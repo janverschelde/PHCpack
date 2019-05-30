@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Ada.Calendar;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
@@ -124,17 +125,18 @@ package Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                deflate,append_sols : in boolean );
+                deflate,append_sols : in boolean;
+                verbose : in integer32 := 0 );
   procedure Square_Main
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                append_sols : in boolean );
+                append_sols : in boolean; verbose : in integer32 := 0 );
   procedure Square_Main
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                append_sols : in boolean );
+                append_sols : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   A polynomial system with as many equations as unknowns is square.
@@ -153,7 +155,8 @@ package Black_Box_Solver_Cases is
   --   start_moment   clock time when phc was started;
   --   p              polynomial system to be solved.
   --   deflate        if not deflate, then not deflation will be applied;
-  --   append_sols    true if solutions need to be appended to input file.
+  --   append_sols    true if solutions need to be appended to input file;
+  --   verbose        the verbose level.
 
   -- ON RETURN :
   --   p              system may be scaled or reduced.
@@ -162,17 +165,17 @@ package Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
-                append_sols : in boolean );
+                append_sols : in boolean; verbose : in integer32 := 0 );
   procedure Square_Main
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
-                append_sols : in boolean );
+                append_sols : in boolean; verbose : in integer32 := 0 );
   procedure Square_Main
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
-                append_sols : in boolean );
+                append_sols : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   A polynomial system with as many equations as unknowns is square.
@@ -190,7 +193,8 @@ package Black_Box_Solver_Cases is
   --   outfilename    the name of the output file;
   --   start_moment   clock time when phc was started;
   --   p              polynomial system to be solved.
-  --   append_sols    true if solutions need to be appended to input file.
+  --   append_sols    true if solutions need to be appended to input file;
+  --   verbose        the verbose level.
 
   -- ON RETURN :
   --   p              system may be scaled or reduced.

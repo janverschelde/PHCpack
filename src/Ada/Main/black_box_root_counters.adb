@@ -8,7 +8,6 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
-with Arrays_of_Integer_Vector_Lists;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -21,16 +20,14 @@ with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Total_Degree_Start_Systems;         use Total_Degree_Start_Systems;
-with Partitions_of_Sets_Of_Unknowns_io;  use Partitions_of_Sets_of_Unknowns_io;
 with m_Homogeneous_Bezout_Numbers;       use m_Homogeneous_Bezout_Numbers;
 with m_Homogeneous_Start_Systems;        use m_Homogeneous_Start_Systems;
-with Set_Structure,Set_Structure_io;
+with Set_Structure;
 with Standard_Linear_Product_System;
 with Standard_Complex_Prod_Systems;      use Standard_Complex_Prod_Systems;
 with Standard_Complex_Prod_Systems_io;   use Standard_Complex_Prod_Systems_io;
 with Standard_Complex_Prod_Planes;
 with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
-with Supports_of_Polynomial_Systems;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
 with Induced_Permutations;
@@ -42,11 +39,6 @@ with Black_Polyhedral_Continuations;     use Black_Polyhedral_Continuations;
 with Root_Counters_Output;
 with Pipelined_Labeled_Cells;
 with Pipelined_Polyhedral_Drivers;
-
-with Standard_Integer_Numbers_io;
- use Standard_Integer_Numbers_io;
-with Standard_Integer_Vectors_io;
- use Standard_Integer_Vectors_io;
 
 package body Black_Box_Root_Counters is
 
@@ -102,7 +94,7 @@ package body Black_Box_Root_Counters is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
       := DoblDobl_Complex_to_Standard_Poly_Sys(p);
-    res : natural64 := Set_Structure_Bound(q);
+    res : constant natural64 := Set_Structure_Bound(q);
 
   begin
     Standard_Complex_Poly_Systems.Clear(q);
@@ -114,7 +106,7 @@ package body Black_Box_Root_Counters is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
       := QuadDobl_Complex_to_Standard_Poly_Sys(p);
-    res : natural64 := Set_Structure_Bound(q);
+    res : constant natural64 := Set_Structure_Bound(q);
 
   begin
     Standard_Complex_Poly_Systems.Clear(q);
@@ -132,7 +124,7 @@ package body Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration ) is
+                 rocotime : out duration; verbose : in integer32 := 0 ) is
 
     timer : timing_widget;
     n : constant natural32 := natural32(p'length);
@@ -144,15 +136,29 @@ package body Black_Box_Root_Counters is
     orgcnt,stbcnt : natural32;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Count_Roots 1,");
+      put_line("for polynomial systems in double precision ...");
+    end if;
     tstart(timer);
     Compute_Total_Degree(p,d,mptode);
     if d = 0 and Equal(mptode,0)       -- patch for GNAT optimizers ...
      then mptode := Total_Degree(p);
     end if;
+    if verbose > 0
+     then put("-> total degree : "); put(d,1); new_line;
+    end if;
     declare
     begin
       PB(p,bz,m,z);
+      if verbose > 0 then
+        put("-> "); put(m,1); put("-homogeneous Bezout number : ");
+        put(bz,1); new_line;
+      end if;
       bs := Set_Structure_Bound(p);
+      if verbose > 0 then
+        put("-> set structure Bezout bound : "); put(bs,1); new_line;
+      end if;
     exception
       when others => m := 1; bz := 0; bs := 0;
     end;
@@ -190,14 +196,18 @@ package body Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration ) is
+                 rocotime : out duration; verbose : in integer32 := 0 ) is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
       := DoblDobl_Complex_to_Standard_Poly_Sys(p);
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Count_Roots 2,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     Count_Roots(q,deg,tode,mptode,mhbz,setb,mivo,stmv,zz,nz,stlb,lifsup,
-                mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     if iprm /= null then
      -- put("The permutation : "); put(iprm); new_line;
      -- put_line("The system before the permutation : "); put_line(p);
@@ -218,14 +228,18 @@ package body Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration ) is
+                 rocotime : out duration; verbose : in integer32 := 0 ) is
 
     q : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
       := QuadDobl_Complex_to_Standard_Poly_Sys(p);
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Count_Roots 3,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     Count_Roots(q,deg,tode,mptode,mhbz,setb,mivo,stmv,zz,nz,stlb,lifsup,
-                mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     if iprm /= null
      then Induced_Permutations.Permute(iprm.all,p);
     end if;
@@ -244,7 +258,7 @@ package body Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration ) is
+                 rocotime : out duration; verbose : in integer32 := 0 ) is
 
     timer : timing_widget;
     n : constant natural32 := natural32(p'length);
@@ -257,6 +271,10 @@ package body Black_Box_Root_Counters is
     use Root_Counters_Output;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Count_Roots 4,");
+      put_line("for polynomial systems in double precision ...");
+    end if;
     tstart(timer);
     declare
     begin
@@ -269,13 +287,20 @@ package body Black_Box_Root_Counters is
     if d = 0 and Equal(mptode,0)      -- patch for GNAT optimizers ...
      then mptode := Total_Degree(p);
     end if;
-   -- put("total degree : "); put(d,1); new_line;
+    if verbose > 0
+     then put("-> total degree : "); put(d,1); new_line;
+    end if;
     declare
     begin
       PB(p,bz,m,z); 
-     -- put(m,1); put("-homogeneous Bezout number : "); put(bz,1); new_line;
+      if verbose > 0 then
+        put("-> "); put(m,1); put("-homogeneous Bezout number : ");
+        put(bz,1); new_line;
+      end if;
       bs := Set_Structure_Bound(p);
-     -- put("set structure Bezout bound : "); put(bs,1); new_line;
+      if verbose > 0 then
+        put("-> set structure Bezout bound : "); put(bs,1); new_line;
+      end if;
     exception
       when others => bz := 0; m := 1; bs := 0;
     end;
@@ -318,14 +343,18 @@ package body Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration ) is
+                 rocotime : out duration; verbose : in integer32 := 0 ) is
 
     sp : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
        := DoblDobl_Complex_to_Standard_Poly_Sys(p);
 
   begin
-    Count_Roots(file,sp,deg,tode,mptode,mhbz,setb,mivo,stmv,
-                zz,nz,stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Count_Roots 5,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
+    Count_Roots(file,sp,deg,tode,mptode,mhbz,setb,mivo,stmv,zz,nz,stlb,
+                lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     if iprm /= null then
      -- put("The permutation : "); put(iprm); new_line;
      -- put_line("The system before the permutation : "); put_line(p);
@@ -347,14 +376,18 @@ package body Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration ) is
+                 rocotime : out duration; verbose : in integer32 := 0 ) is
 
     sp : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
        := QuadDobl_Complex_to_Standard_Poly_Sys(p);
 
   begin
-    Count_Roots(file,sp,deg,tode,mptode,mhbz,setb,mivo,stmv,
-                zz,nz,stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Count_Roots 6,");
+      put_line("for polynomial systems in double precision ...");
+    end if;
+    Count_Roots(file,sp,deg,tode,mptode,mhbz,setb,mivo,stmv,zz,nz,stlb,
+                lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     if iprm /= null
      then Induced_Permutations.Permute(iprm.all,p);
     end if;
@@ -411,7 +444,7 @@ package body Black_Box_Root_Counters is
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : in out Standard_Complex_Solutions.Solution_List;
-                hocotime : out duration ) is
+                hocotime : out duration; verbose : in integer32 := 0 ) is
 
     timer : timing_widget;
     n : constant natural32 := natural32(p'length);
@@ -419,6 +452,10 @@ package body Black_Box_Root_Counters is
     gap : constant natural32 := smv - mv;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Construct_Start_System 1,");
+      put_line("for polynomial systems in double precision ...");
+    end if;
     tstart(timer);
     if mv = 0 and smv = 0
      then roco := Minimum(d,bz,bs);
@@ -463,7 +500,7 @@ package body Black_Box_Root_Counters is
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : in out DoblDobl_Complex_Solutions.Solution_List;
-                hocotime : out duration ) is
+                hocotime : out duration; verbose : in integer32 := 0 ) is
 
     timer : timing_widget;
     n : constant natural32 := natural32(p'length);
@@ -471,6 +508,10 @@ package body Black_Box_Root_Counters is
     gap : constant natural32 := smv - mv;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Construct_Start_System 2,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     tstart(timer);
     if mv = 0 and smv = 0
      then roco := Minimum(d,bz,bs);
@@ -529,7 +570,7 @@ package body Black_Box_Root_Counters is
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : in out QuadDobl_Complex_Solutions.Solution_List;
-                hocotime : out duration ) is
+                hocotime : out duration; verbose : in integer32 := 0 ) is
 
     timer : timing_widget;
     n : constant natural32 := natural32(p'length);
@@ -537,6 +578,10 @@ package body Black_Box_Root_Counters is
     gap : constant natural32 := smv - mv;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Construct_Start_System 3,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     tstart(timer);
     if mv = 0 and smv = 0
      then roco := Minimum(d,bz,bs);
@@ -594,7 +639,7 @@ package body Black_Box_Root_Counters is
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : in out Standard_Complex_Solutions.Solution_List;
-                hocotime : out duration ) is
+                hocotime : out duration; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -607,6 +652,10 @@ package body Black_Box_Root_Counters is
     gap : constant natural32 := smv - mv;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Construct_Start_System 4,");
+      put_line("for polynomial systems in double precision ...");
+    end if;
     new_line(file);
     tstart(timer);
     if mv = 0 and smv = 0
@@ -673,7 +722,7 @@ package body Black_Box_Root_Counters is
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : in out DoblDobl_Complex_Solutions.Solution_List;
-                hocotime : out duration ) is
+                hocotime : out duration; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -686,6 +735,10 @@ package body Black_Box_Root_Counters is
     gap : constant natural32 := smv - mv;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Construct_Start_System 5,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     new_line(file);
     tstart(timer);
     if mv = 0 and smv = 0
@@ -766,7 +819,7 @@ package body Black_Box_Root_Counters is
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : in out QuadDobl_Complex_Solutions.Solution_List;
-                hocotime : out duration ) is
+                hocotime : out duration; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -779,6 +832,10 @@ package body Black_Box_Root_Counters is
     gap : constant natural32 := smv - mv;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Construct_Start_System 6,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     new_line(file);
     tstart(timer);
     if mv = 0 and smv = 0
@@ -856,7 +913,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -872,14 +930,18 @@ package body Black_Box_Root_Counters is
     use Root_Counters_Output;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 1,");
+      put_line("for polynomial systems in double precision ...");
+    end if;
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
-    if not silent
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
+    if (not silent) or (verbose > 0)
      then Write_Root_Counts(standard_output,no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     end if;
     Construct_Start_System
       (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
-       q,qsols,qsols0,hocotime);
+       q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -897,7 +959,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -913,14 +976,18 @@ package body Black_Box_Root_Counters is
     use Root_Counters_Output;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 2,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
-    if not silent
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
+    if (not silent) or (verbose > 0)
      then Write_Root_Counts(standard_output,no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     end if;
     Construct_Start_System
       (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
-       q,qsols,qsols0,hocotime);
+       q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -938,7 +1005,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -954,14 +1022,18 @@ package body Black_Box_Root_Counters is
     use Root_Counters_Output;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 3,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
-    if not silent
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
+    if (not silent) or (verbose > 0)
      then Write_Root_Counts(standard_output,no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     end if;
     Construct_Start_System
       (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
-       q,qsols,qsols0,hocotime);
+       q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -980,7 +1052,8 @@ package body Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -996,17 +1069,24 @@ package body Black_Box_Root_Counters is
     use Root_Counters_Output;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 4,");
+      put_line("for polynomial systems in double precision ...");
+    end if;
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     declare
       rcs : constant string
           := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     begin
       rocos := new string'(rcs);
+      if verbose > 0
+       then put_line(rcs);
+      end if;
     end;
     Construct_Start_System
       (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
-       q,qsols,qsols0,hocotime);
+       q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -1025,7 +1105,8 @@ package body Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -1041,17 +1122,24 @@ package body Black_Box_Root_Counters is
     use Root_Counters_Output;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 5,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     declare
       rcs : constant string
           := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     begin
       rocos := new string'(rcs);
+      if verbose > 0
+       then put_line(rcs);
+      end if;
     end;
     Construct_Start_System
       (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
-       q,qsols,qsols0,hocotime);
+       q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -1070,7 +1158,8 @@ package body Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -1086,17 +1175,24 @@ package body Black_Box_Root_Counters is
     use Root_Counters_Output;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 6,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     declare
       rcs : constant string
           := Root_Counts_to_String(no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     begin
       rocos := new string'(rcs);
+      if verbose > 0
+       then put_line(rcs);
+      end if;
     end;
     Construct_Start_System
       (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
-       q,qsols,qsols0,hocotime);
+       q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -1114,7 +1210,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -1127,11 +1224,15 @@ package body Black_Box_Root_Counters is
     mptdeg : Natural_Number;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 7,");
+      put_line("for polynomial systems in double precision ...");
+    end if;
     Count_Roots(file,p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     Construct_Start_System
       (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,
-       wrc,q,qsols,qsols0,hocotime);
+       wrc,q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -1146,7 +1247,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -1159,11 +1261,15 @@ package body Black_Box_Root_Counters is
     mptdeg : Natural_Number;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 8,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     Count_Roots(file,p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     Construct_Start_System
       (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,
-       wrc,q,qsols,qsols0,hocotime);
+       wrc,q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -1178,7 +1284,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d,bz,bs,wrc : natural64;
     mv,smv : natural32;
@@ -1191,11 +1298,15 @@ package body Black_Box_Root_Counters is
     mptdeg : Natural_Number;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 9,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     Count_Roots(file,p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime,verbose-1);
     Construct_Start_System
       (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,
-       wrc,q,qsols,qsols0,hocotime);
+       wrc,q,qsols,qsols0,hocotime,verbose-1);
     rc := natural32(wrc);
     Clear(z);
     Clear(mix);
@@ -1457,7 +1568,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1515,7 +1626,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1574,7 +1685,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1632,7 +1743,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1684,7 +1795,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1737,7 +1848,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     no_mv : constant boolean := deg or (natural32(p'last) > chicken_mv);
@@ -1792,7 +1903,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     timer : Timing_Widget;
@@ -1861,7 +1972,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     timer : Timing_Widget;
@@ -1931,7 +2042,7 @@ package body Black_Box_Root_Counters is
     mv,smv,tmv : natural32;
     r : integer32;
     mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    mcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
     timer : Timing_Widget;
@@ -1994,7 +2105,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
@@ -2002,6 +2114,10 @@ package body Black_Box_Root_Counters is
     mixsub : Mixed_Subdivision;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 10,");
+      put_line("for Laurent systems in double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
@@ -2021,7 +2137,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
@@ -2031,6 +2148,10 @@ package body Black_Box_Root_Counters is
        := DoblDobl_Complex_to_Standard_Laur_Sys(p);
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 11,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
@@ -2051,7 +2172,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
@@ -2061,6 +2183,10 @@ package body Black_Box_Root_Counters is
        := QuadDobl_Complex_to_Standard_Laur_Sys(p);
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 12,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
@@ -2082,7 +2208,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32; rocos : out Link_to_String;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
@@ -2090,6 +2217,10 @@ package body Black_Box_Root_Counters is
     mixsub : Mixed_Subdivision;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 13,");
+      put_line("for Laurent systems in double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
@@ -2108,7 +2239,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32; rocos : out Link_to_String;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
@@ -2118,6 +2250,10 @@ package body Black_Box_Root_Counters is
        := DoblDobl_Complex_to_Standard_Laur_Sys(p);
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 14,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
@@ -2137,7 +2273,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32; rocos : out Link_to_String;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
@@ -2147,6 +2284,10 @@ package body Black_Box_Root_Counters is
        := QuadDobl_Complex_to_Standard_Laur_Sys(p);
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 15,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
@@ -2166,7 +2307,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -2176,6 +2318,10 @@ package body Black_Box_Root_Counters is
     mixsub : Mixed_Subdivision;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 16,");
+      put_line("for Laurent systems in double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
@@ -2209,7 +2355,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -2221,6 +2368,10 @@ package body Black_Box_Root_Counters is
        := DoblDobl_Complex_to_Standard_Laur_Sys(p);
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 17,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
@@ -2256,7 +2407,8 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -2268,6 +2420,10 @@ package body Black_Box_Root_Counters is
        := QuadDobl_Complex_to_Standard_Laur_Sys(p);
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Black_Box_Root_Counting 18,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     tstart(timer);
     Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);

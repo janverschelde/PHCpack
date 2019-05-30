@@ -4,7 +4,6 @@ with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Communications_with_User;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Write_Seed_Number;
 with Write_Number_of_Tasks;
@@ -25,10 +24,10 @@ with Standard_Monomial_Maps_io;          use Standard_Monomial_Maps_io;
 with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
 with Greeting_Banners;
 with Black_Box_Solver_Cases;
-with Black_Box_Solvers;                  use Black_Box_Solvers;
 with bablsolve;
 
-procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
+procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
+                    verbose : in integer32 := 0 ) is
 
 -- NOTE about the difference between Laurent and ordinary polynomials :
 --   For Laurent binomial systems (the genuine ones with negative powers),
@@ -230,7 +229,8 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
     Affine_Binomial_Solver(q,append_sols,fail);
   end Toric_Binomial_Solver;
 
-  procedure Solve ( p : in Link_to_Poly_Sys; append_sols : in boolean ) is
+  procedure Solve ( p : in Link_to_Poly_Sys; append_sols : in boolean;
+                    v : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Runs the blackbox solver for a polynomial system.
@@ -242,14 +242,16 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
     use Black_Box_Solver_Cases;
 
   begin
-   -- put_line("in bablphc.Solve for regular polynomial system");
+    if v > 0
+     then put_line("-> in bablphc.Solve for an ordinary polynomial system ...");
+    end if;
     if p'last = p'first then
       Single_Main(infilename,outfilename,p(p'first),append_sols);
     elsif p'last = integer32(n) then
       Linear_Main(infilename,outfilename,p,n,append_sols,fail);
       if fail then
         Square_Main
-          (nt,infilename,outfilename,start_moment,p,true,append_sols);
+          (nt,infilename,outfilename,start_moment,p,true,append_sols,v-1);
       end if;
     else
       Toric_Binomial_Solver(p.all,append_sols,fail);
@@ -259,14 +261,20 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
     end if;
   end Solve;
 
-  procedure Solve ( p : in Link_to_Laur_Sys; append_sols : in boolean ) is
+  procedure Solve ( p : in Link_to_Laur_Sys; append_sols : in boolean;
+                    v : in integer32 := 0 ) is
+
+  -- DESCRIPTION :
+  --   Runs the blackbox solver for a Laurent polynomial system.
 
     fail : boolean;
 
     use Black_Box_Solver_Cases;
 
   begin
-   -- put_line("in bablphc.Solve for Laurent polynomial system");
+    if v > 0
+     then put_line("-> in bablphc.Solve for a Laurent polynomial system ...");
+    end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p.all) then
      -- put_line("calling Toric_Binomial_Solver ...");
       Toric_Binomial_Solver(p.all,append_sols,fail);
@@ -274,7 +282,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
       Affine_Binomial_Solver(p.all,append_sols,fail);
     end if;
     if fail then
-      Square_Main(nt,infilename,outfilename,start_moment,p,append_sols);
+      Square_Main(nt,infilename,outfilename,start_moment,p,append_sols,v-1);
     end if;
   end Solve;
 
@@ -286,6 +294,10 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
     q : Link_to_Laur_Sys;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(natural32(verbose),1);
+      put_line(", in bablphc.Main ...");
+    end if;
     Standard_System_Readers.Read_System(infile,infilename,q);
     if q = null then
       put_line(Greeting_Banners.welcome & ".");
@@ -302,7 +314,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
       close(infile);
     end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(q.all) then
-      Solve(q,append_sols);
+      Solve(q,append_sols,verbose-1);
     else
       declare
         use Standard_Laur_Poly_Convertors;
@@ -310,7 +322,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
           := Positive_Laurent_Polynomial_System(q.all);
       begin
         p := new Poly_Sys'(t);
-        Solve(p,append_sols);
+        Solve(p,append_sols,verbose-1);
       end;
     end if;
   end Main;

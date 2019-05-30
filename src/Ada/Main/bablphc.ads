@@ -1,6 +1,8 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 
-procedure bablphc ( nt : in natural32; infilename,outfilename : in string );
+procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
+                    verbose : in integer32 := 0 );
 
 -- DESCRIPTION :
 --   This is the main interactive driver for the homotopy continuation

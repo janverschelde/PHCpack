@@ -64,7 +64,7 @@ package Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration );
+                 rocotime : out duration; verbose : in integer32 := 0 );
   procedure Count_Roots 
                ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean;
@@ -76,7 +76,7 @@ package Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration );
+                 rocotime : out duration; verbose : in integer32 := 0 );
   procedure Count_Roots 
                ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean;
@@ -88,7 +88,7 @@ package Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration );
+                 rocotime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes four different root counts for the system p.
@@ -97,6 +97,8 @@ package Black_Box_Root_Counters is
 
   -- ON ENTRY :
   --   p         a polynomial system.
+  --   deg       if only degrees are used in the root count;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   tode      total degree;
@@ -128,7 +130,7 @@ package Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration );
+                 rocotime : out duration; verbose : in integer32 := 0 );
   procedure Count_Roots 
                ( file : in file_type;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -141,7 +143,7 @@ package Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration );
+                 rocotime : out duration; verbose : in integer32 := 0 );
   procedure Count_Roots 
                ( file : in file_type;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -154,7 +156,7 @@ package Black_Box_Root_Counters is
                  lifsup : out Link_to_Array_of_Lists;
                  mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
-                 rocotime : out duration );
+                 rocotime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes four different root counts for the system p.
@@ -163,7 +165,9 @@ package Black_Box_Root_Counters is
 
   -- ON ENTRY :
   --   file      output file;
-  --   p         a polynomial system.
+  --   p         a polynomial system;
+  --   deg       if only degrees are used in the root count;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   tode      total degree;
@@ -193,7 +197,7 @@ package Black_Box_Root_Counters is
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : in out Standard_Complex_Solutions.Solution_List;
-                 hocotime : out duration );
+                 hocotime : out duration; verbose : in integer32 := 0 );
   procedure Construct_Start_System
                ( nt : in integer32;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -204,7 +208,7 @@ package Black_Box_Root_Counters is
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : in out DoblDobl_Complex_Solutions.Solution_List;
-                 hocotime : out duration );
+                 hocotime : out duration; verbose : in integer32 := 0 );
   procedure Construct_Start_System
                ( nt : in integer32;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -215,7 +219,7 @@ package Black_Box_Root_Counters is
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : in out QuadDobl_Complex_Solutions.Solution_List;
-                 hocotime : out duration );
+                 hocotime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Constructs a start system for the minimal root count and least
@@ -233,7 +237,8 @@ package Black_Box_Root_Counters is
   --   stlb      lifting for the artificial origin;
   --   lifted    lifted supports;
   --   orgmcc    regular mixed-cell configuration to compute mv;
-  --   stbmcc    extra stable mixed cells that contributed to smv.
+  --   stbmcc    extra stable mixed cells that contributed to smv;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   roco      minimum(d,bz,bs,mv), provided mv /= 0;
@@ -251,7 +256,7 @@ package Black_Box_Root_Counters is
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : in out Standard_Complex_Solutions.Solution_List;
-                 hocotime : out duration );
+                 hocotime : out duration; verbose : in integer32 := 0 );
   procedure Construct_Start_System
                ( file : in file_type; nt : in integer32;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -261,7 +266,7 @@ package Black_Box_Root_Counters is
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : in out DoblDobl_Complex_Solutions.Solution_List;
-                 hocotime : out duration );
+                 hocotime : out duration; verbose : in integer32 := 0 );
   procedure Construct_Start_System
                ( file : in file_type; nt : in integer32;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -271,7 +276,7 @@ package Black_Box_Root_Counters is
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : in out QuadDobl_Complex_Solutions.Solution_List;
-                 hocotime : out duration );
+                 hocotime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Constructs a start system for the minimal root count and least
@@ -289,7 +294,8 @@ package Black_Box_Root_Counters is
   --   mix       type of mixture of the supports;
   --   stlb      lifting of the artificial origin;
   --   orgmcc    regular mixed-cell configuration to compute mv;
-  --   stbmcc    extra stable mixed cells that contribute to smv.
+  --   stbmcc    extra stable mixed cells that contribute to smv;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   roco      minimum(d,bz,bs,mv), provided mv /= 0;
@@ -304,21 +310,24 @@ package Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calculates four different root counts: total degree, m-homogeneous
@@ -337,7 +346,8 @@ package Black_Box_Root_Counters is
   --             on screen, otherwise, the root counter remains silent;
   --   p         a polynomial system;
   --   deg       if true, then only degree bounds are used,
-  --             otherwise also the mixed volume is computed.
+  --             otherwise also the mixed volume is computed;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         may have been permuted for semi-mixed inputs;
@@ -356,7 +366,8 @@ package Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( nt : in integer32;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -364,7 +375,8 @@ package Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( nt : in integer32;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -372,7 +384,8 @@ package Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calculates four different root counts: total degree, m-homogeneous
@@ -389,7 +402,8 @@ package Black_Box_Root_Counters is
   --             if 0, then sequential execution;
   --   p         a polynomial system;
   --   deg       if true, then only degree bounds are used,
-  --             otherwise also the mixed volume is computed.
+  --             otherwise also the mixed volume is computed;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         may have been permuted for semi-mixed inputs;
@@ -410,21 +424,24 @@ package Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calculates four different root counts: total degree, m-homogeneous
@@ -442,7 +459,8 @@ package Black_Box_Root_Counters is
   --             if 0, then sequential execution;
   --   p         a polynomial system;
   --   deg       if true, then only degree bounds are used,
-  --             otherwise also the mixed volume is computed.
+  --             otherwise also the mixed volume is computed;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         may have been permuted for semi-mixed inputs;
@@ -620,21 +638,24 @@ package Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Wrapper to a mixed-volume computation for a Laurent polynomial system.
@@ -661,21 +682,24 @@ package Black_Box_Root_Counters is
                  rc : out natural32; rocos : out Link_to_String;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( nt : in integer32;
                  p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32; rocos : out Link_to_String;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( nt : in integer32;
                  p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32; rocos : out Link_to_String;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Wrapper to a mixed-volume computation for a Laurent polynomial system.
@@ -701,21 +725,24 @@ package Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Wrapper to a mixed-volume computation for a Laurent polynomial system,

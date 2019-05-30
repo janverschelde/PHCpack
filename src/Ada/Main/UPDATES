@@ -1,3 +1,7 @@
+Thu 30 May 2019 : added a new verbose level option -V to dispatch.adb,
+  added code in bablphc, black_box_solvers, black_box_solver_cases, and
+  black_box_root_counters.
+
 Fri 17 May 2019 : updated greeting_banners for version 2.4.67.
 
 Fri 29 Mar 2019 : updated greeting_banners for version 2.4.66 and added

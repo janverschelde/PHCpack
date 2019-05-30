@@ -1,5 +1,4 @@
 with text_io;                            use text_io;
-with Ada.Calendar;
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Polynomials;

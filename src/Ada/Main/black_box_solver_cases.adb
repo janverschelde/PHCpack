@@ -1,7 +1,6 @@
 with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -474,7 +473,7 @@ package body Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
-                append_sols : in boolean ) is
+                append_sols : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Standard_Monomial_Maps;
@@ -490,6 +489,10 @@ package body Black_Box_Solver_Cases is
     roco,hoco,poco,total : duration := 0.0;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Square_Main for Laurent systems,");
+      put_line("in double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if output_to_file
      then put(outfile,natural32(p'last),p.all);
@@ -512,7 +515,7 @@ package body Black_Box_Solver_Cases is
         Standard_Complex_Laur_Systems.Copy(p.all,pp);
         if output_to_file then
           Black_Box_Root_Counting
-            (outfile,integer32(nt),pp,rc,q,sols,roco,hoco);
+            (outfile,integer32(nt),pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
             if nt = 0
              then Black_Box_Polynomial_Continuation(outfile,pp,q,sols,poco);
@@ -521,7 +524,8 @@ package body Black_Box_Solver_Cases is
             end if;
           end if;
         else
-          Black_Box_Root_Counting(integer32(nt),false,pp,rc,q,sols,roco,hoco);
+          Black_Box_Root_Counting
+            (integer32(nt),false,pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
             if nt = 0
              then Black_Box_Polynomial_Continuation(pp,q,sols,poco);
@@ -574,7 +578,7 @@ package body Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
-                append_sols : in boolean ) is
+                append_sols : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_Monomial_Maps;
@@ -590,6 +594,10 @@ package body Black_Box_Solver_Cases is
     roco,hoco,poco,total : duration := 0.0;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Square_Main for Laurent systems,");
+      put_line("in double double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if output_to_file
      then put(outfile,p.all);
@@ -612,7 +620,7 @@ package body Black_Box_Solver_Cases is
         DoblDobl_Complex_Laur_Systems.Copy(p.all,pp);
         if output_to_file then
           Black_Box_Root_Counting
-            (outfile,integer32(nt),pp,rc,q,sols,roco,hoco);
+            (outfile,integer32(nt),pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
             if nt = 0
              then Black_Box_Polynomial_Continuation(outfile,pp,q,sols,poco);
@@ -621,7 +629,8 @@ package body Black_Box_Solver_Cases is
             end if;
           end if;
         else
-          Black_Box_Root_Counting(integer32(nt),false,pp,rc,q,sols,roco,hoco);
+          Black_Box_Root_Counting
+            (integer32(nt),false,pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
             if nt = 0
              then Black_Box_Polynomial_Continuation(pp,q,sols,poco);
@@ -677,7 +686,7 @@ package body Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
-                append_sols : in boolean ) is
+                append_sols : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_Monomial_Maps;
@@ -693,6 +702,10 @@ package body Black_Box_Solver_Cases is
     roco,hoco,poco,total : duration := 0.0;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Square_Main for Laurent systems,");
+      put_line("in quad double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if output_to_file
      then put(outfile,p.all);
@@ -715,7 +728,7 @@ package body Black_Box_Solver_Cases is
         QuadDobl_Complex_Laur_Systems.Copy(p.all,pp);
         if output_to_file then
           Black_Box_Root_Counting
-            (outfile,integer32(nt),pp,rc,q,sols,roco,hoco);
+            (outfile,integer32(nt),pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
             if nt = 0
              then Black_Box_Polynomial_Continuation(outfile,pp,q,sols,poco);
@@ -724,7 +737,8 @@ package body Black_Box_Solver_Cases is
             end if;
           end if;
         else
-          Black_Box_Root_Counting(integer32(nt),false,pp,rc,q,sols,roco,hoco);
+          Black_Box_Root_Counting
+            (integer32(nt),false,pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
             if nt = 0
              then Black_Box_Polynomial_Continuation(pp,q,sols,poco);
@@ -780,7 +794,8 @@ package body Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                deflate,append_sols : in boolean ) is
+                deflate,append_sols : in boolean;
+                verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -794,7 +809,11 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
-   -- put_line("in Black_Box_Solvers.Square_Main for regular poly system");
+    if verbose > 0 then
+      put_line
+        ("-> in black_box_solver_cases.Square_Main for polynomial systems,");
+      put_line("in double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if output_to_file
      then put(outfile,natural32(p'last),p.all);
@@ -821,7 +840,8 @@ package body Black_Box_Solver_Cases is
               (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
           else
             Black_Box_Root_Counting
-              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco,
+               verbose-1);
           end if;
         else 
           if nt >= 2 then
@@ -829,7 +849,8 @@ package body Black_Box_Solver_Cases is
               (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
           else
             Black_Box_Root_Counting
-              (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
+              (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco,
+               verbose-1);
           end if;
         end if;
        -- put_line("The system after root counting : "); put(pp);
@@ -912,7 +933,7 @@ package body Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                append_sols : in boolean ) is
+                append_sols : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -926,7 +947,11 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
-   -- put_line("in Black_Box_Solvers.Square_Main for dobldobl poly system");
+    if verbose > 0 then
+      put_line
+        ("-> in black_box_solver_cases.Square_Main for polynomial systems,");
+      put_line("in double double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if output_to_file then
       put(outfile,natural32(p'last),1); new_line(outfile);
@@ -951,10 +976,12 @@ package body Black_Box_Solver_Cases is
         if output_to_file then
           if nt >= 2 then
             Black_Box_Root_Counting
-              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco,
+               verbose-1);
           else
             Black_Box_Root_Counting
-              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco,
+               verbose-1);
           end if;
         else 
           if nt >= 2 then
@@ -962,7 +989,8 @@ package body Black_Box_Solver_Cases is
               (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
           else
             Black_Box_Root_Counting
-              (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
+              (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco,
+               verbose-1);
           end if;
         end if;
        -- put_line("The system after root counting : "); put(pp);
@@ -1043,7 +1071,7 @@ package body Black_Box_Solver_Cases is
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                append_sols : in boolean ) is
+                append_sols : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -1057,7 +1085,11 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
-   -- put_line("in Black_Box_Solvers.Square_Main for regular poly system");
+    if verbose > 0 then
+      put_line
+        ("-> in black_box_solver_cases.Square_Main for polynomial systems,");
+      put_line("in quad double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if output_to_file then
       put(outfile,natural32(p'last),1); new_line(outfile);
@@ -1085,7 +1117,8 @@ package body Black_Box_Solver_Cases is
               (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
           else
             Black_Box_Root_Counting
-              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+              (outfile,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco,
+               verbose-1);
           end if;
         else 
           if nt >= 2 then
@@ -1093,7 +1126,8 @@ package body Black_Box_Solver_Cases is
               (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
           else
             Black_Box_Root_Counting
-              (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco);
+              (integer32(nt),false,pp,false,rc,q,sols,sols0,roco,hoco,
+               verbose-1);
           end if;
         end if;
        -- put_line("The system after root counting : "); put(pp);
@@ -1181,8 +1215,6 @@ package body Black_Box_Solver_Cases is
     ls : Link_to_Solution;
     s : Solution(p'last);
     n : natural32;
-    pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
-    sols0 : Solution_List;
 
   begin
     if p'first = p'last then
@@ -1226,8 +1258,6 @@ package body Black_Box_Solver_Cases is
     ls : Link_to_Solution;
     s : Solution(p'last);
     n : natural32;
-    pp,q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
-    sols0 : Solution_List;
 
   begin
     if p'first = p'last then
@@ -1271,8 +1301,6 @@ package body Black_Box_Solver_Cases is
     ls : Link_to_Solution;
     s : Solution(p'last);
     n : natural32;
-    pp,q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
-    sols0 : Solution_List;
 
   begin
     if p'first = p'last then

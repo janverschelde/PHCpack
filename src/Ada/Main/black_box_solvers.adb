@@ -1,25 +1,4 @@
-with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
-with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Double_Double_Numbers;              use Double_Double_Numbers;
-with Quad_Double_Numbers;                use Quad_Double_Numbers;
-with Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers;
-with Standard_Random_Numbers;
-with Standard_Natural_Vectors;
-with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
-with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
-with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
-with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
-with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
-with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
-with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Linear_Poly_Solvers;
 with DoblDobl_Linear_Poly_Solvers;
 with QuadDobl_Linear_Poly_Solvers;
@@ -28,17 +7,10 @@ with DoblDobl_Scaling;
 with QuadDobl_Scaling;
 with Black_Box_Univariate_Solvers;       use Black_Box_Univariate_Solvers;
 with Black_Box_Simplex_Solvers;          use Black_Box_Simplex_Solvers;
-with Standard_Monomial_Maps;
-with Standard_Monomial_Maps_io;          use Standard_Monomial_Maps_io;
-with DoblDobl_Monomial_Maps;
-with QuadDobl_Monomial_Maps;
-with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
-with Black_Box_Factorization;            use Black_Box_Factorization;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
 with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with DoblDobl_Blackbox_Continuations;    use DoblDobl_Blackbox_Continuations;
 with QuadDobl_Blackbox_Continuations;    use QuadDobl_Blackbox_Continuations;
-with Greeting_Banners;
 with Black_Box_Solver_Cases;             use Black_Box_Solver_Cases;
 
 package body Black_Box_Solvers is
@@ -1034,7 +1006,7 @@ package body Black_Box_Solvers is
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
-      if nt >= 0 then
+      if nt >= 2 then
         Pipelined_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco);
       else
         Black_Box_Root_Counting(integer32(nt),pp,rc,rocos,q,sols,roco,hoco);

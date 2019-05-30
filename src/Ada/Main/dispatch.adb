@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Unix_Command_Line;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Random_Numbers; -- to handle zero seed
@@ -32,17 +33,14 @@ with mainsymb;                -- to get the symbol table contents
 with mainhyp;                 -- witness set for hypersurface
 with mainhyp2,mainhyp4;       -- double double and quad double versions
 with mainseries;              -- Newton's method for power series solutions
+with Number_of_Cores;
+with Write_Seed_Number;
 -- NOTE (added for pieri_solver.ali) :
 with Interfaces.C;
 with Complex_Polynomial_Matrices;        use Complex_Polynomial_Matrices;
 with Complex_Polynomial_Matrices_io;     use Complex_Polynomial_Matrices_io;
 with Verify_Solution_Maps;
 with C_to_Ada_Arrays;                    use C_to_Ada_Arrays;
-with Number_of_Cores;
-with Write_Seed_Number;
-
-with Standard_Natural_Numbers_io;
- use Standard_Natural_Numbers_io;
 
 procedure Dispatch is
 
@@ -70,7 +68,7 @@ procedure Dispatch is
 
 -- AVAILABLE OPTIONS :
 
-  options : constant string := "bB0asdpqmrvekcxyzftwlgo-huj";
+  options : constant string := "bB0asdpqmrvekcxyzftwlgo-hujV";
   -- 0 : zero seed for repeatable runs
   -- a : solve => equation-by-equation solver
   -- b : batch or black box processing
@@ -92,6 +90,7 @@ procedure Dispatch is
   -- t : task => use multitasking
   -- u : series => Newton's method for power series solutions
   -- v : vali => validation of solutions
+  -- V : verbose level, -Vddd sets the level to ddd, default is zero
   -- w : wit  => intersection of witness sets using diagonal homotopies
   -- x : dix  => Python dictionary output for solutions
   -- y : sam  => sampling points from an algebraic set
@@ -196,7 +195,7 @@ procedure Dispatch is
   --   Returns the number of tasks of the argument -t on the command line.
   --   If there is no argument -t, then the number of cores is returned.
 
-    cnt : integer32 := Number_of_Cores;
+    cnt : constant integer32 := Number_of_Cores;
     res : natural32 := 0;
 
   begin
@@ -218,6 +217,30 @@ procedure Dispatch is
     end loop;
     return res;
   end Number_of_Tasks;
+
+  function Verbose_Level return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns 0 if there is no option -V, or no number following the V,
+  --   otherwise returns the verbose level, the number followed the V.
+
+    res : natural32 := 0;
+
+  begin
+    for i in 1..Unix_Command_Line.Number_of_Arguments loop
+      declare
+        s : constant string := Unix_Command_Line.Argument(i);
+      begin
+        if s(2) = 'V' then
+          if s(3..s'last) /= ""    -- if verbose level provided
+           then res := Convert(s(3..s'last));
+          end if;
+          exit;
+        end if;
+      end;
+    end loop;
+    return integer32(res);
+  end Verbose_Level;
 
   function Scan_Precision ( opt : character ) return natural32 is
 
@@ -324,6 +347,7 @@ procedure Dispatch is
     valiprc : constant natural32 := Scan_Precision('v');
     contprc : constant natural32 := Scan_Precision('p');
     redprc : constant natural32 := Scan_Precision('d');
+    vrblvl : constant integer32 := Verbose_Level;
 
   begin
     case option2 is
@@ -378,7 +402,7 @@ procedure Dispatch is
         case bbprc is
           when 2 => bablphc2(0,file1,file2);
           when 4 => bablphc4(0,file1,file2);
-          when others => bablphc(0,file1,file2);
+          when others => bablphc(0,file1,file2,vrblvl);
         end case;
     end case;
   end Black_Box_Dispatcher;
@@ -757,8 +781,8 @@ procedure Dispatch is
      then put_line(welcome); put_line(goodban);
     end if;
     maingood(infile,outfile);
-  exception
-    when others => raise; -- put_line("exception caught ..."); raise;
+  --exception
+  --  when others => raise; -- put_line("exception caught ..."); raise;
   end Test_if_System_is_Good;
 
   procedure General_Help ( opt : in character ) is
@@ -885,8 +909,8 @@ procedure Dispatch is
                      end if;
       when others => put_line(welcome); mainphc(0,f1,f2);
     end case;
-  exception
-    when others => raise; -- put_line("exception in dispatch..."); raise;
+  --exception
+  --  when others => raise; -- put_line("exception in dispatch..."); raise;
   end General_Dispatcher;
 
   procedure Help_Version_License is
@@ -1024,8 +1048,8 @@ procedure Dispatch is
         General_Dispatcher(option1,option2,option3,file1,file2,file3);
       end if;
     end if;
-  exception
-    when others => raise; -- put_line("exception in main ..."); raise;
+  --exception
+  --  when others => raise; -- put_line("exception in main ..."); raise;
   end Main;
 
 begin
