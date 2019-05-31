@@ -1,3 +1,6 @@
+Thu 30 May 2019 : added verbose level parameter to the black box mixed volume
+  computation procedures in black_mixed_volume_computations.
+
 Tue 25 Sep 2018 : the artificial origin must be removed in the computation
   of the induced permutation in black_mixed_volume_computations.adb.
   Extended the package apply_induced_permutations and also exported more

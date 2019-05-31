@@ -6,7 +6,6 @@ with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Integer_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions;
 
@@ -21,7 +20,7 @@ package Black_Mixed_Volume_Computations is
                  lifsup : out 
                    Arrays_of_Integer_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Integer_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv : out natural32 );
+                 mv : out natural32; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Selects the appropriate algorithm to compute the mixed volume,
@@ -99,14 +98,14 @@ package Black_Mixed_Volume_Computations is
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv : out natural32 );
+                 mv : out natural32; verbose : in integer32 := 0 );
   procedure Black_Box_Mixed_Volume_Computation
                ( p : in out Laur_Sys;
                  mix,perm,iprm : out Link_to_Vector;
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv : out natural32 );
+                 mv : out natural32; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Selects the appropriate algorithm to compute the mixed volume,
@@ -133,14 +132,16 @@ package Black_Mixed_Volume_Computations is
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  orgmcc : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  stbmcc : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv,smv,tmv,orgcnt,stbcnt : out natural32 );
+                 mv,smv,tmv,orgcnt,stbcnt : out natural32;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Selects the appropriate algorithm to compute the stable mixed volume,
   --   using floating-valued random lifting functions.
 
   -- ON ENTRY :
-  --   p         polynomial system.
+  --   p         polynomial system;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         permuted if type of mixture is not fully mixed;

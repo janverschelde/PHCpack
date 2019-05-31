@@ -1,26 +1,20 @@
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;
-with Standard_Complex_Laurentials;       use Standard_Complex_Laurentials;
+with text_io;                            use text_io;
 with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors; 
 with Supports_of_Polynomial_Systems;
 with Standard_Integer32_Vertices;        use Standard_Integer32_Vertices;
-with Random_Coefficient_Systems;
-with Integer_Lifting_Utilities;          use Integer_Lifting_Utilities;
 with Floating_Integer_Convertors;
 with Floating_Lifting_Functions;
 with Floating_Lifting_Utilities;
 with Induced_Permutations;
 with Cayley_Trick;                       use Cayley_Trick;
 with Standard_Integer32_Triangulations;  use Standard_Integer32_Triangulations;
-with Standard_Dynamic32_Triangulations;  use Standard_Dynamic32_Triangulations;
+with Standard_Dynamic32_Triangulations;
 with Triangulations_and_Subdivisions;    use Triangulations_and_Subdivisions;
 with Flatten_Mixed_Subdivisions;         use Flatten_Mixed_Subdivisions;
 with Mixed_Volume_Computation;           use Mixed_Volume_Computation;
 with Drivers_for_Static_Lifting;
-with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
+with Drivers_for_MixedVol_Algorithm;
 
---with text_io; use text_io;
 --with Standard_Integer_Numbers_io;
 -- use Standard_Integer_Numbers_io;
 --with Standard_Integer_Vectors_io;
@@ -33,7 +27,7 @@ package body Black_Mixed_Volume_Computations is
                  lifsup : out
                    Arrays_of_Integer_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Integer_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv : out natural32 ) is
+                 mv : out natural32; verbose : in integer32 := 0 ) is
 
     use Arrays_of_Integer_Vector_Lists;
     use Integer_Mixed_Subdivisions;
@@ -55,10 +49,11 @@ package body Black_Mixed_Volume_Computations is
       cells : Mixed_Subdivision;
 
     begin
-      if Is_Null(tmixsub)
-       then cells := Deep_Create(n,t);
-       else cells := Non_Flat_Deep_Create(n,t);
-            Construct(Head_Of(tmixsub),cells);
+      if Is_Null(tmixsub) then
+        cells := Deep_Create(n,t);
+      else
+        cells := Non_Flat_Deep_Create(n,t);
+        Construct(Head_Of(tmixsub),cells);
       end if;
       Flatten(cells);
       tmixsub := cells;
@@ -68,6 +63,10 @@ package body Black_Mixed_Volume_Computations is
             (Collect_Flattening);
 
   begin
+    if verbose > 0 then
+      put("-> in black_mixed_volume_computation.");
+      put_line("Black_Box_Mixed_Volume_Computation 1 ...");
+    end if;
     for i in supports'range loop
       verpts(i) := Vertex_Points(supports(i));
     end loop;
@@ -234,7 +233,7 @@ package body Black_Mixed_Volume_Computations is
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv : out natural32 ) is
+                 mv : out natural32; verbose : in integer32 := 0 ) is
 
    -- n : constant integer32 := p'last;
     sup : constant Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
@@ -242,6 +241,10 @@ package body Black_Mixed_Volume_Computations is
     r : integer32;
 
   begin
+    if verbose > 0 then
+      put("-> in black_mixed_volume_computation.");
+      put_line("Black_Box_Mixed_Volume_Computation 2 ...");
+    end if;
     Drivers_for_MixedVol_Algorithm.Mixed_Volume_Computation
       (p'last,sup,0.0,r,mix,perm,mixsub,mv);
    -- declare
@@ -268,7 +271,7 @@ package body Black_Mixed_Volume_Computations is
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv : out natural32 ) is
+                 mv : out natural32; verbose : in integer32 := 0 ) is
 
    -- n : constant integer32 := p'last;
     sup : constant Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
@@ -276,6 +279,10 @@ package body Black_Mixed_Volume_Computations is
     r : integer32;
 
   begin
+    if verbose > 0 then
+      put("-> in black_mixed_volume_computation.");
+      put_line("Black_Box_Mixed_Volume_Computation 3 ...");
+    end if;
     Drivers_for_MixedVol_Algorithm.Mixed_Volume_Computation
       (p'last,sup,0.0,r,mix,perm,mixsub,mv);
    -- declare
@@ -305,7 +312,8 @@ package body Black_Mixed_Volume_Computations is
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  orgmcc : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  stbmcc : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv,smv,tmv,orgcnt,stbcnt : out natural32 ) is
+                 mv,smv,tmv,orgcnt,stbcnt : out natural32;
+                 verbose : in integer32 := 0 ) is
 
     n : constant integer32 := p'last;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
@@ -313,6 +321,10 @@ package body Black_Mixed_Volume_Computations is
     r : integer32;
 
   begin
+    if verbose > 0 then
+      put("-> in black_mixed_volume_computation.");
+      put_line("Black_Box_Mixed_Volume_Computation 4 ...");
+    end if;
     stlb := Floating_Lifting_Functions.Lifting_Bound(p);
     Drivers_for_MixedVol_Algorithm.Mixed_Volume_Computation
       (p'last,sup,stlb,r,mix,perm,mixsub,mv);

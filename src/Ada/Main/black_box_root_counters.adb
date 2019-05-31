@@ -170,7 +170,7 @@ package body Black_Box_Root_Counters is
       begin
         Black_Box_Mixed_Volume_Computation
           (p,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,
-           mv,smv,tmv,orgcnt,stbcnt);
+           mv,smv,tmv,orgcnt,stbcnt,verbose-1);
       exception
         when others => mv := 0; smv := 0; tmv := 0;
       end;
@@ -312,7 +312,7 @@ package body Black_Box_Root_Counters is
       begin
         Black_Box_Mixed_Volume_Computation
           (p,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,
-           mv,smv,tmv,orgcnt,stbcnt);
+           mv,smv,tmv,orgcnt,stbcnt,verbose-1);
       exception
         when others => mv := 0; smv := 0; tmv := 0;
       end;
@@ -2119,7 +2119,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (p,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     if not silent
      then put("mixed volume : "); put(rc,1); new_line;
@@ -2153,7 +2154,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in double double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (sp,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     if not silent
      then put("mixed volume : "); put(rc,1); new_line;
@@ -2188,7 +2190,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in quad double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (sp,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     if not silent
      then put("mixed volume : "); put(rc,1); new_line;
@@ -2199,7 +2202,6 @@ package body Black_Box_Root_Counters is
     tstop(timer);
     Standard_Complex_Laur_Systems.Clear(sp);
     hocotime := Elapsed_User_Time(timer);
-
   end Black_Box_Root_Counting;
 
   procedure Black_Box_Root_Counting 
@@ -2222,7 +2224,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (p,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     Append(rocos,"mixed volume : ");
     Append(rocos,Characters_and_Numbers.nConvert(rc));
@@ -2255,7 +2258,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in double double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (sp,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     Append(rocos,"mixed volume : ");
     Append(rocos,Characters_and_Numbers.nConvert(rc));
@@ -2289,7 +2293,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in quad double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (sp,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     Append(rocos,"mixed volume : ");
     Append(rocos,Characters_and_Numbers.nConvert(rc));
@@ -2323,7 +2328,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (p,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     new_line(file);
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
@@ -2373,7 +2379,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in double double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (sp,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     new_line(file);
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
@@ -2425,7 +2432,8 @@ package body Black_Box_Root_Counters is
       put_line("for Laurent systems in quad double precision ...");
     end if;
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation
+      (sp,mix,perm,iprm,lifsup,mixsub,rc,verbose-1);
     tstop(timer);
     new_line(file);
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
