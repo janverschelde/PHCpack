@@ -1,7 +1,6 @@
 with Ada.Calendar;
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
