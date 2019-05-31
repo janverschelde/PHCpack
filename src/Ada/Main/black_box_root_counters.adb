@@ -475,11 +475,11 @@ package body Black_Box_Root_Counters is
         Standard_Linear_Product_System.Clear;
       else 
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
       end if;
     else 
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
     end if;
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
@@ -545,11 +545,11 @@ package body Black_Box_Root_Counters is
         end;
       else 
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
       end if;
     else 
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
     end if;
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
@@ -615,11 +615,11 @@ package body Black_Box_Root_Counters is
         end;
       else 
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
       end if;
     else 
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
     end if;
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
@@ -684,12 +684,12 @@ package body Black_Box_Root_Counters is
       else
         put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
       end if;
     else
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
     end if;
     tstop(timer);
     new_line(file);
@@ -781,12 +781,12 @@ package body Black_Box_Root_Counters is
       else
         put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
       end if;
     else
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
     end if;
     tstop(timer);
     new_line(file);
@@ -878,12 +878,12 @@ package body Black_Box_Root_Counters is
       else
         put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
       end if;
     else
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0,verbose-1);
     end if;
     tstop(timer);
     new_line(file);
@@ -2127,7 +2127,8 @@ package body Black_Box_Root_Counters is
     end if;
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
   end Black_Box_Root_Counting;
@@ -2162,7 +2163,8 @@ package body Black_Box_Root_Counters is
     end if;
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     Standard_Complex_Laur_Systems.Clear(sp);
     hocotime := Elapsed_User_Time(timer);
@@ -2198,7 +2200,8 @@ package body Black_Box_Root_Counters is
     end if;
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     Standard_Complex_Laur_Systems.Clear(sp);
     hocotime := Elapsed_User_Time(timer);
@@ -2231,7 +2234,8 @@ package body Black_Box_Root_Counters is
     Append(rocos,Characters_and_Numbers.nConvert(rc));
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
   end Black_Box_Root_Counting;
@@ -2265,7 +2269,8 @@ package body Black_Box_Root_Counters is
     Append(rocos,Characters_and_Numbers.nConvert(rc));
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     Standard_Complex_Laur_Systems.Clear(sp);
     hocotime := Elapsed_User_Time(timer);
@@ -2300,7 +2305,8 @@ package body Black_Box_Root_Counters is
     Append(rocos,Characters_and_Numbers.nConvert(rc));
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     Standard_Complex_Laur_Systems.Clear(sp);
     hocotime := Elapsed_User_Time(timer);
@@ -2339,7 +2345,8 @@ package body Black_Box_Root_Counters is
     rocotime := Elapsed_User_Time(timer);
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
     new_line(file);
@@ -2391,7 +2398,8 @@ package body Black_Box_Root_Counters is
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
    -- careful to apply the permutation on p!
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
     new_line(file);
@@ -2443,7 +2451,8 @@ package body Black_Box_Root_Counters is
     rocotime := Elapsed_User_Time(timer);
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation
+      (nt,p,mix,lifsup.all,mixsub,q,qsols,verbose-1);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
     new_line(file);

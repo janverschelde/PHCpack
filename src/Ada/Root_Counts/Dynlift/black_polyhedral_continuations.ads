@@ -26,7 +26,8 @@ package Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                  mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                 qsols : in out Standard_Complex_Solutions.Solution_List );
+                 qsols : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 );
 
   procedure Black_Box_Polyhedral_Continuation
                ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -34,7 +35,8 @@ package Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                  mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out Standard_Complex_Laur_Systems.Laur_Sys;
-                 qsols : in out Standard_Complex_Solutions.Solution_List );
+                 qsols : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Creates and solves a random coefficient start system, based on 
@@ -45,7 +47,8 @@ package Black_Polyhedral_Continuations is
   --   mix       type of mixture;
   --   lifsup    lifted supports of the system;
   --   mixsub    regular mixed-cell configuration;
-  --   mv        mixed volume.
+  --   mv        mixed volume;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   q         random coefficient start system;
@@ -58,7 +61,8 @@ package Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out Standard_Complex_Laur_Systems.Laur_Sys;
-                 qsols : in out Standard_Complex_Solutions.Solution_List );
+                 qsols : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 );
 
   procedure Black_Box_Polyhedral_Continuation
                ( nt : in integer32;
@@ -67,7 +71,8 @@ package Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                 qsols : in out DoblDobl_Complex_Solutions.Solution_List );
+                 qsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 );
 
   procedure Black_Box_Polyhedral_Continuation
                ( nt : in integer32;
@@ -76,7 +81,8 @@ package Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                 qsols : in out QuadDobl_Complex_Solutions.Solution_List );
+                 qsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 );
 
   procedure Black_Box_Polyhedral_Continuation
                ( nt : in integer32;
@@ -88,7 +94,8 @@ package Black_Polyhedral_Continuations is
                  stbmcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0
-                   : in out Standard_Complex_Solutions.Solution_List );
+                   : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 );
 
   procedure Black_Box_Polyhedral_Continuation
                ( nt : in integer32;
@@ -100,7 +107,8 @@ package Black_Polyhedral_Continuations is
                  stbmcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0
-                   : in out DoblDobl_Complex_Solutions.Solution_List );
+                   : in out DoblDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 );
 
   procedure Black_Box_Polyhedral_Continuation
                ( nt : in integer32;
@@ -112,7 +120,8 @@ package Black_Polyhedral_Continuations is
                  stbmcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0
-                   : in out QuadDobl_Complex_Solutions.Solution_List );
+                   : in out QuadDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Creates and solves a random coefficient start system, based on 
@@ -128,7 +137,8 @@ package Black_Polyhedral_Continuations is
   --   orgmcc    a regular mixed-cell configuration with only
   --             the original mixed cells, without artificial origin;
   --   stbmcc    a regular mixed-cell configuration, with only
-  --             the extra stable mixed cells, with aritifical origin.
+  --             the extra stable mixed cells, with aritifical origin;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   q         random coefficient start system;

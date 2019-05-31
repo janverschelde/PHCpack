@@ -1,3 +1,6 @@
+Fri 31 May 2019 : added verbose level parameters for the black polyhedral
+  continuations in black_box_root_counters.adb.
+
 Thu 30 May 2019 : added a new verbose level option -V to dispatch.adb,
   added code in bablphc, black_box_solvers, black_box_solver_cases, and
   black_box_root_counters.  Updated black_box_root_counters.adb for the

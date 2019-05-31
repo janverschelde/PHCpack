@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -22,15 +23,9 @@ with QuadDobl_Complex_Laur_JacoMats;
 with Standard_Poly_Laur_Convertors;
 with Standard_Laur_Poly_Convertors;
 with DoblDobl_Poly_Laur_Convertors;
-with DoblDobl_Laur_Poly_Convertors;
 with QuadDobl_Poly_Laur_Convertors;
-with QuadDobl_Laur_Poly_Convertors;
 with Standard_Complex_Poly_Randomizers; 
 with Standard_Complex_Laur_Randomizers;  
-with DoblDobl_Complex_Poly_Randomizers; 
-with DoblDobl_Complex_Laur_Randomizers;  
-with QuadDobl_Complex_Poly_Randomizers; 
-with QuadDobl_Complex_Laur_Randomizers;  
 with Continuation_Parameters;
 with Exponent_Vectors;                   use Exponent_Vectors;
 with Random_Coefficient_Systems;
@@ -50,7 +45,8 @@ package body Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                  mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                 qsols : in out Standard_Complex_Solutions.Solution_List ) is
+                 qsols : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Laur_Functions;
@@ -71,6 +67,11 @@ package body Black_Polyhedral_Continuations is
     m : Mult_Factors(j'range(1),j'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in black_polyhedral_continuations.");
+      put_line("Black_Box_Polyhedral_Continuation 1,");
+      put_line("for a polynomial system in double precision ...");
+    end if;
     q := Standard_Complex_Poly_Randomizers.Complex_Randomize1(p);
     lq := Polynomial_to_Laurent_System(q);
     llq := Perform_Lifting(n,mix,lifsup,lq);
@@ -107,11 +108,11 @@ package body Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                  mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out Standard_Complex_Laur_Systems.Laur_Sys;
-                 qsols : in out Standard_Complex_Solutions.Solution_List ) is
+                 qsols : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Laur_Functions;
-    use Standard_Complex_Poly_Systems;
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Laur_SysFun;
     use Standard_Complex_Laur_JacoMats;
@@ -126,6 +127,11 @@ package body Black_Polyhedral_Continuations is
     m : Mult_Factors(j'range(1),j'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in black_polyhedral_continuations.");
+      put_line("Black_Box_Polyhedral_Continuation 2,");
+      put_line("for a Laurent system in double precision ...");
+    end if;
     lq := Standard_Complex_Laur_Randomizers.Complex_Randomize1(p);
     llq := Perform_Lifting(n,mix,lifsup,lq);
     Clear(lq); Clear(q);
@@ -160,7 +166,8 @@ package body Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out Standard_Complex_Laur_Systems.Laur_Sys;
-                 qsols : in out Standard_Complex_Solutions.Solution_List ) is
+                 qsols : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Laur_Functions;
@@ -175,6 +182,11 @@ package body Black_Polyhedral_Continuations is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in black_polyhedral_continuations.");
+      put_line("Black_Box_Polyhedral_Continuation 3");
+      put_line("for a Laurent system in double precision ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(p'last),mix.all,lifsup);
     hq := Create(q);
     expvec := Create(q);
@@ -212,7 +224,8 @@ package body Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                 qsols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                 qsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Laur_Functions;
@@ -228,6 +241,11 @@ package body Black_Polyhedral_Continuations is
     zero : constant double_double := create(0.0);
 
   begin
+    if verbose > 0 then
+      put("-> in black_polyhedral_continuations.");
+      put_line("Black_Box_Polyhedral_Continuation 4,");
+      put_line("for a Laurent system in double double precision ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(p'last),mix.all,lifsup);
     hq := Create(q);
     expvec := Create(q);
@@ -265,7 +283,8 @@ package body Black_Polyhedral_Continuations is
                  lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                 qsols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                 qsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Laur_Functions;
@@ -281,6 +300,11 @@ package body Black_Polyhedral_Continuations is
     zero : constant quad_double := create(0.0);
 
   begin
+    if verbose > 0 then
+      put("-> in black_polyhedral_continuations.");
+      put_line("Black_Box_Polyhedral_Continuation 5");
+      put_line("for a Laurent system in quad double precision ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(p'last),mix.all,lifsup);
     hq := Create(q);
     expvec := Create(q);
@@ -321,7 +345,8 @@ package body Black_Polyhedral_Continuations is
                  stbmcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0
-                  : in out Standard_Complex_Solutions.Solution_List ) is
+                   : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Laur_Functions;
@@ -339,6 +364,11 @@ package body Black_Polyhedral_Continuations is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in black_polyhedral_continuations.");
+      put_line("Black_Box_Polyhedral_Continuation 6");
+      put_line("for a polynomial system in double precision ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(p'last),mix.all,lifsup);
     lq := Polynomial_to_Laurent_System(q);
     hq := Create(lq);
@@ -391,7 +421,8 @@ package body Black_Polyhedral_Continuations is
                  stbmcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0
-                  : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                   : in out DoblDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Laur_Functions;
@@ -410,6 +441,11 @@ package body Black_Polyhedral_Continuations is
     zero : constant double_double := create(0.0);
 
   begin
+    if verbose > 0 then
+      put("-> in black_polyhedral_continuations.");
+      put_line("Black_Box_Polyhedral_Continuation 7");
+      put_line("for a polynomial system in double double precision ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(p'last),mix.all,lifsup);
     lq := Polynomial_to_Laurent_System(q);
     hq := Create(lq);
@@ -462,7 +498,8 @@ package body Black_Polyhedral_Continuations is
                  stbmcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0
-                  : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                   : in out QuadDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Laur_Functions;
@@ -481,6 +518,11 @@ package body Black_Polyhedral_Continuations is
     zero : constant quad_double := create(0.0);
 
   begin
+    if verbose > 0 then
+      put("-> in black_polyhedral_continuations.");
+      put_line("Black_Box_Polyhedral_Continuation 8");
+      put_line("for a polynomial system in quad double precision ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(p'last),mix.all,lifsup);
     lq := Polynomial_to_Laurent_System(q);
     hq := Create(lq);

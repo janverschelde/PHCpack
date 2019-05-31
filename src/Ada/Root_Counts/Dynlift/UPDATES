@@ -1,3 +1,6 @@
+Fri 31 May 2019 : added verbose level parameter to the black box polyhedral
+  continuations in black_polyhedral_continuations.
+
 Thu 30 May 2019 : added verbose level parameter to the black box mixed volume
   computation procedures in black_mixed_volume_computations.
 
