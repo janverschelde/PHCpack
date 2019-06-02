@@ -3,7 +3,7 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Floating_Matrices;
-with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
+with Standard_Complex_Matrices;
 
 package Complex_Polynomial_Matrices is
 
