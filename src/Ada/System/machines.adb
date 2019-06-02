@@ -4,7 +4,8 @@ with text_io;                       use text_io;
 package body Machines is
 
   function getpid return integer;
-  pragma interface(C, getpid);
+ -- pragma interface(C, getpid); -- obsolescent featur
+  pragma import(C, getpid);
 
   function Process_ID return integer is
   begin
