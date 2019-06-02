@@ -1,3 +1,6 @@
+Sun 2 Jun 2019 : replaced pragma Interface with pragma Import in 
+  unix_resource_usage.adb, removing obsolescent feature.
+
 Sat 30 Sep 2017 : added array_of_duration to timing_package.ads.
 
 Sun 29 May 2011 : for warnings, changed unix_resource_usage.adb.

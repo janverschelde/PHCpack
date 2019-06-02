@@ -9,7 +9,8 @@ package body Unix_Resource_Usage is
 
     function getrusage
                ( who : integer; rusage : system.address ) return integer;
-    pragma interface(C, getrusage);
+   -- pragma interface(C, getrusage); -- obsolescent feature
+    pragma Import(C, getrusage);
 
     function timeval_to_duration ( tv : timeval ) return duration;
 
