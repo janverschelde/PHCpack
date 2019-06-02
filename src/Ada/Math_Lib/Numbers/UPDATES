@@ -1,3 +1,5 @@
+Sat 1 Jun 2019 : updates in standard_complex_numbers.adb for compiler warnings.
+
 Thu 22 Feb 2018 : to standard_random_numbers, added a random() function
   which takes on input the probability for true.
 

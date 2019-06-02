@@ -67,8 +67,8 @@ package body Standard_Complex_Numbers is
 
   function "<" ( x,y : Complex_Number ) return boolean is
 
-    avx : double_float := AbsVal(x);
-    avy : double_float := AbsVal(y);
+    avx : constant double_float := AbsVal(x);
+    avy : constant double_float := AbsVal(y);
     res : constant boolean := (avx < avy);
 
   begin
@@ -77,8 +77,8 @@ package body Standard_Complex_Numbers is
 
   function ">" ( x,y : Complex_Number ) return boolean is
 
-    avx : double_float := AbsVal(x);
-    avy : double_float := AbsVal(y);
+    avx : constant double_float := AbsVal(x);
+    avy : constant double_float := AbsVal(y);
     res : constant boolean := (avx > avy);
 
   begin
@@ -99,7 +99,7 @@ package body Standard_Complex_Numbers is
 
   function AbsVal ( x : Complex_Number ) return double_float is
 
-    res : double_float := abs(x.RE) + abs(x.IM);
+    res : constant double_float := abs(x.RE) + abs(x.IM);
 
   begin
     return res;
@@ -107,7 +107,7 @@ package body Standard_Complex_Numbers is
 
   function AbsVal ( x : Complex_Number ) return Complex_Number is
 
-    abx : double_float := AbsVal(x);
+    abx : constant double_float := AbsVal(x);
     res : constant Complex_Number := Create(abx);
 
   begin
