@@ -946,7 +946,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -980,7 +980,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1014,7 +1014,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1047,7 +1047,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1074,7 +1074,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1101,7 +1101,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1128,7 +1128,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1161,7 +1161,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1194,7 +1194,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1224,7 +1224,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1248,7 +1248,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1272,7 +1272,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1300,7 +1300,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1334,7 +1334,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1368,7 +1368,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1401,7 +1401,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1428,7 +1428,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1455,7 +1455,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1483,7 +1483,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1517,7 +1517,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1551,7 +1551,7 @@ package body Power_Series_Methods is
       if verbose then
         put("Running on solution "); put(i,1); put_line(" ...");
         declare
-          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1584,7 +1584,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant Standard_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : Standard_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1611,7 +1611,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : DoblDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
@@ -1638,7 +1638,7 @@ package body Power_Series_Methods is
         put(file,"Running on solution ");
         put(file,i,1); put_line(file," ...");
         declare
-          lvi : QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          lvi : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
           sol : QuadDobl_Complex_Vectors.Vector(lvi'range);
         begin
           for k in sol'range loop
