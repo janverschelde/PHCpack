@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
@@ -13,7 +12,7 @@ with Standard_Floating_Matrices_io;      use Standard_Floating_Matrices_io;
 with Standard_Complex_Matrices;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Random_Matrices;           use Standard_Random_Matrices;
-with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
+with Standard_Complex_Norms_Equals;
 with Standard_Complex_VecMats;           use Standard_Complex_VecMats;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Matrices;
@@ -35,7 +34,7 @@ with Complex_Polynomial_Matrices_io;     use Complex_Polynomial_Matrices_io;
 with Verification_with_Determinants;     use Verification_with_Determinants;
 with Verify_Solution_Maps;
 with Interfaces.C;
-with C_Integer_Arrays,C_Double_Arrays;   use C_Integer_Arrays,C_Double_Arrays;
+with C_Integer_Arrays;                   use C_Integer_Arrays;
 with C_to_Ada_Arrays;                    use C_to_Ada_Arrays;
 
 function Pieri_Solver ( m,p,q,nb,output_level : integer32;
@@ -349,11 +348,13 @@ function Pieri_Solver ( m,p,q,nb,output_level : integer32;
     fail : boolean;
 
     procedure Sil_Cont is
-      new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
+      new Silent_Continue(Standard_Complex_Norms_Equals.Max_Norm,
+                          Standard_Homotopy.Eval,
                           Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
     procedure Rep_Cont is
-      new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
+      new Reporting_Continue(Standard_Complex_Norms_Equals.Max_Norm,
+                             Standard_Homotopy.Eval,
                              Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
   begin

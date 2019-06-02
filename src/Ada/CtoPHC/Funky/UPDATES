@@ -1,3 +1,5 @@
+Sat 1 Jun 2019 : changed pieri_solver.adb for compiler warnings.
+
 Wed 6 Dec 2017 : updated coefficient_support_polynomials.adb,
   coefficient_support_poly_systems.adb, getsys1.adb, and getsys3.adb, 
   for conversion problems with explicitly declared 32-bit numbers,
