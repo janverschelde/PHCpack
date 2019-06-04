@@ -1,4 +1,4 @@
-Static lifting for mixed volumes and polyhedral continuation in PHCv2.4.55
+Static lifting for mixed volumes and polyhedral continuation in PHCv2.4.68
 
 In release 2.3, one file had to be changed for the optimizer in Mac OS X
 and default options were set to floating-point point-wise lifting.

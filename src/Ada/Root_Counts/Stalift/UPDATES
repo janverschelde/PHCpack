@@ -1,3 +1,6 @@
+Tue 4 Jun 2019 : removed superfluous arguments from procedures in
+  stable_polyhedral_continuation.
+
 Thu 31 May 2018 : added new blackbox to drivers_for_demics_algorithm to
   compute the stable mixed volume with DEMiCs.
 
