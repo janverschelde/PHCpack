@@ -48,14 +48,16 @@ package body Black_Box_Solver_Cases is
 
     use Standard_Complex_Numbers;
 
-    n : constant natural32
-      := Standard_Complex_Polynomials.Number_of_Unknowns(p);
-    z : constant Standard_Complex_Polynomials.Degrees
-      := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
-    c : constant Complex_Number := Standard_Complex_Polynomials.Coeff(p,z);
+    nvr : constant natural32
+        := Standard_Complex_Polynomials.Number_of_Unknowns(p);
+    z32 : constant natural32 := natural32(0); -- make sure it is 32-bit
+    zdg : Standard_Complex_Polynomials.Degrees
+        := new Standard_Natural_Vectors.Vector'(1..integer32(nvr) => z32);
+    cff : constant Complex_Number := Standard_Complex_Polynomials.Coeff(p,zdg);
 
   begin
-    if REAL_PART(c) = 0.0 and IMAG_PART(c) = 0.0
+    Standard_Complex_Polynomials.Clear(zdg);
+    if REAL_PART(cff) = 0.0 and IMAG_PART(cff) = 0.0
      then return false;
      else return true;
     end if;
@@ -66,15 +68,17 @@ package body Black_Box_Solver_Cases is
 
     use DoblDobl_Complex_Numbers;
 
-    n : constant natural32
-      := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p);
-    z : constant DoblDobl_Complex_Polynomials.Degrees
-      := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
-    c : constant Complex_Number := DoblDobl_Complex_Polynomials.Coeff(p,z);
+    nvr : constant natural32
+        := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p);
+    z32 : constant natural32 := natural32(0); -- make sure it is 32-bit
+    zdg : DoblDobl_Complex_Polynomials.Degrees
+        := new Standard_Natural_Vectors.Vector'(1..integer32(nvr) => z32);
+    cff : constant Complex_Number := DoblDobl_Complex_Polynomials.Coeff(p,zdg);
     zero : constant double_double := create(0.0);
 
   begin
-    if REAL_PART(c) = zero and IMAG_PART(c) = zero
+    DoblDobl_Complex_Polynomials.Clear(zdg);
+    if REAL_PART(cff) = zero and IMAG_PART(cff) = zero
      then return false;
      else return true;
     end if;
@@ -85,15 +89,17 @@ package body Black_Box_Solver_Cases is
 
     use QuadDobl_Complex_Numbers;
 
-    n : constant natural32
-      := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p);
-    z : constant QuadDobl_Complex_Polynomials.Degrees
-      := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
-    c : constant Complex_Number := QuadDobl_Complex_Polynomials.Coeff(p,z);
+    nvr : constant natural32
+        := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p);
+    z32 : constant natural32 := natural32(0); -- make sure it is 32-bit
+    zdg : QuadDobl_Complex_Polynomials.Degrees
+        := new Standard_Natural_Vectors.Vector'(1..integer32(nvr) => z32);
+    cff : constant Complex_Number := QuadDobl_Complex_Polynomials.Coeff(p,zdg);
     zero : constant quad_double := create(0.0);
 
   begin
-    if REAL_PART(c) = zero and IMAG_PART(c) = zero
+    QuadDobl_Complex_Polynomials.Clear(zdg);
+    if REAL_PART(cff) = zero and IMAG_PART(cff) = zero
      then return false;
      else return true;
     end if;
@@ -108,6 +114,9 @@ package body Black_Box_Solver_Cases is
       end if;
     end loop;
     return true;
+  --exception
+   -- when others => put_line("Are_Constants_In() raised exception.");
+   --                raise;
   end Are_Constants_In;
 
   function Are_Constants_In
@@ -833,7 +842,6 @@ package body Black_Box_Solver_Cases is
         pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
       begin
         Standard_Complex_Poly_Systems.Copy(p.all,pp);
-       -- put_line("The system before root counting : "); put(pp);
         if output_to_file then
           if nt >= 2 then
             Pipelined_Root_Counting
@@ -924,7 +932,7 @@ package body Black_Box_Solver_Cases is
     end if;
   exception
     when others =>
-      put_line("Exception raised in Black_Box_Solvers.Square_Main");
+      put_line("Exception raised in Black_Box_Solver_Cases.Square_Main");
       put("seed = "); put(Standard_Random_Numbers.Get_Seed,1);
       put("  rc = "); put(rc,1); new_line; raise;
   end Square_Main;

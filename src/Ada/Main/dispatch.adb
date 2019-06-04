@@ -1,8 +1,8 @@
 with text_io;                            use text_io;
 with Unix_Command_Line;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+--with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Random_Numbers; -- to handle zero seed
 with Greeting_Banners;
@@ -402,7 +402,8 @@ procedure Dispatch is
         case bbprc is
           when 2 => bablphc2(0,file1,file2);
           when 4 => bablphc4(0,file1,file2);
-          when others => bablphc(0,file1,file2,vrblvl);
+          when others => 
+            bablphc(0,file1,file2,vrblvl);
         end case;
     end case;
   end Black_Box_Dispatcher;
