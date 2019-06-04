@@ -78,35 +78,43 @@ package Black_Box_Solver_Cases is
   procedure Single_Main
                ( infilename,outfilename : in string;
                  p : in Standard_Complex_Polynomials.Poly;
-                 append_sols : in boolean );
+                 append_sols : in boolean; verbose : in integer32 := 0 );
   procedure Single_Main
                ( infilename,outfilename : in string;
                  p : in DoblDobl_Complex_Polynomials.Poly;
-                 append_sols : in boolean );
+                 append_sols : in boolean; verbose : in integer32 := 0 );
   procedure Single_Main
                ( infilename,outfilename : in string;
                  p : in QuadDobl_Complex_Polynomials.Poly;
-                 append_sols : in boolean );
+                 append_sols : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
-  --   This procedure solves one single polynomial,
-  --   branching ont the number of unknowns in p.
+  --   This procedure handles one single polynomial p,
+  --   distinguishing between 1 and several variables,
+  --   with double, double double, or quad double arithmetic.
+
+  -- ON ENTRY :
+  --   infilename   name of the input file;
+  --   outfilename  name of the output file;
+  --   p            a polynomial in one variable;
+  --   append_sols  whether the solutions should be added to the input file;
+  --   verbose      the verbose level.
 
   procedure Linear_Main 
               ( infilename,outfilename : in string;
                 p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 n : in natural32; append_sols : in boolean;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Linear_Main 
               ( infilename,outfilename : in string;
                 p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 n : in natural32; append_sols : in boolean;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Linear_Main 
               ( infilename,outfilename : in string;
                 p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 n : in natural32; append_sols : in boolean;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Parses the system to see if it is square and linear.
@@ -116,7 +124,8 @@ package Black_Box_Solver_Cases is
   --   outfilename    the name of the output file;
   --   p              a polynomial system;
   --   n              number of variables in the polynomials of p;
-  --   append_sols    true if solutions need to be appended to input file.
+  --   append_sols    true if solutions need to be appended to input file;
+  --   verbose        the verbose level.
 
   -- ON RETURN :
   --   fail           true if system p is nonlinear.

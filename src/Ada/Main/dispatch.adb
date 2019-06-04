@@ -393,17 +393,16 @@ procedure Dispatch is
           when 'm' => babldmvc(Number_of_Tasks,file1,file2);
           when others =>
             case bbprc is
-              when 2 => bablphc2(Number_of_Tasks,file1,file2);
-              when 4 => bablphc4(Number_of_Tasks,file1,file2);
-              when others => bablphc(Number_of_Tasks,file1,file2);
+              when 2 => bablphc2(Number_of_Tasks,file1,file2,vrblvl);
+              when 4 => bablphc4(Number_of_Tasks,file1,file2,vrblvl);
+              when others => bablphc(Number_of_Tasks,file1,file2,vrblvl);
             end case;
         end case;
       when others =>
         case bbprc is
-          when 2 => bablphc2(0,file1,file2);
-          when 4 => bablphc4(0,file1,file2);
-          when others => 
-            bablphc(0,file1,file2,vrblvl);
+          when 2 => bablphc2(0,file1,file2,vrblvl);
+          when 4 => bablphc4(0,file1,file2,vrblvl);
+          when others => bablphc(0,file1,file2,vrblvl);
         end case;
     end case;
   end Black_Box_Dispatcher;

@@ -244,7 +244,7 @@ package body Black_Box_Solver_Cases is
   procedure Single_Main
               ( infilename,outfilename : in string;
                 p : in Standard_Complex_Polynomials.Poly;
-                append_sols : in boolean ) is
+                append_sols : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -255,10 +255,15 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
-   -- put("we have one single polynomial in ");
-   -- put(n,1); put_line(" variable(s)...");
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Single_Main on 1 polynomial,");
+      put_line("in double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if n = 1 then
+      if verbose > 0 then
+        put_line("-> calling the method of Weierstrass (Durand-Kerner) ...");
+      end if;
       if output_to_file then
         Black_Box_Durand_Kerner(outfile,p,sols);
         Append_Solutions_to_Input_file(infilename,sols,append_sols);
@@ -269,6 +274,9 @@ package body Black_Box_Solver_Cases is
         put(Length_Of(sols),1,sols);
       end if;
     elsif n > 1 then
+      if verbose > 0 then
+        put_line("-> calling the absolute factorization methods ...");
+      end if;
       Standard_Black_Box_Factorization(infilename,outfile,p);
     else
       if output_to_file then
@@ -283,7 +291,7 @@ package body Black_Box_Solver_Cases is
   procedure Single_Main
               ( infilename,outfilename : in string;
                 p : in DoblDobl_Complex_Polynomials.Poly;
-                append_sols : in boolean ) is
+                append_sols : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -294,10 +302,15 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
-   -- put("we have one single polynomial in ");
-   -- put(n,1); put_line(" variable(s)...");
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Single_Main on 1 polynomial,");
+      put_line("in double double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if n = 1 then
+      if verbose > 0 then
+        put_line("-> calling the method of Weierstrass (Durand-Kerner) ...");
+      end if;
       if output_to_file then
         Black_Box_Durand_Kerner(outfile,p,sols);
         Append_Solutions_to_Input_file(infilename,sols,append_sols);
@@ -308,6 +321,9 @@ package body Black_Box_Solver_Cases is
         put(Length_Of(sols),1,sols);
       end if;
     elsif n > 1 then
+      if verbose > 0 then
+        put_line("-> calling the absolute factorization methods ...");
+      end if;
       DoblDobl_Black_Box_Factorization(infilename,outfile,p);
     else
       if output_to_file then
@@ -322,7 +338,7 @@ package body Black_Box_Solver_Cases is
   procedure Single_Main
               ( infilename,outfilename : in string;
                 p : in QuadDobl_Complex_Polynomials.Poly;
-                append_sols : in boolean ) is
+                append_sols : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -333,10 +349,15 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
-   -- put("we have one single polynomial in ");
-   -- put(n,1); put_line(" variable(s)...");
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Single_Main on 1 polynomial,");
+      put_line("in quad double precision ...");
+    end if;
     Ask_Output_File(outfile,outfilename,output_to_file);
     if n = 1 then
+      if verbose > 0 then
+        put_line("-> calling the method of Weierstrass (Durand-Kerner) ...");
+      end if;
       if output_to_file then
         Black_Box_Durand_Kerner(outfile,p,sols);
         Append_Solutions_to_Input_file(infilename,sols,append_sols);
@@ -347,6 +368,9 @@ package body Black_Box_Solver_Cases is
         put(Length_Of(sols),1,sols);
       end if;
     elsif n > 1 then
+      if verbose > 0 then
+        put_line("-> calling the absolute factorization methods ...");
+      end if;
       QuadDobl_Black_Box_Factorization(infilename,outfile,p);
     else
       if output_to_file then
@@ -362,7 +386,7 @@ package body Black_Box_Solver_Cases is
                ( infilename,outfilename : in string;
                  p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  n : in natural32; append_sols : in boolean;
-                 fail : out boolean ) is
+                 fail : out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -374,6 +398,10 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Linear_Main,");
+      put_line("in double precision ...");
+    end if;
     tstart(timer);
     Standard_Linear_Poly_Solvers.Solve(p.all,s,fail);
     tstop(timer);
@@ -402,7 +430,7 @@ package body Black_Box_Solver_Cases is
                ( infilename,outfilename : in string;
                  p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                  n : in natural32; append_sols : in boolean;
-                 fail : out boolean ) is
+                 fail : out boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -414,6 +442,10 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Linear_Main,");
+      put_line("in double double precision ...");
+    end if;
     tstart(timer);
     DoblDobl_Linear_Poly_Solvers.Solve(p.all,s,fail);
     tstop(timer);
@@ -442,7 +474,7 @@ package body Black_Box_Solver_Cases is
                ( infilename,outfilename : in string;
                  p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                  n : in natural32; append_sols : in boolean;
-                 fail : out boolean ) is
+                 fail : out boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -454,6 +486,10 @@ package body Black_Box_Solver_Cases is
     output_to_file : boolean;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Linear_Main,");
+      put_line("in quad double precision ...");
+    end if;
     tstart(timer);
     QuadDobl_Linear_Poly_Solvers.Solve(p.all,s,fail);
     tstop(timer);

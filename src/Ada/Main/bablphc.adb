@@ -246,9 +246,9 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
      then put_line("-> in bablphc.Solve for an ordinary polynomial system ...");
     end if;
     if p'last = p'first then
-      Single_Main(infilename,outfilename,p(p'first),append_sols);
+      Single_Main(infilename,outfilename,p(p'first),append_sols,v-1);
     elsif p'last = integer32(n) then
-      Linear_Main(infilename,outfilename,p,n,append_sols,fail);
+      Linear_Main(infilename,outfilename,p,n,append_sols,fail,v-1);
       if fail then
         Square_Main
           (nt,infilename,outfilename,start_moment,p,true,append_sols,v-1);
@@ -295,7 +295,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
 
   begin
     if verbose > 0 then
-      put("At verbose level "); put(natural32(verbose),1);
+      put("At verbose level "); put(verbose,1);
       put_line(", in bablphc.Main ...");
     end if;
     Standard_System_Readers.Read_System(infile,infilename,q);
