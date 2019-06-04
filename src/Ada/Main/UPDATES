@@ -1,3 +1,6 @@
+Mon 3 Jun 2019 : updates in compsolve.adb, compsolve2.adb, compsolve4.adb
+  for compiler warnings.
+
 Fri 31 May 2019 : added verbose level parameters for the black polyhedral
   continuations in black_box_root_counters.adb.
 

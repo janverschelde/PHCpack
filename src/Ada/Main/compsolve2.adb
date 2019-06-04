@@ -1,6 +1,5 @@
 with Ada.Calendar;
 with text_io;                           use text_io;
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with String_Splitters;                  use String_Splitters;
 with Communications_with_User;          use Communications_with_User;
 with File_Scanning;                     use File_Scanning;
