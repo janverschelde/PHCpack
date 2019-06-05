@@ -6,7 +6,8 @@
 # The targets are then listed, grouped by each directory.
 
 # The makefile works on RHEL 6.6, Centos Linux 7.3,
-# with python2.6, python3, openmpi, # GNAT GPL 2016 and 2017.
+# with python2.6, python3, openmpi, GNAT GPL 2016 and 2017,
+# GNAT Community 2018 and 2019.
 
 # Location of Python for 2.7 and 3.6 development headers for phcpy
 
@@ -17,14 +18,16 @@ PYTHON3=/usr/local/include/python3.6m
 
 SAGEPYTHONLIB=/home/microway/Downloads/sage-7.3/local/lib
 
-# The location of the adalib folder for the GNATGPL compiler:
+# The location of the adalib folder for the GNAT GPL compiler:
 
 # for GNAT GPL 2016 :
 # ADALIB=/usr/gnat-gpl-2016/lib/gcc/x86_64-pc-linux-gnu/4.9.4/adalib
 # FOR GNAT GPL 2017 :
 # ADALIB=/usr/gnat/lib/gcc/x86_64-pc-linux-gnu/6.3.1/adalib
 # GNAT Community 2018 :
-ADALIB=/home/microway/opt/GNAT/2018/lib/gcc/x86_64-pc-linux-gnu/7.3.1/adalib
+# ADALIB=/home/microway/opt/GNAT/2018/lib/gcc/x86_64-pc-linux-gnu/7.3.1/adalib
+# GNAT Community 2019 :
+ADALIB=/home/jan/opt/GNAT/2019/lib/gcc/x86_64-pc-linux-gnu/8.3.1/adalib
 
 # The location of the g++ compiler
 
@@ -82,7 +85,7 @@ GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
 # GNATFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 # GNATFLAGS=-gnatv -gnatwa -gnatVa
-GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
+# GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
