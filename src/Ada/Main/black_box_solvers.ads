@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
@@ -27,19 +28,23 @@ package Black_Box_Solvers is
 --   Six other Solve procedures write the computed root counts to string
 --   rather than to screen or to file.  Six other multitasked Solve
 --   procedures return also the root counter string.
+--   This results in a total of 36 Solve procedures.
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
                     rc : out natural32;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
                     rc : out natural32;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p,
@@ -51,7 +56,8 @@ package Black_Box_Solvers is
   --   silent       if true, then the computed root counts will not be shown,
   --                if false, then the user will see the computed root counts
   --                displayed on screen;
-  --   deflate      if not deflate, then no deflation will be applied.
+  --   deflate      if not deflate, then no deflation will be applied;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -60,13 +66,16 @@ package Black_Box_Solvers is
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p,
@@ -76,6 +85,7 @@ package Black_Box_Solvers is
   -- ON INPUT :
   --   p            a polynomial system;
   --   deflate      if false, then no deflation will be applied;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -88,15 +98,18 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p.
@@ -104,7 +117,8 @@ package Black_Box_Solvers is
   -- ON INPUT :
   --   file         must be opened for output;
   --   p            a polynomial system;
-  --   deflate      if false, then no deflation will be applied.
+  --   deflate      if false, then no deflation will be applied;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -113,15 +127,18 @@ package Black_Box_Solvers is
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
                     rc : out natural32;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the Laurent system p,
@@ -132,7 +149,8 @@ package Black_Box_Solvers is
   --   p            a Laurent polynomial system;
   --   silent       if true, then the computed root counts will not be shown,
   --                if false, then the user will see the computed root counts
-  --                displayed on screen.
+  --                displayed on screen;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -140,13 +158,16 @@ package Black_Box_Solvers is
 
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the Laurent system p,
@@ -154,7 +175,8 @@ package Black_Box_Solvers is
   --   in standard double, double double, or quad double precision.
 
   -- ON INPUT :
-  --   p            a Laurent polynomial system.
+  --   p            a Laurent polynomial system;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -166,15 +188,18 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the Laurent system p,
@@ -183,7 +208,8 @@ package Black_Box_Solvers is
 
   -- ON INPUT :
   --   file         must be opened for output;
-  --   p            a Laurent polynomial system.
+  --   p            a Laurent polynomial system;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -192,15 +218,18 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean; rc : out natural32;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean; rc : out natural32;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean; rc : out natural32;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p,
@@ -208,11 +237,12 @@ package Black_Box_Solvers is
   --   standard double, double double, or quad double arithmetic.
 
   -- ON INPUT :
-  --    nt          number of tasks for multithreading, 0 if no multitasking;
-  --    p           a polynomial system.
-  --    silent      if not silent, then root counting information will be
+  --   nt           number of tasks for multithreading, 0 if no multitasking;
+  --   p            a polynomial system.
+  --   silent       if not silent, then root counting information will be
   --                written the standard output;
-  --    deflate     if false, then no deflation will be applied.
+  --   deflate      if false, then no deflation will be applied;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -222,15 +252,18 @@ package Black_Box_Solvers is
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p,
@@ -238,9 +271,10 @@ package Black_Box_Solvers is
   --   standard double, double double, or quad double arithmetic.
 
   -- ON INPUT :
-  --    nt          number of tasks for multithreading, 0 if no multitasking;
-  --    p           a polynomial system;
-  --    deflate     if false, then no deflation will be applied.
+  --   nt           number of tasks for multithreading, 0 if no multitasking;
+  --   p            a polynomial system;
+  --   deflate      if false, then no deflation will be applied;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -253,15 +287,18 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     deflate : in boolean; rc : out natural32;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p,
@@ -272,7 +309,8 @@ package Black_Box_Solvers is
   --   file         must be opened for output;
   --   nt           number of tasks for multithreading, 0 if no multitasking;
   --   p            a polynomial system;
-  --   deflate      if false, then no deflation will be applied.
+  --   deflate      if false, then no deflation will be applied;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -281,15 +319,18 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean; rc : out natural32;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p,
@@ -301,7 +342,8 @@ package Black_Box_Solvers is
   --   p            a Laurent polynomial system;
   --   silent       if true, then the computed root counts will not be shown,
   --                if false, then the user will see the computed root counts
-  --                displayed on screen.
+  --                displayed on screen;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -310,15 +352,18 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32; rocos : out Link_to_String;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p,
@@ -327,7 +372,8 @@ package Black_Box_Solvers is
 
   -- ON INPUT :
   --   nt           number of tasks for multithreading, 0 if no multitasking;
-  --   p            a Laurent polynomial system.
+  --   p            a Laurent polynomial system;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
@@ -340,15 +386,18 @@ package Black_Box_Solvers is
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
-                    sols : out Standard_Complex_Solutions.Solution_List );
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
-                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+                    sols : out DoblDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
-                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+                    sols : out QuadDobl_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the Laurent polynomial system p,
@@ -358,7 +407,8 @@ package Black_Box_Solvers is
   -- ON INPUT :
   --   file         must be opened for output;
   --   nt           number of tasks for multithreading, 0 if no multitasking;
-  --   p            a Laurent polynomial system.
+  --   p            a Laurent polynomial system;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           root count used in the homotopy to solve p;
