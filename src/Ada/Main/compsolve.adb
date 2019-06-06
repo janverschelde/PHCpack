@@ -1,5 +1,6 @@
 with Ada.Calendar;
 with text_io;                           use text_io;
+with Standard_Integer_Numbers_io;       use Standard_integer_Numbers_io;
 with String_Splitters;                  use String_Splitters;
 with Communications_with_User;          use Communications_with_User;
 with File_Scanning;                     use File_Scanning;
@@ -11,8 +12,8 @@ with Standard_System_Readers;
 with Embeddings_and_Cascades;           use Embeddings_and_Cascades;
 with Greetings_and_Conclusions;
 
-procedure compsolve
-            ( nt : in natural32; infilename,outfilename : in string ) is
+procedure compsolve ( nt : in natural32; infilename,outfilename : in string;
+                      verbose : in integer32 := 0 ) is
 
   start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
@@ -30,6 +31,10 @@ procedure compsolve
     tofile : character;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in compsolve.Main ...");
+    end if;
     Standard_System_Readers.Read_System(infile,infilename,q);
     if q = null then
       greeted := true;

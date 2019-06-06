@@ -419,21 +419,22 @@ procedure Dispatch is
   --   or '-h' for help.
 
     compprc : constant natural32 := Scan_Precision('B');
+    vrblvl : constant integer32 := Verbose_Level;
 
   begin
     if option2 = 't' then
       case compprc is
-        when 2 => compsolve2(Number_of_Tasks,file1,file2);
-        when 4 => compsolve4(Number_of_Tasks,file1,file2);
-        when others => compsolve(Number_of_Tasks,file1,file2);
+        when 2 => compsolve2(Number_of_Tasks,file1,file2,vrblvl);
+        when 4 => compsolve4(Number_of_Tasks,file1,file2,vrblvl);
+        when others => compsolve(Number_of_Tasks,file1,file2,vrblvl);
       end case;
     elsif option2 = 'h' then
       Greeting_Banners.help4compsolve;
     else 
       case compprc is
-        when 2 => compsolve2(0,file1,file2);
-        when 4 => compsolve4(0,file1,file2);
-        when others => compsolve(0,file1,file2);
+        when 2 => compsolve2(0,file1,file2,vrblvl);
+        when 4 => compsolve4(0,file1,file2,vrblvl);
+        when others => compsolve(0,file1,file2,vrblvl);
       end case;
     end if;
   end Component_Solver;
