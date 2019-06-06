@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
@@ -14,11 +15,13 @@ package Drivers_for_Root_Counts is
   procedure Driver_for_Root_Counts
                ( file : in file_type; nt : in natural32;
                  p,q : in out Poly_Sys; own : in boolean;
-                 qsols : in out Solution_List; roco : out natural32 );
+                 qsols : in out Solution_List; roco : out natural32;
+                 verbose : in integer32 := 0 );
   procedure Driver_for_Root_Counts
                ( file : in file_type; nt : in natural32;
                  p,q : in out Laur_Sys;
-                 qsols : in out Solution_List; roco : out natural32 );
+                 qsols : in out Solution_List; roco : out natural32;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   This procedure implements an interactive driver for several
@@ -30,7 +33,8 @@ package Drivers_for_Root_Counts is
   --   nt        number of tasks, 0 for no multitasking;
   --   p         a polynomial system;
   --   own       if true, then the user has the possibility to give
-  --             an own start system.
+  --             an own start system;
+  --   verbose   is the verbose level.
 
   -- ON RETURN :
   --   p         has eventually been made homogeneous;

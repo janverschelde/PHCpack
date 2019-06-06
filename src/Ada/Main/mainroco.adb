@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -14,7 +13,8 @@ with Write_Seed_Number;
 with Greeting_Banners;
 with Bye_Bye_Message;
 
-procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
+procedure mainroco ( nt : in natural32; infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
  
   procedure Read_System
               ( filename : in string;
@@ -69,10 +69,11 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
     end if;
   end Is_Square;
 
-  procedure Count_Roots ( p : in out Laur_Sys ) is
+  procedure Count_Roots ( p : in out Laur_Sys; v : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Applies the driver to count roots for a square Laurent system p.
+  --   The verbose level is in the value of v.
 
     outft : file_type;
     q : Laur_Sys(p'range);
@@ -80,11 +81,14 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
     rc : natural32;
 
   begin
+    if v > 0
+     then put_line("-> in main_roco.Count_Roots for a Laurent system ...");
+    end if;
     Create_Output_File(outft,outfilename);
     put(outft,p'last,1);
     new_line(outft);
     put(outft,p);
-    Driver_for_Root_Counts(outft,nt,p,q,qsols,rc);
+    Driver_for_Root_Counts(outft,nt,p,q,qsols,rc,v-1);
     new_line(outft);
     put_line(outft,Bye_Bye_Message);
     Write_Seed_Number(outft);
@@ -92,10 +96,11 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
     Close(outft);
   end Count_Roots;
 
-  procedure Count_Roots ( p : in out Poly_Sys ) is
+  procedure Count_Roots ( p : in out Poly_Sys; v : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Applies the driver to count roots for a square polynomial system p.
+  --   The verbose level is in the value of v.
 
     outft : file_type;
     q : Poly_Sys(p'range);
@@ -103,11 +108,14 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
     rc : natural32;
 
   begin
+    if v > 0
+     then put_line("-> in main_roco.Count_Roots for a polynomial system ...");
+    end if;
     Create_Output_File(outft,outfilename);
     put(outft,p'last,1);
     new_line(outft);
     put(outft,p);
-    Driver_for_Root_Counts(outft,nt,p,q,false,qsols,rc);
+    Driver_for_Root_Counts(outft,nt,p,q,false,qsols,rc,v-1);
     new_line(outft);
     put_line(outft,Bye_Bye_Message);
     Write_Seed_Number(outft);
@@ -121,23 +129,26 @@ procedure mainroco ( nt : in natural32; infilename,outfilename : in string ) is
   --   Handles the input and output before calling the driver.
 
     lp : Link_to_Laur_Sys := null;
-    outft : file_type;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainroco.Main ...");
+    end if;
     Read_System(infilename,lp);
     if lp = null
      then new_line; get(lp);
     end if;
     if Is_Square(lp.all) then
       if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-        Count_Roots(lp.all);
+        Count_Roots(lp.all,verbose-1);
       else
         declare
           use Standard_Laur_Poly_Convertors;
           q : Poly_Sys(lp'range)
             := Positive_Laurent_Polynomial_System(lp.all);
         begin
-          Count_Roots(q);
+          Count_Roots(q,verbose-1);
         end;
       end if;
     end if;

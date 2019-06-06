@@ -3,7 +3,6 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
@@ -310,7 +309,8 @@ package body Drivers_for_Root_Counts is
   procedure Driver_for_Root_Counts 
                ( file : in file_type; nt : in natural32;
                  p,q : in out Poly_Sys; own : in boolean;
-                 qsols : in out Solution_List; roco : out natural32 ) is
+                 qsols : in out Solution_List; roco : out natural32;
+                 verbose : in integer32 := 0 ) is
 
     rc : natural64;
     lpos : List;
@@ -321,6 +321,10 @@ package body Drivers_for_Root_Counts is
     first : boolean := true; -- total degree only when first time
 
   begin
+    if verbose > 0 then
+      put_line("-> in drivers_for_root_counts.Driver_for_Root_Counts,");
+      put_line("for a polynomial system ...");
+    end if;
     declare
     begin
       rc := Total_Degree(p);
@@ -382,12 +386,16 @@ package body Drivers_for_Root_Counts is
   procedure Driver_for_Root_Counts
                ( file : in file_type; nt : in natural32;
                  p,q : in out Laur_Sys; qsols : in out Solution_List;
-                 roco : out natural32 ) is
+                 roco : out natural32; verbose : in integer32 := 0 ) is
 
     rc : natural32 := 0;
     choice : character := '0';
 
   begin
+    if verbose > 0 then
+      put_line("-> in drivers_for_root_counts.Driver_for_Root_Counts,");
+      put_line("for a Laurent polynomial system ...");
+    end if;
     loop
       Display_Laurent_Menu(rc,choice);
       put("Type a number in the range from 0 to 6 : ");

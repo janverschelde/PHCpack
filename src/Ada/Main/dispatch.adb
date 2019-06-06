@@ -474,6 +474,8 @@ procedure Dispatch is
   --   Calls the root couting facilities in PHCpack,
   --   when the first option was 'r'.
 
+    vrblvl : constant integer32 := Verbose_Level;
+
   begin
     case o2 is
       when 'h' | '-' => Greeting_Banners.help4rootcounts;
@@ -484,11 +486,11 @@ procedure Dispatch is
           ns : constant string := Convert(integer32(nt));
         begin
           put_line(welcome); put_line(rocoban & ", with " & ns & " tasks.");
-          mainroco(nt,infile,outfile);
+          mainroco(nt,infile,outfile,vrblvl);
         end;
       when others =>
         put_line(welcome); put_line(rocoban & ", no multitasking.");
-        mainroco(0,infile,outfile);
+        mainroco(0,infile,outfile,vrblvl);
     end case;
   end Root_Count_Dispatcher;
 

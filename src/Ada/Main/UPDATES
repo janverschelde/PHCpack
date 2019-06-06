@@ -1,3 +1,6 @@
+Thu 6 Jun 2019 : added the verbose level to mainroco, drivers_for_root_counts,
+  with updates in dispatch.adb.
+
 Wed 5 Jun 2019 : added the verbose level to each of the 36 Solve procedures
   in black_box_solvers.  Added the verbose level to compsolve, compsolve2,
   compsolve4, with updates in dispatch.adb.  Updated dispatch.adb for the
