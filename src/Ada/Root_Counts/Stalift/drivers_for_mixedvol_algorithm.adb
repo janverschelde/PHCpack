@@ -73,7 +73,8 @@ package body Drivers_for_mixedvol_algorithm is
                 stlb : in double_float; r : out integer32;
                 mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mixvol : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     m,size,nb : integer32;
     cnt,ind : Standard_Integer_Vectors.Vector(1..n);
@@ -83,7 +84,10 @@ package body Drivers_for_mixedvol_algorithm is
     cells : CellStack;
 
   begin
-   -- put_line("inside Drivers_for_mixedvol_algorithm.MVC");
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Mixed_Volume_Computation ...");
+    end if;
     Extract_Supports(n,s,m,ind,cnt,sup);
     mv(n,m,ind,cnt,sup.all,stlb,
        r,mtype,perm,idx,vtx,lft,size,nb,cells,mixvol,multprec_hermite);
@@ -111,7 +115,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -128,6 +133,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 1 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
    -- put_line("a random coefficient system "); put_line(q);
     lq := Polynomial_to_Laurent_System(q);
@@ -163,7 +172,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -180,6 +190,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 2 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
    -- put_line("a random coefficient system "); put_line(q);
     lq := Polynomial_to_Laurent_System(q);
@@ -215,7 +229,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -232,6 +247,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 3 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
    -- put_line("a random coefficient system "); put_line(q);
     lq := Polynomial_to_Laurent_System(q);
@@ -267,7 +286,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -283,6 +303,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 4 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
     hq := Standard_Complex_Laur_SysFun.Create(q);
     expvec := Create(q);
@@ -316,7 +340,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -332,6 +357,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 5 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
     hq := DoblDobl_Complex_Laur_SysFun.Create(q);
     expvec := Create(q);
@@ -365,7 +394,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -381,6 +411,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 6 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
     hq := QuadDobl_Complex_Laur_SysFun.Create(q);
     expvec := Create(q);
@@ -415,7 +449,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -432,6 +467,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 7 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
    -- put_line("a random coefficient system "); put_line(q);
     lq := Polynomial_to_Laurent_System(q);
@@ -468,7 +507,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -485,6 +525,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 8 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
    -- put_line("a random coefficient system "); put_line(q);
     lq := Polynomial_to_Laurent_System(q);
@@ -521,7 +565,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -538,6 +583,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 9 ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
    -- put_line("a random coefficient system "); put_line(q);
     lq := Polynomial_to_Laurent_System(q);
@@ -574,7 +623,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -590,7 +640,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
-   -- put_line("inside random_coefficient_system ...");
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 10 ...");
+    end if;
    -- put_line("The lifted supports : "); 
    -- Floating_Mixed_Subdivisions_io.put(ls);
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
@@ -628,7 +681,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -644,7 +698,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
-   -- put_line("inside random_coefficient_system ...");
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 11 ...");
+    end if;
    -- put_line("The lifted supports : "); 
    -- Floating_Mixed_Subdivisions_io.put(ls);
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
@@ -682,7 +739,8 @@ package body Drivers_for_mixedvol_algorithm is
                  sub : in Mixed_Subdivision;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 multprec_hermite : in boolean := false ) is
+                 multprec_hermite : in boolean := false;
+                 verbose : in integer32 := 0 ) is
 
    -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
    --    := Floating_Integer_Convertors.Convert(s);
@@ -698,7 +756,10 @@ package body Drivers_for_mixedvol_algorithm is
     mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
 
   begin
-   -- put_line("inside random_coefficient_system ...");
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Random_Coefficient_System 12 ...");
+    end if;
    -- put_line("The lifted supports : "); 
    -- Floating_Mixed_Subdivisions_io.put(ls);
     q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
@@ -730,7 +791,8 @@ package body Drivers_for_mixedvol_algorithm is
 
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in Standard_Complex_Poly_Systems.Poly_Sys ) is 
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                verbose : in integer32 := 0 ) is 
 
     q,pq : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
     n : constant integer32 := p'last;
@@ -745,7 +807,11 @@ package body Drivers_for_mixedvol_algorithm is
     qsols : Standard_Complex_Solutions.Solution_List;
 
   begin
-    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol);
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 1 ...");
+    end if;
+    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol,verbose=>verbose-1);
     new_line;
     put_line("See the output file for a regular mixed-cell configuration ...");
     new_line;
@@ -763,7 +829,7 @@ package body Drivers_for_mixedvol_algorithm is
     begin
       ls := Floating_Lifting_Utilities.Occurred_Lifting(n,mix.all,fs,sub);
      -- ls := Floating_Lifting_Utilities.Lifted_Supports(mix'last,sub);
-      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols);
+      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols,verbose=>verbose-1);
     end;
     new_line;
     put_line("See the output file for a random coefficient start system ...");
@@ -780,7 +846,8 @@ package body Drivers_for_mixedvol_algorithm is
 
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is 
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                verbose : in integer32 := 0 ) is 
 
     q,pq : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     n : constant integer32 := p'last;
@@ -795,7 +862,11 @@ package body Drivers_for_mixedvol_algorithm is
     qsols : DoblDobl_Complex_Solutions.Solution_List;
 
   begin
-    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol);
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 2 ...");
+    end if;
+    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol,verbose=>verbose-1);
     new_line;
     put_line("See the output file for a regular mixed-cell configuration ...");
     new_line;
@@ -813,7 +884,7 @@ package body Drivers_for_mixedvol_algorithm is
     begin
       ls := Floating_Lifting_Utilities.Occurred_Lifting(n,mix.all,fs,sub);
      -- ls := Floating_Lifting_Utilities.Lifted_Supports(mix'last,sub);
-      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols);
+      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols,verbose=>verbose-1);
     end;
     new_line;
     put_line("See the output file for a random coefficient start system ...");
@@ -830,7 +901,8 @@ package body Drivers_for_mixedvol_algorithm is
 
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is 
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                verbose : in integer32 := 0 ) is 
 
     q,pq : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
     n : constant integer32 := p'last;
@@ -845,7 +917,11 @@ package body Drivers_for_mixedvol_algorithm is
     qsols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
-    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol);
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 3 ...");
+    end if;
+    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol,verbose=>verbose-1);
     new_line;
     put_line("See the output file for a regular mixed-cell configuration ...");
     new_line;
@@ -863,7 +939,7 @@ package body Drivers_for_mixedvol_algorithm is
     begin
       ls := Floating_Lifting_Utilities.Occurred_Lifting(n,mix.all,fs,sub);
      -- ls := Floating_Lifting_Utilities.Lifted_Supports(mix'last,sub);
-      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols);
+      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols,verbose=>verbose-1);
     end;
     new_line;
     put_line("See the output file for a random coefficient start system ...");
@@ -880,7 +956,8 @@ package body Drivers_for_mixedvol_algorithm is
 
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is 
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                verbose : in integer32 := 0 ) is 
 
     q,pq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     n : constant integer32 := p'last;
@@ -895,7 +972,11 @@ package body Drivers_for_mixedvol_algorithm is
     qsols : Standard_Complex_Solutions.Solution_List;
 
   begin
-    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol);
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 4 ...");
+    end if;
+    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol,verbose=>verbose-1);
     new_line;
     put_line("See the output file for a regular mixed-cell configuration ...");
     new_line;
@@ -913,7 +994,7 @@ package body Drivers_for_mixedvol_algorithm is
     begin
       ls := Floating_Lifting_Utilities.Occurred_Lifting(n,mix.all,fs,sub);
      -- ls := Floating_Lifting_Utilities.Lifted_Supports(mix'last,sub);
-      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols);
+      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols,verbose=>verbose-1);
     end;
     new_line;
     put_line("See the output file for a random coefficient start system ...");
@@ -930,7 +1011,8 @@ package body Drivers_for_mixedvol_algorithm is
 
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is 
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                verbose : in integer32 := 0 ) is 
 
     q,pq : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     n : constant integer32 := p'last;
@@ -945,7 +1027,11 @@ package body Drivers_for_mixedvol_algorithm is
     qsols : DoblDobl_Complex_Solutions.Solution_List;
 
   begin
-    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol);
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 5 ...");
+    end if;
+    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol,verbose=>verbose-1);
     new_line;
     put_line("See the output file for a regular mixed-cell configuration ...");
     new_line;
@@ -963,7 +1049,7 @@ package body Drivers_for_mixedvol_algorithm is
     begin
       ls := Floating_Lifting_Utilities.Occurred_Lifting(n,mix.all,fs,sub);
      -- ls := Floating_Lifting_Utilities.Lifted_Supports(mix'last,sub);
-      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols);
+      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols,verbose=>verbose-1);
     end;
     new_line;
     put_line("See the output file for a random coefficient start system ...");
@@ -980,7 +1066,8 @@ package body Drivers_for_mixedvol_algorithm is
 
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is 
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                verbose : in integer32 := 0 ) is 
 
     q,pq : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
     n : constant integer32 := p'last;
@@ -995,7 +1082,11 @@ package body Drivers_for_mixedvol_algorithm is
     qsols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
-    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol);
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 6 ...");
+    end if;
+    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol,verbose=>verbose-1);
     new_line;
     put_line("See the output file for a regular mixed-cell configuration ...");
     new_line;
@@ -1013,7 +1104,7 @@ package body Drivers_for_mixedvol_algorithm is
     begin
       ls := Floating_Lifting_Utilities.Occurred_Lifting(n,mix.all,fs,sub);
      -- ls := Floating_Lifting_Utilities.Lifted_Supports(mix'last,sub);
-      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols);
+      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols,verbose=>verbose-1);
     end;
     new_line;
     put_line("See the output file for a random coefficient start system ...");
@@ -1039,7 +1130,8 @@ package body Drivers_for_mixedvol_algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     ps : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
@@ -1048,6 +1140,10 @@ package body Drivers_for_mixedvol_algorithm is
     lq : Standard_Complex_Laur_Systems.Laur_Sys(q'range);
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Continuation 1 ...");
+    end if;
     tstart(timer);
     if r = n then
       fs := Floating_Integer_Convertors.Convert(s);
@@ -1068,9 +1164,10 @@ package body Drivers_for_mixedvol_algorithm is
    -- end if;
     if contrep then
        Random_Coefficient_System
-         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     else
-       Random_Coefficient_System(nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+       Random_Coefficient_System
+         (nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     end if;
     if stable then
       lq := Polynomial_to_Laurent_System(q);
@@ -1096,7 +1193,8 @@ package body Drivers_for_mixedvol_algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     ps : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
@@ -1105,6 +1203,10 @@ package body Drivers_for_mixedvol_algorithm is
     lq : DoblDobl_Complex_Laur_Systems.Laur_Sys(q'range);
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Continuation 2 ...");
+    end if;
     tstart(timer);
     if r = n then
       fs := Floating_Integer_Convertors.Convert(s);
@@ -1125,9 +1227,10 @@ package body Drivers_for_mixedvol_algorithm is
    -- end if;
     if contrep then
        Random_Coefficient_System
-         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     else
-       Random_Coefficient_System(nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+       Random_Coefficient_System
+         (nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     end if;
     if stable then
       lq := Polynomial_to_Laurent_System(q);
@@ -1153,7 +1256,8 @@ package body Drivers_for_mixedvol_algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     ps : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
@@ -1162,6 +1266,10 @@ package body Drivers_for_mixedvol_algorithm is
     lq : QuadDobl_Complex_Laur_Systems.Laur_Sys(q'range);
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Continuation 3 ...");
+    end if;
     tstart(timer);
     if r = n then
       fs := Floating_Integer_Convertors.Convert(s);
@@ -1182,9 +1290,10 @@ package body Drivers_for_mixedvol_algorithm is
    -- end if;
     if contrep then
        Random_Coefficient_System
-         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     else
-       Random_Coefficient_System(nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+       Random_Coefficient_System
+         (nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     end if;
     if stable then
       lq := Polynomial_to_Laurent_System(q);
@@ -1210,7 +1319,8 @@ package body Drivers_for_mixedvol_algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     ps : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
@@ -1218,6 +1328,10 @@ package body Drivers_for_mixedvol_algorithm is
     ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Continuation 4 ...");
+    end if;
    -- put("perm'first = "); put(perm'first,1);
    -- put("  perm'last = "); put(perm'last,1);
    -- put("  s'first = "); put(s'first,1);
@@ -1255,9 +1369,10 @@ package body Drivers_for_mixedvol_algorithm is
    -- put_line("calling random_coefficient_system ...");
     if contrep then
        Random_Coefficient_System
-         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     else
-       Random_Coefficient_System(nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+       Random_Coefficient_System
+         (nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     end if;
     if stable then
       if contrep then
@@ -1282,7 +1397,8 @@ package body Drivers_for_mixedvol_algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     ps : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
@@ -1290,6 +1406,10 @@ package body Drivers_for_mixedvol_algorithm is
     ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Continuation 5 ...");
+    end if;
    -- put("perm'first = "); put(perm'first,1);
    -- put("  perm'last = "); put(perm'last,1);
    -- put("  s'first = "); put(s'first,1);
@@ -1327,9 +1447,10 @@ package body Drivers_for_mixedvol_algorithm is
    -- put_line("calling random_coefficient_system ...");
     if contrep then
        Random_Coefficient_System
-         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     else
-       Random_Coefficient_System(nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+       Random_Coefficient_System
+         (nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     end if;
     if stable then
       if contrep then
@@ -1354,7 +1475,8 @@ package body Drivers_for_mixedvol_algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     ps : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
@@ -1362,6 +1484,10 @@ package body Drivers_for_mixedvol_algorithm is
     ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Continuation 6 ...");
+    end if;
    -- put("perm'first = "); put(perm'first,1);
    -- put("  perm'last = "); put(perm'last,1);
    -- put("  s'first = "); put(s'first,1);
@@ -1399,9 +1525,10 @@ package body Drivers_for_mixedvol_algorithm is
    -- put_line("calling random_coefficient_system ...");
     if contrep then
        Random_Coefficient_System
-         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+         (file,nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     else
-       Random_Coefficient_System(nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite);
+       Random_Coefficient_System
+         (nt,n,mix.all,ls,mcc,q,qsols,multprec_hermite,verbose-1);
     end if;
     if stable then
       if contrep then
@@ -1422,7 +1549,8 @@ package body Drivers_for_mixedvol_algorithm is
                 mv,smv,tmv : out natural32;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
    -- pq : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
@@ -1436,12 +1564,17 @@ package body Drivers_for_mixedvol_algorithm is
     orgcnt,stbcnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 7 ...");
+    end if;
     if stable
      then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
      else stlb := 0.0;
     end if;
     tstart(timer);
-    Mixed_Volume_Computation(n,s,stlb,r,mix,perm,sub,mv,multprec_hermite);
+    Mixed_Volume_Computation
+      (n,s,stlb,r,mix,perm,sub,mv,multprec_hermite,verbose-1);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Running the MixedVol Algorithm");
@@ -1463,7 +1596,7 @@ package body Drivers_for_mixedvol_algorithm is
       end if;
       Polyhedral_Continuation
          (file,nt,stable,contrep,n,r,stlb,mix,perm,p,s,
-          sub,mcc,stbmcc,q,qsols,qsols0);
+          sub,mcc,stbmcc,q,qsols,qsols0,verbose=>verbose-1);
         --(file,stable,contrep,n,r,stlb,mix,perm,mcc,stbmcc,q,qsols,qsols0,
         -- multprec_hermite);
      -- if r = n then
@@ -1488,7 +1621,8 @@ package body Drivers_for_mixedvol_algorithm is
                 mv,smv,tmv : out natural32;
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
    -- pq : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
@@ -1502,12 +1636,17 @@ package body Drivers_for_mixedvol_algorithm is
     orgcnt,stbcnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 8 ...");
+    end if;
     if stable
      then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
      else stlb := 0.0;
     end if;
     tstart(timer);
-    Mixed_Volume_Computation(n,s,stlb,r,mix,perm,sub,mv,multprec_hermite);
+    Mixed_Volume_Computation
+      (n,s,stlb,r,mix,perm,sub,mv,multprec_hermite,verbose-1);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Running the MixedVol Algorithm");
@@ -1529,7 +1668,7 @@ package body Drivers_for_mixedvol_algorithm is
       end if;
       Polyhedral_Continuation
          (file,nt,stable,contrep,n,r,stlb,mix,perm,p,s,
-          sub,mcc,stbmcc,q,qsols,qsols0);
+          sub,mcc,stbmcc,q,qsols,qsols0,verbose=>verbose-1);
         --(file,stable,contrep,n,r,stlb,mix,perm,mcc,stbmcc,q,qsols,qsols0,
         -- multprec_hermite);
      -- if r = n then
@@ -1554,7 +1693,8 @@ package body Drivers_for_mixedvol_algorithm is
                 mv,smv,tmv : out natural32;
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
    -- pq : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
@@ -1568,12 +1708,17 @@ package body Drivers_for_mixedvol_algorithm is
     orgcnt,stbcnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 9 ...");
+    end if;
     if stable
      then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
      else stlb := 0.0;
     end if;
     tstart(timer);
-    Mixed_Volume_Computation(n,s,stlb,r,mix,perm,sub,mv,multprec_hermite);
+    Mixed_Volume_Computation
+      (n,s,stlb,r,mix,perm,sub,mv,multprec_hermite,verbose-1);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Running the MixedVol Algorithm");
@@ -1595,7 +1740,7 @@ package body Drivers_for_mixedvol_algorithm is
       end if;
       Polyhedral_Continuation
          (file,nt,stable,contrep,n,r,stlb,mix,perm,p,s,
-          sub,mcc,stbmcc,q,qsols,qsols0);
+          sub,mcc,stbmcc,q,qsols,qsols0,verbose=>verbose-1);
         --(file,stable,contrep,n,r,stlb,mix,perm,mcc,stbmcc,q,qsols,qsols0,
         -- multprec_hermite);
      -- if r = n then
@@ -1620,7 +1765,8 @@ package body Drivers_for_mixedvol_algorithm is
                 mv,smv,tmv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
    -- pq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -1634,12 +1780,17 @@ package body Drivers_for_mixedvol_algorithm is
     orgcnt,stbcnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 10 ...");
+    end if;
     if stable
      then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
      else stlb := 0.0;
     end if;
     tstart(timer);
-    Mixed_Volume_Computation(n,s,stlb,r,mix,perm,sub,mv,multprec_hermite);
+    Mixed_Volume_Computation
+      (n,s,stlb,r,mix,perm,sub,mv,multprec_hermite,verbose-1);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Running the MixedVol Algorithm");
@@ -1661,7 +1812,7 @@ package body Drivers_for_mixedvol_algorithm is
       end if;
       Polyhedral_Continuation
         (file,nt,stable,contrep,n,r,stlb,mix,perm,p,s,
-         sub,mcc,stbmcc,q,qsols,qsols0);
+         sub,mcc,stbmcc,q,qsols,qsols0,verbose=>verbose-1);
        -- (file,stable,contrep,n,r,stlb,mix,perm,mcc,stbmcc,q,qsols,qsols0,
        --  multprec_hermite);
      -- if r = n then
@@ -1692,7 +1843,8 @@ package body Drivers_for_mixedvol_algorithm is
                 mv,smv,tmv : out natural32;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
    -- pq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -1706,12 +1858,17 @@ package body Drivers_for_mixedvol_algorithm is
     orgcnt,stbcnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 11 ...");
+    end if;
     if stable
      then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
      else stlb := 0.0;
     end if;
     tstart(timer);
-    Mixed_Volume_Computation(n,s,stlb,r,mix,perm,sub,mv,multprec_hermite);
+    Mixed_Volume_Computation
+      (n,s,stlb,r,mix,perm,sub,mv,multprec_hermite,verbose-1);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Running the MixedVol Algorithm");
@@ -1733,7 +1890,7 @@ package body Drivers_for_mixedvol_algorithm is
       end if;
       Polyhedral_Continuation
         (file,nt,stable,contrep,n,r,stlb,mix,perm,p,s,
-         sub,mcc,stbmcc,q,qsols,qsols0);
+         sub,mcc,stbmcc,q,qsols,qsols0,verbose=>verbose-1);
        -- (file,stable,contrep,n,r,stlb,mix,perm,mcc,stbmcc,q,qsols,qsols0,
        --  multprec_hermite);
      -- if r = n then
@@ -1764,7 +1921,8 @@ package body Drivers_for_mixedvol_algorithm is
                 mv,smv,tmv : out natural32;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
     timer : Timing_Widget;
    -- pq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -1778,12 +1936,17 @@ package body Drivers_for_mixedvol_algorithm is
     orgcnt,stbcnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Polyhedral_Homotopies 12 ...");
+    end if;
     if stable
      then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
      else stlb := 0.0;
     end if;
     tstart(timer);
-    Mixed_Volume_Computation(n,s,stlb,r,mix,perm,sub,mv,multprec_hermite);
+    Mixed_Volume_Computation
+      (n,s,stlb,r,mix,perm,sub,mv,multprec_hermite,verbose-1);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"Running the MixedVol Algorithm");
@@ -1805,7 +1968,7 @@ package body Drivers_for_mixedvol_algorithm is
       end if;
       Polyhedral_Continuation
         (file,nt,stable,contrep,n,r,stlb,mix,perm,p,s,
-         sub,mcc,stbmcc,q,qsols,qsols0);
+         sub,mcc,stbmcc,q,qsols,qsols0,verbose=>verbose-1);
        -- (file,stable,contrep,n,r,stlb,mix,perm,mcc,stbmcc,q,qsols,qsols0,
        --  multprec_hermite);
      -- if r = n then
@@ -1921,7 +2084,7 @@ package body Drivers_for_mixedvol_algorithm is
     else
       Polyhedral_Homotopies
         (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite,verbose-1);
       if ranstart then
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
@@ -1978,7 +2141,7 @@ package body Drivers_for_mixedvol_algorithm is
     else
       Polyhedral_Homotopies
         (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite,verbose-1);
       if ranstart then
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
@@ -2035,7 +2198,7 @@ package body Drivers_for_mixedvol_algorithm is
     else
       Polyhedral_Homotopies
         (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite,verbose-1);
       if ranstart then
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
@@ -2093,7 +2256,7 @@ package body Drivers_for_mixedvol_algorithm is
     else
       Polyhedral_Homotopies
         (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite,verbose-1);
       if ranstart then
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
@@ -2151,7 +2314,7 @@ package body Drivers_for_mixedvol_algorithm is
     else
       Polyhedral_Homotopies
         (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite,verbose-1);
       if ranstart then
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
@@ -2210,7 +2373,7 @@ package body Drivers_for_mixedvol_algorithm is
     else
       Polyhedral_Homotopies
         (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite,verbose-1);
       if ranstart then
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");

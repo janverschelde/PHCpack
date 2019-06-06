@@ -36,7 +36,8 @@ package Drivers_for_MixedVol_Algorithm is
                 stlb : in double_float; r : out integer32;
                 mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mixvol : out natural32;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Extracts the supports of the polynomial system and computes its
@@ -46,7 +47,10 @@ package Drivers_for_MixedVol_Algorithm is
   --   n        number of variables and number of supports;
   --   s        supports of a polynomial system;
   --   stlb     lifting bound to use for stable mixed volumes,
-  --            equals 0.0 if no stable mixed volumes are requested.
+  --            equals 0.0 if no stable mixed volumes are requested;
+  --   multprec_hermite indicates whether multiprecision arithmetic
+  --            must be used for the Hermite normal form;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   r        number of different supports;
@@ -55,8 +59,6 @@ package Drivers_for_MixedVol_Algorithm is
   --            if r < n then the equations must be permuted;
   --   sub      a regular mixed-cell configuration;
   --   mixvol   mixed volume of the polytopes spanned by the supports.
-  --   multprec_hermite indicates whether multiprecision arithmetic
-  --            must be used for the Hermite normal form.
  
   procedure Random_Coefficient_System
               ( nt,n : in integer32;
@@ -65,7 +67,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( nt,n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
@@ -73,7 +76,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( nt,n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
@@ -81,7 +85,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( nt,n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
@@ -89,7 +94,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( nt,n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
@@ -97,7 +103,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( nt,n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
@@ -105,7 +112,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies polyhedral continuation methods to solve a random coefficient
@@ -119,7 +127,10 @@ package Drivers_for_MixedVol_Algorithm is
   --   mix      type of mixture;
   --   ls       lifted supports of the polynomial system,
   --            contains only those points that actually occur in a cell;
-  --   sub      a regular mixed-cell configuration.
+  --   sub      a regular mixed-cell configuration;
+  --   multprec_hermite indicates whether multiprecision arithmetic
+  --            must be used for the Hermite normal form;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   q        a random coefficient system with same supports as in s;
@@ -133,7 +144,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( file : in file_type;
                 nt,n : in integer32;
@@ -142,7 +154,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( file : in file_type;
                 nt,n : in integer32;
@@ -151,7 +164,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( file : in file_type;
                 nt,n : in integer32;
@@ -160,7 +174,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( file : in file_type;
                 nt,n : in integer32;
@@ -169,7 +184,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Random_Coefficient_System
               ( file : in file_type;
                 nt,n : in integer32;
@@ -178,7 +194,8 @@ package Drivers_for_MixedVol_Algorithm is
                 sub : in Mixed_Subdivision;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies polyhedral continuation methods to solve a random coefficient
@@ -194,7 +211,10 @@ package Drivers_for_MixedVol_Algorithm is
   --   mix      type of mixture;
   --   ls       lifted supports of the polynomial system,
   --            contains only those points that actually occur in a cell;
-  --   sub      a regular mixed-cell configuration.
+  --   sub      a regular mixed-cell configuration;
+  --   multprec_hermite indicates whether multiprecision arithmetic
+  --            must be used for the Hermite normal form;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   q        a random coefficient system with same supports as in s;
@@ -202,22 +222,28 @@ package Drivers_for_MixedVol_Algorithm is
 
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in Standard_Complex_Poly_Systems.Poly_Sys );
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys );
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys );
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
-                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys );
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive driver to the polyhedral homotopies to create
@@ -239,7 +265,8 @@ package Drivers_for_MixedVol_Algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Continuation
               ( file : in file_type; nt : in integer32;
                 stable,contrep : in boolean;
@@ -251,7 +278,8 @@ package Drivers_for_MixedVol_Algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Continuation
               ( file : in file_type; nt : in integer32;
                 stable,contrep : in boolean;
@@ -263,7 +291,8 @@ package Drivers_for_MixedVol_Algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Continuation
               ( file : in file_type; nt : in integer32;
                 stable,contrep : in boolean;
@@ -275,7 +304,8 @@ package Drivers_for_MixedVol_Algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Continuation
               ( file : in file_type; nt : in integer32;
                 stable,contrep : in boolean;
@@ -287,7 +317,8 @@ package Drivers_for_MixedVol_Algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Continuation
               ( file : in file_type; nt : in integer32;
                 stable,contrep : in boolean;
@@ -299,7 +330,8 @@ package Drivers_for_MixedVol_Algorithm is
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs polyhedral continuation to solve a random coefficient
@@ -320,14 +352,15 @@ package Drivers_for_MixedVol_Algorithm is
   --   s        supports of the system p;
   --   sub      all mixed cells;
   --   mcc      a regular mixed-cell configuration;
-  --   stbmcc   extra stable mixed cells if stable is on.
+  --   stbmcc   extra stable mixed cells if stable is on;
+  --   multprec_hermite indicates whether multiprecision arithmetic
+  --            must be used for the Hermite normal form;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   q        a random coefficient system with same supports as in s;
   --   qsols    solutions of q.
   --   qsols0   solutions with zero components of q.
-  --   multprec_hermite indicates whether multiprecision arithmetic
-  --            must be used for the Hermite normal form.
 
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
@@ -336,7 +369,8 @@ package Drivers_for_MixedVol_Algorithm is
                 mv,smv,tmv : out natural32;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 stable,misufile,ranstart,contrep : in boolean;
@@ -344,7 +378,8 @@ package Drivers_for_MixedVol_Algorithm is
                 mv,smv,tmv : out natural32;
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 stable,misufile,ranstart,contrep : in boolean;
@@ -352,7 +387,8 @@ package Drivers_for_MixedVol_Algorithm is
                 mv,smv,tmv : out natural32;
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 stable,misufile,ranstart,contrep : in boolean;
@@ -360,7 +396,8 @@ package Drivers_for_MixedVol_Algorithm is
                 mv,smv,tmv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 stable,misufile,ranstart,contrep : in boolean;
@@ -368,7 +405,8 @@ package Drivers_for_MixedVol_Algorithm is
                 mv,smv,tmv : out natural32;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 stable,misufile,ranstart,contrep : in boolean;
@@ -376,7 +414,8 @@ package Drivers_for_MixedVol_Algorithm is
                 mv,smv,tmv : out natural32;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive driver to the polyhedral homotopies to create
@@ -395,7 +434,10 @@ package Drivers_for_MixedVol_Algorithm is
   --            to a separate file;
   --   ranstart indicates whether user wants a random coefficient system;
   --   contrep  indicates whether output is wanted during continuation;
-  --   p        a polynomial system.
+  --   p        a polynomial system;
+  --   multprec_hermite indicates whether multiprecision arithmetic
+  --            must be used for the Hermite normal form;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   mv       mixed volume of the tuple of Newton polytopes
@@ -406,8 +448,6 @@ package Drivers_for_MixedVol_Algorithm is
   --            with as many solutions as the mixed volume;
   --   qsols    solution to a random coefficient system, if ranstart;
   --   qsols0   if stable, then solutions with zero components.
-  --   multprec_hermite indicates whether multiprecision arithmetic
-  --            must be used for the Hermite normal form.
 
   procedure Ask_for_Stable_and_Cells_File
               ( stable,onfile : out boolean; file : in out file_type );
