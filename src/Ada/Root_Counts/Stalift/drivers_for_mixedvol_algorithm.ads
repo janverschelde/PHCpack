@@ -453,7 +453,8 @@ package Drivers_for_MixedVol_Algorithm is
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -461,7 +462,8 @@ package Drivers_for_MixedVol_Algorithm is
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -469,7 +471,8 @@ package Drivers_for_MixedVol_Algorithm is
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -477,7 +480,8 @@ package Drivers_for_MixedVol_Algorithm is
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -485,7 +489,8 @@ package Drivers_for_MixedVol_Algorithm is
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
@@ -493,7 +498,8 @@ package Drivers_for_MixedVol_Algorithm is
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false );
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive driver to the MixedVol Algorithm,
@@ -505,7 +511,10 @@ package Drivers_for_MixedVol_Algorithm is
   --            if nt = 0, then the plain sequential code is used;
   --   p        a polynomial system;
   --   byebye   true if a bye-bye message needs to be given;
-  --   nostart  true if the user does not want a start system.
+  --   nostart  true if the user does not want a start system;
+  --   multprec_hermite indicates whether multiprecision arithmetic
+  --            must be used for the Hermite normal form;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   q        start system (if requested by user);
@@ -514,7 +523,5 @@ package Drivers_for_MixedVol_Algorithm is
   --   mv       mixed volume;
   --   smv      stable mixed volume;
   --   tmv      total mixed volume;
-  --   multprec_hermite indicates whether multiprecision arithmetic
-  --            must be used for the Hermite normal form.
 
 end Drivers_for_MixedVol_Algorithm;

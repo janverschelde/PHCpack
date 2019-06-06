@@ -1881,7 +1881,8 @@ package body Drivers_for_mixedvol_algorithm is
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
    -- ans : character;
     cellfile,startfile : file_type;
@@ -1889,6 +1890,11 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Driver_for_MixedVol_Algorithm 1,");
+      put_line("for a polynomial systems in double precision ...");
+    end if;
     Ask_for_Stable_and_Cells_File(stable,misufile,cellfile);
    -- new_line;
    -- put("Do you want a random coefficient start system ? (y/n) ");
@@ -1931,7 +1937,8 @@ package body Drivers_for_mixedvol_algorithm is
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
    -- ans : character;
     cellfile,startfile : file_type;
@@ -1939,6 +1946,11 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Driver_for_MixedVol_Algorithm 2,");
+      put_line("for a polynomial system in double double precision ...");
+    end if;
     Ask_for_Stable_and_Cells_File(stable,misufile,cellfile);
    -- new_line;
    -- put("Do you want a random coefficient start system ? (y/n) ");
@@ -1982,7 +1994,8 @@ package body Drivers_for_mixedvol_algorithm is
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
    -- ans : character;
     cellfile,startfile : file_type;
@@ -1990,6 +2003,11 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Driver_for_MixedVol_Algorithm 3,");
+      put_line("for a polynomial system in quad double precision ...");
+    end if;
     Ask_for_Stable_and_Cells_File(stable,misufile,cellfile);
    -- new_line;
    -- put("Do you want a random coefficient start system ? (y/n) ");
@@ -2033,7 +2051,8 @@ package body Drivers_for_mixedvol_algorithm is
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
    -- ans : character;
     cellfile,startfile : file_type;
@@ -2041,6 +2060,11 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Driver_for_MixedVol_Algorithm 4,");
+      put_line("for a Laurent system in double precision ...");
+    end if;
     stable := not Is_Genuine_Laurent(p);
     Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
    -- new_line;
@@ -2085,7 +2109,8 @@ package body Drivers_for_mixedvol_algorithm is
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
    -- ans : character;
     cellfile,startfile : file_type;
@@ -2093,6 +2118,11 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Driver_for_MixedVol_Algorithm 5,");
+      put_line("for a Laurent system in double double precision ...");
+    end if;
     stable := not Is_Genuine_Laurent(p);
     Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
    -- new_line;
@@ -2137,7 +2167,8 @@ package body Drivers_for_mixedvol_algorithm is
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                verbose : in integer32 := 0 ) is
 
    -- ans : character;
     cellfile,startfile : file_type;
@@ -2145,6 +2176,11 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_mixedvol_algorithm.");
+      put_line("Driver_for_MixedVol_Algorithm 6,");
+      put_line("for a Laurent system in quad double precision ...");
+    end if;
     stable := not Is_Genuine_Laurent(p);
     Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
    -- new_line;

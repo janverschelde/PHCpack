@@ -1,3 +1,6 @@
+Thu 6 Jun 2019 : added the verbose level to the 6 driver procedures in
+  drivers_for_mixedvol_algorithm.
+
 Tue 4 Jun 2019 : removed superfluous arguments from procedures in
   stable_polyhedral_continuation.
 

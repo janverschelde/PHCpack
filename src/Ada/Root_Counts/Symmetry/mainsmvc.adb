@@ -138,7 +138,8 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Call_MixedVol
                ( file : in file_type;
-                 lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+                 lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                 v : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Asks for the precision and then calls the MixedVol driver.
@@ -154,6 +155,9 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
     nostart : boolean;
   
   begin
+    if v > 0
+     then put_line("-> in mainsmvc.Call_MixedVol ...");
+    end if;
     new_line;
     put_line("MENU for precision to compute random coefficient system :");
     put_line("  0. do not solve a random coefficient system;");
@@ -167,23 +171,24 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
       when '0' | '1' =>
         Driver_for_MixedVol_Algorithm
           (file,integer32(nt),lq.all,true,nostart,
-           d_qq,d_qsols,d_qsols0,mv,smv,tmv);
+           d_qq,d_qsols,d_qsols0,mv,smv,tmv,verbose=>v-1);
       when '2' =>
         dd_p := Standard_Laur_Sys_to_DoblDobl_Complex(lq.all);
         Driver_for_MixedVol_Algorithm
           (file,integer32(nt),dd_p,true,nostart,
-           dd_qq,dd_qsols,dd_qsols0,mv,smv,tmv);
+           dd_qq,dd_qsols,dd_qsols0,mv,smv,tmv,verbose=>v-1);
       when '3' =>
         qd_p := Standard_Laur_Sys_to_QuadDobl_Complex(lq.all);
         Driver_for_MixedVol_Algorithm
           (file,integer32(nt),qd_p,true,nostart,
-           qd_qq,qd_qsols,qd_qsols0,mv,smv,tmv);
+           qd_qq,qd_qsols,qd_qsols0,mv,smv,tmv,verbose=>v-1);
       when others => null;
     end case;
   end Call_MixedVol;
 
   procedure Ask_and_Dispatch_Lifting_Strategy 
-              ( lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+              ( lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                v : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Opens file for output and asks for the lifting strategy,
@@ -198,6 +203,9 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
     deflate : boolean := false;
 
   begin
+    if v > 0
+     then put_line("-> in mainsmvc.Ask_and_Dispatch_Lifting_Strategy ...");
+    end if;
     Create_Output_File(outft,outfilename);
     put(outft,natural32(lq'last),lq.all);
     strategy := Lifting_Strategy;
@@ -222,7 +230,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
           (outft,lq.all,true,qq,qsols,mv);
       when 4 =>
         put_line(outft,"MixedVol Algorithm to compute the mixed volume");
-        Call_MixedVol(outft,lq);
+        Call_MixedVol(outft,lq,v);
       when 5 =>
         put_line(outft,
           "DEMiCs Algorithm applies dynamic enumeration for all mixed cells");
@@ -270,7 +278,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
     if lq = null
      then new_line; get(lq);
     end if;
-    Ask_and_Dispatch_Lifting_Strategy(lq);
+    Ask_and_Dispatch_Lifting_Strategy(lq,verbose-1);
   end Main;
 
 begin

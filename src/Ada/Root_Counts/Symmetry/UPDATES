@@ -1,4 +1,5 @@
-Wed 5 Jun 2019 : added the verbose level to mainsmvc.
+Wed 5 Jun 2019 : added the verbose level to mainsmvc, and then passed that
+  variable to drivers_for_mixedvol_algorithm.Driver_for_MixedVolAlgorithm.
 
 Mon 28 May 2018 : passed the number of tasks from the command line to the
   driver procedure of DEMiCs.  Updated the messages for the output file for
