@@ -2,7 +2,7 @@ with Ada.Calendar;                       use Ada.Calendar;
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Time_Stamps;                        use Time_Stamps;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
@@ -25,7 +25,8 @@ with Drivers_for_DEMiCs_Algorithm;       use Drivers_for_DEMiCs_Algorithm;
 with Write_Seed_Number;
 with Greeting_Banners;
 
-procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
+procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
   start_moment : constant Time := Clock;
   ended_moment : Time;
@@ -261,6 +262,10 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
     lq : Link_to_Laur_Sys := null;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainsmvc.Main ...");
+    end if;
     Read_System(infilename,lq);
     if lq = null
      then new_line; get(lq);

@@ -1,6 +1,7 @@
 Wed 5 Jun 2019 : added the verbose level to each of the 36 Solve procedures
   in black_box_solvers.  Added the verbose level to compsolve, compsolve2,
-  compsolve4, with updates in dispatch.adb.
+  compsolve4, with updates in dispatch.adb.  Updated dispatch.adb for the
+  addition of the verbose level in mainsmvc.
 
 Tue 4 Jun 2019 : in black_box_solver_cases.adb, declared the constant 0
   to be of type natural32, to avoid a crash with GNAT GPL 2019;

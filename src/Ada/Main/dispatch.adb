@@ -502,6 +502,8 @@ procedure Dispatch is
   --   'b' : for blackbox construction of a random coefficient system.
   --   The options 't' and 'b' may be combined.
 
+    vrblvl : constant integer32 := Verbose_Level;
+
   begin
     case o2 is
       when 'h' | '-' => Greeting_Banners.help4mixvol;
@@ -524,12 +526,12 @@ procedure Dispatch is
             babldmvc(nt,infile,outfile);
           else
             put_line(welcome); put_line(mvcban & ", with " & ns & " tasks.");
-            mainsmvc(nt,infile,outfile);
+            mainsmvc(nt,infile,outfile,vrblvl);
           end if;
         end;
       when others =>
        put_line(welcome); put_line(mvcban & ", no multitasking.");
-       mainsmvc(0,infile,outfile);
+       mainsmvc(0,infile,outfile,vrblvl);
     end case;
   end Mixed_Volume_Dispatcher;
 

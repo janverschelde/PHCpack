@@ -1,3 +1,5 @@
+Wed 5 Jun 2019 : added the verbose level to mainsmvc.
+
 Mon 28 May 2018 : passed the number of tasks from the command line to the
   driver procedure of DEMiCs.  Updated the messages for the output file for
   each lifting strategy in mainsmvc.adb.
