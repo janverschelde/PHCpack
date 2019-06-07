@@ -124,21 +124,24 @@ package Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out Standard_Complex_Solutions.Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Silent_Polyhedral_Continuation
               ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out DoblDobl_Complex_Solutions.Solution_List );
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Silent_Polyhedral_Continuation
               ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out QuadDobl_Complex_Solutions.Solution_List );
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -146,7 +149,8 @@ package Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out Standard_Complex_Solutions.Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type;
                 q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -154,7 +158,8 @@ package Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out DoblDobl_Complex_Solutions.Solution_List );
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type;
                 q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
@@ -162,7 +167,8 @@ package Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out QuadDobl_Complex_Solutions.Solution_List );
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs polyhedral continuation to compute the solutions with
@@ -177,7 +183,8 @@ package Stable_Polyhedral_Continuation is
   --   lif      lifted supports;
   --   mic      one extra stable mixed cell;
   --   nbz      number of zeroes in the solutions;
-  --   vol      volume of the cell.
+  --   vol      volume of the cell;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   sols     solutions of q with zero components, 
@@ -189,21 +196,24 @@ package Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; -- k : in integer32;
-                sols : out Standard_Complex_Solutions.Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Silent_Polyhedral_Continuation
               ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 b : in double_float; 
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; -- k : in integer32;
-                sols : out DoblDobl_Complex_Solutions.Solution_List );
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Silent_Polyhedral_Continuation
               ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 b : in double_float; 
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; -- k : in integer32;
-                sols : out QuadDobl_Complex_Solutions.Solution_List );
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -211,7 +221,8 @@ package Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; k : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type;
                 q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -219,7 +230,8 @@ package Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; k : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type;
                 q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
@@ -227,7 +239,8 @@ package Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; k : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs polyhedral continuation to compute the solutions with
@@ -240,7 +253,8 @@ package Stable_Polyhedral_Continuation is
   --   mix      type of mixture of the supports;
   --   lif      lifted supports;
   --   mic      one extra stable mixed cell;
-  --   k        counter of cell.
+  --   k        counter of cell;
+  --   verbose  the verbose level.
  
   -- ON RETURN :
   --   mic      might be refined for mixed volume computation;
@@ -252,21 +266,24 @@ package Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mcc : in Mixed_Subdivision;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Silent_Polyhedral_Continuation
               ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 b : in double_float; 
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mcc : in Mixed_Subdivision;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Silent_Polyhedral_Continuation
               ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 b : in double_float; 
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mcc : in Mixed_Subdivision;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type; 
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -274,7 +291,8 @@ package Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mcc : in Mixed_Subdivision;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type; 
                 q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -282,7 +300,8 @@ package Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mcc : in Mixed_Subdivision;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
   procedure Reporting_Polyhedral_Continuation
               ( file : in file_type; 
                 q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
@@ -290,7 +309,8 @@ package Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mcc : in Mixed_Subdivision;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs polyhedral continuation to compute the solutions with
@@ -302,7 +322,8 @@ package Stable_Polyhedral_Continuation is
   --   b        lifting bound used for the artificial origins;
   --   mix      type of mixture of the supports;
   --   lif      lifted supports;
-  --   mcc      extra stable mixed cells.
+  --   mcc      extra stable mixed cells;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   sols     solutions with zero components of q.

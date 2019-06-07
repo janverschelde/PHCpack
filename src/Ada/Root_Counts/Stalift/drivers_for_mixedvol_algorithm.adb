@@ -1172,9 +1172,11 @@ package body Drivers_for_mixedvol_algorithm is
     if stable then
       lq := Polynomial_to_Laurent_System(q);
       if contrep then
-        Reporting_Polyhedral_Continuation(file,lq,stlb,mix,ls,stbmcc,qsols0);
+        Reporting_Polyhedral_Continuation
+          (file,lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation(lq,stlb,mix,ls,stbmcc,qsols0);
+        Silent_Polyhedral_Continuation
+          (lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
     tstop(timer);
@@ -1235,9 +1237,11 @@ package body Drivers_for_mixedvol_algorithm is
     if stable then
       lq := Polynomial_to_Laurent_System(q);
       if contrep then
-        Reporting_Polyhedral_Continuation(file,lq,stlb,mix,ls,stbmcc,qsols0);
+        Reporting_Polyhedral_Continuation
+          (file,lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation(lq,stlb,mix,ls,stbmcc,qsols0);
+        Silent_Polyhedral_Continuation
+          (lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
     tstop(timer);
@@ -1298,9 +1302,11 @@ package body Drivers_for_mixedvol_algorithm is
     if stable then
       lq := Polynomial_to_Laurent_System(q);
       if contrep then
-        Reporting_Polyhedral_Continuation(file,lq,stlb,mix,ls,stbmcc,qsols0);
+        Reporting_Polyhedral_Continuation
+          (file,lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation(lq,stlb,mix,ls,stbmcc,qsols0);
+        Silent_Polyhedral_Continuation
+          (lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
     tstop(timer);
@@ -1376,9 +1382,11 @@ package body Drivers_for_mixedvol_algorithm is
     end if;
     if stable then
       if contrep then
-        Reporting_Polyhedral_Continuation(file,q,stlb,mix,ls,stbmcc,qsols0);
+        Reporting_Polyhedral_Continuation
+          (file,q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation(q,stlb,mix,ls,stbmcc,qsols0);
+        Silent_Polyhedral_Continuation
+          (q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
     tstop(timer);
@@ -1454,9 +1462,11 @@ package body Drivers_for_mixedvol_algorithm is
     end if;
     if stable then
       if contrep then
-        Reporting_Polyhedral_Continuation(file,q,stlb,mix,ls,stbmcc,qsols0);
+        Reporting_Polyhedral_Continuation
+          (file,q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation(q,stlb,mix,ls,stbmcc,qsols0);
+        Silent_Polyhedral_Continuation
+          (q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
     tstop(timer);
@@ -1532,9 +1542,11 @@ package body Drivers_for_mixedvol_algorithm is
     end if;
     if stable then
       if contrep then
-        Reporting_Polyhedral_Continuation(file,q,stlb,mix,ls,stbmcc,qsols0);
+        Reporting_Polyhedral_Continuation
+          (file,q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation(q,stlb,mix,ls,stbmcc,qsols0);
+        Silent_Polyhedral_Continuation
+          (q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
     tstop(timer);

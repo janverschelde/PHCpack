@@ -1,3 +1,6 @@
+Fri 7 Jun 2019 : added the verbose level to the procdures in
+  stable_polyhedral_continuation, updated drivers_for_mixedvol_algorithm.adb.
+
 Thu 6 Jun 2019 : added the verbose level to the top 6 driver procedures in
   drivers_for_mixedvol_algorithm and then added the verbose level to all
   main procedures in drivers_for_mixedvol_algorithm.

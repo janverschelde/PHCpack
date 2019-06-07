@@ -440,7 +440,8 @@ package body Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out Standard_Complex_Solutions.Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use Arrays_of_Floating_Vector_Lists,Standard_Complex_Solutions;
     use Standard_Complex_Laur_Systems,Standard_Complex_Laur_SysFun;
@@ -450,6 +451,11 @@ package body Stable_Polyhedral_Continuation is
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 1,");
+      put_line("for Laurent systems in double precision ...");
+    end if;
    -- if Number_of_Zero_Polynomials(sq) /= nbz then
    --   put_line("Degenerate subsystem, there are no isolated solutions.");
    -- else
@@ -513,7 +519,8 @@ package body Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use Arrays_of_Floating_Vector_Lists,DoblDobl_Complex_Solutions;
     use DoblDobl_Complex_Laur_Systems,DoblDobl_Complex_Laur_SysFun;
@@ -523,6 +530,11 @@ package body Stable_Polyhedral_Continuation is
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 2,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
    -- if Number_of_Zero_Polynomials(sq) /= nbz then
    --   put_line("Degenerate subsystem, there are no isolated solutions.");
    -- else
@@ -584,7 +596,8 @@ package body Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use Arrays_of_Floating_Vector_Lists,QuadDobl_Complex_Solutions;
     use QuadDobl_Complex_Laur_Systems,QuadDobl_Complex_Laur_SysFun;
@@ -594,6 +607,11 @@ package body Stable_Polyhedral_Continuation is
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 3,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
    -- if Number_of_Zero_Polynomials(sq) /= nbz then
    --   put_line("Degenerate subsystem, there are no isolated solutions.");
    -- else
@@ -656,7 +674,8 @@ package body Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out Standard_Complex_Solutions.Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use Arrays_of_Floating_Vector_Lists,Standard_Complex_Solutions;
     use Standard_Complex_Laur_Systems,Standard_Complex_Laur_SysFun;
@@ -666,6 +685,11 @@ package body Stable_Polyhedral_Continuation is
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 1,");
+      put_line("for Laurent systems in double precision ...");
+    end if;
     if Number_of_Zero_Polynomials(sq) /= nbz then
       put_line(file,"Degenerate subsystem, there are no isolated solutions.");
       put_line(file,"the Laurent system after substitution : ");
@@ -739,7 +763,8 @@ package body Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use Arrays_of_Floating_Vector_Lists,DoblDobl_Complex_Solutions;
     use DoblDobl_Complex_Laur_Systems,DoblDobl_Complex_Laur_SysFun;
@@ -749,6 +774,11 @@ package body Stable_Polyhedral_Continuation is
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 2,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     if Number_of_Zero_Polynomials(sq) /= nbz then
       put_line(file,"Degenerate subsystem, there are no isolated solutions.");
       put_line(file,"the Laurent system after substitution : ");
@@ -818,7 +848,8 @@ package body Stable_Polyhedral_Continuation is
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use Arrays_of_Floating_Vector_Lists,QuadDobl_Complex_Solutions;
     use QuadDobl_Complex_Laur_Systems,QuadDobl_Complex_Laur_SysFun;
@@ -828,6 +859,11 @@ package body Stable_Polyhedral_Continuation is
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 3,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     if Number_of_Zero_Polynomials(sq) /= nbz then
       put_line(file,"Degenerate subsystem, there are no isolated solutions.");
       put_line(file,"the Laurent system after substitution : ");
@@ -895,7 +931,8 @@ package body Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; -- k : in integer32;
-                sols : out Standard_Complex_Solutions.Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions,Standard_Stable_Homotopies;
 
@@ -906,41 +943,11 @@ package body Stable_Polyhedral_Continuation is
     ls : Link_to_Solution;
 
   begin
-   -- put("Type of Cell "); put(k,1); put(" : ");
-   -- Standard_Integer_Vectors_io.put(ztp); 
-   -- put("  #zeroes : "); put(nbz,1); new_line;
-    Mixed_Volume(q'last,mix.all,mic,vol);
-    if nbz = q'last then
-     -- put("Origin is solution with multiplicity "); put(vol,1); new_line;
-      ls := new Solution'(Origin(q'last,integer32(vol)));
-      Construct(ls,sols);
-    else
-     -- put("Solution with "); put(nbz,1); put(" zeroes and volume ");
-     -- put(vol,1); new_line;
-      Silent_Polyhedral_Continuation(q,mix,lif,mic,nbz,vol,ztp,sols);
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 4,");
+      put_line("for Laurent systems in double precision ...");
     end if;
-  exception
-    when others => put_line("exception in main silent polyhedral continuation");
-                   raise;
-  end Silent_Polyhedral_Continuation;
-
-  procedure Silent_Polyhedral_Continuation
-              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                b : in double_float; 
-                mix : in Standard_Integer_Vectors.Link_to_Vector;
-                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                mic : in out Mixed_Cell; -- k : in integer32;
-                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
-
-    use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
-
-    ztp : constant Standard_Integer_Vectors.Vector(q'range)
-        := Zero_Type(mic.nor.all,b,mic.pts.all);
-    nbz : constant integer32 := Number_of_Zeroes(ztp);
-    vol : natural32;
-    ls : Link_to_Solution;
-
-  begin
    -- put("Type of Cell "); put(k,1); put(" : ");
    -- Standard_Integer_Vectors_io.put(ztp); 
    -- put("  #zeroes : "); put(nbz,1); new_line;
@@ -952,7 +959,8 @@ package body Stable_Polyhedral_Continuation is
     else
      -- put("Solution with "); put(nbz,1); put(" zeroes and volume ");
      -- put(vol,1); new_line;
-      Silent_Polyhedral_Continuation(q,mix,lif,mic,nbz,vol,ztp,sols);
+      Silent_Polyhedral_Continuation
+        (q,mix,lif,mic,nbz,vol,ztp,sols,verbose=>verbose-1);
     end if;
   exception
     when others => put_line("exception in main silent polyhedral continuation");
@@ -965,7 +973,8 @@ package body Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; -- k : in integer32;
-                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Stable_Homotopies;
 
@@ -976,6 +985,11 @@ package body Stable_Polyhedral_Continuation is
     ls : Link_to_Solution;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 5,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
    -- put("Type of Cell "); put(k,1); put(" : ");
    -- Standard_Integer_Vectors_io.put(ztp); 
    -- put("  #zeroes : "); put(nbz,1); new_line;
@@ -987,7 +1001,50 @@ package body Stable_Polyhedral_Continuation is
     else
      -- put("Solution with "); put(nbz,1); put(" zeroes and volume ");
      -- put(vol,1); new_line;
-      Silent_Polyhedral_Continuation(q,mix,lif,mic,nbz,vol,ztp,sols);
+      Silent_Polyhedral_Continuation
+        (q,mix,lif,mic,nbz,vol,ztp,sols,verbose=>verbose-1);
+    end if;
+  exception
+    when others => put_line("exception in main silent polyhedral continuation");
+                   raise;
+  end Silent_Polyhedral_Continuation;
+
+  procedure Silent_Polyhedral_Continuation
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in out Mixed_Cell; -- k : in integer32;
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
+
+    use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
+
+    ztp : constant Standard_Integer_Vectors.Vector(q'range)
+        := Zero_Type(mic.nor.all,b,mic.pts.all);
+    nbz : constant integer32 := Number_of_Zeroes(ztp);
+    vol : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 6,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
+   -- put("Type of Cell "); put(k,1); put(" : ");
+   -- Standard_Integer_Vectors_io.put(ztp); 
+   -- put("  #zeroes : "); put(nbz,1); new_line;
+    Mixed_Volume(q'last,mix.all,mic,vol);
+    if nbz = q'last then
+     -- put("Origin is solution with multiplicity "); put(vol,1); new_line;
+      ls := new Solution'(Origin(q'last,integer32(vol)));
+      Construct(ls,sols);
+    else
+     -- put("Solution with "); put(nbz,1); put(" zeroes and volume ");
+     -- put(vol,1); new_line;
+      Silent_Polyhedral_Continuation
+        (q,mix,lif,mic,nbz,vol,ztp,sols,verbose=>verbose-1);
     end if;
   exception
     when others => put_line("exception in main silent polyhedral continuation");
@@ -1001,7 +1058,8 @@ package body Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; k : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions,Standard_Stable_Homotopies;
 
@@ -1012,6 +1070,11 @@ package body Stable_Polyhedral_Continuation is
     ls : Link_to_Solution;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 4,");
+      put_line("for Laurent systems in double precision ...");
+    end if;
     put(file,"Type of Cell "); put(file,k,1); put(file," : ");
     Standard_Integer_Vectors_io.put(file,ztp); 
     put(file,"  #zeroes : "); put(file,nbz,1); new_line(file);
@@ -1025,7 +1088,8 @@ package body Stable_Polyhedral_Continuation is
       put(file,"Solution with "); put(file,nbz,1);
       put(file," zeroes and volume "); 
       put(file,vol,1); new_line(file);
-      Reporting_Polyhedral_Continuation(file,q,mix,lif,mic,nbz,vol,ztp,sols);
+      Reporting_Polyhedral_Continuation
+        (file,q,mix,lif,mic,nbz,vol,ztp,sols,verbose=>verbose-1);
     end if;
   end Reporting_Polyhedral_Continuation;
 
@@ -1036,7 +1100,8 @@ package body Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; k : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Stable_Homotopies;
 
@@ -1047,6 +1112,11 @@ package body Stable_Polyhedral_Continuation is
     ls : Link_to_Solution;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 5,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     put(file,"Type of Cell "); put(file,k,1); put(file," : ");
     Standard_Integer_Vectors_io.put(file,ztp); 
     put(file,"  #zeroes : "); put(file,nbz,1); new_line(file);
@@ -1060,7 +1130,8 @@ package body Stable_Polyhedral_Continuation is
       put(file,"Solution with "); put(file,nbz,1);
       put(file," zeroes and volume "); 
       put(file,vol,1); new_line(file);
-      Reporting_Polyhedral_Continuation(file,q,mix,lif,mic,nbz,vol,ztp,sols);
+      Reporting_Polyhedral_Continuation
+        (file,q,mix,lif,mic,nbz,vol,ztp,sols,verbose=>verbose-1);
     end if;
   end Reporting_Polyhedral_Continuation;
 
@@ -1071,7 +1142,8 @@ package body Stable_Polyhedral_Continuation is
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; k : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
 
@@ -1082,6 +1154,11 @@ package body Stable_Polyhedral_Continuation is
     ls : Link_to_Solution;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 6,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     put(file,"Type of Cell "); put(file,k,1); put(file," : ");
     Standard_Integer_Vectors_io.put(file,ztp); 
     put(file,"  #zeroes : "); put(file,nbz,1); new_line(file);
@@ -1095,7 +1172,8 @@ package body Stable_Polyhedral_Continuation is
       put(file,"Solution with "); put(file,nbz,1);
       put(file," zeroes and volume "); 
       put(file,vol,1); new_line(file);
-      Reporting_Polyhedral_Continuation(file,q,mix,lif,mic,nbz,vol,ztp,sols);
+      Reporting_Polyhedral_Continuation
+        (file,q,mix,lif,mic,nbz,vol,ztp,sols,verbose=>verbose-1);
     end if;
   end Reporting_Polyhedral_Continuation;
 
@@ -1105,7 +1183,8 @@ package body Stable_Polyhedral_Continuation is
                  mix : in Standard_Integer_Vectors.Link_to_Vector;
                  lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Mixed_Subdivision;
-                 sols : in out Standard_Complex_Solutions.Solution_List ) is
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions,Standard_Stable_Homotopies;
 
@@ -1113,13 +1192,19 @@ package body Stable_Polyhedral_Continuation is
     last : Solution_List := sols;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 7,");
+      put_line("for Laurent systems in double precision ...");
+    end if;
     for i in 1..Length_Of(mcc) loop
       declare
         mic : Mixed_Cell := Head_Of(tmp);
         csols : Solution_List;
       begin
        -- Silent_Polyhedral_Continuation(q,b,mix,lif,mic,integer32(i),csols);
-        Silent_Polyhedral_Continuation(q,b,mix,lif,mic,csols);
+        Silent_Polyhedral_Continuation
+          (q,b,mix,lif,mic,csols,verbose=>verbose-1);
         Merge_and_Concat(sols,last,csols);
         Clear(csols);
       end;
@@ -1133,7 +1218,8 @@ package body Stable_Polyhedral_Continuation is
                  mix : in Standard_Integer_Vectors.Link_to_Vector;
                  lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Mixed_Subdivision;
-                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Stable_Homotopies;
 
@@ -1141,13 +1227,19 @@ package body Stable_Polyhedral_Continuation is
     last : Solution_List := sols;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 8,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     for i in 1..Length_Of(mcc) loop
       declare
         mic : Mixed_Cell := Head_Of(tmp);
         csols : Solution_List;
       begin
        -- Silent_Polyhedral_Continuation(q,b,mix,lif,mic,integer32(i),csols);
-        Silent_Polyhedral_Continuation(q,b,mix,lif,mic,csols);
+        Silent_Polyhedral_Continuation
+          (q,b,mix,lif,mic,csols,verbose=>verbose-1);
         Merge_and_Concat(sols,last,csols);
         Clear(csols);
       end;
@@ -1161,7 +1253,8 @@ package body Stable_Polyhedral_Continuation is
                  mix : in Standard_Integer_Vectors.Link_to_Vector;
                  lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Mixed_Subdivision;
-                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
 
@@ -1169,13 +1262,19 @@ package body Stable_Polyhedral_Continuation is
     last : Solution_List := sols;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Silent_Polyhedral_Continuation 9,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     for i in 1..Length_Of(mcc) loop
       declare
         mic : Mixed_Cell := Head_Of(tmp);
         csols : Solution_List;
       begin
        -- Silent_Polyhedral_Continuation(q,b,mix,lif,mic,integer32(i),csols);
-        Silent_Polyhedral_Continuation(q,b,mix,lif,mic,csols);
+        Silent_Polyhedral_Continuation
+          (q,b,mix,lif,mic,csols,verbose=>verbose-1);
         Merge_and_Concat(sols,last,csols);
         Clear(csols);
       end;
@@ -1190,7 +1289,8 @@ package body Stable_Polyhedral_Continuation is
                  mix : in Standard_Integer_Vectors.Link_to_Vector;
                  lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Mixed_Subdivision;
-                 sols : in out Standard_Complex_Solutions.Solution_List ) is
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions,Standard_Stable_Homotopies;
 
@@ -1198,13 +1298,18 @@ package body Stable_Polyhedral_Continuation is
     last : Solution_List := sols;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 7,");
+      put_line("for Laurent systems in double precision ...");
+    end if;
     for i in 1..Length_Of(mcc) loop
       declare
         mic : Mixed_Cell := Head_Of(tmp);
         csols : Solution_List;
       begin
         Reporting_Polyhedral_Continuation
-          (file,q,b,mix,lif,mic,integer32(i),csols);
+          (file,q,b,mix,lif,mic,integer32(i),csols,verbose=>verbose-1);
         Merge_and_Concat(sols,last,csols);
         Clear(csols);
       end;
@@ -1219,7 +1324,8 @@ package body Stable_Polyhedral_Continuation is
                  mix : in Standard_Integer_Vectors.Link_to_Vector;
                  lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Mixed_Subdivision;
-                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Stable_Homotopies;
 
@@ -1227,13 +1333,18 @@ package body Stable_Polyhedral_Continuation is
     last : Solution_List := sols;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 8,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     for i in 1..Length_Of(mcc) loop
       declare
         mic : Mixed_Cell := Head_Of(tmp);
         csols : Solution_List;
       begin
         Reporting_Polyhedral_Continuation
-          (file,q,b,mix,lif,mic,integer32(i),csols);
+          (file,q,b,mix,lif,mic,integer32(i),csols,verbose=>verbose-1);
         Merge_and_Concat(sols,last,csols);
         Clear(csols);
       end;
@@ -1248,7 +1359,8 @@ package body Stable_Polyhedral_Continuation is
                  mix : in Standard_Integer_Vectors.Link_to_Vector;
                  lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  mcc : in Mixed_Subdivision;
-                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
 
@@ -1256,13 +1368,18 @@ package body Stable_Polyhedral_Continuation is
     last : Solution_List := sols;
 
   begin
+    if verbose > 0 then
+      put("-> in stable_polyhedral_continuation.");
+      put_line("Reporting_Polyhedral_Continuation 9,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     for i in 1..Length_Of(mcc) loop
       declare
         mic : Mixed_Cell := Head_Of(tmp);
         csols : Solution_List;
       begin
         Reporting_Polyhedral_Continuation
-          (file,q,b,mix,lif,mic,integer32(i),csols);
+          (file,q,b,mix,lif,mic,integer32(i),csols,verbose=>verbose-1);
         Merge_and_Concat(sols,last,csols);
         Clear(csols);
       end;
