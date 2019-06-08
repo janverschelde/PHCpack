@@ -9,19 +9,14 @@ with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
 with Standard_Integer_VecVecs;
 with Standard_Floating_VecVecs;
 with DoblDobl_Complex_Matrices;          use DoblDobl_Complex_Matrices;
-with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Functions;    use DoblDobl_Complex_Laur_Functions;
-with DoblDobl_Complex_Poly_Systems;      use DoblDobl_Complex_Poly_Systems;
-with DoblDobl_Laur_Poly_Convertors;      use DoblDobl_Laur_Poly_Convertors;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
 with Floating_Lifting_Utilities;         use Floating_Lifting_Utilities;
 with Floating_Integer_Convertors;        use Floating_Integer_Convertors;
-with Transforming_Laurent_Systems;       use Transforming_Laurent_Systems;
 with DoblDobl_IncFix_Continuation;       use DoblDobl_IncFix_Continuation;
 with DoblDobl_Simpomial_Solvers;
 with Polyhedral_Coefficient_Homotopies;  use Polyhedral_Coefficient_Homotopies;
-with BKK_Bound_Computations;             use BKK_Bound_Computations;
 -- for exception handler :
 with DoblDobl_Complex_Laur_Systems_io;
 
@@ -58,9 +53,6 @@ package body DoblDobl_Polyhedral_Continuation is
     scapow : constant Standard_Floating_VecVecs.VecVec(c'range) := Scale(pow);
     ctm : DoblDobl_Complex_VecVecs.VecVec(c'range);
     zero : constant double_double := create(0.0);
-
-    use Standard_Floating_Vectors;
-    use DoblDobl_Complex_Laurentials;
 
     function Eval ( x : DoblDobl_Complex_Vectors.Vector; t : Complex_Number )
                   return DoblDobl_Complex_Vectors.Vector is
@@ -140,9 +132,6 @@ package body DoblDobl_Polyhedral_Continuation is
     scapow : constant Standard_Floating_VecVecs.VecVec(c'range) := Scale(pow);
     ctm : DoblDobl_Complex_VecVecs.VecVec(c'range);
     zero : constant double_double := create(0.0);
-
-    use Standard_Floating_Vectors;
-    use DoblDobl_Complex_Laurentials;
 
     function Eval ( x : DoblDobl_Complex_Vectors.Vector; t : Complex_Number )
                   return DoblDobl_Complex_Vectors.Vector is
@@ -376,8 +365,8 @@ package body DoblDobl_Polyhedral_Continuation is
                   multprec_hermite : in boolean := false ) is
 
     q : Laur_Sys(p'range) := Select_Terms(p,mix,mic.pts.all);
-    sq : Laur_Sys(q'range);
-    pq : Poly_Sys(q'range);
+   -- sq : Laur_Sys(q'range);
+   -- pq : Poly_Sys(q'range);
     qsols : Solution_List;
     len : natural32 := 0;
     tol_zero : constant double_double := create(1.0E-12); 
@@ -423,8 +412,8 @@ package body DoblDobl_Polyhedral_Continuation is
                   multprec_hermite : in boolean := false ) is
 
     q : Laur_Sys(p'range) := Select_Terms(p,mix,mic.pts.all);
-    sq : Laur_Sys(q'range);
-    pq : Poly_Sys(q'range);
+   -- sq : Laur_Sys(q'range);
+   -- pq : Poly_Sys(q'range);
     qsols : Solution_List;
     len : natural32 := 0;
     tol_zero : constant double_double := create(1.0E-12);

@@ -205,8 +205,6 @@ package body Integer_Polyhedral_Continuation is
     j  : Jaco_Mat(h'range,h'first..h'last+1) := Create(h);
     je : Eval_Jaco_Mat(j'range(1),j'range(2)) := Create(j);
 
-    use Standard_Complex_Laurentials;
-
     function Eval ( x : Standard_Complex_Vectors.Vector; t : Complex_Number )
                   return Standard_Complex_Vectors.Vector is
 
@@ -269,8 +267,6 @@ package body Integer_Polyhedral_Continuation is
     hpe : Eval_Laur_Sys(h'range) := Create(h);
     j  : Jaco_Mat(h'range,h'first..h'last+1) := Create(h);
     je : Eval_Jaco_Mat(j'range(1),j'range(2)) := Create(j);
-
-    use Standard_Complex_Laurentials;
 
     function Eval ( x : Standard_Complex_Vectors.Vector; t : Complex_Number )
                   return Standard_Complex_Vectors.Vector is
@@ -339,8 +335,6 @@ package body Integer_Polyhedral_Continuation is
    -- scapow : Standard_Floating_VecVecs.VecVec(c'range) := Scale(pow);
     ctm : Standard_Complex_VecVecs.VecVec(c'range);
 
-    use Standard_Complex_Laurentials;
-
     function Eval ( x : Standard_Complex_Vectors.Vector; t : Complex_Number )
                   return Standard_Complex_Vectors.Vector is
     begin
@@ -407,8 +401,6 @@ package body Integer_Polyhedral_Continuation is
         := Power_Transform(e,lifted,mix,normal);
    -- scapow : Standard_Floating_VecVecs.VecVec(c'range) := Scale(pow);
     ctm : Standard_Complex_VecVecs.VecVec(c'range);
-
-    use Standard_Complex_Laurentials;
 
     function Eval ( x : Standard_Complex_Vectors.Vector; t : Complex_Number )
                   return Standard_Complex_Vectors.Vector is

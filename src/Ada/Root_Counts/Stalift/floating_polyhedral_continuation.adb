@@ -8,7 +8,6 @@ with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Integer_VecVecs;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
-with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Functions;    use Standard_Complex_Laur_Functions;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Laur_Poly_Convertors;      use Standard_Laur_Poly_Convertors;
@@ -56,9 +55,6 @@ package body Floating_Polyhedral_Continuation is
         := Power_Transform(e,lifted,mix,normal);
     scapow : constant Standard_Floating_VecVecs.VecVec(c'range) := Scale(pow);
     ctm : Standard_Complex_VecVecs.VecVec(c'range);
-
-    use Standard_Floating_Vectors;
-    use Standard_Complex_Laurentials;
 
     function Eval ( x : Standard_Complex_Vectors.Vector; t : Complex_Number )
                   return Standard_Complex_Vectors.Vector is
@@ -137,9 +133,6 @@ package body Floating_Polyhedral_Continuation is
         := Power_Transform(e,lifted,mix,normal);
     scapow : constant Standard_Floating_VecVecs.VecVec(c'range) := Scale(pow);
     ctm : Standard_Complex_VecVecs.VecVec(c'range);
-
-    use Standard_Floating_Vectors;
-    use Standard_Complex_Laurentials;
 
     function Eval ( x : Standard_Complex_Vectors.Vector; t : Complex_Number )
                   return Standard_Complex_Vectors.Vector is

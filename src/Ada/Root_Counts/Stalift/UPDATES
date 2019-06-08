@@ -1,3 +1,6 @@
+Sat 8 Jun 2019 : updated {integer,floating,dobldobl,quaddobl}_polyhedral_
+  continuation.adb for compiler warnings.
+
 Fri 7 Jun 2019 : added the verbose level to the procdures in
   stable_polyhedral_continuation, updated drivers_for_mixedvol_algorithm.adb.
 
