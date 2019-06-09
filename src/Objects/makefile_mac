@@ -66,7 +66,8 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
+GNATFLAGS=-gnatv -gnatwa -gnatVa
+# GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
 
@@ -2377,6 +2378,11 @@ use_phc:
 ts_greet:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_greet.adb \
               -o $(BIN)/ts_greet
+
+ts_actopt: corecount.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_actopt.adb
+	gnatbind ts_actopt
+	gnatlink ts_actopt corecount.o -o $(BIN)/ts_actopt
 
 # Test programs for the Library Lib :
 

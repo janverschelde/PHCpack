@@ -1749,6 +1749,9 @@ use_phc:
 ts_greet:
 	make -f $(MAKEFILE) ts_greet
 
+ts_actopt:
+	make -f $(MAKEFILE) ts_actopt
+
 # Test programs in the library Lib :
 
 test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
