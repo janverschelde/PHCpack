@@ -1,4 +1,6 @@
 Sun 9 Jun 2019 : new package actions_and_options, tested by ts_actopt.
+  Added scanning of options getting of arguments to actions_and_options,
+  with extra tests in ts_actopt.
 
 Thu 6 Jun 2019 : added the verbose level to mainroco, drivers_for_root_counts,
   with updates in dispatch.adb.

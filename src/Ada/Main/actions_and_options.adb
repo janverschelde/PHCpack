@@ -71,7 +71,7 @@ package body Actions_and_Options is
       declare
         s : constant string := args(i).all;
       begin
-        if s'last > 0 then
+        if s'last > 1 then
           if s(2) = '0'
            then res := Convert(s(3..s'last)); exit;
           end if;
@@ -91,14 +91,72 @@ package body Actions_and_Options is
       declare
         s : constant string := args(i).all;
       begin
-        if s(2) = opt then
-          if s'last > 2 
-           then res := Convert(s(3..s'last)); exit;
+        if s'last > 1 then
+          if s(2) = opt then
+            if s'last > 2 
+             then res := Convert(s(3..s'last)); exit;
+            end if;
           end if;
         end if;
       end;
     end loop;
     return res;
   end Scan_Precision;
+
+  function Scan_Options ( args : Array_of_Strings ) return string is
+
+    function Scan ( k : in integer; accu : in string ) return string is
+
+    -- DESCRIPTION :
+    --   The current argument has index k in args.
+    --   Accumulates the options in the string accu.
+    --   Returns accu if k is out of range of args.
+
+    begin
+      if k < args'first or k > args'last then
+        return accu;
+      else
+        declare
+          s : constant string := args(k).all;
+        begin
+          if s'last <= 1 then
+            return Scan(k+1,accu);
+          else
+            if s(1) = '-'
+             then return Scan(k+1,accu & s(2));
+             else return Scan(k+1,accu);
+            end if;
+          end if;
+        end;
+      end if;
+    end Scan;
+
+  begin
+    return Scan(1,"");
+  end Scan_Options;
+
+  function Get_Argument
+             ( args : Array_of_Strings; k : integer32 ) return string is
+
+    null_string : constant string := "";
+    cnt : integer32 := 0;
+
+  begin
+    if args'last > 0 then
+      for i in 1..args'last loop
+        declare
+          s : constant string := args(i).all;
+        begin
+          if s(1) /= '-' then
+            cnt := cnt + 1;
+            if k = cnt
+             then return s;
+            end if;
+          end if;
+        end;
+      end loop;
+    end if;
+    return null_string;
+  end Get_Argument;
 
 end Actions_and_Options;

@@ -36,11 +36,17 @@ procedure ts_actopt is
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
     vrb : constant integer32 := Actions_and_Options.Verbose_Level(args);
     seed : constant natural32 := Actions_and_Options.Find_Seed(args);
+    opts : constant string := Actions_and_Options.Scan_Options(args);
 
   begin
     put("The number of tasks : "); put(nt,1); new_line;
     put("The verbose level : "); put(vrb,1); new_line;
     put("The seed : "); put(seed,1); new_line;
+    put("The options : "); put_line(opts);
+    for k in 1..3 loop
+      put("Argument "); put(integer32(k),1); put(" : ");
+      put_line(Actions_and_Options.Get_Argument(args,integer32(k)));
+    end loop;
   end Test_Options;
 
   procedure Main is

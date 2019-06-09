@@ -79,4 +79,18 @@ package Actions_and_Options is
   --   2 : double double precision, as we have -opt2 at the command line;
   --   4 : quad double precision is given as -opt4 at the command line.
 
+  function Scan_Options ( args : Array_of_Strings ) return string;
+
+  -- DESCRIPTION :
+  --   Returns a string with the second character in args following '-'
+  --   in the strings of args.
+
+  function Get_Argument
+             ( args : Array_of_Strings; k : integer32 ) return string;
+
+  -- DESCRIPTION :
+  --   Reads the kth argument from the command line.
+  --   An argument is a string not proceeded by a `-' character.
+  --   The empty string is returned when there is no argument.
+
 end Actions_and_Options;
