@@ -58,6 +58,8 @@ mainzip                      : strip output solutions into Maple format
 maindict                     : convert solutions into Python dictionary
 mainfeed                     : main driver for computing output feedback
 -------------------------------------------------------------------------------
+actions_and_options          : defines actions and options of phc
+ts_actopt                    : test on actions and options
 dispatch                     : scans options and arguments and calls drivers
 -------------------------------------------------------------------------------
 
