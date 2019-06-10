@@ -2852,10 +2852,20 @@ ts_actopt: corecount.o
 	gnatbind ts_actopt
 	gnatlink ts_actopt corecount.o -o $(BIN)/ts_actopt
 
-ts_opthand: corecount.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_opthand.adb
-	gnatbind ts_opthand
-	gnatlink ts_opthand corecount.o -o $(BIN)/ts_opthand
+ts_opthand: corecount.o inputData.o outputData.o iTest.o fTest.o \
+            simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o mvc4phc.o \
+            parameter.o lib2path.o
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_opthand.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind ts_opthand use_c2phc
+	gnatlink ts_opthand corecount.o inputData.o outputData.o iTest.o \
+                            fTest.o simplex4phc.o reltab.o mvc4phc.o \
+                            demicsrun4phc.o lib2path.o $(QD_LIB)/libqd.a \
+                            syscon.o solcon.o phcpack.o parameter.o \
+                 -o $(BIN)/ts_opthand --LINK=$(gpp) 
 
 # Test programs for the Library Lib :
 
