@@ -85,6 +85,13 @@ package Actions_and_Options is
   --   Returns a string with the second character in args following '-'
   --   in the strings of args.
 
+  function Sort_Options ( opts : string ) return string;
+
+  -- DESCRIPTION :
+  --   The string on return contains the options in opts in sorted order,
+  --   sorted so that characters in the constant string actions defined above
+  --   always precede the characters in the constant string options.
+
   function Get_Argument
              ( args : Array_of_Strings; k : integer32 ) return string;
 

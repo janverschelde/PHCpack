@@ -135,6 +135,24 @@ package body Actions_and_Options is
     return Scan(1,"");
   end Scan_Options;
 
+  function Sort_Options ( opts : string ) return string is
+  begin
+    if opts'length <= 1 then
+      return opts;
+    else
+      declare
+        op1 : constant character := opts(opts'first);
+        pos : constant integer32 := Position(actions,op1);
+      begin
+        if pos >= integer32(actions'first) then
+          return opts;
+        else
+          return Sort_Options(opts(opts'first+1..opts'last)) & op1;
+        end if;
+      end;
+    end if;
+  end Sort_Options;
+
   function Get_Argument
              ( args : Array_of_Strings; k : integer32 ) return string is
 
