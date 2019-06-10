@@ -60,6 +60,8 @@ mainfeed                     : main driver for computing output feedback
 -------------------------------------------------------------------------------
 actions_and_options          : defines actions and options of phc
 ts_actopt                    : test on actions and options
+option_handlers              : handles the options for phc
+ts_opthand                   : test on the option handlers
 dispatch                     : scans options and arguments and calls drivers
 -------------------------------------------------------------------------------
 
