@@ -1735,7 +1735,7 @@ ts_mtcelidx:
 
 # Test programs for the Main interactive drivers :
 
-test_main: ts_drivroco ts_blkroco ts_greet use_phc
+test_main: ts_drivroco ts_blkroco ts_greet use_phc ts_actopt ts_opthand
 
 ts_drivroco:
 	make -f $(MAKEFILE) ts_drivroco
@@ -1751,6 +1751,9 @@ ts_greet:
 
 ts_actopt:
 	make -f $(MAKEFILE) ts_actopt
+
+ts_opthand:
+	make -f $(MAKEFILE) ts_opthand
 
 # Test programs in the library Lib :
 

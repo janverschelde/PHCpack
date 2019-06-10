@@ -2847,6 +2847,16 @@ ts_greet:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_greet.adb \
               -o $(BIN)/ts_greet
 
+ts_actopt: corecount.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_actopt.adb
+	gnatbind ts_actopt
+	gnatlink ts_actopt corecount.o -o $(BIN)/ts_actopt
+
+ts_opthand: corecount.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_opthand.adb
+	gnatbind ts_opthand
+	gnatlink ts_opthand corecount.o -o $(BIN)/ts_opthand
+
 # Test programs for the Library Lib :
 
 phcpack.o:
