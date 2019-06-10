@@ -29,27 +29,6 @@ procedure ts_opthand is
     return res;
   end Unix_Command_Line_Arguments;
 
-  procedure Handle ( args : in Array_of_Strings; 
-                     opts,a1,a2,a3 : in string ) is
-
-  -- DESCRIPTION :
-  --   Handles the options in opts of the command line arguments in args,
-  --   with arguments in a1, a2, and a3.
-
-  begin
-    case opts(opts'first) is
-      when 'h' =>
-        if opts'last > 1
-         then Option_Handlers.General_Help(opts(opts'first+1));
-         else Option_Handlers.General_Help(' ');
-        end if;
-      when 'c' => Option_Handlers.Decomposition_Handler(args,opts,a1,a2);
-      when 'e' => Option_Handlers.Enumeration_Handler(args,opts,a1,a2);
-      when 'f' => Option_Handlers.Factorization_Handler(args,opts,a1,a2);
-      when others => put_line("Invalid option ...");
-    end case;
-  end Handle;
-
   procedure Test_Options ( args : in Array_of_Strings ) is
 
   -- DESCRIPTION :
@@ -73,7 +52,7 @@ procedure ts_opthand is
     put("Argument 1 : ");  put_line(arg1);
     put("Argument 2 : ");  put_line(arg2);
     put("Argument 3 : ");  put_line(arg3);
-    Handle(args,sortopts,arg1,arg2,arg3);
+    Option_Handlers.Handle(args,sortopts,arg1,arg2,arg3);
   end Test_Options;
 
   procedure Main is
