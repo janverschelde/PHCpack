@@ -264,7 +264,7 @@ package body Generic_Matrices is
 
   function "*" ( a : Matrix; x : number ) return Matrix is
 
-    res : constant Matrix(a'range(1),a'range(2)) := a*x;
+    res : constant Matrix(a'range(1),a'range(2)) := x*a;
 
   begin
     return res;
