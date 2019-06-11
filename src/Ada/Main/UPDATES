@@ -1,4 +1,5 @@
 Mon 10 Jun 2019 : extended option_handlers, tested by ts_opthand.
+  Added more handlers to option_handlers.
 
 Sun 9 Jun 2019 : new package actions_and_options, tested by ts_actopt.
   Added scanning of options getting of arguments to actions_and_options,

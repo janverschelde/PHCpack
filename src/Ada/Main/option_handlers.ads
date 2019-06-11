@@ -10,6 +10,18 @@ package Option_Handlers is
   -- DESCRIPTION :
   --   Writes general help about an option to screen.
 
+  procedure Help_Version_License
+              ( args : in Array_of_Strings; name : in string );
+
+  -- DESCRIPTION :
+  --   Deals with the options --help, --version, and --license.
+  --   This procedure is called when the first option is '-',
+  --   the specifics of the handler are determined by the contents
+  --   of the first arguments in args.
+  --   The version number is written to the file with the given name
+  --   if the name is not the empty string, otherwise,
+  --   the version string is written to screen.
+
   procedure Good_Format_Handler
               ( opts : in string; infile,outfile : in string );
 
@@ -91,6 +103,17 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
+  --   opts     options extracted from the arguments;
+  --   infile   name of the input file;
+  --   outfile  name of the output file.
+
+  procedure Symbols_Handler
+              ( opts : in string; infile,outfile : in string );
+
+  -- DESCRIPTION :
+  --   Defines the action for the option -o.
+
+  -- ON ENTRY :
   --   opts     options extracted from the arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.

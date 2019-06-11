@@ -4,7 +4,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Greeting_Banners;
 with Actions_and_Options;
-with maingood;
+with maingood,mainsymb;
 with mainscal;
 with mainred,mainred2,mainred4;
 with bablroco,mainroco;
@@ -81,13 +81,46 @@ package body Option_Handlers is
     end case;
   end General_Help;
 
+  procedure Help_Version_License
+              ( args : in Array_of_Strings; name : in string ) is
+
+    arg : constant string := args(1).all;
+
+  begin
+    if arg = "--help" then
+      Greeting_Banners.show_help;
+    elsif arg = "--version" then
+      if name = "" then
+        put_line(Greeting_Banners.Version);
+      else
+        declare
+          file : file_type;
+        begin
+          create(file,out_file,name);
+          put_line(file,Greeting_Banners.Version);
+          close(file);
+        end;
+      end if;
+    elsif arg = "--license" then
+      put_line("PHCpack is free and open source software.");
+      put_line("You can redistribute the code and/or modify it under");
+      put_line("the GNU General Pulic License as published by");
+      put_line("the Free Software Foundation.");
+    elsif arg = "--cite" then
+      Greeting_Banners.How_to_Cite;
+    else
+      put_line(arg & " is not recognized.");
+    end if;
+  end Help_Version_License;
+
   procedure Good_Format_Handler
               ( opts : in string; infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4goodformat;
     else
       if infile = "" or outfile = ""  -- still interactive input needed
@@ -115,14 +148,15 @@ package body Option_Handlers is
               ( args : in Array_of_Strings; opts : in string;
                 infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     compprc : constant natural32
             := Actions_and_Options.Scan_Precision(args,'B');
     vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4compsolve;
     else
       if nt > 0 then
@@ -159,12 +193,13 @@ package body Option_Handlers is
               ( args : in Array_of_Strings; opts : in string;
                 infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     redprc : constant natural32
            := Actions_and_Options.Scan_Precision(args,'r');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4reduction;
     else
       put_line(welcome); put_line(reduban);
@@ -182,13 +217,14 @@ package body Option_Handlers is
               ( args : in Array_of_Strings; opts : in string;
                 infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     bpos : constant integer32 := Actions_and_Options.Position(opts,'b');
     vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4rootcounts;
     elsif bpos >= integer32(opts'first) then
       if nt > 0 
@@ -212,13 +248,14 @@ package body Option_Handlers is
               ( args : in Array_of_Strings; opts : in string;
                 infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     bpos : constant integer32 := Actions_and_Options.Position(opts,'b');
     vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4mixvol;
     elsif bpos >= integer32(opts'first) then
       if nt > 0 
@@ -238,11 +275,27 @@ package body Option_Handlers is
     end if;
   end Mixed_Volume_Handler;
 
+  procedure Symbols_Handler
+              ( opts : in string; infile,outfile : in string ) is
+
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+
+  begin
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
+      Greeting_Banners.help4symbols;
+    else
+      put_line(welcome); put_line(symbban);
+      mainsymb(infile,outfile);
+    end if;
+  end Symbols_Handler;
+
   procedure Continuation_Handler
               ( args : in Array_of_Strings; opts : in string;
                 file1,file2,file3 : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     bpos : constant integer32 := Actions_and_Options.Position(opts,'b');
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
     contprc : constant natural32
@@ -251,7 +304,7 @@ package body Option_Handlers is
           := Actions_and_Options.Scan_Precision(args,'b');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4continuation;
     elsif bpos >= integer32(opts'first) then
       if contprc = 2 or bbprc = 2 then
@@ -278,10 +331,11 @@ package body Option_Handlers is
   procedure Jumpstart_Handler
               ( opts : in string; file1,file2,file3 : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4jumpstart;
     else
       put_line(welcome); put_line(trackban);
@@ -292,10 +346,11 @@ package body Option_Handlers is
   procedure Algorithmic_Differentiation_Handler
               ( opts : in string; file1,file2,file3 : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4adepath;
     else
       put_line(welcome); put_line(adepban);
@@ -306,11 +361,12 @@ package body Option_Handlers is
   procedure Enumeration_Handler
               ( opts : in string; infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     bpos : constant integer32 := Actions_and_Options.Position(opts,'b');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4enumeration;
     elsif bpos >= integer32(opts'first) then
       bablenum(infile,outfile);
@@ -325,10 +381,11 @@ package body Option_Handlers is
                 infile,outfile : in string ) is
 
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
-    pos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if pos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4components;
     else
       if nt > 0 then
@@ -351,10 +408,11 @@ package body Option_Handlers is
                 infile,outfile : in string ) is
 
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
-    pos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if pos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4factor;
     else
       put_line(welcome);
@@ -375,12 +433,13 @@ package body Option_Handlers is
               ( args : in Array_of_Strings; opts : in string;
                 infile,outfile : in string ) is
 
-    pos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     prc : constant natural32
         := Actions_and_Options.Scan_Precision(args,'u');
 
   begin
-    if pos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4series;
     else
       put_line(welcome);
@@ -405,7 +464,8 @@ package body Option_Handlers is
               ( args : in Array_of_Strings; opts : in string;
                 infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     bpos : constant integer32 := Actions_and_Options.Position(opts,'b');
     veriprc : constant natural32
             := Actions_and_Options.Scan_Precision(args,'v');
@@ -413,7 +473,7 @@ package body Option_Handlers is
           := Actions_and_Options.Scan_Precision(args,'b');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4verification;
     elsif bpos >= integer32(opts'first) then 
       if veriprc = 2 or bbprc = 2 then
@@ -433,12 +493,13 @@ package body Option_Handlers is
               ( args : in Array_of_Strings; opts : in string;
                 polyfile,logfile : in string ) is
 
-    pos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     precision : constant natural32
               := Actions_and_Options.Scan_Precision(args,'l');
 
   begin
-    if pos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4hypersurface;
     else
       if polyfile = "" or logfile = ""
@@ -455,10 +516,11 @@ package body Option_Handlers is
   procedure Witness_Set_Intersection_Handler
               ( opts,witset_one,witset_two,logfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4witsetinsect;
     else
       if witset_one = "" or witset_two = "" or logfile = ""
@@ -471,10 +533,11 @@ package body Option_Handlers is
   procedure Witness_Set_Sampler_Handler
               ( opts : in string; infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if hpos >= integer32(opts'first) then
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4sampler;
     else
       put_line(welcome); put_line(samban);
@@ -485,10 +548,11 @@ package body Option_Handlers is
   procedure Maple_Format_Handler
               ( opts : in string; infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if hpos >= integer32(opts'first)
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
      then Greeting_Banners.help4mapleform;
      else mainzip(infile,outfile);
     end if;
@@ -497,10 +561,11 @@ package body Option_Handlers is
   procedure Python_Format_Handler
               ( opts : in string; infile,outfile : in string ) is
 
-    hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
 
   begin
-    if hpos >= integer32(opts'first)
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
      then Greeting_Banners.help4pythondict;
      else maindict(infile,outfile);
     end if;
@@ -512,6 +577,7 @@ package body Option_Handlers is
                      opts,a1,a2,a3 : in string ) is
   begin
     case opts(opts'first) is
+      when '-' => Help_Version_License(args,a1);
       when 'g' => Good_Format_Handler(opts,a1,a2);
       when 'h' =>
         if opts'last > 1
@@ -524,6 +590,7 @@ package body Option_Handlers is
       when 'd' => Reduction_Handler(args,opts,a1,a2);
       when 'r' => Root_Count_Handler(args,opts,a1,a2);
       when 'm' => Mixed_Volume_Handler(args,opts,a1,a2);
+      when 'o' => Symbols_Handler(opts,a1,a2);
       when 'p' => Continuation_Handler(args,opts,a1,a2,a3);
       when 'q' => Jumpstart_Handler(opts,a1,a2,a3);
       when 'j' => Algorithmic_Differentiation_Handler(opts,a1,a2,a3);
