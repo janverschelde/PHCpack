@@ -4,6 +4,8 @@ package Option_Handlers is
 
 -- DESCRIPTION :
 --   Defines the handlers for the options of phc.
+--   The option handlers define the main program,
+--   in a top down design point of view of the software.
 
   procedure General_Help ( opt : in character );
 
@@ -165,7 +167,17 @@ package Option_Handlers is
   --   Defines the action for the option -e.
 
   -- ON ENTRY :
-  --   args     command line arguments;
+  --   opts     options extracted from the arguments;
+  --   infile   name of the input file;
+  --   outfile  name of the output file.
+
+  procedure Feedback_Handler
+              ( opts : in string; infile,outfile : in string );
+
+  -- DESCRIPTION :
+  --   Defines the action for the option -k.
+
+  -- ON ENTRY :
   --   opts     options extracted from the arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.

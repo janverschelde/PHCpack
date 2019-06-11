@@ -13,7 +13,7 @@ with mainpoco,bablpoco,bablpoco2,bablpoco4;
 with mainadep,maintrack;
 with mainfac;
 with maindeco;
-with mainenum,bablenum;
+with mainenum,bablenum,mainfeed;
 with mainseries;
 with mainvali,bablvali,bablvali2,bablvali4;
 with compsolve,compsolve2,compsolve4;
@@ -376,6 +376,19 @@ package body Option_Handlers is
     end if;
   end Enumeration_Handler;
 
+  procedure Feedback_Handler
+              ( opts : in string; infile,outfile : in string ) is
+
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+
+  begin
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
+     then Greeting_Banners.help4feedback;
+     else mainfeed(infile,outfile);
+    end if;
+  end Feedback_Handler;
+
   procedure Decomposition_Handler
               ( args : in Array_of_Strings; opts : in string;
                 infile,outfile : in string ) is
@@ -596,6 +609,7 @@ package body Option_Handlers is
       when 'j' => Algorithmic_Differentiation_Handler(opts,a1,a2,a3);
       when 'c' => Decomposition_Handler(args,opts,a1,a2);
       when 'e' => Enumeration_Handler(opts,a1,a2);
+      when 'k' => Feedback_Handler(opts,a1,a2);
       when 'f' => Factorization_Handler(args,opts,a1,a2);
       when 'u' => Series_Handler(args,opts,a1,a2);
       when 'v' => Verification_Handler(args,opts,a1,a2);
