@@ -1,4 +1,4 @@
-Main interactive drivers and dispatcher for the software package PHCv2.4.68
+Main interactive drivers and top level procedure in PHCv2.4.68
 
 New in release 2.1 in this directory is the conversion between symbolic 
 and tableau formats, plus the interface of the solutions in Maple format.
@@ -15,12 +15,12 @@ Quad double arithmetic was introduced in v2.3.55.  The blackbox solver
 phc -b was extended in v2.3.68 with new tools for binomial systems,
 and updated with an irreducible decomposition for binomial systems.
 
-The are four parts in this library :
+The are several parts in this library :
 
-1. Separate drivers
-2. Main drivers and black-box solver
+1. separate drivers
+2. main drivers and black-box solver
 3. PHCpack as server package and how to use it
-4. The main dispatcher
+4. the top level procedure
 
 -------------------------------------------------------------------------------
 file name                    : short description
@@ -62,7 +62,7 @@ actions_and_options          : defines actions and options of phc
 ts_actopt                    : test on actions and options
 option_handlers              : handles the options for phc
 ts_opthand                   : test on the option handlers
-dispatch                     : scans options and arguments and calls drivers
+phctop                       : scans options and arguments and calls drivers
 -------------------------------------------------------------------------------
 
 The driver for root refinement are located at this level because symmetry
