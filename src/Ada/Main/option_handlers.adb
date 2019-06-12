@@ -5,16 +5,14 @@ with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Random_Numbers;
 with Greeting_Banners;
 with Actions_and_Options;
-with bablphc,bablphc2,bablphc4;
+with mainphc,bablphc,bablphc2,bablphc4;
 with maingood,mainsymb;
-with mainscal;
-with mainred,mainred2,mainred4;
+with mainscal,mainred,mainred2,mainred4;
 with bablroco,mainroco;
 with babldmvc,mainsmvc;
 with mainpoco,bablpoco,bablpoco2,bablpoco4;
 with mainadep,maintrack;
-with mainfac;
-with maindeco;
+with mainfac,maindeco;
 with mainenum,bablenum,mainfeed;
 with mainseries;
 with mainvali,bablvali,bablvali2,bablvali4;
@@ -85,6 +83,14 @@ package body Option_Handlers is
     end case;
   end General_Help;
 
+  procedure General_Help_Handler ( opts : in string ) is
+  begin
+    if opts'last > 1
+     then General_Help(opts(opts'first+1));
+     else General_Help(' ');
+    end if;
+  end General_Help_Handler;
+
   procedure Help_Version_License
               ( args : in Array_of_Strings; name : in string ) is
 
@@ -116,6 +122,19 @@ package body Option_Handlers is
       put_line(arg & " is not recognized.");
     end if;
   end Help_Version_License;
+
+  procedure Full_Mode_Handler
+              ( args : in Array_of_Strings; infile,outfile : in string ) is
+
+    nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
+
+  begin
+    put_line(welcome);
+    if nt > 0
+     then mainphc(nt,infile,outfile);
+     else mainphc(0,infile,outfile);
+    end if;
+  end Full_Mode_Handler;
 
   procedure Good_Format_Handler
               ( opts : in string; infile,outfile : in string ) is
@@ -694,11 +713,7 @@ package body Option_Handlers is
     case opts(opts'first) is
       when '-' => Help_Version_License(args,a1);
       when 'g' => Good_Format_Handler(opts,a1,a2);
-      when 'h' =>
-        if opts'last > 1
-         then General_Help(opts(opts'first+1));
-         else General_Help(' ');
-        end if;
+      when 'h' => General_Help_Handler(opts);
       when 'a' => EqnByEqn_Solver_Handler(opts,a1,a2);
       when 'b' => BlackBox_Solver_Handler(args,opts,a1,a2,a3);
       when 'B' => Component_Solver_Handler(args,opts,a1,a2);
@@ -721,7 +736,7 @@ package body Option_Handlers is
       when 'x' => Python_Format_Handler(opts,a1,a2);
       when 'y' => Witness_Set_Sampler_Handler(opts,a1,a2);
       when 'z' => Maple_Format_Handler(opts,a1,a2);
-      when others => put_line("Invalid option ...");
+      when others => Full_Mode_Handler(args,a1,a2);
     end case;
   end Handle;
 

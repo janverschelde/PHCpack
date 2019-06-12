@@ -12,6 +12,14 @@ package Option_Handlers is
   -- DESCRIPTION :
   --   Writes general help about an option to screen.
 
+  procedure General_Help_Handler ( opts : in character );
+
+  -- DESCRIPTION :
+  --   Wraps the procedure General_Help.
+
+  -- ON ENTRY :
+  --   opts     options extracted from the command line arguments.
+
   procedure Help_Version_License
               ( args : in Array_of_Strings; name : in string );
 
@@ -24,6 +32,17 @@ package Option_Handlers is
   --   if the name is not the empty string, otherwise,
   --   the version string is written to screen.
 
+  procedure Full_Mode_Handler
+              ( args : in Array_of_Strings; infile,outfile : in string );
+
+  -- DESCRIPTION :
+  --   Defines the action for running phc in full mode.
+
+  -- ON ENTRY :
+  --   args     command line arguments;
+  --   infile   name of the input file;
+  --   outfile  name of the output file.
+
   procedure Good_Format_Handler
               ( opts : in string; infile,outfile : in string );
 
@@ -31,7 +50,7 @@ package Option_Handlers is
   --   Defines the action for the option -g.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -47,7 +66,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments.
+  --   opts     options extracted from the command line arguments.
 
   procedure EqnByEqn_Solver_Handler
               ( opts : in string; infile,outfile : in string );
@@ -57,7 +76,7 @@ package Option_Handlers is
   --   the equation-by-equation solver.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -88,7 +107,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -100,7 +119,7 @@ package Option_Handlers is
   --   for equation and coefficient scaling.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -114,7 +133,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -128,7 +147,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -142,7 +161,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -153,7 +172,7 @@ package Option_Handlers is
   --   Defines the action for the option -o.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -167,7 +186,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   file1    name of the input file with the target system;
   --   file2    name of the output file, if not combined with -b,
   --            otherwise, as -p -b, file2 contains the start system
@@ -182,7 +201,7 @@ package Option_Handlers is
   --   for path tracking with jumpstarting.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   file1    name of the input file with the target system;
   --   file2    name of the input file with the start system;
   --   file3    name of the output file.
@@ -191,10 +210,11 @@ package Option_Handlers is
               ( opts : in string; file1,file2,file3 : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -j.
+  --   Defines the action for the option -j,
+  --   for path trackers with algorithmic differentation.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   file1    name of the input file with the target system;
   --   file2    name of the input file with the start system;
   --   file3    name of the output file.
@@ -203,10 +223,11 @@ package Option_Handlers is
               ( opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -e.
+  --   Defines the action for the option -e,
+  --   for the numerical Schubert calculus.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -217,7 +238,7 @@ package Option_Handlers is
   --   Defines the action for the option -k.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -230,7 +251,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -239,11 +260,12 @@ package Option_Handlers is
                 infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -f.
+  --   Defines the action for the option -f,
+  --   to filter and factor positive dimensional solution sets.
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -256,7 +278,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -265,11 +287,12 @@ package Option_Handlers is
                 infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -v.
+  --   Defines the action for the option -v,
+  --   to verify solutions.
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -282,7 +305,7 @@ package Option_Handlers is
 
   -- ON ENTRY :
   --   args     command line arguments;
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the command line arguments;
   --   polyfile is the name of the input file;
   --   logfile  name of the output file.
 
@@ -293,7 +316,7 @@ package Option_Handlers is
   --   Defines the action for the option -w.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the comamnd line arguments;
   --   witset_one is the name of the first witness set;
   --   witset_two is the name of the second witness set;
   --   logfile  name of the output file.
@@ -305,7 +328,7 @@ package Option_Handlers is
   --   Defines the action for the option -y.
 
   -- ON ENTRY :
-  --   opts     options extracted from the arguments;
+  --   opts     options extracted from the comamnd line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
