@@ -67,7 +67,9 @@ procedure ts_opthand is
     new_line;
     put_line("Testing the processing of actions and options ...");
     put("The number of arguments : "); put(argc,1); new_line;
-    if argc > 0 then
+    if argc = 0 then
+      Option_Handlers.Handle_no_Options("","");
+    else -- argc > 0
       declare
         args : constant Array_of_Strings := Unix_Command_Line_Arguments(argc);
       begin

@@ -12,7 +12,7 @@ package Option_Handlers is
   -- DESCRIPTION :
   --   Writes general help about an option to screen.
 
-  procedure General_Help_Handler ( opts : in character );
+  procedure General_Help_Handler ( opts : in string );
 
   -- DESCRIPTION :
   --   Wraps the procedure General_Help.
@@ -33,13 +33,15 @@ package Option_Handlers is
   --   the version string is written to screen.
 
   procedure Full_Mode_Handler
-              ( args : in Array_of_Strings; infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
   --   Defines the action for running phc in full mode.
 
   -- ON ENTRY :
   --   args     command line arguments;
+  --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
@@ -373,5 +375,14 @@ package Option_Handlers is
 
   -- REQUIRED :
   --   The options in opts are sorted, actions precede options.
+
+  procedure Handle_no_Options ( infile,outfile : in string );
+
+  -- DESCRIPTION :
+  --   This handler is for when there are no command line arguments.
+
+  -- ON ENTRY :
+  --   infile   name of the input file;
+  --   outfile  name of the output file.
 
 end Option_Handlers;

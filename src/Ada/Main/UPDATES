@@ -1,4 +1,6 @@
 Wed 12 Jun 2019 : improved option_handlers, defining the full mode handler.
+  Dealt with the no options case, added exception handlers and checking
+  whether the first two files names are identical.
 
 Tue 11 Jun 2019 : added the handler for the -k option to option_handlers.
   Added handler for blackbox solver in option_handlers and fixed a bug

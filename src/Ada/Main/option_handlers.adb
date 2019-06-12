@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Random_Numbers;
+with Write_Seed_Number;
 with Greeting_Banners;
 with Actions_and_Options;
 with mainphc,bablphc,bablphc2,bablphc4;
@@ -124,11 +125,19 @@ package body Option_Handlers is
   end Help_Version_License;
 
   procedure Full_Mode_Handler
-              ( args : in Array_of_Strings; infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
+    optstr : constant string := Actions_and_Options.options;
+    firstopt : constant character := opts(opts'first);
+    pos : constant integer32 := Actions_and_Options.Position(optstr,firstopt);
 
   begin
+    if pos < integer32(optstr'first) then
+      put("The option '"); put(firstopt);
+      put_line("' is not recognised.  Will ignore it...");
+    end if;
     put_line(welcome);
     if nt > 0
      then mainphc(nt,infile,outfile);
@@ -704,40 +713,78 @@ package body Option_Handlers is
     end if;
   end Python_Format_Handler;
 
--- THE MAIN HANDLER :
+-- THE MAIN HANDLERS :
+
+  procedure Handle_Options ( args : in Array_of_Strings; 
+                             opts,a1,a2,a3 : in string ) is
+
+  -- DESCRIPTION :
+  --   The handler after checking the case where the first two
+  --   file names in a1 and a2 would be the same nonempty string.
+
+  begin
+    Find_and_Set_Seed(args,opts);
+    if opts'length = 0 then
+      Handle_no_Options(a1,a2);
+    else
+      case opts(opts'first) is
+        when '-' => Help_Version_License(args,a1);
+        when 'g' => Good_Format_Handler(opts,a1,a2);
+        when 'h' => General_Help_Handler(opts);
+        when 'a' => EqnByEqn_Solver_Handler(opts,a1,a2);
+        when 'b' => BlackBox_Solver_Handler(args,opts,a1,a2,a3);
+        when 'B' => Component_Solver_Handler(args,opts,a1,a2);
+        when 's' => Scaling_Handler(opts,a1,a2);
+        when 'd' => Reduction_Handler(args,opts,a1,a2);
+        when 'r' => Root_Count_Handler(args,opts,a1,a2);
+        when 'm' => Mixed_Volume_Handler(args,opts,a1,a2);
+        when 'o' => Symbols_Handler(opts,a1,a2);
+        when 'p' => Continuation_Handler(args,opts,a1,a2,a3);
+        when 'q' => Jumpstart_Handler(opts,a1,a2,a3);
+        when 'j' => Algorithmic_Differentiation_Handler(opts,a1,a2,a3);
+        when 'c' => Decomposition_Handler(args,opts,a1,a2);
+        when 'e' => Enumeration_Handler(opts,a1,a2);
+        when 'k' => Feedback_Handler(opts,a1,a2);
+        when 'f' => Factorization_Handler(args,opts,a1,a2);
+        when 'u' => Series_Handler(args,opts,a1,a2);
+        when 'v' => Verification_Handler(args,opts,a1,a2);
+        when 'l' => Witness_Set_for_Hypersurface_Handler(args,opts,a1,a2);
+        when 'w' => Witness_Set_Intersection_Handler(opts,a1,a2,a3);
+        when 'x' => Python_Format_Handler(opts,a1,a2);
+        when 'y' => Witness_Set_Sampler_Handler(opts,a1,a2);
+        when 'z' => Maple_Format_Handler(opts,a1,a2);
+        when others => Full_Mode_Handler(args,opts,a1,a2);
+      end case;
+    end if;
+  exception
+    when others =>
+      put_line("Oops, an unhandled exception occurred.");
+      Write_Seed_Number(standard_output);
+      put_line("Use the seed number to reproduce the error."); raise;
+  end Handle_Options;
 
   procedure Handle ( args : in Array_of_Strings; 
                      opts,a1,a2,a3 : in string ) is
   begin
-    Find_and_Set_Seed(args,opts);
-    case opts(opts'first) is
-      when '-' => Help_Version_License(args,a1);
-      when 'g' => Good_Format_Handler(opts,a1,a2);
-      when 'h' => General_Help_Handler(opts);
-      when 'a' => EqnByEqn_Solver_Handler(opts,a1,a2);
-      when 'b' => BlackBox_Solver_Handler(args,opts,a1,a2,a3);
-      when 'B' => Component_Solver_Handler(args,opts,a1,a2);
-      when 's' => Scaling_Handler(opts,a1,a2);
-      when 'd' => Reduction_Handler(args,opts,a1,a2);
-      when 'r' => Root_Count_Handler(args,opts,a1,a2);
-      when 'm' => Mixed_Volume_Handler(args,opts,a1,a2);
-      when 'o' => Symbols_Handler(opts,a1,a2);
-      when 'p' => Continuation_Handler(args,opts,a1,a2,a3);
-      when 'q' => Jumpstart_Handler(opts,a1,a2,a3);
-      when 'j' => Algorithmic_Differentiation_Handler(opts,a1,a2,a3);
-      when 'c' => Decomposition_Handler(args,opts,a1,a2);
-      when 'e' => Enumeration_Handler(opts,a1,a2);
-      when 'k' => Feedback_Handler(opts,a1,a2);
-      when 'f' => Factorization_Handler(args,opts,a1,a2);
-      when 'u' => Series_Handler(args,opts,a1,a2);
-      when 'v' => Verification_Handler(args,opts,a1,a2);
-      when 'l' => Witness_Set_for_Hypersurface_Handler(args,opts,a1,a2);
-      when 'w' => Witness_Set_Intersection_Handler(opts,a1,a2,a3);
-      when 'x' => Python_Format_Handler(opts,a1,a2);
-      when 'y' => Witness_Set_Sampler_Handler(opts,a1,a2);
-      when 'z' => Maple_Format_Handler(opts,a1,a2);
-      when others => Full_Mode_Handler(args,a1,a2);
-    end case;
+    if a1 /= "" and then (a1 = a2) then
+      new_line;
+      put_line("The first two file names are identical.");
+      put_line("Will ignore the second file name.");
+      Handle_Options(args,opts,a1,"",a3);
+    else
+      Handle_Options(args,opts,a1,a2,a3);
+    end if;
   end Handle;
+
+  procedure Handle_no_Options ( infile,outfile : in string ) is
+  begin
+    put_line(welcome);
+    mainphc(0,infile,outfile);
+  exception
+    when others =>
+      put_line("Oops, an unhandled exception occurred.");
+      Write_Seed_Number(standard_output);
+      put_line("Use the seed number to reproduce the error."); raise;
+  end Handle_no_Options;
 
 end Option_Handlers;
