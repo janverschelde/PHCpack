@@ -35,23 +35,56 @@ package Option_Handlers is
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
+  procedure Find_and_Set_Seed
+              ( args : in Array_of_Strings; opts : in string );
+
+  -- DESCRIPTION :
+  --   In case the '-0' option is on, the value of the seed
+  --   will be extracted from the command line, and if nonzero
+  --   it will be used to set the seed.
+  --   If there is no value at the command line after '-0',
+  --   then a fixed constant value is used as seed.
+
+  -- ON ENTRY :
+  --   args     command line arguments;
+  --   opts     options extracted from the arguments.
+
   procedure EqnByEqn_Solver_Handler
               ( opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -a.
+  --   Defines the action for the option -a,
+  --   the equation-by-equation solver.
 
   -- ON ENTRY :
   --   opts     options extracted from the arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
+  procedure BlackBox_Solver_Handler
+              ( args : in Array_of_Strings; opts : in string;
+                file1,file2,file3 : in string );
+
+  -- DESCRIPTION :
+  --   Defines the action for the option -b,
+  --   the blackbox solver for isolated solutions.
+
+  -- ON ENTRY :
+  --   args     command line arguments;
+  --   opts     options extracted from the arguments;
+  --   file1    name of the input file with the target system;
+  --   file2    name of the output file, if not combined with -b,
+  --            otherwise, as -p -b, file2 contains the start system
+  --            with the start solutions;
+  --   file3    name of the output file, when running as -p -b.
+
   procedure Component_Solver_Handler
               ( args : in Array_of_Strings; opts : in string;
                 infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -B.
+  --   Defines the action for the option -B,
+  --   the blackbox numerical irreducible decomposition.
 
   -- ON ENTRY :
   --   args     command line arguments;
@@ -63,7 +96,8 @@ package Option_Handlers is
               ( opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -s.
+  --   Defines the action for the option -s,
+  --   for equation and coefficient scaling.
 
   -- ON ENTRY :
   --   opts     options extracted from the arguments;
@@ -75,7 +109,8 @@ package Option_Handlers is
                 infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -d.
+  --   Defines the action for the option -d,
+  --   for total degree reduction.
 
   -- ON ENTRY :
   --   args     command line arguments;
@@ -88,7 +123,8 @@ package Option_Handlers is
                 infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -r.
+  --   Defines the action for the option -r,
+  --   for root counts and start system construction.
 
   -- ON ENTRY :
   --   args     command line arguments;
@@ -101,7 +137,8 @@ package Option_Handlers is
                 infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -m.
+  --   Defines the action for the option -m,
+  --   for mixed volumes and polyhedral homotopies.
 
   -- ON ENTRY :
   --   args     command line arguments;
@@ -125,7 +162,8 @@ package Option_Handlers is
                 file1,file2,file3 : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -p.
+  --   Defines the action for the option -p,
+  --   for continuation methods.
 
   -- ON ENTRY :
   --   args     command line arguments;
@@ -140,7 +178,8 @@ package Option_Handlers is
               ( opts : in string; file1,file2,file3 : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -q.
+  --   Defines the action for the option -q,
+  --   for path tracking with jumpstarting.
 
   -- ON ENTRY :
   --   opts     options extracted from the arguments;

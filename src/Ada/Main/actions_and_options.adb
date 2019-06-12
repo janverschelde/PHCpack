@@ -24,7 +24,7 @@ package body Actions_and_Options is
         s : constant string := args(i).all;
       begin
         if s'last > 1 then
-          if s(2) = 't' then
+          if s(1) = '-' and s(2) = 't' then
             if s(3..s'last) = "" then -- no number of cores provided
               if cnt > 0
                then res := natural32(cnt);
@@ -50,7 +50,7 @@ package body Actions_and_Options is
         s : constant string := args(i).all;
       begin
         if s'last > 1 then
-          if s(2) = 'V' then
+          if s(1) = '-' and s(2) = 'V' then
             if s(3..s'last) /= ""    -- if verbose level provided
              then res := Convert(s(3..s'last));
             end if;
@@ -72,7 +72,7 @@ package body Actions_and_Options is
         s : constant string := args(i).all;
       begin
         if s'last > 1 then
-          if s(2) = '0'
+          if s(1) = '-' and s(2) = '0'
            then res := Convert(s(3..s'last)); exit;
           end if;
         end if;
@@ -92,7 +92,7 @@ package body Actions_and_Options is
         s : constant string := args(i).all;
       begin
         if s'last > 1 then
-          if s(2) = opt then
+          if s(1) = '-' and s(2) = opt then
             if s'last > 2 
              then res := Convert(s(3..s'last)); exit;
             end if;

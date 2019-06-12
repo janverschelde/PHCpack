@@ -2,8 +2,10 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Characters_and_Numbers;             use Characters_and_Numbers;
+with Standard_Random_Numbers;
 with Greeting_Banners;
 with Actions_and_Options;
+with bablphc,bablphc2,bablphc4;
 with maingood,mainsymb;
 with mainscal;
 with mainred,mainred2,mainred4;
@@ -23,6 +25,8 @@ with mainsam,mainwit;
 with maindict,mainzip;
 
 package body Option_Handlers is
+
+  fixed_seed : constant natural32 := 68717;
 
 -- BANNERS WITH INFORMATION TO START DIALOGUE WITH USER :
 
@@ -130,19 +134,116 @@ package body Option_Handlers is
     end if;
   end Good_Format_Handler;
 
-  procedure EqnByEqn_Solver_Handler
-              ( opts : in string; infile,outfile : in string ) is
+  procedure Find_and_Set_Seed
+              ( args : in Array_of_Strings; opts : in string ) is
 
-    pos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    pos : constant integer32 := Actions_and_Options.Position(opts,'0');
+    seed_found : natural32;
 
   begin
     if pos >= integer32(opts'first) then
+      seed_found := Actions_and_Options.Find_Seed(args);
+      if seed_found = 0
+       then Standard_Random_Numbers.Set_Seed(fixed_seed);
+       else Standard_Random_Numbers.Set_Seed(seed_found);
+      end if;
+    end if;
+  end Find_and_Set_Seed;
+
+  procedure EqnByEqn_Solver_Handler
+              ( opts : in string; infile,outfile : in string ) is
+
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+
+  begin
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4eqnbyeqn;
     else
       put_line(welcome); put_line(slvban);
       mainsolve(infile,outfile);
     end if;
   end EqnByEqn_Solver_Handler;
+
+  procedure BlackBox_Solver_Handler
+              ( args : in Array_of_Strings; opts : in string;
+                file1,file2,file3 : in string ) is
+
+    hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
+    hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    epos : constant integer32 := Actions_and_Options.Position(opts,'e');
+    spos : constant integer32 := Actions_and_Options.Position(opts,'s');
+    dpos : constant integer32 := Actions_and_Options.Position(opts,'d');
+    rpos : constant integer32 := Actions_and_Options.Position(opts,'r');
+    mpos : constant integer32 := Actions_and_Options.Position(opts,'m');
+    ppos : constant integer32 := Actions_and_Options.Position(opts,'p');
+    vpos : constant integer32 := Actions_and_Options.Position(opts,'v');
+    nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
+    redprc : constant natural32
+           := Actions_and_Options.Scan_Precision(args,'d');
+    bbprc : constant natural32
+          := Actions_and_Options.Scan_Precision(args,'b');
+    valiprc : constant natural32
+            := Actions_and_Options.Scan_Precision(args,'v');
+    contprc : constant natural32
+            := Actions_and_Options.Scan_Precision(args,'p');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
+
+  begin
+    if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
+      Greeting_Banners.help4blackbox;
+    elsif spos >= integer32(opts'first) then
+      mainscal(file1,file2);
+    elsif epos >= integer32(opts'first) then
+      bablenum(file1,file2);
+    elsif dpos >= integer32(opts'first) then
+      if redprc = 2 then
+        mainred2(file1,file2);
+      elsif redprc = 4 then
+        mainred4(file1,file2);
+      else
+        mainred(file1,file2);
+      end if;
+    elsif rpos >= integer32(opts'first) then
+      if nt > 0
+       then bablroco(nt,file1,file2);
+       else bablroco(0,file1,file2);
+      end if;
+    elsif mpos >= integer32(opts'first) then
+      if nt > 0
+       then babldmvc(nt,file1,file2);
+       else babldmvc(0,file1,file2);
+      end if;
+    elsif ppos >= integer32(opts'first) then
+      if bbprc = 2 or contprc = 2 then
+        bablpoco2(file1,file2,file3);
+      elsif bbprc = 4 or contprc = 4 then
+        bablpoco4(file1,file2,file3);
+      else
+        bablpoco(file1,file2,file3);
+      end if;
+    elsif vpos >= integer32(opts'first) then
+      if bbprc = 2 or valiprc = 2 then
+        bablvali2(file1,file2);
+      elsif bbprc = 4 or valiprc = 4 then
+        bablvali4(file1,file2);
+      else
+        bablvali(file1,file2);
+      end if;
+    elsif nt > 0 then
+      case bbprc is
+        when 2 => bablphc2(nt,file1,file2,vrblvl);
+        when 4 => bablphc4(nt,file1,file2,vrblvl);
+        when others => bablphc(nt,file1,file2,vrblvl);
+      end case;
+    else
+      case bbprc is
+        when 2 => bablphc2(0,file1,file2,vrblvl);
+        when 4 => bablphc4(0,file1,file2,vrblvl);
+        when others => bablphc(0,file1,file2,vrblvl);
+      end case;
+    end if;
+  end BlackBox_Solver_Handler;
 
   procedure Component_Solver_Handler
               ( args : in Array_of_Strings; opts : in string;
@@ -589,6 +690,7 @@ package body Option_Handlers is
   procedure Handle ( args : in Array_of_Strings; 
                      opts,a1,a2,a3 : in string ) is
   begin
+    Find_and_Set_Seed(args,opts);
     case opts(opts'first) is
       when '-' => Help_Version_License(args,a1);
       when 'g' => Good_Format_Handler(opts,a1,a2);
@@ -598,6 +700,7 @@ package body Option_Handlers is
          else General_Help(' ');
         end if;
       when 'a' => EqnByEqn_Solver_Handler(opts,a1,a2);
+      when 'b' => BlackBox_Solver_Handler(args,opts,a1,a2,a3);
       when 'B' => Component_Solver_Handler(args,opts,a1,a2);
       when 's' => Scaling_Handler(opts,a1,a2);
       when 'd' => Reduction_Handler(args,opts,a1,a2);

@@ -1,4 +1,6 @@
 Tue 11 Jun 2019 : added the handler for the -k option to option_handlers.
+  Added handler for blackbox solver in option_handlers and fixed a bug
+  in actions_and_options.adb.
 
 Mon 10 Jun 2019 : extended option_handlers, tested by ts_opthand.
   Added more handlers to option_handlers.
