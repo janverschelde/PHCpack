@@ -245,11 +245,11 @@ package body Option_Handlers is
       end if;
     elsif ppos >= integer32(opts'first) then
       if bbprc = 2 or contprc = 2 then
-        bablpoco2(file1,file2,file3);
+        bablpoco2(file1,file2,file3,vrblvl);
       elsif bbprc = 4 or contprc = 4 then
-        bablpoco4(file1,file2,file3);
+        bablpoco4(file1,file2,file3,vrblvl);
       else
-        bablpoco(file1,file2,file3);
+        bablpoco(file1,file2,file3,vrblvl);
       end if;
     elsif vpos >= integer32(opts'first) then
       if bbprc = 2 or valiprc = 2 then
@@ -430,30 +430,30 @@ package body Option_Handlers is
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
     contprc : constant natural32
             := Actions_and_Options.Scan_Precision(args,'p');
-    bbprc : constant natural32
-          := Actions_and_Options.Scan_Precision(args,'b');
+    bbprc : constant natural32 := Actions_and_Options.Scan_Precision(args,'b');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4continuation;
     elsif bpos >= integer32(opts'first) then
       if contprc = 2 or bbprc = 2 then
-        bablpoco2(file1,file2,file3);
+        bablpoco2(file1,file2,file3,vrblvl);
       elsif contprc = 4 or bbprc = 4 then
-        bablpoco4(file1,file2,file3);
+        bablpoco4(file1,file2,file3,vrblvl);
       else
-        bablpoco(file1,file2,file3);
+        bablpoco(file1,file2,file3,vrblvl);
       end if;
     elsif nt = 0 then
       put_line(welcome); put_line(pocoban & ", no multitasking.");
-      mainpoco(0,file1,file2,contprc);
+      mainpoco(0,file1,file2,contprc,vrblvl);
     else
       declare
         ns : constant string := Convert(integer32(nt));
       begin
         put_line(welcome);
         put_line(pocoban & ", with " & ns & " tasks.");
-        mainpoco(nt,file1,file2,contprc);
+        mainpoco(nt,file1,file2,contprc,vrblvl);
       end;
     end if;
   end Continuation_Handler;

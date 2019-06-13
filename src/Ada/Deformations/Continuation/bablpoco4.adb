@@ -1,13 +1,19 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with QuadDobl_BlackBox_Continuations;    use QuadDobl_BlackBox_Continuations;
 
-procedure bablpoco4 ( targetname,startname,outfilename : in string ) is
+procedure bablpoco4 ( targetname,startname,outfilename : in string;
+                      verbose : in integer32 := 0 ) is
 
   targetfile,startfile,outfile : file_type;
   poco : duration;
 
 begin
+  if verbose > 0 then
+    put("At verbose level "); put(verbose,1);
+    put_line(", in bablpoco4 ...");
+  end if;
   if targetname /= "" then
     Open_Input_File(targetfile,targetname);
   else

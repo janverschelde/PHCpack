@@ -1,3 +1,6 @@
+Thu 13 Jun 2019 : added the verbose level to mainpoco, bablpoco, bablpoco2,
+  and bablpoco4.
+
 Wed 2 Jan 2019 : fixed error in ts_bbpoco.adb.
 
 Tue 18 Dec 2018 : added writing of time stamps to mainpoco.adb.

@@ -4,7 +4,7 @@ with Communications_with_User;           use Communications_with_User;
 with Time_Stamps;
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -15,12 +15,10 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_to_Real_Poly;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with Standard_Complex_Poly_SysFun;       use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Laurentials;       use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
-with Standard_System_Readers;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_to_Real_Poly;
@@ -63,7 +61,7 @@ with Greeting_Banners;
 --with Bye_Bye_Message;
 
 procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
-                     prclvl : in natural32 ) is
+                     prclvl : in natural32; verbose : in integer32 := 0 ) is
 
   procedure Refine_Solutions
               ( outft : in file_type;
@@ -146,7 +144,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     deflate : boolean := false;
     ddtre : constant double_double := create(REAL_PART(target));
     ddtim : constant double_double := create(IMAG_PART(target));
-    ddtarget : DoblDobl_Complex_Numbers.Complex_Number
+    ddtarget : constant DoblDobl_Complex_Numbers.Complex_Number
              := DoblDobl_Complex_Numbers.Create(ddtre,ddtim);
 
     use DoblDobl_Complex_Poly_Systems;
@@ -196,7 +194,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     deflate : boolean := false;
     qdtre : constant quad_double := create(REAL_PART(target));
     qdtim : constant quad_double := create(IMAG_PART(target));
-    qdtarget : QuadDobl_Complex_Numbers.Complex_Number
+    qdtarget : constant QuadDobl_Complex_Numbers.Complex_Number
              := QuadDobl_Complex_Numbers.Create(qdtre,qdtim);
 
     use QuadDobl_Complex_Poly_Systems;
@@ -243,7 +241,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
     epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
     nb : natural32 := 0;
-    deflate : boolean := false;
+   -- deflate : boolean := false;
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -301,7 +299,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nb : natural32 := 0;
     ddtre : constant double_double := create(REAL_PART(target));
     ddtim : constant double_double := create(IMAG_PART(target));
-    ddtarget : DoblDobl_Complex_Numbers.Complex_Number
+    ddtarget : constant DoblDobl_Complex_Numbers.Complex_Number
              := DoblDobl_Complex_Numbers.Create(ddtre,ddtim);
 
     use DoblDobl_Complex_Laur_Systems;
@@ -350,7 +348,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nb : natural32 := 0;
     qdtre : constant quad_double := create(REAL_PART(target));
     qdtim : constant quad_double := create(IMAG_PART(target));
-    qdtarget : QuadDobl_Complex_Numbers.Complex_Number
+    qdtarget : constant QuadDobl_Complex_Numbers.Complex_Number
              := QuadDobl_Complex_Numbers.Create(qdtre,qdtim);
 
     use QuadDobl_Complex_Laur_Systems;
@@ -806,7 +804,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
         declare
           nvr : constant natural32 
               := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
-          ddp : DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
+          ddp : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
               := DoblDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
         begin
           if pos = '1'
@@ -818,7 +816,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
         declare
           nvr : constant natural32 
               := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
-          qdp : QuadDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
+          qdp : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
               := QuadDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
         begin
           if pos = '1'
@@ -942,29 +940,29 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     end if;
   end Main_Dispatch;
 
-  procedure Standard_Main is
+  --procedure Standard_Main is
 
   -- DESCRIPTION :
   --   Reads in the system as a Laurent system with standard
   --   double precision coefficients.
   --   This is the original main program...
 
-    inft : file_type;
-    lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
-    ls : Link_to_Array_of_Strings := null;
+  --  inft : file_type;
+  --  lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+  --  ls : Link_to_Array_of_Strings := null;
 
-    use Standard_Complex_Laur_Systems;
+  --  use Standard_Complex_Laur_Systems;
 
-  begin
-    Standard_System_Readers.Read_System(inft,infilename,lq);
-    if lq = null then
-      new_line;
-      put_line("Reading the target polynomial system...");
-      Read_Name_and_Open_File(inft);
-      get(inft,lq);
-    end if;
-    Main_Dispatch(inft,lq.all,ls);
-  end Standard_Main;
+  --begin
+  --  Standard_System_Readers.Read_System(inft,infilename,lq);
+  --  if lq = null then
+  --    new_line;
+  --    put_line("Reading the target polynomial system...");
+  --    Read_Name_and_Open_File(inft);
+  --    get(inft,lq);
+  --  end if;
+  --  Main_Dispatch(inft,lq.all,ls);
+  --end Standard_Main;
 
   procedure String_Main is
 
@@ -978,6 +976,10 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     n,m : natural32;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainpoco.String_Main ...");
+    end if;
     String_System_Readers.Read_System(inft,infilename,n,m,ls);
     if ls = null then
       new_line;
@@ -994,7 +996,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
    -- put_line("parsing the strings into a Laurent system ...");
     Symbol_Table.Init(m);
     declare
-      q : Standard_Complex_Laur_Systems.Laur_Sys(1..integer32(n))
+      q : constant Standard_Complex_Laur_Systems.Laur_Sys(1..integer32(n))
          := Standard_Complex_Laur_Strings.Parse(m,ls.all);
     begin
      -- put_line("the Laurent polynomial system : "); put(q);

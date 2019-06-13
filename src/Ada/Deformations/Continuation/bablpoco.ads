@@ -1,4 +1,7 @@
-procedure bablpoco ( targetname,startname,outfilename : in string );
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+
+procedure bablpoco ( targetname,startname,outfilename : in string;
+                     verbose : in integer32 := 0 );
 
 -- DESCRIPTION :
 --   This is the polynomial continuation routine, to run in batch
@@ -9,4 +12,5 @@ procedure bablpoco ( targetname,startname,outfilename : in string );
 -- ON INPUT :
 --   targetname      name of the file where the target system is;
 --   startname       name of the file where the start system is;
---   outfilename     name of the output file.
+--   outfilename     name of the output file;
+--   verbose         the verbose level.
