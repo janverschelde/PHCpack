@@ -196,13 +196,15 @@ package Option_Handlers is
   --   file3    name of the output file, when running as -p -b.
 
   procedure Jumpstart_Handler
-              ( opts : in string; file1,file2,file3 : in string );
+              ( args : in Array_of_Strings; opts : in string;
+                file1,file2,file3 : in string );
 
   -- DESCRIPTION :
   --   Defines the action for the option -q,
   --   for path tracking with jumpstarting.
 
   -- ON ENTRY :
+  --   args     command line arguments;
   --   opts     options extracted from the command line arguments;
   --   file1    name of the input file with the target system;
   --   file2    name of the input file with the start system;
@@ -234,22 +236,26 @@ package Option_Handlers is
   --   outfile  name of the output file.
 
   procedure Feedback_Handler
-              ( opts : in string; infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -k.
+  --   Defines the action for the option -k,
+  --   to compute feedback laws with Pieri homotopies.
 
   -- ON ENTRY :
+  --   args     command line arguments;
   --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
   procedure Decomposition_Handler
-              ( args : in Array_of_Strings; opts : in string;
-                infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -c.
+  --   Defines the action for the option -c,
+  --   to run cascades of homotopies and diagonal homotopies.
 
   -- ON ENTRY :
   --   args     command line arguments;
@@ -276,7 +282,8 @@ package Option_Handlers is
                 infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -u.
+  --   Defines the action for the option -u,
+  --   to compute power series of solution curves.
 
   -- ON ENTRY :
   --   args     command line arguments;
@@ -303,7 +310,8 @@ package Option_Handlers is
                 polyfile,logfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -l.
+  --   Defines the action for the option -l,
+  --   to compute a witness set of a hypersurface.
 
   -- ON ENTRY :
   --   args     command line arguments;
@@ -315,7 +323,8 @@ package Option_Handlers is
               ( opts,witset_one,witset_two,logfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -w.
+  --   Defines the action for the option -w,
+  --   to intersect two witness sets.
 
   -- ON ENTRY :
   --   opts     options extracted from the comamnd line arguments;
@@ -327,7 +336,8 @@ package Option_Handlers is
               ( opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -y.
+  --   Defines the action for the option -y,
+  --   to sample witness sets.
 
   -- ON ENTRY :
   --   opts     options extracted from the comamnd line arguments;
@@ -335,23 +345,29 @@ package Option_Handlers is
   --   outfile  name of the output file.
 
   procedure Maple_Format_Handler
-              ( opts : in string; infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -z.
+  --   Defines the action for the option -z,
+  --   to interchange solutions from and into Maple formats.
 
   -- ON ENTRY :
+  --   args     command line arguments;
   --   opts     options extracted from the arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
   procedure Python_Format_Handler
-              ( opts : in string; infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
-  --   Defines the action for the option -x.
+  --   Defines the action for the option -x,
+  --   to interchange solutions from and into Python dictionaries.
 
   -- ON ENTRY :
+  --   args     command line arguments;
   --   opts     options extracted from the arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.

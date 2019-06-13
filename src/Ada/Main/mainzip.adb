@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 -- with Maple, the default format uses multiprecision numbers
 --with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 --with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
@@ -9,7 +10,8 @@ with Multprec_Complex_Solutions;         use Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Multprec_Maple_Solutions_io;
 
-procedure mainzip ( infilename,outfilename : in string ) is
+procedure mainzip ( infilename,outfilename : in string;
+                    verbose : in integer32 := 0 ) is
 
 -- READING THE INPUT :
 
@@ -109,6 +111,10 @@ procedure mainzip ( infilename,outfilename : in string ) is
     solsonfile,maple_format : boolean;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainzip.Main ...");
+    end if;
     Scan_Solutions(infilename,sols,solsonfile,maple_format);
     if outfilename = "" then
       if maple_format

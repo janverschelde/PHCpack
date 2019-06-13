@@ -1,9 +1,13 @@
-procedure mainzip ( infilename,outfilename : in string );
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+
+procedure mainzip ( infilename,outfilename : in string;
+                    verbose : in integer32 := 0 );
 
 -- DESCRIPTION :
 --   This routine converts output solutions into Maple format,
 --   as called by the central dispatcher.
---   The arguments are the names of the input and output file respectively.
+--   The first two arguments are the names of the input and output file.
+--   The last argument is the verbose level.
 
 -- FUNCTIONALITY :
 --   The program strips the output file of phc (with name infilename)

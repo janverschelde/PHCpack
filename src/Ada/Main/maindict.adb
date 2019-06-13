@@ -1,11 +1,13 @@
 with text_io;                            use text_io;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Dictionary_Solutions_io;
 
-procedure maindict ( infilename,outfilename : in string ) is
+procedure maindict ( infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
 -- READING THE INPUT :
 
@@ -94,6 +96,10 @@ procedure maindict ( infilename,outfilename : in string ) is
     solsonfile,python_format : boolean;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in maindict.Main ...");
+    end if;
     Scan_Solutions(infilename,sols,solsonfile,python_format);
     if outfilename = "" then
       if python_format

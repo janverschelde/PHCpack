@@ -2,6 +2,9 @@ Wed 12 Jun 2019 : improved option_handlers, defining the full mode handler.
   Dealt with the no options case, added exception handlers and checking
   whether the first two files names are identical.
   Replaced dispatch with phctop as the top level procedure for phc.
+  Added the verbose level to mainphc, mainvali, bablvali, bablvali2, bablvali4,
+  bablroco, maindict, maintrack, mainzip, mainfeed, which caused updates to
+  the option_handlers.
 
 Tue 11 Jun 2019 : added the handler for the -k option to option_handlers.
   Added handler for blackbox solver in option_handlers and fixed a bug

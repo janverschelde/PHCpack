@@ -1,9 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Communications_with_User;           use Communications_with_User;
-with File_Scanning;                      use File_Scanning;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
@@ -14,7 +12,8 @@ with Black_Box_Root_Refiners;
 with Prompt_for_Systems;
 with Prompt_for_Solutions;
 
-procedure bablvali ( infilename,outfilename : in string ) is
+procedure bablvali ( infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
   procedure Refine ( file : in out file_type; lp : in Link_to_Laur_Sys;
                      sysonfile : in boolean ) is
@@ -40,7 +39,7 @@ procedure bablvali ( infilename,outfilename : in string ) is
     else
       declare
         use Standard_Laur_Poly_Convertors;
-        p : Poly_Sys(lp'range)
+        p : constant Poly_Sys(lp'range)
           := Positive_Laurent_Polynomial_System(lp.all);
       begin
         Black_Box_Root_Refiners.Refine_Roots(outfile,p,sols);
@@ -59,6 +58,10 @@ procedure bablvali ( infilename,outfilename : in string ) is
     lp : Link_to_Laur_Sys := null;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in bablvali.Main ...");
+    end if;
     Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
     if lp /= null
      then Refine(infile,lp,sysonfile);

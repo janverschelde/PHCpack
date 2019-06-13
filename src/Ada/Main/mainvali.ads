@@ -1,9 +1,13 @@
-procedure mainvali ( infilename,outfilename : in string );
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+
+procedure mainvali ( infilename,outfilename : in string;
+                     verbose : in integer32 := 0 );
 
 -- DESCRIPTION :
 --   This is the routine for validating the solutions of a polynomial system,
 --   as called by the central dispatcher.
---   The arguments are the names of the input and output file respectively.
+--   The first two arguments are the names of the input and output file,
+--   the last argument is the verbose level.
 
 -- FUNCTIONALITY :
 --   There are three types of functionality offered:

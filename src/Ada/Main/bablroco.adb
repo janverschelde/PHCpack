@@ -1,12 +1,13 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
 
-procedure bablroco ( nt : in natural32; infilename,outfilename : in string ) is
+procedure bablroco ( nt : in natural32; infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
   procedure Read_System ( file : in out file_type; filename : in string;
                           lp : out Link_to_Poly_Sys ) is
@@ -29,6 +30,10 @@ procedure bablroco ( nt : in natural32; infilename,outfilename : in string ) is
     qsols,qsols0 : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in bablroco.Main ...");
+    end if;
     Read_System(infile,infilename,lp);
     if lp = null then
       new_line;

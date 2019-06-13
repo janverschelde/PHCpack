@@ -5,10 +5,8 @@ with Timing_Package;                     use Timing_Package;
 with Time_Stamps;                        use Time_Stamps;
 with String_Splitters;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Random_Numbers;
 with Write_Seed_Number;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
@@ -33,7 +31,9 @@ with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with Greeting_Banners;
 --with Bye_Bye_Message;
 
-procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
+procedure mainphc
+            ( nt : in natural32; infilename,outfilename : in string;
+              verbose : in integer32 := 0 ) is
 
   start_moment : constant Time := Clock;
   ended_moment : Time;
@@ -220,6 +220,10 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
     use String_Splitters;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainphc.String_Main ...");
+    end if;
     new_line;
     Display_Options;
     String_System_Readers.Read_System(inft,infilename,n,m,ls);

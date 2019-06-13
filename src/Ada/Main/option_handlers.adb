@@ -132,6 +132,7 @@ package body Option_Handlers is
     optstr : constant string := Actions_and_Options.options;
     firstopt : constant character := opts(opts'first);
     pos : constant integer32 := Actions_and_Options.Position(optstr,firstopt);
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if pos < integer32(optstr'first) then
@@ -140,8 +141,8 @@ package body Option_Handlers is
     end if;
     put_line(welcome);
     if nt > 0
-     then mainphc(nt,infile,outfile);
-     else mainphc(0,infile,outfile);
+     then mainphc(nt,infile,outfile,vrblvl);
+     else mainphc(0,infile,outfile,vrblvl);
     end if;
   end Full_Mode_Handler;
 
@@ -234,8 +235,8 @@ package body Option_Handlers is
       end if;
     elsif rpos >= integer32(opts'first) then
       if nt > 0
-       then bablroco(nt,file1,file2);
-       else bablroco(0,file1,file2);
+       then bablroco(nt,file1,file2,vrblvl);
+       else bablroco(0,file1,file2,vrblvl);
       end if;
     elsif mpos >= integer32(opts'first) then
       if nt > 0
@@ -252,11 +253,11 @@ package body Option_Handlers is
       end if;
     elsif vpos >= integer32(opts'first) then
       if bbprc = 2 or valiprc = 2 then
-        bablvali2(file1,file2);
+        bablvali2(file1,file2,vrblvl);
       elsif bbprc = 4 or valiprc = 4 then
-        bablvali4(file1,file2);
+        bablvali4(file1,file2,vrblvl);
       else
-        bablvali(file1,file2);
+        bablvali(file1,file2,vrblvl);
       end if;
     elsif nt > 0 then
       case bbprc is
@@ -357,8 +358,8 @@ package body Option_Handlers is
       Greeting_Banners.help4rootcounts;
     elsif bpos >= integer32(opts'first) then
       if nt > 0 
-       then bablroco(nt,infile,outfile);
-       else bablroco(0,infile,outfile);
+       then bablroco(nt,infile,outfile,vrblvl);
+       else bablroco(0,infile,outfile,vrblvl);
       end if;
     elsif nt = 0 then
       put_line(welcome); put_line(rocoban & ", no multitasking.");
@@ -458,17 +459,19 @@ package body Option_Handlers is
   end Continuation_Handler;
 
   procedure Jumpstart_Handler
-              ( opts : in string; file1,file2,file3 : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; file1,file2,file3 : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4jumpstart;
     else
       put_line(welcome); put_line(trackban);
-      maintrack(file1,file2,file3);
+      maintrack(file1,file2,file3,vrblvl);
     end if;
   end Jumpstart_Handler;
 
@@ -506,21 +509,23 @@ package body Option_Handlers is
   end Enumeration_Handler;
 
   procedure Feedback_Handler
-              ( opts : in string; infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
      then Greeting_Banners.help4feedback;
-     else mainfeed(infile,outfile);
+     else mainfeed(infile,outfile,vrblvl);
     end if;
   end Feedback_Handler;
 
   procedure Decomposition_Handler
-              ( args : in Array_of_Strings; opts : in string;
-                infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
@@ -613,21 +618,22 @@ package body Option_Handlers is
             := Actions_and_Options.Scan_Precision(args,'v');
     bbprc : constant natural32
           := Actions_and_Options.Scan_Precision(args,'b');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4verification;
     elsif bpos >= integer32(opts'first) then 
       if veriprc = 2 or bbprc = 2 then
-        bablvali2(infile,outfile);
+        bablvali2(infile,outfile,vrblvl);
       elsif veriprc = 4 or bbprc = 4 then
-        bablvali4(infile,outfile);
+        bablvali4(infile,outfile,vrblvl);
       else
-        bablvali(infile,outfile);
+        bablvali(infile,outfile,vrblvl);
       end if;
     else
       put_line(welcome); put_line(veriban);
-      mainvali(infile,outfile);
+      mainvali(infile,outfile,vrblvl);
     end if;
   end Verification_Handler;
 
@@ -688,28 +694,32 @@ package body Option_Handlers is
   end Witness_Set_Sampler_Handler;
 
   procedure Maple_Format_Handler
-              ( opts : in string; infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
      then Greeting_Banners.help4mapleform;
-     else mainzip(infile,outfile);
+     else mainzip(infile,outfile,vrblvl);
     end if;
   end Maple_Format_Handler;
 
   procedure Python_Format_Handler
-              ( opts : in string; infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first)
      then Greeting_Banners.help4pythondict;
-     else maindict(infile,outfile);
+     else maindict(infile,outfile,vrblvl);
     end if;
   end Python_Format_Handler;
 
@@ -740,19 +750,19 @@ package body Option_Handlers is
         when 'm' => Mixed_Volume_Handler(args,opts,a1,a2);
         when 'o' => Symbols_Handler(opts,a1,a2);
         when 'p' => Continuation_Handler(args,opts,a1,a2,a3);
-        when 'q' => Jumpstart_Handler(opts,a1,a2,a3);
+        when 'q' => Jumpstart_Handler(args,opts,a1,a2,a3);
         when 'j' => Algorithmic_Differentiation_Handler(opts,a1,a2,a3);
         when 'c' => Decomposition_Handler(args,opts,a1,a2);
         when 'e' => Enumeration_Handler(opts,a1,a2);
-        when 'k' => Feedback_Handler(opts,a1,a2);
+        when 'k' => Feedback_Handler(args,opts,a1,a2);
         when 'f' => Factorization_Handler(args,opts,a1,a2);
         when 'u' => Series_Handler(args,opts,a1,a2);
         when 'v' => Verification_Handler(args,opts,a1,a2);
         when 'l' => Witness_Set_for_Hypersurface_Handler(args,opts,a1,a2);
         when 'w' => Witness_Set_Intersection_Handler(opts,a1,a2,a3);
-        when 'x' => Python_Format_Handler(opts,a1,a2);
+        when 'x' => Python_Format_Handler(args,opts,a1,a2);
         when 'y' => Witness_Set_Sampler_Handler(opts,a1,a2);
-        when 'z' => Maple_Format_Handler(opts,a1,a2);
+        when 'z' => Maple_Format_Handler(args,opts,a1,a2);
         when others => Full_Mode_Handler(args,opts,a1,a2);
       end case;
     end if;

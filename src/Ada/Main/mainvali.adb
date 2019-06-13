@@ -2,14 +2,11 @@ with text_io;                            use text_io;
 with Timing_Package;                     use Timing_Package;
 with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
-with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
-with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -42,7 +39,7 @@ with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Multprec_Root_Refiners;             use Multprec_Root_Refiners;
 with Multprec_Residual_Evaluations;      use Multprec_Residual_Evaluations;
 with Symmetry_Group;                     use Symmetry_Group;
-with Symbolic_Symmetry_Group_io;         use Symbolic_Symmetry_Group_io;
+with Symbolic_Symmetry_Group_io;
 with Drivers_for_Symmetry_Group_io;      use Drivers_for_Symmetry_Group_io;
 with Drivers_for_Orbits_of_Solutions;    use Drivers_for_Orbits_of_Solutions;
 with Driver_for_Winding_Numbers;
@@ -58,7 +55,8 @@ with Verification_of_Solutions;          use Verification_of_Solutions;
 with Prompt_for_Systems;                 use Prompt_for_Systems;
 with Prompt_for_Solutions;               use Prompt_for_Solutions;
 
-procedure mainvali ( infilename,outfilename : in string ) is
+procedure mainvali ( infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
   procedure Display_Verification_Info is
 
@@ -788,7 +786,7 @@ procedure mainvali ( infilename,outfilename : in string ) is
   --   and then calls the corresponding driver
   --   to apply Newton's method with deflation.
 
-    prc : character := Prompt_for_Precision;
+    prc : constant character := Prompt_for_Precision;
 
   begin
     case prc is
@@ -890,7 +888,7 @@ procedure mainvali ( infilename,outfilename : in string ) is
   --   and then launches the corresponding driver
   --   to compute the multiplicity structure.
 
-    prc : character := Prompt_for_Precision;
+    prc : constant character := Prompt_for_Precision;
 
   begin
     case prc is
@@ -906,6 +904,10 @@ procedure mainvali ( infilename,outfilename : in string ) is
     ans : character;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainvali.Display_and_Dispatch_Menu ...");
+    end if;
     loop
       new_line;
       put_line("MENU with Verification Methods : ");

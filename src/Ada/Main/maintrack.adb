@@ -14,7 +14,8 @@ with Drivers_to_Track_QuadDobl_Paths;
 with Jumpstart_Polyhedral_Homotopies;   use Jumpstart_Polyhedral_Homotopies;
 with Jumpstart_Diagonal_Homotopies;     use Jumpstart_Diagonal_Homotopies;
 
-procedure maintrack ( targetfilename,startfilename,outfilename : in string ) is
+procedure maintrack ( targetfilename,startfilename,outfilename : in string;
+                      verbose : in integer32 := 0 ) is
 
   function Ask_for_Start_Type return character is
 
@@ -136,6 +137,10 @@ procedure maintrack ( targetfilename,startfilename,outfilename : in string ) is
     use Drivers_to_Track_Standard_Paths;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in maintrack.Main ...");
+    end if;
     start_type := Ask_for_Start_Type;
     if targetfilename = "" then
       new_line;
