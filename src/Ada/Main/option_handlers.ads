@@ -224,13 +224,15 @@ package Option_Handlers is
   --   file3    name of the output file.
 
   procedure Enumeration_Handler
-              ( opts : in string; infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
   --   Defines the action for the option -e,
   --   for the numerical Schubert calculus.
 
   -- ON ENTRY :
+  --   args     command line arguments;
   --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.

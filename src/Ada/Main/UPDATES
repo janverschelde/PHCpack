@@ -1,5 +1,6 @@
 Thu 13 Jun 2019 : updated option_handlers.adb for the verbose level added
-  to mainpoco, bablpoco, bablpoco2, and bablpoco4.
+  to mainpoco, bablpoco, bablpoco2, and bablpoco4.  Added the verbose level
+  to mainenum.
 
 Wed 12 Jun 2019 : improved option_handlers, defining the full mode handler.
   Dealt with the no options case, added exception handlers and checking

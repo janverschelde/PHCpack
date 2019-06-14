@@ -2,18 +2,22 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Drivers_for_SAGBI_Homotopies;       use Drivers_for_SAGBI_Homotopies;
 with Drivers_for_Pieri_Homotopies;       use Drivers_for_Pieri_Homotopies;
 with Drivers_for_Quantum_Pieri;          use Drivers_for_Quantum_Pieri;
 with Drivers_for_Schubert_Induction;     use Drivers_for_Schubert_Induction;
 
-procedure mainenum is
+procedure mainenum ( verbose : in integer32 := 0 ) is
 
   m,p,q,n : natural32 := 0;
   ans : character;
 
 begin
+  if verbose > 0 then
+    put("At verbose level "); put(verbose,1);
+    put_line(", in mainenum ...");
+  end if;
   new_line;
   put_line("MENU of Homotopies to solve Enumerative Geometry Problems");
   put_line("  1. SAGBI for intersection hypersurface conditions;");

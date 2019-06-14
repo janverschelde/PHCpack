@@ -491,11 +491,13 @@ package body Option_Handlers is
   end Algorithmic_Differentiation_Handler;
 
   procedure Enumeration_Handler
-              ( opts : in string; infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     bpos : constant integer32 := Actions_and_Options.Position(opts,'b');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
@@ -504,7 +506,7 @@ package body Option_Handlers is
       bablenum(infile,outfile);
     else
       put_line(welcome); put_line(enumban);
-      mainenum;
+      mainenum(vrblvl);
     end if;
   end Enumeration_Handler;
 
@@ -753,7 +755,7 @@ package body Option_Handlers is
         when 'q' => Jumpstart_Handler(args,opts,a1,a2,a3);
         when 'j' => Algorithmic_Differentiation_Handler(opts,a1,a2,a3);
         when 'c' => Decomposition_Handler(args,opts,a1,a2);
-        when 'e' => Enumeration_Handler(opts,a1,a2);
+        when 'e' => Enumeration_Handler(args,opts,a1,a2);
         when 'k' => Feedback_Handler(args,opts,a1,a2);
         when 'f' => Factorization_Handler(args,opts,a1,a2);
         when 'u' => Series_Handler(args,opts,a1,a2);
