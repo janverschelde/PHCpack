@@ -1,6 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
@@ -49,7 +48,8 @@ package body Floating_Polyhedral_Continuation is
                   e : in Exponent_Vectors_Array;
                   j : in Eval_Coeff_Jaco_Mat; m : in Mult_Factors;
                   normal : in Standard_Floating_Vectors.Vector;
-                  sols : in out Solution_List ) is
+                  sols : in out Solution_List;
+                  verbose : in integer32 := 0 ) is
 
     pow : Standard_Floating_VecVecs.VecVec(c'range)
         := Power_Transform(e,lifted,mix,normal);
@@ -95,6 +95,10 @@ package body Floating_Polyhedral_Continuation is
     procedure Laur_Cont is new Silent_Continue(Max_Norm,Eval,dHt,dHx);
 
   begin
+    if verbose > 0 then
+      put("-> in floating_polyhedral_continuation.");
+      put_line("Mixed_Continuation 1 ...");
+   end if;
    -- put_line("The coefficient vectors :" );
    -- for i in c'range loop
    --   put(standard_output,c(i).all,3,3,3); new_line;
@@ -127,7 +131,8 @@ package body Floating_Polyhedral_Continuation is
                   e : in Exponent_Vectors_Array;
                   j : in Eval_Coeff_Jaco_Mat; m : in Mult_Factors;
                   normal : in Standard_Floating_Vectors.Vector;
-                  sols : in out Solution_List ) is
+                  sols : in out Solution_List;
+                  verbose : in integer32 := 0 ) is
 
     pow : Standard_Floating_VecVecs.VecVec(c'range)
         := Power_Transform(e,lifted,mix,normal);
@@ -173,6 +178,10 @@ package body Floating_Polyhedral_Continuation is
     procedure Laur_Cont is new Reporting_Continue(Max_Norm,Eval,dHt,dHx);
 
   begin
+    if verbose > 0 then
+      put("-> in floating_polyhedral_continuation.");
+      put_line("Mixed_Continuation 2 ...");
+    end if;
    -- put_line(file,"The coefficient vectors :" );
    -- for i in c'range loop
    --   put(file,c(i).all,3,3,3); new_line(file);
@@ -362,7 +371,8 @@ package body Floating_Polyhedral_Continuation is
                   mix : in Standard_Integer_Vectors.Vector;
                   mic : in Mixed_Cell;
                   sols,sols_last : in out Solution_List;
-                  multprec_hermite : in boolean := false ) is
+                  multprec_hermite : in boolean := false;
+                  verbose : in integer32 := 0 ) is
 
     q : Laur_Sys(p'range) := Select_Terms(p,mix,mic.pts.all);
     sq : Laur_Sys(q'range);
@@ -373,6 +383,9 @@ package body Floating_Polyhedral_Continuation is
     fail,zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put_line("-> in floating_polyhedral_continuation.Mixed_Solve 1 ...");
+    end if;
     Standard_Simpomial_Solvers.Solve
       (q,tol_zero,qsols,fail,zero_y,multprec_hermite);
     if fail then
@@ -388,7 +401,8 @@ package body Floating_Polyhedral_Continuation is
     end if;
     len := Length_Of(qsols);
     if len > 0 then
-      Mixed_Continuation(mix,lifted,h,c,e,j,m,mic.nor.all,qsols);
+      Mixed_Continuation
+        (mix,lifted,h,c,e,j,m,mic.nor.all,qsols,verbose=>verbose-1);
       Concat(sols,sols_last,qsols);
     end if;
     Clear(q); -- for debugging with multithreading on cyclic 10
@@ -407,7 +421,8 @@ package body Floating_Polyhedral_Continuation is
                   mix : in Standard_Integer_Vectors.Vector;
                   mic : in Mixed_Cell;
                   sols,sols_last : in out Solution_List;
-                  multprec_hermite : in boolean := false ) is
+                  multprec_hermite : in boolean := false;
+                  verbose : in integer32 := 0 ) is
 
     q : Laur_Sys(p'range) := Select_Terms(p,mix,mic.pts.all);
     sq : Laur_Sys(q'range);
@@ -418,6 +433,9 @@ package body Floating_Polyhedral_Continuation is
     fail,zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put_line("-> in floating_polyhedral_continuation.Mixed_Solve 2 ...");
+    end if;
    -- put_line(" calling standard simpomial solver ...");
    -- if multprec_hermite
    --  then put_line("with multiprecision arithmetic for the Hermite form");
@@ -457,7 +475,8 @@ package body Floating_Polyhedral_Continuation is
     put(file,len,1); put_line(file," solutions found.");
    -- put("starting to track "); put(len,1); put_line(" paths...");
     if len > 0 then
-      Mixed_Continuation(file,mix,lifted,h,c,e,j,m,mic.nor.all,qsols);
+      Mixed_Continuation
+        (file,mix,lifted,h,c,e,j,m,mic.nor.all,qsols,verbose=>verbose-1);
       Concat(sols,sols_last,qsols);
     end if;
     Clear(q); Clear(qsols);
@@ -474,16 +493,22 @@ package body Floating_Polyhedral_Continuation is
                   mix : in Standard_Integer_Vectors.Vector;
                   mixsub : in Mixed_Subdivision;
                   sols : in out Solution_List;
-                  multprec_hermite : in boolean := false ) is
+                  multprec_hermite : in boolean := false;
+                  verbose : in integer32 := 0 ) is
 
     tmp : Mixed_Subdivision := mixsub;
     mic : Mixed_Cell;
     sols_last : Solution_List;
 
   begin
+    if verbose > 0 then
+      put_line("-> in floating_polyhedral_continuation.Mixed_Solve 3 ...");
+    end if;
     while not Is_Null(tmp) loop
       mic := Head_Of(tmp);
-      Mixed_Solve(p,lifted,h,c,e,j,m,mix,mic,sols,sols_last,multprec_hermite);
+      Mixed_Solve
+        (p,lifted,h,c,e,j,m,mix,mic,sols,sols_last,multprec_hermite,
+         verbose-1);
       tmp := Tail_Of(tmp);
     end loop;
   end Mixed_Solve;
@@ -498,7 +523,8 @@ package body Floating_Polyhedral_Continuation is
                   mix : in Standard_Integer_Vectors.Vector;
                   mixsub : in Mixed_Subdivision;
                   sols : in out Solution_List;
-                  multprec_hermite : in boolean := false ) is
+                  multprec_hermite : in boolean := false;
+                  verbose : in integer32 := 0 ) is
 
     tmp : Mixed_Subdivision := mixsub;
     mic : Mixed_Cell;
@@ -506,6 +532,9 @@ package body Floating_Polyhedral_Continuation is
     cnt : natural32 := 0;
 
   begin
+    if verbose > 0 then
+      put_line("-> in floating_polyhedral_continuation.Mixed_Solve 4 ...");
+    end if;
    -- if multprec_hermite
    --  then put_line("running multprecision Hermite option");
    --  else put_line("running standard Hermite option");
@@ -519,7 +548,7 @@ package body Floating_Polyhedral_Continuation is
       new_line(file);
      -- put("starting to solve subsystem "); put(cnt,1); put_line(" ...");
       Mixed_Solve(file,p,lifted,h,c,e,j,m,mix,mic,sols,sols_last,
-                  multprec_hermite);
+                  multprec_hermite,verbose-1);
       tmp := Tail_Of(tmp);
     end loop;
   end Mixed_Solve;

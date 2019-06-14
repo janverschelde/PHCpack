@@ -1,3 +1,8 @@
+Fri 14 Jun 2019 : added verbose level to floating_polyhedral_continuation,
+  and some debugging messages to stable_polyhedral_continuation.adb.
+  Updated drivers_for_mixedvol_algorithm.adb so phc -m also writes the
+  solutions with zero coordinates to the output file.
+
 Sat 8 Jun 2019 : updated {integer,floating,dobldobl,quaddobl}_polyhedral_
   continuation.adb for compiler warnings.
 

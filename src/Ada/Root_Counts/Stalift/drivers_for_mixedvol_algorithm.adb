@@ -42,7 +42,7 @@ with Drivers_for_Poly_Continuation;
 with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
 with DoblDobl_Polyhedral_Continuation;   use DoblDobl_Polyhedral_Continuation;
 with QuadDobl_Polyhedral_Continuation;   use QuadDobl_Polyhedral_Continuation;
-with Stable_Polyhedral_Continuation;     use Stable_Polyhedral_Continuation;
+with Stable_Polyhedral_Continuation;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Cell_Stack;                         use Cell_Stack;
 with MixedVol_Algorithm;                 use MixedVol_Algorithm;
@@ -157,7 +157,7 @@ package body Drivers_for_mixedvol_algorithm is
     Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
-                  multprec_hermite);
+                  multprec_hermite,verbose-1);
     else
       Silent_Multitasking_Path_Tracker
         (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
@@ -325,7 +325,7 @@ package body Drivers_for_mixedvol_algorithm is
     Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
-                  multprec_hermite);
+                  multprec_hermite,verbose-1);
     else
       Silent_Multitasking_Path_Tracker
         (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
@@ -491,7 +491,7 @@ package body Drivers_for_mixedvol_algorithm is
     Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(file,lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
-                  multprec_hermite);
+                  multprec_hermite,verbose-1);
     else
       Silent_Multitasking_Path_Tracker
         (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
@@ -665,7 +665,7 @@ package body Drivers_for_mixedvol_algorithm is
     Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(file,q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
-                  multprec_hermite);
+                  multprec_hermite,verbose-1);
     else
       Silent_Multitasking_Path_Tracker
         (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
@@ -1172,10 +1172,10 @@ package body Drivers_for_mixedvol_algorithm is
     if stable then
       lq := Polynomial_to_Laurent_System(q);
       if contrep then
-        Reporting_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Reporting_Polyhedral_Continuation
           (file,lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Silent_Polyhedral_Continuation
           (lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
@@ -1237,10 +1237,10 @@ package body Drivers_for_mixedvol_algorithm is
     if stable then
       lq := Polynomial_to_Laurent_System(q);
       if contrep then
-        Reporting_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Reporting_Polyhedral_Continuation
           (file,lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Silent_Polyhedral_Continuation
           (lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
@@ -1302,10 +1302,10 @@ package body Drivers_for_mixedvol_algorithm is
     if stable then
       lq := Polynomial_to_Laurent_System(q);
       if contrep then
-        Reporting_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Reporting_Polyhedral_Continuation
           (file,lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Silent_Polyhedral_Continuation
           (lq,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
@@ -1382,11 +1382,16 @@ package body Drivers_for_mixedvol_algorithm is
     end if;
     if stable then
       if contrep then
-        Reporting_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Reporting_Polyhedral_Continuation
           (file,q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Silent_Polyhedral_Continuation
           (q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
+      end if;
+      if verbose > 0 then
+        put(file,"Length of qsols0 : ");
+        put(file,Standard_Complex_Solutions.Length_Of(qsols0),1);
+        new_line(file);
       end if;
     end if;
     tstop(timer);
@@ -1462,10 +1467,10 @@ package body Drivers_for_mixedvol_algorithm is
     end if;
     if stable then
       if contrep then
-        Reporting_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Reporting_Polyhedral_Continuation
           (file,q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Silent_Polyhedral_Continuation
           (q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
@@ -1542,10 +1547,10 @@ package body Drivers_for_mixedvol_algorithm is
     end if;
     if stable then
       if contrep then
-        Reporting_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Reporting_Polyhedral_Continuation
           (file,q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       else
-        Silent_Polyhedral_Continuation
+        Stable_Polyhedral_Continuation.Silent_Polyhedral_Continuation
           (q,stlb,mix,ls,stbmcc,qsols0,verbose=>verbose-1);
       end if;
     end if;
@@ -1844,6 +1849,10 @@ package body Drivers_for_mixedvol_algorithm is
         put_line(qfile,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
         put(qfile,Standard_Complex_Solutions.Length_Of(qsols0),
             natural32(Standard_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        new_line(file); -- WRITE ALSO INTO THE OUTPUT FILE!
+        put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+        put(file,Standard_Complex_Solutions.Length_Of(qsols0),
+            natural32(Standard_Complex_Solutions.Head_Of(qsols0).n),qsols0);
       end if;
     end if;
   end Polyhedral_Homotopies;
@@ -1922,6 +1931,10 @@ package body Drivers_for_mixedvol_algorithm is
         put_line(qfile,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
         put(qfile,DoblDobl_Complex_Solutions.Length_Of(qsols0),
             natural32(DoblDobl_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        new_line(file); -- WRITE ALSO INTO THE OUTPUT FILE!
+        put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+        put(file,DoblDobl_Complex_Solutions.Length_Of(qsols0),
+            natural32(DoblDobl_Complex_Solutions.Head_Of(qsols0).n),qsols0);
       end if;
     end if;
   end Polyhedral_Homotopies;
@@ -1998,6 +2011,10 @@ package body Drivers_for_mixedvol_algorithm is
       if not QuadDobl_Complex_Solutions.Is_Null(qsols0) then
         new_line(qfile);
         put_line(qfile,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+        put(qfile,QuadDobl_Complex_Solutions.Length_Of(qsols0),
+            natural32(QuadDobl_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        new_line(file); -- WRITE ALSO INTO THE OUTPUT FILE!
+        put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
         put(qfile,QuadDobl_Complex_Solutions.Length_Of(qsols0),
             natural32(QuadDobl_Complex_Solutions.Head_Of(qsols0).n),qsols0);
       end if;
@@ -2101,6 +2118,12 @@ package body Drivers_for_mixedvol_algorithm is
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
         Standard_System_and_Solutions_io.put_line(file,q,qsols);
+        if not Standard_Complex_Solutions.Is_Null(qsols0) then
+          new_line(file);
+          put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+          put(file,Standard_Complex_Solutions.Length_Of(qsols0),
+              natural32(Standard_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        end if;
       end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
@@ -2158,6 +2181,12 @@ package body Drivers_for_mixedvol_algorithm is
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
         DoblDobl_System_and_Solutions_io.put_line(file,q,qsols);
+        if not DoblDobl_Complex_Solutions.Is_Null(qsols0) then
+          new_line(file);
+          put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+          put(file,DoblDobl_Complex_Solutions.Length_Of(qsols0),
+              natural32(DoblDobl_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        end if;
       end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
@@ -2215,6 +2244,12 @@ package body Drivers_for_mixedvol_algorithm is
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
         QuadDobl_System_and_Solutions_io.put_line(file,q,qsols);
+        if not QuadDobl_Complex_Solutions.Is_Null(qsols0) then
+          new_line(file);
+          put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+          put(file,QuadDobl_Complex_Solutions.Length_Of(qsols0),
+              natural32(QuadDobl_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        end if;
       end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
@@ -2273,6 +2308,12 @@ package body Drivers_for_mixedvol_algorithm is
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
         Standard_System_and_Solutions_io.put_line(file,q,qsols);
+        if not Standard_Complex_Solutions.Is_Null(qsols0) then
+          new_line(file);
+          put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+          put(file,Standard_Complex_Solutions.Length_Of(qsols0),
+              natural32(Standard_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        end if;
       end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
@@ -2331,6 +2372,12 @@ package body Drivers_for_mixedvol_algorithm is
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
         DoblDobl_System_and_Solutions_io.put_line(file,q,qsols);
+        if not DoblDobl_Complex_Solutions.Is_Null(qsols0) then
+          new_line(file);
+          put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+          put(file,DoblDobl_Complex_Solutions.Length_Of(qsols0),
+              natural32(DoblDobl_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        end if;
       end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
@@ -2390,6 +2437,12 @@ package body Drivers_for_mixedvol_algorithm is
         new_line(file);
         put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
         QuadDobl_System_and_Solutions_io.put_line(file,q,qsols);
+        if not QuadDobl_Complex_Solutions.Is_Null(qsols0) then
+          new_line(file);
+          put_line(file,"THE SOLUTIONS WITH ZERO COMPONENTS : ");
+          put(file,QuadDobl_Complex_Solutions.Length_Of(qsols0),
+              natural32(QuadDobl_Complex_Solutions.Head_Of(qsols0).n),qsols0);
+        end if;
       end if;
     end if;
   end Driver_for_MixedVol_Algorithm;

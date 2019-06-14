@@ -1310,7 +1310,17 @@ package body Stable_Polyhedral_Continuation is
       begin
         Reporting_Polyhedral_Continuation
           (file,q,b,mix,lif,mic,integer32(i),csols,verbose=>verbose-1);
+        if verbose > 0 then
+          put(file,"Length of csols : "); put(file,Length_Of(csols),1);
+          new_line(file);
+          put(file,"Length of sols before concat : ");
+          put(file,Length_Of(sols),1); new_line(file);
+        end if;
         Merge_and_Concat(sols,last,csols);
+        if verbose > 0 then
+          put(file,"Length of sols after concat : ");
+          put(file,Length_Of(sols),1); new_line(file);
+        end if;
         Clear(csols);
       end;
       tmp := Tail_Of(tmp);

@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_VecVecs;
@@ -30,7 +31,8 @@ package Floating_Polyhedral_Continuation is
                   e : in Exponent_Vectors_Array;
                   j : in Eval_Coeff_Jaco_Mat; m : in Mult_Factors;
                   normal : in Standard_Floating_Vectors.Vector;
-                  sols : in out Solution_List );
+                  sols : in out Solution_List;
+                  verbose : in integer32 := 0 );
 
   procedure Mixed_Continuation
                 ( file : in file_type;
@@ -40,7 +42,8 @@ package Floating_Polyhedral_Continuation is
                   e : in Exponent_Vectors_Array;
                   j : in Eval_Coeff_Jaco_Mat; m : in Mult_Factors;
                   normal : in Standard_Floating_Vectors.Vector;
-                  sols : in out Solution_List );
+                  sols : in out Solution_List;
+                  verbose : in integer32 := 0 );
 
   -- DESCRIPTION : polyhedral continuation with coefficient homotopy.
 
@@ -55,7 +58,8 @@ package Floating_Polyhedral_Continuation is
   --   m          multiplication factors in coefficient Jacobian matrix;
   --   normal     normal to a mixed cell;
   --   sols       start solutions of the subsystem which corresponds
-  --              with the mixed cell with given inner normal.
+  --              with the mixed cell with given inner normal;
+  --   verbose    the verbose level.
 
   -- ON RETURN :
   --   sols       the solutions of p, which correspond to one mixed cell.
@@ -71,7 +75,8 @@ package Floating_Polyhedral_Continuation is
                   mix : in Standard_Integer_Vectors.Vector;
                   mic : in Mixed_Cell;
                   sols,sols_last : in out Solution_List;
-                  multprec_hermite : in boolean := false );
+                  multprec_hermite : in boolean := false;
+                  verbose : in integer32 := 0 );
 
   procedure Mixed_Solve
                 ( file : in file_type;
@@ -83,7 +88,8 @@ package Floating_Polyhedral_Continuation is
                   mix : in Standard_Integer_Vectors.Vector;
                   mic : in Mixed_Cell;
                   sols,sols_last : in out Solution_List;
-                  multprec_hermite : in boolean := false );
+                  multprec_hermite : in boolean := false;
+                  verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Polyhedral coefficient-homotopy continuation for one mixed cell.
@@ -103,7 +109,8 @@ package Floating_Polyhedral_Continuation is
   --   mic        a mixed cell;
   --   multprec_hermite indicates whether multiprecision arithmetic
   --              will be used for the Hermite normal form in the
-  --              solution of the binomial initial form systems.
+  --              solution of the binomial initial form systems;
+  --   verbose    the verbose level.
 
   -- ON RETURN :
   --   sols       the solution list of p;
@@ -120,7 +127,8 @@ package Floating_Polyhedral_Continuation is
                   mix : in Standard_Integer_Vectors.Vector;
                   mixsub : in Mixed_Subdivision;
                   sols : in out Solution_List;
-                  multprec_hermite : in boolean := false );
+                  multprec_hermite : in boolean := false;
+                  verbose : in integer32 := 0 );
 
   procedure Mixed_Solve
                 ( file : in file_type;
@@ -132,7 +140,8 @@ package Floating_Polyhedral_Continuation is
                   mix : in Standard_Integer_Vectors.Vector;
                   mixsub : in Mixed_Subdivision;
                   sols : in out Solution_List;
-                  multprec_hermite : in boolean := false );
+                  multprec_hermite : in boolean := false;
+                  verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Polyhedral coefficient-homotopy continuation for a mixed subdivision.
@@ -152,7 +161,8 @@ package Floating_Polyhedral_Continuation is
   --   mixsub     a collection of mixed cells;
   --   multprec_hermite indicates whether multiprecision arithmetic
   --              will be used for the Hermite normal form in the
-  --              solution of the binomial initial form systems.
+  --              solution of the binomial initial form systems;
+  --   verbose    the verbose level.
 
   -- ON RETURN :
   --   sols       the solution list of p.
