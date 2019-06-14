@@ -447,7 +447,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   procedure Secant_Homotopy
               ( nbequ,nbvar : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                ls : in Link_to_Array_of_Strings ) is
+                ls : in Link_to_Array_of_Strings;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Creates the output file and reads start system and start solutions
@@ -471,6 +472,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Secant_Homotopy 1 ...");
+    end if;
     Create_Output_File(outft,outfilename);
     if nbequ = nbvar
      then put(outft,nbequ,p);
@@ -515,7 +519,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   procedure Secant_Homotopy
               ( nbequ,nbvar : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                ls : in Link_to_Array_of_Strings ) is
+                ls : in Link_to_Array_of_Strings;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Creates the output file and reads start system and start solutions
@@ -539,6 +544,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Secant_Homotopy 2 ...");
+    end if;
     Create_Output_File(outft,outfilename);
     if nbequ = nbvar
      then put(outft,nbequ,p);
@@ -581,7 +589,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Parameter_Homotopy
               ( infile : in file_type;
-                p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Defines a setup for a parameter homotopy in standard double precision.
@@ -591,6 +600,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nb_equ,nb_unk,nb_par : integer32;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Parameter_Homotopy 1 ...");
+    end if;
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Coefficient_Parameter_Homotopy_Continuation
       (outfile,p,sols,nb_equ,nb_unk,nb_par);
@@ -598,7 +610,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Parameter_Homotopy
               ( infile : in file_type;
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Defines a setup for a parameter homotopy in double double precision.
@@ -611,6 +624,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Parameter_Homotopy 2 ...");
+    end if;
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Coefficient_Parameter_Homotopy_Continuation
       (outfile,p,sols,nb_equ,nb_unk,nb_par);
@@ -621,7 +637,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Parameter_Homotopy
               ( infile : in file_type;
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Defines a setup for a parameter homotopy in quad double precision.
@@ -634,6 +651,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Parameter_Homotopy 3 ...");
+    end if;
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Coefficient_Parameter_Homotopy_Continuation
       (outfile,p,sols,nb_equ,nb_unk,nb_par);
@@ -644,7 +664,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Sweep_Homotopy
               ( infile : in file_type;
-                p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Sets the parameters and runs the sweep homotopy
@@ -659,6 +680,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Sweep_Homotopy 1 ...");
+    end if;
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Sweep(outfile,isreal,p,sols,nb_equ,nb_unk,nb_par);
     ended_moment := Ada.Calendar.Clock;
@@ -668,7 +692,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Sweep_Homotopy
               ( infile : in file_type;
-                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Sets the parameters and runs the sweep homotopy
@@ -683,6 +708,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Sweep_Homotopy 2 ...");
+    end if;
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Sweep(outfile,isreal,p,sols,nb_equ,nb_unk,nb_par);
     ended_moment := Ada.Calendar.Clock;
@@ -692,7 +720,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Sweep_Homotopy
               ( infile : in file_type;
-                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Sets the parameters and runs the sweep homotopy
@@ -707,6 +736,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Sweep_Homotopy 3 ...");
+    end if;
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
     Sweep(outfile,isreal,p,sols,nb_equ,nb_unk,nb_par);
     ended_moment := Ada.Calendar.Clock;
@@ -717,7 +749,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   procedure Multitasking_Secant_Homotopy
                ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  ls : in Link_to_Array_of_Strings;
-                 nt,nbequ,nbvar : in natural32 ) is
+                 nt,nbequ,nbvar : in natural32;
+                 vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Calls the multitasking path trackers on the system p.
@@ -727,7 +760,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   --   ls        the string representation of the system p;
   --   nt        the number of tasks;
   --   nbequ     number of equations;
-  --   nbvar     number of variables.
+  --   nbvar     number of variables;
+  --   verbose   the verbose level.
 
     outft : file_type;
 
@@ -735,6 +769,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Multitasking_Secant_Homotopy 1 ...");
+    end if;
     Create_Output_File(outft,outfilename);
     Multitasking_Continuation.Driver_to_Path_Tracker
       (outft,p,prclvl,ls,integer32(nt),integer32(nbequ),integer32(nbvar));
@@ -746,7 +783,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   procedure Multitasking_Secant_Homotopy
                ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                  ls : in Link_to_Array_of_Strings;
-                 nt,nbequ,nbvar : in natural32 ) is
+                 nt,nbequ,nbvar : in natural32;
+                 vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Calls the multitasking path trackers on the Laurent system p.
@@ -756,7 +794,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   --   ls        the string representation of the system p;
   --   nt        the number of tasks;
   --   nbequ     number of equations;
-  --   nbvar     number of variables.
+  --   nbvar     number of variables;
+  --   verbose   the verbose level.
 
     outft : file_type;
 
@@ -764,6 +803,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     ended_moment : Ada.Calendar.Time;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Multitasking_Secant_Homotopy 2 ...");
+    end if;
     Create_Output_File(outft,outfilename);
     Multitasking_Continuation.Driver_to_Path_Tracker
       (outft,p,prclvl,ls,integer32(nt),integer32(nbequ),integer32(nbvar));
@@ -775,7 +817,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   procedure Parameter_or_Sweep_Homotopy
               ( inft : in out file_type;
                 lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                ls : in Link_to_Array_of_Strings ) is
+                ls : in Link_to_Array_of_Strings;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for the type of homotopy: parameter or sweep,
@@ -785,6 +828,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     prc : character;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Parameter_or_Sweep_Homotopy ...");
+    end if;
     if prclvl = 1 then
       prc := Prompt_for_Precision;
     elsif prclvl = 2 then
@@ -797,8 +843,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     case prc is 
       when '0' =>
         if pos = '1'
-         then Parameter_Homotopy(inft,lp.all);
-         else Sweep_Homotopy(inft,lp.all);
+         then Parameter_Homotopy(inft,lp.all,vrb-1);
+         else Sweep_Homotopy(inft,lp.all,vrb-1);
         end if;
       when '1' =>
         declare
@@ -808,8 +854,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
               := DoblDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
         begin
           if pos = '1'
-           then Parameter_Homotopy(inft,ddp);
-           else Sweep_Homotopy(inft,ddp);
+           then Parameter_Homotopy(inft,ddp,vrb-1);
+           else Sweep_Homotopy(inft,ddp,vrb-1);
           end if;
         end;
       when '2' =>
@@ -820,8 +866,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
               := QuadDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
         begin
           if pos = '1'
-           then Parameter_Homotopy(inft,qdp);
-           else Sweep_Homotopy(inft,qdp);
+           then Parameter_Homotopy(inft,qdp,vrb-1);
+           else Sweep_Homotopy(inft,qdp,vrb-1);
           end if;
         end;
       when others => null;
@@ -856,7 +902,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   procedure Polynomial_Tracker
               ( inft : in out file_type;
                 lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                ls : in Link_to_Array_of_Strings ) is
+                ls : in Link_to_Array_of_Strings;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Main driver to call the path trackers
@@ -865,12 +912,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nva,neq : natural32;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Polynomial_Tracker ...");
+    end if;
     neq := natural32(lp'last);
     nva := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
     if nt = 0 then
       if nva <= neq then
         close(inft);
-        Secant_Homotopy(neq,nva,lp.all,ls);
+        Secant_Homotopy(neq,nva,lp.all,ls,vrb-1);
       else
         new_line;
         put("Found "); put(neq,1);
@@ -886,7 +936,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   procedure Standard_Laurent_Tracker
               ( inft : in out file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                ls : in Link_to_Array_of_Strings ) is
+                ls : in Link_to_Array_of_Strings;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Main driver to call the path trackers
@@ -895,12 +946,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     nva,neq : natural32;
 
   begin
+    if vrb > 0 
+     then put_line("-> in mainpoco.Standard_Laurent_Tracker ...");
+    end if;
     neq := natural32(p'last);
     nva := Number_of_Unknowns(p(p'first));
     if nt = 0 then
       if nva <= neq then
         close(inft);
-        Secant_Homotopy(neq,nva,p,ls);
+        Secant_Homotopy(neq,nva,p,ls,vrb-1);
       else
         new_line;
         put("Found "); put(neq,1);
@@ -908,14 +962,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
         Parameter_or_Sweep_Homotopy(inft,p,ls);
       end if;
     else
-      Multitasking_Secant_Homotopy(p,ls,nt,neq,nva);
+      Multitasking_Secant_Homotopy(p,ls,nt,neq,nva,vrb-1);
     end if;
   end Standard_Laurent_Tracker;
 
   procedure Main_Dispatch
               ( inft : in out file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                ls : in Link_to_Array_of_Strings ) is
+                ls : in Link_to_Array_of_Strings;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Decides whether the given system p is a genuine Laurent system,
@@ -924,10 +979,14 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   --   or the path trackers for regular polynomial systems.
   --   The general path trackers may run in higher precision and use
   --   the original formulation of the system as given in the strings ls.
+  --   The verbose level is in vrb.
 
   begin
+    if vrb > 0
+     then put_line("-> in mainpoco.Main_Dispatch ...");
+    end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p) then
-      Standard_Laurent_Tracker(inft,p,ls);
+      Standard_Laurent_Tracker(inft,p,ls,vrb-1);
     else
       declare
         use Standard_Complex_Poly_Systems;
@@ -935,7 +994,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
         lp : Link_to_Poly_Sys;
       begin
         lp := new Poly_Sys'(Positive_Laurent_Polynomial_System(p));
-        Polynomial_Tracker(inft,lp,ls);
+        Polynomial_Tracker(inft,lp,ls,vrb-1);
       end;
     end if;
   end Main_Dispatch;
@@ -1000,7 +1059,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
          := Standard_Complex_Laur_Strings.Parse(m,ls.all);
     begin
      -- put_line("the Laurent polynomial system : "); put(q);
-      Main_Dispatch(inft,q,ls);
+      Main_Dispatch(inft,q,ls,verbose-1);
     end;
   end String_Main;
 

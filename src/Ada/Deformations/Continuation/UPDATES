@@ -1,3 +1,5 @@
+Fri 14 Jun 2019 : added verbose level to the procudures in mainpoco.adb.
+
 Thu 13 Jun 2019 : added the verbose level to mainpoco, bablpoco, bablpoco2,
   and bablpoco4.
 
