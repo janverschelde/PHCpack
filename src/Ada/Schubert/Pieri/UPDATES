@@ -1,3 +1,5 @@
+Thu 13 Jun 2019 : added the verbose level to the bablenum.
+
 Tue 29 Nov 2016 : added extra zero option to drivers_for_input_planes
   to skip the cheater homotopy stage in the Pieri homotopies.
   This changed drivers_for_pieri_homotopies.adb and

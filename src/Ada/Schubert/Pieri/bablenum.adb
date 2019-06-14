@@ -1,16 +1,17 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Communications_with_User;          use Communications_with_User;
 with Localization_Posets;               use Localization_Posets;
 
-procedure bablenum ( infilename,outfilename : in string ) is
+procedure bablenum ( infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
   procedure Pieri_Count ( file : in file_type; m,p,q : in natural32 ) is
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     nq : constant natural32 := m*p + q*(m+p);
     nb : natural32;
     level_poset : Array_of_Nodes(0..integer32(nq));
@@ -30,6 +31,10 @@ procedure bablenum ( infilename,outfilename : in string ) is
     m,p,q : natural32 := 0;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in bablenum.Main ...");
+    end if;
     Open_Input_File(infile,infilename);
     Create_Output_File(outfile,outfilename);
     get(infile,m); put(outfile,"m = "); put(outfile,m,1);

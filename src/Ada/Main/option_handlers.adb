@@ -224,7 +224,7 @@ package body Option_Handlers is
     elsif spos >= integer32(opts'first) then
       mainscal(file1,file2);
     elsif epos >= integer32(opts'first) then
-      bablenum(file1,file2);
+      bablenum(file1,file2,vrblvl);
     elsif dpos >= integer32(opts'first) then
       if redprc = 2 then
         mainred2(file1,file2);
@@ -503,7 +503,7 @@ package body Option_Handlers is
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4enumeration;
     elsif bpos >= integer32(opts'first) then
-      bablenum(infile,outfile);
+      bablenum(infile,outfile,vrblvl);
     else
       put_line(welcome); put_line(enumban);
       mainenum(vrblvl);
