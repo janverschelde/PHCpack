@@ -1,12 +1,14 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Communications_with_User;           use Communications_with_User;
 with QuadDobl_Complex_Poly_Systems;      use QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_System_Readers;
 with Drivers_for_Reduction;              use Drivers_for_Reduction;
 
-procedure mainred4 ( infilename,outfilename : in string ) is
+procedure mainred4 ( infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
   procedure Main is
 
@@ -16,6 +18,10 @@ procedure mainred4 ( infilename,outfilename : in string ) is
     ans : character;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainred4.Main ...");
+    end if;
     QuadDobl_System_Readers.Read_System(infile,infilename,lp);
     if lp = null
      then new_line; get(lp);

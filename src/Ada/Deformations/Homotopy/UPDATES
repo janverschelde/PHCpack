@@ -1,3 +1,6 @@
+Thu 13 Jun 2019 : added the verbose level to mainscal, mainred, mainred2,
+  and mainred4.
+
 Fri 22 Sep 2017 : added main drivers for double double and quad doubles
   to drivers_for_reduction.  New procedures mainred2 and mainred4 to be
   called by the dispatch procedure, which define phc -d2 and phc -d4.

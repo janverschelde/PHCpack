@@ -3,7 +3,6 @@ with Communications_with_User;           use Communications_with_User;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
@@ -17,10 +16,10 @@ with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with DoblDobl_Complex_Polynomials;
+--with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
-with QuadDobl_Complex_Polynomials;
+--with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
@@ -34,7 +33,8 @@ with DoblDobl_Scaling;
 with QuadDobl_Scaling;
 with Drivers_for_Scaling;                use Drivers_for_Scaling;
 
-procedure mainscal ( infilename,outfilename : in string ) is
+procedure mainscal ( infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
   procedure Standard_Read_System 
               ( file : in out file_type; filename : in string;
@@ -155,8 +155,8 @@ procedure mainscal ( infilename,outfilename : in string ) is
 
     ans : character;
     scafile : file_type;
-    use DoblDobl_Complex_Polynomials;
-    nunk : constant natural32 := Number_of_Unknowns(p(p'first));
+   -- use DoblDobl_Complex_Polynomials;
+   -- nunk : constant natural32 := Number_of_Unknowns(p(p'first));
 
   begin
     new_line;
@@ -188,8 +188,8 @@ procedure mainscal ( infilename,outfilename : in string ) is
 
     ans : character;
     scafile : file_type;
-    use QuadDobl_Complex_Polynomials;
-    nunk : constant natural32 := Number_of_Unknowns(p(p'first));
+   -- use QuadDobl_Complex_Polynomials;
+   -- nunk : constant natural32 := Number_of_Unknowns(p(p'first));
 
   begin
     new_line;
@@ -729,6 +729,10 @@ procedure mainscal ( infilename,outfilename : in string ) is
     ans : character;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainscal.Main ...");
+    end if;
     new_line;
     put_line("MENU for the precision of the scalers :");
     put_line("  0. standard double precision;");

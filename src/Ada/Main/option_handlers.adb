@@ -222,16 +222,16 @@ package body Option_Handlers is
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4blackbox;
     elsif spos >= integer32(opts'first) then
-      mainscal(file1,file2);
+      mainscal(file1,file2,vrblvl);
     elsif epos >= integer32(opts'first) then
       bablenum(file1,file2,vrblvl);
     elsif dpos >= integer32(opts'first) then
       if redprc = 2 then
-        mainred2(file1,file2);
+        mainred2(file1,file2,vrblvl);
       elsif redprc = 4 then
-        mainred4(file1,file2);
+        mainred4(file1,file2,vrblvl);
       else
-        mainred(file1,file2);
+        mainred(file1,file2,vrblvl);
       end if;
     elsif rpos >= integer32(opts'first) then
       if nt > 0
@@ -306,27 +306,30 @@ package body Option_Handlers is
   end Component_Solver_Handler;
 
   procedure Scaling_Handler 
-              ( opts : in string; infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos : constant integer32 := Actions_and_Options.Position(opts,'h');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos >= integer32(opts'first) then
       Greeting_Banners.help4scaling;
     else
       put_line(welcome); put_line(scalban);
-      mainscal(infile,outfile);
+      mainscal(infile,outfile,vrblvl);
     end if;
   end Scaling_Handler;
 
   procedure Reduction_Handler
-              ( args : in Array_of_Strings; opts : in string;
-                infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     redprc : constant natural32
            := Actions_and_Options.Scan_Precision(args,'r');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
@@ -334,11 +337,11 @@ package body Option_Handlers is
     else
       put_line(welcome); put_line(reduban);
       if redprc = 2 then
-        mainred2(infile,outfile);
+        mainred2(infile,outfile,vrblvl);
       elsif redprc = 4 then
-        mainred4(infile,outfile);
+        mainred4(infile,outfile,vrblvl);
       else
-        mainred(infile,outfile);
+        mainred(infile,outfile,vrblvl);
       end if;
     end if;
   end Reduction_Handler;
@@ -746,7 +749,7 @@ package body Option_Handlers is
         when 'a' => EqnByEqn_Solver_Handler(opts,a1,a2);
         when 'b' => BlackBox_Solver_Handler(args,opts,a1,a2,a3);
         when 'B' => Component_Solver_Handler(args,opts,a1,a2);
-        when 's' => Scaling_Handler(opts,a1,a2);
+        when 's' => Scaling_Handler(args,opts,a1,a2);
         when 'd' => Reduction_Handler(args,opts,a1,a2);
         when 'r' => Root_Count_Handler(args,opts,a1,a2);
         when 'm' => Mixed_Volume_Handler(args,opts,a1,a2);

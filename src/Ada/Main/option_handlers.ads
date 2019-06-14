@@ -114,20 +114,22 @@ package Option_Handlers is
   --   outfile  name of the output file.
 
   procedure Scaling_Handler
-              ( opts : in string; infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
   --   Defines the action for the option -s,
   --   for equation and coefficient scaling.
 
   -- ON ENTRY :
+  --   args     command line arguments;
   --   opts     options extracted from the command line arguments;
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
   procedure Reduction_Handler
-              ( args : in Array_of_Strings; opts : in string;
-                infile,outfile : in string );
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string );
 
   -- DESCRIPTION :
   --   Defines the action for the option -d,
