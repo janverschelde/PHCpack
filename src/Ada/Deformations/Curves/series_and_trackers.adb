@@ -1,6 +1,5 @@
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -226,7 +225,8 @@ package body Series_and_Trackers is
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float ) is
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
    -- nbq : constant integer32 := hom'last;
@@ -256,6 +256,9 @@ package body Series_and_Trackers is
     nbrit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 1 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntfail := 0;
@@ -266,8 +269,8 @@ package body Series_and_Trackers is
      -- step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
      -- step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
+     -- dstep := Series_and_Predictors.Step_Distance
+     --            (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
      -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
      -- step := Minimum(step,dstep); -- ignore series step
       dstep := pars.maxsize; -- ignore Hessian step size
@@ -323,7 +326,8 @@ package body Series_and_Trackers is
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float ) is
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
    -- nbq : constant integer32 := hom'last;
@@ -356,6 +360,9 @@ package body Series_and_Trackers is
     nbrit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 2 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntfail := 0;
@@ -369,8 +376,8 @@ package body Series_and_Trackers is
      --            (step,hi_part(frp),pars.pbeta); -- ignore series step
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       dd_t := Create(t);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+     -- dstep := Series_and_Predictors.Step_Distance
+     --            (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
       dstep := pars.maxsize; -- ignore Hessian step size
       step := Series_and_Predictors.Cap_Step_Size
                  (dstep,hi_part(frp),pars.pbeta);
@@ -431,7 +438,8 @@ package body Series_and_Trackers is
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float ) is
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
    -- nbq : constant integer32 := hom'last;
@@ -464,6 +472,9 @@ package body Series_and_Trackers is
     nbrit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 3 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntfail := 0;
@@ -477,8 +488,8 @@ package body Series_and_Trackers is
      --           (step,hihi_part(frp),pars.pbeta); -- ignore series step
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       qd_t := Create(t);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+     -- dstep := Series_and_Predictors.Step_Distance
+     --            (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
       dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size
                 (dstep,hihi_part(frp),pars.pbeta);
@@ -541,7 +552,8 @@ package body Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
    -- nbq : constant integer32 := hom'last;
@@ -571,6 +583,9 @@ package body Series_and_Trackers is
     nbrit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 4 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntfail := 0;
@@ -673,7 +688,8 @@ package body Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
    -- nbq : constant integer32 := hom'last;
@@ -706,6 +722,9 @@ package body Series_and_Trackers is
     nbrit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 5 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntfail := 0;
@@ -729,8 +748,8 @@ package body Series_and_Trackers is
                 (step,hi_part(frp),pars.pbeta);
       DoblDobl_Complex_Series_Vectors.Clear(eva);
       dd_t := Create(t);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+     -- dstep := Series_and_Predictors.Step_Distance
+     --            (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
       dstep := pars.maxsize; -- ignore Hessian step
       step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
@@ -806,7 +825,8 @@ package body Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
    -- nbq : constant integer32 := hom'last;
@@ -839,6 +859,9 @@ package body Series_and_Trackers is
     nbrit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 6 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntfail := 0;
@@ -857,14 +880,14 @@ package body Series_and_Trackers is
       end if;
       step := Series_and_Predictors.Set_Step_Size
                 (file,eva,tolcff,alpha,verbose);
-      step := pars.sbeta*step;
+     -- step := pars.sbeta*step;
       step := pars.maxsize; -- ignore series step
       step := Series_and_Predictors.Cap_Step_Size
                 (step,hihi_part(frp),pars.pbeta);
       QuadDobl_Complex_Series_Vectors.Clear(eva);
       qd_t := Create(t);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+     -- dstep := Series_and_Predictors.Step_Distance
+     --            (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
       dstep := pars.maxsize; -- ignore Hessian step
       step := Minimum(step,dstep);
       Set_Step(t,step,pars.maxsize,onetarget);
@@ -945,7 +968,8 @@ package body Series_and_Trackers is
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float ) is
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 ) is
 
    -- nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
@@ -975,6 +999,9 @@ package body Series_and_Trackers is
     wrk_fcf : Standard_Complex_Series_VecVecs.VecVec(fcf'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 7 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
@@ -987,8 +1014,8 @@ package body Series_and_Trackers is
      -- step := pars.sbeta*step;
       Standard_Complex_Series_Vectors.Clear(eva);
      -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
+     -- dstep := Series_and_Predictors.Step_Distance
+     --            (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
      -- step := Minimum(step,dstep); -- ignore series step
       dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
@@ -1044,7 +1071,8 @@ package body Series_and_Trackers is
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float ) is
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 ) is
 
    -- nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
@@ -1076,6 +1104,9 @@ package body Series_and_Trackers is
     wrk_fcf : DoblDobl_Complex_Series_VecVecs.VecVec(fcf'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 8 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
@@ -1090,8 +1121,8 @@ package body Series_and_Trackers is
      -- step := Series_and_Predictors.Cap_Step_Size
      --           (step,hi_part(frp),pars.pbeta);
       dd_t := Create(t);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
+     -- dstep := Series_and_Predictors.Step_Distance
+     --            (maxdeg,dbeta,dd_t,jm,hs,wrk_sol,srv,pv);
      -- step := Minimum(step,dstep); -- ignore series step
       dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size
@@ -1153,7 +1184,8 @@ package body Series_and_Trackers is
                 sol : in out QuadDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float ) is
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 ) is
 
    -- nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
@@ -1185,6 +1217,9 @@ package body Series_and_Trackers is
     wrk_fcf : QuadDobl_Complex_Series_VecVecs.VecVec(fcf'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 9 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
@@ -1199,8 +1234,8 @@ package body Series_and_Trackers is
      -- step := Series_and_Predictors.Cap_Step_Size
      --           (step,hihi_part(frp),pars.pbeta);
       qd_t := Create(t);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
+     -- dstep := Series_and_Predictors.Step_Distance
+     --            (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
      -- step := Minimum(step,dstep); -- ignore series step
       dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size
@@ -1264,7 +1299,8 @@ package body Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
    -- nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
@@ -1294,6 +1330,9 @@ package body Series_and_Trackers is
     wrk_fcf : Standard_Complex_Series_VecVecs.VecVec(fcf'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 10 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
@@ -1407,7 +1446,8 @@ package body Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
    -- nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
@@ -1439,6 +1479,9 @@ package body Series_and_Trackers is
     wrk_fcf : DoblDobl_Complex_Series_VecVecs.VecVec(fcf'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 11 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
@@ -1550,7 +1593,8 @@ package body Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
    -- nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
@@ -1582,6 +1626,9 @@ package body Series_and_Trackers is
     wrk_fcf : QuadDobl_Complex_Series_VecVecs.VecVec(fcf'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_One_Path 12 ...");
+    end if;
     minsize := 1.0; maxsize := 0.0;
     nbrcorrs := 0; cntfail := 0;
     nbrsteps := max_steps;
@@ -1707,7 +1754,8 @@ package body Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                monitor,verbose : in boolean := false ) is
+                monitor,verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -1729,6 +1777,9 @@ package body Series_and_Trackers is
     minsize,maxsize,smallest,largest : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_Many_Paths 1 ...");
+    end if;
     Standard_CSeries_Jaco_Matrices.Create(hom,ejm,mlt);
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
@@ -1770,7 +1821,8 @@ package body Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                monitor,verbose : in boolean := false ) is
+                monitor,verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -1785,6 +1837,9 @@ package body Series_and_Trackers is
     minsize,maxsize,smallest,largest : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_Many_Paths 2 ...");
+    end if;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -1821,7 +1876,8 @@ package body Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                monitor,verbose : in boolean := false ) is
+                monitor,verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -1836,6 +1892,9 @@ package body Series_and_Trackers is
     minsize,maxsize,smallest,largest : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_Many_Paths 3 ...");
+    end if;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -1870,7 +1929,8 @@ package body Series_and_Trackers is
                 hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -1883,6 +1943,9 @@ package body Series_and_Trackers is
     minsize,maxsize : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_Many_Paths 4 ...");
+    end if;
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path
@@ -1897,7 +1960,8 @@ package body Series_and_Trackers is
                 hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -1910,6 +1974,9 @@ package body Series_and_Trackers is
     minsize,maxsize : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_Many_Paths 5 ...");
+    end if;
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path
@@ -1924,7 +1991,8 @@ package body Series_and_Trackers is
                 hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -1937,6 +2005,9 @@ package body Series_and_Trackers is
     minsize,maxsize : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_trackers.Track_Many_Paths 6 ...");
+    end if;
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path

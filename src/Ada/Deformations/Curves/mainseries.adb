@@ -40,7 +40,8 @@ procedure mainseries ( precision : in character;
   procedure Run_Newton
              ( file : in file_type; echelon : in boolean;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-               s : in Standard_Complex_Series_VecVecs.VecVec ) is
+               s : in Standard_Complex_Series_VecVecs.VecVec;
+               vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -51,7 +52,8 @@ procedure mainseries ( precision : in character;
   --   file    to write the output to;
   --   echelon indicates whether to use echelon Newton;
   --   p       a polynomial of nq equations in nv unknowns;
-  --   s       initial terms in series expansion solutions.
+  --   s       initial terms in series expansion solutions;
+  --   vrb     the verbose level.
 
     nbrit,maxdeg : integer32 := 0;
     ans : character;
@@ -59,6 +61,9 @@ procedure mainseries ( precision : in character;
     timer : Timing_Widget;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.Run_Newton 1 ...");
+    end if;
     put("Give the number of steps in Newton's method : "); get(nbrit);
     put("Give the maximal degree of the series : "); get(maxdeg);
     put("Do you want extra diagnostic output in every Newton step ? (y/n) ");
@@ -86,7 +91,8 @@ procedure mainseries ( precision : in character;
   procedure Run_Newton
              ( file : in file_type; echelon : in boolean;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-               s : in DoblDobl_Complex_Series_VecVecs.VecVec ) is
+               s : in DoblDobl_Complex_Series_VecVecs.VecVec;
+               vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -97,7 +103,8 @@ procedure mainseries ( precision : in character;
   --   file    to write the output to;
   --   echelon indicates whether to use echelon Newton or not;
   --   p       a polynomial of nq equations in nv unknowns;
-  --   s       initial terms in series expansion solutions.
+  --   s       initial terms in series expansion solutions;
+  --   vrb     the verbose level.
 
     maxdeg,nbrit : integer32 := 0;
     ans : character;
@@ -105,6 +112,9 @@ procedure mainseries ( precision : in character;
     timer : Timing_Widget;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.Run_Newton 2 ...");
+    end if;
     put("Give the number of steps in Newton's method : "); get(nbrit);
     put("Give the maximal degree of the series : "); get(maxdeg);
     put("Do you want extra diagnostic output in every Newton step ? (y/n) ");
@@ -132,7 +142,8 @@ procedure mainseries ( precision : in character;
   procedure Run_Newton
              ( file : in file_type; echelon : in boolean;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-               s : in QuadDobl_Complex_Series_VecVecs.VecVec ) is
+               s : in QuadDobl_Complex_Series_VecVecs.VecVec;
+               vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -151,6 +162,9 @@ procedure mainseries ( precision : in character;
     timer : Timing_Widget;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.Run_Newton 3 ...");
+    end if;
     put("Give the number of steps in Newton's method : "); get(nbrit);
     put("Give the maximal degree of the series : "); get(maxdeg);
     put("Do you want extra diagnostic output in every Newton step ? (y/n) ");
@@ -178,7 +192,8 @@ procedure mainseries ( precision : in character;
   procedure Run_Newton_at_Constant
              ( file : in file_type; idx : in integer32;
                p : in Standard_Complex_Poly_Systems.Poly_Sys;
-               s : in Standard_Complex_Solutions.Solution_List ) is
+               s : in Standard_Complex_Solutions.Solution_List;
+               vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -190,7 +205,8 @@ procedure mainseries ( precision : in character;
   --   file    to write the output to;
   --   idx     index to the series parameter;
   --   p       a polynomial of nq equations in nv unknowns;
-  --   s       a list of solutions.
+  --   s       a list of solutions;
+  --   vrb     the verbose level.
 
     use Standard_Complex_Solutions;
 
@@ -201,14 +217,18 @@ procedure mainseries ( precision : in character;
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(file,false,srp,srv);
+    if vrb > 0
+     then put_line("-> in mainseries.Run_Newton_at_Constant 1 ...");
+    end if;
+    Run_Newton(file,false,srp,srv,vrb-1);
     Standard_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton_at_Constant;
 
   procedure Run_Newton_at_Constant
              ( file : in file_type; idx : in integer32;
                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-               s : in DoblDobl_Complex_Solutions.Solution_List ) is
+               s : in DoblDobl_Complex_Solutions.Solution_List;
+               vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -220,7 +240,8 @@ procedure mainseries ( precision : in character;
   --   file    to write the output to;
   --   idx     index to the series parameter;
   --   p       a polynomial of nq equations in nv unknowns;
-  --   s       a list of solutions.
+  --   s       a list of solutions;
+  --   vrb     the verbose level.
 
     use DoblDobl_Complex_Solutions;
 
@@ -231,14 +252,18 @@ procedure mainseries ( precision : in character;
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(file,false,srp,srv);
+    if vrb > 0
+     then put_line("-> in mainseries.Run_Newton_at_Constant 2 ...");
+    end if;
+    Run_Newton(file,false,srp,srv,vrb-1);
     DoblDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton_at_Constant;
 
   procedure Run_Newton_at_Constant
              ( file : in file_type; idx : in integer32;
                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-               s : in QuadDobl_Complex_Solutions.Solution_List ) is
+               s : in QuadDobl_Complex_Solutions.Solution_List;
+               vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -250,7 +275,8 @@ procedure mainseries ( precision : in character;
   --   file    to write the output to;
   --   idx     index to the series parameter;
   --   p       a polynomial of nq equations in nv unknowns;
-  --   s       a list of solutions.
+  --   s       a list of solutions;
+  --   vrb     the verbose level.
 
     use QuadDobl_Complex_Solutions;
 
@@ -261,15 +287,19 @@ procedure mainseries ( precision : in character;
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(file,false,srp,srv);
+    if vrb > 0
+     then put_line("-> in mainseries.Run_Newton_at_Constant 3 ...");
+    end if;
+    Run_Newton(file,false,srp,srv,vrb-1);
     QuadDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton_at_Constant;
 
-  procedure Standard_Main_at_Constant is
+  procedure Standard_Main_at_Constant ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Performs a test in standard double precision,
   --   prompting the user for a system and its solutions.
+  --   The vrb on input is the verbose level.
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
@@ -281,6 +311,9 @@ procedure mainseries ( precision : in character;
     sols : Solution_List;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.Standard_Main_at_Constant ...");
+    end if;
     if infilename = "" then
       new_line;
       put_line("Reading the file name for a system and solutions ...");
@@ -305,10 +338,10 @@ procedure mainseries ( precision : in character;
     end if;
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton_at_Constant(outfile,idx,lp.all,sols);
+    Run_Newton_at_Constant(outfile,idx,lp.all,sols,vrb-1);
   end Standard_Main_at_Constant;
 
-  procedure DoblDobl_Main_at_Constant is
+  procedure DoblDobl_Main_at_Constant ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Performs a test in double double precision,
@@ -324,6 +357,9 @@ procedure mainseries ( precision : in character;
     sols : Solution_List;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.DoblDobl_Main_at_Constant ...");
+    end if;
     if infilename = "" then
       new_line;
       put_line("Reading the file name for a system and solutions ...");
@@ -348,10 +384,10 @@ procedure mainseries ( precision : in character;
     end if;
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton_at_Constant(outfile,idx,lp.all,sols);
+    Run_Newton_at_Constant(outfile,idx,lp.all,sols,vrb-1);
   end DoblDobl_Main_at_Constant;
 
-  procedure QuadDobl_Main_at_Constant is
+  procedure QuadDobl_Main_at_Constant ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Performs a test in quad double precision,
@@ -367,6 +403,9 @@ procedure mainseries ( precision : in character;
     sols : Solution_List;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.QuadDobl_Main_at_Constant ...");
+    end if;
     if infilename = "" then
       new_line;
       put_line("Reading the file name for a system and solutions ...");
@@ -391,10 +430,10 @@ procedure mainseries ( precision : in character;
     end if;
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton_at_Constant(outfile,idx,lp.all,sols);
+    Run_Newton_at_Constant(outfile,idx,lp.all,sols,vrb-1);
   end QuadDobl_Main_at_Constant;
 
-  procedure Standard_Main_at_Series is
+  procedure Standard_Main_at_Series ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Performs a test in standard double precision,
@@ -410,6 +449,9 @@ procedure mainseries ( precision : in character;
     srv : Standard_Complex_Series_Vectors.Link_to_Vector;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.Standard_Main_at_Series ...");
+    end if;
     if infilename = "" then
       new_line;
       put_line("Reading a polynomial system ...");
@@ -442,12 +484,12 @@ procedure mainseries ( precision : in character;
           := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     begin
       s(1) := srv;
-      Run_Newton(outfile,true,srp,s);
+      Run_Newton(outfile,true,srp,s,vrb-1);
       Standard_CSeries_Poly_Systems.Clear(srp);
     end;
   end Standard_Main_at_Series;
 
-  procedure DoblDobl_Main_at_Series is
+  procedure DoblDobl_Main_at_Series ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Performs a test in double double precision,
@@ -463,6 +505,9 @@ procedure mainseries ( precision : in character;
     srv : DoblDobl_Complex_Series_Vectors.Link_to_Vector;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.DoblDobl_Main_at_Constant ...");
+    end if;
     if infilename = "" then
       new_line;
       put_line("Reading a polynomial system ...");
@@ -495,12 +540,12 @@ procedure mainseries ( precision : in character;
           := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     begin
       s(1) := srv;
-      Run_Newton(outfile,true,srp,s);
+      Run_Newton(outfile,true,srp,s,vrb-1);
       DoblDobl_CSeries_Poly_Systems.Clear(srp);
     end;
   end DoblDobl_Main_at_Series;
 
-  procedure QuadDobl_Main_at_Series is
+  procedure QuadDobl_Main_at_Series ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Performs a test in quad double precision,
@@ -516,6 +561,9 @@ procedure mainseries ( precision : in character;
     srv : QuadDobl_Complex_Series_Vectors.Link_to_Vector;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainseries.QuadDobl_Main_at_Constant ...");
+    end if;
     if infilename = "" then
       new_line;
       put_line("Reading a polynomial system ...");
@@ -548,12 +596,13 @@ procedure mainseries ( precision : in character;
           := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     begin
       s(1) := srv;
-      Run_Newton(outfile,true,srp,s);
+      Run_Newton(outfile,true,srp,s,vrb-1);
       QuadDobl_CSeries_Poly_Systems.Clear(srp);
     end;
   end QuadDobl_Main_at_Series;
 
-  procedure Nonzero_Precision_Main ( valprc : in character ) is
+  procedure Nonzero_Precision_Main
+              ( valprc : in character; vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   This main procedure is called when the precision is determined,
@@ -566,6 +615,9 @@ procedure mainseries ( precision : in character;
     ans : character;
 
   begin 
+    if vrb > 0
+     then put_line("-> in mainseries.Nonzero_Precision_Main ...");
+    end if;
     new_line;
     put_line("MENU for power series methods :");
     put_line("  1. apply polyhedral methods for tropisms;");
@@ -597,8 +649,8 @@ procedure mainseries ( precision : in character;
           when '1' =>
             put_line("The working precision is double precision");
             if ans = 'y'
-             then Standard_Main_at_Constant;
-             else Standard_Main_at_Series;
+             then Standard_Main_at_Constant(vrb-1);
+             else Standard_Main_at_Series(vrb-1);
             end if;
           when '2' =>
             put_line("The working precision is double double precision.");
@@ -609,8 +661,8 @@ procedure mainseries ( precision : in character;
           when '4' =>
             put_line("The working precision is quad double precision.");
             if ans = 'y'
-             then QuadDobl_Main_at_Constant;
-             else QuadDobl_Main_at_Series;
+             then QuadDobl_Main_at_Constant(vrb-1);
+             else QuadDobl_Main_at_Series(vrb-1);
             end if;
           when others => null;
         end case;
@@ -649,9 +701,9 @@ procedure mainseries ( precision : in character;
       put("Type 0, 1, or 2 to select the working precision : ");
       Ask_Alternative(prc,"012");
       case prc is
-        when '0' => Nonzero_Precision_Main('1');
-        when '1' => Nonzero_Precision_Main('2');
-        when '2' => Nonzero_Precision_Main('4');
+        when '0' => Nonzero_Precision_Main('1',verbose-1);
+        when '1' => Nonzero_Precision_Main('2',verbose-1);
+        when '2' => Nonzero_Precision_Main('4',verbose-1);
         when others => null;
       end case;
     end if;

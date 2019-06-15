@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;
@@ -124,7 +125,8 @@ package Series_and_Trackers is
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float );
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -133,7 +135,8 @@ package Series_and_Trackers is
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float );
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -142,7 +145,8 @@ package Series_and_Trackers is
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float );
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution sol using the homotopy hom,
@@ -155,7 +159,8 @@ package Series_and_Trackers is
   --   hs       Hessians for all equations in the polynomial homotopy;
   --   hom      a homotopy with series coefficients;
   --   sol      start solution in the homotopy;
-  --   pars     values of the parameters and tolerances.
+  --   pars     values of the parameters and tolerances;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   sol      solution at the end of the path;
@@ -175,7 +180,8 @@ package Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( file : in file_type;
                 abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -186,7 +192,8 @@ package Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( file : in file_type;
                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -197,7 +204,8 @@ package Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution sol using the homotopy hom,
@@ -211,7 +219,8 @@ package Series_and_Trackers is
   --   hs       Hessians for all equations in the polynomial homotopy;
   --   hom      a homotopy with series coefficients;
   --   sol      start solution in the homotopy;
-  --   pars     values of the parameters and tolerances.
+  --   pars     values of the parameters and tolerances;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   sol      solution at the end of the path;
@@ -234,7 +243,8 @@ package Series_and_Trackers is
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float );
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -246,7 +256,8 @@ package Series_and_Trackers is
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float );
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -258,7 +269,8 @@ package Series_and_Trackers is
                 sol : in out QuadDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float );
+                minsize,maxsize : out double_float;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path starting using a coefficient-parameter homotopy
@@ -275,7 +287,8 @@ package Series_and_Trackers is
   --   ejm      coefficient-parameter matrix of all derivatives;
   --   mlt      multiplication factors for the derivatives;
   --   sol      start solution in the homotopy;
-  --   pars     values of the parameters and tolerances.
+  --   pars     values of the parameters and tolerances;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   sol      solution at the end of the path;
@@ -298,7 +311,8 @@ package Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( file : in file_type;
                 abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -312,7 +326,8 @@ package Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( file : in file_type;
                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -326,7 +341,8 @@ package Series_and_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntfail : out natural32;
                 minsize,maxsize : out double_float;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path starting using a coefficient-parameter homotopy
@@ -344,7 +360,8 @@ package Series_and_Trackers is
   --   ejm      coefficient-parameter matrix of all derivatives;
   --   mlt      multiplication factors for the derivatives;
   --   sol      start solution in the homotopy;
-  --   pars     values of the parameters and tolerances.
+  --   pars     values of the parameters and tolerances;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   sol      solution at the end of the path;
@@ -374,19 +391,22 @@ package Series_and_Trackers is
                 hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 );
   procedure Track_Many_Paths
               ( jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 );
   procedure Track_Many_Paths
               ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks the paths starting at the solutions in the list sols,
@@ -399,7 +419,8 @@ package Series_and_Trackers is
   --   hs       Hessians for all equations in the polynomial homotopy;
   --   hom      a homotopy with series coefficients;
   --   sols     start solutions in the homotopy;
-  --   pars     values of the parameters and tolerances.
+  --   pars     values of the parameters and tolerances;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   sols     solutions at the end of the paths.
@@ -411,7 +432,8 @@ package Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                monitor,verbose : in boolean := false );
+                monitor,verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Track_Many_Paths
               ( file : in file_type;
                 jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -419,7 +441,8 @@ package Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                monitor,verbose : in boolean := false );
+                monitor,verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Track_Many_Paths
               ( file : in file_type;
                 jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -427,7 +450,8 @@ package Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                monitor,verbose : in boolean := false );
+                monitor,verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks the paths starting at the solutions in the list sols,
@@ -441,7 +465,8 @@ package Series_and_Trackers is
   --   hom      a homotopy with series coefficients;
   --   sols     start solutions in the homotopy;
   --   pars     values of the parameters and tolerances;
-  --   verbose  if true, then extra output is written to file.
+  --   verbose  if true, then extra output is written to file;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   sols     solutions at the end of the paths.

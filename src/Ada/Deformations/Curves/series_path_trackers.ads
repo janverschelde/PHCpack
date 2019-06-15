@@ -48,13 +48,16 @@ package Series_Path_Trackers is
 
   procedure Standard_Run
               ( nq,nvr,idxpar : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 );
   procedure DoblDobl_Run
               ( nq,nvr,idxpar : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 );
   procedure QuadDobl_Run
               ( nq,nvr,idxpar : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   With a homotopy defined, runs the path tracker starting at the
@@ -64,7 +67,8 @@ package Series_Path_Trackers is
   --   nq       number of equations in the homotopy;
   --   nvr      number of variables in the homotopy;
   --   idxpar   index of the parameter in a natural parameter homotopy,
-  --            in 1..nvr, or else 0 for an artificial parameter homotopy.
+  --            in 1..nvr, or else 0 for an artificial parameter homotopy;
+  --   verbose  the verbose level.
 
   function Prompt_for_Artificial return boolean;
 
@@ -72,9 +76,9 @@ package Series_Path_Trackers is
   --   Asks the user whether the homotopy is an artificial parameter
   --   homotopy and return true if so, otherwise false is returned.
 
-  procedure Standard_Main;
-  procedure DoblDobl_Main;
-  procedure QuadDobl_Main;
+  procedure Standard_Main ( verbose : in integer32 := 0 );
+  procedure DoblDobl_Main ( verbose : in integer32 := 0 );
+  procedure QuadDobl_Main ( verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for a homotopy, runs the series path trackers

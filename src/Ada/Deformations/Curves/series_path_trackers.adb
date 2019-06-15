@@ -135,7 +135,8 @@ package body Series_Path_Trackers is
 
   procedure Standard_Run
               ( nq,nvr,idxpar : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -168,6 +169,9 @@ package body Series_Path_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrb > 0
+     then put_line("-> in series_path_trackers.Standard_Run ...");
+    end if;
     if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
       p.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(p);
@@ -205,7 +209,7 @@ package body Series_Path_Trackers is
       if tofile then
         Series_and_Trackers.Track_One_Path
           (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -215,7 +219,7 @@ package body Series_Path_Trackers is
       else
         Series_and_Trackers.Track_One_Path
           (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (standard_output,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -267,7 +271,8 @@ package body Series_Path_Trackers is
 
   procedure DoblDobl_Run
               ( nq,nvr,idxpar : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -304,6 +309,9 @@ package body Series_Path_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrb > 0
+     then put_line("-> in series_path_trackers.DoblDobl_Run ...");
+    end if;
     if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
       p.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(p);
@@ -341,7 +349,7 @@ package body Series_Path_Trackers is
       if tofile then
         Series_and_Trackers.Track_One_Path
           (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -351,7 +359,7 @@ package body Series_Path_Trackers is
       else
         Series_and_Trackers.Track_One_Path
           (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (standard_output,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -404,7 +412,8 @@ package body Series_Path_Trackers is
 
   procedure QuadDobl_Run
               ( nq,nvr,idxpar : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -441,6 +450,9 @@ package body Series_Path_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrb > 0
+     then put_line("-> in series_path_trackers.QuadDobl_Run ...");
+    end if;
     if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
       p.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(p);
@@ -478,7 +490,7 @@ package body Series_Path_Trackers is
       if tofile then
         Series_and_Trackers.Track_One_Path
           (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -488,7 +500,7 @@ package body Series_Path_Trackers is
       else
         Series_and_Trackers.Track_One_Path
           (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (standard_output,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
@@ -552,66 +564,75 @@ package body Series_Path_Trackers is
     return (ans = 'y');
   end Prompt_for_Artificial;
 
-  procedure Standard_Main is
+  procedure Standard_Main ( verbose : in integer32 := 0 ) is
 
     nbq,nvr,idx : integer32;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
  
   begin
+    if verbose > 0
+     then put_line("-> in series_path_trackers.Standard_Main ...");
+    end if;
     if arth then
       Homotopy_Series_Readers.Standard_Reader(nbq,sols);
       nvr := Standard_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
       new_line;
-      Standard_Run(nbq,nvr,idx,sols);
+      Standard_Run(nbq,nvr,idx,sols,verbose-1);
     else
       Homotopy_Series_Readers.Standard_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
       new_line;
-      Standard_Run(nbq,nvr,idx,dropsols);
+      Standard_Run(nbq,nvr,idx,dropsols,verbose-1);
     end if;
   end Standard_Main;
 
-  procedure DoblDobl_Main is
+  procedure DoblDobl_Main ( verbose : in integer32 := 0 ) is
 
     nbq,nvr,idx : integer32;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
 
   begin
+    if verbose > 0
+     then put_line("-> in series_path_trackers.DoblDobl_Main ...");
+    end if;
     if arth then
       Homotopy_Series_Readers.DoblDobl_Reader(nbq,sols);
       nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
       new_line;
-      DoblDobl_Run(nbq,nvr,idx,sols);
+      DoblDobl_Run(nbq,nvr,idx,sols,verbose-1);
     else
       Homotopy_Series_Readers.DoblDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
       new_line;
-      DoblDobl_Run(nbq,nvr,idx,dropsols);
+      DoblDobl_Run(nbq,nvr,idx,dropsols,verbose-1);
     end if;
   end DoblDobl_Main;
 
-  procedure QuadDobl_Main is
+  procedure QuadDobl_Main ( verbose : in integer32 := 0 ) is
 
     nbq,nvr,idx : integer32;
     sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
 
   begin
+    if verbose > 0
+     then put_line("-> in series_path_trackers.QuadDobl_Main ...");
+    end if;
     if arth then
       Homotopy_Series_Readers.QuadDobl_Reader(nbq,sols);
       nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
       new_line;
-      QuadDobl_Run(nbq,nvr,idx,sols);
+      QuadDobl_Run(nbq,nvr,idx,sols,verbose-1);
     else
       Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
       new_line;
-      QuadDobl_Run(nbq,nvr,idx,dropsols);
+      QuadDobl_Run(nbq,nvr,idx,dropsols,verbose-1);
     end if;
   end QuadDobl_Main;
 

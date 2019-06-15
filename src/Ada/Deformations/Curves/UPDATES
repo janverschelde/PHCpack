@@ -1,4 +1,6 @@
 Sat 15 Jun 2019 : added the verbose level to mainseries.
+  Added the verbose level to the procedures in mainseries.adb,
+  to series_path_trackers and series_and_trackers, tested by ts_serpath.
 
 Sat 1 Jun 2019 : updates in power_series_methods.adb for compiler warnings.
  

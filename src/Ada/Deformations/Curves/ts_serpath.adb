@@ -1,5 +1,7 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Series_Path_Trackers;
 
 procedure ts_serpath is
@@ -14,6 +16,7 @@ procedure ts_serpath is
   --   and then launches the path tracker.
 
     ans : character;
+    vrb : integer32 := 0;
 
   begin
     new_line;
@@ -23,10 +26,13 @@ procedure ts_serpath is
     put_line("  2. quad double precision.");
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(ans,"012");
+    new_line;
+    put("Verbose level ? (0 if no verbose level) : ");
+    get(vrb);
     case ans is
-      when '0' => Series_Path_Trackers.Standard_Main;
-      when '1' => Series_Path_Trackers.DoblDobl_Main;
-      when '2' => Series_Path_Trackers.QuadDobl_Main;
+      when '0' => Series_Path_Trackers.Standard_Main(vrb);
+      when '1' => Series_Path_Trackers.DoblDobl_Main(vrb);
+      when '2' => Series_Path_Trackers.QuadDobl_Main(vrb);
       when others => null;
     end case;
   end Main;
