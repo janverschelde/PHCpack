@@ -1,3 +1,5 @@
+Sat 15 Jun 2019 : updated option_handlers.adb for adding -V to phc -u.
+
 Thu 13 Jun 2019 : updated option_handlers.adb for the verbose level added
   to mainpoco, bablpoco, bablpoco2, and bablpoco4.  Added the verbose level
   to mainenum and to bablenum; and to mainscal, mainred, mainred2, mainred4.

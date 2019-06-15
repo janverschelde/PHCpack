@@ -582,13 +582,14 @@ package body Option_Handlers is
   end Factorization_Handler;
 
   procedure Series_Handler
-              ( args : in Array_of_Strings; opts : in string;
-                infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     prc : constant natural32
         := Actions_and_Options.Scan_Precision(args,'u');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
@@ -598,23 +599,23 @@ package body Option_Handlers is
       case prc is
         when 1 =>
           put_line(seriesban & ", in double precision.");
-          mainseries('1',infile,outfile);
+          mainseries('1',infile,outfile,vrblvl);
         when 2 =>
           put_line(seriesban & ", with double doubles.");
-          mainseries('2',infile,outfile);
+          mainseries('2',infile,outfile,vrblvl);
         when 4 =>
           put_line(seriesban & ", with quad doubles.");
-          mainseries('4',infile,outfile);
+          mainseries('4',infile,outfile,vrblvl);
         when others =>
           put_line(seriesban & ".");
-          mainseries('0',infile,outfile);
+          mainseries('0',infile,outfile,vrblvl);
       end case;
     end if;
   end Series_Handler;
 
   procedure Verification_Handler
-              ( args : in Array_of_Strings; opts : in string;
-                infile,outfile : in string ) is
+              ( args : in Array_of_Strings;
+                opts : in string; infile,outfile : in string ) is
 
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');

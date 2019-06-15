@@ -1,5 +1,8 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+
 procedure mainseries ( precision : in character;
-                       infilename,outfilename : in string );
+                       infilename,outfilename : in string;
+                       verbose : in integer32 := 0 );
 
 -- DESCRIPTION :
 --   This procedure is called by dispatch.adb to define the phc -u,
@@ -14,4 +17,5 @@ procedure mainseries ( precision : in character;
 --   infilename   name of the input file, if "", then the user will
 --                be prompted to provide the name of the input file;
 --   outfilename  name of the output file, if "", then the user will
---                be prompted to provide the name of the output file.
+--                be prompted to provide the name of the output file;
+--   verbose      the verbose level.

@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
@@ -35,7 +34,8 @@ with Regular_Newton_Puiseux;
 with Series_Path_Trackers;
 
 procedure mainseries ( precision : in character;
-                       infilename,outfilename : in string ) is
+                       infilename,outfilename : in string;
+                       verbose : in integer32 := 0 ) is
 
   procedure Run_Newton
              ( file : in file_type; echelon : in boolean;
@@ -176,7 +176,7 @@ procedure mainseries ( precision : in character;
   end Run_Newton;
 
   procedure Run_Newton_at_Constant
-             ( file : in file_type; nq,idx : in integer32;
+             ( file : in file_type; idx : in integer32;
                p : in Standard_Complex_Poly_Systems.Poly_Sys;
                s : in Standard_Complex_Solutions.Solution_List ) is
 
@@ -188,7 +188,6 @@ procedure mainseries ( precision : in character;
 
   -- ON ENTRY :
   --   file    to write the output to;
-  --   nq      number of equations in p;
   --   idx     index to the series parameter;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a list of solutions.
@@ -207,7 +206,7 @@ procedure mainseries ( precision : in character;
   end Run_Newton_at_Constant;
 
   procedure Run_Newton_at_Constant
-             ( file : in file_type; nq,idx : in integer32;
+             ( file : in file_type; idx : in integer32;
                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                s : in DoblDobl_Complex_Solutions.Solution_List ) is
 
@@ -219,7 +218,6 @@ procedure mainseries ( precision : in character;
 
   -- ON ENTRY :
   --   file    to write the output to;
-  --   nq      number of equations in p;
   --   idx     index to the series parameter;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a list of solutions.
@@ -238,7 +236,7 @@ procedure mainseries ( precision : in character;
   end Run_Newton_at_Constant;
 
   procedure Run_Newton_at_Constant
-             ( file : in file_type; nq,idx : in integer32;
+             ( file : in file_type; idx : in integer32;
                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                s : in QuadDobl_Complex_Solutions.Solution_List ) is
 
@@ -250,7 +248,6 @@ procedure mainseries ( precision : in character;
 
   -- ON ENTRY :
   --   file    to write the output to;
-  --   nq      number of equations in p;
   --   idx     index to the series parameter;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a list of solutions.
@@ -308,7 +305,7 @@ procedure mainseries ( precision : in character;
     end if;
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton_at_Constant(outfile,nq,idx,lp.all,sols);
+    Run_Newton_at_Constant(outfile,idx,lp.all,sols);
   end Standard_Main_at_Constant;
 
   procedure DoblDobl_Main_at_Constant is
@@ -351,7 +348,7 @@ procedure mainseries ( precision : in character;
     end if;
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton_at_Constant(outfile,nq,idx,lp.all,sols);
+    Run_Newton_at_Constant(outfile,idx,lp.all,sols);
   end DoblDobl_Main_at_Constant;
 
   procedure QuadDobl_Main_at_Constant is
@@ -394,7 +391,7 @@ procedure mainseries ( precision : in character;
     end if;
     new_line;
     put("Give the index of the parameter : "); get(idx);
-    Run_Newton_at_Constant(outfile,nq,idx,lp.all,sols);
+    Run_Newton_at_Constant(outfile,idx,lp.all,sols);
   end QuadDobl_Main_at_Constant;
 
   procedure Standard_Main_at_Series is
@@ -446,6 +443,7 @@ procedure mainseries ( precision : in character;
     begin
       s(1) := srv;
       Run_Newton(outfile,true,srp,s);
+      Standard_CSeries_Poly_Systems.Clear(srp);
     end;
   end Standard_Main_at_Series;
 
@@ -498,6 +496,7 @@ procedure mainseries ( precision : in character;
     begin
       s(1) := srv;
       Run_Newton(outfile,true,srp,s);
+      DoblDobl_CSeries_Poly_Systems.Clear(srp);
     end;
   end DoblDobl_Main_at_Series;
 
@@ -550,6 +549,7 @@ procedure mainseries ( precision : in character;
     begin
       s(1) := srv;
       Run_Newton(outfile,true,srp,s);
+      QuadDobl_CSeries_Poly_Systems.Clear(srp);
     end;
   end QuadDobl_Main_at_Series;
 
@@ -634,6 +634,10 @@ procedure mainseries ( precision : in character;
     prc : character;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in mainseries.Main ...");
+    end if;
     if precision /= '0' then
       Nonzero_Precision_Main(precision);
     else
