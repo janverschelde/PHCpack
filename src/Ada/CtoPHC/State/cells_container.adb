@@ -6,7 +6,6 @@ with Arrays_of_Floating_Vector_Lists_io; use Arrays_of_Floating_Vector_Lists_io;
 -- normal dependencies :
 with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
@@ -51,9 +50,11 @@ package body Cells_Container is
 
 -- DATA STRUCTURES :
 
+  stable : boolean := false;         -- if stable mixed volume is computed
+  stablebound : double_float := 0.0; -- stable lifting bound
   mix : Standard_Integer_Vectors.Link_to_Vector;
   lifsup,lifsup_last : Link_to_Array_of_Lists;
-  cells,cells_last : Mixed_Subdivision;
+  cells,cells_last,orgcells,stbcells : Mixed_Subdivision;
   st_rndcffsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
   dd_rndcffsys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
   qd_rndcffsys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -142,9 +143,25 @@ package body Cells_Container is
                 lifting : in Link_to_Array_of_Lists;
                 mcc : in Mixed_Subdivision ) is
   begin
+    stable := false;
     mix := mixture;
     lifsup := lifting;
     cells := mcc;
+  end Initialize;
+
+  procedure Initialize 
+              ( stlb : in double_float;
+                mixture : in Standard_Integer_Vectors.Link_to_Vector;
+                lifting : in Link_to_Array_of_Lists;
+                mixsub,orgmcc,stbmcc : in Mixed_Subdivision ) is
+  begin
+    stable := true;
+    stablebound := stlb;
+    mix := mixture;
+    lifsup := lifting;
+    cells := mixsub;
+    orgcells := orgmcc;
+    stbcells := stbmcc;
   end Initialize;
 
   procedure Initialize 
@@ -959,6 +976,8 @@ package body Cells_Container is
     Deep_Clear(lifsup);
     lifsup_last := null;
     Deep_Clear(cells);
+    Deep_Clear(orgcells);
+    Deep_Clear(stbcells);
     Standard_Integer_Vectors.Clear(mix);
   end Clear_Cell_Data;
 

@@ -2323,16 +2323,17 @@ function use_c2phc4c ( job : integer32;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-    mixsub,mcc1,mcc2 : Floating_Mixed_Subdivisions.Mixed_Subdivision;
-    mv,smv,tot,c1,c2 : natural32;
+    mixsub,orgmcc,stbmcc : Floating_Mixed_Subdivisions.Mixed_Subdivision;
+    mv,smv,totmv,orgcnt,stbcnt : natural32;
     stlb : double_float;
 
   begin
     Black_Box_Mixed_Volume_Computation
-      (lp.all,mix,perm,iprm,stlb,lifsup,mixsub,mcc1,mcc2,mv,smv,tot,c1,c2);
+      (lp.all,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,mv,smv,totmv,
+       orgcnt,stbcnt);
     Assign(integer32(mv),a);
     Assign(integer32(smv),b);
-    Cells_Container.Initialize(mix,lifsup,mixsub);
+    Cells_Container.Initialize(stlb,mix,lifsup,mixsub,orgmcc,stbmcc);
     return 0;
   end Job79;
 

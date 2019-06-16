@@ -1,3 +1,6 @@
+Sun 16 Jun 2019 : added an extra initialize procedure to cells_container,
+  called in job 79 of use_c2phc4c.adb, to store the stable mixed cells.
+
 Sat 11 May 2019 : commented out the printing of the parsed solution in
   use_solcon.adb, with the append of a solution string in double precision.
 

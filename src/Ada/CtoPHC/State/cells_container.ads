@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;   use Arrays_of_Floating_Vector_Lists;
@@ -32,6 +33,23 @@ package Cells_Container is
   -- DESCRIPTION :
   --   Initializes the container with a mixed-cell configuration.
   --   On entry are the type of mixture, lifted supports and the cells.
+
+  procedure Initialize 
+              ( stlb : in double_float;
+                mixture : in Standard_Integer_Vectors.Link_to_Vector;
+                lifting : in Link_to_Array_of_Lists;
+                mixsub,orgmcc,stbmcc : in Mixed_Subdivision );
+
+  -- DESCRIPTION :
+  --   Initializes the container when the stable mixed volume is computed.
+
+  -- ON ENTRY :
+  --   stlb     the stable lifting bound;
+  --   mixture  type of mixture;
+  --   lifting  the lifted supports;
+  --   mixsub   a regular mixed-cell configuration;
+  --   orgmcc   original mixed cells, without artifical origin;
+  --   stbmcc   extra stable mixed cells.
 
   procedure Initialize
               ( mixture : in Standard_Integer_Vectors.Link_to_Vector );
