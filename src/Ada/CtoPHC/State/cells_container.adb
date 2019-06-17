@@ -457,6 +457,35 @@ package body Cells_Container is
     end if;
   end Dimension;
 
+  function Is_Stable return boolean is
+  begin
+    return stable;
+  end Is_Stable;
+
+  function Stable_Lifting_Bound return double_float is
+  begin
+    if not stable
+     then return 0.0;
+     else return stablebound;
+    end if;
+  end Stable_Lifting_Bound;
+
+  function Number_of_Original_Cells return natural32 is
+  begin
+    if not stable
+     then return 0;
+     else return Length_Of(orgcells);
+    end if;
+  end Number_of_Original_Cells;
+
+  function Number_of_Stable_Cells return natural32 is
+  begin
+    if not stable
+     then return 0;
+     else return Length_Of(stbcells);
+    end if;
+  end Number_of_Stable_Cells;
+
   function Type_of_Mixture return Standard_Integer_Vectors.Link_to_Vector is
   begin
     return mix;

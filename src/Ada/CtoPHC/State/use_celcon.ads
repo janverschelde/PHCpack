@@ -205,5 +205,14 @@ function use_celcon ( job : integer32;
 --            = 68 : makes the subdivision for the lifted points
 --                   and type of mixture stored in the container.
 
+-- FUNCTIONS FOR STABLE MIXED CELLS :
+
+--   job      = 69 : returns in a[0] the value 1 or 0, depending whether
+--                   stable mixed cells are stored in the cells container
+--                   or not;
+--            = 70 : returns in a[0] the number of original cells,
+--                   the cells without artificial origin; 
+--            = 71 : returns in a[0] the number of stable mixed cells.
+
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong...

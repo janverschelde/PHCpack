@@ -1274,6 +1274,33 @@ function use_celcon ( job : integer32;
       return 0;
     end if;
   end Job67;
+
+  function Job69 return integer32 is
+  begin
+    if Cells_Container.Is_Stable
+     then Assign(1,a);
+     else Assign(0,a);
+    end if;
+    return 0;
+  end Job69;
+
+  function Job70 return integer32 is
+
+    nbr : constant natural32 := Cells_Container.Number_of_Original_Cells;
+
+  begin
+    Assign(integer32(nbr),a);
+    return 0;
+  end Job70;
+
+  function Job71 return integer32 is
+
+    nbr : constant natural32 := Cells_Container.Number_of_Stable_Cells;
+
+  begin
+    Assign(integer32(nbr),a);
+    return 0;
+  end Job71;
  
   function Handle_Jobs return integer32 is
   begin
@@ -1352,6 +1379,9 @@ function use_celcon ( job : integer32;
       when 66 => Integer_Cells_Container.Clear; return 0;
       when 67 => return Job67; -- retrieve a mixed cell
       when 68 => Integer_Cells_Container.Make_Subdivision; return 0;
+      when 69 => return Job69; -- returns Is_Stable
+      when 70 => return Job70; -- return the number of original cells
+      when 71 => return Job71; -- return the number of stable cells
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

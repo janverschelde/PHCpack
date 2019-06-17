@@ -122,6 +122,32 @@ package Cells_Container is
   --   dimension of lifted points in the cells are returned.
   --   This dimension is the length of the lifted points.
 
+  function Is_Stable return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if the cell container was initialized with a mixed cell
+  --   configuration computed with a stable lifting bound.
+  --   Returns false otherwise.
+
+  function Stable_Lifting_Bound return double_float;
+
+  -- DESCRIPTION :
+  --   Returns 0.0 if not Is_Stable,
+  --   otherwise returns the stable lifting bound.
+
+  function Number_of_Original_Cells return natural32;
+
+  -- DESCRIPTION :
+  --   Returns the number of original cells,
+  --   the cells without artificial origin, if Is_Stable,
+  --   otherwise 0 is returned.
+
+  function Number_of_Stable_Cells return natural32;
+
+  -- DESCRIPTION :
+  --   Returns the number of stable mixed cells if Is_Stable,
+  --   otherwise 0 is returned.
+
   function Type_of_Mixture return Standard_Integer_Vectors.Link_to_Vector;
 
   -- DESCRIPTION :

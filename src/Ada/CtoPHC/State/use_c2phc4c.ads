@@ -1451,6 +1451,15 @@ function use_c2phc4c ( job : integer32;
 --                 double complex polynomial and Laurent systems based on
 --                 the induced permutation of the supports.
 --
+-- functions to query the stable cells in the cells container :
+--
+--   job   = 879 : returns in a[0] the value 1 or 0, depending whether
+--                 stable mixed cells are stored in the cells container
+--                 or not;
+--         = 880 : returns in a[0] the number of original cells,
+--                 the cells without artificial origin; 
+--         = 881 : returns in a[0] the number of stable mixed cells.
+--
 -- MOVING START SOLUTIONS TO CONTAINER :
 --
 --   job   = 597 : copy i-th start solution of the k-th cell to the
