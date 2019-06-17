@@ -188,6 +188,17 @@ package Cells_Container is
   -- DESCRIPTION :
   --   Returns the mixed subdivision stored in the container.
 
+  function Retrieve_Original_Cells return Mixed_Subdivision;
+
+  -- DESCRIPTION :
+  --   Returns the original mixed cells, the cells without artificial origin,
+  --   if initialized.
+
+  function Retrieve_Stable_Cells return Mixed_Subdivision;
+
+  -- DESCRIPTION :
+  --   Returns the stable mixed cells, if initialized.
+
   function Retrieve_Random_Standard_Coefficient_System
              return Standard_Complex_Poly_Systems.Poly_Sys;
   function Retrieve_Random_Standard_Coefficient_System

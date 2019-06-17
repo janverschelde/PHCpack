@@ -499,10 +499,14 @@ package body Cells_Container is
   procedure Retrieve ( k : in natural32; mic : out Mixed_Cell;
                        fail : out boolean ) is
 
-    tmp : Mixed_Subdivision := cells;
+    tmp : Mixed_Subdivision;
     cnt : natural32 := 0;
 
   begin
+    if not stable
+     then tmp := cells;
+     else tmp := orgcells;
+    end if;
     while not Is_Null(tmp) loop
       cnt := cnt + 1;
       if cnt = k then
@@ -550,6 +554,16 @@ package body Cells_Container is
   begin
     return cells;
   end Retrieve;
+
+  function Retrieve_Original_Cells return Mixed_Subdivision is
+  begin
+    return orgcells;
+  end Retrieve_Original_Cells;
+
+  function Retrieve_Stable_Cells return Mixed_Subdivision is
+  begin
+    return stbcells;
+  end Retrieve_Stable_Cells;
 
   function Retrieve_Random_Standard_Coefficient_System
              return Standard_Complex_Poly_Systems.Poly_Sys is
