@@ -189,6 +189,8 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
    }
    else
       fail = _ada_use_c2phc4c(738,&k,&parval,val);
+
+   return fail;
 }
 
 int padcon_standard_track ( int nbc, char* name, int verbose )

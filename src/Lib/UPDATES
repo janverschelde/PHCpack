@@ -1,3 +1,6 @@
+Mon 17 Jun 2019 : added the return of the fail value in a couple of functions
+  in padcon.c and syspool.c.
+
 Sun 16 Jun 2019 : added new functions to query the stable mixed cells to
   celcon and phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
 

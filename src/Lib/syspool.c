@@ -136,6 +136,8 @@ int syspool_standard_clear ( void )
    double *c;
 
    fail = _ada_use_c2phc4c(697,a,b,c);
+
+   return fail;
 }
 
 int syspool_dobldobl_clear ( void )
@@ -144,6 +146,8 @@ int syspool_dobldobl_clear ( void )
    double *c;
 
    fail = _ada_use_c2phc4c(698,a,b,c);
+
+   return fail;
 }
 
 int syspool_quaddobl_clear ( void )
@@ -152,4 +156,6 @@ int syspool_quaddobl_clear ( void )
    double *c;
 
    fail = _ada_use_c2phc4c(699,a,b,c);
+
+   return fail;
 }
