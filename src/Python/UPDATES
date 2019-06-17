@@ -1,3 +1,6 @@
+Mon 17 Jun 2019 : updates in random_coefficient_system() functions in
+  python2 and python3 for stable mixed volumes.
+
 Sun 26 May 2019 : in the trackers module, replaced silent by verbose in
   the test_track(), both for python2 and python3.
 

@@ -823,7 +823,9 @@ def standard_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_standard_random_coefficient_system
     from phcpy.phcpy2c2 import py2c_celcon_copy_into_standard_systems_container
     from phcpy.phcpy2c2 import py2c_celcon_standard_polyhedral_homotopy
+    from phcpy.phcpy2c2 import py2c_celcon_is_stable
     from phcpy.phcpy2c2 import py2c_celcon_number_of_cells
+    from phcpy.phcpy2c2 import py2c_celcon_number_of_original_cells
     from phcpy.phcpy2c2 import py2c_solcon_clear_standard_solutions
     from phcpy.phcpy2c2 import py2c_celcon_solve_standard_start_system
     from phcpy.phcpy2c2 import py2c_celcon_track_standard_solution_path
@@ -837,7 +839,10 @@ def standard_random_coefficient_system(verbose=True):
     result = load_standard_system()
     # print result
     py2c_celcon_standard_polyhedral_homotopy()
-    nbcells = py2c_celcon_number_of_cells()
+    if py2c_celcon_is_stable():
+        nbcells = py2c_celcon_number_of_original_cells()
+    else:
+        nbcells = py2c_celcon_number_of_cells()
     py2c_solcon_clear_standard_solutions()
     for cell in range(1, nbcells+1):
         mixvol = py2c_celcon_solve_standard_start_system(cell)
@@ -864,7 +869,9 @@ def dobldobl_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_dobldobl_random_coefficient_system
     from phcpy.phcpy2c2 import py2c_celcon_copy_into_dobldobl_systems_container
     from phcpy.phcpy2c2 import py2c_celcon_dobldobl_polyhedral_homotopy
+    from phcpy.phcpy2c2 import py2c_celcon_is_stable
     from phcpy.phcpy2c2 import py2c_celcon_number_of_cells
+    from phcpy.phcpy2c2 import py2c_celcon_number_of_original_cells
     from phcpy.phcpy2c2 import py2c_solcon_clear_dobldobl_solutions
     from phcpy.phcpy2c2 import py2c_celcon_solve_dobldobl_start_system
     from phcpy.phcpy2c2 import py2c_celcon_track_dobldobl_solution_path
@@ -878,7 +885,10 @@ def dobldobl_random_coefficient_system(verbose=True):
     result = load_dobldobl_system()
     # print result
     py2c_celcon_dobldobl_polyhedral_homotopy()
-    nbcells = py2c_celcon_number_of_cells()
+    if py2c_celcon_is_stable():
+        nbcells = py2c_celcon_number_of_original_cells()
+    else:
+        nbcells = py2c_celcon_number_of_cells()
     py2c_solcon_clear_dobldobl_solutions()
     for cell in range(1, nbcells+1):
         mixvol = py2c_celcon_solve_dobldobl_start_system(cell)
@@ -905,7 +915,9 @@ def quaddobl_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_quaddobl_random_coefficient_system
     from phcpy.phcpy2c2 import py2c_celcon_copy_into_quaddobl_systems_container
     from phcpy.phcpy2c2 import py2c_celcon_quaddobl_polyhedral_homotopy
+    from phcpy.phcpy2c2 import py2c_celcon_is_stable
     from phcpy.phcpy2c2 import py2c_celcon_number_of_cells
+    from phcpy.phcpy2c2 import py2c_celcon_number_of_original_cells
     from phcpy.phcpy2c2 import py2c_solcon_clear_quaddobl_solutions
     from phcpy.phcpy2c2 import py2c_celcon_solve_quaddobl_start_system
     from phcpy.phcpy2c2 import py2c_celcon_track_quaddobl_solution_path
@@ -919,7 +931,10 @@ def quaddobl_random_coefficient_system(verbose=True):
     result = load_quaddobl_system()
     # print result
     py2c_celcon_quaddobl_polyhedral_homotopy()
-    nbcells = py2c_celcon_number_of_cells()
+    if py2c_celcon_is_stable():
+        nbcells = py2c_celcon_number_of_original_cells()
+    else:
+        nbcells = py2c_celcon_number_of_cells()
     py2c_solcon_clear_quaddobl_solutions()
     for cell in range(1, nbcells+1):
         mixvol = py2c_celcon_solve_quaddobl_start_system(cell)
