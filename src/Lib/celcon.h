@@ -38,6 +38,23 @@ int celcon_dimension_of_points ( int *dimension );
  * DESCRIPTION :
  *   Returns the dimension of the lifted points in the cells container. */
 
+int celcon_is_stable ( int *flag );
+/*
+ * DESCRIPTION :
+ *   Returns in flag 1 if the stable mixed cells were stored,
+ *   returns in flag 0 otherwise. */
+
+int celcon_number_of_original_cells ( int *length );
+/*
+ * DESCRIPTION :
+ *   Returns the in length number of original cells,
+ *   the cells without artificial original. */
+
+int celcon_number_of_stable_cells ( int *length );
+/*
+ * DESCRIPTION :
+ *   Returns in length the number of stable cells. */
+
 int celcon_type_of_mixture ( int *r, int *mix );
 /*
  * DESCRIPTION :

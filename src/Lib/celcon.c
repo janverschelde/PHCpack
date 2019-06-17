@@ -35,6 +35,39 @@ int celcon_dimension_of_points ( int *dimension )
    return fail;
 }
 
+int celcon_is_stable ( int *flag )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(879,flag,b,c);
+
+   return fail;
+}
+
+int celcon_number_of_original_cells ( int *length )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(880,length,b,c);
+
+   return fail;
+}
+
+int celcon_number_of_stable_cells ( int *length )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(881,length,b,c);
+
+   return fail;
+}
+
 int celcon_type_of_mixture ( int *r, int *mix )
 {
    int fail;

@@ -2661,6 +2661,23 @@ static PyObject *py2c_celcon_number_of_cells
  * DESCRIPTION :
  *   Returns the number of cells in the cell container. */
 
+static PyObject *py2c_celcon_is_stable ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns 1 if the stable mixed cells were stored, returns 0 otherwise. */
+
+static PyObject *py2c_celcon_number_of_original_cells
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of original cells, without artificial original. */
+
+static PyObject *py2c_celcon_number_of_stable_cells
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of stable cells. */
+
 static PyObject *py2c_celcon_standard_random_coefficient_system 
  ( PyObject *self, PyObject *args );
 /*

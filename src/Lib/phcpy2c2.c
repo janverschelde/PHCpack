@@ -3969,6 +3969,41 @@ static PyObject *py2c_celcon_number_of_cells
    return Py_BuildValue("i",length);
 }
 
+static PyObject *py2c_celcon_is_stable ( PyObject *self, PyObject *args )
+{
+   int fail,result;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_is_stable(&result);
+
+   return Py_BuildValue("i",result);
+}
+
+static PyObject *py2c_celcon_number_of_original_cells
+ ( PyObject *self, PyObject *args )
+{
+   int fail,result;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_number_of_original_cells(&result);
+
+   return Py_BuildValue("i",result);
+}
+
+static PyObject *py2c_celcon_number_of_stable_cells
+ ( PyObject *self, PyObject *args )
+{
+   int fail,result;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_number_of_stable_cells(&result);
+
+   return Py_BuildValue("i",result);
+}
+
 static PyObject *py2c_celcon_standard_random_coefficient_system 
  ( PyObject *self, PyObject *args )
 {
@@ -10036,6 +10071,14 @@ static PyMethodDef phcpy2c_methods[] =
     "Returns the mixed volume of the supports stored in the cell container."},
    {"py2c_celcon_number_of_cells", py2c_celcon_number_of_cells,
     METH_VARARGS, "returns the number of cells in the cell container"},
+   {"py2c_celcon_is_stable", py2c_celcon_is_stable,
+    METH_VARARGS, "returns 1 if stable mixed cells were stored, 0 otherwise"},
+   {"py2c_celcon_number_of_original_cells",
+     py2c_celcon_number_of_original_cells,
+    METH_VARARGS, "returns the number of original cells in the cell container"},
+   {"py2c_celcon_number_of_stable_cells",
+     py2c_celcon_number_of_stable_cells,
+    METH_VARARGS, "returns the number of stable cells in the cell container"},
    {"py2c_celcon_standard_random_coefficient_system",
      py2c_celcon_standard_random_coefficient_system, METH_VARARGS,
     "Based on the lifted supports stored in the container,\n a random coefficient system with coefficients in standard double\n precision is stored in the cell container."},
