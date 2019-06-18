@@ -727,7 +727,6 @@ function use_celcon ( job : integer32;
 
   function Job25 return integer32 is -- permute system in st container 
 
-    use Arrays_of_Floating_Vector_Lists;
     use Floating_mixed_Subdivisions;
 
     mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
