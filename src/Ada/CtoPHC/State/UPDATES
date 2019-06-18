@@ -1,3 +1,6 @@
+Tue 18 Jun 2019 : added a function to the cells_container to retrieve
+  the k-th stable cell.
+
 Mon 17 Jun 2019 : updated cells_container with two retrieve functions
   and fixed the retrieval of mixed cells for stable mixed volumes.
 

@@ -520,6 +520,27 @@ package body Cells_Container is
     fail := true;
   end Retrieve;
 
+  procedure Retrieve_Stable_Cell
+              ( k : in natural32; mic : out Mixed_Cell;
+                fail : out boolean ) is
+
+    tmp : Mixed_Subdivision := stbcells;
+    cnt : natural32 := 0;
+
+  begin
+    while not Is_Null(tmp) loop
+      cnt := cnt + 1;
+      if cnt = k then
+        mic := Head_Of(tmp);
+        fail := false;
+        return;
+      else
+        tmp := Tail_Of(tmp);
+      end if;
+    end loop;
+    fail := true;
+  end Retrieve_Stable_Cell;
+
   procedure Retrieve_Mixed_Cell
              ( k : in natural32; fail : out boolean;
                cnt,lab : out Standard_Integer_Vectors.Link_to_Vector;

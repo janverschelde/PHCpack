@@ -162,7 +162,16 @@ package Cells_Container is
                        fail : out boolean );
 
   -- DESCRIPTION : 
-  --   Returns the k-th cell in the subdivision in mic if not fail.
+  --   Returns in mic the k-th cell in the subdivision if not fail.
+  --   If there is no k-th cell, then fail is true on return.
+
+  procedure Retrieve_Stable_Cell
+             ( k : in natural32; mic : out Mixed_Cell;
+               fail : out boolean );
+
+  -- DESCRIPTION : 
+  --   Returns in mic the k-th stable cell if not fail.
+  --   If there is no k-th stable cell, then fail is true on return.
 
   procedure Retrieve_Mixed_Cell
              ( k : in natural32; fail : out boolean;
