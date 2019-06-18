@@ -297,9 +297,26 @@ package Cells_Container is
 
   procedure Solve_Standard_Start_System
               ( k : in natural32; mv : out natural32 );
+  procedure Solve_Standard_Start_System
+              ( k : in natural32; mv : out natural32; stable : in boolean );
 
   -- DESCRIPTION :
   --   Solves the start system defined by the k-th mixed cell in
+  --   standard precision.  Returns in "mv" the number of solutions,
+  --   which should equal the mixed volume of the cell.
+  --   If stable, then the start system for the k-th stable cell is solved.
+
+  -- REQUIRED :
+  --   The standard polyhedral homotopy has been created.
+
+  procedure Solve_Stable_Standard_Start_System
+              ( k : in natural32; mv : out natural32 );
+  procedure Solve_Stable_Standard_Start_System
+              ( k : in natural32; mic : in out Mixed_Cell;
+                mv : out natural32 );
+
+  -- DESCRIPTION :
+  --   Solves the start system defined by the k-th stable mixed cell mic in
   --   standard precision.  Returns in "mv" the number of solutions,
   --   which should equal the mixed volume of the cell.
 
@@ -308,9 +325,26 @@ package Cells_Container is
 
   procedure Solve_DoblDobl_Start_System
               ( k : in natural32; mv : out natural32 );
+  procedure Solve_DoblDobl_Start_System
+              ( k : in natural32; mv : out natural32; stable : in boolean );
 
   -- DESCRIPTION :
   --   Solves the start system defined by the k-th mixed cell in
+  --   double double precision.  Returns in "mv" the number of solutions,
+  --   which should equal the mixed volume of the cell.
+  --   If stable, then the start system for the k-th stable cell is solved.
+
+  -- REQUIRED :
+  --   The dobldobl polyhedral homotopy has been created.
+
+  procedure Solve_Stable_DoblDobl_Start_System
+              ( k : in natural32; mv : out natural32 );
+  procedure Solve_Stable_DoblDobl_Start_System
+              ( k : in natural32; mic : in out Mixed_Cell;
+                mv : out natural32 );
+
+  -- DESCRIPTION :
+  --   Solves the start system defined by the k-th stable mixed cell mic in
   --   double double precision.  Returns in "mv" the number of solutions,
   --   which should equal the mixed volume of the cell.
 
@@ -319,10 +353,27 @@ package Cells_Container is
 
   procedure Solve_QuadDobl_Start_System
               ( k : in natural32; mv : out natural32 );
+  procedure Solve_QuadDobl_Start_System
+              ( k : in natural32; mv : out natural32; stable : in boolean );
 
   -- DESCRIPTION :
   --   Solves the start system defined by the k-th mixed cell in
   --   quad double precision.  Returns in "mv" the number of solutions,
+  --   which should equal the mixed volume of the cell.
+  --   If stable, then the start system for the k-th stable cell is solved.
+
+  -- REQUIRED :
+  --   The quaddobl polyhedral homotopy has been created.
+
+  procedure Solve_Stable_QuadDobl_Start_System
+              ( k : in natural32; mv : out natural32 );
+  procedure Solve_Stable_QuadDobl_Start_System
+              ( k : in natural32; mic : in out Mixed_Cell;
+                mv : out natural32 );
+
+  -- DESCRIPTION :
+  --   Solves the start system defined by the k-th stable mixed cell mic
+  --   in quad double precision.  Returns in "mv" the number of solutions,
   --   which should equal the mixed volume of the cell.
 
   -- REQUIRED :

@@ -43,7 +43,11 @@ with QuadDobl_Simpomial_Solvers;
 with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
 with DoblDobl_Polyhedral_Continuation;   use DoblDobl_Polyhedral_Continuation;
 with QuadDobl_Polyhedral_Continuation;   use QuadDobl_Polyhedral_Continuation;
+with Mixed_Volume_Computation;
 with Black_Mixed_Volume_Computations;
+with Standard_Stable_Homotopies;
+with DoblDobl_Stable_Homotopies;
+with QuadDobl_Stable_Homotopies;
 with PHCpack_Operations;
 
 package body Cells_Container is
@@ -898,6 +902,156 @@ package body Cells_Container is
       put_line("Exception raised for mixed cell with supports :");
       put(mic.pts.all);
       raise;
+  end Solve_QuadDobl_Start_System;
+
+  procedure Solve_Stable_Standard_Start_System
+              ( k : in natural32; mic : in out Mixed_Cell;
+                mv : out natural32 ) is
+
+    use Standard_Complex_Solutions;
+    use Standard_Stable_Homotopies;
+
+    dim : constant integer32 := mic.nor'last;
+    ztp : constant Standard_Integer_Vectors.Vector(mic.nor'range)
+        := Zero_Type(mic.nor.all,stablebound,mic.pts.all);
+    nbz : constant integer32 := Number_of_Zeroes(ztp);
+    vol : natural32;
+    ls : Link_to_Solution;
+    sols : Solution_List;
+    idx : constant integer32 := integer32(Length_Of(orgcells) + k);
+
+  begin
+    Mixed_Volume_Computation.Mixed_Volume(dim,mix.all,mic,vol);
+    if nbz = dim then
+      ls := new Solution'(Origin(dim,integer32(vol)));
+      Construct(ls,sols);
+      mv := vol;
+      st_start_sols(idx) := sols;
+    end if;
+  end Solve_Stable_Standard_Start_System;
+
+  procedure Solve_Stable_DoblDobl_Start_System
+              ( k : in natural32; mic : in out Mixed_Cell;
+                mv : out natural32 ) is
+
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Stable_Homotopies;
+
+    dim : constant integer32 := mic.nor'last;
+    ztp : constant Standard_Integer_Vectors.Vector(mic.nor'range)
+        := Zero_Type(mic.nor.all,stablebound,mic.pts.all);
+    nbz : constant integer32 := Number_of_Zeroes(ztp);
+    vol : natural32;
+    ls : Link_to_Solution;
+    sols : Solution_List;
+    idx : constant integer32 := integer32(Length_Of(orgcells) + k);
+
+  begin
+    Mixed_Volume_Computation.Mixed_Volume(dim,mix.all,mic,vol);
+    if nbz = dim then
+      ls := new Solution'(Origin(dim,integer32(vol)));
+      Construct(ls,sols);
+      mv := vol;
+      dd_start_sols(idx) := sols;
+    end if;
+  end Solve_Stable_DoblDobl_Start_System;
+
+  procedure Solve_Stable_QuadDobl_Start_System
+              ( k : in natural32; mic : in out Mixed_Cell;
+                mv : out natural32 ) is
+
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Stable_Homotopies;
+
+    dim : constant integer32 := mic.nor'last;
+    ztp : constant Standard_Integer_Vectors.Vector(mic.nor'range)
+        := Zero_Type(mic.nor.all,stablebound,mic.pts.all);
+    nbz : constant integer32 := Number_of_Zeroes(ztp);
+    vol : natural32;
+    ls : Link_to_Solution;
+    sols : Solution_List;
+    idx : constant integer32 := integer32(Length_Of(orgcells) + k);
+
+  begin
+    Mixed_Volume_Computation.Mixed_Volume(dim,mix.all,mic,vol);
+    if nbz = dim then
+      ls := new Solution'(Origin(dim,integer32(vol)));
+      Construct(ls,sols);
+      mv := vol;
+      qd_start_sols(idx) := sols;
+    end if;
+  end Solve_Stable_QuadDobl_Start_System;
+
+  procedure Solve_Stable_Standard_Start_System
+              ( k : in natural32; mv : out natural32 ) is
+
+    mic : Mixed_Cell;
+    fail : boolean;
+
+  begin
+    Retrieve_Stable_Cell(k,mic,fail);
+    if fail
+     then mv := 0;
+     else Solve_Stable_Standard_Start_System(k,mic,mv);
+    end if;
+  end Solve_Stable_Standard_Start_System;
+
+  procedure Solve_Stable_DoblDobl_Start_System
+              ( k : in natural32; mv : out natural32 ) is
+
+    mic : Mixed_Cell;
+    fail : boolean;
+
+  begin
+    Retrieve_Stable_Cell(k,mic,fail);
+    if fail
+     then mv := 0;
+     else Solve_Stable_DoblDobl_Start_System(k,mic,mv);
+    end if;
+  end Solve_Stable_DoblDobl_Start_System;
+
+  procedure Solve_Stable_QuadDobl_Start_System
+              ( k : in natural32; mv : out natural32 ) is
+
+    mic : Mixed_Cell;
+    fail : boolean;
+
+  begin
+    Retrieve_Stable_Cell(k,mic,fail);
+    if fail
+     then mv := 0;
+     else Solve_Stable_QuadDobl_Start_System(k,mic,mv);
+    end if;
+  end Solve_Stable_QuadDobl_Start_System;
+
+  procedure Solve_Standard_Start_System
+              ( k : in natural32; mv : out natural32;
+                stable : in boolean ) is
+  begin
+    if stable
+     then Solve_Stable_Standard_Start_System(k,mv);
+     else Solve_Standard_Start_System(k,mv);
+    end if;
+  end Solve_Standard_Start_System;
+
+  procedure Solve_DoblDobl_Start_System
+              ( k : in natural32; mv : out natural32;
+                stable : in boolean ) is
+  begin
+    if stable
+     then Solve_Stable_DoblDobl_Start_System(k,mv);
+     else Solve_DoblDobl_Start_System(k,mv);
+    end if;
+  end Solve_DoblDobl_Start_System;
+
+  procedure Solve_QuadDobl_Start_System
+              ( k : in natural32; mv : out natural32;
+                stable : in boolean ) is
+  begin
+    if stable
+     then Solve_Stable_QuadDobl_Start_System(k,mv);
+     else Solve_QuadDobl_Start_System(k,mv);
+    end if;
   end Solve_QuadDobl_Start_System;
 
   procedure Track_Standard_Solution_Path ( k,i,otp : in natural32 ) is
