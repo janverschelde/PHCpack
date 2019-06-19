@@ -3322,6 +3322,9 @@ function use_c2phc4c ( job : integer32;
       when 879 => return use_celcon(69,a,b,c);
       when 880 => return use_celcon(70,a,b,c);
       when 881 => return use_celcon(71,a,b,c);
+      when 882 => return use_celcon(72,a,b,c); -- solve st stable start sys
+      when 883 => return use_celcon(73,a,b,c); -- solve dd stable start sys
+      when 884 => return use_celcon(74,a,b,c); -- solve qd stable start sys
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

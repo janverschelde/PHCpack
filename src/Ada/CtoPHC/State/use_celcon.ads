@@ -212,7 +212,19 @@ function use_celcon ( job : integer32;
 --                   or not;
 --            = 70 : returns in a[0] the number of original cells,
 --                   the cells without artificial origin; 
---            = 71 : returns in a[0] the number of stable mixed cells.
+--            = 71 : returns in a[0] the number of stable mixed cells;
+--            = 72 : solve start system corresponding to the k-th stable cell,
+--                   in standard precision,
+--                   where k is given on input as the value of a,
+--                   on return in b is the number of solutions found;
+--            = 73 : solve start system corresponding to the k-th stable cell,
+--                   in double double precision,
+--                   where k is given on input as the value of a,
+--                   on return in b is the number of solutions found;
+--            = 74 : solve start system corresponding to the k-th stable cell,
+--                   in quad double precision,
+--                   where k is given on input as the value of a,
+--                   on return in b is the number of solutions found.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong...

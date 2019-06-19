@@ -1300,6 +1300,42 @@ function use_celcon ( job : integer32;
     Assign(integer32(nbr),a);
     return 0;
   end Job71;
+
+  function Job72 return integer32 is -- solve a stable standard start system
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(va(va'first));
+    mv : natural32;
+
+  begin
+    Cells_Container.Solve_Stable_Standard_Start_System(k,mv);
+    Assign(integer32(mv),b);
+    return 0;
+  end Job72;
+
+  function Job73 return integer32 is -- solve a stable dobldobl start system
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(va(va'first));
+    mv : natural32;
+
+  begin
+    Cells_Container.Solve_Stable_DoblDobl_Start_System(k,mv);
+    Assign(integer32(mv),b);
+    return 0;
+  end Job73;
+
+  function Job74 return integer32 is -- solve a stable quaddobl start system
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(va(va'first));
+    mv : natural32;
+
+  begin
+    Cells_Container.Solve_Stable_QuadDobl_Start_System(k,mv);
+    Assign(integer32(mv),b);
+    return 0;
+  end Job74;
  
   function Handle_Jobs return integer32 is
   begin
@@ -1381,6 +1417,9 @@ function use_celcon ( job : integer32;
       when 69 => return Job69; -- returns Is_Stable
       when 70 => return Job70; -- return the number of original cells
       when 71 => return Job71; -- return the number of stable cells
+      when 72 => return Job72; -- solve a stable standard start system
+      when 73 => return Job73; -- solve a stable dobldobl start system
+      when 74 => return Job74; -- solve a stable quaddobl start system
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

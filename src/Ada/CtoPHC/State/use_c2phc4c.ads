@@ -1458,7 +1458,19 @@ function use_c2phc4c ( job : integer32;
 --                 or not;
 --         = 880 : returns in a[0] the number of original cells,
 --                 the cells without artificial origin; 
---         = 881 : returns in a[0] the number of stable mixed cells.
+--         = 881 : returns in a[0] the number of stable mixed cells;
+--         = 882 : solve start system corresponding to the k-th stable cell,
+--                 in standard precision,
+--                 where k is given on input as the value of a,
+--                 on return in b is the number of solutions found;
+--         = 883 : solve start system corresponding to the k-th stable cell,
+--                 in double double precision,
+--                 where k is given on input as the value of a,
+--                 on return in b is the number of solutions found;
+--         = 884 : solve start system corresponding to the k-th stable cell,
+--                 in quad double precision,
+--                 where k is given on input as the value of a,
+--                 on return in b is the number of solutions found.
 --
 -- MOVING START SOLUTIONS TO CONTAINER :
 --
