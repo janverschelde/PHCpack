@@ -88,7 +88,8 @@ procedure mainphc
 
   procedure Main_Polynomial_Solver 
               ( file : in file_type; p : in Poly_Sys;
-                ls : in String_Splitters.Link_to_Array_of_Strings ) is
+                ls : in String_Splitters.Link_to_Array_of_Strings;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   This is the main interactive solver for polynomial systems,
@@ -105,11 +106,14 @@ procedure mainphc
     proj : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainphc.Main_Polynomial_Solver ...");
+    end if;
     Copy(p,scalp);
-    Driver_for_Scaling(file,scalp,basis,scalvec);
-    Driver_for_Reduction(file,scalp,roco,true);
+    Driver_for_Scaling(file,scalp,basis,scalvec,vrb-1);
+    Driver_for_Reduction(file,scalp,roco,true,vrb-1);
     Copy(scalp,projp);
-    Driver_for_Root_Counts(file,nt,projp,q,true,sols,roco);
+    Driver_for_Root_Counts(file,nt,projp,q,true,sols,roco,vrb-1);
     if Length_Of(sols) > 0 then
       Driver_for_Homotopy_Construction(file,ls,projp,q,sols,target,deci);
       proj := (Number_of_Unknowns(p(p'first)) > natural32(p'last));
@@ -135,7 +139,8 @@ procedure mainphc
   end Main_Polynomial_Solver;
 
   procedure Main_Laurent_Solver 
-              ( file : in file_type; p : in Laur_Sys ) is
+              ( file : in file_type; p : in Laur_Sys;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   This is the main interactive solver for Laurent systems,
@@ -147,23 +152,27 @@ procedure mainphc
     poco : duration := 0.0;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainphc.Main_Laurent_Solver ...");
+    end if;
     Copy(p,cp);
-    Driver_for_Root_Counts(file,nt,cp,q,sols,roco);
+    Driver_for_Root_Counts(file,nt,cp,q,sols,roco,vrb-1);
     if Length_Of(sols) > 0 then
       if Head_Of(sols).t /= Create(0.0)
        then Set_Continuation_Parameter(sols,Create(0.0));
       end if;
       if nt = 0
-       then Black_Box_Polynomial_Continuation(file,cp,q,sols,poco);
+       then Black_Box_Polynomial_Continuation(file,cp,q,sols,poco,vrb-1);
        else Black_Box_Polynomial_Continuation
-              (file,integer32(nt),cp,q,sols,poco);
+              (file,integer32(nt),cp,q,sols,poco,vrb-1);
       end if;
     end if;
   end Main_Laurent_Solver;
 
   procedure Main_Dispatch 
               ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
-                ls : in String_Splitters.Link_to_Array_of_Strings ) is
+                ls : in String_Splitters.Link_to_Array_of_Strings;
+                vrb : in integer32 := 0 ) is
 
    -- use Standard_Complex_Laur_Systems;
 
@@ -171,6 +180,9 @@ procedure mainphc
     outpt : file_type;
 
   begin
+    if vrb > 0
+     then put_line("-> in mainphc.Main_Dispatch ...");
+    end if;
     Create_Output_File(outpt,outfilename);
     put(outpt,q'last,1);
     new_line(outpt);
@@ -179,7 +191,7 @@ procedure mainphc
     end loop;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(q) then
       tstart(timer);
-      Main_Laurent_Solver(outpt,q);
+      Main_Laurent_Solver(outpt,q,vrb-1);
       tstop(timer);
     else
       declare
@@ -188,7 +200,7 @@ procedure mainphc
           := Positive_Laurent_Polynomial_System(q);
       begin
         tstart(timer);
-        Main_Polynomial_Solver(outpt,p,ls);
+        Main_Polynomial_Solver(outpt,p,ls,vrb-1);
         tstop(timer);
       end;
     end if;
@@ -239,7 +251,7 @@ procedure mainphc
       q : constant Standard_Complex_Laur_Systems.Laur_Sys(1..integer32(n))
          := Standard_Complex_Laur_Strings.Parse(m,ls.all);
     begin
-      Main_Dispatch(q,ls);
+      Main_Dispatch(q,ls,verbose-1);
     end;
   end String_Main;
 
