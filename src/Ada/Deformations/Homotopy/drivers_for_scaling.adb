@@ -1,7 +1,6 @@
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -346,13 +345,17 @@ package body Drivers_for_Scaling is
               ( file : in file_type;
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 basis : out natural32;
-                scvc : out Standard_Complex_Vectors.Link_to_Vector ) is
+                scvc : out Standard_Complex_Vectors.Link_to_Vector;
+                verbose : in integer32 := 0 ) is
 
     ans : character;
     res_scvc : Standard_Complex_Vectors.Link_to_Vector;
     bas : natural32 := 0;
 
   begin
+    if verbose > 0
+     then put_line("-> in drivers_for_scaling.Driver_for_Scaling 1 ...");
+    end if;
     loop
       new_line;
       put_line("MENU for Scaling Polynomial Systems :");
@@ -382,13 +385,17 @@ package body Drivers_for_Scaling is
               ( file : in file_type;
                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 basis : out natural32;
-                scvc : out DoblDobl_Complex_Vectors.Link_to_Vector ) is
+                scvc : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                verbose : in integer32 := 0 ) is
 
     ans : character;
     res_scvc : DoblDobl_Complex_Vectors.Link_to_Vector;
     bas : natural32 := 0;
 
   begin
+    if verbose > 0
+     then put_line("-> in drivers_for_scaling.Driver_for_Scaling 2 ...");
+    end if;
     loop
       new_line;
       put_line("MENU for Scaling Polynomial Systems :");
@@ -418,13 +425,17 @@ package body Drivers_for_Scaling is
               ( file : in file_type;
                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 basis : out natural32;
-                scvc : out QuadDobl_Complex_Vectors.Link_to_Vector ) is
+                scvc : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                verbose : in integer32 := 0 ) is
 
     ans : character;
     res_scvc : QuadDobl_Complex_Vectors.Link_to_Vector;
     bas : natural32 := 0;
 
   begin
+    if verbose > 0
+     then put_line("-> in drivers_for_scaling.Driver_for_Scaling 3 ...");
+    end if;
     loop
       new_line;
       put_line("MENU for Scaling Polynomial Systems :");
@@ -454,13 +465,17 @@ package body Drivers_for_Scaling is
               ( file : in file_type;
                 p : in out Multprec_Complex_Poly_Systems.Poly_Sys;
                 basis : out natural32;
-                scvc : out Multprec_Complex_Vectors.Link_to_Vector ) is
+                scvc : out Multprec_Complex_Vectors.Link_to_Vector;
+                verbose : in integer32 := 0 ) is
 
     ans : character;
     res_scvc : Multprec_Complex_Vectors.Link_to_Vector;
     bas : natural32 := 0;
 
   begin
+    if verbose > 0
+     then put_line("-> in drivers_for_scaling.Driver_for_Scaling 4 ...");
+    end if;
     loop
       new_line;
       put_line("MENU for Scaling Polynomial Systems :");

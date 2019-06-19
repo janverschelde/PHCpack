@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -66,15 +67,18 @@ package Drivers_for_Reduction is
   procedure Driver_for_Reduction 
                ( file : in file_type;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                 d : out natural32; exit_option : in boolean );
+                 d : out natural32; exit_option : in boolean;
+                 verbose : in integer32 := 0 );
   procedure Driver_for_Reduction 
                ( file : in file_type;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                 d : out natural32; exit_option : in boolean );
+                 d : out natural32; exit_option : in boolean;
+                 verbose : in integer32 := 0 );
   procedure Driver_for_Reduction 
                ( file : in file_type;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                 d : out natural32; exit_option : in boolean );
+                 d : out natural32; exit_option : in boolean;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   This is an interactive driver for the reduction procedures,
@@ -83,7 +87,8 @@ package Drivers_for_Reduction is
   -- ON ENTRY :
   --   file         a file to write intermediate results and diagnostics on;
   --   p            a polynomial system;
-  --   exit_option  if true, then the leave-option will be shown.
+  --   exit_option  if true, then the leave-option will be shown;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   p            the system in a reduced form;

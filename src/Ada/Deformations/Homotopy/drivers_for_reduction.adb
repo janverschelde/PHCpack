@@ -2,7 +2,6 @@ with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with Numbers_io;                         use Numbers_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -509,12 +508,16 @@ package body Drivers_for_Reduction is
   procedure Driver_for_Reduction
               ( file : in file_type;
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                d : out natural32; exit_option : in boolean ) is
+                d : out natural32; exit_option : in boolean;
+                verbose : in integer32 := 0 ) is
 
     n : constant natural32 := natural32(p'length);
     ans : character := '0';
 
   begin
+    if verbose > 0
+     then put_line("-> in drivers_for_reduction.Driver_for_Reduction 1 ...");
+    end if;
     Display_Menu(exit_option,ans);
     case ans is
       when '1' => Driver_for_Linear_Reduction(file,p,d);
@@ -531,12 +534,15 @@ package body Drivers_for_Reduction is
   procedure Driver_for_Reduction
               ( file : in file_type;
                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                d : out natural32; exit_option : in boolean ) is
+                d : out natural32; exit_option : in boolean;
+                verbose : in integer32 := 0 ) is
 
-    n : constant natural32 := natural32(p'length);
     ans : character := '0';
 
   begin
+    if verbose > 0
+     then put_line("-> in drivers_for_reduction.Driver_for_Reduction 2 ...");
+    end if;
     Linear_Display_Menu(exit_option,ans);
     case ans is
       when '1' => Driver_for_Linear_Reduction(file,p,d);
@@ -548,12 +554,15 @@ package body Drivers_for_Reduction is
   procedure Driver_for_Reduction
               ( file : in file_type;
                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                d : out natural32; exit_option : in boolean ) is
+                d : out natural32; exit_option : in boolean;
+                verbose : in integer32 := 0 ) is
 
-    n : constant natural32 := natural32(p'length);
     ans : character := '0';
 
   begin
+    if verbose > 0
+     then put_line("-> in drivers_for_reduction.Driver_for_Reduction 3 ...");
+    end if;
     Linear_Display_Menu(exit_option,ans);
     case ans is
       when '1' => Driver_for_Linear_Reduction(file,p,d);

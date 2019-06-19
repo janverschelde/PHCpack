@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -93,29 +94,34 @@ package Drivers_for_Scaling is
               ( file : in file_type;
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 basis : out natural32;
-                scvc : out Standard_Complex_Vectors.Link_to_Vector );
+                scvc : out Standard_Complex_Vectors.Link_to_Vector;
+                verbose : in integer32 := 0 );
   procedure Driver_for_Scaling
               ( file : in file_type;
                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 basis : out natural32;
-                scvc : out DoblDobl_Complex_Vectors.Link_to_Vector );
+                scvc : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                verbose : in integer32 := 0 );
   procedure Driver_for_Scaling
               ( file : in file_type;
                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 basis : out natural32;
-                scvc : out QuadDobl_Complex_Vectors.Link_to_Vector );
+                scvc : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                verbose : in integer32 := 0 );
   procedure Driver_for_Scaling
               ( file : in file_type;
                 p : in out Multprec_Complex_Poly_Systems.Poly_Sys;
                 basis : out natural32;
-                scvc : out Multprec_Complex_Vectors.Link_to_Vector );
+                scvc : out Multprec_Complex_Vectors.Link_to_Vector;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   This is an interactive driver for phc running in full mode.
 
   -- ON ENTRY :
   --   file     file to write intermediate results and diagnostics on;
-  --   p        a polynomial system.
+  --   p        a polynomial system;
+  --   verbose  the verbose level.
 
   -- ON RETURN :
   --   p        the scaled polynomial system;

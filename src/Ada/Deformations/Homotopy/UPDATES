@@ -1,3 +1,6 @@
+Wed 19 Jun 2019 : added the verbose level to the top level drivers
+  in drivers_for_scaling and driver_for_reduction.
+
 Thu 13 Jun 2019 : added the verbose level to mainscal, mainred, mainred2,
   and mainred4.
 
