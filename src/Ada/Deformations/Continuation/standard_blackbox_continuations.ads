@@ -16,17 +16,20 @@ package Standard_BlackBox_Continuations is
 -- ALL INPUT IS SCANNED FROM FILES :
 
   procedure Black_Box_Polynomial_Continuation
-                  ( infile,outfile : in file_type; 
-                    deflate : in boolean; pocotime : out duration );
+               ( infile,outfile : in file_type; 
+                 deflate : in boolean; pocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
-                  ( targetfile,startfile,outfile : in file_type;
-                    deflate : in boolean; pocotime : out duration );
+               ( targetfile,startfile,outfile : in file_type;
+                 deflate : in boolean; pocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Scans the targetfile for the target system,
   --   scans the startfile for start system and start solutions,
   --   and then does the path tracking, writing results to outfile.
   --   If deflate is false, then deflation will not be applied.
+  --   The verbose is the verbose level value.
 
 -- STABLE POLYOMIAL CONTINUATION :
 
@@ -34,12 +37,12 @@ package Standard_BlackBox_Continuations is
                ( deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Stable_Poly_Continuation
                ( file : file_type; deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given a solution list where all solutions have at least one
@@ -53,7 +56,8 @@ package Standard_BlackBox_Continuations is
   --   q         start system;
   --   gamma     a random constant;
   --   sols      solutions of the start system q,
-  --             every solution has at least one zero component.
+  --             every solution has at least one zero component;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   sols      solutions at the end of the paths;
@@ -64,41 +68,41 @@ package Standard_BlackBox_Continuations is
   procedure Black_Box_Polynomial_Continuation
                ( deflate : in boolean;
                  p,q : in Poly_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; deflate : in boolean;
                  nt : in integer32;
                  p,q : in Poly_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; deflate : in boolean;
                  nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs polynomial continuation with default settings
@@ -115,7 +119,8 @@ package Standard_BlackBox_Continuations is
   --   q         a start system for solving p;
   --   gamma     constant to multiply q with in the homotopy,
   --             if not provided, a will be generated;
-  --   sols      solutions of q, without zero components.
+  --   sols      solutions of q, without zero components;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   sols      solutions of p, obtained from sols;
@@ -126,41 +131,41 @@ package Standard_BlackBox_Continuations is
   procedure Black_Box_Polynomial_Continuation
                ( deflate : in boolean;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; deflate : in boolean;
                  nt : in integer32;
                  p,q : in Poly_Sys; sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( deflate : in boolean; nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; deflate : in boolean;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; deflate : in boolean;
                  nt : in integer32;
                  p,q : in Poly_Sys; gamma : in Complex_Number;
                  sols,sols0 : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs polynomial continuation with default settings,
@@ -177,7 +182,8 @@ package Standard_BlackBox_Continuations is
   --   gamma     constant to multiply q with in the homotopy,
   --             if not provided, a will be generated;
   --   sols      solutions of q, without zero components;
-  --   sols0     solutions of q with zero components.
+  --   sols0     solutions of q with zero components;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   sols      solutions of p, obtained from sols;
@@ -188,19 +194,19 @@ package Standard_BlackBox_Continuations is
 
   procedure Black_Box_Polynomial_Continuation
                ( p,q : in Laur_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( nt : in integer32;
                  p,q : in Laur_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; 
                  p,q : in Laur_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
   procedure Black_Box_Polynomial_Continuation
                ( file : in file_type; nt : in integer32;
                  p,q : in Laur_Sys; sols : in out Solution_List;
-                 pocotime : out duration );
+                 pocotime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs polynomial continuation with default settings, for
@@ -213,7 +219,8 @@ package Standard_BlackBox_Continuations is
   --   nt        number of tasks, must be larger than zero to have effect;
   --   p         target polynomial system;
   --   q         a start system for solving p;
-  --   sols      solutions of q, without zero components.
+  --   sols      solutions of q, without zero components;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   sols      solutions of p, obtained from sols;

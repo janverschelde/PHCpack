@@ -1,4 +1,7 @@
-Fri 14 Jun 2019 : added verbose level to the procudures in mainpoco.adb.
+Wed 19 Jun 2019 : added verbose level to *_blackbox_continuations,
+  updated bablpoco.adb, bablpoco2.adb, and bablpoco4.adb.
+
+Fri 14 Jun 2019 : added verbose level to the procedures in mainpoco.adb.
 
 Thu 13 Jun 2019 : added the verbose level to mainpoco, bablpoco, bablpoco2,
   and bablpoco4.

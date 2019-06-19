@@ -30,6 +30,6 @@ begin
   end if;
   Create_Output_File(outfile,outfilename);
   Black_Box_Polynomial_Continuation
-    (targetfile,startfile,outfile,true,poco);
+    (targetfile,startfile,outfile,true,poco,verbose-1);
   Close(targetfile); Close(startfile); Close(outfile);
 end bablpoco;

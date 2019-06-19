@@ -29,6 +29,7 @@ begin
     Read_Name_and_Open_File(startfile);
   end if;
   Create_Output_File(outfile,outfilename);
-  Black_Box_Polynomial_Continuation(targetfile,startfile,outfile,poco);
+  Black_Box_Polynomial_Continuation
+    (targetfile,startfile,outfile,poco,verbose-1);
   Close(targetfile); Close(startfile); Close(outfile);
 end bablpoco2;
