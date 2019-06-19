@@ -1,3 +1,6 @@
+Tue 18 Jun 2019 : extended celcon, phcpy2c.h, phcpy2c2.c, phcpy2c3.c with
+  function to solve start system corresponding to stable cells.
+
 Mon 17 Jun 2019 : added the return of the fail value in a couple of functions
   in padcon.c and syspool.c.
 

@@ -332,6 +332,17 @@ int celcon_solve_standard_start_system ( int k, int *mv );
  * REQUIRED :
  *   The creation of the polyhedral homotopy terminated successfully. */
 
+int celcon_solve_stable_standard_start_system ( int k, int *mv );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th stable mixed cell,
+ *   using standard double precision arithmetic,
+ *   returns in mv the number of solution found, which must equal
+ *   the mixed volume of the k-th stable mixed cell.
+ *
+ * REQUIRED :
+ *   The creation of the polyhedral homotopy terminated successfully. */
+
 int celcon_solve_dobldobl_start_system ( int k, int *mv );
 /*
  * DESCRIPTION :
@@ -343,6 +354,17 @@ int celcon_solve_dobldobl_start_system ( int k, int *mv );
  * REQUIRED :
  *   The creation of the polyhedral homotopy terminated successfully. */
 
+int celcon_solve_stable_dobldobl_start_system ( int k, int *mv );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th stable mixed cell,
+ *   using double double precision arithmetic,
+ *   returns in mv the number of solution found, which must equal
+ *   the mixed volume of the k-th stable mixed cell.
+ *
+ * REQUIRED :
+ *   The creation of the polyhedral homotopy terminated successfully. */
+
 int celcon_solve_quaddobl_start_system ( int k, int *mv );
 /*
  * DESCRIPTION :
@@ -350,6 +372,17 @@ int celcon_solve_quaddobl_start_system ( int k, int *mv );
  *   using quad double precision arithmetic,
  *   returns in mv the number of solution found, which must equal
  *   the mixed volume of the k-th mixed cell.
+ *
+ * REQUIRED :
+ *   The creation of the polyhedral homotopy terminated successfully. */
+
+int celcon_solve_stable_quaddobl_start_system ( int k, int *mv );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th stable mixed cell,
+ *   using quad double precision arithmetic,
+ *   returns in mv the number of solution found, which must equal
+ *   the mixed volume of the k-th stable mixed cell.
  *
  * REQUIRED :
  *   The creation of the polyhedral homotopy terminated successfully. */

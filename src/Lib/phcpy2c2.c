@@ -4148,6 +4148,42 @@ static PyObject *py2c_celcon_solve_quaddobl_start_system
    return Py_BuildValue("i",nb);
 }
 
+static PyObject *py2c_celcon_solve_stable_standard_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,nb;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = celcon_solve_stable_standard_start_system(k,&nb);
+
+   return Py_BuildValue("i",nb);
+}
+
+static PyObject *py2c_celcon_solve_stable_dobldobl_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,nb;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = celcon_solve_stable_dobldobl_start_system(k,&nb);
+
+   return Py_BuildValue("i",nb);
+}
+
+static PyObject *py2c_celcon_solve_stable_quaddobl_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,nb;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = celcon_solve_stable_quaddobl_start_system(k,&nb);
+
+   return Py_BuildValue("i",nb);
+}
+
 static PyObject *py2c_celcon_track_standard_solution_path
  ( PyObject *self, PyObject *args )
 {
@@ -10115,6 +10151,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_solve_quaddobl_start_system",
      py2c_celcon_solve_quaddobl_start_system, METH_VARARGS, 
     "Solves the start system corresponding to the k-th mixed cell,\n using quad double precision arithmetic.\n The precondition for this function is that the creation of\n the polyhedral homotopy in quad double precision ended well.\n On return is the number of solution found, which must equal\n the mixed volume of the k-th mixed cell."},
+   {"py2c_celcon_solve_stable_standard_start_system",
+     py2c_celcon_solve_stable_standard_start_system, METH_VARARGS, 
+    "Solves the start system corresponding to the k-th stable mixed cell,\n using standard double precision arithmetic.\n The precondition for this function is that the creation of\n the polyhedral homotopy in standard double precision ended well.\n On return is the number of solution found, which must equal\n the mixed volume of the k-th stable mixed cell."},
+   {"py2c_celcon_solve_stable_dobldobl_start_system",
+     py2c_celcon_solve_stable_dobldobl_start_system, METH_VARARGS, 
+    "Solves the start system corresponding to the k-th stable mixed cell,\n using double double precision arithmetic.\n The precondition for this function is that the creation of\n the polyhedral homotopy in double double precision ended well.\n On return is the number of solution found, which must equal\n the mixed volume of the k-th stable mixed cell."},
+   {"py2c_celcon_solve_stable_quaddobl_start_system",
+     py2c_celcon_solve_stable_quaddobl_start_system, METH_VARARGS, 
+    "Solves the start system corresponding to the k-th stable mixed cell,\n using quad double precision arithmetic.\n The precondition for this function is that the creation of\n the polyhedral homotopy in quad double precision ended well.\n On return is the number of solution found, which must equal\n the mixed volume of the k-th stable mixed cell."},
    {"py2c_celcon_track_standard_solution_path",
      py2c_celcon_track_standard_solution_path, METH_VARARGS, 
     "Tracks a solution path starting at the i-th solution of the k-th cell,\n using standard double precision arithmetic.\n The precondition for this function is that the start system defined\n by the k-th mixed cell is solved in standard double precision.\n There are three input parameters:\n 1) k, the index to a mixed cell in the cell container;\n 2) i, the index to a solution path defined by that mixed cell;\n 3) otp, the level for intermediate output during path tracking.\n A target solution corresponding to the k-th cell is added on return."},

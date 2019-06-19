@@ -326,6 +326,14 @@ int celcon_solve_standard_start_system ( int k, int *mv )
    return fail;
 }
 
+int celcon_solve_stable_standard_start_system ( int k, int *mv )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc4c(882,&k,mv,c);
+   return fail;
+}
+
 int celcon_solve_dobldobl_start_system ( int k, int *mv )
 {
    int fail;
@@ -334,11 +342,27 @@ int celcon_solve_dobldobl_start_system ( int k, int *mv )
    return fail;
 }
 
+int celcon_solve_stable_dobldobl_start_system ( int k, int *mv )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc4c(883,&k,mv,c);
+   return fail;
+}
+
 int celcon_solve_quaddobl_start_system ( int k, int *mv )
 {
    int fail;
    double *c;
    fail = _ada_use_c2phc4c(476,&k,mv,c);
+   return fail;
+}
+
+int celcon_solve_stable_quaddobl_start_system ( int k, int *mv )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc4c(884,&k,mv,c);
    return fail;
 }
 
