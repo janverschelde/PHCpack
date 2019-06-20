@@ -1,5 +1,4 @@
 with Communications_with_User;           use Communications_with_User;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with DoblDobl_Complex_Numbers;
@@ -447,12 +446,16 @@ package body Drivers_for_Homotopy_Creation is
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type;
                  p,q : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                 target : out Complex_Number ) is
+                 target : out Complex_Number; verbose : in integer32 := 0 ) is
 
     k,d : natural32;
     a,t : Complex_Number;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_homotopy_creation.");
+      put_line("Driver_for_Homotopy_Construction 1 ...");
+    end if;
     Default_Homotopy_Settings(d,k,a,t);
     Menu_for_Homotopy_Settings(file,false,k,a,t);
     target := t;
@@ -467,12 +470,16 @@ package body Drivers_for_Homotopy_Creation is
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type;
                  p,q : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                 target : out Complex_Number ) is
+                 target : out Complex_Number; verbose : in integer32 := 0 ) is
 
     k,d : natural32;
     a,t : Complex_Number;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_homotopy_creation.");
+      put_line("Driver_for_Homotopy_Construction 2 ...");
+    end if;
     Default_Homotopy_Settings(d,k,a,t);
     Menu_for_Homotopy_Settings(file,true,k,a,t);
     target := t;
@@ -487,12 +494,16 @@ package body Drivers_for_Homotopy_Creation is
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type; dp : in natural32;
                  p,q : in Multprec_Complex_Poly_Systems.Poly_Sys;
-                 target : out Complex_Number ) is
+                 target : out Complex_Number; verbose : in integer32 := 0 ) is
 
     k,d : natural32;
     a,t : Complex_Number;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_homotopy_creation.");
+      put_line("Driver_for_Homotopy_Construction 3 ...");
+    end if;
     Default_Homotopy_Settings(d,k,a,t); d := dp;
     Menu_for_Homotopy_Settings(file,d,k,a,t);
     target := t;
@@ -507,7 +518,8 @@ package body Drivers_for_Homotopy_Creation is
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type; p,q : in out Laur_Sys;
                 -- qsols : in out Solution_List;
-                 target : out Complex_Number; deci : in out natural32 ) is
+                 target : out Complex_Number; deci : in out natural32;
+                 verbose : in integer32 := 0 ) is
 
     k,d : natural32;
     a,t : Complex_Number;
@@ -515,6 +527,10 @@ package body Drivers_for_Homotopy_Creation is
    -- size : natural;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_homotopy_creation.");
+      put_line("Driver_for_Homotopy_Construction 4 ...");
+    end if;
     Default_Homotopy_Settings(d,k,a,t,prt);
     if deci /= 0   
      then d := deci; -- respect the preset value of the precision
@@ -556,7 +572,7 @@ package body Drivers_for_Homotopy_Creation is
                  ls : in String_Splitters.Link_to_Array_of_Strings;
                  p,q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols : in out Solution_List; target : out Complex_Number;
-                 deci : in out natural32 ) is
+                 deci : in out natural32; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     a,t : Complex_Number;
@@ -564,6 +580,10 @@ package body Drivers_for_Homotopy_Creation is
     k,d,size : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_homotopy_creation.");
+      put_line("Driver_for_Homotopy_Construction 5 ...");
+    end if;
     Default_Homotopy_Settings(d,k,a,t,prt);
     if deci > 0
      then d := deci; -- respect the preset value of the precision
@@ -586,7 +606,8 @@ package body Drivers_for_Homotopy_Creation is
         end;
       else
         Standard_Homotopy.Create(p,q,k,a);
-        Standard_Coefficient_Homotopy.Create(q,p,k,a);
+       -- Standard_Coefficient_Homotopy.Create(q,p,k,a);
+        Standard_Coefficient_Homotopy.Create(p,q,k,a);
       end if;
     elsif d <= 32 then
       declare
@@ -619,7 +640,7 @@ package body Drivers_for_Homotopy_Creation is
       size := Multprec_Floating_Numbers.Decimal_to_Size(d);
       declare
         nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
-        mp : Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
+        mp : constant Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
            := Multprec_Complex_Poly_Strings.Parse(nv_p,size,ls.all);
         mq : Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
            := Convert(q);
@@ -638,14 +659,17 @@ package body Drivers_for_Homotopy_Creation is
                  ls : in String_Splitters.Link_to_Array_of_Strings;
                  p,q : in out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : in out Solution_List; target : out Complex_Number;
-                 deci : in out natural32 ) is
+                 deci : in out natural32; verbose : in integer32 := 0 ) is
 
-    use Standard_Complex_Laur_Systems;
     a,t : Complex_Number;
     prt : boolean;
     k,d : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_homotopy_creation.");
+      put_line("Driver_for_Homotopy_Construction 6 ...");
+    end if;
     Default_Homotopy_Settings(d,k,a,t,prt);
     if deci > 0
      then d := deci; -- respect the preset value of the precision

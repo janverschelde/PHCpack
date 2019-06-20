@@ -1,3 +1,5 @@
+Thu 20 Jun 2019 : added verbose level in drivers_for_homotopy_creation.
+
 Wed 19 Jun 2019 : added the verbose level to the top level drivers
   in drivers_for_scaling and driver_for_reduction.
 
