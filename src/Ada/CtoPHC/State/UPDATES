@@ -1,3 +1,6 @@
+Thu 20 Jun 2019 : extended cells_container.adb to add the solutions with
+  all coordinates equal to zero, for the stable mixed volume case.
+
 Tue 18 Jun 2019 : added a function to the cells_container to retrieve
   the k-th stable cell.  Removed a use clause from use_celcon.adb.
   Added procedures to the cells container to solve a start system

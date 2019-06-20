@@ -911,7 +911,7 @@ package body Cells_Container is
     use Standard_Complex_Solutions;
     use Standard_Stable_Homotopies;
 
-    dim : constant integer32 := mic.nor'last;
+    dim : constant integer32 := mic.nor'last-1;
     ztp : constant Standard_Integer_Vectors.Vector(mic.nor'range)
         := Zero_Type(mic.nor.all,stablebound,mic.pts.all);
     nbz : constant integer32 := Number_of_Zeroes(ztp);
@@ -927,6 +927,7 @@ package body Cells_Container is
       Construct(ls,sols);
       mv := vol;
       st_start_sols(idx) := sols;
+      Append(st_target_sols(idx),st_target_last(idx),ls.all);
     end if;
   end Solve_Stable_Standard_Start_System;
 
@@ -937,7 +938,7 @@ package body Cells_Container is
     use DoblDobl_Complex_Solutions;
     use DoblDobl_Stable_Homotopies;
 
-    dim : constant integer32 := mic.nor'last;
+    dim : constant integer32 := mic.nor'last-1;
     ztp : constant Standard_Integer_Vectors.Vector(mic.nor'range)
         := Zero_Type(mic.nor.all,stablebound,mic.pts.all);
     nbz : constant integer32 := Number_of_Zeroes(ztp);
@@ -953,6 +954,7 @@ package body Cells_Container is
       Construct(ls,sols);
       mv := vol;
       dd_start_sols(idx) := sols;
+      Append(dd_target_sols(idx),dd_target_last(idx),ls.all);
     end if;
   end Solve_Stable_DoblDobl_Start_System;
 
@@ -963,7 +965,7 @@ package body Cells_Container is
     use QuadDobl_Complex_Solutions;
     use QuadDobl_Stable_Homotopies;
 
-    dim : constant integer32 := mic.nor'last;
+    dim : constant integer32 := mic.nor'last-1;
     ztp : constant Standard_Integer_Vectors.Vector(mic.nor'range)
         := Zero_Type(mic.nor.all,stablebound,mic.pts.all);
     nbz : constant integer32 := Number_of_Zeroes(ztp);
@@ -979,6 +981,7 @@ package body Cells_Container is
       Construct(ls,sols);
       mv := vol;
       qd_start_sols(idx) := sols;
+      Append(qd_target_sols(idx),qd_target_last(idx),ls.all);
     end if;
   end Solve_Stable_QuadDobl_Start_System;
 
