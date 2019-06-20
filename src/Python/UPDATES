@@ -1,3 +1,6 @@
+Thu 20 Jun 2019 : additions to solver.py for zero coordinate solutions,
+  both for python2 and python3.
+
 Mon 17 Jun 2019 : updates in random_coefficient_system() functions in
   python2 and python3 for stable mixed volumes.
 

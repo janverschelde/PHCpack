@@ -826,8 +826,10 @@ def standard_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_is_stable
     from phcpy.phcpy2c2 import py2c_celcon_number_of_cells
     from phcpy.phcpy2c2 import py2c_celcon_number_of_original_cells
+    from phcpy.phcpy2c2 import py2c_celcon_number_of_stable_cells
     from phcpy.phcpy2c2 import py2c_solcon_clear_standard_solutions
     from phcpy.phcpy2c2 import py2c_celcon_solve_standard_start_system
+    from phcpy.phcpy2c2 import py2c_celcon_solve_stable_standard_start_system
     from phcpy.phcpy2c2 import py2c_celcon_track_standard_solution_path
     from phcpy.phcpy2c2 \
         import py2c_celcon_copy_target_standard_solution_to_container
@@ -839,7 +841,8 @@ def standard_random_coefficient_system(verbose=True):
     result = load_standard_system()
     # print result
     py2c_celcon_standard_polyhedral_homotopy()
-    if py2c_celcon_is_stable():
+    is_stable = py2c_celcon_is_stable()
+    if is_stable:
         nbcells = py2c_celcon_number_of_original_cells()
     else:
         nbcells = py2c_celcon_number_of_cells()
@@ -853,6 +856,16 @@ def standard_random_coefficient_system(verbose=True):
                 print '-> tracking path %d out of %d' % (j, mixvol)
             py2c_celcon_track_standard_solution_path(cell, j, 0)
             py2c_celcon_copy_target_standard_solution_to_container(cell, j)
+    if is_stable:
+        nbcells = py2c_celcon_number_of_stable_cells()
+        if verbose:
+            print 'number of stable cells :', nbcells
+        for cell in range(1, nbcells+1):
+            mixvol = py2c_celcon_solve_stable_standard_start_system(cell)
+            if verbose:
+                print 'system %d has %d solutions' % (cell, mixvol)
+            for j in range(1, mixvol+1):
+                py2c_celcon_copy_target_standard_solution_to_container(cell, j)
     sols = load_standard_solutions()
     # print sols
     # newton_step(result, sols)
@@ -872,8 +885,10 @@ def dobldobl_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_is_stable
     from phcpy.phcpy2c2 import py2c_celcon_number_of_cells
     from phcpy.phcpy2c2 import py2c_celcon_number_of_original_cells
+    from phcpy.phcpy2c2 import py2c_celcon_number_of_stable_cells
     from phcpy.phcpy2c2 import py2c_solcon_clear_dobldobl_solutions
     from phcpy.phcpy2c2 import py2c_celcon_solve_dobldobl_start_system
+    from phcpy.phcpy2c2 import py2c_celcon_solve_stable_dobldobl_start_system
     from phcpy.phcpy2c2 import py2c_celcon_track_dobldobl_solution_path
     from phcpy.phcpy2c2 \
         import py2c_celcon_copy_target_dobldobl_solution_to_container
@@ -885,7 +900,8 @@ def dobldobl_random_coefficient_system(verbose=True):
     result = load_dobldobl_system()
     # print result
     py2c_celcon_dobldobl_polyhedral_homotopy()
-    if py2c_celcon_is_stable():
+    is_stable = py2c_celcon_is_stable()
+    if is_stable:
         nbcells = py2c_celcon_number_of_original_cells()
     else:
         nbcells = py2c_celcon_number_of_cells()
@@ -899,6 +915,16 @@ def dobldobl_random_coefficient_system(verbose=True):
                 print '-> tracking path %d out of %d' % (j, mixvol)
             py2c_celcon_track_dobldobl_solution_path(cell, j, 0)
             py2c_celcon_copy_target_dobldobl_solution_to_container(cell, j)
+    if is_stable:
+        nbcells = py2c_celcon_number_of_stable_cells()
+        if verbose:
+            print 'number of stable cells :', nbcells
+        for cell in range(1, nbcells+1):
+            mixvol = py2c_celcon_solve_stable_dobldobl_start_system(cell)
+            if verbose:
+                print 'system %d has %d solutions' % (cell, mixvol)
+            for j in range(1, mixvol+1):
+                py2c_celcon_copy_target_dobldobl_solution_to_container(cell, j)
     sols = load_dobldobl_solutions()
     # print sols
     # newton_step(result, sols)
@@ -918,8 +944,10 @@ def quaddobl_random_coefficient_system(verbose=True):
     from phcpy.phcpy2c2 import py2c_celcon_is_stable
     from phcpy.phcpy2c2 import py2c_celcon_number_of_cells
     from phcpy.phcpy2c2 import py2c_celcon_number_of_original_cells
+    from phcpy.phcpy2c2 import py2c_celcon_number_of_stable_cells
     from phcpy.phcpy2c2 import py2c_solcon_clear_quaddobl_solutions
     from phcpy.phcpy2c2 import py2c_celcon_solve_quaddobl_start_system
+    from phcpy.phcpy2c2 import py2c_celcon_solve_stable_quaddobl_start_system
     from phcpy.phcpy2c2 import py2c_celcon_track_quaddobl_solution_path
     from phcpy.phcpy2c2 \
         import py2c_celcon_copy_target_quaddobl_solution_to_container
@@ -931,6 +959,7 @@ def quaddobl_random_coefficient_system(verbose=True):
     result = load_quaddobl_system()
     # print result
     py2c_celcon_quaddobl_polyhedral_homotopy()
+    is_stable = py2c_celcon_is_stable()
     if py2c_celcon_is_stable():
         nbcells = py2c_celcon_number_of_original_cells()
     else:
@@ -945,6 +974,16 @@ def quaddobl_random_coefficient_system(verbose=True):
                 print '-> tracking path %d out of %d' % (j, mixvol)
             py2c_celcon_track_quaddobl_solution_path(cell, j, 0)
             py2c_celcon_copy_target_quaddobl_solution_to_container(cell, j)
+    if is_stable:
+        nbcells = py2c_celcon_number_of_stable_cells()
+        if verbose:
+            print 'number of stable cells :', nbcells
+        for cell in range(1, nbcells+1):
+            mixvol = py2c_celcon_solve_stable_quaddobl_start_system(cell)
+            if verbose:
+                print 'system %d has %d solutions' % (cell, mixvol)
+            for j in range(1, mixvol+1):
+                py2c_celcon_copy_target_quaddobl_solution_to_container(cell, j)
     sols = load_quaddobl_solutions()
     # print sols
     # newton_step(result, sols)
