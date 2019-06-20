@@ -3578,7 +3578,7 @@ int simplex::initIter
    int& sub_pivOutIdx, double& theta, double& redCost, 
    int termS, int reTermS, int preNbN )
 {
-   int flag;
+   int flag = -1;
   
    // cout << "<< initIter >>\n\n";
   
@@ -3671,6 +3671,7 @@ int simplex::initIter
       }
       break;
    }
+   return (flag); // added because end of control of non-void function ...
 }
 
 void simplex::get_mNbN_nfN ( data* parent, data** cur )

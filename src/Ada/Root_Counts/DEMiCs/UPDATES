@@ -1,3 +1,5 @@
+Thu 20 Jun 2019 : added return in simplex.cpp for compiler warning.
+
 Fri 29 Mar 2019 : commented out the #include <sys/times.h> in global.h
   as this was a problem for the mingw compiler.
 
