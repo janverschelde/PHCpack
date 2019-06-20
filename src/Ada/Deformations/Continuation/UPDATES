@@ -1,3 +1,6 @@
+Thu 20 Jun 2019 : added verbose level to the main driver procedures
+  in drivers_for_poly_continuation.
+
 Wed 19 Jun 2019 : added verbose level to *_blackbox_continuations,
   updated bablpoco.adb, bablpoco2.adb, and bablpoco4.adb.
 

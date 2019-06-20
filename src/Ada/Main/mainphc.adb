@@ -115,25 +115,29 @@ procedure mainphc
     Copy(scalp,projp);
     Driver_for_Root_Counts(file,nt,projp,q,true,sols,roco,vrb-1);
     if Length_Of(sols) > 0 then
-      Driver_for_Homotopy_Construction(file,ls,projp,q,sols,target,deci);
+      Driver_for_Homotopy_Construction(file,ls,projp,q,sols,target,deci,vrb-1);
       proj := (Number_of_Unknowns(p(p'first)) > natural32(p'last));
       if Head_Of(sols).t /= Create(0.0)
        then Set_Continuation_Parameter(sols,Create(0.0));
       end if;
       if deci <= 16 then
-        Driver_for_Standard_Continuation(file,sols,proj,target=>target);
+        Driver_for_Standard_Continuation
+          (file,sols,proj,target=>target,verbose=>vrb-1);
         Driver_for_Root_Refining(file,scalp,p,basis,scalvec,sols);
       elsif deci <= 32 then
         ddsols := DoblDobl_Complex_Solutions.Create(sols);
-        Driver_for_DoblDobl_Continuation(file,ddsols,target=>target);
+        Driver_for_DoblDobl_Continuation
+          (file,ddsols,target=>target,verbose=>vrb-1);
       elsif deci <= 64 then
         qdsols := QuadDobl_Complex_Solutions.Create(sols);
-        Driver_for_QuadDobl_Continuation(file,qdsols,target=>target);
+        Driver_for_QuadDobl_Continuation
+          (file,qdsols,target=>target,verbose=>vrb-1);
       else
         mpsols := Multprec_Complex_Solutions.Create(sols);
         size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
         Multprec_Complex_Solutions.Set_Size(mpsols,size);
-        Driver_for_Multprec_Continuation(file,mpsols,proj,deci,target);
+        Driver_for_Multprec_Continuation
+          (file,mpsols,proj,deci,target,verbose=>vrb-1);
       end if;
     end if;
   end Main_Polynomial_Solver;

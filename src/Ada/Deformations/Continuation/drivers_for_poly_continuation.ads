@@ -81,7 +81,7 @@ package Drivers_for_Poly_Continuation is
                   ddsols : out DoblDobl_Complex_Solutions.Solution_list;
                   qdsols : out QuadDobl_Complex_Solutions.Solution_list;
                   mpsols : out Multprec_Complex_Solutions.Solution_list;
-                  target : out Complex_Number );
+                  target : out Complex_Number; verbose : in integer32 := 0 );
   procedure Driver_for_Laurent_Continuation
                 ( file : in file_type;
                   p : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -91,7 +91,7 @@ package Drivers_for_Poly_Continuation is
                   ddsols : out DoblDobl_Complex_Solutions.Solution_list;
                   qdsols : out QuadDobl_Complex_Solutions.Solution_list;
                   mpsols : out Multprec_Complex_Solutions.Solution_list;
-                  target : out Complex_Number );
+                  target : out Complex_Number; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   This is a driver for the polynomial continuation routine
@@ -104,7 +104,8 @@ package Drivers_for_Poly_Continuation is
   --   p          a polynomial system;
   --   prclvl     preset precision level, is either 1, 2, or 4,
   --              for double, double double, or quad double precision;
-  --   ls         string representations of the input polynomials.
+  --   ls         string representations of the input polynomials;
+  --   verbose    the verbose level.
 
   -- ON RETURN :
   --   sols       the computed solutions in standard double precision,
@@ -120,7 +121,8 @@ package Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   p : in Standard_Complex_Poly_Systems.Poly_Sys;
                   k : in natural32; target : in Complex_Number;
-                  sols : out Standard_Complex_Solutions.Solution_list );
+                  sols : out Standard_Complex_Solutions.Solution_list;
+                  verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   This is a driver for the polynomial continuation routine
@@ -131,7 +133,8 @@ package Drivers_for_Poly_Continuation is
   --   file       to write diagnostics and results on;
   --   p          a polynomial system, with n equations and n+1 unknowns;
   --   k          index of t = xk;
-  --   target     target value for the continuation parameter.
+  --   target     target value for the continuation parameter;
+  --   verbose    the verbose level.
 
   -- ON RETURN :
   --   sols       the computed solutions.
@@ -142,17 +145,17 @@ package Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                   sols : out DoblDobl_Complex_Solutions.Solution_list;
-                  target : out Complex_Number );
+                  target : out Complex_Number; verbose : in integer32 := 0 );
   procedure Driver_for_Polynomial_Continuation
                 ( file : in file_type;
                   p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                   sols : out QuadDobl_Complex_Solutions.Solution_list;
-                  target : out Complex_Number );
+                  target : out Complex_Number; verbose : in integer32 := 0 );
   procedure Driver_for_Polynomial_Continuation
                 ( file : in file_type; dp : in natural32;
                   p : in Multprec_Complex_Poly_Systems.Poly_Sys;
                   sols : out Multprec_Complex_Solutions.Solution_list;
-                  target : out Complex_Number );
+                  target : out Complex_Number; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   This is a driver for the polynomial continuation routine
@@ -163,7 +166,8 @@ package Drivers_for_Poly_Continuation is
   -- ON ENTRY :
   --   file       to write diagnostics and results on;
   --   dp         decimal places in the working precision;
-  --   p          a polynomial system.
+  --   p          a polynomial system;
+  --   verbose    the verbose level.
 
   -- ON RETURN :
   --   sols       the computed solutions;
@@ -188,37 +192,44 @@ package Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   sols : in out Standard_Complex_Solutions.Solution_List;
                   proj : in boolean; nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) );
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 );
   procedure Driver_for_Standard_Laurent_Continuation
                 ( file : in file_type;
                   sols : in out Standard_Complex_Solutions.Solution_List;
                   proj : in boolean; nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) );
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 );
   procedure Driver_for_Multprec_Continuation
                 ( file : in file_type;
                   sols : in out Multprec_Complex_Solutions.Solution_List;
                   proj : in boolean; deci : in natural32;
-                  target : Complex_Number := Create(1.0) );
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 );
   procedure Driver_for_DoblDobl_Continuation
                 ( file : in file_type;
                   sols : in out DoblDobl_Complex_Solutions.Solution_List;
                   nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) );
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 );
   procedure Driver_for_DoblDobl_Laurent_Continuation
                 ( file : in file_type;
                   sols : in out DoblDobl_Complex_Solutions.Solution_List;
                   nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) );
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 );
   procedure Driver_for_QuadDobl_Continuation
                 ( file : in file_type;
                   sols : in out QuadDobl_Complex_Solutions.Solution_List;
                   nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) );
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 );
   procedure Driver_for_QuadDobl_Laurent_Continuation
                 ( file : in file_type;
                   sols : in out QuadDobl_Complex_Solutions.Solution_List;
                   nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) );
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given a homotopy, contained in the Homotopy package,
@@ -233,7 +244,8 @@ package Drivers_for_Poly_Continuation is
   --   deci       number of decimal places;
   --   proj       true when a projective-perpendicular corrector will be used;
   --   nbq        number of equations to turn on the Gauss-Newton correctors;
-  --   target     target value for the continuation parameter.
+  --   target     target value for the continuation parameter;
+  --   verbose    the verbose level.
 
   -- ON RETURN :
   --   sols       the computed solutions.

@@ -1,3 +1,6 @@
+Thu 20 Jun 2019 : for the verbose levels in the homotopy contruction
+  and continuation, added verbose levels to procedures in mainphc.adb.
+
 Wed 19 Jun 2019 : added verbose levels to procedures in mainphc.adb.
 
 Sat 15 Jun 2019 : updated option_handlers.adb for adding -V to phc -u.

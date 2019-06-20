@@ -31,7 +31,6 @@ with Symbol_Table,Symbol_Table_io;       use Symbol_Table;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
@@ -39,7 +38,6 @@ with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Standard_Homotopy;
-with Standard_Coefficient_Homotopy;
 with Standard_Laurent_Homotopy;
 with DoblDobl_Homotopy;
 with DoblDobl_Laurent_Homotopy;
@@ -930,7 +928,7 @@ package body Drivers_for_Poly_Continuation is
                   ddsols : out DoblDobl_Complex_Solutions.Solution_List;
                   qdsols : out QuadDobl_Complex_Solutions.Solution_List;
                   mpsols : out Multprec_Complex_Solutions.Solution_List;
-                  target : out Complex_Number ) is
+                  target : out Complex_Number; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -944,6 +942,10 @@ package body Drivers_for_Poly_Continuation is
     nbequ,nbvar : integer32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Polynomial_Continuation 1 ...");
+    end if;
     Read_Start_System(file,q,qsols);
     nbequ := q'last;
     nbvar := Head_Of(qsols).n;
@@ -999,7 +1001,7 @@ package body Drivers_for_Poly_Continuation is
                   ddsols : out DoblDobl_Complex_Solutions.Solution_list;
                   qdsols : out QuadDobl_Complex_Solutions.Solution_list;
                   mpsols : out Multprec_Complex_Solutions.Solution_list;
-                  target : out Complex_Number ) is
+                  target : out Complex_Number; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -1008,10 +1010,13 @@ package body Drivers_for_Poly_Continuation is
     qsols : Solution_List;
     proj : boolean;
     deci : natural32 := 0;
-    rsols : Solution_List;
     nbequ,nbvar : integer32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Laurent_Continuation ...");
+    end if;
     Read_Start_System(file,q,qsols);
     nbequ := q'last;
     nbvar := integer32(Number_of_Unknowns(q(q'first)));
@@ -1062,12 +1067,17 @@ package body Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   p : in Standard_Complex_Poly_Systems.Poly_Sys;
                   k : in natural32; target : in Complex_Number;
-                  sols : out Standard_Complex_Solutions.Solution_list ) is
+                  sols : out Standard_Complex_Solutions.Solution_list;
+                  verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     qsols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Parameter_Continuation ...");
+    end if;
     new_line; Read(qsols);
     put_line(file,"THE START SOLUTIONS :");
     put(file,Length_Of(qsols),natural32(Head_Of(qsols).n),qsols);
@@ -1087,7 +1097,7 @@ package body Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                   sols : out DoblDobl_Complex_Solutions.Solution_list;
-                  target : out Complex_Number ) is
+                  target : out Complex_Number; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -1095,6 +1105,10 @@ package body Drivers_for_Poly_Continuation is
     qsols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Polynomial_Continuation 2 ...");
+    end if;
     Read_Start_System(file,q,qsols);
     Driver_for_Homotopy_Construction(file,p,q,target);
     Driver_for_DoblDobl_Continuation(file,qsols,target=>target);
@@ -1105,7 +1119,7 @@ package body Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                   sols : out QuadDobl_Complex_Solutions.Solution_list;
-                  target : out Complex_Number ) is
+                  target : out Complex_Number; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -1113,6 +1127,10 @@ package body Drivers_for_Poly_Continuation is
     qsols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Polynomial_Continuation 3 ...");
+    end if;
     Read_Start_System(file,q,qsols);
     Driver_for_Homotopy_Construction(file,p,q,target);
     Driver_for_QuadDobl_Continuation(file,qsols,target=>target);
@@ -1123,7 +1141,7 @@ package body Drivers_for_Poly_Continuation is
                 ( file : in file_type; dp : in natural32;
                   p : in Multprec_Complex_Poly_Systems.Poly_Sys;
                   sols : out Multprec_Complex_Solutions.Solution_list;
-                  target : out Complex_Number ) is
+                  target : out Complex_Number; verbose : in integer32 := 0 ) is
 
     use Multprec_Complex_Poly_Systems;
     use Multprec_Complex_Solutions;
@@ -1131,6 +1149,10 @@ package body Drivers_for_Poly_Continuation is
     qsols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Polynomial_Continuation 4 ...");
+    end if;
     Read_Start_System(file,q,qsols);
     Driver_for_Homotopy_Construction(file,dp,p,q,target);
     Driver_for_Multprec_Continuation(file,qsols,false,dp,target);
@@ -1199,7 +1221,8 @@ package body Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   sols : in out Standard_Complex_Solutions.Solution_List;
                   proj : in boolean; nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) ) is
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -1213,6 +1236,10 @@ package body Drivers_for_Poly_Continuation is
     k : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Standard_Continuation ...");
+    end if;
     new_line;
     Driver_for_Continuation_Parameters(file);
     if Continuation_Parameters.endext_order > 0
@@ -1244,14 +1271,17 @@ package body Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   sols : in out Standard_Complex_Solutions.Solution_List;
                   proj : in boolean; nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) ) is
-
-    use Standard_Complex_Solutions;
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 ) is
 
     oc : natural32;
     report : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Standard_Laurent_Continuation ...");
+    end if;
     new_line;
     Driver_for_Continuation_Parameters(file);
     new_line;
@@ -1267,9 +1297,8 @@ package body Drivers_for_Poly_Continuation is
               ( file : in file_type;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 nbq : in integer32 := 0;
-                target : Complex_Number := Create(1.0) ) is
-
-    use DoblDobl_Complex_Solutions;
+                target : in Complex_Number := Create(1.0);
+                verbose : in integer32 := 0 ) is
 
     oc : natural32;
     report : boolean;
@@ -1277,6 +1306,10 @@ package body Drivers_for_Poly_Continuation is
               := Standard_to_DoblDobl_Complex(target);
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_DoblDobl_Laurent_Continuation ...");
+    end if;
     new_line;
     Driver_for_Continuation_Parameters(file);
     new_line;
@@ -1292,9 +1325,8 @@ package body Drivers_for_Poly_Continuation is
               ( file : in file_type;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 nbq : in integer32 := 0;
-                target : Complex_Number := Create(1.0) ) is
-
-    use QuadDobl_Complex_Solutions;
+                target : in Complex_Number := Create(1.0);
+                verbose : in integer32 := 0 ) is
 
     oc : natural32;
     report : boolean;
@@ -1302,6 +1334,10 @@ package body Drivers_for_Poly_Continuation is
               := Standard_to_QuadDobl_Complex(target);
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_QuadDobl_Laurent_Continuation ...");
+    end if;
     new_line;
     Driver_for_Continuation_Parameters(file);
     new_line;
@@ -1317,12 +1353,17 @@ package body Drivers_for_Poly_Continuation is
               ( file : in file_type;
                 sols : in out Multprec_Complex_Solutions.Solution_List;
                 proj : in boolean; deci : in natural32;
-                target : Complex_Number := Create(1.0) ) is
+                target : in Complex_Number := Create(1.0);
+                verbose : in integer32 := 0 ) is
 
     oc : natural32;
     report : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_Multprec_Continuation ...");
+    end if;
     new_line;
     Continuation_Parameters.Tune(0); -- ,deci); -- just leave default ...
     Driver_for_Continuation_Parameters(file);
@@ -1339,7 +1380,8 @@ package body Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   sols : in out DoblDobl_Complex_Solutions.Solution_List;
                   nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) ) is
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -1355,6 +1397,10 @@ package body Drivers_for_Poly_Continuation is
     k : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_DoblDobl_Continuation ...");
+    end if;
     new_line;
     Continuation_Parameters.Tune(0); -- ,32); -- too severe !!!
     Driver_for_Continuation_Parameters(file);
@@ -1390,7 +1436,8 @@ package body Drivers_for_Poly_Continuation is
                 ( file : in file_type;
                   sols : in out QuadDobl_Complex_Solutions.Solution_List;
                   nbq : in integer32 := 0;
-                  target : Complex_Number := Create(1.0) ) is
+                  target : in Complex_Number := Create(1.0);
+                  verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -1406,6 +1453,10 @@ package body Drivers_for_Poly_Continuation is
     k : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_for_poly_continuation.");
+      put_line("Driver_for_QuadDobl_Continuation ...");
+    end if;
     new_line;
     Continuation_Parameters.Tune(0); -- ,64); -- too severe !!!
     Driver_for_Continuation_Parameters(file);
