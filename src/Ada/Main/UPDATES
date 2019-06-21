@@ -1,5 +1,6 @@
 Fri 21 Jun 2019 : added the verbose level to driver_for_root_refining,
   updated mainphc.adb.  Updated greeting_banners for v2.4.68.
+  Documented the -V option in mainphc.adb, for running in full mode.
 
 Thu 20 Jun 2019 : for the verbose levels in the homotopy contruction
   and continuation, added verbose levels to procedures in mainphc.adb.

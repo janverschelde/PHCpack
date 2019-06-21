@@ -43,7 +43,7 @@ procedure mainphc
   -- DESCRIPTION :
   --   Displays an overview of all options on screen.
 
-    o : array(0..25) of string(1..65);
+    o : array(0..26) of string(1..65);
 
   begin
     put("Running full mode,");
@@ -74,10 +74,11 @@ procedure mainphc
     o(19):= "  phc -t : tasking for tracking paths using multiple threads     ";
     o(20):= "  phc -u : Newton's method to compute power series solutions     ";
     o(21):= "  phc -v : verification, refinement and purification of solutions";
-    o(22):= "  phc -w : witness set intersection using diagonal homotopies    ";
-    o(23):= "  phc -x : convert solutions from PHCpack into Python dictionary ";
-    o(24):= "  phc -y : sample points from an algebraic set, given witness set";
-    o(25):= "  phc -z : strip phc output solution lists into Maple format     ";
+    o(22):= "  phc -V : in verbose mode, at some given verbose level          ";
+    o(23):= "  phc -w : witness set intersection using diagonal homotopies    ";
+    o(24):= "  phc -x : convert solutions from PHCpack into Python dictionary ";
+    o(25):= "  phc -y : sample points from an algebraic set, given witness set";
+    o(26):= "  phc -z : strip phc output solution lists into Maple format     ";
     for i in o'range loop
       put_line(o(i));
     end loop;
