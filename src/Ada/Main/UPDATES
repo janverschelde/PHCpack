@@ -1,3 +1,6 @@
+Fri 21 Jun 2019 : added the verbose level to driver_for_root_refining,
+  updated mainphc.adb.
+
 Thu 20 Jun 2019 : for the verbose levels in the homotopy contruction
   and continuation, added verbose levels to procedures in mainphc.adb.
 

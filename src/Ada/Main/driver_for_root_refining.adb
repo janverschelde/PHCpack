@@ -1,14 +1,14 @@
 with Timing_Package;                     use Timing_Package;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Scaling;                   use Standard_Scaling;
 with Projective_Transformations;         use Projective_Transformations;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 
 procedure Driver_for_Root_Refining
-             ( file : in file_type; scalp,p : in Poly_Sys;
-               basis : in natural32;
-               scalvec : in Link_to_Vector; sols : in out Solution_List ) is
+             ( file : in file_type;
+               scalp,p : in Poly_Sys; basis : in natural32;
+               scalvec : in Link_to_Vector; sols : in out Solution_List;
+               verbose : in integer32 := 0 ) is
 
   numb : natural32;
   epsxa,epsfa : constant double_float := 1.0E-8;
@@ -18,6 +18,9 @@ procedure Driver_for_Root_Refining
   deflate : boolean := false;
 
 begin
+  if verbose > 0
+   then put_line("-> in driver_for_root_refining ...");
+  end if;
   if (len /= 0) and then Head_Of(sols).n > p'last
    then Affine_Transformation(sols);
   end if;

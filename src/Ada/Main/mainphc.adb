@@ -123,7 +123,7 @@ procedure mainphc
       if deci <= 16 then
         Driver_for_Standard_Continuation
           (file,sols,proj,target=>target,verbose=>vrb-1);
-        Driver_for_Root_Refining(file,scalp,p,basis,scalvec,sols);
+        Driver_for_Root_Refining(file,scalp,p,basis,scalvec,sols,vrb-1);
       elsif deci <= 32 then
         ddsols := DoblDobl_Complex_Solutions.Create(sols);
         Driver_for_DoblDobl_Continuation
