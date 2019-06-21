@@ -1336,6 +1336,17 @@ For double double precision, use as ``phc -b2 -v`` or ``phc -b -v2``.
 For quad double precision, use as ``phc -b4 -v`` or ``phc -b -v4``.
 The order of ``-b`` and ``-v`` at the command line does not matter.
 
+phc -V : run in verbose mode
+============================
+
+To run the blackbox solver in verbose mode, at level 17, 
+type ``phc -b -V17`` at the command prompt.
+In this mode, the names of the called procedures will be shown
+on screen, up to the 17-th level of nesting deep.
+
+This option is helpful to obtain a dynamic view of the tree of code
+and, in case of a crash, to track down the procedure where the crash happened.
+
 phc -w : witness set intersection using diagonal homotopies    
 ===========================================================
 
