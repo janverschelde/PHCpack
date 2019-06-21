@@ -396,7 +396,8 @@ package body Black_Polyhedral_Continuations is
     end if;
     Set_Continuation_Parameter(qsols,Create(0.0));
     if not Floating_Mixed_Subdivisions.Is_Null(stbmcc) then
-      Silent_Polyhedral_Continuation(lq,stlb,mix,lifsup,stbmcc,qsols0);
+      Silent_Polyhedral_Continuation
+        (lq,stlb,mix,lifsup,stbmcc,qsols0,verbose-1);
      -- put_line("looking at the stable mixed cells ...");
      -- Reporting_Polyhedral_Continuation
      --   (standard_output,lq,stlb,mix,lifsup,stbmcc,qsols0);
@@ -473,7 +474,8 @@ package body Black_Polyhedral_Continuations is
     end if;
     Set_Continuation_Parameter(qsols,Create(zero));
     if not Floating_Mixed_Subdivisions.Is_Null(stbmcc) then
-      Silent_Polyhedral_Continuation(lq,stlb,mix,lifsup,stbmcc,qsols0);
+      Silent_Polyhedral_Continuation
+        (lq,stlb,mix,lifsup,stbmcc,qsols0,verbose-1);
      -- put_line("looking at the stable mixed cells ...");
      -- Reporting_Polyhedral_Continuation
      --   (standard_output,lq,stlb,mix,lifsup,stbmcc,qsols0);
@@ -550,7 +552,8 @@ package body Black_Polyhedral_Continuations is
     end if;
     Set_Continuation_Parameter(qsols,Create(zero));
     if not Floating_Mixed_Subdivisions.Is_Null(stbmcc) then
-      Silent_Polyhedral_Continuation(lq,stlb,mix,lifsup,stbmcc,qsols0);
+      Silent_Polyhedral_Continuation
+        (lq,stlb,mix,lifsup,stbmcc,qsols0,verbose-1);
      -- put_line("looking at the stable mixed cells ...");
      -- Reporting_Polyhedral_Continuation
      --   (standard_output,lq,stlb,mix,lifsup,stbmcc,qsols0);
