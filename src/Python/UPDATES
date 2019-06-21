@@ -1,5 +1,6 @@
 Fri 21 Jun 2019 : fixed copying of target solutions with zero coordinates
   for the solving of the random coefficient start system.
+  Updates files for version 0.9.6 of phcpy.
 
 Thu 20 Jun 2019 : additions to solver.py for zero coordinate solutions,
   both for python2 and python3.
