@@ -72,11 +72,11 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) dispatch.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) phctop.adb
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gnatbind dispatch use_c2phc
-	gnatlink dispatch syscon.o solcon.o phcpack.o feedback.o \
-                 pieri_solver.o lib.a parameter.o lib2path.o \
+	gnatbind phctop use_c2phc pieri_solver
+	gnatlink phctop syscon.o solcon.o phcpack.o feedback.o \
+                 lib.a parameter.o lib2path.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  get_clock.o get_clocks_per_sec.o corecount.o \
