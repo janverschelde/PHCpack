@@ -640,11 +640,18 @@ package body Cells_Container is
   function Retrieve_Standard_Target_Solution
              ( k,i : natural32 )
              return Standard_Complex_Solutions.Link_to_Solution is
+
+    use Standard_Complex_Solutions;
+
   begin
-    if Standard_Complex_Solutions.Is_Null(st_target_sols(integer32(k)))
-     then return null;
-     else return Standard_Complex_Solutions.Retrieve
-                   (st_target_sols(integer32(k)),i);
+    if k > natural32(st_target_sols'last) then
+      return null;
+    elsif Is_Null(st_target_sols(integer32(k))) then
+      return null;
+    elsif i > Length_Of(st_target_sols(integer32(k))) then
+      return null;
+    else 
+      return Retrieve(st_target_sols(integer32(k)),i);
     end if;
   end Retrieve_Standard_Target_Solution;
 
@@ -662,11 +669,18 @@ package body Cells_Container is
   function Retrieve_DoblDobl_Target_Solution
              ( k,i : natural32 )
              return DoblDobl_Complex_Solutions.Link_to_Solution is
+
+    use DoblDobl_Complex_Solutions;
+
   begin
-    if DoblDobl_Complex_Solutions.Is_Null(dd_target_sols(integer32(k)))
-     then return null;
-     else return DoblDobl_Complex_Solutions.Retrieve
-                   (dd_target_sols(integer32(k)),i);
+    if k > natural32(dd_target_sols'last) then
+      return null;
+    elsif Is_Null(dd_target_sols(integer32(k))) then
+      return null;
+    elsif i > Length_Of(dd_target_sols(integer32(k))) then
+      return null;
+    else
+      return Retrieve(dd_target_sols(integer32(k)),i);
     end if;
   end Retrieve_DoblDobl_Target_Solution;
 
@@ -684,11 +698,18 @@ package body Cells_Container is
   function Retrieve_QuadDobl_Target_Solution
              ( k,i : natural32 )
              return QuadDobl_Complex_Solutions.Link_to_Solution is
+
+    use QuadDobl_Complex_Solutions;
+
   begin
-    if QuadDobl_Complex_Solutions.Is_Null(qd_target_sols(integer32(k)))
-     then return null;
-     else return QuadDobl_Complex_Solutions.Retrieve
-                   (qd_target_sols(integer32(k)),i);
+    if k > natural32(qd_target_sols'last) then
+      return null;
+    elsif Is_Null(qd_target_sols(integer32(k))) then
+      return null;
+    elsif i > Length_Of(qd_target_sols(integer32(k))) then
+      return null;
+    else
+      return Retrieve(qd_target_sols(integer32(k)),i);
     end if;
   end Retrieve_QuadDobl_Target_Solution;
 

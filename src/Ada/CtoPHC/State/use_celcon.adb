@@ -649,9 +649,13 @@ function use_celcon ( job : integer32;
     i : constant natural32 := natural32(vb(vb'first));
     ls : Standard_Complex_Solutions.Link_to_Solution;
 
+    use Standard_Complex_Solutions;
+
   begin
     ls := Cells_Container.Retrieve_Standard_Target_Solution(k,i);
-    Standard_Solutions_Container.Append(ls.all);
+    if ls /= null
+     then Standard_Solutions_Container.Append(ls.all);
+    end if;
     return 0;
   end Job24;
 
@@ -663,9 +667,13 @@ function use_celcon ( job : integer32;
     i : constant natural32 := natural32(vb(vb'first));
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
 
+    use DoblDobl_Complex_Solutions;
+
   begin
     ls := Cells_Container.Retrieve_DoblDobl_Target_Solution(k,i);
-    DoblDobl_Solutions_Container.Append(ls.all);
+    if ls /= null
+     then DoblDobl_Solutions_Container.Append(ls.all);
+    end if;
     return 0;
   end Job34;
 
@@ -677,9 +685,13 @@ function use_celcon ( job : integer32;
     i : constant natural32 := natural32(vb(vb'first));
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
 
+    use QuadDobl_Complex_Solutions;
+
   begin
     ls := Cells_Container.Retrieve_QuadDobl_Target_Solution(k,i);
-    QuadDobl_Solutions_Container.Append(ls.all);
+    if ls /= null
+     then QuadDobl_Solutions_Container.Append(ls.all);
+    end if;
     return 0;
   end Job44;
 

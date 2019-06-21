@@ -1,3 +1,7 @@
+Fri 21 Jun 2019 : added explicit range checks in cells_container.adb to
+  the procedure to copy a target solution, in use_celcon.adb added the
+  explicit check whether a target solution is null before appending.
+
 Thu 20 Jun 2019 : extended cells_container.adb to add the solutions with
   all coordinates equal to zero, for the stable mixed volume case.
 
