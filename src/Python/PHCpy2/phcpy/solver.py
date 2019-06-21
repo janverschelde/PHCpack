@@ -857,6 +857,7 @@ def standard_random_coefficient_system(verbose=True):
             py2c_celcon_track_standard_solution_path(cell, j, 0)
             py2c_celcon_copy_target_standard_solution_to_container(cell, j)
     if is_stable:
+        nborgcells = nbcells
         nbcells = py2c_celcon_number_of_stable_cells()
         if verbose:
             print 'number of stable cells :', nbcells
@@ -865,7 +866,8 @@ def standard_random_coefficient_system(verbose=True):
             if verbose:
                 print 'system %d has %d solutions' % (cell, mixvol)
             for j in range(1, mixvol+1):
-                py2c_celcon_copy_target_standard_solution_to_container(cell, j)
+                idx = nborgcells + cell
+                py2c_celcon_copy_target_standard_solution_to_container(idx, j)
     sols = load_standard_solutions()
     # print sols
     # newton_step(result, sols)
@@ -916,6 +918,7 @@ def dobldobl_random_coefficient_system(verbose=True):
             py2c_celcon_track_dobldobl_solution_path(cell, j, 0)
             py2c_celcon_copy_target_dobldobl_solution_to_container(cell, j)
     if is_stable:
+        nborgcells = nbcells
         nbcells = py2c_celcon_number_of_stable_cells()
         if verbose:
             print 'number of stable cells :', nbcells
@@ -924,7 +927,8 @@ def dobldobl_random_coefficient_system(verbose=True):
             if verbose:
                 print 'system %d has %d solutions' % (cell, mixvol)
             for j in range(1, mixvol+1):
-                py2c_celcon_copy_target_dobldobl_solution_to_container(cell, j)
+                idx = nborgcells + cell
+                py2c_celcon_copy_target_dobldobl_solution_to_container(idx, j)
     sols = load_dobldobl_solutions()
     # print sols
     # newton_step(result, sols)
@@ -975,6 +979,7 @@ def quaddobl_random_coefficient_system(verbose=True):
             py2c_celcon_track_quaddobl_solution_path(cell, j, 0)
             py2c_celcon_copy_target_quaddobl_solution_to_container(cell, j)
     if is_stable:
+        nborgcells = nbcells
         nbcells = py2c_celcon_number_of_stable_cells()
         if verbose:
             print 'number of stable cells :', nbcells
@@ -983,7 +988,8 @@ def quaddobl_random_coefficient_system(verbose=True):
             if verbose:
                 print 'system %d has %d solutions' % (cell, mixvol)
             for j in range(1, mixvol+1):
-                py2c_celcon_copy_target_quaddobl_solution_to_container(cell, j)
+                idx = nborgcells + cell
+                py2c_celcon_copy_target_quaddobl_solution_to_container(idx, j)
     sols = load_quaddobl_solutions()
     # print sols
     # newton_step(result, sols)
