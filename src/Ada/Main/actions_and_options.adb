@@ -84,7 +84,7 @@ package body Actions_and_Options is
   function Scan_Precision
              ( args : Array_of_Strings; opt : character ) return natural32 is
 
-    res : natural32 := 1;
+    res : natural32 := 0; -- better default than 1
 
   begin
     for i in 1..args'last loop

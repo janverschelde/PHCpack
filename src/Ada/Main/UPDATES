@@ -1,3 +1,7 @@
+Sat 22 Jun 2019 : updated actions_and_options.adb so in Scan_Precision, 
+  the default return value is 0 instead of 1 if the user does not provide 
+  a precision level, as is important in phc -u.
+
 Fri 21 Jun 2019 : added the verbose level to driver_for_root_refining,
   updated mainphc.adb.  Updated greeting_banners for v2.4.68.
   Documented the -V option in mainphc.adb, for running in full mode.
