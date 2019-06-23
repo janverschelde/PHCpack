@@ -1,4 +1,5 @@
 Sun 23 Jun 2019 : updated mainseries.adb to pass the verbose level.
+  Applied the verbose level in the procedures of series_and_trackers.adb.
 
 Sat 15 Jun 2019 : added the verbose level to mainseries.
   Added the verbose level to the procedures in mainseries.adb,

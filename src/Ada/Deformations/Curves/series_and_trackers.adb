@@ -1790,8 +1790,8 @@ package body Series_and_Trackers is
       if monitor
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
-      Track_One_Path(file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
-                     nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose);
+      Track_One_Path(file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,
+                     nbrcorrs,cntfail,minsize,maxsize,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       end if;
@@ -1850,7 +1850,7 @@ package body Series_and_Trackers is
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
       Track_One_Path(file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
-                     minsize,maxsize,verbose);
+                     minsize,maxsize,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       end if;
@@ -1905,7 +1905,7 @@ package body Series_and_Trackers is
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
       Track_One_Path(file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
-                     minsize,maxsize,verbose);
+                     minsize,maxsize,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
       end if;
@@ -1949,7 +1949,8 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path
-        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize,
+         vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
     Standard_Complex_Poly_SysFun.Clear(abh);
@@ -1980,7 +1981,8 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path
-        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize,
+         vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
     DoblDobl_Complex_Poly_SysFun.Clear(abh);
@@ -2011,7 +2013,8 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       Track_One_Path
-        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize,
+         vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
     QuadDobl_Complex_Poly_SysFun.Clear(abh);
