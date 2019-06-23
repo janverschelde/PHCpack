@@ -668,9 +668,9 @@ procedure mainseries ( precision : in character;
         end case;
       when '3' =>
         case valprc is
-          when '1' => Series_Path_Trackers.Standard_Main;
-          when '2' => Series_Path_Trackers.DoblDobl_Main;
-          when '4' => Series_Path_Trackers.QuadDobl_Main;
+          when '1' => Series_Path_Trackers.Standard_Main(vrb-1);
+          when '2' => Series_Path_Trackers.DoblDobl_Main(vrb-1);
+          when '4' => Series_Path_Trackers.QuadDobl_Main(vrb-1);
           when others => null;
         end case;
       when others => null;
@@ -691,7 +691,7 @@ procedure mainseries ( precision : in character;
       put_line(", in mainseries.Main ...");
     end if;
     if precision /= '0' then
-      Nonzero_Precision_Main(precision);
+      Nonzero_Precision_Main(precision,verbose-1);
     else
       new_line;
       put_line("MENU to select the working precision :");
