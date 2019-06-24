@@ -48,6 +48,7 @@ with Series_and_Trackers;
 with Homotopy_Mixed_Residuals;
 with Homotopy_Series_Readers;
 with Homotopy_Continuation_Parameters_io;
+with Standard_Pade_Trackers;
 with Drivers_to_Series_Trackers;         use Drivers_to_Series_Trackers;
 
 package body Series_Path_Trackers is
@@ -207,7 +208,7 @@ package body Series_Path_Trackers is
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
       if tofile then
-        Series_and_Trackers.Track_One_Path
+        Standard_Pade_Trackers.Track_One_Path
           (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
@@ -217,7 +218,7 @@ package body Series_Path_Trackers is
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
       else
-        Series_and_Trackers.Track_One_Path
+        Standard_Pade_Trackers.Track_One_Path
           (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then

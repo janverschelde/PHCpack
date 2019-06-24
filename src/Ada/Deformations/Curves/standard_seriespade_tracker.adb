@@ -12,7 +12,7 @@ with Standard_Pade_Approximants_io;
 with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
-with Series_and_Trackers;
+with Standard_Pade_Trackers;
 with Homotopy_Newton_Steps;
 with Homotopy_Mixed_Residuals;
 
@@ -157,14 +157,14 @@ package body Standard_SeriesPade_Tracker is
                         (current_step,current_frp,homconpars.pbeta);
     end if;
     t := Standard_Complex_Numbers.REAL_PART(current.t);
-    Series_and_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
+    Standard_Pade_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
     if verbose
      then put("Step size :"); put(current_step,2); put("  t ="); put(t,2);
     end if;
     loop
       sol := Series_and_Predictors.Predicted_Solution
                (current_padvec.all,current_step);
-      predres := Series_and_Trackers.Residual_Prediction(sol,t);
+      predres := Standard_Pade_Trackers.Residual_Prediction(sol,t);
       if verbose
        then put("  residual :"); put(predres,2); new_line;
       end if;
@@ -190,7 +190,7 @@ package body Standard_SeriesPade_Tracker is
 
     t : constant double_float := REAL_PART(current.t);
     nbrit : natural32 := 0;
-    extra : constant natural32 := homconpars.corsteps;
+    extra : constant natural32 := 0; -- := homconpars.corsteps;
 
   begin
     if verbose then

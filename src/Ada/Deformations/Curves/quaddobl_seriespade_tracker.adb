@@ -16,6 +16,7 @@ with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Series_and_Trackers;
+with Standard_Pade_Trackers;
 with Homotopy_Newton_Steps;
 with Homotopy_Mixed_Residuals;
 
@@ -166,7 +167,7 @@ package body QuadDobl_SeriesPade_Tracker is
     end if;
     qd_t := QuadDobl_Complex_Numbers.REAL_PART(current.t);
     t := hihi_part(qd_t);
-    Series_and_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
+    Standard_Pade_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
     if verbose
      then put("Step size :"); put(current_step,2); put("  t ="); put(t,2);
     end if;

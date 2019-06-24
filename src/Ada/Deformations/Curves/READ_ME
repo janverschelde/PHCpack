@@ -1,4 +1,4 @@
-Univariate solvers and plane algebraic curves in PHCpack version 2.4.68
+Univariate solvers and plane algebraic curves in PHCpack version 2.4.69
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,
@@ -58,7 +58,7 @@ quaddobl_pade_approximants       : Pade approximants with quad doubles
 quaddobl_pade_approximants_io    : output of quad double Pade approximants
 homotopy_pade_approximants       : wraps series Newton and Pade creators
 ts_serpade                       : test rational approximations given series
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 singular_values_of_hessians      : wraps SVD for the Hessian criterion
 ts_hesscrit                      : test development of the Hessian criterion
 ts_hesspred                      : test step size based on nearest solution
@@ -74,6 +74,7 @@ ts_predstep                      : test setting of step size
 homotopy_continuation_parameters    : parameters and tolerances
 homotopy_continuation_parameters_io : output and tuning of arameters 
 homotopy_newton_steps               : defines the correctors
+standard_pade_trackers              : pade trackers in double precision
 series_and_trackers                 : power series predictor in path tracker
 drivers_to_series_trackers          : helps to launch series trackers
 series_path_trackers                : runs the series path trackers
