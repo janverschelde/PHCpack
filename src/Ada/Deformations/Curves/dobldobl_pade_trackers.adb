@@ -101,7 +101,7 @@ package body DoblDobl_Pade_Trackers is
    -- tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := 0.005;
+    dbeta : constant double_float := pars.cbeta;
     maxit : constant natural32 := 50;
     extra : constant natural32 := maxit/10;
     fail : boolean;
@@ -215,7 +215,7 @@ package body DoblDobl_Pade_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := 0.005;
+    dbeta : constant double_float := pars.cbeta;
     maxit : constant natural32 := 50;
     extra : constant natural32 := maxit/10;
     fail : boolean;
@@ -354,7 +354,7 @@ package body DoblDobl_Pade_Trackers is
    -- tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := 0.005;
+    dbeta : constant double_float := pars.cbeta;
     maxit : constant natural32 := 50;
     extra : constant natural32 := maxit/10;
     fail : boolean;
@@ -469,7 +469,7 @@ package body DoblDobl_Pade_Trackers is
     tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := 0.005;
+    dbeta : constant double_float := pars.cbeta;
     maxit : constant natural32 := 50;
     extra : constant natural32 := maxit/10;
     fail : boolean;

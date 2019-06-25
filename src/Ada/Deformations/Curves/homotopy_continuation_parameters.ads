@@ -12,6 +12,7 @@ package Homotopy_Continuation_Parameters is
     alpha : double_float;    -- tolerance on the residual of the prediction
     sbeta : double_float;    -- multiplication factor of the series step
     pbeta : double_float;    -- multiplication factor of the pole radius
+    cbeta : double_float;    -- multiplication factor for the curvature
     gamma : Complex_Number;  -- the gamma constant in the homotopy
     tolres : double_float;   -- tolerance on the residual in the corrector
     epsilon : double_float;  -- tolerance on zero series coefficients

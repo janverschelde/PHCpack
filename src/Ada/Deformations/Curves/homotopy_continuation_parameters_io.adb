@@ -1,4 +1,3 @@
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
@@ -29,15 +28,17 @@ package body Homotopy_Continuation_Parameters_io is
     put(file,pars.sbeta,2); new_line(file);
     put(file," 7. multiplication factor of the pole radius   :");
     put(file,pars.pbeta,2); new_line(file);
-    put(file," 8. tolerance on the residual of the predictor :");
+    put(file," 8. multiplication factor for the curvature    :");
+    put(file,pars.cbeta,2); new_line(file);
+    put(file," 9. tolerance on the residual of the predictor :");
     put(file,pars.alpha,2); new_line(file);
-    put(file," 9. tolerance on the residual of the corrector :");
+    put(file,"10. tolerance on the residual of the corrector :");
     put(file,pars.tolres,2); new_line(file);
-    put(file,"10. tolerance on zero series coefficients      :");
+    put(file,"12. tolerance on zero series coefficients      :");
     put(file,pars.epsilon,2); new_line(file);
-    put(file,"11. maximum number of corrector steps          : ");
+    put(file,"12. maximum number of corrector steps          : ");
     put(file,pars.corsteps,1); new_line(file);
-    put(file,"12. maximum steps on a path                    : ");
+    put(file,"13. maximum steps on a path                    : ");
     put(file,pars.maxsteps,1); new_line(file);
   end put;
 
@@ -46,8 +47,8 @@ package body Homotopy_Continuation_Parameters_io is
     loop
       put("Type a number to change a value, or 0 to exit : ");
       Numbers_io.Read_Natural(nbr);
-      exit when (nbr < 13);
-      put_line("Your number should be 12 or less.  Please try again.");
+      exit when (nbr < 14);
+      put_line("Your number should be 13 or less.  Please try again.");
     end loop;
   end Prompt_for_Selection;
 
@@ -86,19 +87,22 @@ package body Homotopy_Continuation_Parameters_io is
         put("-> give a new multiplication factor for the pole radius : ");
         Numbers_io.Read_Positive_Float(pars.pbeta);
       when 8 =>
+        put("-> give a new multiplication factor for the curvature : ");
+        Numbers_io.Read_Positive_Float(pars.cbeta);
+      when 9 =>
         put("-> give a new tolerance on the predictor residual : ");
         Numbers_io.Read_Positive_Float(pars.alpha);
-      when 9 =>
+      when 10 =>
         put("-> give a new tolerance on the corrector residual : ");
         Numbers_io.Read_Positive_Float(pars.tolres);
-      when 10 =>
+      when 11 =>
         put("-> give a new tolerance on a zero series coefficient : ");
         Numbers_io.Read_Positive_Float(pars.epsilon);
-      when 11 =>
+      when 12 =>
         put("-> give a new maximum number of corrector steps : ");
         Numbers_io.Read_Positive(pos);
         pars.corsteps := natural32(pos);
-      when 12 =>
+      when 13 =>
         put("-> give a new maximum number of steps on a path : ");
         Numbers_io.Read_Positive(pos);
         pars.maxsteps := natural32(pos);
