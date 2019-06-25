@@ -4,7 +4,6 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;
-with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_VecVecs;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;

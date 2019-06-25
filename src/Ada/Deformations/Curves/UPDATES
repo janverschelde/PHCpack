@@ -1,3 +1,6 @@
+Tue 25 Jun 2019 : removed superfluous with/use clauses from the
+  headers of the package dobldobl_pade_trackers.
+
 Mon 24 Jun 2019 : refactored series_and_trackers into the new package
   standard_pade_trackers, which changed series_path_trackers.adb and
   {standard,dobldobl,quaddobl}_seriespade_tracker.adb.
