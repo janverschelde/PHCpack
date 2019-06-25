@@ -2,16 +2,12 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
-with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vector_Norms;
-with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;
@@ -38,53 +34,6 @@ package body Series_and_Trackers is
      else return b;
     end if;
   end Minimum;
-
-  function Residual_Prediction
-              ( sol : DoblDobl_Complex_Vectors.Vector;
-                t : double_float ) return double_float is
-
-    res : double_double;
-    ddt : constant double_double := create(t);
-    cmplxt : constant DoblDobl_Complex_Numbers.Complex_Number
-           := DoblDobl_Complex_Numbers.Create(ddt);
-    val : constant DoblDobl_Complex_Vectors.Vector
-        := DoblDobl_Homotopy.Eval(sol,cmplxt);
-
-  begin
-    res := DoblDobl_Complex_Vector_Norms.Max_Norm(val);
-    return hi_part(res);
-  end Residual_Prediction;
-
-  function Residual_Prediction
-              ( abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sol : DoblDobl_Complex_Vectors.Vector;
-                t : double_float ) return double_float is
-
-    res : double_double;
-    ddt : constant double_double := create(t);
-    cmplxt : constant DoblDobl_Complex_Numbers.Complex_Number
-           := DoblDobl_Complex_Numbers.Create(ddt);
-
-  begin
-    res := Homotopy_mixed_Residuals.Residual(abh,sol,cmplxt);
-    return hi_part(res);
-  end Residual_Prediction;
-
-  function Residual_Prediction
-              ( file : file_type;
-                abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sol : DoblDobl_Complex_Vectors.Vector;
-                t : double_float ) return double_float is
-
-    res : double_double;
-    ddt : constant double_double := create(t);
-    cmplxt : constant DoblDobl_Complex_Numbers.Complex_Number
-           := DoblDobl_Complex_Numbers.Create(ddt);
-
-  begin
-    res := Homotopy_mixed_Residuals.Residual(file,abh,sol,cmplxt);
-    return hi_part(res);
-  end Residual_Prediction;
 
   function Residual_Prediction
               ( sol : QuadDobl_Complex_Vectors.Vector;

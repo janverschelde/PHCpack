@@ -3,7 +3,6 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Solutions;
-with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
@@ -34,9 +33,6 @@ package Series_and_Trackers is
 --   The versions may be silent or verbose.
 
   function Residual_Prediction
-              ( sol : DoblDobl_Complex_Vectors.Vector;
-                t : double_float ) return double_float;
-  function Residual_Prediction
               ( sol : QuadDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float;
 
@@ -49,15 +45,6 @@ package Series_and_Trackers is
   --   the Standard_Homotopy, DoblDobl_Homotopy, or QuadDobl_Homotopy
   --   must have been properly initialized.
 
-  function Residual_Prediction
-              ( abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sol : DoblDobl_Complex_Vectors.Vector;
-                t : double_float ) return double_float;
-  function Residual_Prediction
-              ( file : file_type;
-                abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sol : DoblDobl_Complex_Vectors.Vector;
-                t : double_float ) return double_float;
   function Residual_Prediction
               ( abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 sol : QuadDobl_Complex_Vectors.Vector;
