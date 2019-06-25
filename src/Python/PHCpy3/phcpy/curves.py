@@ -67,6 +67,15 @@ def get_pole_radius_beta_factor():
     """
     return get_homotopy_continuation_parameter(7)
 
+def get_curvature_beta_factor():
+    """
+    Returns the current multiplication factor of the curvature bound.
+    This curvature bound gives an upper bound on a safe step size.
+    The step size is set by multiplication of the curvature bound
+    with the beta factor. 
+    """
+    return get_homotopy_continuation_parameter(8)
+
 def get_predictor_residual_alpha():
     """
     Returns the current tolerance on the residual of the predictor.
@@ -74,7 +83,7 @@ def get_predictor_residual_alpha():
     As long as the residual of the evaluated predicted solution
     is larger than alpha, the step size is cut in half.
     """
-    return get_homotopy_continuation_parameter(8)
+    return get_homotopy_continuation_parameter(9)
 
 def get_corrector_residual_tolerance():
     """
@@ -82,7 +91,7 @@ def get_corrector_residual_tolerance():
     The corrector stops if the residual of the current approximation
     drops below this tolerance.
     """
-    return get_homotopy_continuation_parameter(9)
+    return get_homotopy_continuation_parameter(10)
 
 def get_zero_series_coefficient_tolerance():
     """
@@ -90,14 +99,14 @@ def get_zero_series_coefficient_tolerance():
     A coefficient in a power series will be considered as zero if
     its absolute value drops below this tolerance.
     """
-    return get_homotopy_continuation_parameter(10)
+    return get_homotopy_continuation_parameter(11)
 
 def get_maximum_corrector_steps():
     """
     Returns the current value of the maximum number of corrector steps
     executed after the predictor stage.
     """
-    return get_homotopy_continuation_parameter(11)
+    return get_homotopy_continuation_parameter(12)
 
 def get_maximum_steps_on_path():
     """
@@ -105,7 +114,7 @@ def get_maximum_steps_on_path():
     The path trackers abandons the tracking of a path once the number
     of steps reaches this maximum number.
     """
-    return get_homotopy_continuation_parameter(12)
+    return get_homotopy_continuation_parameter(13)
 
 def set_homotopy_continuation_parameter(idx, val):
     """
@@ -135,7 +144,7 @@ def write_homotopy_continuation_parameters():
     """
     Writes the values of the homotopy continuation parameters.
     """
-    pars = [get_homotopy_continuation_parameter(k) for k in range(1, 13)]
+    pars = [get_homotopy_continuation_parameter(k) for k in range(1, 14)]
     regamma, imgamma = pars[0]
     print("Values of the HOMOTOPY CONTINUATION PARAMETERS :")
     print(" 1. gamma :", regamma + imgamma*complex(0,1))
@@ -143,13 +152,14 @@ def write_homotopy_continuation_parameters():
     print(" 3. degree of denominator of Pade approximant  :", pars[2])
     print(" 4. maximum step size                          :", pars[3])
     print(" 5. minimum step size                          :", pars[4])
-    print(" 6. multiplication factor of the series step   :", pars[5])
-    print(" 7. multiplication factor of the pole radius   :", pars[6])
-    print(" 8. tolerance on the residual of the predictor :", pars[7])
-    print(" 9. tolerance on the residual of the corrector :", pars[8])
-    print("10. tolerance on zero series coefficients      :", pars[9])
-    print("11. maximum number of corrector steps          :", pars[10])
-    print("12. maximum steps on a path                    :", pars[11])
+    print(" 6. multiplication factor for the series step  :", pars[5])
+    print(" 7. multiplication factor for the pole radius  :", pars[6])
+    print(" 8. multiplication factor for the curvature    :", pars[7])
+    print(" 9. tolerance on the residual of the predictor :", pars[8])
+    print("10. tolerance on the residual of the corrector :", pars[9])
+    print("11. tolerance on zero series coefficients      :", pars[10])
+    print("12. maximum number of corrector steps          :", pars[11])
+    print("13. maximum steps on a path                    :", pars[12])
 
 def tune_homotopy_continuation_parameters():
     """

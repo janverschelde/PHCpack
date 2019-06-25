@@ -1,3 +1,6 @@
+Tue 25 Jun 2019 : extended the curves modules with functions to tune the
+  multiplication factor for the curvature step control.
+
 Fri 21 Jun 2019 : fixed copying of target solutions with zero coordinates
   for the solving of the random coefficient start system.
   Updates files for version 0.9.6 of phcpy.
