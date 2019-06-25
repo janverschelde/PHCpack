@@ -2,14 +2,12 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
 with Standard_Complex_Series_VecVecs;
-with DoblDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_VecVecs;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
@@ -22,10 +20,7 @@ with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Hessians;
 with Standard_CSeries_Poly_Systems;
 with Standard_CSeries_Poly_SysFun;
-with Standard_CSeries_Jaco_Matrices;
 with DoblDobl_CSeries_Poly_Systems;
-with DoblDobl_CSeries_Poly_SysFun;
-with DoblDobl_CSeries_Jaco_Matrices;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_SysFun;
 with QuadDobl_CSeries_Jaco_Matrices;
@@ -38,26 +33,6 @@ package Series_and_Trackers is
 --   in standard double, double double, or quad double precision.
 --   The versions may be silent or verbose.
 
-  procedure Set_Step
-              ( t,step : in out double_float;
-                maxstep,target : in double_float );
-
-  -- DESCRIPTION :
-  --   Sets the step size and the new value for t,
-  --   taking into account the maximal step size maxstep
-  --   and the value for the target for t.
-
-  procedure Update_Step_Sizes
-              ( minsize,maxsize : in out double_float;
-                step : in double_float );
-
-  -- DESCRIPTION :
-  --   Given in step is a size of a step,
-  --   the smallest and largest sizes in minsize and maxsize are updated.
-
-  function Residual_Prediction
-              ( sol : Standard_Complex_Vectors.Vector;
-                t : double_float ) return double_float;
   function Residual_Prediction
               ( sol : DoblDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float;
@@ -74,15 +49,6 @@ package Series_and_Trackers is
   --   the Standard_Homotopy, DoblDobl_Homotopy, or QuadDobl_Homotopy
   --   must have been properly initialized.
 
-  function Residual_Prediction
-              ( abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sol : Standard_Complex_Vectors.Vector;
-                t : double_float ) return double_float;
-  function Residual_Prediction
-              ( file : file_type;
-                abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sol : Standard_Complex_Vectors.Vector;
-                t : double_float ) return double_float;
   function Residual_Prediction
               ( abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 sol : DoblDobl_Complex_Vectors.Vector;
@@ -118,26 +84,6 @@ package Series_and_Trackers is
   --   t        current value of the continuation parameter.
 
   procedure Track_One_Path
-              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
-                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
-                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                sol : in out Standard_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                vrblvl : in integer32 := 0 );
-  procedure Track_One_Path
-              ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
-                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
-                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                sol : in out DoblDobl_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                vrblvl : in integer32 := 0 );
-  procedure Track_One_Path
               ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
@@ -170,30 +116,6 @@ package Series_and_Trackers is
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
 
-  procedure Track_One_Path
-              ( file : in file_type;
-                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
-                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
-                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                sol : in out Standard_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                verbose : in boolean := false;
-                vrblvl : in integer32 := 0 );
-  procedure Track_One_Path
-              ( file : in file_type;
-                abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
-                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
-                hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                sol : in out DoblDobl_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                verbose : in boolean := false;
-                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( file : in file_type;
                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -232,32 +154,6 @@ package Series_and_Trackers is
 
 -- VERSIONS WITH COEFFICIENT-PARAMETER HOMOTOPIES :
 
-  procedure Track_One_Path
-              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat; 
-                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
-                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
-                fcf : in Standard_Complex_Series_VecVecs.VecVec;
-                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
-                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
-                sol : in out Standard_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                vrblvl : in integer32 := 0 );
-  procedure Track_One_Path
-              ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
-                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
-                fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
-                fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
-                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
-                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
-                sol : in out DoblDobl_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -298,36 +194,6 @@ package Series_and_Trackers is
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
 
-  procedure Track_One_Path
-              ( file : in file_type;
-                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
-                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
-                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
-                fcf : in Standard_Complex_Series_VecVecs.VecVec;
-                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
-                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
-                sol : in out Standard_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                verbose : in boolean := false;
-                vrblvl : in integer32 := 0 );
-  procedure Track_One_Path
-              ( file : in file_type;
-                abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
-                hs : in DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
-                fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
-                fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
-                ejm : in DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
-                mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
-                sol : in out DoblDobl_Complex_Solutions.Solution;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
-                minsize,maxsize : out double_float;
-                verbose : in boolean := false;
-                vrblvl : in integer32 := 0 );
   procedure Track_One_Path
               ( file : in file_type;
                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
