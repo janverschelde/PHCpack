@@ -343,8 +343,9 @@ global optimization, and computational physics:
    *Journal of Physical Sciences and Innovation*, 4:44-53, 2012.
 
 #. Michael F. Adamer and Martin Helmer:
-   **Euclidean Distance Degree for Chemical Reaction Networks**.
-   arXiv:1707.07650v1 [q-bio.QM] 24 Jul 2017.
+   **Complexity of model testing for dynamical systems with toric
+   steady states**.
+   *Advances in Applied Mathematics* 110: 42-75, 2019.
 
 #. Min-Ho Ahn, Dong-Oh Nam and Chung-Nim Lee:
    **Self-Calibration with Varying Focal Lengths Using 
