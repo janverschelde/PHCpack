@@ -480,21 +480,24 @@ package Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calculates four different root counts: total degree, m-homogeneous
@@ -513,7 +516,8 @@ package Black_Box_Root_Counters is
   --             on screen, otherwise, the root counter remains silent;
   --   p         a polynomial system;
   --   deg       if true, then only degree bounds are used,
-  --             otherwise also the mixed volume is computed.
+  --             otherwise also the mixed volume is computed;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         may have been permuted for semi-mixed inputs;
@@ -532,7 +536,8 @@ package Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( nt : in integer32;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -540,7 +545,8 @@ package Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( nt : in integer32;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -548,7 +554,8 @@ package Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calculates four different root counts: total degree, m-homogeneous
@@ -565,7 +572,8 @@ package Black_Box_Root_Counters is
   --             if 0, then sequential execution;
   --   p         a polynomial system;
   --   deg       if true, then only degree bounds are used,
-  --             otherwise also the mixed volume is computed.
+  --             otherwise also the mixed volume is computed;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         may have been permuted for semi-mixed inputs;
@@ -586,21 +594,24 @@ package Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration );
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calculates four different root counts: total degree, m-homogeneous
@@ -618,7 +629,8 @@ package Black_Box_Root_Counters is
   --             if 0, then sequential execution;
   --   p         a polynomial system;
   --   deg       if true, then only degree bounds are used,
-  --             otherwise also the mixed volume is computed.
+  --             otherwise also the mixed volume is computed;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         may have been permuted for semi-mixed inputs;
@@ -770,21 +782,21 @@ package Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Wrapper to the pipelined polyhedral homotopies to solve
@@ -798,7 +810,8 @@ package Black_Box_Root_Counters is
   --   silent    if silent, then the mixed volume will not be written
   --             to screen, otherwise, if silent, then the user will
   --             be shown the mixed volume on screen;
-  --   p         a Laurent polynomial system.
+  --   p         a Laurent polynomial system;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         may have been permuted for semi-mixed inputs;
@@ -813,21 +826,21 @@ package Black_Box_Root_Counters is
                  rc : out natural32; rocos : out Link_to_String;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( nt : in integer32;
                  p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32; rocos : out Link_to_String;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( nt : in integer32;
                  p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32; rocos : out Link_to_String;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Wrapper to the pipelined polyhedral homotopies to solve
@@ -838,7 +851,8 @@ package Black_Box_Root_Counters is
   -- ON ENTRY :
   --   nt        number of tasks for polyhedral homotopy continuation,
   --             nt must be at least 2;
-  --   p         a Laurent polynomial system.
+  --   p         a Laurent polynomial system;
+  --   verbose   the verbose level.
 
   -- ON RETURN :
   --   p         may have been permuted for semi-mixed inputs;
@@ -855,21 +869,21 @@ package Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
   procedure Pipelined_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration );
+                 elaptime : out duration; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Wrapper to the pipelined polyhedral homotopies to solve

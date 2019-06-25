@@ -1559,7 +1559,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
     ended_moment : Ada.Calendar.Time;
@@ -1581,6 +1582,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 1,");
+      put_line("for polynomial systems in standard double precision ...");
+    end if;
     if nt < 2 or no_mv then
       Black_Box_Root_Counting
         (nt,silent,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
@@ -1617,7 +1622,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
     ended_moment : Ada.Calendar.Time;
@@ -1640,6 +1646,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 2,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     if nt < 2 or no_mv then
       Black_Box_Root_Counting
         (nt,silent,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
@@ -1676,7 +1686,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
     ended_moment : Ada.Calendar.Time;
@@ -1699,6 +1710,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 3,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     if nt < 2 or no_mv then
       Black_Box_Root_Counting
         (nt,silent,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
@@ -1736,7 +1751,8 @@ package body Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d : natural64;
     mptdeg : Natural_Number;
@@ -1756,6 +1772,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 4,");
+      put_line("for polynomial systems in standard double precision ...");
+    end if;
     if nt < 2 or no_mv then
       Black_Box_Root_Counting
         (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
@@ -1788,7 +1808,8 @@ package body Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d : natural64;
     mptdeg : Natural_Number;
@@ -1809,6 +1830,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 5,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     if nt < 2 or no_mv then
       Black_Box_Root_Counting
         (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
@@ -1841,7 +1866,8 @@ package body Black_Box_Root_Counters is
                  rocos : out Link_to_String;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     d : natural64;
     mptdeg : Natural_Number;
@@ -1862,6 +1888,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 6,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     if nt < 2 or no_mv then
       Black_Box_Root_Counting
         (nt,p,deg,rc,rocos,q,qsols,qsols0,rocotime,hocotime);
@@ -1894,7 +1924,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
     ended_moment : Ada.Calendar.Time;
@@ -1915,6 +1946,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 7,");
+      put_line("for polynomial systems in standard double precision ...");
+    end if;
     if nt < 2 or deg then
       Black_Box_Root_Counting
         (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
@@ -1963,7 +1998,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
     ended_moment : Ada.Calendar.Time;
@@ -1985,6 +2021,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 8,");
+      put_line("for polynomial systems in double double precision ...");
+    end if;
     if nt < 2 or deg then
       Black_Box_Root_Counting
         (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
@@ -2033,7 +2073,8 @@ package body Black_Box_Root_Counters is
                  deg : in boolean; rc : out natural32;
                  q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
-                 rocotime,hocotime : out duration ) is
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 ) is
 
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
     ended_moment : Ada.Calendar.Time;
@@ -2055,6 +2096,10 @@ package body Black_Box_Root_Counters is
     use Pipelined_Polyhedral_Drivers;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 9,");
+      put_line("for polynomial systems in quad double precision ...");
+    end if;
     if nt < 2 or deg then
       Black_Box_Root_Counting
         (file,nt,p,deg,rc,q,qsols,qsols0,rocotime,hocotime);
@@ -2477,7 +2522,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2487,6 +2532,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 10,");
+      put_line("for Laurent systems in standard double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
@@ -2509,7 +2558,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2519,6 +2568,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 11,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
@@ -2541,7 +2594,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2551,6 +2604,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 12,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
@@ -2573,7 +2630,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32; rocos : out Link_to_String;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2581,6 +2638,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 13,");
+      put_line("for Laurent systems in standard double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
@@ -2595,7 +2656,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32; rocos : out Link_to_String;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2603,6 +2664,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 14,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
@@ -2617,7 +2682,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32; rocos : out Link_to_String;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2625,6 +2690,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 15,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
@@ -2639,7 +2708,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2649,6 +2718,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 16,");
+      put_line("for Laurent systems in standard double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
@@ -2678,7 +2751,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2688,6 +2761,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 17,");
+      put_line("for Laurent systems in double double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
@@ -2717,7 +2794,7 @@ package body Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out QuadDobl_Complex_Solutions.Solution_List;
-                 elaptime : out duration ) is
+                 elaptime : out duration; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use Pipelined_Polyhedral_Drivers;
@@ -2727,6 +2804,10 @@ package body Black_Box_Root_Counters is
     timer : Timing_Widget;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_root_counters.Pipelined_Count_Rooting 18,");
+      put_line("for Laurent systems in quad double precision ...");
+    end if;
     tstart(timer);
     Pipelined_Polyhedral_Homotopies(nt,p,rc,q,qsols);
     tstop(timer);
