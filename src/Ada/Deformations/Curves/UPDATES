@@ -5,6 +5,8 @@ Mon 24 Jun 2019 : refactored series_and_trackers into the new package
   which changed series_path_trackers.adb.
   Removed residual prediction from series_and_trackers in double double
   precision, updated dobldobl_seriespade_tracker.adb.
+  New package quaddobl_pade_trackers, with code from series_and_trackers,
+  which changed series_path_trackers.adb and quaddobl_seriespade_tracker.adb.
 
 Sun 23 Jun 2019 : updated mainseries.adb to pass the verbose level.
   Applied the verbose level in the procedures of series_and_trackers.adb.
