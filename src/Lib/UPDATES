@@ -1,3 +1,6 @@
+Tue 25 Jun 2019 : modified padcon, phcpy2c.h, phcpy2c2.c, phcpy2c3.c for
+  the tuning of the multiplication factor for the curvature step control.
+
 Tue 18 Jun 2019 : extended celcon, phcpy2c.h, phcpy2c2.c, phcpy2c3.c with
   function to solve start system corresponding to stable cells.
 

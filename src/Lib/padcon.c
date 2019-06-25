@@ -45,26 +45,29 @@ void padcon_write_homotopy_continuation_parameters ( void )
    printf(" 5. minimum step size                          : ");
    fail = padcon_get_homotopy_continuation_parameter(5,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf(" 6. multiplication factor of the series step   : ");
+   printf(" 6. multiplication factor for the series step  : ");
    fail = padcon_get_homotopy_continuation_parameter(6,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf(" 7. multiplication factor of the pole radius   : ");
+   printf(" 7. multiplication factor for the pole radius  : ");
    fail = padcon_get_homotopy_continuation_parameter(7,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf(" 8. tolerance on the residual of the predictor : ");
+   printf(" 8. multiplication factor for the curvature    : ");
    fail = padcon_get_homotopy_continuation_parameter(8,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf(" 9. tolerance on the residual of the corrector : ");
+   printf(" 9. tolerance on the residual of the predictor : ");
    fail = padcon_get_homotopy_continuation_parameter(9,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf("10. tolerance on zero series coefficients      : ");
+   printf("10. tolerance on the residual of the corrector : ");
    fail = padcon_get_homotopy_continuation_parameter(10,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf("11. maximum number of corrector steps          : ");
+   printf("11. tolerance on zero series coefficients      : ");
    fail = padcon_get_homotopy_continuation_parameter(11,&fltval[0]);
-   printf("%d\n", (int) fltval[0]);
-   printf("12. maximum steps on a path                    : ");
+   printf("%.2E\n", fltval[0]);
+   printf("12. maximum number of corrector steps          : ");
    fail = padcon_get_homotopy_continuation_parameter(12,&fltval[0]);
+   printf("%d\n", (int) fltval[0]);
+   printf("13. maximum steps on a path                    : ");
+   fail = padcon_get_homotopy_continuation_parameter(13,&fltval[0]);
    printf("%d\n", (int) fltval[0]);
 }
 
@@ -129,30 +132,35 @@ void padcon_tune_homotopy_continuation_parameters ( void )
       }
       else if(choice == 8)
       {
-         printf("-> give a new tolerance on the predictor residual : ");
+         printf("-> give a new multiplication factor for the curvature : ");
          scanf("%lf", &fltpar);
       }
       else if(choice == 9)
       {
-         printf("-> give a new tolerance on the corrector residual : ");
+         printf("-> give a new tolerance on the predictor residual : ");
          scanf("%lf", &fltpar);
       }
       else if(choice == 10)
       {
-         printf("-> give a new tolerance on a zero series coefficient : ");
+         printf("-> give a new tolerance on the corrector residual : ");
          scanf("%lf", &fltpar);
       }
       else if(choice == 11)
       {
+         printf("-> give a new tolerance on a zero series coefficient : ");
+         scanf("%lf", &fltpar);
+      }
+      else if(choice == 12)
+      {
          printf("-> give a new maximum number of corrector steps : ");
          scanf("%d", &intpar); fltpar = (double) intpar;
       }
-      else if(choice == 12)
+      else if(choice == 13)
       {
          printf("-> give a new maximum number of steps on a path : ");
          scanf("%d", &intpar); fltpar = (double) intpar;
       }
-      if((choice > 1) && (choice < 13))
+      if((choice > 1) && (choice < 14))
       {
          // printf("setting parameter %d to %.3e ...\n", choice, fltpar);
          fail = padcon_set_homotopy_continuation_parameter(choice,&fltpar);
@@ -165,7 +173,7 @@ int padcon_get_homotopy_continuation_parameter ( int k, double *val )
 {
    int fail,parval;
 
-   if((k == 2) || (k == 3) || (k == 11) || (k == 12))
+   if((k == 2) || (k == 3) || (k == 12) || (k == 13))
    {
       fail = _ada_use_c2phc4c(737,&k,&parval,val);
 
@@ -181,7 +189,7 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
 {
    int fail,parval;
 
-   if((k == 2) || (k == 3) || (k == 11) || (k == 12))
+   if((k == 2) || (k == 3) || (k == 12) || (k == 13))
    {
       parval = (int) (*val); // pass integer value
 

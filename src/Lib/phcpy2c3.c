@@ -8007,7 +8007,7 @@ static PyObject *py2c_padcon_get_homotopy_continuation_parameter
 
    if(idx == 1)
       return Py_BuildValue("(d,d)", val[0], val[1]);
-   if((idx == 2) || (idx == 3) || (idx == 11) || (idx == 12))
+   if((idx == 2) || (idx == 3) || (idx == 12) || (idx == 13))
    {
        int parval = (int) val[0];
        return Py_BuildValue("i",parval);
@@ -10860,13 +10860,13 @@ static PyMethodDef phcpy2c3_methods[] =
     "Deallocates the allocated space for the parameters."},
    {"py2c_padcon_get_homotopy_continuation_parameter",
      py2c_padcon_get_homotopy_continuation_parameter, METH_VARARGS,
-    "Returns the value of the k-th continuation parameter,\n if k ranges between 1 and 12.  The integer k is given on entry."},
+    "Returns the value of the k-th continuation parameter,\n if k ranges between 1 and 13.  The integer k is given on entry."},
    {"py2c_padcon_set_homotopy_continuation_gamma",
      py2c_padcon_set_homotopy_continuation_gamma, METH_VARARGS,
     "The gamma constant is the first homotopy continuation parameter.\n The gamma is a complex number and it should be given as two\n doubles, as its real and imaginary part respectively."},
    {"py2c_padcon_set_homotopy_continuation_parameter",
      py2c_padcon_set_homotopy_continuation_parameter, METH_VARARGS,
-    "Sets the value of the k-th continuation parameter to the given value.\n The first parameter k is an integer number between 2 and 12.\n The second parameter is the value of the k-th parameter,\n parsed as a floating point number."},
+    "Sets the value of the k-th continuation parameter to the given value.\n The first parameter k is an integer number between 2 and 13.\n The second parameter is the value of the k-th parameter,\n parsed as a floating point number."},
    {"py2c_padcon_standard_track",
      py2c_padcon_standard_track, METH_VARARGS,
     "For the defined target, start system, and start solutions,\n launches the Pade continuation in standard double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file,\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen."},

@@ -5670,7 +5670,7 @@ static PyObject *py2c_padcon_get_homotopy_continuation_parameter
 /*
  * DESCRIPTION :
  *   Returns the value of the k-th continuation parameter,
- *   if k ranges between 1 and 12.  The integer k is given on entry. */
+ *   if k ranges between 1 and 13.  The integer k is given on entry. */
 
 static PyObject *py2c_padcon_set_homotopy_continuation_gamma
  ( PyObject *self, PyObject *args );
@@ -5685,7 +5685,7 @@ static PyObject *py2c_padcon_set_homotopy_continuation_parameter
 /*
  * DESCRIPTION :
  *   Sets the value of the k-th continuation parameter to the given value.
- *   The first parameter k is an integer number between 2 and 12.
+ *   The first parameter k is an integer number between 2 and 13.
  *   The second parameter is the value of the k-th parameter,
  *   parsed as a floating point number. */
 
