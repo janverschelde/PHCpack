@@ -1,3 +1,6 @@
+Tue 25 Jun 2019 : extended use_padcon with the tuning of the cbeta parameter,
+  the multiplication factor for the curvature step size control.
+
 Fri 21 Jun 2019 : added explicit range checks in cells_container.adb to
   the procedure to copy a target solution, in use_celcon.adb added the
   explicit check whether a target solution is null before appending.
