@@ -1,3 +1,7 @@
+Wed 26 Jun 2019 : added the verbose level to the solve_for_special_cases
+  procedures in black_box_solver_cases.  Applied the verbose parameter 
+  inside the procedures of black_box_solvers.adb.
+
 Tue 25 Jun 2019 : added the verbose level to the pipelined root counters
   in black_box_root_counters.
 

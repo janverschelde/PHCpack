@@ -1252,7 +1252,7 @@ package body Black_Box_Solver_Cases is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 rc : out natural32;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
  
@@ -1261,6 +1261,9 @@ package body Black_Box_Solver_Cases is
     n : natural32;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Solve_for_Special_Cases 1 ...");
+    end if;
     if p'first = p'last then
       n := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
       if n > 0 then
@@ -1295,7 +1298,7 @@ package body Black_Box_Solver_Cases is
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 rc : out natural32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
  
@@ -1304,6 +1307,9 @@ package body Black_Box_Solver_Cases is
     n : natural32;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Solve_for_Special_Cases 2 ...");
+    end if;
     if p'first = p'last then
       n := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
       if n > 0 then
@@ -1338,7 +1344,7 @@ package body Black_Box_Solver_Cases is
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 rc : out natural32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
  
@@ -1347,6 +1353,9 @@ package body Black_Box_Solver_Cases is
     n : natural32;
 
   begin
+    if verbose > 0 then
+      put_line("-> in black_box_solver_cases.Solve_for_Special_Cases 3 ...");
+    end if;
     if p'first = p'last then
       n := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
       if n > 0 then

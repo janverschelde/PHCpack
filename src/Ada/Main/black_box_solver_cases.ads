@@ -212,17 +212,17 @@ package Black_Box_Solver_Cases is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 rc : out natural32;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Solve_for_Special_Cases
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 rc : out natural32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Solve_for_Special_Cases
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 rc : out natural32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Checks whether the system p is one of the three special cases:
@@ -233,7 +233,8 @@ package Black_Box_Solver_Cases is
   --   and fail will be false.  Otherwise, fail is true.
 
   -- ON INPUT :
-  --   p            a polynomial system.
+  --   p            a polynomial system;
+  --   verbose      the verbose level.
 
   -- ON RETURN :
   --   rc           equals the number of solutions in sols or 0 if fail;
