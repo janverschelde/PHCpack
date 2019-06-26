@@ -165,7 +165,7 @@ package body Series_Path_Trackers is
     timer : Timing_Widget;
     prevgamma : Standard_Complex_Numbers.Complex_Number;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
-    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntfail : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
@@ -212,20 +212,20 @@ package body Series_Path_Trackers is
       if tofile then
         Standard_Pade_Trackers.Track_One_Path
           (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
+           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
         end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
       else
         Standard_Pade_Trackers.Track_One_Path
           (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
+           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
         end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
@@ -355,7 +355,7 @@ package body Series_Path_Trackers is
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+            (file,nbrsteps,nbrcorrs,0,cntfail,minsize,maxsize);
         end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
@@ -365,7 +365,7 @@ package body Series_Path_Trackers is
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+            (standard_output,nbrsteps,nbrcorrs,0,cntfail,minsize,maxsize);
         end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) ");
@@ -496,7 +496,7 @@ package body Series_Path_Trackers is
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+            (file,nbrsteps,nbrcorrs,0,cntfail,minsize,maxsize);
         end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
@@ -506,7 +506,7 @@ package body Series_Path_Trackers is
            nbrsteps,nbrcorrs,cntfail,minsize,maxsize,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+            (standard_output,nbrsteps,nbrcorrs,0,cntfail,minsize,maxsize);
         end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);

@@ -61,7 +61,7 @@ package body Series_and_Trackers is
     ls : Link_to_Solution;
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
-    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntfail : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
 
   begin
@@ -80,9 +80,10 @@ package body Series_and_Trackers is
       end if;
       Standard_Pade_Trackers.Track_One_Path
         (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,
-         nbrcorrs,cntfail,minsize,maxsize,verbose,vrblvl-1);
+         nbrcorrs,cntcut,cntfail,minsize,maxsize,verbose,vrblvl-1);
       if verbose then
-        Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        Write_Path_Statistics
+          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       Standard_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -142,7 +143,8 @@ package body Series_and_Trackers is
         (file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
          minsize,maxsize,verbose,vrblvl-1);
       if verbose then
-        Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        Write_Path_Statistics
+          (file,nbrsteps,nbrcorrs,0,cntfail,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       DoblDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -198,7 +200,8 @@ package body Series_and_Trackers is
         (file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
          minsize,maxsize,verbose,vrblvl-1);
       if verbose then
-        Write_Path_Statistics(file,nbrsteps,nbrcorrs,cntfail,minsize,maxsize);
+        Write_Path_Statistics
+          (file,nbrsteps,nbrcorrs,0,cntfail,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       QuadDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -230,7 +233,7 @@ package body Series_and_Trackers is
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
-    nbrsteps,nbrcorrs,cntfail : natural32;
+    nbrsteps,nbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize : double_float;
 
   begin
@@ -240,8 +243,8 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       Standard_Pade_Trackers.Track_One_Path
-        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize,
-         vrblvl-1);
+        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
+         minsize,maxsize,vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
     Standard_Complex_Poly_SysFun.Clear(abh);
@@ -313,13 +316,15 @@ package body Series_and_Trackers is
 
   procedure Write_Path_Statistics
               ( file : in file_type;
-                nbrsteps,nbrcorrs,cntfail : in natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : in natural32;
                 minsize,maxsize : in double_float ) is
   begin
     put(file,"The total number of steps on the path     : ");
     put(file,nbrsteps,1); new_line(file);
     put(file,"Total number of correct steps on the path : ");
     put(file,nbrcorrs,1); new_line(file);
+    put(file,"Number of predictor residuals cut step size : ");
+    put(file,cntcut,1); new_line(file);
     put(file,"Number of corrector failures on the path  : ");
     put(file,cntfail,1); new_line(file);
     put(file,"The smallest step size on the path        :");

@@ -7,7 +7,6 @@ with Standard_Complex_Vector_Norms;
 with Standard_Homotopy;
 with Standard_Complex_Series_Vectors;
 with Standard_CSeries_Vector_Functions;
-with Standard_Pade_Approximants;
 with Homotopy_Pade_Approximants;
 with Homotopy_Mixed_Residuals;
 with Homotopy_Newton_Steps;
@@ -98,6 +97,131 @@ package body Standard_Pade_Trackers is
     return res;
   end Residual_Prediction;
 
+  procedure Predictor_Feedback
+              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in Standard_Pade_Approximants.Pade_Vector;
+                sol : out Standard_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep : in double_float;
+                cntcut : in out natural32 ) is
+  begin
+    loop
+      sol := Series_and_Predictors.Predicted_Solution(pv,step);
+      predres := Residual_Prediction(abh,sol,t);
+      exit when (predres <= tolpres);
+      t := t - step; step := step/2.0; t := t + step;
+      cntcut := cntcut + 1;
+      exit when (step <= minstep);
+    end loop;
+  end Predictor_Feedback;
+
+  procedure Predictor_Feedback
+              ( file : in file_type;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in Standard_Pade_Approximants.Pade_Vector;
+                sol : out Standard_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep : in double_float;
+                cntcut : in out natural32 ) is
+  begin
+    loop
+      sol := Series_and_Predictors.Predicted_Solution(pv,step);
+      predres := Residual_Prediction(abh,sol,t);
+      put(file,"  predictor residual : ");
+      put(file,predres,3); new_line(file);
+      exit when (predres <= tolpres);
+      t := t - step; step := step/2.0; t := t + step;
+      cntcut := cntcut + 1;
+      put(file,"Cut step size : "); put(file,step,3);
+      put(file," t = "); put(file,t,3);
+      exit when (step <= minstep);
+    end loop;
+  end Predictor_Feedback;
+
+  procedure Predictor_Feedback
+              ( file : in file_type; verbose : in boolean;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in Standard_Pade_Approximants.Pade_Vector;
+                sol : out Standard_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep : in double_float;
+                cntcut : in out natural32 ) is
+  begin
+    if verbose then
+      Predictor_Feedback
+        (file,abh,pv,sol,predres,t,step,tolpres,minstep,cntcut);
+    else
+      Predictor_Feedback(abh,pv,sol,predres,t,step,tolpres,minstep,cntcut);
+    end if;
+  end Predictor_Feedback;
+
+  procedure Predictor_Corrector
+              ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in Standard_Pade_Approximants.Pade_Vector;
+                sol : out Standard_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep,tolcres : in double_float;
+                maxit,extra : in natural32; nbrcorrs : in out natural32;
+                err,rco,res : out double_float;
+                cntcut,cntfail : in out natural32; fail : out boolean ) is
+
+    nbrit : natural32 := 0;
+
+  begin
+    fail := true;
+    loop
+      Predictor_Feedback(abh,pv,sol,predres,t,step,tolpres,tolpres,cntcut);
+     -- exit when ((step < pars.minsize) and (predres > alpha));
+      Homotopy_Newton_Steps.Correct
+        (abh,t,tolcres,maxit,nbrit,sol,err,rco,res,fail,extra);
+      nbrcorrs := nbrcorrs + nbrit;
+      exit when (not fail);
+      t := t - step; step := step/2.0; t := t + step;
+      cntfail := cntfail + 1;
+      exit when (step < minstep);
+    end loop;
+  end Predictor_Corrector;
+
+  procedure Predictor_Corrector
+              ( file : in file_type; verbose : in boolean;
+                abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in Standard_Pade_Approximants.Pade_Vector;
+                sol : out Standard_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep,tolcres : in double_float;
+                maxit,extra : in natural32; nbrcorrs : in out natural32;
+                err,rco,res : out double_float;
+                cntcut,cntfail : in out natural32; fail : out boolean ) is
+
+    nbrit : natural32 := 0;
+
+  begin
+    fail := true;
+    loop
+      Predictor_Feedback
+        (file,verbose,abh,pv,sol,predres,t,step,tolpres,tolpres,cntcut);
+     -- exit when ((step < pars.minsize) and (predres > alpha));
+      Homotopy_Newton_Steps.Correct
+        (file,abh,t,tolcres,maxit,nbrit,sol,err,rco,res,fail,extra,verbose);
+      nbrcorrs := nbrcorrs + nbrit;
+      if verbose then
+        if fail
+         then put_line(file,"The correct stage failed.");
+         else put_line(file,"The correct stage succeeded.");
+        end if;
+      end if;
+      exit when (not fail);
+      t := t - step; step := step/2.0; t := t + step;
+      cntfail := cntfail + 1;
+      exit when (step < minstep);
+    end loop;
+  end Predictor_Corrector;
+
   procedure Track_One_Path
               ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -105,7 +229,7 @@ package body Standard_Pade_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 vrblvl : in integer32 := 0 ) is
 
@@ -125,8 +249,8 @@ package body Standard_Pade_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := pars.cbeta;
-    maxit : constant natural32 := 50;
-    extra : constant natural32 := maxit/10;
+    maxit : constant natural32 := pars.corsteps;
+    extra : constant natural32 := 2;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -142,7 +266,7 @@ package body Standard_Pade_Trackers is
     end if;
     minsize := 1.0; maxsize := 0.0;
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntfail := 0;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
@@ -157,26 +281,10 @@ package body Standard_Pade_Trackers is
       dstep := pars.maxsize; -- ignore Hessian step size
       step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
-      loop
-        loop
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-         -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-         -- exit when (step < pars.minsize);
-          exit when (step <= alpha);
-        end loop;
-        Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra);
-         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra);
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
+      Predictor_Corrector
+        (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
+         maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
+      Update_Step_Sizes(minsize,maxsize,step);
       Standard_Complex_Series_Vectors.Clear(srv);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
@@ -207,7 +315,7 @@ package body Standard_Pade_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
@@ -228,8 +336,8 @@ package body Standard_Pade_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := pars.cbeta;
-    maxit : constant natural32 := 50;
-    extra : constant natural32 := maxit/10;
+    maxit : constant natural32 := pars.corsteps;
+    extra : constant natural32 := 2;
     fail : boolean;
     t,step,dstep,pstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -245,7 +353,7 @@ package body Standard_Pade_Trackers is
     end if;
     minsize := 1.0; maxsize := 0.0;
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntfail := 0;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
@@ -284,35 +392,10 @@ package body Standard_Pade_Trackers is
         put(file,"Step size : "); put(file,step,3);
         put(file," t = "); put(file,t,3);
       end if;
-      loop
-        loop
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-         -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          if verbose
-           then put(file,"  residual : "); put(file,predres,3); new_line(file);
-          end if;
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-          if verbose then
-            put(file,"Step size : "); put(file,step,3);
-            put(file," t = "); put(file,t,3);
-          end if;
-         -- exit when (step < pars.minsize);
-          exit when (step <= alpha);
-        end loop;
-        Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,
-           extra,verbose);
-         -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,
-         --  extra,verbose);
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
+      Predictor_Corrector
+        (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
+         maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
+      Update_Step_Sizes(minsize,maxsize,step);
       Standard_Complex_Series_Vectors.Clear(srv);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
@@ -347,7 +430,7 @@ package body Standard_Pade_Trackers is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 vrblvl : in integer32 := 0 ) is
 
@@ -366,8 +449,8 @@ package body Standard_Pade_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := pars.cbeta;
-    maxit : constant natural32 := 50;
-    extra : constant natural32 := maxit/10;
+    maxit : constant natural32 := pars.corsteps;
+    extra : constant natural32 := 2;
     fail : boolean;
     t,step,dstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -383,7 +466,7 @@ package body Standard_Pade_Trackers is
      then put_line("-> in standard_pade_trackers.Track_One_Path 3 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntfail := 0;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
@@ -400,26 +483,10 @@ package body Standard_Pade_Trackers is
       dstep := pars.maxsize; -- ignore Hessian step
       step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
       Set_Step(t,step,pars.maxsize,onetarget);
-      loop
-        loop
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-         -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-         -- exit when (step < pars.minsize);
-          exit when (step <= alpha);
-        end loop;
-        Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra);
-         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra);
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
+      Predictor_Corrector
+        (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
+         maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
+      Update_Step_Sizes(minsize,maxsize,step);
       Standard_Complex_Series_Vectors.Clear(srv);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
@@ -451,7 +518,7 @@ package body Standard_Pade_Trackers is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
@@ -471,8 +538,8 @@ package body Standard_Pade_Trackers is
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
     dbeta : constant double_float := pars.cbeta;
-    maxit : constant natural32 := 50;
-    extra : constant natural32 := maxit/10;
+    maxit : constant natural32 := pars.corsteps;
+    extra : constant natural32 := 2;
     fail : boolean;
     t,step,dstep,pstep : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
@@ -488,7 +555,7 @@ package body Standard_Pade_Trackers is
      then put_line("-> in standard_pade_trackers.Track_One_Path 4 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntfail := 0;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
@@ -526,45 +593,10 @@ package body Standard_Pade_Trackers is
         put(file,"Step size : "); put(file,step,3);
         put(file," t = "); put(file,t,3);
       end if;
-      loop
-        loop
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,step);
-         -- predres := Residual_Prediction(wrk_sol,t);
-          if not verbose then
-           -- predres := Residual_Prediction(wrk_sol,t);
-            predres := Residual_Prediction(abh,wrk_sol,t);
-          else
-           -- predres := Residual_Prediction(wrk_sol,t);
-            predres := Residual_Prediction(file,abh,wrk_sol,t);
-            put(file,"  residual : "); put(file,predres,3); new_line(file);
-          end if;
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-          if verbose then
-            put(file,"Step size : "); put(file,step,3);
-            put(file," t = "); put(file,t,3);
-          end if;
-          exit when (step < pars.minsize);
-         -- exit when (step <= alpha);
-        end loop;
-        Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,
-           extra,verbose);
-         -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,
-         --  extra,verbose);
-        if verbose then
-          if fail
-           then put_line(file,"The correct stage failed."); fail := false;
-           else put_line(file,"The correct stage succeeded.");
-          end if;
-        end if;
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
+      Predictor_Corrector
+        (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
+         maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
+      Update_Step_Sizes(minsize,maxsize,step);
       Standard_Complex_Series_Vectors.Clear(srv);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;

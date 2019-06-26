@@ -130,7 +130,7 @@ package Series_and_Trackers is
 
   procedure Write_Path_Statistics
               ( file : in file_type;
-                nbrsteps,nbrcorrs,cntfail : in natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : in natural32;
                 minsize,maxsize : in double_float );
 
   -- DESCRIPTION :
@@ -139,6 +139,7 @@ package Series_and_Trackers is
   -- ON ENTRY :
   --   nbrsteps is the total number of steps on the path;
   --   nbrcorrs is the total number of corrector iterations on the path;
+  --   cntcut   is the number of steps cut by predictor residual;
   --   cntfail  is the number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
