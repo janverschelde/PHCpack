@@ -2,7 +2,6 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
-with Standard_Complex_VecVecs;
 with Standard_Complex_Vector_Norms;
 with Standard_Homotopy;
 with Standard_Complex_Series_Vectors;
@@ -222,6 +221,189 @@ package body Standard_Pade_Trackers is
     end loop;
   end Predictor_Corrector;
 
+  procedure Step_Control
+              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec;
+                t,step : in out double_float ) is
+
+    srv : Standard_Complex_Series_Vectors.Vector(sol'range);
+    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
+    frp : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
+    sstep,dstep : double_float;
+    onetarget : constant double_float := 1.0;
+    alpha : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+
+  begin
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
+    sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    sstep := pars.sbeta*sstep;
+    Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    dstep := Series_and_Predictors.Step_Distance
+               (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
+    step := Minimum(sstep,dstep);
+    step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+    Set_Step(t,step,pars.maxsize,onetarget);
+    Standard_Complex_Series_Vectors.Clear(eva);
+    Standard_Complex_Series_Vectors.Clear(srv);
+  end Step_Control;
+
+  procedure Step_Control
+              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in Standard_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec;
+                t,step : in out double_float ) is
+
+    srv : Standard_Complex_Series_Vectors.Vector(sol'range);
+    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
+    frp : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
+    sstep,dstep : double_float;
+    onetarget : constant double_float := 1.0;
+    alpha : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+
+  begin
+    Series_and_Predictors.Newton_Prediction
+      (maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva);
+    sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    sstep := pars.sbeta*sstep;
+    Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    dstep := Series_and_Predictors.Step_Distance
+               (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
+    step := Minimum(sstep,dstep);
+    step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+    Set_Step(t,step,pars.maxsize,onetarget);
+    Standard_Complex_Series_Vectors.Clear(eva);
+    Standard_Complex_Series_Vectors.Clear(srv);
+  end Step_Control;
+
+  procedure Step_Control
+              ( file : in file_type; verbose : in boolean;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec;
+                t,step : in out double_float ) is
+
+    srv : Standard_Complex_Series_Vectors.Vector(sol'range);
+    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
+    frp : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
+    sstep,dstep : double_float;
+    onetarget : constant double_float := 1.0;
+    alpha : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+
+  begin
+    Series_and_Predictors.Newton_Prediction
+      (file,maxdeg,nit,hom,sol,srv,eva,false); -- verbose);
+    sstep := Series_and_Predictors.Set_Step_Size
+               (file,eva,tolcff,alpha,verbose);
+    sstep := pars.sbeta*sstep;
+    if verbose
+     then put(file,"series step : "); put(file,sstep,2); new_line(file);
+    end if;
+    Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    if verbose then
+      put(file,"Smallest pole radius :");
+      put(file,frp,3); new_line(file);
+      put(file,"Closest pole :"); put(file,cfp); new_line(file);
+    end if;
+    dstep := Series_and_Predictors.Step_Distance
+               (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
+    step := Minimum(sstep,dstep);
+    step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+    if verbose then
+      put(file,"Hessian step : "); put(file,dstep,2);
+      put(file,"  step : "); put(file,step,2);
+      new_line(file);
+    end if;
+    Set_Step(t,step,pars.maxsize,onetarget);
+    if verbose then
+      put(file,"Step size : "); put(file,step,3);
+      put(file," t = "); put(file,t,3);
+    end if;
+    Standard_Complex_Series_Vectors.Clear(eva);
+    Standard_Complex_Series_Vectors.Clear(srv);
+  end Step_Control;
+
+  procedure Step_Control
+              ( file : in file_type; verbose : in boolean;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in Standard_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec;
+                t,step : in out double_float ) is
+
+    srv : Standard_Complex_Series_Vectors.Vector(sol'range);
+    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
+    frp : double_float;
+    cfp : Standard_Complex_Numbers.Complex_Number;
+    sstep,dstep : double_float;
+    onetarget : constant double_float := 1.0;
+    alpha : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+
+  begin
+    Series_and_Predictors.Newton_Prediction
+      (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false); -- verbose);
+    sstep := Series_and_Predictors.Set_Step_Size
+               (file,eva,tolcff,alpha,verbose);
+    sstep := pars.sbeta*sstep;
+    if verbose
+     then put(file,"series step : "); put(file,sstep,2); new_line(file);
+    end if;
+    Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    if verbose then
+      put(file,"Smallest pole radius :");
+      put(file,frp,3); new_line(file);
+      put(file,"Closest pole :"); put(file,cfp); new_line(file);
+    end if;
+    dstep := Series_and_Predictors.Step_Distance
+               (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
+    step := Minimum(sstep,dstep);
+    step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
+    if verbose then
+      put(file,"Hessian step : "); put(file,dstep,2);
+      put(file,"  step : "); put(file,step,2);
+      new_line(file);
+    end if;
+    Set_Step(t,step,pars.maxsize,onetarget);
+    if verbose then
+      put(file,"Step size : "); put(file,step,3);
+      put(file," t = "); put(file,t,3);
+    end if;
+    Standard_Complex_Series_Vectors.Clear(eva);
+    Standard_Complex_Series_Vectors.Clear(srv);
+  end Step_Control;
+
   procedure Track_One_Path
               ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -234,30 +416,23 @@ package body Standard_Pade_Trackers is
                 vrblvl : in integer32 := 0 ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
-   -- nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
-    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+    pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
-   -- tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := pars.cbeta;
     maxit : constant natural32 := pars.corsteps;
-    extra : constant natural32 := 2;
+    extra : constant natural32 := 1;
     fail : boolean;
-    t,step,dstep : double_float := 0.0;
+    t,step : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
-    err,rco,res,frp,predres : double_float;
-    cfp : Standard_Complex_Numbers.Complex_Number;
+    err,rco,res,predres : double_float;
     nbrit : natural32 := 0;
 
   begin
@@ -269,23 +444,11 @@ package body Standard_Pade_Trackers is
     nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-     -- step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
-     -- step := pars.sbeta*step;
-      Standard_Complex_Series_Vectors.Clear(eva);
-     -- dstep := Series_and_Predictors.Step_Distance
-     --            (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
-     -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-     -- step := Minimum(step,dstep); -- ignore series step
-      dstep := pars.maxsize; -- ignore Hessian step size
-      step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
-      Set_Step(t,step,pars.maxsize,onetarget);
+      Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Update_Step_Sizes(minsize,maxsize,step);
-      Standard_Complex_Series_Vectors.Clear(srv);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -299,7 +462,6 @@ package body Standard_Pade_Trackers is
     wrk := Series_and_Homotopies.Shift(hom,-1.0);
     Homotopy_Newton_Steps.Correct
       (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,extra);
-     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,extra);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -326,25 +488,19 @@ package body Standard_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
-    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Complex_Series_Vectors.Vector(hom'range);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+    pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
-    tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := pars.cbeta;
     maxit : constant natural32 := pars.corsteps;
-    extra : constant natural32 := 2;
+    extra : constant natural32 := 1;
     fail : boolean;
-    t,step,dstep,pstep : double_float := 0.0;
+    t,step : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
-    err,rco,res,frp,predres : double_float;
-    cfp : Standard_Complex_Numbers.Complex_Number;
+    err,rco,res,predres : double_float;
     nbrit : natural32 := 0;
 
   begin
@@ -357,46 +513,14 @@ package body Standard_Pade_Trackers is
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
-        put(file,"Step "); put(file,k,1); put(file," : ");
+        put(file,"Step "); put(file,k,1); put_line(file," : ");
       end if;
-      Series_and_Predictors.Newton_Prediction
-        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-      if verbose then
-        put(file,"Smallest pole radius :");
-        put(file,frp,3); new_line(file);
-        put(file,"Closest pole :"); put(file,cfp); new_line(file);
-      end if;
-      step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,alpha,verbose);
-      step := pars.sbeta*step;
-     -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-     -- ignore series step
-      if verbose then
-        put(file,"series step : "); put(step,2); 
-      end if;
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
-      if verbose then
-        put(file,"  Hessian step : "); put(file,dstep,2);
-        pstep := frp*pars.pbeta;
-        put(file,"  pole step : "); put(file,pstep,2);
-        new_line(file);
-      end if;
-      dstep := pars.maxsize; -- ignore Hessian step
-      step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
-     -- step := Minimum(step,dstep);
-      Standard_Complex_Series_Vectors.Clear(eva);
-      Set_Step(t,step,pars.maxsize,onetarget);
-      if verbose then
-        put(file,"Step size : "); put(file,step,3);
-        put(file," t = "); put(file,t,3);
-      end if;
+      Step_Control
+        (file,verbose,jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Update_Step_Sizes(minsize,maxsize,step);
-      Standard_Complex_Series_Vectors.Clear(srv);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -410,8 +534,6 @@ package body Standard_Pade_Trackers is
     Homotopy_Newton_Steps.Correct
       (file,abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,
        extra,verbose);
-     -- (file,nbq,1.0,tolres,pars.corsteps,nbrit,
-     --  wrk_sol,err,rco,res,fail,extra,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -434,30 +556,23 @@ package body Standard_Pade_Trackers is
                 minsize,maxsize : out double_float;
                 vrblvl : in integer32 := 0 ) is
 
-   -- nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
-    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+    pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
-   -- tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := pars.cbeta;
     maxit : constant natural32 := pars.corsteps;
-    extra : constant natural32 := 2;
+    extra : constant natural32 := 1;
     fail : boolean;
-    t,step,dstep : double_float := 0.0;
+    t,step : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
-    err,rco,res,frp,predres : double_float;
-    cfp : Standard_Complex_Numbers.Complex_Number;
+    err,rco,res,predres : double_float;
     nbrit : natural32 := 0;
     wrk_fcf : Standard_Complex_Series_VecVecs.VecVec(fcf'range);
 
@@ -470,24 +585,12 @@ package body Standard_Pade_Trackers is
     nbrsteps := max_steps;
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction
-        (maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-     -- step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
-     -- step := pars.sbeta*step;
-      Standard_Complex_Series_Vectors.Clear(eva);
-     -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-     -- dstep := Series_and_Predictors.Step_Distance
-     --            (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
-     -- step := Minimum(step,dstep); -- ignore series step
-      dstep := pars.maxsize; -- ignore Hessian step
-      step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
-      Set_Step(t,step,pars.maxsize,onetarget);
+      Step_Control
+        (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Update_Step_Sizes(minsize,maxsize,step);
-      Standard_Complex_Series_Vectors.Clear(srv);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -499,7 +602,6 @@ package body Standard_Pade_Trackers is
     Standard_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
       (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,extra);
-     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,extra);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := Standard_Complex_Numbers.Create(t);
     sol.v := wrk_sol;
@@ -523,30 +625,23 @@ package body Standard_Pade_Trackers is
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
-   -- nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg +2; -- + 1; -- + 2;
-    srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
-    pv : Standard_Pade_Approximants.Pade_Vector(srv'range)
+    pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_Standard_Poles(sol.n,dendeg);
-    tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := pars.cbeta;
     maxit : constant natural32 := pars.corsteps;
-    extra : constant natural32 := 2;
+    extra : constant natural32 := 1;
     fail : boolean;
-    t,step,dstep,pstep : double_float := 0.0;
+    t,step : double_float := 0.0;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : Standard_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
-    err,rco,res,frp,predres : double_float;
-    cfp : Standard_Complex_Numbers.Complex_Number;
+    err,rco,res,predres : double_float;
     nbrit : natural32 := 0;
     wrk_fcf : Standard_Complex_Series_VecVecs.VecVec(fcf'range);
 
@@ -560,44 +655,15 @@ package body Standard_Pade_Trackers is
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
       if verbose then
-        put(file,"Step "); put(file,k,1); put(file," : ");
+        put(file,"Step "); put(file,k,1); put_line(file," : ");
       end if;
-      Series_and_Predictors.Newton_Prediction -- no verbose flag set
-        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-      if verbose then
-        put(file,"Smallest pole radius :");
-        put(file,frp,3); new_line(file);
-        put(file,"Closest pole :"); put(file,cfp); new_line(file);
-      end if;
-      step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,alpha,verbose);
-      step := pars.sbeta*step;
-      if verbose then
-        put(file,"series step : "); put(file,step,2);
-      end if;
-     -- step := Series_and_Predictors.Cap_Step_Size(step,frp,pars.pbeta);
-      Standard_Complex_Series_Vectors.Clear(eva);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,t,jm,hs,wrk_sol,srv,pv);
-      if verbose then
-        put(file,"  Hessian step : "); put(file,dstep,2);
-        pstep := frp*pars.pbeta;
-        put(file,"  pole step : "); put(file,pstep,2); new_line(file);
-      end if;
-     -- step := Series_and_Predictors.Cap_Step_Size(dstep,frp,pars.pbeta);
-      dstep := pars.maxsize; -- ignore Hessian step
-      step := Minimum(dstep,pstep);
-      Set_Step(t,step,pars.maxsize,onetarget);
-      if verbose then
-        put(file,"Step size : "); put(file,step,3);
-        put(file," t = "); put(file,t,3);
-      end if;
+      Step_Control
+        (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
+         pv,poles,t,step);
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Update_Step_Sizes(minsize,maxsize,step);
-      Standard_Complex_Series_Vectors.Clear(srv);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged

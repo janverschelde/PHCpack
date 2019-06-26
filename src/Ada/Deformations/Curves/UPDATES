@@ -1,6 +1,7 @@
 Wed 26 Jun 2019 : moved the predictor-corrector feedback loop in separate
   procedures in standard_pade_trackers, updated series_and_trackers,
-  and series_path_trackers.adb.
+  and series_path_trackers.adb.  Moved the step control in the
+  standard_pade_trackers into separate procedures.
 
 Tue 25 Jun 2019 : removed superfluous with/use clauses from the
   headers of the package dobldobl_pade_trackers.

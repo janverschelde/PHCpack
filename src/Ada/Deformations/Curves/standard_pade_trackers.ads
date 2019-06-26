@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Complex_Solutions;
 with Standard_Complex_Series_VecVecs;
 with Standard_Complex_Poly_SysFun;
@@ -172,6 +173,109 @@ package Standard_Pade_Trackers is
   --   cntcut   updated value of the counter of step size cuts;
   --   cntfail  updated value of the counter of the corrector failures;
   --   fail     true if failed to meet the tolerance tolcres.
+
+  procedure Step_Control
+              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec;
+                t,step : in out double_float );
+  procedure Step_Control
+              ( file : in file_type; verbose : in boolean;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec;
+                t,step : in out double_float );
+
+  -- DESCRIPTION :
+  --   Determines the step size for the next step on a path.
+
+  -- ON ENTRY :
+  --   file     to write extra output and diagnostics;
+  --   verbose  flag indicates if extra output will be written to file;
+  --   jm       Jacobian matrix for the polynomial homotopy;
+  --   hs       Hessians for all equations in the polynomial homotopy;
+  --   hom      a homotopy with series coefficients;
+  --   sol      current solution on a path;
+  --   maxdeg   largest degree of the power series;
+  --   nit      number of iterations allowed in Newton for power series;
+  --   pars     values of the parameters and tolerances;
+  --   pv       space allocated for a vector of Pade approximants;
+  --   poles    space allocated for the poles of the Pade approximants;
+  --   t        current value of the continuation parameter;
+  --   step     current value of the step size.
+
+  -- ON RETURN :
+  --   pv       vector of Pade approximants;
+  --   poles    poles of the Pade approximants;
+  --   t        updated value of the continuation parameter;
+  --   step     updated value of the step size.
+
+  procedure Step_Control
+              ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in Standard_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec;
+                t,step : in out double_float );
+  procedure Step_Control
+              ( file : in file_type; verbose : in boolean;
+                jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                ejm : in Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in Standard_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out Standard_Pade_Approximants.Pade_Vector;
+                poles : in out Standard_Complex_VecVecs.VecVec;
+                t,step : in out double_float );
+
+  -- DESCRIPTION :
+  --   Determines the step size for the next step on a path,
+  --   for a coefficient-parameter homotopy.
+
+  -- ON ENTRY :
+  --   file     to write extra output and diagnostics;
+  --   verbose  flag indicates if extra output will be written to file;
+  --   jm       Jacobian matrix for the polynomial homotopy;
+  --   hs       Hessians for all equations in the polynomial homotopy;
+  --   fhm      coefficient-parameter homotopy for efficient evaluation,
+  --            the series parameter is the continuation parameter;
+  --   fcf      coefficient vectors of the homotopy;
+  --   ejm      coefficient-parameter matrix of all derivatives;
+  --   mlt      multiplication factors for the derivatives;
+  --   sol      current solution on a path;
+  --   maxdeg   largest degree of the power series;
+  --   nit      number of iterations allowed in Newton for power series;
+  --   pars     values of the parameters and tolerances;
+  --   pv       space allocated for a vector of Pade approximants;
+  --   poles    space allocated for the poles of the Pade approximants;
+  --   t        current value of the continuation parameter;
+  --   step     current value of the step size.
+
+  -- ON RETURN :
+  --   pv       vector of Pade approximants;
+  --   poles    poles of the Pade approximants;
+  --   t        updated value of the continuation parameter;
+  --   step     updated value of the step size.
 
   procedure Track_One_Path
               ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
