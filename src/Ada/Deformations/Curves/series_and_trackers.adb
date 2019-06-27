@@ -123,7 +123,7 @@ package body Series_and_Trackers is
     ls : Link_to_Solution;
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
-    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntfail : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
 
   begin
@@ -140,11 +140,11 @@ package body Series_and_Trackers is
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
       DoblDobl_Pade_Trackers.Track_One_Path
-        (file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,
+        (file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
          minsize,maxsize,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
-          (file,nbrsteps,nbrcorrs,0,cntfail,minsize,maxsize);
+          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       DoblDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -265,7 +265,7 @@ package body Series_and_Trackers is
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
-    nbrsteps,nbrcorrs,cntfail : natural32;
+    nbrsteps,nbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize : double_float;
 
   begin
@@ -275,8 +275,8 @@ package body Series_and_Trackers is
     for i in 1..len loop
       ls := Head_Of(tmp);
       DoblDobl_Pade_Trackers.Track_One_Path
-        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntfail,minsize,maxsize,
-         vrblvl-1);
+        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
+         minsize,maxsize,vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
     DoblDobl_Complex_Poly_SysFun.Clear(abh);
