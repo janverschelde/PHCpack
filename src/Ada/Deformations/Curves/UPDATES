@@ -1,7 +1,9 @@
-Thu 27 Jun 2019 : refactored quaddobl_path_trackers, updated the packages
+Thu 27 Jun 2019 : refactored quaddobl_pade_trackers, updated the packages
   series_path_trackers.adb and series_and_trackers.adb.
   Some minor changes in dobldobl_pade_trackers.  Forgot to update 
   the smallest and largest step sizes in quaddobl_pade_trackers.adb.
+  Exported the minimum function in standard_pade_trackers, updated
+  dobldobl_pade_trackers.adb and quaddobl_pade_trackers.adb.
 
 Wed 26 Jun 2019 : moved the predictor-corrector feedback loop in separate
   procedures in standard_pade_trackers, updated series_and_trackers,

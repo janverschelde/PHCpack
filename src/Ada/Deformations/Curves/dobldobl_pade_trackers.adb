@@ -17,14 +17,6 @@ with Standard_Pade_Trackers;
 
 package body DoblDobl_Pade_Trackers is
 
-  function Minimum ( a, b : in double_float ) return double_float is
-  begin
-    if a < b
-     then return a;
-     else return b;
-    end if;
-  end Minimum;
-
   function Residual_Prediction
               ( sol : DoblDobl_Complex_Vectors.Vector;
                 t : double_float ) return double_float is
@@ -234,7 +226,7 @@ package body DoblDobl_Pade_Trackers is
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    step := Minimum(sstep,dstep);
+    step := Standard_Pade_Trackers.Minimum(sstep,dstep);
     step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),pars.pbeta);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     DoblDobl_Complex_Series_Vectors.Clear(eva);
@@ -281,7 +273,7 @@ package body DoblDobl_Pade_Trackers is
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    step := Minimum(sstep,dstep);
+    step := Standard_Pade_Trackers.Minimum(sstep,dstep);
     step := Series_and_Predictors.Cap_Step_Size
               (step,hi_part(frp),pars.pbeta);
     if verbose then
@@ -332,7 +324,7 @@ package body DoblDobl_Pade_Trackers is
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                 (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    step := Minimum(sstep,dstep);
+    step := Standard_Pade_Trackers.Minimum(sstep,dstep);
     step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),pars.pbeta);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     DoblDobl_Complex_Series_Vectors.Clear(eva);
@@ -382,7 +374,7 @@ package body DoblDobl_Pade_Trackers is
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    step := Minimum(sstep,dstep);
+    step := Standard_Pade_Trackers.Minimum(sstep,dstep);
     step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),pars.pbeta);
     if verbose then
       put(file,"Hessian step : "); put(file,dstep,2);

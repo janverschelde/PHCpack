@@ -21,6 +21,11 @@ package Standard_Pade_Trackers is
 --   Path trackers which compute Pade approximants in standard precision
 --   are provided, in silent or verbose versions.
 
+  function Minimum ( a,b : double_float ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the minimum of a and b.
+
   procedure Set_Step
               ( t,step : in out double_float;
                 maxstep,target : in double_float );

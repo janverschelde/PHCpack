@@ -14,7 +14,7 @@ with Series_and_Predictors;
 
 package body Standard_Pade_Trackers is
 
-  function Minimum ( a, b : in double_float ) return double_float is
+  function Minimum ( a,b : double_float ) return double_float is
   begin
     if a < b
      then return a;
