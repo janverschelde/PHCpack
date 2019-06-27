@@ -1,3 +1,7 @@
+Thu 27 Jun 2019 : refactored quaddobl_path_trackers, updated the packages
+  series_path_trackers.adb and series_and_trackers.adb.
+  Some minor changes in dobldobl_pade_trackers.
+
 Wed 26 Jun 2019 : moved the predictor-corrector feedback loop in separate
   procedures in standard_pade_trackers, updated series_and_trackers,
   and series_path_trackers.adb.  Moved the step control in the

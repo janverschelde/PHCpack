@@ -4,18 +4,15 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
-with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Homotopy;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_CSeries_Vector_Functions;
-with QuadDobl_Pade_Approximants;
 with Homotopy_Pade_Approximants;
 with Homotopy_Mixed_Residuals;
 with Homotopy_Newton_Steps;
 with Series_and_Homotopies;
 with Series_and_Predictors;
-
 with Standard_Pade_Trackers;
 
 package body QuadDobl_Pade_Trackers is
@@ -75,6 +72,331 @@ package body QuadDobl_Pade_Trackers is
     return hihi_part(res);
   end Residual_Prediction;
 
+  procedure Predictor_Feedback
+              ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in QuadDobl_Pade_Approximants.Pade_Vector;
+                sol : out QuadDobl_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep : in double_float;
+                cntcut : in out natural32 ) is
+
+    qd_step : quad_double;
+
+  begin
+    loop
+      qd_step := create(step);
+      sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+      predres := Residual_Prediction(abh,sol,t);
+      exit when (predres <= tolpres);
+      t := t - step; step := step/2.0; t := t + step;
+      cntcut := cntcut + 1;
+      exit when (step <= minstep);
+    end loop;
+  end Predictor_Feedback;
+
+  procedure Predictor_Feedback
+              ( file : in file_type;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in QuadDobl_Pade_Approximants.Pade_Vector;
+                sol : out QuadDobl_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep : in double_float;
+                cntcut : in out natural32 ) is
+
+    qd_step : quad_double;
+
+  begin
+    loop
+      qd_step := create(step);
+      sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
+      predres := Residual_Prediction(abh,sol,t);
+      put(file,"  predictor residual : ");
+      put(file,predres,3); new_line(file);
+      exit when (predres <= tolpres);
+      t := t - step; step := step/2.0; t := t + step;
+      cntcut := cntcut + 1;
+      put(file,"Cut step size : "); put(file,step,3);
+      put(file," t = "); put(file,t,3);
+      exit when (step < minstep);
+    end loop;
+  end Predictor_Feedback;
+
+  procedure Predictor_Feedback
+              ( file : in file_type; verbose : in boolean;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in QuadDobl_Pade_Approximants.Pade_Vector;
+                sol : out QuadDobl_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep : in double_float;
+                cntcut : in out natural32 ) is
+  begin
+    if verbose then
+      Predictor_Feedback
+        (file,abh,pv,sol,predres,t,step,tolpres,minstep,cntcut);
+    else
+      Predictor_Feedback(abh,pv,sol,predres,t,step,tolpres,minstep,cntcut);
+    end if;
+  end Predictor_Feedback;
+
+  procedure Predictor_Corrector
+              ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in QuadDobl_Pade_Approximants.Pade_Vector;
+                sol : out QuadDobl_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep,tolcres : in double_float;
+                maxit,extra : in natural32; nbrcorrs : in out natural32;
+                err,rco,res : out double_float;
+                cntcut,cntfail : in out natural32; fail : out boolean ) is
+
+    nbrit : natural32 := 0;
+
+  begin
+    fail := true;
+    loop
+      Predictor_Feedback(abh,pv,sol,predres,t,step,tolpres,tolpres,cntcut);
+     -- exit when ((step < pars.minsize) and (predres > alpha));
+      Homotopy_Newton_Steps.Correct
+        (abh,t,tolcres,maxit,nbrit,sol,err,rco,res,fail,extra);
+      nbrcorrs := nbrcorrs + nbrit;
+      exit when (not fail);
+      t := t - step; step := step/2.0; t := t + step;
+      cntfail := cntfail + 1;
+      exit when (step < minstep);
+    end loop;
+  end Predictor_Corrector;
+
+  procedure Predictor_Corrector
+              ( file : in file_type; verbose : in boolean;
+                abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                pv : in QuadDobl_Pade_Approximants.Pade_Vector;
+                sol : out QuadDobl_Complex_Vectors.Vector;
+                predres : out double_float;
+                t,step : in out double_float;
+                tolpres,minstep,tolcres : in double_float;
+                maxit,extra : in natural32; nbrcorrs : in out natural32;
+                err,rco,res : out double_float;
+                cntcut,cntfail : in out natural32; fail : out boolean ) is
+
+    nbrit : natural32 := 0;
+
+  begin
+    fail := true;
+    loop
+      Predictor_Feedback
+        (file,verbose,abh,pv,sol,predres,t,step,tolpres,tolpres,cntcut);
+     -- exit when ((step < pars.minsize) and (predres > alpha));
+      Homotopy_Newton_Steps.Correct
+        (file,abh,t,tolcres,maxit,nbrit,sol,err,rco,res,fail,extra,verbose);
+      nbrcorrs := nbrcorrs + nbrit;
+      if verbose then
+        if fail
+         then put_line(file,"The correct stage failed.");
+         else put_line(file,"The correct stage succeeded.");
+        end if;
+      end if;
+      exit when (not fail);
+      t := t - step; step := step/2.0; t := t + step;
+      cntfail := cntfail + 1;
+      exit when (step < minstep);
+    end loop;
+  end Predictor_Corrector;
+
+  procedure Step_Control
+              ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
+                poles : in out QuadDobl_Complex_VecVecs.VecVec;
+                t,step : in out double_float ) is
+
+    srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
+    frp : quad_double;
+    cfp : QuadDobl_Complex_Numbers.Complex_Number;
+    sstep,dstep : double_float;
+    dd_t : quad_double;
+    onetarget : constant double_float := 1.0;
+    alpha : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+
+  begin
+    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
+    sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    sstep := pars.sbeta*sstep;
+    Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    dd_t := Create(t);
+    dstep := Series_and_Predictors.Step_Distance
+               (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+    step := Minimum(sstep,dstep);
+    step := Series_and_Predictors.Cap_Step_Size(step,hihi_part(frp),pars.pbeta);
+    Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
+    QuadDobl_Complex_Series_Vectors.Clear(eva);
+    QuadDobl_Complex_Series_Vectors.Clear(srv);
+  end Step_Control;
+
+  procedure Step_Control
+              ( file : in file_type; verbose : in boolean;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
+                poles : in out QuadDobl_Complex_VecVecs.VecVec;
+                t,step : in out double_float ) is
+
+    srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
+    frp : quad_double;
+    cfp : QuadDobl_Complex_Numbers.Complex_Number;
+    sstep,dstep : double_float;
+    dd_t : quad_double;
+    onetarget : constant double_float := 1.0;
+    alpha : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+
+  begin
+    Series_and_Predictors.Newton_Prediction
+      (file,maxdeg,nit,hom,sol,srv,eva,false); -- verbose);
+    sstep := Series_and_Predictors.Set_Step_Size
+               (file,eva,tolcff,alpha,verbose);
+    sstep := pars.sbeta*sstep;
+    if verbose
+     then put(file,"series step : "); put(file,sstep,2); new_line(file);
+    end if;
+    Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    if verbose then
+      put(file,"Smallest pole radius : ");
+      put(file,frp,3); new_line(file);
+      put(file,"Closest pole : "); put(file,cfp); new_line(file);
+    end if;
+    dd_t := Create(t);
+    dstep := Series_and_Predictors.Step_Distance
+               (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+    step := Minimum(sstep,dstep);
+    step := Series_and_Predictors.Cap_Step_Size
+              (step,hihi_part(frp),pars.pbeta);
+    if verbose then
+      put(file,"Hessian step : "); put(file,dstep,2);
+      put(file,"  step : "); put(file,step,2);
+      new_line(file);
+    end if;
+    Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
+    if verbose then
+      put(file,"Step size : "); put(file,step,3);
+      put(file," t = "); put(file,t,3);
+    end if;
+    QuadDobl_Complex_Series_Vectors.Clear(eva);
+    QuadDobl_Complex_Series_Vectors.Clear(srv);
+  end Step_Control;
+
+  procedure Step_Control
+              ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
+                poles : in out QuadDobl_Complex_VecVecs.VecVec;
+                t,step : in out double_float ) is
+
+    srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
+    frp : quad_double;
+    cfp : QuadDobl_Complex_Numbers.Complex_Number;
+    sstep,dstep : double_float;
+    dd_t : quad_double;
+    onetarget : constant double_float := 1.0;
+    alpha : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+
+  begin
+    Series_and_Predictors.Newton_Prediction
+      (maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva);
+    sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    sstep := pars.sbeta*sstep;
+    Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    QuadDobl_Complex_Series_Vectors.Clear(eva);
+    dd_t := Create(t);
+    dstep := Series_and_Predictors.Step_Distance
+                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+    step := Minimum(sstep,dstep);
+    step := Series_and_Predictors.Cap_Step_Size(step,hihi_part(frp),pars.pbeta);
+    Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
+    QuadDobl_Complex_Series_Vectors.Clear(eva);
+    QuadDobl_Complex_Series_Vectors.Clear(srv);
+  end Step_Control;
+
+  procedure Step_Control
+              ( file : in file_type; verbose : in boolean;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+                hs : in QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+                fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                maxdeg,nit : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
+                poles : in out QuadDobl_Complex_VecVecs.VecVec;
+                t,step : in out double_float ) is
+
+    srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
+    frp : quad_double;
+    cfp : QuadDobl_Complex_Numbers.Complex_Number;
+    sstep,dstep : double_float;
+    dd_t : quad_double;
+    onetarget : constant double_float := 1.0;
+    alpha : constant double_float := pars.alpha;
+    tolcff : constant double_float := pars.epsilon;
+
+  begin
+    Series_and_Predictors.Newton_Prediction -- verbose flag set to false
+      (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false);
+    sstep := Series_and_Predictors.Set_Step_Size
+               (file,eva,tolcff,alpha,verbose);
+    sstep := pars.sbeta*sstep;
+    if verbose
+     then put(file,"series step : "); put(file,step,2); new_line(file);
+    end if;
+    Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    if verbose then
+      put(file,"Smallest pole radius : ");
+      put(file,frp,3); new_line(file);
+      put(file,"Closest pole : "); put(file,cfp); new_line(file);
+    end if;
+    dd_t := Create(t);
+    dstep := Series_and_Predictors.Step_Distance
+               (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+    step := Minimum(sstep,dstep);
+    step := Series_and_Predictors.Cap_Step_Size(step,hihi_part(frp),pars.pbeta);
+    if verbose then
+      put(file,"Hessian step : "); put(file,dstep,2);
+      put(file,"  step : "); put(file,step,2); new_line(file);
+    end if;
+    Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
+    if verbose then
+      put(file,"Step size : "); put(file,step,3);
+      put(file," t = "); put(file,t,3);
+    end if;
+    QuadDobl_Complex_Series_Vectors.Clear(eva);
+    QuadDobl_Complex_Series_Vectors.Clear(srv);
+  end Step_Control;
+
   procedure Track_One_Path
               ( abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -82,86 +404,45 @@ package body QuadDobl_Pade_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 vrblvl : in integer32 := 0 ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-   -- nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
-    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
-    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_QuadDobl_Poles(sol.n,dendeg);
-   -- tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := pars.cbeta;
-    maxit : constant natural32 := 50;
-    extra : constant natural32 := maxit/10;
+    maxit : constant natural32 := pars.corsteps;
+    extra : constant natural32 := 1;
     fail : boolean;
-    t,step,dstep : double_float := 0.0;
+    t,step : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
     err,rco,res : double_float;
-    frp : quad_double;
-    cfp : QuadDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
     nbrit : natural32 := 0;
 
   begin
     if vrblvl > 0
-     then put_line("-> in series_and_trackers.Track_One_Path 3 ...");
+     then put_line("-> in quaddobl_pade_trackers.Track_One_Path 1 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntfail := 0;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction(maxdeg,nit,wrk,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-     -- step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
-     -- step := pars.sbeta*step;
-     -- step := Series_and_Predictors.Cap_Step_Size
-     --           (step,hihi_part(frp),pars.pbeta); -- ignore series step
-      QuadDobl_Complex_Series_Vectors.Clear(eva);
-      qd_t := Create(t);
-     -- dstep := Series_and_Predictors.Step_Distance
-     --            (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
-      dstep := pars.maxsize; -- ignore Hessian step
-      step := Series_and_Predictors.Cap_Step_Size
-                (dstep,hihi_part(frp),pars.pbeta);
-     -- step := Minimum(step,dstep);
-      Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
-      loop
-        loop
-          qd_step := create(step);
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-         -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-         -- exit when (step < pars.minsize);
-          exit when (step <= alpha);
-        end loop;
-        Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra);
-         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra);
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
-      QuadDobl_Complex_Series_Vectors.Clear(srv);
+      Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
+      Predictor_Corrector
+        (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
+         maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       qd_step := create(step);
       Series_and_Homotopies.Shift(wrk,-qd_step);
       if t = 1.0 then        -- converged and reached the end
@@ -195,109 +476,50 @@ package body QuadDobl_Pade_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
     wrk : QuadDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
-   -- nbq : constant integer32 := hom'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
-    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
-    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_QuadDobl_Poles(sol.n,dendeg);
-    tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := pars.cbeta;
-    maxit : constant natural32 := 50;
-    extra : constant natural32 := maxit/10;
+    maxit : constant natural32 := pars.corsteps;
+    extra : constant natural32 := 1;
     fail : boolean;
-    t,step,dstep : double_float := 0.0;
+    t,step : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
     err,rco,res : double_float;
-    frp : quad_double;
-    cfp : QuadDobl_Complex_Numbers.Complex_Number;
     predres : double_float;
     nbrit : natural32 := 0;
 
   begin
     if vrblvl > 0
-     then put_line("-> in series_and_trackers.Track_One_Path 6 ...");
+     then put_line("-> in quaddobl_pade_trackers.Track_One_Path 2 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntfail := 0;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
-        put(file,"Step "); put(file,k,1); put(file," : ");
+        put(file,"Step "); put(file,k,1); put_line(file," : ");
       end if;
-      Series_and_Predictors.Newton_Prediction
-        (file,maxdeg,nit,wrk,wrk_sol,srv,eva,false); -- verbose);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-      if verbose then
-        put(file,"Smallest pole radius : ");
-        put(file,frp,3); new_line(file);
-        put(file,"Closest pole : "); put(file,cfp); new_line(file);
-      end if;
-      step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,alpha,verbose);
-     -- step := pars.sbeta*step;
-      step := pars.maxsize; -- ignore series step
-      step := Series_and_Predictors.Cap_Step_Size
-                (step,hihi_part(frp),pars.pbeta);
-      QuadDobl_Complex_Series_Vectors.Clear(eva);
-      qd_t := Create(t);
-     -- dstep := Series_and_Predictors.Step_Distance
-     --            (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
-      dstep := pars.maxsize; -- ignore Hessian step
-      step := Minimum(step,dstep);
-      Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
-      if verbose then
-        put(file,"Step size : "); put(file,step,3);
-        put(file," t = "); put(file,t,3);
-      end if;
-      loop
-        loop
-          qd_step := create(step);
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-         -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          if verbose
-           then put(file,"  residual : "); put(file,predres,3); new_line(file);
-          end if;
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-          if verbose then
-            put(file,"Step size : "); put(file,step,3);
-            put(file," t = "); put(file,t,3);
-          end if;
-         -- exit when (step < pars.minsize);
-          exit when (step < alpha);
-        end loop;
-        Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (file,abh,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,
-           extra,verbose);
-         -- (file,nbq,t,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,
-         --  extra,verbose);
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
-      QuadDobl_Complex_Series_Vectors.Clear(srv);
+      Step_Control
+        (file,verbose,jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
+      Predictor_Corrector
+        (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
+         maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
      -- QuadDobl_CSeries_Poly_Systems.Clear(wrk);
      -- qd_t := create(-t);
      -- wrk := Series_and_Homotopies.Shift(hom,qd_t);
@@ -339,86 +561,45 @@ package body QuadDobl_Pade_Trackers is
                 mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in out QuadDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 vrblvl : in integer32 := 0 ) is
 
-   -- nbq : constant integer32 := fhm'last;
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := integer32(pars.corsteps+2);
-    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
-    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_QuadDobl_Poles(sol.n,dendeg);
-   -- tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := pars.cbeta;
-    maxit : constant natural32 := 50;
-    extra : constant natural32 := maxit/10;
+    maxit : constant natural32 := pars.corsteps;
+    extra : constant natural32 := 1;
     fail : boolean;
-    t,step,dstep : double_float := 0.0;
+    t,step : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
     err,rco,res,predres : double_float;
-    frp : quad_double;
-    cfp : QuadDobl_Complex_Numbers.Complex_Number;
     nbrit : natural32 := 0;
     wrk_fcf : QuadDobl_Complex_Series_VecVecs.VecVec(fcf'range);
 
   begin
     if vrblvl > 0
-     then put_line("-> in series_and_trackers.Track_One_Path 9 ...");
+     then put_line("-> in quaddobl_pade_trackers.Track_One_Path 3 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntfail := 0;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     wrk_fcf := QuadDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
-      Series_and_Predictors.Newton_Prediction
-        (maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-     -- step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
-     -- step := pars.sbeta*step;
-      QuadDobl_Complex_Series_Vectors.Clear(eva);
-     -- step := Series_and_Predictors.Cap_Step_Size
-     --           (step,hihi_part(frp),pars.pbeta);
-      qd_t := Create(t);
-     -- dstep := Series_and_Predictors.Step_Distance
-     --            (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
-     -- step := Minimum(step,dstep); -- ignore series step
-      dstep := pars.maxsize; -- ignore Hessian step
-      step := Series_and_Predictors.Cap_Step_Size
-                (dstep,hihi_part(frp),pars.pbeta);
-      Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
-      loop
-        loop
-          qd_step := create(step);
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-         -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-         -- exit when (step < pars.minsize);
-          exit when (step <= alpha);
-        end loop;
-        Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra);
-         -- (nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra);
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
-      QuadDobl_Complex_Series_Vectors.Clear(srv);
+      Step_Control
+        (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
+      Predictor_Corrector
+        (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
+         maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -453,115 +634,50 @@ package body QuadDobl_Pade_Trackers is
                 mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in out QuadDobl_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                nbrsteps,nbrcorrs,cntfail : out natural32;
+                nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
-   -- nbq : constant integer32 := fhm'last;
     nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- 2;
-    srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
-    eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
-    pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range)
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    pv : QuadDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
           := Homotopy_Pade_Approximants.Allocate_QuadDobl_Poles(sol.n,dendeg);
-    tolcff : constant double_float := pars.epsilon;
     alpha : constant double_float := pars.alpha;
     tolres : constant double_float := pars.tolres;
-    dbeta : constant double_float := pars.cbeta;
-    maxit : constant natural32 := 50;
-    extra : constant natural32 := maxit/10;
+    maxit : constant natural32 := pars.corsteps;
+    extra : constant natural32 := 1;
     fail : boolean;
-    t,step,dstep,pstep : double_float := 0.0;
+    t,step : double_float := 0.0;
     qd_t,qd_step : quad_double;
     max_steps : constant natural32 := pars.maxsteps;
     wrk_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n) := sol.v;
-    onetarget : constant double_float := 1.0;
     err,rco,res,predres : double_float;
-    frp : quad_double;
-    cfp : QuadDobl_Complex_Numbers.Complex_Number;
     nbrit : natural32 := 0;
     wrk_fcf : QuadDobl_Complex_Series_VecVecs.VecVec(fcf'range);
 
   begin
     if vrblvl > 0
-     then put_line("-> in series_and_trackers.Track_One_Path 12 ...");
+     then put_line("-> in quaddobl_pade_trackers.Track_One_Path 4 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntfail := 0;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     wrk_fcf := QuadDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
       if verbose then
-        put(file,"Step "); put(file,k,1); put(file," : ");
+        put(file,"Step "); put(file,k,1); put_line(file," : ");
       end if;
-      Series_and_Predictors.Newton_Prediction -- verbose flag set to false
-        (file,maxdeg,nit,fhm,wrk_fcf,ejm,mlt,wrk_sol,srv,eva,false);
-      Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-      if verbose then
-        put(file,"Smallest pole radius :");
-        put(file,frp,3); new_line(file);
-        put(file,"Closest pole :"); put(file,cfp); new_line(file);
-      end if;
-      step := Series_and_Predictors.Set_Step_Size
-                (file,eva,tolcff,alpha,verbose);
-      step := pars.sbeta*step;
-      if verbose then
-        put(file,"series step : "); put(file,step,2);
-      end if;
-     -- step := Series_and_Predictors.Cap_Step_Size
-     --           (step,hihi_part(frp),pars.pbeta);
-      QuadDobl_Complex_Series_Vectors.Clear(eva);
-      qd_t := Create(t);
-      dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,dbeta,qd_t,jm,hs,wrk_sol,srv,pv);
-      if verbose then
-        put(file,"  Hessian step : "); put(file,dstep,2);
-        pstep := hihi_part(frp)*pars.pbeta;
-        put(file,"  pole step : "); put(file,pstep,2); new_line(file);
-      end if;
-      dstep := pars.maxsize; -- ignore Hessian step
-      step := Minimum(dstep,pstep);
-      Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
-      if verbose then
-        put(file,"Step size : "); put(file,step,3);
-        put(file," t = "); put(file,t,3);
-      end if;
-      loop
-        loop
-          qd_step := create(step);
-          wrk_sol := Series_and_Predictors.Predicted_Solution(pv,qd_step);
-         -- predres := Residual_Prediction(wrk_sol,t);
-          predres := Residual_Prediction(abh,wrk_sol,t);
-          if verbose
-           then put(file,"  residual : "); put(file,predres,3); new_line(file);
-          end if;
-          exit when (predres <= alpha);
-          t := t - step; step := step/2.0; t := t + step;
-          if verbose then
-            put(file,"Step size : "); put(file,step,3);
-            put(file," t = "); put(file,t,3);
-          end if;
-         -- exit when (step < pars.minsize);
-          exit when (step <= alpha);
-        end loop;
-        Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
-        exit when ((step < pars.minsize) and (predres > alpha));
-        Homotopy_Newton_Steps.Correct
-          (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,
-           extra,verbose);
-         -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,
-         --  extra,verbose);
-        nbrcorrs := nbrcorrs + nbrit;
-        exit when (not fail);
-        step := step/2.0; cntfail := cntfail + 1;
-        exit when (step < pars.minsize);
-      end loop;
-      QuadDobl_Complex_Series_Vectors.Clear(srv);
+      Step_Control
+        (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
+         pv,poles,t,step);
+      Predictor_Corrector
+        (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
+         maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
@@ -575,8 +691,6 @@ package body QuadDobl_Pade_Trackers is
     Homotopy_Newton_Steps.Correct
       (file,abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,
        extra,verbose);
-     -- (file,nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,
-     --  extra,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     qd_t := Quad_Double_Numbers.Create(t);
     sol.t := QuadDobl_Complex_Numbers.Create(qd_t);

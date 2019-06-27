@@ -288,6 +288,7 @@ package DoblDobl_Pade_Trackers is
   --   sol      solution at the end of the path;
   --   nbrsteps is the total number of steps on the path;
   --   nbrcorrs is the total number of corrector iterations on the path;
+  --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
@@ -323,6 +324,7 @@ package DoblDobl_Pade_Trackers is
   --   sol      solution at the end of the path;
   --   nbrsteps is the total number of steps on the path;
   --   nbrcorrs is the total number of corrector iterations on the path;
+  --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failes on the paths;
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path.
