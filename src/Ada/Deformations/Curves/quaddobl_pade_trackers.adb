@@ -443,6 +443,7 @@ package body QuadDobl_Pade_Trackers is
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
+      Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
       qd_step := create(step);
       Series_and_Homotopies.Shift(wrk,-qd_step);
       if t = 1.0 then        -- converged and reached the end
@@ -520,9 +521,7 @@ package body QuadDobl_Pade_Trackers is
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
-     -- QuadDobl_CSeries_Poly_Systems.Clear(wrk);
-     -- qd_t := create(-t);
-     -- wrk := Series_and_Homotopies.Shift(hom,qd_t);
+      Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
       qd_step := create(step);
       Series_and_Homotopies.Shift(wrk,-qd_step);
       if t = 1.0 then        -- converged and reached the end
@@ -600,13 +599,14 @@ package body QuadDobl_Pade_Trackers is
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
+      Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
+      qd_step := create(step);
+      QuadDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-qd_step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      qd_step := create(step);
-      QuadDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-qd_step);
     end loop;
     QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Clear(poles);
@@ -678,13 +678,14 @@ package body QuadDobl_Pade_Trackers is
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
+      Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
+      qd_step := create(step);
+      QuadDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-qd_step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      qd_step := create(step);
-      QuadDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-qd_step);
     end loop;
     QuadDobl_Pade_Approximants.Clear(pv);
     QuadDobl_Complex_VecVecs.Clear(poles);
