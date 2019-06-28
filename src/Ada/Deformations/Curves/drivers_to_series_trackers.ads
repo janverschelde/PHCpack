@@ -52,52 +52,64 @@ package Drivers_to_Series_Trackers is
 
   procedure Standard_Track
               ( nq : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Standard_Track
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 );
   procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false );
-  procedure DoblDobl_Track
-              ( nq : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure DoblDobl_Track
               ( nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
+                vrblvl : in integer32 := 0 );
+  procedure DoblDobl_Track
+              ( nq : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 );
   procedure DoblDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure DoblDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false );
-  procedure QuadDobl_Track
-              ( nq : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure QuadDobl_Track
               ( nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters );
+                vrblvl : in integer32 := 0 );
+  procedure QuadDobl_Track
+              ( nq : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 );
   procedure QuadDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure QuadDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given the homotopy defined in Standard_Homotopy, or DoblDob_Homotopy,
@@ -111,7 +123,8 @@ package Drivers_to_Series_Trackers is
   --   sols     start solutions;
   --   pars     values for the homotopy continuation parameters,
   --            if omitted, then default values are used;
-  --   verbose  if extra output during the tracking is needed.
+  --   verbose  if extra output during the tracking is needed;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   sols     the solutions at the end of the tracking.

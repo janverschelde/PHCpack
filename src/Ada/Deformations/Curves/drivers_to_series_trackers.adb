@@ -120,7 +120,8 @@ package body Drivers_to_Series_Trackers is
   procedure Standard_Track
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 ) is
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
@@ -132,8 +133,11 @@ package body Drivers_to_Series_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.Standard_Track 1 ...");
+    end if;
     Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
-    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars);
+    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars,vrblvl-1);
     Standard_Complex_Jaco_Matrices.Clear(jm);
     Standard_Complex_Hessians.Clear(hs);
     Standard_CSeries_Poly_Systems.Clear(s);
@@ -142,20 +146,25 @@ package body Drivers_to_Series_Trackers is
 
   procedure Standard_Track
               ( nq : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    Standard_Track(nq,sols,p);
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.Standard_Track 2 ...");
+    end if;
+    Standard_Track(nq,sols,p,vrblvl-1);
   end Standard_Track;
 
   procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
@@ -167,11 +176,16 @@ package body Drivers_to_Series_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.Standard_Track 3 ...");
+    end if;
     Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
     if verbose then
-      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars,true,true);
+      Series_and_Trackers.Track_Many_Paths
+        (file,jm,hs,s,sols,pars,true,true,vrblvl-1);
     else
-      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars);
+      Series_and_Trackers.Track_Many_Paths
+        (file,jm,hs,s,sols,pars,vrblvl=>vrblvl-1);
     end if;
     Standard_Complex_Jaco_Matrices.Clear(jm);
     Standard_Complex_Hessians.Clear(hs);
@@ -182,19 +196,24 @@ package body Drivers_to_Series_Trackers is
   procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    Standard_Track(file,nq,sols,p,verbose);
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.Standard_Track 4 ...");
+    end if;
+    Standard_Track(file,nq,sols,p,verbose,vrblvl-1);
   end Standard_Track;
 
   procedure DoblDobl_Track
               ( nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 ) is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
@@ -206,8 +225,11 @@ package body Drivers_to_Series_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.DoblDobl_Track 1 ...");
+    end if;
     DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
-    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars);
+    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars,vrblvl-1);
     DoblDobl_Complex_Jaco_Matrices.Clear(jm);
     DoblDobl_Complex_Hessians.Clear(hs);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
@@ -216,20 +238,25 @@ package body Drivers_to_Series_Trackers is
 
   procedure DoblDobl_Track
               ( nq : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    DoblDobl_Track(nq,sols,p);
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.DoblDobl_Track 2 ...");
+    end if;
+    DoblDobl_Track(nq,sols,p,vrblvl-1);
   end DoblDobl_Track;
 
   procedure DoblDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
@@ -241,11 +268,16 @@ package body Drivers_to_Series_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.DoblDobl_Track 3 ...");
+    end if;
     DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
     if verbose then
-      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars,true,true);
+      Series_and_Trackers.Track_Many_Paths
+        (file,jm,hs,s,sols,pars,true,true,vrblvl-1);
     else
-      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars);
+      Series_and_Trackers.Track_Many_Paths
+        (file,jm,hs,s,sols,pars,vrblvl=>vrblvl-1);
     end if;
     DoblDobl_Complex_Jaco_Matrices.Clear(jm);
     DoblDobl_Complex_Hessians.Clear(hs);
@@ -256,19 +288,24 @@ package body Drivers_to_Series_Trackers is
   procedure DoblDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    DoblDobl_Track(file,nq,sols,p,verbose);
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.DoblDobl_Track 4 ...");
+    end if;
+    DoblDobl_Track(file,nq,sols,p,verbose,vrblvl-1);
   end DoblDobl_Track;
 
   procedure QuadDobl_Track
               ( nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                vrblvl : in integer32 := 0 ) is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
@@ -280,8 +317,11 @@ package body Drivers_to_Series_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.QuadDobl_Track 1 ...");
+    end if;
     QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
-    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars);
+    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars,vrblvl-1);
     QuadDobl_Complex_Jaco_Matrices.Clear(jm);
     QuadDobl_Complex_Hessians.Clear(hs);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
@@ -290,20 +330,25 @@ package body Drivers_to_Series_Trackers is
 
   procedure QuadDobl_Track
               ( nq : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    QuadDobl_Track(nq,sols,p);
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.QuadDobl_Track 2 ...");
+    end if;
+    QuadDobl_Track(nq,sols,p,vrblvl-1);
   end QuadDobl_Track;
 
   procedure QuadDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
@@ -315,11 +360,16 @@ package body Drivers_to_Series_Trackers is
     use Singular_Values_of_Hessians;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.QuadDobl_Track 3 ...");
+    end if;
     QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
     if verbose then
-      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars,true,true);
+      Series_and_Trackers.Track_Many_Paths
+        (file,jm,hs,s,sols,pars,true,true,vrblvl-1);
     else
-      Series_and_Trackers.Track_Many_Paths(file,jm,hs,s,sols,pars);
+      Series_and_Trackers.Track_Many_Paths
+        (file,jm,hs,s,sols,pars,vrblvl=>vrblvl-1);
     end if;
     QuadDobl_Complex_Jaco_Matrices.Clear(jm);
     QuadDobl_Complex_Hessians.Clear(hs);
@@ -330,13 +380,17 @@ package body Drivers_to_Series_Trackers is
   procedure QuadDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     p : constant Homotopy_Continuation_Parameters.Parameters
       := Homotopy_Continuation_Parameters.Default_Values;
 
   begin
-    QuadDobl_Track(file,nq,sols,p,verbose);
+    if vrblvl > 0 then
+      put_line("-> in drivers_to_series_trackers.QuadDobl_Track 4 ...");
+    end if;
+    QuadDobl_Track(file,nq,sols,p,verbose,vrblvl-1);
   end QuadDobl_Track;
 
   procedure Write_Timer

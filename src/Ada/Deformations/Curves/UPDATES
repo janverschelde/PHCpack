@@ -1,3 +1,6 @@
+Fri 28 Jun 2019 : added the verbose level parameter to the main procedures
+  in drivers_to_series_trackers.
+
 Thu 27 Jun 2019 : refactored quaddobl_pade_trackers, updated the packages
   series_path_trackers.adb and series_and_trackers.adb.
   Some minor changes in dobldobl_pade_trackers.  Forgot to update 
