@@ -403,8 +403,8 @@ package body DoblDobl_Pade_Trackers is
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
@@ -428,8 +428,7 @@ package body DoblDobl_Pade_Trackers is
     end if;
     minsize := 1.0; maxsize := 0.0;
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
       Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
       Predictor_Corrector
@@ -477,7 +476,7 @@ package body DoblDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
@@ -501,8 +500,7 @@ package body DoblDobl_Pade_Trackers is
     end if;
     minsize := 1.0; maxsize := 0.0;
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
@@ -557,7 +555,7 @@ package body DoblDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
@@ -590,13 +588,13 @@ package body DoblDobl_Pade_Trackers is
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
+      dd_step := create(step);
+      DoblDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-dd_step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      dd_step := create(step);
-      DoblDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-dd_step);
     end loop;
     DoblDobl_Pade_Approximants.Clear(pv);
     DoblDobl_Complex_VecVecs.Clear(poles);
@@ -628,10 +626,10 @@ package body DoblDobl_Pade_Trackers is
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
-    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
@@ -654,8 +652,7 @@ package body DoblDobl_Pade_Trackers is
      then put_line("-> in dobldobl_pade_trackers.Track_One_Path 4 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := DoblDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
       if verbose then
@@ -668,13 +665,13 @@ package body DoblDobl_Pade_Trackers is
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Standard_Pade_Trackers.Update_Step_Sizes(minsize,maxsize,step);
+      dd_step := create(step);
+      DoblDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-dd_step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      dd_step := create(step);
-      DoblDobl_CSeries_Vector_Functions.Shift(wrk_fcf,-dd_step);
     end loop;
     DoblDobl_Pade_Approximants.Clear(pv);
     DoblDobl_Complex_VecVecs.Clear(poles);

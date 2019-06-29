@@ -14,6 +14,14 @@ with Series_and_Predictors;
 
 package body Standard_Pade_Trackers is
 
+  function Maximum ( a,b : integer32 ) return integer32 is
+  begin
+    if a > b
+     then return a;
+     else return b;
+    end if;
+  end Maximum;
+
   function Minimum ( a,b : double_float ) return double_float is
   begin
     if a < b
@@ -418,8 +426,8 @@ package body Standard_Pade_Trackers is
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := Maximum(3,maxdeg/2);
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -441,20 +449,19 @@ package body Standard_Pade_Trackers is
     end if;
     minsize := 1.0; maxsize := 0.0;
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
       Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Update_Step_Sizes(minsize,maxsize,step);
+      Series_and_Homotopies.Shift(wrk,-step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      Series_and_Homotopies.Shift(wrk,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
@@ -483,11 +490,10 @@ package body Standard_Pade_Trackers is
                 vrblvl : in integer32 := 0 ) is
 
     wrk : Standard_CSeries_Poly_Systems.Poly_Sys(hom'range);
-   -- nbq : constant integer32 := hom'last;
-    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := Maximum(3,maxdeg/2);
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -509,8 +515,7 @@ package body Standard_Pade_Trackers is
     end if;
     minsize := 1.0; maxsize := 0.0;
     Standard_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
@@ -521,12 +526,12 @@ package body Standard_Pade_Trackers is
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Update_Step_Sizes(minsize,maxsize,step);
+      Series_and_Homotopies.Shift(wrk,-step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      Series_and_Homotopies.Shift(wrk,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
@@ -558,8 +563,8 @@ package body Standard_Pade_Trackers is
 
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := Maximum(3,maxdeg/2);
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -581,8 +586,7 @@ package body Standard_Pade_Trackers is
      then put_line("-> in standard_pade_trackers.Track_One_Path 3 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
       Step_Control
@@ -591,12 +595,12 @@ package body Standard_Pade_Trackers is
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Update_Step_Sizes(minsize,maxsize,step);
+      Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
@@ -625,10 +629,10 @@ package body Standard_Pade_Trackers is
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
-    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg +2; -- + 1; -- + 2;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := Maximum(3,maxdeg/2);
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -650,8 +654,7 @@ package body Standard_Pade_Trackers is
      then put_line("-> in standard_pade_trackers.Track_One_Path 4 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
       if verbose then
@@ -664,23 +667,20 @@ package body Standard_Pade_Trackers is
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
       Update_Step_Sizes(minsize,maxsize,step);
+      Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
       if t = 1.0 then        -- converged and reached the end
         nbrsteps := k; exit;
       elsif (fail and (step < pars.minsize)) then -- diverged
         nbrsteps := k; exit;
       end if;
-      Standard_CSeries_Vector_Functions.Shift(wrk_fcf,-step);
     end loop;
     Standard_Pade_Approximants.Clear(pv);
     Standard_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
       (file,abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,
        extra,verbose);
-     -- (file,nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,
-     --  extra,verbose);
     nbrcorrs := nbrcorrs + nbrit;
-    sol.t := Standard_Complex_Numbers.Create(t);
-    sol.v := wrk_sol;
+    sol.t := Standard_Complex_Numbers.Create(t); sol.v := wrk_sol;
     sol.err := err; sol.rco := rco; sol.res := res;
     Standard_CSeries_Vector_Functions.Deep_Clear(wrk_fcf);
   end Track_One_Path;

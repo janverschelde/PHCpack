@@ -21,6 +21,11 @@ package Standard_Pade_Trackers is
 --   Path trackers which compute Pade approximants in standard precision
 --   are provided, in silent or verbose versions.
 
+  function Maximum ( a,b : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the maximum of a and b.
+
   function Minimum ( a,b : double_float ) return double_float;
 
   -- DESCRIPTION :

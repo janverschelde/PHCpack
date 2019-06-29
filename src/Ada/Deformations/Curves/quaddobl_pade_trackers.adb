@@ -404,7 +404,7 @@ package body QuadDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
@@ -428,8 +428,7 @@ package body QuadDobl_Pade_Trackers is
     end if;
     minsize := 1.0; maxsize := 0.0;
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
       Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
       Predictor_Corrector
@@ -451,7 +450,6 @@ package body QuadDobl_Pade_Trackers is
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     Homotopy_Newton_Steps.Correct
       (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,extra);
-     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -478,7 +476,7 @@ package body QuadDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
@@ -502,8 +500,7 @@ package body QuadDobl_Pade_Trackers is
     end if;
     minsize := 1.0; maxsize := 0.0;
     QuadDobl_CSeries_Poly_Systems.Copy(hom,wrk);
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
@@ -529,8 +526,6 @@ package body QuadDobl_Pade_Trackers is
     wrk := Series_and_Homotopies.Shift(hom,qd_t);
     Homotopy_Newton_Steps.Correct
       (file,abh,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,extra,verbose);
-     -- (file,nbq,t,tolres,maxit,nbrit,wrk_sol,err,rco,res,fail,
-     --  extra,verbose);
     nbrcorrs := nbrcorrs + nbrit;
     sol.t := QuadDobl_Complex_Numbers.Create(Quad_Double_Numbers.Create(t));
     sol.v := wrk_sol;
@@ -559,7 +554,7 @@ package body QuadDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := integer32(pars.corsteps+2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
@@ -582,8 +577,7 @@ package body QuadDobl_Pade_Trackers is
      then put_line("-> in quaddobl_pade_trackers.Track_One_Path 3 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := QuadDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
       Step_Control
@@ -604,7 +598,6 @@ package body QuadDobl_Pade_Trackers is
     QuadDobl_Complex_VecVecs.Clear(poles);
     Homotopy_Newton_Steps.Correct
       (abh,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,extra);
-     -- (nbq,1.0,tolres,pars.corsteps,nbrit,wrk_sol,err,rco,res,fail,extra);
     nbrcorrs := nbrcorrs + nbrit;
     qd_t := Quad_Double_Numbers.Create(t);
     sol.t := QuadDobl_Complex_Numbers.Create(qd_t);
@@ -631,10 +624,10 @@ package body QuadDobl_Pade_Trackers is
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
-    nit : constant integer32 := integer32(pars.corsteps+2);
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := QuadDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : QuadDobl_Complex_VecVecs.VecVec(pv'range)
@@ -657,8 +650,7 @@ package body QuadDobl_Pade_Trackers is
      then put_line("-> in quaddobl_pade_trackers.Track_One_Path 4 ...");
     end if;
     minsize := 1.0; maxsize := 0.0;
-    nbrcorrs := 0; cntcut := 0; cntfail := 0;
-    nbrsteps := max_steps;
+    nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := QuadDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
       if verbose then
