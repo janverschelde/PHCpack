@@ -427,7 +427,7 @@ package body Standard_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Maximum(3,maxdeg/2);
+    nit : constant integer32 := Maximum(5,maxdeg/2);
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -493,7 +493,7 @@ package body Standard_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Maximum(3,maxdeg/2);
+    nit : constant integer32 := Maximum(5,maxdeg/2);
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -564,7 +564,7 @@ package body Standard_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Maximum(3,maxdeg/2);
+    nit : constant integer32 := Maximum(5,maxdeg/2);
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -632,7 +632,7 @@ package body Standard_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Maximum(3,maxdeg/2);
+    nit : constant integer32 := Maximum(5,maxdeg/2);
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)

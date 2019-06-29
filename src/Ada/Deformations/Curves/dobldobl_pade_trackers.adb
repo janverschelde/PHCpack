@@ -404,7 +404,7 @@ package body DoblDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(5,maxdeg/2);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
@@ -476,7 +476,7 @@ package body DoblDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(5,maxdeg/2);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
@@ -555,7 +555,7 @@ package body DoblDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(5,maxdeg/2);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
@@ -629,7 +629,7 @@ package body DoblDobl_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Standard_Pade_Trackers.Maximum(3,maxdeg/2);
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(5,maxdeg/2);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(1..sol.n)
        := DoblDobl_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : DoblDobl_Complex_VecVecs.VecVec(pv'range)
