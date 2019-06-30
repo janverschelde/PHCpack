@@ -184,6 +184,32 @@ package Standard_Pade_Trackers is
   --   cntfail  updated value of the counter of the corrector failures;
   --   fail     true if failed to meet the tolerance tolcres.
 
+  procedure Minimum_Step_Size
+              ( sstp,dstp,pstp : in double_float; minstp : out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
+  procedure Minimum_Step_Size
+              ( file : in file_type;
+                sstp,dstp,pstp : in double_float; minstp : out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
+
+  -- DESCRIPTION :
+  --   Determines the smallest step and updates the corresponding counter.
+
+  -- ON ENTRY :
+  --   file     output file for writing diagnostics;
+  --   sstp     step size determined by the power series;
+  --   dstp     step size determined by the curvature;
+  --   pstp     step size determined by the closest pole;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
+
+  -- ON RETURN :
+  --   minstp   the smallest value of sstp, dstp, and pstp;
+  --   cntsstp  updated count of the number of times sstp was smallest;
+  --   cntdstp  updated count of the number of times dstp was smallest;
+  --   cntpstp  updated count of the number of times pstp was smallest.
+
   procedure Step_Control
               ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
@@ -193,7 +219,8 @@ package Standard_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
-                t,step : in out double_float );
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
   procedure Step_Control
               ( file : in file_type; verbose : in boolean;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -204,7 +231,8 @@ package Standard_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
-                t,step : in out double_float );
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
 
   -- DESCRIPTION :
   --   Determines the step size for the next step on a path.
@@ -222,13 +250,19 @@ package Standard_Pade_Trackers is
   --   pv       space allocated for a vector of Pade approximants;
   --   poles    space allocated for the poles of the Pade approximants;
   --   t        current value of the continuation parameter;
-  --   step     current value of the step size.
+  --   step     current value of the step size;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
   -- ON RETURN :
   --   pv       vector of Pade approximants;
   --   poles    poles of the Pade approximants;
   --   t        updated value of the continuation parameter;
-  --   step     updated value of the step size.
+  --   step     updated value of the step size;
+  --   cntsstp  updated count of the number of times sstp was smallest;
+  --   cntdstp  updated count of the number of times dstp was smallest;
+  --   cntpstp  updated count of the number of times pstp was smallest.
 
   procedure Step_Control
               ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -242,7 +276,8 @@ package Standard_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
-                t,step : in out double_float );
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
   procedure Step_Control
               ( file : in file_type; verbose : in boolean;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -256,7 +291,8 @@ package Standard_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
-                t,step : in out double_float );
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
 
   -- DESCRIPTION :
   --   Determines the step size for the next step on a path,
@@ -279,13 +315,19 @@ package Standard_Pade_Trackers is
   --   pv       space allocated for a vector of Pade approximants;
   --   poles    space allocated for the poles of the Pade approximants;
   --   t        current value of the continuation parameter;
-  --   step     current value of the step size.
+  --   step     current value of the step size;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
   -- ON RETURN :
   --   pv       vector of Pade approximants;
   --   poles    poles of the Pade approximants;
   --   t        updated value of the continuation parameter;
-  --   step     updated value of the step size.
+  --   step     updated value of the step size;
+  --   cntsstp  updated count of the number of times sstp was smallest;
+  --   cntdstp  updated count of the number of times dstp was smallest;
+  --   cntpstp  updated count of the number of times pstp was smallest.
 
   procedure Track_One_Path
               ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -296,6 +338,7 @@ package Standard_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -318,7 +361,10 @@ package Standard_Pade_Trackers is
   --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
-  --   maxsize  is the largest step size on the path.
+  --   maxsize  is the largest step size on the path;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
   procedure Track_One_Path
               ( file : in file_type;
@@ -330,6 +376,7 @@ package Standard_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
 
@@ -355,7 +402,10 @@ package Standard_Pade_Trackers is
   --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failes on the paths;
   --   minsize  is the smallest step size on the path;
-  --   maxsize  is the largest step size on the path.
+  --   maxsize  is the largest step size on the path;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
 -- VERSIONS WITH COEFFICIENT-PARAMETER HOMOTOPIES :
 
@@ -371,6 +421,7 @@ package Standard_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -397,7 +448,10 @@ package Standard_Pade_Trackers is
   --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
-  --   maxsize  is the largest step size on the path.
+  --   maxsize  is the largest step size on the path;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
   procedure Track_One_Path
               ( file : in file_type;
@@ -412,6 +466,7 @@ package Standard_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
 
@@ -441,6 +496,9 @@ package Standard_Pade_Trackers is
   --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failes on the paths;
   --   minsize  is the smallest step size on the path;
-  --   maxsize  is the largest step size on the path.
+  --   maxsize  is the largest step size on the path;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
 end Standard_Pade_Trackers;
