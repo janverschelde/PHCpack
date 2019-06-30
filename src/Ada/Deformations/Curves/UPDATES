@@ -1,7 +1,7 @@
 Sat 29 Jun 2019 : the number of iterations in the Newton method for power
   series should depend on the degree of the series, updated the packages
   standard_pade_trackers, and *dobl_pade_trackers.adb.
-  The number of iterations should be at least five, updated *pade_trackers.adb.
+  Fixed the extra corrector steps in homotopy_newton_steps.adb.
 
 Fri 28 Jun 2019 : added the verbose level parameter to the main procedures
   in drivers_to_series_trackers.
