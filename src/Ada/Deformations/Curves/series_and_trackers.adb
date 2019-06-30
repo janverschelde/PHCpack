@@ -126,6 +126,7 @@ package body Series_and_Trackers is
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
 
   begin
     if vrblvl > 0
@@ -142,7 +143,7 @@ package body Series_and_Trackers is
       end if;
       DoblDobl_Pade_Trackers.Track_One_Path
         (file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,verbose,vrblvl-1);
+         minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
@@ -183,6 +184,7 @@ package body Series_and_Trackers is
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
 
   begin
     if vrblvl > 0
@@ -199,7 +201,7 @@ package body Series_and_Trackers is
       end if;
       QuadDobl_Pade_Trackers.Track_One_Path
         (file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,verbose,vrblvl-1);
+         minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
@@ -269,6 +271,7 @@ package body Series_and_Trackers is
     ls : Link_to_Solution;
     nbrsteps,nbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
 
   begin
     if vrblvl > 0
@@ -278,7 +281,7 @@ package body Series_and_Trackers is
       ls := Head_Of(tmp);
       DoblDobl_Pade_Trackers.Track_One_Path
         (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,vrblvl-1);
+         minsize,maxsize,cntsstp,cntdstp,cntpstp,vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
     DoblDobl_Complex_Poly_SysFun.Clear(abh);
@@ -301,6 +304,7 @@ package body Series_and_Trackers is
     ls : Link_to_Solution;
     nbrsteps,nbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
 
   begin
     if vrblvl > 0
@@ -310,7 +314,7 @@ package body Series_and_Trackers is
       ls := Head_Of(tmp);
       QuadDobl_Pade_Trackers.Track_One_Path
         (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,vrblvl-1);
+         minsize,maxsize,cntsstp,cntdstp,cntpstp,vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
     QuadDobl_Complex_Poly_SysFun.Clear(abh);

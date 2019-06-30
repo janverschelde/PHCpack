@@ -255,20 +255,20 @@ package body Standard_Pade_Trackers is
       if sstp < pstp then
         minstp := sstp; cntsstp := cntsstp + 1;
         put(file,"series step is mimimal, count = ");
-        put(cntsstp,1); new_line(file);
+        put(file,cntsstp,1); new_line(file);
       else -- pstp <= sstp < dstp
         minstp := pstp; cntpstp := cntpstp + 1;
         put(file,"pole step is mimimal, count = ");
-        put(cntpstp,1); new_line(file);
+        put(file,cntpstp,1); new_line(file);
       end if;
     elsif pstp < dstp then
       minstp := pstp; cntpstp := cntpstp + 1;
       put(file,"pole step is mimimal, count = ");
-      put(cntpstp,1); new_line(file);
+      put(file,cntpstp,1); new_line(file);
     else -- dstp <= pstp <= sstp
       minstp := dstp; cntdstp := cntdstp + 1;
       put(file,"curvature step is mimimal, count = ");
-      put(cntdstp,1); new_line(file);
+      put(file,cntdstp,1); new_line(file);
     end if;
   end Minimum_Step_Size;
 
@@ -387,7 +387,7 @@ package body Standard_Pade_Trackers is
     pstep := Series_and_Predictors.Cap_Step_Size(pars.maxsize,frp,pars.pbeta);
     if verbose then
       put(file,"Hessian step : "); put(file,dstep,2);
-      put(file,"  step : "); put(file,pstep,2); new_line(file);
+      put(file,"  pole step : "); put(file,pstep,2); new_line(file);
     end if;
     Minimum_Step_Size(file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Set_Step(t,step,pars.maxsize,onetarget);
@@ -443,7 +443,7 @@ package body Standard_Pade_Trackers is
     pstep := Series_and_Predictors.Cap_Step_Size(pars.maxsize,frp,pars.pbeta);
     if verbose then
       put(file,"Hessian step : "); put(file,dstep,2);
-      put(file,"  step : "); put(file,step,2); new_line(file);
+      put(file,"  pole step : "); put(file,pstep,2); new_line(file);
     end if;
     Minimum_Step_Size(file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Set_Step(t,step,pars.maxsize,onetarget);

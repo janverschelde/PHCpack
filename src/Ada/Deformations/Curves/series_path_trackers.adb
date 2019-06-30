@@ -309,6 +309,7 @@ package body Series_Path_Trackers is
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
     use Singular_Values_of_Hessians;
@@ -353,8 +354,8 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         DoblDobl_Pade_Trackers.Track_One_Path
-          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,verbose,vrb-1);
+          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,nbrsteps,nbrcorrs,cntcut,
+           cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
@@ -364,7 +365,8 @@ package body Series_Path_Trackers is
       else
         DoblDobl_Pade_Trackers.Track_One_Path
           (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,verbose,vrb-1);
+           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
@@ -450,6 +452,7 @@ package body Series_Path_Trackers is
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
     use Singular_Values_of_Hessians;
@@ -494,8 +497,8 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         QuadDobl_Pade_Trackers.Track_One_Path
-          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,verbose,vrb-1);
+          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,nbrsteps,nbrcorrs,cntcut,
+           cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
@@ -505,7 +508,8 @@ package body Series_Path_Trackers is
       else
         QuadDobl_Pade_Trackers.Track_One_Path
           (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
-           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,verbose,vrb-1);
+           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
             (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);

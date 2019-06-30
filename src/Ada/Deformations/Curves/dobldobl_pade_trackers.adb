@@ -206,13 +206,14 @@ package body DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                t,step : in out double_float ) is
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 ) is
 
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     frp : double_double;
     cfp : DoblDobl_Complex_Numbers.Complex_Number;
-    sstep,dstep : double_float;
+    sstep,dstep,pstep : double_float;
     dd_t : double_double;
     onetarget : constant double_float := 1.0;
     alpha : constant double_float := pars.alpha;
@@ -226,8 +227,10 @@ package body DoblDobl_Pade_Trackers is
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    step := Standard_Pade_Trackers.Minimum(sstep,dstep);
-    step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),pars.pbeta);
+    pstep := Series_and_Predictors.Cap_Step_Size
+               (pars.maxsize,hi_part(frp),pars.pbeta);
+    Standard_Pade_Trackers.Minimum_Step_Size
+      (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     DoblDobl_Complex_Series_Vectors.Clear(eva);
     DoblDobl_Complex_Series_Vectors.Clear(srv);
@@ -243,13 +246,14 @@ package body DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                t,step : in out double_float ) is
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 ) is
 
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     frp : double_double;
     cfp : DoblDobl_Complex_Numbers.Complex_Number;
-    sstep,dstep : double_float;
+    sstep,dstep,pstep : double_float;
     dd_t : double_double;
     onetarget : constant double_float := 1.0;
     alpha : constant double_float := pars.alpha;
@@ -266,21 +270,21 @@ package body DoblDobl_Pade_Trackers is
     end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     if verbose then
-      put(file,"Smallest pole radius : ");
-      put(file,frp,3); new_line(file);
+      put(file,"Smallest pole radius : "); put(file,frp,3); new_line(file);
       put(file,"Closest pole : "); put(file,cfp); new_line(file);
     end if;
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    step := Standard_Pade_Trackers.Minimum(sstep,dstep);
-    step := Series_and_Predictors.Cap_Step_Size
-              (step,hi_part(frp),pars.pbeta);
+    pstep := Series_and_Predictors.Cap_Step_Size
+               (pars.maxsize,hi_part(frp),pars.pbeta);
     if verbose then
       put(file,"Hessian step : "); put(file,dstep,2);
-      put(file,"  step : "); put(file,step,2);
+      put(file,"  pole step : "); put(file,pstep,2);
       new_line(file);
     end if;
+    Standard_Pade_Trackers.Minimum_Step_Size
+      (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     if verbose then
       put(file,"Step size : "); put(file,step,3);
@@ -302,13 +306,14 @@ package body DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                t,step : in out double_float ) is
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 ) is
 
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
     frp : double_double;
     cfp : DoblDobl_Complex_Numbers.Complex_Number;
-    sstep,dstep : double_float;
+    sstep,dstep,pstep : double_float;
     dd_t : double_double;
     onetarget : constant double_float := 1.0;
     alpha : constant double_float := pars.alpha;
@@ -324,8 +329,10 @@ package body DoblDobl_Pade_Trackers is
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                 (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    step := Standard_Pade_Trackers.Minimum(sstep,dstep);
-    step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),pars.pbeta);
+    pstep := Series_and_Predictors.Cap_Step_Size
+                (pars.maxsize,hi_part(frp),pars.pbeta);
+    Standard_Pade_Trackers.Minimum_Step_Size
+      (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     DoblDobl_Complex_Series_Vectors.Clear(eva);
     DoblDobl_Complex_Series_Vectors.Clear(srv);
@@ -344,13 +351,14 @@ package body DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                t,step : in out double_float ) is
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 ) is
 
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
     frp : double_double;
     cfp : DoblDobl_Complex_Numbers.Complex_Number;
-    sstep,dstep : double_float;
+    sstep,dstep,pstep : double_float;
     dd_t : double_double;
     onetarget : constant double_float := 1.0;
     alpha : constant double_float := pars.alpha;
@@ -367,19 +375,20 @@ package body DoblDobl_Pade_Trackers is
     end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     if verbose then
-      put(file,"Smallest pole radius : ");
-      put(file,frp,3); new_line(file);
+      put(file,"Smallest pole radius : "); put(file,frp,3); new_line(file);
       put(file,"Closest pole : "); put(file,cfp); new_line(file);
     end if;
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    step := Standard_Pade_Trackers.Minimum(sstep,dstep);
-    step := Series_and_Predictors.Cap_Step_Size(step,hi_part(frp),pars.pbeta);
+    pstep := Series_and_Predictors.Cap_Step_Size
+               (pars.maxsize,hi_part(frp),pars.pbeta);
     if verbose then
       put(file,"Hessian step : "); put(file,dstep,2);
-      put(file,"  step : "); put(file,step,2); new_line(file);
+      put(file,"  pole step : "); put(file,pstep,2); new_line(file);
     end if;
+    Standard_Pade_Trackers.Minimum_Step_Size
+      (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     if verbose then
       put(file,"Step size : "); put(file,step,3);
@@ -398,6 +407,7 @@ package body DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 vrblvl : in integer32 := 0 ) is
 
     wrk : DoblDobl_CSeries_Poly_Systems.Poly_Sys(hom'range);
@@ -426,11 +436,12 @@ package body DoblDobl_Pade_Trackers is
     if vrblvl > 0
      then put_line("-> in dobldobl_pade_trackers.Track_One_Path 1 ...");
     end if;
-    minsize := 1.0; maxsize := 0.0;
+    minsize := 1.0; maxsize := 0.0; cntsstp := 0; cntdstp := 0; cntpstp := 0;
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
-      Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
+      Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
+                   cntsstp,cntdstp,cntpstp);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -469,6 +480,7 @@ package body DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
@@ -498,7 +510,7 @@ package body DoblDobl_Pade_Trackers is
     if vrblvl > 0
      then put_line("-> in dobldobl_pade_trackers.Track_One_Path 2 ...");
     end if;
-    minsize := 1.0; maxsize := 0.0;
+    minsize := 1.0; maxsize := 0.0; cntsstp := 0; cntdstp := 0; cntpstp := 0;
     DoblDobl_CSeries_Poly_Systems.Copy(hom,wrk);
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
@@ -506,7 +518,8 @@ package body DoblDobl_Pade_Trackers is
         put(file,"Step "); put(file,k,1); put_line(file," : ");
       end if;
       Step_Control
-        (file,verbose,jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
+        (file,verbose,jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
+         cntsstp,cntdstp,cntpstp);
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -550,6 +563,7 @@ package body DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 vrblvl : in integer32 := 0 ) is
 
     numdeg : constant integer32 := integer32(pars.numdeg);
@@ -577,13 +591,14 @@ package body DoblDobl_Pade_Trackers is
     if vrblvl > 0
      then put_line("-> in dobldobl_pade_trackers.Track_One_Path 3 ...");
     end if;
-    minsize := 1.0; maxsize := 0.0;
+    minsize := 1.0; maxsize := 0.0; cntsstp := 0; cntdstp := 0; cntpstp := 0;
     nbrcorrs := 0; cntcut := 0; cntfail := 0;
     nbrsteps := max_steps;
     wrk_fcf := DoblDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
       Step_Control
-        (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step);
+        (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
+         cntsstp,cntdstp,cntpstp);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -623,6 +638,7 @@ package body DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
@@ -651,7 +667,7 @@ package body DoblDobl_Pade_Trackers is
     if vrblvl > 0
      then put_line("-> in dobldobl_pade_trackers.Track_One_Path 4 ...");
     end if;
-    minsize := 1.0; maxsize := 0.0;
+    minsize := 1.0; maxsize := 0.0; cntsstp := 0; cntdstp := 0; cntpstp := 0;
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := DoblDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
@@ -660,7 +676,7 @@ package body DoblDobl_Pade_Trackers is
       end if;
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
-         pv,poles,t,step);
+         pv,poles,t,step,cntsstp,cntdstp,cntpstp);
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);

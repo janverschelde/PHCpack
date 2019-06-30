@@ -166,7 +166,8 @@ package DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                t,step : in out double_float );
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
   procedure Step_Control
               ( file : in file_type; verbose : in boolean;
                 jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -177,7 +178,8 @@ package DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                t,step : in out double_float );
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
 
   -- DESCRIPTION :
   --   Determines the step size for the next step on a path.
@@ -195,13 +197,19 @@ package DoblDobl_Pade_Trackers is
   --   pv       space allocated for a vector of Pade approximants;
   --   poles    space allocated for the poles of the Pade approximants;
   --   t        current value of the continuation parameter;
-  --   step     current value of the step size.
+  --   step     current value of the step size;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
   -- ON RETURN :
   --   pv       vector of Pade approximants;
   --   poles    poles of the Pade approximants;
   --   t        updated value of the continuation parameter;
-  --   step     updated value of the step size.
+  --   step     updated value of the step size;
+  --   cntsstp  updated count of the number of times sstp was smallest;
+  --   cntdstp  updated count of the number of times dstp was smallest;
+  --   cntpstp  updated count of the number of times pstp was smallest.
 
   procedure Step_Control
               ( jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -215,7 +223,8 @@ package DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                t,step : in out double_float );
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
   procedure Step_Control
               ( file : in file_type; verbose : in boolean;
                 jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -229,7 +238,8 @@ package DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
-                t,step : in out double_float );
+                t,step : in out double_float;
+                cntsstp,cntdstp,cntpstp : in out natural32 );
 
   -- DESCRIPTION :
   --   Determines the step size for the next step on a path,
@@ -252,13 +262,19 @@ package DoblDobl_Pade_Trackers is
   --   pv       space allocated for a vector of Pade approximants;
   --   poles    space allocated for the poles of the Pade approximants;
   --   t        current value of the continuation parameter;
-  --   step     current value of the step size.
+  --   step     current value of the step size;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
   -- ON RETURN :
   --   pv       vector of Pade approximants;
   --   poles    poles of the Pade approximants;
   --   t        updated value of the continuation parameter;
-  --   step     updated value of the step size.
+  --   step     updated value of the step size;
+  --   cntsstp  updated count of the number of times sstp was smallest;
+  --   cntdstp  updated count of the number of times dstp was smallest;
+  --   cntpstp  updated count of the number of times pstp was smallest.
 
   procedure Track_One_Path
               ( abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -269,6 +285,7 @@ package DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -291,7 +308,10 @@ package DoblDobl_Pade_Trackers is
   --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
-  --   maxsize  is the largest step size on the path.
+  --   maxsize  is the largest step size on the path;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
   procedure Track_One_Path
               ( file : in file_type;
@@ -303,6 +323,7 @@ package DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
 
@@ -327,7 +348,10 @@ package DoblDobl_Pade_Trackers is
   --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failes on the paths;
   --   minsize  is the smallest step size on the path;
-  --   maxsize  is the largest step size on the path.
+  --   maxsize  is the largest step size on the path;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
 -- VERSIONS WITH COEFFICIENT-PARAMETER HOMOTOPIES :
 
@@ -343,6 +367,7 @@ package DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -369,7 +394,10 @@ package DoblDobl_Pade_Trackers is
   --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
-  --   maxsize  is the largest step size on the path.
+  --   maxsize  is the largest step size on the path;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
   procedure Track_One_Path
               ( file : in file_type;
@@ -384,6 +412,7 @@ package DoblDobl_Pade_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
+                cntsstp,cntdstp,cntpstp : out natural32;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
 
@@ -412,7 +441,9 @@ package DoblDobl_Pade_Trackers is
   --   cntcut   is the total number of steps cut by predictor residual;
   --   cntfail  is the total number of corrector failes on the paths;
   --   minsize  is the smallest step size on the path;
-  --   maxsize  is the largest step size on the path.
-  --   largestsize is the largest step size on a path.
+  --   maxsize  is the largest step size on the path;
+  --   cntsstp  counts the number of times sstp was smallest;
+  --   cntdstp  counts the number of times dstp was smallest;
+  --   cntpstp  counts the number of times pstp was smallest.
 
 end DoblDobl_Pade_Trackers;
