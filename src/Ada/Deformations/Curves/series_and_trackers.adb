@@ -84,7 +84,8 @@ package body Series_and_Trackers is
          cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
-          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       Standard_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -146,7 +147,8 @@ package body Series_and_Trackers is
          minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
-          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       DoblDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -204,7 +206,8 @@ package body Series_and_Trackers is
          minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
-          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       QuadDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -323,7 +326,8 @@ package body Series_and_Trackers is
   procedure Write_Path_Statistics
               ( file : in file_type;
                 nbrsteps,nbrcorrs,cntcut,cntfail : in natural32;
-                minsize,maxsize : in double_float ) is
+                minsize,maxsize : in double_float;
+                cntsstp,cntdstp,cntpstp : in natural32 ) is
   begin
     put(file,"The total number of steps on the path     : ");
     put(file,nbrsteps,1); new_line(file);
@@ -337,6 +341,12 @@ package body Series_and_Trackers is
     put(file,minsize,2); new_line(file);
     put(file,"The largest step size on the path         :");
     put(file,maxsize,2); new_line(file);
+    put(file,"Number of times the series step was minimal : ");
+    put(file,cntsstp,1); new_line(file);
+    put(file,"Number of times the curvature step was minimal : ");
+    put(file,cntdstp,1); new_line(file);
+    put(file,"Number of times the pole step was minimal : ");
+    put(file,cntpstp,1); new_line(file);
   end Write_Path_Statistics;
 
   procedure Write_Total_Path_Statistics

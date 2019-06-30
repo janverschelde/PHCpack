@@ -216,7 +216,8 @@ package body Series_Path_Trackers is
            cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+             cntsstp,cntdstp,cntpstp);
         end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
@@ -227,7 +228,8 @@ package body Series_Path_Trackers is
            cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+             cntsstp,cntdstp,cntpstp);
         end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
@@ -358,7 +360,8 @@ package body Series_Path_Trackers is
            cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+             cntsstp,cntdstp,cntpstp);
         end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
@@ -369,7 +372,8 @@ package body Series_Path_Trackers is
            cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+             cntsstp,cntdstp,cntpstp);
         end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) ");
@@ -501,7 +505,8 @@ package body Series_Path_Trackers is
            cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+             cntsstp,cntdstp,cntpstp);
         end if;
         put(file,"Solution "); put(file,i,1); put_line(file," :");
         put(file,ls.all); new_line(file);
@@ -512,7 +517,8 @@ package body Series_Path_Trackers is
            cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize);
+            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+             cntsstp,cntdstp,cntpstp);
         end if;
         put("Solution "); put(i,1); put_line(" :"); put(ls.all);
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
