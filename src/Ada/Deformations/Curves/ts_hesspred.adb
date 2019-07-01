@@ -56,7 +56,6 @@ procedure ts_hesspred is
   --   Tests the predictor on the one solution in sol for the homotopy hom,
   --   in standard double precision.
 
-    nit : constant integer32 := 4;
     srv : Standard_Complex_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
@@ -64,12 +63,17 @@ procedure ts_hesspred is
     verbose : constant boolean := false;
     eta,nrm,step : double_float;
     beta : constant double_float := 0.005;
+    nit : integer32;
 
   begin
     new_line;
     put("Give the degree of the numerator : "); get(degnum);
     put("Give the degree of the denominator : "); get(degden);
     maxdeg := degnum + degden + 2;
+    nit := maxdeg/2;
+    if nit < 5
+     then nit := 5;
+    end if;
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     pv := Standard_Pade_Approximants.Create(degnum,degden,srv,verbose);
     eta := Singular_Values_of_Hessians.Standard_Distance(jm.all,hs.all,sol);
@@ -90,7 +94,6 @@ procedure ts_hesspred is
   --   Tests the predictor on the one solution in sol for the homotopy hom,
   --   in double double precision.
 
-    nit : constant integer32 := 4;
     srv : DoblDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : DoblDobl_Pade_Approximants.Pade_Vector(srv'range);
@@ -99,12 +102,17 @@ procedure ts_hesspred is
     eta,nrm : double_double;
     step : double_float;
     beta : constant double_float := 0.005;
+    nit : integer32;
 
   begin
     new_line;
     put("Give the degree of the numerator : "); get(degnum);
     put("Give the degree of the denominator : "); get(degden);
     maxdeg := degnum + degden + 2;
+    nit := maxdeg/2;
+    if nit < 5
+     then nit := 5;
+    end if;
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     pv := DoblDobl_Pade_Approximants.Create(degnum,degden,srv,verbose);
     eta := Singular_Values_of_Hessians.DoblDobl_Distance(jm.all,hs.all,sol);
@@ -126,7 +134,6 @@ procedure ts_hesspred is
   --   Tests the predictor on the one solution in sol for the homotopy hom,
   --   in quad double precision.
 
-    nit : constant integer32 := 4;
     srv : QuadDobl_Complex_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     pv : QuadDobl_Pade_Approximants.Pade_Vector(srv'range);
@@ -135,12 +142,17 @@ procedure ts_hesspred is
     eta,nrm : quad_double;
     step : double_float;
     beta : constant double_float := 0.005;
+    nit : integer32;
 
   begin
     new_line;
     put("Give the degree of the numerator : "); get(degnum);
     put("Give the degree of the denominator : "); get(degden);
     maxdeg := degnum + degden + 2;
+    nit := maxdeg/2;
+    if nit < 5
+     then nit := 5;
+    end if;
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
     pv := QuadDobl_Pade_Approximants.Create(degnum,degden,srv,verbose);
     eta := Singular_Values_of_Hessians.QuadDobl_Distance(jm.all,hs.all,sol);
@@ -171,6 +183,7 @@ procedure ts_hesspred is
     sol : Standard_Complex_Solutions.Link_to_Solution;
     jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
     hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+    ans : character;
 
     use Singular_Values_of_Hessians;
 
@@ -184,7 +197,12 @@ procedure ts_hesspred is
     for k in 1..len loop
       put("At solution "); put(k,1); put_line("...");
       sol := Standard_Complex_Solutions.Head_Of(tmp);
-      Standard_Test_Prediction(jm,hs,s,sol.all);
+      loop
+        Standard_Test_Prediction(jm,hs,s,sol.all);
+        put("Do another test on this solution ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end loop;
       tmp := Standard_Complex_Solutions.Tail_Of(tmp);
     end loop;
   end Standard_Test_Prediction;
