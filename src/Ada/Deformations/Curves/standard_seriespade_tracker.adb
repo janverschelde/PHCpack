@@ -6,6 +6,8 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;
+with Standard_Complex_Hessians;
 with Standard_CSeries_Poly_Systems;
 with Standard_Homotopy;
 with Standard_Pade_Approximants_io;
@@ -15,6 +17,7 @@ with Series_and_Predictors;
 with Standard_Pade_Trackers;
 with Homotopy_Newton_Steps;
 with Homotopy_Mixed_Residuals;
+with Singular_Values_of_Hessians;
 
 package body Standard_SeriesPade_Tracker is
 
@@ -26,6 +29,8 @@ package body Standard_SeriesPade_Tracker is
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
   abh : Standard_Complex_Poly_SysFun.Link_to_Eval_Poly_Sys;
+  jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+  hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
   current_poles : Standard_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
   current_servec : Standard_Complex_Series_Vectors.Link_to_Vector;
@@ -67,6 +72,8 @@ package body Standard_SeriesPade_Tracker is
     tpow : constant natural32 := 2;
     gamma : constant Complex_Number := homconpars.gamma;
 
+    use Singular_Values_of_Hessians;
+
   begin
     idxpar := 0; -- artificial-parameter homotopy
     Standard_Homotopy.Create(p.all,q.all,tpow,gamma);
@@ -76,9 +83,13 @@ package body Standard_SeriesPade_Tracker is
     nbvar := integer32(Number_of_Unknowns(p(p'first)));
    -- series homotopy is define when initializing the solution
     Initialize_Series_and_Approximants;
+    Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
   end Init;
 
   procedure Init ( h : in Link_to_Poly_Sys; idx : in integer32 ) is
+
+    use Singular_Values_of_Hessians;
+
   begin
     idxpar := idx;
     Standard_Homotopy.Create(h.all,idx);
@@ -87,6 +98,7 @@ package body Standard_SeriesPade_Tracker is
     nbeqs := h'last;
     nbvar := integer32(Number_of_Unknowns(h(h'first))) - 1;
     Initialize_Series_and_Approximants;
+    Standard_Jacobian_Hessians_of_Homotopy(idx,jm,hs);
   end Init;
 
   procedure Init ( s : in Link_to_Solution ) is
@@ -152,10 +164,8 @@ package body Standard_SeriesPade_Tracker is
     end if;
     current_step := homconpars.sbeta*current_step;
     Standard_Complex_Series_Vectors.Clear(eva);
-    if current_frp > 0.0 then
-      current_step := Series_and_Predictors.Cap_Step_Size
-                        (current_step,current_frp,homconpars.pbeta);
-    end if;
+    current_step := Series_and_Predictors.Cap_Step_Size
+                      (current_step,current_frp,homconpars.pbeta);
     t := Standard_Complex_Numbers.REAL_PART(current.t);
     Standard_Pade_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
     if verbose
@@ -190,7 +200,7 @@ package body Standard_SeriesPade_Tracker is
 
     t : constant double_float := REAL_PART(current.t);
     nbrit : natural32 := 0;
-    extra : constant natural32 := 0; -- := homconpars.corsteps;
+    extra : constant natural32 := 1; -- := homconpars.corsteps;
 
   begin
     if verbose then
@@ -271,6 +281,8 @@ package body Standard_SeriesPade_Tracker is
     Homotopy_Continuation_Parameters.Clear(homconpars);
     Standard_CSeries_Poly_Systems.Clear(htp);
     Standard_Complex_Poly_SysFun.Clear(abh);
+    Standard_Complex_Jaco_Matrices.Clear(jm);
+    Standard_Complex_Hessians.Clear(hs);
     Standard_Complex_VecVecs.Deep_Clear(current_poles);
     Standard_Complex_Series_Vectors.Clear(current_servec);
     Standard_Pade_Approximants.Clear(current_padvec);

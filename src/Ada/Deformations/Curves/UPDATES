@@ -2,6 +2,8 @@ Mon 1 Jul 2019 : modified {standard,*dobl}_pade_approximants.adb for a
   compiler warning.  Modified test_series_predictors.adb for compiler warning.
   Fixed the number of iterations in Newton's method for power series
   in the test procedures in ts_hesspred.adb.
+  Added initialization, construction, and destruction of the Jacobian
+  and Hessians to *_seriespade_tracker.adb.
 
 Sun 30 Jun 2019 : added a 3-way minimum to standard_pade_trackers,
   updated series_path_trackers.adb and series_and_trackers.adb.

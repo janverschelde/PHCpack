@@ -9,6 +9,8 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Polynomials;       use QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Hessians;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_Homotopy;
 with QuadDobl_Pade_Approximants_io;
@@ -19,6 +21,7 @@ with Standard_Pade_Trackers;
 with QuadDobl_Pade_Trackers;
 with Homotopy_Newton_Steps;
 with Homotopy_Mixed_Residuals;
+with Singular_Values_of_Hessians;
 
 package body QuadDobl_SeriesPade_Tracker is
 
@@ -30,6 +33,8 @@ package body QuadDobl_SeriesPade_Tracker is
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : QuadDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
   abh : QuadDobl_Complex_Poly_SysFun.Link_to_Eval_Poly_Sys;
+  jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+  hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
   current_poles : QuadDobl_Complex_VecVecs.Link_to_VecVec;
   current : Link_to_Solution;
   current_servec : QuadDobl_Complex_Series_Vectors.Link_to_Vector;
@@ -74,6 +79,8 @@ package body QuadDobl_SeriesPade_Tracker is
     qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
              := Standard_to_QuadDobl_Complex(d_gamma);
 
+    use Singular_Values_of_Hessians;
+
   begin
     idxpar := 0;
     QuadDobl_Homotopy.Create(p.all,q.all,tpow,qd_gamma);
@@ -83,9 +90,13 @@ package body QuadDobl_SeriesPade_Tracker is
     nbvar := integer32(Number_of_Unknowns(p(p'first)));
    -- Init of solution defines the series homotopy 
     Initialize_Series_and_Approximants;  
+    QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
   end Init;
 
   procedure Init ( h : in Link_to_Poly_Sys; idx : in integer32 ) is
+
+    use Singular_Values_of_Hessians;
+
   begin
     idxpar := idx;
     QuadDobl_Homotopy.Create(h.all,idx);
@@ -94,6 +105,7 @@ package body QuadDobl_SeriesPade_Tracker is
     nbeqs := h'last;
     nbvar := integer32(Number_of_Unknowns(h(h'first))) - 1;
     Initialize_Series_and_Approximants;
+    QuadDobl_Jacobian_Hessians_of_Homotopy(idx,jm,hs);
   end Init;
 
   procedure Init ( s : in Link_to_Solution ) is
@@ -161,10 +173,8 @@ package body QuadDobl_SeriesPade_Tracker is
     end if;
     current_step := homconpars.sbeta*current_step;
     QuadDobl_Complex_Series_Vectors.Clear(eva);
-    if current_frp > 0.0 then
-      current_step := Series_and_Predictors.Cap_Step_Size
-                        (current_step,hihi_part(current_frp),homconpars.pbeta);
-    end if;
+    current_step := Series_and_Predictors.Cap_Step_Size
+                      (current_step,hihi_part(current_frp),homconpars.pbeta);
     qd_t := QuadDobl_Complex_Numbers.REAL_PART(current.t);
     t := hihi_part(qd_t);
     Standard_Pade_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
@@ -204,7 +214,7 @@ package body QuadDobl_SeriesPade_Tracker is
     t : constant double_float
       := hihi_part(QuadDobl_Complex_Numbers.REAL_PART(current.t));
     nbrit : natural32 := 0;
-    extra : constant natural32 := homconpars.corsteps;
+    extra : constant natural32 := 1; -- homconpars.corsteps;
     err,rco,res : double_float;
 
   begin
@@ -290,6 +300,8 @@ package body QuadDobl_SeriesPade_Tracker is
     Homotopy_Continuation_Parameters.Clear(homconpars);
     QuadDobl_CSeries_Poly_Systems.Clear(htp);
     QuadDobl_Complex_Poly_SysFun.Clear(abh);
+    QuadDobl_Complex_Jaco_Matrices.Clear(jm);
+    QuadDobl_Complex_Hessians.Clear(hs);
     QuadDobl_Complex_VecVecs.Deep_Clear(current_poles);
     QuadDobl_Complex_Series_Vectors.Clear(current_servec);
     QuadDobl_Pade_Approximants.Clear(current_padvec);
