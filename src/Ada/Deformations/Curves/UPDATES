@@ -1,3 +1,6 @@
+Mon 1 Jul 2019 : modified {standard,*dobl}_pade_approximants.adb 
+  for a compiler warning.
+
 Sun 30 Jun 2019 : added a 3-way minimum to standard_pade_trackers,
   updated series_path_trackers.adb and series_and_trackers.adb.
   Fixed some errors in standard_pade_trackers.adb, updated the double double

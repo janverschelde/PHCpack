@@ -1,4 +1,5 @@
 with unchecked_deallocation;
+with Standard_Complex_Vector_Norms;
 with Standard_Rational_Approximations;
 
 package body Standard_Pade_Approximants is
@@ -71,7 +72,7 @@ package body Standard_Pade_Approximants is
         := (0..numdeg => zero);
     den : constant Standard_Complex_Vectors.Vector(0..dendeg)
         := (0..dendeg => zero);
-    res : Pade := Create(num,den);
+    res : constant Pade := Create(num,den);
 
   begin
     return res;

@@ -71,7 +71,7 @@ package body DoblDobl_Pade_Approximants is
         := (0..numdeg => zero);
     den : constant DoblDobl_Complex_Vectors.Vector(0..dendeg)
         := (0..dendeg => zero);
-    res : Pade := Create(num,den);
+    res : constant Pade := Create(num,den);
 
   begin
     return res;
