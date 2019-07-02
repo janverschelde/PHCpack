@@ -335,7 +335,7 @@ package body Series_and_Trackers is
     put(file,nbrcorrs,1); new_line(file);
     put(file,"Number of predictor residuals cut step size : ");
     put(file,cntcut,1); new_line(file);
-    put(file,"Number of corrector failures on the path  : ");
+    put(file,"Number of corrector failures on the path    : ");
     put(file,cntfail,1); new_line(file);
     put(file,"The smallest step size on the path        :");
     put(file,minsize,2); new_line(file);

@@ -1,3 +1,6 @@
+Tue 2 Jul 2019 : improve the output in series_and_trackers.adb and in
+  the standard_pade_trackers.adb.
+
 Mon 1 Jul 2019 : modified {standard,*dobl}_pade_approximants.adb for a 
   compiler warning.  Modified test_series_predictors.adb for compiler warning.
   Fixed the number of iterations in Newton's method for power series

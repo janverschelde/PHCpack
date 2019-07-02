@@ -7,6 +7,7 @@ with Standard_Homotopy;
 with Standard_Complex_Series_Vectors;
 with Standard_CSeries_Vector_Functions;
 with Homotopy_Pade_Approximants;
+with Singular_Values_of_Hessians;
 with Homotopy_Mixed_Residuals;
 with Homotopy_Newton_Steps;
 with Series_and_Homotopies;
@@ -361,7 +362,7 @@ package body Standard_Pade_Trackers is
 
     srv : Standard_Complex_Series_Vectors.Vector(sol'range);
     eva : Standard_Complex_Series_Vectors.Vector(hom'range);
-    frp : double_float;
+    frp,eta,nrm : double_float;
     cfp : Standard_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
     onetarget : constant double_float := 1.0;
@@ -378,16 +379,22 @@ package body Standard_Pade_Trackers is
      then put(file,"series step : "); put(file,sstep,2); new_line(file);
     end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-    if verbose then
-      put(file,"Smallest pole radius : "); put(file,frp,3); new_line(file);
-      put(file,"Closest pole : "); put(file,cfp); new_line(file);
-    end if;
-    dstep := Series_and_Predictors.Step_Distance
-               (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
     pstep := Series_and_Predictors.Cap_Step_Size(pars.maxsize,frp,pars.pbeta);
     if verbose then
+      put(file,"pole step : "); put(file,pstep,2); new_line(file);
+      put(file,"  smallest pole radius : "); put(file,frp,2);
+      put(file,"closest pole : "); put(file,cfp); new_line(file);
+    end if;
+    if not verbose then
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
+    else
+      eta := Singular_Values_of_Hessians.Standard_Distance(jm.all,hs.all,sol);
+      nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+      dstep := Series_and_Predictors.Step_Distance(maxdeg,pars.cbeta,eta,nrm);
       put(file,"Hessian step : "); put(file,dstep,2);
-      put(file,"  pole step : "); put(file,pstep,2); new_line(file);
+      put(file,"  eta : "); put(file,eta,2);
+      put(file,"  nrm : "); put(file,nrm,2); new_line(file);
     end if;
     Minimum_Step_Size(file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Set_Step(t,step,pars.maxsize,onetarget);
@@ -417,7 +424,7 @@ package body Standard_Pade_Trackers is
 
     srv : Standard_Complex_Series_Vectors.Vector(sol'range);
     eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
-    frp : double_float;
+    frp,eta,nrm : double_float;
     cfp : Standard_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
     onetarget : constant double_float := 1.0;
@@ -434,22 +441,28 @@ package body Standard_Pade_Trackers is
      then put(file,"series step : "); put(file,sstep,2); new_line(file);
     end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-    if verbose then
-      put(file,"Smallest pole radius : "); put(file,frp,3); new_line(file);
-      put(file,"Closest pole : "); put(file,cfp); new_line(file);
-    end if;
-    dstep := Series_and_Predictors.Step_Distance
-               (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
     pstep := Series_and_Predictors.Cap_Step_Size(pars.maxsize,frp,pars.pbeta);
     if verbose then
+      put(file,"pole step : "); put(file,pstep,2);
+      put(file,"  smallest pole radius : "); put(file,frp,2); new_line(file);
+      put(file,"closest pole : "); put(file,cfp); new_line(file);
+    end if;
+    if not verbose then
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
+    else
+      eta := Singular_Values_of_Hessians.Standard_Distance(jm.all,hs.all,sol);
+      nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+      dstep := Series_and_Predictors.Step_Distance(maxdeg,pars.cbeta,eta,nrm);
       put(file,"Hessian step : "); put(file,dstep,2);
-      put(file,"  pole step : "); put(file,pstep,2); new_line(file);
+      put(file,"  eta : "); put(file,eta,2);
+      put(file,"  nrm : "); put(file,nrm,2); new_line(file);
     end if;
     Minimum_Step_Size(file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Set_Step(t,step,pars.maxsize,onetarget);
     if verbose then
       put(file,"Step size : "); put(file,step,3);
-      put(file," t = "); put(file,t,3);
+      put(file,"  t = "); put(file,t,3);
     end if;
     Standard_Complex_Series_Vectors.Clear(eva);
     Standard_Complex_Series_Vectors.Clear(srv);
