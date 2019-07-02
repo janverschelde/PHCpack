@@ -168,6 +168,7 @@ package body Series_Path_Trackers is
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
     cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
     use Singular_Values_of_Hessians;
@@ -240,11 +241,14 @@ package body Series_Path_Trackers is
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
       Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
+      Series_and_Trackers.Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,
+        cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
     end loop;
     tstop(timer);
     if tofile then
       Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+         smallest,largest,ratsstp,ratdstp,ratpstp);
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -256,7 +260,7 @@ package body Series_Path_Trackers is
     else
       Series_and_Trackers.Write_Total_Path_Statistics
         (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest);
+         smallest,largest,ratsstp,ratdstp,ratpstp);
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -312,6 +316,7 @@ package body Series_Path_Trackers is
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
     cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
     use Singular_Values_of_Hessians;
@@ -385,11 +390,14 @@ package body Series_Path_Trackers is
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
       Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
+      Series_and_Trackers.Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,
+        cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
     end loop;
     tstop(timer);
     if tofile then
       Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+         smallest,largest,ratsstp,ratdstp,ratpstp);
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -401,7 +409,7 @@ package body Series_Path_Trackers is
     else
       Series_and_Trackers.Write_Total_Path_Statistics
         (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest);
+         smallest,largest,ratsstp,ratdstp,ratpstp);
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -457,6 +465,7 @@ package body Series_Path_Trackers is
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
     cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
     start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
 
     use Singular_Values_of_Hessians;
@@ -529,11 +538,14 @@ package body Series_Path_Trackers is
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
       Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
+      Series_and_Trackers.Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,
+        cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
     end loop;
     tstop(timer);
     if tofile then
       Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
+        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+         smallest,largest,ratsstp,ratdstp,ratpstp);
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -545,7 +557,7 @@ package body Series_Path_Trackers is
     else
       Series_and_Trackers.Write_Total_Path_Statistics
         (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest);
+         smallest,largest,ratsstp,ratdstp,ratpstp);
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);

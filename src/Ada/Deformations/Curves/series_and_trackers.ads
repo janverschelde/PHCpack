@@ -43,6 +43,20 @@ package Series_and_Trackers is
   --   Given the current smallest and largest step sizes,
   --   updates their values with the new minimum and maximum step sizes.
 
+  procedure Update_Ratio_Sum
+              ( ratsum : in out double_float; num,den : in natural32 );
+
+  -- DESCRIPTION :
+  --   Adds to ratsum the ratio num/den.
+
+  procedure Update_Ratio_Sums
+              ( ratsum1,ratsum2,ratsum3 : in out double_float;
+                num1,num2,num3,den : in natural32 );
+
+  -- DESCRIPTION :
+  --   Adds to ratsum1 the ratio num1/den, to ratsum2 the ratio num2/den,
+  --   and to ratsum3 the ratio num3/den.
+
   procedure Track_Many_Paths
               ( jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
                 hs : in Standard_Complex_Hessians.Link_to_Array_of_Hessians;
@@ -145,24 +159,28 @@ package Series_and_Trackers is
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path;
   --   cntsstp  counts the number of times the series step was minimal;
-  --   cntdstp  counts the number of times the curvature step was minimal;
+  --   cntdstp  counts the number of times the Hessian step was minimal;
   --   cntpstp  counts the number of times the pole step was minimal.
 
   procedure Write_Total_Path_Statistics
               ( file : in file_type;
                 minnbrsteps,maxnbrsteps : in natural32;
                 minnbrcorrs,maxnbrcorrs : in natural32;
-                smallestsize,largestsize : in double_float );
+                smallestsize,largestsize : in double_float;
+                ratsstp,ratdstp,ratpstp : in double_float );
 
   -- DESCRIPTION :
   --   Writes the statistic for all paths.
 
-  -- ON RETURN :
+  -- ON ENTRY :
   --   minnbrsteps is the smallest number of steps on a path;
   --   maxnbrsteps is the largest number of steps on a path;
   --   minnbrcorrs is the smallest number of corrector iterations on a path;
   --   maxnbrcorrs is the largest number of corrector iterations on a path.
   --   smallestsize is the smallest step size on a path;
-  --   largestsize is the largest step size on a path.
+  --   largestsize is the largest step size on a path;
+  --   ratsstp is the average ratio of times series step was minimal;
+  --   ratdstp is the average ratio of times Hessian step was minimal;
+  --   ratpstp is the average ratio of times pole step was minimal.
 
 end Series_and_Trackers;

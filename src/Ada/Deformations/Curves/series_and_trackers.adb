@@ -35,6 +35,21 @@ package body Series_and_Trackers is
     end if;
   end Update_MinMax;
 
+  procedure Update_Ratio_Sum
+              ( ratsum : in out double_float; num,den : in natural32 ) is
+  begin
+    ratsum := ratsum + double_float(num)/double_float(den);
+  end Update_Ratio_Sum;
+
+  procedure Update_Ratio_Sums
+              ( ratsum1,ratsum2,ratsum3 : in out double_float;
+                num1,num2,num3,den : in natural32 ) is
+  begin
+    Update_Ratio_Sum(ratsum1,num1,den);
+    Update_Ratio_Sum(ratsum2,num2,den);
+    Update_Ratio_Sum(ratsum3,num3,den);
+  end Update_Ratio_Sums;
+
   procedure Track_Many_Paths
               ( file : in file_type;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -64,6 +79,7 @@ package body Series_and_Trackers is
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
     cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
 
   begin
     if vrblvl > 0
@@ -93,10 +109,13 @@ package body Series_and_Trackers is
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
       Update_MinMax(smallest,largest,minsize,maxsize);
+      Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,cntsstp,cntdstp,cntpstp,
+                        nbrsteps*natural32(len)); -- divide by total #paths
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest,
+       ratsstp,ratdstp,ratpstp);
     new_line(file);
     print_times(file,timer,"Tracking in double precision.");
     Standard_CSeries_Poly_SysFun.Clear(fhm);
@@ -128,6 +147,7 @@ package body Series_and_Trackers is
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
     cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
 
   begin
     if vrblvl > 0
@@ -156,10 +176,13 @@ package body Series_and_Trackers is
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
       Update_MinMax(smallest,largest,minsize,maxsize);
+      Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,cntsstp,cntdstp,cntpstp,
+                        nbrsteps*natural32(len));
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest,
+       ratsstp,ratdstp,ratpstp);
     new_line(file);
     print_times(file,timer,"Tracking in double double precision.");
     DoblDobl_Complex_Poly_SysFun.Clear(abh);
@@ -187,6 +210,7 @@ package body Series_and_Trackers is
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
     cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
 
   begin
     if vrblvl > 0
@@ -215,10 +239,13 @@ package body Series_and_Trackers is
       Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
       Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
       Update_MinMax(smallest,largest,minsize,maxsize);
+      Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,cntsstp,cntdstp,cntpstp,
+                        nbrsteps*natural32(len));
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest);
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest,
+       ratsstp,ratdstp,ratpstp);
     new_line(file);
     print_times(file,timer,"Tracking in quad double precision.");
     QuadDobl_Complex_Poly_SysFun.Clear(abh);
@@ -341,11 +368,11 @@ package body Series_and_Trackers is
     put(file,minsize,2); new_line(file);
     put(file,"The largest step size on the path         :");
     put(file,maxsize,2); new_line(file);
-    put(file,"Number of times the series step was minimal : ");
+    put(file,"Number of times the series step was minimal  : ");
     put(file,cntsstp,1); new_line(file);
-    put(file,"Number of times the curvature step was minimal : ");
+    put(file,"Number of times the Hessian step was minimal : ");
     put(file,cntdstp,1); new_line(file);
-    put(file,"Number of times the pole step was minimal : ");
+    put(file,"Number of times the pole step was minimal    : ");
     put(file,cntpstp,1); new_line(file);
   end Write_Path_Statistics;
 
@@ -353,7 +380,8 @@ package body Series_and_Trackers is
               ( file : in file_type;
                 minnbrsteps,maxnbrsteps : in natural32;
                 minnbrcorrs,maxnbrcorrs : in natural32;
-                smallestsize,largestsize : in double_float ) is
+                smallestsize,largestsize : in double_float;
+                ratsstp,ratdstp,ratpstp : in double_float ) is
   begin
     new_line(file);
     put(file,"The smallest number of total steps : ");
@@ -368,6 +396,12 @@ package body Series_and_Trackers is
     put(file,smallestsize,2); new_line(file);
     put(file,"The largest step size on a path  :");
     put(file,largestsize,2); new_line(file);
+    put(file,"Average ratio of times series step was minimal  : ");
+    put(file,ratsstp,1,4,0); new_line(file);
+    put(file,"Average ratio of times Hessian step was minimal : ");
+    put(file,ratdstp,1,4,0); new_line(file);
+    put(file,"Average ratio of times pole step was minimal    : ");
+    put(file,ratpstp,1,4,0); new_line(file);
   end Write_Total_Path_Statistics;
 
 end Series_and_Trackers;
