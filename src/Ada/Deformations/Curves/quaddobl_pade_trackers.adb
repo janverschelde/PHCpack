@@ -9,6 +9,7 @@ with QuadDobl_Homotopy;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_CSeries_Vector_Functions;
 with Homotopy_Pade_Approximants;
+with Singular_Values_of_Hessians;
 with Homotopy_Mixed_Residuals;
 with Homotopy_Newton_Steps;
 with Series_and_Homotopies;
@@ -224,11 +225,10 @@ package body QuadDobl_Pade_Trackers is
     sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     sstep := pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    pstep := pars.pbeta*hihi_part(frp);
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    pstep := Series_and_Predictors.Cap_Step_Size
-               (pars.maxsize,hihi_part(frp),pars.pbeta);
     Standard_Pade_Trackers.Minimum_Step_Size
       (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
@@ -251,7 +251,7 @@ package body QuadDobl_Pade_Trackers is
 
     srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
-    frp : quad_double;
+    frp,eta,nrm : quad_double;
     cfp : QuadDobl_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
     dd_t : quad_double;
@@ -269,21 +269,34 @@ package body QuadDobl_Pade_Trackers is
      then put(file,"series step : "); put(file,sstep,2); new_line(file);
     end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    pstep := pars.pbeta*hihi_part(frp);
     if verbose then
-      put(file,"Smallest pole radius : "); put(file,frp,3); new_line(file);
-      put(file,"Closest pole : "); put(file,cfp); new_line(file);
+      put(file,"pole step : "); put(file,pstep,2);
+      put(file,"  smallest pole radius : "); put(file,frp,2); new_line(file);
+      put(file,"closest pole : "); put(file,cfp); new_line(file);
     end if;
     dd_t := Create(t);
-    dstep := Series_and_Predictors.Step_Distance
-               (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    pstep := Series_and_Predictors.Cap_Step_Size
-               (pars.maxsize,hihi_part(frp),pars.pbeta);
-    if verbose then
+    if not verbose then
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+    else
+      declare -- must extend the solution vector with the value of t
+        solxt : QuadDobl_Complex_Vectors.Vector(sol'first..sol'last+1);
+        use Singular_Values_of_Hessians;
+      begin
+        solxt(sol'range) := sol;
+        solxt(solxt'last) := QuadDobl_Complex_Numbers.Create(dd_t);
+        eta := QuadDobl_Distance(jm.all,hs.all,solxt);
+      end;
+      nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,pars.cbeta,hihi_part(eta),hihi_part(nrm));
       put(file,"Hessian step : "); put(file,dstep,2);
-      put(file,"  pole step : "); put(file,step,2); new_line(file);
+      put(file,"  eta : "); put(file,eta,2);
+      put(file,"  nrm : "); put(file,nrm,2); new_line(file);
     end if;
     Standard_Pade_Trackers.Minimum_Step_Size
-      (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+      (file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     if verbose then
       put(file,"Step size : "); put(file,step,3);
@@ -324,14 +337,13 @@ package body QuadDobl_Pade_Trackers is
     sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     sstep := pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    pstep := pars.pbeta*hihi_part(frp);
     QuadDobl_Complex_Series_Vectors.Clear(eva);
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    pstep := Series_and_Predictors.Cap_Step_Size
-               (pars.maxsize,hihi_part(frp),pars.pbeta);
     Standard_Pade_Trackers.Minimum_Step_Size
-       (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+      (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     QuadDobl_Complex_Series_Vectors.Clear(eva);
     QuadDobl_Complex_Series_Vectors.Clear(srv);
@@ -355,7 +367,7 @@ package body QuadDobl_Pade_Trackers is
 
     srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
-    frp : quad_double;
+    frp,eta,nrm : quad_double;
     cfp : QuadDobl_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
     dd_t : quad_double;
@@ -373,21 +385,34 @@ package body QuadDobl_Pade_Trackers is
      then put(file,"series step : "); put(file,step,2); new_line(file);
     end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
+    pstep := pars.pbeta*hihi_part(frp);
     if verbose then
-      put(file,"Smallest pole radius : "); put(file,frp,3); new_line(file);
-      put(file,"Closest pole : "); put(file,cfp); new_line(file);
+      put(file,"pole step : "); put(file,pstep,2);
+      put(file,"  smallest pole radius : "); put(file,frp,2); new_line(file);
+      put(file,"closest pole : "); put(file,cfp); new_line(file);
     end if;
     dd_t := Create(t);
-    dstep := Series_and_Predictors.Step_Distance
-               (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
-    pstep := Series_and_Predictors.Cap_Step_Size
-               (pars.maxsize,hihi_part(frp),pars.pbeta);
-    if verbose then
+    if not verbose then
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+    else
+      declare -- must extend the solution vector with the value of t
+        solxt : QuadDobl_Complex_Vectors.Vector(sol'first..sol'last+1);
+        use Singular_Values_of_Hessians;
+      begin
+        solxt(sol'range) := sol;
+        solxt(solxt'last) := QuadDobl_Complex_Numbers.Create(dd_t);
+        eta := QuadDobl_Distance(jm.all,hs.all,solxt);
+      end;
+      nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
+      dstep := Series_and_Predictors.Step_Distance
+                 (maxdeg,pars.cbeta,hihi_part(eta),hihi_part(nrm));
       put(file,"Hessian step : "); put(file,dstep,2);
-      put(file,"  pole step : "); put(file,step,2); new_line(file);
+      put(file,"  eta : "); put(file,eta,2);
+      put(file,"  nrm : "); put(file,nrm,2); new_line(file);
     end if;
     Standard_Pade_Trackers.Minimum_Step_Size
-      (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+      (file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
     if verbose then
       put(file,"Step size : "); put(file,step,3);

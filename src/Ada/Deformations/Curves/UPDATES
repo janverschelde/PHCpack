@@ -1,6 +1,7 @@
 Tue 2 Jul 2019 : improve the output in series_and_trackers.adb and in
   the standard_pade_trackers.adb.  Bug fixed in standard_pade_trackers.adb,
   forgot to extend the solution vector with t for the eta computation.
+  Improved the output in *dobl_pade_trackers.adb.
 
 Mon 1 Jul 2019 : modified {standard,*dobl}_pade_approximants.adb for a 
   compiler warning.  Modified test_series_predictors.adb for compiler warning.
