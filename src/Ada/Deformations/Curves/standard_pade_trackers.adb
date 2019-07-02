@@ -301,7 +301,7 @@ package body Standard_Pade_Trackers is
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
-    pstep := Series_and_Predictors.Cap_Step_Size(pars.maxsize,frp,pars.pbeta);
+    pstep := pars.pbeta*frp;
     Minimum_Step_Size(sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Set_Step(t,step,pars.maxsize,onetarget);
     Standard_Complex_Series_Vectors.Clear(eva);
@@ -340,7 +340,7 @@ package body Standard_Pade_Trackers is
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
-    pstep := Series_and_Predictors.Cap_Step_Size(pars.maxsize,frp,pars.pbeta);
+    pstep := pars.pbeta*frp;
     Minimum_Step_Size(sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Set_Step(t,step,pars.maxsize,onetarget);
     Standard_Complex_Series_Vectors.Clear(eva);
@@ -379,7 +379,7 @@ package body Standard_Pade_Trackers is
      then put(file,"series step : "); put(file,sstep,2); new_line(file);
     end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-    pstep := Series_and_Predictors.Cap_Step_Size(pars.maxsize,frp,pars.pbeta);
+    pstep := pars.pbeta*frp;
     if verbose then
       put(file,"pole step : "); put(file,pstep,2); new_line(file);
       put(file,"  smallest pole radius : "); put(file,frp,2);
@@ -389,7 +389,14 @@ package body Standard_Pade_Trackers is
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
     else
-      eta := Singular_Values_of_Hessians.Standard_Distance(jm.all,hs.all,sol);
+      declare -- must extend the solution vector with the value for t
+        solxt : Standard_Complex_Vectors.Vector(sol'first..sol'last+1);
+        use Singular_Values_of_Hessians;
+      begin
+        solxt(sol'range) := sol;
+        solxt(solxt'last) := Standard_Complex_Numbers.Create(t);
+        eta := Standard_Distance(jm.all,hs.all,solxt);
+      end;
       nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
       dstep := Series_and_Predictors.Step_Distance(maxdeg,pars.cbeta,eta,nrm);
       put(file,"Hessian step : "); put(file,dstep,2);
@@ -441,7 +448,7 @@ package body Standard_Pade_Trackers is
      then put(file,"series step : "); put(file,sstep,2); new_line(file);
     end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
-    pstep := Series_and_Predictors.Cap_Step_Size(pars.maxsize,frp,pars.pbeta);
+    pstep := pars.pbeta*frp;
     if verbose then
       put(file,"pole step : "); put(file,pstep,2);
       put(file,"  smallest pole radius : "); put(file,frp,2); new_line(file);
@@ -451,7 +458,14 @@ package body Standard_Pade_Trackers is
       dstep := Series_and_Predictors.Step_Distance
                  (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
     else
-      eta := Singular_Values_of_Hessians.Standard_Distance(jm.all,hs.all,sol);
+      declare -- must extend the solution vector with the value for t
+        solxt : Standard_Complex_Vectors.Vector(sol'first..sol'last+1);
+        use Singular_Values_of_Hessians;
+      begin
+        solxt(sol'range) := sol;
+        solxt(solxt'last) := Standard_Complex_Numbers.Create(t);
+        eta := Standard_Distance(jm.all,hs.all,solxt);
+      end;
       nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
       dstep := Series_and_Predictors.Step_Distance(maxdeg,pars.cbeta,eta,nrm);
       put(file,"Hessian step : "); put(file,dstep,2);
