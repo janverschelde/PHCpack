@@ -326,6 +326,11 @@ package body Standard_SeriesPade_Tracker is
     return pole_step;
   end Get_Current_Pole_Step;
 
+  function Get_Current_Estimated_Distance return double_float is
+  begin
+    return eta;
+  end Get_Current_Estimated_Distance;
+
   function Get_Current_Hessian_Step return double_float is
   begin
     return hessian_step;

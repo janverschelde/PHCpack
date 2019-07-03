@@ -143,6 +143,11 @@ package QuadDobl_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Returns the current value of the pole step.
 
+  function Get_Current_Estimated_Distance return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the estimate distance to the closest solution.
+
   function Get_Current_Hessian_Step return double_float;
 
   -- DESCRIPTION :
