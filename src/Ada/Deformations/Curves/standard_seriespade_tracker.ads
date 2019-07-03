@@ -51,6 +51,23 @@ package Standard_SeriesPade_Tracker is
 
 -- PREDICTOR-CORRECTOR STAGE :
 
+  procedure Step_Control ( verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Determines the next value of the step size,
+  --   with additional output if verbose.
+
+  procedure Predictor_Feedback_Loop
+              ( fail : out boolean; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Runs the predictor feedback loop with intermediate output if verbose.
+  --   Each iteration of the loop computes the predictor residual and
+  --   the step size in halved if the predictor residual is too large.
+  --   If the predictor residual is small enough, then fail is false on return,
+  --   otherwise, if the step size is smaller than the minimum step size,
+  --   then fail will be false on return.
+
   procedure Predict ( fail : out boolean; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -126,10 +143,26 @@ package Standard_SeriesPade_Tracker is
   --   Returns the closest pole, computed by the predictor.
   --   Note: only meaningful if the real part is positive.
 
+  function Get_Current_Series_Step return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the series step.
+
+  function Get_Current_Pole_Step return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the pole step.
+
+  function Get_Current_Hessian_Step return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the Hessian step.
+
   function Get_Current_Step_Size return double_float;
 
   -- DESCRIPTION :
   --   Returns the current value of the step size.
+  --   This step size is the minimum of the series and the pole step.
 
   function Get_Current_t_Value return double_float;
 

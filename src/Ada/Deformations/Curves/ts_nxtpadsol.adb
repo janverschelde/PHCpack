@@ -3,6 +3,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
@@ -64,6 +65,13 @@ procedure ts_nxtpadsol is
         put_line("The start solution is okay.");
         loop
           Standard_SeriesPade_Tracker.Predict_and_Correct(fail,true);
+          put("  series step : ");
+          put(Standard_SeriesPade_Tracker.Get_Current_Series_Step,2);
+          put("  pole step : ");
+          put(Standard_SeriesPade_Tracker.Get_Current_Pole_Step,2);
+          put("  Hessian step : ");
+          put(Standard_SeriesPade_Tracker.Get_Current_Hessian_Step,2);
+          new_line;
           if fail
            then put_line("Failed to meet the accuracy requirements.  Abort.");
           end if;
