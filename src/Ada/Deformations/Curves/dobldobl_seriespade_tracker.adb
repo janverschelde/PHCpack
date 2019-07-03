@@ -39,9 +39,10 @@ package body DoblDobl_SeriesPade_Tracker is
   current : Link_to_Solution;
   current_servec : DoblDobl_Complex_Series_Vectors.Link_to_Vector;
   current_padvec : DoblDobl_Pade_Approximants.Link_to_Pade_Vector;
-  current_frp : double_double;
+  current_frp,solnrm,eta : double_double;
   current_cfp : DoblDobl_Complex_Numbers.Complex_Number;
-  current_step : double_float;
+  series_step,pole_step,hessian_step,current_step : double_float;
+  cntsstp,cntdstp,cntpstp : natural32;
 
 -- CONSTRUCTORS :
 
@@ -127,67 +128,108 @@ package body DoblDobl_SeriesPade_Tracker is
     begin
       htp := new DoblDobl_CSeries_Poly_Systems.Poly_Sys'(sh);
     end;
+    cntsstp := 0; cntdstp := 0; cntpstp := 0;
   end Init;
 
 -- PREDICTOR-CORRECTOR STAGE :
 
-  procedure Predict ( fail : out boolean; verbose : in boolean := false ) is
+  procedure Step_Control ( verbose : in boolean := false ) is
 
     numdeg : constant integer32 := integer32(homconpars.numdeg);
     dendeg : constant integer32 := integer32(homconpars.dendeg);
-    maxdeg : constant integer32 := numdeg + dendeg + 2; -- + 1; -- + 2;
-    nit : constant integer32 := integer32(homconpars.corsteps+2);
-    sol : DoblDobl_Complex_Vectors.Vector(1..current.n) := current.v;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    nit : constant integer32 := Standard_Pade_Trackers.Maximum(5,maxdeg/2);
     eva : DoblDobl_Complex_Series_Vectors.Vector(1..nbeqs);
-    t,predres : double_float;
-    dd_t,dd_step : double_double;
+    dd_t : double_double := DoblDobl_Complex_Numbers.REAL_PART(current.t);
+    t : double_float := hi_part(dd_t);
     tolcff : constant double_float := homconpars.epsilon;
     alpha : constant double_float := homconpars.alpha;
 
   begin
     if verbose then
       Series_and_Predictors.Newton_Prediction
-        (standard_output,maxdeg,nit,htp.all,sol,current_servec.all,eva,verbose);
+        (standard_output,maxdeg,nit,htp.all,current.v,current_servec.all,
+         eva,verbose);
+      series_step := Series_and_Predictors.Set_Step_Size
+                       (standard_output,eva,tolcff,alpha,verbose);
     else
       Series_and_Predictors.Newton_Prediction
-        (maxdeg,nit,htp.all,sol,current_servec.all,eva);
+        (maxdeg,nit,htp.all,current.v,current_servec.all,eva);
+      series_step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    end if;
+    series_step := homconpars.sbeta*series_step;
+    if verbose
+     then put("series step : "); put(series_step,2); new_line;
     end if;
     Series_and_Predictors.Pade_Approximants
       (current_servec.all,current_padvec.all,current_poles.all,
        current_frp,current_cfp);
+    pole_step := homconpars.pbeta*hi_part(current_frp);
     if verbose then
       put_line("The Pade vector : ");
       for i in current_padvec'range loop
         put_line(DoblDobl_Pade_Approximants_io.Write(current_padvec(i)));
       end loop;
       put_line("The poles : "); put_line(current_poles.all);
-      put_line("The poles :"); put_line(current_poles.all);
-      put("Smallest pole radius : "); put(current_frp,3); new_line;
-      if DoblDobl_Complex_Numbers.REAL_PART(current_cfp) >= 0.0
-       then put("Closest pole : "); put(current_cfp); new_line;
-      end if;
-      current_step := Series_and_Predictors.Set_Step_Size
-                        (standard_output,eva,tolcff,alpha,verbose);
-    else
-      current_step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+      put("pole step : "); put(pole_step,2);
+      put("  smallest pole radius : "); put(current_frp,2); new_line;
+      put("closest pole : "); put(current_cfp); new_line;
     end if;
-    current_step := homconpars.sbeta*current_step;
-    DoblDobl_Complex_Series_Vectors.Clear(eva);
-    current_step := Series_and_Predictors.Cap_Step_Size
-                      (current_step,hi_part(current_frp),homconpars.pbeta);
-    dd_t := DoblDobl_Complex_Numbers.REAL_PART(current.t);
-    t := hi_part(dd_t);
+    if not verbose then
+      hessian_step := Series_and_Predictors.Step_Distance
+                        (maxdeg,homconpars.cbeta,dd_t,jm,hs,current.v,
+                         current_servec.all,current_padvec.all);
+      Standard_Pade_Trackers.Minimum_Step_Size
+        (series_step,hessian_step,pole_step,current_step,
+         cntsstp,cntdstp,cntpstp);
+    else
+      declare -- must extend the solution vector with the value for t
+        use DoblDobl_Complex_Vectors,Singular_Values_of_Hessians;
+        solxt : Vector(current.v'first..current.v'last+1);
+      begin
+        solxt(current.v'range) := current.v;
+        solxt(solxt'last) := current.t;
+        eta := DoblDobl_Distance(jm.all,hs.all,solxt);
+      end;
+      solnrm := Homotopy_Pade_Approximants.Solution_Error_Norm
+                  (current_servec.all,current_padvec.all);
+      hessian_step := Series_and_Predictors.Step_Distance
+                        (maxdeg,homconpars.cbeta,hi_part(eta),hi_part(solnrm));
+      put("Hessian step : "); put(hessian_step,2);
+      put("  eta : "); put(eta,2);
+      put("  nrm : "); put(solnrm,2); new_line;
+      Standard_Pade_Trackers.Minimum_Step_Size
+        (standard_output,series_step,hessian_step,
+         pole_step,current_step,cntsstp,cntdstp,cntpstp);
+    end if;
     Standard_Pade_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
+    dd_t := Double_Double_Numbers.Create(t);
+    current.t := DoblDobl_Complex_Numbers.Create(dd_t);
     if verbose
      then put("Step size :"); put(current_step,2); put("  t ="); put(t,2);
     end if;
+    DoblDobl_Complex_Series_Vectors.Clear(eva);
+  end Step_Control;
+
+  procedure Predictor_Feedback_Loop
+              ( fail : out boolean; verbose : in boolean := false ) is
+
+    sol : DoblDobl_Complex_Vectors.Vector(1..current.n) := current.v;
+    t : double_float
+      := hi_part(DoblDobl_Complex_Numbers.REAL_PART(current.t));
+    predres : double_float;
+    dd_step,dd_t : double_double;
+    alpha : constant double_float := homconpars.alpha;
+
+  begin
+    fail := false;
     loop
       dd_step := Double_Double_Numbers.Create(current_step);
       sol := Series_and_Predictors.Predicted_Solution
                (current_padvec.all,dd_step);
       predres := DoblDobl_Pade_Trackers.Residual_Prediction(sol,t);
       if verbose
-       then put("  residual :"); put(predres,2); new_line;
+       then put("  predictor residual :"); put(predres,2); new_line;
       end if;
       exit when (predres <= alpha);
       t := t - current_step; current_step := current_step/2.0;
@@ -195,17 +237,29 @@ package body DoblDobl_SeriesPade_Tracker is
       if verbose
        then put("Step size :"); put(current_step,2); put("  t ="); put(t,2);
       end if;
-      exit when (current_step < homconpars.minsize);
+      if current_step < homconpars.minsize
+       then fail := true; exit;
+      end if;
     end loop;
     dd_t := Double_Double_Numbers.Create(t);
-    dd_step := Double_Double_Numbers.Create(current_step);
     current.t := DoblDobl_Complex_Numbers.Create(dd_t);
     current.v := sol;
+  end Predictor_Feedback_Loop;
+
+  procedure Predict ( fail : out boolean; verbose : in boolean := false ) is
+
+    t : double_float;
+    dd_step : double_double;
+
+  begin
+    Step_Control(verbose);
+    Predictor_Feedback_Loop(fail,verbose);
+    t := hi_part(DoblDobl_Complex_Numbers.REAL_PART(current.t));
     if t = 1.0 
      then fail := false;
      else fail := (current_step < homconpars.minsize);
     end if;
-    DoblDobl_Complex_Series_Vectors.Clear(eva);
+    dd_step := Double_Double_Numbers.Create(current_step);
     Series_and_Homotopies.Shift(htp.all,-dd_step);
   end Predict;
 
@@ -214,7 +268,7 @@ package body DoblDobl_SeriesPade_Tracker is
     t : constant double_float
       := hi_part(DoblDobl_Complex_Numbers.REAL_PART(current.t));
     nbrit : natural32 := 0;
-    extra : constant natural32 := 1; -- homconpars.corsteps;
+    extra : constant natural32 := 1;
     err,rco,res : double_float;
 
   begin
@@ -282,6 +336,21 @@ package body DoblDobl_SeriesPade_Tracker is
   begin
     return current_cfp;
   end Get_Current_Closest_Pole;
+
+  function Get_Current_Series_Step return double_float is
+  begin
+    return series_step;
+  end Get_Current_Series_Step;
+
+  function Get_Current_Pole_Step return double_float is
+  begin
+    return pole_step;
+  end Get_Current_Pole_Step;
+
+  function Get_Current_Hessian_Step return double_float is
+  begin
+    return hessian_step;
+  end Get_Current_Hessian_Step;
 
   function Get_Current_Step_Size return double_float is
   begin

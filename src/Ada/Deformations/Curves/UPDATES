@@ -1,5 +1,7 @@
 Wed 3 Jul 2019 : refactored code in standard_seriespade_tracker and added
   the curvature bound with better output statistics, tested by ts_nxtpadsol.
+  Updated also the double double and quad double versions in the files
+  *_seriespade_trackers, with extra output written by ts_nxtpadsol.
 
 Tue 2 Jul 2019 : improve the output in series_and_trackers.adb and in
   the standard_pade_trackers.adb.  Bug fixed in standard_pade_trackers.adb,

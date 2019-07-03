@@ -135,13 +135,12 @@ package Standard_SeriesPade_Tracker is
   function Get_Current_Pole_Radius return double_float;
 
   -- DESCRIPTION :
-  --   Returns the smallest forward pole radius, computed by the predictor.
+  --   Returns the smallest pole radius, computed by the predictor.
 
   function Get_Current_Closest_Pole return Complex_Number;
 
   -- DESCRIPTION :
   --   Returns the closest pole, computed by the predictor.
-  --   Note: only meaningful if the real part is positive.
 
   function Get_Current_Series_Step return double_float;
 

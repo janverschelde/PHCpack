@@ -116,6 +116,13 @@ procedure ts_nxtpadsol is
         put_line("The start solution is okay.");
         loop
           DoblDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
+          put("  series step : ");
+          put(DoblDobl_SeriesPade_Tracker.Get_Current_Series_Step,2);
+          put("  pole step : ");
+          put(DoblDobl_SeriesPade_Tracker.Get_Current_Pole_Step,2);
+          put("  Hessian step : ");
+          put(DoblDobl_SeriesPade_Tracker.Get_Current_Hessian_Step,2);
+          new_line;
           if fail
            then put_line("Failed to meet the accuracy requirements.  Abort.");
           end if;
@@ -160,6 +167,13 @@ procedure ts_nxtpadsol is
         put_line("The start solution is okay.");
         loop
           QuadDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
+          put("  series step : ");
+          put(QuadDobl_SeriesPade_Tracker.Get_Current_Series_Step,2);
+          put("  pole step : ");
+          put(QuadDobl_SeriesPade_Tracker.Get_Current_Pole_Step,2);
+          put("  Hessian step : ");
+          put(QuadDobl_SeriesPade_Tracker.Get_Current_Hessian_Step,2);
+          new_line;
           if fail
            then put_line("Failed to meet the accuracy requirements.  Abort.");
           end if;

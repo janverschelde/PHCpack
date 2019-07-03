@@ -133,7 +133,7 @@ package body Standard_SeriesPade_Tracker is
     maxdeg : constant integer32 := numdeg + dendeg + 2;
     nit : constant integer32 := Standard_Pade_Trackers.Maximum(5,maxdeg/2);
     eva : Standard_Complex_Series_Vectors.Vector(1..nbeqs);
-    t : double_float := 0.0;
+    t : double_float := Standard_Complex_Numbers.REAL_PART(current.t);
     tolcff : constant double_float := homconpars.epsilon;
     alpha : constant double_float := homconpars.alpha;
 
@@ -180,7 +180,7 @@ package body Standard_SeriesPade_Tracker is
         solxt : Vector(current.v'first..current.v'last+1);
       begin
         solxt(current.v'range) := current.v;
-        solxt(solxt'last) := Standard_Complex_Numbers.Create(t);
+        solxt(solxt'last) := current.t;
         eta := Standard_Distance(jm.all,hs.all,solxt);
       end;
       solnrm := Homotopy_Pade_Approximants.Solution_Error_Norm
@@ -194,7 +194,6 @@ package body Standard_SeriesPade_Tracker is
         (standard_output,series_step,hessian_step,
          pole_step,current_step,cntsstp,cntdstp,cntpstp);
     end if;
-    t := Standard_Complex_Numbers.REAL_PART(current.t);
     Standard_Pade_Trackers.Set_Step(t,current_step,homconpars.maxsize,1.0);
     current.t := Standard_Complex_Numbers.Create(t);
     if verbose
@@ -253,7 +252,7 @@ package body Standard_SeriesPade_Tracker is
 
     t : constant double_float := REAL_PART(current.t);
     nbrit : natural32 := 0;
-    extra : constant natural32 := 1; -- := homconpars.corsteps;
+    extra : constant natural32 := 1;
 
   begin
     if verbose then

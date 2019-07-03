@@ -47,6 +47,17 @@ package QuadDobl_SeriesPade_Tracker is
 
 -- PREDICTOR-CORRECTOR STAGE :
 
+  procedure Predictor_Feedback_Loop
+              ( fail : out boolean; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Runs the predictor feedback loop with intermediate output if verbose.
+  --   Each iteration of the loop computes the predictor residual and
+  --   the step size in halved if the predictor residual is too large.
+  --   If the predictor residual is small enough, then fail is false on return,
+  --   otherwise, if the step size is smaller than the minimum step size,
+  --   then fail will be false on return.
+
   procedure Predict ( fail : out boolean; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -114,14 +125,28 @@ package QuadDobl_SeriesPade_Tracker is
   function Get_Current_Pole_Radius return quad_double;
 
   -- DESCRIPTION :
-  --   Returns the smallest forward pole radius, computed by the predictor.
+  --   Returns the smallest pole radius, computed by the predictor.
 
   function Get_Current_Closest_Pole
              return QuadDobl_Complex_Numbers.Complex_Number;
 
   -- DESCRIPTION :
   --   Returns the closest pole, computed by the predictor.
-  --   Note: only meaningful if the real part is positive.
+
+  function Get_Current_Series_Step return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the series step.
+
+  function Get_Current_Pole_Step return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the pole step.
+
+  function Get_Current_Hessian_Step return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the current value of the Hessian step.
 
   function Get_Current_Step_Size return double_float;
 
