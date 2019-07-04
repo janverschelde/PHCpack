@@ -99,6 +99,18 @@ function use_padcon ( job : integer32;
 --   job   =  13 : returns in c[0] the current step size of the path tracker
 --                 in double, double double, or quad double precision,
 --                 depending whether a[0] is 0, 1, or 2;
+--   job   =  19 : returns in c[0] the current series step of the path tracker
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2;
+--   job   =  20 : returns in c[0] the current pole step of the path tracker
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2;
+--   job   =  21 : returns in c[0] the distance to the closest solution
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2;
+--   job   =  22 : returns in c[0] the current Hessian step of the path tracker
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2;
 --   job   =  14 : returns in c[0] and c[1] the real and imaginary parts of
 --                 the series coefficient at component a[1] with power a[2],
 --                 in double, double double, or quad double precision,

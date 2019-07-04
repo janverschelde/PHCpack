@@ -1,3 +1,6 @@
+Wed 3 Jul 2019 : extended use_padcon and use_c2phc4c with four jobs to
+  retrieve values of the step sizes and the estimated distance eta.
+
 Tue 25 Jun 2019 : extended use_padcon with the tuning of the cbeta parameter,
   the multiplication factor for the curvature step size control.
 

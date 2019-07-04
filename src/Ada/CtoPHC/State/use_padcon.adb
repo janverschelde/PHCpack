@@ -819,6 +819,101 @@ function use_padcon ( job : integer32;
       return 868;
   end Job13;
 
+  function Job19 return integer32 is -- get current series step size
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    step : double_float;
+
+  begin
+    case prc is
+      when 0 => step := Standard_SeriesPade_Tracker.Get_Current_Series_Step;
+      when 1 => step := DoblDobl_SeriesPade_Tracker.Get_Current_Series_Step;
+      when 2 => step := QuadDobl_SeriesPade_Tracker.Get_Current_Series_Step;
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    Assign(step,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 19 of use_padcon.");
+      return 885;
+  end Job19;
+
+  function Job20 return integer32 is -- get current pole step size
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    step : double_float;
+
+  begin
+    case prc is
+      when 0 => step := Standard_SeriesPade_Tracker.Get_Current_Pole_Step;
+      when 1 => step := DoblDobl_SeriesPade_Tracker.Get_Current_Pole_Step;
+      when 2 => step := QuadDobl_SeriesPade_Tracker.Get_Current_Pole_Step;
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    Assign(step,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 20 of use_padcon.");
+      return 886;
+  end Job20;
+
+  function Job21 return integer32 is -- get current estimated distance
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    dist : double_float;
+    dd_dist : double_double;
+    qd_dist : quad_double;
+
+  begin
+    case prc is
+      when 0 =>
+        dist := Standard_SeriesPade_Tracker.Get_Current_Estimated_Distance;
+      when 1 =>
+        dd_dist := DoblDobl_SeriesPade_Tracker.Get_Current_Estimated_Distance;
+        dist := hi_part(dd_dist);
+      when 2 => 
+        qd_dist := QuadDobl_SeriesPade_Tracker.Get_Current_Estimated_Distance;
+        dist := hihi_part(qd_dist);
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    Assign(dist,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 21 of use_padcon.");
+      return 887;
+  end Job21;
+
+  function Job22 return integer32 is -- get current Hessian step size
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    step : double_float;
+
+  begin
+    case prc is
+      when 0 => step := Standard_SeriesPade_Tracker.Get_Current_Hessian_Step;
+      when 1 => step := DoblDobl_SeriesPade_Tracker.Get_Current_Hessian_Step;
+      when 2 => step := QuadDobl_SeriesPade_Tracker.Get_Current_Hessian_Step;
+      when others => put_line("Wrong value for the precision.");
+    end case;
+    Assign(step,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised in job 22 of use_padcon.");
+      return 888;
+  end Job22;
+
   function Standard_Series_Coefficient
              ( leadidx,cffidx : integer32; verbose : boolean )
              return Standard_Complex_Numbers.Complex_Number is
@@ -1309,6 +1404,10 @@ function use_padcon ( job : integer32;
       when 16 => return Job16; -- get pole
       when 17 => return Job17; -- write parameters to defined output file
       when 18 => return Job18; -- initializes natural parameter homotopy
+      when 19 => return Job19; -- get current series step
+      when 20 => return Job20; -- get current pole step
+      when 21 => return Job21; -- get current estimated distance
+      when 22 => return Job22; -- get current Hessian step
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception

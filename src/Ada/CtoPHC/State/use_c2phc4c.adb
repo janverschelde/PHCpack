@@ -3325,6 +3325,11 @@ function use_c2phc4c ( job : integer32;
       when 882 => return use_celcon(72,a,b,c); -- solve st stable start sys
       when 883 => return use_celcon(73,a,b,c); -- solve dd stable start sys
       when 884 => return use_celcon(74,a,b,c); -- solve qd stable start sys
+     -- retrieving step sizes for the step-by-step series-Pade tracker
+      when 885 => return use_padcon(19,a,b,c); -- get series step
+      when 886 => return use_padcon(20,a,b,c); -- get pole step
+      when 887 => return use_padcon(21,a,b,c); -- get estimated distance eta
+      when 888 => return use_padcon(22,a,b,c); -- get Hessian step
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
