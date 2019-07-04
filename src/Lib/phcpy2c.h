@@ -5978,6 +5978,90 @@ static PyObject *py2c_padcon_quaddobl_step_size
  *   Returns the current step size of the path tracker
  *   which runs in quad double precision. */
 
+static PyObject *py2c_padcon_standard_series_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current series step size of the path tracker
+ *   which runs in standard double precision. */
+
+static PyObject *py2c_padcon_dobldobl_series_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current series step size of the path tracker
+ *   which runs in double double precision. */
+
+static PyObject *py2c_padcon_quaddobl_series_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current series step size of the path tracker
+ *   which runs in quad double precision. */
+
+static PyObject *py2c_padcon_standard_pole_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current pole step size of the path tracker
+ *   which runs in standard double precision. */
+
+static PyObject *py2c_padcon_dobldobl_pole_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current pole step size of the path tracker
+ *   which runs in double double precision. */
+
+static PyObject *py2c_padcon_quaddobl_pole_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current pole step size of the path tracker
+ *   which runs in quad double precision. */
+
+static PyObject *py2c_padcon_standard_estimated_distance
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the estimated distance to the closest solution by
+ *   the path tracker which runs in standard double precision. */
+
+static PyObject *py2c_padcon_dobldobl_estimated_distance
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the estimated distance to the closest solution by 
+ *   the path tracker which runs in double double precision. */
+
+static PyObject *py2c_padcon_quaddobl_estimated_distance
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the estimated distance to the closest solution by
+ *   the path tracker which runs in quad double precision. */
+
+static PyObject *py2c_padcon_standard_hessian_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current Hessian step size of the path tracker
+ *   which runs in standard double precision. */
+
+static PyObject *py2c_padcon_dobldobl_hessian_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current Hessian step size of the path tracker
+ *   which runs in double double precision. */
+
+static PyObject *py2c_padcon_quaddobl_hessian_step
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current Hessian step size of the path tracker
+ *   which runs in quad double precision. */
+
 static PyObject *py2c_padcon_standard_series_coefficient
  ( PyObject *self, PyObject *args );
 /*

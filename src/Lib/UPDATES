@@ -1,5 +1,7 @@
 Thu 4 Jul 2019 : updated padcon, lib_padcon, for the showing of different
-  step sizes, updates in pchpy2c.h, phcpy2c2.c, phcpy2c3.c for name change.
+  step sizes, updates in phcpy2c.h, phcpy2c2.c, phcpy2c3.c for name change.
+  Added 12 functions to phcpy2c.h, phcpy2c2.c, and phcpy2c3.c to report
+  the various different step sizes.
 
 Tue 25 Jun 2019 : modified padcon, phcpy2c.h, phcpy2c2.c, phcpy2c3.c for
   the tuning of the multiplication factor for the curvature step control.

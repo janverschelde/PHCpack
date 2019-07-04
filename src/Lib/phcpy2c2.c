@@ -8378,6 +8378,162 @@ static PyObject *py2c_padcon_quaddobl_step_size
    return Py_BuildValue("d",step);
 }
 
+static PyObject *py2c_padcon_standard_series_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_standard_series_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_dobldobl_series_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_dobldobl_series_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_quaddobl_series_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_quaddobl_series_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_standard_pole_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_standard_pole_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_dobldobl_pole_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_dobldobl_pole_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_quaddobl_pole_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_quaddobl_pole_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_standard_estimated_distance
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_standard_estimated_distance(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_dobldobl_estimated_distance
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_dobldobl_estimated_distance(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_quaddobl_estimated_distance
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_quaddobl_estimated_distance(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_standard_hessian_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_standard_hessian_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_dobldobl_hessian_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_dobldobl_hessian_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
+static PyObject *py2c_padcon_quaddobl_hessian_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double step;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = padcon_get_quaddobl_hessian_step(&step);
+
+   return Py_BuildValue("d",step);
+}
+
 static PyObject *py2c_padcon_standard_series_coefficient
  ( PyObject *self, PyObject *args )
 {
@@ -10935,6 +11091,42 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_padcon_quaddobl_step_size",
      py2c_padcon_quaddobl_step_size, METH_VARARGS,
     "Returns the current step size of the path tracker\n which runs in quad double precision."},
+   {"py2c_padcon_standard_series_step",
+     py2c_padcon_standard_series_step, METH_VARARGS,
+    "Returns the current series step size of the path tracker which runs in standard double precision."},
+   {"py2c_padcon_dobldobl_series_step",
+     py2c_padcon_dobldobl_series_step, METH_VARARGS,
+    "Returns the current series step size of the path tracker which runs in double double precision."},
+   {"py2c_padcon_quaddobl_series_step",
+     py2c_padcon_quaddobl_series_step, METH_VARARGS,
+    "Returns the current series step size of the path tracker which runs in quad double precision."},
+   {"py2c_padcon_standard_pole_step",
+     py2c_padcon_standard_pole_step, METH_VARARGS,
+    "Returns the current pole step size of the path tracker which runs in standard double precision."},
+   {"py2c_padcon_dobldobl_pole_step",
+     py2c_padcon_dobldobl_pole_step, METH_VARARGS,
+    "Returns the current pole step size of the path tracker which runs in double double precision."},
+   {"py2c_padcon_quaddobl_pole_step",
+     py2c_padcon_quaddobl_pole_step, METH_VARARGS,
+    "Returns the current pole step size of the path tracker which runs in quad double precision."},
+   {"py2c_padcon_standard_estimated_distance",
+     py2c_padcon_standard_estimated_distance, METH_VARARGS,
+    "Returns the estimated distance to the closest solution by the path tracker which runs in standard double precision."},
+   {"py2c_padcon_dobldobl_estimated_distance",
+     py2c_padcon_dobldobl_estimated_distance, METH_VARARGS,
+    "Returns the estimated distance to the closest solution by the path tracker which runs in double double precision."},
+   {"py2c_padcon_quaddobl_estimated_distance",
+     py2c_padcon_quaddobl_estimated_distance, METH_VARARGS,
+    "Returns the estimated distance to the closest solution by the path tracker which runs in quad double precision."},
+   {"py2c_padcon_standard_hessian_step",
+     py2c_padcon_standard_hessian_step, METH_VARARGS,
+    "Returns the current Hessian step size of the path tracker which runs in standard double precision."},
+   {"py2c_padcon_dobldobl_hessian_step",
+     py2c_padcon_dobldobl_hessian_step, METH_VARARGS,
+    "Returns the current Hessian step size of the path tracker which runs in double double precision."},
+   {"py2c_padcon_quaddobl_hessian_step",
+     py2c_padcon_quaddobl_hessian_step, METH_VARARGS,
+    "Returns the current Hessian step size of the path tracker which runs in quad double precision."},
    {"py2c_padcon_standard_series_coefficient",
      py2c_padcon_standard_series_coefficient, METH_VARARGS,
     "Returns a tuple: the real and imaginary parts of the series\n coefficient of component with leadidx at position idx,\n of the series computed by the predictor in double precision.\n The integers leadidx and idx are two input parameters,\n the third input integer is the verbose flag."},
