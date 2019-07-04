@@ -531,9 +531,10 @@ void standard_next_loop ( int index )
 {
    int fail,length,failed,dim;
    char contstep,nlsb;
-   double frp,re_pole,im_pole,tval,step;
+   double frp,re_pole,im_pole,tval,step,sstep,pstep,dstep,eta;
 
    fail = padcon_initialize_standard_solution(index,1);
+   fail = solcon_dimension_of_standard_solutions(&dim);
    do
    {
       fail = padcon_standard_predict_correct(&failed,1);
@@ -544,14 +545,19 @@ void standard_next_loop ( int index )
          contstep = 'n';
       else
       {
-         fail = padcon_get_standard_forward_pole_radius(&frp);
+         fail = padcon_get_standard_pole_radius(&frp);
          fail = padcon_get_standard_closest_pole(&re_pole,&im_pole);
          fail = padcon_get_standard_t_value(&tval);
          fail = padcon_get_standard_step_size(&step);
+         fail = padcon_get_standard_series_step(&sstep);
+         fail = padcon_get_standard_pole_step(&pstep);
+         fail = padcon_get_standard_hessian_step(&dstep);
+         fail = padcon_get_standard_estimated_distance(&eta);
+         printf("series step : %.3e  pole step : %.3e  Hessian step : %.3e\n",
+                sstep, pstep, dstep);
          printf("t : %.3e  step : %.3e\n", tval, step);
-         printf("Smallest forward pole radius : %.3e\n", frp);
-         if(re_pole >= 0.0)
-            printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         printf("Smallest pole radius : %.3e  eta : %.3e\n", frp, eta);
+         printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
          printf("continue ? (y/n) ");
          contstep = getchar();
          scanf("%c",&nlsb);
@@ -564,9 +570,10 @@ void dobldobl_next_loop ( int index )
 {
    int fail,length,failed,dim;
    char contstep,nlsb;
-   double frp,re_pole,im_pole,tval,step;
+   double frp,re_pole,im_pole,tval,step,sstep,pstep,dstep,eta;
 
    fail = padcon_initialize_dobldobl_solution(index,1);
+   fail = solcon_dimension_of_dobldobl_solutions(&dim);
    do
    {
       fail = padcon_dobldobl_predict_correct(&failed,1);
@@ -577,14 +584,19 @@ void dobldobl_next_loop ( int index )
          contstep = 'n';
       else
       {
-         fail = padcon_get_dobldobl_forward_pole_radius(&frp);
+         fail = padcon_get_dobldobl_pole_radius(&frp);
          fail = padcon_get_dobldobl_closest_pole(&re_pole,&im_pole);
          fail = padcon_get_dobldobl_t_value(&tval);
          fail = padcon_get_dobldobl_step_size(&step);
+         fail = padcon_get_dobldobl_series_step(&sstep);
+         fail = padcon_get_dobldobl_pole_step(&pstep);
+         fail = padcon_get_dobldobl_hessian_step(&dstep);
+         fail = padcon_get_dobldobl_estimated_distance(&eta);
+         printf("series step : %.3e  pole step : %.3e  Hessian step : %.3e\n",
+                sstep, pstep, dstep);
          printf("t : %.3e  step : %.3e\n", tval, step);
-         printf("Smallest forward pole radius : %.3e\n", frp);
-         if(re_pole >= 0.0)
-            printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         printf("Smallest pole radius : %.3e  eta : %.3e\n", frp, eta);
+         printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
          printf("continue ? (y/n) ");
          contstep = getchar();
          scanf("%c",&nlsb);
@@ -597,9 +609,10 @@ void quaddobl_next_loop ( int index )
 {
    int fail,length,failed,dim;
    char contstep,nlsb;
-   double frp,re_pole,im_pole,tval,step;
+   double frp,re_pole,im_pole,tval,step,sstep,pstep,dstep,eta;
 
    fail = padcon_initialize_quaddobl_solution(index,1);
+   fail = solcon_dimension_of_quaddobl_solutions(&dim);
    do
    {
       fail = padcon_quaddobl_predict_correct(&failed,1);
@@ -610,14 +623,19 @@ void quaddobl_next_loop ( int index )
          contstep = 'n';
       else
       {
-         fail = padcon_get_quaddobl_forward_pole_radius(&frp);
+         fail = padcon_get_quaddobl_pole_radius(&frp);
          fail = padcon_get_quaddobl_closest_pole(&re_pole,&im_pole);
          fail = padcon_get_quaddobl_t_value(&tval);
          fail = padcon_get_quaddobl_step_size(&step);
+         fail = padcon_get_quaddobl_series_step(&sstep);
+         fail = padcon_get_quaddobl_pole_step(&pstep);
+         fail = padcon_get_quaddobl_hessian_step(&dstep);
+         fail = padcon_get_quaddobl_estimated_distance(&eta);
+         printf("series step : %.3e  pole step : %.3e  Hessian step : %.3e\n",
+                sstep, pstep, dstep);
          printf("t : %.3e  step : %.3e\n", tval, step);
-         printf("Smallest forward pole radius : %.3e\n", frp);
-         if(re_pole >= 0.0)
-            printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         printf("Smallest pole radius : %.3e  eta : %.3e\n", frp, eta);
+         printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
          printf("continue ? (y/n) ");
          contstep = getchar();
          scanf("%c",&nlsb);

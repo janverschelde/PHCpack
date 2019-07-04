@@ -5891,14 +5891,14 @@ static PyObject *py2c_padcon_standard_pole_radius
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns the smallest forward pole radius computed 
+ *   Returns the smallest pole radius computed 
  *   by the predictor in standard double precision. */
 
 static PyObject *py2c_padcon_dobldobl_pole_radius
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns the smallest forward pole radius computed
+ *   Returns the smallest pole radius computed
  *   by the predictor in double double precision.
  *   The returned number is the high part of the double double number. */
 
@@ -5906,7 +5906,7 @@ static PyObject *py2c_padcon_quaddobl_pole_radius
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns the smallest forward pole radius computed
+ *   Returns the smallest pole radius computed
  *   by the predictor in quad double precision.
  *   The returned number is the highest part of the quad double number. */
 

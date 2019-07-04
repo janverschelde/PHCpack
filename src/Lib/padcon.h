@@ -231,23 +231,23 @@ int padcon_get_quaddobl_solution ( int idx, int verbose );
  *   in the solutions container in quad double precision.
  *   If verbose = 1, then extra output will be written. */
 
-int padcon_get_standard_forward_pole_radius ( double* frp );
+int padcon_get_standard_pole_radius ( double* frp );
 /*
  * DESCRIPTION :
- *   Returns in frp the smallest forward pole radius computed 
+ *   Returns in frp the smallest pole radius computed 
  *   by the predictor in standard double precision. */
 
-int padcon_get_dobldobl_forward_pole_radius ( double* frp );
+int padcon_get_dobldobl_pole_radius ( double* frp );
 /*
  * DESCRIPTION :
- *   Returns in frp the smallest forward pole radius computed
+ *   Returns in frp the smallest pole radius computed
  *   by the predictor in double double precision.
  *   The returned frp is the high part of the double double number. */
 
-int padcon_get_quaddobl_forward_pole_radius ( double* frp );
+int padcon_get_quaddobl_pole_radius ( double* frp );
 /*
  * DESCRIPTION :
- *   Returns in frp the smallest forward pole radius computed
+ *   Returns in frp the smallest pole radius computed
  *   by the predictor in quad double precision.
  *   The returned frp is the highest part of the quad double number. */
 
@@ -298,19 +298,91 @@ int padcon_get_quaddobl_t_value ( double *tval );
 int padcon_get_standard_step_size ( double *step );
 /*
  * DESCRIPTION :
- *   Returns in tval the current step size of the path tracker
+ *   Returns in step the current step size of the path tracker
  *   which runs in standard double precision. */
 
 int padcon_get_dobldobl_step_size ( double *step );
 /*
  * DESCRIPTION :
- *   Returns in tval the current step size of the path tracker
+ *   Returns in step the current step size of the path tracker
  *   which runs in double double precision. */
 
 int padcon_get_quaddobl_step_size ( double *step );
 /*
  * DESCRIPTION :
- *   Returns in tval the current step size of the path tracker
+ *   Returns in step the current step size of the path tracker
+ *   which runs in quad double precision. */
+
+int padcon_get_standard_series_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current series step size of the path tracker
+ *   which runs in standard double precision. */
+
+int padcon_get_dobldobl_series_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current series step size of the path tracker
+ *   which runs in double double precision. */
+
+int padcon_get_quaddobl_series_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current series step size of the path tracker
+ *   which runs in quad double precision. */
+
+int padcon_get_standard_pole_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current pole step size of the path tracker
+ *   which runs in standard double precision. */
+
+int padcon_get_dobldobl_pole_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current pole step size of the path tracker
+ *   which runs in double double precision. */
+
+int padcon_get_quaddobl_pole_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current pole step size of the path tracker
+ *   which runs in quad double precision. */
+
+int padcon_get_standard_estimated_distance ( double *eta );
+/*
+ * DESCRIPTION :
+ *   Returns in eta the estimated distance to the closest solution by
+ *   the path tracker which runs in standard double precision. */
+
+int padcon_get_dobldobl_estimated_distance ( double *eta );
+/*
+ * DESCRIPTION :
+ *   Returns in eta the estimated distance to the closest solution by 
+ *   the path tracker which runs in double double precision. */
+
+int padcon_get_quaddobl_estimated_distance ( double *eta );
+/*
+ * DESCRIPTION :
+ *   Returns in eta the estimated distance to the closest solution by
+ *   the path tracker which runs in quad double precision. */
+
+int padcon_get_standard_hessian_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current Hessian step size of the path tracker
+ *   which runs in standard double precision. */
+
+int padcon_get_dobldobl_hessian_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current Hessian step size of the path tracker
+ *   which runs in double double precision. */
+
+int padcon_get_quaddobl_hessian_step ( double *step );
+/*
+ * DESCRIPTION :
+ *   Returns in step the current Hessian step size of the path tracker
  *   which runs in quad double precision. */
 
 int padcon_get_standard_series_coefficient

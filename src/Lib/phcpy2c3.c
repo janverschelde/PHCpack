@@ -8252,7 +8252,7 @@ static PyObject *py2c_padcon_standard_pole_radius
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = padcon_get_standard_forward_pole_radius(&frp);
+   fail = padcon_get_standard_pole_radius(&frp);
 
    return Py_BuildValue("d",frp);
 }
@@ -8265,7 +8265,7 @@ static PyObject *py2c_padcon_dobldobl_pole_radius
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = padcon_get_dobldobl_forward_pole_radius(&frp);
+   fail = padcon_get_dobldobl_pole_radius(&frp);
 
    return Py_BuildValue("d",frp);
 }
@@ -8278,7 +8278,7 @@ static PyObject *py2c_padcon_quaddobl_pole_radius
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = padcon_get_quaddobl_forward_pole_radius(&frp);
+   fail = padcon_get_quaddobl_pole_radius(&frp);
 
    return Py_BuildValue("d",frp);
 }
@@ -10923,13 +10923,13 @@ static PyMethodDef phcpy2c3_methods[] =
     "On entry are two integer parameters: 1) the index of the position of\n the solution and 2) the verbose flag, which is zero or one.\n Retrieves the current solution and places it at the given position\n in the solutions container in quad double precision.\n If the verbose flag is 1, then extra output will be written."},
    {"py2c_padcon_standard_pole_radius",
      py2c_padcon_standard_pole_radius, METH_VARARGS,
-    "Returns the smallest forward pole radius computed\n by the predictor in standard double precision."},
+    "Returns the smallest pole radius computed\n by the predictor in standard double precision."},
    {"py2c_padcon_dobldobl_pole_radius",
      py2c_padcon_dobldobl_pole_radius, METH_VARARGS,
-    "Returns the smallest forward pole radius computed\n by the predictor in double double precision.\n The returned number is the high part of the double double number."},
+    "Returns the smallest pole radius computed\n by the predictor in double double precision.\n The returned number is the high part of the double double number."},
    {"py2c_padcon_quaddobl_pole_radius",
      py2c_padcon_quaddobl_pole_radius, METH_VARARGS,
-    "Returns the smallest forward pole radius computed\n by the predictor in quad double precision.\n The returned number is the highest part of the quad double number."},
+    "Returns the smallest pole radius computed\n by the predictor in quad double precision.\n The returned number is the highest part of the quad double number."},
    {"py2c_padcon_standard_closest_pole",
      py2c_padcon_standard_closest_pole, METH_VARARGS,
     "Returns the complex number representation of the closest pole,\n computed by the predictor in standard double precision.\n Results are meaningful only if the real part >= 0.0."},

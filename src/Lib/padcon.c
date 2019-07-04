@@ -474,7 +474,7 @@ int padcon_get_quaddobl_solution ( int idx, int verbose )
    return fail;
 }
 
-int padcon_get_standard_forward_pole_radius ( double* frp )
+int padcon_get_standard_pole_radius ( double* frp )
 {
    int fail;
    int precision = 0;
@@ -485,7 +485,7 @@ int padcon_get_standard_forward_pole_radius ( double* frp )
    return fail;
 }
 
-int padcon_get_dobldobl_forward_pole_radius ( double* frp )
+int padcon_get_dobldobl_pole_radius ( double* frp )
 {
    int fail;
    int precision = 1;
@@ -496,7 +496,7 @@ int padcon_get_dobldobl_forward_pole_radius ( double* frp )
    return fail;
 }
 
-int padcon_get_quaddobl_forward_pole_radius ( double* frp )
+int padcon_get_quaddobl_pole_radius ( double* frp )
 {
    int fail;
    int precision = 2;
@@ -614,6 +614,138 @@ int padcon_get_quaddobl_step_size ( double *step )
    int *b;
 
    fail = _ada_use_c2phc4c(868,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_standard_series_step ( double *step )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+
+   fail = _ada_use_c2phc4c(885,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_dobldobl_series_step ( double *step )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+
+   fail = _ada_use_c2phc4c(885,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_quaddobl_series_step ( double *step )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+
+   fail = _ada_use_c2phc4c(885,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_standard_pole_step ( double *step )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+
+   fail = _ada_use_c2phc4c(886,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_dobldobl_pole_step ( double *step )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+
+   fail = _ada_use_c2phc4c(886,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_quaddobl_pole_step ( double *step )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+
+   fail = _ada_use_c2phc4c(886,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_standard_estimated_distance ( double *eta )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+
+   fail = _ada_use_c2phc4c(887,&precision,b,eta);
+
+   return fail;
+}
+
+int padcon_get_dobldobl_estimated_distance ( double *eta )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+
+   fail = _ada_use_c2phc4c(887,&precision,b,eta);
+
+   return fail;
+}
+
+int padcon_get_quaddobl_estimated_distance ( double *eta )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+
+   fail = _ada_use_c2phc4c(887,&precision,b,eta);
+
+   return fail;
+}
+
+int padcon_get_standard_hessian_step ( double *step )
+{
+   int fail;
+   int precision = 0;
+   int *b;
+
+   fail = _ada_use_c2phc4c(888,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_dobldobl_hessian_step ( double *step )
+{
+   int fail;
+   int precision = 1;
+   int *b;
+
+   fail = _ada_use_c2phc4c(888,&precision,b,step);
+
+   return fail;
+}
+
+int padcon_get_quaddobl_hessian_step ( double *step )
+{
+   int fail;
+   int precision = 2;
+   int *b;
+
+   fail = _ada_use_c2phc4c(888,&precision,b,step);
 
    return fail;
 }
