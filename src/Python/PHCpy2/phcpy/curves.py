@@ -558,9 +558,96 @@ def quaddobl_step_size():
     from phcpy.phcpy2c2 import py2c_padcon_quaddobl_step_size
     return py2c_padcon_quaddobl_step_size()
 
+def standard_series_step():
+    """
+    Returns the current series step in the tracker in double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_series_step
+    return py2c_padcon_standard_series_step()
+
+def dobldobl_series_step():
+    """
+    Returns the current series step in the tracker in double double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_series_step
+    return py2c_padcon_dobldobl_series_step()
+
+def quaddobl_series_step():
+    """
+    Returns the current series step in the tracker in quad double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_series_step
+    return py2c_padcon_quaddobl_series_step()
+
+def standard_pole_step():
+    """
+    Returns the current pole step in the tracker in double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_pole_step
+    return py2c_padcon_standard_pole_step()
+
+def dobldobl_pole_step():
+    """
+    Returns the current pole step in the tracker in double double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_pole_step
+    return py2c_padcon_dobldobl_pole_step()
+
+def quaddobl_pole_step():
+    """
+    Returns the current pole step in the tracker in quad double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_pole_step
+    return py2c_padcon_quaddobl_pole_step()
+
+def standard_estimated_distance():
+    """
+    Returns the current estimated distance to the closest solution computed
+    by the tracker in double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_estimated_distance
+    return py2c_padcon_standard_estimated_distance()
+
+def dobldobl_estimated_distance():
+    """
+    Returns the current estimated distance to the closest solution computed
+    by the tracker in double double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_estimated_distance
+    return py2c_padcon_dobldobl_estimated_distance()
+
+def quaddobl_estimated_distance():
+    """
+    Returns the current estimated distance to the closest solution computed
+    by the tracker in quad double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_estimated_distance
+    return py2c_padcon_quaddobl_estimated_distance()
+
+def standard_hessian_step():
+    """
+    Returns the current Hessian step in the tracker in double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_standard_hessian_step
+    return py2c_padcon_standard_hessian_step()
+
+def dobldobl_hessian_step():
+    """
+    Returns the current Hessian step in the tracker in double double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_dobldobl_hessian_step
+    return py2c_padcon_dobldobl_hessian_step()
+
+def quaddobl_hessian_step():
+    """
+    Returns the current Hessian step in the tracker in quad double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_padcon_quaddobl_hessian_step
+    return py2c_padcon_quaddobl_hessian_step()
+
 def standard_pole_radius():
     """
-    Returns the smallest forward pole radius,
+    Returns the smallest pole radius,
     used in the predictor in standard double precision.
     """
     from phcpy.phcpy2c2 import py2c_padcon_standard_pole_radius
@@ -568,7 +655,7 @@ def standard_pole_radius():
 
 def dobldobl_pole_radius():
     """
-    Returns the smallest forward pole radius,
+    Returns the smallest pole radius,
     used in the predictor in double double precision.
     The returned double is the high part of the quad double.
     """
@@ -577,7 +664,7 @@ def dobldobl_pole_radius():
 
 def quaddobl_pole_radius():
     """
-    Returns the smallest forward pole radius,
+    Returns the smallest pole radius,
     used in the predictor in quad double precision.
     The returned double is the highest part of the quad double.
     """

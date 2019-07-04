@@ -1,3 +1,6 @@
+Thu 4 Jul 2019 : added functions to the curves module to return the various
+  different step sizes.
+
 Tue 25 Jun 2019 : extended the curves modules with functions to tune the
   multiplication factor for the curvature step control.
 
