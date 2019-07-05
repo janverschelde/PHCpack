@@ -1,4 +1,4 @@
-phcpy 0.9.6 offers a simple Python interface to PHCv2.4.68
+phcpy 0.9.7 offers a simple Python interface to PHCv2.4.69
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -68,6 +68,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.9.7 : 2019-07-05 : improved step-by-step Pade continuation
 0.9.6 : 2019-06-21 : improved random_coefficient_system in the solver module
 0.9.5 : 2019-05-17 : test in curves module for natural parameter homotopy
 0.9.4 : 2019-03-29 : gamma added to step-by-step path tracker in trackers
