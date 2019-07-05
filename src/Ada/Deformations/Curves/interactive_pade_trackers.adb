@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
@@ -171,7 +170,7 @@ package body Interactive_Pade_Trackers is
     end loop;
   end QuadDobl_Loop;
  
-  procedure Standard_Main is
+  procedure Standard_Main ( verbose : in integer32 := 0 ) is
 
     nbq,nvr,idx,nbpar : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
@@ -185,6 +184,9 @@ package body Interactive_Pade_Trackers is
     use Standard_Parameter_Systems;
 
   begin
+    if verbose > 0
+     then put_line("-> in interactive_pade_trackers.Standard_Main ...");
+    end if;
     new_line;
     put_line("Tuning the homotopy continuation parameters ...");
     new_line;
@@ -222,7 +224,7 @@ package body Interactive_Pade_Trackers is
     end if;
   end Standard_Main;
 
-  procedure DoblDobl_Main is
+  procedure DoblDobl_Main ( verbose : in integer32 := 0 ) is
 
     nbq,nvr,idx,nbpar : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
@@ -236,6 +238,9 @@ package body Interactive_Pade_Trackers is
     use DoblDobl_Parameter_Systems;
 
   begin
+    if verbose > 0
+     then put_line("-> in interactive_pade_trackers.DoblDobl_Main ...");
+    end if;
     new_line;
     put_line("Tuning the homotopy continuation parameters ...");
     new_line;
@@ -273,7 +278,7 @@ package body Interactive_Pade_Trackers is
     end if;
   end DoblDobl_Main;
 
-  procedure QuadDobl_Main is
+  procedure QuadDobl_Main ( verbose : in integer32 := 0 ) is
 
     nbq,nvr,idx,nbpar : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
@@ -287,6 +292,9 @@ package body Interactive_Pade_Trackers is
     use QuadDobl_Parameter_Systems;
 
   begin
+    if verbose > 0
+     then put_line("-> in interactive_pade_trackers.QuadDobl_Main ...");
+    end if;
     new_line;
     put_line("Tuning the homotopy continuation parameters ...");
     new_line;

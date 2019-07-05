@@ -32,6 +32,7 @@ with Series_and_Solutions;
 with Power_Series_Methods;              use Power_Series_Methods;
 with Regular_Newton_Puiseux;
 with Series_Path_Trackers;
+with Interactive_Pade_Trackers;
 
 procedure mainseries ( precision : in character;
                        infilename,outfilename : in string;
@@ -667,12 +668,24 @@ procedure mainseries ( precision : in character;
           when others => null;
         end case;
       when '3' =>
-        case valprc is
-          when '1' => Series_Path_Trackers.Standard_Main(vrb-1);
-          when '2' => Series_Path_Trackers.DoblDobl_Main(vrb-1);
-          when '4' => Series_Path_Trackers.QuadDobl_Main(vrb-1);
-          when others => null;
-        end case;
+        new_line;
+        put("Step-by-step interactive execution ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          case valprc is
+            when '1' => Interactive_Pade_Trackers.Standard_Main(vrb-1);
+            when '2' => Interactive_Pade_Trackers.DoblDobl_Main(vrb-1);
+            when '4' => Interactive_Pade_Trackers.QuadDobl_Main(vrb-1);
+            when others => null;
+          end case;
+        else
+          case valprc is
+            when '1' => Series_Path_Trackers.Standard_Main(vrb-1);
+            when '2' => Series_Path_Trackers.DoblDobl_Main(vrb-1);
+            when '4' => Series_Path_Trackers.QuadDobl_Main(vrb-1);
+            when others => null;
+          end case;
+       end if;
       when others => null;
     end case;
   end Nonzero_Precision_Main;

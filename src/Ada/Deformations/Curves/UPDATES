@@ -1,5 +1,7 @@
 Fri 5 Jul 2019 : removed "Testing ..." line in homotopy_series_readers.adb.
   New package interactive_pade_trackers with code from ts_nxtpadsol.
+  Added verbose level to the main procedues in interactive_pade_trackers
+  and updated mainseries.adb, so step-by-step is possible with phc -u.
 
 Wed 3 Jul 2019 : refactored code in standard_seriespade_tracker and added
   the curvature bound with better output statistics, tested by ts_nxtpadsol.
