@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
@@ -40,8 +39,6 @@ package body Homotopy_Series_Readers is
     ans : character;
 
   begin
-    new_line;
-    put_line("Testing the creation of a homotopies as a series system ...");
     new_line;
     put_line("Reading the target system ..."); get(target);
     new_line;
@@ -87,8 +84,6 @@ package body Homotopy_Series_Readers is
 
   begin
     new_line;
-    put_line("Testing the creation of a homotopies as a series system ...");
-    new_line;
     put_line("Reading the target system ..."); get(target);
     new_line;
     put_line("Reading the start system and its solutions ...");
@@ -132,8 +127,6 @@ package body Homotopy_Series_Readers is
     ans : character;
 
   begin
-    new_line;
-    put_line("Testing the creation of a homotopies as a series system ...");
     new_line;
     put_line("Reading the target system ..."); get(target);
     new_line;
@@ -271,7 +264,7 @@ package body Homotopy_Series_Readers is
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out Standard_Complex_Series_Vectors.Vector ) is
 
-    hom : Standard_Complex_Poly_Systems.Poly_Sys(1..nbequ)
+    hom : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := Standard_Homotopy.Homotopy_System;
     sys : Standard_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);
@@ -297,7 +290,7 @@ package body Homotopy_Series_Readers is
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out DoblDobl_Complex_Series_Vectors.Vector ) is
 
-    hom : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
+    hom : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := DoblDobl_Homotopy.Homotopy_System;
     sys : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);
@@ -323,7 +316,7 @@ package body Homotopy_Series_Readers is
                 idx,nbequ : in integer32; nbterms,nbiters : in natural32;
                 srv,eva : out QuadDobl_Complex_Series_Vectors.Vector ) is
 
-    hom : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
+    hom : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbequ)
         := QuadDobl_Homotopy.Homotopy_System;
     sys : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nbequ)
         := Series_and_Homotopies.Create(hom,idx);

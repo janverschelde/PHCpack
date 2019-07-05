@@ -1,3 +1,6 @@
+Fri 5 Jul 2019 : removed "Testing ..." line in homotopy_series_readers.adb.
+  New package interactive_pade_trackers with code from ts_nxtpadsol.
+
 Wed 3 Jul 2019 : refactored code in standard_seriespade_tracker and added
   the curvature bound with better output statistics, tested by ts_nxtpadsol.
   Updated also the double double and quad double versions in the files

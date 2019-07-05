@@ -86,5 +86,6 @@ mainseries                          : defines the phc -u
 standard_seriespade_tracker      : provides a get_next() method tracker
 dobldobl_seriespade_tracker      : a get_next() tracker with double doubles
 quaddobl_seriespade_tracker      : a get_next() tracker with quad doubles
+interactive_pade_trackers        : calls the step-by-step path trackers
 ts_nxtpadsol                     : test on the get_next() trackers
 -------------------------------------------------------------------------------
