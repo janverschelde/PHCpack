@@ -1,3 +1,5 @@
+Fri 5 Jul 2019 : updated greeting_banners for version 2.4.69.
+
 Wed 26 Jun 2019 : added the verbose level to the solve_for_special_cases
   procedures in black_box_solver_cases.  Applied the verbose parameter 
   inside the procedures of black_box_solvers.adb.
