@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.69
+PHCpack as a library of C functions with a state machine in PHCv2.4.70
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -32,6 +32,7 @@ phcpack.c            : definitions of functions in phcpack.h
 syscon.h             : prototypes for systems container
 syscon.c             : definitions of functions in syscon.h
 lib_syscon.c         : test on operations in systems container
+lib_tabform.c        : test on tableau form of a system
 syspool.h            : prototypes for systems pool
 syspool.c            : definitions of functions in syspool.h
 solcon.h             : prototypes for solutions container
