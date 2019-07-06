@@ -10,6 +10,8 @@
 
 # PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
 PYTHON=/usr/include/python2.7
+PYTHON37=/Library/Frameworks/Python.framework/Versions/3.7/include/python3.7m
+PYTHON37lib=/Library/Frameworks/Python.framework/Versions/3.7/lib
 PYTHON36=/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
 PYTHON36lib=/Library/Frameworks/Python.framework/Versions/3.6/lib
 PYTHON35=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
@@ -61,12 +63,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-# GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+GNATFLAGS=-gnatv -O3 -gnatp -gnatf
 # GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-GNATFLAGS=-gnatv -gnatwa -gnatVa
+# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+# GNATFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -2431,6 +2433,23 @@ lib_syscon_cpp:
 	gnatlink -C use_c2phc4c syscon.o lib_syscon.o \
                     /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/lib_syscon --LINK=g++
+
+lib_tabform:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/lib_tabform.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c syscon.o lib_tabform.o \
+                 -o $(BIN)/lib_tabform
+
+lib_tabform_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_tabform.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c syscon.o lib_tabform.o \
+                    /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -o $(BIN)/lib_tabform --LINK=g++
 
 lib_solcon:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc4c.adb
