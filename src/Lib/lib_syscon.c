@@ -17,17 +17,35 @@ LIST *push ( LIST *l, int n, double *c, int *e );
 /* pushes the monomial to the front of the list l */
 
 void write_monomial_list ( LIST *l, int n );
-/* writes the list of monomials */
+/*
+ * DESCRIPTION :
+ *   Writes the list of monomials,
+ *   the number of variables is in n. */
 
-void test_retrievals ( int n, LIST *p[] );
-/* prints the system in the container,
- * and returns the lists of terms in p */
+void test_retrievals ( int neq, int nvr, LIST *p[] );
+/*
+ * DESCRIPTION :
+ *   Prints the system in the container,
+ *   and returns the lists of terms in p.
+ *
+ * ON ENTRY :
+ *   neq     number of equations in the system;
+ *   nvr     number of variables in the system.
+ *
+ * ON RETURN :
+ *   p       an array of lists of terms.  */
 
-void test_additions ( int n, LIST *p[] );
-/* fills up the container with the terms in p */
+void test_additions ( int neq, int nvr, LIST *p[] );
+/* 
+ * DESCRIPTION :
+ *   Fills up the container with the terms in p.
+ *   The number of equations is in neq. */
 
-void test_symbol_table ( void );
-/* tests operations in the symbol table */
+void test_symbol_table ( int *nvr );
+/*
+ * DESCRIPTION :
+ *   Tests operations in the symbol table.
+ *   On return in nvr is the number of symbols. */
 
 void test_standard_container ( void );
 /* test operations of standard system container */
@@ -76,43 +94,43 @@ int main(void)
    return 0;
 }
 
-void test_retrievals ( int n, LIST *p[] )
+void test_retrievals ( int neq, int nvr, LIST *p[] )
 {
    int i,j,k,nt,fail;
    double c[2];
-   int d[n];
+   int d[nvr];
 
-   for(i=1; i<=n; i++)
+   for(i=1; i<=neq; i++)
    {
-      fail = syscon_number_of_standard_terms(i,&nt);
+      fail = syscon_number_of_standard_terms(i, &nt);
       printf("  #terms in polynomial %d : %d\n", i, nt);
 
       p[i-1] = NULL;
       for(j=1; j<=nt; j++)
       {
-         fail = syscon_retrieve_standard_term(i,j,n,d,c);
-         printf(" %.15f  %.15f", c[0], c[1]);
-         for (k=0; k<n; k++) printf(" %d", d[k]);
+         fail = syscon_retrieve_standard_term(i,j,nvr,d,c);
+         printf("%22.15e  %22.15e", c[0], c[1]);
+         for (k=0; k<nvr; k++) printf(" %d", d[k]);
          printf("\n");
-         p[i-1] = push(p[i-1],n,c,d);
+         p[i-1] = push(p[i-1],nvr,c,d);
       }
    }
 }
 
-void test_additions ( int n, LIST *p[] )
+void test_additions ( int neq, int nvr, LIST *p[] )
 {
    int i,fail;
    double *c;
    LIST *l;
 
-   fail = syscon_initialize_number_of_standard_polynomials(n);
-   for(i=0; i<n; i++)
+   fail = syscon_initialize_number_of_standard_polynomials(neq);
+   for(i=0; i<neq; i++)
       for(l=p[i]; l!=NULL; l=l->next)
       {
          double cf[2];
          cf[0] = l->rc;
          cf[1] = l->ic;
-         fail = syscon_add_standard_term(i+1,n,l->exp,cf);
+         fail = syscon_add_standard_term(i+1,nvr,l->exp,cf);
       }
    printf("\nThe reconstructed system :\n");
    fail = syscon_write_standard_system();
@@ -141,64 +159,65 @@ void write_monomial_list ( LIST *l, int n )
 
    for(p=l; p!= NULL; p=p->next)
    {
-      printf(" %.15f  %.15f", p->rc, p->ic);
+      printf("%22.15e  %22.15e", p->rc, p->ic);
       for(k=0; k<n; k++) printf(" %d", p->exp[k]);
       printf("\n");
    }
 }
 
-void test_symbol_table ( void )
+void test_symbol_table ( int *nvr )
 {
-   int n,fail;
+   int fail;
    int sbsize = 80;
    int size;
    char *s;
 
-   fail = syscon_number_of_symbols(&n);
-   printf("number of symbols in the table : %d\n",n);
+   fail = syscon_number_of_symbols(nvr);
+   printf("number of symbols in the table : %d\n", *nvr);
    printf("the symbols :");
    fail = syscon_write_symbols();
    printf("\n");
-   size = n*sbsize;
-   s = (char*)calloc(size,sizeof(char));
-   fail = syscon_string_of_symbols(&size,s);
-   printf("the string of symbols : %s\n",s);
-   printf("number of characters in the string : %d\n",size);
+   size = (*nvr)*sbsize;
+   s = (char*)calloc(size, sizeof(char));
+   fail = syscon_string_of_symbols(&size, s);
+   printf("the string of symbols : %s\n", s);
+   printf("number of characters in the string : %d\n", size);
 }
 
 void test_standard_container ( void )
 {
-   int n,fail,*d;
+   int neq,nvr,fail,*d;
    double *c;
 
    fail = syscon_read_standard_system();
    fail = syscon_write_standard_system();
-   fail = syscon_number_of_standard_polynomials(&n);
+   fail = syscon_number_of_standard_polynomials(&neq);
 
-   test_symbol_table();
+   test_symbol_table(&nvr);
 
-   printf("\nThe dimension of the system : %d\n",n);
+   printf("\nThe number of equations in the system : %d\n", neq);
+   printf("The number of variables in the system : %d\n\n", nvr);
    {
-      LIST *p[n];
+      LIST *p[neq];
       int i;
 
-      test_retrievals(n,p);
+      test_retrievals(neq, nvr, p);
 
       fail = syscon_clear_standard_system();
 
-      for(i=0; i<n; i++)
+      for(i=0; i<neq; i++)
       {
          printf("The terms in polynomial %d : \n", i+1);
-         write_monomial_list(p[i],n);
+         write_monomial_list(p[i], nvr);
       }
 
-      test_additions(n,p);
+      test_additions(neq, nvr, p);
    }
 }
 
 void test_dobldobl_container ( void )
 {
-   int fail,n,i,t,deg;
+   int fail,n,i,t,deg,nvr;
 
    fail = syscon_read_dobldobl_system();
    fail = syscon_write_dobldobl_system();
@@ -225,12 +244,12 @@ void test_dobldobl_container ( void )
       printf("polynomial %d : %s\n",i,buffer);
    }
    printf("\n");
-   test_symbol_table();
+   test_symbol_table(&nvr);
 }
 
 void test_quaddobl_container ( void )
 {
-   int fail,n,i,t,deg;
+   int fail,n,i,t,deg,nvr;
 
    fail = syscon_read_quaddobl_system();
    fail = syscon_write_quaddobl_system();
@@ -257,12 +276,12 @@ void test_quaddobl_container ( void )
       printf("polynomial %d : %s\n",i,buffer);
    }
    printf("\n");
-   test_symbol_table();
+   test_symbol_table(&nvr);
 }
 
 void test_multprec_container ( void )
 {
-   int deci,fail,n,i,t,deg;
+   int deci,fail,n,i,t,deg,nvr;
 
    printf("\nGive the number of decimal places in the working precision : ");
    scanf("%d",&deci);
@@ -291,7 +310,7 @@ void test_multprec_container ( void )
       printf("polynomial %d : %s\n",i,buffer);
    }
    printf("\n");
-   test_symbol_table();
+   test_symbol_table(&nvr);
 }
 
 void show_random_system ( void )
