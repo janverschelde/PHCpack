@@ -4,18 +4,54 @@
 #include <stdlib.h>
 #include "syscon.h"
 
-void standard_tableau_form ( void );
+int total_number_of_standard_terms ( void );
+/*
+ * DESCRIPTION :
+ *   Returns the total number of terms in the system stored in the
+ *   container for systems with standard double precision coefficients. */
+
+void standard_tableau_form
+ ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents,
+   int verbose );
+/*
+ * DESCRIPTION :
+ *   Given allocated data structures, defines the coefficients and exponents
+ *   of the tableau form of the system stored in the container for systems
+ *   with standard double precision coefficients.
+ *
+ * ON ENTRY :
+ *   neq            number of equations of the system;
+ *   nvr            number of variables of the system;
+ *   nbterms        array of size neq, nbterms[k] contains the number
+ *                  of terms in the (k+1)-th equation in the system;
+ *   coefficients   allocated for 2 times the total number of terms;
+ *   exponents      allocated for nvr times the total number of terms;
+ *   verbose        if > 0, then the tableau form is written,
+ *                  if = 0, then the function remains silent.
+ *
+ * ON RETURN :
+ *   coefficients   coefficients of the system;
+ *   exponents      exponents of the system. */
+
+void write_standard_tableau_form
+ ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents );
+/*
+ * DESCRIPTION :
+ *   Writes the tableau form of the system to screen.
+ *
+ * ON ENTRY :
+ *   neq            number of equations of the system;
+ *   nvr            number of variables of the system;
+ *   nbterms        array of size neq, nbterms[k] contains the number
+ *                  of terms in the (k+1)-th equation in the system;
+ *   coefficients   coefficients of the system;
+ *   exponents      exponents of the system. */
+
+void make_standard_tableau_form ( void );
 /*
  * DESCRIPTION :
  *   Sets up the data structures for the tableau form of the system
  *   in the container with standard double precision coefficients. */
-
-void write_standard_tableau_form ( int n );
-/*
- * DESCRIPTION :
- *   Writes the tableau form of the system in the container
- *   with standard double precision coefficients.
- *   The dimension of the system is given in n. */
 
 void test_standard_container ( void );
 /*
@@ -32,74 +68,58 @@ int main ( void )
    return 0;
 }
 
-void write_standard_tableau_form ( int n )
+int total_number_of_standard_terms ( void )
 {
-   int i,j,k,nt,fail;
-   double c[2];
-   int d[n];
+   int result = 0;
+   int fail,neq,idx,nbt;
 
-   for(i=1; i<=n; i++)
+   fail = syscon_number_of_standard_polynomials(&neq);
+
+   for(idx=1; idx <= neq; idx++)
    {
-      fail = syscon_number_of_standard_terms(i,&nt);
-      printf("  #terms in polynomial %d : %d\n", i, nt);
+      fail = syscon_number_of_standard_terms(idx,&nbt);
+      result = result + nbt;
+   }
+   return result;
+}
 
-      for(j=1; j<=nt; j++)
+void standard_tableau_form
+ ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents,
+   int verbose )
+{
+   int wrk[nvr];  // work space to hold the exponents of a term
+   double cff[2]; // holds real and imaginary part of a coefficient
+   int cffidx = 0;
+   int expidx = 0;
+   int fail,idx,idxtrm,k;
+
+   if(verbose > 0) printf("%d\n", neq);
+   for(idx=0; idx < neq; idx++)
+   {
+      if(verbose > 0) printf("%d\n", nbterms[idx]);
+      for(idxtrm=1; idxtrm <= nbterms[idx]; idxtrm++)
       {
-         fail = syscon_retrieve_standard_term(i,j,n,d,c);
-         printf("%22.15e  %22.15e", c[0], c[1]);
-         for (k=0; k<n; k++) printf(" %d", d[k]);
-         printf("\n");
+         fail = syscon_retrieve_standard_term(idx+1,idxtrm,neq,wrk,cff);
+         coefficients[cffidx++] = cff[0];
+         coefficients[cffidx++] = cff[1];
+         if(verbose > 0)
+         {
+            printf("%22.15e  %22.15e", cff[0], cff[1]);
+            for (k=0; k < nvr; k++) printf(" %d", wrk[k]);
+            printf("\n");
+         }
+         for (k=0; k < nvr; k++) exponents[expidx++] = wrk[k];
       }
    }
 }
 
-void standard_tableau_form ( void )
+void write_standard_tableau_form
+ ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents )
 {
-   int fail,neq,nbt,idx,nbtsum,cffidx,expidx,idxtrm,k;
-   double cff[2];
-   double* coefficients;
-   int* nbterms;
-   int* exponents;
+   int cffidx = 0;
+   int expidx = 0;
+   int idx,idxtrm,k;
 
-   fail = syscon_number_of_standard_polynomials(&neq);
-
-   nbterms = (int*)calloc(neq,sizeof(int));
-   
-   nbtsum = 0;
-   for(idx=1; idx <= neq; idx++)
-   {
-      fail = syscon_number_of_standard_terms(idx,&nbt);
-      printf("  #terms in polynomial %d : %d\n", idx, nbt);
-      nbterms[idx-1] = nbt;
-      nbtsum = nbtsum + nbt;
-   }
-   printf("Total number of terms : %d = %d", nbtsum, nbterms[0]);
-   for(idx=1; idx<neq; idx++) printf(" + %d", nbterms[idx]);
-   printf("\n");
-   coefficients = (double*)calloc(2*nbtsum,sizeof(double));
-   exponents = (int*)calloc(neq*nbtsum,sizeof(int));
-   {
-      int wrk[neq];
-
-      cffidx = 0; expidx = 0;
-      printf("%d\n", neq);
-      for(idx=0; idx < neq; idx++)
-      {
-         printf("%d\n", nbterms[idx]);
-         for(idxtrm=1; idxtrm <= nbterms[idx]; idxtrm++)
-         {
-            fail = syscon_retrieve_standard_term(idx+1,idxtrm,neq,wrk,cff);
-            coefficients[cffidx++] = cff[0];
-            coefficients[cffidx++] = cff[1];
-            printf("%22.15e  %22.15e", cff[0], cff[1]);
-            for (k=0; k < neq; k++) printf(" %d", wrk[k]);
-            for (k=0; k < neq; k++) exponents[expidx++] = wrk[k];
-            printf("\n");
-         }
-      }
-   }
-   printf("The tableau format :\n");
-   cffidx = 0; expidx = 0;
    printf("%d\n", neq);
    for(idx=0; idx < neq; idx++)
    {
@@ -109,10 +129,44 @@ void standard_tableau_form ( void )
          printf("%22.15e  %22.15e",
                 coefficients[cffidx], coefficients[cffidx+1]);
          cffidx = cffidx + 2;
-         for (k=0; k < neq; k++) printf(" %d", exponents[expidx++]);
+         for (k=0; k < nvr; k++) printf(" %d", exponents[expidx++]);
          printf("\n");
       }
    }
+}
+
+void make_standard_tableau_form ( void )
+{
+   int fail,neq,nvr,nbt,idx,nbtsum;
+   int *nbterms;
+   int *exponents;
+   double *coefficients;
+
+   fail = syscon_number_of_standard_polynomials(&neq);
+   fail = syscon_number_of_symbols(&nvr);
+
+   printf("\nThe number of equations in the system : %d\n",neq);
+   printf("The number of variables in the system : %d\n\n",nvr);
+
+   nbtsum = total_number_of_standard_terms();
+   nbterms = (int*)calloc(neq,sizeof(int));
+   
+   for(idx=1; idx <= neq; idx++)
+   {
+      fail = syscon_number_of_standard_terms(idx,&nbt);
+      printf("  #terms in polynomial %d : %d\n", idx, nbt);
+      nbterms[idx-1] = nbt;
+   }
+   printf("Total number of terms : %d = %d", nbtsum, nbterms[0]);
+   for(idx=1; idx<neq; idx++) printf(" + %d", nbterms[idx]);
+   printf("\n");
+   coefficients = (double*)calloc(2*nbtsum,sizeof(double));
+   exponents = (int*)calloc(nvr*nbtsum,sizeof(int));
+
+   standard_tableau_form(neq,nvr,nbterms,coefficients,exponents,1);
+
+   printf("The tableau format :\n");
+   write_standard_tableau_form(neq,nvr,nbterms,coefficients,exponents);
 }
 
 void test_standard_container ( void )
@@ -122,10 +176,6 @@ void test_standard_container ( void )
 
    fail = syscon_read_standard_system();
    fail = syscon_write_standard_system();
-   fail = syscon_number_of_standard_polynomials(&n);
 
-   printf("\nThe dimension of the system : %d\n",n);
-
-   write_standard_tableau_form(n);
-   standard_tableau_form();
+   make_standard_tableau_form();
 }

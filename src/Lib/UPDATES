@@ -1,5 +1,7 @@
 Sun 7 Jul 2019 : improved lib_syscon.c for systems with different number
-  of equations and number of variables.
+  of equations and number of variables.  Improved lib_tabform.c for general
+  systems with different number of equations and variables, refactored code
+  into separate functions.
 
 Sat 6 Jul 2019 : new test program lib_tabform.c, to develop the tableau form
   of a polynomial system as an alternative to the symbolic representation.
