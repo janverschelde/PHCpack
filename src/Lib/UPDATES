@@ -1,5 +1,7 @@
 Sat 6 Jul 2019 : new test program lib_tabform.c, to develop the tableau form
   of a polynomial system as an alternative to the symbolic representation.
+  Added function to allocate and define coefficients and exponents of
+  tableau form in lib_tabform.c.
 
 Thu 4 Jul 2019 : updated padcon, lib_padcon, for the showing of different
   step sizes, updates in phcpy2c.h, phcpy2c2.c, phcpy2c3.c for name change.
