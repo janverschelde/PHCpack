@@ -166,14 +166,24 @@ function use_syscon ( job : integer32;
 
   function Job1 return integer32 is -- write system in container
  
+    use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    nvr : natural32;
 
   begin
     if lp /= null then
-      if PHCpack_Operations.file_okay
-       then put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
-       else put(standard_output,natural32(lp'last),lp.all);
+      nvr := Number_of_Unknowns(lp(lp'first));
+      if PHCpack_Operations.file_okay then
+        if integer32(nvr) = lp'last then
+          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
+        else
+          put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
+        end if;
+      elsif integer32(nvr) = lp'last then
+        put(standard_output,natural32(lp'last),lp.all);
+      else
+        put(standard_output,natural32(lp'last),nvr,lp.all);
       end if;
     end if;
     return 0;
@@ -181,14 +191,24 @@ function use_syscon ( job : integer32;
 
   function Job101 return integer32 is -- write system in container
    
+    use Standard_Complex_Laurentials;
     use Standard_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+    nvr : natural32;
 
   begin
     if lp /= null then
-      if PHCpack_Operations.file_okay
-       then put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
-       else put(standard_output,natural32(lp'last),lp.all);
+      nvr := Number_of_Unknowns(lp(lp'first));
+      if PHCpack_Operations.file_okay then
+        if integer32(nvr) = lp'last then
+          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
+        else
+          put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
+        end if;
+      elsif integer32(nvr) = lp'last then
+        put(standard_output,natural32(lp'last),lp.all);
+      else
+        put(standard_output,natural32(lp'last),nvr,lp.all);
       end if;
     end if;
     return 0;
@@ -196,14 +216,24 @@ function use_syscon ( job : integer32;
 
   function Job111 return integer32 is -- write system in container
  
+    use DoblDobl_Complex_Laurentials;
     use DoblDobl_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    nvr : natural32;
 
   begin
     if lp /= null then
-      if PHCpack_Operations.file_okay
-       then put(PHCpack_Operations.output_file,lp.all);
-       else put(standard_output,lp.all);
+      nvr := Number_of_Unknowns(lp(lp'first));
+      if PHCpack_Operations.file_okay then
+        if integer32(nvr) = lp'last then
+          put(PHCpack_Operations.output_file,lp.all);
+        else
+          put(PHCpack_Operations.output_file,nvr,lp.all);
+        end if;
+      elsif integer32(nvr) = lp'last then
+        put(standard_output,lp.all);
+      else
+        put(standard_output,nvr,lp.all);
       end if;
     end if;
     return 0;
@@ -211,14 +241,24 @@ function use_syscon ( job : integer32;
 
   function Job121 return integer32 is -- write system in container
  
+    use QuadDobl_Complex_Laurentials;
     use QuadDobl_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    nvr : natural32;
 
   begin
     if lp /= null then
-      if PHCpack_Operations.file_okay
-       then put(PHCpack_Operations.output_file,lp.all);
-       else put(standard_output,lp.all);
+      nvr := Number_of_Unknowns(lp(lp'first));
+      if PHCpack_Operations.file_okay then
+        if integer32(nvr) = lp'last then
+          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
+        else
+          put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
+        end if;
+      elsif integer32(nvr) = lp'last then
+        put(standard_output,natural32(lp'last),lp.all);
+      else
+        put(standard_output,natural32(lp'last),nvr,lp.all);
       end if;
     end if;
     return 0;
@@ -226,14 +266,25 @@ function use_syscon ( job : integer32;
 
   function Job131 return integer32 is -- write system in container
  
+    use Multprec_Complex_Laurentials;
     use Multprec_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := Multprec_LaurSys_Container.Retrieve;
+    nvr : natural32;
 
   begin
     if lp /= null then
-      if PHCpack_Operations.file_okay
-       then put(PHCpack_Operations.output_file,lp.all);
-       else put(standard_output,lp.all);
+      nvr := Number_of_Unknowns(lp(lp'first));
+      if PHCpack_Operations.file_okay then
+       -- if integer32(nvr) = lp'last then
+          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
+       -- else
+       --   put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
+       -- end if;
+     -- elsif integer32(nvr) = lp'last then
+      else
+        put(standard_output,natural32(lp'last),lp.all);
+     -- else
+     --   put(standard_output,natural32(lp'last),nvr,lp.all);
       end if;
     end if;
     return 0;
@@ -241,16 +292,24 @@ function use_syscon ( job : integer32;
 
   function Job201 return integer32 is -- write system in container
  
+    use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Poly_Systems;
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    nvr : natural32;
 
   begin
     if lp /= null then
-      if PHCpack_Operations.file_okay
-      -- then put(PHCpack_Operations.output_file,lp'last,lp.all);
-       then put(PHCpack_Operations.output_file,lp.all);
-      -- else put(standard_output,lp'last,lp.all);
-       else put(standard_output,lp.all);
+      nvr := Number_of_Unknowns(lp(lp'first));
+      if PHCpack_Operations.file_okay then
+        if integer32(nvr) = lp'last then
+          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
+        else
+          put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
+        end if;
+      elsif integer32(nvr) = lp'last then
+        put(standard_output,natural32(lp'last),lp.all);
+      else
+        put(standard_output,natural32(lp'last),nvr,lp.all);
       end if;
     end if;
     return 0;
@@ -258,16 +317,24 @@ function use_syscon ( job : integer32;
 
   function Job211 return integer32 is -- write system in container
  
+    use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Poly_Systems;
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    nvr : natural32;
 
   begin
     if lp /= null then
-      if PHCpack_Operations.file_okay
-      -- then put(PHCpack_Operations.output_file,lp'last,lp.all);
-       then put(PHCpack_Operations.output_file,lp.all);
-      -- else put(standard_output,lp'last,lp.all);
-       else put(standard_output,lp.all);
+      nvr := Number_of_Unknowns(lp(lp'first));
+      if PHCpack_Operations.file_okay then
+        if integer32(nvr) = lp'last then
+          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
+        else   
+          put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
+        end if;
+      elsif integer32(nvr) = lp'last then
+        put(standard_output,natural32(lp'last),lp.all);
+      else
+        put(standard_output,natural32(lp'last),nvr,lp.all);
       end if;
     end if;
     return 0;

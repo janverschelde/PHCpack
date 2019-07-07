@@ -1,3 +1,6 @@
+Sun 7 Jul 2019 : improved use_syscon.adb for the output of systems with
+  different number of equations than variables.
+
 Wed 3 Jul 2019 : extended use_padcon and use_c2phc4c with four jobs to
   retrieve values of the step sizes and the estimated distance eta.
 
