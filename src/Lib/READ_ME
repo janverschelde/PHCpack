@@ -32,6 +32,8 @@ phcpack.c            : definitions of functions in phcpack.h
 syscon.h             : prototypes for systems container
 syscon.c             : definitions of functions in syscon.h
 lib_syscon.c         : test on operations in systems container
+tabform.h            : prototypes of functions to compute the tableau form
+tabform.c            : definitions of functions for tableau formats
 lib_tabform.c        : test on tableau form of a system
 syspool.h            : prototypes for systems pool
 syspool.c            : definitions of functions in syspool.h

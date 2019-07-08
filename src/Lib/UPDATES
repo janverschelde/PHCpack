@@ -1,3 +1,6 @@
+Mon 8 Jul 2019 : new tabform.h and tabform.c with functions to make the
+  tableau form of a system, with code from lib_tabform.c.
+
 Sun 7 Jul 2019 : improved lib_syscon.c for systems with different number
   of equations and number of variables.  Improved lib_tabform.c for general
   systems with different number of equations and variables, refactored code
