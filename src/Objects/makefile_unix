@@ -2901,17 +2901,19 @@ lib_syscon_cpp:
 lib_tabform:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/tabform.c
 	gcc -c $(PHCLib)/lib_tabform.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o lib_tabform.o \
+	gnatlink -C use_c2phc4c syscon.o tabform.o lib_tabform.o \
                  -o $(BIN)/lib_tabform
 
 lib_tabform_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/tabform.c
 	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/lib_tabform.c
 	gnatbind -n use_c2phc4c
-	gnatlink -C use_c2phc4c syscon.o lib_tabform.o \
+	gnatlink -C use_c2phc4c syscon.o tabform.o lib_tabform.o \
                  -o $(BIN)/lib_tabform --LINK=$(gpp)
 
 lib_solcon:
