@@ -54,6 +54,8 @@ int make_standard_tableau_form ( void )
    {
       printf("The tableau format :\n");
       write_standard_tableau_form(neq,nvr,nbterms,coefficients,exponents);
+
+      store_standard_tableau_form(neq,nvr,nbterms,coefficients,exponents);
    }
    return fail;
 }

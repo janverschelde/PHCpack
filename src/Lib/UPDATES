@@ -1,3 +1,6 @@
+Tue 9 Jul 2019 : added function to tabform to pass the tableau form to
+  the systems container, called in lib_tabform.
+
 Mon 8 Jul 2019 : new tabform.h and tabform.c with functions to make the
   tableau form of a system, with code from lib_tabform.c.
 

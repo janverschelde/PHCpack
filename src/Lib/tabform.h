@@ -73,4 +73,19 @@ void write_standard_tableau_form
  *   coefficients   coefficients of the system;
  *   exponents      exponents of the system. */
 
+int store_standard_tableau_form
+ ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents );
+/*
+ * DESCRIPTION :
+ *   Stores the tableau form into the standard systems container.
+ *   Returns 0 if all went well.
+ *
+ * ON ENTRY :
+ *   neq            number of equations of the system;
+ *   nvr            number of variables of the system;
+ *   nbterms        array of size neq, nbterms[k] contains the number
+ *                  of terms in the (k+1)-th equation in the system;
+ *   coefficients   coefficients of the system;
+ *   exponents      exponents of the system. */
+
 #endif

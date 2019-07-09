@@ -80,3 +80,25 @@ void write_standard_tableau_form
       }
    }
 }
+
+int store_standard_tableau_form
+ ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents )
+{
+   int fail,idx,nbtsum;
+
+   nbtsum = 0;
+   for(idx=0; idx<neq; idx++) nbtsum = nbtsum + nbterms[idx];
+
+   {
+      int dim[neq+3];
+   
+      dim[0] = neq;
+      dim[1] = nvr;
+      dim[2] = nbtsum;
+
+      for(idx=0; idx<neq; idx++) dim[3+idx] = nbterms[idx];
+
+      fail = _ada_use_c2phc4c(889,dim,exponents,coefficients);
+   }
+   return fail;
+}
