@@ -77,6 +77,7 @@ with PHCpack_Operations;
 with PHCpack_Operations_io;
 with C_to_PHCpack;
 with use_syscon,use_syspool;
+with use_tabform;
 with use_solcon,use_solpool;
 with use_scaling;
 with use_reduction;
@@ -3330,6 +3331,8 @@ function use_c2phc4c ( job : integer32;
       when 886 => return use_padcon(20,a,b,c); -- get pole step
       when 887 => return use_padcon(21,a,b,c); -- get estimated distance eta
       when 888 => return use_padcon(22,a,b,c); -- get Hessian step
+     -- passing the tableau forms to the systems containers
+      when 889 => return use_tabform(0,a,b,c); -- standard tableau form
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

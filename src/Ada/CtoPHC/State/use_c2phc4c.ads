@@ -2937,6 +2937,18 @@ function use_c2phc4c ( job : integer32;
 --        =  858 : clears the witness solutions for double double precision.
 --        =  859 : clears the witness solutions for quad double precision.
 --
+-- passing tableau forms to the systems containers :
+--
+--   job  =  889 : the triplet (a, b, c) defines a tableau form,
+--                 in a[0] is the number of equations, 
+--                 in a[1] is the number of variables,
+--                 in a[2] is the total number of monomials,
+--                 in a[k+2] is the number of terms of the k-th polynomial,
+--                 exponents of monomials are stored in b,
+--                 the size of b is a[1]*a[2],
+--                 complex coefficients of monomials are stored in c,
+--                 the size of c is 2*a[2].
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   or job not in the right range.

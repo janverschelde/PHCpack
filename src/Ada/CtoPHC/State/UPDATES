@@ -1,3 +1,6 @@
+Tue 9 Jul 2019 : new use_tabform procedure to process tableau forms,
+  updated use_c2phc4c with an additional job.
+
 Sun 7 Jul 2019 : improved use_syscon.adb for the output of systems with
   different number of equations than variables.
 

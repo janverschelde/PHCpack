@@ -27,6 +27,7 @@ quaddobl_laursys_container       : for Laurent systems with quaddobl coeffs
 multprec_laursys_container       : for Laurent systems with multprec coeffs
 ts_syscon                        : tests the systems container
 use_syscon                       : Ada gateway to the systems container
+use_tabform                      : pass tableau forms of systems
 ts_use_syscon.c                  : C routine calls the Ada gateway use_syscon
 standard_systems_pool            : pool of systems and associated structures
 dobldobl_systems_pool            : pool of dobldobl complex systems
