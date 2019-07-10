@@ -12,7 +12,8 @@ function use_tabform ( job : integer32;
 --   via the tableau format of polynomial systems.
 
 -- ON ENTRY :
---   job    =   0 : the triplet (a, b, c) defines a tableau form,
+--   job    =   0 : initializes the systems container with the system 
+--                  defined by tableau form stored in the triplet (a, b, c):
 --                  in a[0] is the number of equations, 
 --                  in a[1] is the number of variables,
 --                  in a[2] is the total number of monomials,

@@ -2939,7 +2939,8 @@ function use_c2phc4c ( job : integer32;
 --
 -- passing tableau forms to the systems containers :
 --
---   job  =  889 : the triplet (a, b, c) defines a tableau form,
+--   job  =  889 : initializes the systems container with the system 
+--                 defined by tableau form stored in the triplet (a, b, c):
 --                 in a[0] is the number of equations, 
 --                 in a[1] is the number of variables,
 --                 in a[2] is the total number of monomials,
