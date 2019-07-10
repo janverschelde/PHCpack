@@ -82,7 +82,8 @@ void write_standard_tableau_form
 }
 
 int store_standard_tableau_form
- ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents )
+ ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents,
+   int verbose )
 {
    int fail,idx,nbtsum;
 
@@ -90,13 +91,15 @@ int store_standard_tableau_form
    for(idx=0; idx<neq; idx++) nbtsum = nbtsum + nbterms[idx];
 
    {
-      int dim[neq+3];
+      int dim[neq+4];
    
       dim[0] = neq;
       dim[1] = nvr;
       dim[2] = nbtsum;
 
       for(idx=0; idx<neq; idx++) dim[3+idx] = nbterms[idx];
+
+      dim[neq+3] = verbose;
 
       fail = _ada_use_c2phc4c(889,dim,exponents,coefficients);
    }

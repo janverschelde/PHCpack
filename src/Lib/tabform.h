@@ -53,7 +53,7 @@ int standard_tableau_form
  *   coefficients   allocated for 2 times the total number of terms;
  *   exponents      allocated for nvr times the total number of terms;
  *   verbose        if > 0, then the tableau form is written,
- *                  if = 0, then the function remains silent.
+ *                  otherwise, then the function remains silent.
  *
  * ON RETURN :
  *   coefficients   coefficients of the system;
@@ -74,7 +74,8 @@ void write_standard_tableau_form
  *   exponents      exponents of the system. */
 
 int store_standard_tableau_form
- ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents );
+ ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents,
+   int verbose );
 /*
  * DESCRIPTION :
  *   Stores the tableau form into the standard systems container.
@@ -86,6 +87,8 @@ int store_standard_tableau_form
  *   nbterms        array of size neq, nbterms[k] contains the number
  *                  of terms in the (k+1)-th equation in the system;
  *   coefficients   coefficients of the system;
- *   exponents      exponents of the system. */
+ *   exponents      exponents of the system;
+ *   verbose        if > 0, then extra information is written,
+ *                  otherwise, the function remains silent. */
 
 #endif

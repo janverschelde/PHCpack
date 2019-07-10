@@ -5,11 +5,12 @@
 #include "syscon.h"
 #include "tabform.h"
 
-int make_standard_tableau_form ( void );
+int make_standard_tableau_form ( int verbose );
 /*
  * DESCRIPTION :
  *   Sets up the data structures for the tableau form of the system
  *   in the container with standard double precision coefficients.
+ *   If verbose, then extra information is written to screen.
  *   Returns the failure code of the retrieval operations. */
 
 int test_standard_container ( void );
@@ -27,7 +28,7 @@ int main ( void )
    return 0;
 }
 
-int make_standard_tableau_form ( void )
+int make_standard_tableau_form ( int verbose )
 {
    int fail,neq,nvr,nbtsum;
    int *nbterms;
@@ -49,26 +50,37 @@ int make_standard_tableau_form ( void )
    coefficients = (double*)calloc(2*nbtsum,sizeof(double));
    exponents = (int*)calloc(nvr*nbtsum,sizeof(int));
 
-   fail = standard_tableau_form(neq,nvr,nbterms,coefficients,exponents,1);
+   fail = standard_tableau_form
+             (neq,nvr,nbterms,coefficients,exponents,verbose);
    if(fail == 0)
    {
       printf("The tableau format :\n");
       write_standard_tableau_form(neq,nvr,nbterms,coefficients,exponents);
 
-      store_standard_tableau_form(neq,nvr,nbterms,coefficients,exponents);
+      fail = syscon_clear_standard_system();
+
+      store_standard_tableau_form
+         (neq,nvr,nbterms,coefficients,exponents,verbose);
+
+      printf("After storing the system defined by the tableau format :\n");
+      fail = syscon_write_standard_system();
    }
    return fail;
 }
 
 int test_standard_container ( void )
 {
-   int n,fail,*d;
-   double *c;
+   int fail,verbose = 0;
+   char ans;
+
+   printf("Verbose ? (y/n) ");
+   ans = getchar();
+   if(ans == 'y') verbose = 1;
 
    fail = syscon_read_standard_system();
    if(fail == 0) fail = syscon_write_standard_system();
 
-   if(fail == 0) fail = make_standard_tableau_form();
+   if(fail == 0) fail = make_standard_tableau_form(verbose);
 
    return fail;
 }
