@@ -3604,6 +3604,7 @@ lib_witsols_cpp:
 phcpy2c2.so: parameter.o lib2path.o
 	/bin/rm -f -r phcpy2c2.o phcpy2c2.a phcpy2c3.o phcpy2c3.a
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/tabform.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/solcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/product.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 \
@@ -3660,6 +3661,7 @@ phcpy2c2.so: parameter.o lib2path.o
 phcpy2c3.so: parameter.o lib2path.o
 	/bin/rm -f -r phcpy2c2.o phcpy2c2.a phcpy2c3.o phcpy2c3.a
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/tabform.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/solcon.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 $(PHCLib)/product.c
 	$(gpp) -Dcompilewgpp=1 -static -c -fPIC -O3 \
