@@ -309,6 +309,12 @@ references
    **Dynamic enumeration of all mixed cells.**
    *Discrete Comput. Geom.* 37(3):351-367, 2007.
 
+#. J. Otto, A. Forbes, and J. Verschelde.
+   **Solving Polynomial Systems with phcpy.**
+   In the Proceedings of the 18th Python in Science Conference (SciPy 2019),
+   edited by Chris Calloway, David Lippa, Dillon Niederhut and David Shupe,
+   pages 58-64, 2019.
+
 #. K. Piret:
    **Computing Critical Points of Polynomial Systems 
    using PHCpack and Python.**
