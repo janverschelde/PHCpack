@@ -2031,6 +2031,45 @@ static PyObject *py2c_syscon_quaddobl_Laurent_drop_variable_by_name
  *   2) s, a string that holds the name of the variable.
  *   On return is the failure code, which equals zero if all went well. */
 
+/* The wrapping of the functions in tabform.h starts from here */
+
+static PyObject *py2c_tabform_store_standard_tableau
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On input is the tableau form of a polynomial system, given by
+ *   1) the number of equations as an integer,
+ *   2) the number of equations as an integer,
+ *   3) the number of characters in the 4-th string input,
+ *   4) the number of terms in each polynomial, given as a string,
+ *   the string representation of a list of integers,
+ *   5) the number of characters in the 6-th string input,
+ *   6) the coefficients of all terms, given as a string,
+ *   the string representation of a list of doubles,
+ *   each pair of consecutive doubles represents a complex coefficient,
+ *   7) the number of characters in the 7-th string input,
+ *   8) the exponents of all terms, given as a string,
+ *   the string representation of a list of integers.
+ *   The tableau form is parsed and the container for systems with
+ *   standard double precision coefficients is initialized. */
+
+static PyObject *py2c_tabform_load_standard_tableau
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a 5-tuple with the tableau form of the system with
+ *   standard double precision coefficients in the container.
+ *   The five items in the returned tuple are
+ *   1) the number of equations as an integer,
+ *   2) the number of equations as an integer,
+ *   3) the number of terms in each polynomial, given as a string,
+ *   the string representation of a list of integers,
+ *   4) the coefficients of all terms, given as a string,
+ *   the string representation of a list of doubles,
+ *   each pair of consecutive doubles represents a complex coefficient,
+ *   5) the exponents of all terms, given as a string,
+ *   the string representation of a list of integers. */
+
 /* The wrapping of functions with prototypes in solcon.h starts here. */
 
 static PyObject *py2c_solcon_read_standard_solutions

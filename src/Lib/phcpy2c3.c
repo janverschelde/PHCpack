@@ -11,6 +11,7 @@
 #include "giftwrappers.h"
 #include "schubert.h"
 #include "syscon.h"
+#include "tabform.h"
 #include "syspool.h"
 #include "solcon.h"
 #include "product.h"
@@ -3001,6 +3002,44 @@ static PyObject *py2c_syscon_quaddobl_Laurent_drop_variable_by_name
    initialize();
    if(!PyArg_ParseTuple(args,"is",&nc,&s)) return NULL;
    fail = syscon_quaddobl_Laurent_drop_variable_by_name(nc,s);
+
+   return Py_BuildValue("i",fail);
+}
+
+/* The wrapping of the functions in tabform.h starts from here */
+
+static PyObject *py2c_tabform_store_standard_tableau
+ ( PyObject *self, PyObject *args )
+{
+   int fail,neq,nvr,nc1,nc2,nc3;
+   char *nbt,*cff,*xpc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiisisis",&nvr,&neq,&nc1,&nbt,&nc2,&cff,
+      &nc3,&xpc)) return NULL;
+   {
+      int ic1 = itemcount(nbt);
+      int ic2 = itemcount(xpc);
+      int ic3 = itemcount(cff);
+
+      int nbterms[ic1];
+      int exponents[ic2];
+      double coefficients[ic3];
+
+      str2intlist(ic1,nbt,nbterms);
+      str2intlist(ic2,xpc,exponents);
+      str2dbllist(ic3,cff,coefficients);
+
+      fail = store_standard_tableau_form
+                (neq,nvr,nbterms,coefficients,exponents,0);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_tabform_load_standard_tableau
+ ( PyObject *self, PyObject *args )
+{
+   int fail = 0;
 
    return Py_BuildValue("i",fail);
 }
@@ -10112,6 +10151,12 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_syscon_quaddobl_Laurent_drop_variable_by_name",
      py2c_syscon_quaddobl_Laurent_drop_variable_by_name, METH_VARARGS,
     "Replaces the Laurent system in the quad double precision container\n with the same Laurent system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_tabform_store_standard_tableau",
+     py2c_tabform_store_standard_tableau, METH_VARARGS,
+    "On input is the tableau form of a polynomial system, given by\n 1) the number of equations as an integer,\n 2) the number of equations as an integer,\n 3) the number of characters in the 4-th string input,\n 4) the number of terms in each polynomial, given as a string,\n the string representation of a list of integers,\n 5) the number of characters in the 6-th string input,\n 6) the coefficients of all terms, given as a string,\n the string representation of a list of doubles,\n each pair of consecutive doubles represents a complex coefficient,\n 7) the number of characters in the 7-th string input,\n 8) the exponents of all terms, given as a string,\n the string representation of a list of integers.\n The tableau form is parsed and the container for systems with\n standard double precision coefficients is initialized."},
+   {"py2c_tabform_load_standard_tableau",
+     py2c_tabform_load_standard_tableau, METH_VARARGS,
+    "Returns a 5-tuple with the tableau form of the system with\n standard double precision coefficients in the container.\n The five items in the returned tuple are\n 1) the number of equations as an integer,\n 2) the number of equations as an integer,\n 3) the number of terms in each polynomial, given as a string,\n the string representation of a list of integers,\n 4) the coefficients of all terms, given as a string,\n the string representation of a list of doubles,\n each pair of consecutive doubles represents a complex coefficient,\n 5) the exponents of all terms, given as a string,\n the string representation of a list of integers."},
    {"py2c_solcon_length_standard_solution_string",
      py2c_solcon_length_standard_solution_string,
      METH_VARARGS,

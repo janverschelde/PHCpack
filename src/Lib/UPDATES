@@ -1,3 +1,6 @@
+Wed 10 Jul 2019 : added functions to the C code to define the Python extension
+  module, updating the files phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
+
 Tue 9 Jul 2019 : added function to tabform to pass the tableau form to
   the systems container, called in lib_tabform.  Add function in tabform,
   tested in lib_tabform.c to define the system in the container with data
