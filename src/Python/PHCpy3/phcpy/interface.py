@@ -49,7 +49,7 @@ def store_standard_tableau(poltab, verbose=False):
         strcff = str(frimcff)
         strxps = str(flatxps)
         fail = store(neq, nvr, len(strnbt), strnbt, \
-                     len(strcff), strcff, len(strxps), strxps)
+                     len(strcff), strcff, len(strxps), strxps, int(verbose))
 
 def store_standard_system(polsys, **nbvar):
     r"""

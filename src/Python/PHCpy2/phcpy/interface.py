@@ -4,6 +4,53 @@ The user gives as input string representations of polynomials or solutions
 to the interface functions which store the data.
 """
 
+def store_standard_tableau(poltab, verbose=False):
+    r"""
+    Stores the polynomial system given in the list of lists *poltab* in
+    the container for systems with coefficients in standard double precision.
+    Every polynomial in the system is represented by a list of tuples.
+    A monomial is represented by a 2-tuple:
+
+    1. the coefficient of the monomial is a complex number,
+
+    2. the exponent are a tuple of natural numbers.
+
+    For example, the system x^2 - y = 0, x^3 - z = 0 is represented as
+    [[((1+0j), (2, 0, 0)), ((-1+0j), (0, 1, 0))], \
+    [((1+0j), (3, 0, 0)), ((-1+0j), (0, 0, 1))]].
+    """
+    from phcpy.phcpy2c3 import py2c_tabform_store_standard_tableau as store
+    neq = len(poltab)                               # number of equations
+    if verbose:
+        print 'number of equations :', neq
+    if neq > 0:
+        nvr = len(poltab[0][0][1])                  # number of variables
+        if verbose:
+            print 'number of variables :', nvr
+        nbt = [len(pol) for pol in poltab]          # number of terms
+        if verbose:
+            print 'number of terms :', nbt
+        cff = [[c for (c, e) in p] for p in poltab] # coefficients
+        if verbose:
+            print 'the coefficients on input :', cff
+        flatcff = sum(cff, [])                      # flatten list of lists
+        frimcff = sum([[x.real, x.imag] for x in flatcff], [])
+        if verbose:
+            print 'flat list of coefficients :', frimcff
+        xps = [[e for (c, e) in p] for p in poltab] # exponents
+        if verbose:
+            print 'the exponents on input :', xps
+        txps = sum(xps, [])                         # list of tuples
+        lxps = [list(x) for x in txps]              # list of lists
+        flatxps = sum(lxps, [])                     # flatten list of lists
+        if verbose:
+            print 'flat list of exponents :', flatxps
+        strnbt = str(nbt)
+        strcff = str(frimcff)
+        strxps = str(flatxps)
+        fail = store(neq, nvr, len(strnbt), strnbt, \
+                     len(strcff), strcff, len(strxps), strxps, int(verbose))
+
 def store_standard_system(polsys, **nbvar):
     r"""
     Stores the polynomials represented by the list of strings in *polsys* into
