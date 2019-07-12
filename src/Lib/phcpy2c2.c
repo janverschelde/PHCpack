@@ -9,6 +9,7 @@
 #include "giftwrappers.h"
 #include "schubert.h"
 #include "syscon.h"
+#include "tabform.h"
 #include "syspool.h"
 #include "solcon.h"
 #include "product.h"
@@ -3008,11 +3009,11 @@ static PyObject *py2c_tabform_store_standard_tableau
  ( PyObject *self, PyObject *args )
 {
    int fail,neq,nvr,nc1,nc2,nc3,verbose;
-   char *nbt,*cff,*exp;
+   char *nbt,*cff,*xpc;
 
    initialize();
    if(!PyArg_ParseTuple(args,"iiisisisi",&neq,&nvr,&nc1,&nbt,&nc2,&cff,
-      &nc3,&exp,&verbose)) return NULL;
+      &nc3,&xpc,&verbose)) return NULL;
    {
       if(verbose > 0)
       {
