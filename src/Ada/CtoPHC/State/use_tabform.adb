@@ -17,25 +17,23 @@ function use_tabform ( job : integer32;
                        b : C_intarrs.Pointer;
                        c : C_dblarrs.Pointer ) return integer32 is
 
-  procedure Extract_Dimensions ( neq,nvr,nbt : out integer32 ) is
+  procedure Extract_Dimensions ( neq,nvr : out integer32 ) is
 
   -- DESCRIPTION :
   --   Extracts the dimensions out of the three numbers of a.
 
   -- ON RETURN :
   --   neq       the number of equations is in a[0];
-  --   nvr       the number of variables is in a[1];
-  --   nbt       the total number of terms is in a[2].
+  --   nvr       the number of variables is in a[1].
 
     v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
 
     use Interfaces.C;
 
   begin
     neq := integer32(v(v'first));
     nvr := integer32(v(v'first+1));
-    nbt := integer32(v(v'first+2));
   end Extract_Dimensions;
 
   procedure Write_Tableau
@@ -135,46 +133,64 @@ function use_tabform ( job : integer32;
     return res;
   end Make_System;
 
+  procedure Extract_Tableau
+              ( neq,nvr,nbt : in integer32;
+                nbterms : in Standard_Integer_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Extracts the coefficients and exponents from b and c.
+
+    nbrexp : constant integer32 := nvr*nbt;
+    nbrcff : constant integer32 := 2*nbt;
+    expdata : Standard_Integer_Vectors.Vector(1..nbrexp);
+    cffdata : Standard_Complex_Vectors.Vector(1..nbrcff);
+    p : Standard_Complex_Poly_Systems.Poly_Sys(1..neq);
+
+  begin
+    Assign(natural32(nbrexp),b,expdata);
+    Assign(natural32(nbrcff),c,cffdata);
+    if verbose
+     then Write_Tableau(neq,nvr,nbterms,cffdata,expdata);
+    end if;
+    p := Make_System(neq,nvr,nbterms,cffdata,expdata,verbose);
+    if verbose then
+      put_line("The polynomial system made from the tableau form :");
+      put(p);
+    end if;
+    Standard_PolySys_Container.Initialize(p);
+  end Extract_Tableau;
+
   function Job0 return integer32 is -- store tableau form
 
     neq,nvr,nbt : integer32;
     verbose : boolean;
 
   begin
-    Extract_Dimensions(neq,nvr,nbt);
+    Extract_Dimensions(neq,nvr);
     declare
       dim : constant integer32 := 3+neq+1;
-      nbrexp : constant integer32 := nvr*nbt;
-      nbrcff : constant integer32 := 2*nbt;
       dimdata : Standard_Integer_Vectors.Vector(1..dim);
-      expdata : Standard_Integer_Vectors.Vector(1..nbrexp);
-      cffdata : Standard_Complex_Vectors.Vector(1..nbrcff);
       nbterms : Standard_Integer_Vectors.Vector(1..neq);
-      p : Standard_Complex_Poly_Systems.Poly_Sys(1..neq);
     begin
       Assign(natural32(dim),a,dimdata);
-      Assign(natural32(nbrexp),b,expdata);
-      Assign(natural32(nbrcff),c,cffdata);
       verbose := (dimdata(dim) > 0);
-      for i in 1..neq loop
-        nbterms(i) := dimdata(i+3);
-      end loop;      
       if verbose then
         put("-> the number of equations : "); put(neq,1); new_line;
         put("-> the number of variables : "); put(nvr,1); new_line;
+      end if;
+      for i in 1..neq loop
+        nbterms(i) := dimdata(i+3);
+      end loop;      
+      nbt := Standard_Integer_Vectors.Sum(nbterms);
+      if verbose then
         put("-> total number of terms : "); put(nbt,1); new_line;
         for i in 1..neq loop
           put("-> number of terms in polynomial ");
-          put(i,1); put(" : "); put(dimdata(i+3),1); new_line;
+          put(i,1); put(" : "); put(nbterms(i),1); new_line;
         end loop;
-        Write_Tableau(neq,nvr,nbterms,cffdata,expdata);
       end if;
-      p := Make_System(neq,nvr,nbterms,cffdata,expdata,verbose);
-      if verbose then
-        put_line("The polynomial system made from the tableau form :");
-        put(p);
-      end if;
-      Standard_PolySys_Container.Initialize(p);
+      Extract_Tableau(neq,nvr,nbt,nbterms,verbose);
     end;
     return 0;
   end Job0;

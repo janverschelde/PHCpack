@@ -1,3 +1,5 @@
+Fri 12 Jul 2019 : fixed bug in use_tabform.adb for the total number of terms.
+
 Tue 9 Jul 2019 : new use_tabform procedure to process tableau forms,
   updated use_c2phc4c with an additional job.  Updated use_c2phc4.ads
   and use_tabform with initialization of the systems container, given
