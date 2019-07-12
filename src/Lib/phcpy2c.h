@@ -2049,7 +2049,8 @@ static PyObject *py2c_tabform_store_standard_tableau
  *   each pair of consecutive doubles represents a complex coefficient,
  *   7) the number of characters in the 7-th string input,
  *   8) the exponents of all terms, given as a string,
- *   the string representation of a list of integers.
+ *   the string representation of a list of integers,
+ *   9) the verbose flag is an integer.
  *   The tableau form is parsed and the container for systems with
  *   standard double precision coefficients is initialized. */
 
