@@ -1,5 +1,7 @@
 Thu 11 Jul 2019 : added the SciPy 2019 paper to the reference list in
   the file welcome.rst of the python2 and python3 documentation.
+  Added to interface.py in PHCpy3/phcpy a function to store the
+  tableau representation of a system.
 
 Fri 5 Jul 2019 : updated files for version 0.9.7 of phcpy.
 
