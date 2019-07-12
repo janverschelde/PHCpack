@@ -1,6 +1,7 @@
 Fri 12 Jul 2019 : fixed flattening of complex coefficients in the
   interface module for python3.  Update store_standard_tableau in the
-  interface.py for python3 and python2.
+  interface.py for python3 and python2.  Fixed the import inside the
+  store_standard_tableau function of the interface.py for python2.
 
 Thu 11 Jul 2019 : added the SciPy 2019 paper to the reference list in
   the file welcome.rst of the python2 and python3 documentation.

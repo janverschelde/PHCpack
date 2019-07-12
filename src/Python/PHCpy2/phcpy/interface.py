@@ -19,7 +19,7 @@ def store_standard_tableau(poltab, verbose=False):
     [[((1+0j), (2, 0, 0)), ((-1+0j), (0, 1, 0))], \
     [((1+0j), (3, 0, 0)), ((-1+0j), (0, 0, 1))]].
     """
-    from phcpy.phcpy2c3 import py2c_tabform_store_standard_tableau as store
+    from phcpy.phcpy2c2 import py2c_tabform_store_standard_tableau as store
     neq = len(poltab)                               # number of equations
     if verbose:
         print 'number of equations :', neq
