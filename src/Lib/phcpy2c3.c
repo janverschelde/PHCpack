@@ -3018,9 +3018,17 @@ static PyObject *py2c_tabform_store_standard_tableau
    if(!PyArg_ParseTuple(args,"iiisisis",&nvr,&neq,&nc1,&nbt,&nc2,&cff,
       &nc3,&xpc)) return NULL;
    {
+      printf("the string of terms : %s\n", nbt);
+      printf("the string of coefficients : %s\n", cff);
+      printf("the string of exponents : %s\n", xpc);
+
       int ic1 = itemcount(nbt);
       int ic2 = itemcount(xpc);
       int ic3 = itemcount(cff);
+
+      printf("number of items in nbt : %d\n", ic1);
+      printf("number of items in xpc : %d\n", ic2);
+      printf("number of items in cff : %d\n", ic3);
 
       int nbterms[ic1];
       int exponents[ic2];
@@ -3030,8 +3038,20 @@ static PyObject *py2c_tabform_store_standard_tableau
       str2intlist(ic2,xpc,exponents);
       str2dbllist(ic3,cff,coefficients);
 
+      int idx;
+
+      printf("the number of terms : ");
+      for(idx=0; idx<ic1; idx++) printf(" %d", nbterms[idx]);
+      printf("\n");
+      printf("the coefficients : ");
+      for(idx=0; idx<ic3; idx++) printf(" %.15le", coefficients[idx]);
+      printf("\n");
+      printf("the exponents : ");
+      for(idx=0; idx<ic2; idx++) printf(" %d", exponents[idx]);
+      printf("\n");
+
       fail = store_standard_tableau_form
-                (neq,nvr,nbterms,coefficients,exponents,0);
+                (neq,nvr,nbterms,coefficients,exponents,1);
    }
    return Py_BuildValue("i",fail);
 }

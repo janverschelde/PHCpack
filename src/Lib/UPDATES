@@ -1,3 +1,5 @@
+Fri 12 Jul 2019 : added print statements to phcpy2c3.c for debugging.
+
 Wed 10 Jul 2019 : added functions to the C code to define the Python extension
   module, updating the files phcpy2c.h, phcpy2c2.c, and phcpy2c3.c.
 
