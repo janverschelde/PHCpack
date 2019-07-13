@@ -3071,13 +3071,49 @@ static PyObject *py2c_tabform_load_standard_tableau
    if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
 
    fail = load_standard_tableau_dimensions(&neq,&nvr,&nbt);
+   if(verbose > 0)
+   {
+      printf("the number of equations : %d\n", neq);
+      printf("the number of variables : %d\n", nvr);
+      printf("total number of terms : %d\n", nbt);
+   }
    {
       int nbterms[neq];
-      int exponents[nvr*nbt];
-      double coefficients[2*nbt];
-   }
+      const int nbexp = nvr*nbt;
+      const int nbcff = 2*nbt;
+      int exponents[nbexp];
+      double coefficients[nbcff];
+      char strnbt[neq*8];
+      char strxps[nbexp*8];
+      char strcff[nbcff*26];
 
-   return Py_BuildValue("(i, i, i)", neq, nvr, nbt);
+      fail = number_of_standard_terms(neq,nbterms,&nbt,verbose);
+      fail = standard_tableau_form
+               (neq,nvr,nbterms,coefficients,exponents,verbose);
+
+      intlist2str(neq, nbterms, strnbt);
+      intlist2str(nbexp, exponents, strxps);
+      dbllist2str(nbcff, coefficients, strcff);
+      if(verbose > 0)
+      {
+         int idx;
+         printf("the number of terms : ");
+         for(idx=0; idx<neq; idx++) printf(" %d", nbterms[idx]);
+         printf("\n");
+         printf("its string representation : %s\n", strnbt);
+         printf("the coefficients : ");
+         for(idx=0; idx<nbcff; idx++) printf(" %.15le", coefficients[idx]);
+         printf("\n");
+         printf("its string representation : %s\n", strcff);
+         printf("the exponents : ");
+         for(idx=0; idx<nbexp; idx++) printf(" %d", exponents[idx]);
+         printf("\n");
+         printf("its string representation : %s\n", strxps);
+      }
+
+      return Py_BuildValue("(i, i, s, s, s)",
+                           neq, nvr, strnbt, strcff, strxps);
+   }
 }
 
 /* The wrapping of the functions in solcon.h starts from here. */
