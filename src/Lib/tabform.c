@@ -105,3 +105,18 @@ int store_standard_tableau_form
    }
    return fail;
 }
+
+int load_standard_tableau_dimensions ( int *neq, int *nvr, int *nbt )
+{
+   int fail,*b;
+   double *c;
+   int dim[3];
+
+   fail = _ada_use_c2phc4c(890,dim,b,c);
+
+   *neq = dim[0];
+   *nvr = dim[1];
+   *nbt = dim[2];
+
+   return fail;
+}

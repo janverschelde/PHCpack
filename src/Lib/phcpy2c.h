@@ -2060,6 +2060,7 @@ static PyObject *py2c_tabform_load_standard_tableau
  * DESCRIPTION :
  *   Returns a 5-tuple with the tableau form of the system with
  *   standard double precision coefficients in the container.
+ *   On input is the verbose flag as an integer.
  *   The five items in the returned tuple are
  *   1) the number of equations as an integer,
  *   2) the number of equations as an integer,

@@ -1,3 +1,6 @@
+Sat 13 Jul 2019 : added function to retrieve the dimensions of the tableau
+  to tabform, tested by lib_tabform, and added to phcpy2c.h, phcpy2c3.c.
+
 Fri 12 Jul 2019 : added print statements to phcpy2c3.c for debugging.
   Fixed bug in phcpy2c3.c, added verbose flag to phcpy2c.h, and updated
   phcpy2c2.c as well.  Fixed bug in phcpy2c2.c for include and xpc name.

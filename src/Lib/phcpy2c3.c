@@ -3065,9 +3065,19 @@ static PyObject *py2c_tabform_store_standard_tableau
 static PyObject *py2c_tabform_load_standard_tableau
  ( PyObject *self, PyObject *args )
 {
-   int fail = 0;
+   int fail,neq,nvr,nbt,verbose;
 
-   return Py_BuildValue("i",fail);
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
+
+   fail = load_standard_tableau_dimensions(&neq,&nvr,&nbt);
+   {
+      int nbterms[neq];
+      int exponents[nvr*nbt];
+      double coefficients[2*nbt];
+   }
+
+   return Py_BuildValue("(i, i, i)", neq, nvr, nbt);
 }
 
 /* The wrapping of the functions in solcon.h starts from here. */
@@ -10182,7 +10192,7 @@ static PyMethodDef phcpy2c3_methods[] =
     "On input is the tableau form of a polynomial system, given by\n 1) the number of equations as an integer,\n 2) the number of equations as an integer,\n 3) the number of characters in the 4-th string input,\n 4) the number of terms in each polynomial, given as a string,\n the string representation of a list of integers,\n 5) the number of characters in the 6-th string input,\n 6) the coefficients of all terms, given as a string,\n the string representation of a list of doubles,\n each pair of consecutive doubles represents a complex coefficient,\n 7) the number of characters in the 7-th string input,\n 8) the exponents of all terms, given as a string,\n the string representation of a list of integers.\n The tableau form is parsed and the container for systems with\n standard double precision coefficients is initialized."},
    {"py2c_tabform_load_standard_tableau",
      py2c_tabform_load_standard_tableau, METH_VARARGS,
-    "Returns a 5-tuple with the tableau form of the system with\n standard double precision coefficients in the container.\n The five items in the returned tuple are\n 1) the number of equations as an integer,\n 2) the number of equations as an integer,\n 3) the number of terms in each polynomial, given as a string,\n the string representation of a list of integers,\n 4) the coefficients of all terms, given as a string,\n the string representation of a list of doubles,\n each pair of consecutive doubles represents a complex coefficient,\n 5) the exponents of all terms, given as a string,\n the string representation of a list of integers."},
+    "Returns a 5-tuple with the tableau form of the system with\n standard double precision coefficients in the container.\n On input is the verbose flag, as an integer.\n The five items in the returned tuple are\n 1) the number of equations as an integer,\n 2) the number of equations as an integer,\n 3) the number of terms in each polynomial, given as a string,\n the string representation of a list of integers,\n 4) the coefficients of all terms, given as a string,\n the string representation of a list of doubles,\n each pair of consecutive doubles represents a complex coefficient,\n 5) the exponents of all terms, given as a string,\n the string representation of a list of integers."},
    {"py2c_solcon_length_standard_solution_string",
      py2c_solcon_length_standard_solution_string,
      METH_VARARGS,

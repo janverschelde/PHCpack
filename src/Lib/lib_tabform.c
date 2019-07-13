@@ -13,6 +13,11 @@ int make_standard_tableau_form ( int verbose );
  *   If verbose, then extra information is written to screen.
  *   Returns the failure code of the retrieval operations. */
 
+int retrieve_standard_tableau_form ( int verbose );
+/*
+ * DESCRIPTION :
+ *   Tests the retrieval of the system in the container in tableau format. */
+
 int test_standard_container ( void );
 /*
  * DESCRIPTION :
@@ -68,6 +73,26 @@ int make_standard_tableau_form ( int verbose )
    return fail;
 }
 
+int retrieve_standard_tableau_form ( int verbose )
+{
+   int fail,neq,nvr,nbt;
+
+   fail = load_standard_tableau_dimensions(&neq,&nvr,&nbt);
+
+   if(verbose > 0)
+   {
+      printf("-> the number of equations : %d\n", neq);
+      printf("-> the number of variables : %d\n", nvr);
+      printf("-> total number of terms : %d\n", nbt);
+   }
+   {
+      int nbterms[neq];
+      int exponents[nvr*nbt];
+      double coefficients[2*nbt];
+   }
+   return fail;
+}
+
 int test_standard_container ( void )
 {
    int fail,verbose = 0;
@@ -81,6 +106,8 @@ int test_standard_container ( void )
    if(fail == 0) fail = syscon_write_standard_system();
 
    if(fail == 0) fail = make_standard_tableau_form(verbose);
+
+   if(fail == 0) fail = retrieve_standard_tableau_form(verbose);
 
    return fail;
 }

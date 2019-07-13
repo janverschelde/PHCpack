@@ -91,4 +91,15 @@ int store_standard_tableau_form
  *   verbose        if > 0, then extra information is written,
  *                  otherwise, the function remains silent. */
 
+int load_standard_tableau_dimensions ( int *neq, int *nvr, int *nbt );
+/*
+ * DESCRIPTION :
+ *   Returns the dimensions of the tableau form for the system stored
+ *   in the container for standard double precision coefficients.
+ *
+ * ON RETURN :
+ *   neq            number of equations of the system;
+ *   nvr            number of variables of the system;
+ *   nbt            total number of terms in the system. */
+
 #endif
