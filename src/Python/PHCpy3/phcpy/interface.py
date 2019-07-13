@@ -51,6 +51,14 @@ def store_standard_tableau(poltab, verbose=False):
         fail = store(neq, nvr, len(strnbt), strnbt, \
                      len(strcff), strcff, len(strxps), strxps, int(verbose))
 
+def load_standard_tableau(verbose=False):
+    """
+    Returns the tableau form of the system stored in the container for
+    double precision coefficients.
+    """
+    from phcpy.phcpy2c3 import py2c_tabform_load_standard_tableau as load
+    return load(int(verbose))
+
 def store_standard_system(polsys, **nbvar):
     r"""
     Stores the polynomials represented by the list of strings in *polsys* into

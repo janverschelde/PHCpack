@@ -1,3 +1,6 @@
+Sat 13 Jul 2019 : prepared code for retrieval of tableau form in the
+  interface module of the python3 version of phcpy.
+
 Fri 12 Jul 2019 : fixed flattening of complex coefficients in the
   interface module for python3.  Update store_standard_tableau in the
   interface.py for python3 and python2.  Fixed the import inside the
