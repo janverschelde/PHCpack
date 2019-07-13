@@ -20,11 +20,11 @@ function use_tabform ( job : integer32;
   procedure Extract_Dimensions ( neq,nvr : out integer32 ) is
 
   -- DESCRIPTION :
-  --   Extracts the dimensions out of the three numbers of a.
+  --   Extracts the dimensions out of the two numbers of a.
 
   -- ON RETURN :
-  --   neq       the number of equations is in a[0];
-  --   nvr       the number of variables is in a[1].
+  --   neq      the number of equations is in a[0];
+  --   nvr      the number of variables is in a[1].
 
     v : constant C_Integer_Array
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
@@ -34,6 +34,30 @@ function use_tabform ( job : integer32;
   begin
     neq := integer32(v(v'first));
     nvr := integer32(v(v'first+1));
+  end Extract_Dimensions;
+
+  procedure Extract_Dimensions
+              ( neq,nvr,nbt : out integer32; verbose : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Extracts the dimensions out of the four numbers of a.
+
+  -- ON RETURN :
+  --   neq      the number of equations is in a[0];
+  --   nvr      the number of variables is in a[1];
+  --   nbt      total number of terms is in a[2];
+  --   verbose  is the verbose flag.
+
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
+
+    use Interfaces.C;
+
+  begin
+    neq := integer32(v(v'first));
+    nvr := integer32(v(v'first+1));
+    nbt := integer32(v(v'first+2));
+    verbose := (integer32(v(v'first+3)) = 1);
   end Extract_Dimensions;
 
   procedure Write_Tableau
@@ -195,10 +219,36 @@ function use_tabform ( job : integer32;
     return 0;
   end Job0;
 
+  function Job1 return integer32 is
+
+    neq,nvr,nbt : integer32 := 0;
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
+    res : Standard_Integer_Vectors.Vector(1..3);
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
+
+  begin
+    if lp /= null then
+      neq := lp'last;
+      nvr := integer32(Number_of_Unknowns(lp(lp'first)));
+      for k in 1..neq loop
+        nbt := nbt + integer32(Standard_PolySys_Container.Number_of_Terms(k));
+      end loop;
+    end if;
+    res(1) := neq;
+    res(2) := nvr;
+    res(3) := nbt;
+    Assign(res,a);
+    return 0;
+  end Job1;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
-      when 0 => return Job0;
+      when 0 => return Job0; -- store a standard tableau
+      when 1 => return Job1; -- load standard tableau dimensions
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

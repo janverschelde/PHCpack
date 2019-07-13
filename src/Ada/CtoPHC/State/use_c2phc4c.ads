@@ -2948,7 +2948,14 @@ function use_c2phc4c ( job : integer32;
 --                 exponents of monomials are stored in b,
 --                 the size of b is a[1]*a[2],
 --                 complex coefficients of monomials are stored in c,
---                 the size of c is 2*a[2].
+--                 the size of c is 2*a[2];
+--        =  890 : returns in a the dimensions of the system in the
+--                 container for the standard double precision systems,
+--                 a[0] : the number of equations,
+--                 a[1] : the number of variables, and
+--                 a[2] : the total number of terms.
+--                 This job is good to allocate the data to retrieve
+--                 the tableau form of a system.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

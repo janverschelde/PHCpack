@@ -3332,7 +3332,8 @@ function use_c2phc4c ( job : integer32;
       when 887 => return use_padcon(21,a,b,c); -- get estimated distance eta
       when 888 => return use_padcon(22,a,b,c); -- get Hessian step
      -- passing the tableau forms to the systems containers
-      when 889 => return use_tabform(0,a,b,c); -- standard tableau form
+      when 889 => return use_tabform(0,a,b,c); -- store standard tableau form
+      when 890 => return use_tabform(1,a,b,c); -- get std tableau dimensions
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

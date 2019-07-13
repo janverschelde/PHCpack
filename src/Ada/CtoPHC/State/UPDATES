@@ -1,3 +1,7 @@
+Sat 13 Jul 2019 : added job to use_tabform and use_c2phc4c to return the
+  dimensions of the tableau form of the system stored in the standard
+  systems container.
+
 Fri 12 Jul 2019 : fixed bug in use_tabform.adb for the total number of terms.
 
 Tue 9 Jul 2019 : new use_tabform procedure to process tableau forms,
