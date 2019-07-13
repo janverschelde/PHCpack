@@ -57,7 +57,25 @@ def load_standard_tableau(verbose=False):
     double precision coefficients.
     """
     from phcpy.phcpy2c3 import py2c_tabform_load_standard_tableau as load
-    return load(int(verbose))
+    neq, nvr, nbterms, coefficients, exponents = load(int(verbose))
+    nbt = eval(nbterms)
+    cff = eval(coefficients)
+    xps = eval(exponents)
+    xpsidx = 0
+    cffidx = 0
+    tableau = []
+    for i in range(neq):
+        pol = []
+        for j in range(nbt[i]):
+            trm = []
+            for k in range(nvr):
+                trm.append(xps[xpsidx])
+                xpsidx = xpsidx + 1
+            cfftrm = complex(cff[cffidx], cff[cffidx+1])
+            cffidx = cffidx + 2
+            pol.append((cfftrm ,tuple(trm)))
+        tableau.append(pol)
+    return (neq, nvr, tableau)
 
 def store_standard_system(polsys, **nbvar):
     r"""
