@@ -1,3 +1,6 @@
+Sun 14 Jul 2019 : added test_tableau function to the interface module
+  of the python3 version of phcpy.
+
 Sat 13 Jul 2019 : prepared code for retrieval of tableau form in the
   interface module of the python3 version of phcpy.
   Completed first version of load tableau form in interface.py for python3.

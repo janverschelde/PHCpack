@@ -959,6 +959,23 @@ the solution for t :
     for sol in storedsols:
         print(sol)
 
+def test_tableau():
+    """
+    Tests on storing and loading of a tableau.
+    """
+    from phcpy.phcpy2c3 import py2c_syscon_random_system
+    from phcpy.phcpy2c3 import py2c_syscon_clear_standard_system
+    dim, nbrmon, deg, cff = 2, 4, 3, 0
+    py2c_syscon_random_system(dim, nbrmon, deg, cff)
+    pols = load_standard_system()
+    print('a random polynomial system :\n', pols)
+    neq, nvr, ptab = load_standard_tableau()
+    print('its tableau form :\n', ptab)
+    py2c_syscon_clear_standard_system()
+    store_standard_tableau(ptab)
+    storedpols = load_standard_system()
+    print('after clearing the container :\n', storedpols)
+
 if __name__ == "__main__":
     test('d')
     test('d', True)
