@@ -51,6 +51,32 @@ def store_standard_tableau(poltab, verbose=False):
         fail = store(neq, nvr, len(strnbt), strnbt, \
                      len(strcff), strcff, len(strxps), strxps, int(verbose))
 
+def load_standard_tableau(verbose=False):
+    """
+    Returns the tableau form of the system stored in the container for
+    double precision coefficients.
+    """
+    from phcpy.phcpy2c2 import py2c_tabform_load_standard_tableau as load
+    neq, nvr, nbterms, coefficients, exponents = load(int(verbose))
+    nbt = eval(nbterms)
+    cff = eval(coefficients)
+    xps = eval(exponents)
+    xpsidx = 0
+    cffidx = 0
+    tableau = []
+    for i in range(neq):
+        pol = []
+        for j in range(nbt[i]):
+            trm = []
+            for k in range(nvr):
+                trm.append(xps[xpsidx])
+                xpsidx = xpsidx + 1
+            cfftrm = complex(cff[cffidx], cff[cffidx+1])
+            cffidx = cffidx + 2
+            pol.append((cfftrm ,tuple(trm)))
+        tableau.append(pol)
+    return (neq, nvr, tableau)
+
 def store_standard_system(polsys, **nbvar):
     r"""
     Stores the polynomials represented by the list of strings in *polsys* into
@@ -932,6 +958,23 @@ the solution for t :
         print 'invalid precision level'
     for sol in storedsols:
         print sol
+
+def test_tableau():
+    """
+    Tests on storing and loading of a tableau.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_random_system
+    from phcpy.phcpy2c2 import py2c_syscon_clear_standard_system
+    dim, nbrmon, deg, cff = 2, 4, 3, 0
+    py2c_syscon_random_system(dim, nbrmon, deg, cff)
+    pols = load_standard_system()
+    print 'a random polynomial system :\n', pols
+    neq, nvr, ptab = load_standard_tableau()
+    print 'its tableau form :\n', ptab
+    py2c_syscon_clear_standard_system()
+    store_standard_tableau(ptab)
+    storedpols = load_standard_system()
+    print 'after clearing the container :\n', storedpols
 
 if __name__ == "__main__":
     # test('d', True)

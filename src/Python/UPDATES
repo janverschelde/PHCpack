@@ -1,3 +1,5 @@
+Mon 15 Jul 2019 : updated the interface module for the python2 phcpy.
+
 Sun 14 Jul 2019 : added test_tableau function to the interface module
   of the python3 version of phcpy.
 
