@@ -296,8 +296,8 @@ package body Standard_Pade_Trackers is
 
   begin
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
-    sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
-    sstep := pars.sbeta*sstep;
+   -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    sstep := 1.0; -- disable series step --  pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
@@ -335,8 +335,8 @@ package body Standard_Pade_Trackers is
   begin
     Series_and_Predictors.Newton_Prediction
       (maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva);
-    sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
-    sstep := pars.sbeta*sstep;
+   -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     dstep := Series_and_Predictors.Step_Distance
                (maxdeg,pars.cbeta,t,jm,hs,sol,srv,pv);
@@ -372,12 +372,12 @@ package body Standard_Pade_Trackers is
   begin
     Series_and_Predictors.Newton_Prediction
       (file,maxdeg,nit,hom,sol,srv,eva,false); -- verbose);
-    sstep := Series_and_Predictors.Set_Step_Size
-               (file,eva,tolcff,alpha,verbose);
-    sstep := pars.sbeta*sstep;
-    if verbose
-     then put(file,"series step : "); put(file,sstep,2); new_line(file);
-    end if;
+   -- sstep := Series_and_Predictors.Set_Step_Size
+   --            (file,eva,tolcff,alpha,verbose);
+    sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
+   -- if verbose
+   --  then put(file,"series step : "); put(file,sstep,2); new_line(file);
+   -- end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     pstep := pars.pbeta*frp;
     if verbose then
@@ -441,12 +441,12 @@ package body Standard_Pade_Trackers is
   begin
     Series_and_Predictors.Newton_Prediction
       (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false); -- verbose);
-    sstep := Series_and_Predictors.Set_Step_Size
-               (file,eva,tolcff,alpha,verbose);
-    sstep := pars.sbeta*sstep;
-    if verbose
-     then put(file,"series step : "); put(file,sstep,2); new_line(file);
-    end if;
+   -- sstep := Series_and_Predictors.Set_Step_Size
+   --            (file,eva,tolcff,alpha,verbose);
+    sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
+   -- if verbose
+   --  then put(file,"series step : "); put(file,sstep,2); new_line(file);
+   -- end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     pstep := pars.pbeta*frp;
     if verbose then

@@ -142,17 +142,17 @@ package body Standard_SeriesPade_Tracker is
       Series_and_Predictors.Newton_Prediction
         (standard_output,maxdeg,nit,htp.all,current.v,current_servec.all,
          eva,verbose);
-      series_step := Series_and_Predictors.Set_Step_Size
-                       (standard_output,eva,tolcff,alpha,verbose);
+     -- series_step := Series_and_Predictors.Set_Step_Size
+     --                  (standard_output,eva,tolcff,alpha,verbose);
     else
       Series_and_Predictors.Newton_Prediction
         (maxdeg,nit,htp.all,current.v,current_servec.all,eva);
-      series_step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+     -- series_step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     end if;
-    series_step := homconpars.sbeta*series_step;
-    if verbose
-     then put("series step : "); put(series_step,2); new_line;
-    end if;
+    series_step := 1.0; -- disable series step -- homconpars.sbeta*series_step;
+   -- if verbose
+   --  then put("series step : "); put(series_step,2); new_line;
+   -- end if;
     Series_and_Predictors.Pade_Approximants
       (current_servec.all,current_padvec.all,current_poles.all,
        current_frp,current_cfp);

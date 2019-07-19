@@ -222,8 +222,8 @@ package body DoblDobl_Pade_Trackers is
 
   begin
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
-    sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
-    sstep := pars.sbeta*sstep;
+   -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     dd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
@@ -262,12 +262,12 @@ package body DoblDobl_Pade_Trackers is
   begin
     Series_and_Predictors.Newton_Prediction
       (file,maxdeg,nit,hom,sol,srv,eva,false); -- verbose);
-    sstep := Series_and_Predictors.Set_Step_Size
-               (file,eva,tolcff,alpha,verbose);
-    sstep := pars.sbeta*sstep;
-    if verbose
-     then put(file,"series step : "); put(file,sstep,2); new_line(file);
-    end if;
+   -- sstep := Series_and_Predictors.Set_Step_Size
+   --            (file,eva,tolcff,alpha,verbose);
+    sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
+   -- if verbose
+   --  then put(file,"series step : "); put(file,sstep,2); new_line(file);
+   -- end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     pstep := pars.pbeta*hi_part(frp);
     if verbose then
@@ -334,8 +334,8 @@ package body DoblDobl_Pade_Trackers is
   begin
     Series_and_Predictors.Newton_Prediction
       (maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva);
-    sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
-    sstep := pars.sbeta*sstep;
+   -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
+    sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     pstep := pars.pbeta*hi_part(frp);
     dd_t := Create(t);
@@ -377,12 +377,12 @@ package body DoblDobl_Pade_Trackers is
   begin
     Series_and_Predictors.Newton_Prediction -- verbose flag set to false
       (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false);
-    sstep := Series_and_Predictors.Set_Step_Size
-               (file,eva,tolcff,alpha,verbose);
-    sstep := pars.sbeta*sstep;
-    if verbose
-     then put(file,"series step : "); put(file,step,2); new_line(file);
-    end if;
+   -- sstep := Series_and_Predictors.Set_Step_Size
+   --            (file,eva,tolcff,alpha,verbose);
+    sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
+   -- if verbose
+   --  then put(file,"series step : "); put(file,step,2); new_line(file);
+   -- end if;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     pstep := pars.pbeta*hi_part(frp);
     if verbose then

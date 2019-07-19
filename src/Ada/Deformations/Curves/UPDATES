@@ -1,3 +1,6 @@
+Fri 19 Jul 2019 : disabled the series step in *_pade_trackers.adb and also
+  in *_seriespade_tracker.adb.
+
 Fri 5 Jul 2019 : removed "Testing ..." line in homotopy_series_readers.adb.
   New package interactive_pade_trackers with code from ts_nxtpadsol.
   Added verbose level to the main procedues in interactive_pade_trackers
