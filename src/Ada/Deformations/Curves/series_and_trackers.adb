@@ -368,8 +368,8 @@ package body Series_and_Trackers is
     put(file,minsize,2); new_line(file);
     put(file,"The largest step size on the path         :");
     put(file,maxsize,2); new_line(file);
-    put(file,"Number of times the series step was minimal  : ");
-    put(file,cntsstp,1); new_line(file);
+   -- put(file,"Number of times the series step was minimal  : ");
+   -- put(file,cntsstp,1); new_line(file);
     put(file,"Number of times the Hessian step was minimal : ");
     put(file,cntdstp,1); new_line(file);
     put(file,"Number of times the pole step was minimal    : ");
@@ -396,8 +396,8 @@ package body Series_and_Trackers is
     put(file,smallestsize,2); new_line(file);
     put(file,"The largest step size on a path  :");
     put(file,largestsize,2); new_line(file);
-    put(file,"Average ratio of times series step was minimal  : ");
-    put(file,ratsstp,1,4,0); new_line(file);
+   -- put(file,"Average ratio of times series step was minimal  : ");
+   -- put(file,ratsstp,1,4,0); new_line(file);
     put(file,"Average ratio of times Hessian step was minimal : ");
     put(file,ratdstp,1,4,0); new_line(file);
     put(file,"Average ratio of times pole step was minimal    : ");
