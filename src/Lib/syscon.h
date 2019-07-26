@@ -80,10 +80,10 @@ int syscon_read_multprec_Laurent_system ( int deci );
  *   by the value of deci.
  *   Returns 0 if okay, otherwise returns the fail value. */
 
-int syscon_random_system ( int n, int m, int d, int c );
+int syscon_random_system ( int n, int m, int d, int c, int neq );
 /*
  * DESCRIPTION :
- *   Puts in the system container a system of n equations in n variables,
+ *   Puts in the system container a system of neq equations in n variables,
  *   with at most m monomials per equation and where each monomial has
  *   degree no larger then d.  The coefficient type c is 0, 1, or 2:
  *   c = 0 : complex coefficients on the unit circle;

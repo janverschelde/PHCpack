@@ -69,14 +69,16 @@ int syscon_read_multprec_Laurent_system ( int deci )
    return fail;
 }
 
-int syscon_random_system ( int n, int m, int d, int c )
+int syscon_random_system ( int n, int m, int d, int c, int neq )
 {
-   int b[3],fail;
+   int a[2],b[3],fail;
    double *tmp;
+   a[0] = n;
+   a[1] = neq;
    b[0] = m;
    b[1] = d;
    b[2] = c;
-   fail = _ada_use_c2phc4c(109,&n,b,tmp);
+   fail = _ada_use_c2phc4c(109,a,b,tmp);
    return fail;
 }
 

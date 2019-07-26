@@ -315,14 +315,16 @@ void test_multprec_container ( void )
 
 void show_random_system ( void )
 {
-   int n,m,d,c;
+   int n,m,d,c,neq,fail;
 
    printf("\nGenerating a random system ...\n");
-   printf("-> enter the dimension : "); scanf("%d", &n);
+   printf("-> enter the number of variables : "); scanf("%d", &n);
+   printf("-> enter the number of equations : "); scanf("%d", &neq);
    printf("-> enter the number of monomials : "); scanf("%d", &m);
    printf("-> enter the degree bound : "); scanf("%d", &d);
    printf("-> enter the coefficient type : "); scanf("%d", &c);
 
-   syscon_random_system(n,m,d,c);
+   fail = syscon_random_system(n,m,d,c,neq);
+   if(fail == 0) printf("Making of a random system succeeded.\n");
    syscon_write_standard_system();
 }

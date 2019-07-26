@@ -1,3 +1,6 @@
+Fri 26 Jul 2019 : extended syscon.h, syscon.c, lib_syscon.c for generation
+  of random systems that are not square.
+
 Mon 15 Jul 2019 : copied definition of load_standard_tableau into phcpy2c2.c.
 
 Sat 13 Jul 2019 : added function to retrieve the dimensions of the tableau
