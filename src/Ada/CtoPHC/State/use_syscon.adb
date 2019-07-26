@@ -1074,25 +1074,31 @@ function use_syscon ( job : integer32;
 
   function Job71 return integer32 is -- puts random system in the container
 
+    use Interfaces.C;
+
     v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    p : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    neq : constant integer32 := integer32(v_a(v_a'first+1));
+    p : Standard_Complex_Poly_Systems.Poly_Sys(1..neq);
     v_b : constant C_Integer_Array
         := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(3));
     m : constant natural32 := natural32(v_b(v_b'first));
-    use Interfaces.C;
     d : constant natural32 := natural32(v_b(v_b'first+1));
     c : constant natural32 := natural32(v_b(v_b'first+2));
 
   begin
     for i in p'range loop
-      p(i) := Standard_Random_Polynomials.Random_Sparse_Poly(n,d,m,c);
+      if m = 0 then
+        p(i) := Standard_Random_Polynomials.Random_Dense_Poly(nvr,d,c);
+      else
+        p(i) := Standard_Random_Polynomials.Random_Sparse_Poly(nvr,d,m,c);
+      end if;
     end loop;
     Standard_PolySys_Container.Clear; 
     Standard_PolySys_Container.Initialize(p); 
    -- must initialize the symbol table with actual symbols for printing
-    Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(n)));
+    Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(nvr)));
     return 0;
   exception
     when others => return 71;

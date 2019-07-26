@@ -1,3 +1,6 @@
+Fri 26 Jul 2019 : extended the job to make random systems in use_syscon.adb to 
+  allow for systems with a different number of polynomials than variables.
+
 Sat 13 Jul 2019 : added job to use_tabform and use_c2phc4c to return the
   dimensions of the tableau form of the system stored in the standard
   systems container.
