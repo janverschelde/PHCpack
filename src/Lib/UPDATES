@@ -1,5 +1,6 @@
 Fri 26 Jul 2019 : extended syscon.h, syscon.c, lib_syscon.c for generation
-  of random systems that are not square.
+  of random systems that are not square.  Extended likewise phcpy2c.h,
+  phcpy2c2.c, and phcpy2c3.c, with an extra parameter.
 
 Mon 15 Jul 2019 : copied definition of load_standard_tableau into phcpy2c2.c.
 

@@ -2032,11 +2032,11 @@ static PyObject *py2c_syscon_read_multprec_Laurent_system
 static PyObject *py2c_syscon_random_system
  ( PyObject *self, PyObject *args )
 {
-   int fail,n,m,d,c;
+   int fail,n,m,d,c,neq;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iiii",&n,&m,&d,&c)) return NULL;   
-   fail = syscon_random_system(n,m,d,c);
+   if(!PyArg_ParseTuple(args,"iiiii",&n,&m,&d,&c,&neq)) return NULL;   
+   fail = syscon_random_system(n,m,d,c,neq);
 
    return Py_BuildValue("i",fail);
 }
@@ -9944,7 +9944,7 @@ static PyMethodDef phcpy2c_methods[] =
      py2c_syscon_read_multprec_Laurent_system, METH_VARARGS,
     "Interactive procedure to read a Laurent polynomial system with\n coefficients in arbitrary multiprecision.  The one input parameter is\n an integer, the number of decimal places in the working precision.\n The system will be placed in the multprec Laurent systems container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_random_system", py2c_syscon_random_system, METH_VARARGS,
-    "Places in the systems container a random polynomial system\n with coefficients in standard double precision.\n There are four integers as input parameters:\n 1) n, the number of polynomials and variables;\n 2) m, the number of monomials per equation;\n 3) d, the largest degree of each monomial;\n 4) c, the type of coefficient: 0 if on the complex unit circle,\n 1, if all coefficients are one, 2, if all coefficients are\n random floats in [-1,+1]."}, 
+    "Places in the systems container a random polynomial system\n with coefficients in standard double precision.\n There are five integers as input parameters:\n 1) n, the number of polynomials and variables;\n 2) m, the number of monomials per equation;\n 3) d, the largest degree of each monomial;\n 4) c, the type of coefficient: 0 if on the complex unit circle,\n 1, if all coefficients are one, 2, if all coefficients are\n random floats in [-1,+1];\n 5) neq, the number of polynomials in the system."}, 
    {"py2c_syscon_write_standard_system",
      py2c_syscon_write_standard_system, METH_VARARGS,
     "Writes the polynomial system with standard double precision coefficients\n that is stored in the container."},

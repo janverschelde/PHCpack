@@ -1371,13 +1371,14 @@ static PyObject *py2c_syscon_random_system
  * DESCRIPTION :
  *   Places in the systems container a random polynomial system
  *   with coefficients in standard double precision.
- *   There are four integers as input parameters:
+ *   There are five integers as input parameters:
  *   1) n, the number of polynomials and variables;
  *   2) m, the number of monomials per equation;
  *   3) d, the largest degree of each monomial;
  *   4) c, the type of coefficient: 0 if on the complex unit circle,
  *   1, if all coefficients are one, 2, if all coefficients are
- *   random floats in [-1,+1]. */
+ *   random floats in [-1,+1];
+ *   5) neq, the number of equations. */
 
 static PyObject *py2c_syscon_write_standard_system
  ( PyObject *self, PyObject *args );
