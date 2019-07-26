@@ -1,3 +1,6 @@
+Fri 26 Jul 2019 : refactored procedures in random_polynomial_systems into
+  new functions to generate random polynomial systems.
+
 Sun 17 Feb 2019 : added link to array of Hessians type to
   generic_hessian_matrices, along with a deallocator procedure.
 
