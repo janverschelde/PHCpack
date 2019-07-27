@@ -50,13 +50,17 @@ def real_random_trinomials(sys):
         result.append(rpol)
     return result
 
-def random_system(dim, nbrmon, deg, cff):
+def random_system(neq, nvr, nbrmon, deg, cff):
     r"""
     Generates a random polynomial system based on the following:
 
-    *dim*: number of equations and variables,
+    *neq*: number of equations,
+
+    *nvr*: number of variables,
 
     *nbrmon*: maximum number of monomials per equation,
+
+       if 0, then the generated polynomials are dense,
 
     *deg*: upper bound on the degree of the monomials,
 
@@ -70,7 +74,7 @@ def random_system(dim, nbrmon, deg, cff):
     """
     from phcpy.phcpy2c2 import py2c_syscon_random_system
     from phcpy.interface import load_standard_system
-    py2c_syscon_random_system(dim, nbrmon, deg, cff)
+    py2c_syscon_random_system(nvr, nbrmon, deg, cff, neq)
     return load_standard_system()
 
 def number_of_symbols(pols):
