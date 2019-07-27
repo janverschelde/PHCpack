@@ -73,12 +73,47 @@ int syscon_random_system ( int n, int m, int d, int c, int neq )
 {
    int a[2],b[3],fail;
    double *tmp;
+
    a[0] = n;
    a[1] = neq;
    b[0] = m;
    b[1] = d;
    b[2] = c;
+
    fail = _ada_use_c2phc4c(109,a,b,tmp);
+
+   return fail;
+}
+
+int syscon_dobldobl_random_system ( int n, int m, int d, int c, int neq )
+{
+   int a[2],b[3],fail;
+   double *tmp;
+
+   a[0] = n;
+   a[1] = neq;
+   b[0] = m;
+   b[1] = d;
+   b[2] = c;
+
+   fail = _ada_use_c2phc4c(548,a,b,tmp);
+
+   return fail;
+}
+
+int syscon_quaddobl_random_system ( int n, int m, int d, int c, int neq )
+{
+   int a[2],b[3],fail;
+   double *tmp;
+
+   a[0] = n;
+   a[1] = neq;
+   b[0] = m;
+   b[1] = d;
+   b[2] = c;
+
+   fail = _ada_use_c2phc4c(549,a,b,tmp);
+
    return fail;
 }
 

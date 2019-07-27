@@ -83,9 +83,38 @@ int syscon_read_multprec_Laurent_system ( int deci );
 int syscon_random_system ( int n, int m, int d, int c, int neq );
 /*
  * DESCRIPTION :
- *   Puts in the system container a system of neq equations in n variables,
- *   with at most m monomials per equation and where each monomial has
- *   degree no larger then d.  The coefficient type c is 0, 1, or 2:
+ *   Generates a random polynomial system of neq equations in n variables
+ *   and stores the system in the container for standard double precision.
+ *   If m = 0, then the polynomials are dense of degree d,
+ *   otherwise, at most m monomials per equations are generated and
+ *   each monomial has degree no larger than d.
+ *   The coefficient type c is 0, 1, or 2:
+ *   c = 0 : complex coefficients on the unit circle;
+ *   c = 1 : all coefficients are equal to one;
+ *   c = 2 : coefficients are random floats, uniform in [-1,+1]. */
+
+int syscon_dobldobl_random_system ( int n, int m, int d, int c, int neq );
+/*
+ * DESCRIPTION :
+ *   Generates a random polynomial system of neq equations in n variables
+ *   and stores the system in the container for double double precision.
+ *   If m = 0, then the polynomials are dense of degree d,
+ *   otherwise, at most m monomials per equations are generated and
+ *   each monomial has degree no larger than d.
+ *   The coefficient type c is 0, 1, or 2:
+ *   c = 0 : complex coefficients on the unit circle;
+ *   c = 1 : all coefficients are equal to one;
+ *   c = 2 : coefficients are random floats, uniform in [-1,+1]. */
+
+int syscon_quaddobl_random_system ( int n, int m, int d, int c, int neq );
+/*
+ * DESCRIPTION :
+ *   Generates a random polynomial system of neq equations in n variables
+ *   and stores the system in the container for quad double precision.
+ *   If m = 0, then the polynomials are dense of degree d,
+ *   otherwise, at most m monomials per equations are generated and
+ *   each monomial has degree no larger than d.
+ *   The coefficient type c is 0, 1, or 2:
  *   c = 0 : complex coefficients on the unit circle;
  *   c = 1 : all coefficients are equal to one;
  *   c = 2 : coefficients are random floats, uniform in [-1,+1]. */
