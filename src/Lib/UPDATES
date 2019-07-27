@@ -1,5 +1,7 @@
 Sat 27 Jul 2019 : added functions to syscon to generate random polynomial
   systems in double double and quad double precision.
+  Updated phcpy2c.h, phcpy2c2.c, and phcpy2c3.c with the new functions to
+  generate random polynomial systems with double doubles and quad doubles.
 
 Fri 26 Jul 2019 : extended syscon.h, syscon.c, lib_syscon.c for generation
   of random systems that are not square.  Extended likewise phcpy2c.h,

@@ -1380,6 +1380,36 @@ static PyObject *py2c_syscon_random_system
  *   random floats in [-1,+1];
  *   5) neq, the number of equations. */
 
+static PyObject *py2c_syscon_dobldobl_random_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Places in the systems container a random polynomial system
+ *   with coefficients in double double precision.
+ *   There are five integers as input parameters:
+ *   1) n, the number of polynomials and variables;
+ *   2) m, the number of monomials per equation;
+ *   3) d, the largest degree of each monomial;
+ *   4) c, the type of coefficient: 0 if on the complex unit circle,
+ *   1, if all coefficients are one, 2, if all coefficients are
+ *   random floats in [-1,+1];
+ *   5) neq, the number of equations. */
+
+static PyObject *py2c_syscon_quaddobl_random_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Places in the systems container a random polynomial system
+ *   with coefficients in double double precision.
+ *   There are five integers as input parameters:
+ *   1) n, the number of polynomials and variables;
+ *   2) m, the number of monomials per equation;
+ *   3) d, the largest degree of each monomial;
+ *   4) c, the type of coefficient: 0 if on the complex unit circle,
+ *   1, if all coefficients are one, 2, if all coefficients are
+ *   random floats in [-1,+1];
+ *   5) neq, the number of equations. */
+
 static PyObject *py2c_syscon_write_standard_system
  ( PyObject *self, PyObject *args );
 /*
