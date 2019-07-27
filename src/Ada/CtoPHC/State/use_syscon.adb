@@ -19,6 +19,7 @@ with Symbol_Table;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Random_Polynomials;
 with DoblDobl_Complex_Poly_Strings;
 with DoblDobl_Complex_Laur_Strings;
 with DoblDobl_Complex_Poly_Systems;
@@ -27,6 +28,7 @@ with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Random_Polynomials;
 with QuadDobl_Complex_Poly_Strings;
 with QuadDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Poly_Systems;
@@ -1104,6 +1106,70 @@ function use_syscon ( job : integer32;
     when others => return 71;
   end Job71;
 
+  function Job78 return integer32 is -- random dobldobl system
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    neq : constant integer32 := integer32(v_a(v_a'first+1));
+    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..neq);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(3));
+    m : constant natural32 := natural32(v_b(v_b'first));
+    d : constant natural32 := natural32(v_b(v_b'first+1));
+    c : constant natural32 := natural32(v_b(v_b'first+2));
+
+  begin
+    for i in p'range loop
+      if m = 0 then
+        p(i) := DoblDobl_Random_Polynomials.Random_Dense_Poly(nvr,d,c);
+      else
+        p(i) := DoblDobl_Random_Polynomials.Random_Sparse_Poly(nvr,d,m,c);
+      end if;
+    end loop;
+    DoblDobl_PolySys_Container.Clear; 
+    DoblDobl_PolySys_Container.Initialize(p); 
+   -- must initialize the symbol table with actual symbols for printing
+    Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(nvr)));
+    return 0;
+  exception
+    when others => return 78;
+  end Job78;
+
+  function Job79 return integer32 is -- random quaddobl system
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    neq : constant integer32 := integer32(v_a(v_a'first+1));
+    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..neq);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(3));
+    m : constant natural32 := natural32(v_b(v_b'first));
+    d : constant natural32 := natural32(v_b(v_b'first+1));
+    c : constant natural32 := natural32(v_b(v_b'first+2));
+
+  begin
+    for i in p'range loop
+      if m = 0 then
+        p(i) := QuadDobl_Random_Polynomials.Random_Dense_Poly(nvr,d,c);
+      else
+        p(i) := QuadDobl_Random_Polynomials.Random_Sparse_Poly(nvr,d,m,c);
+      end if;
+    end loop;
+    QuadDobl_PolySys_Container.Clear; 
+    QuadDobl_PolySys_Container.Initialize(p); 
+   -- must initialize the symbol table with actual symbols for printing
+    Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(nvr)));
+    return 0;
+  exception
+    when others => return 79;
+  end Job79;
+
   function Job74 return integer32 is -- Laurential as string to container
 
     use Interfaces.C;
@@ -2109,6 +2175,9 @@ function use_syscon ( job : integer32;
       when 74 => return Job74; -- store standard Laurential in container
       when 76 => return Job76; -- store standard polynomial in container
       when 77 => return Job77; -- load standard Laurential from container
+     -- random systems in double double and quad double precision
+      when 78 => return Job78; -- store random system in dobldobl container 
+      when 79 => return Job79; -- store random system in quaddobl container
      -- jobs to return the size limit of the string representations
       when 80 => return Job80; -- size limit of k-th standard polynomial
       when 81 => return Job81; -- size limit of k-th dobldobl polynomial

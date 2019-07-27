@@ -1,3 +1,6 @@
+Sat 27 Jul 2019 : added jobs to use_syscon and use_c2phc4c to generate 
+  random polynomial systems in double double and quad double precision.
+
 Fri 26 Jul 2019 : extended the job to make random systems in use_syscon.adb to 
   allow for systems with a different number of polynomials than variables.
 

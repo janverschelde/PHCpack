@@ -1496,7 +1496,30 @@ function use_c2phc4c ( job : integer32;
 --   job   = 109 : stores a random polynomial system in the container
 --                 for systems with standard complex coefficients,
 --                 the parameters on input should be as follows:
---                 a[0] : n, the dimension of the system;
+--                 a[0] : n, the number of variables in the system;
+--                 a[1] : neq, the number of equations in the system;
+--                 b[0] : m, the number of monomials per equations;
+--                 b[1] : d, the degree bound on the monomials;
+--                 b[2] : c, type of coefficient: 0, 1, or 2:
+--                   c = 0 : default complex coefficient on unit circle,
+--                   c = 1 : all coefficients are equal to one,
+--                   c = 2 : real coefficients in [-1,+1].
+--         = 548 : stores a random polynomial system in the container
+--                 for systems with double double complex coefficients,
+--                 the parameters on input should be as follows:
+--                 a[0] : n, the number of variables in the system;
+--                 a[1] : neq, the number of equations in the system;
+--                 b[0] : m, the number of monomials per equations;
+--                 b[1] : d, the degree bound on the monomials;
+--                 b[2] : c, type of coefficient: 0, 1, or 2:
+--                   c = 0 : default complex coefficient on unit circle,
+--                   c = 1 : all coefficients are equal to one,
+--                   c = 2 : real coefficients in [-1,+1].
+--         = 549 : stores a random polynomial system in the container
+--                 for systems with quad double complex coefficients,
+--                 the parameters on input should be as follows:
+--                 a[0] : n, the number of variables in the system;
+--                 a[1] : neq, the number of equations in the system;
 --                 b[0] : m, the number of monomials per equations;
 --                 b[1] : d, the degree bound on the monomials;
 --                 b[2] : c, type of coefficient: 0, 1, or 2:

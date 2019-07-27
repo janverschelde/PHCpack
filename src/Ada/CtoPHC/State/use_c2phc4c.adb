@@ -3124,6 +3124,9 @@ function use_c2phc4c ( job : integer32;
       when 540..543 => return use_syscon(job,a,b,c);
      -- operations to read systems and solutions into the containers
       when 544..547 => return use_solcon(job,a,b,c);
+     -- random dobldobl and quaddobl systems
+      when 548 => return use_syscon(78,a,b,c);
+      when 549 => return use_syscon(79,a,b,c);
      -- operations on Laurent container for double doubles :
       when 550..558 => return use_syscon(job-440,a,b,c);
       when 559 => return use_syscon(72,a,b,c);
