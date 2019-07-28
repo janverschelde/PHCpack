@@ -50,9 +50,10 @@ def real_random_trinomials(sys):
         result.append(rpol)
     return result
 
-def random_system(neq, nvr, nbrmon, deg, cff):
+def standard_random_system(neq, nvr, nbrmon, deg, cff):
     r"""
-    Generates a random polynomial system based on the following:
+    Returns a random polynomial system with coefficients in
+    standard double precision, based on the following:
 
     *neq*: number of equations,
 
@@ -76,6 +77,101 @@ def random_system(neq, nvr, nbrmon, deg, cff):
     from phcpy.interface import load_standard_system
     py2c_syscon_random_system(nvr, nbrmon, deg, cff, neq)
     return load_standard_system()
+
+def dobldobl_random_system(neq, nvr, nbrmon, deg, cff):
+    r"""
+    Returns a random polynomial system with coefficients in
+    double double precision, based on the following:
+
+    *neq*: number of equations,
+
+    *nvr*: number of variables,
+
+    *nbrmon*: maximum number of monomials per equation,
+
+       if 0, then the generated polynomials are dense,
+
+    *deg*: upper bound on the degree of the monomials,
+
+    *cff*: type of coefficients, must be 0, 1, or 2,
+
+       if 0, then random complex numbers on the unit circle,
+
+       if 1, then coefficients are one (or integer multiples of one),
+
+       if 2, then coefficients are floats in [-1,+1].
+    """
+    from phcpy.phcpy2c3 import py2c_syscon_dobldobl_random_system
+    from phcpy.interface import load_dobldobl_system
+    py2c_syscon_dobldobl_random_system(nvr, nbrmon, deg, cff, neq)
+    return load_dobldobl_system()
+
+def quaddobl_random_system(neq, nvr, nbrmon, deg, cff):
+    r"""
+    Returns a random polynomial system with coefficients in
+    quad double precision, based on the following:
+
+    *neq*: number of equations,
+
+    *nvr*: number of variables,
+
+    *nbrmon*: maximum number of monomials per equation,
+
+       if 0, then the generated polynomials are dense,
+
+    *deg*: upper bound on the degree of the monomials,
+
+    *cff*: type of coefficients, must be 0, 1, or 2,
+
+       if 0, then random complex numbers on the unit circle,
+
+       if 1, then coefficients are one (or integer multiples of one),
+
+       if 2, then coefficients are floats in [-1,+1].
+    """
+    from phcpy.phcpy2c3 import py2c_syscon_quaddobl_random_system
+    from phcpy.interface import load_quaddobl_system
+    py2c_syscon_quaddobl_random_system(nvr, nbrmon, deg, cff, neq)
+    return load_quaddobl_system()
+
+def random_system(neq, nvr, nbrmon, deg, cff, precision='d'):
+    r"""
+    Generates a random polynomial system based on the following:
+
+    *neq*: number of equations,
+
+    *nvr*: number of variables,
+
+    *nbrmon*: maximum number of monomials per equation,
+
+       if 0, then the generated polynomials are dense,
+
+    *deg*: upper bound on the degree of the monomials,
+
+    *cff*: type of coefficients, must be 0, 1, or 2,
+
+       if 0, then random complex numbers on the unit circle,
+
+       if 1, then coefficients are one (or integer multiples of one),
+
+       if 2, then coefficients are floats in [-1,+1],
+
+    *precision*: the precision of the coefficients,
+
+       if 'd', the precision of the coefficients is double,
+
+       if 'dd', the precision of the coefficients is double double,
+
+       if 'qd', the precision of the coefficients is quad double.
+    """
+    if(precision == 'd'):
+        return standard_random_system(neq, nvr, nbrmon, deg, cff)
+    elif(precision == 'dd'):
+        return dobldobl_random_system(neq, nvr, nbrmon, deg, cff)
+    elif(precision == 'qd'):
+        return quaddobl_random_system(neq, nvr, nbrmon, deg, cff)
+    else:
+        print('wrong level of precision, use d, dd, or qd')
 
 def number_of_symbols(pols):
     r"""

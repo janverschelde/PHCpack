@@ -1,3 +1,7 @@
+Sun 28 Jul 2019 : updated random_system in the solver modules for python2
+  and python3 so systems with double double and quad double precision can
+  be generated.
+
 Sat 27 Jul 2019 : updated random_system in the solver modules for python2
   and python3 so nonsquare systems can be generated.
 
