@@ -4,11 +4,8 @@ with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
 with Standard_Integer_Vectors;
-with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
-with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Homotopy;
 with Standard_System_and_Solutions_io;
@@ -16,6 +13,8 @@ with DoblDobl_Homotopy;
 with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Homotopy;
 with QuadDobl_System_and_Solutions_io;
+with Projective_Transformations;         use Projective_Transformations;
+with Homogenization;                     use Homogenization;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
@@ -28,12 +27,48 @@ with Jacobian_Rabinowitsch_Trick;        use Jacobian_Rabinowitsch_Trick;
 
 package body Homotopy_Series_Readers is
 
+  procedure Standard_Projective_Transformation
+              ( targt : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    ptar : Standard_Complex_Poly_Systems.Poly_Sys(targt'first..targt'last+1);
+    pstr : Standard_Complex_Poly_Systems.Poly_Sys(start'first..start'last+1);
+
+  begin
+    Projective_Transformation(sols);
+    Projective_Transformation(targt.all);
+    Projective_Transformation(start.all);
+    ptar := Add_Random_Hyperplanes(targt.all,1,false);
+    pstr := Add_Standard_Hyperplanes(start.all,1);
+    Standard_Complex_Poly_Systems.Clear(targt);
+    targt := new Standard_Complex_Poly_Systems.Poly_Sys'(ptar);
+    Standard_Complex_Poly_Systems.Clear(start);
+    start := new Standard_Complex_Poly_Systems.Poly_Sys'(pstr);
+  end Standard_Projective_Transformation;
+
+  procedure DoblDobl_Projective_Transformation
+              ( targt : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+  begin
+    Projective_Transformation(sols);
+  end DoblDobl_Projective_Transformation;
+
+  procedure QuadDobl_Projective_Transformation
+              ( targt : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+  begin
+    Projective_Transformation(sols);
+  end QuadDobl_Projective_Transformation;
+
   procedure Standard_Reader
               ( nbequ : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 tpow : in natural32;
                 gamma : in Standard_Complex_Numbers.Complex_Number;
-                rabin : in boolean := false ) is
+                homcrd,rabin : in boolean := false ) is
 
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     ans : character;
@@ -45,6 +80,9 @@ package body Homotopy_Series_Readers is
     put_line("Reading the start system and its solutions ...");
     Standard_System_and_Solutions_io.get(start,sols);
     if not rabin then
+      if homcrd
+       then Standard_Projective_Transformation(target,start,sols);
+      end if;
       nbequ := target'last;
       Standard_Homotopy.Create(target.all,start.all,tpow,gamma);
     else
@@ -77,7 +115,7 @@ package body Homotopy_Series_Readers is
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 tpow : in natural32;
                 gamma : in DoblDobl_Complex_Numbers.Complex_Number;
-                rabin : in boolean := false ) is
+                homcrd,rabin : in boolean := false ) is
 
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     ans : character;
@@ -89,6 +127,9 @@ package body Homotopy_Series_Readers is
     put_line("Reading the start system and its solutions ...");
     DoblDobl_System_and_Solutions_io.get(start,sols);
     if not rabin then
+      if homcrd
+       then DoblDobl_Projective_Transformation(target,start,sols);
+      end if;
       nbequ := target'last;
       DoblDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
     else
@@ -121,7 +162,7 @@ package body Homotopy_Series_Readers is
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
                 tpow : in natural32;
                 gamma : in QuadDobl_Complex_Numbers.Complex_Number;
-                rabin : in boolean := false ) is
+                homcrd,rabin : in boolean := false ) is
 
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     ans : character;
@@ -133,6 +174,9 @@ package body Homotopy_Series_Readers is
     put_line("Reading the start system ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
     if not rabin then
+      if homcrd
+       then QuadDobl_Projective_Transformation(target,start,sols);
+      end if;
       nbequ := target'last;
       QuadDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
     else
@@ -164,39 +208,39 @@ package body Homotopy_Series_Readers is
               ( nbequ : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 tpow : in natural32 := 2;
-                rabin : in boolean := false ) is
+                homcrd,rabin : in boolean := false ) is
 
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
 
   begin
-    Standard_Reader(nbequ,sols,tpow,gamma,rabin);
+    Standard_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
   end Standard_Reader;
 
   procedure DoblDobl_Reader
               ( nbequ : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 tpow : in natural32 := 2;
-                rabin : in boolean := false ) is
+                homcrd,rabin : in boolean := false ) is
 
     gamma : constant DoblDobl_Complex_Numbers.Complex_Number
           := DoblDobl_Random_Numbers.Random1;
 
   begin
-    DoblDobl_Reader(nbequ,sols,tpow,gamma,rabin);
+    DoblDobl_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
   end DoblDobl_Reader;
 
   procedure QuadDobl_Reader
               ( nbequ : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
                 tpow : in natural32 := 2;
-                rabin : in boolean := false ) is
+                homcrd,rabin : in boolean := false ) is
 
     gamma : constant QuadDobl_Complex_Numbers.Complex_Number
           := QuadDobl_Random_Numbers.Random1;
 
   begin
-    QuadDobl_Reader(nbequ,sols,tpow,gamma,rabin);
+    QuadDobl_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
   end QuadDobl_Reader;
 
   procedure Standard_Parameter_Reader

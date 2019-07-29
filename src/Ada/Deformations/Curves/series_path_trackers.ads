@@ -76,6 +76,11 @@ package Series_Path_Trackers is
   --   Asks the user whether the homotopy is an artificial parameter
   --   homotopy and return true if so, otherwise false is returned.
 
+  function Prompt_for_Homogenization return boolean;
+
+  -- DESCRIPTION :
+  --   Asks the user whether homogeneous coordinates need to be used.
+
   procedure Standard_Main ( verbose : in integer32 := 0 );
   procedure DoblDobl_Main ( verbose : in integer32 := 0 );
   procedure QuadDobl_Main ( verbose : in integer32 := 0 );

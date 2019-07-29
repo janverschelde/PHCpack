@@ -2,14 +2,17 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Series_Vectors;
 
@@ -21,24 +24,55 @@ package Homotopy_Series_Readers is
 --   The homotopy is an artificial parameter homotopy
 --   or a natural parameter homotopy.
 
+  procedure Standard_Projective_Transformation
+              ( targt : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure DoblDobl_Projective_Transformation
+              ( targt : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure QuadDobl_Projective_Transformation
+              ( targt : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Transforms the target, start system, and its start solutions
+  --   into homogeneous coordinates, adding one random linear equation to
+  --   the target system and Z0 = 1 to the start system, adding 1 to
+  --   every start solution.
+
+  -- ON ENTRY :
+  --   targt    target system in an artificial-parameter homotopy;
+  --   start    start system in an artificial-parameter homotopy;
+  --   sols     start solutions.
+
+  -- ON RETURN :
+  --   targt    target system in homogeneous coordinates
+  --            and with one random linear equation added;
+  --   start    start system in homogeneous coordinates
+  --            and with the equation Z0 = 1 added;
+  --   sols     solutions extended with 1 as last coordinate.
+
   procedure Standard_Reader
               ( nbequ : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 tpow : in natural32;
                 gamma : in Standard_Complex_Numbers.Complex_Number;
-                rabin : in boolean := false );
+                homcrd,rabin : in boolean := false );
   procedure DoblDobl_Reader
               ( nbequ : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 tpow : in natural32;
                 gamma : in DoblDobl_Complex_Numbers.Complex_Number;
-                rabin : in boolean := false );
+                homcrd,rabin : in boolean := false );
   procedure QuadDobl_Reader
               ( nbequ : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
                 tpow : in natural32;
                 gamma : in QuadDobl_Complex_Numbers.Complex_Number;
-                rabin : in boolean := false );
+                homcrd,rabin : in boolean := false );
 
   -- DESCRIPTION :
   --   Prompts for a target system, a start system with start solutions.
@@ -50,6 +84,7 @@ package Homotopy_Series_Readers is
   --   tpow     power of the continuation parameter
   --            in the artificial parameter homotopy;
   --   gamma    value for the accessibility constant;
+  --   homcrd   if homogeneous coordinates need to be used;
   --   rabin    if the user should be prompted for the Rabinowitsch trick.
 
   -- ON RETURN :
@@ -60,17 +95,17 @@ package Homotopy_Series_Readers is
               ( nbequ : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 tpow : in natural32 := 2;
-                rabin : in boolean := false );
+                homcrd,rabin : in boolean := false );
   procedure DoblDobl_Reader
               ( nbequ : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 tpow : in natural32 := 2;
-                rabin : in boolean := false );
+                homcrd,rabin : in boolean := false );
   procedure QuadDobl_Reader
               ( nbequ : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
                 tpow : in natural32 := 2;
-                rabin : in boolean := false );
+                homcrd,rabin : in boolean := false );
 
   -- DESCRIPTION :
   --   Prompts for a target system, a start system with start solutions.
@@ -80,6 +115,7 @@ package Homotopy_Series_Readers is
   -- ON ENTRY :
   --   tpow     power of the continuation parameter
   --            in the artificial parameter homotopy.
+  --   homcrd   if homogeneous coordinates need to be used;
   --   rabin    if the user should be prompted for the Rabinowitsch trick.
 
   -- ON RETURN :

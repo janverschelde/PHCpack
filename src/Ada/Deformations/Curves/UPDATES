@@ -1,3 +1,7 @@
+Mon 29 Jul 2019 : added prompts for homogeneous coordinates in 
+  interactive_pade_trackers.adb and series_path_trackers; with projective
+  transformations done in homotopy_series_readers.
+
 Thu 25 Jul 2019 : in series_and_trackers.adb, commented out the reporting
   on the counts and ratios for the series step.
 

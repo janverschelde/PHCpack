@@ -8,6 +8,7 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
+with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
@@ -591,18 +592,33 @@ package body Series_Path_Trackers is
     return (ans = 'y');
   end Prompt_for_Artificial;
 
+  function Prompt_for_Homogenization return boolean is
+
+    ans : character;
+
+  begin
+    new_line;
+    put("Are homogeneneous coordinates to be used? (y/n) ");
+    Ask_Yes_or_No(ans);
+    return (ans = 'y');
+  end Prompt_for_Homogenization;
+
   procedure Standard_Main ( verbose : in integer32 := 0 ) is
 
     nbq,nvr,idx : integer32;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
+    homo : constant boolean := Prompt_for_Homogenization;
  
   begin
     if verbose > 0
      then put_line("-> in series_path_trackers.Standard_Main ...");
     end if;
     if arth then
-      Homotopy_Series_Readers.Standard_Reader(nbq,sols);
+      Homotopy_Series_Readers.Standard_Reader(nbq,sols,homcrd=>homo);
+      if homo
+       then Symbol_Table.Add_String("Z0");
+      end if;
       nvr := Standard_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
       new_line;
@@ -620,13 +636,17 @@ package body Series_Path_Trackers is
     nbq,nvr,idx : integer32;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
+    homo : constant boolean := Prompt_for_Homogenization;
 
   begin
     if verbose > 0
      then put_line("-> in series_path_trackers.DoblDobl_Main ...");
     end if;
     if arth then
-      Homotopy_Series_Readers.DoblDobl_Reader(nbq,sols);
+      Homotopy_Series_Readers.DoblDobl_Reader(nbq,sols,homcrd=>homo);
+      if homo
+       then Symbol_Table.Add_String("Z0");
+      end if;
       nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
       new_line;
@@ -644,13 +664,17 @@ package body Series_Path_Trackers is
     nbq,nvr,idx : integer32;
     sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
+    homo : constant boolean := Prompt_for_Homogenization;
 
   begin
     if verbose > 0
      then put_line("-> in series_path_trackers.QuadDobl_Main ...");
     end if;
     if arth then
-      Homotopy_Series_Readers.QuadDobl_Reader(nbq,sols);
+      Homotopy_Series_Readers.QuadDobl_Reader(nbq,sols,homcrd=>homo);
+      if homo
+       then Symbol_Table.Add_String("Z0");
+      end if;
       nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
       new_line;

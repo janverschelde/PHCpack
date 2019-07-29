@@ -177,7 +177,7 @@ package body Interactive_Pade_Trackers is
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
-    arthom : boolean;
+    arthom,homgen : boolean;
     zero : constant Standard_Complex_Numbers.Complex_Number
          := Standard_Complex_Numbers.Create(0.0);
 
@@ -198,6 +198,7 @@ package body Interactive_Pade_Trackers is
     Homotopy_Continuation_Parameters_io.put
       (Standard_SeriesPade_Tracker.Get_Parameters.all);
     arthom := Series_Path_Trackers.Prompt_for_Artificial;
+    homgen := Series_Path_Trackers.Prompt_for_Homogenization;
     if arthom then
       new_line;
       put_line("Reading the target system ..."); get(target);
@@ -231,7 +232,7 @@ package body Interactive_Pade_Trackers is
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
-    arthom : boolean;
+    arthom,homgen : boolean;
     zero : constant DoblDobl_Complex_Numbers.Complex_Number
          := DoblDobl_Complex_Numbers.Create(integer32(0));
 
@@ -252,6 +253,7 @@ package body Interactive_Pade_Trackers is
     Homotopy_Continuation_Parameters_io.put
       (DoblDobl_SeriesPade_Tracker.Get_Parameters.all);
     arthom := Series_Path_Trackers.Prompt_for_Artificial;
+    homgen := Series_Path_Trackers.Prompt_for_Homogenization;
     if arthom then
       new_line;
       put_line("Reading the target system ..."); get(target);
@@ -285,7 +287,7 @@ package body Interactive_Pade_Trackers is
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
-    arthom : boolean;
+    arthom,homgen : boolean;
     zero : constant QuadDobl_Complex_Numbers.Complex_Number
          := QuadDobl_Complex_Numbers.Create(integer32(0));
 
@@ -306,6 +308,7 @@ package body Interactive_Pade_Trackers is
     Homotopy_Continuation_Parameters_io.put
       (QuadDobl_SeriesPade_Tracker.Get_Parameters.all);
     arthom := Series_Path_Trackers.Prompt_for_Artificial;
+    homgen := Series_Path_Trackers.Prompt_for_Homogenization;
     if arthom then
       new_line;
       put_line("Reading the target system ..."); get(target);
