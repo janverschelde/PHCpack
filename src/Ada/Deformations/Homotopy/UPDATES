@@ -1,5 +1,7 @@
 Tue 30 Jul 2019 : new test procedure ts_scalplane to experiment with the
   scaling of coefficient polynomial systems in homogeneous coordinates.
+  Prepared homogenization for the addition of double double and quad double
+  versions of the exported operations by the package.
 
 Thu 20 Jun 2019 : added verbose level in drivers_for_homotopy_creation.
 

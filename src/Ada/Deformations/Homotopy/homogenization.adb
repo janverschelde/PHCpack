@@ -6,7 +6,11 @@ with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 
 package body Homogenization is
 
-  function Homogeneous_Part ( p : Poly ) return Poly is
+  function Homogeneous_Part
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly := Null_Poly;
     d : constant integer32 := Degree(p);
@@ -25,7 +29,11 @@ package body Homogenization is
     return res;
   end Homogeneous_Part;
 
-  function Homogeneous_Part ( p : Poly_Sys ) return Poly_Sys is
+  function Homogeneous_Part
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(p'range);
 
@@ -36,7 +44,11 @@ package body Homogenization is
     return res;
   end Homogeneous_Part;
 
-  function Real_Random_Hyperplane ( n : natural32 ) return Poly is
+  function Real_Random_Hyperplane
+             ( n : natural32 )
+             return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     t : Term;
@@ -61,7 +73,11 @@ package body Homogenization is
     return res;
   end Real_Random_Hyperplane;
 
-  function Complex_Random_Hyperplane ( n : natural32 ) return Poly is
+  function Complex_Random_Hyperplane
+             ( n : natural32 )
+             return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     t : Term;
@@ -83,9 +99,13 @@ package body Homogenization is
     return res;
   end Complex_Random_Hyperplane;
 
-  function Standard_Hyperplane ( n,i : natural32 ) return Poly is
+  function Standard_Hyperplane
+             ( n,i : natural32 )
+             return Standard_Complex_Polynomials.Poly is
 
   -- DESCRIPTION : Returns x_i - 1.
+
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     t : Term;
@@ -106,7 +126,8 @@ package body Homogenization is
   end Standard_Hyperplane;
 
   procedure Construct_Real_Random_Hyperplanes
-                ( s : in out Poly_Sys; m : natural32 ) is
+              ( s : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                m : natural32 ) is
 
   -- DESCRIPTION :
   --   the polynomial system s will be filled with polynomials in m unknowns,
@@ -114,13 +135,14 @@ package body Homogenization is
 
   begin
     for i in s'range loop
-      Clear(s(i));
+      Standard_Complex_Polynomials.Clear(s(i));
       s(i) := Real_Random_Hyperplane(m);
     end loop;
   end Construct_Real_Random_Hyperplanes;
 
   procedure Construct_Complex_Random_Hyperplanes
-                ( s : in out Poly_Sys; m : natural32 ) is
+              ( s : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                m : natural32 ) is
 
   -- DESCRIPTION :
   --   The polynomial system s will be filled with polynomials in m unknowns,
@@ -128,12 +150,13 @@ package body Homogenization is
 
   begin
     for i in s'range loop
-      Clear(s(i));
+      Standard_Complex_Polynomials.Clear(s(i));
       s(i) := Complex_Random_Hyperplane(m);
     end loop;
   end Construct_Complex_Random_Hyperplanes;
 
-  procedure Construct_Standard_Hyperplanes ( s : in out Poly_Sys ) is
+  procedure Construct_Standard_Hyperplanes
+              ( s : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
   --   for i in s'range : s(i) := x_i - 1.
@@ -142,68 +165,82 @@ package body Homogenization is
 
   begin
     for i in s'range loop
-      Clear(s(i));
+      Standard_Complex_Polynomials.Clear(s(i));
       s(i) := Standard_Hyperplane(n,natural32(i));
     end loop;
   end Construct_Standard_Hyperplanes;
 
-  procedure Enlarge_Before ( p : in out Poly; m : in natural32 ) is
+  procedure Enlarge_Before
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                m : in natural32 ) is
 
   -- DESCRIPTION :
   --   To each term t of p, m additional zero entries will be inserted to t.dg
 
-   procedure Enlarge_Term ( t : in out Term; continue : out boolean ) is
+    use Standard_Complex_Polynomials;
 
-     d : constant Degrees
-       := new Standard_Natural_Vectors.Vector(1..(t.dg'last+integer32(m)));
+    procedure Enlarge_Term ( t : in out Term; continue : out boolean ) is
 
-   begin
-     for i in 1..integer32(m) loop
-       d(i) := 0;
-     end loop;
-     for i in t.dg'range loop
-       d(i+integer32(m)) := t.dg(i);
-     end loop;
-     Standard_Natural_Vectors.Clear
-       (Standard_Natural_Vectors.Link_to_Vector(t.dg));
-     t.dg := d;
-     continue := true;
-   end Enlarge_Term;
-   procedure Enlarge_Terms is new Changing_Iterator(Enlarge_Term);
+      d : constant Degrees
+        := new Standard_Natural_Vectors.Vector(1..(t.dg'last+integer32(m)));
+
+    begin
+      for i in 1..integer32(m) loop
+        d(i) := 0;
+      end loop;
+      for i in t.dg'range loop
+        d(i+integer32(m)) := t.dg(i);
+      end loop;
+      Standard_Natural_Vectors.Clear
+        (Standard_Natural_Vectors.Link_to_Vector(t.dg));
+      t.dg := d;
+      continue := true;
+    end Enlarge_Term;
+    procedure Enlarge_Terms is new Changing_Iterator(Enlarge_Term);
 
   begin
     Enlarge_Terms(p);
   end Enlarge_Before;
 
-  procedure Enlarge_After ( p : in out Poly; m : in natural32 ) is
+  procedure Enlarge_After
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                m : in natural32 ) is
 
   -- DESCRIPTION :
   --   To each term t of p, m additional zero entries will be added to t.dg
 
-   procedure Enlarge_Term ( t : in out Term; continue : out boolean ) is
+    use Standard_Complex_Polynomials;
 
-     d : constant Degrees
-       := new Standard_Natural_Vectors.Vector(1..(t.dg'last+integer32(m)));
+    procedure Enlarge_Term ( t : in out Term; continue : out boolean ) is
 
-   begin
-     for i in t.dg'range loop
-       d(i) := t.dg(i);
-     end loop;
-     for i in (t.dg'last+1)..integer32(m) loop
-       d(i) := 0;
-     end loop;
-     Standard_Natural_Vectors.Clear
-       (Standard_Natural_Vectors.Link_to_Vector(t.dg));
-     t.dg := d;
-     continue := true;
-   end Enlarge_Term;
-   procedure Enlarge_Terms is new Changing_Iterator(Enlarge_Term);
+      d : constant Degrees
+        := new Standard_Natural_Vectors.Vector(1..(t.dg'last+integer32(m)));
+
+    begin
+      for i in t.dg'range loop
+        d(i) := t.dg(i);
+      end loop;
+      for i in (t.dg'last+1)..integer32(m) loop
+        d(i) := 0;
+      end loop;
+      Standard_Natural_Vectors.Clear
+        (Standard_Natural_Vectors.Link_to_Vector(t.dg));
+      t.dg := d;
+      continue := true;
+    end Enlarge_Term;
+    procedure Enlarge_Terms is new Changing_Iterator(Enlarge_Term);
 
   begin
     Enlarge_Terms(p);
   end Enlarge_After;
 
-  function Add_Equations ( s1 : Poly_Sys; s2 : Poly_Sys ) return Poly_Sys is
+  function Add_Equations
+             ( s1 : Standard_Complex_Poly_Systems.Poly_Sys;
+               s2 : Standard_Complex_Poly_Systems.Poly_Sys )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
 
     n1 : constant natural32 := natural32(s1'last - s1'first + 1);
     n2 : constant natural32 := natural32(s2'last - s2'first + 1);
@@ -228,7 +265,13 @@ package body Homogenization is
     return res;
   end Add_Equations;
 
-  function Add_Equation ( s : Poly_Sys; p : Poly ) return Poly_Sys is
+  function Add_Equation
+             ( s : Standard_Complex_Poly_Systems.Poly_Sys;
+               p : Standard_Complex_Polynomials.Poly )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
 
     n : constant natural32 := natural32(s'last - s'first + 1);
     m : natural32;
@@ -250,7 +293,11 @@ package body Homogenization is
   end Add_Equation;
 
   function Add_Random_Hyperplanes
-               ( s : Poly_Sys; m : natural32; re : boolean ) return Poly_Sys is
+             ( s : Standard_Complex_Poly_Systems.Poly_Sys;
+               m : natural32; re : boolean )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Poly_Systems;
 
     s2 : Poly_Sys(1..integer32(m));
     n : constant natural32 := natural32(s'last - s'first + 1);
@@ -267,7 +314,11 @@ package body Homogenization is
   end Add_Random_Hyperplanes;
 
   function Add_Standard_Hyperplanes
-               ( s : Poly_Sys; m : natural32 ) return Poly_Sys is
+             ( s : Standard_Complex_Poly_Systems.Poly_Sys;
+               m : natural32 )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Poly_Systems;
 
     n : constant natural32 := natural32(s'length);
     res : Poly_Sys(1..integer32(n+m));
