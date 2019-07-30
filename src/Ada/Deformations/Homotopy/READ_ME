@@ -1,4 +1,4 @@
-Homotopies, scaling and reduction in PHCv2.4.68
+Homotopies, scaling and reduction in PHCv2.4.71
 
 The Creators in the package Homotopy allow more accessibility constants for
 the Cheater's homotopy.  A multiprecision version of the homotopy package
@@ -37,6 +37,7 @@ standard_coefficient_homotopy      : coefficient-parameter homotopy
 dobldobl_coefficient_homotopy      : double double coeff-parameter homotopy
 quaddobl_coefficient_homotopy      : quad double coeff-parameter homotopy
 ts_evalhomt                        : test on coefficient-parameter homotopy
+ts_scalplane                       : test on scaling last hyperplane
 ------------------------------------------------------------------------------
 standard_scaling                   : scaling standard systems and solutions
 dobldobl_scaling                   : scaling systems in double double precision
