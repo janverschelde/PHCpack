@@ -1,3 +1,7 @@
+Wed 31 Jul 2019 : made coefficient homotopy in homotopy_series_readers.adb,
+  called in homotopy_newton_steps.adb for homogeneous coordinates, and
+  added diagnostic prints in standard_pade_trackers.adb.
+
 Tue 30 Jul 2019 : updated homotopy_series_readers.adb with versions for
   double double and quad double precision of the projective transformations.
 

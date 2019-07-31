@@ -17,6 +17,7 @@ with Standard_Complex_Singular_Values;   use Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Homotopy_Mixed_Residuals;
@@ -117,15 +118,21 @@ package body Homotopy_Newton_Steps is
                 err,rco,res : out double_float ) is
 
     nq : constant integer32 := abh'last;
-    y : Standard_Complex_Vectors.Vector(1..nq)
-      := Standard_Homotopy.Eval(x,t);
-    A : Standard_Complex_Matrices.Matrix(1..nq,x'range)
-      := Standard_Homotopy.Diff(x,t);
+    y : Standard_Complex_Vectors.Vector(1..nq);
+    A : Standard_Complex_Matrices.Matrix(1..nq,x'range);
     ipvt : Standard_Integer_Vectors.Vector(A'range(2));
     info : integer32;
-    Anorm : constant double_float := Norm1(A);
+    Anorm : double_float;
 
   begin
+    if Standard_Coefficient_Homotopy.Number_of_Equations = -1 then
+      y := Standard_Homotopy.Eval(x,t);
+      A := Standard_Homotopy.Diff(x,t);
+    else
+      y := Standard_Coefficient_Homotopy.Eval(x,t);
+      A := Standard_Coefficient_Homotopy.Diff(x,t);
+    end if;
+    Anorm := Norm1(A);
     Standard_Complex_Vectors.Min(y);
     lufac(A,A'last(1),ipvt,info);
     estco(A,A'last(1),ipvt,Anorm,rco);
@@ -142,10 +149,8 @@ package body Homotopy_Newton_Steps is
                 err,rco,res : out double_float ) is
 
     nq : constant integer32 := abh'last;
-    y : Standard_Complex_Vectors.Vector(1..nq)
-      := Standard_Homotopy.Eval(x,t);
-    A : Standard_Complex_Matrices.Matrix(1..nq,x'range)
-      := Standard_Homotopy.Diff(x,t);
+    y : Standard_Complex_Vectors.Vector(1..nq);
+    A : Standard_Complex_Matrices.Matrix(1..nq,x'range);
     u : Standard_Complex_Matrices.Matrix(y'range,y'range);
     v : Standard_Complex_Matrices.Matrix(x'range,x'range);
     p : constant integer32 := x'length;
@@ -156,6 +161,13 @@ package body Homotopy_Newton_Steps is
     dx : Standard_Complex_Vectors.Vector(x'range);
 
   begin
+    if Standard_Coefficient_Homotopy.Number_of_Equations = -1 then
+      y := Standard_Homotopy.Eval(x,t);
+      A := Standard_Homotopy.Diff(x,t);
+    else
+      y := Standard_Coefficient_Homotopy.Eval(x,t);
+      A := Standard_Coefficient_Homotopy.Diff(x,t);
+    end if;
     SVD(A,nq,p,s,e,u,v,11,info);
     rco := Inverse_Condition_Number(s);
     Standard_Complex_Vectors.Min(y);

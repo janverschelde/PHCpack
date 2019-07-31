@@ -8,6 +8,7 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with Standard_System_and_Solutions_io;
 with DoblDobl_Homotopy;
 with DoblDobl_System_and_Solutions_io;
@@ -108,6 +109,9 @@ package body Homotopy_Series_Readers is
       end if;
       nbequ := target'last;
       Standard_Homotopy.Create(target.all,start.all,tpow,gamma);
+      if homcrd then
+        Standard_Coefficient_Homotopy.Create(start.all,target.all,tpow,gamma);
+      end if;
     else
       new_line;
       put("Apply Rabinowitsch trick to put singularities at infinity ? (y/n) ");

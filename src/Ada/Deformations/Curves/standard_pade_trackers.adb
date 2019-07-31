@@ -1,10 +1,14 @@
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with Standard_Complex_Series_Vectors;
+with Standard_Complex_Series_Vectors_io;
 with Standard_CSeries_Vector_Functions;
 with Homotopy_Pade_Approximants;
 with Singular_Values_of_Hessians;
@@ -736,6 +740,25 @@ package body Standard_Pade_Trackers is
     for k in 1..max_steps loop
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
+        put_line(file,"The last of wrk_fcf :");
+        Standard_Complex_Series_Vectors_io.put_line
+          (file,wrk_fcf(wrk_fcf'last).all);
+        declare
+          nbreqs : constant integer32 
+                 := Standard_Coefficient_Homotopy.Number_of_Equations;
+          hcp,hcq : Standard_Complex_Vectors.Link_to_Vector;
+        begin
+          put(file,"Number of equations in the coefficient homotopy : ");
+          put(file,nbreqs,1); new_line(file);
+          if nbreqs > 0 then
+            hcp := Standard_Coefficient_Homotopy.Target_Coefficients(nbreqs);
+            hcq := Standard_Coefficient_Homotopy.Start_Coefficients(nbreqs);
+            put_line(file,"Coefficients of the last target equation :");
+            Standard_Complex_Vectors_io.put_line(file,hcp);
+            put_line(file,"Coefficients of the last start equation :");
+            Standard_Complex_Vectors_io.put_line(file,hcq);
+          end if;
+        end;
       end if;
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
