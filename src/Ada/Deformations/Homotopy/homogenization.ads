@@ -1,6 +1,10 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
 
 package Homogenization is
 
@@ -25,6 +29,14 @@ package Homogenization is
              ( s1 : Standard_Complex_Poly_Systems.Poly_Sys;
                s2 : Standard_Complex_Poly_Systems.Poly_Sys )
              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Add_Equations
+             ( s1 : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               s2 : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Equations
+             ( s1 : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               s2 : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   The resulting polynomial system is the concatenation of s1 and s2.
@@ -53,6 +65,12 @@ package Homogenization is
   function Add_Standard_Hyperplanes
              ( s : Standard_Complex_Poly_Systems.Poly_Sys; m : natural32 )
              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Add_Standard_Hyperplanes
+             ( s : DoblDobl_Complex_Poly_Systems.Poly_Sys; m : natural32 )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Standard_Hyperplanes
+             ( s : QuadDobl_Complex_Poly_Systems.Poly_Sys; m : natural32 )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   If n = Number_Of_Unknowns(s(i)), for i in s'range,
