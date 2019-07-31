@@ -328,26 +328,26 @@ package body Standard_Coefficient_Homotopy is
 
   function All_Start_Coefficients return Standard_Complex_VecVecs.VecVec is
   begin
-    return hom.cq;
+    return hom.cp; -- p is the start system
   end All_Start_Coefficients;
 
   function Start_Coefficients
              ( idx : integer32 )
              return Standard_Complex_Vectors.Link_to_Vector is
   begin
-    return hom.cq(idx);
+    return hom.cp(idx);
   end Start_Coefficients;
 
   function All_Target_Coefficients return Standard_Complex_VecVecs.VecVec is
   begin
-    return hom.cp;
+    return hom.cq; -- q is the target system
   end All_Target_Coefficients;
 
   function Target_Coefficients
              ( idx : integer32 )
              return Standard_Complex_Vectors.Link_to_Vector is
   begin
-    return hom.cp(idx);
+    return hom.cq(idx);
   end Target_Coefficients;
 
   function Eval ( x : Standard_Complex_Vectors.Vector;
