@@ -1,3 +1,6 @@
+Tue 30 Jul 2019 : updated homotopy_series_readers.adb with versions for
+  double double and quad double precision of the projective transformations.
+
 Mon 29 Jul 2019 : added prompts for homogeneous coordinates in 
   interactive_pade_trackers.adb and series_path_trackers; with projective
   transformations done in homotopy_series_readers.

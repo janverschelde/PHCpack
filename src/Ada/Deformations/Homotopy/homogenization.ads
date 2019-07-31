@@ -54,6 +54,14 @@ package Homogenization is
              ( s : Standard_Complex_Poly_Systems.Poly_Sys;
                m : natural32; re : boolean )
              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Add_Random_Hyperplanes
+             ( s : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               m : natural32; re : boolean )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Random_Hyperplanes
+             ( s : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               m : natural32; re : boolean )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   To the polynomial system s, m hyperplanes are added with

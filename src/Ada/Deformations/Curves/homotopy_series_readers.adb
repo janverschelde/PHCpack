@@ -51,16 +51,39 @@ package body Homotopy_Series_Readers is
               ( targt : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    ptar : DoblDobl_Complex_Poly_Systems.Poly_Sys(targt'first..targt'last+1);
+    pstr : DoblDobl_Complex_Poly_Systems.Poly_Sys(start'first..start'last+1);
+
   begin
     Projective_Transformation(sols);
+    Projective_Transformation(targt.all);
+    Projective_Transformation(start.all);
+    ptar := Add_Random_Hyperplanes(targt.all,1,false);
+    pstr := Add_Standard_Hyperplanes(start.all,1);
+    DoblDobl_Complex_Poly_Systems.Clear(targt);
+    targt := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(ptar);
+    DoblDobl_Complex_Poly_Systems.Clear(start);
+    start := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(pstr);
   end DoblDobl_Projective_Transformation;
 
   procedure QuadDobl_Projective_Transformation
               ( targt : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    ptar : QuadDobl_Complex_Poly_Systems.Poly_Sys(targt'first..targt'last+1);
+    pstr : QuadDobl_Complex_Poly_Systems.Poly_Sys(start'first..start'last+1);
   begin
     Projective_Transformation(sols);
+    Projective_Transformation(targt.all);
+    Projective_Transformation(start.all);
+    ptar := Add_Random_Hyperplanes(targt.all,1,false);
+    pstr := Add_Standard_Hyperplanes(start.all,1);
+    QuadDobl_Complex_Poly_Systems.Clear(targt);
+    targt := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(ptar);
+    QuadDobl_Complex_Poly_Systems.Clear(start);
+    start := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(pstr);
   end QuadDobl_Projective_Transformation;
 
   procedure Standard_Reader
