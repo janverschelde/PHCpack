@@ -1,3 +1,6 @@
+Wed 31 Jul 2019 : extended the standard_coefficient_homotopy with functions
+  to get the coefficients of the stored homotopy.
+
 Tue 30 Jul 2019 : new test procedure ts_scalplane to experiment with the
   scaling of coefficient polynomial systems in homogeneous coordinates.
   Prepared homogenization for the addition of double double and quad double
