@@ -110,9 +110,11 @@ package body Homotopy_Series_Readers is
        then Standard_Projective_Transformation(target,start,sols);
       end if;
       nbequ := target'last;
-      Standard_Homotopy.Create(target.all,start.all,tpow,gamma);
-      if homcrd then
-        Standard_Coefficient_Homotopy.Create(start.all,target.all,tpow,gamma);
+      if not homcrd then
+        Standard_Homotopy.Create(target.all,start.all,tpow,gamma);
+      else -- set the value for tpow to one if homcrd
+        Standard_Homotopy.Create(target.all,start.all,1,gamma);
+        Standard_Coefficient_Homotopy.Create(start.all,target.all,1,gamma);
       end if;
     else
       new_line;
@@ -160,9 +162,11 @@ package body Homotopy_Series_Readers is
        then DoblDobl_Projective_Transformation(target,start,sols);
       end if;
       nbequ := target'last;
-      DoblDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
-      if homcrd then
-        DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,tpow,gamma);
+      if not homcrd then
+        DoblDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+      else -- set tpow to one for homogeneous coordinates
+        DoblDobl_Homotopy.Create(target.all,start.all,1,gamma);
+        DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,gamma);
       end if;
     else
       new_line;
@@ -210,9 +214,11 @@ package body Homotopy_Series_Readers is
        then QuadDobl_Projective_Transformation(target,start,sols);
       end if;
       nbequ := target'last;
-      QuadDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
-      if homcrd then
-        QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,tpow,gamma);
+      if not homcrd then
+        QuadDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+      else -- set tpow to one for homogeneous coordinates
+        QuadDobl_Homotopy.Create(target.all,start.all,1,gamma);
+        QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,gamma);
       end if;
     else
       new_line;
