@@ -11,8 +11,10 @@ with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
 with Standard_System_and_Solutions_io;
 with DoblDobl_Homotopy;
+with DoblDobl_Coefficient_Homotopy;
 with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Homotopy;
+with QuadDobl_Coefficient_Homotopy;
 with QuadDobl_System_and_Solutions_io;
 with Projective_Transformations;         use Projective_Transformations;
 with Homogenization;                     use Homogenization;
@@ -159,6 +161,9 @@ package body Homotopy_Series_Readers is
       end if;
       nbequ := target'last;
       DoblDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+      if homcrd then
+        DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,tpow,gamma);
+      end if;
     else
       new_line;
       put("Apply Rabinowitsch trick to put singularities at infinity ? (y/n) ");
@@ -206,6 +211,9 @@ package body Homotopy_Series_Readers is
       end if;
       nbequ := target'last;
       QuadDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+      if homcrd then
+        QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,tpow,gamma);
+      end if;
     else
       new_line;
       put("Apply Rabinowitsch trick to put singularities at infinity ? (y/n) ");

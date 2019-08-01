@@ -19,7 +19,9 @@ with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
 with DoblDobl_Homotopy;
+with DoblDobl_Coefficient_Homotopy;
 with QuadDobl_Homotopy;
+with QuadDobl_Coefficient_Homotopy;
 with Homotopy_Mixed_Residuals;
 
 package body Homotopy_Newton_Steps is
@@ -188,16 +190,21 @@ package body Homotopy_Newton_Steps is
     nq : constant integer32 := abh'last;
     dd_t : constant DoblDobl_Complex_Numbers.Complex_Number
          := Standard_to_DoblDobl_Complex(t);
-    y : DoblDobl_Complex_Vectors.Vector(1..nq)
-      := DoblDobl_Homotopy.Eval(x,dd_t);
-    A : DoblDobl_Complex_Matrices.Matrix(1..nq,x'range)
-      := DoblDobl_Homotopy.Diff(x,dd_t);
+    y : DoblDobl_Complex_Vectors.Vector(1..nq);
+    A : DoblDobl_Complex_Matrices.Matrix(1..nq,x'range);
     ipvt : Standard_Integer_Vectors.Vector(A'range(2));
     info : integer32;
-    Anorm : constant double_double := Norm1(A);
-    dd_rco,dd_res : double_double;
+    Anorm,dd_rco,dd_res : double_double;
 
   begin
+    if DoblDobl_Coefficient_Homotopy.Number_of_Equations = -1 then
+      y := DoblDobl_Homotopy.Eval(x,dd_t);
+      A := DoblDobl_Homotopy.Diff(x,dd_t);
+    else
+      y := DoblDobl_Coefficient_Homotopy.Eval(x,dd_t);
+      A := DoblDobl_Coefficient_Homotopy.Diff(x,dd_t);
+    end if;
+    Anorm := Norm1(A);
     DoblDobl_Complex_Vectors.Min(y);
     lufac(A,A'last(1),ipvt,info);
     estco(A,A'last(1),ipvt,Anorm,dd_rco);
@@ -220,16 +227,21 @@ package body Homotopy_Newton_Steps is
     nq : constant integer32 := abh'last;
     qd_t : constant QuadDobl_Complex_Numbers.Complex_Number
          := Standard_to_QuadDobl_Complex(t);
-    y : QuadDobl_Complex_Vectors.Vector(1..nq)
-      := QuadDobl_Homotopy.Eval(x,qd_t);
-    A : QuadDobl_Complex_Matrices.Matrix(1..nq,x'range)
-      := QuadDobl_Homotopy.Diff(x,qd_t);
+    y : QuadDobl_Complex_Vectors.Vector(1..nq);
+    A : QuadDobl_Complex_Matrices.Matrix(1..nq,x'range);
     ipvt : Standard_Integer_Vectors.Vector(A'range(2));
     info : integer32;
-    Anorm : constant quad_double := Norm1(A);
-    qd_rco,qd_res : quad_double;
+    Anorm,qd_rco,qd_res : quad_double;
 
   begin
+    if QuadDobl_Coefficient_Homotopy.Number_of_Equations = -1 then
+      y := QuadDobl_Homotopy.Eval(x,qd_t);
+      A := QuadDobl_Homotopy.Diff(x,qd_t);
+    else
+      y := QuadDobl_Coefficient_Homotopy.Eval(x,qd_t);
+      A := QuadDobl_Coefficient_Homotopy.Diff(x,qd_t);
+    end if;
+    Anorm := Norm1(A);
     QuadDobl_Complex_Vectors.Min(y);
     lufac(A,A'last(1),ipvt,info);
     estco(A,A'last(1),ipvt,Anorm,qd_rco);
