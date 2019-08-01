@@ -171,6 +171,48 @@ package QuadDobl_Coefficient_Homotopy is
   --     H(x,t) = a * ((1 - t)^k) * p + (t^k) * q.
   --   Note that p is the start system and q the target!
 
+  function Number_of_Equations return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the number of equations in the homotopy,
+  --   returns -1 if there is no homotopy created.
+
+  function All_Start_Coefficients return QuadDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of the start equations
+  --   in the stored coefficient homotopy.
+
+  -- REQUIRED : Number_of_Equations /= -1.
+
+  function Start_Coefficients
+             ( idx : integer32 )
+             return QuadDobl_Complex_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of the start equations of index idx
+  --   in the stored coefficient homotopy.
+
+  -- REQUIRED : Number_of_Equations /= -1.
+
+  function All_Target_Coefficients return QuadDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of the target equations
+  --   in the stored coefficient homotopy.
+
+  -- REQUIRED : Number_of_Equations /= -1.
+
+  function Target_Coefficients
+             ( idx : integer32 )
+             return QuadDobl_Complex_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of the target equations of index idx
+  --   in the stored coefficient homotopy.
+
+  -- REQUIRED : Number_of_Equations /= -1.
+
   function Eval ( x : QuadDobl_Complex_Vectors.Vector;
                   t : Complex_Number )
                 return QuadDobl_Complex_Vectors.Vector;

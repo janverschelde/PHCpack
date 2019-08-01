@@ -324,6 +324,38 @@ package body QuadDobl_Coefficient_Homotopy is
     Clear(lp); Clear(lq); Clear(lh);
   end Create;
 
+  function Number_of_Equations return integer32 is
+  begin
+    if hom = null
+     then return -1;
+     else return hom.n;
+    end if;
+  end Number_of_Equations;
+
+  function All_Start_Coefficients return QuadDobl_Complex_VecVecs.VecVec is
+  begin
+    return hom.cp; -- p is the start system
+  end All_Start_Coefficients;
+
+  function Start_Coefficients
+             ( idx : integer32 )
+             return QuadDobl_Complex_Vectors.Link_to_Vector is
+  begin
+    return hom.cp(idx);
+  end Start_Coefficients;
+
+  function All_Target_Coefficients return QuadDobl_Complex_VecVecs.VecVec is
+  begin
+    return hom.cq; -- q is the target system
+  end All_Target_Coefficients;
+
+  function Target_Coefficients
+             ( idx : integer32 )
+             return QuadDobl_Complex_Vectors.Link_to_Vector is
+  begin
+    return hom.cq(idx);
+  end Target_Coefficients;
+
   function Eval ( x : QuadDobl_Complex_Vectors.Vector;
                   t : Complex_Number )
                 return QuadDobl_Complex_Vectors.Vector is

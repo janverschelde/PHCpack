@@ -1,6 +1,7 @@
 Wed 31 Jul 2019 : extended the standard_coefficient_homotopy with functions
   to get the coefficients of the stored homotopy.
   Fixed order of p and q in functions in standard_coefficient_homotopy.adb.
+  Updated {dobldobl,quaddobl}_coefficient_homotopy with same extensions.
 
 Tue 30 Jul 2019 : new test procedure ts_scalplane to experiment with the
   scaling of coefficient polynomial systems in homogeneous coordinates.
