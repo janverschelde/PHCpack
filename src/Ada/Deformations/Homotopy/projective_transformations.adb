@@ -10,13 +10,70 @@ with Standard_Natural_Vectors;
 
 package body Projective_Transformations is
 
+  function Head_Degree
+             ( p : Standard_Complex_Polynomials.Poly ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the degree of the head term.
+  --   This is a patch, as the Degree() function causes problems...
+
+    use Standard_Complex_Polynomials;
+
+    res : natural32 := 0;
+    trm : constant Term := Head(p);
+
+  begin
+    for i in trm.dg'range loop
+      res := res + trm.dg(i);
+    end loop;
+    return res;
+  end Head_Degree;
+
+  function Head_Degree
+             ( p : DoblDobl_Complex_Polynomials.Poly ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the degree of the head term.
+  --   This is a patch, as the Degree() function causes problems...
+
+    use DoblDobl_Complex_Polynomials;
+
+    res : natural32 := 0;
+    trm : constant Term := Head(p);
+
+  begin
+    for i in trm.dg'range loop
+      res := res + trm.dg(i);
+    end loop;
+    return res;
+  end Head_Degree;
+
+  function Head_Degree
+             ( p : QuadDobl_Complex_Polynomials.Poly ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the degree of the head term.
+  --   This is a patch, as the Degree() function causes problems...
+
+    use QuadDobl_Complex_Polynomials;
+
+    res : natural32 := 0;
+    trm : constant Term := Head(p);
+
+  begin
+    for i in trm.dg'range loop
+      res := res + trm.dg(i);
+    end loop;
+    return res;
+  end Head_Degree;
+
   function Projective_Transformation
              ( p : Standard_Complex_Polynomials.Poly )
              return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Polynomials;
   
-    deg : constant integer32 := Degree(p);
+    deg : constant natural32 := Head_Degree(p);
     htd : Degrees
         := new Standard_Natural_Vectors.Vector
                  (1..integer32(Number_of_Unknowns(p))+1);
@@ -33,7 +90,7 @@ package body Projective_Transformations is
         sum := sum + t.dg(i);
         htd(i) := t.dg(i);
       end loop;
-      htd(htd'last) := natural32(deg)-sum;
+      htd(htd'last) := deg-sum;
       ht.dg := htd;
       Add(res,ht);
       continue := true;
@@ -52,7 +109,7 @@ package body Projective_Transformations is
 
     use DoblDobl_Complex_Polynomials;
   
-    deg : constant integer32 := Degree(p);
+    deg : constant natural32 := Head_Degree(p);
     htd : Degrees
         := new Standard_Natural_Vectors.Vector
                  (1..integer32(Number_of_Unknowns(p))+1);
@@ -69,7 +126,7 @@ package body Projective_Transformations is
         sum := sum + t.dg(i);
         htd(i) := t.dg(i);
       end loop;
-      htd(htd'last) := natural32(deg)-sum;
+      htd(htd'last) := deg-sum;
       ht.dg := htd;
       Add(res,ht);
       continue := true;
@@ -88,7 +145,7 @@ package body Projective_Transformations is
 
     use QuadDobl_Complex_Polynomials;
   
-    deg : constant integer32 := Degree(p);
+    deg : constant natural32 := Head_Degree(p);
     htd : Degrees
         := new Standard_Natural_Vectors.Vector
                  (1..integer32(Number_of_Unknowns(p))+1);
@@ -105,7 +162,7 @@ package body Projective_Transformations is
         sum := sum + t.dg(i);
         htd(i) := t.dg(i);
       end loop;
-      htd(htd'last) := natural32(deg)-sum;
+      htd(htd'last) := deg-sum;
       ht.dg := htd;
       Add(res,ht);
       continue := true;
@@ -123,10 +180,10 @@ package body Projective_Transformations is
 
     use Standard_Complex_Polynomials;
   
-    res : Poly := Projective_Transformation(p);
+    res : constant Poly := Projective_Transformation(p);
 
   begin
-    Copy(res,p); Clear(res);
+    Clear(p); p := res;
   end Projective_Transformation;
 
   procedure Projective_Transformation
@@ -134,10 +191,10 @@ package body Projective_Transformations is
 
     use DoblDobl_Complex_Polynomials;
   
-    res : Poly := Projective_Transformation(p);
+    res : constant Poly := Projective_Transformation(p);
 
   begin
-    Copy(res,p); Clear(res);
+    Clear(p); p := res;
   end Projective_Transformation;
 
   procedure Projective_Transformation
@@ -145,10 +202,10 @@ package body Projective_Transformations is
 
     use QuadDobl_Complex_Polynomials;
   
-    res : Poly := Projective_Transformation(p);
+    res : constant Poly := Projective_Transformation(p);
 
   begin
-    Copy(res,p); Clear(res);
+    Clear(p); p := res;
   end Projective_Transformation;
 
   function Projective_Transformation
