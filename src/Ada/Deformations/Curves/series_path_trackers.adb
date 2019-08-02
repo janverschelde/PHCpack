@@ -616,8 +616,9 @@ package body Series_Path_Trackers is
     end if;
     if arth then
       Homotopy_Series_Readers.Standard_Reader(nbq,sols,homcrd=>homo);
-      if homo
-       then Symbol_Table.Add_String("Z0");
+      if homo then
+        Symbol_Table.Enlarge(1);
+        Symbol_Table.Add_String("Z0");
       end if;
       nvr := Standard_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
@@ -644,8 +645,9 @@ package body Series_Path_Trackers is
     end if;
     if arth then
       Homotopy_Series_Readers.DoblDobl_Reader(nbq,sols,homcrd=>homo);
-      if homo
-       then Symbol_Table.Add_String("Z0");
+      if homo then
+        Symbol_Table.Enlarge(1);
+        Symbol_Table.Add_String("Z0");
       end if;
       nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
@@ -672,8 +674,9 @@ package body Series_Path_Trackers is
     end if;
     if arth then
       Homotopy_Series_Readers.QuadDobl_Reader(nbq,sols,homcrd=>homo);
-      if homo
-       then Symbol_Table.Add_String("Z0");
+      if homo then
+        Symbol_Table.Enlarge(1);
+        Symbol_Table.Add_String("Z0");
       end if;
       nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
