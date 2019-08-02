@@ -1,3 +1,6 @@
+Fri 2 Aug 2019 : removed use clauses out of projective_transformations.adb
+  for compiler warnings.
+
 Wed 31 Jul 2019 : extended the standard_coefficient_homotopy with functions
   to get the coefficients of the stored homotopy.
   Fixed order of p and q in functions in standard_coefficient_homotopy.adb.

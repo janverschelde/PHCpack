@@ -14,7 +14,6 @@ package body Projective_Transformations is
              ( p : Standard_Complex_Polynomials.Poly )
              return Standard_Complex_Polynomials.Poly is
 
-    use Standard_Complex_Numbers;
     use Standard_Complex_Polynomials;
   
     deg : constant integer32 := Degree(p);
@@ -51,7 +50,6 @@ package body Projective_Transformations is
              ( p : DoblDobl_Complex_Polynomials.Poly )
              return DoblDobl_Complex_Polynomials.Poly is
 
-    use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Polynomials;
   
     deg : constant integer32 := Degree(p);
@@ -88,7 +86,6 @@ package body Projective_Transformations is
              ( p : QuadDobl_Complex_Polynomials.Poly )
              return QuadDobl_Complex_Polynomials.Poly is
 
-    use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Polynomials;
   
     deg : constant integer32 := Degree(p);
