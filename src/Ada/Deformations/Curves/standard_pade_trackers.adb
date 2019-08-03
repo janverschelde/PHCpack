@@ -295,8 +295,8 @@ package body Standard_Pade_Trackers is
     cfp : Standard_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
     onetarget : constant double_float := 1.0;
-    alpha : constant double_float := pars.alpha;
-    tolcff : constant double_float := pars.epsilon;
+   -- alpha : constant double_float := pars.alpha;
+   -- tolcff : constant double_float := pars.epsilon;
 
   begin
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
@@ -333,8 +333,8 @@ package body Standard_Pade_Trackers is
     cfp : Standard_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
     onetarget : constant double_float := 1.0;
-    alpha : constant double_float := pars.alpha;
-    tolcff : constant double_float := pars.epsilon;
+   -- alpha : constant double_float := pars.alpha;
+   -- tolcff : constant double_float := pars.epsilon;
 
   begin
     Series_and_Predictors.Newton_Prediction
@@ -370,8 +370,8 @@ package body Standard_Pade_Trackers is
     cfp : Standard_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
     onetarget : constant double_float := 1.0;
-    alpha : constant double_float := pars.alpha;
-    tolcff : constant double_float := pars.epsilon;
+   -- alpha : constant double_float := pars.alpha;
+   -- tolcff : constant double_float := pars.epsilon;
 
   begin
     Series_and_Predictors.Newton_Prediction
@@ -439,8 +439,8 @@ package body Standard_Pade_Trackers is
     cfp : Standard_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
     onetarget : constant double_float := 1.0;
-    alpha : constant double_float := pars.alpha;
-    tolcff : constant double_float := pars.epsilon;
+   -- alpha : constant double_float := pars.alpha;
+   -- tolcff : constant double_float := pars.epsilon;
 
   begin
     Series_and_Predictors.Newton_Prediction
@@ -625,6 +625,56 @@ package body Standard_Pade_Trackers is
 
 -- VERSIONS ON COEFFICIENT-PARAMETER HOMOTOPIES :
 
+  procedure Last_Coefficients
+              ( file : in file_type;
+                fcf : in Standard_Complex_Series_Vectors.Link_to_Vector;
+                t : in double_float;
+                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Checks the last coefficients in the linear equation added
+  --   by the projective transformation and writes diagnostics to file.
+  --   The input fcf are the current coefficient vectors of the homotopy.
+ 
+    nbreqs : constant integer32 
+           := Standard_Coefficient_Homotopy.Number_of_Equations;
+    hcp,hcq : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    put_line(file,"The last of wrk_fcf :");
+    Standard_Complex_Series_Vectors_io.put_line(file,fcf);
+    put(file,"Number of equations in the coefficient homotopy : ");
+    put(file,nbreqs,1); new_line(file);
+    if nbreqs > 0 then
+      hcp := Standard_Coefficient_Homotopy.Target_Coefficients(nbreqs);
+      hcq := Standard_Coefficient_Homotopy.Start_Coefficients(nbreqs);
+      put_line(file,"Coefficients of the last target equation :");
+      Standard_Complex_Vectors_io.put_line(file,hcp);
+      put_line(file,"Coefficients of the last start equation :");
+      Standard_Complex_Vectors_io.put_line(file,hcq);
+      declare
+        wrk : Standard_Complex_Vectors.Vector(hcp'range);
+        onemint : constant double_float := 1.0 - t;
+        use Standard_Complex_Numbers;
+      begin
+        for i in wrk'range loop
+          wrk(i) := t*hcp(i);
+        end loop;
+       -- the constant is the last coefficient in the vector
+        wrk(wrk'last) := wrk(wrk'last) + gamma*onemint*hcq(hcq'last);
+       -- the Z0 coefficient is the next to last coefficient
+        wrk(wrk'last-1) := wrk(wrk'last-1) + gamma*onemint*hcq(hcq'last-1);
+        put_line(file,"last coefficients with t value multiplied in :");
+        Standard_Complex_Vectors_io.put_line(file,wrk);
+        put_line(file,"the coefficients in fcf :");
+        for i in fcf'range loop
+          Standard_Complex_Numbers_io.put(file,fcf(i).cff(0));
+          new_line(file);
+        end loop;
+      end;
+    end if;
+  end Last_Coefficients;
+
   procedure Track_One_Path
               ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -740,25 +790,7 @@ package body Standard_Pade_Trackers is
     for k in 1..max_steps loop
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
-        put_line(file,"The last of wrk_fcf :");
-        Standard_Complex_Series_Vectors_io.put_line
-          (file,wrk_fcf(wrk_fcf'last).all);
-        declare
-          nbreqs : constant integer32 
-                 := Standard_Coefficient_Homotopy.Number_of_Equations;
-          hcp,hcq : Standard_Complex_Vectors.Link_to_Vector;
-        begin
-          put(file,"Number of equations in the coefficient homotopy : ");
-          put(file,nbreqs,1); new_line(file);
-          if nbreqs > 0 then
-            hcp := Standard_Coefficient_Homotopy.Target_Coefficients(nbreqs);
-            hcq := Standard_Coefficient_Homotopy.Start_Coefficients(nbreqs);
-            put_line(file,"Coefficients of the last target equation :");
-            Standard_Complex_Vectors_io.put_line(file,hcp);
-            put_line(file,"Coefficients of the last start equation :");
-            Standard_Complex_Vectors_io.put_line(file,hcq);
-          end if;
-        end;
+        Last_Coefficients(file,wrk_fcf(wrk_fcf'last),t,pars.gamma);
       end if;
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,

@@ -1,3 +1,7 @@
+Sat 3 Aug 2019 : printing of coefficients of the last equation in the
+  homotopies shows the correspondence between the coefficient homotopy
+  and homotopy with series coefficients in standard_pade_trackers.adb.
+
 Fri 2 Aug 2019 : forgot to enlarge the symbol table when adding the extra
   symbol Z0 for the homogenization of the homotopy.
 
