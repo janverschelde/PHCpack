@@ -1,5 +1,6 @@
 Sun 4 Aug 2019 : new package hyperplane_solution_scaling with code from
-  the test procedure ts_scalplane.
+  the test procedure ts_scalplane.  Added double double and quad double
+  versions to hyperplane_solution_scaling, tested by ts_scalplane.
 
 Fri 2 Aug 2019 : removed use clauses out of projective_transformations.adb
   for compiler warnings.  Patched the degree of a polynomial computation
