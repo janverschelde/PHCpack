@@ -1,14 +1,9 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Natural_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Complex_Vector_Norms;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
@@ -18,57 +13,13 @@ with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_System_and_Solutions_io;
 with Projective_Transformations;         use Projective_Transformations;
 with Homogenization;                     use Homogenization;
+with Hyperplane_Solution_Scaling;        use Hyperplane_Solution_Scaling;
 
 procedure ts_scalplane is
 
 -- DESCRIPTION :
 --   Test on readjusting the hyperplane in a projective transformation,
 --   after scaling a solution.
-
-  procedure Sub ( p : in out Poly; c : in Complex_Number ) is
-
-  -- DESCRIPTION :
-  --   Subtracts the number c from p.
-
-    t : Term;
-    n : constant integer32 := integer32(Number_of_Unknowns(p));
-    d : constant Standard_Natural_Vectors.Vector(1..n) := (1..n => 0);
-
-  begin
-    t.cf := c;
-    t.dg := new Standard_Natural_Vectors.Vector'(d);
-    Sub(p,t);
-    Clear(t);
-  end Sub;
-
-  procedure Scale ( v : in out Standard_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Divides every component in v by the largest element.
-
-    mxv : constant double_float := Standard_Complex_Vector_Norms.Max_Norm(v);
-
-  begin
-    for i in v'range loop
-      v(i) := v(i)/mxv;
-    end loop;
-  end Scale;
-
-  procedure Adjust ( c : in out Standard_Complex_Vectors.Link_to_Vector;
-                     v : in Standard_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Adjusts the last coefficients of c so that the c*v equals zero,
-  --   where * is the regular inner product (not Hermitian).
-
-    val : Complex_Number := c(c'last);
-
-  begin
-    for i in v'range loop
-      val := val + c(i)*v(i);
-    end loop;
-    c(c'last) := c(c'last) - val;
-  end Adjust;
 
   procedure Scale ( p : in out Poly_sys; evp : in Eval_Coeff_Poly_Sys;
                     cff : in out Standard_Complex_VecVecs.VecVec;
@@ -155,6 +106,7 @@ procedure ts_scalplane is
     put_line("The last coefficient vector :");
     put_line(cff(cff'last).all);
     Scale(p,evp,cff,sols);
+    Standard_Complex_Poly_SysFun.Clear(evp);
   end Test;
 
   procedure Main is
