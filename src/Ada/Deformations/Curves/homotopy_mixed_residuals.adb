@@ -9,8 +9,11 @@ with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with DoblDobl_Homotopy;
+with DoblDobl_Coefficient_Homotopy;
 with QuadDobl_Homotopy;
+with QuadDobl_Coefficient_Homotopy;
 with Standard_Mixed_Residuals;
 with DoblDobl_Mixed_Residuals;
 with QuadDobl_Mixed_Residuals;
@@ -70,8 +73,7 @@ package body Homotopy_Mixed_Residuals is
                       t : Standard_Complex_Numbers.Complex_Number )
                     return double_float is
 
-    val : constant Standard_Complex_Vectors.Vector(abh'range)
-        := Standard_Homotopy.Eval(z,t);
+    val : Standard_Complex_Vectors.Vector(abh'range);
     abz : constant Standard_Complex_Vectors.Vector(z'range)
         := Standard_Mixed_Residuals.AbsVal(z);
     azt : Standard_Complex_Vectors.Vector(z'first..z'last+1);
@@ -81,6 +83,10 @@ package body Homotopy_Mixed_Residuals is
     res : double_float := 0.0;
 
   begin
+    if Standard_Coefficient_Homotopy.Number_of_Equations = -1
+     then val := Standard_Homotopy.Eval(z,t);
+     else val := Standard_Coefficient_Homotopy.Eval(z,t);
+    end if;
     azt(abz'range) := abz;
     azt(azt'last) := t;
     avl := Standard_Complex_Poly_SysFun.Eval(abh,azt);
@@ -98,8 +104,7 @@ package body Homotopy_Mixed_Residuals is
                       t : DoblDobl_Complex_Numbers.Complex_Number )
                     return double_double is
 
-    val : constant DoblDobl_Complex_Vectors.Vector(abh'range)
-        := DoblDobl_Homotopy.Eval(z,t);
+    val : DoblDobl_Complex_Vectors.Vector(abh'range);
     abz : constant DoblDobl_Complex_Vectors.Vector(z'range)
         := DoblDobl_Mixed_Residuals.AbsVal(z);
     azt : DoblDobl_Complex_Vectors.Vector(z'first..z'last+1);
@@ -109,6 +114,10 @@ package body Homotopy_Mixed_Residuals is
     res : double_double := Double_Double_Numbers.create(0.0);
 
   begin
+    if DoblDobl_Coefficient_Homotopy.Number_of_Equations = -1
+     then val := DoblDobl_Homotopy.Eval(z,t);
+     else val := DoblDobl_Coefficient_Homotopy.Eval(z,t);
+    end if;
     azt(abz'range) := abz;
     azt(azt'last) := t;
     avl := DoblDobl_Complex_Poly_SysFun.Eval(abh,azt);
@@ -126,8 +135,7 @@ package body Homotopy_Mixed_Residuals is
                       t : QuadDobl_Complex_Numbers.Complex_Number )
                     return quad_double is
 
-    val : constant QuadDobl_Complex_Vectors.Vector(abh'range)
-        := QuadDobl_Homotopy.Eval(z,t);
+    val : QuadDobl_Complex_Vectors.Vector(abh'range);
     abz : constant QuadDobl_Complex_Vectors.Vector(z'range)
         := QuadDobl_Mixed_Residuals.AbsVal(z);
     azt : QuadDobl_Complex_Vectors.Vector(z'first..z'last+1);
@@ -137,6 +145,10 @@ package body Homotopy_Mixed_Residuals is
     res : quad_double := Quad_Double_Numbers.create(0.0);
 
   begin
+    if QuadDobl_Coefficient_Homotopy.Number_of_Equations = -1
+     then val := QuadDobl_Homotopy.Eval(z,t);
+     else val := QuadDobl_Coefficient_Homotopy.Eval(z,t);
+    end if;
     azt(abz'range) := abz;
     azt(azt'last) := t;
     avl := QuadDobl_Complex_Poly_SysFun.Eval(abh,azt);
@@ -155,8 +167,7 @@ package body Homotopy_Mixed_Residuals is
                       t : Standard_Complex_Numbers.Complex_Number )
                     return double_float is
 
-    val : constant Standard_Complex_Vectors.Vector(abh'range)
-        := Standard_Homotopy.Eval(z,t);
+    val : Standard_Complex_Vectors.Vector(abh'range);
     abz : constant Standard_Complex_Vectors.Vector(z'range)
         := Standard_Mixed_Residuals.AbsVal(z);
     azt : Standard_Complex_Vectors.Vector(z'first..z'last+1);
@@ -166,6 +177,10 @@ package body Homotopy_Mixed_Residuals is
     sumres : double_float := 0.0;
 
   begin
+    if Standard_Coefficient_Homotopy.Number_of_Equations = -1
+     then val := Standard_Homotopy.Eval(z,t);
+     else val := Standard_Coefficient_Homotopy.Eval(z,t);
+    end if;
     vaz := Standard_Complex_Vector_Norms.Max_Norm(abz);
     azt(abz'range) := abz;
     azt(azt'last) := t;
@@ -187,8 +202,7 @@ package body Homotopy_Mixed_Residuals is
                       t : DoblDobl_Complex_Numbers.Complex_Number )
                     return double_double is
 
-    val : constant DoblDobl_Complex_Vectors.Vector(abh'range)
-        := DoblDobl_Homotopy.Eval(z,t);
+    val : DoblDobl_Complex_Vectors.Vector(abh'range);
     abz : constant DoblDobl_Complex_Vectors.Vector(z'range)
         := DoblDobl_Mixed_Residuals.AbsVal(z);
     azt : DoblDobl_Complex_Vectors.Vector(z'first..z'last+1);
@@ -198,6 +212,10 @@ package body Homotopy_Mixed_Residuals is
     sumres : double_double := Double_Double_Numbers.create(0.0);
 
   begin
+    if DoblDobl_Coefficient_Homotopy.Number_of_Equations = -1
+     then val := DoblDobl_Homotopy.Eval(z,t);
+     else val := DoblDobl_Coefficient_Homotopy.Eval(z,t);
+    end if;
     vaz := DoblDobl_Complex_Vector_Norms.Max_Norm(abz);
     azt(abz'range) := abz;
     azt(azt'last) := t;
@@ -219,8 +237,7 @@ package body Homotopy_Mixed_Residuals is
                       t : QuadDobl_Complex_Numbers.Complex_Number )
                     return quad_double is
 
-    val : constant QuadDobl_Complex_Vectors.Vector(abh'range)
-        := QuadDobl_Homotopy.Eval(z,t);
+    val : QuadDobl_Complex_Vectors.Vector(abh'range);
     abz : constant QuadDobl_Complex_Vectors.Vector(z'range)
         := QuadDobl_Mixed_Residuals.AbsVal(z);
     azt : QuadDobl_Complex_Vectors.Vector(z'first..z'last+1);
@@ -230,6 +247,10 @@ package body Homotopy_Mixed_Residuals is
     sumres : quad_double := Quad_Double_Numbers.create(0.0);
 
   begin
+    if QuadDobl_Coefficient_Homotopy.Number_of_Equations = -1
+     then val := QuadDobl_Homotopy.Eval(z,t);
+     else val := QuadDobl_Coefficient_Homotopy.Eval(z,t);
+    end if;
     vaz := QuadDobl_Complex_Vector_Norms.Max_Norm(abz);
     azt(abz'range) := abz;
     azt(azt'last) := t;

@@ -1,3 +1,6 @@
+Mon 5 Aug 2019 : adjusted homotopy_mixed_residuals so that, when the
+  coefficient homotopy is defined, then it is used to compute the residual.
+
 Sat 3 Aug 2019 : printing of coefficients of the last equation in the
   homotopies shows the correspondence between the coefficient homotopy
   and homotopy with series coefficients in standard_pade_trackers.adb.
