@@ -7,6 +7,7 @@ with Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
 with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
+with Hyperplane_Solution_Scaling;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_Vectors_io;
 with Standard_CSeries_Vector_Functions;
@@ -14,6 +15,7 @@ with Homotopy_Pade_Approximants;
 with Singular_Values_of_Hessians;
 with Homotopy_Mixed_Residuals;
 with Homotopy_Newton_Steps;
+with Series_and_Solutions;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 
@@ -140,7 +142,7 @@ package body Standard_Pade_Trackers is
   begin
     loop
       sol := Series_and_Predictors.Predicted_Solution(pv,step);
-      predres := Residual_Prediction(abh,sol,t);
+      predres := Residual_Prediction(file,abh,sol,t);
       put(file,"  predictor residual : ");
       put(file,predres,3); new_line(file);
       exit when (predres <= tolpres);
@@ -444,7 +446,7 @@ package body Standard_Pade_Trackers is
 
   begin
     Series_and_Predictors.Newton_Prediction
-      (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false); -- verbose);
+      (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,true); -- verbose);
    -- sstep := Series_and_Predictors.Set_Step_Size
    --            (file,eva,tolcff,alpha,verbose);
     sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
@@ -675,6 +677,64 @@ package body Standard_Pade_Trackers is
     end if;
   end Last_Coefficients;
 
+  procedure Scale_Solution_Coefficients
+              ( file : in file_type;
+                fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                hcf : in Standard_Complex_Series_VecVecs.VecVec;
+                sol : in out Standard_Complex_Vectors.Vector;
+                t : in double_float;
+                gamma : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Scales the solution and the coefficients in the homotopy.
+
+    use Standard_Complex_Numbers;
+
+    prd : Complex_Number;
+    hcp,hcq : Standard_Complex_Vectors.Link_to_Vector;
+    nbreqs : constant integer32 
+           := Standard_Coefficient_Homotopy.Number_of_Equations;
+    srv : Standard_Complex_Series_Vectors.Vector(sol'range);
+    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
+    evh : Standard_Complex_Vectors.Vector(fhm'range);
+    fcf : constant Standard_Complex_Series_Vectors.Link_to_Vector
+        := hcf(hcf'last);
+    cmt : constant Complex_Number := Create(t);
+
+  begin
+    if nbreqs > 0 then
+      srv := Series_and_Solutions.Create(sol,0);
+      eva := Standard_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
+      evh := Standard_Coefficient_Homotopy.Eval(sol,cmt);
+      put_line(file,"The evaluated solution before scaling :");
+      Standard_Complex_Vectors_io.put_line(file,evh);
+      put_line(file,"The gamma constant : ");
+      put(file,gamma); new_line(file);
+      put_line(file,"The evaluated solution series before scaling :");
+      Standard_Complex_Series_Vectors_io.put_line(file,eva);
+      Hyperplane_Solution_Scaling.Scale(sol);
+      hcq := Standard_Coefficient_Homotopy.Start_Coefficients(nbreqs);
+      hcp := Standard_Coefficient_Homotopy.Target_Coefficients(nbreqs);
+      hcq(hcq'last) := -sol(sol'last);
+      if t > 0.0 then
+        prd := hcp(hcp'first)*sol(sol'first);
+        for i in sol'first+1..sol'last loop
+          prd := prd + hcp(i)*sol(i);
+        end loop;
+        hcp(hcp'last) := -prd;
+      end if;
+      fcf(fcf'last).cff(0) := -gamma*sol(sol'last);
+      fcf(fcf'last).cff(1) := gamma*sol(sol'last) + hcp(hcp'last);
+      srv := Series_and_Solutions.Create(sol,0);
+      eva := Standard_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
+      put_line(file,"The evaluated solution series after scaling :");
+      Standard_Complex_Series_Vectors_io.put_line(file,eva);
+      evh := Standard_Coefficient_Homotopy.Eval(sol,cmt);
+      put_line(file,"The evaluated solution after scaling :");
+      Standard_Complex_Vectors_io.put_line(file,evh);
+    end if;
+  end Scale_Solution_Coefficients;
+
   procedure Track_One_Path
               ( abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -763,7 +823,7 @@ package body Standard_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Maximum(5,maxdeg/2);
+    nit : constant integer32 := Maximum(5,maxdeg/2) + 2;
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
@@ -792,6 +852,7 @@ package body Standard_Pade_Trackers is
         put(file,"Step "); put(file,k,1); put_line(file," : ");
         Last_Coefficients(file,wrk_fcf(wrk_fcf'last),t,pars.gamma);
       end if;
+      Scale_Solution_Coefficients(file,fhm,wrk_fcf,wrk_sol,t,pars.gamma);
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
          pv,poles,t,step,cntsstp,cntdstp,cntpstp);
