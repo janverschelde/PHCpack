@@ -1,3 +1,6 @@
+Tue 6 Aug 2019 : fixed the scaling of the last coefficients in the homotopies
+  in standard_pade_trackers.adb so tracking in homogeneous coordinates works.
+
 Mon 5 Aug 2019 : adjusted homotopy_mixed_residuals so that, when the
   coefficient homotopy is defined, then it is used to compute the residual.
   Managed to get the scaling of solutions and the last coefficients to work for

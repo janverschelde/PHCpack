@@ -142,7 +142,7 @@ package body Standard_Pade_Trackers is
   begin
     loop
       sol := Series_and_Predictors.Predicted_Solution(pv,step);
-      predres := Residual_Prediction(file,abh,sol,t);
+      predres := Residual_Prediction(abh,sol,t);
       put(file,"  predictor residual : ");
       put(file,predres,3); new_line(file);
       exit when (predres <= tolpres);
@@ -446,7 +446,7 @@ package body Standard_Pade_Trackers is
 
   begin
     Series_and_Predictors.Newton_Prediction
-      (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,true); -- verbose);
+      (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false); -- verbose);
    -- sstep := Series_and_Predictors.Set_Step_Size
    --            (file,eva,tolcff,alpha,verbose);
     sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
@@ -690,7 +690,7 @@ package body Standard_Pade_Trackers is
 
     use Standard_Complex_Numbers;
 
-    prd,fpd : Complex_Number;
+    prd : Complex_Number;
     hcp,hcq : Standard_Complex_Vectors.Link_to_Vector;
     nbreqs : constant integer32 
            := Standard_Coefficient_Homotopy.Number_of_Equations;
@@ -721,14 +721,19 @@ package body Standard_Pade_Trackers is
         fcf(fcf'last).cff(1) := gamma*sol(sol'last) + hcp(hcp'last);
       else
         prd := hcp(hcp'first)*sol(sol'first);
-        fpd := fcf(fcf'first).cff(0)*sol(sol'first);
         for i in sol'first+1..sol'last loop
           prd := prd + hcp(i)*sol(i);
-          fpd := fpd + fcf(i).cff(0)*sol(i);
         end loop;
         hcp(hcp'last) := -prd;
-        fcf(fcf'last).cff(0) := - fpd; -- -gamma*sol(sol'last);
-       -- fcf(fcf'last).cff(1) := gamma*sol(sol'last) - fpd;
+        for i in fcf'range loop
+          fcf(i).cff(0) := Standard_Complex_Numbers.create(0.0);
+          fcf(i).cff(1) := hcp(i);
+        end loop;
+        fcf(fcf'last-1).cff(0) := gamma;
+        fcf(fcf'last-1).cff(1) := fcf(fcf'last-1).cff(1) - gamma;
+        fcf(fcf'last).cff(0) := -gamma*sol(sol'last);
+        fcf(fcf'last).cff(1) := fcf(fcf'last).cff(1) + gamma*sol(sol'last);
+        Standard_CSeries_Vector_Functions.Shift(fcf.all,-t);
       end if;
       srv := Series_and_Solutions.Create(sol,0);
       eva := Standard_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
@@ -828,7 +833,7 @@ package body Standard_Pade_Trackers is
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Maximum(5,maxdeg/2) + 2;
+    nit : constant integer32 := Maximum(5,maxdeg/2) + 1; -- one extra
     pv : Standard_Pade_Approximants.Pade_Vector(1..sol.n)
        := Standard_Pade_Approximants.Allocate(sol.n,numdeg,dendeg);
     poles : Standard_Complex_VecVecs.VecVec(pv'range)
