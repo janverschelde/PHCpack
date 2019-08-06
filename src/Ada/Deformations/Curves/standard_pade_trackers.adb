@@ -690,7 +690,7 @@ package body Standard_Pade_Trackers is
 
     use Standard_Complex_Numbers;
 
-    prd : Complex_Number;
+    prd,fpd : Complex_Number;
     hcp,hcq : Standard_Complex_Vectors.Link_to_Vector;
     nbreqs : constant integer32 
            := Standard_Coefficient_Homotopy.Number_of_Equations;
@@ -716,15 +716,20 @@ package body Standard_Pade_Trackers is
       hcq := Standard_Coefficient_Homotopy.Start_Coefficients(nbreqs);
       hcp := Standard_Coefficient_Homotopy.Target_Coefficients(nbreqs);
       hcq(hcq'last) := -sol(sol'last);
-      if t > 0.0 then
+      if t = 0.0 then
+        fcf(fcf'last).cff(0) := -gamma*sol(sol'last);
+        fcf(fcf'last).cff(1) := gamma*sol(sol'last) + hcp(hcp'last);
+      else
         prd := hcp(hcp'first)*sol(sol'first);
+        fpd := fcf(fcf'first).cff(0)*sol(sol'first);
         for i in sol'first+1..sol'last loop
           prd := prd + hcp(i)*sol(i);
+          fpd := fpd + fcf(i).cff(0)*sol(i);
         end loop;
         hcp(hcp'last) := -prd;
+        fcf(fcf'last).cff(0) := - fpd; -- -gamma*sol(sol'last);
+       -- fcf(fcf'last).cff(1) := gamma*sol(sol'last) - fpd;
       end if;
-      fcf(fcf'last).cff(0) := -gamma*sol(sol'last);
-      fcf(fcf'last).cff(1) := gamma*sol(sol'last) + hcp(hcp'last);
       srv := Series_and_Solutions.Create(sol,0);
       eva := Standard_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
       put_line(file,"The evaluated solution series after scaling :");
