@@ -405,7 +405,11 @@ package body Standard_Pade_Trackers is
       put(file,"  eta : "); put(file,eta,2);
       put(file,"  nrm : "); put(file,nrm,2); new_line(file);
     end if;
-    Minimum_Step_Size(file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+    if verbose then
+      Minimum_Step_Size(file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+    else
+      Minimum_Step_Size(sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+    end if;
     Set_Step(t,step,pars.maxsize,onetarget);
     if verbose then
       put(file,"Step size : "); put(file,step,3);
@@ -474,7 +478,11 @@ package body Standard_Pade_Trackers is
       put(file,"  eta : "); put(file,eta,2);
       put(file,"  nrm : "); put(file,nrm,2); new_line(file);
     end if;
-    Minimum_Step_Size(file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+    if verbose then
+      Minimum_Step_Size(file,sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+    else
+      Minimum_Step_Size(sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
+    end if;
     Set_Step(t,step,pars.maxsize,onetarget);
     if verbose then
       put(file,"Step size : "); put(file,step,3);
@@ -666,6 +674,8 @@ package body Standard_Pade_Trackers is
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
+      Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+        (wrk_fcf,wrk_sol,t,pars.gamma);
       Step_Control
         (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
          cntsstp,cntdstp,cntpstp);
@@ -738,8 +748,8 @@ package body Standard_Pade_Trackers is
     for k in 1..max_steps loop
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
-        Homotopy_Coefficient_Scaling.Last_Coefficients
-          (file,wrk_fcf(wrk_fcf'last),t,pars.gamma);
+       -- Homotopy_Coefficient_Scaling.Last_Coefficients
+       --   (file,wrk_fcf(wrk_fcf'last),t,pars.gamma);
       end if;
       Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
         (file,fhm,wrk_fcf,wrk_sol,t,pars.gamma);
