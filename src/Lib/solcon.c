@@ -954,3 +954,33 @@ int solcon_quaddobl_set_continuation_parameter ( void )
 
    return fail;
 }
+
+int solcon_standard_one_homogenization ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(894,a,b,c);
+
+   return fail;
+}
+
+int solcon_dobldobl_one_homogenization ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(895,a,b,c);
+
+   return fail;
+}
+
+int solcon_quaddobl_one_homogenization ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(896,a,b,c);
+
+   return fail;
+}

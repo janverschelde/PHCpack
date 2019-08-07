@@ -922,4 +922,31 @@ int syscon_quaddobl_Laurent_drop_variable_by_name ( int nc, char *s );
  *   with the same Laurent system that has that variable dropped
  *   corresponding to the name in the string s of nc characters long. */
 
+int syscon_standard_one_homogenization ( int lintype );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the standard double precision container
+ *   with its transformation in 1-homogeneous coordinates.
+ *   If lintype is 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
+int syscon_dobldobl_one_homogenization ( int lintype );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the double double precision container
+ *   with its transformation in 1-homogeneous coordinates.
+ *   If lintype is 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
+int syscon_quaddobl_one_homogenization ( int lintype );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the quad double precision container
+ *   with its transformation in 1-homogeneous coordinates.
+ *   If lintype is 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
 #endif

@@ -947,4 +947,22 @@ int solcon_quaddobl_set_continuation_parameter ( void );
  *   Sets the value of the continuation parameter to zero for all solutions
  *   in the quad double precision solutions container. */
 
+int solcon_standard_one_homogenization ( void );
+/*
+ * DESCRIPTION :
+ *   Add one extra coordinate one to every solution in the container
+ *   for solutions in standard double precision. */
+
+int solcon_dobldobl_one_homogenization ( void );
+/*
+ * DESCRIPTION :
+ *   Add one extra coordinate one to every solution in the container
+ *   for solutions in double double precision. */
+
+int solcon_quaddobl_one_homogenization ( void );
+/*
+ * DESCRIPTION :
+ *   Add one extra coordinate one to every solution in the container
+ *   for solutions in double double precision. */
+
 #endif

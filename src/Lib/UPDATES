@@ -1,3 +1,6 @@
+Wed 7 Aug 2019 : added functions to syscon and solcon for 1-homogeneous
+  coordinate transformations, added prompt for homogenization in lib_padcon.
+
 Sat 27 Jul 2019 : added functions to syscon to generate random polynomial
   systems in double double and quad double precision.
   Updated phcpy2c.h, phcpy2c2.c, and phcpy2c3.c with the new functions to

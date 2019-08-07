@@ -26,32 +26,41 @@ void prompt_for_output_file ( int* nbc, char* name, int *verbose );
  *   Prompts the user for an output file, returned in name,
  *   with in nbc the number of characters in name. */
 
-void standard_track ( int nbc, char* name, int verbose );
+int prompt_for_homogenization ( void );
+/*
+ * DESCRIPTION :
+ *   Asks the user if a projective transformation must be applied.
+ *   Return 1 for homogeneous coordinates, return 0 otherwise. */
+
+void standard_track ( int nbc, char* name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   Tracks in standard double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
  *   otherwise, the output is written to the name with file name.
- *   If verbose > 0, then more output is written. */
+ *   If verbose > 0, then more output is written.
+ *   If homo > 0, then tracking happens in homogeneous coordinates. */
 
-void dobldobl_track ( int nbc, char* name, int verbose );
+void dobldobl_track ( int nbc, char* name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   Tracks in double double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
  *   otherwise, the output is written to the name with file name.
- *   If verbose > 0, then more output is written. */
+ *   If verbose > 0, then more output is written.
+ *   If homo > 0, then tracking happens in homogeneous coordinates. */
 
-void quaddobl_track ( int nbc, char* name, int verbose );
+void quaddobl_track ( int nbc, char* name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   Tracks in quad double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
  *   otherwise, the output is written to the name with file name.
- *   If verbose > 0, then more output is written. */
+ *   If verbose > 0, then more output is written.
+ *   If homo > 0, then tracking happens in homogeneous coordinates. */
 
 int maximal_series_degree ( void );
 /*
@@ -161,7 +170,7 @@ int main ( void )
    adainit();
 
    char nlsb,ans;
-   int fail,precision,nbchar,verbose;
+   int fail,precision,nbchar,homo,verbose;
    char filename[80];
 
    printf("\nMENU for the precision :\n");
@@ -189,14 +198,16 @@ int main ( void )
    }
    else
    {
+      homo = prompt_for_homogenization();
+
       prompt_for_output_file(&nbchar,filename,&verbose);
 
       if(nbchar > 0)
          printf("\nThe name of the output file is %s.\n", filename);
 
-      if(precision == 0) standard_track(nbchar,filename,verbose);
-      if(precision == 1) dobldobl_track(nbchar,filename,verbose);
-      if(precision == 2) quaddobl_track(nbchar,filename,verbose);
+      if(precision == 0) standard_track(nbchar,filename,verbose,homo);
+      if(precision == 1) dobldobl_track(nbchar,filename,verbose,homo);
+      if(precision == 2) quaddobl_track(nbchar,filename,verbose,homo);
    }
    adafinal();
 
@@ -265,7 +276,21 @@ void prompt_for_output_file ( int* nbc, char* name, int *verbose )
    }
 }
 
-void standard_track ( int nbc, char* name, int verbose )
+int prompt_for_homogenization ( void )
+{
+   char ans,nlsb;
+
+   printf("\nRunning in homogeneous coordinates ? (y/n) ? ");
+   scanf("%c",&ans);
+   scanf("%c",&nlsb); /* skip newline symbol */
+
+   if(ans == 'y')
+      return 1;
+   else
+      return 0;
+}
+
+void standard_track ( int nbc, char* name, int verbose, int homo )
 {
    int fail,length;
 
@@ -282,7 +307,7 @@ void standard_track ( int nbc, char* name, int verbose )
    if(nbc == 0) fail = solcon_write_standard_solutions();
 }
 
-void dobldobl_track ( int nbc, char* name, int verbose )
+void dobldobl_track ( int nbc, char* name, int verbose, int homo )
 {
    int fail,length;
 
@@ -299,7 +324,7 @@ void dobldobl_track ( int nbc, char* name, int verbose )
    if(nbc == 0) fail = solcon_write_dobldobl_solutions();
 }
 
-void quaddobl_track ( int nbc, char* name, int verbose )
+void quaddobl_track ( int nbc, char* name, int verbose, int homo )
 {
    int fail,length;
 

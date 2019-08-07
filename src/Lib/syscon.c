@@ -1126,3 +1126,36 @@ int syscon_quaddobl_Laurent_drop_variable_by_name ( int nc, char *s )
    fail = _ada_use_c2phc4c(833,&nc,b,c);
    return fail;
 }
+
+int syscon_standard_one_homogenization ( int lintype )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(891,&lintype,b,c);
+
+   return fail;
+}
+
+int syscon_dobldobl_one_homogenization ( int lintype )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(892,&lintype,b,c);
+
+   return fail;
+}
+
+int syscon_quaddobl_one_homogenization ( int lintype )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(893,&lintype,b,c);
+
+   return fail;
+}
