@@ -50,6 +50,7 @@ homotopy_series_readers          : reads a homotopy for power series
 standard_rational_approximations : definition of a rational approximation
 dobldobl_rational_approximations : rational approximations with double doubles
 quaddobl_rational_approximations : rational approximations with quad doubles
+homotopy_coefficient_scaling     : scale coefficients for homogenization
 standard_pade_approximants       : Pade approximants in double precision
 standard_pade_approximants_io    : output of double Pade approximants
 dobldobl_pade_approximants       : Pade approximants with double doubles
