@@ -21,14 +21,17 @@ with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Homotopy;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with DoblDobl_Homotopy;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with QuadDobl_Homotopy;
@@ -227,6 +230,15 @@ function use_padcon ( job : integer32;
       end if;
     else
       Create(file,out_file,name);
+      put(file,natural32(target'last),target.all);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,natural32(start'last),start.all);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,Standard_Complex_Solutions.Length_Of(sols),
+          natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+      new_line(file);
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.Standard_Track
         (file,target'last,sols,homconpars.all,verbose);
@@ -275,6 +287,15 @@ function use_padcon ( job : integer32;
       end if;
     else
       Create(file,out_file,name);
+      put(file,natural32(target'last),target.all);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,natural32(start'last),start.all);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+          natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+      new_line(file);
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.DoblDobl_Track
         (file,target'last,sols,homconpars.all,verbose);
@@ -322,6 +343,15 @@ function use_padcon ( job : integer32;
       end if;
     else
       Create(file,out_file,name);
+      put(file,natural32(target'last),target.all);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,natural32(start'last),start.all);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+          natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+      new_line(file);
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.QuadDobl_Track
         (file,target'last,sols,homconpars.all,verbose);
