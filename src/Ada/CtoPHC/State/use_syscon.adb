@@ -48,6 +48,8 @@ with Multprec_Complex_Laur_Systems;
 with Multprec_Complex_Laur_Systems_io;  use Multprec_Complex_Laur_Systems_io;
 with Polynomial_Drops;
 with Total_Degree_Start_Systems;
+with Projective_Transformations;
+with Homogenization;
 with PHCpack_Operations;
 with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
@@ -268,14 +270,14 @@ function use_syscon ( job : integer32;
 
   function Job131 return integer32 is -- write system in container
  
-    use Multprec_Complex_Laurentials;
+   -- use Multprec_Complex_Laurentials;
     use Multprec_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := Multprec_LaurSys_Container.Retrieve;
-    nvr : natural32;
+   -- nvr : natural32;
 
   begin
     if lp /= null then
-      nvr := Number_of_Unknowns(lp(lp'first));
+     -- nvr := Number_of_Unknowns(lp(lp'first));
       if PHCpack_Operations.file_okay then
        -- if integer32(nvr) = lp'last then
           put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
@@ -2062,6 +2064,66 @@ function use_syscon ( job : integer32;
     return 0;
   end Job543;
 
+  function Job891 return integer32 is -- 1-homogeneous standard system
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    opt : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
+    res : Standard_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last+1);
+
+  begin
+    Projective_Transformations.Projective_Transformation(lp.all);
+    if opt = 0
+     then res := Homogenization.Add_Random_Hyperplanes(lp.all,1,false);
+     else res := Homogenization.Add_Standard_Hyperplanes(lp.all,1);
+    end if;
+    Standard_PolySys_Container.Clear;
+    Standard_PolySys_Container.Initialize(res);
+    return 0;
+  end Job891;
+
+  function Job892 return integer32 is -- 1-homogeneous dobldobl system
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    opt : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last+1);
+
+  begin
+    Projective_Transformations.Projective_Transformation(lp.all);
+    if opt = 0
+     then res := Homogenization.Add_Random_Hyperplanes(lp.all,1,false);
+     else res := Homogenization.Add_Standard_Hyperplanes(lp.all,1);
+    end if;
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(res);
+    return 0;
+  end Job892;
+
+  function Job893 return integer32 is -- 1-homogeneous quaddobl system
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    opt : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := QuadDobl_PolySys_Container.Retrieve;
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last+1);
+
+  begin
+    Projective_Transformations.Projective_Transformation(lp.all);
+    if opt = 0
+     then res := Homogenization.Add_Random_Hyperplanes(lp.all,1,false);
+     else res := Homogenization.Add_Standard_Hyperplanes(lp.all,1);
+    end if;
+    QuadDobl_PolySys_Container.Clear;
+    QuadDobl_PolySys_Container.Initialize(res);
+    return 0;
+  end Job893;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -2192,6 +2254,10 @@ function use_syscon ( job : integer32;
       when 541 => return Job541; -- read double double system from file
       when 542 => return Job542; -- read quad double system from file
       when 543 => return Job543; -- read multiprecision system from file
+     -- projective transformations :
+      when 891 => return Job891; -- 1-homogeneous standard system
+      when 892 => return Job892; -- 1-homogeneous dobldobl system
+      when 893 => return Job893; -- 1-homogeneous quaddobl system
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

@@ -1,5 +1,7 @@
 Wed 7 Aug 2019 : in use_padcon.adb, added the instructions to write the
   target, start, and start solutions when the output file name is given.
+  Added jobs to use_syscon, use_solcon, and use_c2phc4c for projective
+  coordinate transformations.
 
 Sat 27 Jul 2019 : added jobs to use_syscon and use_c2phc4c to generate 
   random polynomial systems in double double and quad double precision.

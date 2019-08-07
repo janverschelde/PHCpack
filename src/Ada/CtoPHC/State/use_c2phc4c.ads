@@ -2980,6 +2980,30 @@ function use_c2phc4c ( job : integer32;
 --                 This job is good to allocate the data to retrieve
 --                 the tableau form of a system.
 --
+-- projective coordinate transformations :
+--
+--   job   = 891 : to the system with double precision coefficients,
+--                 applies a 1-homogeneous projective transformation,
+--                 adding a random linear equation if a[0] == 0,
+--                 or the linear equation z0 - 1 = 0 if a[0]] = 1;
+--         = 892 : to the system with double double precision coefficients,
+--                 applies a 1-homogeneous projective transformation,
+--                 adding a random linear equation if a[0] == 0,
+--                 or the linear equation z0 - 1 = 0 if a[0]] = 1;
+--         = 893 : to the system with quad double precision coefficients,
+--                 applies a 1-homogeneous projective transformation,
+--                 adding a random linear equation if a[0] == 0,
+--                 or the linear equation z0 - 1 = 0 if a[0]] = 1.
+--         = 894 : to the solutions in double precision,
+--                 applies a 1-homogeneous projective transformation,
+--                 augmenting every solution with one as extra coordinate;
+--         = 895 : to the system in double double precision,
+--                 applies a 1-homogeneous projective transformation,
+--                 augmenting every solution with one as extra coordinate;
+--         = 896 : to the system in quad double precision,
+--                 applies a 1-homogeneous projective transformation,
+--                 augmenting every solution with one as extra coordinate.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   or job not in the right range.

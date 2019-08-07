@@ -37,6 +37,7 @@ with Multprec_System_and_Solutions_io;
 with Total_Degree_Start_Systems;        use Total_Degree_Start_Systems;
 with Lexicographic_Root_Enumeration;    use Lexicographic_Root_Enumeration;
 with Drivers_to_Track_Standard_Paths;   use Drivers_to_Track_Standard_Paths;
+with Projective_Transformations;
 with PHCpack_Operations;
 with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
@@ -1692,6 +1693,42 @@ function use_solcon ( job : integer32;
     return 0;
   end Job877;
 
+  function Job894 return integer32 is -- 1-homogeneous standard solutions
+
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+
+  begin
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Projective_Transformation(sols);
+    end if;
+    return 0;
+  end Job894;
+
+  function Job895 return integer32 is -- 1-homogeneous dobldobl solutions
+
+    sols : DoblDobl_Complex_Solutions.Solution_List
+         := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    if not DoblDobl_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Projective_Transformation(sols);
+    end if;
+    return 0;
+  end Job895;
+
+  function Job896 return integer32 is -- 1-homogeneous quaddobl solutions
+
+    sols : QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Projective_Transformation(sols);
+    end if;
+    return 0;
+  end Job896;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1805,6 +1842,10 @@ function use_solcon ( job : integer32;
       when 875 => return Job875; -- for standard solutions, set t = 0
       when 876 => return Job876; -- for dobldobl solutions, set t = 0
       when 877 => return Job877; -- for quaddobl solutions, set t = 0
+     -- add one to each solution in 1-homogeneous coordinate transformation
+      when 894 => return Job894; -- 1-homogeneous standard solutions
+      when 895 => return Job895; -- 1-homogeneous dobldobl solutions
+      when 896 => return Job896; -- 1-homogeneous quaddobl solutions
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

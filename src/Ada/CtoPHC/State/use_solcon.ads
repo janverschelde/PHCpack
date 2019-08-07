@@ -318,6 +318,18 @@ function use_solcon ( job : integer32;
 --           the complex value for the continuation paramter t,
 --           the complex coefficients (real and imaginary parts)
 --           of the solution vector, err, rco, and res.
+--
+-- projective coordinate transformations :
+--
+--   job     = 894 : to the solutions in double precision,
+--                   applies a 1-homogeneous projective transformation,
+--                   augmenting every solution with one as extra coordinate;
+--   job     = 895 : to the system in double double precision,
+--                   applies a 1-homogeneous projective transformation,
+--                   augmenting every solution with one as extra coordinate;
+--   job     = 896 : to the system in quad double precision,
+--                   applies a 1-homogeneous projective transformation,
+--                   augmenting every solution with one as extra coordinate.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong,

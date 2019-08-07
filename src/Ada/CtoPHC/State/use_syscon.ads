@@ -354,6 +354,21 @@ function use_syscon ( job : integer32;
 --   c        memory allocated for array of double floating-point numbers,
 --            used for real and imaginary part of complex coefficient.
 --
+-- projective coordinate transformations :
+--
+--   job    = 891 : to the system with double precision coefficients,
+--                  applies a 1-homogeneous projective transformation,
+--                  adding a random linear equation if a[0] == 0,
+--                  or the linear equation z0 - 1 = 0 if a[0]] = 1;
+--   job    = 892 : to the system with double double precision coefficients,
+--                  applies a 1-homogeneous projective transformation,
+--                  adding a random linear equation if a[0] == 0,
+--                  or the linear equation z0 - 1 = 0 if a[0]] = 1;
+--   job    = 893 : to the system with quad double precision coefficients,
+--                  applies a 1-homogeneous projective transformation,
+--                  adding a random linear equation if a[0] == 0,
+--                  or the linear equation z0 - 1 = 0 if a[0]] = 1.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   e.g.: indices to monomial out of range, or job not in the proper range.
