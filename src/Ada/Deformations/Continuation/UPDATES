@@ -1,3 +1,6 @@
+Tue 6 Aug 2019 : modified drivers_for_poly_continuation.adb so prclvl = 0 also
+  stands for double precision, as a result of changing default from 0 to 1.
+
 Thu 20 Jun 2019 : added verbose level to the main driver procedures
   in drivers_for_poly_continuation.
 

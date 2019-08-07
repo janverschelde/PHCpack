@@ -411,7 +411,7 @@ package body Drivers_for_Poly_Continuation is
   end Driver_for_Continuation_Parameters;
 
   procedure Driver_for_Continuation_Parameters
-              ( precision : in natural32) is
+              ( precision : in natural32 ) is
 
     nb : natural32 := 0;
 
@@ -950,7 +950,7 @@ package body Drivers_for_Poly_Continuation is
     nbequ := q'last;
     nbvar := Head_Of(qsols).n;
     Copy(p,pp);
-    if prclvl = 1 then
+    if prclvl <= 1 then
       deci := 16;
     elsif prclvl = 2 then
       deci := 32;
@@ -1021,7 +1021,7 @@ package body Drivers_for_Poly_Continuation is
     nbequ := q'last;
     nbvar := integer32(Number_of_Unknowns(q(q'first)));
     Copy(p,pp);
-    if prclvl = 1 then
+    if prclvl <= 1 then
       deci := 16;
     elsif prclvl = 2 then
       deci := 32;
