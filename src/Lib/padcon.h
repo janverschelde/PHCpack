@@ -72,7 +72,7 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val );
  * ON RETURN 
  *   val      the value for the k-th homotopy continuation parameter. */
 
-int padcon_standard_track ( int nbc, char* name, int verbose );
+int padcon_standard_track ( int nbc, char* name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -83,9 +83,10 @@ int padcon_standard_track ( int nbc, char* name, int verbose );
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
  *            the file name has nbc characters;
- *   verbose  if > 0, then more information is written. */
+ *   verbose  if > 0, then more information is written;
+ *   homo     if > 0, then homogeneous coordinates are applied. */
 
-int padcon_dobldobl_track ( int nbc, char* name, int verbose );
+int padcon_dobldobl_track ( int nbc, char* name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -96,9 +97,10 @@ int padcon_dobldobl_track ( int nbc, char* name, int verbose );
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
  *            the file name has nbc characters;
- *   verbose  if > 0, then more information is written. */
+ *   verbose  if > 0, then more information is written;
+ *   homo     if > 0, then homogeneous coordinates are applied. */
 
-int padcon_quaddobl_track ( int nbc, char* name, int verbose );
+int padcon_quaddobl_track ( int nbc, char* name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -109,7 +111,8 @@ int padcon_quaddobl_track ( int nbc, char* name, int verbose );
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
  *            the file name has nbc characters;
- *   verbose  if > 0, then more information is written. */
+ *   verbose  if > 0, then more information is written;
+ *   homo     if > 0, then homogeneous coordinates are applied. */
 
 int padcon_standard_initialize_homotopy ( int verbose );
 /*

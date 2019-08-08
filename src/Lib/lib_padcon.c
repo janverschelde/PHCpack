@@ -32,6 +32,30 @@ int prompt_for_homogenization ( void );
  *   Asks the user if a projective transformation must be applied.
  *   Return 1 for homogeneous coordinates, return 0 otherwise. */
 
+void standard_projective_transformation ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their 1-homogeneously transformed versions.
+ *   Transforms as well the start and target systems
+ *   in standard double precision.  Adds "Z0" to the symbol table. */
+
+void dobldobl_projective_transformation ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their 1-homogeneously transformed versions.
+ *   Transforms as well the start and target systems
+ *   in double double precision.  Adds "Z0" to the symbol table. */
+
+void quaddobl_projective_transformation ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their 1-homogeneously transformed versions.
+ *   Transforms as well the start and target systems
+ *   in quad double precision.  Adds "Z0" to the symbol table. */
+
 void standard_track ( int nbc, char* name, int verbose, int homo );
 /*
  * DESCRIPTION :
@@ -290,6 +314,54 @@ int prompt_for_homogenization ( void )
       return 0;
 }
 
+void standard_projective_transformation ( void )
+{
+   int fail;
+   char *name = "Z0";
+
+   fail = solcon_standard_one_homogenization();
+   fail = copy_container_to_start_solutions();
+   fail = copy_target_system_to_container();
+   fail = syscon_standard_one_homogenization(0);
+   fail = copy_container_to_target_system();
+   fail = copy_start_system_to_container();
+   fail = syscon_standard_one_homogenization(1);
+   fail = copy_container_to_start_system();
+   fail = syscon_add_symbol(2,name);
+}
+
+void dobldobl_projective_transformation ( void )
+{
+   int fail;
+   char *name = "Z0";
+
+   fail = solcon_dobldobl_one_homogenization();
+   fail = copy_dobldobl_container_to_start_solutions();
+   fail = copy_dobldobl_target_system_to_container();
+   fail = syscon_dobldobl_one_homogenization(0);
+   fail = copy_dobldobl_container_to_target_system();
+   fail = copy_dobldobl_start_system_to_container();
+   fail = syscon_dobldobl_one_homogenization(1);
+   fail = copy_dobldobl_container_to_start_system();
+   fail = syscon_add_symbol(2,name);
+}
+
+void quaddobl_projective_transformation ( void )
+{
+   int fail;
+   char *name = "Z0";
+
+   fail = solcon_quaddobl_one_homogenization();
+   fail = copy_quaddobl_container_to_start_solutions();
+   fail = copy_quaddobl_target_system_to_container();
+   fail = syscon_quaddobl_one_homogenization(0);
+   fail = copy_quaddobl_container_to_target_system();
+   fail = copy_quaddobl_start_system_to_container();
+   fail = syscon_quaddobl_one_homogenization(1);
+   fail = copy_quaddobl_container_to_start_system();
+   fail = syscon_add_symbol(2,name);
+}
+
 void standard_track ( int nbc, char* name, int verbose, int homo )
 {
    int fail,length;
@@ -300,9 +372,11 @@ void standard_track ( int nbc, char* name, int verbose, int homo )
    fail = solcon_number_of_standard_solutions(&length);
    printf("Read %d start solutions.\n", length);
 
+   if(homo > 0) standard_projective_transformation();
+
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_standard_track(nbc,name,verbose);
+   fail = padcon_standard_track(nbc,name,verbose,homo);
 
    if(nbc == 0) fail = solcon_write_standard_solutions();
 }
@@ -317,9 +391,11 @@ void dobldobl_track ( int nbc, char* name, int verbose, int homo )
    fail = solcon_number_of_dobldobl_solutions(&length);
    printf("Read %d start solutions.\n", length);
 
+   if(homo > 0) dobldobl_projective_transformation();
+
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_dobldobl_track(nbc,name,verbose);
+   fail = padcon_dobldobl_track(nbc,name,verbose,homo);
 
    if(nbc == 0) fail = solcon_write_dobldobl_solutions();
 }
@@ -334,9 +410,11 @@ void quaddobl_track ( int nbc, char* name, int verbose, int homo )
    fail = solcon_number_of_quaddobl_solutions(&length);
    printf("Read %d start solutions.\n", length);
 
+   if(homo > 0) quaddobl_projective_transformation();
+
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_quaddobl_track(nbc,name,verbose);
+   fail = padcon_quaddobl_track(nbc,name,verbose,homo);
 
    if(nbc == 0) fail = solcon_write_quaddobl_solutions();
 }

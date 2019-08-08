@@ -45,29 +45,26 @@ void padcon_write_homotopy_continuation_parameters ( void )
    printf(" 5. minimum step size                          : ");
    fail = padcon_get_homotopy_continuation_parameter(5,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf(" 6. multiplication factor for the series step  : ");
+   printf(" 6. multiplication factor for the pole radius  : ");
    fail = padcon_get_homotopy_continuation_parameter(6,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf(" 7. multiplication factor for the pole radius  : ");
+   printf(" 7. multiplication factor for the curvature    : ");
    fail = padcon_get_homotopy_continuation_parameter(7,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf(" 8. multiplication factor for the curvature    : ");
+   printf(" 8. tolerance on the residual of the predictor : ");
    fail = padcon_get_homotopy_continuation_parameter(8,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf(" 9. tolerance on the residual of the predictor : ");
+   printf(" 9. tolerance on the residual of the corrector : ");
    fail = padcon_get_homotopy_continuation_parameter(9,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf("10. tolerance on the residual of the corrector : ");
+   printf("10. tolerance on zero series coefficients      : ");
    fail = padcon_get_homotopy_continuation_parameter(10,&fltval[0]);
    printf("%.2E\n", fltval[0]);
-   printf("11. tolerance on zero series coefficients      : ");
+   printf("11. maximum number of corrector steps          : ");
    fail = padcon_get_homotopy_continuation_parameter(11,&fltval[0]);
-   printf("%.2E\n", fltval[0]);
-   printf("12. maximum number of corrector steps          : ");
-   fail = padcon_get_homotopy_continuation_parameter(12,&fltval[0]);
    printf("%d\n", (int) fltval[0]);
-   printf("13. maximum steps on a path                    : ");
-   fail = padcon_get_homotopy_continuation_parameter(13,&fltval[0]);
+   printf("12. maximum steps on a path                    : ");
+   fail = padcon_get_homotopy_continuation_parameter(12,&fltval[0]);
    printf("%d\n", (int) fltval[0]);
 }
 
@@ -196,16 +193,17 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
    return fail;
 }
 
-int padcon_standard_track ( int nbc, char* name, int verbose )
+int padcon_standard_track ( int nbc, char* name, int verbose, int homo )
 {
    int fail;
-   int pars[3];
+   int pars[4];
    int *b;
    double *c;
 
    pars[0] = 0;   // set precision to double
    pars[1] = nbc;
    pars[2] = verbose;
+   pars[3] = homo;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);
@@ -218,16 +216,17 @@ int padcon_standard_track ( int nbc, char* name, int verbose )
    return fail;
 }
 
-int padcon_dobldobl_track ( int nbc, char* name, int verbose )
+int padcon_dobldobl_track ( int nbc, char* name, int verbose, int homo )
 {
    int fail;
-   int pars[3];
+   int pars[4];
    int *b;
    double *c;
 
    pars[0] = 1;   // set precision to double double
    pars[1] = nbc;
    pars[2] = verbose;
+   pars[3] = homo;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);
@@ -240,16 +239,17 @@ int padcon_dobldobl_track ( int nbc, char* name, int verbose )
    return fail;
 }
 
-int padcon_quaddobl_track ( int nbc, char* name, int verbose )
+int padcon_quaddobl_track ( int nbc, char* name, int verbose, int homo )
 {
    int fail;
-   int pars[3];
+   int pars[4];
    int *b;
    double *c;
 
    pars[0] = 2;   // set precision to quad double
    pars[1] = nbc;
    pars[2] = verbose;
+   pars[3] = homo;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);

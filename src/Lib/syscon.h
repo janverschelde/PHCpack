@@ -949,4 +949,12 @@ int syscon_quaddobl_one_homogenization ( int lintype );
  *   otherwise, the linear equation z0 - 1 = 0 is added,
  *   where z0 is the extra homogeneous coordinate. */
 
+int syscon_add_symbol ( int nbc, char *name );
+/*
+ * DESCRIPTION :
+ *   Adds a symbol to the table, with name given in the string,
+ *   where the number of characters in the name equals nbc.
+ *   This symbol represents the last variable added in the homogeneous
+ *   coordinate transformation. */
+
 #endif

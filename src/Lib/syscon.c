@@ -1159,3 +1159,16 @@ int syscon_quaddobl_one_homogenization ( int lintype )
 
    return fail;
 }
+
+int syscon_add_symbol ( int nbc, char *name )
+{
+   int fail,idx;
+   int chrs[nbc];
+   double *c;
+
+   for(idx=0; idx<nbc; idx++) chrs[idx] = (int) name[idx];
+
+   fail = _ada_use_c2phc4c(897,&nbc,chrs,c);
+
+   return fail;
+}

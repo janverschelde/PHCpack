@@ -1,5 +1,11 @@
+Thu 8 Aug 2019 : to syscon, added a function to add a symbol to the table.
+  Updated padcon and lib_padcon for the homogeneous coordinates.
+
 Wed 7 Aug 2019 : added functions to syscon and solcon for 1-homogeneous
   coordinate transformations, added prompt for homogenization in lib_padcon.
+  Updated the tuning of the homotopy continuation parameters in padcon for the
+  elimination of the sbeta parameter.  Made similar updates in phcpy2.h,
+  phcpy2c2.c and phcpy2c3.c for the Python extension module.
 
 Sat 27 Jul 2019 : added functions to syscon to generate random polynomial
   systems in double double and quad double precision.
