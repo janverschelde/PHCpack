@@ -1,4 +1,8 @@
 Thu 8 Aug 2019 : use_syscon and use_c2phc4c have a function to add a symbol.
+  Bug fix in use_c2phc4c.adb, called use_syscon instead of use_solcon.
+  Extended use_padcon with an extra parameter to indicate that homogeneous
+  coordinates will be applied.  Updated the documentation in use_c2phc4c.ads
+  accordingly to the line added in use_padcon.ads.
 
 Wed 7 Aug 2019 : in use_padcon.adb, added the instructions to write the
   target, start, and start solutions when the output file name is given.

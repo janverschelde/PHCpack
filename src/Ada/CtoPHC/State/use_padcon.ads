@@ -56,6 +56,7 @@ function use_padcon ( job : integer32;
 --                 output file, if a[1] is zero, then no output is written,
 --                 otherwise, the characters of the output file name are
 --                 defined by b, in a[2] is the value of the verbose flag;
+--                 in a[3] is the value of the homogeneous coordinates flag,
 --                 on return are the end of the solution paths in the
 --                 double, double double, or quad double solutions container.
 --   job   =   5 : initializes homotopy for a step-by-step execution

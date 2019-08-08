@@ -25,16 +25,19 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with DoblDobl_Homotopy;
+with DoblDobl_Coefficient_Homotopy;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with QuadDobl_Homotopy;
+with QuadDobl_Coefficient_Homotopy;
 with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
@@ -185,12 +188,14 @@ function use_padcon ( job : integer32;
       return 738;
   end Job3;
 
-  procedure Standard_Track ( name : in string; verbose : in boolean ) is
+  procedure Standard_Track
+              ( name : in string; verbose,homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
+  --   If homogeneous, then homogeneous coordinates are applied.
 
     file : file_type;
     start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -201,21 +206,16 @@ function use_padcon ( job : integer32;
                := Homotopy_Continuation_Parameters.Retrieve;
 
   begin
-   -- put_line("Retrieving the data from PHCpack_Operations ...");
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
-   -- put_line("Entering the creation of the homotopy ...");
-   -- declare
-   --   cp,cq : Standard_Complex_Poly_Systems.Poly_Sys(target'range);
-   -- begin
-   --   Standard_Complex_Poly_Systems.Copy(target.all,cp);
-   --   Standard_Complex_Poly_Systems.Copy(start.all,cq);
-     -- Standard_Homotopy.Clear;
-   --   Standard_Homotopy.Create(cp,cq,tpow,homconpars.gamma);
-    Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
-   -- end;
-   -- put_line("Done with the creation of the homotopy, call trackers ...");
+    if not homogeneous then
+      Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
+    else
+      Standard_Homotopy.Create(target.all,start.all,1,homconpars.gamma);
+      Standard_Coefficient_Homotopy.Create
+        (start.all,target.all,1,homconpars.gamma);
+    end if;
     if name = "" then
       if not verbose then
         Drivers_to_Series_Trackers.Standard_Track
@@ -246,12 +246,14 @@ function use_padcon ( job : integer32;
     Standard_Solutions_Container.Initialize(sols);
   end Standard_Track;
 
-  procedure DoblDobl_Track ( name : in string; verbose : in boolean ) is
+  procedure DoblDobl_Track
+              ( name : in string; verbose,homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
+  --   If homogeneous, then homogeneous coordinates are applied.
 
     use DoblDobl_Complex_Numbers_cv;
 
@@ -272,7 +274,12 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
-    DoblDobl_Homotopy.Create(target.all,start.all,tpow,dd_gamma);
+    if not homogeneous then
+      DoblDobl_Homotopy.Create(target.all,start.all,tpow,dd_gamma);
+    else
+      DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
+      DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,dd_gamma);
+    end if;
     if name = "" then
       if not verbose then
         Drivers_to_Series_Trackers.DoblDobl_Track
@@ -302,12 +309,14 @@ function use_padcon ( job : integer32;
     DoblDobl_Solutions_Container.Initialize(sols);
   end DoblDobl_Track;
 
-  procedure QuadDobl_Track ( name : in string; verbose : in boolean ) is
+  procedure QuadDobl_Track
+              ( name : in string; verbose,homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
+  --   If homogeneous, then homogeneous coordinates are applied.
 
     use QuadDobl_Complex_Numbers_cv;
 
@@ -328,7 +337,12 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
-    QuadDobl_Homotopy.Create(target.all,start.all,tpow,qd_gamma);
+    if not homogeneous then
+      QuadDobl_Homotopy.Create(target.all,start.all,tpow,qd_gamma);
+    else
+      QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
+      QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
+    end if;
     if name = "" then
       if not verbose then
         Drivers_to_Series_Trackers.QuadDobl_Track
@@ -363,18 +377,20 @@ function use_padcon ( job : integer32;
     use Interfaces.C;
 
     v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
     prc : constant natural32 := natural32(v_a(v_a'first));
     nbc : constant natural32 := natural32(v_a(v_a'first+1));
     vrb : constant natural32 := natural32(v_a(v_a'first+2));
+    hmf : constant natural32 := natural32(v_a(v_a'first+3));
     verbose : constant boolean := (vrb > 0);
+    homogeneous : constant boolean := (hmf > 0);
 
   begin
     if nbc = 0 then
       case prc is
-        when 0 => Standard_Track("",verbose);
-        when 1 => DoblDobl_Track("",verbose);
-        when 2 => QuadDobl_Track("",verbose);
+        when 0 => Standard_Track("",verbose,homogeneous);
+        when 1 => DoblDobl_Track("",verbose,homogeneous);
+        when 2 => QuadDobl_Track("",verbose,homogeneous);
         when others => null;
       end case;
     else
@@ -384,9 +400,9 @@ function use_padcon ( job : integer32;
         name : constant string := C_Integer_Array_to_String(nbc,v_b);
       begin
         case prc is
-          when 0 => Standard_Track(name,verbose);
-          when 1 => DoblDobl_Track(name,verbose);
-          when 2 => QuadDobl_Track(name,verbose);
+          when 0 => Standard_Track(name,verbose,homogeneous);
+          when 1 => DoblDobl_Track(name,verbose,homogeneous);
+          when 2 => QuadDobl_Track(name,verbose,homogeneous);
           when others => null;
         end case;
       end;
