@@ -1,5 +1,7 @@
 Wed 7 Aug 2019 : extended homotopy_coefficient_scaling with a silent version
   of the scaling procedure, updated standard_pade_trackers.adb.
+  Changed the defaults for the degrees in homotopy_continuation_parameters,
+  elimination of sbeta changed homotopy_continuation_parameters_io.adb.
 
 Tue 6 Aug 2019 : fixed the scaling of the last coefficients in the homotopies
   in standard_pade_trackers.adb so tracking in homogeneous coordinates works.

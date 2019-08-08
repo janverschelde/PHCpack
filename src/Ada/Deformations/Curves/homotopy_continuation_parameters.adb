@@ -9,14 +9,13 @@ package body Homotopy_Continuation_Parameters is
 
   begin
     res.alpha := 1.0E-3;
-    res.sbeta := 0.5;
     res.pbeta := 0.5;
     res.cbeta := 0.005;
     res.gamma := Standard_Random_Numbers.Random1;
     res.tolres := 1.0E-8;
     res.epsilon := 1.0E-12;
-    res.numdeg := 4;
-    res.dendeg := 4;
+    res.numdeg := 5;
+    res.dendeg := 1;
     res.maxsize := 0.1;
     res.minsize := 1.0E-6;
     res.corsteps := 4;

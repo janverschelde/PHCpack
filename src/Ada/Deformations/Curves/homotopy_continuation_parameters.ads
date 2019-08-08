@@ -10,7 +10,6 @@ package Homotopy_Continuation_Parameters is
 
   type Parameters is record
     alpha : double_float;    -- tolerance on the residual of the prediction
-    sbeta : double_float;    -- multiplication factor of the series step
     pbeta : double_float;    -- multiplication factor of the pole radius
     cbeta : double_float;    -- multiplication factor for the curvature
     gamma : Complex_Number;  -- the gamma constant in the homotopy
