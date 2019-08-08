@@ -934,6 +934,7 @@ function use_syscon ( job : integer32;
     sv : constant Standard_Integer_Vectors.Vector
        := String_to_Integer_Vector(s);
     slast : constant integer32 := integer32(s'last);
+
   begin
    -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
    -- put("#characters : "); put(s'last,1); new_line;
@@ -2124,6 +2125,23 @@ function use_syscon ( job : integer32;
     return 0;
   end Job893;
 
+  function Job897 return integer32 is -- add symbol passed as string
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant integer := integer(v_a(v_a'first));
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    smb : constant String(1..nc)
+        := C_Integer_Array_to_String(natural32(nc),v_b);
+
+  begin
+    Symbol_Table.Enlarge(1);
+    Symbol_Table.Add_String(smb);
+    return 0;
+  end Job897;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -2258,6 +2276,8 @@ function use_syscon ( job : integer32;
       when 891 => return Job891; -- 1-homogeneous standard system
       when 892 => return Job892; -- 1-homogeneous dobldobl system
       when 893 => return Job893; -- 1-homogeneous quaddobl system
+     -- add symbol passed as string to the table
+      when 897 => return Job897; -- add symbol to the table
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

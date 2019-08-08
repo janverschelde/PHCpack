@@ -3002,7 +3002,11 @@ function use_c2phc4c ( job : integer32;
 --                 augmenting every solution with one as extra coordinate;
 --         = 896 : to the system in quad double precision,
 --                 applies a 1-homogeneous projective transformation,
---                 augmenting every solution with one as extra coordinate.
+--                 augmenting every solution with one as extra coordinate;
+--         = 897 : in b are the a[0] characters of the string which
+--                 defines the name of the variable to be added to
+--                 the symbol table, this name represents the variable
+--                 added as the last coordinate in the homogenization.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

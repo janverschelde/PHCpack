@@ -1,3 +1,5 @@
+Thu 8 Aug 2019 : use_syscon and use_c2phc4c have a function to add a symbol.
+
 Wed 7 Aug 2019 : in use_padcon.adb, added the instructions to write the
   target, start, and start solutions when the output file name is given.
   Added jobs to use_syscon, use_solcon, and use_c2phc4c for projective

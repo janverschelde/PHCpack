@@ -360,14 +360,21 @@ function use_syscon ( job : integer32;
 --                  applies a 1-homogeneous projective transformation,
 --                  adding a random linear equation if a[0] == 0,
 --                  or the linear equation z0 - 1 = 0 if a[0]] = 1;
---   job    = 892 : to the system with double double precision coefficients,
+--          = 892 : to the system with double double precision coefficients,
 --                  applies a 1-homogeneous projective transformation,
 --                  adding a random linear equation if a[0] == 0,
 --                  or the linear equation z0 - 1 = 0 if a[0]] = 1;
---   job    = 893 : to the system with quad double precision coefficients,
+--          = 893 : to the system with quad double precision coefficients,
 --                  applies a 1-homogeneous projective transformation,
 --                  adding a random linear equation if a[0] == 0,
 --                  or the linear equation z0 - 1 = 0 if a[0]] = 1.
+--
+-- adding a symbol passed as string :
+--
+--   job    = 897 : in b are the a[0] characters of the string which
+--                  defines the name of the variable to be added to
+--                  the symbol table, this name represents the variable
+--                  added as the last coordinate in the homogenization.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
