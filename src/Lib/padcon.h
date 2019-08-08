@@ -52,10 +52,10 @@ int padcon_get_homotopy_continuation_parameter ( int k, double *val );
 /*
  * DESCRIPTION :
  *   Returns in val the value of the k-th continuation parameter,
- *   if k ranges between 1 and 13.
+ *   if k ranges between 1 and 12.
  *
  * ON ENTRY :
- *   k        an integer number between 1 and 13.
+ *   k        an integer number between 1 and 12.
  *
  * ON RETURN 
  *   val      the value for the k-th homotopy continuation parameter. */
@@ -64,10 +64,10 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val );
 /*
  * DESCRIPTION :
  *   Sets the value of the k-th continuation parameter to val,
- *   if k ranges between 1 and 13.
+ *   if k ranges between 1 and 12.
  *
  * ON ENTRY :
- *   k        an integer number between 1 and 13.
+ *   k        an integer number between 1 and 12.
  *
  * ON RETURN 
  *   val      the value for the k-th homotopy continuation parameter. */

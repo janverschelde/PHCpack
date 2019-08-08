@@ -8123,7 +8123,7 @@ static PyObject *py2c_padcon_get_homotopy_continuation_parameter
 
    if(idx == 1)
       return Py_BuildValue("(d,d)", val[0], val[1]);
-   else if((idx == 2) || (idx == 3) || (idx == 12) || (idx == 13))
+   else if((idx == 2) || (idx == 3) || (idx == 11) || (idx == 12))
    {
       int parval = (int) val[0];
       return Py_BuildValue("i",parval);
