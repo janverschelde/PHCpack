@@ -4,6 +4,7 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Homotopy;
 with QuadDobl_Complex_Series_Vectors;
@@ -15,6 +16,7 @@ with Homotopy_Newton_Steps;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Standard_Pade_Trackers;
+with Homotopy_Coefficient_Scaling;
 
 package body QuadDobl_Pade_Trackers is
 
@@ -217,8 +219,8 @@ package body QuadDobl_Pade_Trackers is
     sstep,dstep,pstep : double_float;
     dd_t : quad_double;
     onetarget : constant double_float := 1.0;
-    alpha : constant double_float := pars.alpha;
-    tolcff : constant double_float := pars.epsilon;
+   -- alpha : constant double_float := pars.alpha;
+   -- tolcff : constant double_float := pars.epsilon;
 
   begin
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
@@ -256,8 +258,8 @@ package body QuadDobl_Pade_Trackers is
     sstep,dstep,pstep : double_float;
     dd_t : quad_double;
     onetarget : constant double_float := 1.0;
-    alpha : constant double_float := pars.alpha;
-    tolcff : constant double_float := pars.epsilon;
+   -- alpha : constant double_float := pars.alpha;
+   -- tolcff : constant double_float := pars.epsilon;
 
   begin
     Series_and_Predictors.Newton_Prediction
@@ -328,8 +330,8 @@ package body QuadDobl_Pade_Trackers is
     sstep,dstep,pstep : double_float;
     dd_t : quad_double;
     onetarget : constant double_float := 1.0;
-    alpha : constant double_float := pars.alpha;
-    tolcff : constant double_float := pars.epsilon;
+   -- alpha : constant double_float := pars.alpha;
+   -- tolcff : constant double_float := pars.epsilon;
 
   begin
     Series_and_Predictors.Newton_Prediction
@@ -372,8 +374,8 @@ package body QuadDobl_Pade_Trackers is
     sstep,dstep,pstep : double_float;
     dd_t : quad_double;
     onetarget : constant double_float := 1.0;
-    alpha : constant double_float := pars.alpha;
-    tolcff : constant double_float := pars.epsilon;
+   -- alpha : constant double_float := pars.alpha;
+   -- tolcff : constant double_float := pars.epsilon;
 
   begin
     Series_and_Predictors.Newton_Prediction -- verbose flag set to false
@@ -609,6 +611,8 @@ package body QuadDobl_Pade_Trackers is
     err,rco,res,predres : double_float;
     nbrit : natural32 := 0;
     wrk_fcf : QuadDobl_Complex_Series_VecVecs.VecVec(fcf'range);
+    qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+             := Standard_to_QuadDobl_Complex(pars.gamma);
 
   begin
     if vrblvl > 0
@@ -618,6 +622,9 @@ package body QuadDobl_Pade_Trackers is
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := QuadDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
+      qd_t := Quad_Double_Numbers.Create(t);
+      Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+        (wrk_fcf,wrk_sol,qd_t,qd_gamma);
       Step_Control
         (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
          cntsstp,cntdstp,cntpstp);
@@ -684,6 +691,8 @@ package body QuadDobl_Pade_Trackers is
     err,rco,res,predres : double_float;
     nbrit : natural32 := 0;
     wrk_fcf : QuadDobl_Complex_Series_VecVecs.VecVec(fcf'range);
+    qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+             := Standard_to_QuadDobl_Complex(pars.gamma);
 
   begin
     if vrblvl > 0
@@ -693,9 +702,14 @@ package body QuadDobl_Pade_Trackers is
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := QuadDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
+      qd_t := Quad_Double_Numbers.Create(t);
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
+        Homotopy_Coefficient_Scaling.Last_Coefficients
+          (file,wrk_fcf(wrk_fcf'last),qd_t,qd_gamma);
       end if;
+      Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+        (file,fhm,wrk_fcf,wrk_sol,qd_t,qd_gamma); -- ,true);
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
          pv,poles,t,step,cntsstp,cntdstp,cntpstp);

@@ -12,7 +12,6 @@ with Homotopy_Mixed_Residuals;
 with Homotopy_Newton_Steps;
 with Series_and_Homotopies;
 with Series_and_Predictors;
-
 with Homotopy_Coefficient_Scaling;
 
 package body Standard_Pade_Trackers is
