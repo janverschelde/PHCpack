@@ -149,31 +149,38 @@ package Drivers_to_Series_Trackers is
 
   procedure Refine_Roots
               ( file : in file_type; nq : in integer32;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Refine_Roots
               ( file : in file_type; nq : in integer32;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Refine_Roots
               ( file : in file_type; nq : in integer32;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs the root refiners on the solutions in the list sols,
   --   where the nq is the number of equations.
   --   Output is written to the file.
+  --   The verbose level is given in vrblvl.
 
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs the root refiners on the solutions in the list sols,
@@ -181,5 +188,6 @@ package Drivers_to_Series_Trackers is
   --   Output is written to the file.
   --   The mixed residuals are computed, evaluating the solutions
   --   at the homotopy polynomials with positive coefficients in abh.
+  --   The verbose level is given in vrblvl.
 
 end Drivers_to_Series_Trackers;

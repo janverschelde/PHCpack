@@ -705,8 +705,8 @@ package body QuadDobl_Pade_Trackers is
       qd_t := Quad_Double_Numbers.Create(t);
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
-        Homotopy_Coefficient_Scaling.Last_Coefficients
-          (file,wrk_fcf(wrk_fcf'last),qd_t,qd_gamma);
+       -- Homotopy_Coefficient_Scaling.Last_Coefficients
+       --   (file,wrk_fcf(wrk_fcf'last),qd_t,qd_gamma);
       end if;
       Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
         (file,fhm,wrk_fcf,wrk_sol,qd_t,qd_gamma); -- ,true);

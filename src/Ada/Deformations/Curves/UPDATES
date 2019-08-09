@@ -1,6 +1,8 @@
 Fri 9 Aug 2019 : double double and quad double extensions to the procedures
   in homotopy_coefficient_scaling, updates in standard_pade_trackers.adb,
   dobldobl_pade_trackers.adb and quaddobl_pade_trackes.adb.
+  In drivers_to_series_trackers, transformed back to affine coordinates,
+  updated series_path_trackers.adb to pass the verbose level.
 
 Wed 7 Aug 2019 : extended homotopy_coefficient_scaling with a silent version
   of the scaling procedure, updated standard_pade_trackers.adb.
