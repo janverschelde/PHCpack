@@ -984,3 +984,33 @@ int solcon_quaddobl_one_homogenization ( void )
 
    return fail;
 }
+
+int solcon_standard_one_affinization ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(898,a,b,c);
+
+   return fail;
+}
+
+int solcon_dobldobl_one_affinization ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(899,a,b,c);
+
+   return fail;
+}
+
+int solcon_quaddobl_one_affinization ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc4c(900,a,b,c);
+
+   return fail;
+}

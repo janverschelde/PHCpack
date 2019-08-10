@@ -965,4 +965,22 @@ int solcon_quaddobl_one_homogenization ( void );
  *   Add one extra coordinate one to every solution in the container
  *   for solutions in double double precision. */
 
+int solcon_standard_one_affinization ( void );
+/*
+ * DESCRIPTION :
+ *   Divides every coordinate by the last coordinate of every solution
+ *   in the container for solutions in standard double precision. */
+
+int solcon_dobldobl_one_affinization ( void );
+/*
+ * DESCRIPTION :
+ *   Divides every coordinate by the last coordinate of every solution
+ *   in the container for solutions in double double precision. */
+
+int solcon_quaddobl_one_affinization ( void );
+/*
+ * DESCRIPTION :
+ *   Divides every coordinate by the last coordinate of every solution
+ *   in the container for solutions in quad double precision. */
+
 #endif
