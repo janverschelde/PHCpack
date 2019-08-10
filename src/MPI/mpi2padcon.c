@@ -343,7 +343,7 @@ int standard_track_paths
 
    if(nbc == 0)
    {
-      fail = padcon_standard_track(0,"",verbose,homo);
+      fail = padcon_standard_track(0,"",0,verbose,homo);
    }
    else
    {
@@ -354,7 +354,10 @@ int standard_track_paths
       myfile[nbc+cnt] = '\0';
       if(verbose > 0)
          printf("Node %d will write to file \"%s\".\n",myid,myfile);
-      fail = padcon_standard_track(nbc+cnt,myfile,verbose,homo);
+      if(myid == 0) // manager uses the defined output file
+         fail = padcon_standard_track(nbc+cnt,myfile,0,verbose,homo);
+      else          // files for workers are local
+         fail = padcon_standard_track(nbc+cnt,myfile,1,verbose,homo);
    }
    return fail;
 }
@@ -368,7 +371,7 @@ int dobldobl_track_paths
 
    if(nbc == 0)
    {
-      fail = padcon_dobldobl_track(0,"",verbose,homo);
+      fail = padcon_dobldobl_track(0,"",0,verbose,homo);
    }
    else
    {
@@ -379,7 +382,10 @@ int dobldobl_track_paths
       myfile[nbc+cnt] = '\0';
       if(verbose > 0)
          printf("Node %d will write to file \"%s\".\n",myid,myfile);
-      fail = padcon_dobldobl_track(nbc+cnt,myfile,verbose,homo);
+      if(myid == 0) // manager uses the defined output file
+         fail = padcon_dobldobl_track(nbc+cnt,myfile,0,verbose,homo);
+      else          // files for workers are local
+         fail = padcon_dobldobl_track(nbc+cnt,myfile,1,verbose,homo);
    }
    return fail;
 }
@@ -393,7 +399,7 @@ int quaddobl_track_paths
 
    if(nbc == 0)
    {
-      fail = padcon_quaddobl_track(0,"",verbose,homo);
+      fail = padcon_quaddobl_track(0,"",0,verbose,homo);
    }
    else
    {
@@ -404,7 +410,10 @@ int quaddobl_track_paths
       myfile[nbc+cnt] = '\0';
       if(verbose > 0)
          printf("Node %d will write to file \"%s\".\n",myid,myfile);
-      fail = padcon_quaddobl_track(nbc+cnt,myfile,verbose,homo);
+      if(myid == 0) // manager uses the defined output file
+         fail = padcon_quaddobl_track(nbc+cnt,myfile,0,verbose,homo);
+      else          // files for workers are local
+         fail = padcon_quaddobl_track(nbc+cnt,myfile,1,verbose,homo);
    }
    return fail;
 }
@@ -499,8 +508,15 @@ int standard_run
 
    if(myid == 0)
    {
-      fail = copy_container_to_target_solutions();
-      fail = write_target_solutions();
+      if(homo > 0)
+      {
+         fail = solcon_standard_one_affinization();
+         fail = copy_target_system_to_container();
+         fail = syscon_standard_one_affinization();
+      }
+      fail = syscon_write_standard_system();
+      fail = solcon_write_solution_banner_to_defined_output_file();
+      fail = solcon_write_standard_solutions();
    }
    endwtime = MPI_Wtime();
    wtime = endwtime-startwtime;
@@ -605,8 +621,15 @@ int dobldobl_run
 
    if(myid == 0)
    {
-      fail = copy_dobldobl_container_to_target_solutions();
-      fail = write_dobldobl_target_solutions();
+      if(homo > 0)
+      {
+         fail = solcon_dobldobl_one_affinization();
+         fail = copy_dobldobl_target_system_to_container();
+         fail = syscon_dobldobl_one_affinization();
+      }
+      fail = syscon_write_dobldobl_system();
+      fail = solcon_write_solution_banner_to_defined_output_file();
+      fail = solcon_write_dobldobl_solutions();
    }
    endwtime = MPI_Wtime();
    wtime = endwtime-startwtime;
@@ -711,8 +734,15 @@ int quaddobl_run
 
    if(myid == 0)
    {
-      fail = copy_quaddobl_container_to_target_solutions();
-      fail = write_quaddobl_target_solutions();
+      if(homo > 0) 
+      {
+         fail = solcon_quaddobl_one_affinization();
+         fail = copy_quaddobl_target_system_to_container();
+         fail = syscon_quaddobl_one_affinization();
+      }
+      fail = syscon_write_quaddobl_system();
+      fail = solcon_write_solution_banner_to_defined_output_file();
+      fail = solcon_write_quaddobl_solutions();
    }
    endwtime = MPI_Wtime();
    wtime = endwtime-startwtime;
