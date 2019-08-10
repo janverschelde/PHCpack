@@ -1,3 +1,5 @@
+Sat 10 Aug 2019 : added to syscon functions to transform to affine coordinates.
+
 Fri 9 Aug 2019 : added to solcon functions to transform to affine coordinates.
 
 Thu 8 Aug 2019 : to syscon, added a function to add a symbol to the table.

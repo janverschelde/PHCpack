@@ -1172,3 +1172,33 @@ int syscon_add_symbol ( int nbc, char *name )
 
    return fail;
 }
+
+int syscon_standard_one_affinization ( void )
+{
+   int fail,a,b;
+   double c;
+
+   fail = _ada_use_c2phc4c(901,&a,&b,&c);
+
+   return fail;
+}
+
+int syscon_dobldobl_one_affinization ( void )
+{
+   int fail,a,b;
+   double c;
+
+   fail = _ada_use_c2phc4c(902,&a,&b,&c);
+
+   return fail;
+}
+
+int syscon_quaddobl_one_affinization ( void )
+{
+   int fail,a,b;
+   double c;
+
+   fail = _ada_use_c2phc4c(903,&a,&b,&c);
+
+   return fail;
+}

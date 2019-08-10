@@ -957,4 +957,25 @@ int syscon_add_symbol ( int nbc, char *name );
  *   This symbol represents the last variable added in the homogeneous
  *   coordinate transformation. */
 
+int syscon_standard_one_affinization ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the standard double precision container
+ *   by its transformation to affine coordinates, substituting the
+ *   value of the last coordinate by one and removing the last equation. */
+
+int syscon_dobldobl_one_affinization ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the double double precision container
+ *   by its transformation to affine coordinates, substituting the
+ *   value of the last coordinate by one and removing the last equation. */
+
+int syscon_quaddobl_one_affinization ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the quad double precision container
+ *   by its transformation to affine coordinates, substituting the
+ *   value of the last coordinate by one and removing the last equation. */
+
 #endif
