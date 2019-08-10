@@ -324,12 +324,21 @@ function use_solcon ( job : integer32;
 --   job     = 894 : to the solutions in double precision,
 --                   applies a 1-homogeneous projective transformation,
 --                   augmenting every solution with one as extra coordinate;
---   job     = 895 : to the system in double double precision,
+--           = 895 : to the solutions in double double precision,
 --                   applies a 1-homogeneous projective transformation,
 --                   augmenting every solution with one as extra coordinate;
---   job     = 896 : to the system in quad double precision,
+--           = 896 : to the solutions in quad double precision,
 --                   applies a 1-homogeneous projective transformation,
---                   augmenting every solution with one as extra coordinate.
+--                   augmenting every solution with one as extra coordinate;
+--           = 898 : transforms the solutions in double precision
+--                   into affine coordinates, dividing every coordinate
+--                   by the value of the last coordinate of the solution;
+--           = 899 : transforms the solutions in double double precision
+--                   into affine coordinates, dividing every coordinate
+--                   by the value of the last coordinate of the solution;
+--           = 900 : transforms the solutions in quad double precision
+--                   into affine coordinates, dividing every coordinate
+--                   by the value of the last coordinate of the solution.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong,

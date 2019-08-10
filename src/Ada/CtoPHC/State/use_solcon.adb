@@ -1729,6 +1729,42 @@ function use_solcon ( job : integer32;
     return 0;
   end Job896;
 
+  function Job898 return integer32 is -- double affine transformations
+
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+
+  begin
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Affine_Transformation(sols);
+    end if;
+    return 0;
+  end Job898;
+
+  function Job899 return integer32 is -- dobldobl affine transformations
+
+    sols : DoblDobl_Complex_Solutions.Solution_List
+         := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    if not DoblDobl_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Affine_Transformation(sols);
+    end if;
+    return 0;
+  end Job899;
+
+  function Job900 return integer32 is -- quaddobl affine transformations
+
+    sols : QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Affine_Transformation(sols);
+    end if;
+    return 0;
+  end Job900;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1846,6 +1882,10 @@ function use_solcon ( job : integer32;
       when 894 => return Job894; -- 1-homogeneous standard solutions
       when 895 => return Job895; -- 1-homogeneous dobldobl solutions
       when 896 => return Job896; -- 1-homogeneous quaddobl solutions
+     -- affine transformations of the solutions
+      when 898 => return Job898; -- double solutions to affine
+      when 899 => return Job899; -- double double solutions to affine
+      when 900 => return Job900; -- quad double solutions to affine
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

@@ -3339,6 +3339,7 @@ function use_c2phc4c ( job : integer32;
       when 891..893 => return use_syscon(job,a,b,c);
      -- projective transformations of solutions
       when 894..896 => return use_solcon(job,a,b,c);
+      when 898..900 => return use_solcon(job,a,b,c); -- to affine
      -- adding a symbol passed as string
       when 897 => return use_syscon(job,a,b,c);
      -- getting, setting the seed and the version string

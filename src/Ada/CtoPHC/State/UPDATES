@@ -1,3 +1,6 @@
+Fri 9 Aug 2019 : extended use_solcon and use_c2phc4c with jobs to transform
+  solutions into affine coordinates.
+
 Thu 8 Aug 2019 : use_syscon and use_c2phc4c have a function to add a symbol.
   Bug fix in use_c2phc4c.adb, called use_syscon instead of use_solcon.
   Extended use_padcon with an extra parameter to indicate that homogeneous
