@@ -21,6 +21,7 @@ quaddobl_embed_laurentials         : embed quaddobl Laurent polynomial
 multprec_embed_polynomials         : embed multprec polynomial in larger space
 homogenization                     : making polynomials homogeneous
 projective_transformations         : transform polynomials and solutions
+affine_transformations             : transform systems into affine coordinates
 standard_homotopy                  : homotopy for standard polynomial systems
 standard_laurent_homotopy          : homotopy for standard Laurent systems
 dobldobl_homotopy                  : homotopy for systems of double doubles

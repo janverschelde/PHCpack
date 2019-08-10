@@ -2,23 +2,18 @@ with Communications_with_User;           use Communications_with_User;
 with Time_Stamps;
 with Characters_and_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Double_Double_Numbers;              use Double_Double_Numbers;
-with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
-with Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Hessians;
-with DoblDobl_Complex_Poly_Functions;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Hessians;
-with QuadDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Jaco_Matrices;
@@ -30,6 +25,7 @@ with DoblDobl_Coefficient_Homotopy;
 with QuadDobl_Homotopy;
 with QuadDobl_Coefficient_Homotopy;
 with Projective_Transformations;
+with Affine_Transformations;
 with Standard_Mixed_Residuals;
 with DoblDobl_Mixed_Residuals;
 with QuadDobl_Mixed_Residuals;
@@ -549,12 +545,8 @@ package body Drivers_to_Series_Trackers is
         q : Standard_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
         abq : Standard_Complex_Poly_Systems.Poly_Sys(q'range);
         evabq : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
-        one : constant Standard_Complex_Numbers.Complex_Number
-            := Standard_Complex_Numbers.Create(1.0);
       begin
-        for i in q'range loop
-          q(i) := Standard_Complex_Poly_Functions.Eval(p(i),one,nbreqs);
-        end loop;
+        q := Affine_Transformations.Make_Affine(p);
         abq := Standard_Mixed_Residuals.AbsVal(q);
         evabq := Standard_Complex_Poly_SysFun.Create(abq);
         new_line(file);
@@ -597,13 +589,8 @@ package body Drivers_to_Series_Trackers is
         q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
         abq : DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range);
         evabq : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
-        dd_one : constant double_double := create(1.0);
-        one : constant DoblDobl_Complex_Numbers.Complex_Number
-            := DoblDobl_Complex_Numbers.Create(dd_one);
       begin
-        for i in q'range loop
-          q(i) := DoblDobl_Complex_Poly_Functions.Eval(p(i),one,nbreqs);
-        end loop;
+        q := Affine_Transformations.Make_Affine(p);
         abq := DoblDobl_Mixed_Residuals.AbsVal(q);
         evabq := DoblDobl_Complex_Poly_SysFun.Create(abq);
         new_line(file);
@@ -646,13 +633,8 @@ package body Drivers_to_Series_Trackers is
         q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
         abq : QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range);
         evabq : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
-        qd_one : constant quad_double := create(1.0);
-        one : constant QuadDobl_Complex_Numbers.Complex_Number
-            := QuadDobl_Complex_Numbers.Create(qd_one);
       begin
-        for i in q'range loop
-          q(i) := QuadDobl_Complex_Poly_Functions.Eval(p(i),one,nbreqs);
-        end loop;
+        q := Affine_Transformations.Make_Affine(p);
         abq := QuadDobl_Mixed_Residuals.AbsVal(q);
         evabq := QuadDobl_Complex_Poly_SysFun.Create(abq);
         new_line(file);
