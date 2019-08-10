@@ -197,7 +197,7 @@ function use_padcon ( job : integer32;
   --   otherwise, creates an output file with the given name.
   --   If homogeneous, then homogeneous coordinates are applied.
 
-    file : file_type;
+   -- file : file_type; -- use the output_file in PHCpack_Operations
     start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
@@ -226,20 +226,24 @@ function use_padcon ( job : integer32;
           (standard_output,target'last,sols,homconpars.all,verbose);
       end if;
     else
-      Create(file,out_file,name);
-      put(file,natural32(target'last),target.all);
-      new_line(file);
-      put_line(file,"THE START SYSTEM :");
-      put(file,natural32(start'last),start.all);
-      new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
-      put(file,Standard_Complex_Solutions.Length_Of(sols),
+     -- Create(file,out_file,name);
+      PHCpack_Operations.Define_Output_File(name);
+      put(PHCpack_Operations.output_file,natural32(target'last),target.all);
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
+      put(PHCpack_Operations.output_file,natural32(start'last),start.all);
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE START SOLUTIONS :");
+      put(PHCpack_Operations.output_file,
+          Standard_Complex_Solutions.Length_Of(sols),
           natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
-      new_line(file);
-      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
+      new_line(PHCpack_Operations.output_file);
+      Homotopy_Continuation_Parameters_io.put
+        (PHCpack_Operations.output_file,homconpars.all);
       Drivers_to_Series_Trackers.Standard_Track
-        (file,target'last,sols,homconpars.all,verbose);
-      close(file);
+        (PHCpack_Operations.output_file,
+         target'last,sols,homconpars.all,verbose);
+     -- close(file); -- do not close for later writing solutions!
     end if;
    -- put_line("Clearing the solutions container ...");
     Standard_Solutions_Container.Clear;
@@ -257,7 +261,7 @@ function use_padcon ( job : integer32;
 
     use DoblDobl_Complex_Numbers_cv;
 
-    file : file_type;
+   -- file : file_type; -- use output_file of PHCpack_Operations
     start,target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
@@ -290,20 +294,24 @@ function use_padcon ( job : integer32;
           (standard_output,target'last,sols,homconpars.all,verbose);
       end if;
     else
-      Create(file,out_file,name);
-      put(file,natural32(target'last),target.all);
-      new_line(file);
-      put_line(file,"THE START SYSTEM :");
-      put(file,natural32(start'last),start.all);
-      new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
-      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+     -- Create(file,out_file,name);
+      PHCpack_Operations.Define_Output_File(name);
+      put(PHCpack_Operations.output_file,natural32(target'last),target.all);
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
+      put(PHCpack_Operations.output_file,natural32(start'last),start.all);
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE START SOLUTIONS :");
+      put(PHCpack_Operations.output_file,
+          DoblDobl_Complex_Solutions.Length_Of(sols),
           natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      new_line(file);
-      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
+      new_line(PHCpack_Operations.output_file);
+      Homotopy_Continuation_Parameters_io.put
+        (PHCpack_Operations.output_file,homconpars.all);
       Drivers_to_Series_Trackers.DoblDobl_Track
-        (file,target'last,sols,homconpars.all,verbose);
-      close(file);
+        (PHCpack_Operations.output_file,
+         target'last,sols,homconpars.all,verbose);
+     -- close(file); -- needed for later writing
     end if;
     DoblDobl_Solutions_Container.Clear;
     DoblDobl_Solutions_Container.Initialize(sols);
@@ -320,7 +328,7 @@ function use_padcon ( job : integer32;
 
     use QuadDobl_Complex_Numbers_cv;
 
-    file : file_type;
+   -- file : file_type; -- use output_file of PHCpack_Operations
     start,target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
@@ -353,20 +361,24 @@ function use_padcon ( job : integer32;
           (standard_output,target'last,sols,homconpars.all,verbose);
       end if;
     else
-      Create(file,out_file,name);
-      put(file,natural32(target'last),target.all);
-      new_line(file);
-      put_line(file,"THE START SYSTEM :");
-      put(file,natural32(start'last),start.all);
-      new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
-      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+     -- Create(file,out_file,name);
+      PHCpack_Operations.Define_Output_File(name);
+      put(PHCpack_Operations.output_file,natural32(target'last),target.all);
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE START SYSTEM :");
+      put(PHCpack_Operations.output_file,natural32(start'last),start.all);
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE START SOLUTIONS :");
+      put(PHCpack_Operations.output_file,
+          QuadDobl_Complex_Solutions.Length_Of(sols),
           natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      new_line(file);
-      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
+      new_line(PHCpack_Operations.output_file);
+      Homotopy_Continuation_Parameters_io.put
+        (PHCpack_Operations.output_file,homconpars.all);
       Drivers_to_Series_Trackers.QuadDobl_Track
-        (file,target'last,sols,homconpars.all,verbose);
-      close(file);
+        (PHCpack_Operations.output_file,
+         target'last,sols,homconpars.all,verbose);
+     -- close(file); -- same file may be needed for writing later
     end if;
     QuadDobl_Solutions_Container.Clear;
     QuadDobl_Solutions_Container.Initialize(sols);
