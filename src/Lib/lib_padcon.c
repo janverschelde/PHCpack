@@ -378,7 +378,15 @@ void standard_track ( int nbc, char* name, int verbose, int homo )
 
    fail = padcon_standard_track(nbc,name,verbose,homo);
 
-   if(nbc == 0) fail = solcon_write_standard_solutions();
+   if(homo > 0)
+   {
+      fail = solcon_standard_one_affinization();
+      fail = copy_target_system_to_container();
+      fail = syscon_standard_one_affinization();
+   }
+   fail = syscon_write_standard_system();
+   if(nbc != 0) fail = solcon_write_solution_banner_to_defined_output_file();
+   fail = solcon_write_standard_solutions();
 }
 
 void dobldobl_track ( int nbc, char* name, int verbose, int homo )
@@ -397,7 +405,15 @@ void dobldobl_track ( int nbc, char* name, int verbose, int homo )
 
    fail = padcon_dobldobl_track(nbc,name,verbose,homo);
 
-   if(nbc == 0) fail = solcon_write_dobldobl_solutions();
+   if(homo > 0)
+   {
+      fail = solcon_dobldobl_one_affinization();
+      fail = copy_dobldobl_target_system_to_container();
+      fail = syscon_dobldobl_one_affinization();
+   }
+   fail = syscon_write_dobldobl_system();
+   if(nbc != 0) fail = solcon_write_solution_banner_to_defined_output_file();
+   fail = solcon_write_dobldobl_solutions();
 }
 
 void quaddobl_track ( int nbc, char* name, int verbose, int homo )
@@ -416,7 +432,15 @@ void quaddobl_track ( int nbc, char* name, int verbose, int homo )
 
    fail = padcon_quaddobl_track(nbc,name,verbose,homo);
 
-   if(nbc == 0) fail = solcon_write_quaddobl_solutions();
+   if(homo > 0) 
+   {
+      fail = solcon_quaddobl_one_affinization();
+      fail = copy_quaddobl_target_system_to_container();
+      fail = syscon_quaddobl_one_affinization();
+   }
+   fail = syscon_write_quaddobl_system();
+   if(nbc != 0) fail = solcon_write_solution_banner_to_defined_output_file();
+   fail = solcon_write_quaddobl_solutions();
 }
 
 int maximal_series_degree ( void )
