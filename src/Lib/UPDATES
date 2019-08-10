@@ -1,6 +1,7 @@
 Sat 10 Aug 2019 : added to syscon functions to transform to affine coordinates.
   Updated lib_padcon so the system and solutions in affine coordinates are
-  written at the end of the output file.
+  written at the end of the output file.  Updated padcon and lib_padcon for
+  the extra flag to indicate whether the file is a local variable or not.
 
 Fri 9 Aug 2019 : added to solcon functions to transform to affine coordinates.
 

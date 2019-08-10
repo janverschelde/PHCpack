@@ -193,10 +193,11 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
    return fail;
 }
 
-int padcon_standard_track ( int nbc, char* name, int verbose, int homo )
+int padcon_standard_track
+ ( int nbc, char *name, int locfile, int verbose, int homo )
 {
    int fail;
-   int pars[4];
+   int pars[5];
    int *b;
    double *c;
 
@@ -204,6 +205,7 @@ int padcon_standard_track ( int nbc, char* name, int verbose, int homo )
    pars[1] = nbc;
    pars[2] = verbose;
    pars[3] = homo;
+   pars[4] = locfile;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);
@@ -216,10 +218,11 @@ int padcon_standard_track ( int nbc, char* name, int verbose, int homo )
    return fail;
 }
 
-int padcon_dobldobl_track ( int nbc, char* name, int verbose, int homo )
+int padcon_dobldobl_track
+ ( int nbc, char *name, int locfile, int verbose, int homo )
 {
    int fail;
-   int pars[4];
+   int pars[5];
    int *b;
    double *c;
 
@@ -227,6 +230,7 @@ int padcon_dobldobl_track ( int nbc, char* name, int verbose, int homo )
    pars[1] = nbc;
    pars[2] = verbose;
    pars[3] = homo;
+   pars[4] = locfile;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);
@@ -239,10 +243,11 @@ int padcon_dobldobl_track ( int nbc, char* name, int verbose, int homo )
    return fail;
 }
 
-int padcon_quaddobl_track ( int nbc, char* name, int verbose, int homo )
+int padcon_quaddobl_track
+ ( int nbc, char *name, int locfile, int verbose, int homo )
 {
    int fail;
-   int pars[4];
+   int pars[5];
    int *b;
    double *c;
 
@@ -250,6 +255,7 @@ int padcon_quaddobl_track ( int nbc, char* name, int verbose, int homo )
    pars[1] = nbc;
    pars[2] = verbose;
    pars[3] = homo;
+   pars[4] = locfile;
 
    if(nbc == 0)
       fail = _ada_use_c2phc4c(739,pars,b,c);

@@ -72,7 +72,8 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val );
  * ON RETURN 
  *   val      the value for the k-th homotopy continuation parameter. */
 
-int padcon_standard_track ( int nbc, char* name, int verbose, int homo );
+int padcon_standard_track
+ ( int nbc, char *name, int locfile, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -83,10 +84,15 @@ int padcon_standard_track ( int nbc, char* name, int verbose, int homo );
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
  *            the file name has nbc characters;
+ *   locfile  a flag to indicate if the file is local to the function,
+ *            if 0, then the file is the defined output file, which is
+ *            created but left open, so output may still be written to it,
+ *            if 1, only this function will write to file;
  *   verbose  if > 0, then more information is written;
  *   homo     if > 0, then homogeneous coordinates are applied. */
 
-int padcon_dobldobl_track ( int nbc, char* name, int verbose, int homo );
+int padcon_dobldobl_track
+ ( int nbc, char *name, int locfile, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -97,10 +103,14 @@ int padcon_dobldobl_track ( int nbc, char* name, int verbose, int homo );
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
  *            the file name has nbc characters;
+ *   locfile  a flag to indicate if the file is local to the function,
+ *            if 0, then the file is the defined output file, which is
+ *            created but left open, so output may still be written to it,
  *   verbose  if > 0, then more information is written;
  *   homo     if > 0, then homogeneous coordinates are applied. */
 
-int padcon_quaddobl_track ( int nbc, char* name, int verbose, int homo );
+int padcon_quaddobl_track
+ ( int nbc, char *name, int locfile, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -111,6 +121,9 @@ int padcon_quaddobl_track ( int nbc, char* name, int verbose, int homo );
  *            equals 0 if no output will be written to file;
  *   name     defines the name of the output file,
  *            the file name has nbc characters;
+ *   locfile  a flag to indicate if the file is local to the function,
+ *            if 0, then the file is the defined output file, which is
+ *            created but left open, so output may still be written to it,
  *   verbose  if > 0, then more information is written;
  *   homo     if > 0, then homogeneous coordinates are applied. */
 

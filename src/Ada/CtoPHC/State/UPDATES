@@ -1,6 +1,8 @@
 Sat 10 Aug 2019 : added jobs to use_syscon and use_c2phc4c to transform a
   polynomial system into affine coordinates.  In use_padcon.adb, used the
   output_file of PHCpack_Operations instead of a local file variable.
+  Added an extra parameter to use_padcon, a flag to indicate whether the
+  file is local or the defined output file.
 
 Fri 9 Aug 2019 : extended use_solcon and use_c2phc4c with jobs to transform
   solutions into affine coordinates.

@@ -56,7 +56,7 @@ void quaddobl_projective_transformation ( void );
  *   Transforms as well the start and target systems
  *   in quad double precision.  Adds "Z0" to the symbol table. */
 
-void standard_track ( int nbc, char* name, int verbose, int homo );
+void standard_track ( int nbc, char *name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   Tracks in standard double precision.  On input is the name of the
@@ -66,7 +66,7 @@ void standard_track ( int nbc, char* name, int verbose, int homo );
  *   If verbose > 0, then more output is written.
  *   If homo > 0, then tracking happens in homogeneous coordinates. */
 
-void dobldobl_track ( int nbc, char* name, int verbose, int homo );
+void dobldobl_track ( int nbc, char *name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   Tracks in double double precision.  On input is the name of the
@@ -76,7 +76,7 @@ void dobldobl_track ( int nbc, char* name, int verbose, int homo );
  *   If verbose > 0, then more output is written.
  *   If homo > 0, then tracking happens in homogeneous coordinates. */
 
-void quaddobl_track ( int nbc, char* name, int verbose, int homo );
+void quaddobl_track ( int nbc, char *name, int verbose, int homo );
 /*
  * DESCRIPTION :
  *   Tracks in quad double precision.  On input is the name of the
@@ -362,7 +362,7 @@ void quaddobl_projective_transformation ( void )
    fail = syscon_add_symbol(2,name);
 }
 
-void standard_track ( int nbc, char* name, int verbose, int homo )
+void standard_track ( int nbc, char *name, int verbose, int homo )
 {
    int fail,length;
 
@@ -376,7 +376,7 @@ void standard_track ( int nbc, char* name, int verbose, int homo )
 
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_standard_track(nbc,name,verbose,homo);
+   fail = padcon_standard_track(nbc,name,0,verbose,homo);
 
    if(homo > 0)
    {
@@ -389,7 +389,7 @@ void standard_track ( int nbc, char* name, int verbose, int homo )
    fail = solcon_write_standard_solutions();
 }
 
-void dobldobl_track ( int nbc, char* name, int verbose, int homo )
+void dobldobl_track ( int nbc, char *name, int verbose, int homo )
 {
    int fail,length;
 
@@ -403,7 +403,7 @@ void dobldobl_track ( int nbc, char* name, int verbose, int homo )
 
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_dobldobl_track(nbc,name,verbose,homo);
+   fail = padcon_dobldobl_track(nbc,name,0,verbose,homo);
 
    if(homo > 0)
    {
@@ -416,7 +416,7 @@ void dobldobl_track ( int nbc, char* name, int verbose, int homo )
    fail = solcon_write_dobldobl_solutions();
 }
 
-void quaddobl_track ( int nbc, char* name, int verbose, int homo )
+void quaddobl_track ( int nbc, char *name, int verbose, int homo )
 {
    int fail,length;
 
@@ -430,7 +430,7 @@ void quaddobl_track ( int nbc, char* name, int verbose, int homo )
 
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_quaddobl_track(nbc,name,verbose,homo);
+   fail = padcon_quaddobl_track(nbc,name,0,verbose,homo);
 
    if(homo > 0) 
    {

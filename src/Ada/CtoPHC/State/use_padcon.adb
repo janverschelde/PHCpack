@@ -189,15 +189,18 @@ function use_padcon ( job : integer32;
   end Job3;
 
   procedure Standard_Track
-              ( name : in string; verbose,homogeneous : in boolean ) is
+              ( name : in string;
+                localfile,verbose,homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
+  --   The file name is the defined output file if localfile is false,
+  --   otherwise, if localfile, the the file is a local variable.
   --   If homogeneous, then homogeneous coordinates are applied.
 
-   -- file : file_type; -- use the output_file in PHCpack_Operations
+    file : file_type;
     start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
@@ -225,8 +228,22 @@ function use_padcon ( job : integer32;
         Drivers_to_Series_Trackers.Standard_Track
           (standard_output,target'last,sols,homconpars.all,verbose);
       end if;
+    elsif localfile then
+      Create(file,out_file,name);
+      put(file,natural32(target'last),target.all);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,natural32(start'last),start.all);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,Standard_Complex_Solutions.Length_Of(sols),
+          natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+      new_line(file);
+      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
+      Drivers_to_Series_Trackers.Standard_Track
+        (file,target'last,sols,homconpars.all,verbose);
+      close(file);
     else
-     -- Create(file,out_file,name);
       PHCpack_Operations.Define_Output_File(name);
       put(PHCpack_Operations.output_file,natural32(target'last),target.all);
       new_line(PHCpack_Operations.output_file);
@@ -243,7 +260,6 @@ function use_padcon ( job : integer32;
       Drivers_to_Series_Trackers.Standard_Track
         (PHCpack_Operations.output_file,
          target'last,sols,homconpars.all,verbose);
-     -- close(file); -- do not close for later writing solutions!
     end if;
    -- put_line("Clearing the solutions container ...");
     Standard_Solutions_Container.Clear;
@@ -251,17 +267,20 @@ function use_padcon ( job : integer32;
   end Standard_Track;
 
   procedure DoblDobl_Track
-              ( name : in string; verbose,homogeneous : in boolean ) is
+              ( name : in string;
+                localfile,verbose,homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
+  --   The file name is the defined output file if localfile is false,
+  --   otherwise, if localfile, the the file is a local variable.
   --   If homogeneous, then homogeneous coordinates are applied.
 
     use DoblDobl_Complex_Numbers_cv;
 
-   -- file : file_type; -- use output_file of PHCpack_Operations
+    file : file_type;
     start,target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
@@ -293,8 +312,22 @@ function use_padcon ( job : integer32;
         Drivers_to_Series_Trackers.DoblDobl_Track
           (standard_output,target'last,sols,homconpars.all,verbose);
       end if;
+    elsif localfile then
+      Create(file,out_file,name);
+      put(file,natural32(target'last),target.all);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,natural32(start'last),start.all);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+          natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+      new_line(file);
+      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
+      Drivers_to_Series_Trackers.DoblDobl_Track
+        (file,target'last,sols,homconpars.all,verbose);
+      close(file);
     else
-     -- Create(file,out_file,name);
       PHCpack_Operations.Define_Output_File(name);
       put(PHCpack_Operations.output_file,natural32(target'last),target.all);
       new_line(PHCpack_Operations.output_file);
@@ -311,24 +344,26 @@ function use_padcon ( job : integer32;
       Drivers_to_Series_Trackers.DoblDobl_Track
         (PHCpack_Operations.output_file,
          target'last,sols,homconpars.all,verbose);
-     -- close(file); -- needed for later writing
     end if;
     DoblDobl_Solutions_Container.Clear;
     DoblDobl_Solutions_Container.Initialize(sols);
   end DoblDobl_Track;
 
   procedure QuadDobl_Track
-              ( name : in string; verbose,homogeneous : in boolean ) is
+              ( name : in string; 
+                localfile,verbose,homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
   --   writing no output if name is empty,
   --   otherwise, creates an output file with the given name.
+  --   The file name is the defined output file if localfile is false,
+  --   otherwise, if localfile, the the file is a local variable.
   --   If homogeneous, then homogeneous coordinates are applied.
 
     use QuadDobl_Complex_Numbers_cv;
 
-   -- file : file_type; -- use output_file of PHCpack_Operations
+    file : file_type;
     start,target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
@@ -360,8 +395,22 @@ function use_padcon ( job : integer32;
         Drivers_to_Series_Trackers.QuadDobl_Track
           (standard_output,target'last,sols,homconpars.all,verbose);
       end if;
+    elsif localfile then
+      Create(file,out_file,name);
+      put(file,natural32(target'last),target.all);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,natural32(start'last),start.all);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+          natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+      new_line(file);
+      Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
+      Drivers_to_Series_Trackers.QuadDobl_Track
+        (file,target'last,sols,homconpars.all,verbose);
+      close(file);
     else
-     -- Create(file,out_file,name);
       PHCpack_Operations.Define_Output_File(name);
       put(PHCpack_Operations.output_file,natural32(target'last),target.all);
       new_line(PHCpack_Operations.output_file);
@@ -378,7 +427,6 @@ function use_padcon ( job : integer32;
       Drivers_to_Series_Trackers.QuadDobl_Track
         (PHCpack_Operations.output_file,
          target'last,sols,homconpars.all,verbose);
-     -- close(file); -- same file may be needed for writing later
     end if;
     QuadDobl_Solutions_Container.Clear;
     QuadDobl_Solutions_Container.Initialize(sols);
@@ -389,20 +437,22 @@ function use_padcon ( job : integer32;
     use Interfaces.C;
 
     v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(5));
     prc : constant natural32 := natural32(v_a(v_a'first));
     nbc : constant natural32 := natural32(v_a(v_a'first+1));
     vrb : constant natural32 := natural32(v_a(v_a'first+2));
     hmf : constant natural32 := natural32(v_a(v_a'first+3));
+    lcf : constant natural32 := natural32(v_a(v_a'first+4));
     verbose : constant boolean := (vrb > 0);
     homogeneous : constant boolean := (hmf > 0);
+    localfile : constant boolean := (lcf > 0);
 
   begin
     if nbc = 0 then
       case prc is
-        when 0 => Standard_Track("",verbose,homogeneous);
-        when 1 => DoblDobl_Track("",verbose,homogeneous);
-        when 2 => QuadDobl_Track("",verbose,homogeneous);
+        when 0 => Standard_Track("",localfile,verbose,homogeneous);
+        when 1 => DoblDobl_Track("",localfile,verbose,homogeneous);
+        when 2 => QuadDobl_Track("",localfile,verbose,homogeneous);
         when others => null;
       end case;
     else
@@ -412,9 +462,9 @@ function use_padcon ( job : integer32;
         name : constant string := C_Integer_Array_to_String(nbc,v_b);
       begin
         case prc is
-          when 0 => Standard_Track(name,verbose,homogeneous);
-          when 1 => DoblDobl_Track(name,verbose,homogeneous);
-          when 2 => QuadDobl_Track(name,verbose,homogeneous);
+          when 0 => Standard_Track(name,localfile,verbose,homogeneous);
+          when 1 => DoblDobl_Track(name,localfile,verbose,homogeneous);
+          when 2 => QuadDobl_Track(name,localfile,verbose,homogeneous);
           when others => null;
         end case;
       end;
