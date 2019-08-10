@@ -376,6 +376,18 @@ function use_syscon ( job : integer32;
 --                  the symbol table, this name represents the variable
 --                  added as the last coordinate in the homogenization.
 --
+-- affine coordinate transformations :
+--
+--   job    = 901 : to the system with double precision coefficients,
+--                  substitutes the last variable by the value one,
+--                  and removes the last linear equation;
+--          = 902 : to the system with double double precision coefficients,
+--                  substitutes the last variable by the value one,
+--                  and removes the last linear equation;
+--          = 903 : to the system with quad double precision coefficients,
+--                  substitutes the last variable by the value one,
+--                  and removes the last linear equation.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   e.g.: indices to monomial out of range, or job not in the proper range.

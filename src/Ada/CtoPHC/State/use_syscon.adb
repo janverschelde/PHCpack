@@ -49,6 +49,7 @@ with Multprec_Complex_Laur_Systems_io;  use Multprec_Complex_Laur_Systems_io;
 with Polynomial_Drops;
 with Total_Degree_Start_Systems;
 with Projective_Transformations;
+with Affine_Transformations;
 with Homogenization;
 with PHCpack_Operations;
 with Standard_PolySys_Container;
@@ -2142,6 +2143,45 @@ function use_syscon ( job : integer32;
     return 0;
   end Job897;
 
+  function Job901 return integer32 is -- double affine transformation
+
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
+    res : constant Standard_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last-1)
+        := Affine_Transformations.Make_Affine(lp.all);
+
+  begin
+    Standard_PolySys_Container.Clear;
+    Standard_PolySys_Container.Initialize(res);
+    return 0;
+  end Job901;
+
+  function Job902 return integer32 is -- double double affine transformation
+
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    res : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last-1)
+        := Affine_Transformations.Make_Affine(lp.all);
+
+  begin
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(res);
+    return 0;
+  end Job902;
+
+  function Job903 return integer32 is -- quad double affine transformation
+
+    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := QuadDobl_PolySys_Container.Retrieve;
+    res : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last-1)
+        := Affine_Transformations.Make_Affine(lp.all);
+
+  begin
+    QuadDobl_PolySys_Container.Clear;
+    QuadDobl_PolySys_Container.Initialize(res);
+    return 0;
+  end Job903;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -2278,6 +2318,10 @@ function use_syscon ( job : integer32;
       when 893 => return Job893; -- 1-homogeneous quaddobl system
      -- add symbol passed as string to the table
       when 897 => return Job897; -- add symbol to the table
+     -- affine transformations :
+      when 901 => return Job901; -- double affine transformation
+      when 902 => return Job902; -- double double affine transformation
+      when 903 => return Job903; -- quad double affine transformation
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

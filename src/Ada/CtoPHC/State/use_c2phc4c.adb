@@ -3337,6 +3337,7 @@ function use_c2phc4c ( job : integer32;
       when 890 => return use_tabform(1,a,b,c); -- get std tableau dimensions
      -- projective transformations of systems
       when 891..893 => return use_syscon(job,a,b,c);
+      when 901..903 => return use_syscon(job,a,b,c); -- to affine
      -- projective transformations of solutions
       when 894..896 => return use_solcon(job,a,b,c);
       when 898..900 => return use_solcon(job,a,b,c); -- to affine

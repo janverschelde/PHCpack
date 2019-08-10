@@ -3016,7 +3016,16 @@ function use_c2phc4c ( job : integer32;
 --                 by the value of the last coordinate of the solution;
 --         = 900 : transforms the solutions in quad double precision
 --                 into affine coordinates, dividing every coordinate
---                 by the value of the last coordinate of the solution.
+--                 by the value of the last coordinate of the solution;
+--         = 901 : to the system with double precision coefficients,
+--                 substitutes the last variable by the value one,
+--                 and removes the last linear equation;
+--         = 902 : to the system with double double precision coefficients,
+--                 substitutes the last variable by the value one,
+--                 and removes the last linear equation;
+--         = 903 : to the system with quad double precision coefficients,
+--                 substitutes the last variable by the value one,
+--                 and removes the last linear equation.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
