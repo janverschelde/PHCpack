@@ -1,3 +1,6 @@
+Sun 11 Aug 2019 : added default values for the extra flags in the track with
+  Pade continuation in phcpy2c2.c and phcpy2c3.c.
+
 Sat 10 Aug 2019 : added to syscon functions to transform to affine coordinates.
   Updated lib_padcon so the system and solutions in affine coordinates are
   written at the end of the output file.  Updated padcon and lib_padcon for

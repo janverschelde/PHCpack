@@ -8186,7 +8186,7 @@ static PyObject *py2c_padcon_standard_track
    initialize();
    if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
    // printf("calling padcon_standard_track ...\n");
-   fail = padcon_standard_track(nbc,name,verbose);
+   fail = padcon_standard_track(nbc,name,0,verbose,0);
    return Py_BuildValue("i",fail);
 }
 
@@ -8198,7 +8198,7 @@ static PyObject *py2c_padcon_dobldobl_track
 
    initialize();
    if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
-   fail = padcon_dobldobl_track(nbc,name,verbose);
+   fail = padcon_dobldobl_track(nbc,name,0,verbose,0);
    return Py_BuildValue("i",fail);
 }
 
@@ -8210,7 +8210,7 @@ static PyObject *py2c_padcon_quaddobl_track
 
    initialize();
    if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
-   fail = padcon_quaddobl_track(nbc,name,verbose);
+   fail = padcon_quaddobl_track(nbc,name,0,verbose,0);
    return Py_BuildValue("i",fail);
 }
 
