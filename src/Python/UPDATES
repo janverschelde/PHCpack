@@ -1,3 +1,6 @@
+Sun 11 Aug 2019 : to the curves module, added default values for the new
+  parameters in the track functions for Pade continuation.
+
 Sun 28 Jul 2019 : updated random_system in the solver modules for python2
   and python3 so systems with double double and quad double precision can
   be generated.

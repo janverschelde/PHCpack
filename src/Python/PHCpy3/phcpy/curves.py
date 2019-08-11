@@ -211,7 +211,7 @@ def standard_track(target, start, sols, filename="", verbose=False):
     (regamma, imgamma) = get_homotopy_continuation_parameter(1)
     py2c_create_standard_homotopy_with_gamma(regamma, imgamma)
     nbc = len(filename)
-    fail = py2c_padcon_standard_track(nbc,filename,int(verbose))
+    fail = py2c_padcon_standard_track(nbc,filename,0,int(verbose),0)
     # py2c_clear_standard_operations_data()
     return load_standard_solutions()
 
@@ -248,7 +248,7 @@ def dobldobl_track(target, start, sols, filename="", verbose=False):
     (regamma, imgamma) = get_homotopy_continuation_parameter(1)
     py2c_create_dobldobl_homotopy_with_gamma(regamma, imgamma)
     nbc = len(filename)
-    fail = py2c_padcon_dobldobl_track(nbc,filename,int(verbose))
+    fail = py2c_padcon_dobldobl_track(nbc,filename,0,int(verbose),0)
     # py2c_clear_dobldobl_operations_data()
     return load_dobldobl_solutions()
 
@@ -285,7 +285,7 @@ def quaddobl_track(target, start, sols, filename="", verbose=False):
     (regamma, imgamma) = get_homotopy_continuation_parameter(1)
     py2c_create_quaddobl_homotopy_with_gamma(regamma, imgamma)
     nbc = len(filename)
-    fail = py2c_padcon_quaddobl_track(nbc,filename,int(verbose))
+    fail = py2c_padcon_quaddobl_track(nbc,filename,0,int(verbose),0)
     # py2c_clear_quaddobl_operations_data()
     return load_quaddobl_solutions()
 
