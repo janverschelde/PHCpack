@@ -2062,6 +2062,73 @@ static PyObject *py2c_syscon_quaddobl_Laurent_drop_variable_by_name
  *   2) s, a string that holds the name of the variable.
  *   On return is the failure code, which equals zero if all went well. */
 
+static PyObject *py2c_syscon_standard_one_homogenization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the standard double precision container
+ *   with its transformation in 1-homogeneous coordinates.
+ *   There is one integer on input.
+ *   If 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
+static PyObject *py2c_syscon_dobldobl_one_homogenization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the double double precision container
+ *   with its transformation in 1-homogeneous coordinates.
+ *   There is one integer on input.
+ *   If 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
+static PyObject *py2c_syscon_quaddobl_one_homogenization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the quad double precision container
+ *   with its transformation in 1-homogeneous coordinates.
+ *   There is one integer on input.
+ *   If 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
+static PyObject *py2c_syscon_add_symbol
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Adds a symbol to the table, with name given in the string,
+ *   where the number of characters in the name equals the first
+ *   integer argument.  The second input parameter is the string.
+ *   This symbol represents the last variable added in the homogeneous
+ *   coordinate transformation. */
+
+static PyObject *py2c_syscon_standard_one_affinization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the standard double precision container
+ *   by its transformation to affine coordinates, substituting the
+ *   value of the last coordinate by one and removing the last equation. */
+
+static PyObject *py2c_syscon_dobldobl_one_affinization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the double double precision container
+ *   by its transformation to affine coordinates, substituting the
+ *   value of the last coordinate by one and removing the last equation. */
+
+static PyObject *py2c_syscon_quaddobl_one_affinization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the quad double precision container
+ *   by its transformation to affine coordinates, substituting the
+ *   value of the last coordinate by one and removing the last equation. */
+
 /* The wrapping of the functions in tabform.h starts from here */
 
 static PyObject *py2c_tabform_store_standard_tableau
@@ -2563,6 +2630,48 @@ static PyObject *py2c_solcon_quaddobl_drop_coordinate_by_name
  *   1) nc, the number of characters in the string with the name;
  *   2) s, the string with the name of the variable.
  *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_solcon_standard_one_homogenization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Add one extra coordinate one to every solution in the container
+ *   for solutions in standard double precision. */
+
+static PyObject *py2c_solcon_dobldobl_one_homogenization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Add one extra coordinate one to every solution in the container
+ *   for solutions in double double precision. */
+
+static PyObject *py2c_solcon_quaddobl_one_homogenization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Add one extra coordinate one to every solution in the container
+ *   for solutions in double double precision. */
+
+static PyObject *py2c_solcon_standard_one_affinization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Divides every coordinate by the last coordinate of every solution
+ *   in the container for solutions in standard double precision. */
+
+static PyObject *py2c_solcon_dobldobl_one_affinization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Divides every coordinate by the last coordinate of every solution
+ *   in the container for solutions in double double precision. */
+
+static PyObject *py2c_solcon_quaddobl_one_affinization
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Divides every coordinate by the last coordinate of every solution
+ *   in the container for solutions in quad double precision. */
 
 /* The wrapping of the functions in product.h starts here. */
 
@@ -5768,11 +5877,15 @@ static PyObject *py2c_padcon_standard_track
  *   For the defined target, start system, and start solutions,
  *   launches the Pade continuation in standard double precision.
  *   Three input parameters are expected:
- *   1) the number of characters in the name of the output file,
+ *   1) the number of characters in the name of the output file;
  *   2) a string which defines the name of the output file,
  *   if the string is empty, then no file is created;
- *   3) an integer for the verbose flag, if zero, then no extra
- *   information is written to file or screen. */
+ *   3) a flag to indicate whether the output file is the defined output file
+ *   (value 1 of the flag), or whether the file is local (value 0);
+ *   4) an integer for the verbose flag, if zero, then no extra
+ *   information is written to file or to screen;
+ *   5) an integer for the homogenization, if zero, tracking happens in
+ *   affine space, if one, then tracking happens in projective space. */
 
 static PyObject *py2c_padcon_dobldobl_track
  ( PyObject *self, PyObject *args );
@@ -5781,11 +5894,15 @@ static PyObject *py2c_padcon_dobldobl_track
  *   For the defined target, start system, and start solutions,
  *   launches the Pade continuation in double double precision.
  *   Three input parameters are expected:
- *   1) the number of characters in the name of the output file,
+ *   1) the number of characters in the name of the output file;
  *   2) a string which defines the name of the output file,
  *   if the string is empty, then no file is created;
- *   3) an integer for the verbose flag, if zero, then no extra
- *   information is written to file or screen. */
+ *   3) a flag to indicate whether the output file is the defined output file
+ *   (value 1 of the flag), or whether the file is local (value 0);
+ *   4) an integer for the verbose flag, if zero, then no extra
+ *   information is written to file or to screen;
+ *   5) an integer for the homogenization, if zero, tracking happens in
+ *   affine space, if one, then tracking happens in projective space. */
 
 static PyObject *py2c_padcon_quaddobl_track
  ( PyObject *self, PyObject *args );
@@ -5797,8 +5914,12 @@ static PyObject *py2c_padcon_quaddobl_track
  *   1) the number of characters in the name of the output file,
  *   2) a string which defines the name of the output file,
  *   if the string is empty, then no file is created;
- *   3) an integer for the verbose flag, if zero, then no extra
- *   information is written to file or screen. */
+ *   3) a flag to indicate whether the output file is the defined output file
+ *   (value 1 of the flag), or whether the file is local (value 0);
+ *   4) an integer for the verbose flag, if zero, then no extra
+ *   information is written to file or to screen;
+ *   5) an integer for the homogenization, if zero, tracking happens in
+ *   affine space, if one, then tracking happens in projective space. */
 
 static PyObject *py2c_padcon_standard_initialize_homotopy
  ( PyObject *self, PyObject *args );

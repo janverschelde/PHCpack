@@ -3030,6 +3030,98 @@ static PyObject *py2c_syscon_quaddobl_Laurent_drop_variable_by_name
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_syscon_standard_one_homogenization
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lintype;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&lintype)) return NULL;
+
+   fail = syscon_standard_one_homogenization(lintype);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_dobldobl_one_homogenization
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lintype;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&lintype)) return NULL;
+
+   fail = syscon_dobldobl_one_homogenization(lintype);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_quaddobl_one_homogenization
+ ( PyObject *self, PyObject *args )
+{
+   int fail,lintype;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&lintype)) return NULL;
+
+   fail = syscon_quaddobl_one_homogenization(lintype);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_add_symbol
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbc;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nbc,&name)) return NULL;
+
+   fail = syscon_add_symbol(nbc,name);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_standard_one_affinization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if (!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = syscon_standard_one_affinization();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_dobldobl_one_affinization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if (!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = syscon_dobldobl_one_affinization();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_quaddobl_one_affinization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if (!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = syscon_quaddobl_one_affinization();
+
+   return Py_BuildValue("i",fail);
+}
+
 /* The wrapping of the functions in tabform.h starts from here */
 
 static PyObject *py2c_tabform_store_standard_tableau
@@ -3840,6 +3932,78 @@ static PyObject *py2c_solcon_quaddobl_drop_coordinate_by_name
    initialize();
    if(!PyArg_ParseTuple(args,"is",&nc,&s)) return NULL;
    fail = solcon_quaddobl_drop_coordinate_by_name(nc,s);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_standard_one_homogenization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = solcon_standard_one_homogenization();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_dobldobl_one_homogenization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = solcon_dobldobl_one_homogenization();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_quaddobl_one_homogenization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = solcon_quaddobl_one_homogenization();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_standard_one_affinization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = solcon_standard_one_affinization();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_dobldobl_one_affinization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = solcon_dobldobl_one_affinization();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_quaddobl_one_affinization
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = solcon_quaddobl_one_affinization();
 
    return Py_BuildValue("i",fail);
 }
@@ -8178,38 +8342,41 @@ static PyObject *py2c_padcon_set_homotopy_continuation_parameter
 static PyObject *py2c_padcon_standard_track
  ( PyObject *self, PyObject *args )
 {
-   int nbc,fail,verbose;
+   int nbc,fail,localfile,verbose,homogns;
    char *name;
 
    // printf("inside py2c_padcon_standard track ...\n");
 
    initialize();
-   if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
+   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&homogns))
+      return NULL;
    // printf("calling padcon_standard_track ...\n");
-   fail = padcon_standard_track(nbc,name,0,verbose,0);
+   fail = padcon_standard_track(nbc,name,localfile,verbose,homogns);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_padcon_dobldobl_track
  ( PyObject *self, PyObject *args )
 {
-   int nbc,fail,verbose;
+   int nbc,fail,localfile,verbose,homogns;
    char *name;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
-   fail = padcon_dobldobl_track(nbc,name,0,verbose,0);
+   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&homogns))
+      return NULL;
+   fail = padcon_dobldobl_track(nbc,name,localfile,verbose,homogns);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_padcon_quaddobl_track
  ( PyObject *self, PyObject *args )
 {
-   int nbc,fail,verbose;
+   int nbc,fail,localfile,verbose,homogns;
    char *name;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"isi",&nbc,&name,&verbose)) return NULL;
+   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&homogns))
+      return NULL;
    fail = padcon_quaddobl_track(nbc,name,0,verbose,0);
    return Py_BuildValue("i",fail);
 }
@@ -10253,6 +10420,27 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_syscon_quaddobl_Laurent_drop_variable_by_name",
      py2c_syscon_quaddobl_Laurent_drop_variable_by_name, METH_VARARGS,
     "Replaces the Laurent system in the quad double precision container\n with the same Laurent system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syscon_standard_one_homogenization",
+     py2c_syscon_standard_one_homogenization, METH_VARARGS,
+    "Replaces the system in the standard double precision container\n with its transformation in 1-homogeneous coordinates.\n There is one integer on input.\n If 0, then a random linear equation is added,\n otherwise, the linear equation z0 - 1 = 0 is added,\n where z0 is the extra homogeneous coordinate."},
+   {"py2c_syscon_dobldobl_one_homogenization",
+     py2c_syscon_dobldobl_one_homogenization, METH_VARARGS,
+    "Replaces the system in the double double precision container\n with its transformation in 1-homogeneous coordinates.\n There is one integer on input.\n If 0, then a random linear equation is added,\n otherwise, the linear equation z0 - 1 = 0 is added,\n where z0 is the extra homogeneous coordinate."},
+   {"py2c_syscon_quaddobl_one_homogenization",
+     py2c_syscon_quaddobl_one_homogenization, METH_VARARGS,
+    "Replaces the system in the quad double precision container\n with its transformation in 1-homogeneous coordinates.\n There is one integer on input.\n If 0, then a random linear equation is added,\n otherwise, the linear equation z0 - 1 = 0 is added,\n where z0 is the extra homogeneous coordinate."},
+   {"py2c_syscon_add_symbol",
+     py2c_syscon_add_symbol, METH_VARARGS,
+    "Adds a symbol to the table, with name given in the string,\n where the number of characters in the name equals the first\n integer argument.  The second input parameter is the string.\n This symbol represents the last variable added in the homogeneous\n coordinate transformation."},
+   {"py2c_syscon_standard_one_affinization",
+     py2c_syscon_standard_one_affinization, METH_VARARGS,
+    "Replaces the system in the standard double precision container\n by its transformation to affine coordinates, substituting the\n value of the last coordinate by one and removing the last equation."},
+   {"py2c_syscon_dobldobl_one_affinization",
+     py2c_syscon_dobldobl_one_affinization, METH_VARARGS,
+    "Replaces the system in the double double precision container\n by its transformation to affine coordinates, substituting the\n value of the last coordinate by one and removing the last equation."},
+   {"py2c_syscon_quaddobl_one_affinization",
+     py2c_syscon_quaddobl_one_affinization, METH_VARARGS,
+    "Replaces the system in the quad double precision container\n by its transformation to affine coordinates, substituting the\n value of the last coordinate by one and removing the last equation."},
    {"py2c_tabform_store_standard_tableau",
      py2c_tabform_store_standard_tableau, METH_VARARGS,
     "On input is the tableau form of a polynomial system, given by\n 1) the number of equations as an integer,\n 2) the number of equations as an integer,\n 3) the number of characters in the 4-th string input,\n 4) the number of terms in each polynomial, given as a string,\n the string representation of a list of integers,\n 5) the number of characters in the 6-th string input,\n 6) the coefficients of all terms, given as a string,\n the string representation of a list of doubles,\n each pair of consecutive doubles represents a complex coefficient,\n 7) the number of characters in the 7-th string input,\n 8) the exponents of all terms, given as a string,\n the string representation of a list of integers.\n The tableau form is parsed and the container for systems with\n standard double precision coefficients is initialized."},
@@ -10376,6 +10564,24 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_solcon_quaddobl_drop_coordinate_by_name",
      py2c_solcon_quaddobl_drop_coordinate_by_name, METH_VARARGS,
     "Replaces the solutions in the quad double precision container\n with the same solutions that have their coordinate dropped\n corresponding to the name in the string s of nc characters long.\n There are two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, the string with the name of the variable.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_solcon_standard_one_homogenization",
+     py2c_solcon_standard_one_homogenization, METH_VARARGS,
+    "Add one extra coordinate one to every solution in the container\n for solutions in standard double precision."},
+   {"py2c_solcon_dobldobl_one_homogenization",
+     py2c_solcon_dobldobl_one_homogenization, METH_VARARGS,
+    "Add one extra coordinate one to every solution in the container\n for solutions in double double precision."},
+   {"py2c_solcon_quaddobl_one_homogenization",
+     py2c_solcon_quaddobl_one_homogenization, METH_VARARGS,
+    "Add one extra coordinate one to every solution in the container\n for solutions in double double precision."},
+   {"py2c_solcon_standard_one_affinization",
+     py2c_solcon_standard_one_affinization, METH_VARARGS,
+    "Divides every coordinate by the last coordinate of every solution\n in the container for solutions in standard double precision."},
+   {"py2c_solcon_dobldobl_one_affinization",
+     py2c_solcon_dobldobl_one_affinization, METH_VARARGS,
+    "Divides every coordinate by the last coordinate of every solution\n in the container for solutions in double double precision."},
+   {"py2c_solcon_quaddobl_one_affinization",
+     py2c_solcon_quaddobl_one_affinization, METH_VARARGS,
+    "Divides every coordinate by the last coordinate of every solution\n in the container for solutions in quad double precision."},
    {"py2c_product_supporting_set_structure",
      py2c_product_supporting_set_structure, METH_VARARGS,
     "Builds a supporting set structure for the system stored in the\n container with coefficients in standard double precision."},
@@ -11172,13 +11378,13 @@ static PyMethodDef phcpy2c3_methods[] =
     "Sets the value of the k-th continuation parameter to the given value.\n The first parameter k is an integer number between 2 and 13.\n The second parameter is the value of the k-th parameter,\n parsed as a floating point number."},
    {"py2c_padcon_standard_track",
      py2c_padcon_standard_track, METH_VARARGS,
-    "For the defined target, start system, and start solutions,\n launches the Pade continuation in standard double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file,\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen."},
+    "For the defined target, start system, and start solutions,\n launches the Pade continuation in standard double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file;\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) a flag to indicate whether the output file is the defined output file\n (value 1 of the flag), or whether the file is local (value 0);\n 4) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen;\n 5) an integer for the homogenization, if zero, tracking happens in\n affine space, if one, then tracking happens in projective space."},
    {"py2c_padcon_dobldobl_track",
      py2c_padcon_dobldobl_track, METH_VARARGS, 
-    "For the defined target, start system, and start solutions,\n launches the Pade continuation in double double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file,\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen."},
+    "For the defined target, start system, and start solutions,\n launches the Pade continuation in double double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file;\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) a flag to indicate whether the output file is the defined output file\n (value 1 of the flag), or whether the file is local (value 0);\n 4) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen;\n 5) an integer for the homogenization, if zero, tracking happens in\n affine space, if one, then tracking happens in projective space."},
    {"py2c_padcon_quaddobl_track",
      py2c_padcon_quaddobl_track, METH_VARARGS,
-    "For the defined target, start system, and start solutions,\n launches the Pade continuation in quad double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file,\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen."},
+    "For the defined target, start system, and start solutions,\n launches the Pade continuation in quad double precision.\n Three input parameters are expected:\n 1) the number of characters in the name of the output file;\n 2) a string which defines the name of the output file,\n if the string is empty, then no file is created;\n 3) a flag to indicate whether the output file is the defined output file\n (value 1 of the flag), or whether the file is local (value 0);\n 4) an integer for the verbose flag, if zero, then no extra\n information is written to file or screen;\n 5) an integer for the homogenization, if zero, tracking happens in\n affine space, if one, then tracking happens in projective space."},
    {"py2c_padcon_standard_initialize_homotopy",
      py2c_padcon_standard_initialize_homotopy, METH_VARARGS,
     "For the defined target and start system,\n initializes the homotopy in standard double precision,\n for the step-by-step Pade continuation.\n On entry is one parameter, the verbose flag which is zero or one.\n If the verbose flag is 1, then extra output will be written."},
