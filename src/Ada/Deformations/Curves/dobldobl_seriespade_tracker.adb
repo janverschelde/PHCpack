@@ -7,18 +7,22 @@ with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
+with Symbol_Table;
 with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Hessians;
 with DoblDobl_CSeries_Poly_Systems;
 with DoblDobl_Homotopy;
+with DoblDobl_Coefficient_Homotopy;
+with Projective_Transformations;
 with DoblDobl_Pade_Approximants_io;
 with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Standard_Pade_Trackers;
 with DoblDobl_Pade_Trackers;
+with Homotopy_Series_Readers;
 with Homotopy_Newton_Steps;
 with Homotopy_Mixed_Residuals;
 with Singular_Values_of_Hessians;
@@ -43,6 +47,7 @@ package body DoblDobl_SeriesPade_Tracker is
   current_cfp : DoblDobl_Complex_Numbers.Complex_Number;
   series_step,pole_step,hessian_step,current_step : double_float;
   cntsstp,cntdstp,cntpstp : natural32;
+  homcoord : boolean := false; -- homogeneous coordinates or not
 
 -- CONSTRUCTORS :
 
@@ -72,23 +77,39 @@ package body DoblDobl_SeriesPade_Tracker is
     current_poles := new DoblDobl_Complex_VecVecs.VecVec'(allpoles);
   end Initialize_Series_and_Approximants;
 
-  procedure Init ( p,q : in Link_to_Poly_Sys ) is
+  procedure Init ( p,q : in Link_to_Poly_Sys; homogeneous : in boolean ) is
 
     tpow : constant natural32 := 2;
     d_gamma : constant Standard_Complex_Numbers.Complex_Number
             := homconpars.gamma;
     dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
              := Standard_to_DoblDobl_Complex(d_gamma);
+    vp : Link_to_Poly_Sys := p;
+    vq : Link_to_Poly_Sys := q;
 
     use Singular_Values_of_Hessians;
 
   begin
     idxpar := 0;
-    DoblDobl_Homotopy.Create(p.all,q.all,tpow,dd_gamma);
+    homcoord := homogeneous;
+    if not homogeneous then
+      DoblDobl_Homotopy.Create(p.all,q.all,tpow,dd_gamma);
+    else
+      Homotopy_Series_Readers.DoblDobl_Projective_Transformation(vp,vq);
+      Symbol_Table.Enlarge(1);
+      Symbol_Table.Add_String("Z0");
+      DoblDobl_Homotopy.Create(vp.all,vq.all,1,dd_gamma);
+      DoblDobl_Coefficient_Homotopy.Create(vq.all,vp.all,1,dd_gamma);
+    end if;
     abh := new DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys'
                  (Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy);
-    nbeqs := p'last;
-    nbvar := integer32(Number_of_Unknowns(p(p'first)));
+    if homogeneous then
+      nbeqs := vp'last;
+      nbvar := integer32(Number_of_Unknowns(vp(vp'first)));
+    else
+      nbeqs := p'last;
+      nbvar := integer32(Number_of_Unknowns(p(p'first)));
+    end if;
    -- definition of series homotopy is done with Init of the solution
     Initialize_Series_and_Approximants;
     DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
@@ -118,7 +139,16 @@ package body DoblDobl_SeriesPade_Tracker is
      then conpar := nbeqs + 1;
      else conpar := idxpar;
     end if;
-    current := s;
+    if not homcoord then
+      current := s;
+    else
+      declare
+        p1s : constant Solution(s.n+1)
+            := Projective_Transformations.Projective_Transformation(s.all);
+      begin
+        current := new Solution'(p1s);
+      end;
+    end if;
     DoblDobl_CSeries_Poly_Systems.Clear(htp);
     declare -- reset the shifted homotopy
       hs : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
@@ -142,8 +172,8 @@ package body DoblDobl_SeriesPade_Tracker is
     eva : DoblDobl_Complex_Series_Vectors.Vector(1..nbeqs);
     dd_t : double_double := DoblDobl_Complex_Numbers.REAL_PART(current.t);
     t : double_float := hi_part(dd_t);
-    tolcff : constant double_float := homconpars.epsilon;
-    alpha : constant double_float := homconpars.alpha;
+   -- tolcff : constant double_float := homconpars.epsilon;
+   -- alpha : constant double_float := homconpars.alpha;
 
   begin
     if verbose then

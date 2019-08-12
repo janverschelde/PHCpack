@@ -33,7 +33,8 @@ with QuadDobl_SeriesPade_Tracker;
 package body Interactive_Pade_Trackers is
 
   procedure Standard_Loop
-              ( sols : in out Standard_Complex_Solutions.Solution_List ) is
+              ( sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in boolean := false ) is
 
     solsptr : Standard_Complex_Solutions.Solution_List := sols;
     ls : Standard_Complex_Solutions.Link_to_Solution;
@@ -45,22 +46,28 @@ package body Interactive_Pade_Trackers is
       ls := Standard_Complex_Solutions.Head_Of(solsptr);
       Standard_SeriesPade_Tracker.Init(ls);
       put_line("Checking the start solution ...");
-      Standard_SeriesPade_Tracker.Correct(fail,true);
+      Standard_SeriesPade_Tracker.Correct(fail,verbose);
       if fail then
         put_line("The start solution is NOT okay!?");
       else
         put_line("The start solution is okay.");
         loop
-          Standard_SeriesPade_Tracker.Predict_and_Correct(fail,true);
-          put("  series step : ");
-          put(Standard_SeriesPade_Tracker.Get_Current_Series_Step,2);
+          Standard_SeriesPade_Tracker.Predict_and_Correct(fail,verbose);
+         -- put("  series step : ");
+         -- put(Standard_SeriesPade_Tracker.Get_Current_Series_Step,2);
           put("  pole step : ");
           put(Standard_SeriesPade_Tracker.Get_Current_Pole_Step,2);
           put("  Hessian step : ");
           put(Standard_SeriesPade_Tracker.Get_Current_Hessian_Step,2);
           new_line;
-          if fail
-           then put_line("Failed to meet the accuracy requirements.  Abort.");
+          if verbose then
+            put_line("The solution : ");
+            ls := Standard_SeriesPade_Tracker.Get_Current_Solution;
+            Standard_Complex_Solutions_io.put(ls.all); new_line;
+          end if;
+          if fail then
+            put_line("Warning: failed to meet the accuracy requirements.");
+            fail := false; -- ignore predictor-corrector failure
           end if;
           exit when fail;
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -79,7 +86,8 @@ package body Interactive_Pade_Trackers is
   end Standard_Loop;
 
   procedure DoblDobl_Loop
-              ( sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+              ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false ) is
 
     solsptr : DoblDobl_Complex_Solutions.Solution_List := sols;
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
@@ -97,16 +105,22 @@ package body Interactive_Pade_Trackers is
       else
         put_line("The start solution is okay.");
         loop
-          DoblDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
-          put("  series step : ");
-          put(DoblDobl_SeriesPade_Tracker.Get_Current_Series_Step,2);
+          DoblDobl_SeriesPade_Tracker.Predict_and_Correct(fail,verbose);
+         -- put("  series step : ");
+         -- put(DoblDobl_SeriesPade_Tracker.Get_Current_Series_Step,2);
           put("  pole step : ");
           put(DoblDobl_SeriesPade_Tracker.Get_Current_Pole_Step,2);
           put("  Hessian step : ");
           put(DoblDobl_SeriesPade_Tracker.Get_Current_Hessian_Step,2);
           new_line;
-          if fail
-           then put_line("Failed to meet the accuracy requirements.  Abort.");
+          if verbose then
+            put_line("The solution : ");
+            ls := DoblDobl_SeriesPade_Tracker.Get_Current_Solution;
+            DoblDobl_Complex_Solutions_io.put(ls.all); new_line;
+          end if;
+          if fail then
+            put_line("Warning: failed to meet the accuracy requirements.");
+            fail := false; -- ignore predictor-corrector failure
           end if;
           exit when fail;
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -125,7 +139,8 @@ package body Interactive_Pade_Trackers is
   end DoblDobl_Loop;
 
   procedure QuadDobl_Loop
-              ( sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+              ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false ) is
 
     solsptr : QuadDobl_Complex_Solutions.Solution_List := sols;
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
@@ -143,16 +158,22 @@ package body Interactive_Pade_Trackers is
       else
         put_line("The start solution is okay.");
         loop
-          QuadDobl_SeriesPade_Tracker.Predict_and_Correct(fail,true);
-          put("  series step : ");
-          put(QuadDobl_SeriesPade_Tracker.Get_Current_Series_Step,2);
+          QuadDobl_SeriesPade_Tracker.Predict_and_Correct(fail,verbose);
+         -- put("  series step : ");
+         -- put(QuadDobl_SeriesPade_Tracker.Get_Current_Series_Step,2);
           put("  pole step : ");
           put(QuadDobl_SeriesPade_Tracker.Get_Current_Pole_Step,2);
           put("  Hessian step : ");
           put(QuadDobl_SeriesPade_Tracker.Get_Current_Hessian_Step,2);
           new_line;
-          if fail
-           then put_line("Failed to meet the accuracy requirements.  Abort.");
+          if verbose then
+            put_line("The solution : ");
+            ls := QuadDobl_SeriesPade_Tracker.Get_Current_Solution;
+            QuadDobl_Complex_Solutions_io.put(ls.all); new_line;
+          end if;
+          if fail then
+            put_line("Warning: failed to meet the accuracy requirements.");
+            fail := false;
           end if;
           exit when fail;
           put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -170,7 +191,7 @@ package body Interactive_Pade_Trackers is
     end loop;
   end QuadDobl_Loop;
  
-  procedure Standard_Main ( verbose : in integer32 := 0 ) is
+  procedure Standard_Main ( vrblvl : in integer32 := 0 ) is
 
     nbq,nvr,idx,nbpar : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
@@ -184,7 +205,7 @@ package body Interactive_Pade_Trackers is
     use Standard_Parameter_Systems;
 
   begin
-    if verbose > 0
+    if vrblvl > 0
      then put_line("-> in interactive_pade_trackers.Standard_Main ...");
     end if;
     new_line;
@@ -205,8 +226,8 @@ package body Interactive_Pade_Trackers is
       new_line;
       put_line("Reading the start system and its solutions ...");
       Standard_System_and_Solutions_io.get(start,sols);
-      Standard_SeriesPade_Tracker.Init(target,start);
-      Standard_Loop(sols);
+      Standard_SeriesPade_Tracker.Init(target,start,homgen);
+      Standard_Loop(sols,true);
     else
       Read_Parameter_Homotopy(target,sols,nbq,nvr,nbpar);
       declare
@@ -221,11 +242,11 @@ package body Interactive_Pade_Trackers is
       Standard_SeriesPade_Tracker.Init(target,idx);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
       Standard_Complex_Solutions.Set_Continuation_Parameter(dropsols,zero);
-      Standard_Loop(dropsols);
+      Standard_Loop(dropsols,true);
     end if;
   end Standard_Main;
 
-  procedure DoblDobl_Main ( verbose : in integer32 := 0 ) is
+  procedure DoblDobl_Main ( vrblvl : in integer32 := 0 ) is
 
     nbq,nvr,idx,nbpar : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
@@ -239,7 +260,7 @@ package body Interactive_Pade_Trackers is
     use DoblDobl_Parameter_Systems;
 
   begin
-    if verbose > 0
+    if vrblvl > 0
      then put_line("-> in interactive_pade_trackers.DoblDobl_Main ...");
     end if;
     new_line;
@@ -260,8 +281,8 @@ package body Interactive_Pade_Trackers is
       new_line;
       put_line("Reading the start system and its solutions ...");
       DoblDobl_System_and_Solutions_io.get(start,sols);
-      DoblDobl_SeriesPade_Tracker.Init(target,start);
-      DoblDobl_Loop(sols);
+      DoblDobl_SeriesPade_Tracker.Init(target,start,homgen);
+      DoblDobl_Loop(sols,true);
     else
       Read_Parameter_Homotopy(target,sols,nbq,nvr,nbpar);
       declare
@@ -276,11 +297,11 @@ package body Interactive_Pade_Trackers is
       DoblDobl_SeriesPade_Tracker.Init(target,idx);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
       DoblDobl_Complex_Solutions.Set_Continuation_Parameter(dropsols,zero);
-      DoblDobl_Loop(dropsols);
+      DoblDobl_Loop(dropsols,true);
     end if;
   end DoblDobl_Main;
 
-  procedure QuadDobl_Main ( verbose : in integer32 := 0 ) is
+  procedure QuadDobl_Main ( vrblvl : in integer32 := 0 ) is
 
     nbq,nvr,idx,nbpar : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
@@ -294,7 +315,7 @@ package body Interactive_Pade_Trackers is
     use QuadDobl_Parameter_Systems;
 
   begin
-    if verbose > 0
+    if vrblvl > 0
      then put_line("-> in interactive_pade_trackers.QuadDobl_Main ...");
     end if;
     new_line;
@@ -315,8 +336,8 @@ package body Interactive_Pade_Trackers is
       new_line;
       put_line("Reading the start system and its solutions ...");
       QuadDobl_System_and_Solutions_io.get(start,sols);
-      QuadDobl_SeriesPade_Tracker.Init(target,start);
-      QuadDobl_Loop(sols);
+      QuadDobl_SeriesPade_Tracker.Init(target,start,homgen);
+      QuadDobl_Loop(sols,true);
     else
       Read_Parameter_Homotopy(target,sols,nbq,nvr,nbpar);
       declare
@@ -331,7 +352,7 @@ package body Interactive_Pade_Trackers is
       QuadDobl_SeriesPade_Tracker.Init(target,idx);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
       QuadDobl_Complex_Solutions.Set_Continuation_Parameter(dropsols,zero);
-      QuadDobl_Loop(dropsols);
+      QuadDobl_Loop(dropsols,true);
     end if;
   end QuadDobl_Main;
 

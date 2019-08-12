@@ -1,5 +1,8 @@
 Mon 12 Aug 2019 : ignoring corrector failure, disabled the corrector
   feedback loop in {standard,dobldobl,quaddobl}_pade_trackers.adb.
+  Separated projective transformation of solutions and systems in
+  homotopy_series_readers, adjusted interactive_pade_readers and
+  the *_seriespade_trackers for homogeneous coordinates.
 
 Fri 9 Aug 2019 : double double and quad double extensions to the procedures
   in homotopy_coefficient_scaling, updates in standard_pade_trackers.adb,

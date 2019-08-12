@@ -31,62 +31,84 @@ with Jacobian_Rabinowitsch_Trick;        use Jacobian_Rabinowitsch_Trick;
 package body Homotopy_Series_Readers is
 
   procedure Standard_Projective_Transformation
-              ( targt : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                start : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+              ( target,start
+                 : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
-    ptar : Standard_Complex_Poly_Systems.Poly_Sys(targt'first..targt'last+1);
+    ptar : Standard_Complex_Poly_Systems.Poly_Sys(target'first..target'last+1);
     pstr : Standard_Complex_Poly_Systems.Poly_Sys(start'first..start'last+1);
 
   begin
-    Projective_Transformation(sols);
-    Projective_Transformation(targt.all);
+    Projective_Transformation(target.all);
     Projective_Transformation(start.all);
-    ptar := Add_Random_Hyperplanes(targt.all,1,false);
+    ptar := Add_Random_Hyperplanes(target.all,1,false);
     pstr := Add_Standard_Hyperplanes(start.all,1);
-    Standard_Complex_Poly_Systems.Clear(targt);
-    targt := new Standard_Complex_Poly_Systems.Poly_Sys'(ptar);
+    Standard_Complex_Poly_Systems.Clear(target);
+    target := new Standard_Complex_Poly_Systems.Poly_Sys'(ptar);
     Standard_Complex_Poly_Systems.Clear(start);
     start := new Standard_Complex_Poly_Systems.Poly_Sys'(pstr);
   end Standard_Projective_Transformation;
 
   procedure DoblDobl_Projective_Transformation
-              ( targt : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                start : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+              ( target,start
+                 : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
-    ptar : DoblDobl_Complex_Poly_Systems.Poly_Sys(targt'first..targt'last+1);
+    ptar : DoblDobl_Complex_Poly_Systems.Poly_Sys(target'first..target'last+1);
     pstr : DoblDobl_Complex_Poly_Systems.Poly_Sys(start'first..start'last+1);
 
   begin
-    Projective_Transformation(sols);
-    Projective_Transformation(targt.all);
+    Projective_Transformation(target.all);
     Projective_Transformation(start.all);
-    ptar := Add_Random_Hyperplanes(targt.all,1,false);
+    ptar := Add_Random_Hyperplanes(target.all,1,false);
     pstr := Add_Standard_Hyperplanes(start.all,1);
-    DoblDobl_Complex_Poly_Systems.Clear(targt);
-    targt := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(ptar);
+    DoblDobl_Complex_Poly_Systems.Clear(target);
+    target := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(ptar);
     DoblDobl_Complex_Poly_Systems.Clear(start);
     start := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(pstr);
   end DoblDobl_Projective_Transformation;
 
   procedure QuadDobl_Projective_Transformation
-              ( targt : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+              ( target,start
+                 : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
-    ptar : QuadDobl_Complex_Poly_Systems.Poly_Sys(targt'first..targt'last+1);
+    ptar : QuadDobl_Complex_Poly_Systems.Poly_Sys(target'first..target'last+1);
     pstr : QuadDobl_Complex_Poly_Systems.Poly_Sys(start'first..start'last+1);
+
   begin
-    Projective_Transformation(sols);
-    Projective_Transformation(targt.all);
+    Projective_Transformation(target.all);
     Projective_Transformation(start.all);
-    ptar := Add_Random_Hyperplanes(targt.all,1,false);
+    ptar := Add_Random_Hyperplanes(target.all,1,false);
     pstr := Add_Standard_Hyperplanes(start.all,1);
-    QuadDobl_Complex_Poly_Systems.Clear(targt);
-    targt := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(ptar);
+    QuadDobl_Complex_Poly_Systems.Clear(target);
+    target := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(ptar);
     QuadDobl_Complex_Poly_Systems.Clear(start);
     start := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(pstr);
+  end QuadDobl_Projective_Transformation;
+
+  procedure Standard_Projective_Transformation
+              ( target : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+  begin
+    Standard_Projective_Transformation(target,start);
+    Projective_Transformation(sols);
+  end Standard_Projective_Transformation;
+
+  procedure DoblDobl_Projective_Transformation
+              ( target : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+  begin
+    DoblDobl_Projective_Transformation(target,start);
+    Projective_Transformation(sols);
+  end DoblDobl_Projective_Transformation;
+
+  procedure QuadDobl_Projective_Transformation
+              ( target : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+  begin
+    QuadDobl_Projective_Transformation(target,start);
+    Projective_Transformation(sols);
   end QuadDobl_Projective_Transformation;
 
   procedure Standard_Reader
@@ -106,8 +128,8 @@ package body Homotopy_Series_Readers is
     put_line("Reading the start system and its solutions ...");
     Standard_System_and_Solutions_io.get(start,sols);
     if not rabin then
-      if homcrd
-       then Standard_Projective_Transformation(target,start,sols);
+      if homcrd then
+        Standard_Projective_Transformation(target,start,sols);
       end if;
       nbequ := target'last;
       if not homcrd then

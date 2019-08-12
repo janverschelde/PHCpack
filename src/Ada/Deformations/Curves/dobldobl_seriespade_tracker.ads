@@ -23,11 +23,13 @@ package DoblDobl_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Stores the values for the homotopy continuation parameters in pars.
 
-  procedure Init ( p,q : in Link_to_Poly_Sys );
+  procedure Init ( p,q : in Link_to_Poly_Sys; homogeneous : in boolean );
 
   -- DESCRIPTION :
   --   Initializes the homotopy with target system p and start system q,
   --   using the gamma, initialized with the Init(pars) procedure.
+  --   If homogeneous, then 1-homogenization is applied,
+  --   otherwise the tracking happens in the original affine coordinates.
 
   -- REQUIRED :
   --   The homotopy continuation parameters have been initialized

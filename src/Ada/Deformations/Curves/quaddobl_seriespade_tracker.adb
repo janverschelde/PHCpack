@@ -7,18 +7,22 @@ with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
+with Symbol_Table;
 with QuadDobl_Complex_Polynomials;       use QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Hessians;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_Homotopy;
+with QuadDobl_Coefficient_Homotopy;
+with Projective_Transformations;
 with QuadDobl_Pade_Approximants_io;
 with Homotopy_Pade_Approximants;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Standard_Pade_Trackers;
 with QuadDobl_Pade_Trackers;
+with Homotopy_Series_Readers;
 with Homotopy_Newton_Steps;
 with Homotopy_Mixed_Residuals;
 with Singular_Values_of_Hessians;
@@ -43,6 +47,7 @@ package body QuadDobl_SeriesPade_Tracker is
   current_cfp : QuadDobl_Complex_Numbers.Complex_Number;
   series_step,pole_step,hessian_step,current_step : double_float;
   cntsstp,cntdstp,cntpstp : natural32;
+  homcoord : boolean := false; -- homogeneous coordinates or not
 
 -- CONSTRUCTORS :
 
@@ -72,23 +77,39 @@ package body QuadDobl_SeriesPade_Tracker is
     current_poles := new QuadDobl_Complex_VecVecs.VecVec'(allpoles);
   end Initialize_Series_and_Approximants;
 
-  procedure Init ( p,q : in Link_to_Poly_Sys ) is
+  procedure Init ( p,q : in Link_to_Poly_Sys; homogeneous : in boolean ) is
 
     tpow : constant natural32 := 2;
     d_gamma : constant Standard_Complex_Numbers.Complex_Number
             := homconpars.gamma;
     qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
              := Standard_to_QuadDobl_Complex(d_gamma);
+    vp : Link_to_Poly_Sys := p;
+    vq : Link_to_Poly_Sys := q;
 
     use Singular_Values_of_Hessians;
 
   begin
     idxpar := 0;
-    QuadDobl_Homotopy.Create(p.all,q.all,tpow,qd_gamma);
+    homcoord := homogeneous;
+    if not homogeneous then
+      QuadDobl_Homotopy.Create(p.all,q.all,tpow,qd_gamma);
+    else
+      Homotopy_Series_Readers.QuadDobl_Projective_Transformation(vp,vq);
+      Symbol_Table.Enlarge(1);
+      Symbol_Table.Add_String("Z0");
+      QuadDobl_Homotopy.Create(vp.all,vq.all,1,qd_gamma);
+      QuadDobl_Coefficient_Homotopy.Create(vq.all,vp.all,1,qd_gamma);
+    end if;
     abh := new QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys'
                  (Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy);
-    nbeqs := p'last;
-    nbvar := integer32(Number_of_Unknowns(p(p'first)));
+    if homogeneous then
+      nbeqs := vp'last;
+      nbvar := integer32(Number_of_Unknowns(vp(vp'first)));
+    else
+      nbeqs := p'last;
+      nbvar := integer32(Number_of_Unknowns(p(p'first)));
+    end if;
    -- Init of solution defines the series homotopy 
     Initialize_Series_and_Approximants;  
     QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
@@ -118,7 +139,16 @@ package body QuadDobl_SeriesPade_Tracker is
      then conpar := nbeqs + 1;
      else conpar := idxpar;
     end if;
-    current := s;
+    if not homcoord then
+      current := s;
+    else
+      declare
+        p1s : constant Solution(s.n+1)
+            := Projective_Transformations.Projective_Transformation(s.all);
+      begin
+        current := new Solution'(p1s);
+      end;
+    end if;
     QuadDobl_CSeries_Poly_Systems.Clear(htp);
     declare -- reset the shifted homotopy
       hs : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
@@ -142,8 +172,8 @@ package body QuadDobl_SeriesPade_Tracker is
     eva : QuadDobl_Complex_Series_Vectors.Vector(1..nbeqs);
     qd_t : quad_double := QuadDobl_Complex_Numbers.REAL_PART(current.t);
     t : double_float := hihi_part(qd_t);
-    tolcff : constant double_float := homconpars.epsilon;
-    alpha : constant double_float := homconpars.alpha;
+   -- tolcff : constant double_float := homconpars.epsilon;
+   -- alpha : constant double_float := homconpars.alpha;
 
   begin
     if verbose then

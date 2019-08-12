@@ -25,15 +25,41 @@ package Homotopy_Series_Readers is
 --   or a natural parameter homotopy.
 
   procedure Standard_Projective_Transformation
-              ( targt : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+              ( target,start
+                 : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure DoblDobl_Projective_Transformation
+              ( target,start
+                 : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure QuadDobl_Projective_Transformation
+              ( target,start
+                 : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Transforms the target and start system into homogeneous coordinates,
+  --   adding one random linear equation to the target system and Z0 = 1 
+  --   to the start system, adding 1 to every start solution,
+  --   in double, double double, and quad double precision.
+
+  -- ON ENTRY :
+  --   target   target system in an artificial-parameter homotopy;
+  --   start    start system in an artificial-parameter homotopy.
+
+  -- ON RETURN :
+  --   target   target system in homogeneous coordinates
+  --            and with one random linear equation added;
+  --   start    start system in homogeneous coordinates
+  --            and with the equation Z0 = 1 added;
+
+  procedure Standard_Projective_Transformation
+              ( target : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List );
   procedure DoblDobl_Projective_Transformation
-              ( targt : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+              ( target : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
   procedure QuadDobl_Projective_Transformation
-              ( targt : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+              ( target : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
@@ -44,12 +70,12 @@ package Homotopy_Series_Readers is
   --   every start solution.
 
   -- ON ENTRY :
-  --   targt    target system in an artificial-parameter homotopy;
+  --   target   target system in an artificial-parameter homotopy;
   --   start    start system in an artificial-parameter homotopy;
   --   sols     start solutions.
 
   -- ON RETURN :
-  --   targt    target system in homogeneous coordinates
+  --   target   target system in homogeneous coordinates
   --            and with one random linear equation added;
   --   start    start system in homogeneous coordinates
   --            and with the equation Z0 = 1 added;
