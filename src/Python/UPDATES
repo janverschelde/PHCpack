@@ -1,3 +1,6 @@
+Mon 12 Aug 2019 : fixed writing of homotopy parameters in curves, after the
+  removal of the beta for the series step.
+
 Sun 11 Aug 2019 : to the curves module, added default values for the new
   parameters in the track functions for Pade continuation.
 

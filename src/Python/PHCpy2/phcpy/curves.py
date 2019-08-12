@@ -144,7 +144,7 @@ def write_homotopy_continuation_parameters():
     """
     Writes the values of the homotopy continuation parameters.
     """
-    pars = [get_homotopy_continuation_parameter(k) for k in range(1, 14)]
+    pars = [get_homotopy_continuation_parameter(k) for k in range(1, 13)]
     regamma, imgamma = pars[0]
     print "Values of the HOMOTOPY CONTINUATION PARAMETERS :"
     print " 1. gamma :", regamma + imgamma*complex(0,1)
@@ -152,14 +152,13 @@ def write_homotopy_continuation_parameters():
     print " 3. degree of denominator of Pade approximant  :", pars[2]
     print " 4. maximum step size                          :", pars[3]
     print " 5. minimum step size                          :", pars[4]
-    print " 6. multiplication factor for the series step  :", pars[5]
-    print " 7. multiplication factor for the pole radius  :", pars[6]
-    print " 8. multiplication factor for the curvature    :", pars[7]
-    print " 9. tolerance on the residual of the predictor :", pars[8]
-    print "10. tolerance on the residual of the corrector :", pars[9]
-    print "11. tolerance on zero series coefficients      :", pars[10]
-    print "12. maximum number of corrector steps          :", pars[11]
-    print "13. maximum steps on a path                    :", pars[12]
+    print " 6. multiplication factor for the pole radius  :", pars[6]
+    print " 7. multiplication factor for the curvature    :", pars[6]
+    print " 8. tolerance on the residual of the predictor :", pars[7]
+    print " 9. tolerance on the residual of the corrector :", pars[8]
+    print "10. tolerance on zero series coefficients      :", pars[9]
+    print "11. maximum number of corrector steps          :", pars[10]
+    print "12. maximum steps on a path                    :", pars[11]
 
 def tune_homotopy_continuation_parameters():
     """
@@ -170,7 +169,7 @@ def tune_homotopy_continuation_parameters():
         write_homotopy_continuation_parameters()
         idxprompt = 'To change a value, give an index (0 to exit) : '
         idx = int(raw_input(idxprompt))
-        if(idx > 0 and idx < 14):
+        if(idx > 0 and idx < 13):
             if(idx == 1):
                 set_homotopy_continuation_gamma()
             else:
