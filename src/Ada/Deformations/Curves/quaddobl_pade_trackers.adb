@@ -157,6 +157,9 @@ package body QuadDobl_Pade_Trackers is
       Homotopy_Newton_Steps.Correct
         (abh,t,tolcres,maxit,nbrit,sol,err,rco,res,fail,extra);
       nbrcorrs := nbrcorrs + nbrit;
+      if fail
+       then fail := false; -- ignore corrector failure
+      end if;
       exit when (not fail);
       t := t - step; step := step/2.0; t := t + step;
       cntfail := cntfail + 1;
@@ -188,9 +191,11 @@ package body QuadDobl_Pade_Trackers is
         (file,abh,t,tolcres,maxit,nbrit,sol,err,rco,res,fail,extra,verbose);
       nbrcorrs := nbrcorrs + nbrit;
       if verbose then
-        if fail
-         then put_line(file,"The correct stage failed.");
-         else put_line(file,"The correct stage succeeded.");
+        if fail then
+          put_line(file,"Warning: the correct stage failed, will ignore...");
+          fail := false;
+        else
+          put_line(file,"The correct stage succeeded.");
         end if;
       end if;
       exit when (not fail);
