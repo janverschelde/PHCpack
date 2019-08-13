@@ -12,7 +12,11 @@ with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Hessians;
+with DoblDobl_Complex_Series_VecVecs;
+with DoblDobl_CSeries_Vector_Functions;
 with DoblDobl_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_SysFun;
+with DoblDobl_CSeries_Jaco_Matrices;
 with DoblDobl_Homotopy;
 with DoblDobl_Coefficient_Homotopy;
 with Projective_Transformations;
@@ -25,6 +29,7 @@ with DoblDobl_Pade_Trackers;
 with Homotopy_Series_Readers;
 with Homotopy_Newton_Steps;
 with Homotopy_Mixed_Residuals;
+with Homotopy_Coefficient_Scaling;
 with Singular_Values_of_Hessians;
 
 package body DoblDobl_SeriesPade_Tracker is
@@ -36,6 +41,10 @@ package body DoblDobl_SeriesPade_Tracker is
   idxpar : integer32; -- index of the continuation parameter, 0 if artificial
   homconpars : Homotopy_Continuation_Parameters.Link_to_Parameters;
   htp : DoblDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+  fhm : DoblDobl_CSeries_Poly_SysFun.Link_to_Eval_Coeff_Poly_Sys;
+  fcf : DoblDobl_Complex_Series_VecVecs.Link_to_VecVec;
+  ejm : DoblDobl_CSeries_Jaco_Matrices.Link_to_Eval_Coeff_Jaco_Mat;
+  mlt : DoblDobl_CSeries_Jaco_Matrices.Link_to_Mult_Factors;
   abh : DoblDobl_Complex_Poly_SysFun.Link_to_Eval_Poly_Sys;
   jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
   hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
@@ -150,13 +159,29 @@ package body DoblDobl_SeriesPade_Tracker is
       end;
     end if;
     DoblDobl_CSeries_Poly_Systems.Clear(htp);
+    DoblDobl_CSeries_Poly_SysFun.Clear(fhm);
+    DoblDobl_Complex_Series_VecVecs.Deep_Clear(fcf);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(mlt);
     declare -- reset the shifted homotopy
       hs : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nbeqs)
          := DoblDobl_Homotopy.Homotopy_System;
       sh : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nbeqs)
          := Series_and_Homotopies.Create(hs,conpar,false);
+      fs : constant DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(sh'range)
+         := DoblDobl_CSeries_Poly_SysFun.Create(sh);
+      fc : constant DoblDobl_Complex_Series_VecVecs.VecVec(sh'range)
+         := DoblDobl_CSeries_Poly_SysFun.Coeff(sh);
+      nv : constant integer32 := nbvar;
+      dm : DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(sh'range,1..nv);
+      mt : DoblDobl_CSeries_Jaco_Matrices.Mult_Factors(sh'range,1..nv);
     begin
       htp := new DoblDobl_CSeries_Poly_Systems.Poly_Sys'(sh);
+      fhm := new DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys'(fs);
+      fcf := new DoblDobl_Complex_Series_VecVecs.VecVec'(fc);
+      DoblDobl_CSeries_Jaco_Matrices.Create(sh,dm,mt);
+      ejm := new DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat'(dm);
+      mlt := new DoblDobl_CSeries_Jaco_Matrices.Mult_Factors'(mt);
     end;
     cntsstp := 0; cntdstp := 0; cntpstp := 0;
   end Init;
@@ -177,14 +202,20 @@ package body DoblDobl_SeriesPade_Tracker is
 
   begin
     if verbose then
+     -- Series_and_Predictors.Newton_Prediction
+     --   (standard_output,maxdeg,nit,htp.all,current.v,current_servec.all,
+     --    eva,verbose);
       Series_and_Predictors.Newton_Prediction
-        (standard_output,maxdeg,nit,htp.all,current.v,current_servec.all,
-         eva,verbose);
+        (standard_output,maxdeg,nit,fhm.all,fcf.all,ejm.all,mlt.all,
+         current.v,current_servec.all,eva,false);
      -- series_step := Series_and_Predictors.Set_Step_Size
      --                  (standard_output,eva,tolcff,alpha,verbose);
     else
+     -- Series_and_Predictors.Newton_Prediction
+     --   (maxdeg,nit,htp.all,current.v,current_servec.all,eva);
       Series_and_Predictors.Newton_Prediction
-        (maxdeg,nit,htp.all,current.v,current_servec.all,eva);
+        (maxdeg,nit,fhm.all,fcf.all,ejm.all,mlt.all,
+         current.v,current_servec.all,eva);
      -- series_step := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     end if;
     series_step := 1.0; -- disable series step -- homconpars.sbeta*series_step;
@@ -257,7 +288,7 @@ package body DoblDobl_SeriesPade_Tracker is
       dd_step := Double_Double_Numbers.Create(current_step);
       sol := Series_and_Predictors.Predicted_Solution
                (current_padvec.all,dd_step);
-      predres := DoblDobl_Pade_Trackers.Residual_Prediction(sol,t);
+      predres := DoblDobl_Pade_Trackers.Residual_Prediction(abh.all,sol,t);
       if verbose
        then put("  predictor residual :"); put(predres,2); new_line;
       end if;
@@ -278,14 +309,25 @@ package body DoblDobl_SeriesPade_Tracker is
 
   procedure Predict ( fail : out boolean; verbose : in boolean := false ) is
 
-    t : double_float;
+    t : double_double := DoblDobl_Complex_Numbers.REAL_PART(current.t);
     dd_step : double_double;
+    d_gamma : constant Standard_Complex_Numbers.Complex_Number
+            := homconpars.gamma;
+    dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+             := Standard_to_DoblDobl_Complex(d_gamma);
 
   begin
+   -- if verbose then
+   --   Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+   --     (standard_output,fhm.all,fcf.all,current.v,t,dd_gamma,true);
+   -- else -- verbose with scaling is for debugging purposes only
+    Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+      (fcf.all,current.v,t,dd_gamma);
+   -- end if;
     Step_Control(verbose);
     Predictor_Feedback_Loop(fail,verbose);
-    t := hi_part(DoblDobl_Complex_Numbers.REAL_PART(current.t));
-    if t = 1.0 
+    t := DoblDobl_Complex_Numbers.REAL_PART(current.t);
+    if hi_part(t) = 1.0 
      then fail := false;
      else fail := (current_step < homconpars.minsize);
     end if;
@@ -318,11 +360,16 @@ package body DoblDobl_SeriesPade_Tracker is
 
   procedure Predict_and_Correct
               ( fail : out boolean; verbose : in boolean := false ) is
+
+    dd_step : double_double;
+
   begin
     Predict(fail,verbose);
     if not fail
      then Correct(fail,verbose);
     end if;
+    dd_step := create(current_step);
+    DoblDobl_CSeries_Vector_Functions.Shift(fcf.all,-dd_step);
   end Predict_and_Correct;
 
 -- SELECTORS :

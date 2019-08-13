@@ -1,4 +1,4 @@
- with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
