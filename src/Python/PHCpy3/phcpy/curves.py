@@ -305,7 +305,7 @@ def standard_set_homotopy(target, start, verbose=False):
     store_standard_system(start, nbvar=dim)
     py2c_copy_standard_container_to_start_system()
     from phcpy.phcpy2c3 import py2c_padcon_standard_initialize_homotopy
-    return py2c_padcon_standard_initialize_homotopy(int(verbose))
+    return py2c_padcon_standard_initialize_homotopy(int(verbose),0)
 
 def dobldobl_set_homotopy(target, start, verbose=False):
     """
@@ -324,7 +324,7 @@ def dobldobl_set_homotopy(target, start, verbose=False):
     store_dobldobl_system(start, nbvar=dim)
     py2c_copy_dobldobl_container_to_start_system()
     from phcpy.phcpy2c3 import py2c_padcon_dobldobl_initialize_homotopy
-    return py2c_padcon_dobldobl_initialize_homotopy(int(verbose))
+    return py2c_padcon_dobldobl_initialize_homotopy(int(verbose),0)
 
 def quaddobl_set_homotopy(target, start, verbose=False):
     """
@@ -343,7 +343,7 @@ def quaddobl_set_homotopy(target, start, verbose=False):
     store_quaddobl_system(start, nbvar=dim)
     py2c_copy_quaddobl_container_to_start_system()
     from phcpy.phcpy2c3 import py2c_padcon_quaddobl_initialize_homotopy
-    return py2c_padcon_quaddobl_initialize_homotopy(int(verbose))
+    return py2c_padcon_quaddobl_initialize_homotopy(int(verbose),0)
 
 def standard_set_parameter_homotopy(hom, idx, verbose=False):
     """
@@ -923,7 +923,8 @@ def symbolic_pade_vector(cff):
 
 def standard_next_track(target, start, sols, verbose=False):
     """
-    Runs the series-Pade tracker step by step in double precision.
+    Runs the series-Pade tracker step by step in double precision,
+    for an artificial-parameter homotopy.
     On input are a target system and a start system with solutions.
     The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
@@ -941,6 +942,7 @@ def standard_next_track(target, start, sols, verbose=False):
     dim = number_of_symbols(start)
     standard_set_homotopy(target, start, verbose)
     (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
         idx = idx + 1
         standard_set_solution(dim, sol, verbose)
@@ -953,6 +955,10 @@ def standard_next_track(target, start, sols, verbose=False):
                 standard_predict_correct(verbose)
                 sol = standard_get_solution(verbose)
                 print(sol)
+                polestep = standard_pole_step()
+                estidist = standard_estimated_distance()
+                curvstep = standard_hessian_step()
+                print(fmt % (polestep, estidist, curvstep))
                 previoustval = tval
                 (tval, step) = (standard_t_value(), standard_step_size())
                 frp = standard_pole_radius()
@@ -967,7 +973,8 @@ def standard_next_track(target, start, sols, verbose=False):
 
 def dobldobl_next_track(target, start, sols, verbose=False):
     """
-    Runs the series-Pade tracker step by step in double double precision.
+    Runs the series-Pade tracker step by step in double double precision,
+    for an artificial-parameter homotopy.
     On input are a target system and a start system with solutions.
     The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
@@ -985,6 +992,7 @@ def dobldobl_next_track(target, start, sols, verbose=False):
     dim = number_of_symbols(start)
     dobldobl_set_homotopy(target, start, verbose)
     (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
         idx = idx + 1
         dobldobl_set_solution(dim, sol, verbose)
@@ -997,6 +1005,10 @@ def dobldobl_next_track(target, start, sols, verbose=False):
                 dobldobl_predict_correct(verbose)
                 sol = dobldobl_get_solution(verbose)
                 print(sol)
+                polestep = dobldobl_pole_step()
+                estidist = dobldobl_estimated_distance()
+                curvstep = dobldobl_hessian_step()
+                print(fmt % (polestep, estidist, curvstep))
                 previoustval = tval
                 (tval, step) = (dobldobl_t_value(), dobldobl_step_size())
                 frp = dobldobl_pole_radius()
@@ -1011,7 +1023,8 @@ def dobldobl_next_track(target, start, sols, verbose=False):
 
 def quaddobl_next_track(target, start, sols, verbose=False):
     """
-    Runs the series-Pade tracker step by step in quad double precision.
+    Runs the series-Pade tracker step by step in quad double precision,
+    for an artificial-parameter homotopy.
     On input are a target system and a start system with solutions.
     The *target* is a list of strings representing the polynomials
     of the target system (which has to be solved).
@@ -1029,6 +1042,7 @@ def quaddobl_next_track(target, start, sols, verbose=False):
     dim = number_of_symbols(start)
     quaddobl_set_homotopy(target, start, verbose)
     (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
         idx = idx + 1
         quaddobl_set_solution(dim, sol, verbose)
@@ -1041,6 +1055,11 @@ def quaddobl_next_track(target, start, sols, verbose=False):
                 quaddobl_predict_correct(verbose)
                 sol = quaddobl_get_solution(verbose)
                 print(sol)
+                polestep = quaddobl_pole_step()
+                estidist = quaddobl_estimated_distance()
+                curvstep = quaddobl_hessian_step()
+                print(fmt % (polestep, estidist, curvstep))
+                previoustval = tval
                 (tval, step) = (quaddobl_t_value(), quaddobl_step_size())
                 frp = quaddobl_pole_radius()
                 print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
@@ -1074,6 +1093,7 @@ def standard_next_loop(hom, idx, sols, verbose=False):
     dim = number_of_symbols(hom) - 1
     standard_set_parameter_homotopy(hom, idx,verbose)
     (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
         idx = idx + 1
         print('tracking solution path', idx, '...')
@@ -1087,6 +1107,10 @@ def standard_next_loop(hom, idx, sols, verbose=False):
                 standard_predict_correct(verbose)
                 sol = standard_get_solution(verbose)
                 print(sol)
+                polestep = standard_pole_step()
+                estidist = standard_estimated_distance()
+                curvstep = standard_hessian_step()
+                print(fmt % (polestep, estidist, curvstep))
                 previoustval = tval
                 (tval, step) = (standard_t_value(), standard_step_size())
                 frp = standard_pole_radius()
@@ -1121,6 +1145,7 @@ def dobldobl_next_loop(hom, idx, sols, verbose=False):
     dim = number_of_symbols(hom) - 1
     dobldobl_set_parameter_homotopy(hom, idx,verbose)
     (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
         idx = idx + 1
         print('tracking solution path', idx, '...')
@@ -1134,6 +1159,10 @@ def dobldobl_next_loop(hom, idx, sols, verbose=False):
                 dobldobl_predict_correct(verbose)
                 sol = dobldobl_get_solution(verbose)
                 print(sol)
+                polestep = dobldobl_pole_step()
+                estidist = dobldobl_estimated_distance()
+                curvstep = dobldobl_hessian_step()
+                print(fmt % (polestep, estidist, curvstep))
                 previoustval = tval
                 (tval, step) = (dobldobl_t_value(), dobldobl_step_size())
                 frp = dobldobl_pole_radius()
@@ -1168,6 +1197,7 @@ def quaddobl_next_loop(hom, idx, sols, verbose=False):
     dim = number_of_symbols(hom) - 1
     quaddobl_set_parameter_homotopy(hom, idx,verbose)
     (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
         idx = idx + 1
         print('tracking solution path', idx, '...')
@@ -1181,6 +1211,10 @@ def quaddobl_next_loop(hom, idx, sols, verbose=False):
                 quaddobl_predict_correct(verbose)
                 sol = quaddobl_get_solution(verbose)
                 print(sol)
+                polestep = quaddobl_pole_step()
+                estidist = quaddobl_estimated_distance()
+                curvstep = quaddobl_hessian_step()
+                print(fmt % (polestep, estidist, curvstep))
                 previoustval = tval
                 (tval, step) = (quaddobl_t_value(), quaddobl_step_size())
                 frp = quaddobl_pole_radius()

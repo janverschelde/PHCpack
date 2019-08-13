@@ -1,3 +1,7 @@
+Tue 13 Aug 2019 : updated functions in the curves module to show also the
+  pole step, estimated distance, and Hessian step; fixed initialization of
+  the homotopy for the step-by-step with default 0 flag for homogeneous.
+
 Mon 12 Aug 2019 : fixed writing of homotopy parameters in curves, after the
   removal of the beta for the series step.
 
