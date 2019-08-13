@@ -127,29 +127,35 @@ int padcon_quaddobl_track
  *   verbose  if > 0, then more information is written;
  *   homo     if > 0, then homogeneous coordinates are applied. */
 
-int padcon_standard_initialize_homotopy ( int verbose );
+int padcon_standard_initialize_homotopy ( int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target and start system,
  *   initializes the homotopy in standard double precision,
  *   for the step-by-step Pade continuation.
- *   If verbose = 1, then extra output will be written. */
+ *   If verbose = 1, then extra output will be written.
+ *   If homo = 0, then tracking happens in affine coordinates,
+ *   if homo = 1, then homogeneous coordinate transformations are applied. */
 
-int padcon_dobldobl_initialize_homotopy ( int verbose );
+int padcon_dobldobl_initialize_homotopy ( int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target and start system,
  *   initializes the homotopy in double double precision,
  *   for the step-by-step Pade continuation.
- *   If verbose = 1, then extra output will be written. */
+ *   If verbose = 1, then extra output will be written.
+ *   If homo = 0, then tracking happens in affine coordinates,
+ *   if homo = 1, then homogeneous coordinate transformations are applied. */
 
-int padcon_quaddobl_initialize_homotopy ( int verbose );
+int padcon_quaddobl_initialize_homotopy ( int verbose, int homo );
 /*
  * DESCRIPTION :
  *   For the defined target and start system,
  *   initializes the homotopy in quad double precision,
  *   for the step-by-step Pade continuation.
- *   If verbose = 1, then extra output will be written. */
+ *   If verbose = 1, then extra output will be written.
+ *   If homo = 0, then tracking happens in affine coordinates,
+ *   if homo = 1, then homogeneous coordinate transformations are applied. */
 
 int padcon_standard_initialize_parameter_homotopy ( int idx, int verbose );
 /*

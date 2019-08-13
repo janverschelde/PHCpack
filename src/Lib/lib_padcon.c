@@ -153,6 +153,24 @@ void show_quaddobl_poles ( int dim );
  *   Shows all poles computed by the predictor in quad double precision.
  *   The value of dim equals the number of variables. */
 
+void show_standard_solution ( int index );
+/*
+ * DESCRIPTION :
+ *   Shows the current solution in standard double precision,
+ *   at position index in the solutions container. */
+
+void show_dobldobl_solution ( int index );
+/*
+ * DESCRIPTION :
+ *   Shows the current solution in double double precision,
+ *   at position index in the solutions container. */
+
+void show_quaddobl_solution ( int index );
+/*
+ * DESCRIPTION :
+ *   Shows the current solution in quad double precision,
+ *   at position index in the solutions container. */
+
 void standard_next_loop ( int index );
 /*
  *  DESCRIPTION :
@@ -529,7 +547,7 @@ void show_standard_pade_coefficients ( int dim )
    for(lead=1; lead<=dim; lead++)
    {
       printf("Denominator coefficient of Pade approximant %d :\n", lead);
-      for(idx=0; idx<=numdeg; idx++)
+      for(idx=0; idx<=dendeg; idx++)
       {
          fail = padcon_get_standard_denominator_coefficient(lead,idx,0,&re,&im);
          printf(" %d : %.14e  %.14e\n", idx, re, im);
@@ -559,7 +577,7 @@ void show_dobldobl_pade_coefficients ( int dim )
    for(lead=1; lead<=dim; lead++)
    {
       printf("Denominator coefficient of Pade approximant %d :\n", lead);
-      for(idx=0; idx<=numdeg; idx++)
+      for(idx=0; idx<=dendeg; idx++)
       {
          fail = padcon_get_dobldobl_denominator_coefficient(lead,idx,0,&re,&im);
          printf(" %d : %.14e  %.14e\n", idx, re, im);
@@ -589,7 +607,7 @@ void show_quaddobl_pade_coefficients ( int dim )
    for(lead=1; lead<=dim; lead++)
    {
       printf("Denominator coefficient of Pade approximant %d :\n", lead);
-      for(idx=0; idx<=numdeg; idx++)
+      for(idx=0; idx<=dendeg; idx++)
       {
          fail = padcon_get_quaddobl_denominator_coefficient(lead,idx,0,&re,&im);
          printf(" %d : %.14e  %.14e\n", idx, re, im);
@@ -654,11 +672,53 @@ void show_quaddobl_poles ( int dim )
    }
 }
 
+void show_standard_solution ( int index )
+{
+   int fail,strlensol;
+
+   fail = padcon_get_standard_solution(index,0); // 1);
+   fail = solcon_length_standard_solution_string(index,&strlensol);
+   {
+      char idxsol[strlensol+1];
+
+      fail = solcon_write_standard_solution_string(index,strlensol,idxsol);
+      printf("Solution %d :\n%s\n", index, idxsol);
+   }
+}
+
+void show_dobldobl_solution ( int index )
+{
+   int fail,strlensol;
+
+   fail = padcon_get_dobldobl_solution(index,0); // 1);
+   fail = solcon_length_dobldobl_solution_string(index,&strlensol);
+   {
+      char idxsol[strlensol+1];
+
+      fail = solcon_write_dobldobl_solution_string(index,strlensol,idxsol);
+      printf("Solution %d :\n%s\n", index, idxsol);
+   }
+}
+
+void show_quaddobl_solution ( int index )
+{
+   int fail,strlensol;
+
+   fail = padcon_get_quaddobl_solution(index,0); // 1);
+   fail = solcon_length_quaddobl_solution_string(index,&strlensol);
+   {
+      char idxsol[strlensol+1];
+
+      fail = solcon_write_quaddobl_solution_string(index,strlensol,idxsol);
+      printf("Solution %d :\n%s\n", index, idxsol);
+   }
+}
+
 void standard_next_loop ( int index )
 {
    int fail,length,failed,dim;
    char contstep,nlsb;
-   double frp,re_pole,im_pole,tval,step,sstep,pstep,dstep,eta;
+   double frp,re_pole,im_pole,tval,step,pstep,dstep,eta;
 
    fail = padcon_initialize_standard_solution(index,1);
    fail = solcon_dimension_of_standard_solutions(&dim);
@@ -676,15 +736,14 @@ void standard_next_loop ( int index )
          fail = padcon_get_standard_closest_pole(&re_pole,&im_pole);
          fail = padcon_get_standard_t_value(&tval);
          fail = padcon_get_standard_step_size(&step);
-         fail = padcon_get_standard_series_step(&sstep);
          fail = padcon_get_standard_pole_step(&pstep);
          fail = padcon_get_standard_hessian_step(&dstep);
          fail = padcon_get_standard_estimated_distance(&eta);
-         printf("series step : %.3e  pole step : %.3e  Hessian step : %.3e\n",
-                sstep, pstep, dstep);
+         printf("pole step : %.3e  Hessian step : %.3e\n", pstep, dstep);
          printf("t : %.3e  step : %.3e\n", tval, step);
          printf("Smallest pole radius : %.3e  eta : %.3e\n", frp, eta);
          printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         show_standard_solution(index);
          printf("continue ? (y/n) ");
          contstep = getchar();
          scanf("%c",&nlsb);
@@ -697,7 +756,7 @@ void dobldobl_next_loop ( int index )
 {
    int fail,length,failed,dim;
    char contstep,nlsb;
-   double frp,re_pole,im_pole,tval,step,sstep,pstep,dstep,eta;
+   double frp,re_pole,im_pole,tval,step,pstep,dstep,eta;
 
    fail = padcon_initialize_dobldobl_solution(index,1);
    fail = solcon_dimension_of_dobldobl_solutions(&dim);
@@ -715,15 +774,14 @@ void dobldobl_next_loop ( int index )
          fail = padcon_get_dobldobl_closest_pole(&re_pole,&im_pole);
          fail = padcon_get_dobldobl_t_value(&tval);
          fail = padcon_get_dobldobl_step_size(&step);
-         fail = padcon_get_dobldobl_series_step(&sstep);
          fail = padcon_get_dobldobl_pole_step(&pstep);
          fail = padcon_get_dobldobl_hessian_step(&dstep);
          fail = padcon_get_dobldobl_estimated_distance(&eta);
-         printf("series step : %.3e  pole step : %.3e  Hessian step : %.3e\n",
-                sstep, pstep, dstep);
+         printf("pole step : %.3e  Hessian step : %.3e\n", pstep, dstep);
          printf("t : %.3e  step : %.3e\n", tval, step);
          printf("Smallest pole radius : %.3e  eta : %.3e\n", frp, eta);
          printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         show_dobldobl_solution(index);
          printf("continue ? (y/n) ");
          contstep = getchar();
          scanf("%c",&nlsb);
@@ -736,7 +794,7 @@ void quaddobl_next_loop ( int index )
 {
    int fail,length,failed,dim;
    char contstep,nlsb;
-   double frp,re_pole,im_pole,tval,step,sstep,pstep,dstep,eta;
+   double frp,re_pole,im_pole,tval,step,pstep,dstep,eta;
 
    fail = padcon_initialize_quaddobl_solution(index,1);
    fail = solcon_dimension_of_quaddobl_solutions(&dim);
@@ -754,15 +812,14 @@ void quaddobl_next_loop ( int index )
          fail = padcon_get_quaddobl_closest_pole(&re_pole,&im_pole);
          fail = padcon_get_quaddobl_t_value(&tval);
          fail = padcon_get_quaddobl_step_size(&step);
-         fail = padcon_get_quaddobl_series_step(&sstep);
          fail = padcon_get_quaddobl_pole_step(&pstep);
          fail = padcon_get_quaddobl_hessian_step(&dstep);
          fail = padcon_get_quaddobl_estimated_distance(&eta);
-         printf("series step : %.3e  pole step : %.3e  Hessian step : %.3e\n",
-                sstep, pstep, dstep);
+         printf("pole step : %.3e  Hessian step : %.3e\n", pstep, dstep);
          printf("t : %.3e  step : %.3e\n", tval, step);
          printf("Smallest pole radius : %.3e  eta : %.3e\n", frp, eta);
          printf("Closest pole : %.14e  %.14e\n", re_pole, im_pole);
+         show_quaddobl_solution(index);
          printf("continue ? (y/n) ");
          contstep = getchar();
          scanf("%c",&nlsb);
@@ -799,7 +856,7 @@ void standard_next_step ( void )
    printf("Read %d start solutions in dimension %d.\n", length, dim);
 
    if(idx == 0)
-      fail = padcon_standard_initialize_homotopy(1);
+      fail = padcon_standard_initialize_homotopy(1,0);
    else
       fail = padcon_standard_initialize_parameter_homotopy(idx,1);
 
@@ -807,16 +864,6 @@ void standard_next_step ( void )
    {
       printf("\nTracking path %d ...\n", index);
       standard_next_loop(index);
-
-      fail = padcon_get_standard_solution(index,1);
-      fail = solcon_length_standard_solution_string(index,&strlensol);
-      {
-         char idxsol[strlensol+1];
-
-         fail = solcon_write_standard_solution_string
-                  (index,strlensol,idxsol);
-         printf("Solution %d :\n%s\n", index, idxsol);
-      }
       if(index == length) break;
       printf("Continue with the next solution ? (y/n) ");
       contstep = getchar();
@@ -853,7 +900,7 @@ void dobldobl_next_step ( void )
    printf("Read %d start solutions of dimension %d.\n", length, dim);
 
    if(idx == 0)
-      fail = padcon_dobldobl_initialize_homotopy(1);
+      fail = padcon_dobldobl_initialize_homotopy(1,0);
    else
       fail = padcon_dobldobl_initialize_parameter_homotopy(idx,1);
 
@@ -861,16 +908,6 @@ void dobldobl_next_step ( void )
    {
       printf("\nTracking path %d ...\n", index);
       dobldobl_next_loop(index);
-
-      fail = padcon_get_dobldobl_solution(index,1);
-      fail = solcon_length_dobldobl_solution_string(index,&strlensol);
-      {
-         char idxsol[strlensol+1];
-
-         fail = solcon_write_dobldobl_solution_string
-                  (index,strlensol,idxsol);
-         printf("Solution %d :\n%s\n", index, idxsol);
-      }
       if(index == length) break;
       printf("Continue with the next solution ? (y/n) ");
       contstep = getchar();
@@ -908,7 +945,7 @@ void quaddobl_next_step ( void )
    printf("Read %d start solutions of dimension %d.\n", length, dim);
 
    if(idx == 0)
-      fail = padcon_quaddobl_initialize_homotopy(1);
+      fail = padcon_quaddobl_initialize_homotopy(1,0);
    else
       fail = padcon_quaddobl_initialize_parameter_homotopy(idx,1);
 
@@ -916,16 +953,6 @@ void quaddobl_next_step ( void )
    {
       printf("\nTracking path %d ...\n", index);
       quaddobl_next_loop(index);
-
-      fail = padcon_get_quaddobl_solution(index,1);
-      fail = solcon_length_quaddobl_solution_string(index,&strlensol);
-      {
-         char idxsol[strlensol+1];
-
-         fail = solcon_write_quaddobl_solution_string
-                  (index,strlensol,idxsol);
-         printf("Solution %d :\n%s\n", index, idxsol);
-      }
       if(index == length) break;
       printf("Continue with the next solution ? (y/n) ");
       contstep = getchar();
