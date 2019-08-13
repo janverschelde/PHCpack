@@ -296,11 +296,13 @@ def quaddobl_track(target, start, sols, filename="", verbose=False):
     # py2c_clear_quaddobl_operations_data()
     return load_quaddobl_solutions()
 
-def standard_set_homotopy(target, start, verbose=False):
+def standard_set_homotopy(target, start, verbose=False, homogeneous=False):
     """
     Initializes the homotopy with the target and start system for a
     step-by-step run of the series-Pade tracker, in double precision.
     If verbose, then extra output is written.
+    If homogeneous, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
     Returns the failure code of the homotopy initializer.
     """
     from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
@@ -313,13 +315,16 @@ def standard_set_homotopy(target, start, verbose=False):
     store_standard_system(start, nbvar=dim)
     py2c_copy_standard_container_to_start_system()
     from phcpy.phcpy2c2 import py2c_padcon_standard_initialize_homotopy
-    return py2c_padcon_standard_initialize_homotopy(int(verbose),0)
+    vrb, hmg = int(verbose), int(homogeneous)
+    return py2c_padcon_standard_initialize_homotopy(vrb, hmg)
 
-def dobldobl_set_homotopy(target, start, verbose=False):
+def dobldobl_set_homotopy(target, start, verbose=False, homogeneous=False):
     """
     Initializes the homotopy with the target and start system for a
     step-by-step run of the series-Pade tracker, in double double precision.
     If verbose, then extra output is written.
+    If homogeneous, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
     Returns the failure code of the homotopy initializer.
     """
     from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
@@ -332,13 +337,16 @@ def dobldobl_set_homotopy(target, start, verbose=False):
     store_dobldobl_system(start, nbvar=dim)
     py2c_copy_dobldobl_container_to_start_system()
     from phcpy.phcpy2c2 import py2c_padcon_dobldobl_initialize_homotopy
-    return py2c_padcon_dobldobl_initialize_homotopy(int(verbose),0)
+    vrb, hmg = int(verbose), int(homogeneous)
+    return py2c_padcon_dobldobl_initialize_homotopy(vrb, hmg)
 
-def quaddobl_set_homotopy(target, start, verbose=False):
+def quaddobl_set_homotopy(target, start, verbose=False, homogeneous=False):
     """
     Initializes the homotopy with the target and start system for a
     step-by-step run of the series-Pade tracker, in quad double precision.
     If verbose, then extra output is written.
+    If homogeneous, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
     Returns the failure code of the homotopy initializer.
     """
     from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
@@ -351,7 +359,8 @@ def quaddobl_set_homotopy(target, start, verbose=False):
     store_quaddobl_system(start, nbvar=dim)
     py2c_copy_quaddobl_container_to_start_system()
     from phcpy.phcpy2c2 import py2c_padcon_quaddobl_initialize_homotopy
-    return py2c_padcon_quaddobl_initialize_homotopy(int(verbose),0)
+    vrb, hmg = int(verbose), int(homogeneous)
+    return py2c_padcon_quaddobl_initialize_homotopy(vrb, hmg)
 
 def standard_set_parameter_homotopy(hom, idx, verbose=False):
     """
@@ -929,8 +938,8 @@ def quaddobl_poles(dim):
         result.append(poles)
     return result
 
-def standard_next_track(target, start, sols, verbose=False):
-    """
+def standard_next_track(target, start, sols, verbose=False, homogeneous=False):
+    r"""
     Runs the series-Pade tracker step by step in double precision,
     for an artificial-parameter homotopy.
     On input are a target system and a start system with solutions.
@@ -941,14 +950,16 @@ def standard_next_track(target, start, sols, verbose=False):
     The *sols* is a list of strings representing start solutions.
     The function is interactive, prompting the user each time
     before performing the next predictor-corrector step.
-    If verbose, then extra output is written.
+    If *verbose*, then extra output is written.
+    If *homogeneous*, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
     from phcpy.solver import number_of_symbols
     result = []
     dim = number_of_symbols(start)
-    standard_set_homotopy(target, start, verbose)
+    standard_set_homotopy(target, start, verbose, homogeneous)
     (idx, tval) = (0, 0.0)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
@@ -979,8 +990,8 @@ def standard_next_track(target, start, sols, verbose=False):
                 print '4) poles:', standard_poles(dim)
     return result
 
-def dobldobl_next_track(target, start, sols, verbose=False):
-    """
+def dobldobl_next_track(target, start, sols, verbose=False, homogeneous=False):
+    r"""
     Runs the series-Pade tracker step by step in double double precision,
     for an artificial-parameter homotopy.
     On input are a target system and a start system with solutions.
@@ -991,14 +1002,16 @@ def dobldobl_next_track(target, start, sols, verbose=False):
     The *sols* is a list of strings representing start solutions.
     The function is interactive, prompting the user each time
     before performing the next predictor-corrector step.
-    If verbose, then extra output is written.
+    If *verbose*, then extra output is written.
+    If *homogeneous*, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
     from phcpy.solver import number_of_symbols
     result = []
     dim = number_of_symbols(start)
-    dobldobl_set_homotopy(target, start, verbose)
+    dobldobl_set_homotopy(target, start, verbose, homogeneous)
     (idx, tval) = (0, 0.0)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
@@ -1029,8 +1042,8 @@ def dobldobl_next_track(target, start, sols, verbose=False):
                 print '4) poles:', dobldobl_poles(dim)
     return result
 
-def quaddobl_next_track(target, start, sols, verbose=False):
-    """
+def quaddobl_next_track(target, start, sols, verbose=False, homogeneous=False):
+    r"""
     Runs the series-Pade tracker step by step in quad double precision,
     for an artificial-parameter homotopy.
     On input are a target system and a start system with solutions.
@@ -1041,14 +1054,16 @@ def quaddobl_next_track(target, start, sols, verbose=False):
     The *sols* is a list of strings representing start solutions.
     The function is interactive, prompting the user each time
     before performing the next predictor-corrector step.
-    If verbose, then extra output is written.
+    If *verbose*, then extra output is written.
+    If *homogeneous*, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
     from phcpy.solver import number_of_symbols
     result = []
     dim = number_of_symbols(start)
-    quaddobl_set_homotopy(target, start, verbose)
+    quaddobl_set_homotopy(target, start, verbose, homogeneous)
     (idx, tval) = (0, 0.0)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
     for sol in sols:
@@ -1080,7 +1095,7 @@ def quaddobl_next_track(target, start, sols, verbose=False):
     return result
 
 def standard_next_loop(hom, idx, sols, verbose=False):
-    """
+    r"""
     Runs the series-Pade tracker step by step in double precision.
     On input is a natural parameter homotopy with solutions.
     The *hom* is a list of strings representing the polynomials
@@ -1092,7 +1107,7 @@ def standard_next_loop(hom, idx, sols, verbose=False):
     parameter, which is assumed to be equal to zero.
     The function is interactive, prompting the user each time
     before performing the next predictor-corrector step.
-    If verbose, then extra output is written.
+    If *verbose*, then extra output is written.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -1132,7 +1147,7 @@ def standard_next_loop(hom, idx, sols, verbose=False):
     return result
 
 def dobldobl_next_loop(hom, idx, sols, verbose=False):
-    """
+    r"""
     Runs the series-Pade tracker step by step in double double precision.
     On input is a natural parameter homotopy with solutions.
     The *hom* is a list of strings representing the polynomials
@@ -1144,7 +1159,7 @@ def dobldobl_next_loop(hom, idx, sols, verbose=False):
     parameter, which is assumed to be equal to zero.
     The function is interactive, prompting the user each time
     before performing the next predictor-corrector step.
-    If verbose, then extra output is written.
+    If *verbose*, then extra output is written.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -1184,7 +1199,7 @@ def dobldobl_next_loop(hom, idx, sols, verbose=False):
     return result
 
 def quaddobl_next_loop(hom, idx, sols, verbose=False):
-    """
+    r"""
     Runs the series-Pade tracker step by step in quad double precision.
     On input is a natural parameter homotopy with solutions.
     The *hom* is a list of strings representing the polynomials
@@ -1196,7 +1211,7 @@ def quaddobl_next_loop(hom, idx, sols, verbose=False):
     parameter, which is assumed to be equal to zero.
     The function is interactive, prompting the user each time
     before performing the next predictor-corrector step.
-    If verbose, then extra output is written.
+    If *verbose*, then extra output is written.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
@@ -1322,13 +1337,15 @@ def test_next_track(precision='d'):
     k3 = katsura(3)
     from phcpy.solver import total_degree_start_system as tdss
     (k3q, k3qsols) = tdss(k3)
+    ans = raw_input('homogeneous coordinates ? (y/n) ')
+    homo = (ans == 'y')
     print 'tracking', len(k3qsols), 'paths ...'
     if(precision == 'd'):
-        k3sols = standard_next_track(k3, k3q, k3qsols, True)
+        k3sols = standard_next_track(k3, k3q, k3qsols, True, homo)
     elif(precision == 'dd'):
-        k3sols = dobldobl_next_track(k3, k3q, k3qsols, True)
+        k3sols = dobldobl_next_track(k3, k3q, k3qsols, True, homo)
     elif(precision == 'qd'):
-        k3sols = quaddobl_next_track(k3, k3q, k3qsols, True)
+        k3sols = quaddobl_next_track(k3, k3q, k3qsols, True, homo)
     else:
         print 'wrong precision'
     for sol in k3sols:
