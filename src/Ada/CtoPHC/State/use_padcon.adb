@@ -487,7 +487,7 @@ function use_padcon ( job : integer32;
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Target_System(target);
-    Standard_SeriesPade_Tracker.Init(target,start);
+    Standard_SeriesPade_Tracker.Init(target,start,false);
   end Standard_Initialize_Tracker;
 
   procedure DoblDobl_Initialize_Tracker is
@@ -501,7 +501,7 @@ function use_padcon ( job : integer32;
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Target_System(target);
-    DoblDobl_SeriesPade_Tracker.Init(target,start);
+    DoblDobl_SeriesPade_Tracker.Init(target,start,false);
   end DoblDobl_Initialize_Tracker;
 
   procedure QuadDobl_Initialize_Tracker is
@@ -515,7 +515,7 @@ function use_padcon ( job : integer32;
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Target_System(target);
-    QuadDobl_SeriesPade_Tracker.Init(target,start);
+    QuadDobl_SeriesPade_Tracker.Init(target,start,false);
   end QuadDobl_Initialize_Tracker;
 
   procedure Standard_Initialize_Tracker ( idx : in integer32 ) is

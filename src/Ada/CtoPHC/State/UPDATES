@@ -1,3 +1,6 @@
+Mon 12 Aug 2019 : added a default value for the homogeneous argument
+  of the step-by-step Pade tracker in use_padcon.adb.
+
 Sat 10 Aug 2019 : added jobs to use_syscon and use_c2phc4c to transform a
   polynomial system into affine coordinates.  In use_padcon.adb, used the
   output_file of PHCpack_Operations instead of a local file variable.
