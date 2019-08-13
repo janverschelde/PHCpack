@@ -1,4 +1,4 @@
-phcpy 0.9.8 offers a simple Python interface to PHCv2.4.70
+phcpy 0.9.9 offers a simple Python interface to PHCv2.4.71
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -68,6 +68,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.9.9 : 2019-08-13 : step-by-step trackers in curves support 1-homogenization
 0.9.8 : 2019-07-25 : support for the tableau format of a polynomial system
 0.9.7 : 2019-07-05 : improved step-by-step Pade continuation
 0.9.6 : 2019-06-21 : improved random_coefficient_system in the solver module
