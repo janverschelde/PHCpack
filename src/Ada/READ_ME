@@ -1,4 +1,4 @@
-Ada source code of Polynomial Homotopy Continuation version 2.4.70
+Ada source code of Polynomial Homotopy Continuation version 2.4.71
 
 The same hierarchical structure as in the original version is preserved,
 with the addition of numerical Schubert calculus in release 2,
