@@ -8387,7 +8387,7 @@ static PyObject *py2c_padcon_quaddobl_initialize_homotopy
    int fail,verbose,homogeneous;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&verbose,&homogeneous)) return NULL;
+   if(!PyArg_ParseTuple(args,"ii",&verbose,&homogeneous)) return NULL;
    fail = padcon_quaddobl_initialize_homotopy(verbose,homogeneous);
    return Py_BuildValue("i",fail);
 }

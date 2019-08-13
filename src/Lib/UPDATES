@@ -4,6 +4,7 @@ Tue 13 Aug 2019 : in lib_padcon, fixed bug with showing of denominator Pade
   to show the current solution.  Bug fix in padcon.c, adjustments in 
   lib_padcon.c so tracking in projective coordinates works.
   Updated phcpy2c.h, phcpy2c2.c, and phcpy2c3.c for the Python module.
+  Bug fix in phcpy2c2.c with initialization of quaddobl homotopy.
 
 Sun 11 Aug 2019 : added default values for the extra flags in the track with
   Pade continuation in phcpy2c2.c and phcpy2c3.c.
