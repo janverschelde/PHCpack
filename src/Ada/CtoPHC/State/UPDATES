@@ -1,3 +1,6 @@
+Tue 13 Aug 2019 : use_padcon takes the homogeneous coordinates option for
+  the initialization of the step-by-step Pade tracker, updated use_c2phc4c.ads.
+
 Mon 12 Aug 2019 : added a default value for the homogeneous argument
   of the step-by-step Pade tracker in use_padcon.adb.
 

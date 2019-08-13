@@ -476,46 +476,52 @@ function use_padcon ( job : integer32;
       return 739;
   end Job4;
 
-  procedure Standard_Initialize_Tracker is
+  procedure Standard_Initialize_Tracker ( homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Retrieves target and start system and initializes the
   --   Series-Pade tracker in standard double precision.
+  --   If homogeneous, then homogeneous coordinates will be used,
+  --   otherwise the tracking happens in the original affine coordinates.
 
     start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Target_System(target);
-    Standard_SeriesPade_Tracker.Init(target,start,false);
+    Standard_SeriesPade_Tracker.Init(target,start,homogeneous);
   end Standard_Initialize_Tracker;
 
-  procedure DoblDobl_Initialize_Tracker is
+  procedure DoblDobl_Initialize_Tracker ( homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Retrieves target and start system and initializes the
   --   Series-Pade tracker in double double precision.
+  --   If homogeneous, then homogeneous coordinates will be used,
+  --   otherwise the tracking happens in the original affine coordinates.
 
     start,target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Target_System(target);
-    DoblDobl_SeriesPade_Tracker.Init(target,start,false);
+    DoblDobl_SeriesPade_Tracker.Init(target,start,homogeneous);
   end DoblDobl_Initialize_Tracker;
 
-  procedure QuadDobl_Initialize_Tracker is
+  procedure QuadDobl_Initialize_Tracker ( homogeneous : in boolean ) is
 
   -- DESCRIPTION :
   --   Retrieves target and start system and initializes the
   --   Series-Pade tracker in quad double precision.
+  --   If homogeneous, then homogeneous coordinates will be used,
+  --   otherwise the tracking happens in the original affine coordinates.
 
     start,target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Target_System(target);
-    QuadDobl_SeriesPade_Tracker.Init(target,start,false);
+    QuadDobl_SeriesPade_Tracker.Init(target,start,homogeneous);
   end QuadDobl_Initialize_Tracker;
 
   procedure Standard_Initialize_Tracker ( idx : in integer32 ) is
@@ -562,13 +568,17 @@ function use_padcon ( job : integer32;
 
   function Job5 return integer32 is -- initialize seriespade tracker
 
+    use Interfaces.C;
+
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     prc : constant natural32 := natural32(v_a(v_a'first));
     v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
     vrb : constant natural32 := natural32(v_b(v_b'first));
+    hmg : constant natural32 := natural32(v_b(v_b'first+1));
     verbose : constant boolean := (vrb = 1);
+    homogeneous : constant boolean := (hmg = 1);
 
     homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
@@ -581,21 +591,21 @@ function use_padcon ( job : integer32;
           put("in double precision ...");
         end if;
         Standard_SeriesPade_Tracker.Init(homconpars.all);
-        Standard_Initialize_Tracker;
+        Standard_Initialize_Tracker(homogeneous);
       when 1 =>
         if verbose then
           put("Initializing homotopy in Series-Pade tracker ");
           put_line("in double double precision ...");
         end if;
         DoblDobl_SeriesPade_Tracker.Init(homconpars.all);
-        DoblDobl_Initialize_Tracker;
+        DoblDobl_Initialize_Tracker(homogeneous);
       when 2 =>
         if verbose then
           put("Initializing homotopy in Series-Pade tracker ");
           put_line("in quad double precision ...");
         end if;
         QuadDobl_SeriesPade_Tracker.Init(homconpars.all);
-        QuadDobl_Initialize_Tracker;
+        QuadDobl_Initialize_Tracker(homogeneous);
       when others =>
         put_line("Wrong value for the precision.");
     end case;

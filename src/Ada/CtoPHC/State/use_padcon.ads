@@ -62,8 +62,9 @@ function use_padcon ( job : integer32;
 --                 double, double double, or quad double solutions container.
 --   job   =   5 : initializes homotopy for a step-by-step execution
 --                 in double, double double, or quad double precision,
---                 depending whether a[0] is 0, 1, or 2,
---                 the verbose option is in b[0], before execution,
+--                 depending whether a[0] is 0, 1, or 2, the verbose option
+--                 is in b[0], and in b[1] is the flag for homogeneous
+--                 coordinates (1 if on, 0 for affine), before execution,
 --                 the homotopy continuation parameters with job 0 is set,
 --                 target and start system are defined in PHCpack_Operations.
 --   job   =   6 : initializes next start solution in series-Pade tracker,
