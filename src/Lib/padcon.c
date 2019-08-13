@@ -278,7 +278,7 @@ int padcon_standard_initialize_homotopy ( int verbose, int homo )
    pars[0] = verbose;
    pars[1] = homo;
 
-   fail = _ada_use_c2phc4c(860,&precision,&verbose,c);
+   fail = _ada_use_c2phc4c(860,&precision,pars,c);
 
    return fail;
 }

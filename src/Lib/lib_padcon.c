@@ -192,20 +192,26 @@ void quaddobl_next_loop ( int index );
  *    on the solution with the given index in the quad double precision
  *    solutions container. */
 
-void standard_next_step ( void );
+void standard_next_step ( int homo );
 /*
  *  DESCRIPTION :
- *    Runs the series-Pade tracker step by step in double precision. */
+ *    Runs the series-Pade tracker step by step in double precision.
+ *    If homo = 0, then tracking happens in affine coordinates,
+ *    otherwise projective coordinate transformations are applied. */
 
-void dobldobl_next_step ( void );
+void dobldobl_next_step ( int homo );
 /*
  *  DESCRIPTION :
- *    Runs the series-Pade tracker step by step in double double precision. */
+ *    Runs the series-Pade tracker step by step in double double precision.
+ *    If homo = 0, then tracking happens in affine coordinates,
+ *    otherwise projective coordinate transformations are applied. */
 
-void quaddobl_next_step ( void );
+void quaddobl_next_step ( int homo );
 /*
  *  DESCRIPTION :
- *    Runs the series-Pade tracker step by step in quad double precision. */
+ *    Runs the series-Pade tracker step by step in quad double precision.
+ *    If homo = 0, then tracking happens in affine coordinates,
+ *    otherwise projective coordinate transformations are applied. */
 
 int main ( void )
 {
@@ -232,16 +238,17 @@ int main ( void )
    printf("\nStep-by-step run ? (y/n) ");
    ans = getchar();
    scanf("%c", &nlsb); // swallow new line symbol
+
+   homo = prompt_for_homogenization();
+
    if(ans == 'y')
    {
-      if(precision == 0) standard_next_step();
-      if(precision == 1) dobldobl_next_step();
-      if(precision == 2) quaddobl_next_step();
+      if(precision == 0) standard_next_step(homo);
+      if(precision == 1) dobldobl_next_step(homo);
+      if(precision == 2) quaddobl_next_step(homo);
    }
    else
    {
-      homo = prompt_for_homogenization();
-
       prompt_for_output_file(&nbchar,filename,&verbose);
 
       if(nbchar > 0)
@@ -828,7 +835,7 @@ void quaddobl_next_loop ( int index )
    while(contstep == 'y');
 }
 
-void standard_next_step ( void )
+void standard_next_step ( int homo )
 {
    int fail,length,index,strlensol,dim,arthom;
    int idx=0;
@@ -856,7 +863,7 @@ void standard_next_step ( void )
    printf("Read %d start solutions in dimension %d.\n", length, dim);
 
    if(idx == 0)
-      fail = padcon_standard_initialize_homotopy(1,0);
+      fail = padcon_standard_initialize_homotopy(1,homo);
    else
       fail = padcon_standard_initialize_parameter_homotopy(idx,1);
 
@@ -872,7 +879,7 @@ void standard_next_step ( void )
    }
 }
 
-void dobldobl_next_step ( void )
+void dobldobl_next_step ( int homo )
 {
    int fail,length,index,strlensol,dim,arthom;
    int idx=0;
@@ -900,7 +907,7 @@ void dobldobl_next_step ( void )
    printf("Read %d start solutions of dimension %d.\n", length, dim);
 
    if(idx == 0)
-      fail = padcon_dobldobl_initialize_homotopy(1,0);
+      fail = padcon_dobldobl_initialize_homotopy(1,homo);
    else
       fail = padcon_dobldobl_initialize_parameter_homotopy(idx,1);
 
@@ -916,7 +923,7 @@ void dobldobl_next_step ( void )
    }
 }
 
-void quaddobl_next_step ( void )
+void quaddobl_next_step ( int homo )
 {
    int fail,length,index,failed,strlensol,dim,arthom;
    int idx=0;
@@ -945,7 +952,7 @@ void quaddobl_next_step ( void )
    printf("Read %d start solutions of dimension %d.\n", length, dim);
 
    if(idx == 0)
-      fail = padcon_quaddobl_initialize_homotopy(1,0);
+      fail = padcon_quaddobl_initialize_homotopy(1,homo);
    else
       fail = padcon_quaddobl_initialize_parameter_homotopy(idx,1);
 

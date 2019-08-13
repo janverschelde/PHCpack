@@ -8384,33 +8384,33 @@ static PyObject *py2c_padcon_quaddobl_track
 static PyObject *py2c_padcon_standard_initialize_homotopy
  ( PyObject *self, PyObject *args )
 {
-   int fail,verbose;
+   int fail,verbose,homogeneous;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
-   fail = padcon_standard_initialize_homotopy(verbose);
+   if(!PyArg_ParseTuple(args,"ii",&verbose,&homogeneous)) return NULL;
+   fail = padcon_standard_initialize_homotopy(verbose,homogeneous);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_padcon_dobldobl_initialize_homotopy
  ( PyObject *self, PyObject *args )
 {
-   int fail,verbose;
+   int fail,verbose,homogeneous;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
-   fail = padcon_dobldobl_initialize_homotopy(verbose);
+   if(!PyArg_ParseTuple(args,"ii",&verbose,&homogeneous)) return NULL;
+   fail = padcon_dobldobl_initialize_homotopy(verbose,homogeneous);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_padcon_quaddobl_initialize_homotopy
  ( PyObject *self, PyObject *args )
 {
-   int fail,verbose;
+   int fail,verbose,homogeneous;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
-   fail = padcon_quaddobl_initialize_homotopy(verbose);
+   if(!PyArg_ParseTuple(args,"ii",&verbose,&homogeneous)) return NULL;
+   fail = padcon_quaddobl_initialize_homotopy(verbose,homogeneous);
    return Py_BuildValue("i",fail);
 }
 

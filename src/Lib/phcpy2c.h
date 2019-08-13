@@ -5928,8 +5928,10 @@ static PyObject *py2c_padcon_standard_initialize_homotopy
  *   For the defined target and start system,
  *   initializes the homotopy in standard double precision,
  *   for the step-by-step Pade continuation.
- *   On entry is one parameter, the verbose flag which is zero or one.
- *   If the verbose flag is 1, then extra output will be written. */
+ *   On entry are two parameters, the verbose flag which is zero or one,
+ *   and the homogeneous flag which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written.
+ *   If the homogeneous flag is 1, tracking happens in projective space. */
 
 static PyObject *py2c_padcon_dobldobl_initialize_homotopy
  ( PyObject *self, PyObject *args );
@@ -5938,8 +5940,10 @@ static PyObject *py2c_padcon_dobldobl_initialize_homotopy
  *   For the defined target and start system,
  *   initializes the homotopy in double double precision,
  *   for the step-by-step Pade continuation.
- *   On entry is one parameter, the verbose flag which is zero or one.
- *   If the verbose flag is 1, then extra output will be written. */
+ *   On entry are two parameters, the verbose flag which is zero or one,
+ *   and the homogeneous flag which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written.
+ *   If the homogeneous flag is 1, tracking happens in projective space. */
 
 static PyObject *py2c_padcon_quaddobl_initialize_homotopy
  ( PyObject *self, PyObject *args );
@@ -5948,8 +5952,10 @@ static PyObject *py2c_padcon_quaddobl_initialize_homotopy
  *   For the defined target and start system,
  *   initializes the homotopy in quad double precision,
  *   for the step-by-step Pade continuation.
- *   On entry is one parameter, the verbose flag which is zero or one.
- *   If the verbose flag is 1, then extra output will be written. */
+ *   On entry is one parameter, the verbose flag which is zero or one,
+ *   and the homogeneous flag which is zero or one.
+ *   If the verbose flag is 1, then extra output will be written.
+ *   If the homogeneous flag is 1, tracking happens in projective space. */
 
 static PyObject *py2c_padcon_standard_initialize_parameter_homotopy
  ( PyObject *self, PyObject *args );
