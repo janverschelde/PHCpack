@@ -1,3 +1,6 @@
+Wed 14 Aug 2019 : new test procedure ts_multproj.adb to develop the 
+  multi-homogeneous projective transformations.
+
 Fri 9 Aug 2019 : new package affine_transformations to turn systems in
   homogeneous coordinates back to affine coordinates.
 
