@@ -5,8 +5,8 @@
 # swap the # symbol in the following lines to use makefile_windows
 # or to use makefile_mac on a Mac OS x computer
 
-MAKEFILE = makefile_unix
-# MAKEFILE = makefile_mac
+# MAKEFILE = makefile_unix
+MAKEFILE = makefile_mac
 # MAKEFILE = makefile_windows
 
 # the main executable is phc
@@ -624,7 +624,7 @@ ts_mixres:
 
 test_homotopy: ts_quad ts_drivscal ts_scal ts_drivred ts_homotopy \
                ts_homline ts_linsol ts_qdhom ts_poldrop ts_evalhomt ts_vmphom \
-               ts_scalplane
+               ts_scalplane ts_multproj
 
 ts_drivscal:
 	make -f $(MAKEFILE) ts_drivscal
@@ -658,6 +658,9 @@ ts_vmphom:
 
 ts_scalplane:
 	make -f $(MAKEFILE) ts_scalplane
+
+ts_multproj:
+	make -f $(MAKEFILE) ts_multproj
 
 # Test programs for the Deformations/Newton library :
 
