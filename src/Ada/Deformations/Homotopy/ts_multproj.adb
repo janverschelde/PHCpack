@@ -3,6 +3,8 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers;
+with Standard_Random_Numbers;
 with Numbers_io;
 with Characters_and_Numbers;
 with Standard_Natural_Vectors;
@@ -140,6 +142,134 @@ procedure ts_multproj is
     return res;
   end Make_Homogeneous;
 
+  function Standard_Random_Linear_Term
+             ( n,i : natural32 )
+             return Standard_Complex_Polynomials.Term is
+
+  -- DESCRIPTION :
+  --   Returns a term in the i-th variable, with random coefficient,
+  --   as a term in n variables.
+
+    res : Standard_Complex_Polynomials.Term;
+
+  begin
+    res.cf := Standard_Random_Numbers.Random1;
+    res.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
+    res.dg(integer32(i)) := 1;
+    return res;
+  end Standard_Random_Linear_Term;
+
+  function Standard_Start_Linear_Term
+             ( n,i : natural32 )
+             return Standard_Complex_Polynomials.Term is
+
+  -- DESCRIPTION :
+  --   Returns the i-th variable as a term in n variables,
+  --   with coefficient equal to one.
+
+    res : Standard_Complex_Polynomials.Term;
+
+  begin
+    res.cf := Standard_Complex_Numbers.Create(1.0);
+    res.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
+    res.dg(integer32(i)) := 1;
+    return res;
+  end Standard_Start_Linear_Term;
+
+  function Standard_Random_Linear_Polynomial
+             ( n : natural32; s : Sets_of_Unknowns.Set )
+             return Standard_Complex_Polynomials.Poly is
+
+  -- DESCRIPTION :
+  --   Returns a linear polynomial in the variables in s,
+  --   with nonzero constant coefficient as a polynomial in n variables.
+
+    res : Standard_Complex_Polynomials.Poly
+        := Standard_Complex_Polynomials.Null_Poly;
+
+  begin
+    for i in 1..Sets_of_Unknowns.Dimension(s) loop
+      if Sets_of_Unknowns.Is_In(s,i) then
+        declare
+          t : Standard_Complex_Polynomials.Term
+            := Standard_Random_Linear_Term(n,i);
+        begin
+          Standard_Complex_Polynomials.Add(res,t);
+          Standard_Complex_Polynomials.Clear(t);
+        end;
+      end if;
+    end loop;
+    return res;
+  end Standard_Random_Linear_Polynomial;
+
+  function Standard_Start_Linear_Polynomial
+             ( n,i : natural32 )
+             return Standard_Complex_Polynomials.Poly is
+
+  -- DESCRIPTION :
+  --   Returns the start polynomial Zi - 1.
+
+    trm : Standard_Complex_Polynomials.Term
+        := Standard_Start_Linear_Term(n,i);
+    res : Standard_Complex_Polynomials.Poly
+        := Standard_Complex_Polynomials.Create(trm);
+
+  begin
+    trm.dg(integer32(i)) := 0;
+    Standard_Complex_Polynomials.Sub(res,trm);
+    Standard_Complex_Polynomials.Clear(trm);
+    return res;
+  end Standard_Start_Linear_Polynomial;
+
+  function Standard_Random_Linear_Polynomials
+             ( n,m : natural32; z : Partition )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+  -- DESCRIPTION :
+  --   Returns m random linear polynomials in n+m variables in the sets
+  --   of the partition z, with the constant added and the random term
+  --   for the extra homogeneous m-th variable.
+
+    dim : constant natural32 := n+m;
+    res : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
+    cst : Standard_Complex_Polynomials.Term;
+    ztm : Standard_Complex_Polynomials.Term;
+
+  begin
+    cst.dg := new Standard_Natural_Vectors.Vector'(1..integer32(dim) => 0);
+    ztm.dg := new Standard_Natural_Vectors.Vector'(1..integer32(dim) => 0);
+    for i in 1..m loop
+      res(integer32(i)) := Standard_Random_Linear_Polynomial(dim,z(i));
+      cst.cf := Standard_Random_Numbers.Random1;
+      ztm.cf := Standard_Random_Numbers.Random1;
+      Standard_Complex_Polynomials.Add(res(integer32(i)),cst);
+      ztm.dg(integer32(n+i)) := 1;
+      Standard_Complex_Polynomials.Add(res(integer32(i)),ztm);
+      ztm.dg(integer32(n+i)) := 0;
+    end loop;
+    Standard_Complex_Polynomials.Clear(cst);
+    Standard_Complex_Polynomials.Clear(ztm);
+    return res;
+  end Standard_Random_Linear_Polynomials;
+
+  function Standard_Start_Linear_Polynomials
+             ( n,m : natural32 )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+  -- DESCRIPTION :
+  --   Returns m start polynomials in n+m variables Zi - 1,
+  --   for i in range 1..m.
+
+    dim : constant natural32 := n+m;
+    res : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
+    
+  begin
+    for i in 1..m loop
+      res(integer32(i)) := Standard_Start_Linear_Polynomial(dim,n+i);
+    end loop;
+    return res;
+  end Standard_Start_Linear_Polynomials;
+
   function Interactive_Partition
              ( m : natural32 ) return Standard_Natural_Vectors.Vector is
 
@@ -180,6 +310,10 @@ procedure ts_multproj is
     spart : constant Partition := Make_Partition(nbr,m,mpart);
     deg : Standard_Integer_Vectors.Vector(1..integer32(m));
     mhp : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
+    lhp : constant Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(m))
+        := Standard_Random_Linear_Polynomials(nbr,m,spart);
+    shp : constant Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(m))
+        := Standard_Start_Linear_Polynomials(nbr,m);
 
   begin
     put("The partition :"); put(mpart); new_line;
@@ -199,6 +333,8 @@ procedure ts_multproj is
     end loop;
     mhp := Make_Homogeneous(p,m,spart);
     put("The "); put(m,1); put_line("-homogeneous form :"); put(mhp);
+    put_line("The linear equations :"); put_line(lhp);
+    put_line("The start equations :"); put(shp);
   end Test;
 
   procedure Main is
