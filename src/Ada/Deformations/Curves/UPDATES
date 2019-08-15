@@ -1,3 +1,6 @@
+Thu 15 Aug 2019 : updated series_path_trackers, interactive_pade_trackers.adb,
+  replacing the homogeneous boolean by a natural number of m-homogenization.
+
 Mon 12 Aug 2019 : ignoring corrector failure, disabled the corrector
   feedback loop in {standard,dobldobl,quaddobl}_pade_trackers.adb.
   Separated projective transformation of solutions and systems in

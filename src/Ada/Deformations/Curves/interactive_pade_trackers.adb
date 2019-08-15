@@ -198,6 +198,7 @@ package body Interactive_Pade_Trackers is
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
+    mhom : natural32;
     arthom,homgen : boolean;
     zero : constant Standard_Complex_Numbers.Complex_Number
          := Standard_Complex_Numbers.Create(0.0);
@@ -219,13 +220,15 @@ package body Interactive_Pade_Trackers is
     Homotopy_Continuation_Parameters_io.put
       (Standard_SeriesPade_Tracker.Get_Parameters.all);
     arthom := Series_Path_Trackers.Prompt_for_Artificial;
-    homgen := Series_Path_Trackers.Prompt_for_Homogenization;
     if arthom then
       new_line;
       put_line("Reading the target system ..."); get(target);
       new_line;
       put_line("Reading the start system and its solutions ...");
       Standard_System_and_Solutions_io.get(start,sols);
+      nvr := Standard_Complex_Solutions.Head_Of(sols).n;
+      mhom := Series_Path_Trackers.Prompt_for_Homogenization(natural32(nvr));
+      homgen := (mhom > 0);
       Standard_SeriesPade_Tracker.Init(target,start,homgen);
       Standard_Loop(sols,true);
     else
@@ -253,6 +256,7 @@ package body Interactive_Pade_Trackers is
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
+    mhom : natural32;
     arthom,homgen : boolean;
     zero : constant DoblDobl_Complex_Numbers.Complex_Number
          := DoblDobl_Complex_Numbers.Create(integer32(0));
@@ -274,12 +278,14 @@ package body Interactive_Pade_Trackers is
     Homotopy_Continuation_Parameters_io.put
       (DoblDobl_SeriesPade_Tracker.Get_Parameters.all);
     arthom := Series_Path_Trackers.Prompt_for_Artificial;
-    homgen := Series_Path_Trackers.Prompt_for_Homogenization;
     if arthom then
       new_line;
       put_line("Reading the target system ..."); get(target);
       new_line;
       put_line("Reading the start system and its solutions ...");
+      nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
+      mhom := Series_Path_Trackers.Prompt_for_Homogenization(natural32(nvr));
+      homgen := (mhom > 0);
       DoblDobl_System_and_Solutions_io.get(start,sols);
       DoblDobl_SeriesPade_Tracker.Init(target,start,homgen);
       DoblDobl_Loop(sols,true);
@@ -308,6 +314,7 @@ package body Interactive_Pade_Trackers is
          := Homotopy_Continuation_Parameters.Default_Values;
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
+    mhom : natural32;
     arthom,homgen : boolean;
     zero : constant QuadDobl_Complex_Numbers.Complex_Number
          := QuadDobl_Complex_Numbers.Create(integer32(0));
@@ -329,12 +336,14 @@ package body Interactive_Pade_Trackers is
     Homotopy_Continuation_Parameters_io.put
       (QuadDobl_SeriesPade_Tracker.Get_Parameters.all);
     arthom := Series_Path_Trackers.Prompt_for_Artificial;
-    homgen := Series_Path_Trackers.Prompt_for_Homogenization;
     if arthom then
       new_line;
       put_line("Reading the target system ..."); get(target);
       new_line;
       put_line("Reading the start system and its solutions ...");
+      nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
+      mhom := Series_Path_Trackers.Prompt_for_Homogenization(natural32(nvr));
+      homgen := (mhom > 0);
       QuadDobl_System_and_Solutions_io.get(start,sols);
       QuadDobl_SeriesPade_Tracker.Init(target,start,homgen);
       QuadDobl_Loop(sols,true);

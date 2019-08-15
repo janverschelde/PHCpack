@@ -1,13 +1,15 @@
 with Ada.Calendar;
 with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
-with DoblDobl_Complex_Numbers_cv;
+with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers_cv;
+with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
+with Numbers_io;                         use Numbers_io;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -15,22 +17,28 @@ with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Hessians;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Standard_System_and_Solutions_io;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Hessians;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Hessians;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
+with QuadDobl_System_and_Solutions_io;
 with Solution_Drops;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with DoblDobl_Homotopy;
+with DoblDobl_Coefficient_Homotopy;
 with QuadDobl_Homotopy;
+with QuadDobl_Coefficient_Homotopy;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_VecVecs;
@@ -139,6 +147,7 @@ package body Series_Path_Trackers is
 
   procedure Standard_Run
               ( nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -155,8 +164,6 @@ package body Series_Path_Trackers is
     hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
     ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..dim);
     mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..dim);
-    p : Homotopy_Continuation_Parameters.Parameters
-      := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -164,7 +171,6 @@ package body Series_Path_Trackers is
     monitor,verbose,tofile : boolean;
     file : file_type;
     timer : Timing_Widget;
-    prevgamma : Standard_Complex_Numbers.Complex_Number;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
@@ -178,18 +184,9 @@ package body Series_Path_Trackers is
     if vrb > 0
      then put_line("-> in series_path_trackers.Standard_Run ...");
     end if;
-    if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
-      p.gamma := Standard_Complex_Numbers.Create(1.0);
-      Homotopy_Continuation_Parameters_io.Tune(p);
-      Standard_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
-    else
-      p.gamma := Standard_Homotopy.Accessibility_Constant;
-      prevgamma := p.gamma;
-      Homotopy_Continuation_Parameters_io.Tune(p);
-      if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
-       then Standard_Reset_Gamma(p.gamma);
-      end if;
-      Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
+    if idxpar /= 0
+     then Standard_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
+     else Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
     end if;
     h := Standard_Homotopy.Homotopy_System;
     if idxpar /= 0
@@ -201,11 +198,11 @@ package body Series_Path_Trackers is
     Standard_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
-     then Standard_Write(file,natural32(nq),natural32(nvr),idxpar,sols,p);
+     then Standard_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
     end if;
-    minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;
-    smallest := p.maxsize; largest := 0.0;
+    minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -214,7 +211,7 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         Standard_Pade_Trackers.Track_One_Path
-          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,nbrsteps,nbrcorrs,cntcut,
+          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
            cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -225,7 +222,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         Standard_Pade_Trackers.Track_One_Path
-          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
+          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
            nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
            cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
@@ -253,7 +250,7 @@ package body Series_Path_Trackers is
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,p.numdeg,p.dendeg,0,timer);
+      Write_Timer(file,pars.numdeg,pars.dendeg,0,timer);
       if idxpar = 0
        then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
       end if;
@@ -265,7 +262,7 @@ package body Series_Path_Trackers is
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,p.numdeg,p.dendeg,0,timer);
+      Write_Timer(standard_output,pars.numdeg,pars.dendeg,0,timer);
       if idxpar = 0 then
         -- Refine_Roots(standard_output,nq,sols);
         Refine_Roots(standard_output,abh,sols,vrb);
@@ -283,6 +280,7 @@ package body Series_Path_Trackers is
 
   procedure DoblDobl_Run
               ( nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -299,8 +297,6 @@ package body Series_Path_Trackers is
     dim : constant integer32 := Set_Dimension(nvr,idxpar);
     ejm : DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..dim);
     mlt : DoblDobl_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..dim);
-    p : Homotopy_Continuation_Parameters.Parameters
-      := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -308,11 +304,6 @@ package body Series_Path_Trackers is
     monitor,verbose,tofile : boolean;
     file : file_type;
     timer : Timing_Widget;
-    ddgamma : constant DoblDobl_Complex_Numbers.Complex_Number
-            := DoblDobl_Homotopy.Accessibility_Constant;
-    gamma : constant Standard_Complex_Numbers.Complex_Number
-          := DoblDobl_Complex_Numbers_cv.DoblDobl_Complex_to_Standard(ddgamma);
-    prevgamma : Standard_Complex_Numbers.Complex_Number;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
@@ -326,18 +317,9 @@ package body Series_Path_Trackers is
     if vrb > 0
      then put_line("-> in series_path_trackers.DoblDobl_Run ...");
     end if;
-    if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
-      p.gamma := Standard_Complex_Numbers.Create(1.0);
-      Homotopy_Continuation_Parameters_io.Tune(p);
-      DoblDobl_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
-    else
-      p.gamma := gamma;
-      prevgamma := p.gamma;
-      Homotopy_Continuation_Parameters_io.Tune(p);
-      if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
-       then DoblDobl_Reset_Gamma(p.gamma);
-      end if;
-      DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
+    if idxpar /= 0
+     then DoblDobl_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
+     else DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
     end if;
     h := DoblDobl_Homotopy.Homotopy_System;
     if idxpar /= 0
@@ -349,11 +331,11 @@ package body Series_Path_Trackers is
     DoblDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
-     then DoblDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,p);
+     then DoblDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
     end if;
-    minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;
-    smallest := p.maxsize; largest := 0.0;
+    minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -362,7 +344,7 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         DoblDobl_Pade_Trackers.Track_One_Path
-          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,nbrsteps,nbrcorrs,cntcut,
+          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
            cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -373,7 +355,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         DoblDobl_Pade_Trackers.Track_One_Path
-          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
+          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
            nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
            cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
@@ -402,7 +384,7 @@ package body Series_Path_Trackers is
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,p.numdeg,p.dendeg,1,timer);
+      Write_Timer(file,pars.numdeg,pars.dendeg,1,timer);
       if idxpar = 0
        then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
       end if;
@@ -414,7 +396,7 @@ package body Series_Path_Trackers is
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,p.numdeg,p.dendeg,1,timer);
+      Write_Timer(standard_output,pars.numdeg,pars.dendeg,1,timer);
       if idxpar = 0 then
         -- Refine_Roots(standard_output,nq,sols);
         Refine_Roots(standard_output,abh,sols,vrb);
@@ -432,6 +414,7 @@ package body Series_Path_Trackers is
 
   procedure QuadDobl_Run
               ( nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -448,8 +431,6 @@ package body Series_Path_Trackers is
     dim : constant integer32 := Set_Dimension(nvr,idxpar);
     ejm : QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..dim);
     mlt : QuadDobl_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..dim);
-    p : Homotopy_Continuation_Parameters.Parameters
-      := Homotopy_Continuation_Parameters.Default_Values;
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -457,11 +438,6 @@ package body Series_Path_Trackers is
     monitor,verbose,tofile : boolean;
     file : file_type;
     timer : Timing_Widget;
-    qdgamma : constant QuadDobl_Complex_Numbers.Complex_Number
-            := QuadDobl_Homotopy.Accessibility_Constant;
-    gamma : constant Standard_Complex_Numbers.Complex_Number
-          := QuadDobl_Complex_Numbers_cv.QuadDobl_Complex_to_Standard(qdgamma);
-    prevgamma : Standard_Complex_Numbers.Complex_Number;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
     minsize,maxsize,smallest,largest : double_float;
@@ -475,18 +451,9 @@ package body Series_Path_Trackers is
     if vrb > 0
      then put_line("-> in series_path_trackers.QuadDobl_Run ...");
     end if;
-    if idxpar /= 0 then -- gamma is 1 with natural parameter homotopy
-      p.gamma := Standard_Complex_Numbers.Create(1.0);
-      Homotopy_Continuation_Parameters_io.Tune(p);
-      QuadDobl_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
-    else
-      p.gamma := gamma;
-      prevgamma := p.gamma;
-      Homotopy_Continuation_Parameters_io.Tune(p);
-      if not Standard_Complex_Numbers.Equal(p.gamma,prevgamma)
-       then QuadDobl_Reset_Gamma(p.gamma);
-      end if;
-      QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
+    if idxpar /= 0
+     then QuadDobl_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
+     else QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
     end if;
     h := QuadDobl_Homotopy.Homotopy_System;
     if idxpar /= 0
@@ -498,11 +465,11 @@ package body Series_Path_Trackers is
     QuadDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
     Set_Output(file,monitor,verbose,tofile);
     if tofile
-     then QuadDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,p);
+     then QuadDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
     end if;
-    minnbrsteps := p.maxsteps+1; maxnbrsteps := 0;
-    minnbrcorrs := (p.maxsteps+1)*p.corsteps+1; maxnbrcorrs := 0;
-    smallest := p.maxsize; largest := 0.0;
+    minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
     tstart(timer);
     for i in 1..len loop
       ls := Head_Of(tmp);
@@ -511,7 +478,7 @@ package body Series_Path_Trackers is
       end if;
       if tofile then
         QuadDobl_Pade_Trackers.Track_One_Path
-          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,nbrsteps,nbrcorrs,cntcut,
+          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
            cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
           Series_and_Trackers.Write_Path_Statistics
@@ -522,7 +489,7 @@ package body Series_Path_Trackers is
         put(file,ls.all); new_line(file);
       else
         QuadDobl_Pade_Trackers.Track_One_Path
-          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,p,
+          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
            nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
            cntsstp,cntdstp,cntpstp,verbose,vrb-1);
         if verbose then
@@ -550,7 +517,7 @@ package body Series_Path_Trackers is
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,p.numdeg,p.dendeg,2,timer);
+      Write_Timer(file,pars.numdeg,pars.dendeg,2,timer);
       if idxpar = 0
        then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
       end if;
@@ -562,7 +529,7 @@ package body Series_Path_Trackers is
       new_line;
       put_line("THE SOLUTIONS :");
       put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,p.numdeg,p.dendeg,2,timer);
+      Write_Timer(standard_output,pars.numdeg,pars.dendeg,2,timer);
       if idxpar = 0 then
         -- Refine_Roots(standard_output,nq,sols);
         Refine_Roots(standard_output,abh,sols,vrb);
@@ -592,101 +559,175 @@ package body Series_Path_Trackers is
     return (ans = 'y');
   end Prompt_for_Artificial;
 
-  function Prompt_for_Homogenization return boolean is
+  function Prompt_for_Homogenization
+             ( dim : in natural32 ) return natural32 is
 
-    ans : character;
+    res : natural32 := 0;
 
   begin
     new_line;
-    put("Are homogeneneous coordinates to be used? (y/n) ");
-    Ask_Yes_or_No(ans);
-    return (ans = 'y');
+    put_line
+      ("MENU for affine, homogeneous or multi-homogeneous coordinates :");
+    put_line("  0 : in affine coordinates, in the original variables;");
+    put_line("  1 : in 1-homogeous coordinates, in projective space;");
+    put_line("  2 or higher : in multi-homogeous coordinates, in a multi-");
+    put_line("  projective space defined by a partition of the variables.");
+    loop
+      put("Type a number between 0 and "); put(dim,1); put(" : ");
+      Read_Natural(res);
+      exit when res <= dim;
+      put("-> your number is too high, as ");
+      put(res,1); put(" > "); put(dim,1);
+      put_line("; please try again.");
+    end loop;
+    return res;
   end Prompt_for_Homogenization;
 
   procedure Standard_Main ( verbose : in integer32 := 0 ) is
 
+    target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     nbq,nvr,idx : integer32;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
-    homo : constant boolean := Prompt_for_Homogenization;
+    mhom : natural32;
+    pars : Homotopy_Continuation_Parameters.Parameters
+         := Homotopy_Continuation_Parameters.Default_Values;
+
+    use Homotopy_Series_Readers;
  
   begin
     if verbose > 0
      then put_line("-> in series_path_trackers.Standard_Main ...");
     end if;
+    new_line;
     if arth then
-      Homotopy_Series_Readers.Standard_Reader(nbq,sols,homcrd=>homo);
-      if homo then
+      Homotopy_Continuation_Parameters_io.Tune(pars);
+      new_line;
+      put_line("Reading the target system ..."); get(target);
+      new_line;
+      put_line("Reading the start system and its solutions ...");
+      Standard_System_and_Solutions_io.get(start,sols);
+      nvr := Standard_Complex_Solutions.Head_Of(sols).n;
+      nbq := target'last;
+      mhom := Prompt_for_Homogenization(natural32(nvr));
+      if mhom = 0 then
+        Standard_Homotopy.Create(target.all,start.all,2,pars.gamma);
+      else
+        nvr := nvr + 1; nbq := nbq + 1;
+        Standard_Projective_Transformation(target,start,sols);
+        Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
+        Standard_Coefficient_Homotopy.Create(start.all,target.all,1,pars.gamma);
         Symbol_Table.Enlarge(1);
         Symbol_Table.Add_String("Z0");
       end if;
-      nvr := Standard_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
-      new_line;
-      Standard_Run(nbq,nvr,idx,sols,verbose-1);
+      Standard_Run(nbq,nvr,idx,pars,sols,verbose-1);
     else
+      pars.gamma := Standard_Complex_Numbers.Create(1.0);
+      Homotopy_Continuation_Parameters_io.Tune(pars);
       Homotopy_Series_Readers.Standard_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      new_line;
-      Standard_Run(nbq,nvr,idx,dropsols,verbose-1);
+      Standard_Run(nbq,nvr,idx,pars,dropsols,verbose-1);
     end if;
   end Standard_Main;
 
   procedure DoblDobl_Main ( verbose : in integer32 := 0 ) is
 
+    target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     nbq,nvr,idx : integer32;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
-    homo : constant boolean := Prompt_for_Homogenization;
+    mhom : natural32;
+    pars : Homotopy_Continuation_Parameters.Parameters
+         := Homotopy_Continuation_Parameters.Default_Values;
+    dd_gamma : DoblDobl_Complex_Numbers.Complex_Number;
+
+    use Homotopy_Series_Readers;
 
   begin
     if verbose > 0
      then put_line("-> in series_path_trackers.DoblDobl_Main ...");
     end if;
+    new_line;
     if arth then
-      Homotopy_Series_Readers.DoblDobl_Reader(nbq,sols,homcrd=>homo);
-      if homo then
+      Homotopy_Continuation_Parameters_io.Tune(pars);
+      dd_gamma := Standard_to_DoblDobl_Complex(pars.gamma);
+      new_line;
+      put_line("Reading the target system ..."); get(target);
+      new_line;
+      put_line("Reading the start system and its solutions ...");
+      DoblDobl_System_and_Solutions_io.get(start,sols);
+      nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
+      nbq := target'last;
+      mhom := Prompt_for_Homogenization(natural32(nvr));
+      if mhom = 0 then
+        DoblDobl_Homotopy.Create(target.all,start.all,2,dd_gamma);
+      else
+        nvr := nvr + 1; nbq := nbq + 1;
+        DoblDobl_Projective_Transformation (target,start,sols);
+        DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
+        DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,dd_gamma);
         Symbol_Table.Enlarge(1);
         Symbol_Table.Add_String("Z0");
       end if;
-      nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
-      new_line;
-      DoblDobl_Run(nbq,nvr,idx,sols,verbose-1);
+      DoblDobl_Run(nbq,nvr,idx,pars,sols,verbose-1);
     else
+      pars.gamma := Standard_Complex_Numbers.Create(1.0);
+      Homotopy_Continuation_Parameters_io.Tune(pars);
       Homotopy_Series_Readers.DoblDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      new_line;
-      DoblDobl_Run(nbq,nvr,idx,dropsols,verbose-1);
+      DoblDobl_Run(nbq,nvr,idx,pars,dropsols,verbose-1);
     end if;
   end DoblDobl_Main;
 
   procedure QuadDobl_Main ( verbose : in integer32 := 0 ) is
 
+    target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     nbq,nvr,idx : integer32;
     sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
-    homo : constant boolean := Prompt_for_Homogenization;
+    mhom : natural32;
+    pars : Homotopy_Continuation_Parameters.Parameters
+         := Homotopy_Continuation_Parameters.Default_Values;
+    qd_gamma : QuadDobl_Complex_Numbers.Complex_Number;
+
+    use Homotopy_Series_Readers;
 
   begin
     if verbose > 0
      then put_line("-> in series_path_trackers.QuadDobl_Main ...");
     end if;
+    new_line;
     if arth then
-      Homotopy_Series_Readers.QuadDobl_Reader(nbq,sols,homcrd=>homo);
-      if homo then
+      Homotopy_Continuation_Parameters_io.Tune(pars);
+      qd_gamma := Standard_to_QuadDobl_Complex(pars.gamma);
+      new_line;
+      put_line("Reading the target system ..."); get(target);
+      new_line;
+      put_line("Reading the start system and its solutions ...");
+      QuadDobl_System_and_Solutions_io.get(start,sols);
+      nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
+      nbq := target'last;
+      mhom := Prompt_for_Homogenization(natural32(nvr));
+      if mhom = 0 then
+        QuadDobl_Homotopy.Create(target.all,start.all,2,qd_gamma);
+      else
+        nvr := nvr + 1; nbq := nbq + 1;
+        QuadDobl_Projective_Transformation(target,start,sols);
+        QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
+        QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
         Symbol_Table.Enlarge(1);
         Symbol_Table.Add_String("Z0");
       end if;
-      nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
       idx := 0;
-      new_line;
-      QuadDobl_Run(nbq,nvr,idx,sols,verbose-1);
+      QuadDobl_Run(nbq,nvr,idx,pars,sols,verbose-1);
     else
+      pars.gamma := Standard_Complex_Numbers.Create(1.0);
+      Homotopy_Continuation_Parameters_io.Tune(pars);
       Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      new_line;
-      QuadDobl_Run(nbq,nvr,idx,dropsols,verbose-1);
+      QuadDobl_Run(nbq,nvr,idx,pars,dropsols,verbose-1);
     end if;
   end QuadDobl_Main;
 

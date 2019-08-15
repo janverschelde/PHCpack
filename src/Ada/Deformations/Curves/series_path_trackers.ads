@@ -48,14 +48,17 @@ package Series_Path_Trackers is
 
   procedure Standard_Run
               ( nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
   procedure DoblDobl_Run
               ( nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
   procedure QuadDobl_Run
               ( nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
 
@@ -68,7 +71,12 @@ package Series_Path_Trackers is
   --   nvr      number of variables in the homotopy;
   --   idxpar   index of the parameter in a natural parameter homotopy,
   --            in 1..nvr, or else 0 for an artificial parameter homotopy;
+  --   pars     values of the homotopy continuation parameters;
+  --   sols     start solutions;
   --   verbose  the verbose level.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the path.
 
   function Prompt_for_Artificial return boolean;
 
@@ -76,10 +84,16 @@ package Series_Path_Trackers is
   --   Asks the user whether the homotopy is an artificial parameter
   --   homotopy and return true if so, otherwise false is returned.
 
-  function Prompt_for_Homogenization return boolean;
+  function Prompt_for_Homogenization ( dim : natural32 ) return natural32;
 
   -- DESCRIPTION :
   --   Asks the user whether homogeneous coordinates need to be used.
+  --   On return is a natural number.  There are three possibilities:
+  --   1) 0 : for affine coordinates
+  --   2) 1 : in 1-homogeneous coordinates, in ordinary projective space,
+  --   3) 2 or higher : in multi-projective coordinates,
+  --   in a multi-projective space, defined by a partition of the variables.
+  --   The total number of variables is given in the value of dim.
 
   procedure Standard_Main ( verbose : in integer32 := 0 );
   procedure DoblDobl_Main ( verbose : in integer32 := 0 );
