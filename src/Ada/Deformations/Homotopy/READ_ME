@@ -40,6 +40,7 @@ quaddobl_coefficient_homotopy      : quad double coeff-parameter homotopy
 ts_evalhomt                        : test on coefficient-parameter homotopy
 hyperplane_solution_scaling        : scale a solution and a hyperplane
 ts_scalplane                       : test on scaling last hyperplane
+multi_projective_transformations   : transform to m-homogeneous coordinates
 ts_multproj                        : test on multi-homogenization
 ------------------------------------------------------------------------------
 standard_scaling                   : scaling standard systems and solutions
