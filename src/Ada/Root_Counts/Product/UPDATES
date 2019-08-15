@@ -1,3 +1,6 @@
+Thu 15 Aug 2019 : extended degrees_in_sets_of_unknowns with functions for
+  polynomials with coefficients in double double and quad double precision.
+
 Sun 4 Mar 2018 : in drivers_for_set_structures.adb, called the function
   Matching_Permanent() so the formal root count in phc -r goes faster.
 
