@@ -4,13 +4,12 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Numbers_io;
 with Characters_and_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
-with Symbol_Table,Symbol_Table_io;
+with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems;
@@ -26,37 +25,6 @@ procedure ts_multproj is
 -- DESCRIPTION :
 --   Development of multiprojective coordinate transformations.
 
-  function Interactive_Partition
-             ( m : natural32 ) return Standard_Natural_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns a partition of the symbols into m sets,
-  --   prompting the user for each symbol in the table for its set.
-  --   On return is a vector of range 1..n, where n is the number of symbols.
-
-    nbr : constant integer32 := integer32(Symbol_Table.Number);
-    res : Standard_Natural_Vectors.Vector(1..nbr) := (1..nbr => 0);
-    idx : natural32 := 0;
-
-  begin
-    for i in 1..nbr loop
-      declare
-        sb : constant Symbol_Table.Symbol := Symbol_Table.get(natural32(i));
-      begin
-        loop
-          put("-> which set will "); Symbol_Table_io.put(sb);
-          put(" be in? ");
-          Numbers_io.Read_Natural(idx);
-          exit when ((idx > 0) and (idx <= m));
-          put("-> index must be larger than 0 and less than "); 
-          put(m+1,1); put_line(".  Please try again.");
-        end loop;
-        res(i) := idx;
-      end;
-    end loop;
-    return res;
-  end Interactive_Partition;
-
   procedure Standard_Test
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 m : in natural32 ) is
@@ -65,8 +33,7 @@ procedure ts_multproj is
   --   Runs a test on multi-projective transformation on a system
   --   with coefficients in double precision.
 
-    mpart : constant Standard_Natural_Vectors.Vector
-          := Interactive_Partition(m);
+    mpart : constant Standard_Natural_Vectors.Vector := iget(m);
     nbr : constant natural32 := Symbol_Table.Number;
     spart : constant Partition := Make_Partition(nbr,m,mpart);
     deg : Standard_Integer_Vectors.Vector(1..integer32(m));
@@ -106,8 +73,7 @@ procedure ts_multproj is
   --   Runs a test on multi-projective transformation on a system
   --   with coefficients in double double precision.
 
-    mpart : constant Standard_Natural_Vectors.Vector
-          := Interactive_Partition(m);
+    mpart : constant Standard_Natural_Vectors.Vector := iget(m);
     nbr : constant natural32 := Symbol_Table.Number;
     spart : constant Partition := Make_Partition(nbr,m,mpart);
     deg : Standard_Integer_Vectors.Vector(1..integer32(m));
@@ -147,8 +113,7 @@ procedure ts_multproj is
   --   Runs a test on multi-projective transformation on a system
   --   with coefficients in quad double precision.
 
-    mpart : constant Standard_Natural_Vectors.Vector
-          := Interactive_Partition(m);
+    mpart : constant Standard_Natural_Vectors.Vector := iget(m);
     nbr : constant natural32 := Symbol_Table.Number;
     spart : constant Partition := Make_Partition(nbr,m,mpart);
     deg : Standard_Integer_Vectors.Vector(1..integer32(m));

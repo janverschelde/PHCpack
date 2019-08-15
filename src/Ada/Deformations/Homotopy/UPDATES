@@ -1,6 +1,8 @@
 Thu 15 Aug 2019 : new package multi_projective_transformations, with code
   from ts_multproj, extended with versions for double double and quad double
-  precisions, with added tests in ts_multproj.
+  precisions, with added tests in ts_multproj.  Moved code from ts_multproj
+  and multi_projective_transformations into interactive read functions of
+  the package partitions_of_sets_of_unknowns_io.
 
 Wed 14 Aug 2019 : new test procedure ts_multproj.adb to develop the 
   multi-homogeneous projective transformations.

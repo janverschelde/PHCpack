@@ -7,25 +7,10 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Random_Numbers;
+with Standard_Natural_Vectors;
 with Degrees_in_Sets_of_Unknowns;
 
 package body Multi_Projective_Transformations is
-
-  function Make_Partition
-             ( n,m : natural32; p : Standard_Natural_Vectors.Vector )
-             return Partition is
-
-    res : Partition(1..m);
-
-  begin
-    for i in res'range loop
-      res(i) := Sets_of_Unknowns.Create(n); -- initialize each set
-    end loop;
-    for i in p'range loop
-      Sets_of_Unknowns.Add(res(p(i)),natural32(i));
-    end loop;
-    return res;
-  end Make_Partition;
 
   function Multiset_Degrees
              ( p : in Standard_Complex_Polynomials.Poly;

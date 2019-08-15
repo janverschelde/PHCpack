@@ -1,5 +1,4 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials;
@@ -21,16 +20,6 @@ package Multi_Projective_Transformations is
 --   of the partition is the same for all terms in the multi-homogenous form
 --   of the polynomial.  Transformations are supported for polynomials with
 --   coefficients in double, double double, and quad double precision.
-
-  function Make_Partition
-             ( n,m : natural32; p : Standard_Natural_Vectors.Vector )
-             return Partition;
-
-  -- DESCRIPTION :
-  --   Returns the m-partition p, represented as a partition of
-  --   a set of unknowns, a subset of the total set of n variables.
-  --   The input vector p has range 1..n and p(i) defines the set to which
-  --   the i-th variable belongs in the returned partition.
 
   function Multiset_Degrees
              ( p : in Standard_Complex_Polynomials.Poly;
