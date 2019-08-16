@@ -59,16 +59,16 @@ package Multi_Projective_Transformations is
   --   with degrees to match the given multiset degrees in d.
 
   function Make_Homogeneous
-             ( p : in Standard_Complex_Polynomials.Poly; 
-               m : in natural32; z : in Partition )
+             ( p : Standard_Complex_Polynomials.Poly; 
+               m : natural32; z : Partition )
              return Standard_Complex_Polynomials.Poly;
   function Make_Homogeneous
-             ( p : in DoblDobl_Complex_Polynomials.Poly; 
-               m : in natural32; z : in Partition )
+             ( p : DoblDobl_Complex_Polynomials.Poly; 
+               m : natural32; z : Partition )
              return DoblDobl_Complex_Polynomials.Poly;
   function Make_Homogeneous
-             ( p : in QuadDobl_Complex_Polynomials.Poly; 
-               m : in natural32; z : in Partition )
+             ( p : QuadDobl_Complex_Polynomials.Poly; 
+               m : natural32; z : Partition )
              return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
@@ -76,16 +76,16 @@ package Multi_Projective_Transformations is
   --   with degrees to match the given multiset degrees in d.
 
   function Make_Homogeneous
-             ( p : in Standard_Complex_Poly_Systems.Poly_Sys; 
-               m : in natural32; z : in Partition )
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition )
              return Standard_Complex_Poly_Systems.Poly_Sys;
   function Make_Homogeneous
-             ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys; 
-               m : in natural32; z : in Partition )
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Make_Homogeneous
-             ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys; 
-               m : in natural32; z : in Partition )
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
@@ -215,5 +215,24 @@ package Multi_Projective_Transformations is
   -- DESCRIPTION :
   --   Replaces every solution in sols by a solution with the same
   --   coordinates, and with m ones added to each solution vector.
+
+  function Multi_Projective_Transformation
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Multi_Projective_Transformation
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Multi_Projective_Transformation
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the polynomial system p with m variables added,
+  --   with degrees to match the multiset degrees of each polynomial.
+  --   If start, then start linear polynomials are added,
+  --   otherwise, random linear polynomial are added.
 
 end Multi_Projective_Transformations;

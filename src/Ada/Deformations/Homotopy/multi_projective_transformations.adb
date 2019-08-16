@@ -748,4 +748,77 @@ package body Multi_Projective_Transformations is
     end loop;
   end Add_Ones;
 
+  function Multi_Projective_Transformation
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    dim : constant integer32 := p'last + integer32(m);
+    res : Standard_Complex_Poly_Systems.Poly_Sys(1..dim);
+    mhp : constant Standard_Complex_Poly_Systems.Poly_Sys
+        := Make_Homogeneous(p,m,z);
+    lhp : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
+    nbr : constant natural32 := natural32(p'last);
+
+  begin
+    res(mhp'range) := mhp;
+    if start
+     then lhp := Standard_Start_Linear_Polynomials(nbr,m);
+     else lhp := Standard_Random_Linear_Polynomials(nbr,m,z);
+    end if;
+    for i in lhp'range loop
+      res(p'last+i) := lhp(i);
+    end loop;
+    return res;
+  end Multi_Projective_Transformation;
+
+  function Multi_Projective_Transformation
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+ 
+    dim : constant integer32 := p'last + integer32(m);
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..dim);
+    mhp : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+        := Make_Homogeneous(p,m,z);
+    lhp : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
+    nbr : constant natural32 := natural32(p'last);
+
+  begin
+    res(mhp'range) := mhp;
+    if start
+     then lhp := DoblDobl_Start_Linear_Polynomials(nbr,m);
+     else lhp := DoblDobl_Random_Linear_Polynomials(nbr,m,z);
+    end if;
+    for i in lhp'range loop
+      res(p'last+i) := lhp(i);
+    end loop;
+    return res;
+  end Multi_Projective_Transformation;
+
+  function Multi_Projective_Transformation
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+
+    dim : constant integer32 := p'last + integer32(m);
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..dim);
+    mhp : contant QuadDobl_Complex_Poly_Systems.Poly_Sys
+        := Make_Homogeneous(p,m,z);
+    lhp : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
+    nbr : constant natural32 := natural32(p'last);
+
+
+  begin
+    res(mhp'range) := mhp;
+    if start
+     then lhp := QuadDobl_Start_Linear_Polynomials(nbr,m);
+     else lhp := QuadDobl_Random_Linear_Polynomials(nbr,m,z);
+    end if;
+    for i in lhp'range loop
+      res(p'last+i) := lhp(i);
+    end loop;
+    return res;
+  end Multi_Projective_Transformation;
+
 end Multi_Projective_Transformations;
