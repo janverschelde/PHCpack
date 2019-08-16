@@ -4,7 +4,8 @@ Thu 15 Aug 2019 : new package multi_projective_transformations, with code
   and multi_projective_transformations into interactive read functions of
   the package partitions_of_sets_of_unknowns_io.  Extended the package
   multi_projective_transformations with functions with wrap the homogenization
-  and the adding of the linear equations.
+  and the adding of the linear equations.  Fixed some compilation errors in
+  multi_projective_transformations.adb.
 
 Wed 14 Aug 2019 : new test procedure ts_multproj.adb to develop the 
   multi-homogeneous projective transformations.

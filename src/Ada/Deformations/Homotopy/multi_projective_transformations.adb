@@ -799,11 +799,11 @@ package body Multi_Projective_Transformations is
   function Multi_Projective_Transformation
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys; 
                m : natural32; z : Partition; start : boolean := false )
-             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
     dim : constant integer32 := p'last + integer32(m);
     res : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..dim);
-    mhp : contant QuadDobl_Complex_Poly_Systems.Poly_Sys
+    mhp : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
         := Make_Homogeneous(p,m,z);
     lhp : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
     nbr : constant natural32 := natural32(p'last);
