@@ -1,3 +1,5 @@
+Fri 16 Aug 2019 : added access type to partitions_of_sets_of_unknowns.
+
 Thu 15 Aug 2019 : extended degrees_in_sets_of_unknowns with functions for
   polynomials with coefficients in double double and quad double precision.
   Added functions to partitions_of_sets_of_unknowns_io to interactively

@@ -7,7 +7,8 @@ package Partitions_of_Sets_of_Unknowns is
 --   This package provides a data abstraction for enumerating all
 --   partitions of a given set of unknowns.
 
-  type partition is array ( natural32 range <> ) of Set;
+  type Partition is array ( natural32 range <> ) of Set;
+  type Link_to_Partition is access Partition;
 
 -- CREATORS :
 
@@ -49,6 +50,7 @@ package Partitions_of_Sets_of_Unknowns is
 -- DESTRUCTOR :
 
   procedure Clear ( p : in out Partition );
+  procedure Clear ( p : in out Link_to_Partition );
 
   -- DESCRIPTION :
   --   Deallocates the occupied memory.

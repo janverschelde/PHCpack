@@ -1,3 +1,5 @@
+with unchecked_deallocation;
+
 package body Partitions_of_Sets_of_Unknowns is
 
 -- CREATORS :
@@ -164,6 +166,18 @@ package body Partitions_of_Sets_of_Unknowns is
     for i in p'range loop
       Clear(p(i));
     end loop;
+  end Clear;
+
+  procedure Clear ( p : in out Link_to_Partition ) is
+
+    procedure free is
+      new unchecked_deallocation(Partition,Link_to_Partition);
+
+  begin
+    if p /= null then
+      Clear(p.all);
+      free(p);
+    end if;
   end Clear;
 
 end Partitions_of_Sets_of_Unknowns;
