@@ -17,6 +17,7 @@ with QuadDobl_Homotopy;
 with QuadDobl_Coefficient_Homotopy;
 with QuadDobl_System_and_Solutions_io;
 with Projective_Transformations;         use Projective_Transformations;
+with Multi_Projective_Transformations;   use Multi_Projective_Transformations;
 with Homogenization;                     use Homogenization;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_Systems;
@@ -110,6 +111,87 @@ package body Homotopy_Series_Readers is
     QuadDobl_Projective_Transformation(target,start);
     Projective_Transformation(sols);
   end QuadDobl_Projective_Transformation;
+
+  procedure Standard_Multi_Projective_Transformation
+              ( target,start
+                  : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition ) is
+
+    p : constant Standard_Complex_Poly_Systems.Poly_Sys
+      := Multi_Projective_Transformation(target.all,m,z);
+    q : constant Standard_Complex_Poly_Systems.Poly_Sys
+      := Multi_Projective_Transformation(start.all,m,z,true);
+
+  begin
+    Standard_Complex_Poly_Systems.Clear(target);
+    target := new Standard_Complex_Poly_Systems.Poly_Sys'(p);
+    Standard_Complex_Poly_Systems.Clear(start);
+    start := new Standard_Complex_Poly_Systems.Poly_Sys'(q);
+  end Standard_Multi_Projective_Transformation;
+
+  procedure DoblDobl_Multi_Projective_Transformation
+              ( target,start
+                  : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition ) is
+
+    p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+      := Multi_Projective_Transformation(target.all,m,z);
+    q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+      := Multi_Projective_Transformation(start.all,m,z,true);
+
+  begin
+    DoblDobl_Complex_Poly_Systems.Clear(target);
+    target := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(p);
+    DoblDobl_Complex_Poly_Systems.Clear(start);
+    start := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(q);
+  end DoblDobl_Multi_Projective_Transformation;
+
+  procedure QuadDobl_Multi_Projective_Transformation
+              ( target,start
+                  : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition ) is
+
+    p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+      := Multi_Projective_Transformation(target.all,m,z);
+    q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+      := Multi_Projective_Transformation(start.all,m,z,true);
+
+  begin
+    QuadDobl_Complex_Poly_Systems.Clear(target);
+    target := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(p);
+    QuadDobl_Complex_Poly_Systems.Clear(start);
+    start := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(q);
+  end QuadDobl_Multi_Projective_Transformation;
+
+  procedure Standard_Multi_Projective_Transformation
+              ( target : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition ) is
+  begin
+    Standard_Multi_Projective_Transformation(target,start,m,z);
+    Add_Ones(sols,m);
+  end Standard_Multi_Projective_Transformation;
+
+  procedure DoblDobl_Multi_Projective_Transformation
+              ( target : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition ) is
+  begin
+    DoblDobl_Multi_Projective_Transformation(target,start,m,z);
+    Add_Ones(sols,m);
+  end DoblDobl_Multi_Projective_Transformation;
+
+  procedure QuadDobl_Multi_Projective_Transformation
+              ( target : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition ) is
+  begin
+    QuadDobl_Multi_Projective_Transformation(target,start,m,z);
+    Add_Ones(sols,m);
+  end QuadDobl_Multi_Projective_Transformation;
 
   procedure Standard_Reader
               ( nbequ : out integer32;

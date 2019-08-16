@@ -95,6 +95,32 @@ package Series_Path_Trackers is
   --   in a multi-projective space, defined by a partition of the variables.
   --   The total number of variables is given in the value of dim.
 
+  procedure Standard_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : out Standard_Complex_Solutions.Solution_List );
+  procedure DoblDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure QuadDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Prompts the user for target and start system and defines
+  --   the artificial-parameter homotopy, eventually after applying
+  --   projective transformations.
+
+  -- ON ENTRY :
+  --   pars     settings of the parameters (actually only for gamma).
+
+  -- ON RETURN :
+  --   nbq      number of equations;
+  --   nvr      number of variables;
+  --   sols     start solutions.
+
   procedure Standard_Main ( verbose : in integer32 := 0 );
   procedure DoblDobl_Main ( verbose : in integer32 := 0 );
   procedure QuadDobl_Main ( verbose : in integer32 := 0 );

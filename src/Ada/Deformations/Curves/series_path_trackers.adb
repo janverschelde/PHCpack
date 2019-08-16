@@ -9,6 +9,7 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
+with Characters_and_Numbers;
 with Numbers_io;                         use Numbers_io;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems;
@@ -51,6 +52,8 @@ with DoblDobl_CSeries_Jaco_Matrices;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_SysFun;
 with QuadDobl_CSeries_Jaco_Matrices;
+with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
+with Partitions_of_Sets_of_Unknowns_io;
 with Singular_Values_of_Hessians;
 with Series_and_Homotopies;
 with Series_and_Trackers;
@@ -583,18 +586,163 @@ package body Series_Path_Trackers is
     return res;
   end Prompt_for_Homogenization;
 
-  procedure Standard_Main ( verbose : in integer32 := 0 ) is
+  procedure Add_Multihomogeneous_Symbols ( m : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Adds m symbols to represents the extra m symbols.
+
+  begin
+    Symbol_Table.Enlarge(m);
+    for i in 1..m loop
+      declare
+        sv : constant string := "Z" & Characters_and_Numbers.nConvert(i);
+      begin
+        Symbol_Table.Add_String(sv);
+      end;
+    end loop;
+  end Add_Multihomogeneous_Symbols;
+
+  procedure Standard_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
 
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    mhom : natural32;
+
+    use Homotopy_Series_Readers;
+
+  begin
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system and its solutions ...");
+    Standard_System_and_Solutions_io.get(start,sols);
+    nvr := Standard_Complex_Solutions.Head_Of(sols).n;
+    nbq := target'last;
+    mhom := Prompt_for_Homogenization(natural32(nvr));
+    if mhom = 0 then
+      Standard_Homotopy.Create(target.all,start.all,2,pars.gamma);
+    elsif mhom = 1 then
+      nvr := nvr + 1; nbq := nbq + 1;
+      Standard_Projective_Transformation(target,start,sols);
+      Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
+      Standard_Coefficient_Homotopy.Create(start.all,target.all,1,pars.gamma);
+      Symbol_Table.Enlarge(1);
+      Symbol_Table.Add_String("Z0");
+    else
+      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      declare
+        z : constant Partition(1..mhom)
+          := Partitions_of_Sets_of_Unknowns_io.iget(mhom);
+      begin
+        put("The partition : ");
+        Partitions_of_Sets_of_Unknowns_io.put(z); new_line;
+        Standard_Multi_Projective_Transformation(target,start,sols,mhom,z);
+        Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
+      end;
+      Add_Multihomogeneous_Symbols(mhom);
+    end if;
+  end Standard_Define_Homotopy;
+
+  procedure DoblDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    mhom : natural32;
+    dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+             := Standard_to_DoblDobl_Complex(pars.gamma);
+
+    use Homotopy_Series_Readers;
+
+  begin
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system and its solutions ...");
+    DoblDobl_System_and_Solutions_io.get(start,sols);
+    nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
+    nbq := target'last;
+    mhom := Prompt_for_Homogenization(natural32(nvr));
+    if mhom = 0 then
+      DoblDobl_Homotopy.Create(target.all,start.all,2,dd_gamma);
+    elsif mhom = 1 then
+      nvr := nvr + 1; nbq := nbq + 1;
+      DoblDobl_Projective_Transformation(target,start,sols);
+      DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
+      DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,dd_gamma);
+      Symbol_Table.Enlarge(1);
+      Symbol_Table.Add_String("Z0");
+    else
+      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      declare
+        z : constant Partition(1..mhom)
+          := Partitions_of_Sets_of_Unknowns_io.iget(mhom);
+      begin
+        put("The partition : ");
+        Partitions_of_Sets_of_Unknowns_io.put(z); new_line;
+        DoblDobl_Multi_Projective_Transformation(target,start,sols,mhom,z);
+        DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
+      end;
+      Add_Multihomogeneous_Symbols(mhom);
+    end if;
+  end DoblDobl_Define_Homotopy;
+
+  procedure QuadDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    mhom : natural32;
+    qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+             := Standard_to_QuadDobl_Complex(pars.gamma);
+
+    use Homotopy_Series_Readers;
+
+  begin
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system and its solutions ...");
+    QuadDobl_System_and_Solutions_io.get(start,sols);
+    nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
+    nbq := target'last;
+    mhom := Prompt_for_Homogenization(natural32(nvr));
+    if mhom = 0 then
+      QuadDobl_Homotopy.Create(target.all,start.all,2,qd_gamma);
+    elsif mhom = 1 then
+      nvr := nvr + 1; nbq := nbq + 1;
+      QuadDobl_Projective_Transformation(target,start,sols);
+      QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
+      QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
+      Symbol_Table.Enlarge(1);
+      Symbol_Table.Add_String("Z0");
+    else
+      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      declare
+        z : constant Partition(1..mhom)
+          := Partitions_of_Sets_of_Unknowns_io.iget(mhom);
+      begin
+        put("The partition : ");
+        Partitions_of_Sets_of_Unknowns_io.put(z); new_line;
+        QuadDobl_Multi_Projective_Transformation(target,start,sols,mhom,z);
+        QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
+      end;
+      Add_Multihomogeneous_Symbols(mhom);
+    end if;
+  end QuadDobl_Define_Homotopy;
+
+  procedure Standard_Main ( verbose : in integer32 := 0 ) is
+
     nbq,nvr,idx : integer32;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
-    mhom : natural32;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
 
-    use Homotopy_Series_Readers;
- 
   begin
     if verbose > 0
      then put_line("-> in series_path_trackers.Standard_Main ...");
@@ -602,24 +750,7 @@ package body Series_Path_Trackers is
     new_line;
     if arth then
       Homotopy_Continuation_Parameters_io.Tune(pars);
-      new_line;
-      put_line("Reading the target system ..."); get(target);
-      new_line;
-      put_line("Reading the start system and its solutions ...");
-      Standard_System_and_Solutions_io.get(start,sols);
-      nvr := Standard_Complex_Solutions.Head_Of(sols).n;
-      nbq := target'last;
-      mhom := Prompt_for_Homogenization(natural32(nvr));
-      if mhom = 0 then
-        Standard_Homotopy.Create(target.all,start.all,2,pars.gamma);
-      else
-        nvr := nvr + 1; nbq := nbq + 1;
-        Standard_Projective_Transformation(target,start,sols);
-        Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
-        Standard_Coefficient_Homotopy.Create(start.all,target.all,1,pars.gamma);
-        Symbol_Table.Enlarge(1);
-        Symbol_Table.Add_String("Z0");
-      end if;
+      Standard_Define_Homotopy(nbq,nvr,pars,sols);
       idx := 0;
       Standard_Run(nbq,nvr,idx,pars,sols,verbose-1);
     else
@@ -633,16 +764,11 @@ package body Series_Path_Trackers is
 
   procedure DoblDobl_Main ( verbose : in integer32 := 0 ) is
 
-    target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     nbq,nvr,idx : integer32;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
-    mhom : natural32;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
-    dd_gamma : DoblDobl_Complex_Numbers.Complex_Number;
-
-    use Homotopy_Series_Readers;
 
   begin
     if verbose > 0
@@ -651,25 +777,7 @@ package body Series_Path_Trackers is
     new_line;
     if arth then
       Homotopy_Continuation_Parameters_io.Tune(pars);
-      dd_gamma := Standard_to_DoblDobl_Complex(pars.gamma);
-      new_line;
-      put_line("Reading the target system ..."); get(target);
-      new_line;
-      put_line("Reading the start system and its solutions ...");
-      DoblDobl_System_and_Solutions_io.get(start,sols);
-      nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
-      nbq := target'last;
-      mhom := Prompt_for_Homogenization(natural32(nvr));
-      if mhom = 0 then
-        DoblDobl_Homotopy.Create(target.all,start.all,2,dd_gamma);
-      else
-        nvr := nvr + 1; nbq := nbq + 1;
-        DoblDobl_Projective_Transformation (target,start,sols);
-        DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
-        DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,dd_gamma);
-        Symbol_Table.Enlarge(1);
-        Symbol_Table.Add_String("Z0");
-      end if;
+      DoblDobl_Define_Homotopy(nbq,nvr,pars,sols);
       idx := 0;
       DoblDobl_Run(nbq,nvr,idx,pars,sols,verbose-1);
     else
@@ -683,16 +791,11 @@ package body Series_Path_Trackers is
 
   procedure QuadDobl_Main ( verbose : in integer32 := 0 ) is
 
-    target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     nbq,nvr,idx : integer32;
     sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
-    mhom : natural32;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
-    qd_gamma : QuadDobl_Complex_Numbers.Complex_Number;
-
-    use Homotopy_Series_Readers;
 
   begin
     if verbose > 0
@@ -701,25 +804,7 @@ package body Series_Path_Trackers is
     new_line;
     if arth then
       Homotopy_Continuation_Parameters_io.Tune(pars);
-      qd_gamma := Standard_to_QuadDobl_Complex(pars.gamma);
-      new_line;
-      put_line("Reading the target system ..."); get(target);
-      new_line;
-      put_line("Reading the start system and its solutions ...");
-      QuadDobl_System_and_Solutions_io.get(start,sols);
-      nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
-      nbq := target'last;
-      mhom := Prompt_for_Homogenization(natural32(nvr));
-      if mhom = 0 then
-        QuadDobl_Homotopy.Create(target.all,start.all,2,qd_gamma);
-      else
-        nvr := nvr + 1; nbq := nbq + 1;
-        QuadDobl_Projective_Transformation(target,start,sols);
-        QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
-        QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
-        Symbol_Table.Enlarge(1);
-        Symbol_Table.Add_String("Z0");
-      end if;
+      QuadDobl_Define_Homotopy(nbq,nvr,pars,sols);
       idx := 0;
       QuadDobl_Run(nbq,nvr,idx,pars,sols,verbose-1);
     else

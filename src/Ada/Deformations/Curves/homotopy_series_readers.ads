@@ -15,6 +15,7 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Series_Vectors;
+with Partitions_of_Sets_of_Unknowns;    use Partitions_of_Sets_of_Unknowns;
 
 package Homotopy_Series_Readers is
 
@@ -73,6 +74,73 @@ package Homotopy_Series_Readers is
   --   target   target system in an artificial-parameter homotopy;
   --   start    start system in an artificial-parameter homotopy;
   --   sols     start solutions.
+
+  -- ON RETURN :
+  --   target   target system in homogeneous coordinates
+  --            and with one random linear equation added;
+  --   start    start system in homogeneous coordinates
+  --            and with the equation Z0 = 1 added;
+  --   sols     solutions extended with 1 as last coordinate.
+
+  procedure Standard_Multi_Projective_Transformation
+              ( target,start
+                  : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition );
+  procedure DoblDobl_Multi_Projective_Transformation
+              ( target,start
+                  : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition );
+  procedure QuadDobl_Multi_Projective_Transformation
+              ( target,start
+                  : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition );
+
+  -- DESCRIPTION :
+  --   Transforms the target and start system into m-homogeneous coordinates,
+  --   adding m random linear equations to the target system and Zi = 1,
+  --   for i in 1..m, to the start system, adding 1 to every start solution,
+  --   in double, double double, and quad double precision.
+
+  -- ON ENTRY :
+  --   target   target system in an artificial-parameter homotopy;
+  --   start    start system in an artificial-parameter homotopy;
+  --   m        number of sets in the partition;
+  --   z        defines the multi-homogenization.
+
+  -- ON RETURN :
+  --   target   target system in homogeneous coordinates
+  --            and with one random linear equation added;
+  --   start    start system in homogeneous coordinates
+  --            and with the equation Z0 = 1 added;
+
+  procedure Standard_Multi_Projective_Transformation
+              ( target : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition );
+  procedure DoblDobl_Multi_Projective_Transformation
+              ( target : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition );
+  procedure QuadDobl_Multi_Projective_Transformation
+              ( target : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition );
+
+  -- DESCRIPTION :
+  --   Transforms the target, start system, and its start solutions
+  --   into homogeneous coordinates, adding one random linear equation to
+  --   the target system and Z0 = 1 to the start system, adding 1 to
+  --   every start solution.
+
+  -- ON ENTRY :
+  --   target   target system in an artificial-parameter homotopy;
+  --   start    start system in an artificial-parameter homotopy;
+  --   sols     start solutions;
+  --   m        number of sets in the partition;
+  --   z        defines the multi-homogenization.
 
   -- ON RETURN :
   --   target   target system in homogeneous coordinates

@@ -1,5 +1,7 @@
 Thu 15 Aug 2019 : updated series_path_trackers, interactive_pade_trackers.adb,
   replacing the homogeneous boolean by a natural number of m-homogenization.
+  Added multi-homogeneous transformations to homotopy_series_readers and
+  applied them in series_path_trackers, with extra procedures.
 
 Mon 12 Aug 2019 : ignoring corrector failure, disabled the corrector
   feedback loop in {standard,dobldobl,quaddobl}_pade_trackers.adb.
