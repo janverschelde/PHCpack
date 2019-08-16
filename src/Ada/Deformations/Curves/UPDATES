@@ -1,3 +1,6 @@
+Fri 16 Aug 2019 : improved internal structure of series_path_trackers,
+  with better entering of the partition of the set of unknowns.
+
 Thu 15 Aug 2019 : updated series_path_trackers, interactive_pade_trackers.adb,
   replacing the homogeneous boolean by a natural number of m-homogenization.
   Added multi-homogeneous transformations to homotopy_series_readers and

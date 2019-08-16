@@ -52,7 +52,6 @@ with DoblDobl_CSeries_Jaco_Matrices;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_SysFun;
 with QuadDobl_CSeries_Jaco_Matrices;
-with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 with Partitions_of_Sets_of_Unknowns_io;
 with Singular_Values_of_Hessians;
 with Series_and_Homotopies;
@@ -149,7 +148,8 @@ package body Series_Path_Trackers is
   end Set_Dimension;
 
   procedure Standard_Run
-              ( nq,nvr,idxpar : in integer32;
+              ( monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
@@ -171,8 +171,6 @@ package body Series_Path_Trackers is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    monitor,verbose,tofile : boolean;
-    file : file_type;
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
@@ -199,10 +197,6 @@ package body Series_Path_Trackers is
     fhm := Standard_CSeries_Poly_SysFun.Create(s);
     fcf := Standard_CSeries_Poly_SysFun.Coeff(s);
     Standard_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
-    Set_Output(file,monitor,verbose,tofile);
-    if tofile
-     then Standard_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
-    end if;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -212,31 +206,18 @@ package body Series_Path_Trackers is
       if monitor
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
-      if tofile then
-        Standard_Pade_Trackers.Track_One_Path
-          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
-           cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
-        if verbose then
-          Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-             cntsstp,cntdstp,cntpstp);
-        end if;
-        put(file,"Solution "); put(file,i,1); put_line(file," :");
-        put(file,ls.all); new_line(file);
-      else
-        Standard_Pade_Trackers.Track_One_Path
-          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
-           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp,verbose,vrb-1);
-        if verbose then
-          Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-             cntsstp,cntdstp,cntpstp);
-        end if;
-        put("Solution "); put(i,1); put_line(" :"); put(ls.all);
-        put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
+      Standard_Pade_Trackers.Track_One_Path
+        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
+         nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+         cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+      if verbose then
+        Series_and_Trackers.Write_Path_Statistics
+          (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
       end if;
+      put("Solution "); put(i,1); put_line(" :"); put(ls.all); new_line;
+      put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
@@ -246,32 +227,18 @@ package body Series_Path_Trackers is
         cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
     end loop;
     tstop(timer);
-    if tofile then
-      Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest,ratsstp,ratdstp,ratpstp);
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,pars.numdeg,pars.dendeg,0,timer);
-      if idxpar = 0
-       then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
-      end if;
-      Write_Conclusion(file,start_moment);
-    else
-      Series_and_Trackers.Write_Total_Path_Statistics
-        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest,ratsstp,ratdstp,ratpstp);
-      new_line;
-      put_line("THE SOLUTIONS :");
-      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,pars.numdeg,pars.dendeg,0,timer);
-      if idxpar = 0 then
-        -- Refine_Roots(standard_output,nq,sols);
-        Refine_Roots(standard_output,abh,sols,vrb);
-      end if;
-      Write_Conclusion(standard_output,start_moment);
+    Series_and_Trackers.Write_Total_Path_Statistics
+      (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+       smallest,largest,ratsstp,ratdstp,ratpstp);
+    new_line;
+    put_line("THE SOLUTIONS :");
+    put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    Write_Timer(standard_output,pars.numdeg,pars.dendeg,0,timer);
+    if idxpar = 0 then
+      -- Refine_Roots(standard_output,nq,sols);
+      Refine_Roots(standard_output,abh,sols,vrb);
     end if;
+    Write_Conclusion(standard_output,start_moment);
     Standard_Complex_Poly_Systems.Clear(h);
     Standard_Complex_Poly_SysFun.Clear(abh);
     Standard_CSeries_Poly_Systems.Clear(s);
@@ -282,7 +249,8 @@ package body Series_Path_Trackers is
   end Standard_Run;
 
   procedure DoblDobl_Run
-              ( nq,nvr,idxpar : in integer32;
+              ( monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
@@ -304,8 +272,6 @@ package body Series_Path_Trackers is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    monitor,verbose,tofile : boolean;
-    file : file_type;
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
@@ -332,10 +298,6 @@ package body Series_Path_Trackers is
     fhm := DoblDobl_CSeries_Poly_SysFun.Create(s);
     fcf := DoblDobl_CSeries_Poly_SysFun.Coeff(s);
     DoblDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
-    Set_Output(file,monitor,verbose,tofile);
-    if tofile
-     then DoblDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
-    end if;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -345,32 +307,19 @@ package body Series_Path_Trackers is
       if monitor
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
-      if tofile then
-        DoblDobl_Pade_Trackers.Track_One_Path
-          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
-           cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
-        if verbose then
-          Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-             cntsstp,cntdstp,cntpstp);
-        end if;
-        put(file,"Solution "); put(file,i,1); put_line(file," :");
-        put(file,ls.all); new_line(file);
-      else
-        DoblDobl_Pade_Trackers.Track_One_Path
-          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
-           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp,verbose,vrb-1);
-        if verbose then
-          Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-             cntsstp,cntdstp,cntpstp);
-        end if;
-        put("Solution "); put(i,1); put_line(" :"); put(ls.all);
-        put("Continue to the next path ? (y/n) ");
-        Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
+      DoblDobl_Pade_Trackers.Track_One_Path
+        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
+         nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+         cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+      if verbose then
+        Series_and_Trackers.Write_Path_Statistics
+          (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
       end if;
+      put("Solution "); put(i,1); put_line(" :"); put(ls.all); new_line;
+      put("Continue to the next path ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
@@ -380,32 +329,18 @@ package body Series_Path_Trackers is
         cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
     end loop;
     tstop(timer);
-    if tofile then
-      Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest,ratsstp,ratdstp,ratpstp);
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,pars.numdeg,pars.dendeg,1,timer);
-      if idxpar = 0
-       then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
-      end if;
-      Write_Conclusion(file,start_moment);
-    else
-      Series_and_Trackers.Write_Total_Path_Statistics
-        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest,ratsstp,ratdstp,ratpstp);
-      new_line;
-      put_line("THE SOLUTIONS :");
-      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,pars.numdeg,pars.dendeg,1,timer);
-      if idxpar = 0 then
-        -- Refine_Roots(standard_output,nq,sols);
-        Refine_Roots(standard_output,abh,sols,vrb);
-      end if;
-      Write_Conclusion(standard_output,start_moment);
+    Series_and_Trackers.Write_Total_Path_Statistics
+      (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+       smallest,largest,ratsstp,ratdstp,ratpstp);
+    new_line;
+    put_line("THE SOLUTIONS :");
+    put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    Write_Timer(standard_output,pars.numdeg,pars.dendeg,1,timer);
+    if idxpar = 0 then
+      -- Refine_Roots(standard_output,nq,sols);
+      Refine_Roots(standard_output,abh,sols,vrb);
     end if;
+    Write_Conclusion(standard_output,start_moment);
     DoblDobl_Complex_Poly_Systems.Clear(h);
     DoblDobl_Complex_Poly_SysFun.Clear(abh);
     DoblDobl_CSeries_Poly_Systems.Clear(s);
@@ -416,7 +351,8 @@ package body Series_Path_Trackers is
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
-              ( nq,nvr,idxpar : in integer32;
+              ( monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
@@ -438,8 +374,6 @@ package body Series_Path_Trackers is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    monitor,verbose,tofile : boolean;
-    file : file_type;
     timer : Timing_Widget;
     nbrsteps,minnbrsteps,maxnbrsteps : natural32;
     nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
@@ -466,10 +400,6 @@ package body Series_Path_Trackers is
     fhm := QuadDobl_CSeries_Poly_SysFun.Create(s);
     fcf := QuadDobl_CSeries_Poly_SysFun.Coeff(s);
     QuadDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
-    Set_Output(file,monitor,verbose,tofile);
-    if tofile
-     then QuadDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
-    end if;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -479,31 +409,18 @@ package body Series_Path_Trackers is
       if monitor
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
-      if tofile then
-        QuadDobl_Pade_Trackers.Track_One_Path
-          (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
-           cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
-        if verbose then
-          Series_and_Trackers.Write_Path_Statistics
-            (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-             cntsstp,cntdstp,cntpstp);
-        end if;
-        put(file,"Solution "); put(file,i,1); put_line(file," :");
-        put(file,ls.all); new_line(file);
-      else
-        QuadDobl_Pade_Trackers.Track_One_Path
-          (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
-           nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp,verbose,vrb-1);
-        if verbose then
-          Series_and_Trackers.Write_Path_Statistics
-            (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-             cntsstp,cntdstp,cntpstp);
-        end if;
-        put("Solution "); put(i,1); put_line(" :"); put(ls.all);
-        put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
+      QuadDobl_Pade_Trackers.Track_One_Path
+        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
+         nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+         cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+      if verbose then
+        Series_and_Trackers.Write_Path_Statistics
+          (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
       end if;
+      put("Solution "); put(i,1); put_line(" :"); put(ls.all); new_line;
+      put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
@@ -513,32 +430,312 @@ package body Series_Path_Trackers is
         cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
     end loop;
     tstop(timer);
-    if tofile then
-      Series_and_Trackers.Write_Total_Path_Statistics
-        (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest,ratsstp,ratdstp,ratpstp);
-      new_line(file);
-      put_line(file,"THE SOLUTIONS :");
-      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(file,pars.numdeg,pars.dendeg,2,timer);
-      if idxpar = 0
-       then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
-      end if;
-      Write_Conclusion(file,start_moment);
-    else
-      Series_and_Trackers.Write_Total_Path_Statistics
-        (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-         smallest,largest,ratsstp,ratdstp,ratpstp);
-      new_line;
-      put_line("THE SOLUTIONS :");
-      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Write_Timer(standard_output,pars.numdeg,pars.dendeg,2,timer);
-      if idxpar = 0 then
-        -- Refine_Roots(standard_output,nq,sols);
-        Refine_Roots(standard_output,abh,sols,vrb);
-      end if;
-      Write_Conclusion(standard_output,start_moment);
+    Series_and_Trackers.Write_Total_Path_Statistics
+      (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+       smallest,largest,ratsstp,ratdstp,ratpstp);
+    new_line;
+    put_line("THE SOLUTIONS :");
+    put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    Write_Timer(standard_output,pars.numdeg,pars.dendeg,2,timer);
+    if idxpar = 0 then
+      -- Refine_Roots(standard_output,nq,sols);
+      Refine_Roots(standard_output,abh,sols,vrb);
     end if;
+    Write_Conclusion(standard_output,start_moment);
+    QuadDobl_Complex_Poly_Systems.Clear(h);
+    QuadDobl_Complex_Poly_SysFun.Clear(abh);
+    QuadDobl_CSeries_Poly_Systems.Clear(s);
+    QuadDobl_CSeries_Poly_SysFun.Clear(fhm);
+    QuadDobl_Complex_Series_VecVecs.Clear(fcf);
+    QuadDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    QuadDobl_Cseries_Jaco_Matrices.Clear(mlt);
+  end QuadDobl_Run;
+
+  procedure Standard_Run
+              ( file : in file_type; monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 ) is
+
+    use Standard_Complex_Solutions;
+
+    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
+    abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(1..nq)
+        := Homotopy_Mixed_Residuals.Standard_AbsVal_Homotopy;
+    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
+    fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
+    fcf : Standard_Complex_Series_VecVecs.VecVec(1..nq);
+    dim : constant integer32 := Set_Dimension(nvr,idxpar);
+    jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
+    ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..dim);
+    mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..dim);
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+    timer : Timing_Widget;
+    nbrsteps,minnbrsteps,maxnbrsteps : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
+    minsize,maxsize,smallest,largest : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+
+    use Singular_Values_of_Hessians;
+
+  begin
+    if vrb > 0
+     then put_line("-> in series_path_trackers.Standard_Run ...");
+    end if;
+    if idxpar /= 0
+     then Standard_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
+     else Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
+    end if;
+    h := Standard_Homotopy.Homotopy_System;
+    if idxpar /= 0
+     then s := Series_and_Homotopies.Create(h,idxpar,false);
+     else s := Series_and_Homotopies.Create(h,nq+1,false);
+    end if;
+    fhm := Standard_CSeries_Poly_SysFun.Create(s);
+    fcf := Standard_CSeries_Poly_SysFun.Coeff(s);
+    Standard_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
+    Standard_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
+    minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
+    tstart(timer);
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      if monitor
+       then put("Tracking path "); put(i,1); put_line(" ...");
+      end if;
+      Standard_Pade_Trackers.Track_One_Path
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
+         cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+      if verbose then
+        Series_and_Trackers.Write_Path_Statistics
+          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
+      end if;
+      put(file,"Solution "); put(file,i,1); put_line(file," :");
+      put(file,ls.all); new_line(file);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+      Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
+      Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
+      Series_and_Trackers.Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,
+        cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
+    end loop;
+    tstop(timer);
+    Series_and_Trackers.Write_Total_Path_Statistics
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+       smallest,largest,ratsstp,ratdstp,ratpstp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    Write_Timer(file,pars.numdeg,pars.dendeg,0,timer);
+    if idxpar = 0
+     then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
+    end if;
+    Write_Conclusion(file,start_moment);
+    Standard_Complex_Poly_Systems.Clear(h);
+    Standard_Complex_Poly_SysFun.Clear(abh);
+    Standard_CSeries_Poly_Systems.Clear(s);
+    Standard_CSeries_Poly_SysFun.Clear(fhm);
+    Standard_Complex_Series_VecVecs.Clear(fcf);
+    Standard_CSeries_Jaco_Matrices.Clear(ejm);
+    Standard_Cseries_Jaco_Matrices.Clear(mlt);
+  end Standard_Run;
+
+  procedure DoblDobl_Run
+              ( file : in file_type; monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(1..nq)
+        := Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy;
+    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
+    jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+    fhm : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
+    fcf : DoblDobl_Complex_Series_VecVecs.VecVec(1..nq);
+    dim : constant integer32 := Set_Dimension(nvr,idxpar);
+    ejm : DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..dim);
+    mlt : DoblDobl_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..dim);
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+    timer : Timing_Widget;
+    nbrsteps,minnbrsteps,maxnbrsteps : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
+    minsize,maxsize,smallest,largest : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+
+    use Singular_Values_of_Hessians;
+
+  begin
+    if vrb > 0
+     then put_line("-> in series_path_trackers.DoblDobl_Run ...");
+    end if;
+    if idxpar /= 0
+     then DoblDobl_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
+     else DoblDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
+    end if;
+    h := DoblDobl_Homotopy.Homotopy_System;
+    if idxpar /= 0
+     then s := Series_and_Homotopies.Create(h,idxpar,false);
+     else s := Series_and_Homotopies.Create(h,nq+1,false);
+    end if;
+    fhm := DoblDobl_CSeries_Poly_SysFun.Create(s);
+    fcf := DoblDobl_CSeries_Poly_SysFun.Coeff(s);
+    DoblDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
+    DoblDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
+    minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
+    tstart(timer);
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      if monitor
+       then put("Tracking path "); put(i,1); put_line(" ...");
+      end if;
+      DoblDobl_Pade_Trackers.Track_One_Path
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
+         cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+      if verbose then
+        Series_and_Trackers.Write_Path_Statistics
+          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
+      end if;
+      put(file,"Solution "); put(file,i,1); put_line(file," :");
+      put(file,ls.all); new_line(file);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+      Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
+      Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
+      Series_and_Trackers.Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,
+        cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
+    end loop;
+    tstop(timer);
+    Series_and_Trackers.Write_Total_Path_Statistics
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+       smallest,largest,ratsstp,ratdstp,ratpstp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    Write_Timer(file,pars.numdeg,pars.dendeg,1,timer);
+    if idxpar = 0
+     then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
+    end if;
+    Write_Conclusion(file,start_moment);
+    DoblDobl_Complex_Poly_Systems.Clear(h);
+    DoblDobl_Complex_Poly_SysFun.Clear(abh);
+    DoblDobl_CSeries_Poly_Systems.Clear(s);
+    DoblDobl_CSeries_Poly_SysFun.Clear(fhm);
+    DoblDobl_Complex_Series_VecVecs.Clear(fcf);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    DoblDobl_Cseries_Jaco_Matrices.Clear(mlt);
+  end DoblDobl_Run;
+
+  procedure QuadDobl_Run
+              ( file : in file_type; monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(1..nq)
+        := Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy;
+    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
+    jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
+    hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
+    fhm : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(1..nq);
+    fcf : QuadDobl_Complex_Series_VecVecs.VecVec(1..nq);
+    dim : constant integer32 := Set_Dimension(nvr,idxpar);
+    ejm : QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(h'range,1..dim);
+    mlt : QuadDobl_CSeries_Jaco_Matrices.Mult_Factors(h'range,1..dim);
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+    timer : Timing_Widget;
+    nbrsteps,minnbrsteps,maxnbrsteps : natural32;
+    nbrcorrs,minnbrcorrs,maxnbrcorrs,cntcut,cntfail : natural32;
+    minsize,maxsize,smallest,largest : double_float;
+    cntsstp,cntdstp,cntpstp : natural32;
+    ratsstp,ratdstp,ratpstp : double_float := 0.0;
+    start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+
+    use Singular_Values_of_Hessians;
+
+  begin
+    if vrb > 0
+     then put_line("-> in series_path_trackers.QuadDobl_Run ...");
+    end if;
+    if idxpar /= 0
+     then QuadDobl_Jacobian_Hessians_of_Homotopy(idxpar,jm,hs);
+     else QuadDobl_Jacobian_Hessians_of_Homotopy(jm,hs);
+    end if;
+    h := QuadDobl_Homotopy.Homotopy_System;
+    if idxpar /= 0
+     then s := Series_and_Homotopies.Create(h,idxpar,false);
+     else s := Series_and_Homotopies.Create(h,nq+1,false);
+    end if;
+    fhm := QuadDobl_CSeries_Poly_SysFun.Create(s);
+    fcf := QuadDobl_CSeries_Poly_SysFun.Coeff(s);
+    QuadDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
+    QuadDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
+    minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
+    smallest := pars.maxsize; largest := 0.0;
+    tstart(timer);
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      if monitor
+       then put("Tracking path "); put(i,1); put_line(" ...");
+      end if;
+      QuadDobl_Pade_Trackers.Track_One_Path
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
+         cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+      if verbose then
+        Series_and_Trackers.Write_Path_Statistics
+          (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
+           cntsstp,cntdstp,cntpstp);
+      end if;
+      put(file,"Solution "); put(file,i,1); put_line(file," :");
+      put(file,ls.all); new_line(file);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+      Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbrsteps);
+      Series_and_Trackers.Update_Counters(minnbrcorrs,maxnbrcorrs,nbrcorrs);
+      Series_and_Trackers.Update_MinMax(smallest,largest,minsize,maxsize);
+      Series_and_Trackers.Update_Ratio_Sums(ratsstp,ratdstp,ratpstp,
+        cntsstp,cntdstp,cntpstp,nbrsteps*natural32(len));
+    end loop;
+    tstop(timer);
+    Series_and_Trackers.Write_Total_Path_Statistics
+      (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
+       smallest,largest,ratsstp,ratdstp,ratpstp);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    Write_Timer(file,pars.numdeg,pars.dendeg,2,timer);
+    if idxpar = 0
+     then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
+    end if;
+    Write_Conclusion(file,start_moment);
     QuadDobl_Complex_Poly_Systems.Clear(h);
     QuadDobl_Complex_Poly_SysFun.Clear(abh);
     QuadDobl_CSeries_Poly_Systems.Clear(s);
@@ -586,20 +783,76 @@ package body Series_Path_Trackers is
     return res;
   end Prompt_for_Homogenization;
 
-  procedure Add_Multihomogeneous_Symbols ( m : in natural32 ) is
+  function Prompt_for_Partition
+             ( nvr,mhom : in natural32 ) 
+             return Standard_Natural_Vectors.Vector is
+  begin
+    new_line;
+    put("Let us define a partition of "); put(nvr,1);
+    put(" variabes, of size "); put(mhom,1); put_line(" ...");
+    declare
+      res : constant Standard_Natural_Vectors.Vector(1..integer32(nvr))
+          := Partitions_of_Sets_of_Unknowns_io.iget(mhom);
+    begin
+      return res;
+    end;
+  end Prompt_for_Partition;
 
-  -- DESCRIPTION :
-  --   Adds m symbols to represents the extra m symbols.
+  procedure Define_Partition
+              ( n : in natural32; m : in out natural32;
+                idx : out Standard_Natural_Vectors.Link_to_Vector;
+                z : out Link_to_Partition ) is
+
+    ans : character;
 
   begin
-    Symbol_Table.Enlarge(m);
-    for i in 1..m loop
+    loop
       declare
-        sv : constant string := "Z" & Characters_and_Numbers.nConvert(i);
+        wix : Standard_Natural_Vectors.Vector(1..integer32(n));
+        wz : Partition(1..m);
       begin
-        Symbol_Table.Add_String(sv);
+        wix := Prompt_for_Partition(n,m);
+        wz := Partitions_of_Sets_of_Unknowns_io.Make_Partition(n,m,wix);
+        put("-> your partition : ");
+        Partitions_of_Sets_of_Unknowns_io.put(wz);
+        put(" Is this okay ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          idx := new Standard_Natural_Vectors.Vector'(wix);
+          z := new Partition'(wz);
+          return;
+        end if;
       end;
+      loop
+        new_line;
+        put("Give the number of sets in the partition : ");
+        Read_Natural(m);
+        exit when (m > 1 and m <= n);
+        if m < 2 then
+          put_line("-> Please enter a number larger than 1.");
+        elsif m > n then
+          put_line("-> Please enter a number not larger than ");
+          put(n,1); put_line(".");
+        end if;
+      end loop;
     end loop;
+  end Define_Partition;
+
+  procedure Add_Multihomogeneous_Symbols
+              ( m : in natural32; prefix : in string := "Z" ) is
+  begin
+    Symbol_Table.Enlarge(m);
+    if m = 1 then
+      Symbol_Table.Add_String(prefix & "0");
+    else
+      for i in 1..m loop
+        declare
+          sv : constant string := prefix & Characters_and_Numbers.nConvert(i);
+        begin
+          Symbol_Table.Add_String(sv);
+        end;
+      end loop;
+    end if;
   end Add_Multihomogeneous_Symbols;
 
   procedure Standard_Define_Homotopy
@@ -609,6 +862,8 @@ package body Series_Path_Trackers is
 
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     mhom : natural32;
+    idx : Standard_Natural_Vectors.Link_to_Vector;
+    z : Link_to_Partition;
 
     use Homotopy_Series_Readers;
 
@@ -624,23 +879,16 @@ package body Series_Path_Trackers is
     if mhom = 0 then
       Standard_Homotopy.Create(target.all,start.all,2,pars.gamma);
     elsif mhom = 1 then
-      nvr := nvr + 1; nbq := nbq + 1;
       Standard_Projective_Transformation(target,start,sols);
       Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
       Standard_Coefficient_Homotopy.Create(start.all,target.all,1,pars.gamma);
-      Symbol_Table.Enlarge(1);
-      Symbol_Table.Add_String("Z0");
+      nvr := nvr + 1; nbq := nbq + 1;
+      Add_Multihomogeneous_Symbols(1);
     else
+      Define_Partition(natural32(nvr),mhom,idx,z);
+      Standard_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+      Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
       nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
-      declare
-        z : constant Partition(1..mhom)
-          := Partitions_of_Sets_of_Unknowns_io.iget(mhom);
-      begin
-        put("The partition : ");
-        Partitions_of_Sets_of_Unknowns_io.put(z); new_line;
-        Standard_Multi_Projective_Transformation(target,start,sols,mhom,z);
-        Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
-      end;
       Add_Multihomogeneous_Symbols(mhom);
     end if;
   end Standard_Define_Homotopy;
@@ -652,6 +900,8 @@ package body Series_Path_Trackers is
 
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     mhom : natural32;
+    idx : Standard_Natural_Vectors.Link_to_Vector;
+    z : Link_to_Partition;
     dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
              := Standard_to_DoblDobl_Complex(pars.gamma);
 
@@ -673,20 +923,13 @@ package body Series_Path_Trackers is
       DoblDobl_Projective_Transformation(target,start,sols);
       DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
       DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,dd_gamma);
-      Symbol_Table.Enlarge(1);
-      Symbol_Table.Add_String("Z0");
+      Add_Multihomogeneous_Symbols(1);
     else
-      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
-      declare
-        z : constant Partition(1..mhom)
-          := Partitions_of_Sets_of_Unknowns_io.iget(mhom);
-      begin
-        put("The partition : ");
-        Partitions_of_Sets_of_Unknowns_io.put(z); new_line;
-        DoblDobl_Multi_Projective_Transformation(target,start,sols,mhom,z);
-        DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
-      end;
+      Define_Partition(natural32(nvr),mhom,idx,z);
+      DoblDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+      DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
       Add_Multihomogeneous_Symbols(mhom);
+      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
     end if;
   end DoblDobl_Define_Homotopy;
 
@@ -697,6 +940,8 @@ package body Series_Path_Trackers is
 
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     mhom : natural32;
+    idx : Standard_Natural_Vectors.Link_to_Vector;
+    z : Link_to_Partition;
     qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
              := Standard_to_QuadDobl_Complex(pars.gamma);
 
@@ -718,101 +963,121 @@ package body Series_Path_Trackers is
       QuadDobl_Projective_Transformation(target,start,sols);
       QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
       QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
-      Symbol_Table.Enlarge(1);
-      Symbol_Table.Add_String("Z0");
+      Add_Multihomogeneous_Symbols(1);
     else
-      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
-      declare
-        z : constant Partition(1..mhom)
-          := Partitions_of_Sets_of_Unknowns_io.iget(mhom);
-      begin
-        put("The partition : ");
-        Partitions_of_Sets_of_Unknowns_io.put(z); new_line;
-        QuadDobl_Multi_Projective_Transformation(target,start,sols,mhom,z);
-        QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
-      end;
+      Define_Partition(natural32(nvr),mhom,idx,z);
+      QuadDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+      QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
       Add_Multihomogeneous_Symbols(mhom);
+      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
     end if;
   end QuadDobl_Define_Homotopy;
 
-  procedure Standard_Main ( verbose : in integer32 := 0 ) is
+  procedure Standard_Main ( vrb : in integer32 := 0 ) is
 
     nbq,nvr,idx : integer32;
     sols,dropsols : Standard_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
+    monitor,verbose,tofile : boolean;
+    file : file_type;
 
   begin
-    if verbose > 0
+    if vrb > 0
      then put_line("-> in series_path_trackers.Standard_Main ...");
     end if;
+    Set_Output(file,monitor,verbose,tofile);
     new_line;
     if arth then
       Homotopy_Continuation_Parameters_io.Tune(pars);
       Standard_Define_Homotopy(nbq,nvr,pars,sols);
       idx := 0;
-      Standard_Run(nbq,nvr,idx,pars,sols,verbose-1);
+      if tofile
+       then Standard_Run(file,monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+       else Standard_Run(monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+      end if;
     else
       pars.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(pars);
       Homotopy_Series_Readers.Standard_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      Standard_Run(nbq,nvr,idx,pars,dropsols,verbose-1);
+      if tofile
+       then Standard_Run(file,monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+       else Standard_Run(monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+      end if;
     end if;
   end Standard_Main;
 
-  procedure DoblDobl_Main ( verbose : in integer32 := 0 ) is
+  procedure DoblDobl_Main ( vrb : in integer32 := 0 ) is
 
     nbq,nvr,idx : integer32;
     sols,dropsols : DoblDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
+    monitor,verbose,tofile : boolean;
+    file : file_type;
 
   begin
-    if verbose > 0
+    if vrb > 0
      then put_line("-> in series_path_trackers.DoblDobl_Main ...");
     end if;
+    Set_Output(file,monitor,verbose,tofile);
     new_line;
     if arth then
       Homotopy_Continuation_Parameters_io.Tune(pars);
       DoblDobl_Define_Homotopy(nbq,nvr,pars,sols);
       idx := 0;
-      DoblDobl_Run(nbq,nvr,idx,pars,sols,verbose-1);
+      if tofile
+       then DoblDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+       else DoblDobl_Run(monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+      end if;
     else
       pars.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(pars);
       Homotopy_Series_Readers.DoblDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      DoblDobl_Run(nbq,nvr,idx,pars,dropsols,verbose-1);
+      if tofile
+       then DoblDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+       else DoblDobl_Run(monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+      end if;
     end if;
   end DoblDobl_Main;
 
-  procedure QuadDobl_Main ( verbose : in integer32 := 0 ) is
+  procedure QuadDobl_Main ( vrb : in integer32 := 0 ) is
 
     nbq,nvr,idx : integer32;
     sols,dropsols : QuadDobl_Complex_Solutions.Solution_List;
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
+    monitor,verbose,tofile : boolean;
+    file : file_type;
 
   begin
-    if verbose > 0
+    if vrb > 0
      then put_line("-> in series_path_trackers.QuadDobl_Main ...");
     end if;
+    Set_Output(file,monitor,verbose,tofile);
     new_line;
     if arth then
-      Homotopy_Continuation_Parameters_io.Tune(pars);
       QuadDobl_Define_Homotopy(nbq,nvr,pars,sols);
+      Homotopy_Continuation_Parameters_io.Tune(pars);
       idx := 0;
-      QuadDobl_Run(nbq,nvr,idx,pars,sols,verbose-1);
+      if tofile
+       then QuadDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+       else QuadDobl_Run(monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+      end if;
     else
+      Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
       pars.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(pars);
-      Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      QuadDobl_Run(nbq,nvr,idx,pars,dropsols,verbose-1);
+      if tofile
+       then QuadDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+       else QuadDobl_Run(monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+      end if;
     end if;
   end QuadDobl_Main;
 

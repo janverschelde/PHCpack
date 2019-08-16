@@ -1,9 +1,11 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 with Homotopy_Continuation_Parameters;
 
 package Series_Path_Trackers is
@@ -47,17 +49,58 @@ package Series_Path_Trackers is
   --   pars     values of the homotopy continuation parameters.
 
   procedure Standard_Run
-              ( nq,nvr,idxpar : in integer32;
+              ( monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
   procedure DoblDobl_Run
-              ( nq,nvr,idxpar : in integer32;
+              ( monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
   procedure QuadDobl_Run
-              ( nq,nvr,idxpar : in integer32;
+              ( monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   With a homotopy defined, runs the path tracker starting at the
+  --   given solutions, in double, double double or quad double precision.
+  --   No output is written to file.
+
+  -- ON ENTRY :
+  --   monitor  if a message is written at the start of each path;
+  --   verbose  the verbose flag for extra output;
+  --   nq       number of equations in the homotopy;
+  --   nvr      number of variables in the homotopy;
+  --   idxpar   index of the parameter in a natural parameter homotopy,
+  --            in 1..nvr, or else 0 for an artificial parameter homotopy;
+  --   pars     values of the homotopy continuation parameters;
+  --   sols     start solutions;
+  --   vrb      the verbose level.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the path.
+
+  procedure Standard_Run
+              ( file : in file_type; monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 );
+  procedure DoblDobl_Run
+              ( file : in file_type; monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrb : in integer32 := 0 );
+  procedure QuadDobl_Run
+              ( file : in file_type; monitor,verbose : in boolean;
+                nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
@@ -67,13 +110,16 @@ package Series_Path_Trackers is
   --   given solutions, in double, double double or quad double precision.
 
   -- ON ENTRY :
+  --   file     file opened for output to write results to;
+  --   monitor  if a message is written at the start of each path;
+  --   verbose  the verbose flag for extra output;
   --   nq       number of equations in the homotopy;
   --   nvr      number of variables in the homotopy;
   --   idxpar   index of the parameter in a natural parameter homotopy,
   --            in 1..nvr, or else 0 for an artificial parameter homotopy;
   --   pars     values of the homotopy continuation parameters;
   --   sols     start solutions;
-  --   verbose  the verbose level.
+  --   vrb      the verbose level.
 
   -- ON RETURN :
   --   sols     solutions at the end of the path.
@@ -94,6 +140,34 @@ package Series_Path_Trackers is
   --   3) 2 or higher : in multi-projective coordinates,
   --   in a multi-projective space, defined by a partition of the variables.
   --   The total number of variables is given in the value of dim.
+
+  function Prompt_for_Partition
+             ( nvr,mhom : in natural32 ) 
+             return Standard_Natural_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Prompts the user to define a partition of nvr number of variables.
+  --   Returns a vector of range 1..nvr, defined as follows:
+  --   at position k holds the index of set to which variable k belongs.
+  --   This vector is the index representation of the partition.
+
+  procedure Define_Partition
+              ( n : in natural32; m : in out natural32;
+                idx : out Standard_Natural_Vectors.Link_to_Vector;
+                z : out Link_to_Partition );
+
+  -- DESCRIPTION :
+  --   Prompts the user for a partition of the set of n into m sets.
+  --   The user is allowed to reset m, although m must be larger than one.
+  --   On return in idx is the index representation of the partition z.
+
+  procedure Add_Multihomogeneous_Symbols
+              ( m : in natural32; prefix : in string := "Z" );
+
+  -- DESCRIPTION :
+  --   Adds m symbols to represents the extra m symbols.
+  --   If m = 1, then Z0 is added, otherwise, the m symbols
+  --   start with 'Z' and have indices added, starting at 1, up to m.
 
   procedure Standard_Define_Homotopy
               ( nbq,nvr : out integer32;
@@ -121,9 +195,9 @@ package Series_Path_Trackers is
   --   nvr      number of variables;
   --   sols     start solutions.
 
-  procedure Standard_Main ( verbose : in integer32 := 0 );
-  procedure DoblDobl_Main ( verbose : in integer32 := 0 );
-  procedure QuadDobl_Main ( verbose : in integer32 := 0 );
+  procedure Standard_Main ( vrb : in integer32 := 0 );
+  procedure DoblDobl_Main ( vrb : in integer32 := 0 );
+  procedure QuadDobl_Main ( vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for a homotopy, runs the series path trackers
