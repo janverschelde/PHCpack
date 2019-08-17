@@ -889,18 +889,19 @@ package body Series_Path_Trackers is
     mhom := Prompt_for_Homogenization(natural32(nvr));
     if mhom = 0 then
       Standard_Homotopy.Create(target.all,start.all,2,pars.gamma);
-    elsif mhom = 1 then
-      Standard_Projective_Transformation(target,start,sols);
+    else
+      if mhom = 1 then
+        Standard_Projective_Transformation(target,start,sols);
+        Add_Multihomogeneous_Symbols(1);
+        nvr := nvr + 1; nbq := nbq + 1;
+      else
+        Define_Partition(natural32(nvr),mhom,idz,z);
+        Standard_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+        Add_Multihomogeneous_Symbols(mhom);
+        nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      end if;
       Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
       Standard_Coefficient_Homotopy.Create(start.all,target.all,1,pars.gamma);
-      nvr := nvr + 1; nbq := nbq + 1;
-      Add_Multihomogeneous_Symbols(1);
-    else
-      Define_Partition(natural32(nvr),mhom,idz,z);
-      Standard_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
-      Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
-      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
-      Add_Multihomogeneous_Symbols(mhom);
     end if;
   end Standard_Define_Homotopy;
 
@@ -928,18 +929,19 @@ package body Series_Path_Trackers is
     mhom := Prompt_for_Homogenization(natural32(nvr));
     if mhom = 0 then
       DoblDobl_Homotopy.Create(target.all,start.all,2,dd_gamma);
-    elsif mhom = 1 then
-      nvr := nvr + 1; nbq := nbq + 1;
-      DoblDobl_Projective_Transformation(target,start,sols);
+    else
+      if mhom = 1 then
+        DoblDobl_Projective_Transformation(target,start,sols);
+        Add_Multihomogeneous_Symbols(1);
+        nvr := nvr + 1; nbq := nbq + 1;
+      else
+        Define_Partition(natural32(nvr),mhom,idz,z);
+        DoblDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+        Add_Multihomogeneous_Symbols(mhom);
+        nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      end if;
       DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
       DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,dd_gamma);
-      Add_Multihomogeneous_Symbols(1);
-    else
-      Define_Partition(natural32(nvr),mhom,idz,z);
-      DoblDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
-      DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
-      Add_Multihomogeneous_Symbols(mhom);
-      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
     end if;
   end DoblDobl_Define_Homotopy;
 
@@ -967,18 +969,19 @@ package body Series_Path_Trackers is
     mhom := Prompt_for_Homogenization(natural32(nvr));
     if mhom = 0 then
       QuadDobl_Homotopy.Create(target.all,start.all,2,qd_gamma);
-    elsif mhom = 1 then
-      nvr := nvr + 1; nbq := nbq + 1;
-      QuadDobl_Projective_Transformation(target,start,sols);
+    else
+      if mhom = 1 then
+        QuadDobl_Projective_Transformation(target,start,sols);
+        Add_Multihomogeneous_Symbols(1);
+        nvr := nvr + 1; nbq := nbq + 1;
+      else
+        Define_Partition(natural32(nvr),mhom,idz,z);
+        QuadDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+        Add_Multihomogeneous_Symbols(mhom);
+        nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      end if;
       QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
       QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
-      Add_Multihomogeneous_Symbols(1);
-    else
-      Define_Partition(natural32(nvr),mhom,idz,z);
-      QuadDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
-      QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
-      Add_Multihomogeneous_Symbols(mhom);
-      nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
     end if;
   end QuadDobl_Define_Homotopy;
 

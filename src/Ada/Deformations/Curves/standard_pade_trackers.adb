@@ -680,8 +680,10 @@ package body Standard_Pade_Trackers is
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     wrk_fcf := Standard_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
-      Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
-        (wrk_fcf,wrk_sol,t,pars.gamma);
+      if mhom = 1 then
+        Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+          (wrk_fcf,wrk_sol,t,pars.gamma);
+      end if;
       Step_Control
         (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
          cntsstp,cntdstp,cntpstp);
@@ -759,8 +761,10 @@ package body Standard_Pade_Trackers is
        -- Homotopy_Coefficient_Scaling.Last_Coefficients
        --   (file,wrk_fcf(wrk_fcf'last),t,pars.gamma);
       end if;
-      Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
-        (file,fhm,wrk_fcf,wrk_sol,t,pars.gamma);
+      if mhom = 1 then
+        Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+          (file,fhm,wrk_fcf,wrk_sol,t,pars.gamma);
+      end if;
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
          pv,poles,t,step,cntsstp,cntdstp,cntpstp);

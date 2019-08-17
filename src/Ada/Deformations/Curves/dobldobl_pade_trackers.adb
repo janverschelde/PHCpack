@@ -630,9 +630,11 @@ package body DoblDobl_Pade_Trackers is
     nbrsteps := max_steps;
     wrk_fcf := DoblDobl_CSeries_Vector_Functions.Make_Deep_Copy(fcf);
     for k in 1..max_steps loop
-      dd_t := Double_Double_Numbers.Create(t);
-      Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
-        (wrk_fcf,wrk_sol,dd_t,dd_gamma);
+      if mhom = 1 then
+        dd_t := Double_Double_Numbers.Create(t);
+        Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+          (wrk_fcf,wrk_sol,dd_t,dd_gamma);
+      end if;
       Step_Control
         (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
          cntsstp,cntdstp,cntpstp);
@@ -718,8 +720,10 @@ package body DoblDobl_Pade_Trackers is
        -- Homotopy_Coefficient_Scaling.Last_Coefficients
        --   (file,wrk_fcf(wrk_fcf'last),dd_t,dd_gamma);
       end if;
-      Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
-        (file,fhm,wrk_fcf,wrk_sol,dd_t,dd_gamma); -- ,true);
+      if mhom = 1 then
+        Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+          (file,fhm,wrk_fcf,wrk_sol,dd_t,dd_gamma); -- ,true);
+      end if;
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
          pv,poles,t,step,cntsstp,cntdstp,cntpstp);
