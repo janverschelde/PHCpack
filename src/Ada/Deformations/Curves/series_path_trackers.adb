@@ -151,6 +151,8 @@ package body Series_Path_Trackers is
               ( monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -207,7 +209,7 @@ package body Series_Path_Trackers is
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
       Standard_Pade_Trackers.Track_One_Path
-        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
+        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,
          nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
          cntsstp,cntdstp,cntpstp,verbose,vrb-1);
       if verbose then
@@ -252,6 +254,8 @@ package body Series_Path_Trackers is
               ( monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -308,7 +312,7 @@ package body Series_Path_Trackers is
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
       DoblDobl_Pade_Trackers.Track_One_Path
-        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
+        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,
          nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
          cntsstp,cntdstp,cntpstp,verbose,vrb-1);
       if verbose then
@@ -354,6 +358,8 @@ package body Series_Path_Trackers is
               ( monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -410,7 +416,7 @@ package body Series_Path_Trackers is
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
       QuadDobl_Pade_Trackers.Track_One_Path
-        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,
+        (standard_output,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,
          nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
          cntsstp,cntdstp,cntpstp,verbose,vrb-1);
       if verbose then
@@ -455,6 +461,8 @@ package body Series_Path_Trackers is
               ( file : in file_type; monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -511,8 +519,8 @@ package body Series_Path_Trackers is
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
       Standard_Pade_Trackers.Track_One_Path
-        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
-         cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
@@ -553,6 +561,8 @@ package body Series_Path_Trackers is
               ( file : in file_type; monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -609,8 +619,8 @@ package body Series_Path_Trackers is
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
       DoblDobl_Pade_Trackers.Track_One_Path
-        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
-         cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
@@ -651,6 +661,8 @@ package body Series_Path_Trackers is
               ( file : in file_type; monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 ) is
 
@@ -707,8 +719,8 @@ package body Series_Path_Trackers is
        then put("Tracking path "); put(i,1); put_line(" ...");
       end if;
       QuadDobl_Pade_Trackers.Track_One_Path
-        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
-         cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrb-1);
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
@@ -858,12 +870,11 @@ package body Series_Path_Trackers is
   procedure Standard_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out Standard_Complex_Solutions.Solution_List ) is
 
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-    mhom : natural32;
-    idx : Standard_Natural_Vectors.Link_to_Vector;
-    z : Link_to_Partition;
 
     use Homotopy_Series_Readers;
 
@@ -885,7 +896,7 @@ package body Series_Path_Trackers is
       nvr := nvr + 1; nbq := nbq + 1;
       Add_Multihomogeneous_Symbols(1);
     else
-      Define_Partition(natural32(nvr),mhom,idx,z);
+      Define_Partition(natural32(nvr),mhom,idz,z);
       Standard_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
       Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
       nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
@@ -896,12 +907,11 @@ package body Series_Path_Trackers is
   procedure DoblDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out DoblDobl_Complex_Solutions.Solution_List ) is
 
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    mhom : natural32;
-    idx : Standard_Natural_Vectors.Link_to_Vector;
-    z : Link_to_Partition;
     dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
              := Standard_to_DoblDobl_Complex(pars.gamma);
 
@@ -925,7 +935,7 @@ package body Series_Path_Trackers is
       DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,dd_gamma);
       Add_Multihomogeneous_Symbols(1);
     else
-      Define_Partition(natural32(nvr),mhom,idx,z);
+      Define_Partition(natural32(nvr),mhom,idz,z);
       DoblDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
       DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
       Add_Multihomogeneous_Symbols(mhom);
@@ -936,12 +946,11 @@ package body Series_Path_Trackers is
   procedure QuadDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out QuadDobl_Complex_Solutions.Solution_List ) is
 
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    mhom : natural32;
-    idx : Standard_Natural_Vectors.Link_to_Vector;
-    z : Link_to_Partition;
     qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
              := Standard_to_QuadDobl_Complex(pars.gamma);
 
@@ -965,7 +974,7 @@ package body Series_Path_Trackers is
       QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
       Add_Multihomogeneous_Symbols(1);
     else
-      Define_Partition(natural32(nvr),mhom,idx,z);
+      Define_Partition(natural32(nvr),mhom,idz,z);
       QuadDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
       QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
       Add_Multihomogeneous_Symbols(mhom);
@@ -980,6 +989,9 @@ package body Series_Path_Trackers is
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
+    mhom : natural32;
+    z : Link_to_Partition;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
     monitor,verbose,tofile : boolean;
     file : file_type;
 
@@ -991,20 +1003,24 @@ package body Series_Path_Trackers is
     new_line;
     if arth then
       Homotopy_Continuation_Parameters_io.Tune(pars);
-      Standard_Define_Homotopy(nbq,nvr,pars,sols);
+      Standard_Define_Homotopy(nbq,nvr,pars,mhom,z,idz,sols);
       idx := 0;
-      if tofile
-       then Standard_Run(file,monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
-       else Standard_Run(monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+      if tofile then
+        Standard_Run(file,monitor,verbose,nbq,nvr,idx,pars,
+                     mhom,idz,sols,vrb-1);
+      else
+        Standard_Run(monitor,verbose,nbq,nvr,idx,pars,mhom,idz,sols,vrb-1);
       end if;
     else
       pars.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(pars);
       Homotopy_Series_Readers.Standard_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      if tofile
-       then Standard_Run(file,monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
-       else Standard_Run(monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+      if tofile then
+        Standard_Run(file,monitor,verbose,nbq,nvr,idx,pars,
+                     mhom,idz,dropsols,vrb-1);
+      else
+        Standard_Run(monitor,verbose,nbq,nvr,idx,pars,mhom,idz,dropsols,vrb-1);
       end if;
     end if;
   end Standard_Main;
@@ -1016,6 +1032,9 @@ package body Series_Path_Trackers is
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
+    mhom : natural32;
+    z : Link_to_Partition;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
     monitor,verbose,tofile : boolean;
     file : file_type;
 
@@ -1027,20 +1046,24 @@ package body Series_Path_Trackers is
     new_line;
     if arth then
       Homotopy_Continuation_Parameters_io.Tune(pars);
-      DoblDobl_Define_Homotopy(nbq,nvr,pars,sols);
+      DoblDobl_Define_Homotopy(nbq,nvr,pars,mhom,z,idz,sols);
       idx := 0;
-      if tofile
-       then DoblDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
-       else DoblDobl_Run(monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+      if tofile then
+        DoblDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,
+                     mhom,idz,sols,vrb-1);
+      else
+        DoblDobl_Run(monitor,verbose,nbq,nvr,idx,pars,mhom,idz,sols,vrb-1);
       end if;
     else
       pars.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(pars);
       Homotopy_Series_Readers.DoblDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      if tofile
-       then DoblDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
-       else DoblDobl_Run(monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+      if tofile then
+        DoblDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,
+                     mhom,idz,dropsols,vrb-1);
+      else
+        DoblDobl_Run(monitor,verbose,nbq,nvr,idx,pars,mhom,idz,dropsols,vrb-1);
       end if;
     end if;
   end DoblDobl_Main;
@@ -1052,6 +1075,9 @@ package body Series_Path_Trackers is
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
+    mhom : natural32;
+    z : Link_to_Partition;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
     monitor,verbose,tofile : boolean;
     file : file_type;
 
@@ -1062,21 +1088,25 @@ package body Series_Path_Trackers is
     Set_Output(file,monitor,verbose,tofile);
     new_line;
     if arth then
-      QuadDobl_Define_Homotopy(nbq,nvr,pars,sols);
       Homotopy_Continuation_Parameters_io.Tune(pars);
+      QuadDobl_Define_Homotopy(nbq,nvr,pars,mhom,z,idz,sols);
       idx := 0;
-      if tofile
-       then QuadDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
-       else QuadDobl_Run(monitor,verbose,nbq,nvr,idx,pars,sols,vrb-1);
+      if tofile then
+        QuadDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,
+                     mhom,idz,sols,vrb-1);
+      else
+        QuadDobl_Run(monitor,verbose,nbq,nvr,idx,pars,mhom,idz,sols,vrb-1);
       end if;
     else
-      Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
       pars.gamma := Standard_Complex_Numbers.Create(1.0);
       Homotopy_Continuation_Parameters_io.Tune(pars);
+      Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idx,sols);
       dropsols := Solution_Drops.Drop(sols,natural32(idx));
-      if tofile
-       then QuadDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
-       else QuadDobl_Run(monitor,verbose,nbq,nvr,idx,pars,dropsols,vrb-1);
+      if tofile then
+        QuadDobl_Run(file,monitor,verbose,nbq,nvr,idx,pars,
+                     mhom,idz,dropsols,vrb-1);
+      else
+        QuadDobl_Run(monitor,verbose,nbq,nvr,idx,pars,mhom,idz,dropsols,vrb-1);
       end if;
     end if;
   end QuadDobl_Main;

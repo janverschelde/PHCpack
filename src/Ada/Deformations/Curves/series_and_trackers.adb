@@ -2,6 +2,7 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Standard_Natural_Vectors;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;
@@ -80,6 +81,8 @@ package body Series_and_Trackers is
     minsize,maxsize,smallest,largest : double_float;
     cntsstp,cntdstp,cntpstp : natural32;
     ratsstp,ratdstp,ratpstp : double_float := 0.0;
+    mhom : constant natural32 := 0;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
 
   begin
     if vrblvl > 0
@@ -96,8 +99,9 @@ package body Series_and_Trackers is
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
       Standard_Pade_Trackers.Track_One_Path
-        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,nbrsteps,nbrcorrs,cntcut,
-         cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrblvl-1);
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,
+         verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,

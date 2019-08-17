@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Solutions;
@@ -419,6 +420,8 @@ package Standard_Pade_Trackers is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 cntsstp,cntdstp,cntpstp : out natural32;
@@ -439,6 +442,8 @@ package Standard_Pade_Trackers is
   --   mlt      multiplication factors for the derivatives;
   --   sol      start solution in the homotopy;
   --   pars     values of the parameters and tolerances;
+  --   mhom     0 for affine, 1 for 1-homogenization, m for m-homogenization;
+  --   idz      index representation of the partition z, for mhom > 1;
   --   vrblvl   the verbose level.
 
   -- ON RETURN :
@@ -464,6 +469,8 @@ package Standard_Pade_Trackers is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 cntsstp,cntdstp,cntpstp : out natural32;
@@ -486,6 +493,8 @@ package Standard_Pade_Trackers is
   --   mlt      multiplication factors for the derivatives;
   --   sol      start solution in the homotopy;
   --   pars     values of the parameters and tolerances;
+  --   mhom     0 for affine, 1 for 1-homogenization, m for m-homogenization;
+  --   idz      index representation of the partition z, for mhom > 1;
   --   verbose  flag indicates if extra output will be written to file;
   --   vrblvl   the verbose level.
 

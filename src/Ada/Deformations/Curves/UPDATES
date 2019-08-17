@@ -1,3 +1,7 @@
+Sat 17 Aug 2019 : added the multihomogeneous parameters to *_pade_trackers,
+  which changed series_path_trackers, series_and_trackers, and
+  drivers_to_series_trackers.
+
 Fri 16 Aug 2019 : improved internal structure of series_path_trackers,
   with better entering of the partition of the set of unknowns.
 

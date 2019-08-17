@@ -645,6 +645,8 @@ package body Standard_Pade_Trackers is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 cntsstp,cntdstp,cntpstp : out natural32;
@@ -716,6 +718,8 @@ package body Standard_Pade_Trackers is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in out Standard_Complex_Solutions.Solution;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 nbrsteps,nbrcorrs,cntcut,cntfail : out natural32;
                 minsize,maxsize : out double_float;
                 cntsstp,cntdstp,cntpstp : out natural32;

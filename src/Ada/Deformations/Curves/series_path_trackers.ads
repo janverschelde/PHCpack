@@ -52,18 +52,24 @@ package Series_Path_Trackers is
               ( monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
   procedure DoblDobl_Run
               ( monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
   procedure QuadDobl_Run
               ( monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
 
@@ -80,6 +86,8 @@ package Series_Path_Trackers is
   --   idxpar   index of the parameter in a natural parameter homotopy,
   --            in 1..nvr, or else 0 for an artificial parameter homotopy;
   --   pars     values of the homotopy continuation parameters;
+  --   mhom     0 for affine, 1 for 1-homogenization, m for m-homogenization;
+  --   idz      index representation of the partition z, for mhom > 1;
   --   sols     start solutions;
   --   vrb      the verbose level.
 
@@ -90,18 +98,24 @@ package Series_Path_Trackers is
               ( file : in file_type; monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
   procedure DoblDobl_Run
               ( file : in file_type; monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
   procedure QuadDobl_Run
               ( file : in file_type; monitor,verbose : in boolean;
                 nq,nvr,idxpar : in integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrb : in integer32 := 0 );
 
@@ -118,6 +132,8 @@ package Series_Path_Trackers is
   --   idxpar   index of the parameter in a natural parameter homotopy,
   --            in 1..nvr, or else 0 for an artificial parameter homotopy;
   --   pars     values of the homotopy continuation parameters;
+  --   mhom     0 for affine, 1 for 1-homogenization, m for m-homogenization;
+  --   idz      index representation of the partition z, for mhom > 1;
   --   sols     start solutions;
   --   vrb      the verbose level.
 
@@ -172,14 +188,20 @@ package Series_Path_Trackers is
   procedure Standard_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure DoblDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure QuadDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
@@ -193,6 +215,9 @@ package Series_Path_Trackers is
   -- ON RETURN :
   --   nbq      number of equations;
   --   nvr      number of variables;
+  --   mhom     0 for affine, 1 for 1-homogenization, m for m-homogenization;
+  --   z        partition of the sets of unknowns, for mhom > 1;
+  --   idz      index representation of the partition z, for mhom > 1;
   --   sols     start solutions.
 
   procedure Standard_Main ( vrb : in integer32 := 0 );
