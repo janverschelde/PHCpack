@@ -7,7 +7,6 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Random_Numbers;
-with Standard_Natural_Vectors;
 with Degrees_in_Sets_of_Unknowns;
 
 package body Multi_Projective_Transformations is
@@ -747,6 +746,87 @@ package body Multi_Projective_Transformations is
       tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
   end Add_Ones;
+
+  function Make_Affine ( sol : Standard_Complex_Solutions.Solution;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return Standard_Complex_Solutions.Solution is
+
+    res : Standard_Complex_Solutions.Solution(sol.n-integer32(m));
+    idx : integer32;
+
+    use Standard_Complex_Numbers;
+
+  begin
+    res.t := sol.t;
+    res.m := sol.m;
+    res.err := sol.err;
+    res.rco := sol.rco;
+    res.res := sol.res;
+    for k in 1..m loop
+      idx := idz'last + integer32(k); -- homogeneous variable for k-th set
+      for i in idz'range loop
+        if idz(i) = k then
+          res.v(i) := sol.v(i)/sol.v(idx);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Make_Affine;
+
+  function Make_Affine ( sol : DoblDobl_Complex_Solutions.Solution;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return DoblDobl_Complex_Solutions.Solution is
+
+    res : DoblDobl_Complex_Solutions.Solution(sol.n-integer32(m));
+    idx : integer32;
+
+    use DoblDobl_Complex_Numbers;
+
+  begin
+    res.t := sol.t;
+    res.m := sol.m;
+    res.err := sol.err;
+    res.rco := sol.rco;
+    res.res := sol.res;
+    for k in 1..m loop
+      idx := idz'last + integer32(k); -- homogeneous variable for k-th set
+      for i in idz'range loop
+        if idz(i) = k then
+          res.v(i) := sol.v(i)/sol.v(idx);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Make_Affine;
+
+  function Make_Affine ( sol : QuadDobl_Complex_Solutions.Solution;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return QuadDobl_Complex_Solutions.Solution is
+
+    res : QuadDobl_Complex_Solutions.Solution(sol.n-integer32(m));
+    idx : integer32;
+
+    use QuadDobl_Complex_Numbers;
+
+  begin
+    res.t := sol.t;
+    res.m := sol.m;
+    res.err := sol.err;
+    res.rco := sol.rco;
+    res.res := sol.res;
+    for k in 1..m loop
+      idx := idz'last + integer32(k); -- homogeneous variable for k-th set
+      for i in idz'range loop
+        if idz(i) = k then
+          res.v(i) := sol.v(i)/sol.v(idx);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Make_Affine;
 
   function Multi_Projective_Transformation
              ( p : Standard_Complex_Poly_Systems.Poly_Sys; 

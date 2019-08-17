@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials;
@@ -215,6 +216,24 @@ package Multi_Projective_Transformations is
   -- DESCRIPTION :
   --   Replaces every solution in sols by a solution with the same
   --   coordinates, and with m ones added to each solution vector.
+
+  function Make_Affine ( sol : Standard_Complex_Solutions.Solution;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return Standard_Complex_Solutions.Solution;
+  function Make_Affine ( sol : DoblDobl_Complex_Solutions.Solution;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return DoblDobl_Complex_Solutions.Solution;
+  function Make_Affine ( sol : QuadDobl_Complex_Solutions.Solution;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return QuadDobl_Complex_Solutions.Solution;
+
+  -- DESCRIPTION :
+  --   Divides every coordinate in sol.v by the value of the added
+  --   homogeneous coordinate of each set, as defined by idz,
+  --   the index representation of the partition of the variables.
 
   function Multi_Projective_Transformation
              ( p : Standard_Complex_Poly_Systems.Poly_Sys; 

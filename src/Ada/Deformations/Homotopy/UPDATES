@@ -1,3 +1,6 @@
+Sat 17 Aug 2019 : added affine coordinate transformations for solutions in
+  multi-homogeneous coordinates, to multi_projective_transformations.
+  
 Fri 16 Aug 2019 : extended hyperplane solution_scaling with scale procedures
   as defined by the multi-homogeneous coordinates.
 
