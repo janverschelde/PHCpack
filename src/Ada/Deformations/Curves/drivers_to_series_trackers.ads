@@ -4,6 +4,7 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Complex_Poly_SysFun;
 with DoblDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Poly_SysFun;
@@ -169,25 +170,42 @@ package Drivers_to_Series_Trackers is
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrblvl : in integer32 := 0 );
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrblvl : in integer32 := 0 );
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs the root refiners on the solutions in the list sols,
-  --   where the nq is the number of equations.
-  --   Output is written to the file.
+  --   in double, double double, or quad double precision,
+  --   converting the solutions to affine coordinates if mhom > 0.
   --   The mixed residuals are computed, evaluating the solutions
   --   at the homotopy polynomials with positive coefficients in abh.
-  --   The verbose level is given in vrblvl.
+
+  -- ON ENTRY :
+  --   file     for output of the refined solutions;
+  --   abh      the homotopy polynomials with absolute coefficients
+  --            to compute the mixed residuals;
+  --   mhom     0 if affine, 1 if 1-homogeneous, m if m-homogeneous;
+  --   idz      the index representation of the partition, for mhom > 1;
+  --   sols     solutions which will be refived;
+  --   vrblvl   the verbose level.
+
+  -- ON RETURN :
+  --   sols     the refined solutions.
 
 end Drivers_to_Series_Trackers;

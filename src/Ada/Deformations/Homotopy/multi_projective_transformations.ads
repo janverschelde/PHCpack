@@ -235,6 +235,44 @@ package Multi_Projective_Transformations is
   --   homogeneous coordinate of each set, as defined by idz,
   --   the index representation of the partition of the variables.
 
+  function Make_Affine ( sols : Standard_Complex_Solutions.Solution_List;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return Standard_Complex_Solutions.Solution_List;
+  function Make_Affine ( sols : DoblDobl_Complex_Solutions.Solution_List;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return DoblDobl_Complex_Solutions.Solution_List;
+  function Make_Affine ( sols : QuadDobl_Complex_Solutions.Solution_List;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return QuadDobl_Complex_Solutions.Solution_List;
+
+  -- DESCRIPTION :
+  --   Returns the affine version of the solutions in sols,
+  --   dividing every coordinate in a solution by the value of the
+  --   added homogeneous coordinate of each set, as defined by idz,
+  --   the index representation of the partition of the variables.
+
+  procedure Make_Affine
+              ( sols : in out Standard_Complex_Solutions.Solution_List;
+                m : in natural32;
+                idz : in Standard_Natural_Vectors.Vector );
+  procedure Make_Affine
+              ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                m : in natural32;
+                idz : in Standard_Natural_Vectors.Vector );
+  procedure Make_Affine
+              ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                m : in natural32;
+                idz : in Standard_Natural_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Converts the list of solutions sols to affine coordinates,
+  --   dividing every coordinate in a solution by the value of the
+  --   added homogeneous coordinate of each set, as defined by idz,
+  --   the index representation of the partition of the variables.
+
   function Multi_Projective_Transformation
              ( p : Standard_Complex_Poly_Systems.Poly_Sys; 
                m : natural32; z : Partition; start : boolean := false )

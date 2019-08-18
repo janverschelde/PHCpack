@@ -828,6 +828,132 @@ package body Multi_Projective_Transformations is
     return res;
   end Make_Affine;
 
+  function Make_Affine ( sols : Standard_Complex_Solutions.Solution_List;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return Standard_Complex_Solutions.Solution_List is
+
+    res,res_last : Standard_Complex_Solutions.Solution_List;
+    tmp : Standard_Complex_Solutions.Solution_List := sols;
+    ls : Standard_Complex_Solutions.Link_to_Solution;
+
+  begin
+    while not Standard_Complex_Solutions.Is_Null(tmp) loop
+      ls := Standard_Complex_Solutions.Head_Of(tmp);
+      Standard_Complex_Solutions.Append(res,res_last,Make_Affine(ls.all,m,idz));
+      tmp := Standard_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+    return res;
+  end Make_Affine;
+
+  function Make_Affine ( sols : DoblDobl_Complex_Solutions.Solution_List;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return DoblDobl_Complex_Solutions.Solution_List is
+
+    res,res_last : DoblDobl_Complex_Solutions.Solution_List;
+    tmp : DoblDobl_Complex_Solutions.Solution_List := sols;
+    ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    while not DoblDobl_Complex_Solutions.Is_Null(tmp) loop
+      ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
+      DoblDobl_Complex_Solutions.Append(res,res_last,Make_Affine(ls.all,m,idz));
+      tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+    return res;
+  end Make_Affine;
+
+  function Make_Affine ( sols : QuadDobl_Complex_Solutions.Solution_List;
+                         m : natural32;
+                         idz : Standard_Natural_Vectors.Vector )
+                       return QuadDobl_Complex_Solutions.Solution_List is
+
+    res,res_last : QuadDobl_Complex_Solutions.Solution_List;
+    tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    while not QuadDobl_Complex_Solutions.Is_Null(tmp) loop
+      ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
+      QuadDobl_Complex_Solutions.Append(res,res_last,Make_Affine(ls.all,m,idz));
+      tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+    return res;
+  end Make_Affine;
+
+  procedure Make_Affine
+              ( sols : in out Standard_Complex_Solutions.Solution_List;
+                m : in natural32;
+                idz : in Standard_Natural_Vectors.Vector ) is
+
+    tmp : Standard_Complex_Solutions.Solution_List := sols;
+    ls : Standard_Complex_Solutions.Link_to_Solution;
+
+  begin
+    while not Standard_Complex_Solutions.Is_Null(tmp) loop
+      ls := Standard_Complex_Solutions.Head_Of(tmp);
+      declare
+        dim : constant integer32 := ls.n;
+        sol : constant Standard_Complex_Solutions.Solution(dim-integer32(m))
+            := Make_Affine(ls.all,m,idz);
+      begin
+        Standard_Complex_Solutions.Clear(ls);
+        ls := new Standard_Complex_Solutions.Solution'(sol);
+        Standard_Complex_Solutions.Set_Head(tmp,ls);
+      end;
+      tmp := Standard_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+  end Make_Affine;
+
+  procedure Make_Affine
+              ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                m : in natural32;
+                idz : in Standard_Natural_Vectors.Vector ) is
+
+    tmp : DoblDobl_Complex_Solutions.Solution_List := sols;
+    ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    while not DoblDobl_Complex_Solutions.Is_Null(tmp) loop
+      ls := DoblDobl_Complex_Solutions.Head_Of(tmp);
+      declare
+        dim : constant integer32 := ls.n;
+        sol : constant DoblDobl_Complex_Solutions.Solution(dim-integer32(m))
+            := Make_Affine(ls.all,m,idz);
+      begin
+        DoblDobl_Complex_Solutions.Clear(ls);
+        ls := new DoblDobl_Complex_Solutions.Solution'(sol);
+        DoblDobl_Complex_Solutions.Set_Head(tmp,ls);
+      end;
+      tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+  end Make_Affine;
+ 
+  procedure Make_Affine
+              ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                m : in natural32;
+                idz : in Standard_Natural_Vectors.Vector ) is
+
+    tmp : QuadDobl_Complex_Solutions.Solution_List := sols;
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    while not QuadDobl_Complex_Solutions.Is_Null(tmp) loop
+      ls := QuadDobl_Complex_Solutions.Head_Of(tmp);
+      declare
+        dim : constant integer32 := ls.n;
+        sol : constant QuadDobl_Complex_Solutions.Solution(dim-integer32(m))
+            := Make_Affine(ls.all,m,idz);
+      begin
+        QuadDobl_Complex_Solutions.Clear(ls);
+        ls := new QuadDobl_Complex_Solutions.Solution'(sol);
+        QuadDobl_Complex_Solutions.Set_Head(tmp,ls);
+      end;
+      tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+  end Make_Affine;
+
   function Multi_Projective_Transformation
              ( p : Standard_Complex_Poly_Systems.Poly_Sys; 
                m : natural32; z : Partition; start : boolean := false )

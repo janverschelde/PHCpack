@@ -236,9 +236,8 @@ package body Series_Path_Trackers is
     put_line("THE SOLUTIONS :");
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Write_Timer(standard_output,pars.numdeg,pars.dendeg,0,timer);
-    if idxpar = 0 then
-      -- Refine_Roots(standard_output,nq,sols);
-      Refine_Roots(standard_output,abh,sols,vrb);
+    if idxpar = 0
+     then Refine_Roots(standard_output,abh,mhom,idz,sols,vrb);
     end if;
     Write_Conclusion(standard_output,start_moment);
     Standard_Complex_Poly_Systems.Clear(h);
@@ -340,9 +339,8 @@ package body Series_Path_Trackers is
     put_line("THE SOLUTIONS :");
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Write_Timer(standard_output,pars.numdeg,pars.dendeg,1,timer);
-    if idxpar = 0 then
-      -- Refine_Roots(standard_output,nq,sols);
-      Refine_Roots(standard_output,abh,sols,vrb);
+    if idxpar = 0
+     then Refine_Roots(standard_output,abh,mhom,idz,sols,vrb);
     end if;
     Write_Conclusion(standard_output,start_moment);
     DoblDobl_Complex_Poly_Systems.Clear(h);
@@ -443,9 +441,8 @@ package body Series_Path_Trackers is
     put_line("THE SOLUTIONS :");
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Write_Timer(standard_output,pars.numdeg,pars.dendeg,2,timer);
-    if idxpar = 0 then
-      -- Refine_Roots(standard_output,nq,sols);
-      Refine_Roots(standard_output,abh,sols,vrb);
+    if idxpar = 0
+     then Refine_Roots(standard_output,abh,mhom,idz,sols,vrb);
     end if;
     Write_Conclusion(standard_output,start_moment);
     QuadDobl_Complex_Poly_Systems.Clear(h);
@@ -545,7 +542,7 @@ package body Series_Path_Trackers is
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Write_Timer(file,pars.numdeg,pars.dendeg,0,timer);
     if idxpar = 0
-     then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
+     then Refine_Roots(file,abh,mhom,idz,sols,vrb);
     end if;
     Write_Conclusion(file,start_moment);
     Standard_Complex_Poly_Systems.Clear(h);
@@ -645,7 +642,7 @@ package body Series_Path_Trackers is
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Write_Timer(file,pars.numdeg,pars.dendeg,1,timer);
     if idxpar = 0
-     then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
+     then Refine_Roots(file,abh,mhom,idz,sols,vrb);
     end if;
     Write_Conclusion(file,start_moment);
     DoblDobl_Complex_Poly_Systems.Clear(h);
@@ -745,7 +742,7 @@ package body Series_Path_Trackers is
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Write_Timer(file,pars.numdeg,pars.dendeg,2,timer);
     if idxpar = 0
-     then Refine_Roots(file,abh,sols,vrb); -- Refine_Roots(file,nq,sols);
+     then Refine_Roots(file,abh,mhom,idz,sols,vrb);
     end if;
     Write_Conclusion(file,start_moment);
     QuadDobl_Complex_Poly_Systems.Clear(h);

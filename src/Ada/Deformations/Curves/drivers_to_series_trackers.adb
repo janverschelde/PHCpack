@@ -19,12 +19,10 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Hessians;
 with Standard_Homotopy;
-with Standard_Coefficient_Homotopy;
 with DoblDobl_Homotopy;
-with DoblDobl_Coefficient_Homotopy;
 with QuadDobl_Homotopy;
-with QuadDobl_Coefficient_Homotopy;
 with Projective_Transformations;
+with Multi_Projective_Transformations;
 with Affine_Transformations;
 with Standard_Mixed_Residuals;
 with DoblDobl_Mixed_Residuals;
@@ -516,6 +514,8 @@ package body Drivers_to_Series_Trackers is
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 vrblvl : in integer32 := 0 ) is
 
@@ -526,8 +526,6 @@ package body Drivers_to_Series_Trackers is
     epsxa,epsfa,tolsing : double_float;
     numit,maxit : natural32 := 0;
     deflate,wout : boolean;
-    nbreqs : constant integer32 
-           := Standard_Coefficient_Homotopy.Number_of_Equations;
 
   begin
     if vrblvl > 0
@@ -536,30 +534,50 @@ package body Drivers_to_Series_Trackers is
     Standard_Default_Root_Refining_Parameters
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
     deflate := false;
-    if nbreqs <= 0 then
+    if mhom = 0 then
       Reporting_Root_Refiner
         (file,p,abh,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
     else -- dehomogenize p and the solutions
-      Projective_Transformations.Affine_Transformation(sols);
-      declare
-        q : Standard_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
-        abq : Standard_Complex_Poly_Systems.Poly_Sys(q'range);
-        evabq : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
-      begin
-        q := Affine_Transformations.Make_Affine(p);
-        abq := Standard_Mixed_Residuals.AbsVal(q);
-        evabq := Standard_Complex_Poly_SysFun.Create(abq);
-        new_line(file);
-        put(file,natural32(q'last),q);
-        Reporting_Root_Refiner
-          (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
-      end;
+      if mhom = 1 then
+        Projective_Transformations.Affine_Transformation(sols);
+        declare
+          q : Standard_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
+          abq : Standard_Complex_Poly_Systems.Poly_Sys(q'range);
+          evabq : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
+        begin
+          q := Affine_Transformations.Make_Affine(p);
+          abq := Standard_Mixed_Residuals.AbsVal(q);
+          evabq := Standard_Complex_Poly_SysFun.Create(abq);
+          new_line(file);
+          put(file,natural32(q'last),q);
+          Reporting_Root_Refiner
+            (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        end;
+      else
+        Multi_Projective_Transformations.Make_Affine(sols,mhom,idz.all);
+        declare
+          im : constant integer32 := integer32(mhom);
+          q : Standard_Complex_Poly_Systems.Poly_Sys(p'first..p'last-im);
+          abq : Standard_Complex_Poly_Systems.Poly_Sys(q'range);
+          evabq : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
+        begin
+          q := Affine_Transformations.Make_Affine(p,mhom);
+          abq := Standard_Mixed_Residuals.AbsVal(q);
+          evabq := Standard_Complex_Poly_SysFun.Create(abq);
+          new_line(file);
+          put(file,natural32(q'last),q);
+          Reporting_Root_Refiner
+            (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        end;
+      end if;
     end if;
   end Refine_Roots;
 
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 vrblvl : in integer32 := 0 ) is
 
@@ -568,8 +586,6 @@ package body Drivers_to_Series_Trackers is
     epsxa,epsfa,tolsing : double_float;
     numit,maxit : natural32 := 0;
     deflate,wout : boolean;
-    nbreqs : constant integer32 
-           := DoblDobl_Coefficient_Homotopy.Number_of_Equations;
 
     use Root_Refining_Parameters,DoblDobl_Root_Refiners;
 
@@ -580,30 +596,50 @@ package body Drivers_to_Series_Trackers is
     DoblDobl_Default_Root_Refining_Parameters
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
     deflate := false;
-    if nbreqs <= 0 then
+    if mhom = 0 then
       Reporting_Root_Refiner
         (file,p,abh,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
     else -- dehomogenize p and the solutions
-      Projective_Transformations.Affine_Transformation(sols);
-      declare
-        q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
-        abq : DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range);
-        evabq : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
-      begin
-        q := Affine_Transformations.Make_Affine(p);
-        abq := DoblDobl_Mixed_Residuals.AbsVal(q);
-        evabq := DoblDobl_Complex_Poly_SysFun.Create(abq);
-        new_line(file);
-        put(file,natural32(q'last),q);
-        Reporting_Root_Refiner
-          (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
-      end;
+      if mhom = 1 then
+        Projective_Transformations.Affine_Transformation(sols);
+        declare
+          q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
+          abq : DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range);
+          evabq : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
+        begin
+          q := Affine_Transformations.Make_Affine(p);
+          abq := DoblDobl_Mixed_Residuals.AbsVal(q);
+          evabq := DoblDobl_Complex_Poly_SysFun.Create(abq);
+          new_line(file);
+          put(file,natural32(q'last),q);
+          Reporting_Root_Refiner
+            (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        end;
+      else
+        Multi_Projective_Transformations.Make_Affine(sols,mhom,idz.all);
+        declare
+          im : constant integer32 := integer32(mhom);
+          q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'first..p'last-im);
+          abq : DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range);
+          evabq : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
+        begin
+          q := Affine_Transformations.Make_Affine(p,mhom);
+          abq := DoblDobl_Mixed_Residuals.AbsVal(q);
+          evabq := DoblDobl_Complex_Poly_SysFun.Create(abq);
+          new_line(file);
+          put(file,natural32(q'last),q);
+          Reporting_Root_Refiner
+            (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        end;
+      end if;
     end if;
   end Refine_Roots;
 
   procedure Refine_Roots
               ( file : in file_type;
                 abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 vrblvl : in integer32 := 0 ) is
 
@@ -614,8 +650,6 @@ package body Drivers_to_Series_Trackers is
     epsxa,epsfa,tolsing : double_float;
     numit,maxit : natural32 := 0;
     deflate,wout : boolean;
-    nbreqs : constant integer32 
-           := QuadDobl_Coefficient_Homotopy.Number_of_Equations;
 
   begin
     if vrblvl > 0
@@ -624,24 +658,42 @@ package body Drivers_to_Series_Trackers is
     QuadDobl_Default_Root_Refining_Parameters
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
     deflate := false;
-    if nbreqs <= 0 then
+    if mhom = 0 then
       Reporting_Root_Refiner
         (file,p,abh,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
     else -- dehomogenize p and the solutions
-      Projective_Transformations.Affine_Transformation(sols);
-      declare
-        q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
-        abq : QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range);
-        evabq : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
-      begin
-        q := Affine_Transformations.Make_Affine(p);
-        abq := QuadDobl_Mixed_Residuals.AbsVal(q);
-        evabq := QuadDobl_Complex_Poly_SysFun.Create(abq);
-        new_line(file);
-        put(file,natural32(q'last),q);
-        Reporting_Root_Refiner
-          (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
-      end;
+      if mhom = 1 then
+        Projective_Transformations.Affine_Transformation(sols);
+        declare
+          q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'first..p'last-1);
+          abq : QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range);
+          evabq : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
+        begin
+          q := Affine_Transformations.Make_Affine(p);
+          abq := QuadDobl_Mixed_Residuals.AbsVal(q);
+          evabq := QuadDobl_Complex_Poly_SysFun.Create(abq);
+          new_line(file);
+          put(file,natural32(q'last),q);
+          Reporting_Root_Refiner
+            (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        end;
+      else
+        Multi_Projective_Transformations.Make_Affine(sols,mhom,idz.all);
+        declare
+          im : constant integer32 := integer32(mhom);
+          q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'first..p'last-im);
+          abq : QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range);
+          evabq : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(q'range);
+        begin
+          q := Affine_Transformations.Make_Affine(p,mhom);
+          abq := QuadDobl_Mixed_Residuals.AbsVal(q);
+          evabq := QuadDobl_Complex_Poly_SysFun.Create(abq);
+          new_line(file);
+          put(file,natural32(q'last),q);
+          Reporting_Root_Refiner
+            (file,q,evabq,sols,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        end;
+      end if;
     end if;
   end Refine_Roots;
 
