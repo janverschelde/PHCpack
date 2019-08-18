@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -45,7 +46,9 @@ package Homotopy_Coefficient_Scaling is
   --   by the projective transformation and writes diagnostics to file,
   --   in double, double double, and quad double precision.
   --   The input fcf are the current coefficient vectors of the homotopy.
-  --   This is an exploratory testing procedure.
+  --   This is an exploratory testing procedure to verify that the last
+  --   coefficients in fcf can be recomputed from the coefficients in the
+  --   defined coefficient homotopy.
  
   procedure Scale_Solution_Coefficients
               ( hcf : in Standard_Complex_Series_VecVecs.VecVec;
@@ -103,5 +106,43 @@ package Homotopy_Coefficient_Scaling is
   -- ON RETURN :
   --   sol      scaled solution, each component is divided by the magnitude
   --            of the largest coordinate in sol.
+
+-- MULTI-HOMOGENEOUS VERSIONS :
+
+  procedure Last_Coefficients
+              ( file : in file_type;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                t : in double_float;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                m : in natural32 );
+  procedure Last_Coefficients
+              ( file : in file_type;
+                fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                t : in double_double;
+                gamma : in DoblDobl_Complex_Numbers.Complex_Number;
+                m : in natural32 );
+  procedure Last_Coefficients
+              ( file : in file_type;
+                fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                t : in quad_double;
+                gamma : in QuadDobl_Complex_Numbers.Complex_Number;
+                m : in natural32 );
+
+  -- DESCRIPTION :
+  --   Checks the last coefficients in the linear equations added
+  --   by the projective transformation and writes diagnostics to file,
+  --   in double, double double, and quad double precision.
+  --   This is an exploratory testing procedure to verify that the last
+  --   coefficients in fcf can be recomputed from the coefficients in the
+  --   defined coefficient homotopy.
+
+  -- ON ENTRY :
+  --   file     file opened for output;
+  --   fcf      current coefficient vectors of the homotopy;
+  --   t        current value of the homotopy continuation parameter;
+  --   gamma    gamma constant in the homotopy;
+  --   m        number of sets in the partition of the variables,
+  --            the variables added in the m-homogenization are always
+  --            at the last m positions, in increasing order.
 
 end Homotopy_Coefficient_Scaling;

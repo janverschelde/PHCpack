@@ -717,8 +717,15 @@ package body DoblDobl_Pade_Trackers is
       dd_t := Double_Double_Numbers.Create(t);
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
-       -- Homotopy_Coefficient_Scaling.Last_Coefficients
-       --   (file,wrk_fcf(wrk_fcf'last),dd_t,dd_gamma);
+        if vrblvl > 0 then
+          if mhom = 1 then
+            Homotopy_Coefficient_Scaling.Last_Coefficients
+              (file,wrk_fcf(wrk_fcf'last),dd_t,dd_gamma);
+          elsif mhom > 1 then
+            Homotopy_Coefficient_Scaling.Last_Coefficients
+              (file,wrk_fcf,dd_t,dd_gamma,mhom);
+          end if;
+        end if;
       end if;
       if mhom = 1 then
         Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients

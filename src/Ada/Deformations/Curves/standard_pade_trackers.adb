@@ -758,8 +758,15 @@ package body Standard_Pade_Trackers is
     for k in 1..max_steps loop
       if verbose then
         put(file,"Step "); put(file,k,1); put_line(file," : ");
-       -- Homotopy_Coefficient_Scaling.Last_Coefficients
-       --   (file,wrk_fcf(wrk_fcf'last),t,pars.gamma);
+        if vrblvl > 0 then
+          if mhom = 1 then
+            Homotopy_Coefficient_Scaling.Last_Coefficients
+              (file,wrk_fcf(wrk_fcf'last),t,pars.gamma);
+          elsif mhom > 1 then
+            Homotopy_Coefficient_Scaling.Last_Coefficients
+              (file,wrk_fcf,t,pars.gamma,mhom);
+          end if;
+        end if;
       end if;
       if mhom = 1 then
         Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients

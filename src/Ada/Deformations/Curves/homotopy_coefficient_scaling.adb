@@ -1,11 +1,20 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecs_io;
 with DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs_io;
 with Standard_Coefficient_Homotopy;
 with DoblDobl_Coefficient_Homotopy;
 with QuadDobl_Coefficient_Homotopy;
@@ -509,5 +518,219 @@ package body Homotopy_Coefficient_Scaling is
       end if;
     end if;
   end Scale_Solution_Coefficients;
+
+-- MULTI-HOMOGENEOUS VERSIONS :
+
+  procedure Last_Coefficients
+              ( file : in file_type;
+                fcf : in Standard_Complex_Series_VecVecs.VecVec;
+                t : in double_float;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                m : in natural32 ) is
+
+    nbreqs : constant integer32 
+           := Standard_Coefficient_Homotopy.Number_of_Equations;
+    mdim : constant integer32 := integer32(m);
+    hcp,hcq : Standard_Complex_VecVecs.VecVec(1..mdim);
+    idx : integer32;
+
+  begin
+    put(file,"The last "); put(file,mdim,1);
+    put_line(file," coefficients of wrk_fcf :");
+    idx := fcf'last - mdim;
+    for i in 1..mdim loop
+      idx := idx + 1;
+      Standard_Complex_Series_Vectors_io.put_line(file,fcf(idx));
+    end loop;
+    put(file,"Number of equations in the coefficient homotopy : ");
+    put(file,nbreqs,1); new_line(file);
+    if nbreqs > 0 then
+      idx := nbreqs - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        hcp(i) := Standard_Coefficient_Homotopy.Target_Coefficients(idx);
+        hcq(i) := Standard_Coefficient_Homotopy.Start_Coefficients(idx);
+      end loop;
+      put_line(file,"Coefficients of the last target equation :");
+      Standard_Complex_VecVecs_io.put_line(file,hcp);
+      put_line(file,"Coefficients of the last start equation :");
+      Standard_Complex_VecVecs_io.put_line(file,hcq);
+      for i in 1..mdim loop
+        put(file,"Verifying coefficients at i = ");
+        put(file,i,1); put_line(file," :");
+        declare
+          wrk : Standard_Complex_Vectors.Vector(hcp(i)'range);
+          one_min_t : constant double_float := 1.0 - t;
+          adf : double_float;
+          use Standard_Complex_Numbers;
+        begin
+          for j in wrk'range loop
+            wrk(j) := t*hcp(i)(j);
+          end loop;
+         -- the constant is the last coefficient in the vector
+          wrk(wrk'last) := wrk(wrk'last) + gamma*one_min_t*hcq(i)(hcq'last);
+         -- the Zi coefficient in the target is computed by idx
+         -- the Zi coefficient in the start is the next to last coefficient
+          idx := wrk'last - 1; -- hcp(i)'last - mdim + i;
+          wrk(idx) := wrk(idx) + gamma*one_min_t*hcq(i)(hcq(i)'last-1);
+          put_line(file,"last coefficients with t value multiplied in :");
+          Standard_Complex_Vectors_io.put_line(file,wrk);
+          put_line(file,"the coefficients in fcf :");
+          idx := fcf'last - mdim + i;
+          for j in fcf(idx)'range loop
+            Standard_Complex_Numbers_io.put(file,fcf(idx)(j).cff(0));
+            adf := AbsVal(wrk(j)-fcf(idx)(j).cff(0));
+            put(file," | "); put(file,adf,3);
+            if adf < 1.0E-8
+             then put_line(file,"  okay");
+             else put_line(file,"  ERROR!!!");
+            end if;
+          end loop;
+        end;
+      end loop;
+    end if;
+  end Last_Coefficients;
+
+  procedure Last_Coefficients
+              ( file : in file_type;
+                fcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                t : in double_double;
+                gamma : in DoblDobl_Complex_Numbers.Complex_Number;
+                m : in natural32 ) is
+
+    nbreqs : constant integer32 
+           := DoblDobl_Coefficient_Homotopy.Number_of_Equations;
+    mdim : constant integer32 := integer32(m);
+    hcp,hcq : DoblDobl_Complex_VecVecs.VecVec(1..mdim);
+    idx : integer32;
+
+  begin
+    put(file,"The last "); put(file,mdim,1);
+    put_line(file," coefficients of wrk_fcf :");
+    idx := fcf'last - mdim;
+    for i in 1..mdim loop
+      idx := idx + 1;
+      DoblDobl_Complex_Series_Vectors_io.put_line(file,fcf(idx));
+    end loop;
+    put(file,"Number of equations in the coefficient homotopy : ");
+    put(file,nbreqs,1); new_line(file);
+    if nbreqs > 0 then
+      idx := nbreqs - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        hcp(i) := DoblDobl_Coefficient_Homotopy.Target_Coefficients(idx);
+        hcq(i) := DoblDobl_Coefficient_Homotopy.Start_Coefficients(idx);
+      end loop;
+      put_line(file,"Coefficients of the last target equation :");
+      DoblDobl_Complex_VecVecs_io.put_line(file,hcp);
+      put_line(file,"Coefficients of the last start equation :");
+      DoblDobl_Complex_VecVecs_io.put_line(file,hcq);
+      for i in 1..mdim loop
+        put(file,"Verifying coefficients at i = ");
+        put(file,i,1); put_line(file," :");
+        declare
+          wrk : DoblDobl_Complex_Vectors.Vector(hcp(i)'range);
+          one : constant double_double := create(1.0);
+          one_min_t : constant double_double := one - t;
+          adf : double_double;
+          use DoblDobl_Complex_Numbers;
+        begin
+          for j in wrk'range loop
+            wrk(j) := t*hcp(i)(j);
+          end loop;
+         -- the constant is the last coefficient in the vector
+          wrk(wrk'last) := wrk(wrk'last) + gamma*one_min_t*hcq(i)(hcq'last);
+         -- the Zi coefficient in the target is computed by idx
+         -- the Zi coefficient in the start is the next to last coefficient
+          idx := wrk'last - 1; -- hcp(i)'last - mdim + i;
+          wrk(idx) := wrk(idx) + gamma*one_min_t*hcq(i)(hcq(i)'last-1);
+          put_line(file,"last coefficients with t value multiplied in :");
+          DoblDobl_Complex_Vectors_io.put_line(file,wrk);
+          put_line(file,"the coefficients in fcf :");
+          idx := fcf'last - mdim + i;
+          for j in fcf(idx)'range loop
+            DoblDobl_Complex_Numbers_io.put(file,fcf(idx)(j).cff(0));
+            adf := AbsVal(wrk(j)-fcf(idx)(j).cff(0));
+            put(file," | "); put(file,adf,3);
+            if adf < 1.0E-8
+             then put_line(file,"  okay");
+             else put_line(file,"  ERROR!!!");
+            end if;
+          end loop;
+        end;
+      end loop;
+    end if;
+  end Last_Coefficients;
+
+  procedure Last_Coefficients
+              ( file : in file_type;
+                fcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                t : in quad_double;
+                gamma : in QuadDobl_Complex_Numbers.Complex_Number;
+                m : in natural32 ) is
+
+    nbreqs : constant integer32 
+           := QuadDobl_Coefficient_Homotopy.Number_of_Equations;
+    mdim : constant integer32 := integer32(m);
+    hcp,hcq : QuadDobl_Complex_VecVecs.VecVec(1..mdim);
+    idx : integer32;
+
+  begin
+    put(file,"The last "); put(file,mdim,1);
+    put_line(file," coefficients of wrk_fcf :");
+    idx := fcf'last - mdim;
+    for i in 1..mdim loop
+      idx := idx + 1;
+      QuadDobl_Complex_Series_Vectors_io.put_line(file,fcf(idx));
+    end loop;
+    put(file,"Number of equations in the coefficient homotopy : ");
+    put(file,nbreqs,1); new_line(file);
+    if nbreqs > 0 then
+      idx := nbreqs - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        hcp(i) := QuadDobl_Coefficient_Homotopy.Target_Coefficients(idx);
+        hcq(i) := QuadDobl_Coefficient_Homotopy.Start_Coefficients(idx);
+      end loop;
+      put_line(file,"Coefficients of the last target equation :");
+      QuadDobl_Complex_VecVecs_io.put_line(file,hcp);
+      put_line(file,"Coefficients of the last start equation :");
+      QuadDobl_Complex_VecVecs_io.put_line(file,hcq);
+      for i in 1..mdim loop
+        put(file,"Verifying coefficients at i = ");
+        put(file,i,1); put_line(file," :");
+        declare
+          wrk : QuadDobl_Complex_Vectors.Vector(hcp(i)'range);
+          one : constant quad_double := create(1.0);
+          one_min_t : constant quad_double := one - t;
+          adf : quad_double;
+          use QuadDobl_Complex_Numbers;
+        begin
+          for j in wrk'range loop
+            wrk(j) := t*hcp(i)(j);
+          end loop;
+         -- the constant is the last coefficient in the vector
+          wrk(wrk'last) := wrk(wrk'last) + gamma*one_min_t*hcq(i)(hcq'last);
+         -- the Zi coefficient in the target is computed by idx
+         -- the Zi coefficient in the start is the next to last coefficient
+          idx := wrk'last - 1; -- hcp(i)'last - mdim + i;
+          wrk(idx) := wrk(idx) + gamma*one_min_t*hcq(i)(hcq(i)'last-1);
+          put_line(file,"last coefficients with t value multiplied in :");
+          QuadDobl_Complex_Vectors_io.put_line(file,wrk);
+          put_line(file,"the coefficients in fcf :");
+          idx := fcf'last - mdim + i;
+          for j in fcf(idx)'range loop
+            QuadDobl_Complex_Numbers_io.put(file,fcf(idx)(j).cff(0));
+            adf := AbsVal(wrk(j)-fcf(idx)(j).cff(0));
+            put(file," | "); put(file,adf,3);
+            if adf < 1.0E-8
+             then put_line(file,"  okay");
+             else put_line(file,"  ERROR!!!");
+            end if;
+          end loop;
+        end;
+      end loop;
+    end if;
+  end Last_Coefficients;
 
 end Homotopy_Coefficient_Scaling;
