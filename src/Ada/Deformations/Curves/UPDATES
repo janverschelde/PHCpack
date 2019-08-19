@@ -1,6 +1,9 @@
 Sun 18 Aug 2019 : to homotopy_coefficient_scalling, added a procedure to
   verify the coefficients of the last m equations for m-homogenization,
   tested in {standard,dobldobl,quaddobl}_pade_trackers.adb.
+  Completed the scaling of the m-homogeneous solutions and coefficients
+  and homotopy_coefficient_scaling, applied in the procedures in
+  in {standard,dobldobl,quaddobl}_pade_trackers.adb.
 
 Sat 17 Aug 2019 : added the multihomogeneous parameters to *_pade_trackers,
   which changed series_path_trackers, series_and_trackers, and

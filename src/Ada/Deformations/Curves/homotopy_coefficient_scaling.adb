@@ -733,4 +733,451 @@ package body Homotopy_Coefficient_Scaling is
     end if;
   end Last_Coefficients;
 
+  procedure Scale_Solution_Coefficients
+              ( hcf : in Standard_Complex_Series_VecVecs.VecVec;
+                sol : in out Standard_Complex_Vectors.Vector;
+                t : in double_float;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                m : in natural32;
+                z : in Standard_Natural_Vectors.Vector ) is
+
+    use Standard_Complex_Numbers;
+
+    mdim : constant integer32 := integer32(m);
+    prd : Complex_Number;
+    hcp,hcq : Standard_Complex_Vectors.Link_to_Vector;
+    nbreqs : constant integer32 
+           := Standard_Coefficient_Homotopy.Number_of_Equations;
+    idx,cffidx : integer32;
+
+  begin
+    if nbreqs > 0 then
+      Hyperplane_Solution_Scaling.Scale(sol,m,z);
+      idx := hcf'last - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        declare
+          fcf : constant Standard_Complex_Series_Vectors.Link_to_Vector
+              := hcf(idx); -- sharing pointers, assign to fcf change hcf
+        begin
+          hcq := Standard_Coefficient_Homotopy.Start_Coefficients(idx);
+          hcp := Standard_Coefficient_Homotopy.Target_Coefficients(idx);
+          hcq(hcq'last) := -sol(idx);
+          if t = 0.0 then
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := gamma*sol(idx) + hcp(hcp'last);
+          else
+            prd := Standard_Complex_Numbers.create(0.0);
+            cffidx := hcp'first;
+            for j in sol'first..sol'last-mdim loop
+              if z(j) = natural32(i) then
+                prd := prd + hcp(cffidx)*sol(j);   -- scaling equation only
+                cffidx := cffidx + 1;              -- involves the i-th set
+              end if;
+            end loop;
+            prd := prd + hcp(hcp'last-1)*sol(idx); -- z-coeff at idx position
+            hcp(hcp'last) := -prd;
+            for j in fcf'range loop
+              fcf(j).cff(0) := Standard_Complex_Numbers.create(0.0);
+              fcf(j).cff(1) := hcp(j);
+            end loop;
+            fcf(fcf'last-1).cff(0) := gamma;
+            fcf(fcf'last-1).cff(1) := fcf(fcf'last-1).cff(1) - gamma;
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := fcf(fcf'last).cff(1) + gamma*sol(idx);
+            Standard_CSeries_Vector_Functions.Shift(fcf.all,-t);
+          end if;
+        end;
+      end loop;
+    end if;
+  end Scale_Solution_Coefficients;
+
+  procedure Scale_Solution_Coefficients
+              ( hcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                t : in double_double;
+                gamma : in DoblDobl_Complex_Numbers.Complex_Number;
+                m : in natural32;
+                z : in Standard_Natural_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    mdim : constant integer32 := integer32(m);
+    prd : Complex_Number;
+    hcp,hcq : DoblDobl_Complex_Vectors.Link_to_Vector;
+    nbreqs : constant integer32 
+           := DoblDobl_Coefficient_Homotopy.Number_of_Equations;
+    idx,cffidx : integer32;
+
+  begin
+    if nbreqs > 0 then
+      Hyperplane_Solution_Scaling.Scale(sol,m,z);
+      idx := hcf'last - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        declare
+          fcf : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector
+              := hcf(idx); -- sharing pointers, assign to fcf change hcf
+        begin
+          hcq := DoblDobl_Coefficient_Homotopy.Start_Coefficients(idx);
+          hcp := DoblDobl_Coefficient_Homotopy.Target_Coefficients(idx);
+          hcq(hcq'last) := -sol(idx);
+          if hi_part(t) = 0.0 then
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := gamma*sol(idx) + hcp(hcp'last);
+          else
+            prd := DoblDobl_Complex_Numbers.create(integer32(0));
+            cffidx := hcp'first;
+            for j in sol'first..sol'last-mdim loop
+              if z(j) = natural32(i) then
+                prd := prd + hcp(cffidx)*sol(j);   -- scaling equation only
+                cffidx := cffidx + 1;              -- involves the i-th set
+              end if;
+            end loop;
+            prd := prd + hcp(hcp'last-1)*sol(idx); -- z-coeff at idx position
+            hcp(hcp'last) := -prd;
+            for j in fcf'range loop
+              fcf(j).cff(0) := DoblDobl_Complex_Numbers.create(integer32(0));
+              fcf(j).cff(1) := hcp(j);
+            end loop;
+            fcf(fcf'last-1).cff(0) := gamma;
+            fcf(fcf'last-1).cff(1) := fcf(fcf'last-1).cff(1) - gamma;
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := fcf(fcf'last).cff(1) + gamma*sol(idx);
+            DoblDobl_CSeries_Vector_Functions.Shift(fcf.all,-t);
+          end if;
+        end;
+      end loop;
+    end if;
+  end Scale_Solution_Coefficients;
+
+  procedure Scale_Solution_Coefficients
+              ( hcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                t : in quad_double;
+                gamma : in QuadDobl_Complex_Numbers.Complex_Number;
+                m : in natural32;
+                z : in Standard_Natural_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    mdim : constant integer32 := integer32(m);
+    prd : Complex_Number;
+    hcp,hcq : QuadDobl_Complex_Vectors.Link_to_Vector;
+    nbreqs : constant integer32 
+           := QuadDobl_Coefficient_Homotopy.Number_of_Equations;
+    idx,cffidx : integer32;
+
+  begin
+    if nbreqs > 0 then
+      Hyperplane_Solution_Scaling.Scale(sol,m,z);
+      idx := hcf'last - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        declare
+          fcf : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector
+              := hcf(idx); -- sharing pointers, assign to fcf change hcf
+        begin
+          hcq := QuadDobl_Coefficient_Homotopy.Start_Coefficients(idx);
+          hcp := QuadDobl_Coefficient_Homotopy.Target_Coefficients(idx);
+          hcq(hcq'last) := -sol(idx);
+          if hihi_part(t) = 0.0 then
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := gamma*sol(idx) + hcp(hcp'last);
+          else
+            prd := QuadDobl_Complex_Numbers.create(integer32(0));
+            cffidx := hcp'first;
+            for j in sol'first..sol'last-mdim loop
+              if z(j) = natural32(i) then
+                prd := prd + hcp(cffidx)*sol(j);   -- scaling equation only
+                cffidx := cffidx + 1;              -- involves the i-th set
+              end if;
+            end loop;
+            prd := prd + hcp(hcp'last-1)*sol(idx); -- z-coeff at idx position
+            hcp(hcp'last) := -prd;
+            for j in fcf'range loop
+              fcf(j).cff(0) := QuadDobl_Complex_Numbers.create(integer32(0));
+              fcf(j).cff(1) := hcp(j);
+            end loop;
+            fcf(fcf'last-1).cff(0) := gamma;
+            fcf(fcf'last-1).cff(1) := fcf(fcf'last-1).cff(1) - gamma;
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := fcf(fcf'last).cff(1) + gamma*sol(idx);
+            QuadDobl_CSeries_Vector_Functions.Shift(fcf.all,-t);
+          end if;
+        end;
+      end loop;
+    end if;
+  end Scale_Solution_Coefficients;
+
+  procedure Scale_Solution_Coefficients
+              ( file : in file_type;
+                fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                hcf : in Standard_Complex_Series_VecVecs.VecVec;
+                sol : in out Standard_Complex_Vectors.Vector;
+                t : in double_float;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                m : in natural32;
+                z : in Standard_Natural_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+    use Standard_Complex_Numbers;
+
+    mdim : constant integer32 := integer32(m);
+    prd : Complex_Number;
+    hcp,hcq : Standard_Complex_Vectors.Link_to_Vector;
+    nbreqs : constant integer32 
+           := Standard_Coefficient_Homotopy.Number_of_Equations;
+    srv : Standard_Complex_Series_Vectors.Vector(sol'range);
+    eva : Standard_Complex_Series_Vectors.Vector(fhm'range);
+    evh : Standard_Complex_Vectors.Vector(fhm'range);
+    cmt : constant Complex_Number := Create(t);
+    idx,cffidx : integer32;
+
+  begin
+    if nbreqs > 0 then
+      if verbose then
+        srv := Series_and_Solutions.Create(sol,0);
+        eva := Standard_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
+        evh := Standard_Coefficient_Homotopy.Eval(sol,cmt);
+        put_line(file,"The evaluated solution before scaling :");
+        Standard_Complex_Vectors_io.put_line(file,evh);
+        put_line(file,"The gamma constant : ");
+        put(file,gamma); new_line(file);
+        put_line(file,"The evaluated solution series before scaling :");
+        Standard_Complex_Series_Vectors_io.put_line(file,eva);
+      end if;
+      Hyperplane_Solution_Scaling.Scale(sol,m,z);
+      idx := hcf'last - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        declare
+          fcf : constant Standard_Complex_Series_Vectors.Link_to_Vector
+              := hcf(idx); -- sharing pointers, assign to fcf change hcf
+        begin
+          hcq := Standard_Coefficient_Homotopy.Start_Coefficients(idx);
+          hcp := Standard_Coefficient_Homotopy.Target_Coefficients(idx);
+          hcq(hcq'last) := -sol(idx);
+          if t = 0.0 then
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := gamma*sol(idx) + hcp(hcp'last);
+          else
+            prd := Standard_Complex_Numbers.create(0.0);
+            cffidx := hcp'first;
+            for j in sol'first..sol'last-mdim loop
+              if z(j) = natural32(i) then
+                prd := prd + hcp(cffidx)*sol(j);   -- scaling equation only
+                cffidx := cffidx + 1;              -- involves the i-th set
+              end if;
+            end loop;
+            prd := prd + hcp(hcp'last-1)*sol(idx); -- z-coeff at idx position
+            hcp(hcp'last) := -prd;
+            for j in fcf'range loop
+              fcf(j).cff(0) := Standard_Complex_Numbers.create(0.0);
+              fcf(j).cff(1) := hcp(j);
+            end loop;
+            fcf(fcf'last-1).cff(0) := gamma;
+            fcf(fcf'last-1).cff(1) := fcf(fcf'last-1).cff(1) - gamma;
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := fcf(fcf'last).cff(1) + gamma*sol(idx);
+            Standard_CSeries_Vector_Functions.Shift(fcf.all,-t);
+          end if;
+        end;
+      end loop;
+      if verbose then
+        Standard_Complex_Series_Vectors.Clear(srv);
+        Standard_Complex_Series_Vectors.Clear(eva);
+        srv := Series_and_Solutions.Create(sol,0);
+        eva := Standard_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
+        put_line(file,"The evaluated solution series after scaling :");
+        Standard_Complex_Series_Vectors_io.put_line(file,eva);
+        evh := Standard_Coefficient_Homotopy.Eval(sol,cmt);
+        put_line(file,"The evaluated solution after scaling :");
+        Standard_Complex_Vectors_io.put_line(file,evh);
+        Standard_Complex_Series_Vectors.Clear(srv);
+        Standard_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Scale_Solution_Coefficients;
+
+  procedure Scale_Solution_Coefficients
+              ( file : in file_type;
+                fhm : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                hcf : in DoblDobl_Complex_Series_VecVecs.VecVec;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                t : in double_double;
+                gamma : in DoblDobl_Complex_Numbers.Complex_Number;
+                m : in natural32;
+                z : in Standard_Natural_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    mdim : constant integer32 := integer32(m);
+    prd : Complex_Number;
+    hcp,hcq : DoblDobl_Complex_Vectors.Link_to_Vector;
+    nbreqs : constant integer32 
+           := DoblDobl_Coefficient_Homotopy.Number_of_Equations;
+    srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
+    eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
+    evh : DoblDobl_Complex_Vectors.Vector(fhm'range);
+    cmt : constant Complex_Number := Create(t);
+    idx,cffidx : integer32;
+
+  begin
+    if nbreqs > 0 then
+      if verbose then
+        srv := Series_and_Solutions.Create(sol,0);
+        eva := DoblDobl_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
+        evh := DoblDobl_Coefficient_Homotopy.Eval(sol,cmt);
+        put_line(file,"The evaluated solution before scaling :");
+        DoblDobl_Complex_Vectors_io.put_line(file,evh);
+        put_line(file,"The gamma constant : ");
+        put(file,gamma); new_line(file);
+        put_line(file,"The evaluated solution series before scaling :");
+        DoblDobl_Complex_Series_Vectors_io.put_line(file,eva);
+      end if;
+      Hyperplane_Solution_Scaling.Scale(sol,m,z);
+      idx := hcf'last - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        declare
+          fcf : constant DoblDobl_Complex_Series_Vectors.Link_to_Vector
+              := hcf(idx); -- sharing pointers, assign to fcf change hcf
+        begin
+          hcq := DoblDobl_Coefficient_Homotopy.Start_Coefficients(idx);
+          hcp := DoblDobl_Coefficient_Homotopy.Target_Coefficients(idx);
+          hcq(hcq'last) := -sol(idx);
+          if hi_part(t) = 0.0 then
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := gamma*sol(idx) + hcp(hcp'last);
+          else
+            prd := DoblDobl_Complex_Numbers.create(integer32(0));
+            cffidx := hcp'first;
+            for j in sol'first..sol'last-mdim loop
+              if z(j) = natural32(i) then
+                prd := prd + hcp(cffidx)*sol(j);   -- scaling equation only
+                cffidx := cffidx + 1;              -- involves the i-th set
+              end if;
+            end loop;
+            prd := prd + hcp(hcp'last-1)*sol(idx); -- z-coeff at idx position
+            hcp(hcp'last) := -prd;
+            for j in fcf'range loop
+              fcf(j).cff(0) := DoblDobl_Complex_Numbers.create(integer32(0));
+              fcf(j).cff(1) := hcp(j);
+            end loop;
+            fcf(fcf'last-1).cff(0) := gamma;
+            fcf(fcf'last-1).cff(1) := fcf(fcf'last-1).cff(1) - gamma;
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := fcf(fcf'last).cff(1) + gamma*sol(idx);
+            DoblDobl_CSeries_Vector_Functions.Shift(fcf.all,-t);
+          end if;
+        end;
+      end loop;
+      if verbose then
+        DoblDobl_Complex_Series_Vectors.Clear(srv);
+        DoblDobl_Complex_Series_Vectors.Clear(eva);
+        srv := Series_and_Solutions.Create(sol,0);
+        eva := DoblDobl_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
+        put_line(file,"The evaluated solution series after scaling :");
+        DoblDobl_Complex_Series_Vectors_io.put_line(file,eva);
+        evh := DoblDobl_Coefficient_Homotopy.Eval(sol,cmt);
+        put_line(file,"The evaluated solution after scaling :");
+        DoblDobl_Complex_Vectors_io.put_line(file,evh);
+        DoblDobl_Complex_Series_Vectors.Clear(srv);
+        DoblDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Scale_Solution_Coefficients;
+
+  procedure Scale_Solution_Coefficients
+              ( file : in file_type;
+                fhm : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                hcf : in QuadDobl_Complex_Series_VecVecs.VecVec;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                t : in quad_double;
+                gamma : in QuadDobl_Complex_Numbers.Complex_Number;
+                m : in natural32;
+                z : in Standard_Natural_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    mdim : constant integer32 := integer32(m);
+    prd : Complex_Number;
+    hcp,hcq : QuadDobl_Complex_Vectors.Link_to_Vector;
+    nbreqs : constant integer32 
+           := QuadDobl_Coefficient_Homotopy.Number_of_Equations;
+    srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
+    eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
+    evh : QuadDobl_Complex_Vectors.Vector(fhm'range);
+    cmt : constant Complex_Number := Create(t);
+    idx,cffidx : integer32;
+
+  begin
+    if nbreqs > 0 then
+      if verbose then
+        srv := Series_and_Solutions.Create(sol,0);
+        eva := QuadDobl_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
+        evh := QuadDobl_Coefficient_Homotopy.Eval(sol,cmt);
+        put_line(file,"The evaluated solution before scaling :");
+        QuadDobl_Complex_Vectors_io.put_line(file,evh);
+        put_line(file,"The gamma constant : ");
+        put(file,gamma); new_line(file);
+        put_line(file,"The evaluated solution series before scaling :");
+        QuadDobl_Complex_Series_Vectors_io.put_line(file,eva);
+      end if;
+      Hyperplane_Solution_Scaling.Scale(sol,m,z);
+      idx := hcf'last - mdim;
+      for i in 1..mdim loop
+        idx := idx + 1;
+        declare
+          fcf : constant QuadDobl_Complex_Series_Vectors.Link_to_Vector
+              := hcf(idx); -- sharing pointers, assign to fcf change hcf
+        begin
+          hcq := QuadDobl_Coefficient_Homotopy.Start_Coefficients(idx);
+          hcp := QuadDobl_Coefficient_Homotopy.Target_Coefficients(idx);
+          hcq(hcq'last) := -sol(idx);
+          if hihi_part(t) = 0.0 then
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := gamma*sol(idx) + hcp(hcp'last);
+          else
+            prd := QuadDobl_Complex_Numbers.create(integer32(0));
+            cffidx := hcp'first;
+            for j in sol'first..sol'last-mdim loop
+              if z(j) = natural32(i) then
+                prd := prd + hcp(cffidx)*sol(j);   -- scaling equation only
+                cffidx := cffidx + 1;              -- involves the i-th set
+              end if;
+            end loop;
+            prd := prd + hcp(hcp'last-1)*sol(idx); -- z-coeff at idx position
+            hcp(hcp'last) := -prd;
+            for j in fcf'range loop
+              fcf(j).cff(0) := QuadDobl_Complex_Numbers.create(integer32(0));
+              fcf(j).cff(1) := hcp(j);
+            end loop;
+            fcf(fcf'last-1).cff(0) := gamma;
+            fcf(fcf'last-1).cff(1) := fcf(fcf'last-1).cff(1) - gamma;
+            fcf(fcf'last).cff(0) := -gamma*sol(idx);
+            fcf(fcf'last).cff(1) := fcf(fcf'last).cff(1) + gamma*sol(idx);
+            QuadDobl_CSeries_Vector_Functions.Shift(fcf.all,-t);
+          end if;
+        end;
+      end loop;
+      if verbose then
+        QuadDobl_Complex_Series_Vectors.Clear(srv);
+        QuadDobl_Complex_Series_Vectors.Clear(eva);
+        srv := Series_and_Solutions.Create(sol,0);
+        eva := QuadDobl_CSeries_Poly_SysFun.Eval(fhm,hcf,srv);
+        put_line(file,"The evaluated solution series after scaling :");
+        QuadDobl_Complex_Series_Vectors_io.put_line(file,eva);
+        evh := QuadDobl_Coefficient_Homotopy.Eval(sol,cmt);
+        put_line(file,"The evaluated solution after scaling :");
+        QuadDobl_Complex_Vectors_io.put_line(file,evh);
+        QuadDobl_Complex_Series_Vectors.Clear(srv);
+        QuadDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Scale_Solution_Coefficients;
+
 end Homotopy_Coefficient_Scaling;

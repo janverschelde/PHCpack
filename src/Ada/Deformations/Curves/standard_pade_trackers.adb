@@ -683,6 +683,9 @@ package body Standard_Pade_Trackers is
       if mhom = 1 then
         Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
           (wrk_fcf,wrk_sol,t,pars.gamma);
+      elsif mhom > 1 then
+        Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+          (wrk_fcf,wrk_sol,t,pars.gamma,mhom,idz.all);
       end if;
       Step_Control
         (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
@@ -769,8 +772,21 @@ package body Standard_Pade_Trackers is
         end if;
       end if;
       if mhom = 1 then
-        Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
-          (file,fhm,wrk_fcf,wrk_sol,t,pars.gamma);
+        if vrblvl > 0 then
+          Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+            (file,fhm,wrk_fcf,wrk_sol,t,pars.gamma,true);
+        else
+          Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+            (file,fhm,wrk_fcf,wrk_sol,t,pars.gamma);
+        end if;
+      elsif mhom > 1 then
+        if vrblvl > 0 then
+          Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+            (file,fhm,wrk_fcf,wrk_sol,t,pars.gamma,mhom,idz.all,true);
+        else
+          Homotopy_Coefficient_Scaling.Scale_Solution_Coefficients
+            (file,fhm,wrk_fcf,wrk_sol,t,pars.gamma,mhom,idz.all);
+        end if;
       end if;
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
