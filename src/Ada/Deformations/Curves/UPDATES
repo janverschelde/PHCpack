@@ -1,3 +1,6 @@
+Mon 19 Aug 2019 : added on extra iteration on Newton's method for power
+  series in standard_pade_trackers.adb, also in the silent version.
+
 Sun 18 Aug 2019 : to homotopy_coefficient_scalling, added a procedure to
   verify the coefficients of the last m equations for m-homogenization,
   tested in {standard,dobldobl,quaddobl}_pade_trackers.adb.
