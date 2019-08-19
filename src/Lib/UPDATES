@@ -1,3 +1,6 @@
+Mon 19 Aug 2019 : added function to define the partition of the variables
+  to padcon, tested by lib_padcon.
+
 Tue 13 Aug 2019 : in lib_padcon, fixed bug with showing of denominator Pade
   coefficients, removed the series step size.  Adjusted calls to initialize
   the step-by-step Pade tracker in padcon.  To lib_padcon, added functions 

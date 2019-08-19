@@ -397,7 +397,25 @@ void standard_track ( int nbc, char *name, int verbose, int homo )
    fail = solcon_number_of_standard_solutions(&length);
    printf("Read %d start solutions.\n", length);
 
-   if(homo > 0) standard_projective_transformation();
+   if(homo > 0) 
+   {
+      int mhom;
+
+      printf("Give the m for m-homogenization : ");
+      scanf("%d", &mhom);
+
+      if(mhom > 1)
+      {
+         int dim;
+
+         fail = syscon_number_of_symbols(&dim);
+
+         int idz[dim];
+     
+         fail = padcon_define_partition(mhom, dim, idz);
+      }
+      standard_projective_transformation();
+   }
 
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 

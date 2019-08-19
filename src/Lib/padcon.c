@@ -2,6 +2,7 @@
  * prototypes documented in padcon.h. */
 
 #include <stdio.h>
+#include "syscon.h"
 #include "padcon.h"
 
 int padcon_set_default_parameters ( void )
@@ -191,6 +192,40 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
       fail = _ada_use_c2phc4c(738,&k,&parval,val);
 
    return fail;
+}
+
+int padcon_define_partition ( int m, int nvr, int *idz )
+{
+   const int nbc = nvr*10; // 10 characters per symbol
+   char smbstr[nbc];       // holds all symbols
+   char buffer[10];        // buffer holds the current symbol
+   int nbr = nbc;
+   int idx,bufidx,setidx;
+
+   int fail = syscon_string_of_symbols(&nbr, smbstr);
+
+   printf("defining a partition of the variables ...\n");
+   bufidx = 0; // index to the buffer
+   setidx = 0;
+   for(idx=0; idx < nbr; idx++)
+   {
+      if(smbstr[idx] != ' ')
+         buffer[bufidx++] = smbstr[idx];
+      else
+      {
+         buffer[bufidx] = '\0';
+         printf("-> which set will %s be in ? ", buffer);
+         scanf("%d", &idz[setidx++]);
+         bufidx = 0;
+      }
+   }
+   buffer[bufidx] = '\0';
+   printf("-> which set will %s be in ? ", buffer);
+   scanf("%d", &idz[setidx++]); // last variable
+
+   printf("the partition :");
+   for(idx = 0; idx < nvr; idx++) printf(" %d", idz[idx]);
+   printf("\n");
 }
 
 int padcon_standard_track

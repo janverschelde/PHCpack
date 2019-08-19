@@ -72,6 +72,22 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val );
  * ON RETURN 
  *   val      the value for the k-th homotopy continuation parameter. */
 
+int padcon_define_partition ( int m, int nvr, int *idz );
+/*
+ * DESCRIPTION :
+ *   Interactively prompts the user for the partition of the variables.
+ *
+ * ON ENTRY :
+ *   m        number of sets in the partition;
+ *   nvr      the number of variables, which equals the number of symbols
+ *            in the table and the length of the partition in idz;
+ *   idz      space allocated for nvr integers.
+ *
+ * ON RETURN :
+ *   idz      index representation of the partition,
+ *            idz[k] is a number in the range 1 to m,
+ *            defines the set the k-th variable in the partition. */
+
 int padcon_standard_track
  ( int nbc, char *name, int locfile, int verbose, int homo );
 /*
