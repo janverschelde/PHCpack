@@ -985,6 +985,39 @@ int solcon_quaddobl_one_homogenization ( void )
    return fail;
 }
 
+int solcon_standard_multi_homogenization ( int m )
+{
+   int fail;
+   int b;
+   double c;
+
+   fail = _ada_use_c2phc4c(910,&m,&b,&c);
+
+   return fail;
+}
+
+int solcon_dobldobl_multi_homogenization ( int m )
+{
+   int fail;
+   int b;
+   double c;
+
+   fail = _ada_use_c2phc4c(911,&m,&b,&c);
+
+   return fail;
+}
+
+int solcon_quaddobl_multi_homogenization ( int m )
+{
+   int fail;
+   int b;
+   double c;
+
+   fail = _ada_use_c2phc4c(912,&m,&b,&c);
+
+   return fail;
+}
+
 int solcon_standard_one_affinization ( void )
 {
    int fail,*a,*b;
@@ -1011,6 +1044,48 @@ int solcon_quaddobl_one_affinization ( void )
    double *c;
 
    fail = _ada_use_c2phc4c(900,a,b,c);
+
+   return fail;
+}
+
+int solcon_standard_multi_affinization ( int n, int m, int *z )
+{
+   int fail;
+   int pars[2];
+   double c;
+
+   pars[0] = n;
+   pars[1] = m;
+
+   fail = _ada_use_c2phc4c(913,pars,z,&c);
+
+   return fail;
+}
+
+int solcon_dobldobl_multi_affinization ( int n, int m, int *z )
+{
+   int fail;
+   int pars[2];
+   double c;
+
+   pars[0] = n;
+   pars[1] = m;
+
+   fail = _ada_use_c2phc4c(914,pars,z,&c);
+
+   return fail;
+}
+
+int solcon_quaddobl_multi_affinization ( int n, int m, int *z )
+{
+   int fail;
+   int pars[2];
+   double c;
+
+   pars[0] = n;
+   pars[1] = m;
+
+   fail = _ada_use_c2phc4c(915,pars,z,&c);
 
    return fail;
 }

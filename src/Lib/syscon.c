@@ -1160,6 +1160,54 @@ int syscon_quaddobl_one_homogenization ( int lintype )
    return fail;
 }
 
+int syscon_standard_multi_homogenization
+ ( int n, int m, int *idz, int lintype )
+{
+   int fail;
+   int pars[3];
+   double *c;
+
+   pars[0] = n;
+   pars[1] = m;
+   pars[2] = lintype;
+
+   fail = _ada_use_c2phc4c(904,pars,idz,c);
+
+   return fail;
+}
+
+int syscon_dobldobl_multi_homogenization
+ ( int n, int m, int *idz, int lintype )
+{
+   int fail;
+   int pars[3];
+   double *c;
+
+   pars[0] = n;
+   pars[1] = m;
+   pars[2] = lintype;
+
+   fail = _ada_use_c2phc4c(905,pars,idz,c);
+
+   return fail;
+}
+
+int syscon_quaddobl_multi_homogenization
+ ( int n, int m, int *idz, int lintype )
+{
+   int fail;
+   int pars[3];
+   double *c;
+
+   pars[0] = n;
+   pars[1] = m;
+   pars[2] = lintype;
+
+   fail = _ada_use_c2phc4c(906,pars,idz,c);
+
+   return fail;
+}
+
 int syscon_add_symbol ( int nbc, char *name )
 {
    int fail,idx;
@@ -1199,6 +1247,36 @@ int syscon_quaddobl_one_affinization ( void )
    double c;
 
    fail = _ada_use_c2phc4c(903,&a,&b,&c);
+
+   return fail;
+}
+
+int syscon_standard_multi_affinization ( int m )
+{
+   int fail,b;
+   double c;
+
+   fail = _ada_use_c2phc4c(907,&m,&b,&c);
+
+   return fail;
+}
+
+int syscon_dobldobl_multi_affinization ( int m )
+{
+   int fail,b;
+   double c;
+
+   fail = _ada_use_c2phc4c(908,&m,&b,&c);
+
+   return fail;
+}
+
+int syscon_quaddobl_multi_affinization ( int m )
+{
+   int fail,b;
+   double c;
+
+   fail = _ada_use_c2phc4c(909,&m,&b,&c);
 
    return fail;
 }

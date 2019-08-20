@@ -949,6 +949,45 @@ int syscon_quaddobl_one_homogenization ( int lintype );
  *   otherwise, the linear equation z0 - 1 = 0 is added,
  *   where z0 is the extra homogeneous coordinate. */
 
+int syscon_standard_multi_homogenization
+ ( int n, int m, int *idz, int lintype );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the standard double precision container
+ *   with its transformation in m-homogeneous coordinates.
+ *   The number of variables equals n, the number of sets in the
+ *   partition equals m, and idz is the index representation of
+ *   the partition, given as an array of n integers.
+ *   If lintype is 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
+int syscon_dobldobl_multi_homogenization
+ ( int n, int m, int *idz, int lintype );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the double double precision container
+ *   with its transformation in m-homogeneous coordinates.
+ *   The number of variables equals n, the number of sets in the
+ *   partition equals m, and idz is the index representation of
+ *   the partition, given as an array of n integers.
+ *   If lintype is 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
+int syscon_quaddobl_multi_homogenization
+ ( int n, int m, int *idz, int lintype );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the quad double precision container
+ *   with its transformation in 1-homogeneous coordinates.
+ *   The number of variables equals n, the number of sets in the
+ *   partition equals m, and idz is the index representation of
+ *   the partition, given as an array of n integers.
+ *   If lintype is 0, then a random linear equation is added,
+ *   otherwise, the linear equation z0 - 1 = 0 is added,
+ *   where z0 is the extra homogeneous coordinate. */
+
 int syscon_add_symbol ( int nbc, char *name );
 /*
  * DESCRIPTION :
@@ -977,5 +1016,29 @@ int syscon_quaddobl_one_affinization ( void );
  *   Replaces the system in the quad double precision container
  *   by its transformation to affine coordinates, substituting the
  *   value of the last coordinate by one and removing the last equation. */
+
+int syscon_standard_multi_affinization ( int m );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the standard double precision container
+ *   by its transformation to affine coordinates,
+ *   substituting the value of the last m coordinates by one and 
+ *   removing the last m linear polynomials of the system. */
+
+int syscon_dobldobl_multi_affinization ( int m );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the double double precision container
+ *   by its transformation to affine coordinates,
+ *   substituting the value of the last m coordinates by one and
+ *   removing the last m linear polynomials of the system. */
+
+int syscon_quaddobl_multi_affinization ( int m );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the quad double precision container
+ *   by its transformation to affine coordinates,
+ *   substituting the value of the last m coordinates by one and
+ *   removing the last m linear polynomials of the system. */
 
 #endif

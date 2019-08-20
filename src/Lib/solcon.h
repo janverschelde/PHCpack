@@ -965,6 +965,24 @@ int solcon_quaddobl_one_homogenization ( void );
  *   Add one extra coordinate one to every solution in the container
  *   for solutions in double double precision. */
 
+int solcon_standard_multi_homogenization ( int m );
+/*
+ * DESCRIPTION :
+ *   Add m extra coordinates with value all equal to one to every solution
+ *   in the container for solutions in standard double precision. */
+
+int solcon_dobldobl_multi_homogenization ( int m );
+/*
+ * DESCRIPTION :
+ *   Add m extra coordinates with value all equal to one to every solution
+ *   in the container for solutions in double double precision. */
+
+int solcon_quaddobl_multi_homogenization ( int m );
+/*
+ * DESCRIPTION :
+ *   Add m extra coordinates with value all equal to one to every solution
+ *   in the container for solutions in quad double precision. */
+
 int solcon_standard_one_affinization ( void );
 /*
  * DESCRIPTION :
@@ -982,5 +1000,29 @@ int solcon_quaddobl_one_affinization ( void );
  * DESCRIPTION :
  *   Divides every coordinate by the last coordinate of every solution
  *   in the container for solutions in quad double precision. */
+
+int solcon_standard_multi_affinization ( int n, int m, int *z );
+/*
+ * DESCRIPTION :
+ *   For the solutions in the container in standard double precision,
+ *   divides coordinates by their corresponding m-homogeneous coordinate.
+ *   The number of variables is n, which equals the number of integers
+ *   in the index representation z of the partition of the variables. */
+
+int solcon_dobldobl_multi_affinization ( int n, int m, int *z );
+/*
+ * DESCRIPTION :
+ *   For the solutions in the container in double double precision,
+ *   divides coordinates by their corresponding m-homogeneous coordinate.
+ *   The number of variables is n, which equals the number of integers
+ *   in the index representation z of the partition of the variables. */
+
+int solcon_quaddobl_multi_affinization ( int n, int m, int *z );
+/*
+ * DESCRIPTION :
+ *   For the solutions in the container in quad double precision,
+ *   divides coordinates by their corresponding m-homogeneous coordinate.
+ *   The number of variables is n, which equals the number of integers
+ *   in the index representation z of the partition of the variables. */
 
 #endif

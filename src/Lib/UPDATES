@@ -1,5 +1,6 @@
 Tue 20 Aug 2019 : added prompting for multi-homogeneous partition in the
   flow of the path tracker in double precision in lib_padcon.c.
+  Added multi-homogenization functions to syscon and solcon.
 
 Mon 19 Aug 2019 : added function to define the partition of the variables
   to padcon, tested by lib_padcon.
