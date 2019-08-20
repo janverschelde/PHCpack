@@ -1,5 +1,7 @@
 Tue 20 Aug 2019 : added multi-homogeneous coordinate transformations to
-  use_solcon, use_syscon, and use_c2phc4c.
+  use_solcon, use_syscon, and use_c2phc4c.  Updates in use_padcon.adb
+  for the passing of the (mhom, idz) parameters in the Standard_Track
+  procedure of drivers_to_series_trackers.
 
 Tue 13 Aug 2019 : use_padcon takes the homogeneous coordinates option for
   the initialization of the step-by-step Pade tracker, updated use_c2phc4c.ads.

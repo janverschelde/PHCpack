@@ -2,7 +2,6 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Natural_Vectors;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;
@@ -58,6 +57,8 @@ package body Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 monitor,verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
@@ -81,8 +82,6 @@ package body Series_and_Trackers is
     minsize,maxsize,smallest,largest : double_float;
     cntsstp,cntdstp,cntpstp : natural32;
     ratsstp,ratdstp,ratpstp : double_float := 0.0;
-    mhom : constant natural32 := 0;
-    idz : Standard_Natural_Vectors.Link_to_Vector;
 
   begin
     if vrblvl > 0
@@ -105,7 +104,7 @@ package body Series_and_Trackers is
       if verbose then
         Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       Standard_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -119,7 +118,7 @@ package body Series_and_Trackers is
     tstop(timer);
     Write_Total_Path_Statistics
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest,
-       ratsstp,ratdstp,ratpstp);
+       ratdstp,ratpstp);
     new_line(file);
     print_times(file,timer,"Tracking in double precision.");
     Standard_CSeries_Poly_SysFun.Clear(fhm);
@@ -172,7 +171,7 @@ package body Series_and_Trackers is
       if verbose then
         Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       DoblDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -186,7 +185,7 @@ package body Series_and_Trackers is
     tstop(timer);
     Write_Total_Path_Statistics
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest,
-       ratsstp,ratdstp,ratpstp);
+       ratdstp,ratpstp);
     new_line(file);
     print_times(file,timer,"Tracking in double double precision.");
     DoblDobl_Complex_Poly_SysFun.Clear(abh);
@@ -235,7 +234,7 @@ package body Series_and_Trackers is
       if verbose then
         Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       QuadDobl_Complex_Solutions_io.put(file,ls.all); new_line(file);
@@ -249,7 +248,7 @@ package body Series_and_Trackers is
     tstop(timer);
     Write_Total_Path_Statistics
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,smallest,largest,
-       ratsstp,ratdstp,ratpstp);
+       ratdstp,ratpstp);
     new_line(file);
     print_times(file,timer,"Tracking in quad double precision.");
     QuadDobl_Complex_Poly_SysFun.Clear(abh);
@@ -261,12 +260,21 @@ package body Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
     abh : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
         := Homotopy_Mixed_Residuals.Standard_AbsVal_Homotopy;
+    nvr : constant integer32 := Head_Of(sols).n;
+    fhm : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+        := Standard_CSeries_Poly_SysFun.Create(hom);
+    fcf : Standard_Complex_Series_VecVecs.VecVec(hom'range)
+        := Standard_CSeries_Poly_SysFun.Coeff(hom);
+    ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(hom'range,1..nvr);
+    mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(hom'range,1..nvr);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -278,13 +286,18 @@ package body Series_and_Trackers is
     if vrblvl > 0
      then put_line("-> in series_and_trackers.Track_Many_Paths 4 ...");
     end if;
+    Standard_CSeries_Jaco_Matrices.Create(hom,ejm,mlt);
     for i in 1..len loop
       ls := Head_Of(tmp);
       Standard_Pade_Trackers.Track_One_Path
-        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,cntsstp,cntdstp,cntpstp,vrblvl-1);
+        (abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
+    Standard_CSeries_Poly_SysFun.Clear(fhm);
+    Standard_Complex_Series_VecVecs.Clear(fcf);
+    Standard_CSeries_Jaco_Matrices.Clear(ejm);
+    Standard_CSeries_Jaco_Matrices.Clear(mlt);
     Standard_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
@@ -358,7 +371,7 @@ package body Series_and_Trackers is
               ( file : in file_type;
                 nbrsteps,nbrcorrs,cntcut,cntfail : in natural32;
                 minsize,maxsize : in double_float;
-                cntsstp,cntdstp,cntpstp : in natural32 ) is
+                cntdstp,cntpstp : in natural32 ) is
   begin
     put(file,"The total number of steps on the path     : ");
     put(file,nbrsteps,1); new_line(file);
@@ -372,8 +385,6 @@ package body Series_and_Trackers is
     put(file,minsize,2); new_line(file);
     put(file,"The largest step size on the path         :");
     put(file,maxsize,2); new_line(file);
-   -- put(file,"Number of times the series step was minimal  : ");
-   -- put(file,cntsstp,1); new_line(file);
     put(file,"Number of times the Hessian step was minimal : ");
     put(file,cntdstp,1); new_line(file);
     put(file,"Number of times the pole step was minimal    : ");
@@ -385,7 +396,7 @@ package body Series_and_Trackers is
                 minnbrsteps,maxnbrsteps : in natural32;
                 minnbrcorrs,maxnbrcorrs : in natural32;
                 smallestsize,largestsize : in double_float;
-                ratsstp,ratdstp,ratpstp : in double_float ) is
+                ratdstp,ratpstp : in double_float ) is
   begin
     new_line(file);
     put(file,"The smallest number of total steps : ");
@@ -400,8 +411,6 @@ package body Series_and_Trackers is
     put(file,smallestsize,2); new_line(file);
     put(file,"The largest step size on a path  :");
     put(file,largestsize,2); new_line(file);
-   -- put(file,"Average ratio of times series step was minimal  : ");
-   -- put(file,ratsstp,1,4,0); new_line(file);
     put(file,"Average ratio of times Hessian step was minimal : ");
     put(file,ratdstp,1,4,0); new_line(file);
     put(file,"Average ratio of times pole step was minimal    : ");

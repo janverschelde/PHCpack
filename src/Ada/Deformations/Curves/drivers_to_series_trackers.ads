@@ -54,21 +54,29 @@ package Drivers_to_Series_Trackers is
   procedure Standard_Track
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure Standard_Track
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure DoblDobl_Track
@@ -124,6 +132,10 @@ package Drivers_to_Series_Trackers is
   --   sols     start solutions;
   --   pars     values for the homotopy continuation parameters,
   --            if omitted, then default values are used;
+  --   mhom     0 for affine coordinates, 1 for 1-homogenization,
+  --            and m for m-homogenization;
+  --   idz      index representation of the partition of m-homogenization,
+  --            in case mhom > 1;
   --   verbose  if extra output during the tracking is needed;
   --   vrblvl   the verbose level.
 

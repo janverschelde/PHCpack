@@ -14,6 +14,7 @@ with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_cv;
+with Standard_Natural_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
@@ -204,6 +205,8 @@ function use_padcon ( job : integer32;
     start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
+    mhom : natural32;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
 
     homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
@@ -214,19 +217,21 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Target_System(target);
     if not homogeneous then
       Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
+      mhom := 0;
     else
       Standard_Homotopy.Create(target.all,start.all,1,homconpars.gamma);
       Standard_Coefficient_Homotopy.Create
         (start.all,target.all,1,homconpars.gamma);
+      mhom := 1;
     end if;
     if name = "" then
       if not verbose then
         Drivers_to_Series_Trackers.Standard_Track
-          (target'last,sols,homconpars.all); --,verbose);
+          (target'last,sols,homconpars.all,mhom,idz); --,verbose);
       else
         Homotopy_Continuation_Parameters_io.put(homconpars.all);
         Drivers_to_Series_Trackers.Standard_Track
-          (standard_output,target'last,sols,homconpars.all,verbose);
+          (standard_output,target'last,sols,homconpars.all,mhom,idz,verbose);
       end if;
     elsif localfile then
       Create(file,out_file,name);
@@ -241,7 +246,7 @@ function use_padcon ( job : integer32;
       new_line(file);
       Homotopy_Continuation_Parameters_io.put(file,homconpars.all);
       Drivers_to_Series_Trackers.Standard_Track
-        (file,target'last,sols,homconpars.all,verbose);
+        (file,target'last,sols,homconpars.all,mhom,idz,verbose);
       close(file);
     else
       PHCpack_Operations.Define_Output_File(name);
@@ -259,7 +264,7 @@ function use_padcon ( job : integer32;
         (PHCpack_Operations.output_file,homconpars.all);
       Drivers_to_Series_Trackers.Standard_Track
         (PHCpack_Operations.output_file,
-         target'last,sols,homconpars.all,verbose);
+         target'last,sols,homconpars.all,mhom,idz,verbose);
     end if;
    -- put_line("Clearing the solutions container ...");
     Standard_Solutions_Container.Clear;

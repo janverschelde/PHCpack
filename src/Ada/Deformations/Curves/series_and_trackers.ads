@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;  
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -63,6 +64,8 @@ package Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure Track_Many_Paths
               ( jm : in DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -91,6 +94,10 @@ package Series_and_Trackers is
   --   hom      a homotopy with series coefficients;
   --   sols     start solutions in the homotopy;
   --   pars     values of the parameters and tolerances;
+  --   mhom     0 for affine coordinates, 1 for 1-homogenization,
+  --            and m for m-homogenization;
+  --   idz      index representation of the partition of m-homogenization,
+  --            in case mhom > 1;
   --   vrblvl   the verbose level.
 
   -- ON RETURN :
@@ -103,6 +110,8 @@ package Series_and_Trackers is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 monitor,verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure Track_Many_Paths
@@ -136,6 +145,10 @@ package Series_and_Trackers is
   --   hom      a homotopy with series coefficients;
   --   sols     start solutions in the homotopy;
   --   pars     values of the parameters and tolerances;
+  --   mhom     0 for affine coordinates, 1 for 1-homogenization,
+  --            and m for m-homogenization;
+  --   idz      index representation of the partition of m-homogenization,
+  --            in case mhom > 1;
   --   verbose  if true, then extra output is written to file;
   --   vrblvl   the verbose level.
 
@@ -146,7 +159,7 @@ package Series_and_Trackers is
               ( file : in file_type;
                 nbrsteps,nbrcorrs,cntcut,cntfail : in natural32;
                 minsize,maxsize : in double_float;
-                cntsstp,cntdstp,cntpstp : in natural32 );
+                cntdstp,cntpstp : in natural32 );
 
   -- DESCRIPTION :
   --   Writes the path statistics to file.
@@ -158,7 +171,6 @@ package Series_and_Trackers is
   --   cntfail  is the number of corrector failures on the path;
   --   minsize  is the smallest step size on the path;
   --   maxsize  is the largest step size on the path;
-  --   cntsstp  counts the number of times the series step was minimal;
   --   cntdstp  counts the number of times the Hessian step was minimal;
   --   cntpstp  counts the number of times the pole step was minimal.
 
@@ -167,7 +179,7 @@ package Series_and_Trackers is
                 minnbrsteps,maxnbrsteps : in natural32;
                 minnbrcorrs,maxnbrcorrs : in natural32;
                 smallestsize,largestsize : in double_float;
-                ratsstp,ratdstp,ratpstp : in double_float );
+                ratdstp,ratpstp : in double_float );
 
   -- DESCRIPTION :
   --   Writes the statistic for all paths.
@@ -179,7 +191,6 @@ package Series_and_Trackers is
   --   maxnbrcorrs is the largest number of corrector iterations on a path.
   --   smallestsize is the smallest step size on a path;
   --   largestsize is the largest step size on a path;
-  --   ratsstp is the average ratio of times series step was minimal;
   --   ratdstp is the average ratio of times Hessian step was minimal;
   --   ratpstp is the average ratio of times pole step was minimal.
 

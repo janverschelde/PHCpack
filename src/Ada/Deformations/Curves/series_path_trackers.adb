@@ -215,7 +215,7 @@ package body Series_Path_Trackers is
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put("Solution "); put(i,1); put_line(" :"); put(ls.all); new_line;
       put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
@@ -231,7 +231,7 @@ package body Series_Path_Trackers is
     tstop(timer);
     Series_and_Trackers.Write_Total_Path_Statistics
       (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-       smallest,largest,ratsstp,ratdstp,ratpstp);
+       smallest,largest,ratdstp,ratpstp);
     new_line;
     put_line("THE SOLUTIONS :");
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -317,7 +317,7 @@ package body Series_Path_Trackers is
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put("Solution "); put(i,1); put_line(" :"); put(ls.all); new_line;
       put("Continue to the next path ? (y/n) ");
@@ -334,7 +334,7 @@ package body Series_Path_Trackers is
     tstop(timer);
     Series_and_Trackers.Write_Total_Path_Statistics
       (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-       smallest,largest,ratsstp,ratdstp,ratpstp);
+       smallest,largest,ratdstp,ratpstp);
     new_line;
     put_line("THE SOLUTIONS :");
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -420,7 +420,7 @@ package body Series_Path_Trackers is
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (standard_output,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put("Solution "); put(i,1); put_line(" :"); put(ls.all); new_line;
       put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
@@ -436,7 +436,7 @@ package body Series_Path_Trackers is
     tstop(timer);
     Series_and_Trackers.Write_Total_Path_Statistics
       (standard_output,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-       smallest,largest,ratsstp,ratdstp,ratpstp);
+       smallest,largest,ratdstp,ratpstp);
     new_line;
     put_line("THE SOLUTIONS :");
     put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -521,7 +521,7 @@ package body Series_Path_Trackers is
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       put(file,ls.all); new_line(file);
@@ -536,7 +536,7 @@ package body Series_Path_Trackers is
     tstop(timer);
     Series_and_Trackers.Write_Total_Path_Statistics
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-       smallest,largest,ratsstp,ratdstp,ratpstp);
+       smallest,largest,ratdstp,ratpstp);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -621,7 +621,7 @@ package body Series_Path_Trackers is
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       put(file,ls.all); new_line(file);
@@ -636,7 +636,7 @@ package body Series_Path_Trackers is
     tstop(timer);
     Series_and_Trackers.Write_Total_Path_Statistics
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-       smallest,largest,ratsstp,ratdstp,ratpstp);
+       smallest,largest,ratdstp,ratpstp);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -721,7 +721,7 @@ package body Series_Path_Trackers is
       if verbose then
         Series_and_Trackers.Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
-           cntsstp,cntdstp,cntpstp);
+           cntdstp,cntpstp);
       end if;
       put(file,"Solution "); put(file,i,1); put_line(file," :");
       put(file,ls.all); new_line(file);
@@ -736,7 +736,7 @@ package body Series_Path_Trackers is
     tstop(timer);
     Series_and_Trackers.Write_Total_Path_Statistics
       (file,minnbrsteps,maxnbrsteps,minnbrcorrs,maxnbrcorrs,
-       smallest,largest,ratsstp,ratdstp,ratpstp);
+       smallest,largest,ratdstp,ratpstp);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);

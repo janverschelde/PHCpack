@@ -130,6 +130,8 @@ package body Drivers_to_Series_Trackers is
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
 
     h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
@@ -146,7 +148,7 @@ package body Drivers_to_Series_Trackers is
       put_line("-> in drivers_to_series_trackers.Standard_Track 1 ...");
     end if;
     Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
-    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars,vrblvl-1);
+    Series_and_Trackers.Track_Many_Paths(jm,hs,s,sols,pars,mhom,idz,vrblvl-1);
     Standard_Complex_Jaco_Matrices.Clear(jm);
     Standard_Complex_Hessians.Clear(hs);
     Standard_CSeries_Poly_Systems.Clear(s);
@@ -156,6 +158,8 @@ package body Drivers_to_Series_Trackers is
   procedure Standard_Track
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
 
     p : constant Homotopy_Continuation_Parameters.Parameters
@@ -165,13 +169,15 @@ package body Drivers_to_Series_Trackers is
     if vrblvl > 0 then
       put_line("-> in drivers_to_series_trackers.Standard_Track 2 ...");
     end if;
-    Standard_Track(nq,sols,p,vrblvl-1);
+    Standard_Track(nq,sols,p,mhom,idz,vrblvl-1);
   end Standard_Track;
 
   procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
@@ -191,10 +197,10 @@ package body Drivers_to_Series_Trackers is
     Standard_Jacobian_Hessians_of_Homotopy(jm,hs);
     if verbose then
       Series_and_Trackers.Track_Many_Paths
-        (file,jm,hs,s,sols,pars,true,true,vrblvl-1);
+        (file,jm,hs,s,sols,pars,mhom,idz,true,true,vrblvl-1);
     else
       Series_and_Trackers.Track_Many_Paths
-        (file,jm,hs,s,sols,pars,vrblvl=>vrblvl-1);
+        (file,jm,hs,s,sols,pars,mhom,idz,vrblvl=>vrblvl-1);
     end if;
     Standard_Complex_Jaco_Matrices.Clear(jm);
     Standard_Complex_Hessians.Clear(hs);
@@ -205,6 +211,8 @@ package body Drivers_to_Series_Trackers is
   procedure Standard_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
@@ -215,7 +223,7 @@ package body Drivers_to_Series_Trackers is
     if vrblvl > 0 then
       put_line("-> in drivers_to_series_trackers.Standard_Track 4 ...");
     end if;
-    Standard_Track(file,nq,sols,p,verbose,vrblvl-1);
+    Standard_Track(file,nq,sols,p,mhom,idz,verbose,vrblvl-1);
   end Standard_Track;
 
   procedure DoblDobl_Track
