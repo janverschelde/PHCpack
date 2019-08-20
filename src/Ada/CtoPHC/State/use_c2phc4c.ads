@@ -3026,7 +3026,58 @@ function use_c2phc4c ( job : integer32;
 --                 and removes the last linear equation;
 --         = 903 : to the system with quad double precision coefficients,
 --                 substitutes the last variable by the value one,
---                 and removes the last linear equation.
+--                 and removes the last linear equation;
+--         = 904 : to the system with double precision coefficients,
+--                 applies a m-homogeneous projective transformation,
+--                 adding a random linear equation if a[2] == 0,
+--                 or the linear equation z0 - 1 = 0 if a[2]] = 1,
+--                 where the number n of variables is in a[0],
+--                 the value of m is in a[1], and the n values of b
+--                 define the index representation of the partition;
+--         = 905 : to the system with double double precision coefficients,
+--                 applies a m-homogeneous projective transformation,
+--                 adding a random linear equation if a[2] == 0,
+--                 or the linear equation z0 - 1 = 0 if a[2]] = 1,
+--                 where the number n of variables is in a[0],
+--                 the value of m is in a[1], and the n values of b
+--                 define the index representation of the partition;
+--         = 906 : to the system with quad double precision coefficients,
+--                 applies a m-homogeneous projective transformation,
+--                 adding a random linear equation if a[2] == 0,
+--                 or the linear equation z0 - 1 = 0 if a[2]] = 1,
+--                 where the number n of variables is in a[0],
+--                 the value of m is in a[1], and the n values of b
+--                 define the index representation of the partition.
+--         = 907 : to the system with double precision coefficients,
+--                 substitutes the last m variables by the value one,
+--                 and removes the last m linear equations,
+--                 where the value of m equals a[0] on input;
+--         = 908 : to the system with double double precision coefficients,
+--                 substitutes the last m variables by the value one,
+--                 and removes the last m linear equations,
+--                 where the value of m equals a[0] on input;
+--         = 909 : to the system with quad double precision coefficients,
+--                 substitutes the last m variables by the value one,
+--                 and removes the last m linear equations,
+--                 where the value of m equals a[0] on input;
+--         = 910 : to the solutions in standard double precision,
+--                 applies a m-homogeneous projective transformation,
+--                 augmenting every solution with m extra ones;
+--         = 911 : to the solutions in double double precision,
+--                 applies a m-homogeneous projective transformation,
+--                 augmenting every solution with m extra ones;
+--         = 912 : to the solutions in quad double precision,
+--                 applies a m-homogeneous projective transformation,
+--                 augmenting every solution with m extra ones;
+--         = 913 : transforms the solutions in double precision
+--                 into affine coordinates, dividing coordinates by the
+--                 value of their corresponding homogeneous coordinate;
+--         = 914 : transforms the solutions in double double precision
+--                 into affine coordinates, dividing coordinates by the
+--                 value of their corresponding homogeneous coordinate;
+--         = 915 : transforms the solutions in quad double precision
+--                 into affine coordinates, dividing coordinates by the
+--                 value of their corresponding homogeneous coordinate.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

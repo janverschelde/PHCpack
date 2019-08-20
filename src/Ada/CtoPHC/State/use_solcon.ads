@@ -330,6 +330,15 @@ function use_solcon ( job : integer32;
 --           = 896 : to the solutions in quad double precision,
 --                   applies a 1-homogeneous projective transformation,
 --                   augmenting every solution with one as extra coordinate;
+--           = 910 : to the solutions in standard double precision,
+--                   applies a m-homogeneous projective transformation,
+--                   augmenting every solution with m extra ones;
+--           = 911 : to the solutions in double double precision,
+--                   applies a m-homogeneous projective transformation,
+--                   augmenting every solution with m extra ones;
+--           = 912 : to the solutions in quad double precision,
+--                   applies a m-homogeneous projective transformation,
+--                   augmenting every solution with m extra ones;
 --           = 898 : transforms the solutions in double precision
 --                   into affine coordinates, dividing every coordinate
 --                   by the value of the last coordinate of the solution;
@@ -339,6 +348,15 @@ function use_solcon ( job : integer32;
 --           = 900 : transforms the solutions in quad double precision
 --                   into affine coordinates, dividing every coordinate
 --                   by the value of the last coordinate of the solution.
+--           = 913 : transforms the solutions in double precision
+--                   into affine coordinates, dividing coordinates by the
+--                   value of their corresponding homogeneous coordinate;
+--           = 914 : transforms the solutions in double double precision
+--                   into affine coordinates, dividing coordinates by the
+--                   value of their corresponding homogeneous coordinate;
+--           = 915 : transforms the solutions in quad double precision
+--                   into affine coordinates, dividing coordinates by the
+--                   value of their corresponding homogeneous coordinate.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong,

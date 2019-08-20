@@ -49,6 +49,9 @@ with Multprec_Complex_Laur_Systems_io;  use Multprec_Complex_Laur_Systems_io;
 with Polynomial_Drops;
 with Total_Degree_Start_Systems;
 with Projective_Transformations;
+with Partitions_of_Sets_of_Unknowns;
+with Partitions_of_Sets_of_Unknowns_io;
+with Multi_Projective_Transformations;
 with Affine_Transformations;
 with Homogenization;
 with PHCpack_Operations;
@@ -2126,6 +2129,96 @@ function use_syscon ( job : integer32;
     return 0;
   end Job893;
 
+  function Job904 return integer32 is -- m-homogeneous standard system
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    mhom : constant natural32 := natural32(v_a(v_a'first+1));
+    opt : constant natural32 := natural32(v_a(v_a'first+2));
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
+    md : constant integer32 := integer32(mhom);
+    res : Standard_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last+md);
+    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
+    z : Partitions_of_Sets_of_Unknowns.Partition(1..mhom);
+
+    use Multi_Projective_Transformations;
+
+  begin
+    Assign(nvr,b,idz);
+    z := Partitions_of_Sets_of_Unknowns_io.Make_Partition(nvr,mhom,idz);
+    if opt = 0
+     then res := Multi_Projective_Transformation(lp.all,mhom,z,false);
+     else res := Multi_Projective_Transformation(lp.all,mhom,z,true);
+    end if;
+    Standard_PolySys_Container.Clear;
+    Standard_PolySys_Container.Initialize(res);
+    return 0;
+  end Job904;
+
+  function Job905 return integer32 is -- m-homogeneous dobldobl system
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    mhom : constant natural32 := natural32(v_a(v_a'first+1));
+    opt : constant natural32 := natural32(v_a(v_a'first+2));
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    md : constant integer32 := integer32(mhom);
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last+md);
+    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
+    z : Partitions_of_Sets_of_Unknowns.Partition(1..mhom);
+
+    use Multi_Projective_Transformations;
+
+  begin
+    Assign(nvr,b,idz);
+    z := Partitions_of_Sets_of_Unknowns_io.Make_Partition(nvr,mhom,idz);
+    if opt = 0
+     then res := Multi_Projective_Transformation(lp.all,mhom,z,false);
+     else res := Multi_Projective_Transformation(lp.all,mhom,z,true);
+    end if;
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(res);
+    return 0;
+  end Job905;
+
+  function Job906 return integer32 is -- m-homogeneous quaddobl system
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    mhom : constant natural32 := natural32(v_a(v_a'first+1));
+    opt : constant natural32 := natural32(v_a(v_a'first+2));
+    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := QuadDobl_PolySys_Container.Retrieve;
+    md : constant integer32 := integer32(mhom);
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last+md);
+    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
+    z : Partitions_of_Sets_of_Unknowns.Partition(1..mhom);
+
+    use Multi_Projective_Transformations;
+
+  begin
+    Assign(nvr,b,idz);
+    z := Partitions_of_Sets_of_Unknowns_io.Make_Partition(nvr,mhom,idz);
+    if opt = 0
+     then res := Multi_Projective_Transformation(lp.all,mhom,z,false);
+     else res := Multi_Projective_Transformation(lp.all,mhom,z,true);
+    end if;
+    QuadDobl_PolySys_Container.Clear;
+    QuadDobl_PolySys_Container.Initialize(res);
+    return 0;
+  end Job906;
+
   function Job897 return integer32 is -- add symbol passed as string
 
     v_a : constant C_Integer_Array
@@ -2181,6 +2274,54 @@ function use_syscon ( job : integer32;
     QuadDobl_PolySys_Container.Initialize(res);
     return 0;
   end Job903;
+
+  function Job907 return integer32 is -- double m-hom to affine
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    mhom : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
+    res : constant Standard_Complex_Poly_Systems.Poly_Sys
+        := Affine_Transformations.Make_Affine(lp.all,mhom);
+
+  begin
+    Standard_PolySys_Container.Clear;
+    Standard_PolySys_Container.Initialize(res);
+    return 0;
+  end Job907;
+
+  function Job908 return integer32 is -- double double m-hom to affine
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    mhom : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    res : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+        := Affine_Transformations.Make_Affine(lp.all,mhom);
+
+  begin
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(res);
+    return 0;
+  end Job908;
+
+  function Job909 return integer32 is -- quad double m-hom to affine
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    mhom : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := QuadDobl_PolySys_Container.Retrieve;
+    res : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+        := Affine_Transformations.Make_Affine(lp.all,mhom);
+
+  begin
+    QuadDobl_PolySys_Container.Clear;
+    QuadDobl_PolySys_Container.Initialize(res);
+    return 0;
+  end Job909;
 
   function Handle_Jobs return integer32 is
   begin
@@ -2316,12 +2457,18 @@ function use_syscon ( job : integer32;
       when 891 => return Job891; -- 1-homogeneous standard system
       when 892 => return Job892; -- 1-homogeneous dobldobl system
       when 893 => return Job893; -- 1-homogeneous quaddobl system
+      when 904 => return Job904; -- m-homogeneous standard system
+      when 905 => return Job905; -- m-homogeneous dobldobl system
+      when 906 => return Job906; -- m-homogeneous quaddobl system
      -- add symbol passed as string to the table
       when 897 => return Job897; -- add symbol to the table
      -- affine transformations :
       when 901 => return Job901; -- double affine transformation
       when 902 => return Job902; -- double double affine transformation
       when 903 => return Job903; -- quad double affine transformation
+      when 907 => return Job907; -- double m-hom to affine
+      when 908 => return Job908; -- double double m-hom to affine
+      when 909 => return Job909; -- quad double m-hom to affine
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;
