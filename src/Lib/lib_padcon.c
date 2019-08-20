@@ -32,6 +32,14 @@ int prompt_for_homogenization ( void );
  *   Asks the user if a projective transformation must be applied.
  *   Return 1 for homogeneous coordinates, return 0 otherwise. */
 
+int prompt_for_multi_homogenization ( int nvr );
+/*
+ * DESCRIPTION :
+ *   Displays the menu for the multi-homogenization, for a number of
+ *   variables equal to nvr.  On return is a positive integer in the range
+ *   of 0 to nvr, where 0 standard for affine, 1 for 1-homogenization,
+ *   and m for m-homogenization. */
+
 void standard_projective_transformation ( void );
 /*
  * DESCRIPTION :
@@ -56,35 +64,32 @@ void quaddobl_projective_transformation ( void );
  *   Transforms as well the start and target systems
  *   in quad double precision.  Adds "Z0" to the symbol table. */
 
-void standard_track ( int nbc, char *name, int verbose, int homo );
+void standard_track ( int nbc, char *name, int verbose );
 /*
  * DESCRIPTION :
  *   Tracks in standard double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
  *   otherwise, the output is written to the name with file name.
- *   If verbose > 0, then more output is written.
- *   If homo > 0, then tracking happens in homogeneous coordinates. */
+ *   If verbose > 0, then more output is written. */
 
-void dobldobl_track ( int nbc, char *name, int verbose, int homo );
+void dobldobl_track ( int nbc, char *name, int verbose );
 /*
  * DESCRIPTION :
  *   Tracks in double double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
  *   otherwise, the output is written to the name with file name.
- *   If verbose > 0, then more output is written.
- *   If homo > 0, then tracking happens in homogeneous coordinates. */
+ *   If verbose > 0, then more output is written. */
 
-void quaddobl_track ( int nbc, char *name, int verbose, int homo );
+void quaddobl_track ( int nbc, char *name, int verbose );
 /*
  * DESCRIPTION :
  *   Tracks in quad double precision.  On input is the name of the
  *   output file, with its number of characters in nbc.
  *   If nbc = 0, then no output is written to file,
  *   otherwise, the output is written to the name with file name.
- *   If verbose > 0, then more output is written.
- *   If homo > 0, then tracking happens in homogeneous coordinates. */
+ *   If verbose > 0, then more output is written. */
 
 int maximal_series_degree ( void );
 /*
@@ -239,10 +244,10 @@ int main ( void )
    ans = getchar();
    scanf("%c", &nlsb); // swallow new line symbol
 
-   homo = prompt_for_homogenization();
-
    if(ans == 'y')
    {
+      homo = prompt_for_homogenization();
+
       if(precision == 0) standard_next_step(homo);
       if(precision == 1) dobldobl_next_step(homo);
       if(precision == 2) quaddobl_next_step(homo);
@@ -254,9 +259,9 @@ int main ( void )
       if(nbchar > 0)
          printf("\nThe name of the output file is %s.\n", filename);
 
-      if(precision == 0) standard_track(nbchar,filename,verbose,homo);
-      if(precision == 1) dobldobl_track(nbchar,filename,verbose,homo);
-      if(precision == 2) quaddobl_track(nbchar,filename,verbose,homo);
+      if(precision == 0) standard_track(nbchar,filename,verbose);
+      if(precision == 1) dobldobl_track(nbchar,filename,verbose);
+      if(precision == 2) quaddobl_track(nbchar,filename,verbose);
    }
    adafinal();
 
@@ -339,6 +344,23 @@ int prompt_for_homogenization ( void )
       return 0;
 }
 
+int prompt_for_multi_homogenization ( int nvr )
+{
+   int choice;
+
+   printf("\n");
+   printf("MENU for affine, homogeneous or multi-homogeneous coordinates :\n");
+   printf("  0 : in affine coordinates, in the original variables;\n");
+   printf("  1 : in 1-homogeous coordinates, in projective space;\n");
+   printf("  2 or higher : in multi-homogeous coordinates, in a multi-\n");
+   printf("  projective space defined by a partition of the variables.\n");
+   printf("Type a number between 0 and %d : ",nvr);
+
+   scanf("%d",&choice);
+
+   return choice;
+}
+
 void standard_projective_transformation ( void )
 {
    int fail;
@@ -387,9 +409,9 @@ void quaddobl_projective_transformation ( void )
    fail = syscon_add_symbol(2,name);
 }
 
-void standard_track ( int nbc, char *name, int verbose, int homo )
+void standard_track ( int nbc, char *name, int verbose )
 {
-   int fail,length;
+   int fail,length,mhom,dim;
 
    fail = read_standard_target_system();
    fail = read_standard_start_system();
@@ -397,31 +419,22 @@ void standard_track ( int nbc, char *name, int verbose, int homo )
    fail = solcon_number_of_standard_solutions(&length);
    printf("Read %d start solutions.\n", length);
 
-   if(homo > 0) 
+   fail = syscon_number_of_symbols(&dim);
+   mhom = prompt_for_multi_homogenization(dim);
+
+   if(mhom == 1) standard_projective_transformation();
+   if(mhom > 1) 
    {
-      int mhom;
-
-      printf("Give the m for m-homogenization : ");
-      scanf("%d", &mhom);
-
-      if(mhom > 1)
-      {
-         int dim;
-
-         fail = syscon_number_of_symbols(&dim);
-
-         int idz[dim];
-     
-         fail = padcon_define_partition(mhom, dim, idz);
-      }
-      standard_projective_transformation();
+      int idz[dim];
+      fail = padcon_define_partition(mhom, dim, idz);
+      mhom = 1; // true multi-homogenization is not supported yet
    }
 
    if(nbc > 0) printf("\nSee the output file %s ...\n", name);
 
-   fail = padcon_standard_track(nbc,name,0,verbose,homo);
+   fail = padcon_standard_track(nbc,name,0,verbose,mhom);
 
-   if(homo > 0)
+   if(mhom == 1)
    {
       fail = solcon_standard_one_affinization();
       fail = copy_target_system_to_container();
@@ -432,15 +445,17 @@ void standard_track ( int nbc, char *name, int verbose, int homo )
    fail = solcon_write_standard_solutions();
 }
 
-void dobldobl_track ( int nbc, char *name, int verbose, int homo )
+void dobldobl_track ( int nbc, char *name, int verbose )
 {
-   int fail,length;
+   int fail,length,homo;
 
    fail = read_dobldobl_target_system();
    fail = read_dobldobl_start_system();
    fail = copy_dobldobl_start_solutions_to_container();
    fail = solcon_number_of_dobldobl_solutions(&length);
    printf("Read %d start solutions.\n", length);
+
+   homo = prompt_for_homogenization();
 
    if(homo > 0) dobldobl_projective_transformation();
 
@@ -459,15 +474,17 @@ void dobldobl_track ( int nbc, char *name, int verbose, int homo )
    fail = solcon_write_dobldobl_solutions();
 }
 
-void quaddobl_track ( int nbc, char *name, int verbose, int homo )
+void quaddobl_track ( int nbc, char *name, int verbose )
 {
-   int fail,length;
+   int fail,length,homo;
 
    fail = read_quaddobl_target_system();
    fail = read_quaddobl_start_system();
    fail = copy_quaddobl_start_solutions_to_container();
    fail = solcon_number_of_quaddobl_solutions(&length);
    printf("Read %d start solutions.\n", length);
+
+   homo = prompt_for_homogenization();
 
    if(homo > 0) quaddobl_projective_transformation();
 
