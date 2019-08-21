@@ -47,6 +47,7 @@ with DoblDobl_Pade_Approximants;
 with QuadDobl_Pade_Approximants;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
+with Series_Path_Trackers;
 with Drivers_to_Series_Trackers;
 with Standard_SeriesPade_Tracker;
 with DoblDobl_SeriesPade_Tracker;
@@ -190,8 +191,9 @@ function use_padcon ( job : integer32;
   end Job3;
 
   procedure Standard_Track
-              ( name : in string;
-                localfile,verbose,homogeneous : in boolean ) is
+              ( name : in string; localfile,verbose : in boolean;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
@@ -199,14 +201,14 @@ function use_padcon ( job : integer32;
   --   otherwise, creates an output file with the given name.
   --   The file name is the defined output file if localfile is false,
   --   otherwise, if localfile, the the file is a local variable.
-  --   If homogeneous, then homogeneous coordinates are applied.
+  --   The value for mhom is 0, 1, 2 or higher, depending whether
+  --   affine, 1-homogeneous, or m-homogeneous coordinates are applied.
 
     file : file_type;
     start,target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
-    mhom : natural32;
-    idz : Standard_Natural_Vectors.Link_to_Vector;
+    nvr : natural32;
 
     homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
@@ -215,14 +217,12 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
-    if not homogeneous then
+    if mhom = 0 then
       Standard_Homotopy.Create(target.all,start.all,tpow,homconpars.gamma);
-      mhom := 0;
     else
       Standard_Homotopy.Create(target.all,start.all,1,homconpars.gamma);
       Standard_Coefficient_Homotopy.Create
         (start.all,target.all,1,homconpars.gamma);
-      mhom := 1;
     end if;
     if name = "" then
       if not verbose then
@@ -262,6 +262,13 @@ function use_padcon ( job : integer32;
       new_line(PHCpack_Operations.output_file);
       Homotopy_Continuation_Parameters_io.put
         (PHCpack_Operations.output_file,homconpars.all);
+      if mhom > 1 then
+        nvr := natural32(start'last) - mhom;
+        new_line(PHCpack_Operations.output_file);
+        Series_Path_Trackers.Write_Partition
+          (PHCpack_Operations.output_file,nvr,mhom,idz);
+        new_line(PHCpack_Operations.output_file);
+      end if;
       Drivers_to_Series_Trackers.Standard_Track
         (PHCpack_Operations.output_file,
          target'last,sols,homconpars.all,mhom,idz,verbose);
@@ -272,8 +279,9 @@ function use_padcon ( job : integer32;
   end Standard_Track;
 
   procedure DoblDobl_Track
-              ( name : in string;
-                localfile,verbose,homogeneous : in boolean ) is
+              ( name : in string; localfile,verbose : in boolean;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
@@ -281,7 +289,8 @@ function use_padcon ( job : integer32;
   --   otherwise, creates an output file with the given name.
   --   The file name is the defined output file if localfile is false,
   --   otherwise, if localfile, the the file is a local variable.
-  --   If homogeneous, then homogeneous coordinates are applied.
+  --   The value for mhom is 0, 1, 2 or higher, depending whether
+  --   affine, 1-homogeneous, or m-homogeneous coordinates are applied.
 
     use DoblDobl_Complex_Numbers_cv;
 
@@ -289,8 +298,7 @@ function use_padcon ( job : integer32;
     start,target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
-    mhom : natural32;
-    idz : Standard_Natural_Vectors.Link_to_Vector;
+    nvr : natural32;
 
     homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
@@ -304,13 +312,11 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
-    if not homogeneous then
+    if mhom = 0 then
       DoblDobl_Homotopy.Create(target.all,start.all,tpow,dd_gamma);
-      mhom := 0;
     else
       DoblDobl_Homotopy.Create(target.all,start.all,1,dd_gamma);
       DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,dd_gamma);
-      mhom := 1;
     end if;
     if name = "" then
       if not verbose then
@@ -350,6 +356,13 @@ function use_padcon ( job : integer32;
       new_line(PHCpack_Operations.output_file);
       Homotopy_Continuation_Parameters_io.put
         (PHCpack_Operations.output_file,homconpars.all);
+      if mhom > 1 then
+        nvr := natural32(start'last) - mhom;
+        new_line(PHCpack_Operations.output_file);
+        Series_Path_Trackers.Write_Partition
+          (PHCpack_Operations.output_file,nvr,mhom,idz);
+        new_line(PHCpack_Operations.output_file);
+      end if;
       Drivers_to_Series_Trackers.DoblDobl_Track
         (PHCpack_Operations.output_file,
          target'last,sols,homconpars.all,mhom,idz,verbose);
@@ -359,8 +372,9 @@ function use_padcon ( job : integer32;
   end DoblDobl_Track;
 
   procedure QuadDobl_Track
-              ( name : in string; 
-                localfile,verbose,homogeneous : in boolean ) is
+              ( name : in string; localfile,verbose : in boolean;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --   Tracks the solution paths in standard precision,
@@ -368,7 +382,8 @@ function use_padcon ( job : integer32;
   --   otherwise, creates an output file with the given name.
   --   The file name is the defined output file if localfile is false,
   --   otherwise, if localfile, the the file is a local variable.
-  --   If homogeneous, then homogeneous coordinates are applied.
+  --   The value for mhom is 0, 1, 2 or higher, depending whether
+  --   affine, 1-homogeneous, or m-homogeneous coordinates are applied.
 
     use QuadDobl_Complex_Numbers_cv;
 
@@ -376,8 +391,7 @@ function use_padcon ( job : integer32;
     start,target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     tpow : constant natural32 := 2;
-    mhom : natural32;
-    idz : Standard_Natural_Vectors.Link_to_Vector;
+    nvr : natural32;
 
     homconpars : constant Homotopy_Continuation_Parameters.Link_to_Parameters
                := Homotopy_Continuation_Parameters.Retrieve;
@@ -391,13 +405,11 @@ function use_padcon ( job : integer32;
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Start_Solutions(sols);
     PHCpack_Operations.Retrieve_Target_System(target);
-    if not homogeneous then
+    if mhom = 0 then
       QuadDobl_Homotopy.Create(target.all,start.all,tpow,qd_gamma);
-      mhom := 0;
     else
       QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
       QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
-      mhom := 1;
     end if;
     if name = "" then
       if not verbose then
@@ -437,6 +449,13 @@ function use_padcon ( job : integer32;
       new_line(PHCpack_Operations.output_file);
       Homotopy_Continuation_Parameters_io.put
         (PHCpack_Operations.output_file,homconpars.all);
+      if mhom > 1 then
+        nvr := natural32(start'last) - mhom;
+        new_line(PHCpack_Operations.output_file);
+        Series_Path_Trackers.Write_Partition
+          (PHCpack_Operations.output_file,nvr,mhom,idz);
+        new_line(PHCpack_Operations.output_file);
+      end if;
       Drivers_to_Series_Trackers.QuadDobl_Track
         (PHCpack_Operations.output_file,
          target'last,sols,homconpars.all,mhom,idz,verbose);
@@ -450,22 +469,34 @@ function use_padcon ( job : integer32;
     use Interfaces.C;
 
     v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(5));
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(6));
     prc : constant natural32 := natural32(v_a(v_a'first));
     nbc : constant natural32 := natural32(v_a(v_a'first+1));
     vrb : constant natural32 := natural32(v_a(v_a'first+2));
-    hmf : constant natural32 := natural32(v_a(v_a'first+3));
+    mhm : constant natural32 := natural32(v_a(v_a'first+3));
     lcf : constant natural32 := natural32(v_a(v_a'first+4));
+    nvr : constant natural32 := natural32(v_a(v_a'first+5));
     verbose : constant boolean := (vrb > 0);
-    homogeneous : constant boolean := (hmf > 0);
     localfile : constant boolean := (lcf > 0);
+    idz : Standard_Natural_Vectors.Link_to_Vector;
 
   begin
+    if mhm > 1 then
+      declare
+        v_c : constant C_Double_Array(0..Interfaces.C.size_T(nvr-1))
+            := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(nvr));
+      begin
+        idz := new Standard_Natural_Vectors.Vector'(1..integer32(nvr) => 0);
+        for i in idz'range loop
+          idz(i) := natural32(v_c(Interfaces.C.size_T(i-1)));
+        end loop;
+      end;
+    end if;
     if nbc = 0 then
       case prc is
-        when 0 => Standard_Track("",localfile,verbose,homogeneous);
-        when 1 => DoblDobl_Track("",localfile,verbose,homogeneous);
-        when 2 => QuadDobl_Track("",localfile,verbose,homogeneous);
+        when 0 => Standard_Track("",localfile,verbose,mhm,idz);
+        when 1 => DoblDobl_Track("",localfile,verbose,mhm,idz);
+        when 2 => QuadDobl_Track("",localfile,verbose,mhm,idz);
         when others => null;
       end case;
     else
@@ -475,9 +506,9 @@ function use_padcon ( job : integer32;
         name : constant string := C_Integer_Array_to_String(nbc,v_b);
       begin
         case prc is
-          when 0 => Standard_Track(name,localfile,verbose,homogeneous);
-          when 1 => DoblDobl_Track(name,localfile,verbose,homogeneous);
-          when 2 => QuadDobl_Track(name,localfile,verbose,homogeneous);
+          when 0 => Standard_Track(name,localfile,verbose,mhm,idz);
+          when 1 => DoblDobl_Track(name,localfile,verbose,mhm,idz);
+          when 2 => QuadDobl_Track(name,localfile,verbose,mhm,idz);
           when others => null;
         end case;
       end;
