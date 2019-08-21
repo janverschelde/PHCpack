@@ -1,3 +1,6 @@
+Wed 21 Aug 2019 : to series_path_trackers, added a procedure to write the 
+  partition of the variables to file.
+
 Tue 20 Aug 2019 : in series_and_trackers, used the coefficient homotopy also
   when no output to file and passed the (mhom,idz) parameters through,
   which changed drivers_to_series_trackers.  Removal of the series step 

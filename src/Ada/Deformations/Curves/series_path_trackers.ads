@@ -177,6 +177,14 @@ package Series_Path_Trackers is
   --   The user is allowed to reset m, although m must be larger than one.
   --   On return in idx is the index representation of the partition z.
 
+  procedure Write_Partition
+              ( file : in file_type; n,m : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Writes the partition z of the set of n variables 
+  --   for an m-homogenization to the output file.
+
   procedure Add_Multihomogeneous_Symbols
               ( m : in natural32; prefix : in string := "Z" );
 

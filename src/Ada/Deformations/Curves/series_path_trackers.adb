@@ -506,6 +506,10 @@ package body Series_Path_Trackers is
     fcf := Standard_CSeries_Poly_SysFun.Coeff(s);
     Standard_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
     Standard_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
+    if mhom > 1 then
+      Write_Partition(file,natural32(nvr)-mhom,mhom,idz);
+      new_line(file);
+    end if;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -606,6 +610,10 @@ package body Series_Path_Trackers is
     fcf := DoblDobl_CSeries_Poly_SysFun.Coeff(s);
     DoblDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
     DoblDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
+    if mhom > 1 then
+      Write_Partition(file,natural32(nvr)-mhom,mhom,idz);
+      new_line(file);
+    end if;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -706,6 +714,10 @@ package body Series_Path_Trackers is
     fcf := QuadDobl_CSeries_Poly_SysFun.Coeff(s);
     QuadDobl_CSeries_Jaco_Matrices.Create(s,ejm,mlt);
     QuadDobl_Write(file,natural32(nq),natural32(nvr),idxpar,sols,pars);
+    if mhom > 1 then
+      Write_Partition(file,natural32(nvr)-mhom,mhom,idz);
+      new_line(file);
+    end if;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -863,6 +875,20 @@ package body Series_Path_Trackers is
       end loop;
     end if;
   end Add_Multihomogeneous_Symbols;
+
+  procedure Write_Partition
+              ( file : in file_type; n,m : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
+
+    z : constant Partition(1..m)
+      := Partitions_of_Sets_of_Unknowns_io.Make_Partition(n,m,idz.all);
+
+  begin
+    put(file,m,1);
+    put_line(file,"-homogeneous coordinates are defined by the partition");
+    Partitions_of_Sets_of_Unknowns_io.put(file,z);
+    put(file," of the set of "); put(file,n,1); put_line(file," variables.");
+  end Write_Partition;
 
   procedure Standard_Define_Homotopy
               ( nbq,nvr : out integer32;
