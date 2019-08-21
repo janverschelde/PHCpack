@@ -82,41 +82,57 @@ package Drivers_to_Series_Trackers is
   procedure DoblDobl_Track
               ( nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure DoblDobl_Track
               ( nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure DoblDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure DoblDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure QuadDobl_Track
               ( nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure QuadDobl_Track
               ( nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure QuadDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure QuadDobl_Track
               ( file : in file_type; nq : in integer32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
 

@@ -2,6 +2,8 @@ Tue 20 Aug 2019 : in series_and_trackers, used the coefficient homotopy also
   when no output to file and passed the (mhom,idz) parameters through,
   which changed drivers_to_series_trackers.  Removal of the series step 
   counter and ratio modified also series_path_trackers.adb.
+  Updated series_and_trackers and drivers_to_series_trackers for double
+  double and quad double versions, for passing mhom and idz.
 
 Mon 19 Aug 2019 : added on extra iteration on Newton's method for power
   series in standard_pade_trackers.adb, also in the silent version.

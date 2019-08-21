@@ -5,7 +5,15 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;
+with Standard_Complex_Series_VecVecs;
+with Standard_CSeries_Poly_SysFun;
 with Standard_CSeries_Jaco_Matrices;
+with DoblDobl_Complex_Series_VecVecs;
+with DoblDobl_CSeries_Poly_SysFun;
+with DoblDobl_CSeries_Jaco_Matrices;
+with QuadDobl_Complex_Series_VecVecs;
+with QuadDobl_CSeries_Poly_SysFun;
+with QuadDobl_CSeries_Jaco_Matrices;
 with Homotopy_Mixed_Residuals;
 with Standard_Pade_Trackers;
 with DoblDobl_Pade_Trackers;
@@ -135,6 +143,8 @@ package body Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 monitor,verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
@@ -142,6 +152,13 @@ package body Series_and_Trackers is
 
     abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
         := Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy;
+    nvr : constant integer32 := Head_Of(sols).n;
+    fhm : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+        := DoblDobl_CSeries_Poly_SysFun.Create(hom);
+    fcf : DoblDobl_Complex_Series_VecVecs.VecVec(hom'range)
+        := DoblDobl_CSeries_Poly_SysFun.Coeff(hom);
+    ejm : DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(hom'range,1..nvr);
+    mlt : DoblDobl_CSeries_Jaco_Matrices.Mult_Factors(hom'range,1..nvr);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -156,6 +173,7 @@ package body Series_and_Trackers is
     if vrblvl > 0
      then put_line("-> in series_and_trackers.Track_Many_Paths 2 ...");
     end if;
+    DoblDobl_CSeries_Jaco_Matrices.Create(hom,ejm,mlt);
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -166,8 +184,9 @@ package body Series_and_Trackers is
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
       DoblDobl_Pade_Trackers.Track_One_Path
-        (file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrblvl-1);
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,
+         verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
@@ -188,6 +207,10 @@ package body Series_and_Trackers is
        ratdstp,ratpstp);
     new_line(file);
     print_times(file,timer,"Tracking in double double precision.");
+    DoblDobl_CSeries_Poly_SysFun.Clear(fhm);
+    DoblDobl_Complex_Series_VecVecs.Clear(fcf);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(mlt);
     DoblDobl_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
@@ -198,6 +221,8 @@ package body Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 monitor,verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
@@ -205,6 +230,13 @@ package body Series_and_Trackers is
 
     abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
         := Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy;
+    nvr : constant integer32 := Head_Of(sols).n;
+    fhm : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+        := QuadDobl_CSeries_Poly_SysFun.Create(hom);
+    fcf : QuadDobl_Complex_Series_VecVecs.VecVec(hom'range)
+        := QuadDobl_CSeries_Poly_SysFun.Coeff(hom);
+    ejm : QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(hom'range,1..nvr);
+    mlt : QuadDobl_CSeries_Jaco_Matrices.Mult_Factors(hom'range,1..nvr);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -219,6 +251,7 @@ package body Series_and_Trackers is
     if vrblvl > 0
      then put_line("-> in series_and_trackers.Track_Many_Paths 3 ...");
     end if;
+    QuadDobl_CSeries_Jaco_Matrices.Create(hom,ejm,mlt);
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
     minnbrcorrs := (pars.maxsteps+1)*pars.corsteps+1; maxnbrcorrs := 0;
     smallest := pars.maxsize; largest := 0.0;
@@ -229,8 +262,9 @@ package body Series_and_Trackers is
        then put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
       end if;
       QuadDobl_Pade_Trackers.Track_One_Path
-        (file,abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,cntsstp,cntdstp,cntpstp,verbose,vrblvl-1);
+        (file,abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,
+         verbose,vrblvl-1);
       if verbose then
         Write_Path_Statistics
           (file,nbrsteps,nbrcorrs,cntcut,cntfail,minsize,maxsize,
@@ -251,6 +285,10 @@ package body Series_and_Trackers is
        ratdstp,ratpstp);
     new_line(file);
     print_times(file,timer,"Tracking in quad double precision.");
+    QuadDobl_CSeries_Poly_SysFun.Clear(fhm);
+    QuadDobl_Complex_Series_VecVecs.Clear(fcf);
+    QuadDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    QuadDobl_CSeries_Jaco_Matrices.Clear(mlt);
     QuadDobl_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
@@ -307,12 +345,21 @@ package body Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
     abh : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
         := Homotopy_Mixed_Residuals.DoblDobl_AbsVal_Homotopy;
+    nvr : constant integer32 := Head_Of(sols).n;
+    fhm : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+        := DoblDobl_CSeries_Poly_SysFun.Create(hom);
+    fcf : DoblDobl_Complex_Series_VecVecs.VecVec(hom'range)
+        := DoblDobl_CSeries_Poly_SysFun.Coeff(hom);
+    ejm : DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(hom'range,1..nvr);
+    mlt : DoblDobl_CSeries_Jaco_Matrices.Mult_Factors(hom'range,1..nvr);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -324,13 +371,18 @@ package body Series_and_Trackers is
     if vrblvl > 0
      then put_line("-> in series_and_trackers.Track_Many_Paths 5 ...");
     end if;
+    DoblDobl_CSeries_Jaco_Matrices.Create(hom,ejm,mlt);
     for i in 1..len loop
       ls := Head_Of(tmp);
       DoblDobl_Pade_Trackers.Track_One_Path
-        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,cntsstp,cntdstp,cntpstp,vrblvl-1);
+        (abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
+    DoblDobl_CSeries_Poly_SysFun.Clear(fhm);
+    DoblDobl_Complex_Series_VecVecs.Clear(fcf);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(mlt);
     DoblDobl_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 
@@ -340,12 +392,21 @@ package body Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
     abh : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(hom'range)
         := Homotopy_Mixed_Residuals.QuadDobl_AbsVal_Homotopy;
+    nvr : constant integer32 := Head_Of(sols).n;
+    fhm : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+        := QuadDobl_CSeries_Poly_SysFun.Create(hom);
+    fcf : QuadDobl_Complex_Series_VecVecs.VecVec(hom'range)
+        := QuadDobl_CSeries_Poly_SysFun.Coeff(hom);
+    ejm : QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(hom'range,1..nvr);
+    mlt : QuadDobl_CSeries_Jaco_Matrices.Mult_Factors(hom'range,1..nvr);
     tmp : Solution_List := sols;
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
@@ -357,13 +418,18 @@ package body Series_and_Trackers is
     if vrblvl > 0
      then put_line("-> in series_and_trackers.Track_Many_Paths 6 ...");
     end if;
+    QuadDobl_CSeries_Jaco_Matrices.Create(hom,ejm,mlt);
     for i in 1..len loop
       ls := Head_Of(tmp);
       QuadDobl_Pade_Trackers.Track_One_Path
-        (abh,jm,hs,hom,ls.all,pars,nbrsteps,nbrcorrs,cntcut,cntfail,
-         minsize,maxsize,cntsstp,cntdstp,cntpstp,vrblvl-1);
+        (abh,jm,hs,fhm,fcf,ejm,mlt,ls.all,pars,mhom,idz,nbrsteps,nbrcorrs,
+         cntcut,cntfail,minsize,maxsize,cntsstp,cntdstp,cntpstp,vrblvl-1);
       tmp := Tail_Of(tmp);
     end loop;
+    QuadDobl_CSeries_Poly_SysFun.Clear(fhm);
+    QuadDobl_Complex_Series_VecVecs.Clear(fcf);
+    QuadDobl_CSeries_Jaco_Matrices.Clear(ejm);
+    QuadDobl_CSeries_Jaco_Matrices.Clear(mlt);
     QuadDobl_Complex_Poly_SysFun.Clear(abh);
   end Track_Many_Paths;
 

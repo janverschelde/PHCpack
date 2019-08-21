@@ -6,7 +6,6 @@ with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
-with Standard_Complex_Series_VecVecs;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Hessians;
@@ -17,7 +16,6 @@ with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Hessians;
 with Standard_CSeries_Poly_Systems;
-with Standard_CSeries_Poly_SysFun;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with Homotopy_Continuation_Parameters;
@@ -73,6 +71,8 @@ package Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure Track_Many_Paths
               ( jm : in QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -80,6 +80,8 @@ package Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -121,6 +123,8 @@ package Series_and_Trackers is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 monitor,verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure Track_Many_Paths
@@ -130,6 +134,8 @@ package Series_and_Trackers is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in natural32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 monitor,verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
 
