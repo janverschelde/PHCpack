@@ -204,7 +204,7 @@ int padcon_define_partition ( int m, int nvr, int *idz )
 
    int fail = syscon_string_of_symbols(&nbr, smbstr);
 
-   printf("defining a partition of the variables ...\n");
+   printf("Defining a partition of the variables ...\n");
    bufidx = 0; // index to the buffer
    setidx = 0;
    for(idx=0; idx < nbr; idx++)
@@ -223,7 +223,7 @@ int padcon_define_partition ( int m, int nvr, int *idz )
    printf("-> which set will %s be in ? ", buffer);
    scanf("%d", &idz[setidx++]); // last variable
 
-   printf("the partition :");
+   printf("Your partition :");
    for(idx = 0; idx < nvr; idx++) printf(" %d", idz[idx]);
    printf("\n");
 }

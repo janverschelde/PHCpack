@@ -64,6 +64,41 @@ void quaddobl_projective_transformation ( void );
  *   Transforms as well the start and target systems
  *   in quad double precision.  Adds "Z0" to the symbol table. */
 
+void add_symbols ( int m );
+/*
+ * DESCRIPTION :
+ *   Augments the symbol table with Z1, Z2, .., Zm. */
+
+void standard_multi_projective_transformation ( int n, int m, int *idz );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their m-homogeneously transformed versions.
+ *   The index representation for the partition of the set of n variables
+ *   is defined by the n integers in idz.
+ *   Transforms as well the start and target systems
+ *   in standard double precision.  Augments the symbol table. */
+
+void dobldobl_multi_projective_transformation ( int n, int m, int *idz );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their m-homogeneously transformed versions.
+ *   The index representation for the partition of the set of n variables
+ *   is defined by the n integers in idz.
+ *   Transforms as well the start and target systems
+ *   in double double precision.  Augments the symbol table. */
+
+void quaddobl_multi_projective_transformation ( int n, int m, int *idz );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their m-homogeneously transformed versions.
+ *   The index representation for the partition of the set of n variables
+ *   is defined by the n integers in idz.
+ *   Transforms as well the start and target systems
+ *   in quad double precision.  Augments the symbol table. */
+
 void standard_track ( int nbc, char *name, int verbose );
 /*
  * DESCRIPTION :
@@ -409,6 +444,68 @@ void quaddobl_projective_transformation ( void )
    fail = syscon_add_symbol(2,name);
 }
 
+void add_symbols ( int m )
+{
+   char nbr[10];
+   int idx,fail;
+
+   for(idx=1; idx <= m; idx++)
+   {
+      char prefix[2];
+      prefix[0] = 'Z';
+      prefix[1] = '\0';
+
+      sprintf(nbr,"%d",idx);
+      char *name = strcat(prefix,nbr);
+      fail = syscon_add_symbol(strlen(name),name);
+   }
+}
+
+void standard_multi_projective_transformation ( int n, int m, int *idz )
+{
+   int fail;
+
+   fail = solcon_standard_multi_homogenization(m);
+   fail = copy_container_to_start_solutions();
+   fail = copy_target_system_to_container();
+   fail = syscon_standard_multi_homogenization(n,m,idz,0);
+   fail = copy_container_to_target_system();
+   fail = copy_start_system_to_container();
+   fail = syscon_standard_multi_homogenization(n,m,idz,1);
+   fail = copy_container_to_start_system();
+   add_symbols(m);
+}
+
+void dobldobl_multi_projective_transformation ( int n, int m, int *idz )
+{
+   int fail;
+
+   fail = solcon_dobldobl_multi_homogenization(m);
+   fail = copy_dobldobl_container_to_start_solutions();
+   fail = copy_dobldobl_target_system_to_container();
+   fail = syscon_dobldobl_multi_homogenization(n,m,idz,0);
+   fail = copy_dobldobl_container_to_target_system();
+   fail = copy_dobldobl_start_system_to_container();
+   fail = syscon_dobldobl_multi_homogenization(n,m,idz,1);
+   fail = copy_dobldobl_container_to_start_system();
+   add_symbols(m);
+}
+
+void quaddobl_multi_projective_transformation ( int n, int m, int *idz )
+{
+   int fail;
+
+   fail = solcon_quaddobl_multi_homogenization(m);
+   fail = copy_quaddobl_container_to_start_solutions();
+   fail = copy_quaddobl_target_system_to_container();
+   fail = syscon_quaddobl_multi_homogenization(n,m,idz,0);
+   fail = copy_quaddobl_container_to_target_system();
+   fail = copy_quaddobl_start_system_to_container();
+   fail = syscon_quaddobl_multi_homogenization(n,m,idz,1);
+   fail = copy_quaddobl_container_to_start_system();
+   add_symbols(m);
+}
+
 void standard_track ( int nbc, char *name, int verbose )
 {
    int fail,length,mhom,dim;
@@ -422,24 +519,28 @@ void standard_track ( int nbc, char *name, int verbose )
    fail = syscon_number_of_symbols(&dim);
    mhom = prompt_for_multi_homogenization(dim);
 
-   if(mhom == 1) standard_projective_transformation();
    if(mhom > 1) 
    {
       int idz[dim];
       fail = padcon_define_partition(mhom,dim,idz);
+      standard_multi_projective_transformation(dim,mhom,idz);
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_standard_track(nbc,name,0,verbose,mhom,dim,idz);
+      fail = solcon_standard_multi_affinization(dim,mhom,idz);
+      fail = copy_target_system_to_container();
+      fail = syscon_standard_multi_affinization(mhom);
    }
    else
    {
+      if(mhom == 1) standard_projective_transformation();
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_standard_track(nbc,name,0,verbose,mhom,0,&fail);
-   }
-   if(mhom == 1)
-   {
-      fail = solcon_standard_one_affinization();
-      fail = copy_target_system_to_container();
-      fail = syscon_standard_one_affinization();
+      if(mhom == 1)
+      {
+         fail = solcon_standard_one_affinization();
+         fail = copy_target_system_to_container();
+         fail = syscon_standard_one_affinization();
+      }
    }
    fail = syscon_write_standard_system();
    if(nbc != 0) fail = solcon_write_solution_banner_to_defined_output_file();
@@ -459,24 +560,28 @@ void dobldobl_track ( int nbc, char *name, int verbose )
    fail = syscon_number_of_symbols(&dim);
    mhom = prompt_for_multi_homogenization(dim);
 
-   if(mhom == 1) dobldobl_projective_transformation();
    if(mhom > 1) 
    {
       int idz[dim];
       fail = padcon_define_partition(mhom,dim,idz);
+      dobldobl_multi_projective_transformation(dim,mhom,idz);
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_dobldobl_track(nbc,name,0,verbose,mhom,dim,idz);
+      fail = solcon_dobldobl_multi_affinization(dim,mhom,idz);
+      fail = copy_dobldobl_target_system_to_container();
+      fail = syscon_dobldobl_multi_affinization(mhom);
    }
    else
    {
+      if(mhom == 1) dobldobl_projective_transformation();
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_dobldobl_track(nbc,name,0,verbose,mhom,0,&fail);
-   }
-   if(mhom == 1)
-   {
-      fail = solcon_dobldobl_one_affinization();
-      fail = copy_dobldobl_target_system_to_container();
-      fail = syscon_dobldobl_one_affinization();
+      if(mhom == 1)
+      {
+         fail = solcon_dobldobl_one_affinization();
+         fail = copy_dobldobl_target_system_to_container();
+         fail = syscon_dobldobl_one_affinization();
+      }
    }
    fail = syscon_write_dobldobl_system();
    if(nbc != 0) fail = solcon_write_solution_banner_to_defined_output_file();
@@ -496,25 +601,28 @@ void quaddobl_track ( int nbc, char *name, int verbose )
    fail = syscon_number_of_symbols(&dim);
    mhom = prompt_for_multi_homogenization(dim);
 
-   if(mhom == 1) quaddobl_projective_transformation();
-
    if(mhom > 1) 
    {
       int idz[dim];
       fail = padcon_define_partition(mhom,dim,idz);
+      quaddobl_multi_projective_transformation(dim,mhom,idz);
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_quaddobl_track(nbc,name,0,verbose,mhom,dim,idz);
+      fail = solcon_quaddobl_multi_affinization(dim,mhom,idz);
+      fail = copy_quaddobl_target_system_to_container();
+      fail = syscon_quaddobl_multi_affinization(mhom);
    }
    else
    {
+      if(mhom == 1) quaddobl_projective_transformation();
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_quaddobl_track(nbc,name,0,verbose,mhom,0,&fail);
-   }
-   if(mhom == 1) 
-   {
-      fail = solcon_quaddobl_one_affinization();
-      fail = copy_quaddobl_target_system_to_container();
-      fail = syscon_quaddobl_one_affinization();
+      if(mhom == 1) 
+      {
+         fail = solcon_quaddobl_one_affinization();
+         fail = copy_quaddobl_target_system_to_container();
+         fail = syscon_quaddobl_one_affinization();
+      }
    }
    fail = syscon_write_quaddobl_system();
    if(nbc != 0) fail = solcon_write_solution_banner_to_defined_output_file();
