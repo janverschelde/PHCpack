@@ -426,14 +426,15 @@ void standard_track ( int nbc, char *name, int verbose )
    if(mhom > 1) 
    {
       int idz[dim];
-      fail = padcon_define_partition(mhom, dim, idz);
-      mhom = 1; // true multi-homogenization is not supported yet
+      fail = padcon_define_partition(mhom,dim,idz);
+      if(nbc > 0) printf("\nSee the output file %s ...\n", name);
+      fail = padcon_standard_track(nbc,name,0,verbose,mhom,dim,idz);
    }
-
-   if(nbc > 0) printf("\nSee the output file %s ...\n", name);
-
-   fail = padcon_standard_track(nbc,name,0,verbose,mhom);
-
+   else
+   {
+      if(nbc > 0) printf("\nSee the output file %s ...\n", name);
+      fail = padcon_standard_track(nbc,name,0,verbose,mhom,0,&fail);
+   }
    if(mhom == 1)
    {
       fail = solcon_standard_one_affinization();
@@ -447,7 +448,7 @@ void standard_track ( int nbc, char *name, int verbose )
 
 void dobldobl_track ( int nbc, char *name, int verbose )
 {
-   int fail,length,homo;
+   int fail,length,mhom,dim;
 
    fail = read_dobldobl_target_system();
    fail = read_dobldobl_start_system();
@@ -455,15 +456,23 @@ void dobldobl_track ( int nbc, char *name, int verbose )
    fail = solcon_number_of_dobldobl_solutions(&length);
    printf("Read %d start solutions.\n", length);
 
-   homo = prompt_for_homogenization();
+   fail = syscon_number_of_symbols(&dim);
+   mhom = prompt_for_multi_homogenization(dim);
 
-   if(homo > 0) dobldobl_projective_transformation();
-
-   if(nbc > 0) printf("\nSee the output file %s ...\n", name);
-
-   fail = padcon_dobldobl_track(nbc,name,0,verbose,homo);
-
-   if(homo > 0)
+   if(mhom == 1) dobldobl_projective_transformation();
+   if(mhom > 1) 
+   {
+      int idz[dim];
+      fail = padcon_define_partition(mhom,dim,idz);
+      if(nbc > 0) printf("\nSee the output file %s ...\n", name);
+      fail = padcon_dobldobl_track(nbc,name,0,verbose,mhom,dim,idz);
+   }
+   else
+   {
+      if(nbc > 0) printf("\nSee the output file %s ...\n", name);
+      fail = padcon_dobldobl_track(nbc,name,0,verbose,mhom,0,&fail);
+   }
+   if(mhom == 1)
    {
       fail = solcon_dobldobl_one_affinization();
       fail = copy_dobldobl_target_system_to_container();
@@ -476,7 +485,7 @@ void dobldobl_track ( int nbc, char *name, int verbose )
 
 void quaddobl_track ( int nbc, char *name, int verbose )
 {
-   int fail,length,homo;
+   int fail,length,mhom,dim;
 
    fail = read_quaddobl_target_system();
    fail = read_quaddobl_start_system();
@@ -484,15 +493,24 @@ void quaddobl_track ( int nbc, char *name, int verbose )
    fail = solcon_number_of_quaddobl_solutions(&length);
    printf("Read %d start solutions.\n", length);
 
-   homo = prompt_for_homogenization();
+   fail = syscon_number_of_symbols(&dim);
+   mhom = prompt_for_multi_homogenization(dim);
 
-   if(homo > 0) quaddobl_projective_transformation();
+   if(mhom == 1) quaddobl_projective_transformation();
 
-   if(nbc > 0) printf("\nSee the output file %s ...\n", name);
-
-   fail = padcon_quaddobl_track(nbc,name,0,verbose,homo);
-
-   if(homo > 0) 
+   if(mhom > 1) 
+   {
+      int idz[dim];
+      fail = padcon_define_partition(mhom,dim,idz);
+      if(nbc > 0) printf("\nSee the output file %s ...\n", name);
+      fail = padcon_quaddobl_track(nbc,name,0,verbose,mhom,dim,idz);
+   }
+   else
+   {
+      if(nbc > 0) printf("\nSee the output file %s ...\n", name);
+      fail = padcon_quaddobl_track(nbc,name,0,verbose,mhom,0,&fail);
+   }
+   if(mhom == 1) 
    {
       fail = solcon_quaddobl_one_affinization();
       fail = copy_quaddobl_target_system_to_container();

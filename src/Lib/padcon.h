@@ -89,7 +89,8 @@ int padcon_define_partition ( int m, int nvr, int *idz );
  *            defines the set the k-th variable in the partition. */
 
 int padcon_standard_track
- ( int nbc, char *name, int locfile, int verbose, int homo );
+ ( int nbc, char *name, int locfile, int verbose, int mhom,
+   int nvr, int *idz );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -105,10 +106,17 @@ int padcon_standard_track
  *            created but left open, so output may still be written to it,
  *            if 1, only this function will write to file;
  *   verbose  if > 0, then more information is written;
- *   homo     if > 0, then homogeneous coordinates are applied. */
+ *   mhom     if 0, then tracking happens in affine coordinates,
+ *            if 1, then 1-homogeneous coordinates are applied,
+ *            if m > 1, then m-homogenization happens,
+ *            with the partition defined in idz;
+ *   nvr      the number of variables, only if mhom > 1;
+ *   idz      the index representation of the partition, only if mhom > 1,
+ *            as an array of as many integers as the value of nvr. */
 
 int padcon_dobldobl_track
- ( int nbc, char *name, int locfile, int verbose, int homo );
+ ( int nbc, char *name, int locfile, int verbose, int mhom,
+   int nvr, int *idz );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -123,10 +131,17 @@ int padcon_dobldobl_track
  *            if 0, then the file is the defined output file, which is
  *            created but left open, so output may still be written to it,
  *   verbose  if > 0, then more information is written;
- *   homo     if > 0, then homogeneous coordinates are applied. */
+ *   mhom     if 0, then tracking happens in affine coordinates,
+ *            if 1, then 1-homogeneous coordinates are applied,
+ *            if m > 1, then m-homogenization happens,
+ *            with the partition defined in idz;
+ *   nvr      the number of variables, only if mhom > 1;
+ *   idz      the index representation of the partition, only if mhom > 1,
+ *            as an array of as many integers as the value of nvr. */
 
 int padcon_quaddobl_track
- ( int nbc, char *name, int locfile, int verbose, int homo );
+ ( int nbc, char *name, int locfile, int verbose, int mhom,
+   int nvr, int *idz );
 /*
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
@@ -141,7 +156,13 @@ int padcon_quaddobl_track
  *            if 0, then the file is the defined output file, which is
  *            created but left open, so output may still be written to it,
  *   verbose  if > 0, then more information is written;
- *   homo     if > 0, then homogeneous coordinates are applied. */
+ *   mhom     if 0, then tracking happens in affine coordinates,
+ *            if 1, then 1-homogeneous coordinates are applied,
+ *            if m > 1, then m-homogenization happens,
+ *            with the partition defined in idz;
+ *   nvr      the number of variables, only if mhom > 1;
+ *   idz      the index representation of the partition, only if mhom > 1,
+ *            as an array of as many integers as the value of nvr. */
 
 int padcon_standard_initialize_homotopy ( int verbose, int homo );
 /*

@@ -229,76 +229,133 @@ int padcon_define_partition ( int m, int nvr, int *idz )
 }
 
 int padcon_standard_track
- ( int nbc, char *name, int locfile, int verbose, int homo )
+ ( int nbc, char *name, int locfile, int verbose, int mhom,
+   int nvr, int *idz )
 {
-   int fail;
-   int pars[5];
+   int fail,idx;
+   int pars[6];
    int *b;
    double *c;
 
    pars[0] = 0;   // set precision to double
    pars[1] = nbc;
    pars[2] = verbose;
-   pars[3] = homo;
+   pars[3] = mhom;
    pars[4] = locfile;
+   pars[5] = nvr;
 
-   if(nbc == 0)
-      fail = _ada_use_c2phc4c(739,pars,b,c);
+   if(mhom < 2)
+   {
+      if(nbc == 0)
+         fail = _ada_use_c2phc4c(739,pars,b,c);
+      else
+      {
+         int iname[nbc];
+         for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
+         fail = _ada_use_c2phc4c(739,pars,iname,c);
+      }
+   }
    else
    {
-      int iname[nbc];
-      for(int i=0; i<nbc; i++) iname[i] = (int) name[i];
-      fail = _ada_use_c2phc4c(739,pars,iname,c);
+      double z[nvr];
+      for(int idx=0; idx<nvr; idx++) z[idx] = (double) idz[idx];
+ 
+      if(nbc == 0)
+         fail = _ada_use_c2phc4c(739,pars,b,z);
+      else
+      {
+         int iname[nbc];
+         for(int i=0; i<nbc; i++) iname[i] = (int) name[i];
+         fail = _ada_use_c2phc4c(739,pars,iname,z);
+      }
    }
    return fail;
 }
 
 int padcon_dobldobl_track
- ( int nbc, char *name, int locfile, int verbose, int homo )
+ ( int nbc, char *name, int locfile, int verbose, int mhom,
+   int nvr, int *idz )
 {
-   int fail;
-   int pars[5];
+   int fail,idx;
+   int pars[6];
    int *b;
    double *c;
 
    pars[0] = 1;   // set precision to double double
    pars[1] = nbc;
    pars[2] = verbose;
-   pars[3] = homo;
+   pars[3] = mhom;
    pars[4] = locfile;
+   pars[5] = nvr;
 
-   if(nbc == 0)
-      fail = _ada_use_c2phc4c(739,pars,b,c);
+   if(mhom < 2)
+   {
+      if(nbc == 0)
+         fail = _ada_use_c2phc4c(739,pars,b,c);
+      else
+      {
+         int iname[nbc];
+         for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
+         fail = _ada_use_c2phc4c(739,pars,iname,c);
+      }
+   }
    else
    {
-      int iname[nbc];
-      for(int i=0; i<nbc; i++) iname[i] = (int) name[i];
-      fail = _ada_use_c2phc4c(739,pars,iname,c);
+      double z[nvr];
+      for(idx=0; idx<nvr; idx++) z[idx] = (double) idz[idx];
+
+      if(nbc == 0)
+         fail = _ada_use_c2phc4c(739,pars,b,z);
+      else
+      {
+         int iname[nbc];
+         for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
+         fail = _ada_use_c2phc4c(739,pars,iname,z);
+      }
    }
    return fail;
 }
 
 int padcon_quaddobl_track
- ( int nbc, char *name, int locfile, int verbose, int homo )
+ ( int nbc, char *name, int locfile, int verbose, int mhom,
+   int nvr, int *idz )
 {
-   int fail;
-   int pars[5];
+   int fail,idx;
+   int pars[6];
    int *b;
    double *c;
 
    pars[0] = 2;   // set precision to quad double
    pars[1] = nbc;
    pars[2] = verbose;
-   pars[3] = homo;
+   pars[3] = mhom;
    pars[4] = locfile;
+   pars[5] = nvr;
 
-   if(nbc == 0)
-      fail = _ada_use_c2phc4c(739,pars,b,c);
+   if(mhom < 2)
+   {
+      if(nbc == 0)
+         fail = _ada_use_c2phc4c(739,pars,b,c);
+      else
+      {
+         int iname[nbc];
+         for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
+         fail = _ada_use_c2phc4c(739,pars,iname,c);
+      }
+   }
    else
    {
-      int iname[nbc];
-      for(int i=0; i<nbc; i++) iname[i] = (int) name[i];
-      fail = _ada_use_c2phc4c(739,pars,iname,c);
+      double z[nvr];
+      for(idx=0; idx<nvr; idx++) z[idx] = (double) idz[idx];
+
+      if(nbc == 0)
+         fail = _ada_use_c2phc4c(739,pars,b,z);
+      else
+      {
+         int iname[nbc];
+         for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
+         fail = _ada_use_c2phc4c(739,pars,iname,z);
+      }
    }
    return fail;
 }
