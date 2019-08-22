@@ -102,6 +102,17 @@ void padcon_define_partition ( int m, int nvr, int *idz );
  *            idz[k] is a number in the range 1 to m,
  *            defines the set the k-th variable in the partition. */
 
+int padcon_add_Z0 ( void );
+/*
+ * DESCRIPTION :
+ *   Adds the symbol 'Z0' to denote the 1-homogeneous variable. */
+
+int padcon_add_symbols ( int m );
+/*
+ * DESCRIPTION :
+ *   Augments the symbol table with Z1, Z2, .., Zm.
+ *   Returns the failure code of the syscon function. */
+
 int padcon_standard_track
  ( int nbc, char *name, int locfile, int verbose, int mhom,
    int nvr, int *idz );

@@ -50,11 +50,6 @@ void quaddobl_projective_transformation ( void );
  *   Transforms as well the start and target systems
  *   in quad double precision.  Adds "Z0" to the symbol table. */
 
-void add_symbols ( int m );
-/*
- * DESCRIPTION :
- *   Augments the symbol table with Z1, Z2, .., Zm. */
-
 void standard_multi_projective_transformation ( int n, int m, int *idz );
 /*
  * DESCRIPTION :
@@ -354,7 +349,6 @@ void prompt_for_output_file ( int* nbc, char* name, int *verbose )
 void standard_projective_transformation ( void )
 {
    int fail;
-   char *name = "Z0";
 
    fail = solcon_standard_one_homogenization();
    fail = copy_container_to_start_solutions();
@@ -364,13 +358,12 @@ void standard_projective_transformation ( void )
    fail = copy_start_system_to_container();
    fail = syscon_standard_one_homogenization(1);
    fail = copy_container_to_start_system();
-   fail = syscon_add_symbol(2,name);
+   fail = padcon_add_Z0();
 }
 
 void dobldobl_projective_transformation ( void )
 {
    int fail;
-   char *name = "Z0";
 
    fail = solcon_dobldobl_one_homogenization();
    fail = copy_dobldobl_container_to_start_solutions();
@@ -380,13 +373,12 @@ void dobldobl_projective_transformation ( void )
    fail = copy_dobldobl_start_system_to_container();
    fail = syscon_dobldobl_one_homogenization(1);
    fail = copy_dobldobl_container_to_start_system();
-   fail = syscon_add_symbol(2,name);
+   fail = padcon_add_Z0();
 }
 
 void quaddobl_projective_transformation ( void )
 {
    int fail;
-   char *name = "Z0";
 
    fail = solcon_quaddobl_one_homogenization();
    fail = copy_quaddobl_container_to_start_solutions();
@@ -396,24 +388,7 @@ void quaddobl_projective_transformation ( void )
    fail = copy_quaddobl_start_system_to_container();
    fail = syscon_quaddobl_one_homogenization(1);
    fail = copy_quaddobl_container_to_start_system();
-   fail = syscon_add_symbol(2,name);
-}
-
-void add_symbols ( int m )
-{
-   char nbr[10];
-   int idx,fail;
-
-   for(idx=1; idx <= m; idx++)
-   {
-      char prefix[2];
-      prefix[0] = 'Z';
-      prefix[1] = '\0';
-
-      sprintf(nbr,"%d",idx);
-      char *name = strcat(prefix,nbr);
-      fail = syscon_add_symbol(strlen(name),name);
-   }
+   fail = padcon_add_Z0();
 }
 
 void standard_multi_projective_transformation ( int n, int m, int *idz )
@@ -428,7 +403,7 @@ void standard_multi_projective_transformation ( int n, int m, int *idz )
    fail = copy_start_system_to_container();
    fail = syscon_standard_multi_homogenization(n,m,idz,1);
    fail = copy_container_to_start_system();
-   add_symbols(m);
+   fail = padcon_add_symbols(m);
 }
 
 void dobldobl_multi_projective_transformation ( int n, int m, int *idz )
@@ -443,7 +418,7 @@ void dobldobl_multi_projective_transformation ( int n, int m, int *idz )
    fail = copy_dobldobl_start_system_to_container();
    fail = syscon_dobldobl_multi_homogenization(n,m,idz,1);
    fail = copy_dobldobl_container_to_start_system();
-   add_symbols(m);
+   fail = padcon_add_symbols(m);
 }
 
 void quaddobl_multi_projective_transformation ( int n, int m, int *idz )
@@ -458,7 +433,7 @@ void quaddobl_multi_projective_transformation ( int n, int m, int *idz )
    fail = copy_quaddobl_start_system_to_container();
    fail = syscon_quaddobl_multi_homogenization(n,m,idz,1);
    fail = copy_quaddobl_container_to_start_system();
-   add_symbols(m);
+   fail = padcon_add_symbols(m);
 }
 
 void standard_track ( int nbc, char *name, int verbose )

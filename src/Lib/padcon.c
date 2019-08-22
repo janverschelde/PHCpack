@@ -2,6 +2,7 @@
  * prototypes documented in padcon.h. */
 
 #include <stdio.h>
+#include <string.h>
 #include "syscon.h"
 #include "padcon.h"
 
@@ -257,6 +258,34 @@ void padcon_define_partition ( int m, int nvr, int *idz )
    printf("Your partition :");
    for(idx = 0; idx < nvr; idx++) printf(" %d", idz[idx]);
    printf("\n");
+}
+
+int padcon_add_Z0 ( void )
+{
+   int fail;
+   char *name = "Z0";
+
+   fail = syscon_add_symbol(2,name);
+
+   return fail;
+}
+
+int padcon_add_symbols ( int m )
+{
+   char nbr[10];
+   int idx,fail;
+
+   for(idx=1; idx <= m; idx++)
+   {
+      char prefix[2];
+      prefix[0] = 'Z';
+      prefix[1] = '\0';
+
+      sprintf(nbr,"%d",idx);
+      char *name = strcat(prefix,nbr);
+      fail = syscon_add_symbol(strlen(name),name);
+   }
+   return fail;
 }
 
 int padcon_standard_track
