@@ -1,5 +1,6 @@
 Thu 22 Aug 2019 : moved prompt for homogenization and multi-homogenization
-  functions from lib_padcon into padcon.
+  functions from lib_padcon into padcon.  Changed return type from int to
+  void in the function to define the partition in padcon, updated lib_padcon.
 
 Wed 21 Aug 2019 : added the multi-homogenization parameters to the track
   functions in padcon, with updated calls in lib_padcon.

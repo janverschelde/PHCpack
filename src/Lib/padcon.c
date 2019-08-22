@@ -225,7 +225,7 @@ int padcon_prompt_for_multi_homogenization ( int nvr )
    return choice;
 }
 
-int padcon_define_partition ( int m, int nvr, int *idz )
+void padcon_define_partition ( int m, int nvr, int *idz )
 {
    const int nbc = nvr*10; // 10 characters per symbol
    char smbstr[nbc];       // holds all symbols

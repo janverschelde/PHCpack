@@ -86,7 +86,7 @@ int padcon_prompt_for_multi_homogenization ( int nvr );
  *   of 0 to nvr, where 0 standard for affine, 1 for 1-homogenization,
  *   and m for m-homogenization. */
 
-int padcon_define_partition ( int m, int nvr, int *idz );
+void padcon_define_partition ( int m, int nvr, int *idz );
 /*
  * DESCRIPTION :
  *   Interactively prompts the user for the partition of the variables.

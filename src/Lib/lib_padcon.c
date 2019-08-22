@@ -477,7 +477,7 @@ void standard_track ( int nbc, char *name, int verbose )
    if(mhom > 1) 
    {
       int idz[dim];
-      fail = padcon_define_partition(mhom,dim,idz);
+      padcon_define_partition(mhom,dim,idz);
       standard_multi_projective_transformation(dim,mhom,idz);
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_standard_track(nbc,name,0,verbose,mhom,dim,idz);
@@ -518,7 +518,7 @@ void dobldobl_track ( int nbc, char *name, int verbose )
    if(mhom > 1) 
    {
       int idz[dim];
-      fail = padcon_define_partition(mhom,dim,idz);
+      padcon_define_partition(mhom,dim,idz);
       dobldobl_multi_projective_transformation(dim,mhom,idz);
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_dobldobl_track(nbc,name,0,verbose,mhom,dim,idz);
@@ -559,7 +559,7 @@ void quaddobl_track ( int nbc, char *name, int verbose )
    if(mhom > 1) 
    {
       int idz[dim];
-      fail = padcon_define_partition(mhom,dim,idz);
+      padcon_define_partition(mhom,dim,idz);
       quaddobl_multi_projective_transformation(dim,mhom,idz);
       if(nbc > 0) printf("\nSee the output file %s ...\n", name);
       fail = padcon_quaddobl_track(nbc,name,0,verbose,mhom,dim,idz);
