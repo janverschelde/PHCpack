@@ -1,5 +1,10 @@
+Thu 22 Aug 2019 : moved prompt for homogenization and multi-homogenization
+  functions from lib_padcon into padcon.
+
 Wed 21 Aug 2019 : added the multi-homogenization parameters to the track
   functions in padcon, with updated calls in lib_padcon.
+  Minor update in padcon.c, applied multi-projective and affine
+  transformations in lib_padcon.
 
 Tue 20 Aug 2019 : added prompting for multi-homogeneous partition in the
   flow of the path tracker in double precision in lib_padcon.c.

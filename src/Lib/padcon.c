@@ -194,6 +194,37 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
    return fail;
 }
 
+int padcon_prompt_for_homogenization ( void )
+{
+   char ans,nlsb;
+
+   printf("\nRunning in homogeneous coordinates ? (y/n) ? ");
+   scanf("%c",&ans);
+   scanf("%c",&nlsb); /* skip newline symbol */
+
+   if(ans == 'y')
+      return 1;
+   else
+      return 0;
+}
+
+int padcon_prompt_for_multi_homogenization ( int nvr )
+{
+   int choice;
+
+   printf("\n");
+   printf("MENU for affine, homogeneous or multi-homogeneous coordinates :\n");
+   printf("  0 : in affine coordinates, in the original variables;\n");
+   printf("  1 : in 1-homogeous coordinates, in projective space;\n");
+   printf("  2 or higher : in multi-homogeous coordinates, in a multi-\n");
+   printf("  projective space defined by a partition of the variables.\n");
+   printf("Type a number between 0 and %d : ",nvr);
+
+   scanf("%d",&choice);
+
+   return choice;
+}
+
 int padcon_define_partition ( int m, int nvr, int *idz )
 {
    const int nbc = nvr*10; // 10 characters per symbol

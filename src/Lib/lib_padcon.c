@@ -26,20 +26,6 @@ void prompt_for_output_file ( int* nbc, char* name, int *verbose );
  *   Prompts the user for an output file, returned in name,
  *   with in nbc the number of characters in name. */
 
-int prompt_for_homogenization ( void );
-/*
- * DESCRIPTION :
- *   Asks the user if a projective transformation must be applied.
- *   Return 1 for homogeneous coordinates, return 0 otherwise. */
-
-int prompt_for_multi_homogenization ( int nvr );
-/*
- * DESCRIPTION :
- *   Displays the menu for the multi-homogenization, for a number of
- *   variables equal to nvr.  On return is a positive integer in the range
- *   of 0 to nvr, where 0 standard for affine, 1 for 1-homogenization,
- *   and m for m-homogenization. */
-
 void standard_projective_transformation ( void );
 /*
  * DESCRIPTION :
@@ -281,7 +267,7 @@ int main ( void )
 
    if(ans == 'y')
    {
-      homo = prompt_for_homogenization();
+      homo = padcon_prompt_for_homogenization();
 
       if(precision == 0) standard_next_step(homo);
       if(precision == 1) dobldobl_next_step(homo);
@@ -363,37 +349,6 @@ void prompt_for_output_file ( int* nbc, char* name, int *verbose )
       scanf("%c",&nlsb); /* skip newline symbol */
       *nbc = strlen(name);
    }
-}
-
-int prompt_for_homogenization ( void )
-{
-   char ans,nlsb;
-
-   printf("\nRunning in homogeneous coordinates ? (y/n) ? ");
-   scanf("%c",&ans);
-   scanf("%c",&nlsb); /* skip newline symbol */
-
-   if(ans == 'y')
-      return 1;
-   else
-      return 0;
-}
-
-int prompt_for_multi_homogenization ( int nvr )
-{
-   int choice;
-
-   printf("\n");
-   printf("MENU for affine, homogeneous or multi-homogeneous coordinates :\n");
-   printf("  0 : in affine coordinates, in the original variables;\n");
-   printf("  1 : in 1-homogeous coordinates, in projective space;\n");
-   printf("  2 or higher : in multi-homogeous coordinates, in a multi-\n");
-   printf("  projective space defined by a partition of the variables.\n");
-   printf("Type a number between 0 and %d : ",nvr);
-
-   scanf("%d",&choice);
-
-   return choice;
 }
 
 void standard_projective_transformation ( void )
@@ -517,7 +472,7 @@ void standard_track ( int nbc, char *name, int verbose )
    printf("Read %d start solutions.\n", length);
 
    fail = syscon_number_of_symbols(&dim);
-   mhom = prompt_for_multi_homogenization(dim);
+   mhom = padcon_prompt_for_multi_homogenization(dim);
 
    if(mhom > 1) 
    {
@@ -558,7 +513,7 @@ void dobldobl_track ( int nbc, char *name, int verbose )
    printf("Read %d start solutions.\n", length);
 
    fail = syscon_number_of_symbols(&dim);
-   mhom = prompt_for_multi_homogenization(dim);
+   mhom = padcon_prompt_for_multi_homogenization(dim);
 
    if(mhom > 1) 
    {
@@ -599,7 +554,7 @@ void quaddobl_track ( int nbc, char *name, int verbose )
    printf("Read %d start solutions.\n", length);
 
    fail = syscon_number_of_symbols(&dim);
-   mhom = prompt_for_multi_homogenization(dim);
+   mhom = padcon_prompt_for_multi_homogenization(dim);
 
    if(mhom > 1) 
    {

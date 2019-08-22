@@ -72,6 +72,20 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val );
  * ON RETURN 
  *   val      the value for the k-th homotopy continuation parameter. */
 
+int padcon_prompt_for_homogenization ( void );
+/*
+ * DESCRIPTION :
+ *   Asks the user if a projective transformation must be applied.
+ *   Return 1 for homogeneous coordinates, return 0 otherwise. */
+
+int padcon_prompt_for_multi_homogenization ( int nvr );
+/*
+ * DESCRIPTION :
+ *   Displays the menu for the multi-homogenization, for a number of
+ *   variables equal to nvr.  On return is a positive integer in the range
+ *   of 0 to nvr, where 0 standard for affine, 1 for 1-homogenization,
+ *   and m for m-homogenization. */
+
 int padcon_define_partition ( int m, int nvr, int *idz );
 /*
  * DESCRIPTION :
