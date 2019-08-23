@@ -8342,42 +8342,42 @@ static PyObject *py2c_padcon_set_homotopy_continuation_parameter
 static PyObject *py2c_padcon_standard_track
  ( PyObject *self, PyObject *args )
 {
-   int nbc,fail,localfile,verbose,homogns;
+   int nbc,fail,localfile,verbose,mhom,nvr,*idz;
    char *name;
 
    // printf("inside py2c_padcon_standard track ...\n");
 
    initialize();
-   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&homogns))
+   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&mhom))
       return NULL;
    // printf("calling padcon_standard_track ...\n");
-   fail = padcon_standard_track(nbc,name,localfile,verbose,homogns);
+   fail = padcon_standard_track(nbc,name,localfile,verbose,mhom,nvr,idz);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_padcon_dobldobl_track
  ( PyObject *self, PyObject *args )
 {
-   int nbc,fail,localfile,verbose,homogns;
+   int nbc,fail,localfile,verbose,mhom,nvr,*idz;
    char *name;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&homogns))
+   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&mhom))
       return NULL;
-   fail = padcon_dobldobl_track(nbc,name,localfile,verbose,homogns);
+   fail = padcon_dobldobl_track(nbc,name,localfile,verbose,mhom,nvr,idz);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_padcon_quaddobl_track
  ( PyObject *self, PyObject *args )
 {
-   int nbc,fail,localfile,verbose,homogns;
+   int nbc,fail,localfile,verbose,mhom,nvr,*idz;
    char *name;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&homogns))
+   if(!PyArg_ParseTuple(args,"isiii",&nbc,&name,&localfile,&verbose,&mhom))
       return NULL;
-   fail = padcon_quaddobl_track(nbc,name,0,verbose,0);
+   fail = padcon_quaddobl_track(nbc,name,localfile,verbose,mhom,nvr,idz);
    return Py_BuildValue("i",fail);
 }
 

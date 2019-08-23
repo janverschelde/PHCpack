@@ -1,3 +1,6 @@
+Fri 23 Aug 2019 : updated padcon.c for a C++ compiler error and updated
+  phcpy2c2.c and phcpy2c3.c for the extra m-homogenization parameters.
+
 Thu 22 Aug 2019 : moved prompt for homogenization and multi-homogenization
   functions from lib_padcon into padcon.  Changed return type from int to
   void in the function to define the partition in padcon, updated lib_padcon.

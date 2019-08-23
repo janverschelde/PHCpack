@@ -263,8 +263,10 @@ void padcon_define_partition ( int m, int nvr, int *idz )
 int padcon_add_Z0 ( void )
 {
    int fail;
-   char *name = "Z0";
+   char name[2];
 
+   name[0] = 'Z';
+   name[1] = '0';
    fail = syscon_add_symbol(2,name);
 
    return fail;
