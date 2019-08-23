@@ -26,12 +26,6 @@ int prompt_for_precision ( void );
  *   which is either double, double double, or quad double,
  *   and returns 0, 1, or 2 respectively. */
 
-int prompt_for_homogenization ( void );
-/*
- * DESCRIPTION :
- *   Asks the user if a projective transformation must be applied.
- *   Return 1 for homogeneous coordinates, return 0 otherwise. */
-
 int prompt_for_verbose ( void );
 /*
  * DESCRIPTION :
@@ -47,7 +41,8 @@ int parameters_broadcast ( int myid, int nbrp, int verbose );
  *   If verbose, then extra data is written to screen for testing. */
 
 int standard_track_paths
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo );
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose, int mhom,
+   int nvr, int *idz );
 /*
  * DESCRIPTION :
  *   For the stored target, start system and start solutions,
@@ -63,10 +58,15 @@ int standard_track_paths
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
  *            otherwise extra output will be written to file;
- *   home     if > 0, then homogeneous coordinates are applied. */
+ *   mhom     if zero, then path tracking happens in affine coordinates,
+ *            if one, then 1-homogeneous coordinates are applied;
+ *            if > 1, then m-homogenization applies, where m = mhom;
+ *   nvr      number of (affine) variables;
+ *   idz      index representation of the permutation if mhom > 1. */
 
 int dobldobl_track_paths
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo );
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose, int mhom,
+   int nvr, int *idz );
 /*
  * DESCRIPTION :
  *   For the stored target, start system and start solutions,
@@ -82,10 +82,15 @@ int dobldobl_track_paths
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
  *            otherwise extra output will be written to file;
- *   homo     if > 0, then homogeneous coordinates are applied. */
+ *   mhom     if zero, then path tracking happens in affine coordinates,
+ *            if one, then 1-homogeneous coordinates are applied;
+ *            if > 1, then m-homogenization applies, where m = mhom;
+ *   nvr      number of (affine) variables;
+ *   idz      index representation of the permutation if mhom > 1. */
 
 int quaddobl_track_paths
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo );
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose, int mhom,
+   int nvr, int *idz );
 /*
  * DESCRIPTION :
  *   For the stored target, start system and start solutions,
@@ -101,10 +106,14 @@ int quaddobl_track_paths
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
  *            otherwise extra output will be written to file;
- *   homo     if > 0, then homogeneous coordinates are applied. */
+ *   mhom     if zero, then path tracking happens in affine coordinates,
+ *            if one, then 1-homogeneous coordinates are applied;
+ *            if > 1, then m-homogenization applies, where m = mhom;
+ *   nvr      number of (affine) variables;
+ *   idz      index representation of the permutation if mhom > 1. */
 
 int standard_run
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo );
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose );
 /*
  * DESCRIPTION :
  *   Prompts the user for a target system, start system with solutions,
@@ -117,11 +126,10 @@ int standard_run
  *   nbc      number of characters in the string outfile;
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
- *            otherwise extra messages will be written to screen;
- *   homo     if > 0, then homogeneous coordinates are applied. */
+ *            otherwise extra messages will be written to screen. */
 
 int dobldobl_run
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo );
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose );
 /*
  * DESCRIPTION :
  *   Prompts the user for a target system, start system with solutions,
@@ -134,11 +142,10 @@ int dobldobl_run
  *   nbc      number of characters in the string outfile;
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
- *            otherwise extra messages will be written to screen;
- *   homo     if > 0, then homogeneous coordinates are applied. */
+ *            otherwise extra messages will be written to screen. */
 
 int quaddobl_run
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo );
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose );
 /*
  * DESCRIPTION :
  *   Prompts the user for a target system, start system with solutions,
@@ -151,14 +158,13 @@ int quaddobl_run
  *   nbc      number of characters in the string outfile;
  *   outfile  is the name for the output file, only valid if myid == 0;
  *   verbose  if zero, then the run will be silent,
- *            otherwise extra messages will be written to screen;
- *   homo     if > 0, then homogeneous coordinates are applied. */
+ *            otherwise extra messages will be written to screen. */
 
 int main ( int argc, char *argv[] )
 {
    const int verbose = 0; // set to 1 for more info
-   int myid,numprocs,precision,fail,ns,homogns;
-   char* filename;
+   int myid,numprocs,precision,fail,ns;
+   char *filename;
  
    adainit();
    MPI_Init(&argc,&argv);
@@ -167,21 +173,15 @@ int main ( int argc, char *argv[] )
 
    if(verbose > 0)
    {
-       printf("\nHello from process %d!\n", myid);
-       MPI_Barrier(MPI_COMM_WORLD);
+      printf("\nHello from process %d!\n", myid);
+      MPI_Barrier(MPI_COMM_WORLD);
    }
-   if(myid == 0) 
-   {
-      precision = prompt_for_precision();
-      homogns = prompt_for_homogenization();
-   }
+   if(myid == 0) precision = prompt_for_precision();
+
    MPI_Barrier(MPI_COMM_WORLD);
    MPI_Bcast(&precision,1,MPI_INT,0,MPI_COMM_WORLD);
    if(verbose > 0)
-       printf("\nProcess %d has %d as precision.\n", myid, precision);
-   MPI_Bcast(&homogns,1,MPI_INT,0,MPI_COMM_WORLD);
-   if(verbose > 0)
-       printf("\nProcess %d has %d for homogeneous.\n", myid, homogns);
+      printf("\nProcess %d has %d as precision.\n", myid, precision);
 
    MPI_Barrier(MPI_COMM_WORLD);
 
@@ -201,17 +201,17 @@ int main ( int argc, char *argv[] )
    MPI_Bcast(filename,ns,MPI_CHAR,0,MPI_COMM_WORLD);
 
    if(verbose > 0)
-       printf("\nNode %d has filename \"%s\".\n", myid, filename);
+      printf("\nNode %d has filename \"%s\".\n", myid, filename);
 
    MPI_Barrier(MPI_COMM_WORLD);
 
    switch(precision)
    {
-      case 0: fail = standard_run(myid,numprocs,ns,filename,verbose,homogns);
+      case 0: fail = standard_run(myid,numprocs,ns,filename,verbose);
               break;
-      case 1: fail = dobldobl_run(myid,numprocs,ns,filename,verbose,homogns);
+      case 1: fail = dobldobl_run(myid,numprocs,ns,filename,verbose);
               break;
-      case 2: fail = quaddobl_run(myid,numprocs,ns,filename,verbose,homogns);
+      case 2: fail = quaddobl_run(myid,numprocs,ns,filename,verbose);
               break;
       default: printf("Invalid choice of precision.\n");
    }
@@ -234,23 +234,6 @@ int prompt_for_precision ( void )
    scanf("%d", &answer);
 
    return answer;
-}
-
-int prompt_for_homogenization ( void )
-{
-   char answer;
-
-   printf("\nRunning in homogeneous coordinates ? (y/n) ? ");
-   do
-   {                            // loop to skip remaining newlines
-      scanf("%c", &answer);
-      if((answer == 'y') || (answer == 'n')) break;
-   }
-   while(1);
-
-   if(answer == 'y') return 1;
-
-   return 0;
 }
 
 int prompt_for_verbose ( void )
@@ -335,7 +318,8 @@ int parameters_broadcast ( int myid, int nbrp, int verbose )
 }
 
 int standard_track_paths
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo )
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose, int mhom,
+   int nvr, int *idz )
 {
    char myfile[80];
    char nbr[5];
@@ -343,7 +327,7 @@ int standard_track_paths
 
    if(nbc == 0)
    {
-      fail = padcon_standard_track(0,"",0,verbose,homo);
+      fail = padcon_standard_track(0,"",0,verbose,mhom,nvr,idz);
    }
    else
    {
@@ -355,15 +339,18 @@ int standard_track_paths
       if(verbose > 0)
          printf("Node %d will write to file \"%s\".\n",myid,myfile);
       if(myid == 0) // manager uses the defined output file
-         fail = padcon_standard_track(nbc+cnt,myfile,0,verbose,homo);
+         fail = padcon_standard_track
+                   (nbc+cnt,myfile,0,verbose,mhom,nvr,idz);
       else          // files for workers are local
-         fail = padcon_standard_track(nbc+cnt,myfile,1,verbose,homo);
+         fail = padcon_standard_track
+                   (nbc+cnt,myfile,1,verbose,mhom,nvr,idz);
    }
    return fail;
 }
 
 int dobldobl_track_paths
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo )
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose, int mhom,
+   int nvr, int *idz )
 {
    char myfile[80];
    char nbr[5];
@@ -371,7 +358,7 @@ int dobldobl_track_paths
 
    if(nbc == 0)
    {
-      fail = padcon_dobldobl_track(0,"",0,verbose,homo);
+      fail = padcon_dobldobl_track(0,"",0,verbose,mhom,nvr,idz);
    }
    else
    {
@@ -383,15 +370,18 @@ int dobldobl_track_paths
       if(verbose > 0)
          printf("Node %d will write to file \"%s\".\n",myid,myfile);
       if(myid == 0) // manager uses the defined output file
-         fail = padcon_dobldobl_track(nbc+cnt,myfile,0,verbose,homo);
+         fail = padcon_dobldobl_track
+                   (nbc+cnt,myfile,0,verbose,mhom,nvr,idz);
       else          // files for workers are local
-         fail = padcon_dobldobl_track(nbc+cnt,myfile,1,verbose,homo);
+         fail = padcon_dobldobl_track
+                   (nbc+cnt,myfile,1,verbose,mhom,nvr,idz);
    }
    return fail;
 }
 
 int quaddobl_track_paths
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo )
+ ( int myid, int nbrp, int nbc, char *outfile, int verbose, int mhom,
+   int nvr, int *idz )
 {
    char myfile[80];
    char nbr[5];
@@ -399,7 +389,7 @@ int quaddobl_track_paths
 
    if(nbc == 0)
    {
-      fail = padcon_quaddobl_track(0,"",0,verbose,homo);
+      fail = padcon_quaddobl_track(0,"",0,verbose,mhom,nvr,idz);
    }
    else
    {
@@ -411,18 +401,21 @@ int quaddobl_track_paths
       if(verbose > 0)
          printf("Node %d will write to file \"%s\".\n",myid,myfile);
       if(myid == 0) // manager uses the defined output file
-         fail = padcon_quaddobl_track(nbc+cnt,myfile,0,verbose,homo);
+         fail = padcon_quaddobl_track
+                   (nbc+cnt,myfile,0,verbose,mhom,nvr,idz);
       else          // files for workers are local
-         fail = padcon_quaddobl_track(nbc+cnt,myfile,1,verbose,homo);
+         fail = padcon_quaddobl_track
+                   (nbc+cnt,myfile,1,verbose,mhom,nvr,idz);
    }
    return fail;
 }
 
 int standard_run
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo )
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim,nbsols,mysolnum,len,*nbpaths,vrbrun;
+   int fail,dim,nbsols,mysolnum,len,*nbpaths,vrbrun,mhom,*idz;
    double startwtime,endwtime,wtime,*time;
+   char nlsb;
 
    startwtime = MPI_Wtime();
    if(myid == 0)
@@ -431,12 +424,24 @@ int standard_run
       nbpaths = (int*)calloc(nbrp,sizeof(int));
       fail = read_target_system_without_solutions();
       fail = copy_target_system_to_container();
-      if(homo > 0)
+      fail = syscon_number_of_standard_polynomials(&dim);
+      mhom = padcon_prompt_for_multi_homogenization(dim);
+      scanf("%c",&nlsb); // swallow new line symbol
+      if(mhom == 1)
       {
          fail = syscon_standard_one_homogenization(0);
          fail = copy_container_to_target_system();
+         dim = dim + 1;
       }
-      fail = syscon_number_of_standard_polynomials(&dim);
+      else if(mhom > 1)
+      {
+         idz = (int*)calloc(dim,sizeof(int));
+         padcon_define_partition(mhom,dim,idz);
+         scanf("%c",&nlsb); // swallow new line symbol
+         fail = syscon_standard_multi_homogenization(dim,mhom,idz,0);
+         fail = copy_container_to_target_system();
+         dim = dim + mhom;
+      }
    }
    standard_dimensions_broadcast(myid,&dim,&dim);
 
@@ -449,36 +454,49 @@ int standard_run
    if(verbose > 0)
       if(myid == 1) fail = write_standard_target_system();
 
-   if(myid == 0)
+   MPI_Bcast(&mhom,1,MPI_INT,0,MPI_COMM_WORLD);
+   if(verbose > 0)
+      printf("\nProcess %d has %d for homogeneous.\n", myid, mhom);
+
+   if(myid != 0)
+   {
+      fail = syscon_initialize_number_of_standard_polynomials(dim);
+      if(mhom > 1) idz = (int*)calloc(dim-mhom,sizeof(int));
+   }
+   else
    {
       fail = read_standard_start_system();
       fail = copy_start_system_to_container();
-      if(homo > 0) 
+      if(mhom == 1) 
       {
          fail = syscon_standard_one_homogenization(1);
          fail = copy_container_to_start_system();
       }
+      else if(mhom > 1)
+      {
+         fail = syscon_standard_multi_homogenization(dim-mhom,mhom,idz,1);
+         fail = copy_container_to_start_system();
+      }
       fail = copy_start_solutions_to_container();
-      if(homo > 0)
+      if(mhom == 1)
       {
          fail = solcon_standard_one_homogenization();
          fail = copy_container_to_start_solutions();
       }
-      fail = solcon_number_of_standard_solutions(&nbsols);
-      if(verbose>0) printf("Read %d start solutions.\n",nbsols);
-      if(homo > 0)
+      else if(mhom > 1)
       {
-         char *name = "Z0";
-
-         fail = syscon_add_symbol(2,name);
+         fail = solcon_standard_multi_homogenization(mhom);
+         fail = copy_container_to_start_solutions();
       }
+      fail = solcon_number_of_standard_solutions(&nbsols);
+      if(verbose > 0) printf("Read %d start solutions.\n",nbsols);
+      if(mhom == 1) fail = padcon_add_Z0();
+      if(mhom > 1) fail = padcon_add_symbols(mhom);
+
       fail = write_standard_target_system(); // writes to file
       fail = write_standard_start_system(); // writes to file
       fail = write_start_solutions(); // writes solutions to file
    }
-   else
-      fail = syscon_initialize_number_of_standard_polynomials(dim);
-
    monomials_broadcast(myid,dim); // broadcast start system
 
    if(myid != 0) fail = copy_container_to_start_system();
@@ -492,6 +510,16 @@ int standard_run
    MPI_Barrier(MPI_COMM_WORLD);
    MPI_Bcast(&vrbrun,1,MPI_INT,0,MPI_COMM_WORLD);
 
+   if(mhom > 1)
+   {
+      MPI_Bcast(idz,dim-mhom,MPI_INT,0,MPI_COMM_WORLD);
+      if(verbose > 0)
+      {
+         printf("\nProcess %d has partition ", myid);
+         for(int idx=0; idx<dim-mhom; idx++) printf(" %d",idz[idx]);
+         printf("\n");
+      }
+   }
    MPI_Bcast(&nbsols,1,MPI_INT,0,MPI_COMM_WORLD);
    solutions_distribute(myid,nbsols,dim,nbrp,&mysolnum);
 
@@ -501,18 +529,25 @@ int standard_run
    if(myid > 0)
    {
       fail = copy_container_to_start_solutions();
-      fail = standard_track_paths(myid,nbrp,nbc,outfile,vrbrun,homo);
+      fail = standard_track_paths
+                (myid,nbrp,nbc,outfile,vrbrun,mhom,dim-mhom,idz);
    }
    MPI_Barrier(MPI_COMM_WORLD);
    solutions_collect(myid,nbsols,dim,nbrp,mysolnum);
 
    if(myid == 0)
    {
-      if(homo > 0)
+      if(mhom == 1)
       {
          fail = solcon_standard_one_affinization();
          fail = copy_target_system_to_container();
          fail = syscon_standard_one_affinization();
+      }
+      else if(mhom > 1)
+      {
+         fail = solcon_standard_multi_affinization(dim-mhom,mhom,idz);
+         fail = copy_target_system_to_container();
+         fail = syscon_standard_multi_affinization(mhom);
       }
       fail = syscon_write_standard_system();
       fail = solcon_write_solution_banner_to_defined_output_file();
@@ -533,10 +568,11 @@ int standard_run
 }
 
 int dobldobl_run
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo )
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim,nbsols,mysolnum,len,*nbpaths,vrbrun;
+   int fail,dim,nbsols,mysolnum,len,*nbpaths,vrbrun,mhom,*idz;
    double startwtime,endwtime,wtime,*time;
+   char nlsb;
 
    startwtime = MPI_Wtime();
    if(myid == 0)
@@ -545,12 +581,24 @@ int dobldobl_run
       nbpaths = (int*)calloc(nbrp,sizeof(int));
       fail = read_dobldobl_target_system_without_solutions();
       fail = copy_dobldobl_target_system_to_container();
-      if(homo > 0)
+      fail = syscon_number_of_dobldobl_polynomials(&dim);
+      mhom = padcon_prompt_for_multi_homogenization(dim);
+      scanf("%c",&nlsb); // swallow new line symbol
+      if(mhom == 1)
       {
          fail = syscon_dobldobl_one_homogenization(0);
          fail = copy_dobldobl_container_to_target_system();
+         dim = dim + 1;
       }
-      fail = syscon_number_of_dobldobl_polynomials(&dim);
+      else if(mhom > 1)
+      {
+         idz = (int*)calloc(dim,sizeof(int));
+         padcon_define_partition(mhom,dim,idz);
+         scanf("%c",&nlsb); // swallow new line symbol
+         fail = syscon_dobldobl_multi_homogenization(dim,mhom,idz,0);
+         fail = copy_dobldobl_container_to_target_system();
+         dim = dim + mhom;
+      }
    }
    dobldobl_dimensions_broadcast(myid,&dim,&dim);
 
@@ -563,36 +611,49 @@ int dobldobl_run
    if(verbose > 0)
       if(myid == 1) fail = write_dobldobl_target_system();
 
-   if(myid == 0)
+   MPI_Bcast(&mhom,1,MPI_INT,0,MPI_COMM_WORLD);
+   if(verbose > 0)
+      printf("\nProcess %d has %d for homogeneous.\n", myid, mhom);
+
+   if(myid != 0)
+   {
+      fail = syscon_initialize_number_of_dobldobl_polynomials(dim);
+      if(mhom > 1) idz = (int*)calloc(dim-mhom,sizeof(int));
+   }
+   else
    {
       fail = read_dobldobl_start_system();
       fail = copy_dobldobl_start_system_to_container();
-      if(homo > 0) 
+      if(mhom == 1) 
       {
          fail = syscon_dobldobl_one_homogenization(1);
          fail = copy_dobldobl_container_to_start_system();
       }
+      else if(mhom > 1)
+      {
+         fail = syscon_dobldobl_multi_homogenization(dim,mhom-mhom,idz,1);
+         fail = copy_dobldobl_container_to_start_system();
+      }
       fail = copy_dobldobl_start_solutions_to_container();
-      if(homo > 0)
+      if(mhom == 1)
       {
          fail = solcon_dobldobl_one_homogenization();
          fail = copy_dobldobl_container_to_start_solutions();
       }
-      fail = solcon_number_of_dobldobl_solutions(&nbsols);
-      if(verbose>0) printf("Read %d start solutions.\n",nbsols);
-      if(homo > 0)
+      else if(mhom > 1)
       {
-         char *name = "Z0";
-
-         fail = syscon_add_symbol(2,name);
+         fail = solcon_dobldobl_multi_homogenization(mhom);
+         fail = copy_dobldobl_container_to_start_solutions();
       }
+      fail = solcon_number_of_dobldobl_solutions(&nbsols);
+      if(verbose > 0) printf("Read %d start solutions.\n",nbsols);
+      if(mhom == 1) fail = padcon_add_Z0();
+      if(mhom > 1) fail = padcon_add_symbols(mhom);
+
       fail = write_dobldobl_target_system(); // writes to file
       fail = write_dobldobl_start_system(); // writes to file
       fail = write_dobldobl_start_solutions(); // writes solutions to file
    }
-   else
-      fail = syscon_initialize_number_of_dobldobl_polynomials(dim);
-
    dobldobl_monomials_broadcast(myid,dim); // broadcast start system
 
    if(myid != 0) fail = copy_dobldobl_container_to_start_system();
@@ -605,6 +666,16 @@ int dobldobl_run
    MPI_Barrier(MPI_COMM_WORLD);
    MPI_Bcast(&vrbrun,1,MPI_INT,0,MPI_COMM_WORLD);
 
+   if(mhom > 1)
+   {
+      MPI_Bcast(idz,dim-mhom,MPI_INT,0,MPI_COMM_WORLD);
+      if(verbose > 0)
+      {
+         printf("\nProcess %d has partition ", myid);
+         for(int idx=0; idx<dim-mhom; idx++) printf(" %d",idz[idx]);
+         printf("\n");
+      }
+   }
    MPI_Bcast(&nbsols,1,MPI_INT,0,MPI_COMM_WORLD);
    dobldobl_solutions_distribute(myid,nbsols,dim,nbrp,&mysolnum,verbose);
 
@@ -614,18 +685,25 @@ int dobldobl_run
    if(myid > 0)
    {
       fail = copy_dobldobl_container_to_start_solutions();
-      fail = dobldobl_track_paths(myid,nbrp,nbc,outfile,vrbrun,homo);
+      fail = dobldobl_track_paths
+                (myid,nbrp,nbc,outfile,vrbrun,mhom,dim-mhom,idz);
    }
    MPI_Barrier(MPI_COMM_WORLD);
    dobldobl_solutions_collect(myid,nbsols,dim,nbrp,mysolnum);
 
    if(myid == 0)
    {
-      if(homo > 0)
+      if(mhom == 1)
       {
          fail = solcon_dobldobl_one_affinization();
          fail = copy_dobldobl_target_system_to_container();
          fail = syscon_dobldobl_one_affinization();
+      }
+      else if(mhom > 1)
+      {
+         fail = solcon_dobldobl_multi_affinization(dim-mhom,mhom,idz);
+         fail = copy_dobldobl_target_system_to_container();
+         fail = syscon_dobldobl_multi_affinization(mhom);
       }
       fail = syscon_write_dobldobl_system();
       fail = solcon_write_solution_banner_to_defined_output_file();
@@ -646,10 +724,11 @@ int dobldobl_run
 }
 
 int quaddobl_run
- ( int myid, int nbrp, int nbc, char* outfile, int verbose, int homo )
+ ( int myid, int nbrp, int nbc, char* outfile, int verbose )
 {
-   int fail,dim,nbsols,mysolnum,len,*nbpaths,vrbrun;
+   int fail,dim,nbsols,mysolnum,len,*nbpaths,vrbrun,mhom,*idz;
    double startwtime,endwtime,wtime,*time;
+   char nlsb;
 
    startwtime = MPI_Wtime();
    if(myid == 0)
@@ -658,12 +737,24 @@ int quaddobl_run
       nbpaths = (int*)calloc(nbrp,sizeof(int));
       fail = read_quaddobl_target_system_without_solutions();
       fail = copy_quaddobl_target_system_to_container();
-      if(homo > 0)
+      fail = syscon_number_of_quaddobl_polynomials(&dim);
+      mhom = padcon_prompt_for_multi_homogenization(dim);
+      scanf("%c",&nlsb); // swallow new line symbol
+      if(mhom == 1)
       {
          fail = syscon_quaddobl_one_homogenization(0);
          fail = copy_quaddobl_container_to_target_system();
+         dim = dim + 1;
       }
-      fail = syscon_number_of_quaddobl_polynomials(&dim);
+      else if(mhom > 1)
+      {
+         idz = (int*)calloc(dim,sizeof(int));
+         padcon_define_partition(mhom,dim,idz);
+         scanf("%c",&nlsb); // swallow new line symbol
+         fail = syscon_dobldobl_multi_homogenization(dim,mhom,idz,0);
+         fail = copy_dobldobl_container_to_target_system();
+         dim = dim + mhom;
+      }
    }
    quaddobl_dimensions_broadcast(myid,&dim,&dim);
 
@@ -676,36 +767,49 @@ int quaddobl_run
    if(verbose > 0)
       if(myid == 1) fail = write_quaddobl_target_system();
 
-   if(myid == 0)
+   MPI_Bcast(&mhom,1,MPI_INT,0,MPI_COMM_WORLD);
+   if(verbose > 0)
+      printf("\nProcess %d has %d for homogeneous.\n", myid, mhom);
+
+   if(myid != 0)
+   {
+      fail = syscon_initialize_number_of_quaddobl_polynomials(dim);
+      if(mhom > 1) idz = (int*)calloc(dim-mhom,sizeof(int));
+   }
+   else
    {
       fail = read_quaddobl_start_system();
       fail = copy_quaddobl_start_system_to_container();
-      if(homo > 0) 
+      if(mhom == 1) 
       {
          fail = syscon_quaddobl_one_homogenization(1);
          fail = copy_quaddobl_container_to_start_system();
       }
+      else if(mhom > 1)
+      {
+         fail = syscon_quaddobl_multi_homogenization(dim,mhom,idz,1);
+         fail = copy_quaddobl_container_to_start_system();
+      }
       fail = copy_quaddobl_start_solutions_to_container();
-      if(homo > 0)
+      if(mhom == 1)
       {
          fail = solcon_quaddobl_one_homogenization();
          fail = copy_quaddobl_container_to_start_solutions();
       }
+      else if(mhom > 1)
+      {
+         fail = solcon_quaddobl_multi_homogenization(mhom);
+         fail = copy_quaddobl_container_to_start_solutions();
+      }
       fail = solcon_number_of_quaddobl_solutions(&nbsols);
       if(verbose > 0) printf("Read %d start solutions.\n",nbsols);
-      if(homo > 0)
-      {
-         char *name = "Z0";
+      if(mhom == 1) fail = padcon_add_Z0();
+      if(mhom > 1) fail = padcon_add_symbols(mhom);
 
-         fail = syscon_add_symbol(2,name);
-      }
       fail = write_quaddobl_target_system(); // writes to file
       fail = write_quaddobl_start_system(); // writes to file
       fail = write_quaddobl_start_solutions(); // writes solutions to file
    }
-   else
-      fail = syscon_initialize_number_of_quaddobl_polynomials(dim);
-
    quaddobl_monomials_broadcast(myid,dim); // broadcast start system
 
    if(myid != 0) fail = copy_quaddobl_container_to_start_system();
@@ -719,6 +823,16 @@ int quaddobl_run
    MPI_Barrier(MPI_COMM_WORLD);
    MPI_Bcast(&vrbrun,1,MPI_INT,0,MPI_COMM_WORLD);
 
+   if(mhom > 1)
+   {
+      MPI_Bcast(idz,dim-mhom,MPI_INT,0,MPI_COMM_WORLD);
+      if(verbose > 0)
+      {
+         printf("\nProcess %d has partition ", myid);
+         for(int idx=0; idx<dim-mhom; idx++) printf(" %d",idz[idx]);
+         printf("\n");
+      }
+   }
    MPI_Bcast(&nbsols,1,MPI_INT,0,MPI_COMM_WORLD);
    quaddobl_solutions_distribute(myid,nbsols,dim,nbrp,&mysolnum,verbose);
 
@@ -728,17 +842,24 @@ int quaddobl_run
    if(myid > 0)
    {
       fail = copy_quaddobl_container_to_start_solutions();
-      fail = quaddobl_track_paths(myid,nbrp,nbc,outfile,vrbrun,homo);
+      fail = quaddobl_track_paths
+                (myid,nbrp,nbc,outfile,vrbrun,mhom,dim-mhom,idz);
    }
    quaddobl_solutions_collect(myid,nbsols,dim,nbrp,mysolnum);
 
    if(myid == 0)
    {
-      if(homo > 0) 
+      if(mhom == 1) 
       {
          fail = solcon_quaddobl_one_affinization();
          fail = copy_quaddobl_target_system_to_container();
          fail = syscon_quaddobl_one_affinization();
+      }
+      else if(mhom > 1)
+      {
+         fail = solcon_dobldobl_multi_affinization(dim-mhom,mhom,idz);
+         fail = copy_dobldobl_target_system_to_container();
+         fail = syscon_dobldobl_multi_affinization(mhom);
       }
       fail = syscon_write_quaddobl_system();
       fail = solcon_write_solution_banner_to_defined_output_file();
