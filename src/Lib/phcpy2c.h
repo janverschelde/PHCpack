@@ -5876,7 +5876,7 @@ static PyObject *py2c_padcon_standard_track
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
  *   launches the Pade continuation in standard double precision.
- *   Three input parameters are expected:
+ *   Seven input parameters are expected:
  *   1) the number of characters in the name of the output file;
  *   2) a string which defines the name of the output file,
  *   if the string is empty, then no file is created;
@@ -5885,7 +5885,12 @@ static PyObject *py2c_padcon_standard_track
  *   4) an integer for the verbose flag, if zero, then no extra
  *   information is written to file or to screen;
  *   5) an integer for the homogenization, if zero, tracking happens in
- *   affine space, if one, then tracking happens in projective space. */
+ *   affine space, if one, then tracking happens in 1-projective space,
+ *   if m, for m > 1, then multihomogenization is applied;
+ *   6) an integer for the number of variables, 0 if the fifth parameter m
+ *   is zero or one;
+ *   7) a string with the index representation for the partition of the
+ *   set of variables, if the fifth parameter m is larger than one. */
 
 static PyObject *py2c_padcon_dobldobl_track
  ( PyObject *self, PyObject *args );
@@ -5893,7 +5898,7 @@ static PyObject *py2c_padcon_dobldobl_track
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
  *   launches the Pade continuation in double double precision.
- *   Three input parameters are expected:
+ *   Seven input parameters are expected:
  *   1) the number of characters in the name of the output file;
  *   2) a string which defines the name of the output file,
  *   if the string is empty, then no file is created;
@@ -5902,7 +5907,12 @@ static PyObject *py2c_padcon_dobldobl_track
  *   4) an integer for the verbose flag, if zero, then no extra
  *   information is written to file or to screen;
  *   5) an integer for the homogenization, if zero, tracking happens in
- *   affine space, if one, then tracking happens in projective space. */
+ *   affine space, if one, then tracking happens in 1-projective space,
+ *   if m, for m > 1, then multihomogenization is applied;
+ *   6) an integer for the number of variables, 0 if the fifth parameter m
+ *   is zero or one;
+ *   7) a string with the index representation for the partition of the
+ *   set of variables, if the fifth parameter m is larger than one. */
 
 static PyObject *py2c_padcon_quaddobl_track
  ( PyObject *self, PyObject *args );
@@ -5910,7 +5920,7 @@ static PyObject *py2c_padcon_quaddobl_track
  * DESCRIPTION :
  *   For the defined target, start system, and start solutions,
  *   launches the Pade continuation in quad double precision.
- *   Three input parameters are expected:
+ *   Seven input parameters are expected:
  *   1) the number of characters in the name of the output file,
  *   2) a string which defines the name of the output file,
  *   if the string is empty, then no file is created;
@@ -5919,7 +5929,12 @@ static PyObject *py2c_padcon_quaddobl_track
  *   4) an integer for the verbose flag, if zero, then no extra
  *   information is written to file or to screen;
  *   5) an integer for the homogenization, if zero, tracking happens in
- *   affine space, if one, then tracking happens in projective space. */
+ *   affine space, if one, then tracking happens in 1-projective space,
+ *   if m, for m > 1, then multihomogenization is applied;
+ *   6) an integer for the number of variables, 0 if the fifth parameter m
+ *   is zero or one;
+ *   7) a string with the index representation for the partition of the
+ *   set of variables, if the fifth parameter m is larger than one. */
 
 static PyObject *py2c_padcon_standard_initialize_homotopy
  ( PyObject *self, PyObject *args );
