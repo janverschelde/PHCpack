@@ -1015,7 +1015,7 @@ package body Series_Path_Trackers is
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
-    mhom : natural32;
+    mhom : natural32 := 0; -- by default, in affine coordinates
     z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     monitor,verbose,tofile : boolean;
@@ -1058,7 +1058,7 @@ package body Series_Path_Trackers is
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
-    mhom : natural32;
+    mhom : natural32 := 0; -- by default, in affine coordinates
     z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     monitor,verbose,tofile : boolean;
@@ -1101,7 +1101,7 @@ package body Series_Path_Trackers is
     arth : constant boolean := Prompt_for_Artificial;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
-    mhom : natural32;
+    mhom : natural32 := 0; -- by default, in affine coordinates
     z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     monitor,verbose,tofile : boolean;

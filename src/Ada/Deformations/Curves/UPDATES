@@ -1,3 +1,5 @@
+Mon 26 Aug 2019 : initialized mhom to zero in series_path_trackers.adb.
+
 Wed 21 Aug 2019 : to series_path_trackers, added a procedure to write the 
   partition of the variables to file.
 
