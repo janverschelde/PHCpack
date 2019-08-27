@@ -186,7 +186,8 @@ package body Standard_SeriesPade_Tracker is
     numdeg : constant integer32 := integer32(homconpars.numdeg);
     dendeg : constant integer32 := integer32(homconpars.dendeg);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    nit : constant integer32 := Standard_Pade_Trackers.Maximum(5,maxdeg/2);
+    nit : constant integer32
+        := Standard_Pade_Trackers.Maximum(5,maxdeg/2) + 1;
     eva : Standard_Complex_Series_Vectors.Vector(1..nbeqs);
     t : double_float := Standard_Complex_Numbers.REAL_PART(current.t);
    -- tolcff : constant double_float := homconpars.epsilon;
@@ -199,7 +200,7 @@ package body Standard_SeriesPade_Tracker is
      --    eva,false); -- verbose);
       Series_and_Predictors.Newton_Prediction
         (standard_output,maxdeg,nit,fhm.all,fcf.all,ejm.all,mlt.all,
-         current.v,current_servec.all,eva,false);
+         current.v,current_servec.all,eva,true);
      -- series_step := Series_and_Predictors.Set_Step_Size
      --                  (standard_output,eva,tolcff,alpha,verbose);
     else

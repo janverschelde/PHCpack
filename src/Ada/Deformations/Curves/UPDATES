@@ -1,5 +1,7 @@
 Tue 27 Aug 2019 : added verbose level to the step_control procedures in
-  {standard,dobldobl,quaddobl}_pade_trackers.
+  {standard,dobldobl,quaddobl}_pade_trackers.  If the step-by-step tracker
+  runs in the verbose mode, then all Newton iterations are shown,
+  updated *_seriespade_tracker.adb.
 
 Mon 26 Aug 2019 : initialized mhom to zero in series_path_trackers.adb.
 
