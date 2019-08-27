@@ -215,27 +215,31 @@ package body QuadDobl_Pade_Trackers is
                 pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : in out QuadDobl_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 ) is
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     frp : quad_double;
     cfp : QuadDobl_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
-    dd_t : quad_double;
+    qd_t : quad_double;
     onetarget : constant double_float := 1.0;
    -- alpha : constant double_float := pars.alpha;
    -- tolcff : constant double_float := pars.epsilon;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in quaddobl_pade_trackers.Step_Control 1 ...");
+    end if;
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
    -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     pstep := pars.pbeta*hihi_part(frp);
-    dd_t := Create(t);
+    qd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
-               (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+               (maxdeg,pars.cbeta,qd_t,jm,hs,sol,srv,pv);
     Standard_Pade_Trackers.Minimum_Step_Size
       (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
@@ -254,19 +258,23 @@ package body QuadDobl_Pade_Trackers is
                 pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : in out QuadDobl_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 ) is
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : QuadDobl_Complex_Series_Vectors.Vector(hom'range);
     frp,eta,nrm : quad_double;
     cfp : QuadDobl_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
-    dd_t : quad_double;
+    qd_t : quad_double;
     onetarget : constant double_float := 1.0;
    -- alpha : constant double_float := pars.alpha;
    -- tolcff : constant double_float := pars.epsilon;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in quaddobl_pade_trackers.Step_Control 2 ...");
+    end if;
     Series_and_Predictors.Newton_Prediction
       (file,maxdeg,nit,hom,sol,srv,eva,false); -- verbose);
    -- sstep := Series_and_Predictors.Set_Step_Size
@@ -282,17 +290,17 @@ package body QuadDobl_Pade_Trackers is
       put(file,"  smallest pole radius : "); put(file,frp,2); new_line(file);
       put(file,"closest pole : "); put(file,cfp); new_line(file);
     end if;
-    dd_t := Create(t);
+    qd_t := Create(t);
     if not verbose then
       dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+                 (maxdeg,pars.cbeta,qd_t,jm,hs,sol,srv,pv);
     else
       declare -- must extend the solution vector with the value of t
         solxt : QuadDobl_Complex_Vectors.Vector(sol'first..sol'last+1);
         use Singular_Values_of_Hessians;
       begin
         solxt(sol'range) := sol;
-        solxt(solxt'last) := QuadDobl_Complex_Numbers.Create(dd_t);
+        solxt(solxt'last) := QuadDobl_Complex_Numbers.Create(qd_t);
         eta := QuadDobl_Distance(jm.all,hs.all,solxt);
       end;
       nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
@@ -326,19 +334,23 @@ package body QuadDobl_Pade_Trackers is
                 pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : in out QuadDobl_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 ) is
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
     frp : quad_double;
     cfp : QuadDobl_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
-    dd_t : quad_double;
+    qd_t : quad_double;
     onetarget : constant double_float := 1.0;
    -- alpha : constant double_float := pars.alpha;
    -- tolcff : constant double_float := pars.epsilon;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in quaddobl_pade_trackers.Step_Control 3 ...");
+    end if;
     Series_and_Predictors.Newton_Prediction
       (maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva);
    -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
@@ -346,9 +358,9 @@ package body QuadDobl_Pade_Trackers is
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
     pstep := pars.pbeta*hihi_part(frp);
     QuadDobl_Complex_Series_Vectors.Clear(eva);
-    dd_t := Create(t);
+    qd_t := Create(t);
     dstep := Series_and_Predictors.Step_Distance
-               (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+               (maxdeg,pars.cbeta,qd_t,jm,hs,sol,srv,pv);
     Standard_Pade_Trackers.Minimum_Step_Size
       (sstep,dstep,pstep,step,cntsstp,cntdstp,cntpstp);
     Standard_Pade_Trackers.Set_Step(t,step,pars.maxsize,onetarget);
@@ -370,19 +382,23 @@ package body QuadDobl_Pade_Trackers is
                 pv : in out QuadDobl_Pade_Approximants.Pade_Vector;
                 poles : in out QuadDobl_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 ) is
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     srv : QuadDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : QuadDobl_Complex_Series_Vectors.Vector(fhm'range);
     frp,eta,nrm : quad_double;
     cfp : QuadDobl_Complex_Numbers.Complex_Number;
     sstep,dstep,pstep : double_float;
-    dd_t : quad_double;
+    qd_t : quad_double;
     onetarget : constant double_float := 1.0;
    -- alpha : constant double_float := pars.alpha;
    -- tolcff : constant double_float := pars.epsilon;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in quaddobl_pade_trackers.Step_Control 4 ...");
+    end if;
     Series_and_Predictors.Newton_Prediction -- verbose flag set to false
       (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false);
    -- sstep := Series_and_Predictors.Set_Step_Size
@@ -398,17 +414,17 @@ package body QuadDobl_Pade_Trackers is
       put(file,"  smallest pole radius : "); put(file,frp,2); new_line(file);
       put(file,"closest pole : "); put(file,cfp); new_line(file);
     end if;
-    dd_t := Create(t);
+    qd_t := Create(t);
     if not verbose then
       dstep := Series_and_Predictors.Step_Distance
-                 (maxdeg,pars.cbeta,dd_t,jm,hs,sol,srv,pv);
+                 (maxdeg,pars.cbeta,qd_t,jm,hs,sol,srv,pv);
     else
       declare -- must extend the solution vector with the value of t
         solxt : QuadDobl_Complex_Vectors.Vector(sol'first..sol'last+1);
         use Singular_Values_of_Hessians;
       begin
         solxt(sol'range) := sol;
-        solxt(solxt'last) := QuadDobl_Complex_Numbers.Create(dd_t);
+        solxt(solxt'last) := QuadDobl_Complex_Numbers.Create(qd_t);
         eta := QuadDobl_Distance(jm.all,hs.all,solxt);
       end;
       nrm := Homotopy_Pade_Approximants.Solution_Error_Norm(srv,pv);
@@ -472,7 +488,7 @@ package body QuadDobl_Pade_Trackers is
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
       Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
-                   cntsstp,cntdstp,cntpstp);
+                   cntsstp,cntdstp,cntpstp,vrblvl-1);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -550,7 +566,7 @@ package body QuadDobl_Pade_Trackers is
       end if;
       Step_Control
         (file,verbose,jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
-         cntsstp,cntdstp,cntpstp);
+         cntsstp,cntdstp,cntpstp,vrblvl-1);
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -641,7 +657,7 @@ package body QuadDobl_Pade_Trackers is
       end if;
       Step_Control
         (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
-         cntsstp,cntdstp,cntpstp);
+         cntsstp,cntdstp,cntpstp,vrblvl-1);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -751,7 +767,7 @@ package body QuadDobl_Pade_Trackers is
       end if;
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
-         pv,poles,t,step,cntsstp,cntdstp,cntpstp);
+         pv,poles,t,step,cntsstp,cntdstp,cntpstp,vrblvl-1);
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);

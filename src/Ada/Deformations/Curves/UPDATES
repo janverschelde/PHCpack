@@ -1,3 +1,6 @@
+Tue 27 Aug 2019 : added verbose level to the step_control procedures in
+  {standard,dobldobl,quaddobl}_pade_trackers.
+
 Mon 26 Aug 2019 : initialized mhom to zero in series_path_trackers.adb.
 
 Wed 21 Aug 2019 : to series_path_trackers, added a procedure to write the 

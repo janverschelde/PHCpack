@@ -215,7 +215,8 @@ package body DoblDobl_Pade_Trackers is
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 ) is
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -228,6 +229,9 @@ package body DoblDobl_Pade_Trackers is
    -- tolcff : constant double_float := pars.epsilon;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in dobldobl_pade_trackers.Step_Control 1 ...");
+    end if;
     Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
    -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
@@ -254,7 +258,8 @@ package body DoblDobl_Pade_Trackers is
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 ) is
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : DoblDobl_Complex_Series_Vectors.Vector(hom'range);
@@ -267,6 +272,9 @@ package body DoblDobl_Pade_Trackers is
    -- tolcff : constant double_float := pars.epsilon;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in dobldobl_pade_trackers.Step_Control 2 ...");
+    end if;
     Series_and_Predictors.Newton_Prediction
       (file,maxdeg,nit,hom,sol,srv,eva,false); -- verbose);
    -- sstep := Series_and_Predictors.Set_Step_Size
@@ -326,7 +334,8 @@ package body DoblDobl_Pade_Trackers is
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 ) is
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
@@ -339,6 +348,9 @@ package body DoblDobl_Pade_Trackers is
    -- tolcff : constant double_float := pars.epsilon;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in dobldobl_pade_trackers.Step_Control 3 ...");
+    end if;
     Series_and_Predictors.Newton_Prediction
       (maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva);
    -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
@@ -369,7 +381,8 @@ package body DoblDobl_Pade_Trackers is
                 pv : in out DoblDobl_Pade_Approximants.Pade_Vector;
                 poles : in out DoblDobl_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 ) is
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol'range);
     eva : DoblDobl_Complex_Series_Vectors.Vector(fhm'range);
@@ -382,6 +395,9 @@ package body DoblDobl_Pade_Trackers is
    -- tolcff : constant double_float := pars.epsilon;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in dobldobl_pade_trackers.Step_Control 4 ...");
+    end if;
     Series_and_Predictors.Newton_Prediction -- verbose flag set to false
       (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false);
    -- sstep := Series_and_Predictors.Set_Step_Size
@@ -471,7 +487,7 @@ package body DoblDobl_Pade_Trackers is
     nbrcorrs := 0; cntcut := 0; cntfail := 0; nbrsteps := max_steps;
     for k in 1..max_steps loop
       Step_Control(jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
-                   cntsstp,cntdstp,cntpstp);
+                   cntsstp,cntdstp,cntpstp,vrblvl-1);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -549,7 +565,7 @@ package body DoblDobl_Pade_Trackers is
       end if;
       Step_Control
         (file,verbose,jm,hs,wrk,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
-         cntsstp,cntdstp,cntpstp);
+         cntsstp,cntdstp,cntpstp,vrblvl-1);
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -642,7 +658,7 @@ package body DoblDobl_Pade_Trackers is
       end if;
       Step_Control
         (jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,pv,poles,t,step,
-         cntsstp,cntdstp,cntpstp);
+         cntsstp,cntdstp,cntpstp,vrblvl-1);
       Predictor_Corrector
         (abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);
@@ -751,7 +767,7 @@ package body DoblDobl_Pade_Trackers is
       end if;
       Step_Control
         (file,verbose,jm,hs,fhm,wrk_fcf,ejm,mlt,wrk_sol,maxdeg,nit,pars,
-         pv,poles,t,step,cntsstp,cntdstp,cntpstp);
+         pv,poles,t,step,cntsstp,cntdstp,cntpstp,vrblvl-1);
       Predictor_Corrector
         (file,verbose,abh,pv,wrk_sol,predres,t,step,alpha,pars.minsize,tolres,
          maxit,extra,nbrcorrs,err,rco,res,cntcut,cntfail,fail);

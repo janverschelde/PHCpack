@@ -221,7 +221,8 @@ package Standard_Pade_Trackers is
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 );
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 );
   procedure Step_Control
               ( file : in file_type; verbose : in boolean;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -233,7 +234,8 @@ package Standard_Pade_Trackers is
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 );
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Determines the step size for the next step on a path.
@@ -254,7 +256,8 @@ package Standard_Pade_Trackers is
   --   step     current value of the step size;
   --   cntsstp  counts the number of times sstp was smallest;
   --   cntdstp  counts the number of times dstp was smallest;
-  --   cntpstp  counts the number of times pstp was smallest.
+  --   cntpstp  counts the number of times pstp was smallest;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   pv       vector of Pade approximants;
@@ -278,7 +281,8 @@ package Standard_Pade_Trackers is
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 );
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 );
   procedure Step_Control
               ( file : in file_type; verbose : in boolean;
                 jm : in Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
@@ -293,7 +297,8 @@ package Standard_Pade_Trackers is
                 pv : in out Standard_Pade_Approximants.Pade_Vector;
                 poles : in out Standard_Complex_VecVecs.VecVec;
                 t,step : in out double_float;
-                cntsstp,cntdstp,cntpstp : in out natural32 );
+                cntsstp,cntdstp,cntpstp : in out natural32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Determines the step size for the next step on a path,
@@ -319,7 +324,8 @@ package Standard_Pade_Trackers is
   --   step     current value of the step size;
   --   cntsstp  counts the number of times sstp was smallest;
   --   cntdstp  counts the number of times dstp was smallest;
-  --   cntpstp  counts the number of times pstp was smallest.
+  --   cntpstp  counts the number of times pstp was smallest;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   pv       vector of Pade approximants;
