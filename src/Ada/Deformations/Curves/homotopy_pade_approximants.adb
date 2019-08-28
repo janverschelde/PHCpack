@@ -555,6 +555,42 @@ package body Homotopy_Pade_Approximants is
     return res;
   end Closest_Pole;
 
+  function Threshold_Index
+             ( c : Standard_Complex_Vectors.Vector;
+               endidx : integer32; tol : double_float ) return integer32 is
+  begin
+    for i in reverse 0..endidx loop
+      if Standard_Complex_Numbers.AbsVal(c(i)) > tol
+       then return i;
+      end if;
+    end loop;
+    return -1;
+  end Threshold_Index;
+
+  function Threshold_Index
+             ( c : DoblDobl_Complex_Vectors.Vector;
+               endidx : integer32; tol : double_float ) return integer32 is
+  begin
+    for i in reverse 0..endidx loop
+      if DoblDobl_Complex_Numbers.AbsVal(c(i)) > tol
+       then return i;
+      end if;
+    end loop;
+    return -1;
+  end Threshold_Index;
+
+  function Threshold_Index
+             ( c : QuadDobl_Complex_Vectors.Vector;
+               endidx : integer32; tol : double_float ) return integer32 is
+  begin
+    for i in reverse 0..endidx loop
+      if QuadDobl_Complex_Numbers.AbsVal(c(i)) > tol
+       then return i;
+      end if;
+    end loop;
+    return -1;
+  end Threshold_Index;
+
   function Solution_Error_Estimate
              ( s : Standard_Complex_Series.Link_to_Series;
                p : Standard_Pade_Approximants.Pade )
@@ -565,14 +601,33 @@ package body Homotopy_Pade_Approximants is
     numdeg : constant integer32 := Numerator_Degree(p);
     dendeg : constant integer32 := Denominator_Degree(p);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    res : Standard_Complex_Numbers.Complex_Number := s.cff(maxdeg);
+    tol : constant double_float := 1.0E-5;
+    topidx : constant integer32 := Threshold_Index(s.cff,maxdeg,tol);
+    res : Standard_Complex_Numbers.Complex_Number;
     pdncff : constant Standard_Complex_Vectors.Vector(0..dendeg)
            := Denominator_Coefficients(p);
 
   begin
-    for i in 1..dendeg loop
-      res := res + pdncff(i)*s.cff(maxdeg-i);
-    end loop;
+    if topidx < 0 then
+      res := Standard_Complex_Numbers.Create(1.0);
+    else
+      res := s.cff(topidx);
+      for i in 1..dendeg loop
+        exit when (i > topidx);
+        res := res + pdncff(i)*s.cff(topidx-i);
+      end loop;
+      if topidx <= numdeg then
+        declare
+          numcff : constant Standard_Complex_Vectors.Vector(0..numdeg)
+                 := Numerator_Coefficients(p);
+        begin
+          res := numcff(topidx) - res;
+        end;
+      end if;
+    end if;
+    if Standard_Complex_Numbers.AbsVal(res) < tol
+     then res := Standard_Complex_Numbers.Create(1.0);
+    end if;
     return res;
   end Solution_Error_Estimate;
 
@@ -586,14 +641,33 @@ package body Homotopy_Pade_Approximants is
     numdeg : constant integer32 := Numerator_Degree(p);
     dendeg : constant integer32 := Denominator_Degree(p);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    res : DoblDobl_Complex_Numbers.Complex_Number := s.cff(maxdeg);
+    tol : constant double_float := 1.0E-5;
+    topidx : constant integer32 := Threshold_Index(s.cff,maxdeg,tol);
+    res : DoblDobl_Complex_Numbers.Complex_Number;
     pdncff : constant DoblDobl_Complex_Vectors.Vector(0..dendeg)
            := Denominator_Coefficients(p);
 
   begin
-    for i in 1..dendeg loop
-      res := res + pdncff(i)*s.cff(maxdeg-i);
-    end loop;
+    if topidx < 0 then
+      res := DoblDobl_Complex_Numbers.Create(integer32(1));
+    else
+      res := s.cff(topidx);
+      for i in 1..dendeg loop
+        exit when (i > topidx);
+        res := res + pdncff(i)*s.cff(topidx-i);
+      end loop;
+      if topidx <= numdeg then
+        declare
+          numcff : constant DoblDobl_Complex_Vectors.Vector(0..numdeg)
+                 := Numerator_Coefficients(p);
+        begin
+          res := numcff(topidx) - res;
+        end;
+      end if;
+    end if;
+    if DoblDobl_Complex_Numbers.AbsVal(res) < tol
+     then res := DoblDobl_Complex_Numbers.Create(integer32(1));
+    end if;
     return res;
   end Solution_Error_Estimate;
 
@@ -607,14 +681,33 @@ package body Homotopy_Pade_Approximants is
     numdeg : constant integer32 := Numerator_Degree(p);
     dendeg : constant integer32 := Denominator_Degree(p);
     maxdeg : constant integer32 := numdeg + dendeg + 2;
-    res : QuadDobl_Complex_Numbers.Complex_Number := s.cff(maxdeg);
+    tol : constant double_float := 1.0E-5;
+    topidx : constant integer32 := Threshold_Index(s.cff,maxdeg,tol);
+    res : QuadDobl_Complex_Numbers.Complex_Number;
     pdncff : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
            := Denominator_Coefficients(p);
 
   begin
-    for i in 1..dendeg loop
-      res := res + pdncff(i)*s.cff(maxdeg-i);
-    end loop;
+    if topidx < 0 then
+      res := QuadDobl_Complex_Numbers.Create(integer32(1));
+    else
+      res := s.cff(topidx);
+      for i in 1..dendeg loop
+        exit when (i > topidx);
+        res := res + pdncff(i)*s.cff(topidx-i);
+      end loop;
+      if topidx <= numdeg then
+        declare
+          numcff : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
+                 := Numerator_Coefficients(p);
+        begin
+          res := numcff(topidx) - res;
+        end;
+      end if;
+    end if;
+    if QuadDobl_Complex_Numbers.AbsVal(res) < tol
+     then res := QuadDobl_Complex_Numbers.Create(integer32(1));
+    end if;
     return res;
   end Solution_Error_Estimate;
 

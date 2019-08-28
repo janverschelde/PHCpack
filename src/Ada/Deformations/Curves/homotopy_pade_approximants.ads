@@ -229,6 +229,23 @@ package Homotopy_Pade_Approximants is
   -- DESCRIPTION :
   --   Returns the smallest radius in v.
 
+  function Threshold_Index
+             ( c : Standard_Complex_Vectors.Vector;
+               endidx : integer32; tol : double_float ) return integer32;
+  function Threshold_Index
+             ( c : DoblDobl_Complex_Vectors.Vector;
+               endidx : integer32; tol : double_float ) return integer32;
+  function Threshold_Index
+             ( c : QuadDobl_Complex_Vectors.Vector;
+               endidx : integer32; tol : double_float ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the index of the first coefficients in c,
+  --   starting at the end index endidx and decrementing the index,
+  --   that is larger than tol in magnitude.
+  --   If all coefficients in c are less than tol in magnitude,
+  --   then -1 is returned.
+
   function Solution_Error_Estimate
              ( s : Standard_Complex_Series.Link_to_Series;
                p : Standard_Pade_Approximants.Pade )
