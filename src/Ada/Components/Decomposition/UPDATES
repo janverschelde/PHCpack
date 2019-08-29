@@ -1,3 +1,7 @@
+Thu 29 Aug 2019 : removed superfluous with/use clauses from
+  drivers_to_cascade_filtering.adb and updated cascade_homotopies
+  and cascade_homotopy_filters.a* for compiler warnings.
+
 Wed 2 Jan 2019 : fixed compiler error in witness_generate_and_classify.adb,
   for changed specifications in black_box_continuations.
 

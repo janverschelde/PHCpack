@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;

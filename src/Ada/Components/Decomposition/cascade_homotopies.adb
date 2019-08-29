@@ -1,4 +1,4 @@
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
@@ -30,7 +30,7 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    nbq : constant natural32 := natural32(ep'last); -- #equations
+   -- nbq : constant natural32 := natural32(ep'last); -- #equations
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
@@ -475,7 +475,7 @@ package body Cascade_Homotopies is
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
     n : constant natural32 := natural32(ep'last)-topdim; -- #variables
-    nbq : constant natural32 := natural32(ep'last); -- #equations
+   -- nbq : constant natural32 := natural32(ep'last); -- #equations
     pocotime : duration;
     embsys : Array_of_Poly_Sys(0..integer32(topdim));
     pathcnts : Standard_Natural_VecVecs.VecVec(embsys'range);
