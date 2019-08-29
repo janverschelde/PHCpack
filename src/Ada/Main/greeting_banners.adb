@@ -569,7 +569,7 @@ package body Greeting_Banners is
 
   procedure help4series is
   begin
-    put_line("phc -u applies Newton's method for power series solutions.");
+    put_line("phc -u uses power series, Pade approximants for path tracking.");
     new_line;
     put_line("A power series solution expresses the coordinates of the");
     put_line("solution as a truncated power series in one variable.");

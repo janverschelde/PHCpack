@@ -72,7 +72,7 @@ procedure mainphc
     o(17):= "  phc -r : root counting and construction of start systems       ";
     o(18):= "  phc -s : equation and variable scaling on system and solutions ";
     o(19):= "  phc -t : tasking for tracking paths using multiple threads     ";
-    o(20):= "  phc -u : Newton's method to compute power series solutions     ";
+    o(20):= "  phc -u : power series, Pade approximants for path tracking     ";
     o(21):= "  phc -v : verification, refinement and purification of solutions";
     o(22):= "  phc -V : in verbose mode, at some given verbose level          ";
     o(23):= "  phc -w : witness set intersection using diagonal homotopies    ";
