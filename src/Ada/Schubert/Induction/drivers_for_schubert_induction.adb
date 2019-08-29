@@ -4,7 +4,7 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
-with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Standard_Natural_Vectors_io;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Natural_Matrices;          use Standard_Natural_Matrices;
 with Standard_Complex_Matrices;
@@ -21,8 +21,6 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Matrix_Indeterminates;
 with Standard_Homotopy;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
-with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Black_Box_Root_Refiners;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
 with Brackets_io;                        use Brackets_io;
@@ -275,7 +273,7 @@ package body Drivers_for_Schubert_Induction is
 
     procedure Verify ( b : in Bracket; continue : out boolean ) is
     begin
-      continue := Is_Valid_Bracket(n,b);
+      continue := Is_Valid_Bracket(n,b,verbose);
       if not continue
        then res := false;
       end if;
@@ -1399,6 +1397,7 @@ package body Drivers_for_Schubert_Induction is
     new_line(file);
     Write_Seed_Number(file);
     put_line(file,Greeting_Banners.Version);
+    Standard_Natural_VecVecs.Clear(conds);
   end Resolve_Schubert_Problem;
 
   procedure Resolve_Schubert_Problem
@@ -1472,6 +1471,7 @@ package body Drivers_for_Schubert_Induction is
     new_line(file);
     Write_Seed_Number(file);
     put_line(file,Greeting_Banners.Version);
+    Standard_Natural_VecVecs.Clear(conds);
   end Resolve_Schubert_Problem;
 
   procedure Resolve_Schubert_Problem

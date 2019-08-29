@@ -1,3 +1,6 @@
+Thu 29 Aug 2019 : updated drivers_for_schubert_induction.adb for compiler
+  warnings.
+
 Thu 13 Jun 2019 : added the verbose level option to mainenum.
 
 Thu 5 Jan 2017 : in drivers_for_schubert_induction, applied the root refiners
