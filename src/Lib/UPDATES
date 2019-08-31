@@ -1,3 +1,6 @@
+Sat 31 Aug 2019 : extended phcpy2c2.c and phcpy2c3.c with the projective
+  and multi-projective transformations.
+
 Fri 30 Aug 2019 : moved code from lib_padcon into padcon, to make the
   multi-homogenization work in phcpy2c3.c.
 

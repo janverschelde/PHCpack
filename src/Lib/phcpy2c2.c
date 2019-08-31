@@ -8331,11 +8331,21 @@ static PyObject *py2c_padcon_standard_track
    if(!PyArg_ParseTuple(args,"isiiiis",
       &nbc,&name,&localfile,&verbose,&mhom,&nvr,&stridz)) return NULL;
 
-   if(mhom > 1)
+   if(mhom == 1)
+      padcon_standard_projective_transformation();
+   else if(mhom > 1)
    {
       int ic = itemcount(stridz);
       idz = (int*)calloc(ic,sizeof(int));
       str2intlist(ic,stridz,idz);
+      if(verbose > 0)
+      {
+         printf("mhom : %d", mhom);
+         printf(" partition :");
+         for(int k=0; k<nvr; k++) printf(" %d", idz[k]);
+         printf("\n");
+      }
+      padcon_standard_multi_projective_transformation(nvr,mhom,idz);
    }
    fail = padcon_standard_track(nbc,name,localfile,verbose,mhom,nvr,idz);
 
@@ -8353,11 +8363,21 @@ static PyObject *py2c_padcon_dobldobl_track
    if(!PyArg_ParseTuple(args,"isiiiis",
       &nbc,&name,&localfile,&verbose,&mhom,&nvr,&stridz)) return NULL;
 
-   if(mhom > 1)
+   if(mhom == 1)
+      padcon_dobldobl_projective_transformation();
+   else if(mhom > 1)
    {
       int ic = itemcount(stridz);
       idz = (int*)calloc(ic,sizeof(int));
       str2intlist(ic,stridz,idz);
+      if(verbose > 0)
+      {
+         printf("mhom : %d", mhom);
+         printf(" partition :");
+         for(int k=0; k<nvr; k++) printf(" %d", idz[k]);
+         printf("\n");
+      }
+      padcon_dobldobl_multi_projective_transformation(nvr,mhom,idz);
    }
    fail = padcon_dobldobl_track(nbc,name,localfile,verbose,mhom,nvr,idz);
 
@@ -8375,11 +8395,21 @@ static PyObject *py2c_padcon_quaddobl_track
    if(!PyArg_ParseTuple(args,"isiiiis",
       &nbc,&name,&localfile,&verbose,&mhom,&nvr,&stridz)) return NULL;
 
-   if(mhom > 1)
+   if(mhom == 1)
+      padcon_quaddobl_projective_transformation();
+   else if(mhom > 1)
    {
       int ic = itemcount(stridz);
       idz = (int*)calloc(ic,sizeof(int));
       str2intlist(ic,stridz,idz);
+      if(verbose > 0)
+      {
+         printf("mhom : %d", mhom);
+         printf(" partition :");
+         for(int k=0; k<nvr; k++) printf(" %d", idz[k]);
+         printf("\n");
+      }
+      padcon_quaddobl_multi_projective_transformation(nvr,mhom,idz);
    }
    fail = padcon_quaddobl_track(nbc,name,localfile,verbose,mhom,nvr,idz);
 
