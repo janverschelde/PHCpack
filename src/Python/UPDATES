@@ -1,3 +1,6 @@
+Sat 31 Aug 2019 : test on 2-homogenization and 1-homogenization in the
+  curves module improved.
+
 Fri 30 Aug 2019 : extended the curves module with a test on 2-homogenization.
 
 Sun 25 Aug 2019 : extended the call to the tracking functions in the curves

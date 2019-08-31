@@ -265,7 +265,7 @@ def dobldobl_track\
     py2c_create_dobldobl_homotopy_with_gamma(regamma, imgamma)
     nbc = len(filename)
     fail = py2c_padcon_dobldobl_track\
-               (nbc,filename,0,int(verbose),0,mhom,dim,str(partition))
+               (nbc,filename,0,int(verbose),mhom,dim,str(partition))
     # py2c_clear_dobldobl_operations_data()
     return load_dobldobl_solutions()
 
@@ -311,7 +311,7 @@ def quaddobl_track\
     py2c_create_quaddobl_homotopy_with_gamma(regamma, imgamma)
     nbc = len(filename)
     fail = py2c_padcon_quaddobl_track\
-               (nbc,filename,0,int(verbose),0,mhom,dim,str(partition))
+               (nbc,filename,0,int(verbose),mhom,dim,str(partition))
     # py2c_clear_quaddobl_operations_data()
     return load_quaddobl_solutions()
 
@@ -1333,11 +1333,11 @@ def test_simple_track(precision='d'):
     (k3q, k3qsols) = tdss(k3)
     print('tracking', len(k3qsols), 'paths ...')
     if(precision == 'd'):
-        k3sols = standard_track(k3, k3q, k3qsols,"",True)
+        k3sols = standard_track(k3, k3q, k3qsols, "/tmp/out", True, 1)
     elif(precision == 'dd'):
-        k3sols = dobldobl_track(k3, k3q, k3qsols,"",True)
+        k3sols = dobldobl_track(k3, k3q, k3qsols, "/tmp/out", True, 1)
     elif(precision == 'qd'):
-        k3sols = quaddobl_track(k3, k3q, k3qsols,"",True)
+        k3sols = quaddobl_track(k3, k3q, k3qsols, "/tmp/out", True, 1)
     else:
         print('wrong precision')
     for sol in k3sols:
@@ -1368,7 +1368,7 @@ def test_next_track(precision='d'):
     for sol in k3sols:
         print(sol)
 
-def test_twohom():
+def test_twohom(precision='d'):
     """
     Test on a 2-homogeneous homotopy.
     """
@@ -1381,7 +1381,16 @@ def test_twohom():
     for pol in twsq: print(pol)
     print('the start solutions :')
     for sol in twsqsols: print(sol)
-    standard_track(tws, twsq, twsqsols, "/tmp/out", True, 2, [1, 2])
+    if(precision == 'd'):
+        sols = standard_track(tws, twsq, twsqsols, "/tmp/out", True, 2, [1, 2])
+    elif(precision == 'dd'):
+        sols = dobldobl_track(tws, twsq, twsqsols, "/tmp/out", True, 2, [1, 2])
+    elif(precision == 'qd'):
+        sols = quaddobl_track(tws, twsq, twsqsols, "/tmp/out", True, 2, [1, 2])
+    else:
+        print('wrong value for the precision')
+    for sol in sols:
+        print(sol)
 
 if __name__ == "__main__":
     test_hyperbola()
