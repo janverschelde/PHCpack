@@ -3,7 +3,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "phcpack.h"
 #include "syscon.h"
+#include "solcon.h"
 #include "padcon.h"
 
 int padcon_set_default_parameters ( void )
@@ -288,6 +290,99 @@ int padcon_add_symbols ( int m )
       fail = syscon_add_symbol(strlen(name),name);
    }
    return fail;
+}
+
+void padcon_standard_projective_transformation ( void )
+{
+   int fail;
+
+   fail = solcon_standard_one_homogenization();
+   fail = copy_container_to_start_solutions();
+   fail = copy_target_system_to_container();
+   fail = syscon_standard_one_homogenization(0);
+   fail = copy_container_to_target_system();
+   fail = copy_start_system_to_container();
+   fail = syscon_standard_one_homogenization(1);
+   fail = copy_container_to_start_system();
+   fail = padcon_add_Z0();
+}
+
+void padcon_dobldobl_projective_transformation ( void )
+{
+   int fail;
+
+   fail = solcon_dobldobl_one_homogenization();
+   fail = copy_dobldobl_container_to_start_solutions();
+   fail = copy_dobldobl_target_system_to_container();
+   fail = syscon_dobldobl_one_homogenization(0);
+   fail = copy_dobldobl_container_to_target_system();
+   fail = copy_dobldobl_start_system_to_container();
+   fail = syscon_dobldobl_one_homogenization(1);
+   fail = copy_dobldobl_container_to_start_system();
+   fail = padcon_add_Z0();
+}
+
+void padcon_quaddobl_projective_transformation ( void )
+{
+   int fail;
+
+   fail = solcon_quaddobl_one_homogenization();
+   fail = copy_quaddobl_container_to_start_solutions();
+   fail = copy_quaddobl_target_system_to_container();
+   fail = syscon_quaddobl_one_homogenization(0);
+   fail = copy_quaddobl_container_to_target_system();
+   fail = copy_quaddobl_start_system_to_container();
+   fail = syscon_quaddobl_one_homogenization(1);
+   fail = copy_quaddobl_container_to_start_system();
+   fail = padcon_add_Z0();
+}
+
+void padcon_standard_multi_projective_transformation
+ ( int n, int m, int *idz )
+{
+   int fail;
+
+   fail = solcon_standard_multi_homogenization(m);
+   fail = copy_container_to_start_solutions();
+   fail = copy_target_system_to_container();
+   fail = syscon_standard_multi_homogenization(n,m,idz,0);
+   fail = copy_container_to_target_system();
+   fail = copy_start_system_to_container();
+   fail = syscon_standard_multi_homogenization(n,m,idz,1);
+   fail = copy_container_to_start_system();
+   fail = padcon_add_symbols(m);
+}
+
+void padcon_dobldobl_multi_projective_transformation
+ ( int n, int m, int *idz )
+{
+   int fail;
+
+   fail = solcon_dobldobl_multi_homogenization(m);
+   fail = copy_dobldobl_container_to_start_solutions();
+   fail = copy_dobldobl_target_system_to_container();
+   fail = syscon_dobldobl_multi_homogenization(n,m,idz,0);
+   fail = copy_dobldobl_container_to_target_system();
+   fail = copy_dobldobl_start_system_to_container();
+   fail = syscon_dobldobl_multi_homogenization(n,m,idz,1);
+   fail = copy_dobldobl_container_to_start_system();
+   fail = padcon_add_symbols(m);
+}
+
+void padcon_quaddobl_multi_projective_transformation
+ ( int n, int m, int *idz )
+{
+   int fail;
+
+   fail = solcon_quaddobl_multi_homogenization(m);
+   fail = copy_quaddobl_container_to_start_solutions();
+   fail = copy_quaddobl_target_system_to_container();
+   fail = syscon_quaddobl_multi_homogenization(n,m,idz,0);
+   fail = copy_quaddobl_container_to_target_system();
+   fail = copy_quaddobl_start_system_to_container();
+   fail = syscon_quaddobl_multi_homogenization(n,m,idz,1);
+   fail = copy_quaddobl_container_to_start_system();
+   fail = padcon_add_symbols(m);
 }
 
 int padcon_standard_track

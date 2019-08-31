@@ -113,6 +113,63 @@ int padcon_add_symbols ( int m );
  *   Augments the symbol table with Z1, Z2, .., Zm.
  *   Returns the failure code of the syscon function. */
 
+void padcon_standard_projective_transformation ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their 1-homogeneously transformed versions.
+ *   Transforms as well the start and target systems
+ *   in standard double precision.  Adds "Z0" to the symbol table. */
+
+void padcon_dobldobl_projective_transformation ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their 1-homogeneously transformed versions.
+ *   Transforms as well the start and target systems
+ *   in double double precision.  Adds "Z0" to the symbol table. */
+
+void padcon_quaddobl_projective_transformation ( void );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their 1-homogeneously transformed versions.
+ *   Transforms as well the start and target systems
+ *   in quad double precision.  Adds "Z0" to the symbol table. */
+
+void padcon_standard_multi_projective_transformation
+ ( int n, int m, int *idz );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their m-homogeneously transformed versions.
+ *   The index representation for the partition of the set of n variables
+ *   is defined by the n integers in idz.
+ *   Transforms as well the start and target systems
+ *   in standard double precision.  Augments the symbol table. */
+
+void padcon_dobldobl_multi_projective_transformation
+ ( int n, int m, int *idz );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their m-homogeneously transformed versions.
+ *   The index representation for the partition of the set of n variables
+ *   is defined by the n integers in idz.
+ *   Transforms as well the start and target systems
+ *   in double double precision.  Augments the symbol table. */
+
+void padcon_quaddobl_multi_projective_transformation
+ ( int n, int m, int *idz );
+/*
+ * DESCRIPTION :
+ *   Replaces the start solutions in the solutions container by
+ *   their m-homogeneously transformed versions.
+ *   The index representation for the partition of the set of n variables
+ *   is defined by the n integers in idz.
+ *   Transforms as well the start and target systems
+ *   in quad double precision.  Augments the symbol table. */
+
 int padcon_standard_track
  ( int nbc, char *name, int locfile, int verbose, int mhom,
    int nvr, int *idz );
