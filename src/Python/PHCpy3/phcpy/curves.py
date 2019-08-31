@@ -1368,6 +1368,21 @@ def test_next_track(precision='d'):
     for sol in k3sols:
         print(sol)
 
+def test_twohom():
+    """
+    Test on a 2-homogeneous homotopy.
+    """
+    from phcpy.solver import linear_product_root_count as lprc
+    from phcpy.solver import random_linear_product_system as rlps
+    tws = ['x^2 + x - 1;', 'x*y + x - y + 3;']
+    roco = lprc(tws)
+    twsq, twsqsols = rlps(tws)
+    print('the start system :')
+    for pol in twsq: print(pol)
+    print('the start solutions :')
+    for sol in twsqsols: print(sol)
+    standard_track(tws, twsq, twsqsols, "/tmp/out", True, 2, [1, 2])
+
 if __name__ == "__main__":
     test_hyperbola()
     # test_next_track()
