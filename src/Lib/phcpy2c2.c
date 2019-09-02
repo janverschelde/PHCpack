@@ -8348,6 +8348,10 @@ static PyObject *py2c_padcon_standard_track
       padcon_standard_multi_projective_transformation(nvr,mhom,idz);
    }
    fail = padcon_standard_track(nbc,name,localfile,verbose,mhom,nvr,idz);
+   if(mhom == 1)
+      fail = solcon_standard_one_affinization();
+   else if(mhom > 1)
+      fail = solcon_standard_multi_affinization(nvr,mhom,idz);
 
    return Py_BuildValue("i",fail);
 }
@@ -8380,6 +8384,10 @@ static PyObject *py2c_padcon_dobldobl_track
       padcon_dobldobl_multi_projective_transformation(nvr,mhom,idz);
    }
    fail = padcon_dobldobl_track(nbc,name,localfile,verbose,mhom,nvr,idz);
+   if(mhom == 1)
+      fail = solcon_dobldobl_one_affinization();
+   else if(mhom > 1)
+      fail = solcon_dobldobl_multi_affinization(nvr,mhom,idz);
 
    return Py_BuildValue("i",fail);
 }
@@ -8412,6 +8420,10 @@ static PyObject *py2c_padcon_quaddobl_track
       padcon_quaddobl_multi_projective_transformation(nvr,mhom,idz);
    }
    fail = padcon_quaddobl_track(nbc,name,localfile,verbose,mhom,nvr,idz);
+   if(mhom == 1)
+      fail = solcon_quaddobl_one_affinization();
+   else if(mhom > 1)
+      fail = solcon_quaddobl_multi_affinization(nvr,mhom,idz);
 
    return Py_BuildValue("i",fail);
 }
