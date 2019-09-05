@@ -1,3 +1,6 @@
+Wed 4 Sep 2019 : fixed application of strcat() in padcon.c, when adding
+  the m extra symbols for the multi-homogeneous coordinates.
+
 Sun 1 Sep 2019 : added affine transformation to phcpy2c2.c and phcpy2c3.c
   after the Pade continuation.
 

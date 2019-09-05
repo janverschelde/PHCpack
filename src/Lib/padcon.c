@@ -277,16 +277,16 @@ int padcon_add_Z0 ( void )
 int padcon_add_symbols ( int m )
 {
    char nbr[10];
+   char name[20];
    int idx,fail;
 
    for(idx=1; idx <= m; idx++)
    {
-      char prefix[2];
-      prefix[0] = 'Z';
-      prefix[1] = '\0';
+      name[0] = 'Z';
+      name[1] = '\0';
 
       sprintf(nbr,"%d",idx);
-      char *name = strcat(prefix,nbr);
+      char *ptr = strcat(name,nbr);
       fail = syscon_add_symbol(strlen(name),name);
    }
    return fail;
