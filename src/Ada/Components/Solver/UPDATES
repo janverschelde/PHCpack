@@ -1,3 +1,5 @@
+Thu 5 Sep 2019 : added verbose level to bablsolve.
+
 Fri 30 Mar 2018 : equation_by_equation_solvers.adb changed because of
   improved interface in standard_solution_filters.
 

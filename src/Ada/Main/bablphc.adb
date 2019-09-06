@@ -256,7 +256,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
     else
       Toric_Binomial_Solver(p.all,append_sols,fail);
       if fail
-       then bablsolve(p.all);
+       then bablsolve(p.all,v-1);
       end if;
     end if;
   end Solve;
