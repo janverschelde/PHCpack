@@ -1,3 +1,6 @@
+Fri 6 Sep 2019 : updated bablphc.adb, bablphc2.adb, and bablphc4.adb for
+  the modified bablsolve.
+
 Thu 5 Sep 2019 : added verbose level to the call of bablsolve in bablphc.adb.
 
 Sun 1 Sep 2019 : updated greeting_banners for version 2.4.72.
