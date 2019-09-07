@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Ada.Calendar;
+with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Polynomials;
@@ -67,12 +68,17 @@ package Black_Box_Solver_Cases is
   procedure Ask_Output_File
               ( outfile : out file_type; outfilename : in string;
                 output_to_file : out boolean );
+  procedure Ask_Output_File
+              ( outfile : out file_type; outfilename : in string;
+                output_to_file : out boolean;
+                outnewname : out Link_to_String );
 
   -- DESCRIPTION :
   --   In case the output file is empty, the user is asked whether
   --   the output should be written to file.  In case the solutions
   --   should be written to file, the file with the given name is
   --   created, eventually after asking for a nonempty string.
+  --   The new name of the string is optionally returned in outnewname.
   --   On return output_to_file is true if a file has been created.
 
   procedure Single_Main

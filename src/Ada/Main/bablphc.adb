@@ -92,7 +92,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Toric_Binomial_Solver
               ( p : in Laur_Sys; append_sols : in boolean;
-                fail : out boolean ) is
+                outfile : out file_type; fail : out boolean ) is
 
   -- DESCRIPTION :
   --   If p is a binomial system, then it is solved.
@@ -101,7 +101,6 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
     d : natural32;
     M : Standard_Integer_Matrices.Link_to_Matrix;
     c : Solution_List;
-    outfile : file_type;
     to_file : boolean;
     ended_moment : Ada.Calendar.Time;
 
@@ -151,14 +150,13 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Affine_Binomial_Solver
               ( p : in Laur_Sys; append_sols : in boolean;
-                fail : out boolean ) is
+                outfile : out file_type; fail : out boolean ) is
 
   -- DESCRIPTION :
   --   If p is a binomial system, then it is solved.
 
     timer : Timing_Widget;
     sols : Link_to_Array_of_Monomial_Map_Lists;
-    outfile : file_type;
     to_file : boolean;
     ended_moment : Ada.Calendar.Time;
 
@@ -216,7 +214,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Toric_Binomial_Solver
               ( p : in Poly_Sys; append_sols : in boolean;
-                fail : out boolean ) is
+                outfile : out file_type; fail : out boolean ) is
 
   -- DESCRIPTION :
   --   If p is a binomial system, then it is solved.
@@ -226,7 +224,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
 
   begin
    -- Toric_Binomial_Solver(q,append_sols,fail);
-    Affine_Binomial_Solver(q,append_sols,fail);
+    Affine_Binomial_Solver(q,append_sols,outfile,fail);
   end Toric_Binomial_Solver;
 
   procedure Solve ( p : in Link_to_Poly_Sys; append_sols : in boolean;
@@ -238,6 +236,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
     n : constant natural32
       := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
     fail : boolean;
+    outfile : file_type;
 
     use Black_Box_Solver_Cases;
 
@@ -254,7 +253,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
           (nt,infilename,outfilename,start_moment,p,true,append_sols,v-1);
       end if;
     else
-      Toric_Binomial_Solver(p.all,append_sols,fail);
+      Toric_Binomial_Solver(p.all,append_sols,outfile,fail);
       if fail
        then bablsolve(p.all,outfilename,v-1);
       end if;
@@ -268,6 +267,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
   --   Runs the blackbox solver for a Laurent polynomial system.
 
     fail : boolean;
+    outfile : file_type;
 
     use Black_Box_Solver_Cases;
 
@@ -277,9 +277,9 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
     end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p.all) then
      -- put_line("calling Toric_Binomial_Solver ...");
-      Toric_Binomial_Solver(p.all,append_sols,fail);
+      Toric_Binomial_Solver(p.all,append_sols,outfile,fail);
     else
-      Affine_Binomial_Solver(p.all,append_sols,fail);
+      Affine_Binomial_Solver(p.all,append_sols,outfile,fail);
     end if;
     if fail then
       Square_Main(nt,infilename,outfilename,start_moment,p,append_sols,v-1);

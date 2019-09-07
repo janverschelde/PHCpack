@@ -227,6 +227,17 @@ package body Black_Box_Solver_Cases is
               ( outfile : out file_type; outfilename : in string;
                 output_to_file : out boolean ) is
 
+    outnewname : Link_to_String;
+
+  begin
+    Ask_Output_File(outfile,outfilename,output_to_file,outnewname);
+  end Ask_Output_file;
+
+  procedure Ask_Output_File
+              ( outfile : out file_type; outfilename : in string;
+                output_to_file : out boolean;
+                outnewname : out Link_to_String ) is
+
     ans : character := 'y';
 
   begin
@@ -236,7 +247,7 @@ package body Black_Box_Solver_Cases is
       Ask_Yes_or_No(ans);
     end if;
     if ans = 'y'
-     then Create_Output_File(outfile,outfilename);
+     then Create_Output_File(outfile,outfilename,outnewname);
     end if;
     output_to_file := (ans = 'y');
   end Ask_Output_file;
