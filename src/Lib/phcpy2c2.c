@@ -3279,6 +3279,45 @@ static PyObject *py2c_solcon_read_multprec_solutions
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_solcon_read_standard_solutions_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nbc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nbc,&name)) return NULL;   
+   fail = solcon_read_standard_solutions_from_file(nbc,name);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_read_dobldobl_solutions_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nbc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nbc,&name)) return NULL;   
+   fail = solcon_read_dobldobl_solutions_from_file(nbc,name);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_read_quaddobl_solutions_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nbc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nbc,&name)) return NULL;   
+   fail = solcon_read_quaddobl_solutions_from_file(nbc,name);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_solcon_write_standard_solutions
  ( PyObject *self, PyObject *args )
 {
@@ -10284,6 +10323,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solcon_read_multprec_solutions", py2c_solcon_read_multprec_solutions,
      METH_VARARGS,
     "Interactive function to read the solutions into the container,\n in arbitrary multiprecision.\n Returns the failure code, which is zero when all went well."},
+   {"py2c_solcon_read_standard_solutions_from_file",
+     py2c_solcon_read_standard_solutions_from_file, METH_VARARGS,
+    "The two input arguments are a number and a string:\n 1) The number equals the number of characters in the string.\n 2) The string given on input is the name of a file which contains\n a solution list to be parsed in standard double precision.\n Solutions are read from file and stored in the container for\n double precision solutions.\n The failure code is returned, which is zero if all went well."},
+   {"py2c_solcon_read_dobldobl_solutions_from_file",
+     py2c_solcon_read_dobldobl_solutions_from_file, METH_VARARGS,
+    "The two input arguments are a number and a string:\n 1) The number equals the number of characters in the string.\n 2) The string given on input is the name of a file which contains\n a solution list to be parsed in double double precision.\n Solutions are read from file and stored in the container for\n double double precision solutions.\n The failure code is returned, which is zero if all went well."},
+   {"py2c_solcon_read_quaddobl_solutions_from_file",
+     py2c_solcon_read_quaddobl_solutions_from_file, METH_VARARGS,
+    "The two input arguments are a number and a string:\n 1) The number equals the number of characters in the string.\n 2) The string given on input is the name of a file which contains\n a solution list to be parsed in quad double precision.\n Solutions are read from file and stored in the container for\n quad double precision solutions.\n The failure code is returned, which is zero if all went well."},
    {"py2c_solcon_write_standard_solutions",
      py2c_solcon_write_standard_solutions, METH_VARARGS,
     "Writes the solutions in standard double precision to screen.\n Returns the failure code, which equals zero when all went well."},

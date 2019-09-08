@@ -23,6 +23,14 @@ int solcon_read_standard_solutions ( void );
  *   Prompts the user for a file, reads solutions from file, and puts the
  *   solutions in the container; returns 0 if okay, otherwise fail value. */
 
+int solcon_read_standard_solutions_from_file ( int nc, char *filename );
+/*
+ * DESCRIPTION :
+ *   Reads the solutions from the file with name filename, where nc is the
+ *   number of characters in the string filename.  The solutions are stored
+ *   in the container for the solutions in standard double precision.
+ *   Returns 0 if okay, otherwise returns the fail value. */
+
 int solcon_read_dobldobl_solutions ( void );
 /* 
  * DESCRIPTION :
@@ -30,12 +38,28 @@ int solcon_read_dobldobl_solutions ( void );
  *   and puts the solutions in the container for double doubles;
  *   returns 0 if okay, otherwise fail value. */
 
+int solcon_read_dobldobl_solutions_from_file ( int nc, char *filename );
+/*
+ * DESCRIPTION :
+ *   Reads the solutions from the file with name filename, where nc is the
+ *   number of characters in the string filename.  The solutions are stored
+ *   in the container for the solutions in double double precision.
+ *   Returns 0 if okay, otherwise returns the fail value. */
+
 int solcon_read_quaddobl_solutions ( void );
 /* 
  * DESCRIPTION :
  *   Prompts the user for a file, reads solutions from file,
  *   and puts the solutions in the container for quad doubles;
  *   returns 0 if okay, otherwise fail value. */
+
+int solcon_read_quaddobl_solutions_from_file ( int nc, char *filename );
+/*
+ * DESCRIPTION :
+ *   Reads the solutions from the file with name filename, where nc is the
+ *   number of characters in the string filename.  The solutions are stored
+ *   in the container for the solutions in quad double precision.
+ *   Returns 0 if okay, otherwise returns the fail value. */
 
 int solcon_read_multprec_solutions ( void );
 /* 

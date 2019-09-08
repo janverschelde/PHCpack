@@ -1,3 +1,7 @@
+Sat 7 Sep 2019 : added functions to solcon, tested by lib_solcon to read
+  solutions from a file with given name, and added the corresponding
+  functions to the C extension code phcpy2c.h, phcpy2c2.c, phcpy2c3.c.
+
 Wed 4 Sep 2019 : fixed application of strcat() in padcon.c, when adding
   the m extra symbols for the multi-homogeneous coordinates.
 

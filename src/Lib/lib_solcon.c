@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "solcon.h"
 
 typedef struct list LIST;
@@ -19,67 +20,111 @@ struct list
 
 LIST *push ( LIST *l, int n, double rt, double it, int m, double *v,
              double err, double rco, double res );
-/* pushes the solution to the front of the list l */
+/*
+ * DESCRIPTION :
+ *   Pushes the solution to the front of the list l. */
 
 void write_solution ( int n, double rt, double it, int m, double *v,
                       double err, double rco, double res );
-/* writes the n-dimensional solution to the screen */
+/*
+ * DESCRIPTION :
+ *   Writes the n-dimensional solution to the screen. */
 
 void write_solution_list ( LIST *l, int n );
-/* writes the list of n-dimensional solution vectors */
+/*
+ * DESCRIPTION :
+ *   Writes the list of n-dimensional solution vectors. */
 
 void test_solution_retrieval ( int n );
-/* prompts the user for some solution number,
- * retrieves and prints the solution vector,
- * n is the complex dimension of the solution */
+/*
+ * DESCRIPTION :
+ *   Prompts the user for some solution number,
+ *   retrieves and prints the solution vector,
+ *   n is the complex dimension of the solution */
 
 void test_replace_solution ( int n );
-/* prompts the user for some solution number,
- * and replaces the solution */
+/*
+ * DESCRIPTION :
+ *   Prompts the user for some solution number,
+ *   and replaces the solution. */
 
 LIST *test_retrievals ( int len, int n );
-/* writes the solution list of length len and complex dimension n
- * on standard output, returns the list of solutions */
+/*
+ * DESCRIPTION :
+ *   Writes the solution list of length len and complex dimension n
+ *   on standard output, returns the list of solutions. */
 
 void test_additions ( int n, LIST *l );
-/* fills up the container with the solutions in the list l */
+/*
+ * DESCRIPTION :
+ *   Fills up the container with the solutions in the list l. */
 
 void test_solution_container ( void );
-/* tests main operations in the solutions container */
+/*
+ * DESCRIPTION :
+ *   tests main operations in the solutions container. */
 
 void test_incremental_read_and_write ( void );
-/* tests incremental read and write of solutions */
+/*
+ * DESCRIPTION :
+ *   Tests incremental read and write of solutions. */
 
 void test_solution_strings( void );
-/* tests writing of solutions to strings */
+/*
+ * DESCRIPTION :
+ *   Tests writing of solutions to strings. */
 
 void parse_solution_strings ( void );
-/* tests parsing of solutions from strings into container */
+/*
+ * DESCRIPTION :
+ *   Tests parsing of solutions from strings into container. */
 
 void test_standard_container ( void );
-/* test operations in the container for standard solutions */
+/*
+ * DESCRIPTION :
+ *   Test operations in the container for standard solutions. */
 
 void test_dobldobl_container ( void );
-/* test operations in the container for double double solutions */
+/*
+ * DESCRIPTION :
+ *   test operations in the container for double double solutions. */
 
 void test_quaddobl_container ( void );
-/* test operations in the container for quad double solutions */
+/*
+ * DESCRIPTION :
+ *   Test operations in the container for quad double solutions. */
 
 void test_multprec_container ( void );
-/* test operations in the container for multiprecision solutions */
+/*
+ * DESCRIPTION :
+ *   Test operations in the container for multiprecision solutions. */
 
 void standard_next_retrievals ( void );
-/* prints the standard solution vectors with the retrieve_next */
+/*
+ * DESCRIPTION :
+ *   Prints the standard solution vectors with the retrieve_next. */
 
 void test_standard_next_retrievals ( void );
-/* prompts the user for solutions and then calls standard_next_retrievals */
+/*
+ * DESCRIPTION :
+ *   Prompts the user for solutions and then calls standard_next_retrievals. */
 
 void retrieve_all_standard_solution_strings ( void );
-/* prints the strings of all standard solutions */
+/*
+ * DESCRIPTION :
+ *   Prints the strings of all standard solutions. */
 
 void test_retrieve_all_standard_solution_strings ( void );
-/* prompts the user for solutions and then calls 
- * retrieve_all_standard_solution_strings */
+/* 
+ * DESCRIPTION :
+ *   Prompts the user for solutions and then calls 
+ *   retrieve_all_standard_solution_strings. */
+
+void test_read_solutions_from_file ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a file name and then attempts to read
+ *   solutions from file. */
 
 int main(void)
 {
@@ -93,7 +138,8 @@ int main(void)
    printf("  4. test with multiprecision numbers;\n");
    printf("  5. test retrieval of standard solutions with next.\n");
    printf("  6. test retrieval of all standard solution strings.\n");
-   printf("Type 1, 2, 3, 4, 5, or 6 to choose a test : ");
+   printf("  7. test reading solutions from a file with given name.\n");
+   printf("Type 1, 2, 3, 4, 5, 6, or 7 to choose a test : ");
    scanf("%d",&choice);
    scanf("%c",&ch); /* skip new line character */
    printf("\n");
@@ -112,6 +158,8 @@ int main(void)
       test_standard_next_retrievals();
    else if(choice == 6)
       test_retrieve_all_standard_solution_strings();
+   else if(choice == 7)
+      test_read_solutions_from_file();
    else
       printf("invalid choice, please try again\n");
 
@@ -550,4 +598,22 @@ void test_retrieve_all_standard_solution_strings ( void )
 {
    int fail = solcon_read_standard_solutions();
    retrieve_all_standard_solution_strings();
+}
+
+void test_read_solutions_from_file ( void )
+{
+   char name[80];
+   int nbc,fail,len;
+
+   printf("Give the name of the file : ");
+   scanf("%s",name);
+   printf("Reading solutions from file with name \"%s\" ...\n",name);
+
+   nbc = strlen(name);
+   printf("-> number of characters in name : %d\n",nbc);
+
+   printf("\ncalling solcon_read_standard_solutions_from_file ...\n");
+   fail = solcon_read_standard_solutions_from_file(nbc,name);
+   fail = solcon_number_of_standard_solutions(&len);
+   printf("Number of solutions : %d\n",len);
 }

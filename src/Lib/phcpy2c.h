@@ -2180,6 +2180,18 @@ static PyObject *py2c_solcon_read_standard_solutions
  *   in standard double precision.
  *   Returns the failure code, which is zero when all went well. */
 
+static PyObject *py2c_solcon_read_standard_solutions_from_file
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a solution list to be parsed in standard double precision.
+ *   Solutions are read from file and stored in the container for
+ *   double precision solutions.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_solcon_read_dobldobl_solutions
  ( PyObject *self, PyObject *args );
 /*
@@ -2187,6 +2199,18 @@ static PyObject *py2c_solcon_read_dobldobl_solutions
  *   Interactive function to read the solutions into the container,
  *   in double double precision.
  *   Returns the failure code, which is zero when all went well. */
+
+static PyObject *py2c_solcon_read_dobldobl_solutions_from_file
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a solution list to be parsed in double double precision.
+ *   Solutions are read from file and stored in the container for
+ *   double double precision solutions.
+ *   The failure code is returned, which is zero if all went well. */
 
 static PyObject *py2c_solcon_read_quaddobl_solutions
  ( PyObject *self, PyObject *args );
@@ -2196,6 +2220,18 @@ static PyObject *py2c_solcon_read_quaddobl_solutions
  *   in quad double precision.
  *   Returns the failure code, which is zero when all went well. */
 
+static PyObject *py2c_solcon_read_quaddobl_solutions_from_file
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a solution list to be parsed in quad double precision.
+ *   Solutions are read from file and stored in the container for
+ *   quad double precision solutions.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_solcon_read_multprec_solutions
  ( PyObject *self, PyObject *args );
 /*
@@ -2203,6 +2239,67 @@ static PyObject *py2c_solcon_read_multprec_solutions
  *   Interactive function to read the solutions into the container,
  *   in arbitrary multiprecision.
  *   Returns the failure code, which is zero when all went well. */
+
+static PyObject *py2c_read_standard_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a start system that will
+ *   be parsed in standard double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
+static PyObject *py2c_read_standard_start_system_from_file
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a start system to be parsed in standard double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
+static PyObject *py2c_read_dobldobl_target_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a target system that will
+ *   be parsed in double double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
+static PyObject *py2c_read_dobldobl_target_system_from_file
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a target system to be parsed in double double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
+static PyObject *py2c_read_dobldobl_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a start system that will
+ *   be parsed in double double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
+static PyObject *py2c_read_dobldobl_start_system_from_file
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a start system to be parsed in double double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
+static PyObject *py2c_read_quaddobl_target_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a target system that will
+ *   be parsed in quad double precision.
 
 static PyObject *py2c_solcon_write_standard_solutions
  ( PyObject *self, PyObject *args );

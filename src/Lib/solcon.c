@@ -12,6 +12,18 @@ int solcon_read_standard_solutions ( void )
    return fail;
 }
 
+int solcon_read_standard_solutions_from_file ( int nc, char *filename )
+{
+   int b[nc],i,fail;
+   double *c;
+
+   for(i=0; i<nc; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc4c(916,&nc,b,c);
+
+   return fail;
+}
+
 int solcon_read_dobldobl_solutions ( void )
 {
    int *a,*b,fail;
@@ -20,11 +32,35 @@ int solcon_read_dobldobl_solutions ( void )
    return fail;
 }
 
+int solcon_read_dobldobl_solutions_from_file ( int nc, char *filename )
+{
+   int b[nc],i,fail;
+   double *c;
+
+   for(i=0; i<nc; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc4c(917,&nc,b,c);
+
+   return fail;
+}
+
 int solcon_read_quaddobl_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc4c(390,a,b,c);
+   return fail;
+}
+
+int solcon_read_quaddobl_solutions_from_file ( int nc, char *filename )
+{
+   int b[nc],i,fail;
+   double *c;
+
+   for(i=0; i<nc; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc4c(918,&nc,b,c);
+
    return fail;
 }
 
