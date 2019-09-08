@@ -1652,6 +1652,99 @@ function use_solcon ( job : integer32;
     return 0;
   end Job547;
 
+  function Job916 return integer32 is -- read standard sols from file
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      sols : Standard_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      Standard_Complex_Solutions_io.get(file,sols);
+      Standard_Solutions_Container.Clear;
+      Standard_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 916;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 916;
+    end;
+    return 0;
+  end Job916;
+
+  function Job917 return integer32 is -- read dobldobl sols from file
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      sols : DoblDobl_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      DoblDobl_Complex_Solutions_io.get(file,sols);
+      DoblDobl_Solutions_Container.Clear;
+      DoblDobl_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 917;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 917;
+    end;
+    return 0;
+  end Job917;
+
+  function Job918 return integer32 is -- read quaddobl sols from file
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      sols : QuadDobl_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      QuadDobl_Complex_Solutions_io.get(file,sols);
+      QuadDobl_Solutions_Container.Clear;
+      QuadDobl_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 918;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 917;
+    end;
+    return 0;
+  end Job918;
+
   function Job875 return integer32 is -- set t = 0 for standard solutions
 
     use Standard_Complex_Solutions;
@@ -1993,6 +2086,9 @@ function use_solcon ( job : integer32;
       when 913 => return Job913; -- double m-hom sols to affine
       when 914 => return Job914; -- double double m-hom sols to affine
       when 915 => return Job915; -- quad double m-hom sols to affine
+      when 916 => return Job916; -- read standard sols, given file name
+      when 917 => return Job917; -- read standard sols, given file name
+      when 918 => return Job918; -- read standard sols, given file name
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

@@ -3347,6 +3347,8 @@ function use_c2phc4c ( job : integer32;
       when 913..915 => return use_solcon(job,a,b,c); -- from m-hom to affine
      -- adding a symbol passed as string
       when 897 => return use_syscon(job,a,b,c);
+     -- reading solutions from file with given name
+      when 916..918 => return use_solcon(job,a,b,c);
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

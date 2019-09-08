@@ -2557,13 +2557,13 @@ function use_c2phc4c ( job : integer32;
 --   job   = 540 : reads a standard system into the container where the
 --                 file name is given as a string of n = a[0] characters,
 --                 with the n characters are stored in given b on input;
---   job   = 541 : reads a double double system into the container where the
+--         = 541 : reads a double double system into the container where the
 --                 file name is given as a string of n = a[0] characters,
 --                 with the n characters are stored in given b on input;
---   job   = 542 : reads a quad double system into the container where the
+--         = 542 : reads a quad double system into the container where the
 --                 file name is given as a string of n = a[0] characters,
 --                 with the n characters are stored in given b on input;
---   job   = 543 : reads a multiprecision system into the container where the
+--         = 543 : reads a multiprecision system into the container where the
 --                 file name is given as a string of n = a[0] characters,
 --                 with the n characters are stored in given b on input,
 --                 the value of a[1] stores the number of decimal places
@@ -2572,20 +2572,35 @@ function use_c2phc4c ( job : integer32;
 --                 and its solutions into the solutions container where the
 --                 file name is given as a string of n = a[0] characters,
 --                 with the n characters are stored in given b on input;
---   job   = 545 : reads a double double system into the systems container
+--         = 545 : reads a double double system into the systems container
 --                 and its solutions into the solutions container where the
 --                 file name is given as a string of n = a[0] characters,
 --                 with the n characters are stored in given b on input;
---   job   = 546 : reads a quad double system into the systems container
+--         = 546 : reads a quad double system into the systems container
 --                 and its solutions into the solutions container where the
 --                 file name is given as a string of n = a[0] characters,
 --                 with the n characters are stored in given b on input;
---   job   = 547 : reads a multiprecision system into the systems container
+--         = 547 : reads a multiprecision system into the systems container
 --                 and its solutions into the solutions container where the
 --                 file name is given as a string of n = a[0] characters,
 --                 with the n characters are stored in given b on input,
 --                 the value of a[1] stores the number of decimal places
 --                 as the precision for parsing the numbers;
+--
+-- reading solutions from file with given file name :
+--
+--   job   = 916 : reads double precision solutions from file
+--                 into the double precision solutions container where the
+--                 file name is given as a string of n = a[0] characters,
+--                 with the n characters are stored in given b on input;
+--         = 917 : reads double double precision solutions from file
+--                 into the double double solutions container where the
+--                 file name is given as a string of n = a[0] characters,
+--                 with the n characters are stored in given b on input;
+--         = 918 : reads quad double precision solutions from file
+--                 into the quad double solutions container where the
+--                 file name is given as a string of n = a[0] characters,
+--                 with the n characters are stored in given b on input;
 --
 -- convex hull computations via the gift wrapping method :
 --

@@ -201,7 +201,7 @@ function use_solcon ( job : integer32;
 --                   one double for the norm of last Newton update,
 --                   one double for the inverse of condition# estimate,
 --                   one double for the norm of the residual;
---   job     = 277 : if a[0] = 0 on entry, then the pointer to the current
+--           = 277 : if a[0] = 0 on entry, then the pointer to the current
 --                   solution in the dobldobl solutions container will be
 --                   reset to the first solution, otherwise
 --                   returns in b the multiplicity m of the current solution,
@@ -212,7 +212,7 @@ function use_solcon ( job : integer32;
 --                   one double double for the norm of last Newton update,
 --                   one double double for the inverse of condition# estimate,
 --                   one double double for the norm of the residual;
---   job     = 278 : if a[0] = 0 on entry, then the pointer to the current
+--           = 278 : if a[0] = 0 on entry, then the pointer to the current
 --                   solution in the quaddobl solutions container will be
 --                   reset to the first solution, otherwise
 --                   returns in b the multiplicity m of the current solution,
@@ -281,11 +281,11 @@ function use_solcon ( job : integer32;
 --                   and its solutions into the solutions container where the
 --                   file name is given as a string of n = a[0] characters,
 --                   with the n characters are stored in given b on input;
---   job     = 545 : reads a double double system into the systems container
+--           = 545 : reads a double double system into the systems container
 --                   and its solutions into the solutions container where the
 --                   file name is given as a string of n = a[0] characters,
 --                   with the n characters are stored in given b on input;
---   job     = 546 : reads a quad double system into the systems container
+--           = 546 : reads a quad double system into the systems container
 --                   and its solutions into the solutions container where the
 --                   file name is given as a string of n = a[0] characters,
 --                   with the n characters are stored in given b on input;
@@ -296,15 +296,30 @@ function use_solcon ( job : integer32;
 --                   the value of a[1] stores the number of decimal places
 --                   as the precision for parsing the numbers;
 --
+--  READING SOLUTION FROM FILE WITH GIVEN NAME :
+--
+--   job     = 916 : reads double precision solutions from file
+--                   into the double precision solutions container where the
+--                   file name is given as a string of n = a[0] characters,
+--                   with the n characters are stored in given b on input;
+--           = 917 : reads double double precision solutions from file
+--                   into the double double solutions container where the
+--                   file name is given as a string of n = a[0] characters,
+--                   with the n characters are stored in given b on input;
+--           = 918 : reads quad double precision solutions from file
+--                   into the quad double solutions container where the
+--                   file name is given as a string of n = a[0] characters,
+--                   with the n characters are stored in given b on input;
+--
 -- setting the value of the continuation parameter to zero :
 --
 --   job     = 875 : sets the value of the continuation parameter to zero
 --                   for all the solutions in the standard double precision
 --                   solutions container;
---   job     = 876 : sets the value of the continuation parameter to zero
+--           = 876 : sets the value of the continuation parameter to zero
 --                   for all the solutions in the double double precision
 --                   solutions container;
---   job     = 877 : sets the value of the continuation parameter to zero
+--           = 877 : sets the value of the continuation parameter to zero
 --                   for all the solutions in the quad double precision
 --                   solutions container.
 --
