@@ -838,6 +838,36 @@ def store_quaddobl_laurent_witness_set(nbvar, dim, pols, sols):
     store_quaddobl_solutions(len(pols), sols)
     py2c_swap_symbols_for_quaddobl_Laurent_witness_set(nbvar, dim)
 
+def read_standard_solutions(filename):
+    """
+    Returns the list of solutions stored on file with the given file name.
+    The solutions are parsed in standard double precision.
+    """
+    from phcpy.phcpy2c2 import py2c_solcon_read_standard_solutions_from_file
+    namelen = len(filename)
+    py2c_solcon_read_standard_solutions_from_file(namelen, filename)
+    return load_standard_solutions()
+
+def read_dobldobl_solutions(filename):
+    """
+    Returns the list of solutions stored on file with the given file name.
+    The solutions are parsed in double double precision.
+    """
+    from phcpy.phcpy2c2 import py2c_solcon_read_dobldobl_solutions_from_file
+    namelen = len(filename)
+    py2c_solcon_read_dobldobl_solutions_from_file(namelen, filename)
+    return load_dobldobl_solutions()
+
+def read_quaddobl_solutions(filename):
+    """
+    Returns the list of solutions stored on file with the given file name.
+    The solutions are parsed in quad double precision.
+    """
+    from phcpy.phcpy2c2 import py2c_solcon_read_quaddobl_solutions_from_file
+    namelen = len(filename)
+    py2c_solcon_read_quaddobl_solutions_from_file(namelen, filename)
+    return load_quaddobl_solutions()
+
 def test(prc='d', laurent=False):
     """
     Tests the storing of a witness set for the twisted cubic.
