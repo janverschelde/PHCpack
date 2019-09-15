@@ -1,3 +1,6 @@
+Sat 14 Sep 2019 : updated bablphc.adb, bablphc2.adb, and bablphc4.adb 
+  to avoid asking name of file twice.
+
 Sat 7 Sep 2019 : extended black_box_solver_cases with a new procedure to
   return the new file name, updated bablphc.adb.
 

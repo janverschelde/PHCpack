@@ -32,6 +32,7 @@ procedure bablphc2 ( nt : in natural32; infilename,outfilename : in string;
 
     n : constant natural32
       := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+    outfile : file_type;
     fail : boolean;
 
     use Black_Box_Solver_Cases;
@@ -52,7 +53,7 @@ procedure bablphc2 ( nt : in natural32; infilename,outfilename : in string;
         sp : Standard_Complex_Poly_Systems.Poly_Sys(p'range)
            := DoblDobl_Complex_to_Standard_Poly_Sys(p.all);
       begin
-        bablsolve(sp,outfilename,v-1);
+        bablsolve(sp,outfilename,outfile,false,v-1);
         Standard_Complex_Poly_Systems.Clear(sp);
       end;
     end if;
