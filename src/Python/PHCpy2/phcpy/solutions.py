@@ -399,7 +399,7 @@ def filter_vanishing(sols, tol):
             result.append(sol)
     return result
 
-def test():
+def test_functions():
     """
     Generates a random trinomial system,
     solves it, converts the solutions,
@@ -420,5 +420,100 @@ def test():
     for sol in dsols:
         print sum(evaluate(pols, sol))
 
+class Solution(object):
+    """
+    Wraps the functions on solution strings.
+    """
+    def __init__(self, strsol):
+        """
+        A solution is constructed from the
+        string representation in PHCpack format.
+        """
+        self.sol = strsol
+
+    def __str__(self):
+        """
+        Returns the string representation of a solution.
+        """
+        return self.sol
+
+    def __repr__(self):
+        """
+        Defines the representation as the string representation.
+        """
+        return str(self)
+
+    def coordinates(self):
+        """
+        Returns the values of the coordinates of the solution,
+        as a tuple of variable names and corresponding values.
+        """
+        return coordinates(self.sol)
+
+    def dictionary(self):
+        """
+        Returns the dictionary format of the solution.
+        """
+        return strsol2dict(self.sol)
+
+    def variables(self):
+        """
+        Returns the variable names of the coordinates.
+        """
+        sld = strsol2dict(self.sol)
+        return variables(sld)
+
+    def numerals(self):
+        """
+        Returns the numerical values of the coordinates.
+        """
+        sld = strsol2dict(self.sol)
+        return numerals(sld)
+
+    def diagnostics(self):
+        """
+        Returns the numerical diagnostics.
+        """
+        return diagnostics(self.sol)
+
+    def multiplicity(self):
+        """
+        Returns the multiplicity.
+        """
+        (_, result) = endmultiplicity(self.sol)
+        return result
+
+    def timevalue(self):
+        """
+        Returns the value of the continuation parameter.
+        """
+        (result, _) = endmultiplicity(self.sol)
+        return result
+
+def test_class():
+    """
+    Tests the methods in the class Solution.
+    """
+    from phcpy import solver
+    pols = solver.random_trinomials()
+    sols = solver.solve(pols)
+    s = Solution(sols[0])
+    print 'the first solution :'
+    print s
+    print 'its coordinates :'
+    print s.coordinates()
+    print 'its variable names :'
+    print s.variables()
+    print 'its numerical values :'
+    print s.numerals()
+    print 'its diagnostics :'
+    print s.diagnostics()
+    print 'its continuation parameter :', s.timevalue()
+    print 'its multiplicity :', s.multiplicity()
+    print 'the dictionary :'
+    print s.dictionary()
+
+
 if __name__ == "__main__":
-    test()
+    # test_functions()
+    test_class()
