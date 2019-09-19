@@ -1,3 +1,6 @@
+Wed 18 Sep 2019 : swapped the string representation for the dictionary
+  in the definition of the class Solution.
+
 Tue 17 Sep 2019 : added to solutions.py in PHCpy3/phcpy a basic definition
   of the class Solution, and a test_class() function.  Also updated the
   python2 version of the module solutions with a basic Solution class.

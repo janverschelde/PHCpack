@@ -267,7 +267,7 @@ def make_solution(names, values, \
         else:
             print('wrong type for coordinate value')
             return result
-    lastline = '== err : %.3E = rco : %.3e = res : %.3E ==' % (err, rco, res)
+    lastline = '== err :  %.3E = rco :  %.3E = res :  %.3E =' % (err, rco, res)
     result = result + lastline
     return result
 
@@ -424,18 +424,21 @@ class Solution(object):
     """
     Wraps the functions on solution strings.
     """
-    def __init__(self, strsol):
+    def __init__(self, sol):
         """
         A solution is constructed from the
         string representation in PHCpack format.
         """
-        self.sol = strsol
+        self.dict = strsol2dict(sol)
 
     def __str__(self):
         """
         Returns the string representation of a solution.
         """
-        return self.sol
+        result = make_solution(variables(self.dict), numerals(self.dict), \
+            err=self.dict['err'], rco=self.dict['rco'], res=self.dict['res'], \
+            tval=self.dict['t'], multiplicity=self.dict['m'])
+        return result
 
     def __repr__(self):
         """
@@ -448,47 +451,43 @@ class Solution(object):
         Returns the values of the coordinates of the solution,
         as a tuple of variable names and corresponding values.
         """
-        return coordinates(self.sol)
+        return (variables(self.dict), numerals(self.dict))
 
     def dictionary(self):
         """
         Returns the dictionary format of the solution.
         """
-        return strsol2dict(self.sol)
+        return self.dict
 
     def variables(self):
         """
         Returns the variable names of the coordinates.
         """
-        sld = strsol2dict(self.sol)
-        return variables(sld)
+        return variables(self.dict)
 
     def numerals(self):
         """
         Returns the numerical values of the coordinates.
         """
-        sld = strsol2dict(self.sol)
-        return numerals(sld)
+        return numerals(self.dict)
 
     def diagnostics(self):
         """
         Returns the numerical diagnostics.
         """
-        return diagnostics(self.sol)
+        return (self.dict['err'], self.dict['rco'], self.dict['res'])
 
     def multiplicity(self):
         """
         Returns the multiplicity.
         """
-        (_, result) = endmultiplicity(self.sol)
-        return result
+        return self.dict['m']
 
     def timevalue(self):
         """
         Returns the value of the continuation parameter.
         """
-        (result, _) = endmultiplicity(self.sol)
-        return result
+        return self.dict['t']
 
 def test_class():
     """
@@ -497,6 +496,8 @@ def test_class():
     from phcpy import solver
     pols = solver.random_trinomials()
     sols = solver.solve(pols)
+    print('sols[0] :')
+    print(sols[0])
     s = Solution(sols[0])
     print('the first solution :')
     print(s)
