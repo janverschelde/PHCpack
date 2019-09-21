@@ -233,9 +233,9 @@ Pointers to the literature are mentioned below.
 
 #. Y. Guan and J. Verschelde: 
    **PHClab: A MATLAB/Octave interface to PHCpack.**
-   In *IMA Volume 148: Software for Algebraic Geometry*,
-   edited by M. E. Stillman, N. Takayama, and J. Verschelde,
-   pages 15-32, Springer-Verlag, 2008. 
+   In *Software for Algebraic Geometry*, volume 148 of the IMA
+   volumes in Mathematics and its Applications, edited by M.E. Stillman,
+   N. Takayama, and J. Verschelde, pages 15-32, Springer-Verlag, 2008.
 
 #. Y. Hida, X.S. Li, and D.H. Bailey:
    **Algorithms for quad-double precision floating point arithmetic.**
@@ -253,27 +253,34 @@ Pointers to the literature are mentioned below.
 
 #. A. Leykin and J. Verschelde: 
    **Interfacing with the Numerical Homotopy Algorithms in PHCpack.**
-   In *proceedings of ICMS 2006, LNCS 4151*,
+   In the *Proceedings of ICMS 2006, LNCS 4151*,
    edited by A. Iglesias and N. Takayama,
    pages 354-360, Springer-Verlag, 2006. 
 
 #. T. Mizutani and A. Takeda.
    **DEMiCs: A software package for computing the mixed volume via
    dynamic enumeration of all mixed cells.**
-   In M. E. Stillman, N. Takayama, and J. Verschelde, editors,
-   *Software for Algebraic Geometry*, volume 148 of The IMA Volumes in
+   In *Software for Algebraic Geometry*, 
+   edited by M.E. Stillman, N. Takayama, and J. Verschelde,
+   volume 148 of The IMA Volumes in
    Mathematics and its Applications, pages 59-79. Springer-Verlag, 2008.
 
 #. T. Mizutani, A. Takeda, and M. Kojima.
    **Dynamic enumeration of all mixed cells.**
    *Discrete Comput. Geom.* 37(3):351-367, 2007.
 
-#. M. Lu. and B. He and Q. Luo
+#. M. Lu., B. He and Q. Luo.
    **Supporting extended precision on graphics processors.**
-   In *Proceedings of the Sixth International Workshop on Data 
+   In the *Proceedings of the Sixth International Workshop on Data 
    Management on New Hardware (DaMoN 2010), 
    June 7, 2010, Indianapolis, Indiana*, edited by
    A. Ailamaki and P.A. Boncz, pages 19-26, 2010.
+
+#. J. Otto, A. Forbes, and J. Verschelde.
+   **Solving Polynomial Systems with phcpy.**
+   In the *Proceedings of the 18th Python in Science Conference (SciPy 2019)*,
+   edited by Chris Calloway, David Lippa, Dillon Niederhut and David Shupe,
+   pages 58-64, 2019. 
 
 #. K. Piret and J. Verschelde:
    **Sweeping Algebraic Curves for Singular Solutions.**
@@ -297,16 +304,16 @@ Pointers to the literature are mentioned below.
 
 #. J. Verschelde:
    **Modernizing PHCpack through phcpy.**
-   In Proceedings of the 6th European Conference on Python in Science
-   (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
+   In the *Proceedings of the 6th European Conference on Python in Science
+   (EuroSciPy 2013)*, edited by Pierre de Buyl and Nelle Varoquaux,
    pages 71-76, 2014, available at
    <http://arxiv.org/abs/1310.0056>.
 
 #. J. Verschelde and G. Yoffe.
    **Polynomial homotopies on multicore workstations.**
-   In M.M. Maza and J.-L. Roch, editors, *Proceedings of the 4th
-   International Workshop on Parallel Symbolic Computation (PASCO 2010),
-   July 21-23 2010, Grenoble, France*, pages 131--140. ACM, 2010.
+   In the *Proceedings of the 4th International Workshop on Parallel 
+   Symbolic Computation (PASCO 2010), July 21-23 2010, Grenoble, France*,
+   edited by M.M. Maza and J.-L. Roch, pages 131--140. ACM, 2010.
 
 #. J. Verschelde and X. Yu:
    **Polynomial Homotopy Continuation on GPUs.**
@@ -1042,13 +1049,6 @@ So we have to end quoting Bernd Sturmfels:
 Acknowledgments
 ===============
 
-This material is based upon work supported by the 
-National Science Foundation under Grants No. 9804846, 0105739, 0134611,
-0410036, 0713018, 1115777, 1440534, and 1854513.
-Any opinions, findings, and conclusions or recommendations expressed 
-in this material are those of the author(s) and do not necessarily 
-reflect the views of the National Science Foundation. 
-
 Since 2001, the code in PHCpack improved thanks to the contributions
 of many PhD students at the University of Illinois at Chicago.
 Their names, titles of PhD dissertation, and year of PhD are listed below:
@@ -1101,3 +1101,10 @@ Taylor Brysiewicz, Diego Cifuentes, Corey Harris, Kaie Kubjas,
 Anne Seigal, and Jeff Sommars.
 
 The software has been developed with GNAT GPL, the gnu-ada compiler.
+
+This material is based upon work supported by the 
+National Science Foundation under Grants No. 9804846, 0105739, 0134611,
+0410036, 0713018, 1115777, 1440534, and 1854513.
+Any opinions, findings, and conclusions or recommendations expressed 
+in this material are those of the author(s) and do not necessarily 
+reflect the views of the National Science Foundation. 
