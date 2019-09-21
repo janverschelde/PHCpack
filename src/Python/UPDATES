@@ -1,5 +1,6 @@
 Sat 21 Sep 2019 : extended the constructor of a Solution in solutions
   with the alternative dictionary argument, for python3.
+  Did the same for the python2 version of the solutions module.
 
 Wed 18 Sep 2019 : swapped the string representation for the dictionary
   in the definition of the class Solution.  Did the same for the python2

@@ -427,9 +427,28 @@ class Solution(object):
     def __init__(self, sol):
         """
         A solution is constructed from the
-        string representation in PHCpack format.
+        string representation in PHCpack format,
+        or otherwise from a dictionary with keys
+        the names of the variables and values
+        the complex numbers for the corresponding
+        coordinates of the solution.
         """
-        self.dict = strsol2dict(sol)
+        if isinstance(sol, str):
+            self.dict = strsol2dict(sol)
+        elif isinstance(sol, dict):
+            self.dict = sol
+            if not self.dict.has_key('err'):
+                self.dict['err'] = 0.0
+            if not self.dict.has_key('rco'):
+                self.dict['rco'] = 1.0
+            if not self.dict.has_key('res'):
+                self.dict['res'] = 0.0
+            if not self.dict.has_key('m'):
+                self.dict['m'] = 1
+            if not self.dict.has_key('t'):
+                self.dict['t'] = complex(0.0)
+        else:
+            print 'Wrong argument type, provide string or dict.'
 
     def __str__(self):
         """
@@ -513,7 +532,9 @@ def test_class():
     print 'its multiplicity :', s.multiplicity()
     print 'the dictionary :'
     print s.dictionary()
-
+    mysol = Solution({'x': complex(1,2), 'y': complex(-7,0)})
+    print('my solution :')
+    print(mysol)
 
 if __name__ == "__main__":
     # test_functions()

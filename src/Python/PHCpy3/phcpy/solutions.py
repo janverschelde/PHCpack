@@ -428,7 +428,7 @@ class Solution(object):
         """
         A solution is constructed from the
         string representation in PHCpack format,
-        or otherwise from a diction with keys
+        or otherwise from a dictionary with keys
         the names of the variables and values
         the complex numbers for the corresponding
         coordinates of the solution.
