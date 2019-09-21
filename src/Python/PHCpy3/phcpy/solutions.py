@@ -427,9 +427,28 @@ class Solution(object):
     def __init__(self, sol):
         """
         A solution is constructed from the
-        string representation in PHCpack format.
+        string representation in PHCpack format,
+        or otherwise from a diction with keys
+        the names of the variables and values
+        the complex numbers for the corresponding
+        coordinates of the solution.
         """
-        self.dict = strsol2dict(sol)
+        if isinstance(sol, str):
+            self.dict = strsol2dict(sol)
+        elif isinstance(sol, dict):
+            self.dict = sol
+            if 'err' not in self.dict:
+                self.dict['err'] = 0.0
+            if 'rco' not in self.dict:
+                self.dict['rco'] = 1.0
+            if 'res' not in self.dict:
+                self.dict['res'] = 0.0
+            if 'm' not in self.dict:
+                self.dict['m'] = 1
+            if 't' not in self.dict:
+                self.dict['t'] = complex(0.0)
+        else:
+            print('Wrong argument type, provide string or dict.')
 
     def __str__(self):
         """
@@ -501,18 +520,16 @@ def test_class():
     s = Solution(sols[0])
     print('the first solution :')
     print(s)
-    print('its coordinates :')
-    print(s.coordinates())
-    print('its variable names :')
-    print(s.variables())
-    print('its numerical values :')
-    print(s.numerals())
-    print('its diagnostics :')
-    print(s.diagnostics())
+    print('its coordinates :\n', s.coordinates())
+    print('its variable names :\n ', s.variables())
+    print('its numerical values :\n', s.numerals())
+    print('its diagnostics :\n', s.diagnostics())
     print('its continuation parameter :', s.timevalue())
     print('its multiplicity :', s.multiplicity())
-    print('the dictionary :')
-    print(s.dictionary())
+    print('the dictionary :\n', s.dictionary())
+    mysol = Solution({'x': complex(1,2), 'y': complex(-7,0)})
+    print('my solution :')
+    print(mysol)
 
 if __name__ == "__main__":
     # test_functions()
