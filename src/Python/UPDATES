@@ -1,3 +1,6 @@
+Sun 22 Sep 2019 : start of a new module polynomials for the python3 version
+  of phcpy which exports the class Polynomials.
+
 Sat 21 Sep 2019 : extended the constructor of a Solution in solutions
   with the alternative dictionary argument, for python3.
   Did the same for the python2 version of the solutions module.

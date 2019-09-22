@@ -1,6 +1,8 @@
 """
 The module solutions exports functions to convert list of
 PHCpack solution strings into Python dictionaries.
+The module exports the definition of the class Solution,
+as an object-oriented representation of a solution.
 """
 
 def diagnostics(sol):
