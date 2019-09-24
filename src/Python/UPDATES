@@ -1,3 +1,5 @@
+Mon 23 Sep 2019 : modified the setup.py for python3 to include polynomials.py.
+
 Sun 22 Sep 2019 : start of a new module polynomials for the python3 version
   of phcpy which exports the class Polynomials.
 

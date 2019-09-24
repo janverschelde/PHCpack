@@ -36,7 +36,7 @@ diagonal.  Better support for Laurent polynomials was added as well.
 The package phcpy is defined in the directory PHCpy.
 The directory PHCpy3 contains the version of phcpy for Python 3.5+.
 The directory Jupyter contains an extension of the Jupyter notebook,
-which defines the menus for using phcpy in Sage and python.
+which defines the menus for using phcpy in SageMath and python.
 
 ------------------------------------------------------------------------------
 file name              : short description
@@ -50,11 +50,12 @@ factor.py              : factor pure dimensional set into irreducibles
 families.py            : a couple of families of systems
 interface.py           : load/store data to C interface with PHCpack
 maps.py                : monomial maps as solutions of binomials
-polytopes              : convex hulls and mixed volumes of Newton polytopes
+polynomials.py         : defines the class Polynomials
+polytopes.py           : convex hulls and mixed volumes of Newton polytopes
 schubert.py            : numerical Schubert calculus
-series                 : power series solutions with Newton's method
+series.py              : power series solutions and robust path tracker
 sets.py                : manipulate algebraic sets
-solutions.py           : PHCpack solution string into dictionary
+solutions.py           : turns PHCpack solution strings into dictionaries
 solver.py              : use of C extension module phcpy2c
 sweepers.py            : homotopies to sweep through parameter space
 trackers.py            : path trackers
