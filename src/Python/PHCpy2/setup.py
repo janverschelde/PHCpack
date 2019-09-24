@@ -19,7 +19,8 @@ setup(
     url = 'https://github.com/janverschelde/PHCpack' ,
     version = '1.0.0' ,
     packages = ['phcpy'] ,
-    py_modules = ['phcpy/interface', 'phcpy/solver', 'phcpy/solutions', \
+    py_modules = ['phcpy/interface', 'phcpy/solver', \
+        'phcpy/solutions', 'phcpy/polynomials', \
         'phcpy/trackers', 'phcpy/sweepers', 'phcpy/tuning', \
         'phcpy/sets', 'phcpy/cascades', 'phcpy/factor', 'phcpy/diagonal', \
         'phcpy/polytopes', 'phcpy/tropisms', 'phcpy/maps', 'phcpy/series', \
