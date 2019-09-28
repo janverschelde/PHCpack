@@ -17,6 +17,7 @@ class Polynomials(object):
         A polynomial system is contructed as a list of strings.
         """
         self.pols = pols
+        self.vars = solver.names_of_variables(pols)
 
     def __str__(self):
         """
@@ -32,6 +33,12 @@ class Polynomials(object):
         Defines the representation as the string representation.
         """
         return str(self)
+
+    def variables(self):
+        """
+        Returns the list of the variables in the polynomials.
+        """
+        return self.vars
 
     def solve(self, verbose=True):
         """
@@ -49,6 +56,7 @@ def test():
     pols = solver.random_trinomials()
     p = Polynomials(pols)
     print(p)
+    print('the variables :', p.variables())
     s = p.solve()
     for sol in s:
         print(sol)
