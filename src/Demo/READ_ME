@@ -1,0 +1,299 @@
+This directory contains the test database of polynomial systems.
+
+Besides the algebraic formulation and a short decription, every file
+contains various root counts, references and the list of solutions.
+Below is an overview of the application database.
+
+------------------------------------------------------------------------------
+filename  : title contains short description of the application
+==============================================================================
+boon      : neurophysiology, posted by Sjirk Boon
+butcher   : Butcher's problem, from PoSSo test suite
+butcher8  : 8-variable version of Butcher's problem
+camera1s  : camera displacement between two positions, scaled 1st frame
+caprasse  : the system caprasse of the PoSSo test suite
+cassou    : the system of Pierrette Cassou-Nogues
+chemequ   : chemical equilibrium of hydrocarbon combustion
+cohn2     : the system cohn2 from the PoSSo test suite
+cohn3     : the system cohn3 from the PoSSo test suite
+comb3000  : Model A combustion chemistry example for a temparature of 3000 deg
+conform1  : conformal analysis of cyclic molecules, first instance
+cpdm5     : 5-dimensional system of Caprasse and Demaret
+cyclic3   : cyclic 3-roots problem
+cyclic5   : cyclic 5-roots problem
+cyclic6   : cyclic 6-roots problem
+cyclic7   : cyclic 7-roots problem
+cyclic8   : cyclic 8-roots problem
+d1        : a sparse system, known as benchmark D1
+des18_3   : a "dessin d'enfant", called des18_3
+des22_24  : a "dessin d'enfant", called des22_24
+discret3s : system discret3, every equation divided by average coefficient
+eco5      : 5-dimensional economics problem
+eco6      : 6-dimensional economics problem
+eco7      : 7-dimensional economics problem
+eco8      : 8-dimensional economics problem
+extcyc5   : extended cyclic 5-roots problem, to exploit the symmetry
+extcyc6   : extended cyclic 6-roots problem, to exploit the symmetry
+extcyc7   : extended cyclic 7-roots problem, to exploit the symmetry
+extcyc8   : extended cyclic 8-roots problem, to exploit the symmetry
+fourbar   : a four-bar design problem, so-called 5-point problem
+fbrfive4  : Four-bar linkage through five points, 4-dimensional version
+fbrfive12 : Four-bar linkage whose coupler curve passes through five points
+gaukwa2   : Gaussian quadrature formula with 2 knots and 2 weights
+gaukwa3   : Gaussian quadrature formula with 3 knots and 3 weights
+gaukwa4   : Gaussian quadrature formula with 4 knots and 4 weights
+geneig    : generalized eigenvalue problem
+heart     : heart-dipole problem
+i1        : Benchmark i1 from the Interval Arithmetic Benchmarks
+ipp       : six-revolute-joint problem of mechanics
+ipp2      : 6R inverse position problem
+katsura5  : a problem of magnetism in physics
+kinema    : robot kinematics problem
+kin1      : kinematics problem
+ku10      : 10-dimensional system of Ku
+lorentz   : equilibrium points of a 4-dimensional Lorentz attractor
+lumped    : lumped-parameter chemically reacting system
+mickey    : Mickey-mouse example to illustrate homotopy continuation
+noon3     : A neural network modeled by an adaptive Lotka-Volterra system, n=3
+noon4     : A neural network modeled by an adaptive Lotka-Volterra system, n=4
+noon5     : A neural network modeled by an adaptive Lotka-Volterra system, n=5
+proddeco  : system with a product-decomposition structure
+puma      : hand position and orientation of PUMA robot
+quadfor2  : Gaussian quadrature formula with 2 knots and 2 weights over [-1,+1]
+quadgrid  : interpolating quadrature formula for function defined on a grid
+rabmo     : optimal multi-dimensional quadrature formulas
+rbpl      : parallel robot, the so-called left-hand problem
+rbpl24    : parallel robot with 24 real solutions
+redcyc5   : reduced cyclic 5-roots problem
+redcyc6   : reduced cyclic 6-roots problem
+redcyc7   : reduced cyclic 7-roots problem
+redcyc8   : reduced cyclic 8-roots problem
+redeco5   : reduced 5-dimensional economics problem
+redeco6   : reduced 6-dimensional economics problem
+redeco7   : reduced 7-dimensional economics problem
+redeco8   : reduced 8-dimensional economics problem
+rediff3   : 3-dimensional reaction-diffusion problem
+reimer5   : The 5-dimensional system of Reimer
+rose      : the system rose, a general economic equilibrium model
+s9_1      : small system from constructive Galois theory, called s9_1
+sendra    : the system sendra of the PoSSo test suite
+solotarev : the system solotarev of the PoSSo test suite
+sparse5   : a 5-dimensional sparse symmetric polynomial system
+speer     : the system of E.R. speer
+trinks    : system of Trinks from the PoSSo test suite
+virasoro  : the construction of Virasoro algebras
+wood      : system derived from optimizing the Wood function
+wright    : system of A.H. Wright
+========================================================================
+          CHARACTERISTICS OF THE POLYNOMIAL SYSTEMS 
+------------------------------------------------------------------------
+name      :  n :     D  :    bz  :    bs  :   mv  : #sols
+========================================================================
+boon      :  6 :   1024 :    344 :    216 :    20 :     8
+butcher   :  7 :   4608 :   2090 :    605 :    24 :     5
+butcher8  :  8 :   4608 :   1461 :    587 :    26 :    16
+camera1s  :  6 :     64 :     20 :     20 :    20 :    20
+caprasse  :  4 :    144 :     62 :     94 :    48 :    48
+cassou    :  4 :   1344 :    368 :    361 :    24 :    16
+chemequ   :  5 :    108 :     56 :     44 :    16 :    16
+cohn2     :  4 :    900 :    468 :    358 :   124 :    18
+cohn3     :  4 :   1080 :    484 :    358 :   213 :   102
+comb3000  : 10 :     96 :     66 :     28 :    16 :    16
+conform1  :  3 :     64 :     16 :     16 :    16 :    16
+cpdm5     :  5 :    243 :    243 :    243 :   242 :   157
+cyclic5   :  5 :    120 :    120 :    106 :    70 :    70
+cyclic6   :  6 :    720 :    720 :    588 :   156 :   156
+cyclic7   :  7 :   5040 :   5040 :   4200 :   924 :   924
+cyclic8   :  8 :  40320 :  40320 :  30365 :  2560 :  1152
+d1        : 12 :   4068 :    320 :    896 :   192 :    48
+des18_3   :  8 :    324 :    544 :    241 :    46 :    46
+des22_24  : 10 :    256 :    128 :     82 :    42 :    42
+discret3s :  8 :    256 :    128 :    128 :   128 :   128
+eco5      :  5 :     54 :     20 :     16 :     8 :     8
+eco6      :  6 :    162 :     48 :     36 :    16 :    16
+eco7      :  7 :    486 :    112 :     80 :    32 :    32
+eco8      :  8 :   1458 :    256 :    176 :    64 :    64
+extcyc5   :  5 :    120 :    120 :    106 :    70 :    70
+extcyc6   :  6 :    720 :    720 :    588 :   156 :   156
+extcyc7   :  7 :   5040 :   5040 :   4200 :   924 :   924
+extcyc8   :  8 :  40320 :  40320 :  30365 :  2560 :  1152
+fbrfive12 : 12 :   4096 :     96 :     96 :    36 :    36
+fbrfive4  :  4 :    256 :     96 :    194 :    36 :    36
+fourbar   :  4 :    256 :     96 :     96 :    80 :    36
+gaukwa2   :  4 :     24 :     11 :     11 :     5 :     2
+gaukwa3   :  6 :    720 :    225 :    225 :    49 :     6
+gaukwa4   :  8 :  40320 :   6769 :   6769 :   729 :    24
+geneig    :  6 :    243 :     10 :     10 :    10 :    10
+heart     :  8 :    576 :    193 :    193 :   121 :     4
+i1        : 10 :  59049 :    452 :    437 :    66 :    66
+ipp       :  8 :    256 :     96 :     96 :    64 :    48
+ipp2      : 11 :   1024 :    576 :    848 :   288 :    16
+katsura5  :  6 :     32 :     32 :     32 :    32 :    32
+kin1      : 12 :   4608 :    320 :    896 :   192 :    48
+kinema    :  9 :     64 :    240 :     64 :    64 :    40
+ku10      : 10 :   1024 :      2 :      2 :     2 :     2
+lorentz   :  4 :     16 :     14 :     12 :    12 :    11
+lumped    :  4 :     16 :      8 :     11 :     7 :     4
+mickey    :  2 :      4 :      4 :      4 :     4 :     4
+noon3     :  3 :     27 :     29 :     21 :    21 :    21
+noon4     :  4 :     81 :     81 :     73 :    73 :    73
+noon5     :  5 :    243 :    243 :    233 :   233 :   233
+proddeco  :  4 :    256 :     96 :     96 :    26 :     6
+puma      :  8 :    128 :     16 :     32 :    16 :    16
+quadfor2  :  4 :     24 :     11 :     11 :     4 :     2
+quadgrid  :  5 :    120 :     10 :     10 :    10 :     5
+rabmo     :  9 :  36000 :  22740 :   7090 :   136 :    16
+rbpl      :  6 :    486 :    160 :    160 :   160 :   150
+rbpl24    :  9 :    576 :     80 :     80 :    80 :    40
+redcyc5   :  4 :     24 :     24 :     19 :    14 :    14
+redcyc6   :  5 :    120 :     96 :     83 :    26 :    26
+redcyc7   :  6 :    720 :    720 :    511 :   132 :   132
+redcyc8   :  7 :   5040 :   3960 :   3107 :   320 :   144
+redeco5   :  5 :      8 :     12 :      8 :     8 :     8
+redeco6   :  6 :     16 :     28 :     16 :    16 :    16
+redeco7   :  7 :     32 :     64 :     32 :    32 :    32
+redeco8   :  8 :     64 :    144 :     64 :    64 :    64
+rediff3   :  3 :      8 :      8 :      8 :     7 :     7
+reimer5   :  5 :    720 :    720 :    720 :   720 :   144
+rose      :  3 :    216 :    144 :    136 :   136 :   136
+s9_1      :  8 :     16 :     41 :     10 :    10 :    10
+sendra    :  2 :     49 :     49 :     46 :    46 :    46
+solotarev :  4 :     36 :     10 :      8 :     6 :     6
+sparse5   :  5 : 100000 :   3840 :   3840 :   160 :   160
+speer     :  4 :    625 :    384 :    246 :    96 :    43
+trinks    :  6 :     24 :     24 :     18 :    10 :    10
+virasoro  :  8 :    256 :   3072 :    256 :   200 :   200
+wood      :  4 :     36 :     25 :     16 :     9 :     9
+wright    :  5 :     32 :     32 :     32 :    32 :    32
+====================================================================
+        n : dimension = #equations = #variables
+        D : total degre of the system
+       bz : m-homogeneous Bezout number, heuristic output
+       bs : generalized Bezout number, heuristic output
+       mv : mixed volume
+    #sols : number of isolated solutions in C*
+====================================================================
+
+===============================================================================
+             TIMING INFORMATION SUMMARY on SPARCserver-1000
+-------------------------------------------------------------------------------
+name      |   root counts  |  start system  |  continuation  |    total
+===============================================================================
+boon      |  0h 0m 0s190ms |  0h 0m 5s868ms |  0h 0m14s394ms |  0h 0m20s937ms |
+butcher   |  0h 0m13s267ms |  0h 0m29s 23ms |  0h 1m44s962ms |  0h 2m28s449ms |
+butcher8  |  0h 0m50s513ms |  0h 0m25s188ms |  0h 4m20s602ms |  0h 5m38s507ms |
+camera1s  |  0h 0m 8s258ms |  0h 0m 0s110ms |  0h 0m34s406ms |  0h 0m44s682ms |
+caprasse  |  0h 0m 0s769ms |  0h 0m10s  4ms |  0h 0m17s 80ms |  0h 0m28s888ms |
+cassou    |  0h 0m 1s145ms |  0h 0m10s688ms |  0h 1m 3s439ms |  0h 1m15s972ms |
+chemequ   |  0h 0m 1s116ms |  0h 0m 4s827ms |  0h 0m 6s886ms |  0h 0m13s378ms |
+cohn2     |  0h 0m 3s989ms |  0h 0m49s953ms |  0h 2m49s 74ms |  0h 3m46s619ms |
+cohn3     |  0h 0m 4s991ms |  0h 1m12s618ms |  0h16m15s864ms |  0h17m37s282ms |
+comb3000  |  0h 0m 7s814ms |  0h 0m 5s630ms |  0h 0m18s162ms |  0h 0m33s118ms |
+conform1  |  0h 0m 0s 42ms |  0h 0m 0s 45ms |  0h 0m 3s880ms |  0h 0m 4s310ms |
+cpdm5     |  0h 0m18s683ms |  0h 2m27s225ms |  0h 9m51s598ms |  0h12m43s370ms |
+cyclic5   |  0h 0m 0s562ms |  0h 0m11s768ms |  0h 0m32s469ms |  0h 0m45s993ms |
+cyclic6   |  0h 0m 6s 40ms |  0h 1m15s816ms |  0h 2m44s292ms |  0h 4m 9s434ms |
+cyclic7   |  0h 1m15s 74ms |  0h15m49s391ms |  0h27m50s521ms |  0h45m21s434ms |
+cyclic8   |  0h14m41s 38ms |  1h25m14s851ms |  2h54m28s884ms |  4h35m54s367ms |
+d1        |  0h 0m15s182ms |  0h 5m34s397ms |  0h13m30s348ms |  0h19m25s426ms |
+des18_3   |  0h 3m51s209ms |  0h 1m19s587ms |  0h 1m44s 25ms |  0h 6m57s913ms |
+des22_24  |  0h 0m23s538ms |  0h 0m50s660ms |  0h 1m22s251ms |  0h 2m40s 53ms |
+discret3s |  0h 2m20s  4ms |  0h 0m 0s719ms |  0h56m20s922ms |  0h58m52s121ms |
+eco5      |  0h 0m 0s281ms |  0h 0m 1s222ms |  0h 0m 2s829ms |  0h 0m 4s686ms |
+eco6      |  0h 0m 2s217ms |  0h 0m 4s132ms |  0h 0m 6s771ms |  0h 0m13s785ms |
+eco7      |  0h 0m22s215ms |  0h 0m20s511ms |  0h 0m34s 19ms |  0h 1m18s249ms |
+eco8      |  0h 5m28s 66ms |  0h 1m 1s471ms |  0h 1m55s472ms |  0h 8m27s528ms |
+extcyc5   |  0h 0m 2s355ms |  0h 0m36s607ms |  0h 0m37s521ms |  0h 1m17s726ms |
+extcyc6   |  0h 0m30s 15ms |  0h 1m45s137ms |  0h 2m56s572ms |  0h 5m15s706ms |
+extcyc7   |  0h 9m15s674ms |  0h17m22s278ms |  0h30m29s581ms |  0h57m33s835ms |
+extcyc8   |  1h58m58s816ms |  1h36m57s179ms |  3h58m54s943ms |  7h36m30s580ms |
+fbrfive12 |  0h 1m30s161ms |  0h 1m 6s686ms |  0h 2m18s859ms |  0h 4m58s570ms |
+fbrfive4  |  0h 0m 0s463ms |  0h 0m17s283ms |  0h 1m 2s690ms |  0h 1m21s972ms |
+fourbar   |  0h 0m 0s625ms |  0h 0m 8s706ms |  0h 2m 1s 20ms |  0h 2m12s565ms |
+gaukwa2   |  0h 0m 0s 55ms |  0h 0m 0s705ms |  0h 0m 1s460ms |  0h 0m 2s391ms |
+gaukwa3   |  0h 0m 1s430ms |  0h 0m22s803ms |  0h 0m52s615ms |  0h 1m17s674ms |
+gaukwa4   |  0h 1m18s940ms |  0h27m42s595ms |  0h52m30s671ms |  1h21m42s787ms |
+geneig    |  0h 0m 0s476ms |  0h 0m 0s303ms |  0h 0m11s314ms |  0h 0m14s648ms |
+heart     |  0h 1m10s899ms |  0h 3m14s236ms |  0h 4m39s 75ms |  0h 9m 6s712ms |
+i1        |  0h 0m37s869ms |  0h 0m49s215ms |  0h 1m59s959ms |  0h 3m29s913ms |
+ipp       |  0h 1m 4s541ms |  0h 1m21s 14ms |  0h 1m47s940ms |  0h 4m16s287ms |
+ipp2      |  0h 8m21s346ms |  0h11m59s944ms |  0h27m18s539ms |  0h47m48s632ms |
+katsura5  |  0h 0m12s382ms |  0h 0m 0s  8ms |  0h 0m27s511ms |  0h 0m41s303ms |
+kin1      |  0h 2m 2s926ms |  0h 5m39s399ms |  0h11m37s403ms |  0h19m25s259ms |
+kinema    |  0h 2m28s847ms |  0h 0m 0s 22ms |  0h 3m11s205ms |  0h 5m42s168ms |
+ku10      |  0h 0m 1s547ms |  0h 0m 2s253ms |  0h 0m 3s611ms |  0h 0m 8s357ms |
+lorentz   |  0h 0m 0s173ms |  0h 0m 0s 23ms |  0h 0m 6s633ms |  0h 0m 7s256ms |
+lumped    |  0h 0m 0s289ms |  0h 0m 0s714ms |  0h 0m 1s975ms |  0h 0m 3s255ms |
+mickey    |  0h 0m 0s  8ms |  0h 0m 0s  2ms |  0h 0m 0s175ms |  0h 0m 0s248ms |
+noon3     |  0h 0m 0s 58ms |  0h 0m 0s 33ms |  0h 0m 4s639ms |  0h 0m 5s154ms |
+noon4     |  0h 0m 0s399ms |  0h 0m 0s103ms |  0h 0m51s160ms |  0h 0m53s163ms |
+noon5     |  0h 0m 2s922ms |  0h 0m 0s316ms |  0h 7m 9s741ms |  0h 7m17s834ms |
+proddeco  |  0h 0m 0s299ms |  0h 0m10s135ms |  0h 0m42s488ms |  0h 0m54s 26ms |
+puma      |  0h 0m 2s457ms |  0h 0m 0s420ms |  0h 0m34s 43ms |  0h 0m40s105ms |
+quadfor2  |  0h 0m 0s 24ms |  0h 0m 0s183ms |  0h 0m 0s910ms |  0h 0m 1s271ms |
+quadgrid  |  0h 0m 4s451ms |  0h 0m 0s159ms |  0h 0m14s627ms |  0h 0m20s443ms |
+rabmo     |  0h 1m10s899ms |  0h 3m14s236ms |  0h 4m39s 75ms |  0h 9m 6s712ms |
+rbpl      |  0h 1m32s693ms |  0h 0m 0s670ms |  0h10m24s859ms |  0h12m 4s957ms |
+rbpl24    |  3h19m40s323ms |  0h 0m 1s331ms |  0h 9m55s836ms |  3h29m47s764ms |
+redcyc5   |  0h 0m 0s348ms |  0h 0m 2s767ms |  0h 0m 3s505ms |  0h 0m 6s995ms |
+redcyc6   |  0h 0m 3s559ms |  0h 0m 9s911ms |  0h 0m17s549ms |  0h 0m31s863ms |
+redcyc7   |  0h 0m54s118ms |  0h 1m56s885ms |  0h 3m12s794ms |  0h 6m 7s216ms |
+redcyc8   |  0h 9m58s283ms |  0h10m54s911ms |  0h18m11s414ms |  0h39m14s893ms |
+redeco5   |  0h 0m 0s290ms |  0h 0m 0s  3ms |  0h 0m 3s109ms |  0h 0m 3s671ms |
+redeco6   |  0h 0m 2s389ms |  0h 0m 0s  6ms |  0h 0m 7s958ms |  0h 0m10s860ms |
+redeco7   |  0h 0m22s751ms |  0h 0m 0s 10ms |  0h 0m24s990ms |  0h 0m48s725ms |
+redeco8   |  0h 4m30s648ms |  0h 0m 0s 18ms |  0h 1m20s991ms |  0h 5m53s618ms |
+rediff3   |  0h 0m 0s 28ms |  0h 0m 0s225ms |  0h 0m 0s568ms |  0h 0m 1s  2ms |
+reimer5   |  0h 0m 0s913ms |  0h 0m 0s 65ms |  0h 9m20s820ms |  0h 9m30s537ms |
+rose      |  0h 0m 0s 86ms |  0h 0m 0s347ms |  0h 2m26s320ms |  0h 2m30s262ms |
+s9_1      |  0h 0m 0s663ms |  0h 0m 0s 65ms |  0h 0m14s843ms |  0h 0m17s344ms |
+sendra    |  0h 0m 0s 50ms |  0h 0m 0s131ms |  0h 0m18s328ms |  0h 0m19s474ms |
+solotarev |  0h 0m 0s 79ms |  0h 0m 0s365ms |  0h 0m 1s 37ms |  0h 0m 1s695ms |
+sparse5   |  0h 0m 0s396ms |  0h 0m21s672ms |  0h 3m45s456ms |  0h 4m11s 36ms |
+speer     |  0h 0m 1s554ms |  0h 0m52s  9ms |  0h13m35s109ms |  0h14m31s786ms |
+trinks    |  0h 0m 0s666ms |  0h 0m 1s855ms |  0h 0m 5s962ms |  0h 0m 8s967ms |
+virasoro  |  3h40m50s731ms |  0h 7m 0s273ms |  0h 7m42s993ms |  3h55m41s856ms |
+wood      |  0h 0m 0s 55ms |  0h 0m 0s761ms |  0h 0m 2s860ms |  0h 0m 3s912ms |
+wright    |  0h 0m 1s332ms |  0h 0m 0s  6ms |  0h 0m13s251ms |  0h 0m15s210ms |
+===============================================================================
+
+There are 37 new problems that have been added 
+since the first public release of PHCpack:
+
+utbikker  : troublesome problem for elimination methods
+filter9   : Related to a filter design problem.
+pb601     : problem 601, coming from electrochemistry
+pb601es   : problem pb 601 with every equation divided by average coefficient
+pb601vs   : problem pb 601, obtained after variable scaling
+kotsireas : problem of Kotsireas in celestial mechanics  
+chemkin   : a stationary chemical kinetics problem
+katsura6  : the system katsura6
+katsura7  : the system katsura7
+katsura8  : the system katsura8
+katsura9  : the system katsura9
+katsura10 : the system katsura10
+robspat   : spatial Stewart platform
+stewgou40 : Stewart-Gough platform with 40 real postures
+pole27sys : pole placement system (2,7)
+pole28sys : pole placement system (2,8)
+pole43sys : pole placement system (4,3) 
+pole34sys : pole placement system (3,4)
+pltp34sys : pole placement system (3,4) with totally positive matrices
+chandra4  : The Chandrasekhar H-Equation for n=4
+chandra5  : The Chandrasekhar H-Equation for n=5
+chandra6  : The Chandrasekhar H-Equation for n=6
+tangents0 : 12 lines tangent to four given spheres 
+tangents1 : 3 lines tangent to four given spheres, each with multiplicity 4
+tangents2 : 12 real lines tangent to four given spheres  
+game4two  : totally mixed Nash equilibria for 4 players with 2 pure strategies
+game5two  : totally mixed Nash equilibria for 5 players with 2 pure strategies
+game6two  : totally mixed Nash equilibria for 6 players with 2 pure strategies
+game7two  : totally mixed Nash equilibria for 7 players with 2 pure strategies
+assur44   : the Assur group (4.4)
+fbremb2   : embedding and slicing of the system fourbar, zz1 and zz2 added
+butemb3   : embedding and slicing of the system butcher, zz1,zz2,zz3 added
+cyc8emb1  : sliced and embedded system cyclic 8-roots, zz added
+rcyc8emb1 : embedding and slicing of the system redcyc8, zz added
+rcyc9emb2 : embedding and slicing of the system redcyc9, zz1 and zz2 added
+cyclic10  : cyclic 10-roots problem
+cyclic11  : cyclic 11-roots problem

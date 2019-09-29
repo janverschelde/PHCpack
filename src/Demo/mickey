@@ -1,0 +1,61 @@
+2
+ x**2 + 4*y**2 - 4;
+        2*y**2 - x;
+
+TITLE : Mickey-mouse example to illustrate homotopy continuation.
+
+ROOT COUNTS :
+
+total degree : 4
+1-homogeneous Bezout number : 4
+  with partition : {x y }
+generalized Bezout number : 4
+  based on the set structure :
+     {x y }{x y }
+     {x y }{y }
+mixed volume : 4
+
+REFERENCES :
+
+Jan Verschelde and Ronald Cools:
+"Polynomial Homotopy Continuation, A Portable Ada Software Package".
+The Ada-Belgium Newsletter, 4:59--83, 1996.
+Proceedings of the 1996 Ada-Belgium Seminar, 22 November 1996,
+Eurocontrol, Brussels, Belgium.
+
+DESCRIPTION :
+
+The equations represent the intersection of a circle with a parabola.
+
+THE SOLUTIONS :
+
+4 2
+===========================================================
+solution 1 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x : -3.23606797749979E+00   0.00000000000000E+00
+ y :  0.00000000000000E+00  -1.27201964951407E+00
+== err :  1.174E-15 = rco :  1.079E-01 = res :  0.000E+00 ==
+solution 2 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x : -3.23606797749979E+00   0.00000000000000E+00
+ y :  0.00000000000000E+00   1.27201964951407E+00
+== err :  1.174E-15 = rco :  1.079E-01 = res :  0.000E+00 ==
+solution 3 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x :  1.23606797749979E+00   0.00000000000000E+00
+ y : -7.86151377757423E-01  -9.95682444457783E-60
+== err :  3.476E-16 = rco :  1.998E-01 = res :  4.441E-16 ==
+solution 4 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x :  1.23606797749979E+00   0.00000000000000E+00
+ y :  7.86151377757423E-01   9.95682444457783E-60
+== err :  3.476E-16 = rco :  1.998E-01 = res :  4.441E-16 ==

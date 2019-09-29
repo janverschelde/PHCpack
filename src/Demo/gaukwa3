@@ -1,0 +1,52 @@
+6
+ w1       + w2       + w3     
+                         + (-1.85584131425170E-01 + 9.82628378464191E-01*i);
+ w1*x1    + w2*x2    + w3*x3
+                         + (-9.91336064106736E-01 + 1.31349944809144E-01*i);
+ w1*x1**2 + w2*x2**2 + w3*x3**2
+                         + ( 3.99008911367837E-01 - 9.16947047898107E-01*i);
+ w1*x1**3 + w2*x2**3 + w3*x3**3
+                         + (-7.85981252767830E-01 + 6.18250329799760E-01*i);
+ w1*x1**4 + w2*x2**4 + w3*x3**4
+                         + ( 3.99008911367837E-01 - 9.16947047898107E-01*i);
+ w1*x1**5 + w2*x2**5 + w3*x3**5
+                         + ( 1.49480150971521E-01 + 9.88764726547995E-01*i);
+
+TITLE : Gaussian quadrature formula with 3 knots and 3 weights
+
+ROOT COUNTS :
+
+total degree : 720
+2-homogeneous Bezout number : 225
+  with partition : {w1 w2 w3 }{x1 x2 x3 }
+generalized Bezout number : 225
+  based on the set structure :
+     {w1 w2 w3 }
+     {w1 w2 w3 }{x1 x2 x3 }
+     {w1 w2 w3 }{x1 x2 x3 }{x1 x2 x3 }
+     {w1 w2 w3 }{x1 x2 x3 }{x1 x2 x3 }{x1 x2 x3 }
+     {w1 w2 w3 }{x1 x2 x3 }{x1 x2 x3 }{x1 x2 x3 }{x1 x2 x3 }
+     {w1 w2 w3 }{x1 x2 x3 }{x1 x2 x3 }{x1 x2 x3 }{x1 x2 x3 }{x1 x2 x3 }
+mixed volume : 49
+
+NOTE :
+
+The moments are chosen at random.
+By means of a particular symmetric subdivision,
+only one solution path needs to be traced.
+
+THE GENERATING SOLUTIONS :
+
+1 6
+===========================================================
+solution 1 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 6
+the solution for t :
+ w1 :  8.82956381242511E-01  -4.97446186089554E-01
+ w2 :  1.74696857880646E-02  -4.37569014860605E-01
+ w3 : -7.14841935605406E-01  -4.76131775140323E-02
+ x1 :  4.67557036438764E-01   3.14543130902305E-01
+ x2 : -8.99531291584821E-02  -7.48528771335924E-01
+ x3 : -1.02732562627853E+00   3.52094231469549E-01
+== err :  2.264E-15 = rco :  2.130E-02 = res :  2.945E-16 ==

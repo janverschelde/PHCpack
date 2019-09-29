@@ -1,0 +1,148 @@
+ 8 
+a + b - 0.63254;
+c + d + 1.34534;
+t*a + u*b - v*c - w*d + 0.8365348;
+v*a + w*b + t*c + u*d - 1.7345334;
+a*t**2 - a*v**2 - 2*c*t*v + b*u**2 - b*w**2 - 2*d*u*w - 1.352352;
+c*t**2 - c*v**2 + 2*a*t*v + d*u**2 - d*w**2 + 2*b*u*w + 0.843453;
+a*t**3 - 3*a*t*v**2 + c*v**3 - 3*c*v*t**2 
+  + b*u**3 - 3*b*u*w**2 + d*w**3 - 3*d*w*u**2 + 0.9563453;
+c*t**3 - 3*c*t*v**2 - a*v**3 + 3*a*v*t**2 
+  + d*u**3 - 3*d*u*w**2 - b*w**3 + 3*b*w*u**2 - 1.2342523;
+
+TITLE : heart-dipole problem
+
+ROOT COUNTS :
+
+total degree : 576
+2-homogeneous Bezout number : 193
+  with partition : {a b c d }{t u v w }
+generalized Bezout number : 193
+  based on the set structure :
+     {a b }
+     {c d }
+     {a b c d }{t u v w }
+     {a b c d }{t u v w }
+     {a b c d }{t u v w }{t u v w }
+     {a b c d }{t u v w }{t u v w }
+     {a b c d }{t u v w }{t u v w }{t u v w }
+     {a b c d }{t u v w }{t u v w }{t u v w }
+mixed volume : 121
+
+REFERENCES :
+
+Nelsen, C.V. and Hodgkin, B.C.:
+`Determination of magnitudes, directions, and locations of two independent
+ dipoles in a circular conducting region from boundary potential measurements'
+IEEE Trans. Biomed. Engrg. Vol. BME-28, No. 12, pages 817-823, 1981.
+
+Morgan, A.P. and Sommese, A.J.:
+`Coefficient-Parameter Polynomial Continuation'
+Appl. Math. Comput. Vol. 29, No. 2, pages 123-160, 1989.
+Errata: Appl. Math. Comput. 51:207 (1992)
+
+Morgan, A.P. and Sommese, A. and Watson, L.T.:
+`Mathematical reduction of a heart dipole model'
+J. Comput. Appl. Math. Vol. 27, pages 407-410, 1989.
+
+SYMMETRY GROUP (FOR THE POLYTOPES ONLY!)
+
+1
+(a b)(c d)
+(a b)(t u)(v w)
+(c d)(t u)(v w)
+(a c)(b d)(t v)(u w)
+(a d)(b c)
+(a d)(t w)(u v)
+(b c)(t w)(u v)
+
+a b c d t u v w
+
+1 2 3 4 5 6 7 8
+2 1 4 3 5 6 7 8
+2 1 3 4 6 5 8 7
+1 2 4 3 6 5 8 7
+3 4 1 2 7 8 5 6
+4 3 2 1 5 6 7 8
+4 2 3 1 8 7 6 5
+1 3 2 4 8 7 6 5
+
+NOTE :
+
+The deficiency of this system is due to the solutions of the homogeneous part.
+The Groebner bases for the homogeneous part contains the polynomials
+
+ { a + b, c+d , b*t - b*u - d*v + d*w, b*v - b*w + d*t - d*u,
+   d*t**2  - 2*d*t*u + d*u**2  + d*v**2  - 2*d*v*w + d*w**2 }
+
+which leads to four solution components at infinity :
+
+ 1)  a=0, b=0, c=0, d=0, with t,u,v and w arbitrary complex numbers
+ 2)  a= - d*i, b=d*i, c= - d, t= - i*v + i*w + u
+ 3)  a=d*i, b= - d*i, c= - d, t=i*v - i*w + u
+ 4)  a= - b, c= - d, t=u, v=w
+
+The consecutive contributions of the constant monomials to the mixed
+volume are as follows :
+
+   i   1    2    3    4    5    6    7    8
+  vi   0    0   65   65  104  104  121  121
+
+vi = mixed volume of the system with only the first i contant terms
+
+THE SOLUTIONS :
+
+4 8
+===========================================================
+solution 1 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ a :  3.16270000000000E-01  -9.40179958538160E-01
+ b :  3.16270000000000E-01   9.40179958538160E-01
+ c : -6.72670000000000E-01  -3.26802748753925E-01
+ d : -6.72670000000000E-01   3.26802748753925E-01
+ t :  1.05055232394915E-01   8.20732577685255E-02
+ u :  1.05055232394915E-01  -8.20732577685255E-02
+ v : -2.70836601845149E-01   1.06019057303938E+00
+ w : -2.70836601845149E-01  -1.06019057303938E+00
+== err :  2.975E-15 = rco :  4.003E-02 = res :  2.483E-16 ==
+solution 2 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ a : -1.05327487539249E-02  -2.40131204422346E-52
+ b :  6.43072748753925E-01   2.08809742975953E-52
+ c :  2.67509958538160E-01   1.04462108712268E-52
+ d : -1.61284995853816E+00  -1.04404871487976E-52
+ t :  1.16524580543429E+00  -7.51715074713430E-52
+ u : -9.55135340644462E-01   1.07014993275176E-52
+ v : -3.52909859613675E-01  -3.75857537356715E-52
+ w : -1.88763344076624E-01   8.35238971903811E-53
+== err :  2.694E-15 = rco :  4.064E-02 = res :  2.828E-16 ==
+solution 3 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ a :  6.43072748753925E-01  -3.18618382226490E-57
+ b : -1.05327487539250E-02   3.18618382226490E-57
+ c : -1.61284995853816E+00  -8.92131470234173E-57
+ d :  2.67509958538160E-01   8.92131470234173E-57
+ t : -9.55135340644462E-01   1.27447352890596E-57
+ u :  1.16524580543429E+00  -6.24492029163921E-56
+ v : -1.88763344076624E-01  -3.66411139560464E-57
+ w : -3.52909859613675E-01   3.82342058671789E-57
+== err :  2.465E-15 = rco :  3.546E-02 = res :  3.886E-16 ==
+solution 4 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ a :  3.16270000000000E-01   9.40179958538160E-01
+ b :  3.16270000000000E-01  -9.40179958538160E-01
+ c : -6.72670000000000E-01   3.26802748753925E-01
+ d : -6.72670000000000E-01  -3.26802748753925E-01
+ t :  1.05055232394915E-01  -8.20732577685255E-02
+ u :  1.05055232394915E-01   8.20732577685254E-02
+ v : -2.70836601845149E-01  -1.06019057303938E+00
+ w : -2.70836601845149E-01   1.06019057303938E+00
+== err :  3.067E-15 = rco :  4.003E-02 = res :  4.518E-16 ==

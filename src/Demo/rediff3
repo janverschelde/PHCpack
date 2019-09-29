@@ -1,0 +1,91 @@
+3
+    - 2*x1 + x2 + 0.835634534*x1*(1-x1);
+ x1 - 2*x2 + x3 + 0.835634534*x2*(1-x2);
+ x2 - 2*x3      + 0.835634534*x3*(1-x3);
+
+TITLE : 3-dimensional reaction-diffusion problem
+
+ROOT COUNTS :
+
+total degree : 8
+mixed volume : 7
+
+REFERENCES :
+
+Communicated to me by Arieh Iserles, at the conference held
+in Park City, Utah, July 1995.
+
+The general formulation is as follows:
+
+  alpha > 0, x_0 = x_{n+1} = 0
+ 
+  f_k = x_{k-1} - 2*x_k + x_{k+1} + alpha*x_k*(1-x_k) = 0, k = 1,2,..,n.
+
+It stems from a reaction diffusion problem.
+For general dimension n, there are 2^n solutions, with the number of
+real solutions increasing when the parameter alpha increases.
+Though, there is only one real solution with all its components positive.
+This parameter alpha is here the only real random constant in the system.
+
+Note that the mixed volume does not count the trivial zero solution.
+
+THE SOLUTIONS :
+
+7 3
+===========================================================
+solution 1 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x1 :  9.90452246822526E-03   9.20668856728156E-01
+ x2 : -6.96695396506914E-01   1.08723496633471E+00
+ x3 : -1.40329531548205E+00  -9.20668856728156E-01
+== err :  2.381E-15 = rco :  2.697E-01 = res :  3.140E-16 ==
+solution 2 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x1 : -1.51954966926035E+00   1.43763339100755E+00
+ x2 : -1.56688585394284E+00  -1.97704910020807E+00
+ x3 : -1.51954966926035E+00   1.43763339100755E+00
+== err :  6.957E-15 = rco :  2.882E-01 = res :  6.280E-16 ==
+solution 3 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x1 : -1.40329531548205E+00  -9.20668856728156E-01
+ x2 : -6.96695396506914E-01   1.08723496633471E+00
+ x3 :  9.90452246822522E-03   9.20668856728156E-01
+== err :  2.410E-15 = rco :  3.290E-01 = res :  4.965E-16 ==
+solution 4 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x1 : -1.40329531548205E+00   9.20668856728156E-01
+ x2 : -6.96695396506914E-01  -1.08723496633471E+00
+ x3 :  9.90452246822524E-03  -9.20668856728156E-01
+== err :  2.366E-15 = rco :  3.290E-01 = res :  3.140E-16 ==
+solution 5 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x1 :  2.52317752493039E-01   9.48037483736659E-62
+ x2 :  3.46990121858033E-01   1.31266728517383E-61
+ x3 :  2.52317752493039E-01   9.48037483736659E-62
+== err :  1.413E-15 = rco :  6.653E-02 = res :  1.110E-16 ==
+solution 6 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x1 : -1.51954966926035E+00  -1.43763339100755E+00
+ x2 : -1.56688585394284E+00   1.97704910020807E+00
+ x3 : -1.51954966926035E+00  -1.43763339100755E+00
+== err :  6.957E-15 = rco :  2.882E-01 = res :  6.280E-16 ==
+solution 7 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ x1 :  9.90452246822521E-03  -9.20668856728156E-01
+ x2 : -6.96695396506914E-01  -1.08723496633471E+00
+ x3 : -1.40329531548205E+00   9.20668856728156E-01
+== err :  2.390E-15 = rco :  2.697E-01 = res :  3.514E-16 ==

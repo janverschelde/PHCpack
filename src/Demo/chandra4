@@ -1,0 +1,117 @@
+4
+ 8*H1 - 0.51234*H1*(1+(1/2)*H1+(1/3)*H2+(1/4)*H3) - 8;
+ 8*H2 - 0.51234*H2*(1+(2/3)*H1+(2/4)*H2+(2/5)*H3) - 8;
+ 8*H3 - 0.51234*H3*(1+(3/4)*H1+(3/5)*H2+(3/6)*H3) - 8;
+ 8*H4 - 0.51234*H4*(1+(4/5)*H1+(4/6)*H2+(4/7)*H3) - 8;
+
+TITLE : The Chandrasekhar H-Equation for n=4
+
+ROOT COUNTS :
+
+total degree : 16
+2-homogeneous Bezout number : 8
+  with partition : {H1 H2 H3 }{H4 }
+generalized Bezout number : 8
+  based on the set structure :
+     {H1 }{H1 H2 H3 }
+     {H1 H2 }{H2 H3 }
+     {H1 H2 H3 }{H3 }
+     {H1 H2 H3 }{H4 }
+mixed volume : 8
+
+REFERENCES :
+
+Laureano Gonzalez-Vega: "Some examples on problem solving by using the
+  symbolic viewpoint when dealing with polynomial systems of equations".
+  in: "Computer Algebra in Science and Engineering", Editors: J. Fleischer,
+  J. Grabmeier, F.W. Hehl and W. Kuechlin.  Pages 102-116
+  World Scientific Publishing, 1995.
+
+S. Chandrasekhar: "Radiative Transfer", Dover, NY, 1960.
+
+C.T. Kelley: "Solution of the Chandrasekhar H-equation by Newton's method".
+  J. Math. Phys., 21 (1980), pp. 1625-1628.
+
+Jorge J. More': "A collection of nonlinear model problems"
+  in: "Computational Solution of Nonlinear Systems of Equations",
+  Editors: Eugene L. Allgower and Kurt Georg.  Pages 723-762.
+  Lectures in Applied Mathematics, Volume 26, AMS, 1990.
+
+NOTE : the parameter c equals 0.51234.
+  In general c can be any number in the interval (0,1]
+
+THE SOLUTIONS :
+8 4
+===========================================================================
+solution 1 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ H1 :  3.23234611912785E+01   3.30909953661441E-124
+ H2 : -4.08520581599796E+00  -4.90455824176778E-124
+ H3 : -2.67375455108960E+00  -1.06363913676892E-124
+ H4 : -2.23295583879165E+00  -2.83637103138378E-124
+== err :  8.626E-15 = rco :  1.257E-01 = res :  3.553E-15 ==
+solution 2 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ H1 :  2.13878357402332E+00   6.89486635735363E-124
+ H2 :  4.65724101587131E+00  -7.56365608369007E-124
+ H3 :  1.87684762342963E+01   1.01063204129602E-123
+ H4 : -1.68612350186289E+01   2.42036994678082E-122
+== err :  4.651E-14 = rco :  2.608E-02 = res :  1.132E-14 ==
+solution 3 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ H1 :  8.76084766994284E+01  -2.47845882550356E-118
+ H2 : -1.00582925744765E+02   2.13147458993306E-117
+ H3 :  1.66392100394692E+01  -2.35453588422839E-117
+ H4 :  7.52507489032550E+00  -1.23922941275178E-118
+== err :  5.633E-13 = rco :  3.587E-03 = res :  6.839E-14 ==
+solution 4 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ H1 :  5.88966639781217E+01  -5.40561307813535E-110
+ H2 : -1.54901332806343E+01   2.44500037687968E-109
+ H3 : -3.97417697033545E+01  -2.39510241000458E-109
+ H4 :  2.92607213491990E+01  -1.83092273120350E-106
+== err :  1.295E-12 = rco :  5.299E-03 = res :  1.896E-13 ==
+solution 5 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ H1 :  1.17379972280208E+00  -3.17242729664456E-117
+ H2 :  1.22825205825231E+00  -5.07588367463130E-116
+ H3 :  1.26270921307842E+00  -2.53794183731565E-116
+ H4 :  1.28672129216381E+00   0.00000000000000E+00
+== err :  1.663E-16 = rco :  6.745E-01 = res :  3.053E-16 ==
+solution 6 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ H1 :  5.79689067953214E+00  -6.19614706375891E-119
+ H2 :  1.14667154697669E+02   2.16865147231562E-118
+ H3 : -1.16799284383068E+02  -1.67295970721491E-118
+ H4 :  5.68224655652938E+01  -4.10036228091310E-115
+== err :  1.842E-12 = rco :  1.250E-03 = res :  4.268E-13 ==
+solution 7 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ H1 :  1.59631636700878E+02   4.61988642640884E-107
+ H2 : -3.81386641388061E+02  -3.03592536592581E-106
+ H3 :  2.47319505511373E+02   3.15747634092770E-106
+ H4 : -9.86088106502519E+01   4.44700508162162E-101
+== err :  1.787E-10 = rco :  2.390E-04 = res :  3.943E-12 ==
+solution 8 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 1
+the solution for t :
+ H1 :  3.18142927381331E+00   0.00000000000000E+00
+ H2 :  3.02411166378081E+01  -3.17383639986385E-128
+ H3 : -7.85804508743045E+00   2.88530581805804E-128
+ H4 : -4.33625865693282E+00  -7.21326454514511E-129
+== err :  6.367E-15 = rco :  4.877E-02 = res :  6.217E-15 ==

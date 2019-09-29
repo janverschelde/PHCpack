@@ -1,0 +1,34 @@
+4
+ w1       + w2       + (-9.98250904334731E-01 + 5.91196413630250E-02*i);
+ w1*x1    + w2*x2    + (-8.92749639148806E-01 + 4.50553084330444E-01*i);
+ w1*x1**2 + w2*x2**2 + ( 1.60088552022675E-01 + 9.87102657027770E-01*i);
+ w1*x1**3 + w2*x2**3 + (-7.25369971319578E-01 + 6.88359211972815E-01*i);
+
+TITLE : Gaussian quadrature formula with 2 knots and 2 weights
+
+ROOT COUNTS :
+
+total degree : 24
+2-homogeneous Bezout number : 11
+   with partition : {{w1 w2 }{x1 x2 }}
+mixed volume : 5
+
+NOTE :
+
+By a particular symmetric choice of the subdivision,
+only one solution path needs to be traced.
+Moments are taken as random complex coefficients.
+
+THE GENERATING SOLUTIONS :
+
+1 4
+===========================================================
+solution 1 :
+t :  1.00000000000000E+00   0.00000000000000E+00
+m : 2
+the solution for t :
+ w1 :  1.03639570141331E+00   6.19038489119190E-03
+ w2 : -3.81447970785750E-02  -6.53100262542169E-02
+ x1 :  7.26646740724671E-01  -5.51989879497413E-01
+ x2 : -2.24458038436995E+00   7.75072227352324E-01
+== err :  4.047E-15 = rco :  8.280E-03 = res :  2.238E-16 ==
