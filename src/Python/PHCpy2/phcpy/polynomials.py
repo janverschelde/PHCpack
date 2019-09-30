@@ -40,12 +40,14 @@ class Polynomials(object):
         """
         return self.vars
 
-    def solve(self, verbose=True):
+    def solve(self, nbtasks=0, verbose=True):
         """
-        Applies the blackbox solver and results
-        a list of solutions.
+        Applies the blackbox solver and returns a list of solutions.
+        Multitasking is applied when the number of tasks in nbtasks
+        is set to the number of tasks.
+        By default, verbose is True, and root counts are written.
         """
-        sols = solver.solve(self.pols, verbose=verbose)
+        sols = solver.solve(self.pols, verbose=verbose, tasks=nbtasks)
         result = [Solution(sol) for sol in sols]
         return result
 

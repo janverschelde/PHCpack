@@ -1,3 +1,6 @@
+Sun 29 Sep 2019 : added the number of tasks to the solve() method in the
+  class polynomials.
+
 Sat 28 Sep 2019 : added the list of variables as a data attribute in the
   class polynomials.
 
