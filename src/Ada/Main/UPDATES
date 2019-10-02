@@ -1,3 +1,6 @@
+Tue 1 Oct 2019 : added phctop_no_ade, option_handlers_no_ade, to compile
+  versions of phc without the QD and Path libraries.
+
 Sat 14 Sep 2019 : updated bablphc.adb, bablphc2.adb, and bablphc4.adb 
   to avoid asking name of file twice.
 

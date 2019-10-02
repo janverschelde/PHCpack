@@ -64,6 +64,9 @@ option_handlers              : handles the options for phc
 ts_opthand                   : test on the option handlers
 phctop                       : scans options and arguments and calls drivers
 -------------------------------------------------------------------------------
+option_handlers_no_ade       : handles the options for phc without Path
+phctop_no_ade                : phc without QD and without Path
+-------------------------------------------------------------------------------
 
 The driver for root refinement are located at this level because symmetry
 relations can be used to extract the generators of a list of solutions.
