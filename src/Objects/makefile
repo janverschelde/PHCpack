@@ -14,6 +14,9 @@ MAKEFILE = makefile_mac
 phc:
 	make -f $(MAKEFILE) phc
 
+phc_no_ade:
+	make -f $(MAKEFILE) phc_no_ade
+
 # for phcpy for Python 2.6 and 2.7, make phcpy2c2.so
 
 phcpy2c2.so:

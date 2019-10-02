@@ -63,12 +63,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-# GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
-GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-GNATFLAGS=-gnatv -gnatwa -gnatVa
+# GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
+# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+# GNATFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -100,6 +100,25 @@ phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  lib.a $(QD_LIB)/libqd.a \
+                 /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 get_clock.o get_clocks_per_sec.o \
+                 -Wl,-stack_size -Wl,0x10000000 \
+              -o $(BIN)/phc -lm --LINK=g++
+
+phc_no_ade: lib.a feedback.o get_clock.o get_clocks_per_sec.o \
+     inputData.o outputData.o iTest.o fTest.o reltab.o \
+     simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) pieri_solver.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) phctop_no_ade.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatbind phctop_no_ade use_c2phc pieri_solver
+	gnatlink phctop_no_ade syscon.o solcon.o phcpack.o feedback.o \
+                 corecount.o \
+                 inputData.o outputData.o iTest.o fTest.o reltab.o \
+                 simplex4phc.o mvc4phc.o demicsrun4phc.o lib.a \
                  /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  get_clock.o get_clocks_per_sec.o \
                  -Wl,-stack_size -Wl,0x10000000 \
