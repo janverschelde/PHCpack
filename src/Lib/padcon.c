@@ -1173,7 +1173,7 @@ int padcon_get_quaddobl_denominator_coefficient
  ( int leadidx, int idx, int verbose, double* cre, double* cim )
 {
    int fail;
-   int inpars[3];
+   int inpars[4];
    double nbr[2];
 
    inpars[0] = 2;
