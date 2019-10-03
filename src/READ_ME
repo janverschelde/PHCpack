@@ -1,8 +1,7 @@
-The public distribution for PHCpack version 2.4.72 contains
+The public distribution for PHCpack version 2.4.73 contains
 
   Ada        Ada sources
   bin        binary versions of phc
-  Demo       collection of demonstration polynomial systems
   doc        documentation in restructured text for Sphinx
   cgi        scripts for the web interface, developed by Xiangcheng Yu
   Feedback   realization of feedback laws, with Yusong Wang
@@ -30,6 +29,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.73 on 2019-10-03 : bug fix in phc -b for nonsquare systems 
 release 2.4.72 on 2019-09-01 : phc -u supports m-homogeneous coordinates
 release 2.4.71 on 2019-08-13 : phc -u supports 1-homogeneous coordinates
 release 2.4.70 on 2019-07-25 : removed series step from phc -u

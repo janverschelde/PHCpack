@@ -1,3 +1,5 @@
+Thu 3 Oct 2019 : updated greeting_banners for version 2.4.73.
+
 Tue 1 Oct 2019 : added phctop_no_ade, option_handlers_no_ade, to compile
   versions of phc without the QD and Path libraries.
 
