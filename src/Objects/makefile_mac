@@ -8,8 +8,8 @@
 # This makefile is specific for Mac OS X, mainly because of the
 # Python bindings and the use of MPI.
 
-# PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
-PYTHON=/usr/include/python2.7
+PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+# PYTHON=/usr/include/python2.7
 PYTHON37=/Library/Frameworks/Python.framework/Versions/3.7/include/python3.7m
 PYTHON37lib=/Library/Frameworks/Python.framework/Versions/3.7/lib
 PYTHON36=/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
@@ -18,9 +18,12 @@ PYTHON35=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
 PYTHON35lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
 MPI_HOME=/usr/local
 
+# which gcc to use
+gcc=/usr/bin/gcc
 # which g++ to use
-
-gpp=/usr/bin/g++
+# gpp=/usr/bin/g++
+# gpp=g++
+gpp=/usr/bin/clang++
 
 # To extend sage on Mac OS X with python, we must link with the python
 # of the Sage distribution, which is defined here:
@@ -76,7 +79,8 @@ COFLAGS = -O2
 # Very likely the value for MPIR_HOME needs adjusting :
 
 MCC=/usr/bin/gcc
-gpp=/usr/bin/g++
+# gpp=/usr/bin/g++
+# gpp=g++
 
 CC          = $(MPI_HOME)/bin/mpicc
 CLINKER     = $(CC)
@@ -1850,7 +1854,7 @@ ts_runtrack:
 # files in feedback :
 
 lib.a:$(PHCAda)/../Feedback/*.c $(PHCAda)/../Feedback/*.h
-	gcc -c $(PHCAda)/../Feedback/*.c
+	$(gcc) -c $(PHCAda)/../Feedback/*.c
 	ar ruv lib.a    dc_interpolation.o  dcmplx.o       poly_matrix.o\
        append_dcmatrix.o    dc_inverse.o        pieri_sols.o   poly_smith.o\
        c2ada_dc_matrix.o    dc_matrix.o         poly_dcmplx.o  realization.o\
@@ -1866,7 +1870,7 @@ ts_feedback: lib.a get_clock.o get_clocks_per_sec.o
                  get_clock.o get_clocks_per_sec.o
 
 feedback.o:
-	gcc -c $(PHCAda)/../Feedback/feedback.c
+	$(gcc) -c $(PHCAda)/../Feedback/feedback.c
 
 # Test program to test the C interface to GPU acceleration :
 
@@ -3111,31 +3115,31 @@ lib_witsols_cpp:
 
 phcpy2c2.so: lib2path.o parameter.o inputData.o outputData.o iTest.o fTest.o \
              simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/tabform.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witsols.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	g++ -Dcompilewgpp=1 -c -I$(PYTHON) -I$(PYTHON)/Include \
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/tabform.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witsols.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
+	$(gpp) -Dcompilewgpp=1 -c -I$(PYTHON) -I$(PYTHON)/Include \
             $(PHCLib)/phcpy2c2.c
 	gnatmake -c -static -O3 $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
@@ -3147,39 +3151,45 @@ phcpy2c2.so: lib2path.o parameter.o inputData.o outputData.o iTest.o fTest.o \
             inputData.o outputData.o iTest.o fTest.o \
             simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
             parameter.o lib2path.o $(QD_LIB)/libqd.a \
-                 /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so \
-                 /usr/lib/libpython2.7.dylib \
-                 -lm --LINK=gcc
+                 /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+                 -lm --LINK=$(gpp) -Wl,-no_compact_unwind \
+-L/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config \
+-lpython2.7 -ldl -framework CoreFoundation
+
+# The above last two lines are the output of python-config --ldflags,
+# where python is the default python2.7 interpreter.
+# As gpp, the /usr/bin/clang++ was used for python2.
 
 # to extend the Python interpreter of Sage with phcpy2c2.so :
 
 sage_phcpy2c2.so: parameter.o lib2path.o inputData.o outputData.o iTest.o \
                   fTest.o simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witsols.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	g++ -Dcompilewgpp=1 -c -O3 \
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/tabform.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witsols.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 \
             -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc
@@ -3188,12 +3198,20 @@ sage_phcpy2c2.so: parameter.o lib2path.o inputData.o outputData.o iTest.o \
             giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
             scalers.o reducers.o numbtrop.o sweep.o multiplicity.o schubert.o \
             syspool.o series.o padcon.o parameter.o lib2path.o witsols.o \
-            inputData.o outputData.o iTest.o fTest.o \
+            inputData.o outputData.o iTest.o fTest.o tabform.o \
             simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                  $(QD_LIB)/libqd.a \
                  /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
-            $(SAGEPYTHONLIB)/libpython2.7.dylib -o sage_phcpy2c2.so \
-            -lm --LINK=g++
+            -o sage_phcpy2c2.so \
+            -lm --LINK=$(gpp) -Wl,-no_compact_unwind \
+            $(SAGEPYTHONLIB)/libpython2.7.dylib \
+-L/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config \
+            -lpython2.7 -ldl -framework CoreFoundation
+
+# not to be omitted from the linking?
+# $(SAGEPYTHONLIB)/libpython2.7.dylib
+# replace by the output of the ./python-config --ldflags,
+# executed in the local/bin folder of the sage distribution
 
 # Use sage_phcpy2c2.so as follows:
 # (1) Rename into phcpy2c2.so and with the python interpreter of sage,
@@ -3205,33 +3223,33 @@ sage_phcpy2c2.so: parameter.o lib2path.o inputData.o outputData.o iTest.o \
 # (4) With the sage python interpreter do 'python setup.py install'
 #     and then check if import phcpy works at the sage prompt.
 
-phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
+phcpy2c36.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
              simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/tabform.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/witsols.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
-	g++ -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	g++ -Dcompilewgpp=1 -c -O3 -I$(PYTHON36) \
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/tabform.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witsols.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PYTHON36) \
                -I$(PYTHON36)/Include $(PHCLib)/phcpy2c3.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc
@@ -3245,7 +3263,55 @@ phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
             parameter.o lib2path.o $(QD_LIB)/libqd.a \
                   /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
-               $(PYTHON36lib)/libpython3.6m.dylib -lm --LINK=g++
+               $(PYTHON36lib)/libpython3.6m.dylib \
+               -lm --LINK=$(gpp) -Wl,-no_compact_unwind
+
+phcpy2c37.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
+             simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/tabform.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witsols.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PYTHON36) \
+               -I$(PYTHON37)/Include $(PHCLib)/phcpy2c3.c
+	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatbind -n -static use_c2phc
+	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
+            solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
+            giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
+            scalers.o reducers.o sweep.o multiplicity.o numbtrop.o schubert.o \
+            syspool.o series.o witsols.o padcon.o tabform.o \
+            inputData.o outputData.o iTest.o fTest.o \
+            simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+            parameter.o lib2path.o $(QD_LIB)/libqd.a \
+                /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
+               -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
+               -lm --LINK=$(gpp) -Wl,-no_compact_unwind \
+-L/Users/jan/miniconda3/lib/python3.7/config-3.7m-darwin -lpython3.7m -ldl \
+-framework CoreFoundation
+
+# The last lines above were gotten from the output of
+# python3-config --ldflags
 
 # phcpy2c with double version of Path library :
 
