@@ -1,3 +1,5 @@
+Thu 3 Oct 2019 : updates files for version 1.0.1 of phcpy.
+
 Sun 29 Sep 2019 : added the number of tasks to the solve() method in the
   class polynomials.
 

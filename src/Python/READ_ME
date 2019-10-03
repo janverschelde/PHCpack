@@ -1,4 +1,4 @@
-phcpy 1.0.0 offers a simple Python interface to PHCv2.4.72
+phcpy 1.0.1 offers a simple Python interface to PHCv2.4.73
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -69,6 +69,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+1.0.1 : 2019-10-03 : class definitions for polynomials and solutions
 1.0.0 : 2019-09-01 : support for m-homogenization in trackers of curves
 0.9.9 : 2019-08-13 : step-by-step trackers in curves support 1-homogenization
 0.9.8 : 2019-07-25 : support for the tableau format of a polynomial system
