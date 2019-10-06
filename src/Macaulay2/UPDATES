@@ -1,3 +1,5 @@
+Sun 8 Oct 2019 : in cascade, added '0' to the input for double precision.
+
 Tue 29 Nov 2016 : fixed the extraction of the outcome of the PieriHomotopies
   in LRhomotopies.m2.
 

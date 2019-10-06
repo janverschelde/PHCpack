@@ -174,7 +174,7 @@ getFilename = () -> (
   filename
 )
 
-parseSolutions = method(TypicalValue => Sequence, Options => {Bits => 53, computingPrecision => 1})
+parseSolutions = method(TypicalValue => Sequence, Options => {Bits => 53})
 parseSolutions (String,Ring) := o -> (s,R) -> (
   -- parses solutions in PHCpack format 
   -- IN:  s = string of solutions in PHCmaple format 
@@ -182,15 +182,7 @@ parseSolutions (String,Ring) := o -> (s,R) -> (
   -- OUT: List of solutions, each of type Point, 
   --      carrying also other diagnostic information about each.
   oldprec := defaultPrecision;
-  
-  -- If we are working in double double or quad double, we need to have
-  -- sufficient precision while parsing the solutions.
-  if o.computingPrecision == 2 then
-  	defaultPrecision = 120
-  else if o.computingPrecision == 4 then
-  	defaultPrecision = 250
-  else
-    defaultPrecision = o.Bits;
+  defaultPrecision = o.Bits;
   L := get s; 
   L = replace("=", "=>", L);
   L = replace("I", "ii", L);
@@ -648,7 +640,8 @@ cascade (List) := o -> (system) -> (
     stdio << "writing output to file " << PHCoutputFile << endl;
   
   systemToFile(system,PHCinputFile);
-  s := concatenate("0\ny\n",PHCinputFile); -- option 0, system on file
+  s := concatenate("0\n0\ny\n",PHCinputFile); -- option 0, system on file
+  s = concatenate("0\ny\n",PHCinputFile);  -- option 0, double precision
   s = concatenate(s,"\n",PHCoutputFile);   -- add name of the output file
   s = concatenate(s,"\n");
   s = concatenate(s,toString(startdim));   -- add top dimension
@@ -1152,11 +1145,11 @@ solveSystem List := List =>  o->system -> (
   -- parse and output the solutions:
   local result;
   if n == numgens R then (
-    result = parseSolutions(solnsfile, R, computingPrecision => o.computingPrecision)
+    result = parseSolutions(solnsfile, R)
   )
   else (
     slackRing := (coefficientRing R)(gens R | slackVars);
-    result = parseSolutions(solnsfile, slackRing, computingPrecision => o.computingPrecision);
+    result = parseSolutions(solnsfile, slackRing);
 
     stdio << "*** after parseSolutions, ring has " << gens R << " ***" << endl;
 
@@ -1304,7 +1297,7 @@ topWitnessSet (List,ZZ) := o->(system,dimension) -> (
 -- TRACK PATHS --
 -----------------
 
-trackPaths = method(TypicalValue => List, Options=>{gamma=>0, tDegree=>2, Verbose => false, numThreads=>0, seeProgress=>false, interactive => false, saveSettingsPath => "", loadSettingsPath => "", intermediateSolutions => false, computingPrecision => 1})
+trackPaths = method(TypicalValue => List, Options=>{gamma=>0, tDegree=>2, Verbose => false, numThreads=>0, seeProgress=>false, interactive => false, saveSettingsPath => "", loadSettingsPath => "", intermediateSolutions => false})
 trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
   -- IN: T, target system to be solved;
   --     S, start system with solutions in Ssols;
@@ -1322,29 +1315,25 @@ trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
   if (o.loadSettingsPath != "") and o.interactive then
     error "You cannot both load settings and be in interactive mode. Please reset your options.";
 
-  if not member(o.computingPrecision,{1,2,4}) then
-    error "Precision must be set to 1, 2, or 4.";
-
   R := ring first T;
   n := #T;
-  filename := getFilename();
-  targetfile := filename | "PHCtarget";
+  targetfile := temporaryFileName() | "PHCtarget";
   systemToFile(T,targetfile);
 
-  outfile := filename | "PHCoutput";
+  outfile := temporaryFileName() | "PHCoutput";
   if not (o.numThreads > 1) then (
-    startfile := filename | "PHCstart";
+    startfile := temporaryFileName() | "PHCstart";
     systemToFile(S,startfile);
-    Ssolsfile := filename | "PHCstartsols";
+    Ssolsfile := temporaryFileName() | "PHCstartsols";
     solutionsToFile(Ssols,R,Ssolsfile);
   )
   else (
-    startandsolutionfile := filename | "PHCstartandsols";
+    startandsolutionfile := temporaryFileName() | "PHCstartandsols";
     systemToFile(S,startandsolutionfile);
     solutionsToFile(Ssols, R, startandsolutionfile, Append=>true);
   );
-  Tsolsfile := filename | "PHCtargetsols";
-  batchfile := filename | "PHCbat";
+  Tsolsfile := temporaryFileName() | "PHCtargetsols";
+  batchfile := temporaryFileName() | "PHCbat";
   if o.Verbose then
     stdio << "using temporary files " << outfile
           << " and " << Tsolsfile << endl;
@@ -1397,14 +1386,6 @@ trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
       bat << "a" << endl << realPart o.gamma << endl;
       bat << imaginaryPart o.gamma << endl;
     );
-    -- set the precision to double double or quad double, if requested.
-    if (o.computingPrecision == 1) then
-      bat << "d" << endl << "16" << endl
-    else if (o.computingPrecision == 2) then
-      bat << "d" << endl << "32" << endl
-    else if (o.computingPrecision == 4) then
-      bat << "d" << endl << "64" << endl;
-    
     bat << "0" << endl;
     -- second menu 
     bat << "0" << endl; -- exit for now
@@ -1445,7 +1426,7 @@ trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
   if o.intermediateSolutions then (
       return parseIntermediateSolutions(outfile,R);
   );
-  result := parseSolutions(Tsolsfile, R, computingPrecision => o.computingPrecision);
+  result := parseSolutions(Tsolsfile, R);
   if n > numgens R then (
     result = apply(result, s->(
       if any(drop(first s, numgens R), x->abs x > 0.01) 
@@ -1952,9 +1933,9 @@ TEST///
      QQ[x,y,z];
      sys = {y-x^2, z-x^3, (x+y+z-1)/x};
      sols = solveRationalSystem(sys);
-     assert(# sols == 3); --there are 3 solutions
+     assert(# sols == 2); --there are two solutions
      real = realPoints(sols);
-     assert(# real ==1); --one solution is real
+     assert(# real == 2); --both solutions are real
 ///;
 
 -----------------------------------
