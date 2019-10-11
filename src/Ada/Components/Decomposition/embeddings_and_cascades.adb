@@ -1,10 +1,8 @@
 with Ada.Calendar;
 with String_Splitters;                   use String_Splitters;
-with Communications_with_User;           use Communications_with_User;
 with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Numbers_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laurentials;
@@ -71,7 +69,7 @@ package body Embeddings_and_Cascades is
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
@@ -90,16 +88,20 @@ package body Embeddings_and_Cascades is
     deflate : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("Standard_Embed_and_Cascade 1 ...");
+    end if;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     deflate := (topdim = 0);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(embsys.all,deflate,rc,rocos,sols);
+      Black_Box_Solvers.Solve(embsys.all,deflate,rc,rocos,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(nt,embsys.all,deflate,rc,rocos,sols);
+      Black_Box_Solvers.Solve(nt,embsys.all,deflate,rc,rocos,sols,verbose-1);
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -119,7 +121,8 @@ package body Embeddings_and_Cascades is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       if topdim > 0 then
-        Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+        Standard_Run_Cascade
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line;
         put_line("THE SOLUTIONS :");
@@ -131,7 +134,7 @@ package body Embeddings_and_Cascades is
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
@@ -148,6 +151,10 @@ package body Embeddings_and_Cascades is
     deflate : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("Standard_Embed_and_Cascade 2 ...");
+    end if;
     new_line;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
@@ -158,11 +165,11 @@ package body Embeddings_and_Cascades is
     new_line;
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(file,embsys.all,deflate,rc,sols);
+      Black_Box_Solvers.Solve(file,embsys.all,deflate,rc,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,embsys.all,deflate,rc,sols);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,deflate,rc,sols,verbose-1);
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -175,7 +182,7 @@ package body Embeddings_and_Cascades is
     if not Is_Null(sols) then
       if topdim > 0 then
         Standard_Run_Cascade
-          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
@@ -187,7 +194,7 @@ package body Embeddings_and_Cascades is
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Laurentials;
     use Standard_Complex_Solutions;
@@ -205,15 +212,19 @@ package body Embeddings_and_Cascades is
     topsoltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("Standard_Embed_and_Cascade 3 ...");
+    end if;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -233,7 +244,8 @@ package body Embeddings_and_Cascades is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       if topdim > 0 then
-        Standard_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+        Standard_Run_Cascade
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line;
         put_line("THE SOLUTIONS :");
@@ -245,7 +257,7 @@ package body Embeddings_and_Cascades is
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Laurentials;
     use Standard_Complex_Solutions;
@@ -261,17 +273,21 @@ package body Embeddings_and_Cascades is
     sols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("Standard_Embed_and_Cascade 4 ...");
+    end if;
     new_line;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     put_line(file,embsys.all);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols,verbose-1);
       tstop(timer);
       Standard_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -284,7 +300,7 @@ package body Embeddings_and_Cascades is
     if not Is_Null(sols) then
       if topdim > 0 then
         Standard_Run_Cascade
-          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line;
         put_line("THE SOLUTIONS :");
@@ -296,7 +312,7 @@ package body Embeddings_and_Cascades is
   procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Solutions;
@@ -314,15 +330,19 @@ package body Embeddings_and_Cascades is
     topsoltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("DoblDobl_Embed_and_Cascade 1 ...");
+    end if;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -342,7 +362,8 @@ package body Embeddings_and_Cascades is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       if topdim > 0 then
-        DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+        DoblDobl_Run_Cascade
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line;
         put_line("THE SOLUTIONS :");
@@ -354,7 +375,7 @@ package body Embeddings_and_Cascades is
   procedure DoblDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Solutions;
@@ -370,17 +391,21 @@ package body Embeddings_and_Cascades is
     sols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("DoblDobl_Embed_and_Cascade 2 ...");
+    end if;
     new_line;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     put_line(file,embsys.all);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols,verbose-1);
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -393,7 +418,7 @@ package body Embeddings_and_Cascades is
     if not Is_Null(sols) then
       if topdim > 0 then
         DoblDobl_Run_Cascade
-          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
@@ -405,7 +430,7 @@ package body Embeddings_and_Cascades is
   procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Laurentials;
     use DoblDobl_Complex_Solutions;
@@ -423,15 +448,19 @@ package body Embeddings_and_Cascades is
     topsoltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("DoblDobl_Embed_and_Cascade 3 ...");
+    end if;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -451,7 +480,8 @@ package body Embeddings_and_Cascades is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       if topdim > 0 then
-        DoblDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+        DoblDobl_Run_Cascade
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line;
         put_line("THE SOLUTIONS :");
@@ -463,7 +493,7 @@ package body Embeddings_and_Cascades is
   procedure DoblDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Laurentials;
     use DoblDobl_Complex_Solutions;
@@ -479,17 +509,21 @@ package body Embeddings_and_Cascades is
     sols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("DoblDobl_Embed_and_Cascade 4 ...");
+    end if;
     new_line;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     put_line(file,embsys.all);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols,verbose-1);
       tstop(timer);
       DoblDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -502,7 +536,7 @@ package body Embeddings_and_Cascades is
     if not Is_Null(sols) then
       if topdim > 0 then
         DoblDobl_Run_Cascade
-          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
@@ -514,7 +548,7 @@ package body Embeddings_and_Cascades is
   procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Solutions;
@@ -532,15 +566,19 @@ package body Embeddings_and_Cascades is
     topsoltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("QuadDobl_Embed_and_Cascade 1 ...");
+    end if;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -560,7 +598,8 @@ package body Embeddings_and_Cascades is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       if topdim > 0 then
-        QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+        QuadDobl_Run_Cascade
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line;
         put_line("THE SOLUTIONS :");
@@ -572,7 +611,7 @@ package body Embeddings_and_Cascades is
   procedure QuadDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Solutions;
@@ -588,17 +627,21 @@ package body Embeddings_and_Cascades is
     sols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("QuadDobl_Embed_and_Cascade 2 ...");
+    end if;
     new_line;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     put_line(file,embsys.all);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols,verbose-1);
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -611,7 +654,7 @@ package body Embeddings_and_Cascades is
     if not Is_Null(sols) then
       if topdim > 0 then
         QuadDobl_Run_Cascade
-          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line(file);
         put_line(file,"THE SOLUTIONS :");
@@ -623,7 +666,7 @@ package body Embeddings_and_Cascades is
   procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Laurentials;
     use QuadDobl_Complex_Solutions;
@@ -641,15 +684,19 @@ package body Embeddings_and_Cascades is
     topsoltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("QuadDobl_Embed_and_Cascade 3 ...");
+    end if;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols);
+      Black_Box_Solvers.Solve(nt,embsys.all,rc,rocos,sols,verbose-1);
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -669,7 +716,8 @@ package body Embeddings_and_Cascades is
       put("Computed "); put(Length_Of(sols),1);
       put_line(" solutions at the top dimension.");
       if topdim > 0 then
-        QuadDobl_Run_Cascade(nt,topdim,lowdim,embsys.all,sols,filter,factor);
+        QuadDobl_Run_Cascade
+          (nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line;
         put_line("THE SOLUTIONS :");
@@ -681,7 +729,7 @@ package body Embeddings_and_Cascades is
   procedure QuadDobl_Embed_and_Cascade
               ( file : in file_type; name : in string; nt : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Laurentials;
     use QuadDobl_Complex_Solutions;
@@ -697,17 +745,21 @@ package body Embeddings_and_Cascades is
     sols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in embeddings_and_cascades.");
+      put_line("QuadDobl_Embed_and_Cascade 4 ...");
+    end if;
     new_line;
     Prompt_for_Top_Dimension(nq,nv,topdim,lowdim);
     Square_and_Embed(p,topdim,embsys);
     put_line(file,embsys.all);
     if nt = 0 then
       tstart(timer);
-      Black_Box_Solvers.Solve(file,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,embsys.all,rc,sols,verbose-1);
       tstop(timer);
     else
       tstart(timer);
-      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols);
+      Black_Box_Solvers.Solve(file,nt,embsys.all,rc,sols,verbose-1);
       tstop(timer);
       QuadDobl_Solution_Manipulators.Remove_Imaginary_Target(sols);
     end if;
@@ -720,7 +772,7 @@ package body Embeddings_and_Cascades is
     if not Is_Null(sols) then
       if topdim > 0 then
         QuadDobl_Run_Cascade
-          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor);
+          (file,name,nt,topdim,lowdim,embsys.all,sols,filter,factor,verbose-1);
       else
         new_line;
         put_line("THE SOLUTIONS :");

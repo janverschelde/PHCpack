@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
@@ -26,32 +27,32 @@ package Running_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure Standard_Run_Cascade
               ( nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure DoblDobl_Run_Cascade
               ( nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure DoblDobl_Run_Cascade
               ( nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure QuadDobl_Run_Cascade
               ( nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure QuadDobl_Run_Cascade
               ( nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given an embedding of the top dimensional solution set,
@@ -69,44 +70,45 @@ package Running_Cascades is
   --            otherwise, the output will be superwitness sets.
   --   factor   if true and filter, then the filtered witness sets will be
   --            factored into irreducible components,
-  --            otherwise, the output sets may still be reducible.
+  --            otherwise, the output sets may still be reducible;
+  --   verbose  is the verbose level.
 
   procedure Standard_Run_Cascade
               ( file : in file_type; name : in string;
                 nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure Standard_Run_Cascade
               ( file : in file_type; name : in string;
                 nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure DoblDobl_Run_Cascade
               ( file : in file_type; name : in string;
                 nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure DoblDobl_Run_Cascade
               ( file : in file_type; name : in string;
                 nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure QuadDobl_Run_Cascade
               ( file : in file_type; name : in string;
                 nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure QuadDobl_Run_Cascade
               ( file : in file_type; name : in string;
                 nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given an embedding of the top dimensional solution set,
@@ -126,7 +128,8 @@ package Running_Cascades is
   --            otherwise, the output will be superwitness sets.
   --   factor   if true and filter, then the filtered witness sets will be
   --            factored into irreducible components,
-  --            otherwise, the output sets may still be reducible.
+  --            otherwise, the output sets may still be reducible;
+  --   verbose  is the verbose level.
 
   procedure Standard_Cascade_Callback
               ( nt,topdim,lowdim : in natural32;

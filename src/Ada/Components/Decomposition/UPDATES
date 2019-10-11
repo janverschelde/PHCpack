@@ -1,4 +1,5 @@
-Fri 11 Oct 2019 : added verbose level to maindeco.
+Fri 11 Oct 2019 : added verbose level to maindeco and to running_cascades,
+  embeddings_and_cascades, and drivers_to_cascade_filtering.
 
 Thu 29 Aug 2019 : removed superfluous with/use clauses from
   drivers_to_cascade_filtering.adb and updated cascade_homotopies

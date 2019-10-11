@@ -331,7 +331,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
     put("Type 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, or B to choose : ");
     Ask_Alternative(ans,"0123456789AB");
     case ans is
-      when '0' => Embed_and_Cascade(nt,infilename,outfilename);
+      when '0' => Embed_and_Cascade(nt,infilename,outfilename,verbose-1);
       when '1' => Driver_to_Square_and_Embed(infilename,outfilename);
       when '2' => Driver_to_Witness_Generate(nt,infilename,outfilename);
       when '3' => Run_Cascade_Filter(verbose-1);

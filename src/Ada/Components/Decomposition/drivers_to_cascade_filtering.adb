@@ -196,7 +196,8 @@ package body Drivers_to_Cascade_Filtering is
   end Driver_to_Witness_Generate;
 
   procedure Standard_Embed_and_Cascade
-              ( nt : in natural32; inpname,outname : in string ) is
+              ( nt : in natural32; inpname,outname : in string;
+                verbose : in integer32 := 0 ) is
 
     use Standard_Laur_Poly_Convertors;
 
@@ -207,14 +208,20 @@ package body Drivers_to_Cascade_Filtering is
     outfilename : Link_to_String;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_to_cascade_filtering.");
+      put_line("Standard_Embed_and_Cascade ...");
+    end if;
     Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
     Create_Output_File(outfile,outname,outfilename);
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all,true,true);
+      Standard_Embed_and_Cascade
+        (outfile,outfilename.all,nt,lq.all,true,true,verbose-1);
     else
       lp := new Standard_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      Standard_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all,true,true);
+      Standard_Embed_and_Cascade
+        (outfile,outfilename.all,nt,lp.all,true,true,verbose-1);
     end if;
     new_line(outfile);
     Write_Seed_Number(outfile);
@@ -222,7 +229,8 @@ package body Drivers_to_Cascade_Filtering is
   end Standard_Embed_and_Cascade;
 
   procedure DoblDobl_Embed_and_Cascade
-              ( nt : in natural32; inpname,outname : in string ) is
+              ( nt : in natural32; inpname,outname : in string;
+                verbose : in integer32 := 0 ) is
 
     use DoblDobl_Laur_Poly_Convertors;
 
@@ -233,14 +241,20 @@ package body Drivers_to_Cascade_Filtering is
     outfilename : Link_to_String;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_to_cascade_filtering.");
+      put_line("DoblDobl_Embed_and_Cascade ...");
+    end if;
     Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
     Create_Output_File(outfile,outname,outfilename);
     if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all,true,true);
+      DoblDobl_Embed_and_Cascade
+        (outfile,outfilename.all,nt,lq.all,true,true,verbose-1);
     else
       lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      DoblDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all,true,true);
+      DoblDobl_Embed_and_Cascade
+        (outfile,outfilename.all,nt,lp.all,true,true,verbose-1);
     end if;
     new_line(outfile);
     Write_Seed_Number(outfile);
@@ -248,7 +262,8 @@ package body Drivers_to_Cascade_Filtering is
   end DoblDobl_Embed_and_Cascade;
 
   procedure QuadDobl_Embed_and_Cascade
-              ( nt : in natural32; inpname,outname : in string ) is
+              ( nt : in natural32; inpname,outname : in string;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Laur_Poly_Convertors;
 
@@ -259,14 +274,20 @@ package body Drivers_to_Cascade_Filtering is
     outfilename : Link_to_String;
 
   begin
+    if verbose > 0 then
+      put("-> in drivers_to_cascade_filtering.");
+      put_line("QuadDobl_Embed_and_Cascade ...");
+    end if;
     Prompt_for_Systems.Read_System(infile,inpname,lq,sysonfile);
     Create_Output_File(outfile,outname,outfilename);
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lq.all) then
-      QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lq.all,true,true);
+      QuadDobl_Embed_and_Cascade
+        (outfile,outfilename.all,nt,lq.all,true,true,verbose-1);
     else
       lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys'
                   (Positive_Laurent_Polynomial_System(lq.all));
-      QuadDobl_Embed_and_Cascade(outfile,outfilename.all,nt,lp.all,true,true);
+      QuadDobl_Embed_and_Cascade
+        (outfile,outfilename.all,nt,lp.all,true,true,verbose-1);
     end if;
     new_line(outfile);
     Write_Seed_Number(outfile);
@@ -274,15 +295,19 @@ package body Drivers_to_Cascade_Filtering is
   end QuadDobl_Embed_and_Cascade;
 
   procedure Embed_and_Cascade
-              ( nt : in natural32; inpname,outname : in string ) is
+              ( nt : in natural32; inpname,outname : in string;
+                verbose : in integer32 := 0 ) is
 
     prc : constant character := Prompt_for_Precision;
 
   begin
+    if verbose > 0 then
+      put_line("-> in drivers_to_cascade_filtering.Embed_and_Cascade ...");
+    end if;
     case prc is
-      when '0' => Standard_Embed_and_Cascade(nt,inpname,outname);
-      when '1' => DoblDobl_Embed_and_Cascade(nt,inpname,outname);
-      when '2' => QuadDobl_Embed_and_Cascade(nt,inpname,outname);
+      when '0' => Standard_Embed_and_Cascade(nt,inpname,outname,verbose-1);
+      when '1' => DoblDobl_Embed_and_Cascade(nt,inpname,outname,verbose-1);
+      when '2' => QuadDobl_Embed_and_Cascade(nt,inpname,outname,verbose-1);
       when others => null;
     end case;
   end Embed_and_Cascade;

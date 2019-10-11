@@ -1,7 +1,6 @@
 with Ada.Calendar;
 with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Cascade_Homotopies;
 with Cascade_Homotopy_Filters;
@@ -21,7 +20,7 @@ package body Running_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -43,6 +42,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.Standard_Run_Cascade 1 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
@@ -93,7 +95,7 @@ package body Running_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -115,6 +117,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.Standard_Run_Cascade 2 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
@@ -166,7 +171,7 @@ package body Running_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -188,6 +193,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.DoblDobl_Run_Cascade 1 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
@@ -239,7 +247,7 @@ package body Running_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -261,6 +269,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.DoblDobl_Run_Cascade 2 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
@@ -312,7 +323,7 @@ package body Running_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -334,6 +345,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.QuadDobl_Run_Cascade 1 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
@@ -385,7 +399,7 @@ package body Running_Cascades is
               ( nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -407,6 +421,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.QuadDobl_Run_Cascade 2 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,ep,gpts,pc,fc,
@@ -459,7 +476,7 @@ package body Running_Cascades is
                 nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -481,6 +498,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.Standard_Run_Cascade 3 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (file,nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
@@ -531,7 +551,7 @@ package body Running_Cascades is
                 nt,topdim,lowdim : in natural32;
                 embsys : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -553,6 +573,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.Standard_Run_Cascade 4 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (file,nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
@@ -602,7 +625,7 @@ package body Running_Cascades is
                 nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -624,6 +647,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.DoblDobl_Run_Cascade 3 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (file,nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
@@ -673,7 +699,7 @@ package body Running_Cascades is
                 nt,topdim,lowdim : in natural32;
                 embsys : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -695,6 +721,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.DoblDobl_Run_Cascade 4 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (file,nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
@@ -744,7 +773,7 @@ package body Running_Cascades is
                 nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -766,6 +795,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.QuadDobl_Run_Cascade 3 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (file,nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,
@@ -815,7 +847,7 @@ package body Running_Cascades is
                 nt,topdim,lowdim : in natural32;
                 embsys : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                filter,factor : in boolean ) is
+                filter,factor : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -837,6 +869,9 @@ package body Running_Cascades is
     totcas,totfil,totfac,alltime : duration;
 
   begin
+    if verbose > 0 then
+      put("-> in running_cascades.QuadDobl_Run_Cascade 4 ...");
+    end if;
     if filter then
       Cascade_Homotopy_Filters.Witness_Filter
         (file,nt,embsys,sols,topdim,lowdim,tol,rcotol,restol,homtol,

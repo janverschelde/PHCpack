@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
@@ -67,27 +68,27 @@ package Embeddings_and_Cascades is
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure Standard_Embed_and_Cascade
               ( nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure DoblDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure QuadDobl_Embed_and_Cascade
               ( nt : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for the top dimension of the solution set
@@ -107,7 +108,8 @@ package Embeddings_and_Cascades is
   --            if false, the output will be superwitness sets;
   --   factor   if filter and factor, then numerical representations for
   --            the irreducible factors will be computed,
-  --            otherwise, the output sets may still be reducible.
+  --            otherwise, the output sets may still be reducible;
+  --   verbose  is the verbose level.
 
 -- ALL OUTPUT WRITTEN TO FILE :
 
@@ -115,32 +117,32 @@ package Embeddings_and_Cascades is
               ( file : in file_type; name : in string;
                 nt : in natural32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure Standard_Embed_and_Cascade
               ( file : in file_type; name : in string;
                 nt : in natural32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure DoblDobl_Embed_and_Cascade
               ( file : in file_type; name : in string;
                 nt : in natural32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure DoblDobl_Embed_and_Cascade
               ( file : in file_type; name : in string;
                 nt : in natural32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure QuadDobl_Embed_and_Cascade
               ( file : in file_type; name : in string;
                 nt : in natural32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
   procedure QuadDobl_Embed_and_Cascade
               ( file : in file_type; name : in string;
                 nt : in natural32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                filter,factor : in boolean );
+                filter,factor : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for the top dimension of the solution set
@@ -163,7 +165,8 @@ package Embeddings_and_Cascades is
   --            if false, the output will be superwitness sets;
   --   factor   if filter and factor, then numerical representations for
   --            the irreducible factors will be computed,
-  --            otherwise, the output sets may still be reducible.
+  --            otherwise, the output sets may still be reducible;
+  --   verbose  is the verbose level.
 
 -- ALL OUTPUT TO CALLBACK PROCEDURE :
 
