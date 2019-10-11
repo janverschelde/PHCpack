@@ -3,14 +3,11 @@ with String_Splitters;                  use String_Splitters;
 with Communications_with_User;          use Communications_with_User;
 with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Matrices;         use Standard_Complex_Matrices;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Symbol_Table;
-with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
-with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laurentials;      use Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
@@ -24,7 +21,6 @@ with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
 with Intrinsic_Witness_Sets_io;         use Intrinsic_Witness_Sets_io;
 with Drivers_to_Witness_Generate;       use Drivers_to_Witness_Generate;
 with Add_and_Remove_Embedding;
-with Intrinsic_Diagonal_Continuation;   use Intrinsic_Diagonal_Continuation;
 with Extrinsic_Diagonal_Continuation;   use Extrinsic_Diagonal_Continuation;
 with Drivers_to_Cascade_Filtering;      use Drivers_to_Cascade_Filtering;
 with Extrinsic_Diagonal_Homotopies_io;
@@ -32,17 +28,21 @@ with Extrinsic_Diagonal_Solvers;        use Extrinsic_Diagonal_Solvers;
 with Drivers_to_Intersect_Varieties;    use Drivers_to_Intersect_Varieties;
 with Driver_to_Rank_Supports;
 
-procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
+procedure maindeco ( nt : in natural32; infilename,outfilename : in string;
+                     verbose : in integer32 := 0 ) is
 
   procedure Read_Two_Witness_Sets
               ( lp1,lp2 : out Link_to_Poly_Sys;
                 sols1,sols2 : out Solution_List;
-                dim1,dim2 : out natural32 ) is
+                dim1,dim2 : out natural32; vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for two files for two witness sets.
 
   begin
+    if vrb > 0
+     then put_line("-> in maindeco.Read_Two_Witness_Sets 1 ...");
+    end if;
     new_line;
     put_line("Reading the first embedded polynomial system.");
     Standard_Read_Embedding(lp1,sols1,dim1);
@@ -55,7 +55,8 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
               ( lp1,lp2 : out Link_to_Poly_Sys;
                 sols1,sols2 : out Solution_List;
                 dim1,dim2 : out natural32;
-                lsym1,lsym2 : out Symbol_Table.Link_to_Array_of_Symbols ) is
+                lsym1,lsym2 : out Symbol_Table.Link_to_Array_of_Symbols;
+                vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for two files for two witness sets,
@@ -63,6 +64,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
   --   and their symbols for the names of the variables.
 
   begin
+    if vrb > 0
+     then put_line("-> in maindeco.Read_Two_Witness_Sets 2 ...");
+    end if;
     new_line;
     put_line("Reading the first embedded polynomial system.");
     Standard_Read_Embedding(lp1,sols1,dim1);
@@ -73,7 +77,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     lsym2 := Extrinsic_Diagonal_Homotopies_io.Get_Link_to_Symbols;
   end Read_Two_Witness_Sets;
 
-  procedure Call_Extrinsic_Diagonal_Homotopies ( nt : in natural32 ) is
+  procedure Call_Extrinsic_Diagonal_Homotopies ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for two witness sets and runs an extrinsic
@@ -89,9 +93,12 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     report : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in maindeco.Call_Extrinsic_Diagonal_Homotopies ...");
+    end if;
     new_line;
     put_line("Executing diagonal homotopies extrinsically...");
-    Read_Two_Witness_Sets(lp1,lp2,esols1,esols2,dim1,dim2,lsym1,lsym2);
+    Read_Two_Witness_Sets(lp1,lp2,esols1,esols2,dim1,dim2,lsym1,lsym2,vrb-1);
     new_line;
     put("Symbols of first system : ");
     Extrinsic_Diagonal_Homotopies_io.Write(lsym1.all);
@@ -108,15 +115,16 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     new_line;
     put_line("Running continuation, see the output file for results...");
     new_line;
-    if dim1 >= dim2
-     then Extrinsic_Diagonal_Homotopy
-            (file,name.all,report,lp1.all,lp2.all,dim1,dim2,sols1,sols2);
-     else Extrinsic_Diagonal_Homotopy
-            (file,name.all,report,lp2.all,lp1.all,dim2,dim1,sols2,sols1);
+    if dim1 >= dim2 then
+      Extrinsic_Diagonal_Homotopy
+        (file,name.all,report,lp1.all,lp2.all,dim1,dim2,sols1,sols2);
+    else
+      Extrinsic_Diagonal_Homotopy
+        (file,name.all,report,lp2.all,lp1.all,dim2,dim1,sols2,sols1);
     end if;
   end Call_Extrinsic_Diagonal_Homotopies;
 
-  procedure Call_Intrinsic_Diagonal_Homotopies is
+  procedure Call_Intrinsic_Diagonal_Homotopies ( vrb : in integer32 := 0 ) is
 
     lp1,lp2 : Link_to_Poly_Sys;
     sols1,sols2 : Solution_List;
@@ -132,9 +140,12 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     s : Solution_List;
 
   begin
+    if vrb > 0
+     then put_line("-> in maindeco.Call_Intrinsic_Diagonal_Homotopies ...");
+    end if;
     new_line;
     put_line("Executing diagonal homotopies intrinsically...");
-    Read_Two_Witness_Sets(lp1,lp2,sols1,sols2,dim1,dim2);
+    Read_Two_Witness_Sets(lp1,lp2,sols1,sols2,dim1,dim2,vrb-1);
     Create_Output_File(file,outfilename,name);
     new_line;
     put("Do you want the version using generics ? (y/n) ");
@@ -167,7 +178,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     end if;
   end Call_Intrinsic_Diagonal_Homotopies;
 
-  procedure Call_Binomial_Solver is
+  procedure Call_Binomial_Solver ( vrb : in integer32 := 0 ) is
 
     infile,file : file_type;
     lp : Link_to_Laur_Sys;
@@ -179,6 +190,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     timer : Timing_Widget;
 
   begin
+    if vrb > 0
+     then put_line("-> in maindeco.Call_Binomial_Solver ...");
+    end if;
     Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
     Create_Output_File(file,outfilename);
     nv := Number_of_Unknowns(lp(lp'first));
@@ -212,7 +226,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     print_times(file,timer,"the blackbox binomial system solver");
   end Call_Binomial_Solver;
 
-  procedure Degrees_of_Monomial_Maps is
+  procedure Degrees_of_Monomial_Maps ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Reads a Laurent system and a list of monomial maps
@@ -223,6 +237,9 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     maps : Monomial_Map_List;
 
   begin
+    if vrb > 0
+     then put_line("-> in maindeco.Degrees_of_Monomial_Maps ...");
+    end if;
     if infilename = "" then
       new_line;
       Read_System_and_Maps(lp,maps);
@@ -240,7 +257,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     end;
   end Degrees_of_Monomial_Maps;
 
-  procedure Transform_Positive_Corank is
+  procedure Transform_Positive_Corank ( vrb : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Computes the rank of the supports of a Laurent system
@@ -252,21 +269,49 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     sysonfile : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in maindeco.Transform_Positive_Corank ...");
+    end if;
     Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
     Create_Output_File(file,outfilename);
     Driver_to_Rank_Supports(file,lp.all);
   end Transform_Positive_Corank;
 
-  procedure Main is
+  procedure Run_Cascade_Filter ( vrb : in integer32 := 0 ) is
 
-    ans : character;
-    file : file_type;
+  -- DESCRIPTION :
+  --   Runs the cascade filter with verbose level in vrb.
+
     lp : Link_to_Poly_Sys;
     k : natural32 := 0;
-
-    use Add_and_Remove_Embedding;
+    infile,file : file_type;
+    sysonfile : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in maindeco.Run_Cascade_Filter ...");
+    end if;
+    Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
+    Create_Output_File(file,outfilename);
+    new_line;
+    put("Give the top dimension : "); get(k); skip_line;
+    Driver_for_Cascade_Filter(file,lp.all,integer32(k));
+  end Run_Cascade_Filter;
+
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Displays the main menu and then calls the proper handler.
+
+    ans : character;
+
+    use Add_and_Remove_Embedding; -- for 1 and 4
+
+  begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in maindeco.Main ...");
+    end if;
     new_line;
     put_line("MENU to generate and classify witness points :");
     put_line("  0. embed the system and run the cascade of homotopies;");
@@ -289,25 +334,15 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
       when '0' => Embed_and_Cascade(nt,infilename,outfilename);
       when '1' => Driver_to_Square_and_Embed(infilename,outfilename);
       when '2' => Driver_to_Witness_Generate(nt,infilename,outfilename);
-      when '3' => 
-        declare
-          infile : file_type;
-          sysonfile : boolean;
-        begin
-          Prompt_for_Systems.Read_System(infile,infilename,lp,sysonfile);
-        end;
-        Create_Output_File(file,outfilename);
-        new_line;
-        put("Give the top dimension : "); get(k); skip_line;
-        Driver_for_Cascade_Filter(file,lp.all,integer32(k));
+      when '3' => Run_Cascade_Filter(verbose-1);
       when '4' => Driver_to_Remove_Embedding(infilename,outfilename);
       when '5' => Build_Diagonal_Cascade;
       when '6' => Collapse_Diagonal_System;
-      when '7' => Call_Extrinsic_Diagonal_Homotopies(nt);
-      when '8' => Call_Intrinsic_Diagonal_Homotopies;
-      when '9' => Call_Binomial_Solver;
-      when 'A' => Degrees_of_Monomial_Maps;
-      when 'B' => Transform_Positive_Corank;
+      when '7' => Call_Extrinsic_Diagonal_Homotopies(verbose-1);
+      when '8' => Call_Intrinsic_Diagonal_Homotopies(verbose-1);
+      when '9' => Call_Binomial_Solver(verbose-1);
+      when 'A' => Degrees_of_Monomial_Maps(verbose-1);
+      when 'B' => Transform_Positive_Corank(verbose-1);
       when others => null;
     end case;
   end Main;

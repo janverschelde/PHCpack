@@ -537,6 +537,7 @@ package body Option_Handlers_no_ade is
     nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
+    vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
@@ -548,11 +549,11 @@ package body Option_Handlers_no_ade is
         begin
           put_line(welcome);
           put_line(compban & " with " & ns & " tasks");
-          maindeco(nt,infile,outfile);
+          maindeco(nt,infile,outfile,vrblvl);
         end;
       else
         put_line(welcome); put_line(compban);
-        maindeco(0,infile,outfile);
+        maindeco(0,infile,outfile,vrblvl);
       end if;
     end if;
   end Decomposition_Handler;
