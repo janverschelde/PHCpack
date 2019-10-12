@@ -3,7 +3,13 @@ with Symbol_Table_io;
 with Characters_and_Numbers;
 with Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;
+with DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;       use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;       use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;       use QuadDobl_Complex_Solutions_io;
 
 package body Extrinsic_Diagonal_Homotopies_io is
 
@@ -311,12 +317,15 @@ package body Extrinsic_Diagonal_Homotopies_io is
 
   procedure Write_Witness_Set
               ( file : in file_type; name : in string; d : in natural32;
-                p : in Poly_Sys; sols : in Solution_List ) is
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
 
     strd : constant string
          := Characters_and_Numbers.convert(integer32(d));
     filename : constant string := name & "_sw" & strd;
     witfile : file_type;
+
+    use Standard_Complex_Solutions;
 
   begin
     put(file,"writing to file "); put(file,filename); new_line(file);
@@ -331,18 +340,113 @@ package body Extrinsic_Diagonal_Homotopies_io is
 
   procedure Write_Witness_Set
               ( file : in file_type; name : in string; d : in natural32;
-                p : in Laur_Sys; sols : in Solution_List ) is
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
 
     strd : constant string
          := Characters_and_Numbers.convert(integer32(d));
     filename : constant string := name & "_sw" & strd;
     witfile : file_type;
 
+    use DoblDobl_Complex_Solutions;
+
+  begin
+    put(file,"writing to file "); put(file,filename); new_line(file);
+    create(witfile,out_file,filename);
+    put(witfile,p'last,1); new_line(witfile);
+    DoblDobl_Complex_Poly_Systems_io.put(witfile,p);
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    put(witfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    close(witfile);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; name : in string; d : in natural32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+    strd : constant string
+         := Characters_and_Numbers.convert(integer32(d));
+    filename : constant string := name & "_sw" & strd;
+    witfile : file_type;
+
+    use QuadDobl_Complex_Solutions;
+
+  begin
+    put(file,"writing to file "); put(file,filename); new_line(file);
+    create(witfile,out_file,filename);
+    put(witfile,p'last,1); new_line(witfile);
+    QuadDobl_Complex_Poly_Systems_io.put(witfile,p);
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    put(witfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    close(witfile);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; name : in string; d : in natural32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+
+    strd : constant string
+         := Characters_and_Numbers.convert(integer32(d));
+    filename : constant string := name & "_sw" & strd;
+    witfile : file_type;
+
+    use Standard_Complex_Solutions;
+
   begin
     put(file,"writing to file "); put(file,filename); new_line(file);
     create(witfile,out_file,filename);
     put(witfile,p'last,1); new_line(witfile);
     Standard_Complex_Laur_Systems_io.put(witfile,p);
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    put(witfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    close(witfile);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; name : in string; d : in natural32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+    strd : constant string
+         := Characters_and_Numbers.convert(integer32(d));
+    filename : constant string := name & "_sw" & strd;
+    witfile : file_type;
+
+    use DoblDobl_Complex_Solutions;
+
+  begin
+    put(file,"writing to file "); put(file,filename); new_line(file);
+    create(witfile,out_file,filename);
+    put(witfile,p'last,1); new_line(witfile);
+    DoblDobl_Complex_Laur_Systems_io.put(witfile,p);
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    put(witfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    close(witfile);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; name : in string; d : in natural32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+    strd : constant string
+         := Characters_and_Numbers.convert(integer32(d));
+    filename : constant string := name & "_sw" & strd;
+    witfile : file_type;
+
+    use QuadDobl_Complex_Solutions;
+
+  begin
+    put(file,"writing to file "); put(file,filename); new_line(file);
+    create(witfile,out_file,filename);
+    put(witfile,p'last,1); new_line(witfile);
+    QuadDobl_Complex_Laur_Systems_io.put(witfile,p);
     new_line(witfile);
     put_line(witfile,"THE SOLUTIONS :");
     put(witfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);

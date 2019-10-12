@@ -679,6 +679,12 @@ package body Running_Cascades is
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
+    for k in gpts'range loop  -- write the witness sets to separate files
+      if not Is_Null(gpts(k)) then
+        Extrinsic_Diagonal_Homotopies_io.Write_Witness_Set
+          (file,name,natural32(k),ep(k).all,gpts(k));
+      end if;
+    end loop;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
     if filter then
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
@@ -753,6 +759,12 @@ package body Running_Cascades is
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
+    for k in gpts'range loop  -- write the witness sets to separate files
+      if not Is_Null(gpts(k)) then
+        Extrinsic_Diagonal_Homotopies_io.Write_Witness_Set
+          (file,name,natural32(k),ep(k).all,gpts(k));
+      end if;
+    end loop;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
     if filter then
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
@@ -827,6 +839,12 @@ package body Running_Cascades is
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
+    for k in gpts'range loop  -- write the witness sets to separate files
+      if not Is_Null(gpts(k)) then
+        Extrinsic_Diagonal_Homotopies_io.Write_Witness_Set
+          (file,name,natural32(k),ep(k).all,gpts(k));
+      end if;
+    end loop;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
     if filter then
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
@@ -901,6 +919,12 @@ package body Running_Cascades is
         (nt,embsys,sols,topdim,lowdim,restol,rcotol,ep,gpts,pc,castm,totcas);
       Monodromy_Homotopies_io.Write_Components(file,ep,gpts);
     end if;
+    for k in gpts'range loop  -- write the witness sets to separate files
+      if not Is_Null(gpts(k)) then
+        Extrinsic_Diagonal_Homotopies_io.Write_Witness_Set
+          (file,name,natural32(k),ep(k).all,gpts(k));
+      end if;
+    end loop;
     Path_Counts_Table.Write_Path_Counts(file,pc,castm,totcas);
     if filter then
       Path_Counts_Table.Write_Filter_Counts(file,fc,filtm,totfil);
