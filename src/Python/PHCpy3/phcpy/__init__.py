@@ -23,6 +23,9 @@ solutions
    solutions of phcpy.solve are lists of PHCpack solution strings
    and this module exports operations to convert the solution
    strings into Python dictionaries, e.g. for evaluation.
+polynomials
+   the object oriented interface starts with the class Polynomials,
+   which represents a system of polynomials and provides a solve method.
 interface
    data transfer from string representations of polynomials and solutions
    as the interface between Python and the C interface of PHCpack.

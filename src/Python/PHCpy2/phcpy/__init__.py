@@ -23,6 +23,9 @@ solutions
    solutions of phcpy.solve are lists of PHCpack solution strings
    and this module exports operations to convert the solution
    strings into Python dictionaries, e.g. for evaluation.
+polynomials
+   the object oriented interface starts with the class Polynomials,
+   which represents a system of polynomials and provides a solve method.
 interface
    data transfer from string representations of polynomials and solutions
    as the interface between Python and the C interface of PHCpack.
@@ -128,8 +131,8 @@ try:
     from phcpy import polytopes, tropisms, maps, series, curves
     from phcpy import examples, families
     # for Sage, uncomment the following two lines
-    # from cysignals import init_cysignals
-    # init_cysignals()
+    from cysignals import init_cysignals
+    init_cysignals()
 except:
     print 'Is the phcpy2c2.so not suited for this platform?'
 

@@ -1,5 +1,6 @@
 Thu 21 Oct 2019 : updated the documentation of phcpy to include the new
-  module polynomials.
+  module polynomials.  Added a couple of lines about the polynomials module
+  to the __init__.py of both the python2 and the python3 versions of phcpy.
 
 Thu 3 Oct 2019 : updates files for version 1.0.1 of phcpy.
 
