@@ -1,4 +1,4 @@
-phcpy 1.0.1 offers a simple Python interface to PHCv2.4.73
+phcpy 1.0.2 offers a simple Python interface to PHCv2.4.74
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -38,6 +38,10 @@ The directory PHCpy3 contains the version of phcpy for Python 3.5+.
 The directory Jupyter contains an extension of the Jupyter notebook,
 which defines the menus for using phcpy in SageMath and python.
 
+Version 1.0.1 of phcpy started to provide an object oriented interface,
+with classes Solution and Polynomials, to respectively represent a
+solution and a system of polynomials.
+
 ------------------------------------------------------------------------------
 file name              : short description
 ------------------------------------------------------------------------------
@@ -69,6 +73,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+1.0.2 : 2019-10-21 : improved documentation
 1.0.1 : 2019-10-03 : class definitions for polynomials and solutions
 1.0.0 : 2019-09-01 : support for m-homogenization in trackers of curves
 0.9.9 : 2019-08-13 : step-by-step trackers in curves support 1-homogenization
