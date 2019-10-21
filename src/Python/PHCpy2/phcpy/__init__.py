@@ -128,11 +128,11 @@ try:
     print py2c_PHCpack_version_string() + ' works!'
     from phcpy import solver, solutions, interface, trackers, sweepers, tuning
     from phcpy import sets, cascades, factor, diagonal, schubert
-    from phcpy import polytopes, tropisms, maps, series, curves
+    from phcpy import polytopes, polynomials, tropisms, maps, series, curves
     from phcpy import examples, families
     # for Sage, uncomment the following two lines
-    from cysignals import init_cysignals
-    init_cysignals()
+    # from cysignals import init_cysignals
+    # init_cysignals()
 except:
     print 'Is the phcpy2c2.so not suited for this platform?'
 
