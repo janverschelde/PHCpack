@@ -2,288 +2,240 @@
 Getting Started
 ***************
 
-This documentation describes a collection of Python modules
-to compute solutions of polynomial systems using PHCpack.
+This documentation describes the software package PHCpack.
 
 This work is licensed under 
 a Creative Commons Attribution-Share Alike 3.0 License.
 
-The computation of the mixed volume in phcpy calls MixedVol
-(ACM TOMS Algorithm 846 of T. Gao, T.Y. Li, M. Wu) 
-as it is integrated in PHCpack.
-DEMiCs (Dynamic Enumeration of all Mixed Cells,
-by T. Mizutani, A. Takeda, and M. Kojima) is faster than MixedVol
-for larger systems with many different supports.
-A function to compute mixed volumes with DEMiCs is available in phcpy.
-
-For double double and quad double arithmetic, PHCpack incorporates
-the QD library of Y. Hida, X.S. Li, and D.H. Bailey.
-See the References section for pointers to the literature.
-
-While PHCpack has been under development for over twenty years,
-phcpy is still working through its proof-of-concept stage.
-In its present state, working with phcpy will require persistence
-and plenty of patience.
-
-what is phcpy?
-==============
-
-The main executable phc (polynomial homotopy continuation)
-defined by the source code in PHCpack is a menu driven
-and file oriented program.
-The Python interface defined by phcpy replaces the files
-with persistent objects allowing the user to work with
-scripts or in interactive sessions.
-The computationally intensive tasks such as path tracking
-and mixed volume computations are executed as compiled code
-so there will not be a loss of efficiency.
-
-Both phcpy and PHCpack are free and open source software packages;
-you can redistribute it and/or modify it under the terms of the
-GNU General Public License as published by the Free Software Foundation;
-either version 2 of the License, or (at your option) any later version.  
-
-One application of phcpy is to run regression tests.
-The Python interface phcpy to PHCpack is a programmer's interface.
-The long-term goal is to make PHCpack more versatile,
-at least for those programmers familiar 
-with the Python scripting language.
-
-installing phcpy
+What is PHCpack?
 ================
 
-The source for PHCpack can be downloaded from
-<http://www.math.uic.edu/~jan/download.html>
-and is also available at
-<https://github.com/janverschelde/PHCpack>.
-For the installation from source, the gnu-ada compiler 
-(available for free at <http://libre.adacore.com/>) is needed.  
-Also your Python interpreter must most likely have been built with gcc.
-In addition to the Python interpreter, the file Python.h of
-of the developer's libraries will need to exist on your system.
-Otherwise, PHCpack and phcpy are self contained
-and do not require the installation of other software.
+PHCpack implements a collection of algorithms
+to solve polynomial systems by homotopy continuation methods.
 
-Up to version 0.3.7, phcpy was written with versions 2.6 and 2.7 of Python.
-Version 0.3.8 of phcpy was ported to Python 3.5,
-using a modified C interface phcpy2c3.c and the corresponding
-shared object phcpy2c3.so.
+On input is a sequence of polynomials in several variables,
+on output are the solutions to the polynomial system given on input.
+The computational :index:`complexity`
+of this problem is #P-hard because of
+the exponential growth of the number of solutions as the number of
+input polynomials increases.  For example, ten polynomials of degree two
+may intersect in 1,024 isolated points (that is two to the power ten).
+Twenty quadratic polynomials may lead to 1,048,576 solutions
+(that is 1,024 times 1,024).  So it is not too difficult to write
+down small input sequences that lead to a huge output.
 
-The code runs on Red Hat Linux 64-bit, Ubuntu Linux, and on Mac OS X.
-There is no support for Windows.
-Below is a step-by-step installation procedure.
+Even as the computation of the total number of solutions may take
+a long time, numerical homotopy continuation methods have the advantage
+that they compute one solution after the other.  A homotopy is a family
+of polynomial systems, connecting the system we want to solve with an
+easier to solve system, which is called the start system.
+Numerical continuation methods track the solution paths starting at
+known solutions of an easier system to the system we want to solve.
+We have an :index:`optimal homotopy`
+if every path leads to a solution, that is: there are no divergent paths.
 
-0. The gnu-ada compiler must be installed to compile the shared object file.
-   Although several Linux distributions come with gcc that have Ada enabled,
-   check whether ``gnatmake`` is in your execution path.
-   In a terminal window, at the command prompt, type ``which gnatmake``.
-   If the system answers with the location of ``gnatmake``,
-   then the gnu-ada compiler is installed on your system.
+PHCpack offers optimal homotopies for systems that resemble 
+linear-product structures, for geometric problems in enumerative geometry,
+and for sparse polynomial systems with sufficiently generic choices 
+of the coefficients.
+While mathematically this sounds all good, most systems arising in
+practical applications have their own peculiar structure
+and so most homotopies will lead to diverging solution paths.
+In general, a polynomial system may have solution sets of many
+different dimensions, which renders the solving process challenging
+but at the same time still very interesting.
 
-   If you have multiple versions of gcc installed on your system,
-   then the binaries of the gnu-ada compiler should appear first
-   in your execution path.
-   Typing ``gcc -v`` should show ``for GNAT GPL`` in the reply,
-   or most recently (in 2018): ``GNAT Community 2018``.
+Version 1.0 of PHCpack was archived as Algorithm 795
+by ACM Transactions on Mathematical Software.  
+PHCpack is open source and :index:`free software`
+which gives any user the same rights as in free speech.
+You can redistribute PHCpack and/or modify it under the terms of 
+the GNU General Public :index:`License`
+as published by the Free Software Foundation; 
+version 3 of the License.
 
-   If both ``which gnatmake`` and ``gcc -v`` gave satisfactory replies,
-   then you can proceed to step 2 and skip the installation of the
-   gnu-ada compiler. 
+Downloading and Installing
+==========================
 
-1. By default one needs to have superuser privileges to install
-   the gnu-ada compiler at standard locations, but otherwise it is not hard
-   to install the gnu-ada compiler in your own directory.
+Executable versions of the program for various machine architectures
+and operating systems are available via
+<http://www.math.uic.edu/~jan/download.html>.
 
-   Following the instructions of the gnu-ada compiler, the location
-   with the binaries must be added in front of the execution path.
-   You may have to edit ``.bashrc`` (for the Bourne shell)
-   or ``.cshrc`` (for the C shell).
+For the :index:`Windows` operating systems, the 
+executable version of phc is in the file ``phc.exe``
+and is available for download in its uncompressed format.
+Using the plain version of phc on a Windows system 
+requires the opening of a command prompt window
+and typing ``phc`` at the prompt.
+To run ``phc`` from any folder, different from the folder where
+you save ``phc.exe``, you have to change the environment variable ``path``.
+On Windows 10, type ``env`` in the Search window and select
+``Edit the system environment variables`` under the ``Settings``.
+After this selection, click on the ``Environment Variables...`` button
+and select ``Path`` from the ``System Variables``.
+Via the ``Edit`` button you can insert the name of the folder where
+you saved the file ``phc.exe``.  Alternatively, you could of course
+save the ``phc.exe`` in a folder which is already on your path.
 
-2. Since version 0.6.4, the code depends on the quad double library QDlib,
-   available at <http://crd-legacy.lbl.gov/~dhbailey/mpdist>.
-   Version 2.3.17 is available at <https://github.com/scibuilder/QD>.
-
-   On Linux systems, make sure to compile and install the library
-   with the option -fPIC.  When configuring, run configure as
-   ``./configure CXX=/usr/bin/g++ CXXFLAGS='-fPIC -O3'`` to set the flags
-   of the c++ compiler.
-
-   If you rather would not (or cannot) install QDlib, then it is possible
-   to compile the library in your home directory.  All you need is to be
-   aware of the location of the header files for the include statement
-   and you need the ``qdlib.a`` file for linking.
-   For an example, consider the makefile for Windows computers.
-   The ``makefile_windows`` builds ``phc.exe`` with the QD library
-   compiled in a home directory, not installed on the system.
-
-3. The source code directory of PHCpack contains the directory ``Objects``,
-   a directory with file ``makefile`` in it.
-   Depending on whether you are on a Unix-like system or on a mac,
-   you will have to edit the ``makefile`` so the ``MAKEFILE`` variable
-   either refers to ``makefile_unix`` or to ``makefile_mac``.
-   Once the makefile is adjusted you could type, just as a test,
-   ``make phc`` to compile the main executable program.
-   Note that for phcpy, you will not need this executable.
-
-4. To make the shared object file, your python system needs to have been
-   installed with the development version, that is: the file ``Python.h``
-   must be available on your disk.  Often, following binary installations
-   of the Python interpreter, this ``Python.h`` might be absent.
-
-   If packaged distributions for the development version of Python fail,
-   then you may have to download the source code 
-   from <http://www.python.org>,
-   configure, compile, and install the Python system.
-   An additional benefit of such a Python installation is that then the
-   Python interpreter could be built with the gnu-ada compiler,
-   so both the scripting environment as the compiled code are using
-   the same version of gcc.
-
-5. Once you have located the file ``Python.h`` on your system,
-   you most likely will have to adjust the definitions in the files
-   ``makefile_unix`` or ``makefile_mac``.  Assign to the variables
-   ``PYTHON`` and ``PYTHON3`` the directories where ``Python.h`` is.
-
-6. In the directory ``Objects`` of the PHCpack source distribution,
-   type ``make phcpy2c2.so`` to make the shared object file for python2,
-   or type ``make phcpy2c3.so`` for the python3 version of phcpy.
-   If all goes well, the shared object ``phcpy2c2.so`` can then be
-   found in ``Python/PHCpy2/phcpy`` or ``phcpy2c3.so`` is then in
-   ``Python/PHCpy3/phcpy.``
-
-   If you run the Python interpreter in a terminal window in the
-   directory ``phcpy`` of the source code distribution, then the
-   ``import phcpy`` should already work.
-
-7. To extend your python2 installation with phcpy, 
-   go to the ``Python/PHCpy2`` directory and run
-   ``python2 setup.py install`` as superuser or as sudoer.
-   For python3, go to ``PHCpy/phcpy3`` and run
-   ``python3 setup.py install`` as superuser or as sudoer.
-
-The documentation is typeset with Sphinx.  Sphinx depends on the
-default version of Python on your system.  If phcpy is installed
-with a different version of Python than the version Sphinx depends on,
-then this may cause problems to typeset the documentation.
-
-extending Sage with phcpy
-=========================
-
-The current version of Sage uses python2.
-So the instructions to extend Sage with phcpy work only with
-the Python2 version of phcpy.
-
-If you have installed Sage from source on your computer,
-then this installation comes with its own python libraries
-and interpreter.  Then it is not too much work any more
-(in comparison to the steps in last section) to extend
-the python interpreter of Sage with phcpy.
-
-On Linux systems, locate the python interpreter of Sage.
-Most likely this python is ``/local/bin`` of in the downloaded directory.
-Use the absolute path name for the location of the Sage python
-interpreter and navigate to the ``Python/PHCpy2`` directory which
-contains the ``setup.py`` for phcpy.
-Once in ``Python/PHCpy2``, type ``python setup.py install`` at
-the command prompt.  This does not require superuser access,
-but you must execute this setup with the same account you used
-to install Sage with.
-
-We check the installation at the command prompt,
-as shown in :numref:`figphcpyinsage`.
-
-.. _figphcpyinsage:
-
-.. figure:: ./figphcpyinsage.png
-    :align: center
-
-    Importing phcpy in a Sage terminal session.
-
-On Mac OS X, extending Sage with phcpy requires a bit more work as
-the ``phcpy2c2.so`` must be compiled with the Python library that
-comes with the Sage installation.  For this, the ``makefile_mac``
-must be modified with the correct definition for the location of
-the Python library of Sage, as defined by ``SAGEPYTHONLIB``.
-With this definition, do ``make sage_phcpy2c2.so`` and then move
-this file under the name ``phcpy2c2.so`` to the directory
-``/Python/PHCpy2/phcpy``.  The installation is then similar as
-for Linux, type ``python setup.py install`` at the command prompt
-in the directory where ``setup.py`` exists and for ``python``
-using the absolute file name of the executable, e.g., type
-``/Users/jan/Downloads/sage-7.2/local/bin/python setup.py install``.
-
-Importing phcpy apparently changes the configuration of the signal 
-handlers which may lead Sage to crash when exceptions occur.
-Thanks to Marc Culler for reporting this problem
-and for suggesting a work around:
+For :index:`Mac OS X` and :index:`Linux` versions, 
+the executable is tarred and gzipped.
+If the downloaded file is saved as ``*phcv2_4p.tar.gz``,
+then the following commands to unzip and untar the downloaded file 
+can be typed at the command prompt:
 
 ::
 
-   sage: import phcpy
-   sage: from cysignals import init_cysignals
-   sage: init_cysignals()
-   sage: pari(1)/pari(0)
+   gunzip *phcv2_4p.tar.gz
+   tar xpf *phcv2_4p.tar
 
-Without the ``init_cysignals()``,
-the statement ``pari(1)/pari(0)`` crashes Sage.
-With the ``init_cysignals()``, the ``PariError`` exception is handled
-and the user can continue the Sage session.
+If all went well, typing ``./phc`` at the command prompt should bring
+up the welcome message and the screen with available options.
 
-project history
+The executable ``phc`` gives access to almost all the functionality
+of PHCpack, including the :index:`multitasking` capabilities 
+for :index:`shared memory parallelism` 
+on :index:`multicore processors`.
+For other parallel capabilities, such
+as :index:`distributed memory parallelism` with 
+the :index:`Message Passing Interface (MPI)`
+and massive parallelism on 
+a :index:`Graphics Processing Unit (GPU)`,
+one will need to compile the source code.
+
+The :index:`source code` is under :index:`version control` 
+at :index:`github`,
+at <https://github.com/janverschelde/PHCpack>.
+To compile the source code, the gnu-ada compiler is needed.
+Free binary versions of the :index:`gnu-ada compiler`
+are available at <http://libre.adacore.com>.
+One does not need to be superuser to install the gnu-ada compiler.
+The directory ``Objects`` in the
+source code provides makefiles for Linux, Mac OS X, and Windows
+operating systems.
+
+When compiling from source, note that since version 2.4.35,
+the quad double library QDlib must be installed.
+Alternatively, one can also compile the QD library in a user
+account and then adjust the makefiles for the location of the
+header files and the archive qdlib.a.  
+The makefile for Windows provides an example
+of a compilation of the QD library under a user account.
+On Linux systems, the qdlib.a must have been compiled with
+the -fPIC option for the shared object file for the C extension
+module of phcpy.
+
+The software has been compiled with many versions of gcc 
+on Linux, Mac OS X, and Windows computers.
+While the software does not require any particular version of gcc,
+the C, C++, and Ada code must be compiled with the *same* version of gcc.
+One cannot link object code produced by, for example g++ 4.9.3,
+with other object code compiled by another version of gcc,
+for example gcc 4.9.2.
+
+Project History
 ===============
 
-This section describes some milestones in the development history.
+The software originated in the development of new homotopy algorithms
+to solve polynomial systems.  The main novelty of the first release
+of the sources was the application of polyhedral homotopies in the
+blackbox solver.  Polyhedral homotopies are generically optimal for
+sparse polynomial systems.  Although the number of solutions may grow
+exponentially in the number of equations, variables, and degrees,
+for systems where the coefficients are sufficiently generic,
+every solution path defined by a polyhedral homotopy will lead
+to one isolated solution.
 
-The Python interface to PHCpack got to a first start when
-Kathy Piret met William Stein at the software for algebraic geometry
-workshop at the IMA in the Fall of 2006.  
-The first version of this interface is described
-in the 2008 PhD Thesis of Kathy Piret.
+Version 2.0 of the code implemented SAGBI and Pieri homotopies
+to solve problem in enumerative geometry.  A classical problem
+in Schubert calculus is the problem of the two lines that meet
+four general lines in 3-space.  Pieri homotopies are generically
+optimal to compute all solutions to such geometric problems.
+They solve the output pole placement problem in linear systems control.
+With message passing, parallel versions of the Pieri homotopies
+lead to good speedups on parallel distributed memory computers.
 
-The implementation of the Python bindings depend on the C interface
-to PHCpack, developed for use with message passing on distributed
-memory computers.
+Starting with version 2.0 was the gradual introduction of new
+homotopies to deal with positive dimensional solution sets.
+Cascades of homotopies provide generic points on every solution set,
+at every dimension.  After the application of cascade homotopies
+to compute generic points on all equidimensional components,
+the application of monodromy loops with the linear trace stop test
+classifies the generic points on the equidimensional component
+into irreducible components.  This leads to a numerical irreducible
+decomposition of the solution set of a polynomial system.
+Cascade of homotopies are the top down method.
+A bottom up method applies diagonal homotopies to intersect
+positive dimensional solution sets in an equation-by-equation solver.
 
-Version 0.0.1 originated at lecture 40 of MCS 507 in the Fall of 2012,
-as an illustration of Sphinx.  In Spring of 2013, version 0.0.5 was
-presented at a graduate computational algebraic geometry seminar.
-Version 0.1.0 was prepared for presentation at EuroSciPy 2013 (August 2013).
-Improvements using pylint led to version 0.1.1
-and the module maps was added in version 0.1.2.
-Version 0.1.4 added path trackers with a generator
-so all solutions along a path are returned to the user.
-Multicore path tracking was added in version 0.1.7.
+To deal with singular solutions of polynomial systems,
+the deflation method was added in version 2.3.
+Version 2.3 was quickly followed by a bug release 2.3.01
+and subsequently by many more quick releases.
+The introduction of the fast mixed volume calculator MixedVol in 2.3.13
+was followed by capabilities to compute stable mixed volumes in 2.3.31,
+and an upgrade of the blackbox solver in version 2.3.34.
 
-The paper **Modernizing PHCpack through phcpy**
-written for the EuroSciPy 2013 proceedings 
-and available at <http://arxiv.org/abs/1310.0056>
-describes the design of phcpy.
+Shared memory multitasking provided the option -t,
+followed by the number of tasks, to speedup the path tracking.
+Our main motivation of parallelism is to offset the extra cost
+of multiprecision arithmetic, in particular double double and quad
+double arithmetic.
+Marking a milestone after one hundred quick releases,
+version 2.4 provided path tracking methods on graphics processing units.
+A collection of Python scripts defines a simple web interface to the
+blackbox solver and the path trackers,
+enabling the solution of polynomial systems in the cloud.
+DEMiCs applies dynamic enumeration for all mixed cells and
+computes the mixed volume at a faster pace than MixedVol.
+Since version 2.4.53, DEMiCs is distributed with PHCpack.
 
-Version 0.2.9 coincides with version 2.4 of PHCpack and gives access
-to the first version of the GPU accelerated path trackers.
-Sweep homotopies to explore the parameter space with detection and
-location of singularities along the solution paths were exported
-in the module sweepers.py in version 0.3.3 of phcpy.
-With the addition of a homotopy membership test in verion 0.3.7,
-the sets.py module provides the key ingredients for a numerical
-irreducible decomposition.  
-Version 0.5.0 introduced Newton's method on power series.
-Use cases were added to the documentation in versions 0.5.2, 0.5.3, and 0.5.4.
-With static linking, the dependencies on the gnat runtime libraries are removed
-and the Sage python interpreter could be extended with version 0.6.2.
-Better support of Laurent polynomial systems was added in version 0.6.8.
-In version 0.6.9, the large module sets.py was divided up, leading to
-the new modules cascades.py, factor.py, and diagonal.py.
-Code snippets for jupyter notebook menu extensions were defined
-in version 0.7.4.
+phcpy: An Application Programming Interface to PHCpack
+======================================================
 
-references
+Because code development on PHCpack has taken a very long time,
+looking at the code may be a bit too overwhelming at first.
+A good starting point could be the Python interface
+and in particular phcpy, with documentation at
+<http://www.math.uic.edu/~jan/phcpy_doc_html/index.html>.
+
+The main executable ``phc`` built by the code in PHCpack 
+is called at the command line with options to invoke specific tools
+and with file names as arguments in which the input and output data goes.
+In contrast, the scripting interface replaces the files with persistent
+objects and instead of selecting options from menus, the user runs scripts.
+
+References
 ==========
 
-1. T. Gao, T. Y. Li, M. Wu:
+PHCpack relies for its fast mixed volume computation
+on MixedVol and DEMiCs.
+For its double double and quad double arithmetic,
+there is QDlib which is integrated in PHCpack.
+Pointers to the literature are mentioned below.
+
+1. N. Bliss, J. Sommars, J. Verschelde and X. Yu:
+   **Solving polynomial systems in the cloud with polynomial
+   homotopy continuation.**
+   In *Computer Algebra in Scientific Computing, 17th International 
+   Workshop, CASC 2015, Aachen, Germany*,
+   edited by V.P. Gerdt, W. Koepf, E.W. Mayr, and E.V. Vorozhtsov.
+   Volume 9301 of *Lecture Notes in Computer Science*, pages 87-100,
+   Springer-Verlag, 2015.
+
+#. T. Gao, T. Y. Li, M. Wu:
    **Algorithm 846: MixedVol: a software package for mixed-volume 
    computation.**
    *ACM Transactions on Mathematical Software*, 31(4):555-560, 2005.
+
+#. E. Gross, S. Petrovic, and J. Verschelde: **PHCpack in Macaulay2.**
+   *The Journal of Software for Algebra and Geometry: Macaulay2*,
+   5:20-25, 2013.
+
+#. Y. Guan and J. Verschelde: 
+   **PHClab: A MATLAB/Octave interface to PHCpack.**
+   In *IMA Volume 148: Software for Algebraic Geometry*,
+   edited by M. E. Stillman, N. Takayama, and J. Verschelde,
+   pages 15-32, Springer-Verlag, 2008. 
 
 #. Y. Hida, X.S. Li, and D.H. Bailey:
    **Algorithms for quad-double precision floating point arithmetic.**
@@ -292,11 +244,18 @@ references
    IEEE Computer Society, 2001.
    Shortened version of Technical Report LBNL-46996.
 
-#. A. Leykin and J. Verschelde.
-   **Interfacing with the numerical homotopy algorithms in PHCpack.**
-   In N. Takayama and A. Iglesias, editors, *Proceedings of ICMS 2006*,
-   volume 4151 of *Lecture Notes in Computer Science*,
-   pages 354--360. Springer-Verlag, 2006.
+#. A. Leykin and J. Verschelde: 
+   **PHCmaple: A Maple Interface to the Numerical Homotopy Algorithms
+   in PHCpack.**
+   In the *Proceedings of the Tenth International Conference 
+   on Applications of Computer Algebra (ACA'2004)*,
+   edited by Q. N. Tran, pages 139-147, 2004.
+
+#. A. Leykin and J. Verschelde: 
+   **Interfacing with the Numerical Homotopy Algorithms in PHCpack.**
+   In *proceedings of ICMS 2006, LNCS 4151*,
+   edited by A. Iglesias and N. Takayama,
+   pages 354-360, Springer-Verlag, 2006. 
 
 #. T. Mizutani and A. Takeda.
    **DEMiCs: A software package for computing the mixed volume via
@@ -309,16 +268,17 @@ references
    **Dynamic enumeration of all mixed cells.**
    *Discrete Comput. Geom.* 37(3):351-367, 2007.
 
-#. J. Otto, A. Forbes, and J. Verschelde.
-   **Solving Polynomial Systems with phcpy.**
-   In the Proceedings of the 18th Python in Science Conference (SciPy 2019),
-   edited by Chris Calloway, David Lippa, Dillon Niederhut and David Shupe,
-   pages 58-64, 2019.
+#. M. Lu. and B. He and Q. Luo
+   **Supporting extended precision on graphics processors.**
+   In *Proceedings of the Sixth International Workshop on Data 
+   Management on New Hardware (DaMoN 2010), 
+   June 7, 2010, Indianapolis, Indiana*, edited by
+   A. Ailamaki and P.A. Boncz, pages 19-26, 2010.
 
-#. K. Piret:
-   **Computing Critical Points of Polynomial Systems 
-   using PHCpack and Python.**
-   PhD Thesis, University of Illinois at Chicago, 2008.
+#. K. Piret and J. Verschelde:
+   **Sweeping Algebraic Curves for Singular Solutions.**
+   *Journal of Computational and Applied Mathematics*,
+   234(4): 1228-1237, 2010. 
 
 #. A. J. Sommese, J. Verschelde, and C. W. Wampler.
    **Numerical irreducible decomposition using PHCpack.**
@@ -332,44 +292,812 @@ references
    *ACM Transactions on Mathematical Software*, 25(2):251--276, 1999.
 
 #. J. Verschelde:
+   **Polynomial homotopy continuation with PHCpack.**
+   *ACM Communications in Computer Algebra*, 44(4):217-220, 2010.
+
+#. J. Verschelde:
    **Modernizing PHCpack through phcpy.**
    In Proceedings of the 6th European Conference on Python in Science
    (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
    pages 71-76, 2014, available at
    <http://arxiv.org/abs/1310.0056>.
 
+#. J. Verschelde and G. Yoffe.
+   **Polynomial homotopies on multicore workstations.**
+   In M.M. Maza and J.-L. Roch, editors, *Proceedings of the 4th
+   International Workshop on Parallel Symbolic Computation (PASCO 2010),
+   July 21-23 2010, Grenoble, France*, pages 131--140. ACM, 2010.
+
 #. J. Verschelde and X. Yu:
    **Polynomial Homotopy Continuation on GPUs.**
    *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
 
-acknowledgments
+#. J. Verschelde:
+   **A Blackbox Polynomial System Solver on Parallel Shared Memory Computers.**
+   In the *Proceedings of the 20th International
+   Workshop on Computer Algebra in Scientific Computing (CASC 2018)*,
+   edited by V.P. Gerdt, W. Koepf, W.M. Seiler, and E.V. Vorozhtsov,
+   volume 11077 of Lecture Notes in Computer Science,
+   pages 361-375, Springer-Verlag, 2018.
+
+Users
+=====
+
+To demonstrate the relevance of the software, the first version
+of the software was released with a collection of about eighty 
+different polynomial systems, collected from the literature. 
+This section points to a different collection of problems,
+problems that have been solved by users of the software,
+without intervention of its developers.
+
+The papers listed below report the use of PHCpack in the fields of
+algebraic statistics, communication networks,
+geometric constraint solving, real algebraic geometry,
+computation of Nash equilibria, signal processing, magnetism,
+mechanical design, computational geometry, computer vision,
+optimal control, image processing, pattern recognition,
+global optimization, and computational physics:
+
+1. M. Abdullahi, B.I. Mshelia, and S. Hamma:
+   **Solution of polynomial system using PHCpack**.
+   *Journal of Physical Sciences and Innovation*, 4:44-53, 2012.
+
+#. Michael F. Adamer and Martin Helmer:
+   **Complexity of model testing for dynamical systems with toric
+   steady states**.
+   *Advances in Applied Mathematics* 110: 42-75, 2019.
+
+#. Min-Ho Ahn, Dong-Oh Nam and Chung-Nim Lee:
+   **Self-Calibration with Varying Focal Lengths Using 
+   the Infinity Homography**. In *Proceedings of the 
+   4th Asian Conference on Computer Vision* (ACCV2000),
+   pages 140-145, 2000.
+
+#. Carlos Amendola, Nathan Bliss, Isaac Burke,
+   Courtney R. Gibbons, Martin Helmer, Serkan Hosten,
+   Evan D. Nash, Jose Israel Rodriguez, Daniel Smolkin:
+   **The maximum likelihood degree of toric varieties.**
+   *Journal of Symbolic Computation*, article in Press, 2018.
+
+#. Gianni Amisano and Oreste Tristani:
+   **Exact likelihood computation for nonlinear DSGE models with
+   heteroskedastic innovations**.
+   *Journal of Economic Dynamics and Control* 35:2167-2185, 2011.
+
+#. D. Arzelier, C. Louembet, A. Rondepierre, and M. Kara-Zaitri:
+   **A New Mixed Iterative Algorithm to Solve the Fuel-Optimal Linear 
+   Impulsive Rendezvous Problem.**
+   *Journal of Optimization Theory and Applications*, 2013.
+
+#. E. Bartzos, I. Emiris, J. Legersky, and E. Tsigaridas:
+   **On the maximal number of real embeddings of spatial minimally
+   rigid graphs.**
+   In *Proceedings of the 2018 International Symposium on Symbolic and
+   Algebraic Computation (ISSAC 2018)*, pages 55-62, ACM 2018.
+
+#. Bassi, I.G., Abdullahi Mohammed, and Okechukwu C.E.:
+   **Analysis Of Solving Polynomial Equations Using Homotopy Continuation
+   Method**. *International Journal of Engineering Research &
+   Technology (IJERT)* 2(8):1401-1411, 2013.
+
+#. Dmitry Batenkov:
+   **Accurate solution of near-colliding Prony systems via decimation
+   and homotopy continuation**.
+   *Theoretical Computer Science* 681:1-232, 2017.
+
+#. Daniel J. Bates and Frank Sottile:
+   **Khovanskii-Rolle Continuation for Real Solutions**.
+   *Foundations of Computational Mathematics* 11:563-587, 2011.
+
+#. Jahan Bayat and Carl D. Crane III:
+   **Closed-Form Equilibrium Analysis of Planar Tensegrity Mechanisms**.
+   In *2006 Florida Conference on Recent Advances in Robotics*, FCRAR 2006.
+
+#. Genevieve Belanger, Kristjan Kannike, Alexander Pukhov, and Martti Raidal:
+   **Minimal semi-annihilating Z_n scalar dark matter**.
+   *Journal of Cosmology and Astroparticle Physics*, June 2014 (Open Access).
+
+#. Ivo W.M. Bleylevens, Michiel E. Hostenbach, and Ralf L.M. Peeters:
+   **Polynomial Optimization and a Jacobi-Davidson type method for
+   commuting matrices**,
+   *Applied Mathematics and Computation* 224(1): 564-580, 2013.
+
+#. Guy Bresler, Dustin Cartwright, David Tse:
+   **Feasibility of Interference Alignment for the MIMO interference
+   channel**.
+   *IEEE Transactions on Information Theory* 60(9):5573-5586, 2014.
+
+#. M.-L. G. Buot and D. St. P. Richards:
+   **Counting and Locating the Solutions of Polynomial Systems of
+   Maximum Likelihood Equations I**.
+   *Journal of Symbolic Computation* 41(2): 234-244, 2005.
+
+#. Max-Louis G. Buot, Serkan Hosten and Donald St. P. Richards:   
+   **Counting and locating the solutions of polynomial systems of maximum 
+   likelihood equations, II: The Behrens-Fisher problem**.
+   *Statistica Sinica* 17(4):1343-1354, 2007.
+
+#. Enric Celaya, Tom Creemers, Lluis Ros:
+   **Exact interval propagation for the efficient solution of position
+   analysis problems on planar linkages**.
+   *Mechanism and Machine Theory* 54: 116-131, 2012.
+
+#. Zachary Charles and Nigel Boston:
+   **Exploiting algebraic structure in global optimization and the
+   Belgian chocolate problem**.
+   *Journal of Global Optimization* 72(2): 241-254, 2018.
+
+#. Tom Creemers, Josep M. Porta, Lluis Ros, and Federico Thomas:
+   **Fast Multiresolutive Approximations of Planar Linkage Configuration
+   Spaces**. *IEEE 2006 International Conference on Robotics and Automation.*
+
+#. Marc Culler and Nathan M. Dunfield:
+   **Orderability and Dehn filling.**
+   *Geometry and Topology* 22: 1405-1457, 2018.
+
+#. R.S. Datta:
+   **Using Computer Algebra To Compute Nash Equilibria**.
+   In *Proceedings of the 2003 International Symposium on Symbolic and
+   Algebraic Computation (ISSAC 2003)*, pages 74-79, ACM 2003.
+
+#. R.S. Datta:
+   **Finding all Nash equilibria of a finite game using
+   polynomial algebra**.  *Economic Theory* 42(1):55-96, 2009.
+
+#. B.H. Dayton:
+   **Numerical Local Rings and Local Solution of Nonlinear
+   Systems**.  In *Proceedings of the 2007 International Workshop on
+   Symbolic-Numeric Computation (SNC'07)*, pages 79-86, ACM 2007.
+
+#. Max Demenkov:
+   **Estimating region of attraction for polynomial vector fields
+   by homotopy methods**.
+   *ACM Communications in Computer Algebra* 46(3):84-85, 2012.
+
+#. Max Demenkov:
+   A Matlab Tool for Regions of Attraction Estimation
+   via Numerical Algebraic Geometry.</B>
+   In the *2015 International Conference on Mechanics - Seventh
+   Polyakhov's Reading*, February 2-6, 2015, Russia,
+   Saint Petersburg State University,
+   Proceedings Edited by A.A. Tikhonov. IEEE 2015.
+
+#. Ian H. Dinwoodie, Emily Gamundi, and Ed Mosteig:
+   **Multiple Solutions for Blocking Probabilities in Asymmetric Networks**.
+   *Open Systems and Information Dynamics* 12(3):273-288, 2005.
+
+#. Csaba Domokos and Zoltan Kato: 
+   **Parametric Estimation of Affine Deformations of Planar Shapes**.
+   *Pattern Recognition*, 2009. In press.
+
+#. C. Durand and C.M. Hoffmann:
+   **Variational Constraints in 3D**.
+   In *Proceedings of the International Conference on Shape Modeling 
+   and Applications*, Aizu-Wakamatsu, Japan, pages 90-98, IEEE Computer
+   Society, 1999.
+
+#. C. Durand and C.M. Hoffmann:
+   **A systematic framework for solving
+   geometric constraints analytically**.
+   *Journal of Symbolic Computation* 30(5):493-520, 2000.
+
+#. I.Z. Emiris, E. Tsigaridas, G. Tzoumas:
+   **The predicates for the Voronoi diagram of ellipses**. 
+   In *Proc. ACM Symp. Comput. Geom.* 2006. 
+
+#. Jonathan P. Epperlein and Bassam Bamieh:
+   **A Frequency Domain Method for Optimal Periodic Control**.
+   2012 American Control Conference (ACC), pages 5501-5506, IEEE 2012.
+
+#. F. Ferrari:
+   **On the geometry of super Yang-Mills theories: phases and 
+   irreducible polynomials**.
+   *Journal of High Energy Physics* 1, paper 26, 2009.
+
+#. Jaime Gallardo-Alvarado:
+   **A simple method to solve the forward displacement analysis of
+   the general six-legged parallel manipulator**.
+   *Robotics and Computer-Integrated Manufacturing* 30:55-61, 2014.
+
+#. Jaime Gallardo-Alvarado:
+   **Gough's Tyre Testing Machine**.
+   Chapter 12 of
+   *Kinematic Analysis of Parallel Manipulators by Algebraic Screw Theory*,
+   pages 255-280, Springer-Verslag, 2016.
+
+#. Jaime Gallardo-Alvarado and Juan-de-Dios Posadas-Garcia:
+   **Mobility analysis and kinematics of the semi-general 2(3-RPS)
+   series-parallel manipulator**.
+   *Robotics and Computer-Integrated Manufactoring* 29(6): 463-472, 2013.
+
+#. Jaime Gallardo-Alvarado, Mohammad H. Abedinnasab, and Daniel Lichtblau:
+   **Simplified Kinematics for a Parallel Manipulator Generator of the
+   Schoenflies Motion**.
+   *Journal of Mechanisms and Robotics* 8(6):061020-061020-10, 2016.
+
+#. Bertrand Haas:
+   **A Simple Counterexample to Kouchnirenko's Conjecture**.
+   *Beitraege zur Algebra und Geometrie/Contributions to Algebra
+   and Geometry* 43(1):1-8, 2002.
+
+#. Adlane Habed and Boubakeur Boufama:
+   **Camera self-calibration from bivariate polynomial equations and
+   the coplanarity constraint**.
+   *Image and Vision Computing* 24(5):498-514, 2006.
+
+#. Marshall Hampton and Richard Moeckel:
+   **Finiteness of stationary configurations of the four-vortex problem**.
+   *Transactions of the American Mathematical Society* 361(3): 1317-1332,
+   2009.
+
+#. Jonathan Hauenstein, Jose Israel Rodriguez, and Bernd Sturmfels:
+   **Maximum Likelihood for Matrices with Rank Constraints**.
+   *Journal of Algebraic Statistics* 5(1): 18-38, 2014.
+
+#. Christoph Hellings, David A. Schmidt, and Wolfgang Utschick:
+   **Optimized beamforming for the two stream MIMO interference channel
+   at high SNR**. In 2009 Internatial ITG Workshop on Smart Antennas
+   (WSA 2009), February 16-19, Berlin, Germany, pages 88-95.
+
+#. Gabor Horvath:
+   **Moment Matching-Based Distribution Fitting with Generalized
+   Hyper-Erlang Distributions**.
+   In *Analytical and Stochastic Modeling Techniques and Applications*,
+   Lecture Notes in Computer Science, Volume 7984, pages 232-246, 2013.
+
+#. X.G. Huang:
+   **Forward Kinematics for a Parallel Platform Robot**.
+   *Communications in Computer and Information Sciences* 86:529-532, 2011.
+
+#. Xiguang Huang, Qizheng Liao, Shimin Wei, and Qiang Xu:
+   **Five precision point-path synthesis of planar four-bar linkage
+   using algebraic method**.
+   *Frontiers of Electrical and Electronic Engineering in China*
+   3(4):470-474, 2008.
+
+#. Xiguang Huang, Qizheng Liao, Shimin Wei, Qiang Xu, and Shuguang Huang:
+   **The 4SPS-2CCS generalized Stewart-Gough Platform mechanisms and its
+   direct kinematics**.
+   In *Proceedings of the 2007 IEEE International Conference on
+   Mechatronics and Automation*, August 5-8, 2007, Harbin, China.
+   Pages 2472-2477, 2007.
+
+#. Hamadi Jamali, Tokunbo Ogunfunmi:
+   **Stationary points of the finite length constant modulus optimization**.
+   *Signal Processing* 82(4): 625-641, 2002.
+
+#. Hamadi Jamali:
+   **The unsupervised optimum linear finite length filter for fourth order
+   wide sense stationary single output systems**.
+   *Digital Signal Processing*, in press, 2018.
+
+#. A. Jensen, A. Leykin, and J. Yu:
+   **Computing tropical curves via homotopy continuation**.
+   *Experimental Mathematics* 25(1): 83--93, 2016.
+
+#. Libin Jiao, Bo Dong, Jintao Zhang, and Bo Yu:
+   **Polynomial Homotopy Methods for the Sparse Interpolation Problem 
+   Part I: Equally Spaced Sampling**.
+   *SIAM J. Numer. Anal.* 54(1): 462-480, 2016.
+
+#. Bjorn Johansson, Magnus Oskarsson, and Kalle Astrom:
+   **Structure and motion estimation from complex features
+   in three views**.
+   In the Online ICVGIP-2002 Proceedings
+   (Indian Conference on Computer Vision, Graphics and Image Processing).
+
+#. M. Kara-Zaitri, D. Arzelier, and C. Louembet:
+   **Mixed iterative algorithm for solving optimal implusive time-fixed
+   rendezvous problem**.
+   *American Institute of Aeronautics and Astronautics Guidance, Navigation,
+   and Control Conference*, Toronto, Canada, 02-05 August 2010.
+
+#. Yoni Kasten, Meirav Galun, Ronen Basri:
+   **Resultant Based Incremental Recovery of Camera Pose from Pairwise 
+   Matches**.
+   *2019 IEEE Winter Conference on Applications of Computer Vision (WACV)*,
+   Waikoloa Village, HI, USA, 7-11 January 2019, pages 1080-1088, IEEE 2019.
+
+#. Dimitra Kosta and Kaie Kubjas:
+   **Maximum Likelihood Estimation of Symmetric Group-Based Models 
+   via Numerical Algebraic Geometry**.
+   *Bulletin of Mathematical Biology*, October 2018, pages 1-24.
+
+#. P.U. Lamalle, A. Messiaen, P. Dumortier, F. Durodie, M. Evrard, F. Louche:
+   **Study of mutual coupling effects in the antenna array of the ICRH
+   plug-in for ITER**. 
+   *Fusion Engineering and Design* 74:359-365, 2005.
+
+#. E. Lee and C. Mavroidis:
+   **Solving the Geometric Design Problem of Spatial
+   3R Robot Manipulators Using Polynomial Continuation**.
+   *Journal of Mechanical Design, Transactions of the ASME* 124(4):652-661,
+   2002.
+
+#. E. Lee and C. Mavroidis:
+   **Four Precision Points Geometric Design of Spatial 3R Manipulators**.
+   In the *Proceedings of the 11th World Congress in Mechanism and Machine 
+   Sciences*, August 18-21, 2003, Tianjin, China.
+   China Machinery Press, edited by Tian Huang.
+
+#. E. Lee and C. Mavroidis:
+   **Geometric Design of 3R Manipulators for
+   Reaching Four End-Effector Spatial Poses**.
+   *International Journal for Robotics Research*, 23(3):247-254, 2004.
+
+#. E. Lee, C. Mavroidis, and J. Morman:
+   **Geometric Design of Spatial 3R Manipulators**.
+   In *Proceedings of the 2002 NSF Design, Service, and
+   Manufacturing Grantees and Research Conference*, San Juan, Puerto Rico,
+   January 7-10, 2002.
+
+#. Dimitri Leggas and Oleg V. Tsodikov:
+   **Determination of small crystal structures from a minimum set of
+   diffraction intensities by homotopy continuation**.
+   *Acta Crystallographica Section A* 71(3): 319-324, 2015.
+
+#. Dawei Leng and Weidong Sun:
+   **Finding All the Solutions of PnP Problem**.
+   In *IST 2009 - International Workshop on Imaging Systems and Techniques*,
+   Shenzhen, China, May 11-12, 2009.  Pages 348-352, IEEE, 2009.
+
+#. Anton Leykin:
+   **Numerical Primary Decomposition**.
+   In *Proceedings of ISSAC 2008*,
+   edited by David Jeffrey, pages 165-164, ACM 2008.
+
+#. Anton Leykin and Frank Sottile:
+   **Computing Monodromy via Parallel Homotopy Continuation**.
+   In *Proceedings of the 2007 International
+   Workshop on Parallel Symbolic Computation (PASCO'07)*, 
+   pages 97-98, ACM 2007. (on CDROM)
+
+#. Anton Leykin and Frank Sottile:
+   **Galois groups of Schubert problems via homotopy computation**.
+   *Mathematics of Computation* 78: 1749-1765, 2009.
+
+#. Shaobai Li, Srinandan Dasmahapatra, and Koushik Maharatna:
+   **Dynamical System Approach for Edge Detection Using Coupled
+   FitzHugh-Naguma Neurons**.
+   *IEEE Transactions on Image Processing* 24(12), 5206-5219, 2015.
+
+#. Ross A. Lippert:
+   **Fixing multiple eigenvalues by a minimal perturbation**.
+   *Linear Algebra Appl.* 432(7): 1785-1817, 2010.
+
+#. Abdrhaman Mahmoud, Bo Yu, Xuping Zhang:
+   **Solving Variable-Coefficient Fourth-Order ODEs with Polynomial 
+   Nonlinearity by Symmetric Homotopy Method**.
+   *Applied and Computational Mathematics* 7(2): 58-70, 2018.
+
+#. M. Maniatis and O. Nachtmann:
+   **Stability and symmetry breaking in the general three-Higgs-double
+   model**.
+   *Journal of High Energy Physics* 2015:58, February 2015.
+
+#. F. Meng, J. W. Banks, W. D. Henshaw, and D. W. Schwendeman:
+   **A stable and accurate partitioned algorithm 
+   for conjugate heat transfer.**
+   *Journal of Computational Physics* 344: 51-85, 2017.
+
+#. Hyosang Moon and Nina P. Robson:
+   **Design of spatial non-anthropomorphic articulated systems based on
+   arm joint constraint kinematic data for human interactive robotics
+   applications**. DETC2015-46530.  In the *Proceedings of the ASME 2015
+   International Design Engineering Technical Conferences & Computers
+   and Information in Engineering Conference*. IDETC/CIE 2015.
+   August 2-5, 2015, Boston Massachusetts.
+
+#. Marc Moreno Maza, Greg Reid, Robin Scott, and Wenyuan Wu:
+   **On Approximate Triangular Decompositions I. Dimension Zero**.
+   In the *SNC 2005 Proceedings*.
+   International Workshop on Symbolic-Numeric Computation.
+   Xi'an, China, July 19-21, 2005.
+   Edited by Dongming Wang and Lihong Zhi.
+   Pages 250-275, 2005.
+
+#. Andrew J. Newell:
+   **Transition to supermagnetism in chains of magnetosome crystals**.
+   *Geochemistry Geophysics Geosystems* 10(11):1-19, 2009.
+
+#. Girijanandan Nucha, Georges-Pierre Bonneau, Stefanie Hahmann,
+   and Vijay Natarajan.
+   **Computing Contour Trees for 2D piecewise Polynomial Functions**.
+   In *Eurographics Conference on Visualization (EuroVis)* 2017,
+   edited by J. Heer, T. Ropinski, and J. van Wijk, pages 24-33,
+   Computer Graphics Forum, Wiley & Sons Ltd., 2017.
+
+#. Nida Obatake, Anne Shiu, Xiaoxian Tang, and Angelica Torres:
+   **Oscillations and bistability in a model of ERK regulation**.
+   arXiv:1903.02617 
+
+#. M. Oskarsson, A. Zisserman and K. Astrom:
+   **Minimal Projective Reconstruction for combinations of Points
+   and Lines in Three Views**.
+   In the *Electronic Proceedings of BMVC2002 - The 13th British Machine
+   Vision Conference 2002*, pages 63 - 72.
+
+#. P.A. Parrilo and B. Sturmfels.
+   **Minimizing polynomial functions**.
+   In S. Basu and L. Gonzalez-Vega, editors,
+   *Algorithmic and quantitative real algebraic geometry*,
+   volume 60 of *DIMACS Series in Discrete Mathematics and 
+   Theoretical Computer Science*, pages 83-99. AMS, 2003.
+
+#. Alba Perez and J.M. McCarthy:
+   **Dual Quaternion Synthesis of Constrained Robotic Systems**.
+   *Journal of Mechanical Design* 126(3): 425-435, 2004.
+
+#. Nina Patarinsky-Robson, J. Michael McCarthy, and Irem Y. Tumer:
+   **The algebraic synthesis of a spatial TS chain for a prescribed
+   acceleration task**.
+   *Mechanism and Machine Theory* 43(10): 1268-1280, 2008.
+
+#. Nina Patarinsky-Robson, J. Michael McCarthy, and Irem Y. Tumer:
+   **Failure Recovery Planning for an Arm Mounted on an
+   Exploratory Rover**.
+   *IEEE Transactions on Robotics* 25(6):1448-1453, 2009.
+
+#. Jose Israel Rodriguez:
+   **Combinatorial excess intersection**.
+   *Journal of Symbolic Computation* 68(2): 297-307, 2015.
+
+#. Roger E. Sanchez-Alonso, Jose-Joel Gonzalez-Barbosa, Eduardo
+   Castilo-Castaneda, and Jaime Gallardo-Alvarado:
+   **Kinematic analysis of a novel 2(3-RUS) parallel manipulator**.
+   *Robotica*, available on CJO2015.
+
+#. H. Schreiber, K. Meer, and B.J. Schmitt:
+   **Dimensional synthesis of planar Stephenson mechanisms for motion
+   generation using circlepoint search and homotopy methods**.
+   *Mechanism and Machine Theory* 37(7):717-737, 2002.
+
+#. Ben Shirt-Ediss, Ricard V. Sole, and Kepa Ruiz-Mirazo:
+   **Emergent Chemical Behavior in Variable-Volume Protocells**.
+   *Life* 5: 181-121, 2015.
+
+#. Hythem Sidky, Jonathan K. Whitmer, and Dhagash Mehta:
+   **Reliable mixture critical point computation using polynomial 
+   homotopy continuation**.
+   *AIChE Journal.  Thermodynamics and Molecular-Scale Phenomena*,
+   2016.  doi:10.1002/aic.15319
+
+#. Frank Sottile:
+   **Real Schubert Calculus: Polynomial systems and a conjecture
+   of Shapiro and Shapiro**.
+   *Experimental Mathematics* 9(2): 161-182, 2000.
+
+#. H. Stewenius and K. Astrom:
+   **Structure and Motion Problems for Multiple Rigidly Moving Cameras**.
+   In *Computer Vision - ECCV 2004: 8th European Conference on
+   Computer Vision, Prague, Czech Republic, May 11-14, 2004. 
+   Proceedings, Part III*.  Edited by T. Pajdla and J. Matas.
+   Lecture Notes in Computer Science 3023, pages 252-263, Springer, 2004.
+
+#. H.-J. Su and J.M. McCarthy:
+   **Kinematic Synthesis of RPS Serial Chains**.
+   In the *Proceedings of the ASME Design Engineering Technical
+   Conferences* (CDROM).
+   Paper DETC03/DAC-48813.  Chicago, IL, Sept. 02-06, 2003.
+
+#. H.-J. Su and J.M. McCarthy:
+   **Synthesis of Compliant Mechanisms with Specified Equilibrium 
+   Positions**. In the *Proceedings of the ASME International
+   Design Engineering Technical Conferences*.
+   Paper DETC 2005-85085.  Long Beach, CA, Sept. 24-28 2005.
+
+#. H.-J. Su and J.M. McCarthy:
+   **Kinematic Synthesis of RPS Serial Chains for a Given Set of 
+   Task Positions**.
+   *Mechanism and Machine Theory* 40(7):757-775, 2005
+
+#. H.-J. Su and J.M. McCarthy:
+   **A Polynomial Homotopy Formulation of the Inverse Static Analysis of
+   Planar Compliant Mechanisms**.
+   *ASME Journal of Mechanical Design* 128(4): 776-786, 2006.
+
+#. H.-J. Su, C.W. Wampler, and J.M. McCarthy:
+   **Geometric Design of Cylindric PRS Serial Chains**.
+   *ASME Design Engineering Technical Conferences*,
+   Chicago, IL, Sep 2-6, 2003.
+
+#. Weronika J. Swiechowicz and Yuanfang Xiang:
+   **Numerical Methods for Estimating Correlation Coefficient
+   of Trivariate Gaussians** (sponsor: Sonja Petrovic)
+   in Volume 8 of *SIAM Undergraduate Research Online (SIURO)*, 2015.
+
+#. Attila Tanács and Joakim Lindblad and Nataša Sladoje and Zoltan Ka:
+   **Estimation of linear deformations of 2D and 3D fuzzy objects**.
+   *Pattern Recognition* 48(4):1391-1403, 2015.
+
+#. N. Trawny, X.S. Zhou, K.X. Zhou, S.I. Roumeliotis:
+   **3D Relative Pose Estimation from Distance-Only Measurements**.
+   In the *Proceedings of the 2007/IEEE/RSJ International Conference
+   on intelligent Robots and Systems*. San Diego, CA, Oct 29-Nov 2, 2007,
+   pages 1071-1078, IEEE, 2007.
+
+#. T. Turocy:
+   **Towards a black-box solver for finite games: Computing all equilibria
+   with Gambit and PHCpack**.
+   In *Software for Algebraic Geometry*, volume 148 of the IMA
+   volumes in Mathematics and its Applications, edited by M.E. Stillman,
+   N. Takayama, and J. Verschelde, pages 133-148, Springer-Verlag, 2008.
+
+#. Konstantin Usevich and Ivan Markovsky:
+   **Structured low-rank approximation as a rational function
+   minimization**.
+   In 16th IFAC Symposium on System Identification Brussels, 
+   11-13 Jul 2012, pages 722-727.
+
+#. J. Vanderstukken, A. Stegeman, and L. De Lathauwer:
+   **Systems of polynomial equations, higher-order tensor decompositions
+   and multidimensional harmonic retrieval: A unifying framework.
+   Part I: The canonical polyadic decomposition.**
+   Available as
+   ftp://ftp.esat.kuleuven.be/pub/stadius/nvervliet/vanderstukken2017systems1.pdf
+
+#. C.W. Wampler:
+   **Isotropic coordinates, circularity and Bezout numbers:
+   planar kinematics from a new perspective**.
+   In the *Proceedings of the 1996 ASME Design Engineering Technical
+   Conference*. Irvine, CA, Aug 18-22, 1996. Available on CD-ROM.
+
+#. Wenyuan Wu and Greg Reid:
+   **Symbolic-numeric computation of implicit Riquier bases for PDE**.
+   In the *Proceedings of the 2007 International Symposium on Symbolic and
+   Algebraic Computation*, edited by C.W. Brown, pages 377-385, ACM 2007.
+
+#. Wenyuan Wu and Zhonggang Zeng:
+   **The Numerical Factorization of Polynomials.**
+   *Foundations of Computational Mathematics* 17(1): 259-286, 2017.
+
+#. Jonathan Widger and Daniel Grosu:
+   **Parallel Computation of Nash Equilibria in N-Player Games**.
+   In the *Proceedings of the 12th IEEE International Conference
+   on Computational Science and Engineering (CSE 2009)*,
+   August 29-31, 2009, Vancouver, Canada, pages 209-215.
+
+#. F. Xie, G. Reid, and S. Valluri:
+   **A numerical method for the
+   one dimensional action functional for FBG structures**.
+   *Can J. Phys.* 76: 1-21, 2002.
+
+#. Hong Bing Xin, Qiang Huang, and Yueqing Yu:
+   **Position and Orientation Analyses of Mechanism by PHCpack Solver
+   of Homotopy Continuation**.
+   *Applied Mechanics and Materials* 152-254: 1779-1784, 2012.
+
+#. Ke-hu Yang, Dan-ying Lu, Xiao-qing Kuang, and Wen-Shen Yu:
+   **Harmonic Elimination for Multilevel Converters with Unequal DC levels
+   by Using the Polynomial Homotopy Continuation Algorithm**.
+   In the Proceedings of the 35th Chinese Control Conference,
+   July 27-29, 2016, Chengdu, China, pages 9969-9973, IEEE.
+
+#. K. Yang and R. Orsi:
+   **Static output feedback pole placement via a trust region approach**.
+   *IEEE Transactions on Automatic Control* 52(11): 2146-2150, 2007.
+
+#. Yan Yang, Yao Zhang, Fangxing Li, and Haoyong Chen:
+   **Computing All Nash Equilibria of Multiplayer Games in Electricity
+   Markets by Solving Polynomial Equations**.
+   *IEEE Transactions on Power Systems* 27(1): 81-91, 2012.
+
+#. Jun Zhang and Mohan Sarovar:
+   **Identification of open quantum systems from observable time traces**.
+   *Physical Review A* 91, 052121, 2015.
+
+#. Shiqiang Zhang, Shufang Zhang, and Yan Wan:
+   **Biorthogonal Wavelet Construction Using Homotopy Method**.
+   *Chinese Journal of Electronics* 24(4), pages 772-775, 2015.
+
+#. X. Zhang, J. Zhang, and B. Yu:
+   **Symmetric Homotopy Method for Discretized Elliptic Equations with
+   Cubic and Quintic Nonlinearities.**
+   *Journal of Scientific Computing* 70(3): 1316-1335, 2017.
+
+#. Xun S. Zhou and Stergios I. Roumeliotis:
+   **Determining 3-D Relative Transformations for Any Combination of
+   Range and Bearing Measurements.**
+   *IEEE Transactions on Robotics* 29(2):458-474, 2013.
+
+#. Lifeng Zhou, Hai-Jun Su, Alexander E. Marras, Chao-Min Huang,
+   Carlos E. Castro: **Projection kinematic analysis of DNA origami
+   mechanisms based on a two-dimensional TEM image.**
+   *Mechanisms and Machine Theory* 109:22-38, 2017.
+
+In addition to the publications listed above, PHCpack was used as a
+benchmark to measure the progress of new algorithms in the following papers:
+
+111. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+     **A robust approach for finding all well-separated solutions of
+     sparse systems of nonlinear equations**.
+     *Numerical Algorithms* 76:163-189, 2017.
+
+#. Ada Boralevi, Jasper van Doornmalen, Jan Draisma, Michiel E. Hochstenbach,
+   and Bor Plestenjak: **Uniform Determinantal Representations**.
+   *SIAM J. Appl. Algebra Geometry*, vol. 1, pages 415-441, 2017.
+
+#. P. Breiding and S. Timme. **HomotopyContinuation.jl: 
+   A package for homotopy continuation in Julia.**
+   In J. H. Davenport, M. Kauers, G. Labahn, and J. Urban, editors, 
+   *Mathematical Software -- ICMS 2018. 6th International Conference, 
+   South Bend, IN, USA, July 24-27, 2018. Proceedings*, 
+   volume 10931 of *Lecture Notes in Computer Science*, pages 458-465. 
+   Springer-Verlag, 2018.
+
+#. Timothy Duff, Cvetelina Hill, Anders Jensen, Kisun Lee, Anton Leykin,
+   and Jeff Sommars: **Solving polynomial systems via homotopy continuation
+   and monodromy**. 
+   *IMA Journal of Numerical Analysis*. In Press, available online
+   13 April 2018.
+
+#. T. Gao and T.Y. Li:
+   **Mixed volume computation via linear programming**.
+   *Taiwanese Journal of Mathematics* 4(4): 599-619, 2000.
+
+#. T. Gao and T.Y. Li:
+   **Mixed volume computation for semi-mixed systems**.
+   *Discrete Comput. Geom.* 29(2):257-277, 2003.
+
+#. L. Granvilliers:
+   **On the Combination of Interval Constraint Solvers**.
+   *Reliable Computing* 7(6): 467-483, 2001.
+
+#. Jonathan D. Hauenstein, Andrew J. Sommese, and Charles W. Wampler:
+   **Regeneration Homotopies for Solving Systems of Polynomials**
+   *Mathematics of Computation* 80(273): 345-377, 2011.
+
+#. S. Kim and M. Kojima:
+   **Numerical Stability of Path Tracing in Polyhedral Homotopy 
+   Continuation Methods**.
+   *Computing* 73(4): 329-348, 2004.
+
+#. Y. Lebbah, C. Michel, M. Rueher, D. Daney, and J.P. Merlet:
+   **Efficient and safe global constraints for handling numerical
+   constraint systems**.
+   *SIAM J. Numer. Anal.* 42(5):2076-2097, 2005.
+
+#. T.L. Lee, T.Y. Li, and C.H. Tsai:
+   **HOM4PS-2.0: a software package for solving polynomial systems
+   by the polyhedral homotopy continuation method**.
+   *Computing* 83(2-3): 109-133, 2008.
+
+#. Anton Leykin:
+   **Numerical Algebraic Geometry**.
+   *The Journal of Software for Algebra and Geometry*
+   volume 3, pages 5-10, 2011. 
+
+#. T.Y. Li and X. Li:
+   **Finding Mixed Cells in the Mixed Volume Computation**.
+   *Foundations of Computational Mathematics* 1(2): 161-181, 2001.
+
+#. T.Y. Li, X. Wang, and M. Wu:
+   **Numerical Schubert Calculus by the Pieri Homotopy Algorithm**.
+   *SIAM J. Numer Anal.* 40(2): 578-600, 2002.
+
+#. Bernard Mourrain, Simon Telen, and Marc Van Barel:
+   **Solving Polynomial Systems Efficiently and Accurately.**
+   arXiv:1803.07974v2 [math.AG] 22 Mar 2018.
+
+#. J.M. Porta, L. Ros, T. Creemers, and F. Thomas:
+   **Box approximations of planar linkage configuration spaces**.
+   *Journal of Mechanical Design* 129(4):397-405, 2007.
+
+#. Laurent Sorber, Marc Van Barel, and Lieven De Lathauwer:
+   **Numerical solution of bivariate and polyanalytic polynomial systems**.
+   *SIAM J. Numer. Anal.* 52(4):1551-1572, 2014.
+
+#. Yang Sun, Yu-Hui Tao, Feng-Shan Bai:
+   **Incomplete Groebner basis as a preconditioner for polynomial systems**.
+   *Journal of Computational and Applied Mathematics* 226(1):2-9, 2009.
+
+#. Simon Telen and Marc Van Barel:
+   **A stabilized normal form algorithm for generic systems of 
+   polynomial equations**.
+   * Journal of Computational and Applied Mathematics*
+   342(November 2018): 119-132, 2018. 
+
+#. S. Telen, B. Mourrain, and M. Van Barel:
+   **Solving Polynomial Systems via a Stabilized Representation
+   of Quotient Algebras.**
+   arXiv:1711.04543v1 [math.AG] 13 Nov 2017
+
+#. S. Telen, B. Mourrain, and M. Van Barel:
+   **Solving Polynomial Systems via Truncated Normal Forms.**
+   *SIAM J. Matrix Anal. Appl.* 39(3):1421-1447, 2018.
+
+#. A. Zachariah and Z. Charles:
+   **Efficiently Finding All Power Flow Solutions to Tree Networks.**
+   In *Fifty-Fifth Annual Allerton Conference.  Allerton House, UIUC,
+   Illinois, USA.  October 3-6, 2017*, pages 1107-1114, IEEE, 2017.
+
+PHCpack was used to develop new homotopy algorithms:
+
+133. Bo Dong, Bo Yu, and Yan Yu:
+     **A symmetric and hybrid polynomial system solving method for mixed
+     trigonometric polynomial systems**.
+     *Mathematics of Computation* 83(288): 1847-1868, 2014.
+
+#. Bo Yu and Bo Dong:
+   **A hybrid polynomial system solving method for mixed
+   trigonometric polynomial systems**.
+   *SIAM J. Numer. Anal.* 46(3): 1503-1518, 2008.
+
+#. Xuping Zhang, Jintao Zhang, and Bo Yu:
+   **Eigenfunction expansion method for multiple solutions
+   of semilinear elliptic equations with polynomial nonlinearity**
+   *SIAM J. Numer. Anal.* 51(5): 2680-2699, 2013.
+
+Last, but certainly not least, there is the wonderful book of
+Bernd Sturmfels which contains a section on computing Nash
+equilibria with PHCpack.
+
+136. B. Sturmfels:
+     **Solving Systems of Polynomial Equations**.
+     CBMS Regional Conference Series of the AMS, Number 97, 2002.
+
+So we have to end quoting Bernd Sturmfels:
+*polynomial systems are for everyone.*
+
+Acknowledgments
 ===============
 
-The PhD thesis of Kathy Piret (cited above) described the
-development of a first Python interface to PHCpack.
-The 2008 ``phcpy.py`` provided access to the blackbox solver,
-the path trackers, and the mixed volume computation.
-
-In the summer of 2017, Jasmine Otto helped with the setup of
-jupyterhub and the definition of a SageMath kernel.
-Code snippets with example uses of ``phcpy`` in a Jupyter notebook
-were introduced during that summer.  The code snippets,
-listed in a chapter of this document, provide another good way
-to explore the capabilities of the software.
-
 This material is based upon work supported by the 
-National Science Foundation under Grants 1115777 and 1440534.
+National Science Foundation under Grants No. 9804846, 0105739, 0134611,
+0410036, 0713018, 1115777, 1440534, and 1854513.
 Any opinions, findings, and conclusions or recommendations expressed 
 in this material are those of the author(s) and do not necessarily 
 reflect the views of the National Science Foundation. 
 
-about this document
-===================
+Since 2001, the code in PHCpack improved thanks to the contributions
+of many PhD students at the University of Illinois at Chicago.
+Their names, titles of PhD dissertation, and year of PhD are listed below:
 
-This document arose as an exercise in exploring restructured text and Sphinx.
-All good software documents contain the following four items: 
-an installation guide, a getting started, a tutorial, and a reference manual.
-This document combines all four.
-In its current state, phcpy is a collection of modules, with a focus
-on exporting the functionality of PHCpack.  The design is functional.
-The package does not define nor export an object oriented interface.
+1. Yusong Wang: 
+   *Computing Dynamic Output Feedback Laws with Pieri Homotopies on a 
+   Parallel Computer*, 2005.
+
+#. Ailing Zhao:
+   *Newton's Method with Deflation for Isolated Singularities
+   of Polynomial Systems*, 2007.
+
+#. Yan Zhuang:
+   *Parallel Implementation of Polyhedral Homotopy Methods*, 2007.
+
+#. Kathy Piret:
+   *Computing Critical Points of Polynomial Systems
+   using PHCpack and Python*, 2008.
+
+#. Yun Guan:
+   *Numerical Homotopies for Algebraic Sets on a Parallel Computer*, 2010.
+
+#. Genady Yoffe:
+   *Using Parallelism to compensate for Extended Precision in Path 
+   Tracking for Polynomial System Solving*, 2012.
+
+#. Danko Adrovic:
+   *Solving Polynomial Systems with Tropical Methods*, 2012.
+
+#. Xiangcheng Yu:
+   *Accelerating Polynomial Homotopy Continuation
+   on Graphics Processing Units*, 2015.
+
+#. Jeff Sommars:
+   *Algorithms and Implementations in Computational Algebraic Geometry*, 2018.
+
+#. Nathan Bliss:
+   *Computing Series Expansions of Algebraic Space Curves*, 2018.
+
+Anton Leykin contributed to the application of message passing 
+in a parallel implementation of monodromy to decompose an equidimensional
+solution set into irreducible components.  
+The Maple interface ``PHCmaple`` was written jointly with Anton Leykin.
+The work of Anton Leykin also paved the way for the Macaulay2 interface,
+which was further developed into ``PHCpack.m2`` in joint work with
+Elizabeth Gross and Sonja Petrovic.
+The ``PHCpack.m2`` (and also PHCpack itself) improved during various
+Macaulay2 workshops, with the help of
+Taylor Brysiewicz, Diego Cifuentes, Corey Harris, Kaie Kubjas,
+Anne Seigal, and Jeff Sommars.
+
+The software has been developed with GNAT GPL, the gnu-ada compiler.

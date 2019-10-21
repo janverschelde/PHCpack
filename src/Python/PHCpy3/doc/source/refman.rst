@@ -37,6 +37,17 @@ at the command prompt.
 .. automodule:: solutions
    :members:
 
+the module polynomials
+----------------------
+
+The module polynomials exports the definition of a class
+to represent systems of polynomials.
+The class ``Polynomials`` is intended as the starting point
+of the object-oriented interface to the solver.
+
+.. automodule:: polynomials
+   :members:
+
 path trackers and sweep homotopies
 ==================================
 
