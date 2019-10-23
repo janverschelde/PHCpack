@@ -108,7 +108,7 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o parameter.o lib2path.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  lib.a $(QD_LIB)/libqd.a \
                  get_clock.o get_clocks_per_sec.o \
-              -o /tmp/phc -lm --LINK=$(gpp)
+              -o $(BIN)/phc -lm --LINK=$(gpp)
 
 # some settings for MPI :
 
