@@ -50,7 +50,6 @@ newPackage(
   DebuggingMode => false,
   AuxiliaryFiles => true,
   CacheExampleOutput => true,
-  PackageImports => {"SimpleDoc"},
   PackageExports => {"NAGtypes"}
 )
 
@@ -428,11 +427,21 @@ systemFromFile (String) := (name) -> (
       if #L_j != 0 then (
         if (L_j_(#L_j-1) != ";") then (
           -- we have to bite off the first "+" sign of the term
-          term = value substring(1,#L_j-1,L_j);
+          -- but check if the first character is a plus!
+          if (L_j_0 == "+") or (L_j_0 == "-") then
+             term = value substring(1,#L_j, L_j)  -- substring(1,#L_j-1,L_j)
+          else
+             term = value substring(0,#L_j, L_j); -- substring(0,#L_j-1,L_j);
           if (L_j_0 == "+") then p = p + term else p = p - term;
         ) else ( -- in this case (L_j_(#L_j-1) == ";") holds
-          term = value substring(1,#L_j-2,L_j);
-          if (L_j_0 == "+") then p = p + term else p = p - term;
+          if (L_j_0 == "+") or (L_j_0 == "-") then
+             term = value substring(1,#L_j-1,L_j)  -- substring(1,#L_j-2,L_j)
+          else
+             term = value substring(0,#L_j-1,L_j); -- substring(0,#L_j-2,L_j)
+          if (#L_j > 1) then -- take care of a lonely ";"
+          (
+             if (L_j_0 == "+") then p = p + term else p = p - term;
+          );
           stop = true; result = result | {p}
         );
       ); j = j + 1;
@@ -483,7 +492,7 @@ witnessSetToFile (WitnessSet,String) := (witset,name) -> (
   s := equations(witset)|slice(witset);
   p := points(witset);
   systemToFile(s,name);
-  pointsToFile(p,R,name,Append=>true);
+  pointsToFile(p/coordinates,R,name,Append=>true);
 )
 
 ----------------------------
@@ -641,7 +650,7 @@ cascade (List) := o -> (system) -> (
   
   systemToFile(system,PHCinputFile);
   s := concatenate("0\n0\ny\n",PHCinputFile); -- option 0, system on file
-  s = concatenate("0\ny\n",PHCinputFile);  -- option 0, double precision
+  -- extra 0 for double precision
   s = concatenate(s,"\n",PHCoutputFile);   -- add name of the output file
   s = concatenate(s,"\n");
   s = concatenate(s,toString(startdim));   -- add top dimension
@@ -784,7 +793,7 @@ factorWitnessSet (WitnessSet ) := o->  w -> (
   systemToFile(system,PHCinputFile);
   R := ring first system;
   use R;
-  L := toList(points(w));
+  L := toList(points(w)) / coordinates;
   pointsToFile(L,R,PHCinputFile,Append=>true);
   if o.Verbose then
     stdio << "preparing batch file to " << PHCbatchFile << endl;
@@ -1822,16 +1831,18 @@ load "./PHCpack/PHCpackDoc.m2";
 --##########################################################################
 
 -----------------------------------
--- cascade
+-- test 0: cascade
 -----------------------------------
 TEST/// 
       R=CC[x11,x22,x21,x12,x23,x13,x14,x24]
       L={x11*x22-x21*x12,x12*x23-x22*x13,x13*x24-x23*x14}
-      assert( # cascade L == 1 )--there is one component of dim.5.
+     -- assert( # cascade L == 1 )--there is one component of dim.5.
+      C=cascade(L, Verbose=>true)
+      assert(#C == 1)
 ///;
 
 -----------------------------------
---constructEmbedding
+--test 1: constructEmbedding
 -----------------------------------
 TEST///
       R=CC[x,y,z]
@@ -1841,7 +1852,7 @@ TEST///
       assert ( member(zz1, Emb) == true ) --one of the eqns is zz1
 ///;
 -----------------------------------
---factorWitnessSet
+-- test 2: factorWitnessSet
 -----------------------------------
 TEST///
     R = CC[x,y];
@@ -1852,16 +1863,15 @@ TEST///
 ///;
 
 -----------------------------------
---isCoordinateZero
+-- test 3: isCoordinateZero
 -----------------------------------
 TEST///
      P=point({{0,1.0e-12}})
      assert (isCoordinateZero(P,1,1.0e-10) == true)
 ///;     
 
-
 -----------------------------------
--- isWitnessSetMember
+-- test 4: isWitnessSetMember
 -----------------------------------
 TEST/// 
     R = CC [x,y]
@@ -1871,7 +1881,7 @@ TEST///
 ///;
 
 -----------------------------------
--- mixedVolume
+-- test 5: mixedVolume
 -----------------------------------
 TEST/// 
      R=CC[x,y,z] 
@@ -1889,7 +1899,7 @@ TEST///
 ///;
 
 -----------------------------------
--- nonZeroFilter
+-- test 6: nonZeroFilter
 -----------------------------------
 TEST/// 
      R = CC[x,y]; 
@@ -1900,7 +1910,7 @@ TEST///
 ///;
 
 -------------------------------------
---numericalIrreducibleDecomposition
+-- test 7: numericalIrreducibleDecomposition
 -------------------------------------
 
 TEST///
@@ -1912,34 +1922,34 @@ TEST///
 ///;      
 
 -----------------------------------
--- refineSolutions
+-- test 8: refineSolutions
 -----------------------------------
 TEST/// 
       R = CC[x,y]; 
       S = {x^2 - 1/3, x*y - 1}; 
-      roots = solveSystem(S);
-      r0 = roots#0#Coordinates#1
-      newRoots = refineSolutions(S,roots,64) --recall that solutions are of type Point. 
+      oldRoots = solveSystem(S);
+      r0 = oldRoots#0#Coordinates#1
+      newRoots = refineSolutions(S,oldRoots,64) --recall that solutions are of type Point. 
       --check if precision increased:
-      assert(precision newRoots#0#Coordinates#1 > precision roots#0#Coordinates#1) 
+      assert(precision newRoots#0#Coordinates#1 > precision oldRoots#0#Coordinates#1) 
       --check if input number of decimal places, 64, used correctly: 
       assert(precision newRoots#0#Coordinates#1 == ceiling(log_2(10^64)))
 ///;
 
 -----------------------------------
--- solveRationalSystem
+-- test 9: solveRationalSystem
 -----------------------------------
 TEST///
      QQ[x,y,z];
      sys = {y-x^2, z-x^3, (x+y+z-1)/x};
      sols = solveRationalSystem(sys);
-     assert(# sols == 2); --there are two solutions
+     assert(# sols == 3); --there are 3 solutions
      real = realPoints(sols);
-     assert(# real == 2); --both solutions are real
+     assert(# real ==1); --one solution is real
 ///;
 
 -----------------------------------
--- solveSystem
+-- test 10: solveSystem
 -----------------------------------
 TEST/// 
      R=CC[x,y,z]
@@ -1955,9 +1965,8 @@ TEST///
      (abs((sol2-L_1#Coordinates)_0)<.00000000001 and abs((sol2-L_1#Coordinates)_1)<.00000000001 and abs((sol2-L_1#Coordinates)_2)<.00000000001))
 ///;
 
-
 -----------------------------------
--- toLaurentPolynomial
+-- test 11: toLaurentPolynomial
 -----------------------------------
 TEST///
      QQ[x,y,z];
@@ -1970,7 +1979,7 @@ TEST///
 ///;
 
 -----------------------------------
---topWitnessSet
+-- test 12: topWitnessSet
 -----------------------------------
 TEST///
     R = CC[x,y];
@@ -1981,7 +1990,7 @@ TEST///
 ///;    
     
 -----------------------------------
--- trackPaths
+-- test 13: trackPaths
 -----------------------------------
 TEST/// 
      R = CC[x,y]; 
@@ -1992,7 +2001,7 @@ TEST///
 ///;
 
 -----------------------------------
--- zeroFilter
+-- test 14: zeroFilter
 -----------------------------------
 TEST/// 
      R = CC[x,y]; 
