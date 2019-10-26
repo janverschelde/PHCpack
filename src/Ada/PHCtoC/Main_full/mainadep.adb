@@ -7,7 +7,7 @@ procedure mainadep ( targetfilename,startfilename,outfilename : in string ) is
   procedure Main is
 
   -- DESCRIPTION :
-  --   Prompts the user for the precsion and then calls the test.
+  --   Prompts the user for the test and the precision.
 
     tst,prc : character;
 

@@ -1,0 +1,6 @@
+This directory contains the full version of the capabilities of phc -j,
+with the algorithmic differentiation procedures in double double
+and quad double arithmetic.
+
+For this to compile with success, 
+the QD library must be present and installed.

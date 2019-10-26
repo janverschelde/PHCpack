@@ -1,4 +1,4 @@
-GPU acceleration of Newton's method and path tracking in PHCv2.4.60
+GPU acceleration of Newton's method and path tracking in PHCv2.4.75
 
 This directory is newly created in release 2.3.90 of PHCpack.
 At this point it consists of a collection of test programs to 
@@ -9,6 +9,7 @@ as a preparation for the ts_gpu tests that call the GPU.
 
 The code has been developed on the NVIDIA C2050 and K20C,
 using version 5.5 of nvcc and the GNAT GPL 2014 compiler.
+The code runs also on the NVIDIA P100, with version 8.0 of nvcc.
 
 -------------------------------------------------------------------------------
 file name             : short description
@@ -80,5 +81,7 @@ maximum_power_degrees          : checks maximum power in polynomial system
 algorithmic_diffeval_trackers  : wrappers and drivers to the Path library
 ts_ademanypaths                : calls the drivers to the ADE trackers
 -------------------------------------------------------------------------------
-mainadep                       : main driver for phc -j
+mainadep.ads                   : specifies main driver for phc -j
+Main_full/mainadep.adb         : body for phc -j with QD library
+Main_noqd/mainadep.adb         : body for phc -j without the QD library
 -------------------------------------------------------------------------------

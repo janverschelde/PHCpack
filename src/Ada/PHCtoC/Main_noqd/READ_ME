@@ -1,0 +1,4 @@
+This directory contains the restricted version of the capabilities of phc -j,
+without the algorithmic differentiation procedures in double double
+and quad double arithmetic, so phc can be compiled without the QD library
+to be installed on the system.
