@@ -14,8 +14,8 @@ MAKEFILE = makefile_mac
 phc:
 	make -f $(MAKEFILE) phc
 
-phc_no_ade:
-	make -f $(MAKEFILE) phc_no_ade
+phc_noqd:
+	make -f $(MAKEFILE) phc_noqd
 
 # for phcpy for Python 2.6 and 2.7, make phcpy2c2.so
 
@@ -28,9 +28,16 @@ sage_phcpy2c2.so:
 	make -f $(MAKEFILE) sage_phcpy2c2.so
 
 # for phcpy on Python 3.5, make phcpy2c3.so
+# of for 3.6 and 3.7, do make phcpy2c36.so and make phcpy2c37.so
 
 phcpy2c3.so:
 	make -f $(MAKEFILE) phcpy2c3.so
+
+phcpy2c36.so:
+	make -f $(MAKEFILE) phcpy2c36.so
+
+phcpy2c37.so:
+	make -f $(MAKEFILE) phcpy2c37.so
 
 # without the dependencies on GNAT, on Linux:
 
