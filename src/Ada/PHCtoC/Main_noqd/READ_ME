@@ -2,3 +2,10 @@ This directory contains the restricted version of the capabilities of phc -j,
 without the algorithmic differentiation procedures in double double
 and quad double arithmetic, so phc can be compiled without the QD library
 to be installed on the system.
+
+-------------------------------------------------------------------------------
+file name                      : short description
+-------------------------------------------------------------------------------
+algorithmic_diffeval_trackers  : wrappers and drivers to the Path library
+mainadep.adb                   : body for phc -j without the QD library
+-------------------------------------------------------------------------------

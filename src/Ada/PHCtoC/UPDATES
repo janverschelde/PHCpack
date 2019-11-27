@@ -1,3 +1,6 @@
+Tue 26 Nov 2019 : moved the algorithmic_diffeval_trackers to Main_full
+  and copied a restricted version to Main_noqd.
+
 Fri 25 Oct 2019 : new directories Main_full and Main_noqd with the full
   and the restricted version of mainadep.adb, to enable compilation of phc
   with the QD library installed.

@@ -78,10 +78,10 @@ ts_adepath_qd                  : main test program in quad double precision
 path_parameters                : parameters for the path library
 ts_pathpars                    : testing the path parameters
 maximum_power_degrees          : checks maximum power in polynomial system
-algorithmic_diffeval_trackers  : wrappers and drivers to the Path library
 ts_ademanypaths                : calls the drivers to the ADE trackers
 -------------------------------------------------------------------------------
 mainadep.ads                   : specifies main driver for phc -j
+algorithmic_diffeval_trackers  : wrappers and drivers to the Path library
 Main_full/mainadep.adb         : body for phc -j with QD library
 Main_noqd/mainadep.adb         : body for phc -j without the QD library
 -------------------------------------------------------------------------------
