@@ -112,7 +112,7 @@ phc: lib.a parameter.o lib2path.o feedback.o get_clock.o get_clocks_per_sec.o \
 
 phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o \
      inputData.o outputData.o iTest.o fTest.o reltab.o parameter.o \
-     simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o lib2path.o
+     simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o lib2path_d.o
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	$(gpp) -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
@@ -120,9 +120,9 @@ phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o \
 	gnatmake -c $(INCLULIBS) -I$(PHCAda)/PHCtoC/Main_noqd \
                     $(GNATOPTFLAGS) phctop.adb
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	gnatbind phctop_no_ade use_c2phc pieri_solver
-	gnatlink phctop_no_ade syscon.o solcon.o phcpack.o feedback.o \
-                 corecount.o \
+	gnatbind phctop use_c2phc pieri_solver
+	gnatlink phctop syscon.o solcon.o phcpack.o feedback.o \
+                 corecount.o parameter.o lib2path_d.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o lib.a \
                  /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
@@ -2236,6 +2236,12 @@ ts_adepath: utilities_d.o utilities_dd.o poly_d.o poly_dd.o \
 parameter.o:
 	$(gpp) -O3 -I$(PHCgpu)/Path/Host2 \
                -c $(PHCgpu)/Path/Host2/parameter.cpp -o parameter.o
+
+lib2path_d.o:
+	$(gpp) -O3 -I$(PHCLib) \
+                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly3 \
+                   -I$(PHCgpu)/Path/Host2 \
+               -c $(PHCgpu)/Path/Host2/lib2path_d.cpp -o lib2path_d.o
 
 lib2path.o:
 	$(gpp) -O3 -I$(PHCLib) -I$(QD_ROOT)/include \

@@ -1662,6 +1662,9 @@ ademanypaths.o:
 lib2path.o:
 	make -f $(MAKEFILE) lib2path.o
 
+lib2path_d.o:
+	make -f $(MAKEFILE) lib2path_d.o
+
 ts_ademanypaths:
 	make -f $(MAKEFILE) ts_ademanypaths
 
