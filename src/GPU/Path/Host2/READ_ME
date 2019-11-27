@@ -74,4 +74,5 @@ test_start.cpp         : test solutions of a start system
 test_path.cpp          : testing the path tracker
 -------------------------------------------------------------------------------
 lib2path               : connect Lib interface to the Path data structures
+lib2path_d             : double arithmetic version of lib2path, without QD
 -------------------------------------------------------------------------------

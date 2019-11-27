@@ -1,3 +1,6 @@
+Tue 26 Nov 2019 : new lib2path_d.h and lib2path_d.cpp to build the double
+  arithmetic version of the path library, without the QD library.
+
 Sun 21 Oct 2018 : improved test_start.cpp to be ready for multithreading.
 
 Wed 17 Oct 2018 : added test_start.cpp, to test solutions of a start system.
