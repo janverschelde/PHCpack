@@ -1,3 +1,6 @@
+Wed 18 Dec 2019 : ts_speelser computes all derivatives of a product,
+  with convolutions for the coefficients of power series.
+
 Tue 17 Dec 2019 : new test procedure ts_speelser, to develop the reverse mode
   of algorithmic differentiation on power series.
   Added the computation of the product to ts_speelser.adb.

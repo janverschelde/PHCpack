@@ -4,7 +4,7 @@ This directory was created new in v2.3.98, with code that had been building
 up in the directory Functions.  In Functions, polynomials are evaluated by
 means of a nested Horner scheme.  For scaling to larger problems and for
 massively parallel implementations (GPU), new evaluation and differentation
-algorithms were develed jointly with Genady Yoffe.
+algorithms were developed jointly with Genady Yoffe.
 With the reverse mode of algorithmic differentiation the value of a product
 of variables -- the so-called Speelpenning example -- can be computed along
 with its gradient at a cost that is linear in the number of variables.
