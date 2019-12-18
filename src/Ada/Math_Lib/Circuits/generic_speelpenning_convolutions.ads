@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Vectors;
 with Abstract_Ring;
 with Generic_Vectors;
 with Generic_VecVecs;
@@ -34,6 +35,9 @@ package Generic_Speelpenning_Convolutions is
 
   procedure Speel ( x : in VecVecs.VecVec;
                     forward,backward,cross : in out VecVecs.VecVec );
+  procedure Speel ( x : in VecVecs.VecVec;
+                    idx : in Standard_Integer_Vectors.Vector;
+                    forward,backward,cross : in out VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Inline computation of the coefficients of the product
@@ -46,20 +50,23 @@ package Generic_Speelpenning_Convolutions is
 
   -- ON ENTRY :
   --   x            a vector with range starting at 1, ending at 2 or higher;
-  --   forward      has space allocated for x'last-1 coefficient vectors,
+  --   idx          if provided, then only those indices of x with values
+  --                in idx participate and dim = idx'last,
+  --                otherwise, all values of x participate and dim = x'last;
+  --   forward      has space allocated for dim-1 coefficient vectors,
   --                for series of the same fixed degree;
-  --   backward     has space reserved for x'last-2 coefficient vectors,
+  --   backward     has space reserved for dim-2 coefficient vectors,
   --                for series of the same fixed degree;
-  --   cross        has space reserved for x'last-2 coefficient vectors,
+  --   cross        has space reserved for dim-2 coefficient vectors,
   --                for series of the same fixed degree.
 
   -- ON RETURN :
   --   forward      accumulates the forward products,
-  --                forward(x'last-1) holds the coefficients for the product,
-  --                forward(x'last-2) holds the coefficients for the value
+  --                forward(dim-1) holds the coefficients for the product,
+  --                forward(dim-2) holds the coefficients for the value
   --                of the last partial derivative in x;
   --   backward     accumulates the backward products,
-  --                backward(x'last-2) holds the coefficients of the first
+  --                backward(dim-2) holds the coefficients of the first
   --                partial derivative of the product;
   --   cross        stores the cross products, cross(k) contains the
   --                coefficients of the partial derivative w.r.t. k+1.

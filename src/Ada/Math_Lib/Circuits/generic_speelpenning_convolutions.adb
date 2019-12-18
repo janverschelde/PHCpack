@@ -44,11 +44,40 @@ package body Generic_Speelpenning_Convolutions is
       for k in 2..x'last-2 loop
         Multiply(backward(k-1),x(x'last-k),backward(k));
       end loop;
-      Multiply(x(1),backward(x'last-3),cross(1));
-      for k in 2..x'last-3 loop
-        Multiply(forward(k-1),backward(x'last-2-k),cross(k));
+      if x'last = 3 then
+        Multiply(x(1),x(3),cross(1));
+      else
+        Multiply(x(1),backward(x'last-3),cross(1));
+        for k in 2..x'last-3 loop
+          Multiply(forward(k-1),backward(x'last-2-k),cross(k));
+        end loop;
+        Multiply(forward(x'last-3),x(x'last),cross(x'last-2));
+      end if;
+    end if;
+  end Speel;
+
+  procedure Speel ( x : in VecVecs.VecVec;
+                    idx : in Standard_Integer_Vectors.Vector;
+                    forward,backward,cross : in out VecVecs.VecVec ) is
+  begin
+    Multiply(x(idx(1)),x(idx(2)),forward(1));
+    for k in 3..idx'last loop
+      Multiply(forward(k-2),x(idx(k)),forward(k-1));
+    end loop;
+    if idx'last > 2 then
+      Multiply(x(idx(idx'last)),x(idx(idx'last-1)),backward(1));
+      for k in 2..idx'last-2 loop
+        Multiply(backward(k-1),x(idx(idx'last-k)),backward(k));
       end loop;
-      Multiply(forward(x'last-3),x(x'last),cross(x'last-2));
+      if idx'last = 3 then
+        Multiply(x(idx(1)),x(idx(3)),cross(1));
+      else
+        Multiply(x(idx(1)),backward(idx'last-3),cross(1));
+        for k in 2..idx'last-3 loop
+          Multiply(forward(k-1),backward(idx'last-2-k),cross(k));
+        end loop;
+        Multiply(forward(idx'last-3),x(idx(idx'last)),cross(idx'last-2));
+      end if;
     end if;
   end Speel;
 
