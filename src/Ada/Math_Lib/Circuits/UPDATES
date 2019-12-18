@@ -1,5 +1,6 @@
 Tue 17 Dec 2019 : new test procedure ts_speelser, to develop the reverse mode
   of algorithmic differentiation on power series.
+  Added the computation of the product to ts_speelser.adb.
 
 Mon 22 Jun 2015 : new packages multprec_jacobian_evaluations and
   multprec_jacobian_circuits, tested by ts_gradcirc.
