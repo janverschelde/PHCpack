@@ -410,7 +410,7 @@ ts_evddpol:
 # Test programs for Math_Lib/Circuits :
 
 test_circuits: ts_cffsup ts_speel ts_cycfun ts_speelsys ts_gradcirc \
-               ts_vmpeval ts_vmpdiff
+               ts_vmpeval ts_vmpdiff ts_speelser
 
 ts_cffsup:
 	make -f $(MAKEFILE) ts_cffsup
@@ -432,6 +432,9 @@ ts_vmpeval:
 
 ts_vmpdiff:
 	make -f $(MAKEFILE) ts_vmpdiff
+
+ts_speelser:
+	make -f $(MAKEFILE) ts_speelser
 
 # Test programs for Math_Lib/Supports :
 

@@ -508,6 +508,10 @@ ts_gradcirc:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gradcirc.adb \
               -o $(BIN)/ts_gradcirc
 
+ts_speelser:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_speelser.adb \
+              -o $(BIN)/ts_speelser
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:

@@ -512,6 +512,10 @@ ts_vmpdiff:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpdiff.adb \
               -o $(BIN)/ts_vmpdiff
 
+ts_speelser:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speelser.adb \
+              -o $(BIN)/ts_speelser
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
