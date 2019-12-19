@@ -16,6 +16,17 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Allocate_Coefficients;
 
+  procedure Update ( values : in Vectors.Link_to_Vector;
+                     inc : in Vectors.Link_to_Vector ) is
+
+    use Ring;
+
+  begin
+    for i in values'range loop
+      values(i) := values(i) + inc(i);
+    end loop;
+  end Update;
+
   procedure Multiply ( first,second,product : in Vectors.Link_to_Vector ) is
 
     deg : constant integer32 := first'last;
@@ -79,6 +90,41 @@ package body Generic_Speelpenning_Convolutions is
         Multiply(forward(idx'last-3),x(idx(idx'last)),cross(idx'last-2));
       end if;
     end if;
+  end Speel;
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    x : in VecVecs.VecVec;
+                    forward,backward,cross,yd : in out VecVecs.VecVec ) is
+
+    use Standard_Integer_Vectors;
+    use Ring;
+
+    idk : Standard_Integer_Vectors.Link_to_Vector;
+    yptr : constant Vectors.Link_to_Vector := yd(yd'last);
+
+  begin
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        if idk'last = 1 then
+          Update(yptr,x(idk(1)));
+          yd(idk(1))(0) := yd(idk(1))(0) + Ring.one;
+        else
+          Speel(x,idk.all,forward,backward,cross);
+          Update(yptr,forward(idk'last-1));
+          if idk'last = 2 then
+            Update(yd(idk(2)),x(idk(1)));
+            Update(yd(idk(1)),x(idk(2)));
+          else -- idk'last > 2 
+            Update(yd(idk(1)),backward(idk'last-2));
+            for j in idk'first+1..idk'last-1 loop
+              Update(yd(idk(j)),cross(j-1));
+            end loop;
+            Update(yd(idk(idk'last)),forward(idk'last-2));
+          end if;
+        end if;
+      end if;
+    end loop;
   end Speel;
 
 end Generic_Speelpenning_Convolutions;

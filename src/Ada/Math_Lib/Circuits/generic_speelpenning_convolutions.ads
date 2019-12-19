@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_VecVecs;
 with Abstract_Ring;
 with Generic_Vectors;
 with Generic_VecVecs;
@@ -24,6 +25,14 @@ package Generic_Speelpenning_Convolutions is
   -- DESCRIPTION :
   --   Returns allocated space for the coefficients of the series
   --   truncated to degree deg.  The vector on return has range 1..dim.
+
+  procedure Update ( values : in Vectors.Link_to_Vector;
+                     inc : in Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Adds the elements in inc to the values.
+
+  -- REQUIRED : values'range = inc'range.
 
   procedure Multiply ( first,second,product : in Vectors.Link_to_Vector );
 
@@ -70,5 +79,30 @@ package Generic_Speelpenning_Convolutions is
   --                partial derivative of the product;
   --   cross        stores the cross products, cross(k) contains the
   --                coefficients of the partial derivative w.r.t. k+1.
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    x : in VecVecs.VecVec;
+                    forward,backward,cross,yd : in out VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Evaluation and differentiation of the sum of products,
+  --   given in indexed format at a power series.
+
+  -- ON ENTRY :
+  --   idx         indexed representation of a sum of products of variables;
+  --   x           coefficient vectors of power series of same degree;
+  --   forward     work space allocated for x'last-1 coefficient vectors
+  --               of the same fixed degree as the series in x;
+  --   backward    work space allocated for x'last-2 coefficient vectors
+  --               of the same fixed degree as the series in x;
+  --   cross       work space allocated for x'last-2 coefficient vectors
+  --               of the same fixed degree as the series in x;
+  --   yd          vector of range 0..x'last with space allocated for the
+  --               coefficients of power series of the same fixed degree.
+
+  -- ON RETURN :
+  --   yd          yd(x'last+1) contains the coefficient vector of the value
+  --               of the sum of products, evaluated at x,
+  --               yd(k) is the k-th partial derivative at x.
 
 end Generic_Speelpenning_Convolutions;
