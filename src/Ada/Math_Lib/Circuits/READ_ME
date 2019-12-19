@@ -56,6 +56,7 @@ multprec_jacobian_circuits         : Jacobian circuits for multprec numbers
 ts_gradcirc                        : test on eval & diff circuits
 -------------------------------------------------------------------------------
 generic_speelpenning_convolutions  : gradient evaluation of product
+exponent_indices                   : extracting indices of exponent vectors
 standard_speelpenning_convolutions : Speelpenning with doubles
 dobldobl_speelpenning_convolutions : Speelpenning with double doubles
 quaddobl_speelpenning_convolutions : Speelpenning with quad doubles

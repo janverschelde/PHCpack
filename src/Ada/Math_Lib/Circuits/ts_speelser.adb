@@ -32,6 +32,7 @@ with DoblDobl_Series_Polynomials;
 with DoblDobl_Series_Poly_Functions;
 with QuadDobl_Series_Polynomials;
 with QuadDobl_Series_Poly_Functions;
+with Exponent_Indices;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -477,27 +478,6 @@ procedure ts_speelser is
     end if;
   end QuadDobl_Test;
 
-  function Exponent_Index
-             ( xp : Standard_Integer_Vectors.Vector )
-             return Standard_Integer_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns the vector of positions k in xp for which xp(k) = 1.
-  --
-    deg : constant integer32 := Standard_Integer_Vectors.Sum(xp);
-    res : Standard_Integer_Vectors.Vector(1..deg); 
-    idx : integer32 := 0;
-
-  begin
-    for k in xp'range loop
-      if xp(k) = 1 then
-        idx := idx + 1;
-        res(idx) := k;
-      end if;
-    end loop;
-    return res;
-  end Exponent_Index;
-
   procedure Standard_Indexed_Test
               ( dim,deg,nz : in integer32;
                 xp : in Standard_Integer_Vectors.Vector ) is
@@ -512,7 +492,7 @@ procedure ts_speelser is
     use Standard_Speelpenning_Convolutions;
 
     idx : constant Standard_Integer_Vectors.Vector(1..nz)
-        := Exponent_Index(xp);
+        := Exponent_Indices.Exponent_Index(xp);
     prd : constant Standard_Series_Polynomials.Poly
         := Standard_Product(deg,xp);
     x : constant Standard_Dense_Series_Vectors.Vector(1..dim)
@@ -572,7 +552,7 @@ procedure ts_speelser is
     use DoblDobl_Speelpenning_Convolutions;
 
     idx : constant Standard_Integer_Vectors.Vector(1..nz)
-        := Exponent_Index(xp);
+        := Exponent_Indices.Exponent_Index(xp);
     prd : constant DoblDobl_Series_Polynomials.Poly
         := DoblDobl_Product(deg,xp);
     x : constant DoblDobl_Dense_Series_Vectors.Vector(1..dim)
@@ -632,7 +612,7 @@ procedure ts_speelser is
     use QuadDobl_Speelpenning_Convolutions;
 
     idx : constant Standard_Integer_Vectors.Vector(1..nz)
-        := Exponent_Index(xp);
+        := Exponent_Indices.Exponent_Index(xp);
     prd : constant QuadDobl_Series_Polynomials.Poly
         := QuadDobl_Product(deg,xp);
     x : constant QuadDobl_Dense_Series_Vectors.Vector(1..dim)

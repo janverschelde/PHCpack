@@ -4,7 +4,8 @@ Wed 18 Dec 2019 : ts_speelser computes all derivatives of a product,
   double, double double, and quad double coefficients in
   {standard,dobldobl,quaddobl}_speelpenning_convolutions.ads,
   tested by ts_speelser.  Extended generic_speelpenning_convolutions
-  for indexed products, tested by ts_speelser.
+  for indexed products, tested by ts_speelser.  New package exponent_indices,
+  with code extracted from ts_speelser, new ts_speelcnv.
 
 Tue 17 Dec 2019 : new test procedure ts_speelser, to develop the reverse mode
   of algorithmic differentiation on power series.
