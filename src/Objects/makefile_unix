@@ -512,6 +512,10 @@ ts_speelser:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_speelser.adb \
               -o $(BIN)/ts_speelser
 
+ts_speelcnv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_speelcnv.adb \
+              -o $(BIN)/ts_speelcnv
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
