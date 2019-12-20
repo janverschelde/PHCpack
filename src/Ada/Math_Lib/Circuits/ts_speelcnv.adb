@@ -53,12 +53,13 @@ procedure ts_speelcnv is
 --   in a power series of some fixed degree.
 
   function Random_Exponents
-             ( dim,nbr : integer32 ) 
+             ( dim,nbr : integer32; pwr : integer32 := 1 ) 
              return Standard_Integer_VecVecs.VecVec is
 
   -- DESCRIPTION :
-  --   Generates as many random 0/1 vectors of dimension dim
+  --   Generates as many random vectors of dimension dim
   --   as the value of nbr.  All vectors have a nonzero sum.
+  --   The higher power equals pow.
 
     res : Standard_Integer_VecVecs.VecVec(1..nbr);
     nz : integer32;
@@ -68,7 +69,7 @@ procedure ts_speelcnv is
       loop
         declare
           xp : constant Standard_Integer_Vectors.Vector(1..dim)
-             := Standard_Random_Vectors.Random_Vector(1,dim,0,1);
+             := Standard_Random_Vectors.Random_Vector(1,dim,0,pwr);
         begin
           nz := Standard_Integer_Vectors.Sum(xp);
           if nz > 0
@@ -150,7 +151,7 @@ procedure ts_speelcnv is
     return res;
   end Difference;
 
-  procedure Standard_Test ( dim,deg,nbr : in integer32 ) is
+  procedure Standard_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and tests the
@@ -164,9 +165,11 @@ procedure ts_speelcnv is
     use Standard_Speelpenning_Convolutions;
 
     xps : constant Standard_Integer_VecVecs.VecVec(1..nbr)
-        := Random_Exponents(dim,nbr);
+        := Random_Exponents(dim,nbr,pwr);
     idx : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Exponent_Indices.Exponent_Index(xps);
+    fac : constant Standard_Integer_VecVecs.VecVec(1..nbr)
+        := Exponent_Indices.Factor_Index(xps);
     polcff : constant Standard_Dense_Series_Vectors.Vector(1..nbr)
            := Standard_Random_Series.Random_Series_Vector(1,nbr,deg);
     pol : constant Standard_Series_Polynomials.Poly
@@ -197,6 +200,8 @@ procedure ts_speelcnv is
     Standard_Integer_VecVecs_io.put(xps);
     put_line("its exponent indices :");
     Standard_Integer_VecVecs_io.put(idx);
+    put_line("and its factor indices :");
+    Standard_Integer_VecVecs_io.put(fac);
     put_line("the polynomial :"); put(pol); new_line;
     y := Standard_Series_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
@@ -221,7 +226,7 @@ procedure ts_speelcnv is
     put("Sum of errors :"); put(sumerr,3); new_line;
   end Standard_Test;
 
-  procedure DoblDobl_Test ( dim,deg,nbr : in integer32 ) is
+  procedure DoblDobl_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and tests the
@@ -235,7 +240,7 @@ procedure ts_speelcnv is
     use DoblDobl_Speelpenning_Convolutions;
 
     xps : constant Standard_Integer_VecVecs.VecVec(1..nbr)
-        := Random_Exponents(dim,nbr);
+        := Random_Exponents(dim,nbr,pwr);
     idx : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Exponent_Indices.Exponent_Index(xps);
     polcff : constant DoblDobl_Dense_Series_Vectors.Vector(1..nbr)
@@ -292,7 +297,7 @@ procedure ts_speelcnv is
     put("Sum of errors :"); put(sumerr,3); new_line;
   end DoblDobl_Test;
 
-  procedure QuadDobl_Test ( dim,deg,nbr : in integer32 ) is
+  procedure QuadDobl_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and tests the
@@ -306,7 +311,7 @@ procedure ts_speelcnv is
     use QuadDobl_Speelpenning_Convolutions;
 
     xps : constant Standard_Integer_VecVecs.VecVec(1..nbr)
-        := Random_Exponents(dim,nbr);
+        := Random_Exponents(dim,nbr,pwr);
     idx : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Exponent_Indices.Exponent_Index(xps);
     polcff : constant QuadDobl_Dense_Series_Vectors.Vector(1..nbr)
@@ -368,14 +373,15 @@ procedure ts_speelcnv is
   --   Prompts the user for the degree, the dimension,
   --   the number of monomials, and the precision.  Then runs the tests.
 
-    dim,deg,nbr : integer32 := 0;
+    dim,deg,nbr,pwr : integer32 := 0;
     precision : character;
 
   begin
     new_line;
     put("Give the dimension : "); get(dim);
-    put("Give the degree : "); get(deg);
+    put("Give the degree of the series : "); get(deg);
     put("Give the number of monomials : "); get(nbr);
+    put("Give the highest power of each variable : "); get(pwr);
     new_line;
     put_line("MENU for the working precision :");
     put_line("  0. standard double precision");
@@ -385,9 +391,9 @@ procedure ts_speelcnv is
     Ask_Alternative(precision,"012");
     new_line;
     case precision is
-      when '0' => Standard_Test(dim,deg,nbr);
-      when '1' => DoblDobl_Test(dim,deg,nbr);
-      when '2' => QuadDobl_Test(dim,deg,nbr);
+      when '0' => Standard_Test(dim,deg,nbr,pwr);
+      when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
+      when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
       when others => null;
     end case;
   end Main;
