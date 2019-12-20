@@ -1,3 +1,5 @@
+Fri 20 Dec 2019 : added the computation of the errors to ts_speelcnv.
+
 Thu 19 Dec 2019 : new package series_polynomial_gradients, with code
   from ts_speelser, for use in ts_speelcnv.  Extended the package
   generic_speelpenning_convolutions with procedures to evaluate and

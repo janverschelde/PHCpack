@@ -2,6 +2,15 @@ with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;               use Double_Double_Numbers;
+with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                 use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Integer_VecVecs_io;
@@ -72,6 +81,75 @@ procedure ts_speelcnv is
     return res;
   end Random_Exponents;
 
+  function Difference ( s : Standard_Dense_Series.Series;
+                        c : Standard_Complex_Vectors.Link_to_Vector )
+                      return double_float is
+
+  -- DESCRIPTION :
+  --   Returns sum of the absolute value of the difference
+  --   between the coefficients of s and the values in c.
+
+    use Standard_Complex_Numbers;
+
+    res : double_float := 0.0;
+    avl : double_float;
+    val : Complex_Number;
+
+  begin
+    for i in c'range loop
+      val := s.cff(i) - c(i);
+      avl := AbsVal(val);
+      res := res + avl;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( s : DoblDobl_Dense_Series.Series;
+                        c : DoblDobl_Complex_Vectors.Link_to_Vector )
+                      return double_double is
+
+  -- DESCRIPTION :
+  --   Returns sum of the absolute value of the difference
+  --   between the coefficients of s and the values in c.
+
+    use DoblDobl_Complex_Numbers;
+
+    res : double_double := create(0.0);
+    avl : double_double;
+    val : Complex_Number;
+
+  begin
+    for i in c'range loop
+      val := s.cff(i) - c(i);
+      avl := AbsVal(val);
+      res := res + avl;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( s : QuadDobl_Dense_Series.Series;
+                        c : QuadDobl_Complex_Vectors.Link_to_Vector )
+                      return quad_double is
+
+  -- DESCRIPTION :
+  --   Returns sum of the absolute value of the difference
+  --   between the coefficients of s and the values in c.
+
+    use QuadDobl_Complex_Numbers;
+
+    res : quad_double := create(0.0);
+    avl : quad_double;
+    val : Complex_Number;
+
+  begin
+    for i in c'range loop
+      val := s.cff(i) - c(i);
+      avl := AbsVal(val);
+      res := res + avl;
+    end loop;
+    return res;
+  end Difference;
+
   procedure Standard_Test ( dim,deg,nbr : in integer32 ) is
 
   -- DESCRIPTION :
@@ -112,6 +190,7 @@ procedure ts_speelcnv is
           := Allocate_Coefficients(dim+1,deg);
     work : constant Standard_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    err,sumerr : double_float := 0.0;
 
   begin
     put_line("Some random exponents :");
@@ -127,12 +206,19 @@ procedure ts_speelcnv is
     put_line("The coefficient vector of the value of the product :");
     put_line(ygrad(ygrad'last));
     grad := Standard_Gradient(pol,x);
+    err := Difference(y,ygrad(ygrad'last));
+    put("The error :"); put(err,3); new_line;
+    sumerr := err;
     for k in grad'range loop
       put("derivative "); put(k,1); put_line(" :");
       put(grad(k)); new_line;
       put("The coefficient vector of derivative ");
       put(k,1); put_line(" :"); put_line(ygrad(k));
+      err := Difference(grad(k),ygrad(k));
+      put("The error :"); put(err,3); new_line;
+      sumerr := sumerr + err;
     end loop;
+    put("Sum of errors :"); put(sumerr,3); new_line;
   end Standard_Test;
 
   procedure DoblDobl_Test ( dim,deg,nbr : in integer32 ) is
@@ -175,6 +261,7 @@ procedure ts_speelcnv is
           := Allocate_Coefficients(dim+1,deg);
     work : constant DoblDobl_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    err,sumerr : double_double;
 
   begin
     put_line("Some random exponents :");
@@ -190,12 +277,19 @@ procedure ts_speelcnv is
     put_line("The coefficient vector of the value of the product :");
     put_line(ygrad(ygrad'last));
     grad := DoblDobl_Gradient(pol,x);
+    err := Difference(y,ygrad(ygrad'last));
+    put("The error :"); put(err,3); new_line;
+    sumerr := err;
     for k in grad'range loop
       put("derivative "); put(k,1); put_line(" :");
       put(grad(k)); new_line;
       put("The coefficient vector of derivative ");
       put(k,1); put_line(" :"); put_line(ygrad(k));
+      err := Difference(grad(k),ygrad(k));
+      put("The error :"); put(err,3); new_line;
+      sumerr := sumerr + err;
     end loop;
+    put("Sum of errors :"); put(sumerr,3); new_line;
   end DoblDobl_Test;
 
   procedure QuadDobl_Test ( dim,deg,nbr : in integer32 ) is
@@ -238,6 +332,7 @@ procedure ts_speelcnv is
           := Allocate_Coefficients(dim+1,deg);
     work : constant QuadDobl_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    err,sumerr : quad_double;
 
   begin
     put_line("Some random exponents :");
@@ -253,11 +348,17 @@ procedure ts_speelcnv is
     put_line("The coefficient vector of the value of the product :");
     put_line(ygrad(ygrad'last));
     grad := QuadDobl_Gradient(pol,x);
+    err := Difference(y,ygrad(ygrad'last));
+    put("The difference :"); put(err,3); new_line;
+    sumerr := err;
     for k in grad'range loop
       put("derivative "); put(k,1); put_line(" :");
       put(grad(k)); new_line;
       put("The coefficient vector of derivative ");
       put(k,1); put_line(" :"); put_line(ygrad(k));
+      err := Difference(grad(k),ygrad(k));
+      put("The difference :"); put(err,3); new_line;
+      sumerr := sumerr + err;
     end loop;
   end QuadDobl_Test;
 
