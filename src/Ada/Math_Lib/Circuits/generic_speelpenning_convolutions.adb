@@ -1,17 +1,23 @@
 package body Generic_Speelpenning_Convolutions is
 
   function Allocate_Coefficients
+             ( deg : integer32 ) return Vectors.Link_to_Vector is
+
+    cff : constant Vectors.Vector(0..deg) := (0..deg => Ring.zero);
+    res : constant Vectors.Link_to_Vector := new Vectors.Vector'(cff);
+
+  begin
+    return res;
+  end Allocate_Coefficients;
+
+  function Allocate_Coefficients
              ( dim,deg : integer32 ) return VecVecs.VecVec is
 
     res : VecVecs.VecVec(1..dim);
 
   begin
     for k in 1..dim loop
-      declare
-        cff : constant Vectors.Vector(0..deg) := (0..deg => Ring.zero);
-      begin
-        res(k) := new Vectors.Vector'(cff);
-      end;
+      res(k) := Allocate_Coefficients(deg);
     end loop;
     return res;
   end Allocate_Coefficients;
@@ -121,6 +127,50 @@ package body Generic_Speelpenning_Convolutions is
               Update(yd(idk(j)),cross(j-1));
             end loop;
             Update(yd(idk(idk'last)),forward(idk'last-2));
+          end if;
+        end if;
+      end if;
+    end loop;
+  end Speel;
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
+                    forward,backward,cross,yd : in out VecVecs.VecVec;
+                    wrk : Vectors.Link_to_Vector ) is
+
+    use Standard_Integer_Vectors;
+
+    idk : Standard_Integer_Vectors.Link_to_Vector;
+    yptr : constant Vectors.Link_to_Vector := yd(yd'last);
+    pcff : Vectors.Link_to_Vector;
+
+  begin
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        pcff := cff(k);
+        if idk'last = 1 then
+          Multiply(pcff,x(idk(1)),wrk);
+          Update(yptr,wrk);
+          Update(yd(idk(1)),pcff);
+        else
+          Speel(x,idk.all,forward,backward,cross);
+          Multiply(pcff,forward(idk'last-1),wrk);
+          Update(yptr,wrk);
+          if idk'last = 2 then
+            Multiply(pcff,x(idk(1)),wrk);
+            Update(yd(idk(2)),wrk);
+            Multiply(pcff,x(idk(2)),wrk);
+            Update(yd(idk(1)),wrk);
+          else -- idk'last > 2 
+            Multiply(pcff,backward(idk'last-2),wrk);
+            Update(yd(idk(1)),wrk);
+            for j in idk'first+1..idk'last-1 loop
+              Multiply(pcff,cross(j-1),wrk);
+              Update(yd(idk(j)),wrk);
+            end loop;
+            Multiply(pcff,forward(idk'last-2),wrk);
+            Update(yd(idk(idk'last)),wrk);
           end if;
         end if;
       end if;

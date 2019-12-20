@@ -20,11 +20,19 @@ package Generic_Speelpenning_Convolutions is
 --   of power series, all truncated to the same fixed degree.
 
   function Allocate_Coefficients
+             ( deg : integer32 ) return Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns allocated space for the coefficients of the series,
+  --   truncaged to degree deg and initialized to zero.
+
+  function Allocate_Coefficients
              ( dim,deg : integer32 ) return VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns allocated space for the coefficients of the series
-  --   truncated to degree deg.  The vector on return has range 1..dim.
+  --   truncated to degree deg and initialized to zero.
+  --   The vector on return has range 1..dim.
 
   procedure Update ( values : in Vectors.Link_to_Vector;
                      inc : in Vectors.Link_to_Vector );
@@ -83,6 +91,10 @@ package Generic_Speelpenning_Convolutions is
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     x : in VecVecs.VecVec;
                     forward,backward,cross,yd : in out VecVecs.VecVec );
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
+                    forward,backward,cross,yd : in out VecVecs.VecVec;
+                    wrk : Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Evaluation and differentiation of the sum of products,
@@ -90,6 +102,8 @@ package Generic_Speelpenning_Convolutions is
 
   -- ON ENTRY :
   --   idx         indexed representation of a sum of products of variables;
+  --   cff         coefficients of the products, if not provided,
+  --               then all coefficients are considered as one;
   --   x           coefficient vectors of power series of same degree;
   --   forward     work space allocated for x'last-1 coefficient vectors
   --               of the same fixed degree as the series in x;
@@ -98,7 +112,8 @@ package Generic_Speelpenning_Convolutions is
   --   cross       work space allocated for x'last-2 coefficient vectors
   --               of the same fixed degree as the series in x;
   --   yd          vector of range 0..x'last with space allocated for the
-  --               coefficients of power series of the same fixed degree.
+  --               coefficients of power series of the same fixed degree;
+  --   wrk         work space for the coefficients of the same fixed degree.
 
   -- ON RETURN :
   --   yd          yd(x'last+1) contains the coefficient vector of the value

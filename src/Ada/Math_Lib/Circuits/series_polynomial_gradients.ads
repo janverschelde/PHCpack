@@ -58,20 +58,38 @@ package Series_Polynomial_Gradients is
              ( dim,deg : in integer32;
                xps : Standard_Integer_VecVecs.VecVec )
              return Standard_Series_Polynomials.Poly;
+  function Standard_Polynomial
+             ( dim : in integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : Standard_Dense_Series_Vectors.Vector )
+             return Standard_Series_Polynomials.Poly;
   function DoblDobl_Polynomial
              ( dim,deg : in integer32;
                xps : Standard_Integer_VecVecs.VecVec )
+             return DoblDobl_Series_Polynomials.Poly;
+  function DoblDobl_Polynomial
+             ( dim : in integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : DoblDobl_Dense_Series_Vectors.Vector )
              return DoblDobl_Series_Polynomials.Poly;
   function QuadDobl_Polynomial
              ( dim,deg : in integer32;
                xps : Standard_Integer_VecVecs.VecVec )
              return QuadDobl_Series_Polynomials.Poly;
+  function QuadDobl_Polynomial
+             ( dim : in integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : QuadDobl_Dense_Series_Vectors.Vector )
+             return QuadDobl_Series_Polynomials.Poly;
 
   -- DESCRIPTION :
-  --   Returns the polynomial in dim variables, with exponents in xps. 
+  --   Returns the polynomial in dim variables, with exponents in xps,
+  --   and optionally, the coefficients in cff,
   --   as a polynomial where the coefficients are truncated power series,
   --   truncated to degree deg, with standard double, double double,
   --   or quad double precision coefficients.
+
+  -- REQUIRED : cff'range = xps'range.
 
   function Standard_Gradient
              ( p : Standard_Series_Polynomials.Poly;

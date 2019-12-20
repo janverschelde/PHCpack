@@ -136,6 +136,29 @@ package body Series_Polynomial_Gradients is
     return res;
   end Standard_Polynomial;
 
+  function Standard_Polynomial
+             ( dim : in integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : Standard_Dense_Series_Vectors.Vector )
+             return Standard_Series_Polynomials.Poly is
+
+    res : Standard_Series_Polynomials.Poly
+        := Standard_Series_Polynomials.Null_Poly;
+    trm : Standard_Series_Polynomials.Term;
+
+  begin
+    for k in xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+      for i in xps(k)'range loop
+        trm.dg(xps(k)(i)) := 1;
+      end loop;
+      Standard_Dense_Series.Copy(cff(k),trm.cf);
+      Standard_Series_Polynomials.Add(res,trm);
+      Standard_Series_Polynomials.Clear(trm);
+    end loop;
+    return res;
+  end Standard_Polynomial;
+
   function DoblDobl_Polynomial
              ( dim,deg : in integer32;
                xps : Standard_Integer_VecVecs.VecVec )
@@ -158,6 +181,29 @@ package body Series_Polynomial_Gradients is
     return res;
   end DoblDobl_Polynomial;
 
+  function DoblDobl_Polynomial
+             ( dim : in integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : DoblDobl_Dense_Series_Vectors.Vector )
+             return DoblDobl_Series_Polynomials.Poly is
+
+    res : DoblDobl_Series_Polynomials.Poly
+        := DoblDobl_Series_Polynomials.Null_Poly;
+    trm : DoblDobl_Series_Polynomials.Term;
+
+  begin
+    for k in xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+      for i in xps(k)'range loop
+        trm.dg(xps(k)(i)) := 1;
+      end loop;
+      DoblDobl_Dense_Series.Copy(cff(k),trm.cf);
+      DoblDobl_Series_Polynomials.Add(res,trm);
+      DoblDobl_Series_Polynomials.Clear(trm);
+    end loop;
+    return res;
+  end DoblDobl_Polynomial;
+
   function QuadDobl_Polynomial
              ( dim,deg : in integer32;
                xps : Standard_Integer_VecVecs.VecVec )
@@ -174,6 +220,29 @@ package body Series_Polynomial_Gradients is
         trm.dg(xps(k)(i)) := 1;
       end loop;
       trm.cf := QuadDobl_Dense_Series.Create(1.0,deg);
+      QuadDobl_Series_Polynomials.Add(res,trm);
+      QuadDobl_Series_Polynomials.Clear(trm);
+    end loop;
+    return res;
+  end QuadDobl_Polynomial;
+
+  function QuadDobl_Polynomial
+             ( dim : in integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : QuadDobl_Dense_Series_Vectors.Vector )
+             return QuadDobl_Series_Polynomials.Poly is
+
+    res : QuadDobl_Series_Polynomials.Poly
+        := QuadDobl_Series_Polynomials.Null_Poly;
+    trm : QuadDobl_Series_Polynomials.Term;
+
+  begin
+    for k in xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+      for i in xps(k)'range loop
+        trm.dg(xps(k)(i)) := 1;
+      end loop;
+      QuadDobl_Dense_Series.Copy(cff(k),trm.cf);
       QuadDobl_Series_Polynomials.Add(res,trm);
       QuadDobl_Series_Polynomials.Clear(trm);
     end loop;
