@@ -1,5 +1,6 @@
 Sat 21 Dec 2019 : added procedures to generic_speelpenning_convolutions
   to multiply the common factor and the multiplier exponent.
+  Fixed error with the multiplication with the multiplier exponent.
 
 Fri 20 Dec 2019 : added the computation of the errors to ts_speelcnv.
   Extended the exponent_indices with function to compute the factor index,

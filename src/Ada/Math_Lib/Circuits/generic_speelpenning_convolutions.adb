@@ -252,22 +252,17 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
   end Multiply_Factor;
 
-  procedure Multiply_Powers
-              ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+  procedure Multiply_Power
+              ( multiplier : in integer32;
                 cff : in Vectors.Link_to_Vector ) is
 
-    multiplier : integer32 := 0;
-    factor : Ring.number;
+    factor : constant Ring.number := Ring.create(integer(multiplier));
 
   begin
-    for k in facidx'range loop
-      multiplier := multiplier + xpk(facidx(k));
-    end loop;
-    factor := Ring.create(integer(multiplier));
     for i in cff'range loop
       Ring.Mul(cff(i),factor);
     end loop;
-  end Multiply_Powers;
+  end Multiply_Power;
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
@@ -297,7 +292,7 @@ package body Generic_Speelpenning_Convolutions is
             Multiply_Factor(xpk,fck,x,pcff,wrk,acc,pwt);
             Multiply(acc,x(idk(1)),wrk);
             Update(yptr,wrk);
-            Multiply_Powers(xpk,fck,acc);
+            Multiply_Power(xpk(idk(1)),acc);
             Update(yd(idk(1)),acc);
           end if;
         else
@@ -332,14 +327,16 @@ package body Generic_Speelpenning_Convolutions is
               Multiply(pcff,forward(idk'last-2),wrk);
               Update(yd(idk(idk'last)),wrk);
             else
-              Multiply_Powers(xpk,fck,acc);
               Multiply(acc,backward(idk'last-2),wrk);
+              Multiply_Power(xpk(idk(1)),wrk);
               Update(yd(idk(1)),wrk);
               for j in idk'first+1..idk'last-1 loop
                 Multiply(acc,cross(j-1),wrk);
+                Multiply_Power(xpk(idk(j)),wrk);
                 Update(yd(idk(j)),wrk);
               end loop;
               Multiply(acc,forward(idk'last-2),wrk);
+              Multiply_Power(xpk(idk(idk'last)),wrk);
               Update(yd(idk(idk'last)),wrk);
             end if;
           end if;
