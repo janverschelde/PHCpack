@@ -141,6 +141,48 @@ package Generic_Speelpenning_Convolutions is
   --                of the sum of products, evaluated at x,
   --                yd(k) is the k-th partial derivative at x.
 
+  procedure Multiply_Factor
+                  ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                    x : in VecVecs.VecVec;
+                    cff,wrk,acc : in Vectors.Link_to_Vector;
+                    pwt : in Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Multiplies the coefficient with the common factor.
+
+  -- REQUIRED : facidx /= null.
+
+  -- ON ENTRY :
+  --   xpk          k-th exponent vector;
+  --   facidx       factor index of k-th exponents in xpk;
+  --   x            values for the variables;
+  --   cff          coefficient of the monomial;
+  --   wrk          allocated space for coefficients of series of same degree;
+  --   acc          allocated space for coefficients of series of same degree;
+  --   pwt          the power table of the values in x.
+
+  -- ON RETURN :
+  --   acc          accumulates the product of the coefficients with
+  --                the evaluated powers of x as defined by xpk and
+  --                the factor index in facidx.
+
+  procedure Multiply_Powers
+                  ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                    cff : in Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Multiplies the coefficients of the power series with the sum
+  --   of exponents of the common factor.
+
+  -- ON ENTRY:
+  --   xpk          k-th exponent vector;
+  --   facidx       factor index of k-th exponents in xpk;
+  --   cff          coefficients of a power series.
+
+  -- ON RETURN :
+  --   cff          coefficients multiplied with the sum of the powers
+  --                in the common factor.
+
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
                     forward,backward,cross,yd : in out VecVecs.VecVec;

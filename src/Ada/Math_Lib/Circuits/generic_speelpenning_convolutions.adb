@@ -218,6 +218,57 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
   end Speel;
 
+  procedure Multiply_Factor
+              ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                x : in VecVecs.VecVec;
+                cff,wrk,acc : in Vectors.Link_to_Vector;
+                pwt : in Link_to_VecVecVec ) is
+
+    pwx : VecVecs.Link_to_VecVec;
+    lpw : Vectors.Link_to_Vector;
+    powidx : integer32;
+
+  begin
+    pwx := pwt(facidx(facidx'first));
+    powidx := xpk(facidx(facidx'first));   -- power in power table
+    if powidx = 2 then
+      Multiply(cff,x(facidx(facidx'first)),acc);
+    else
+      lpw := pwx(powidx-2);  -- coefficients of higher powers
+      Multiply(cff,lpw,acc);
+    end if;
+    for k in facidx'first+1..facidx'last loop
+      for i in wrk'range loop
+        wrk(i) := acc(i);
+      end loop;
+      pwx := pwt(facidx(k));
+      powidx := xpk(facidx(k));   -- power in power table
+      if powidx = 2 then
+        Multiply(wrk,x(facidx(k)),acc);
+      else
+        lpw := pwx(powidx-2);  -- coefficients of higher powers
+        Multiply(wrk,lpw,acc);
+      end if;
+    end loop;
+  end Multiply_Factor;
+
+  procedure Multiply_Powers
+              ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                cff : in Vectors.Link_to_Vector ) is
+
+    multiplier : integer32 := 0;
+    factor : Ring.number;
+
+  begin
+    for k in facidx'range loop
+      multiplier := multiplier + xpk(facidx(k));
+    end loop;
+    factor := Ring.create(integer(multiplier));
+    for i in cff'range loop
+      Ring.Mul(cff(i),factor);
+    end loop;
+  end Multiply_Powers;
+
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
                     forward,backward,cross,yd : in out VecVecs.VecVec;
@@ -227,72 +278,70 @@ package body Generic_Speelpenning_Convolutions is
     use Standard_Integer_Vectors;
 
     idk,xpk,fck : Standard_Integer_Vectors.Link_to_Vector;
-    pwx : VecVecs.Link_to_VecVec;
-    lpw : Vectors.Link_to_Vector;
     yptr : constant Vectors.Link_to_Vector := yd(yd'last);
     pcff : Vectors.Link_to_Vector;
-    powidx : integer32;
 
   begin
     for k in idx'range loop
-      xpk := xps(k); -- the k-th exponent vector
-      idk := idx(k); -- the k-th exponent index 
-      fck := fac(k); -- the k-th factor index
+      idk := idx(k);           -- the k-th exponent index 
       if idk /= null then
+        xpk := xps(k);         -- the k-th exponent vector
+        fck := fac(k);         -- the k-th factor index
         pcff := cff(k);
         if idk'last = 1 then
-          Multiply(pcff,x(idk(1)),wrk);
           if fck = null then
+            Multiply(pcff,x(idk(1)),wrk);
             Update(yptr,wrk);
+            Update(yd(idk(1)),pcff);
           else
-            pwx := pwt(fck(1));      -- access power table
-            powidx := xpk(fck(1));   -- power in power table
-            if powidx = 2 then
-              Multiply(wrk,x(fck(1)),acc);
-            else
-              lpw := pwx(powidx-2);  -- coefficients of higher powers
-              Multiply(wrk,lpw,acc);
-            end if;
-            Update(yptr,acc);
+            Multiply_Factor(xpk,fck,x,pcff,wrk,acc,pwt);
+            Multiply(acc,x(idk(1)),wrk);
+            Update(yptr,wrk);
+            Multiply_Powers(xpk,fck,acc);
+            Update(yd(idk(1)),acc);
           end if;
-          Update(yd(idk(1)),pcff);
         else
           Speel(x,idk.all,forward,backward,cross);
-          Multiply(pcff,forward(idk'last-1),wrk);
           if fck = null then
-            Update(yptr,wrk);
+            Multiply(pcff,forward(idk'last-1),wrk);
           else
-            for j in fck'range loop
-              pwx := pwt(fck(j));
-              powidx := xpk(fck(j));   -- power in power table
-              if powidx = 2 then
-                Multiply(wrk,x(fck(j)),acc);
-              else
-                lpw := pwx(powidx-2);  -- coefficients of higher powers
-                Multiply(wrk,lpw,acc);
-              end if;
-              if j < fck'last then
-                for i in wrk'range loop
-                  wrk(i) := acc(i);
-                end loop;
-              end if;
-            end loop;
-            Update(yptr,acc);
+            Multiply_Factor(xpk,fck,x,pcff,wrk,acc,pwt);
+            Multiply(acc,forward(idk'last-1),wrk);
           end if;
+          Update(yptr,wrk);
           if idk'last = 2 then
-            Multiply(pcff,x(idk(1)),wrk);
-            Update(yd(idk(2)),wrk);
-            Multiply(pcff,x(idk(2)),wrk);
-            Update(yd(idk(1)),wrk);
+            if fck = null then
+              Multiply(pcff,x(idk(1)),wrk);
+              Update(yd(idk(2)),wrk);
+              Multiply(pcff,x(idk(2)),wrk);
+              Update(yd(idk(1)),wrk);
+            else -- select in the power table
+              Multiply(pcff,x(idk(1)),wrk);
+              Update(yd(idk(2)),wrk);
+              Multiply(pcff,x(idk(2)),wrk);
+              Update(yd(idk(1)),wrk);
+            end if;
           else -- idk'last > 2 
-            Multiply(pcff,backward(idk'last-2),wrk);
-            Update(yd(idk(1)),wrk);
-            for j in idk'first+1..idk'last-1 loop
-              Multiply(pcff,cross(j-1),wrk);
-              Update(yd(idk(j)),wrk);
-            end loop;
-            Multiply(pcff,forward(idk'last-2),wrk);
-            Update(yd(idk(idk'last)),wrk);
+            if fck = null then
+              Multiply(pcff,backward(idk'last-2),wrk);
+              Update(yd(idk(1)),wrk);
+              for j in idk'first+1..idk'last-1 loop
+                Multiply(pcff,cross(j-1),wrk);
+                Update(yd(idk(j)),wrk);
+              end loop;
+              Multiply(pcff,forward(idk'last-2),wrk);
+              Update(yd(idk(idk'last)),wrk);
+            else
+              Multiply_Powers(xpk,fck,acc);
+              Multiply(acc,backward(idk'last-2),wrk);
+              Update(yd(idk(1)),wrk);
+              for j in idk'first+1..idk'last-1 loop
+                Multiply(acc,cross(j-1),wrk);
+                Update(yd(idk(j)),wrk);
+              end loop;
+              Multiply(acc,forward(idk'last-2),wrk);
+              Update(yd(idk(idk'last)),wrk);
+            end if;
           end if;
         end if;
       end if;
