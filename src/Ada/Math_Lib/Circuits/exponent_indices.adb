@@ -98,4 +98,22 @@ package body Exponent_Indices is
     return res;
   end Factor_Index;
 
+  function Maxima ( xp : Standard_Integer_VecVecs.VecVec )
+                  return Standard_Integer_Vectors.Vector is
+
+    lpt : Standard_Integer_Vectors.Link_to_Vector := xp(xp'first);
+    res : Standard_Integer_Vectors.Vector(lpt'range) := lpt.all;
+
+  begin
+    for k in xp'first+1..xp'last loop
+      lpt := xp(k);
+      for i in res'range loop
+        if lpt(i) > res(i)
+         then res(i) := lpt(i);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Maxima;
+
 end Exponent_Indices;

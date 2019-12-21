@@ -19,6 +19,27 @@ package Generic_Speelpenning_Convolutions is
 --   This package offers a vectorized version on the coefficients
 --   of power series, all truncated to the same fixed degree.
 
+  type VecVecVec is array ( integer32 range <> ) of VecVecs.Link_to_VecVec;
+  -- A three dimensional structure to store the coefficient vectors
+  -- of powers of series.
+ 
+  type Link_to_VecVecVec is access VecVecVec; -- stores the power table
+
+  function Create ( x : VecVecs.VecVec;
+                    d : Standard_Integer_Vectors.Vector )
+                  return Link_to_VecVecVec;
+
+  -- DESCRIPTION :
+  --   Stores all powers x(i)^k for k ranging from 2 to d(i),
+  --   for i in d'range = x'range, in the power table.
+  --   The i-th entry in the power table contains the powers of x(i),
+  --   if d(i) > 1, starting with x(i)^2 at the first position.
+
+  procedure Clear ( pwt : in out Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by the power table pwt.
+
   function Allocate_Coefficients
              ( deg : integer32 ) return Vectors.Link_to_Vector;
 
@@ -94,30 +115,64 @@ package Generic_Speelpenning_Convolutions is
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
                     forward,backward,cross,yd : in out VecVecs.VecVec;
-                    wrk : Vectors.Link_to_Vector );
+                    wrk : in Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Evaluation and differentiation of the sum of products,
   --   given in indexed format at a power series.
 
   -- ON ENTRY :
-  --   idx         indexed representation of a sum of products of variables;
-  --   cff         coefficients of the products, if not provided,
-  --               then all coefficients are considered as one;
-  --   x           coefficient vectors of power series of same degree;
-  --   forward     work space allocated for x'last-1 coefficient vectors
-  --               of the same fixed degree as the series in x;
-  --   backward    work space allocated for x'last-2 coefficient vectors
-  --               of the same fixed degree as the series in x;
-  --   cross       work space allocated for x'last-2 coefficient vectors
-  --               of the same fixed degree as the series in x;
-  --   yd          vector of range 0..x'last with space allocated for the
-  --               coefficients of power series of the same fixed degree;
-  --   wrk         work space for the coefficients of the same fixed degree.
+  --   idx          indexed representation of a sum of products of variables;
+  --   cff          coefficients of the products, if not provided,
+  --                then all coefficients are considered as one;
+  --   x            coefficient vectors of power series of same degree;
+  --   forward      work space allocated for x'last-1 coefficient vectors
+  --                of the same fixed degree as the series in x;
+  --   backward     work space allocated for x'last-2 coefficient vectors
+  --                of the same fixed degree as the series in x;
+  --   cross        work space allocated for x'last-2 coefficient vectors
+  --                of the same fixed degree as the series in x;
+  --   yd           vector of range 0..x'last with space allocated for the
+  --                coefficients of power series of the same fixed degree;
+  --   wrk          work space for the coefficients of the same fixed degree.
 
   -- ON RETURN :
-  --   yd          yd(x'last+1) contains the coefficient vector of the value
-  --               of the sum of products, evaluated at x,
-  --               yd(k) is the k-th partial derivative at x.
+  --   yd           yd(x'last+1) contains the coefficient vector of the value
+  --                of the sum of products, evaluated at x,
+  --                yd(k) is the k-th partial derivative at x.
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
+                    forward,backward,cross,yd : in out VecVecs.VecVec;
+                    wrk,acc : in Vectors.Link_to_Vector;
+                    pwt : in Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Evaluation and differentiation of a polynomial,
+  --   given in indexed format at a power series.
+
+  -- ON ENTRY :
+  --   xps          exponent vector of the monomials;
+  --   idx          indexed representation of the variables in exponents;
+  --   fac          factor index of the exponents;
+  --   cff          coefficients of the products, if not provided,
+  --                then all coefficients are considered as one;
+  --   x            coefficient vectors of power series of same degree;
+  --   forward      work space allocated for x'last-1 coefficient vectors
+  --                of the same fixed degree as the series in x;
+  --   backward     work space allocated for x'last-2 coefficient vectors
+  --                of the same fixed degree as the series in x;
+  --   cross        work space allocated for x'last-2 coefficient vectors
+  --                of the same fixed degree as the series in x;
+  --   yd           vector of range 0..x'last with space allocated for the
+  --                coefficients of power series of the same fixed degree;
+  --   wrk          work space for the coefficients of the same fixed degree;
+  --   acc          work space for the coefficients of the same fixed degree;
+  --   pwt          power table of the values in x.
+
+  -- ON RETURN :
+  --   yd           yd(x'last+1) contains the coefficient vector of the value
+  --                of the sum of products, evaluated at x,
+  --                yd(k) is the k-th partial derivative at x.
 
 end Generic_Speelpenning_Convolutions;

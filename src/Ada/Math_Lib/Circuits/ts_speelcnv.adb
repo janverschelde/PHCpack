@@ -12,6 +12,7 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
 with Standard_Integer_VecVecs_io;
 with Standard_Random_Vectors;
@@ -170,11 +171,14 @@ procedure ts_speelcnv is
         := Exponent_Indices.Exponent_Index(xps);
     fac : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Exponent_Indices.Factor_Index(xps);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(xps);
     polcff : constant Standard_Dense_Series_Vectors.Vector(1..nbr)
            := Standard_Random_Series.Random_Series_Vector(1,nbr,deg);
     pol : constant Standard_Series_Polynomials.Poly
        -- := Standard_Polynomial(dim,deg,idx); -- all coefficients are one
-        := Standard_Polynomial(dim,idx,polcff);
+       -- := Standard_Polynomial(dim,idx,polcff); -- all exponents are one
+        := Standard_Polynomial(dim,xps,polcff,false);
     x : constant Standard_Dense_Series_Vectors.Vector(1..dim)
       := Standard_Random_Series.Random_Series_Vector(1,dim,deg);
     y : Standard_Dense_Series.Series;
@@ -193,19 +197,24 @@ procedure ts_speelcnv is
           := Allocate_Coefficients(dim+1,deg);
     work : constant Standard_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    acc : constant Standard_Complex_Vectors.Link_to_Vector
+        := Allocate_Coefficients(deg);
     err,sumerr : double_float := 0.0;
+    pwt : Link_to_VecVecVec := Create(xcff,mxe);
 
   begin
     put_line("Some random exponents :");
     Standard_Integer_VecVecs_io.put(xps);
     put_line("its exponent indices :");
     Standard_Integer_VecVecs_io.put(idx);
-    put_line("and its factor indices :");
+    put_line("its factor indices :");
     Standard_Integer_VecVecs_io.put(fac);
+    put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := Standard_Series_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work);
+   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The value of the product at the random series :");
     put(y); new_line;
     put_line("The coefficient vector of the value of the product :");
@@ -224,6 +233,7 @@ procedure ts_speelcnv is
       sumerr := sumerr + err;
     end loop;
     put("Sum of errors :"); put(sumerr,3); new_line;
+    Clear(pwt);
   end Standard_Test;
 
   procedure DoblDobl_Test ( dim,deg,nbr,pwr : in integer32 ) is
@@ -243,11 +253,16 @@ procedure ts_speelcnv is
         := Random_Exponents(dim,nbr,pwr);
     idx : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Exponent_Indices.Exponent_Index(xps);
+    fac : constant Standard_Integer_VecVecs.VecVec(1..nbr)
+        := Exponent_Indices.Factor_Index(xps);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(xps);
     polcff : constant DoblDobl_Dense_Series_Vectors.Vector(1..nbr)
            := DoblDobl_Random_Series.Random_Series_Vector(1,nbr,deg);
     pol : constant DoblDobl_Series_Polynomials.Poly
        -- := DoblDobl_Polynomial(dim,deg,idx); -- all coefficients are one
-        := DoblDobl_Polynomial(dim,idx,polcff);
+       -- := DoblDobl_Polynomial(dim,idx,polcff); -- all exponents are one
+        := DoblDobl_Polynomial(dim,xps,polcff,false);
     x : constant DoblDobl_Dense_Series_Vectors.Vector(1..dim)
       := DoblDobl_Random_Series.Random_Series_Vector(1,dim,deg);
     y : DoblDobl_Dense_Series.Series;
@@ -266,24 +281,31 @@ procedure ts_speelcnv is
           := Allocate_Coefficients(dim+1,deg);
     work : constant DoblDobl_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    acc : constant DoblDobl_Complex_Vectors.Link_to_Vector
+        := Allocate_Coefficients(deg);
     err,sumerr : double_double;
+    pwt : Link_to_VecVecVec := Create(xcff,mxe);
 
   begin
     put_line("Some random exponents :");
     Standard_Integer_VecVecs_io.put(xps);
     put_line("its exponent indices :");
     Standard_Integer_VecVecs_io.put(idx);
+    put_line("its factor indices :");
+    Standard_Integer_VecVecs_io.put(fac);
+    put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := DoblDobl_Series_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work);
+   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The value of the product at the random series :");
     put(y); new_line;
     put_line("The coefficient vector of the value of the product :");
     put_line(ygrad(ygrad'last));
     grad := DoblDobl_Gradient(pol,x);
     err := Difference(y,ygrad(ygrad'last));
-    put("The error :"); put(err,3); new_line;
+    put("The error : "); put(err,3); new_line;
     sumerr := err;
     for k in grad'range loop
       put("derivative "); put(k,1); put_line(" :");
@@ -291,10 +313,11 @@ procedure ts_speelcnv is
       put("The coefficient vector of derivative ");
       put(k,1); put_line(" :"); put_line(ygrad(k));
       err := Difference(grad(k),ygrad(k));
-      put("The error :"); put(err,3); new_line;
+      put("The error : "); put(err,3); new_line;
       sumerr := sumerr + err;
     end loop;
-    put("Sum of errors :"); put(sumerr,3); new_line;
+    put("Sum of errors : "); put(sumerr,3); new_line;
+    Clear(pwt);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test ( dim,deg,nbr,pwr : in integer32 ) is
@@ -314,11 +337,16 @@ procedure ts_speelcnv is
         := Random_Exponents(dim,nbr,pwr);
     idx : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Exponent_Indices.Exponent_Index(xps);
+    fac : constant Standard_Integer_VecVecs.VecVec(1..nbr)
+        := Exponent_Indices.Factor_Index(xps);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(xps);
     polcff : constant QuadDobl_Dense_Series_Vectors.Vector(1..nbr)
            := QuadDobl_Random_Series.Random_Series_Vector(1,nbr,deg);
     pol : constant QuadDobl_Series_Polynomials.Poly
        -- := QuadDobl_Polynomial(dim,deg,idx); -- all coefficients are one
-        := QuadDobl_Polynomial(dim,idx,polcff);
+       -- := QuadDobl_Polynomial(dim,idx,polcff); -- all exponents are one
+        := QuadDobl_Polynomial(dim,xps,polcff,false);
     x : constant QuadDobl_Dense_Series_Vectors.Vector(1..dim)
       := QuadDobl_Random_Series.Random_Series_Vector(1,dim,deg);
     y : QuadDobl_Dense_Series.Series;
@@ -337,24 +365,31 @@ procedure ts_speelcnv is
           := Allocate_Coefficients(dim+1,deg);
     work : constant QuadDobl_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    acc : constant QuadDobl_Complex_Vectors.Link_to_Vector
+        := Allocate_Coefficients(deg);
     err,sumerr : quad_double;
+    pwt : Link_to_VecVecVec := Create(xcff,mxe);
 
   begin
     put_line("Some random exponents :");
     Standard_Integer_VecVecs_io.put(xps);
     put_line("its exponent indices :");
     Standard_Integer_VecVecs_io.put(idx);
+    put_line("its factor indices :");
+    Standard_Integer_VecVecs_io.put(fac);
+    put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := QuadDobl_Series_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work);
+   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The value of the product at the random series :");
     put(y); new_line;
     put_line("The coefficient vector of the value of the product :");
     put_line(ygrad(ygrad'last));
     grad := QuadDobl_Gradient(pol,x);
     err := Difference(y,ygrad(ygrad'last));
-    put("The difference :"); put(err,3); new_line;
+    put("The error : "); put(err,3); new_line;
     sumerr := err;
     for k in grad'range loop
       put("derivative "); put(k,1); put_line(" :");
@@ -362,9 +397,11 @@ procedure ts_speelcnv is
       put("The coefficient vector of derivative ");
       put(k,1); put_line(" :"); put_line(ygrad(k));
       err := Difference(grad(k),ygrad(k));
-      put("The difference :"); put(err,3); new_line;
+      put("The error : "); put(err,3); new_line;
       sumerr := sumerr + err;
     end loop;
+    put("Sum of errors : "); put(sumerr,3); new_line;
+    Clear(pwt);
   end QuadDobl_Test;
 
   procedure Main is

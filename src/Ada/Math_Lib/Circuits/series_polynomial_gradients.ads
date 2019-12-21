@@ -19,13 +19,13 @@ package Series_Polynomial_Gradients is
 --   The functions are mainly wrappers and used for testing purposes.
 
   function Standard_Product
-             ( dim,deg : in integer32 )
+             ( dim,deg : integer32 )
              return Standard_Series_Polynomials.Poly;
   function DoblDobl_Product
-             ( dim,deg : in integer32 )
+             ( dim,deg : integer32 )
              return DoblDobl_Series_Polynomials.Poly;
   function QuadDobl_Product
-             ( dim,deg : in integer32 )
+             ( dim,deg : integer32 )
              return QuadDobl_Series_Polynomials.Poly;
 
   -- DESCRIPTION :
@@ -35,15 +35,15 @@ package Series_Polynomial_Gradients is
   --   or quad double precision coefficients.
 
   function Standard_Product
-             ( deg : in integer32;
+             ( deg : integer32;
                xp : Standard_Integer_Vectors.Vector )
              return Standard_Series_Polynomials.Poly;
   function DoblDobl_Product
-             ( deg : in integer32;
+             ( deg : integer32;
                xp : Standard_Integer_Vectors.Vector )
              return DoblDobl_Series_Polynomials.Poly;
   function QuadDobl_Product
-             ( deg : in integer32;
+             ( deg : integer32;
                xp : Standard_Integer_Vectors.Vector )
              return QuadDobl_Series_Polynomials.Poly;
 
@@ -55,31 +55,34 @@ package Series_Polynomial_Gradients is
   --   or quad double precision coefficients.
 
   function Standard_Polynomial
-             ( dim,deg : in integer32;
+             ( dim,deg : integer32;
                xps : Standard_Integer_VecVecs.VecVec )
              return Standard_Series_Polynomials.Poly;
   function Standard_Polynomial
-             ( dim : in integer32;
+             ( dim : integer32;
                xps : Standard_Integer_VecVecs.VecVec;
-               cff : Standard_Dense_Series_Vectors.Vector )
+               cff : Standard_Dense_Series_Vectors.Vector;
+               isxidx : boolean := true )
              return Standard_Series_Polynomials.Poly;
   function DoblDobl_Polynomial
-             ( dim,deg : in integer32;
+             ( dim,deg : integer32;
                xps : Standard_Integer_VecVecs.VecVec )
              return DoblDobl_Series_Polynomials.Poly;
   function DoblDobl_Polynomial
-             ( dim : in integer32;
+             ( dim : integer32;
                xps : Standard_Integer_VecVecs.VecVec;
-               cff : DoblDobl_Dense_Series_Vectors.Vector )
+               cff : DoblDobl_Dense_Series_Vectors.Vector;
+               isxidx : boolean := true )
              return DoblDobl_Series_Polynomials.Poly;
   function QuadDobl_Polynomial
-             ( dim,deg : in integer32;
+             ( dim,deg : integer32;
                xps : Standard_Integer_VecVecs.VecVec )
              return QuadDobl_Series_Polynomials.Poly;
   function QuadDobl_Polynomial
-             ( dim : in integer32;
+             ( dim : integer32;
                xps : Standard_Integer_VecVecs.VecVec;
-               cff : QuadDobl_Dense_Series_Vectors.Vector )
+               cff : QuadDobl_Dense_Series_Vectors.Vector;
+               isxidx : boolean := true )
              return QuadDobl_Series_Polynomials.Poly;
 
   -- DESCRIPTION :
@@ -88,6 +91,10 @@ package Series_Polynomial_Gradients is
   --   as a polynomial where the coefficients are truncated power series,
   --   truncated to degree deg, with standard double, double double,
   --   or quad double precision coefficients.
+  --   The isxidx indicates if xps is an exponent index vector or not.
+  --   If not, then xps holds the actual values of the exponents,
+  --   otherwise, if isxidx, then xps holds the indices of the
+  --   variables which appear with exponent one in the monomials.
 
   -- REQUIRED : cff'range = xps'range.
 

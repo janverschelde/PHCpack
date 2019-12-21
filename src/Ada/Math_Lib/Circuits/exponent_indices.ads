@@ -55,4 +55,10 @@ package Exponent_Indices is
   --   in the vector of vectors.  Note that the entries of the vector
   --   on return may be null if there are no powers higher than one.
 
+  function Maxima ( xp : Standard_Integer_VecVecs.VecVec )
+                  return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the largest power for each value in the exponents.
+
 end Exponent_Indices;
