@@ -25,6 +25,30 @@ package Generic_Speelpenning_Convolutions is
  
   type Link_to_VecVecVec is access VecVecVec; -- stores the power table
 
+-- A convolution circuit is a data structure for the efficient evaluation
+-- and differentiation of polynomials in several variables at the
+-- coefficient vectors of power series using the reverse mode of
+-- algorithmic differentiation.
+
+  type Convolution_Circuit ( nbr,dim,dim1,dim2 : integer32 ) is record
+    xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponent vectors
+    idx : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponent indices
+    fac : Standard_Integer_VecVecs.VecVec(1..nbr); -- factor indices
+    cff : VecVecs.VecVec(1..nbr); -- coefficients of the monomials
+    cst : Vectors.Link_to_Vector; -- the constant coefficient
+   -- workspace for products and coefficient vectors of series
+    forward : VecVecs.VecVec(1..dim1);        -- forward products
+    backward,cross : VecVecs.VecVec(1..dim2); -- backward and cross products
+    wrk,acc : Vectors.Link_to_Vector;         -- series coefficients
+  end record;
+
+  type Link_to_Convolution_Circuit is access Convolution_Circuit;
+
+  type Convolution_Circuits is
+    array ( integer32 range <> ) of Link_to_Convolution_Circuit;
+
+  type Link_to_Convolution_Circuits is access Convolution_Circuits;
+
   function Create ( x : VecVecs.VecVec;
                     d : Standard_Integer_Vectors.Vector )
                   return Link_to_VecVecVec;
@@ -35,10 +59,22 @@ package Generic_Speelpenning_Convolutions is
   --   The i-th entry in the power table contains the powers of x(i),
   --   if d(i) > 1, starting with x(i)^2 at the first position.
 
+-- DEALLOCATORS :
+
   procedure Clear ( pwt : in out Link_to_VecVecVec );
 
   -- DESCRIPTION :
   --   Deallocates the space occupied by the power table pwt.
+
+  procedure Clear ( c : in out Convolution_Circuit );
+  procedure Clear ( c : in out Link_to_Convolution_Circuit );
+  procedure Clear ( c : in out Convolution_Circuits );
+  procedure Clear ( c : in out Link_to_Convolution_Circuits );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by the convolution circuits.
+
+-- ALLOCATORS :
 
   function Allocate_Coefficients
              ( deg : integer32 ) return Vectors.Link_to_Vector;
@@ -54,6 +90,8 @@ package Generic_Speelpenning_Convolutions is
   --   Returns allocated space for the coefficients of the series
   --   truncated to degree deg and initialized to zero.
   --   The vector on return has range 1..dim.
+
+-- AUXILIARY COMPUTATIONAL PROCEDURES :
 
   procedure Update ( values : in Vectors.Link_to_Vector;
                      inc : in Vectors.Link_to_Vector );
@@ -71,11 +109,13 @@ package Generic_Speelpenning_Convolutions is
 
   -- REQUIRED : first'last = second'last = product'last.
 
+-- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
+
   procedure Speel ( x : in VecVecs.VecVec;
-                    forward,backward,cross : in out VecVecs.VecVec );
+                    forward,backward,cross : in VecVecs.VecVec );
   procedure Speel ( x : in VecVecs.VecVec;
                     idx : in Standard_Integer_Vectors.Vector;
-                    forward,backward,cross : in out VecVecs.VecVec );
+                    forward,backward,cross : in VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Inline computation of the coefficients of the product
@@ -111,10 +151,10 @@ package Generic_Speelpenning_Convolutions is
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     x : in VecVecs.VecVec;
-                    forward,backward,cross,yd : in out VecVecs.VecVec );
+                    forward,backward,cross,yd : in VecVecs.VecVec );
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
-                    forward,backward,cross,yd : in out VecVecs.VecVec;
+                    forward,backward,cross,yd : in VecVecs.VecVec;
                     wrk : in Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
@@ -182,7 +222,7 @@ package Generic_Speelpenning_Convolutions is
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
-                    forward,backward,cross,yd : in out VecVecs.VecVec;
+                    forward,backward,cross,yd : in VecVecs.VecVec;
                     wrk,acc : in Vectors.Link_to_Vector;
                     pwt : in Link_to_VecVecVec );
 
@@ -203,7 +243,7 @@ package Generic_Speelpenning_Convolutions is
   --                of the same fixed degree as the series in x;
   --   cross        work space allocated for x'last-2 coefficient vectors
   --                of the same fixed degree as the series in x;
-  --   yd           vector of range 0..x'last with space allocated for the
+  --   yd           vector of range 1..x'last+1 with space allocated for the
   --                coefficients of power series of the same fixed degree;
   --   wrk          work space for the coefficients of the same fixed degree;
   --   acc          work space for the coefficients of the same fixed degree;
@@ -213,5 +253,15 @@ package Generic_Speelpenning_Convolutions is
   --   yd           yd(x'last+1) contains the coefficient vector of the value
   --                of the sum of products, evaluated at x,
   --                yd(k) is the k-th partial derivative at x.
+
+  procedure EvalDiff ( c : in Convolution_Circuit;
+                       x : in VecVecs.VecVec;
+                       pwt : in Link_to_VecVecVec;
+                       yd : in VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Wraps the Speel procedure for the convolution circuit c,
+  --   to evaluate at x, with the aid of the power table pwt.
+  --   The result is placed in yd.
 
 end Generic_Speelpenning_Convolutions;

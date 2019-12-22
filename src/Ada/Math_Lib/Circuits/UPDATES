@@ -1,3 +1,7 @@
+Sun 22 Dec 2019 : added the convolution circuit as a data type to
+  generic_speelpenning_convolutions, with added constant declarations
+  in ts_speelcnv.
+
 Sat 21 Dec 2019 : added procedures to generic_speelpenning_convolutions
   to multiply the common factor and the multiplier exponent.
   Fixed error with the multiplication with the multiplier exponent.

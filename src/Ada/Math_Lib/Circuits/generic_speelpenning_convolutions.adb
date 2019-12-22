@@ -41,6 +41,55 @@ package body Generic_Speelpenning_Convolutions is
     end if;
   end Clear;
 
+  procedure Clear ( c : in out Convolution_Circuit ) is
+  begin
+    Standard_Integer_VecVecs.Clear(c.xps);
+    Standard_Integer_VecVecs.Clear(c.idx);
+    Standard_Integer_VecVecs.Clear(c.fac);
+    VecVecs.Clear(c.cff);
+    Vectors.Clear(c.cst);
+    VecVecs.Clear(c.forward);
+    VecVecs.Clear(c.backward);
+    VecVecs.Clear(c.cross);
+    Vectors.Clear(c.wrk);
+    Vectors.Clear(c.acc);
+  end Clear;
+
+  procedure Clear ( c : in out Link_to_Convolution_Circuit ) is
+
+    procedure free is
+      new unchecked_deallocation(Convolution_Circuit,
+                                 Link_to_Convolution_Circuit);
+
+  begin
+    if c /= null then
+      Clear(c.all);
+      free(c);
+    end if;
+  end Clear;
+
+  procedure Clear ( c : in out Convolution_Circuits ) is
+  begin
+    for k in c'range loop
+      Clear(c(k));
+    end loop;
+  end Clear;
+
+  procedure Clear ( c : in out Link_to_Convolution_Circuits ) is
+
+    procedure free is
+      new unchecked_deallocation(Convolution_Circuits,
+                                 Link_to_Convolution_Circuits);
+
+  begin
+    if c /= null then
+      Clear(c.all);
+      free(c);
+    end if;
+  end Clear;
+
+-- ALLOCATORS :
+
   function Allocate_Coefficients
              ( deg : integer32 ) return Vectors.Link_to_Vector is
 
@@ -62,6 +111,8 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
     return res;
   end Allocate_Coefficients;
+
+-- AUXILIARY COMPUTATIONAL PROCEDURES :
 
   procedure Update ( values : in Vectors.Link_to_Vector;
                      inc : in Vectors.Link_to_Vector ) is
@@ -90,8 +141,10 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
   end Multiply;
 
+-- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
+
   procedure Speel ( x : in VecVecs.VecVec;
-                    forward,backward,cross : in out VecVecs.VecVec ) is
+                    forward,backward,cross : in VecVecs.VecVec ) is
   begin
     Multiply(x(1),x(2),forward(1));
     for k in 3..x'last loop
@@ -116,7 +169,7 @@ package body Generic_Speelpenning_Convolutions is
 
   procedure Speel ( x : in VecVecs.VecVec;
                     idx : in Standard_Integer_Vectors.Vector;
-                    forward,backward,cross : in out VecVecs.VecVec ) is
+                    forward,backward,cross : in VecVecs.VecVec ) is
   begin
     Multiply(x(idx(1)),x(idx(2)),forward(1));
     for k in 3..idx'last loop
@@ -141,7 +194,7 @@ package body Generic_Speelpenning_Convolutions is
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     x : in VecVecs.VecVec;
-                    forward,backward,cross,yd : in out VecVecs.VecVec ) is
+                    forward,backward,cross,yd : in VecVecs.VecVec ) is
 
     use Standard_Integer_Vectors;
     use Ring;
@@ -176,7 +229,7 @@ package body Generic_Speelpenning_Convolutions is
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
-                    forward,backward,cross,yd : in out VecVecs.VecVec;
+                    forward,backward,cross,yd : in VecVecs.VecVec;
                     wrk : in Vectors.Link_to_Vector ) is
 
     use Standard_Integer_Vectors;
@@ -266,7 +319,7 @@ package body Generic_Speelpenning_Convolutions is
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
-                    forward,backward,cross,yd : in out VecVecs.VecVec;
+                    forward,backward,cross,yd : in VecVecs.VecVec;
                     wrk,acc : in Vectors.Link_to_Vector;
                     pwt : in Link_to_VecVecVec ) is
 
@@ -350,5 +403,15 @@ package body Generic_Speelpenning_Convolutions is
       end if;
     end loop;
   end Speel;
+
+  procedure EvalDiff ( c : in Convolution_Circuit;
+                       x : in VecVecs.VecVec;
+                       pwt : in Link_to_VecVecVec;
+                       yd : in VecVecs.VecVec ) is
+  begin
+    Speel(c.xps,c.idx,c.fac,c.cff,x,c.forward,c.backward,c.cross,yd,
+          c.wrk,c.acc,pwt);
+    Update(yd(yd'last),c.cst);
+  end EvalDiff;
 
 end Generic_Speelpenning_Convolutions;

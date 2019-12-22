@@ -187,13 +187,13 @@ procedure ts_speelcnv is
          := Standard_Series_Coefficients(x);
     pcff : constant Standard_Complex_VecVecs.VecVec(1..nbr)
          := Standard_Series_Coefficients(polcff);
-    forward : Standard_Complex_VecVecs.VecVec(1..dim-1)
+    forward : constant Standard_Complex_VecVecs.VecVec(1..dim-1)
             := Allocate_Coefficients(dim-1,deg);
-    backward : Standard_Complex_VecVecs.VecVec(1..dim-2)
+    backward : constant Standard_Complex_VecVecs.VecVec(1..dim-2)
              := Allocate_Coefficients(dim-2,deg);
-    cross : Standard_Complex_VecVecs.VecVec(1..dim-2)
+    cross : constant Standard_Complex_VecVecs.VecVec(1..dim-2)
           := Allocate_Coefficients(dim-2,deg);
-    ygrad : Standard_Complex_VecVecs.VecVec(1..dim+1)
+    ygrad : constant Standard_Complex_VecVecs.VecVec(1..dim+1)
           := Allocate_Coefficients(dim+1,deg);
     work : constant Standard_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
@@ -270,14 +270,14 @@ procedure ts_speelcnv is
     xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
          := DoblDobl_Series_Coefficients(x);
     pcff : constant DoblDobl_Complex_VecVecs.VecVec(1..nbr)
-         := DOblDobl_Series_Coefficients(polcff);
-    forward : DoblDobl_Complex_VecVecs.VecVec(1..dim-1)
+         := DoblDobl_Series_Coefficients(polcff);
+    forward : constant DoblDobl_Complex_VecVecs.VecVec(1..dim-1)
             := Allocate_Coefficients(dim-1,deg);
-    backward : DoblDobl_Complex_VecVecs.VecVec(1..dim-2)
+    backward : constant DoblDobl_Complex_VecVecs.VecVec(1..dim-2)
              := Allocate_Coefficients(dim-2,deg);
-    cross : DoblDobl_Complex_VecVecs.VecVec(1..dim-2)
+    cross : constant DoblDobl_Complex_VecVecs.VecVec(1..dim-2)
           := Allocate_Coefficients(dim-2,deg);
-    ygrad : DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
+    ygrad : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
           := Allocate_Coefficients(dim+1,deg);
     work : constant DoblDobl_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
@@ -355,13 +355,13 @@ procedure ts_speelcnv is
          := QuadDobl_Series_Coefficients(x);
     pcff : constant QuadDobl_Complex_VecVecs.VecVec(1..nbr)
          := QuadDobl_Series_Coefficients(polcff);
-    forward : QuadDobl_Complex_VecVecs.VecVec(1..dim-1)
+    forward : constant QuadDobl_Complex_VecVecs.VecVec(1..dim-1)
             := Allocate_Coefficients(dim-1,deg);
-    backward : QuadDobl_Complex_VecVecs.VecVec(1..dim-2)
+    backward : constant QuadDobl_Complex_VecVecs.VecVec(1..dim-2)
              := Allocate_Coefficients(dim-2,deg);
-    cross : QuadDobl_Complex_VecVecs.VecVec(1..dim-2)
+    cross : constant QuadDobl_Complex_VecVecs.VecVec(1..dim-2)
           := Allocate_Coefficients(dim-2,deg);
-    ygrad : QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
+    ygrad : constant QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
           := Allocate_Coefficients(dim+1,deg);
     work : constant QuadDobl_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
