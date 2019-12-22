@@ -310,10 +310,16 @@ package body Generic_Speelpenning_Convolutions is
               Update(yd(idk(2)),wrk);
               Multiply(pcff,x(idk(2)),wrk);
               Update(yd(idk(1)),wrk);
-            else -- select in the power table
-              Multiply(pcff,x(idk(1)),wrk);
+            else -- use the common factor in acc
+              Multiply(acc,x(idk(1)),wrk);
+              if xpk(idk(2)) > 1
+               then Multiply_Power(xpk(idk(2)),wrk);
+              end if;
               Update(yd(idk(2)),wrk);
-              Multiply(pcff,x(idk(2)),wrk);
+              Multiply(acc,x(idk(2)),wrk);
+              if xpk(idk(1)) > 1
+               then Multiply_Power(xpk(idk(1)),wrk);
+              end if;
               Update(yd(idk(1)),wrk);
             end if;
           else -- idk'last > 2 
