@@ -12,6 +12,120 @@ with QuadDobl_Series_Poly_Functions;
 
 package body Series_Polynomial_Gradients is
 
+  function Standard_Polynomial
+             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuit )
+             return Standard_Series_Polynomials.Poly is
+
+    res : Standard_Series_Polynomials.Poly
+        := Standard_Series_Polynomials.Null_Poly;
+    trm : Standard_Series_Polynomials.Term;
+
+  begin
+    for k in c.xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+      for i in 1..c.dim loop
+        trm.dg(i) := natural32(c.xps(k)(i));
+      end loop;
+      trm.cf := Standard_Dense_Series.Create(c.cff(k).all);
+      Standard_Series_Polynomials.Add(res,trm);
+      Standard_Series_Polynomials.Clear(trm);
+    end loop;
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+    trm.cf := Standard_Dense_Series.Create(c.cst.all);
+    Standard_Series_Polynomials.Add(res,trm);
+    Standard_Series_Polynomials.Clear(trm);
+    return res;
+  end Standard_Polynomial;
+
+  function DoblDobl_Polynomial
+             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuit )
+             return DoblDobl_Series_Polynomials.Poly is
+
+    res : DoblDobl_Series_Polynomials.Poly
+        := DoblDobl_Series_Polynomials.Null_Poly;
+    trm : DoblDobl_Series_Polynomials.Term;
+
+  begin
+    for k in c.xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+      for i in 1..c.dim loop
+        trm.dg(i) := natural32(c.xps(k)(i));
+      end loop;
+      trm.cf := DoblDobl_Dense_Series.Create(c.cff(k).all);
+      DoblDobl_Series_Polynomials.Add(res,trm);
+      DoblDobl_Series_Polynomials.Clear(trm);
+    end loop;
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+    trm.cf := DoblDobl_Dense_Series.Create(c.cst.all);
+    DoblDobl_Series_Polynomials.Add(res,trm);
+    DoblDobl_Series_Polynomials.Clear(trm);
+    return res;
+  end DoblDobl_Polynomial;
+
+  function QuadDobl_Polynomial
+             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuit )
+             return QuadDobl_Series_Polynomials.Poly is
+
+    res : QuadDobl_Series_Polynomials.Poly
+        := QuadDobl_Series_Polynomials.Null_Poly;
+    trm : QuadDobl_Series_Polynomials.Term;
+
+  begin
+    for k in c.xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+      for i in 1..c.dim loop
+        trm.dg(i) := natural32(c.xps(k)(i));
+      end loop;
+      trm.cf := QuadDobl_Dense_Series.Create(c.cff(k).all);
+      QuadDobl_Series_Polynomials.Add(res,trm);
+      QuadDobl_Series_Polynomials.Clear(trm);
+    end loop;
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+    trm.cf := QuadDobl_Dense_Series.Create(c.cst.all);
+    QuadDobl_Series_Polynomials.Add(res,trm);
+    QuadDobl_Series_Polynomials.Clear(trm);
+    return res;
+  end QuadDobl_Polynomial;
+
+  function Standard_System
+             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuits )
+             return Standard_Series_Poly_Systems.Poly_Sys is
+
+    res : Standard_Series_Poly_Systems.Poly_Sys(c'range);
+
+  begin
+    for i in c'range loop
+      res(i) := Standard_Polynomial(c(i).all);
+    end loop;
+    return res;
+  end Standard_System;
+
+  function DoblDobl_System
+             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuits )
+             return DoblDobl_Series_Poly_Systems.Poly_Sys is
+
+    res : DoblDobl_Series_Poly_Systems.Poly_Sys(c'range);
+
+  begin
+    for i in c'range loop
+      res(i) := DoblDobl_Polynomial(c(i).all);
+    end loop;
+    return res;
+  end DoblDobl_System;
+
+  function QuadDobl_System
+             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuits )
+             return QuadDobl_Series_Poly_Systems.Poly_Sys is
+
+    res : QuadDobl_Series_Poly_Systems.Poly_Sys(c'range);
+
+  begin
+    for i in c'range loop
+      res(i) := QuadDobl_Polynomial(c(i).all);
+    end loop;
+    return res;
+  end QuadDobl_System;
+
   function Standard_Product
              ( dim,deg : in integer32 )
              return Standard_Series_Polynomials.Poly is

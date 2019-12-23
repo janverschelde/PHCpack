@@ -34,10 +34,13 @@ with QuadDobl_Dense_Series;
 with QuadDobl_Dense_Series_Vectors;
 with Standard_Series_Polynomials;
 with Standard_Series_Poly_Functions;
+with Standard_Series_Poly_Systems;
 with DoblDobl_Series_Polynomials;
 with DoblDobl_Series_Poly_Functions;
+with DoblDobl_Series_Poly_Systems;
 with QuadDobl_Series_Polynomials;
 with QuadDobl_Series_Poly_Functions;
+with QuadDobl_Series_Poly_Systems;
 with Standard_Random_Series;
 with DoblDobl_Random_Series;
 with QuadDobl_Random_Series;
@@ -161,7 +164,8 @@ procedure ts_speelcnv is
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
-  --   nbr      number of products.
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
 
     use Standard_Speelpenning_Convolutions;
 
@@ -245,7 +249,8 @@ procedure ts_speelcnv is
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
-  --   nbr      number of products.
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
 
     use DoblDobl_Speelpenning_Convolutions;
 
@@ -329,7 +334,8 @@ procedure ts_speelcnv is
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
-  --   nbr      number of products.
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
 
     use QuadDobl_Speelpenning_Convolutions;
 
@@ -404,6 +410,282 @@ procedure ts_speelcnv is
     Clear(pwt);
   end QuadDobl_Test;
 
+  function Standard_Random_Convolution_Circuit
+             ( dim,deg,nbr,pwr : in integer32 )
+             return Standard_Speelpenning_Convolutions.Convolution_Circuit is
+
+  -- DESCRIPTION :
+  --   Generates a sequence of random exponents and coefficients
+  --   in standard double precision and returns a convolution circuit.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use Standard_Speelpenning_Convolutions;
+
+    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    polcff : constant Standard_Dense_Series_Vectors.Vector(1..nbr)
+           := Standard_Random_Series.Random_Series_Vector(1,nbr,deg);
+    rancst : constant Standard_Dense_Series.Series
+           := Standard_Random_Series.Random_Series(deg);
+    cstcff : constant Standard_Complex_Vectors.Vector(0..rancst.deg)
+           := rancst.cff(0..rancst.deg);
+
+  begin
+    res.xps := Random_Exponents(dim,nbr,pwr);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cff := Standard_Series_Coefficients(polcff);
+    res.cst := new Standard_Complex_Vectors.Vector'(cstcff);
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end Standard_Random_Convolution_Circuit;
+
+  function DoblDobl_Random_Convolution_Circuit
+             ( dim,deg,nbr,pwr : in integer32 )
+             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuit is
+
+  -- DESCRIPTION :
+  --   Generates a sequence of random exponents and coefficients
+  --   in double double precision and returns a convolution circuit.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    polcff : constant DoblDobl_Dense_Series_Vectors.Vector(1..nbr)
+           := DoblDobl_Random_Series.Random_Series_Vector(1,nbr,deg);
+    rancst : constant DoblDobl_Dense_Series.Series
+           := DoblDobl_Random_Series.Random_Series(deg);
+    cstcff : constant DoblDobl_Complex_Vectors.Vector(0..rancst.deg)
+           := rancst.cff(0..rancst.deg);
+
+  begin
+    res.xps := Random_Exponents(dim,nbr,pwr);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cff := DoblDobl_Series_Coefficients(polcff);
+    res.cst := new DoblDobl_Complex_Vectors.Vector'(cstcff);
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end DoblDobl_Random_Convolution_Circuit;
+
+  function QuadDobl_Random_Convolution_Circuit
+             ( dim,deg,nbr,pwr : in integer32 )
+             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuit is
+
+  -- DESCRIPTION :
+  --   Generates a sequence of random exponents and coefficients
+  --   in quad double precision and returns a convolution circuit.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    polcff : constant QuadDobl_Dense_Series_Vectors.Vector(1..nbr)
+           := QuadDobl_Random_Series.Random_Series_Vector(1,nbr,deg);
+    rancst : constant QuadDobl_Dense_Series.Series
+           := QuadDobl_Random_Series.Random_Series(deg);
+    cstcff : constant QuadDobl_Complex_Vectors.Vector(0..rancst.deg)
+           := rancst.cff(0..rancst.deg);
+
+  begin
+    res.xps := Random_Exponents(dim,nbr,pwr);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cff := QuadDobl_Series_Coefficients(polcff);
+    res.cst := new QuadDobl_Complex_Vectors.Vector'(cstcff);
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end QuadDobl_Random_Convolution_Circuit;
+
+  function Standard_Random_Convolution_Circuits
+             ( dim,deg,nbr,pwr : in integer32 )
+             return Standard_Speelpenning_Convolutions.Convolution_Circuits is
+
+  -- DESCRIPTION :
+  --   Generates a sequence of random exponents and coefficients
+  --   in standard double precision and returns as many convolution circuits
+  --   as the value of dim.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use Standard_Speelpenning_Convolutions;
+
+    res : Convolution_Circuits(1..dim);
+
+  begin
+    for k in 1..dim loop
+      declare
+        c : constant Convolution_Circuit(nbr,dim,dim-1,dim-2)
+          := Standard_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+      begin
+        res(k) := new Convolution_Circuit'(c);
+      end;
+    end loop;
+    return res;
+  end Standard_Random_Convolution_Circuits;
+
+  function DoblDobl_Random_Convolution_Circuits
+             ( dim,deg,nbr,pwr : in integer32 )
+             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuits is
+
+  -- DESCRIPTION :
+  --   Generates a sequence of random exponents and coefficients
+  --   in double double precision and returns as many convolution circuits
+  --   as the value of dim.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    res : Convolution_Circuits(1..dim);
+
+  begin
+    for k in 1..dim loop
+      declare
+        c : constant Convolution_Circuit(nbr,dim,dim-1,dim-2)
+          := DoblDobl_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+      begin
+        res(k) := new Convolution_Circuit'(c);
+      end;
+    end loop;
+    return res;
+  end DoblDobl_Random_Convolution_Circuits;
+
+  function QuadDobl_Random_Convolution_Circuits
+             ( dim,deg,nbr,pwr : in integer32 )
+             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuits is
+
+  -- DESCRIPTION :
+  --   Generates a sequence of random exponents and coefficients
+  --   in quad double precision and returns as many convolution circuits
+  --   as the value of dim.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    res : Convolution_Circuits(1..dim);
+
+  begin
+    for k in 1..dim loop
+      declare
+        c : constant Convolution_Circuit(nbr,dim,dim-1,dim-2)
+          := QuadDobl_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+      begin
+        res(k) := new Convolution_Circuit'(c);
+      end;
+    end loop;
+    return res;
+  end QuadDobl_Random_Convolution_Circuits;
+
+  procedure Standard_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random system of exponents and coefficients.
+  --   Run tests in standard double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use Standard_Speelpenning_Convolutions;
+
+    c : constant Convolution_Circuits
+      := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    p : constant Standard_Series_Poly_Systems.Poly_Sys(1..dim)
+      := Standard_System(c);
+
+  begin
+    put_line("the polynomial system :"); put(p,dim+1);
+  end Standard_System_Test;
+
+  procedure DoblDobl_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random system of exponents and coefficients.
+  --   Run tests in double double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    c : constant Convolution_Circuits
+      := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    p : constant DoblDobl_Series_Poly_Systems.Poly_Sys(1..dim)
+      := DoblDobl_System(c);
+
+  begin
+    put_line("the polynomial system :"); put(p,dim+1);
+  end DoblDobl_System_Test;
+
+  procedure QuadDobl_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random system of exponents and coefficients.
+  --   Run tests in double double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    c : constant Convolution_Circuits
+      := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    p : constant QuadDobl_Series_Poly_Systems.Poly_Sys(1..dim)
+      := QuadDobl_System(c);
+
+  begin
+    put_line("the polynomial system :"); put(p,dim+1);
+  end QuadDobl_System_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -411,7 +693,7 @@ procedure ts_speelcnv is
   --   the number of monomials, and the precision.  Then runs the tests.
 
     dim,deg,nbr,pwr : integer32 := 0;
-    precision : character;
+    precision,answer : character;
 
   begin
     new_line;
@@ -427,12 +709,23 @@ procedure ts_speelcnv is
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(precision,"012");
     new_line;
-    case precision is
-      when '0' => Standard_Test(dim,deg,nbr,pwr);
-      when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
-      when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
-      when others => null;
-    end case;
+    put("Test system ? (y/n) "); Ask_Yes_or_No(answer);
+    new_line;
+    if answer = 'y' then
+      case precision is
+        when '0' => Standard_System_Test(dim,deg,nbr,pwr);
+        when '1' => DoblDobl_System_Test(dim,deg,nbr,pwr);
+        when '2' => QuadDobl_System_Test(dim,deg,nbr,pwr);
+        when others => null;
+      end case;
+    else
+      case precision is
+        when '0' => Standard_Test(dim,deg,nbr,pwr);
+        when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
+        when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin

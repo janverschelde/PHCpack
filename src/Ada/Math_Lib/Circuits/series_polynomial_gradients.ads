@@ -6,10 +6,16 @@ with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Standard_Dense_Series_Vectors;
 with Standard_Series_Polynomials;
+with Standard_Series_Poly_Systems;
 with DoblDobl_Dense_Series_Vectors;
 with DoblDobl_Series_Polynomials;
+with DoblDobl_Series_Poly_Systems;
 with QuadDobl_Dense_Series_Vectors;
 with QuadDobl_Series_Polynomials;
+with QuadDobl_Series_Poly_Systems;
+with Standard_Speelpenning_Convolutions;
+with DoblDobl_Speelpenning_Convolutions;
+with QuadDobl_Speelpenning_Convolutions;
 
 package Series_Polynomial_Gradients is
 
@@ -17,6 +23,32 @@ package Series_Polynomial_Gradients is
 --   This package exports utilities to define, evaluate, and differentiate
 --   polynomials in several variables with power series coefficients.
 --   The functions are mainly wrappers and used for testing purposes.
+
+  function Standard_Polynomial
+             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuit )
+             return Standard_Series_Polynomials.Poly;
+  function DoblDobl_Polynomial
+             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuit )
+             return DoblDobl_Series_Polynomials.Poly;
+  function QuadDobl_Polynomial
+             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuit )
+             return QuadDobl_Series_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   Makes the polynomial system equivalent to the convolution circuits.
+
+  function Standard_System
+             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuits )
+             return Standard_Series_Poly_Systems.Poly_Sys;
+  function DoblDobl_System
+             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuits )
+             return DoblDobl_Series_Poly_Systems.Poly_Sys;
+  function QuadDobl_System
+             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuits )
+             return QuadDobl_Series_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Makes the polynomial system equivalent to the convolution circuits.
 
   function Standard_Product
              ( dim,deg : integer32 )
