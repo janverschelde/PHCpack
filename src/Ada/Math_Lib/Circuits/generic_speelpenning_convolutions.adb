@@ -414,4 +414,32 @@ package body Generic_Speelpenning_Convolutions is
     Update(yd(yd'last),c.cst);
   end EvalDiff;
 
+  procedure EvalDiff ( c : in Convolution_Circuits;
+                       x : in VecVecs.VecVec;
+                       pwt : in Link_to_VecVecVec;
+                       yd : in VecVecs.VecVec;
+                       vy : in VecVecs.VecVec;
+                       vm : in VecMats.VecMat ) is
+
+    vleft,vright : Vectors.Link_to_Vector;
+    mleft : Matrices.Link_to_Matrix;
+
+  begin
+    for i in c'range loop
+      EvalDiff(c(i).all,x,pwt,yd);
+      vleft := vy(i);
+      vright := yd(x'last+1);
+      for j in vleft'range loop
+        vleft(j) := vright(j);
+      end loop;
+      for j in 1..x'last loop
+        vright := yd(j);
+        for k in vm'range loop     -- k-th coefficient in matrix vm(k)
+          mleft := vm(k);          -- the row i in vm(k) is the equation
+          mleft(i,j) := vright(k); -- the column j in vm(k) is the variable
+        end loop;
+      end loop;
+    end loop;
+  end EvalDiff;
+
 end Generic_Speelpenning_Convolutions;

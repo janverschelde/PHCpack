@@ -3,13 +3,17 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Abstract_Ring;
 with Generic_Vectors;
+with Generic_Matrices;
 with Generic_VecVecs;
+with Generic_VecMats;
 
 generic
 
   with package Ring is new Abstract_Ring(<>);
   with package Vectors is new Generic_Vectors(Ring);
   with package VecVecs is new Generic_VecVecs(Ring,Vectors);
+  with package Matrices is new Generic_Matrices(Ring,Vectors);
+  with package VecMats is new Generic_VecMats(Ring,Vectors,Matrices);
 
 package Generic_Speelpenning_Convolutions is
 
@@ -263,5 +267,30 @@ package Generic_Speelpenning_Convolutions is
   --   Wraps the Speel procedure for the convolution circuit c,
   --   to evaluate at x, with the aid of the power table pwt.
   --   The result is placed in yd.
+
+  procedure EvalDiff ( c : in Convolution_Circuits;
+                       x : in VecVecs.VecVec;
+                       pwt : in Link_to_VecVecVec;
+                       yd : in VecVecs.VecVec;
+                       vy : in VecVecs.VecVec;
+                       vm : in VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiates the convolution circuits in c at x.
+
+  -- ON ENTRY :
+  --   c            an array of convolution circuits;
+  --   x            coefficient vectors of power series of same degree;
+  --   pwt          power table of the values in x.
+  --   yd           work space of range 1..x'last+1 to contain the
+  --                gradient and the value of the circuits in c;
+  --   vy           allocated space for the values of the circuits at x;
+  --   vm           space allocated for a series of some fixed degree
+  --                with matrix coefficients.
+
+  -- ON RETURN :
+  --   vy           values of the circuits at x;
+  --   vm           the evaluated circuits at x as a series 
+  --                of some fixe degree with matrix coefficients.
 
 end Generic_Speelpenning_Convolutions;
