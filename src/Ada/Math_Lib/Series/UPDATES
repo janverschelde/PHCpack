@@ -1,5 +1,7 @@
 Wed 25 Dec 2019 : the generic_dense_series.ads did not export the creating
   of a link to a series, given the coefficient vector.
+  Modifications to {standard,dobldobl,quaddobl}_cseries_polynomials_io.adb
+  for compiler warnings.
 
 Mon 13 May 2019 : added double double and quad double versions of the
   packages to compute coefficient modulus transforms on series.

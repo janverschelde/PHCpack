@@ -1,5 +1,4 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Natural_Vectors;
@@ -15,7 +14,7 @@ package body QuadDobl_CSeries_Polynomials_io is
 
   procedure put ( file : in file_type; t : in Term ) is
 
-    s : Link_to_Series := t.cf;
+    s : constant Link_to_Series := t.cf;
     dt : constant natural32 := Standard_Natural_Vectors.Sum(t.dg.all);
 
   begin
