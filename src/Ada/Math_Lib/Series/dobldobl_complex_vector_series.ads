@@ -3,7 +3,6 @@ with Double_Double_Numbers;             use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
-with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Vectors;
 
 package DoblDobl_Complex_Vector_Series is

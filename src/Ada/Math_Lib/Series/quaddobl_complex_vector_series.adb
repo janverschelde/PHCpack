@@ -1,4 +1,5 @@
 with unchecked_deallocation;
+with QuadDobl_Complex_Series;
 
 package body QuadDobl_Complex_Vector_Series is
 

@@ -1,4 +1,5 @@
 with unchecked_deallocation;
+with Standard_Complex_Series;
 
 package body Standard_Complex_Vector_Series is
 

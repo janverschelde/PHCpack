@@ -21,7 +21,7 @@ package body Standard_Random_Series_Vectors is
 
     rnd : Standard_Complex_Series_Vectors.Vector(first..last)
         := Random_Series_Vector(first,last,degree);
-    res : Standard_Complex_Vector_Series.Vector
+    res : constant Standard_Complex_Vector_Series.Vector
         := Standard_Complex_Vector_Series.Create(rnd); 
 
   begin

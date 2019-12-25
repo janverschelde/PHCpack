@@ -1,4 +1,5 @@
 with unchecked_deallocation;
+with DoblDobl_Complex_Series;
 
 package body DoblDobl_Complex_Vector_Series is
 

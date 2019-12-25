@@ -21,7 +21,7 @@ package body QuadDobl_Random_Series_Vectors is
 
     rnd : QuadDobl_Complex_Series_Vectors.Vector(first..last)
         := Random_Series_Vector(first,last,degree);
-    res : QuadDobl_Complex_Vector_Series.Vector
+    res : constant QuadDobl_Complex_Vector_Series.Vector
         := QuadDobl_Complex_Vector_Series.Create(rnd); 
 
   begin

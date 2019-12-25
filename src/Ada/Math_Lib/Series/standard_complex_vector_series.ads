@@ -3,7 +3,6 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
 
 package Standard_Complex_Vector_Series is

@@ -21,7 +21,7 @@ package body DoblDobl_Random_Series_Vectors is
 
     rnd : DoblDobl_Complex_Series_Vectors.Vector(first..last)
         := Random_Series_Vector(first,last,degree);
-    res : DoblDobl_Complex_Vector_Series.Vector
+    res : constant DoblDobl_Complex_Vector_Series.Vector
         := DoblDobl_Complex_Vector_Series.Create(rnd); 
 
   begin

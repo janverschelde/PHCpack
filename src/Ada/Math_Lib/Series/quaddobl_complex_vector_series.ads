@@ -3,7 +3,6 @@ with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
-with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Vectors;
 
 package QuadDobl_Complex_Vector_Series is
