@@ -53,6 +53,7 @@ package Generic_Dense_Series is
   --   i or n, and all other coefficients equal to zero.
 
   function Create ( c : Vectors.Vector ) return Series;
+  function Create ( c : Vectors.Vector ) return Link_to_Series;
 
   -- DESCRIPTION :
   --   Returns a series with coefficients in c,
