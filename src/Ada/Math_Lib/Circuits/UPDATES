@@ -1,3 +1,6 @@
+Tue 24 Dec 2019 : added allocation of vectors of matrices to
+  generic_speelpenning_convolutions, called in ts_speelcnv.
+
 Mon 23 Dec 2019 : to series_polynomial_gradients, added functions to turn
   convolution circuits into polynomial systems and to ts_speelcnv,
   added procedures to generate random convolution circuits.

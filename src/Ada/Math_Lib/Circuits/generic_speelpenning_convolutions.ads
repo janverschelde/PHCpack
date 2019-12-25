@@ -95,6 +95,15 @@ package Generic_Speelpenning_Convolutions is
   --   truncated to degree deg and initialized to zero.
   --   The vector on return has range 1..dim.
 
+  function Allocate_Coefficients
+             ( nbq,nvr,deg : integer32 ) return VecMats.VecMat;
+
+  -- DESCRIPTION :
+  --   Returns a vector of matrices, of range 0..deg,
+  --   of nbq-by-nvr matrices of coefficients,
+  --   where nbq equals the number of equations
+  --   and nvr is the number of variables.
+
 -- AUXILIARY COMPUTATIONAL PROCEDURES :
 
   procedure Update ( values : in Vectors.Link_to_Vector;

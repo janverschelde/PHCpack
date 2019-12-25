@@ -19,12 +19,15 @@ with Standard_Random_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
+with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecMats;
 with Exponent_Indices;
 with Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
@@ -617,6 +620,87 @@ procedure ts_speelcnv is
     return res;
   end QuadDobl_Random_Convolution_Circuits;
 
+  function Exponent_Maxima
+             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuits;
+               dim : integer32 )
+             return Standard_Integer_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the maximal exponents of the dim variables in the circuits.
+
+    res : Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c(c'first).xps);
+
+  begin
+    for k in c'first+1..c'last loop
+      declare
+        mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+            := Exponent_Indices.Maxima(c(k).xps);
+      begin
+        for i in mxe'range loop
+          if mxe(i) > res(i)
+           then res(i) := mxe(i);
+          end if;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Exponent_Maxima;
+
+  function Exponent_Maxima
+             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+               dim : integer32 )
+             return Standard_Integer_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the maximal exponents of the dim variables in the circuits.
+
+    res : Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c(c'first).xps);
+
+  begin
+    for k in c'first+1..c'last loop
+      declare
+        mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+            := Exponent_Indices.Maxima(c(k).xps);
+      begin
+        for i in mxe'range loop
+          if mxe(i) > res(i)
+           then res(i) := mxe(i);
+          end if;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Exponent_Maxima;
+
+  function Exponent_Maxima
+             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+               dim : integer32 )
+             return Standard_Integer_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the maximal exponents of the dim variables in the circuits.
+
+    res : Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c(c'first).xps);
+
+  begin
+    for k in c'first+1..c'last loop
+      declare
+        mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+            := Exponent_Indices.Maxima(c(k).xps);
+      begin
+        for i in mxe'range loop
+          if mxe(i) > res(i)
+           then res(i) := mxe(i);
+          end if;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Exponent_Maxima;
+
   procedure Standard_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
@@ -631,13 +715,34 @@ procedure ts_speelcnv is
 
     use Standard_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : Convolution_Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
-    p : constant Standard_Series_Poly_Systems.Poly_Sys(1..dim)
-      := Standard_System(c);
+    p : Standard_Series_Poly_Systems.Poly_Sys(1..dim) := Standard_System(c);
+    x : Standard_Dense_Series_Vectors.Vector(1..dim)
+      := Standard_Random_Series.Random_Series_Vector(1,dim,deg);
+    xcff : Standard_Complex_VecVecs.VecVec(1..dim)
+         := Standard_Series_Coefficients(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Maxima(c,dim);
+    pwt : Link_to_VecVecVec := Create(xcff,mxe);
+    yd : Standard_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy : Standard_Complex_VecVecs.VecVec(1..dim)
+       := Allocate_Coefficients(dim,deg);
+    vm : Standard_Complex_VecMats.VecMat(0..deg)
+       := Allocate_Coefficients(dim,dim,deg);
 
   begin
     put_line("the polynomial system :"); put(p,dim+1);
+    EvalDiff(c,xcff,pwt,yd,vy,vm);
+    Clear(c);
+    Standard_Series_Poly_Systems.Clear(p);
+    Clear(pwt);
+    Standard_Dense_Series_Vectors.Clear(x);
+    Standard_Complex_VecVecs.Clear(xcff);
+    Standard_Complex_VecVecs.Clear(yd);
+    Standard_Complex_VecVecs.Clear(vy);
+    Standard_Complex_VecMats.Clear(vm);
   end Standard_System_Test;
 
   procedure DoblDobl_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
@@ -654,13 +759,34 @@ procedure ts_speelcnv is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : Convolution_Circuits
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
-    p : constant DoblDobl_Series_Poly_Systems.Poly_Sys(1..dim)
-      := DoblDobl_System(c);
+    p : DoblDobl_Series_Poly_Systems.Poly_Sys(1..dim) := DoblDobl_System(c);
+    x : DoblDobl_Dense_Series_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Series.Random_Series_Vector(1,dim,deg);
+    xcff : DoblDobl_Complex_VecVecs.VecVec(1..dim)
+         := DoblDobl_Series_Coefficients(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Maxima(c,dim);
+    pwt : Link_to_VecVecVec := Create(xcff,mxe);
+    yd : DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy : DoblDobl_Complex_VecVecs.VecVec(1..dim)
+       := Allocate_Coefficients(dim,deg);
+    vm : DoblDobl_Complex_VecMats.VecMat(0..deg)
+       := Allocate_Coefficients(dim,dim,deg);
 
   begin
     put_line("the polynomial system :"); put(p,dim+1);
+    EvalDiff(c,xcff,pwt,yd,vy,vm);
+    Clear(c);
+    DoblDobl_Series_Poly_Systems.Clear(p);
+    Clear(pwt);
+    DoblDobl_Dense_Series_Vectors.Clear(x);
+    DoblDobl_Complex_VecVecs.Clear(xcff);
+    DoblDobl_Complex_VecVecs.Clear(yd);
+    DoblDobl_Complex_VecVecs.Clear(vy);
+    DoblDobl_Complex_VecMats.Clear(vm);
   end DoblDobl_System_Test;
 
   procedure QuadDobl_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
@@ -677,13 +803,34 @@ procedure ts_speelcnv is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : Convolution_Circuits
       := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
-    p : constant QuadDobl_Series_Poly_Systems.Poly_Sys(1..dim)
-      := QuadDobl_System(c);
+    p : QuadDobl_Series_Poly_Systems.Poly_Sys(1..dim) := QuadDobl_System(c);
+    x : QuadDobl_Dense_Series_Vectors.Vector(1..dim)
+      := QuadDobl_Random_Series.Random_Series_Vector(1,dim,deg);
+    xcff : QuadDobl_Complex_VecVecs.VecVec(1..dim)
+         := QuadDobl_Series_Coefficients(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Maxima(c,dim);
+    pwt : Link_to_VecVecVec := Create(xcff,mxe);
+    yd : QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy : QuadDobl_Complex_VecVecs.VecVec(1..dim)
+       := Allocate_Coefficients(dim,deg);
+    vm : QuadDobl_Complex_VecMats.VecMat(0..deg)
+       := Allocate_Coefficients(dim,dim,deg);
 
   begin
     put_line("the polynomial system :"); put(p,dim+1);
+    EvalDiff(c,xcff,pwt,yd,vy,vm);
+    Clear(c);
+    QuadDobl_Series_Poly_Systems.Clear(p);
+    Clear(pwt);
+    QuadDobl_Dense_Series_Vectors.Clear(x);
+    QuadDobl_Complex_VecVecs.Clear(xcff);
+    QuadDobl_Complex_VecVecs.Clear(yd);
+    QuadDobl_Complex_VecVecs.Clear(vy);
+    QuadDobl_Complex_VecMats.Clear(vm);
   end QuadDobl_System_Test;
 
   procedure Main is

@@ -112,6 +112,27 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Allocate_Coefficients;
 
+  function Allocate_Coefficients
+             ( nbq,nvr,deg : integer32 ) return VecMats.VecMat is
+
+    res : VecMats.VecMat(0..deg);
+
+  begin
+    for k in res'range loop
+      declare
+        mat : Matrices.Matrix(1..nbq,1..nvr);
+      begin
+        for i in 1..nbq loop
+          for j in 1..nvr loop
+            mat(i,j) := Ring.zero;
+          end loop;
+        end loop;
+        res(k) := new Matrices.Matrix'(mat);
+      end;
+    end loop;
+    return res;
+  end Allocate_Coefficients;
+
 -- AUXILIARY COMPUTATIONAL PROCEDURES :
 
   procedure Update ( values : in Vectors.Link_to_Vector;
