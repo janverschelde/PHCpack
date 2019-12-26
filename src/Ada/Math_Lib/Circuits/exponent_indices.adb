@@ -1,6 +1,6 @@
 package body Exponent_Indices is
 
-  function Index_Size ( v : Standard_Integer_Vectors.Link_to_Vector ) 
+  function Index_Size ( v : Standard_Integer_Vectors.Vector ) 
                       return integer32 is
 
     res : integer32 := 0;
@@ -12,6 +12,12 @@ package body Exponent_Indices is
       end if;
     end loop;
     return res;
+  end Index_Size;
+
+  function Index_Size ( v : Standard_Integer_Vectors.Link_to_Vector ) 
+                      return integer32 is
+  begin
+    return Index_Size(v.all);
   end Index_Size;
 
   function Factor_Size ( v : Standard_Integer_Vectors.Link_to_Vector ) 
@@ -29,21 +35,32 @@ package body Exponent_Indices is
   end Factor_Size;
 
   function Exponent_Index
-             ( xp : Standard_Integer_Vectors.Link_to_Vector )
-             return Standard_Integer_Vectors.Link_to_Vector is
+             ( xp : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector is
 
-    res : Standard_Integer_Vectors.Link_to_Vector;
-    indices : Standard_Integer_Vectors.Vector(1..Index_Size(xp)); 
+    res : Standard_Integer_Vectors.Vector(1..Index_Size(xp));
     idx : integer32 := 0;
 
   begin
     for k in xp'range loop
       if xp(k) > 0 then
         idx := idx + 1;
-        indices(idx) := k;
+        res(idx) := k;
       end if;
     end loop;
-    res := new Standard_Integer_Vectors.Vector'(indices);
+    return res;
+  end Exponent_Index;
+
+  function Exponent_Index
+             ( xp : Standard_Integer_Vectors.Link_to_Vector )
+             return Standard_Integer_Vectors.Link_to_Vector is
+
+    indices : constant Standard_Integer_Vectors.Vector
+            := Exponent_Index(xp.all);
+    res : constant Standard_Integer_Vectors.Link_to_Vector
+        := new Standard_Integer_Vectors.Vector'(indices);
+
+  begin
     return res;
   end Exponent_Index;
 

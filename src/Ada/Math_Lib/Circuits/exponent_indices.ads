@@ -9,6 +9,8 @@ package Exponent_Indices is
 --   in an exponent vector.  The indices of the higher powers in
 --   exponent vectors are stored in the factor index.
 
+  function Index_Size ( v : Standard_Integer_Vectors.Vector ) 
+                      return integer32;
   function Index_Size ( v : Standard_Integer_Vectors.Link_to_Vector ) 
                       return integer32;
 
@@ -21,6 +23,9 @@ package Exponent_Indices is
   -- DESCRIPTION :
   --   Returns the number of entries in v that are larger than one.
 
+  function Exponent_Index
+             ( xp : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector;
   function Exponent_Index
              ( xp : Standard_Integer_Vectors.Link_to_Vector )
              return Standard_Integer_Vectors.Link_to_Vector;

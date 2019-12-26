@@ -1,3 +1,6 @@
+Thu 26 Dec 2019 : updated exponent_indices and ts_speelser for the changes
+  in series_polynomial_grandients.
+
 Wed 25 Dec 2019 : upgraded series_polynomial_gradients to work with complex
   series instead of dense series, tested by ts_speelcnv.
 
