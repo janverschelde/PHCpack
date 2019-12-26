@@ -1,5 +1,5 @@
 with Ada.Numerics.Generic_Elementary_Functions;
-with Ada.Numerics;                     use Ada.Numerics;
+with Ada.Numerics;
 
 package body Standard_Mathematical_Functions is
 

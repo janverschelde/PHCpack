@@ -1,6 +1,6 @@
 package body Generic_Complex_Numbers is
 
-  TWO : constant number := one+one;
+--  TWO : constant number := one+one;
 
 -- CREATORS :
 

@@ -107,7 +107,6 @@ package body Multprec_Complex_Numbers_io is
     sy : string(1..integer(Character_Size(y)));
   
   begin
-    s := (s'range => ' ');
     put(sx,x); Clear(x);
     put(sy,y); Clear(y);
     s := sx & "  " & sy;

@@ -115,7 +115,6 @@ package body Standard_Complex_Numbers_io is
     sre,sim : string(1..22) := (1..22 => ' ');
 
   begin
-    s := (s'range => ' ');
     put(sre,REAL_PART(c),aft,exp);
     put(sim,IMAG_PART(c),aft,exp);
     s := Trim_Spaces(sre) & "  " & Trim_Spaces(sim);

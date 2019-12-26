@@ -322,15 +322,11 @@ package body Standard_Parse_Numbers is
           Parse(file,char,expo,expo2,k1,k2,sign);
         end if;
       when 'E' => 
-        if (char = 'E') or (char = 'e') then
-          get(file,char); -- skip the 'E'/'e'
-          Parse(file,char,expo,expo2,k1,k2,sign);
-        end if;
+        get(file,char); -- skip the 'E'/'e'
+        Parse(file,char,expo,expo2,k1,k2,sign);
       when 'e' => 
-        if (char = 'E') or (char = 'e') then
-          get(file,char); -- skip the 'E'/'e'
-          Parse(file,char,expo,expo2,k1,k2,sign);
-        end if;
+        get(file,char); -- skip the 'E'/'e'
+        Parse(file,char,expo,expo2,k1,k2,sign);
       when others => null;
     end case; 
     if min then
