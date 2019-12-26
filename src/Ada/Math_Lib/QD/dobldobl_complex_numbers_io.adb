@@ -87,7 +87,6 @@ package body DoblDobl_Complex_Numbers_io is
     y : constant double_double := IMAG_PARt(c);
 
   begin
-    s := (s'range => ' ');
     to_string(x,dp,0,false,false,true,' ',re,re_ends);
     to_string(y,dp,0,false,false,true,' ',im,im_ends);
     s := re(1..re_ends) & "  " & im(1..im_ends);

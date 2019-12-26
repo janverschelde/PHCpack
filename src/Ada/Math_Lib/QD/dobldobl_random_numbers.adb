@@ -1,6 +1,5 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
-with Standard_Mathematical_Functions;
 with Double_Double_Constants;
 with DoblDobl_Mathematical_Functions;
 

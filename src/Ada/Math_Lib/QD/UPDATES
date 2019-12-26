@@ -1,3 +1,6 @@
+Thu 26 Dec 2019 : modified {dobldobl,quaddobl}_random_numbers.adb 
+  and {dobldobl,quaddobl}_complex_numbers_io.adb for compiler warnings.
+
 Wed 26 Oct 2016 : wrong end of comment symbol fixed in dd_test.c.
 
 Sat 22 Oct 2016 : to *dobl_random_numbers added random number generators
