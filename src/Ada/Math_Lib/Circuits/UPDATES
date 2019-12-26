@@ -1,3 +1,6 @@
+Wed 25 Dec 2019 : upgraded series_polynomial_gradients to work with complex
+  series instead of dense series, tested by ts_speelcnv.
+
 Tue 24 Dec 2019 : added allocation of vectors of matrices to
   generic_speelpenning_convolutions, called in ts_speelcnv.
 

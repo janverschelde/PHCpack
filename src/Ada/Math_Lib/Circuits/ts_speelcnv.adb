@@ -1,13 +1,13 @@
-with text_io;                             use text_io;
-with Communications_with_User;            use Communications_with_User;
-with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
-with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
-with Double_Double_Numbers;               use Double_Double_Numbers;
-with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
-with Quad_Double_Numbers;                 use Quad_Double_Numbers;
-with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
+with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
@@ -17,41 +17,70 @@ with Standard_Integer_VecVecs;
 with Standard_Integer_VecVecs_io;
 with Standard_Random_Vectors;
 with Standard_Complex_Vectors;
-with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
+with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
+with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
+with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
 with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
 with QuadDobl_Complex_VecMats;
 with Exponent_Indices;
-with Standard_Dense_Series;
-with Standard_Dense_Series_Vectors;
-with DoblDobl_Dense_Series;
-with DoblDobl_Dense_Series_Vectors;
-with QuadDobl_Dense_Series;
-with QuadDobl_Dense_Series_Vectors;
-with Standard_Series_Polynomials;
-with Standard_Series_Poly_Functions;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Series_Polynomials;
-with DoblDobl_Series_Poly_Functions;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Polynomials;
-with QuadDobl_Series_Poly_Functions;
-with QuadDobl_Series_Poly_Systems;
-with Standard_Random_Series;
-with DoblDobl_Random_Series;
-with QuadDobl_Random_Series;
-with Series_and_Polynomials_io;           use Series_and_Polynomials_io;
+with Standard_Complex_Series;
+with Standard_Complex_Series_io;         use Standard_Complex_Series_io;
+with Standard_Complex_Series_Vectors;
+with Standard_Complex_Series_Vectors_io; use Standard_Complex_Series_Vectors_io;
+with Standard_Complex_Series_Matrices;
+with Standard_Complex_Random_Series;
+with Standard_Random_Series_Vectors;
+with DoblDobl_Complex_Series;
+with DoblDobl_Complex_Series_io;         use DoblDobl_Complex_Series_io;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors_io; use DoblDobl_Complex_Series_Vectors_io;
+with DoblDobl_Complex_Series_Matrices;
+with DoblDobl_Complex_Random_Series;
+with DoblDobl_Random_Series_Vectors;
+with QuadDobl_Complex_Series;
+with QuadDobl_Complex_Series_io;         use QuadDobl_Complex_Series_io;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors_io; use QuadDobl_Complex_Series_Vectors_io;
+with QuadDobl_Complex_Series_Matrices;
+with QuadDobl_Complex_Random_Series;
+with QuadDobl_Random_Series_Vectors;
+with Standard_CSeries_Polynomials;
+with Standard_CSeries_Polynomials_io;    use Standard_CSeries_Polynomials_io;
+with Standard_CSeries_Poly_Functions;
+with Standard_CSeries_Poly_Systems;
+with Standard_CSeries_Poly_Systems_io;
+with Standard_CSeries_Poly_SysFun;
+with Standard_CSeries_Jaco_Matrices;
+with DoblDobl_CSeries_Polynomials;
+with DoblDobl_CSeries_Polynomials_io;    use DoblDobl_CSeries_Polynomials_io;
+with DoblDobl_CSeries_Poly_Functions;
+with DoblDobl_CSeries_Poly_Systems;
+with DoblDobl_CSeries_Poly_Systems_io;
+with DoblDobl_CSeries_Poly_SysFun;
+with DoblDobl_CSeries_Jaco_Matrices;
+with QuadDobl_CSeries_Polynomials;
+with QuadDobl_CSeries_Polynomials_io;    use QuadDobl_CSeries_Polynomials_io;
+with QuadDobl_CSeries_Poly_Functions;
+with QuadDobl_CSeries_Poly_Systems;
+with QuadDobl_CSeries_Poly_Systems_io;
+with QuadDobl_CSeries_Poly_SysFun;
+with QuadDobl_CSeries_Jaco_Matrices;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
-with Series_Polynomial_Gradients;         use Series_Polynomial_Gradients;
+with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
 
 procedure ts_speelcnv is
 
@@ -89,7 +118,7 @@ procedure ts_speelcnv is
     return res;
   end Random_Exponents;
 
-  function Difference ( s : Standard_Dense_Series.Series;
+  function Difference ( s : Standard_Complex_Series.Link_to_Series;
                         c : Standard_Complex_Vectors.Link_to_Vector )
                       return double_float is
 
@@ -112,7 +141,7 @@ procedure ts_speelcnv is
     return res;
   end Difference;
 
-  function Difference ( s : DoblDobl_Dense_Series.Series;
+  function Difference ( s : DoblDobl_Complex_Series.Link_to_Series;
                         c : DoblDobl_Complex_Vectors.Link_to_Vector )
                       return double_double is
 
@@ -135,7 +164,7 @@ procedure ts_speelcnv is
     return res;
   end Difference;
 
-  function Difference ( s : QuadDobl_Dense_Series.Series;
+  function Difference ( s : QuadDobl_Complex_Series.Link_to_Series;
                         c : QuadDobl_Complex_Vectors.Link_to_Vector )
                       return quad_double is
 
@@ -180,16 +209,16 @@ procedure ts_speelcnv is
         := Exponent_Indices.Factor_Index(xps);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Indices.Maxima(xps);
-    polcff : constant Standard_Dense_Series_Vectors.Vector(1..nbr)
-           := Standard_Random_Series.Random_Series_Vector(1,nbr,deg);
-    pol : constant Standard_Series_Polynomials.Poly
+    polcff : constant Standard_Complex_Series_Vectors.Vector(1..nbr)
+           := Standard_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
+    pol : constant Standard_CSeries_Polynomials.Poly
        -- := Standard_Polynomial(dim,deg,idx); -- all coefficients are one
        -- := Standard_Polynomial(dim,idx,polcff); -- all exponents are one
         := Standard_Polynomial(dim,xps,polcff,false);
-    x : constant Standard_Dense_Series_Vectors.Vector(1..dim)
-      := Standard_Random_Series.Random_Series_Vector(1,dim,deg);
-    y : Standard_Dense_Series.Series;
-    grad : Standard_Dense_Series_Vectors.Vector(1..dim);
+    x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
+      := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    y : Standard_Complex_Series.Link_to_Series;
+    grad : Standard_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
          := Standard_Series_Coefficients(x);
     pcff : constant Standard_Complex_VecVecs.VecVec(1..nbr)
@@ -218,7 +247,7 @@ procedure ts_speelcnv is
     Standard_Integer_VecVecs_io.put(fac);
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
-    y := Standard_Series_Poly_Functions.Eval(pol,x);
+    y := Standard_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
    -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
     Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
@@ -265,16 +294,16 @@ procedure ts_speelcnv is
         := Exponent_Indices.Factor_Index(xps);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Indices.Maxima(xps);
-    polcff : constant DoblDobl_Dense_Series_Vectors.Vector(1..nbr)
-           := DoblDobl_Random_Series.Random_Series_Vector(1,nbr,deg);
-    pol : constant DoblDobl_Series_Polynomials.Poly
+    polcff : constant DoblDobl_Complex_Series_Vectors.Vector(1..nbr)
+           := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
+    pol : constant DoblDobl_CSeries_Polynomials.Poly
        -- := DoblDobl_Polynomial(dim,deg,idx); -- all coefficients are one
        -- := DoblDobl_Polynomial(dim,idx,polcff); -- all exponents are one
         := DoblDobl_Polynomial(dim,xps,polcff,false);
-    x : constant DoblDobl_Dense_Series_Vectors.Vector(1..dim)
-      := DoblDobl_Random_Series.Random_Series_Vector(1,dim,deg);
-    y : DoblDobl_Dense_Series.Series;
-    grad : DoblDobl_Dense_Series_Vectors.Vector(1..dim);
+    x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    y : DoblDobl_Complex_Series.Link_to_Series;
+    grad : DoblDobl_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
          := DoblDobl_Series_Coefficients(x);
     pcff : constant DoblDobl_Complex_VecVecs.VecVec(1..nbr)
@@ -303,7 +332,7 @@ procedure ts_speelcnv is
     Standard_Integer_VecVecs_io.put(fac);
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
-    y := DoblDobl_Series_Poly_Functions.Eval(pol,x);
+    y := DoblDobl_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
    -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
     Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
@@ -350,16 +379,16 @@ procedure ts_speelcnv is
         := Exponent_Indices.Factor_Index(xps);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Indices.Maxima(xps);
-    polcff : constant QuadDobl_Dense_Series_Vectors.Vector(1..nbr)
-           := QuadDobl_Random_Series.Random_Series_Vector(1,nbr,deg);
-    pol : constant QuadDobl_Series_Polynomials.Poly
+    polcff : constant QuadDobl_Complex_Series_Vectors.Vector(1..nbr)
+           := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
+    pol : constant QuadDobl_CSeries_Polynomials.Poly
        -- := QuadDobl_Polynomial(dim,deg,idx); -- all coefficients are one
        -- := QuadDobl_Polynomial(dim,idx,polcff); -- all exponents are one
         := QuadDobl_Polynomial(dim,xps,polcff,false);
-    x : constant QuadDobl_Dense_Series_Vectors.Vector(1..dim)
-      := QuadDobl_Random_Series.Random_Series_Vector(1,dim,deg);
-    y : QuadDobl_Dense_Series.Series;
-    grad : QuadDobl_Dense_Series_Vectors.Vector(1..dim);
+    x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
+      := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    y : QuadDobl_Complex_Series.Link_to_Series;
+    grad : QuadDobl_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
          := QuadDobl_Series_Coefficients(x);
     pcff : constant QuadDobl_Complex_VecVecs.VecVec(1..nbr)
@@ -388,7 +417,7 @@ procedure ts_speelcnv is
     Standard_Integer_VecVecs_io.put(fac);
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
-    y := QuadDobl_Series_Poly_Functions.Eval(pol,x);
+    y := QuadDobl_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
    -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
     Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
@@ -430,10 +459,10 @@ procedure ts_speelcnv is
     use Standard_Speelpenning_Convolutions;
 
     res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
-    polcff : constant Standard_Dense_Series_Vectors.Vector(1..nbr)
-           := Standard_Random_Series.Random_Series_Vector(1,nbr,deg);
-    rancst : constant Standard_Dense_Series.Series
-           := Standard_Random_Series.Random_Series(deg);
+    polcff : constant Standard_Complex_Series_Vectors.Vector(1..nbr)
+           := Standard_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
+    rancst : constant Standard_Complex_Series.Series
+           := Standard_Complex_Random_Series.Random_Series(deg);
     cstcff : constant Standard_Complex_Vectors.Vector(0..rancst.deg)
            := rancst.cff(0..rancst.deg);
 
@@ -468,10 +497,10 @@ procedure ts_speelcnv is
     use DoblDobl_Speelpenning_Convolutions;
 
     res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
-    polcff : constant DoblDobl_Dense_Series_Vectors.Vector(1..nbr)
-           := DoblDobl_Random_Series.Random_Series_Vector(1,nbr,deg);
-    rancst : constant DoblDobl_Dense_Series.Series
-           := DoblDobl_Random_Series.Random_Series(deg);
+    polcff : constant DoblDobl_Complex_Series_Vectors.Vector(1..nbr)
+           := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
+    rancst : constant DoblDobl_Complex_Series.Series
+           := DoblDobl_Complex_Random_Series.Random_Series(deg);
     cstcff : constant DoblDobl_Complex_Vectors.Vector(0..rancst.deg)
            := rancst.cff(0..rancst.deg);
 
@@ -506,10 +535,10 @@ procedure ts_speelcnv is
     use QuadDobl_Speelpenning_Convolutions;
 
     res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
-    polcff : constant QuadDobl_Dense_Series_Vectors.Vector(1..nbr)
-           := QuadDobl_Random_Series.Random_Series_Vector(1,nbr,deg);
-    rancst : constant QuadDobl_Dense_Series.Series
-           := QuadDobl_Random_Series.Random_Series(deg);
+    polcff : constant QuadDobl_Complex_Series_Vectors.Vector(1..nbr)
+           := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
+    rancst : constant QuadDobl_Complex_Series.Series
+           := QuadDobl_Complex_Random_Series.Random_Series(deg);
     cstcff : constant QuadDobl_Complex_Vectors.Vector(0..rancst.deg)
            := rancst.cff(0..rancst.deg);
 
@@ -717,11 +746,17 @@ procedure ts_speelcnv is
 
     c : Convolution_Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
-    p : Standard_Series_Poly_Systems.Poly_Sys(1..dim) := Standard_System(c);
-    x : Standard_Dense_Series_Vectors.Vector(1..dim)
-      := Standard_Random_Series.Random_Series_Vector(1,dim,deg);
+    p : Standard_CSeries_Poly_Systems.Poly_Sys(1..dim) := Standard_System(c);
+    x : Standard_Complex_Series_Vectors.Vector(1..dim)
+      := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    px : Standard_Complex_Series_Vectors.Vector(p'range)
+       := Standard_CSeries_Poly_SysFun.Eval(p,x);
     xcff : Standard_Complex_VecVecs.VecVec(1..dim)
          := Standard_Series_Coefficients(x);
+    jp : Standard_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
+       := Standard_CSeries_Jaco_Matrices.Create(p);
+    jm : Standard_Complex_Series_Matrices.Matrix(1..dim,1..dim)
+       := Standard_CSeries_Jaco_Matrices.Eval(jp,x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Maxima(c,dim);
     pwt : Link_to_VecVecVec := Create(xcff,mxe);
@@ -733,12 +768,29 @@ procedure ts_speelcnv is
        := Allocate_Coefficients(dim,dim,deg);
 
   begin
-    put_line("the polynomial system :"); put(p,dim+1);
+    put_line("the polynomial system :");
+    Standard_CSeries_Poly_Systems_io.put(p);
     EvalDiff(c,xcff,pwt,yd,vy,vm);
+    put_line("The evaluation values :"); put(px);
+    put_line("The coefficient vectors of the evaluation :"); put(vy);
+    for i in vm'range loop
+      put("The matrix "); put(i,1); put_line(" :");
+      put(vm(i).all);
+    end loop;
+    for i in 1..dim loop
+      for j in 1..dim loop
+        put("the series of the Jacobian at ");
+        put(i,1); put(" and "); put(j,1); put_line(" :");
+        put(jm(i,j));
+      end loop;
+    end loop;
     Clear(c);
-    Standard_Series_Poly_Systems.Clear(p);
+    Standard_CSeries_Poly_Systems.Clear(p);
+    Standard_CSeries_Jaco_Matrices.Clear(jp);
     Clear(pwt);
-    Standard_Dense_Series_Vectors.Clear(x);
+    Standard_Complex_Series_Vectors.Clear(x);
+    Standard_Complex_Series_Vectors.Clear(px);
+    Standard_Complex_Series_Matrices.Clear(jm);
     Standard_Complex_VecVecs.Clear(xcff);
     Standard_Complex_VecVecs.Clear(yd);
     Standard_Complex_VecVecs.Clear(vy);
@@ -761,11 +813,17 @@ procedure ts_speelcnv is
 
     c : Convolution_Circuits
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
-    p : DoblDobl_Series_Poly_Systems.Poly_Sys(1..dim) := DoblDobl_System(c);
-    x : DoblDobl_Dense_Series_Vectors.Vector(1..dim)
-      := DoblDobl_Random_Series.Random_Series_Vector(1,dim,deg);
+    p : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := DoblDobl_System(c);
+    x : DoblDobl_Complex_Series_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    px : DoblDobl_Complex_Series_Vectors.Vector(p'range)
+       := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     xcff : DoblDobl_Complex_VecVecs.VecVec(1..dim)
          := DoblDobl_Series_Coefficients(x);
+    jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
+       := DoblDobl_CSeries_Jaco_Matrices.Create(p);
+    jm : DoblDobl_Complex_Series_Matrices.Matrix(1..dim,1..dim)
+       := DoblDobl_CSeries_Jaco_Matrices.Eval(jp,x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Maxima(c,dim);
     pwt : Link_to_VecVecVec := Create(xcff,mxe);
@@ -777,12 +835,29 @@ procedure ts_speelcnv is
        := Allocate_Coefficients(dim,dim,deg);
 
   begin
-    put_line("the polynomial system :"); put(p,dim+1);
+    put_line("the polynomial system :");
+    DoblDobl_CSeries_Poly_Systems_io.put(p);
     EvalDiff(c,xcff,pwt,yd,vy,vm);
+    put_line("The evaluation values :"); put(px);
+    put_line("The coefficient vectors of the evaluation :"); put(vy);
+    for i in vm'range loop
+      put("The matrix "); put(i,1); put_line(" :");
+      put(vm(i).all);
+    end loop;
+    for i in 1..dim loop
+      for j in 1..dim loop
+        put("the series of the Jacobian at ");
+        put(i,1); put(" and "); put(j,1); put_line(" :");
+        put(jm(i,j));
+      end loop;
+    end loop;
     Clear(c);
-    DoblDobl_Series_Poly_Systems.Clear(p);
+    DoblDobl_CSeries_Poly_Systems.Clear(p);
+    DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
     Clear(pwt);
-    DoblDobl_Dense_Series_Vectors.Clear(x);
+    DoblDobl_Complex_Series_Vectors.Clear(x);
+    DoblDobl_Complex_Series_Vectors.Clear(px);
+    DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_Complex_VecVecs.Clear(xcff);
     DoblDobl_Complex_VecVecs.Clear(yd);
     DoblDobl_Complex_VecVecs.Clear(vy);
@@ -805,11 +880,17 @@ procedure ts_speelcnv is
 
     c : Convolution_Circuits
       := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
-    p : QuadDobl_Series_Poly_Systems.Poly_Sys(1..dim) := QuadDobl_System(c);
-    x : QuadDobl_Dense_Series_Vectors.Vector(1..dim)
-      := QuadDobl_Random_Series.Random_Series_Vector(1,dim,deg);
+    p : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := QuadDobl_System(c);
+    x : QuadDobl_Complex_Series_Vectors.Vector(1..dim)
+      := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    px : QuadDobl_Complex_Series_Vectors.Vector(p'range)
+       := QuadDobl_CSeries_Poly_SysFun.Eval(p,x);
     xcff : QuadDobl_Complex_VecVecs.VecVec(1..dim)
          := QuadDobl_Series_Coefficients(x);
+    jp : QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
+       := QuadDobl_CSeries_Jaco_Matrices.Create(p);
+    jm : QuadDobl_Complex_Series_Matrices.Matrix(1..dim,1..dim)
+       := QuadDobl_CSeries_Jaco_Matrices.Eval(jp,x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Maxima(c,dim);
     pwt : Link_to_VecVecVec := Create(xcff,mxe);
@@ -821,12 +902,29 @@ procedure ts_speelcnv is
        := Allocate_Coefficients(dim,dim,deg);
 
   begin
-    put_line("the polynomial system :"); put(p,dim+1);
+    put_line("the polynomial system :");
+    QuadDobl_CSeries_Poly_Systems_io.put(p);
     EvalDiff(c,xcff,pwt,yd,vy,vm);
+    put_line("The evaluation values :"); put(px);
+    put_line("The coefficient vectors of the evaluation :"); put(vy);
+    for i in vm'range loop
+      put("The matrix "); put(i,1); put_line(" :");
+      put(vm(i).all);
+    end loop;
+    for i in 1..dim loop
+      for j in 1..dim loop
+        put("the series of the Jacobian at ");
+        put(i,1); put(" and "); put(j,1); put_line(" :");
+        put(jm(i,j));
+      end loop;
+    end loop;
     Clear(c);
-    QuadDobl_Series_Poly_Systems.Clear(p);
+    QuadDobl_CSeries_Poly_Systems.Clear(p);
+    QuadDobl_CSeries_Jaco_Matrices.Clear(jp);
     Clear(pwt);
-    QuadDobl_Dense_Series_Vectors.Clear(x);
+    QuadDobl_Complex_Series_Vectors.Clear(x);
+    QuadDobl_Complex_Series_Vectors.Clear(px);
+    QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_Complex_VecVecs.Clear(xcff);
     QuadDobl_Complex_VecVecs.Clear(yd);
     QuadDobl_Complex_VecVecs.Clear(vy);

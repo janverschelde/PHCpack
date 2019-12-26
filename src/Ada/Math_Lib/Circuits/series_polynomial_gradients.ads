@@ -4,15 +4,15 @@ with Standard_Integer_VecVecs;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
-with Standard_Dense_Series_Vectors;
-with Standard_Series_Polynomials;
-with Standard_Series_Poly_Systems;
-with DoblDobl_Dense_Series_Vectors;
-with DoblDobl_Series_Polynomials;
-with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Dense_Series_Vectors;
-with QuadDobl_Series_Polynomials;
-with QuadDobl_Series_Poly_Systems;
+with Standard_Complex_Series_Vectors;
+with Standard_CSeries_Polynomials;
+with Standard_CSeries_Poly_Systems;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_CSeries_Polynomials;
+with DoblDobl_CSeries_Poly_Systems;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_CSeries_Polynomials;
+with QuadDobl_CSeries_Poly_Systems;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -26,39 +26,41 @@ package Series_Polynomial_Gradients is
 
   function Standard_Polynomial
              ( c : Standard_Speelpenning_Convolutions.Convolution_Circuit )
-             return Standard_Series_Polynomials.Poly;
+             return Standard_CSeries_Polynomials.Poly;
   function DoblDobl_Polynomial
              ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuit )
-             return DoblDobl_Series_Polynomials.Poly;
+             return DoblDobl_CSeries_Polynomials.Poly;
   function QuadDobl_Polynomial
              ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuit )
-             return QuadDobl_Series_Polynomials.Poly;
+             return QuadDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
-  --   Makes the polynomial system equivalent to the convolution circuits.
+  --   Makes the series polynomial that is equivalent to the circuit,
+  --   in double, double double, and quad double precision.
 
   function Standard_System
              ( c : Standard_Speelpenning_Convolutions.Convolution_Circuits )
-             return Standard_Series_Poly_Systems.Poly_Sys;
+             return Standard_CSeries_Poly_Systems.Poly_Sys;
   function DoblDobl_System
              ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuits )
-             return DoblDobl_Series_Poly_Systems.Poly_Sys;
+             return DoblDobl_CSeries_Poly_Systems.Poly_Sys;
   function QuadDobl_System
              ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuits )
-             return QuadDobl_Series_Poly_Systems.Poly_Sys;
+             return QuadDobl_CSeries_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
-  --   Makes the polynomial system equivalent to the convolution circuits.
+  --   Makes the series polynomial system that is equivalent to the circuits,
+  --   in double, double double, and quad double precision.
 
   function Standard_Product
              ( dim,deg : integer32 )
-             return Standard_Series_Polynomials.Poly;
+             return Standard_CSeries_Polynomials.Poly;
   function DoblDobl_Product
              ( dim,deg : integer32 )
-             return DoblDobl_Series_Polynomials.Poly;
+             return DoblDobl_CSeries_Polynomials.Poly;
   function QuadDobl_Product
              ( dim,deg : integer32 )
-             return QuadDobl_Series_Polynomials.Poly;
+             return QuadDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the product of the first dim variables,
@@ -69,15 +71,15 @@ package Series_Polynomial_Gradients is
   function Standard_Product
              ( deg : integer32;
                xp : Standard_Integer_Vectors.Vector )
-             return Standard_Series_Polynomials.Poly;
+             return Standard_CSeries_Polynomials.Poly;
   function DoblDobl_Product
              ( deg : integer32;
                xp : Standard_Integer_Vectors.Vector )
-             return DoblDobl_Series_Polynomials.Poly;
+             return DoblDobl_CSeries_Polynomials.Poly;
   function QuadDobl_Product
              ( deg : integer32;
                xp : Standard_Integer_Vectors.Vector )
-             return QuadDobl_Series_Polynomials.Poly;
+             return QuadDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the product of the first dim variables, dim = xp'last,
@@ -89,33 +91,33 @@ package Series_Polynomial_Gradients is
   function Standard_Polynomial
              ( dim,deg : integer32;
                xps : Standard_Integer_VecVecs.VecVec )
-             return Standard_Series_Polynomials.Poly;
+             return Standard_CSeries_Polynomials.Poly;
   function Standard_Polynomial
              ( dim : integer32;
                xps : Standard_Integer_VecVecs.VecVec;
-               cff : Standard_Dense_Series_Vectors.Vector;
+               cff : Standard_Complex_Series_Vectors.Vector;
                isxidx : boolean := true )
-             return Standard_Series_Polynomials.Poly;
+             return Standard_CSeries_Polynomials.Poly;
   function DoblDobl_Polynomial
              ( dim,deg : integer32;
                xps : Standard_Integer_VecVecs.VecVec )
-             return DoblDobl_Series_Polynomials.Poly;
+             return DoblDobl_CSeries_Polynomials.Poly;
   function DoblDobl_Polynomial
              ( dim : integer32;
                xps : Standard_Integer_VecVecs.VecVec;
-               cff : DoblDobl_Dense_Series_Vectors.Vector;
+               cff : DoblDobl_Complex_Series_Vectors.Vector;
                isxidx : boolean := true )
-             return DoblDobl_Series_Polynomials.Poly;
+             return DoblDobl_CSeries_Polynomials.Poly;
   function QuadDobl_Polynomial
              ( dim,deg : integer32;
                xps : Standard_Integer_VecVecs.VecVec )
-             return QuadDobl_Series_Polynomials.Poly;
+             return QuadDobl_CSeries_Polynomials.Poly;
   function QuadDobl_Polynomial
              ( dim : integer32;
                xps : Standard_Integer_VecVecs.VecVec;
-               cff : QuadDobl_Dense_Series_Vectors.Vector;
+               cff : QuadDobl_Complex_Series_Vectors.Vector;
                isxidx : boolean := true )
-             return QuadDobl_Series_Polynomials.Poly;
+             return QuadDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the polynomial in dim variables, with exponents in xps,
@@ -131,31 +133,45 @@ package Series_Polynomial_Gradients is
   -- REQUIRED : cff'range = xps'range.
 
   function Standard_Gradient
-             ( p : Standard_Series_Polynomials.Poly;
-               x : Standard_Dense_Series_Vectors.Vector )
-             return Standard_Dense_Series_Vectors.Vector;
+             ( p : Standard_CSeries_Polynomials.Poly;
+               x : Standard_Complex_Series_Vectors.Vector )
+             return Standard_Complex_Series_Vectors.Vector;
   function DoblDobl_Gradient
-             ( p : DoblDobl_Series_Polynomials.Poly;
-               x : DoblDobl_Dense_Series_Vectors.Vector )
-             return DoblDobl_Dense_Series_Vectors.Vector;
+             ( p : DoblDobl_CSeries_Polynomials.Poly;
+               x : DoblDobl_Complex_Series_Vectors.Vector )
+             return DoblDobl_Complex_Series_Vectors.Vector;
   function QuadDobl_Gradient
-             ( p : QuadDobl_Series_Polynomials.Poly;
-               x : QuadDobl_Dense_Series_Vectors.Vector )
-             return QuadDobl_Dense_Series_Vectors.Vector;
+             ( p : QuadDobl_CSeries_Polynomials.Poly;
+               x : QuadDobl_Complex_Series_Vectors.Vector )
+             return QuadDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Evaluates the gradient of p at x, for testing purposes,
   --   in double, double double, or quad double precision.
 
   function Standard_Series_Coefficients
-             ( s : Standard_Dense_Series_Vectors.Vector )
+             ( s : Standard_Complex_Series_Vectors.Vector )
              return Standard_Complex_VecVecs.VecVec;
   function DoblDobl_Series_Coefficients
-             ( s : DoblDobl_Dense_Series_Vectors.Vector )
+             ( s : DoblDobl_Complex_Series_Vectors.Vector )
              return DoblDobl_Complex_VecVecs.VecVec;
   function QuadDobl_Series_Coefficients
-             ( s : QuadDobl_Dense_Series_Vectors.Vector )
+             ( s : QuadDobl_Complex_Series_Vectors.Vector )
              return QuadDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of the series in the vector of vectors.
+  --   The range of the k-th vector is 0..s(k).deg.
+
+  --function Standard_Series_Coefficients
+  --           ( s : Standard_Dense_Series_Vectors.Vector )
+  --           return Standard_Complex_VecVecs.VecVec;
+  --function DoblDobl_Series_Coefficients
+  --           ( s : DoblDobl_Dense_Series_Vectors.Vector )
+  --           return DoblDobl_Complex_VecVecs.VecVec;
+  --function QuadDobl_Series_Coefficients
+  --           ( s : QuadDobl_Dense_Series_Vectors.Vector )
+  --           return QuadDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns the coefficients of the series in the vector of vectors.
