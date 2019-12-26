@@ -123,8 +123,10 @@ procedure ts_speelcnv is
                       return double_float is
 
   -- DESCRIPTION :
-  --   Returns sum of the absolute value of the difference
+  --   Returns the sum of the absolute values of the differences
   --   between the coefficients of s and the values in c.
+
+  -- REQUIRED : s.cff'range = c'range.
 
     use Standard_Complex_Numbers;
 
@@ -146,8 +148,10 @@ procedure ts_speelcnv is
                       return double_double is
 
   -- DESCRIPTION :
-  --   Returns sum of the absolute value of the difference
+  --   Returns the sum of the absolute values of the differences
   --   between the coefficients of s and the values in c.
+
+  -- REQUIRED : s.cff'range = c'range.
 
     use DoblDobl_Complex_Numbers;
 
@@ -169,8 +173,10 @@ procedure ts_speelcnv is
                       return quad_double is
 
   -- DESCRIPTION :
-  --   Returns sum of the absolute value of the difference
+  --   Returns the sum of the absolute values of the differences
   --   between the coefficients of s and the values in c.
+
+  -- REQUIRED : s.cff'range = c'range.
 
     use QuadDobl_Complex_Numbers;
 
@@ -183,6 +189,27 @@ procedure ts_speelcnv is
       val := s.cff(i) - c(i);
       avl := AbsVal(val);
       res := res + avl;
+    end loop;
+    return res;
+  end Difference;
+
+  function Difference ( s : Standard_Complex_Series_Vectors.Vector;
+                       c : Standard_Complex_VecVecs.VecVec )
+                     return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the sum of the absolute values of the differences
+  --   between the coefficients of s and the values in c.
+
+  -- REQUIRED : s'range = c'range.
+
+    res : double_float := 0.0;
+    val : double_float;
+
+  begin
+    for i in s'range loop
+      val := Difference(s(i),c(i));
+      res := res + val;
     end loop;
     return res;
   end Difference;
@@ -766,13 +793,16 @@ procedure ts_speelcnv is
        := Allocate_Coefficients(dim,deg);
     vm : Standard_Complex_VecMats.VecMat(0..deg)
        := Allocate_Coefficients(dim,dim,deg);
+    err : double_float;
 
   begin
     put_line("the polynomial system :");
     Standard_CSeries_Poly_Systems_io.put(p);
     EvalDiff(c,xcff,pwt,yd,vy,vm);
-    put_line("The evaluation values :"); put(px);
-    put_line("The coefficient vectors of the evaluation :"); put(vy);
+    put_line("The evaluation values :"); put_line(px);
+    put_line("The coefficient vectors of the evaluation :"); put_line(vy);
+    err := Difference(px,vy);
+    put("The error :"); put(err,3); new_line;
     for i in vm'range loop
       put("The matrix "); put(i,1); put_line(" :");
       put(vm(i).all);
@@ -838,8 +868,8 @@ procedure ts_speelcnv is
     put_line("the polynomial system :");
     DoblDobl_CSeries_Poly_Systems_io.put(p);
     EvalDiff(c,xcff,pwt,yd,vy,vm);
-    put_line("The evaluation values :"); put(px);
-    put_line("The coefficient vectors of the evaluation :"); put(vy);
+    put_line("The evaluation values :"); put_line(px);
+    put_line("The coefficient vectors of the evaluation :"); put_line(vy);
     for i in vm'range loop
       put("The matrix "); put(i,1); put_line(" :");
       put(vm(i).all);
@@ -905,8 +935,8 @@ procedure ts_speelcnv is
     put_line("the polynomial system :");
     QuadDobl_CSeries_Poly_Systems_io.put(p);
     EvalDiff(c,xcff,pwt,yd,vy,vm);
-    put_line("The evaluation values :"); put(px);
-    put_line("The coefficient vectors of the evaluation :"); put(vy);
+    put_line("The evaluation values :"); put_line(px);
+    put_line("The coefficient vectors of the evaluation :"); put_line(vy);
     for i in vm'range loop
       put("The matrix "); put(i,1); put_line(" :");
       put(vm(i).all);

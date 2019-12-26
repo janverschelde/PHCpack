@@ -452,12 +452,14 @@ package body Generic_Speelpenning_Convolutions is
       vright := yd(x'last+1);
       for j in vleft'range loop
         vleft(j) := vright(j);
+        vright(j) := Ring.zero;    -- reset the value to zero
       end loop;
       for j in 1..x'last loop
         vright := yd(j);
         for k in vm'range loop     -- k-th coefficient in matrix vm(k)
           mleft := vm(k);          -- the row i in vm(k) is the equation
           mleft(i,j) := vright(k); -- the column j in vm(k) is the variable
+          vright(k) := Ring.zero;  -- reset the value to zero
         end loop;
       end loop;
     end loop;
