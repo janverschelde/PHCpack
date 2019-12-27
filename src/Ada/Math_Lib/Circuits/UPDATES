@@ -1,3 +1,6 @@
+Fri 27 Dec 2019 : new package random_convolution_circuits with code taken
+  from ts_speelcnv.
+
 Thu 26 Dec 2019 : updated exponent_indices and ts_speelser for the changes
   in series_polynomial_grandients.  Reset the work space variables to zero
   in the EvalDiff of generic_speelpenning_convolutions.adb for systems,

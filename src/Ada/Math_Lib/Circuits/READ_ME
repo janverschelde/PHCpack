@@ -61,6 +61,7 @@ standard_speelpenning_convolutions : Speelpenning with doubles
 dobldobl_speelpenning_convolutions : Speelpenning with double doubles
 quaddobl_speelpenning_convolutions : Speelpenning with quad doubles
 series_polynomial_gradients        : collects test utilities
+random_convolution_circuits        : generation of random circuits for testing
 ts_speelser                        : test reverse mode on power series
 ts_speelcnv                        : convolutions for series polynomials
 -------------------------------------------------------------------------------
