@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -36,6 +37,12 @@ with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
 with QuadDobl_Complex_VecMats;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Exponent_Indices;
 with Standard_Complex_Series;
 with Standard_Complex_Series_io;         use Standard_Complex_Series_io;
@@ -81,6 +88,7 @@ with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
+with System_Convolution_Circuits;        use System_Convolution_Circuits;
 
 procedure ts_speelcnv is
 
@@ -883,6 +891,114 @@ procedure ts_speelcnv is
     QuadDobl_Complex_VecMats.Clear(vm);
   end QuadDobl_System_Test;
 
+  procedure Standard_Input_Test ( deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system,
+  --   makes convolution circuits, evaluates and differentiates
+  --   at a vector of random series, in double precision.
+
+    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    d : constant natural32 := natural32(deg);
+
+    use Standard_Speelpenning_Convolutions;
+
+  begin
+    put_line("Reading a polynomial system ..."); get(p);
+    declare
+      dim : constant integer32 := p'last;
+      c : constant Convolution_Circuits(p'range)
+        := Make_Convolution_Circuits(p.all,d);
+      x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
+        := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+      xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
+           := Standard_Series_Coefficients(x);
+      mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+          := Exponent_Maxima(c,dim);
+      pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
+      yd : constant Standard_Complex_VecVecs.VecVec(1..dim+1)
+         := Allocate_Coefficients(dim+1,deg);
+      vy : constant Standard_Complex_VecVecs.VecVec(1..dim)
+         := Allocate_Coefficients(dim,deg);
+      vm : constant Standard_Complex_VecMats.VecMat(0..deg)
+         := Allocate_Coefficients(dim,dim,deg);
+    begin
+      EvalDiff(c,xcff,pwt,yd,vy,vm);
+    end;
+  end Standard_Input_Test;
+
+  procedure DoblDobl_Input_Test ( deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system,
+  --   makes convolution circuits, evaluates and differentiates
+  --   at a vector of random series, in double double precision.
+
+    p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    d : constant natural32 := natural32(deg);
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    put_line("Reading a polynomial system ..."); get(p);
+    declare
+      dim : constant integer32 := p'last;
+      c : constant Convolution_Circuits(p'range)
+        := Make_Convolution_Circuits(p.all,d);
+      x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
+        := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+      xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
+           := DoblDobl_Series_Coefficients(x);
+      mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+          := Exponent_Maxima(c,dim);
+      pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
+      yd : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
+         := Allocate_Coefficients(dim+1,deg);
+      vy : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
+         := Allocate_Coefficients(dim,deg);
+      vm : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
+         := Allocate_Coefficients(dim,dim,deg);
+    begin
+      EvalDiff(c,xcff,pwt,yd,vy,vm);
+    end;
+  end DoblDobl_Input_Test;
+
+  procedure QuadDobl_Input_Test ( deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system,
+  --   makes convolution circuits, evaluates and differentiates
+  --   at a vector of random series, in quad double precision.
+
+    p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    d : constant natural32 := natural32(deg);
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    put_line("Reading a polynomial system ..."); get(p);
+    declare
+      dim : constant integer32 := p'last;
+      c : constant Convolution_Circuits(p'range)
+        := Make_Convolution_Circuits(p.all,d);
+      x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
+        := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+      xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
+           := QuadDobl_Series_Coefficients(x);
+      mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+          := Exponent_Maxima(c,dim);
+      pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
+      yd : constant QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
+         := Allocate_Coefficients(dim+1,deg);
+      vy : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
+         := Allocate_Coefficients(dim,deg);
+      vm : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
+         := Allocate_Coefficients(dim,dim,deg);
+    begin
+      EvalDiff(c,xcff,pwt,yd,vy,vm);
+    end;
+  end QuadDobl_Input_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -890,14 +1006,9 @@ procedure ts_speelcnv is
   --   the number of monomials, and the precision.  Then runs the tests.
 
     dim,deg,nbr,pwr : integer32 := 0;
-    precision,answer : character;
+    precision,random,answer : character;
 
   begin
-    new_line;
-    put("Give the dimension : "); get(dim);
-    put("Give the degree of the series : "); get(deg);
-    put("Give the number of monomials : "); get(nbr);
-    put("Give the highest power of each variable : "); get(pwr);
     new_line;
     put_line("MENU for the working precision :");
     put_line("  0. standard double precision");
@@ -906,22 +1017,41 @@ procedure ts_speelcnv is
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(precision,"012");
     new_line;
-    put("Test system ? (y/n) "); Ask_Yes_or_No(answer);
-    new_line;
-    if answer = 'y' then
+    put("Random polynomials ? (y/n) "); Ask_Yes_Or_No(random);
+    if random = 'n' then
+      new_line;
+      put("Give the degree of the series : "); get(deg);
+      new_line;
       case precision is
-        when '0' => Standard_System_Test(dim,deg,nbr,pwr);
-        when '1' => DoblDobl_System_Test(dim,deg,nbr,pwr);
-        when '2' => QuadDobl_System_Test(dim,deg,nbr,pwr);
+        when '0' => Standard_Input_Test(deg);
+        when '1' => DoblDobl_Input_Test(deg);
+        when '2' => QuadDobl_Input_Test(deg);
         when others => null;
       end case;
     else
-      case precision is
-        when '0' => Standard_Test(dim,deg,nbr,pwr);
-        when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
-        when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
-        when others => null;
-      end case;
+      new_line;
+      put("Give the dimension : "); get(dim);
+      put("Give the degree of the series : "); get(deg);
+      put("Give the number of monomials : "); get(nbr);
+      put("Give the highest power of each variable : "); get(pwr);
+      new_line;
+      put("Test system ? (y/n) "); Ask_Yes_or_No(answer);
+      new_line;
+      if answer = 'y' then
+        case precision is
+          when '0' => Standard_System_Test(dim,deg,nbr,pwr);
+          when '1' => DoblDobl_System_Test(dim,deg,nbr,pwr);
+          when '2' => QuadDobl_System_Test(dim,deg,nbr,pwr);
+          when others => null;
+        end case;
+      else
+        case precision is
+          when '0' => Standard_Test(dim,deg,nbr,pwr);
+          when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
+          when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
+          when others => null;
+        end case;
+      end if;
     end if;
   end Main;
 

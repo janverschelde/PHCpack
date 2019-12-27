@@ -1,5 +1,6 @@
 Fri 27 Dec 2019 : new package random_convolution_circuits with code taken
-  from ts_speelcnv.
+  from ts_speelcnv.  New package system_convolution_circuits to define
+  circuits from polynomials and systems, tested by ts_speelcnv.
 
 Thu 26 Dec 2019 : updated exponent_indices and ts_speelser for the changes
   in series_polynomial_grandients.  Reset the work space variables to zero
