@@ -1,5 +1,7 @@
-with text_io,integer_io;               use text_io,integer_io;
+with text_io;                          use text_io;
 with Communications_with_User;         use Communications_with_User;
+with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;      use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
 with Multitasking;
 
@@ -9,12 +11,12 @@ procedure ts_tasking is
 --   Prompts the user for the number of threads
 --   and launches as many tasks as the number given.
 
-  procedure Busy_Sum ( n,m : natural ) is
+  procedure Busy_Sum ( n,m : in integer32 ) is
 
   -- DESCRIPTION :
   --   Just to keep the tasks very busy, summing n*m numbers.
 
-    sum : natural;
+    sum : integer32;
 
   begin
     for i in 1..n loop
@@ -25,11 +27,11 @@ procedure ts_tasking is
     end loop;
   end Busy_Sum;
 
-  procedure Start_Silent_Workers ( n : in natural ) is
+  procedure Start_Silent_Workers ( n : in integer32 ) is
 
-    procedure a_job ( i,n : in natural ) is
+    procedure a_job ( i,n : in integer32 ) is
 
-      w : constant natural := 100000;
+      w : constant integer32 := 100000;
 
     begin
       Busy_Sum(w/n,w);
@@ -40,11 +42,11 @@ procedure ts_tasking is
     do_jobs(n);
   end Start_Silent_Workers;
 
-  procedure Start_Reporting_Workers ( n : in natural ) is
+  procedure Start_Reporting_Workers ( n : in integer32 ) is
 
-    procedure a_job ( i,n : in natural ) is
+    procedure a_job ( i,n : in integer32 ) is
 
-      w : constant natural := 100000;
+      w : constant integer32 := 100000;
 
     begin
       Busy_Sum(w/n,w);
@@ -55,13 +57,13 @@ procedure ts_tasking is
     do_jobs(n);
   end Start_Reporting_Workers;
 
-  procedure Start_Reporting_Looping_Workers ( n : in natural ) is
+  procedure Start_Reporting_Looping_Workers ( n : in integer32 ) is
 
-    secret : constant natural := 1;
+    secret : constant integer32 := 1;
 
-    procedure guess ( i,n : in natural; continue : out boolean ) is
+    procedure guess ( i,n : in integer32; continue : out boolean ) is
 
-      r : integer;
+      r : integer32;
       use Multitasking;
 
     begin
@@ -83,13 +85,13 @@ procedure ts_tasking is
     do_jobs(n);
   end Start_Reporting_Looping_Workers;
 
-  procedure Start_Silent_Looping_Workers ( n : in natural ) is
+  procedure Start_Silent_Looping_Workers ( n : in integer32 ) is
 
-    secret : constant natural := 1;
+    secret : constant integer32 := 1;
 
-    procedure guess ( i,n : in natural; continue : out boolean ) is
+    procedure guess ( i,n : in integer32; continue : out boolean ) is
 
-      r : integer;
+      r : integer32;
       use Multitasking;
 
     begin
@@ -114,7 +116,7 @@ procedure ts_tasking is
 
   procedure Main is
 
-    n : natural;
+    n : integer32 := 0;
     ans,choice : character;
 
   begin
