@@ -23,6 +23,8 @@ package Generic_Speelpenning_Convolutions is
 --   This package offers a vectorized version on the coefficients
 --   of power series, all truncated to the same fixed degree.
 
+-- DATA STRUCTURES :
+
   type VecVecVec is array ( integer32 range <> ) of VecVecs.Link_to_VecVec;
   -- A three dimensional structure to store the coefficient vectors
   -- of powers of series.
@@ -52,6 +54,15 @@ package Generic_Speelpenning_Convolutions is
     array ( integer32 range <> ) of Link_to_Convolution_Circuit;
 
   type Link_to_Convolution_Circuits is access Convolution_Circuits;
+
+  function Exponent_Maxima
+             ( c : Convolution_Circuits; dim : integer32 )
+             return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the maximal exponents of the dim variables in the circuits.
+  --   The result of this function is the 'd' in the Create procedure
+  --   of the power table.
 
   function Create ( x : VecVecs.VecVec;
                     d : Standard_Integer_Vectors.Vector )

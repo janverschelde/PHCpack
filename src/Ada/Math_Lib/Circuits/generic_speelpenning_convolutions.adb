@@ -1,6 +1,30 @@
 with unchecked_deallocation;
+with Exponent_Indices;
 
 package body Generic_Speelpenning_Convolutions is
+
+  function Exponent_Maxima
+             ( c : Convolution_Circuits; dim : integer32 )
+             return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c(c'first).xps);
+
+  begin
+    for k in c'first+1..c'last loop
+      declare
+        mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+            := Exponent_Indices.Maxima(c(k).xps);
+      begin
+        for i in mxe'range loop
+          if mxe(i) > res(i)
+           then res(i) := mxe(i);
+          end if;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Exponent_Maxima;
 
   function Create ( x : VecVecs.VecVec;
                     d : Standard_Integer_Vectors.Vector )
