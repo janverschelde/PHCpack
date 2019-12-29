@@ -1,3 +1,6 @@
+Sun 29 Dec 2019 : new package evaluation_differentiation_errors with code
+  taken from ts_speelcnv.
+
 Sat 28 Dec 2019 : moved the computation of the exponent maxima from the
   ts_speelser to the generic_speelpenning_convolutions.
 

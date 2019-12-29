@@ -9,9 +9,6 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
@@ -20,21 +17,18 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
-with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
-with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
 with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
-with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
 with QuadDobl_Complex_VecMats;
 with Standard_Complex_Poly_Systems;
@@ -90,255 +84,13 @@ with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Complex_Series_and_Polynomials;     use Complex_Series_and_Polynomials;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
+with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 
 procedure ts_speelcnv is
 
 -- DESCRIPTION :
 --   Tests the evaluation of the gradient of a polynomial in many variables,
 --   in a power series of some fixed degree.
-
-  function Difference ( s : Standard_Complex_Series.Link_to_Series;
-                        c : Standard_Complex_Vectors.Link_to_Vector )
-                      return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of s and the values in c.
-
-  -- REQUIRED : s.cff'range = c'range.
-
-    use Standard_Complex_Numbers;
-
-    res : double_float := 0.0;
-    avl : double_float;
-    val : Complex_Number;
-
-  begin
-    for i in c'range loop
-      val := s.cff(i) - c(i);
-      avl := AbsVal(val);
-      res := res + avl;
-    end loop;
-    return res;
-  end Difference;
-
-  function Difference ( s : DoblDobl_Complex_Series.Link_to_Series;
-                        c : DoblDobl_Complex_Vectors.Link_to_Vector )
-                      return double_double is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of s and the values in c.
-
-  -- REQUIRED : s.cff'range = c'range.
-
-    use DoblDobl_Complex_Numbers;
-
-    res : double_double := create(0.0);
-    avl : double_double;
-    val : Complex_Number;
-
-  begin
-    for i in c'range loop
-      val := s.cff(i) - c(i);
-      avl := AbsVal(val);
-      res := res + avl;
-    end loop;
-    return res;
-  end Difference;
-
-  function Difference ( s : QuadDobl_Complex_Series.Link_to_Series;
-                        c : QuadDobl_Complex_Vectors.Link_to_Vector )
-                      return quad_double is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of s and the values in c.
-
-  -- REQUIRED : s.cff'range = c'range.
-
-    use QuadDobl_Complex_Numbers;
-
-    res : quad_double := create(0.0);
-    avl : quad_double;
-    val : Complex_Number;
-
-  begin
-    for i in c'range loop
-      val := s.cff(i) - c(i);
-      avl := AbsVal(val);
-      res := res + avl;
-    end loop;
-    return res;
-  end Difference;
-
-  function Difference ( s : Standard_Complex_Series_Vectors.Vector;
-                       c : Standard_Complex_VecVecs.VecVec )
-                     return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of s and the values in c.
-
-  -- REQUIRED : s'range = c'range.
-
-    res : double_float := 0.0;
-    val : double_float;
-
-  begin
-    for i in s'range loop
-      val := Difference(s(i),c(i));
-      res := res + val;
-    end loop;
-    return res;
-  end Difference;
-
-  function Difference ( s : DoblDobl_Complex_Series_Vectors.Vector;
-                       c : DoblDobl_Complex_VecVecs.VecVec )
-                     return double_double is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of s and the values in c.
-
-  -- REQUIRED : s'range = c'range.
-
-    res : double_double := create(0.0);
-    val : double_double;
-
-  begin
-    for i in s'range loop
-      val := Difference(s(i),c(i));
-      res := res + val;
-    end loop;
-    return res;
-  end Difference;
-
-  function Difference ( s : QuadDobl_Complex_Series_Vectors.Vector;
-                       c : QuadDobl_Complex_VecVecs.VecVec )
-                     return quad_double is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of s and the values in c.
-
-  -- REQUIRED : s'range = c'range.
-
-    res : quad_double := create(0.0);
-    val : quad_double;
-
-  begin
-    for i in s'range loop
-      val := Difference(s(i),c(i));
-      res := res + val;
-    end loop;
-    return res;
-  end Difference;
-
-  function Difference ( jm : Standard_Complex_Series_Matrices.Matrix;
-                        vm : Standard_Complex_VecMats.VecMat )
-                      return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of jm and the values in vm.
-
-  -- REQUIRED : vm'range = 0..degree, where degree is the degree
-  --   of all series in the matrix jm, for all k in vm'range:
-  --   vm(k)'range(1) = jm'range(1) and vm(k)'range(2) = jm'range(2).
-
-    use Standard_Complex_Numbers;
-
-    res : double_float := 0.0;
-    avl : double_float;
-    val : Complex_Number;
-
-  begin
-    for i in jm'range(1) loop
-      for j in jm'range(2) loop
-        for k in jm(i,j).cff'range loop
-          declare
-            mat : constant Standard_Complex_Matrices.Link_to_Matrix := vm(k);
-          begin
-            val := jm(i,j).cff(k) - mat(i,j);
-            avl := AbsVal(val);
-            res := res + avl;
-          end;
-        end loop;
-      end loop;
-    end loop;
-    return res;
-  end Difference;
-
-  function Difference ( jm : DoblDobl_Complex_Series_Matrices.Matrix;
-                        vm : DoblDobl_Complex_VecMats.VecMat )
-                      return double_double is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of jm and the values in vm.
-
-  -- REQUIRED : vm'range = 0..degree, where degree is the degree
-  --   of all series in the matrix jm, for all k in vm'range:
-  --   vm(k)'range(1) = jm'range(1) and vm(k)'range(2) = jm'range(2).
-
-    use DoblDobl_Complex_Numbers;
-
-    res : double_double := create(0.0);
-    avl : double_double;
-    val : Complex_Number;
-
-  begin
-    for i in jm'range(1) loop
-      for j in jm'range(2) loop
-        for k in jm(i,j).cff'range loop
-          declare
-            mat : constant DoblDobl_Complex_Matrices.Link_to_Matrix := vm(k);
-          begin
-            val := jm(i,j).cff(k) - mat(i,j);
-            avl := AbsVal(val);
-            res := res + avl;
-          end;
-        end loop;
-      end loop;
-    end loop;
-    return res;
-  end Difference;
-
-  function Difference ( jm : QuadDobl_Complex_Series_Matrices.Matrix;
-                        vm : QuadDobl_Complex_VecMats.VecMat )
-                      return quad_double is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the absolute values of the differences
-  --   between the coefficients of jm and the values in vm.
-
-  -- REQUIRED : vm'range = 0..degree, where degree is the degree
-  --   of all series in the matrix jm, for all k in vm'range:
-  --   vm(k)'range(1) = jm'range(1) and vm(k)'range(2) = jm'range(2).
-
-    use QuadDobl_Complex_Numbers;
-
-    res : quad_double := create(0.0);
-    avl : quad_double;
-    val : Complex_Number;
-
-  begin
-    for i in jm'range(1) loop
-      for j in jm'range(2) loop
-        for k in jm(i,j).cff'range loop
-          declare
-            mat : constant QuadDobl_Complex_Matrices.Link_to_Matrix := vm(k);
-          begin
-            val := jm(i,j).cff(k) - mat(i,j);
-            avl := AbsVal(val);
-            res := res + avl;
-          end;
-        end loop;
-      end loop;
-    end loop;
-    return res;
-  end Difference;
 
   procedure Standard_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
