@@ -1,4 +1,6 @@
 Sat 28 Dec 2019 : fixed compilation errors in ts_tasking.adb. 
+  New test procedure ts_mtadcnv to develop the multitasked version of
+  the algorithmic differentiation for power series convolutions.
 
 Fri 22 Mar 2019 : new function number_of_cores, tested by ts_corecount,
   uses corecount.c to return the number of available cores.
