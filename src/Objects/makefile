@@ -1759,6 +1759,9 @@ ts_mtmbthom:
 ts_mtcelidx:
 	make -f $(MAKEFILE) ts_mtcelidx
 
+ts_mtadcnv:
+	make -f $(MAKEFILE) ts_mtadcnv
+
 # Test programs for the Main interactive drivers :
 
 test_main: ts_drivroco ts_blkroco ts_greet use_phc ts_actopt ts_opthand

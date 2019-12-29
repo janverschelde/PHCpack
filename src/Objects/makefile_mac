@@ -66,12 +66,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+# GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
-# GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-# GNATFLAGS=-gnatv -gnatwa -gnatVa
+GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
+GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+GNATFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -2401,6 +2401,10 @@ ts_mtcelidx: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
                  -o $(BIN)/ts_mtcelidx \
                  /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  --LINK=g++
+
+ts_mtadcnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtadcnv.adb \
+              -o $(BIN)/ts_mtadcnv
 
 # Test programs for the Main interactive drivers :
 

@@ -2866,6 +2866,10 @@ ts_mtcelidx: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
                  simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
                  -o $(BIN)/ts_mtcelidx --LINK=$(gpp) 
 
+ts_mtadcnv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtadcnv.adb \
+              -o $(BIN)/ts_mtadcnv
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
