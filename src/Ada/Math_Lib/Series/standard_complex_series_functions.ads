@@ -64,7 +64,7 @@ package Standard_Complex_Series_Functions is
   --   If the s = null, then -1 is returned.
 
   procedure Filter ( s : in out Series; tol : in double_float );
-  procedure Filter ( s : in out Link_to_Series; tol : in double_float );
+  procedure Filter ( s : in Link_to_Series; tol : in double_float );
 
   -- DESCRIPTION :
   --   All coefficients of s that are less than tol in magnitude 
@@ -95,8 +95,8 @@ package Standard_Complex_Series_Functions is
   -- DESCRIPTION :
   --   On return, s = Shift(s,c).
 
-  procedure Shift ( s : in out Link_to_Series; c : in double_float );
-  procedure Shift ( s : in out Link_to_Series; c : in Complex_Number );
+  procedure Shift ( s : in Link_to_Series; c : in double_float );
+  procedure Shift ( s : in Link_to_Series; c : in Complex_Number );
 
   -- DESCRIPTION :
   --   On return, s = Shift(s,c).

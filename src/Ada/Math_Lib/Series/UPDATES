@@ -1,3 +1,6 @@
+Mon 30 Dec 2019 : updates in complex_series_and_polynomials.adb and in
+  standard_complex_series_functions for compiler warnings.
+
 Wed 25 Dec 2019 : the generic_dense_series.ads did not export the creating
   of a link to a series, given the coefficient vector.
   Modifications to {standard,dobldobl,quaddobl}_cseries_polynomials_io.adb

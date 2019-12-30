@@ -126,8 +126,6 @@ package body Complex_Series_and_Polynomials is
                idx : integer32 := 1 )
              return Standard_Complex_Series.Series is
 
-    use Standard_Complex_Numbers;
-
     res : Standard_Complex_Series.Link_to_Series;
 
     procedure Visit_Term ( t : in Standard_Complex_Polynomials.Term;
@@ -160,8 +158,6 @@ package body Complex_Series_and_Polynomials is
                idx : integer32 := 1 )
              return DoblDobl_Complex_Series.Series is
 
-    use DoblDobl_Complex_Numbers;
-
     res : DoblDobl_Complex_Series.Link_to_Series;
 
     procedure Visit_Term ( t : in DoblDobl_Complex_Polynomials.Term;
@@ -193,8 +189,6 @@ package body Complex_Series_and_Polynomials is
              ( p : QuadDobl_Complex_Polynomials.Poly;
                idx : integer32 := 1 )
              return QuadDobl_Complex_Series.Series is
-
-    use QuadDobl_Complex_Numbers;
 
     res : QuadDobl_Complex_Series.Link_to_Series;
 
@@ -522,7 +516,7 @@ package body Complex_Series_and_Polynomials is
           := Set_Degree(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       dim : constant integer32
           := Set_Dimension(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
-      rcf : Standard_Complex_Series.Link_to_Series
+      rcf : constant Standard_Complex_Series.Link_to_Series
           := Standard_Complex_Series.Create(0,ord);
       cnt : natural32 := 0;
 
@@ -587,7 +581,7 @@ package body Complex_Series_and_Polynomials is
           := Set_Degree(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       dim : constant integer32
           := Set_Dimension(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
-      rcf : DoblDobl_Complex_Series.Link_to_Series
+      rcf : constant DoblDobl_Complex_Series.Link_to_Series
           := DoblDobl_Complex_Series.Create(0,ord);
       cnt : natural32 := 0;
 
@@ -652,7 +646,7 @@ package body Complex_Series_and_Polynomials is
           := Set_Degree(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       dim : constant integer32
           := Set_Dimension(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
-      rcf : QuadDobl_Complex_Series.Link_to_Series
+      rcf : constant QuadDobl_Complex_Series.Link_to_Series
           := QuadDobl_Complex_Series.Create(0,ord);
       cnt : natural32 := 0;
 

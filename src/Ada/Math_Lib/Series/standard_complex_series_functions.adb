@@ -134,7 +134,7 @@ package body Standard_Complex_Series_Functions is
     end loop;
   end Filter;
 
-  procedure Filter ( s : in out Link_to_Series; tol : in double_float ) is
+  procedure Filter ( s : in Link_to_Series; tol : in double_float ) is
   begin
     if s /= null
      then Filter(s.all,tol);
@@ -228,7 +228,7 @@ package body Standard_Complex_Series_Functions is
     s := r;
   end Shift;
 
-  procedure Shift ( s : in out Link_to_Series; c : in double_float ) is
+  procedure Shift ( s : in Link_to_Series; c : in double_float ) is
   begin
     if s /= null then
       declare
@@ -239,7 +239,7 @@ package body Standard_Complex_Series_Functions is
     end if;
   end Shift;
 
-  procedure Shift ( s : in out Link_to_Series; c : in Complex_Number ) is
+  procedure Shift ( s : in Link_to_Series; c : in Complex_Number ) is
   begin
     if s /= null then 
       declare
