@@ -1,3 +1,5 @@
+Sun 29 Dec 2019 : updated ts_mtadcnv with multitasked code.
+
 Sat 28 Dec 2019 : fixed compilation errors in ts_tasking.adb. 
   New test procedure ts_mtadcnv to develop the multitasked version of
   the algorithmic differentiation for power series convolutions.

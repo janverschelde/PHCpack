@@ -1,8 +1,10 @@
 with text_io;                            use text_io;
-with Timing_Package;                    use Timing_Package;
+with Timing_Package;                     use Timing_Package;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Complex_Numbers;
+with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
 with Standard_Complex_Series_Vectors;
@@ -10,6 +12,7 @@ with Standard_Random_Series_Vectors;
 with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
 with Standard_Speelpenning_Convolutions;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
+with Multitasking;
 
 procedure ts_mtadcnv is
 
@@ -17,13 +20,38 @@ procedure ts_mtadcnv is
 --   Development of algorithmic differentiation to evaluate and differentiate
 --   polynomial systems at truncated power series with multitasking.
 
+  function Allocate_Work_Space
+             ( nbt,dim,deg : integer32 )
+             return Standard_Speelpenning_Convolutions.VecVecVec is
+
+  -- DESCRIPTION :
+  --   Returns work space for nbt tasks to evaluate circuits of
+  --   dimension dim at power series of degree deg.
+
+    use Standard_Speelpenning_Convolutions;
+
+    res : VecVecVec(1..nbt);
+
+  begin
+    for i in res'range loop
+      declare
+        cff : constant Standard_Complex_VecVecs.VecVec(1..dim+1)
+            := Allocate_Coefficients(dim+1,deg);
+      begin
+        res(i) := new Standard_Complex_VecVecs.VecVec'(cff);
+      end;
+    end loop;
+    return res;
+  end Allocate_Work_Space;
+
   procedure Standard_Multitasked_EvalDiff
               ( nbt : in integer32;
                 c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
                 x : in Standard_Complex_VecVecs.VecVec;
                 pwt : in Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
                 vy : in Standard_Complex_VecVecs.VecVec;
-                vm : in Standard_Complex_VecMats.VecMat ) is
+                vm : in Standard_Complex_VecMats.VecMat;
+                output : in boolean := false ) is
 
   -- DESCRIPTION :
   --   Evaluates and differentiates the convolution circuits in c at x
@@ -35,10 +63,72 @@ procedure ts_mtadcnv is
   --   x        coefficients of power series;
   --   pwt      the power table of x, as high as the degrees in c;
   --   vy       allocated space for evaluated c at x;
-  --   vm       allocated space for differentiated c at x.
+  --   vm       allocated space for differentiated c at x;
+  --   output   true for the writing of intermediate output.
+
+    use Standard_Speelpenning_Convolutions;
+
+    dim : constant integer32 := c'last; -- assuming square circuits
+    deg : constant integer32 := vm'last;
+    yd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
+    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate the circuit
+    --   without intermediate output.
+ 
+    begin
+      for k in c'range loop
+        if (k mod n) = i-1 then
+          EvalDiff(c(k).all,x,pwt,yd(k).all);
+        end if;
+      end loop;
+      done(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate the circuit
+    --   with intermediate output.
+
+      idx : integer32 := i;
+      vleft,vright : Standard_Complex_Vectors.Link_to_Vector;
+ 
+    begin
+      put_line("number of circuits : " & Multitasking.to_string(c'last));
+      while idx <= c'last loop
+        put_line("considering circuit " & Multitasking.to_string(idx));
+        put_line("task " & Multitasking.to_string(i)
+                         & " computes circuit "
+                         & Multitasking.to_string(idx));
+        EvalDiff(c(idx).all,x,pwt,yd(idx).all);
+        vleft := vy(idx);
+        vright := yd(i)(x'last+1);
+        for j in vleft'range loop
+          vleft(j) := vright(j);
+          vright(j) := Standard_Complex_Numbers.Create(0.0);
+        end loop;
+        idx := idx + n;
+      end loop;
+      put_line("task " & Multitasking.to_string(i) & " is done.");
+      done(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
 
   begin
-    null;
+    put("dim : "); put(dim,1); new_line;
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks
+    while not Multitasking.all_true(nbt,done) loop
+      delay 0.1;
+    end loop;
   end Standard_Multitasked_EvalDiff;
 
   procedure Standard_Random_Test
@@ -79,13 +169,13 @@ procedure ts_mtadcnv is
       tstart(timer);
       EvalDiff(c,xcff,pwt,yd,vy,vm);
       tstop(timer);
-      print_times(standard_output,timer,"evaluation and differentiation");
     else
       tstart(timer);
-      Standard_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy,vm);
+      Standard_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy,vm,true);
       tstop(timer);
-      print_times(standard_output,timer,"evaluation and differentiation");
     end if;
+    new_line;
+    print_times(standard_output,timer,"evaluation and differentiation");
   end Standard_Random_Test;
 
   procedure Main is
