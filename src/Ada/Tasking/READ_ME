@@ -95,5 +95,6 @@ pipelined_cell_indices            : pipelined processing of cell indices
 pipelined_polyhedral_homotopies   : 2-stage pipeline for polyhedral homotopies
 ts_mtcelidx                       : test on pipelining cell indices
 -------------------------------------------------------------------------------
-ts_mtadcnv                        : test on AD for power series
+multitasked_algodiff_convolutions : multitasked AD for power series
+ts_mtadcnv                        : test on multitasked AD for power series
 -------------------------------------------------------------------------------

@@ -1,3 +1,6 @@
+Tue 31 Dec 2019 : new package multitasked_algodiff_convolutions, with code
+  from ts_mtadcnv, extended with double double and quad double versions.
+
 Mon 30 Dec 2019 : compared results in ts_mtadcnv, fixed indexing error.
 
 Sun 29 Dec 2019 : updated ts_mtadcnv with multitasked code.
