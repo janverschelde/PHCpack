@@ -1,5 +1,7 @@
 with text_io;                            use text_io;
+with Ada.Calendar;
 with Communications_with_User;           use Communications_with_User;
+with Time_Stamps;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -74,16 +76,27 @@ procedure ts_mtadcnv is
     vm2 : constant Standard_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     err : double_float;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
   begin
     put_line("running on one task ...");
+    seristart := Ada.Calendar.Clock;
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
     put("running with "); put(nbt,1); put_line(" tasks ...");
+    multstart := Ada.Calendar.Clock;
     Standard_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
+    multstop := Ada.Calendar.Clock;
     err := Difference(vy1,vy2);
     put("the error of evaluation : "); put(err,3); new_line;
     err := Difference(vm1,vm2);
     put("the error of differentiation : "); put(err,3); new_line;
+    new_line;
+    put_line("Elapsed time on multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+    new_line;
+    put_line("Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
   end Standard_Random_Test;
 
   procedure DoblDobl_Random_Test
@@ -125,16 +138,27 @@ procedure ts_mtadcnv is
     vm2 : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     err : double_double;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
   begin
     put_line("running on one task ...");
+    seristart := Ada.Calendar.Clock;
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
     put("running with "); put(nbt,1); put_line(" tasks ...");
+    multstart := Ada.Calendar.Clock;
     DoblDobl_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
+    multstop := Ada.Calendar.Clock;
     err := Difference(vy1,vy2);
     put("the error of evaluation : "); put(err,3); new_line;
     err := Difference(vm1,vm2);
     put("the error of differentiation : "); put(err,3); new_line;
+    new_line;
+    put_line("Elapsed time on multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+    new_line;
+    put_line("Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
   end DoblDobl_Random_Test;
 
   procedure QuadDobl_Random_Test
@@ -176,16 +200,27 @@ procedure ts_mtadcnv is
     vm2 : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     err : quad_double;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
   begin
     put_line("running on one task ...");
+    seristart := Ada.Calendar.Clock;
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
     put("running with "); put(nbt,1); put_line(" tasks ...");
+    multstart := Ada.Calendar.Clock;
     QuadDobl_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
+    multstop := Ada.Calendar.Clock;
     err := Difference(vy1,vy2);
     put("the error of evaluation : "); put(err,3); new_line;
     err := Difference(vm1,vm2);
     put("the error of differentiation : "); put(err,3); new_line;
+    new_line;
+    put_line("Elapsed time on multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+    new_line;
+    put_line("Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
   end QuadDobl_Random_Test;
 
   procedure Main is
