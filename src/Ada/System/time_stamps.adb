@@ -55,7 +55,7 @@ package body Time_Stamps is
     remainder := integer(seconds)-hour*3600;
     min := remainder/60;
     remainder := remainder-min*60;
-    sec := integer(remainder);
+    sec := remainder;
     millisec := integer(milliseconds*1000.0);
   end Seconds_into_HMSMS;
 
