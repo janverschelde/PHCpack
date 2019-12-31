@@ -1,3 +1,5 @@
+Mon 30 Dec 2019 : compared results in ts_mtadcnv, fixed indexing error.
+
 Sun 29 Dec 2019 : updated ts_mtadcnv with multitasked code.
 
 Sat 28 Dec 2019 : fixed compilation errors in ts_tasking.adb. 
