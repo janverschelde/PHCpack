@@ -88,7 +88,7 @@ procedure ts_padepred is
               (standard_output,eva,tolcff,tolres,true);
     put("The computed step size : "); put(step,3); new_line;
     Test_Series_Predictors.Standard_Check_Prediction(hom,srv,eva,step);
-    Test_Pade_Predictors.Standard_Check_Prediction(hom,srv,eva,pv,step);
+    Test_Pade_Predictors.Standard_Check_Prediction(hom,pv,step);
   end Standard_Test_Prediction;
 
   procedure DoblDobl_Test_Prediction
@@ -133,7 +133,7 @@ procedure ts_padepred is
     put("The computed step size : "); put(step,3); new_line;
     dd_step := create(step);
     Test_Series_Predictors.DoblDobl_Check_Prediction(hom,srv,eva,dd_step);
-    Test_Pade_Predictors.DoblDobl_Check_Prediction(hom,srv,eva,pv,dd_step);
+    Test_Pade_Predictors.DoblDobl_Check_Prediction(hom,pv,dd_step);
   end DoblDobl_Test_Prediction;
 
   procedure QuadDobl_Test_Prediction
@@ -178,7 +178,7 @@ procedure ts_padepred is
     put("The computed step size : "); put(step,3); new_line;
     qd_step := create(step);
     Test_Series_Predictors.QuadDobl_Check_Prediction(hom,srv,eva,qd_step);
-    Test_Pade_Predictors.QuadDobl_Check_Prediction(hom,srv,eva,pv,qd_step);
+    Test_Pade_Predictors.QuadDobl_Check_Prediction(hom,pv,qd_step);
   end QuadDobl_Test_Prediction;
 
   procedure Standard_Forward_Pole_Radius

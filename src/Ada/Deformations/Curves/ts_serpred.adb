@@ -9,9 +9,6 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
-with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Poly_Systems;
@@ -24,13 +21,10 @@ with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Standard_Complex_Series_Vectors;
 with Standard_CSeries_Poly_Systems;
-with Standard_CSeries_Poly_SysFun;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_CSeries_Poly_Systems;
-with DoblDobl_CSeries_Poly_SysFun;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_CSeries_Poly_Systems;
-with QuadDobl_CSeries_Poly_SysFun;
 with Series_and_Homotopies;
 with Series_and_Predictors;
 with Test_Series_Predictors;
@@ -228,9 +222,9 @@ procedure ts_serpred is
   --   The Standard_Homotopy is initialized with nq equations
   --   and sols contains the solutions of the start system.
 
-    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
-    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(Standard_Complex_Solutions.Length_Of(sols));
@@ -256,9 +250,9 @@ procedure ts_serpred is
   --   The DoblDobl_Homotopy is initialized with nq equations
   --   and sols contains the solutions of the start system.
 
-    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(DoblDobl_Complex_Solutions.Length_Of(sols));
@@ -284,9 +278,9 @@ procedure ts_serpred is
   --   The QuadDobl_Homotopy is initialized with nq equations
   --   and sols contains the solutions of the start system.
 
-    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,idxpar);
     len : constant integer32
         := integer32(QuadDobl_Complex_Solutions.Length_Of(sols));
@@ -320,7 +314,7 @@ procedure ts_serpred is
       Standard_Test_Prediction(nbeq,nbeq+1,sols);
     else -- drop the parameter value from the solution list
       declare
-        dropsols : Standard_Complex_Solutions.Solution_List
+        dropsols : constant Standard_Complex_Solutions.Solution_List
                  := Solution_Drops.Drop(sols,natural32(idxpar));
       begin
         Standard_Test_Prediction(nbeq,idxpar,dropsols);
@@ -344,7 +338,7 @@ procedure ts_serpred is
       DoblDobl_Test_Prediction(nbeq,nbeq+1,sols);
     else
       declare
-        dropsols : DoblDobl_Complex_Solutions.Solution_List
+        dropsols : constant DoblDobl_Complex_Solutions.Solution_List
                  := Solution_Drops.Drop(sols,natural32(idxpar));
       begin
         DoblDobl_Test_Prediction(nbeq,idxpar,dropsols);
@@ -368,7 +362,7 @@ procedure ts_serpred is
       QuadDobl_Test_Prediction(nbeq,nbeq+1,sols);
     else
       declare
-        dropsols : QuadDobl_Complex_Solutions.Solution_List
+        dropsols : constant QuadDobl_Complex_Solutions.Solution_List
                  := Solution_Drops.Drop(sols,natural32(idxpar));
       begin
         QuadDobl_Test_Prediction(nbeq,idxpar,dropsols);

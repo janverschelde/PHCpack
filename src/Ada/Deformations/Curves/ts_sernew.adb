@@ -51,8 +51,6 @@ procedure ts_sernew is
   --   series will be evaluated, in standard double precision.
   --   The idx is the index of the variable used as series variable.
 
-    use Standard_CSeries_Polynomials;
-
     vx : integer32 := 1;
 
   begin
@@ -77,8 +75,6 @@ procedure ts_sernew is
   --   series will be evaluated, in double double precision.
   --   The idx is the index of the variable used as series variable.
 
-    use DoblDobl_CSeries_Polynomials;
-
     vx : integer32 := 1;
 
   begin
@@ -102,8 +98,6 @@ procedure ts_sernew is
   --   The dim is the number of variables in the system where the
   --   series will be evaluated, in quad double precision.
   --   The idx is the index of the variable used as series variable.
-
-    use QuadDobl_CSeries_Polynomials;
 
     vx : integer32 := 1;
 
@@ -1215,7 +1209,7 @@ procedure ts_sernew is
     info : integer32;
     tol : constant double_float := 1.0E-12;
     eva : Standard_Complex_Series_Vectors.Vector(p'range);
-    deg : integer32 := degree;
+    deg : constant integer32 := degree;
     z : Standard_Complex_Series_Vectors.Vector(x'range) := x;
     rcond : double_float;
 
@@ -1258,7 +1252,7 @@ procedure ts_sernew is
     info : integer32;
     tol : constant double_float := 1.0E-12;
     eva : DoblDobl_Complex_Series_Vectors.Vector(p'range);
-    deg : integer32 := degree;
+    deg : constant integer32 := degree;
     z : DoblDobl_Complex_Series_Vectors.Vector(x'range) := x;
     rcond : double_double;
     one : constant double_double := create(1.0);
@@ -1302,7 +1296,7 @@ procedure ts_sernew is
     info : integer32;
     tol : constant double_float := 1.0E-12;
     eva : QuadDobl_Complex_Series_Vectors.Vector(p'range);
-    deg : integer32 := degree;
+    deg : constant integer32 := degree;
     z : QuadDobl_Complex_Series_Vectors.Vector(x'range) := x;
     rcond : quad_double;
     one : constant quad_double := create(1.0);

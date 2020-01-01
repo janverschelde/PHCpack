@@ -43,7 +43,6 @@ with QuadDobl_Complex_Series_VecVecs;
 with QuadDobl_CSeries_Vector_Functions;
 with QuadDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_SysFun;
-with Complex_Series_and_Polynomials;
 with Complex_Series_and_Polynomials_io;  use Complex_Series_and_Polynomials_io;
 with Series_and_Homotopies;
 
@@ -61,7 +60,7 @@ procedure ts_serhom is
   --   except for that the last variable in h has become
   --   the first variable in s.
 
-    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
     s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
 
@@ -80,7 +79,7 @@ procedure ts_serhom is
   --   except for that the last variable in h has become
   --   the first variable in s.
 
-    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
     s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
 
@@ -99,7 +98,7 @@ procedure ts_serhom is
   --   except for that the last variable in h has become
   --   the first variable in s.
 
-    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
     s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq);
 
@@ -117,9 +116,9 @@ procedure ts_serhom is
   --   polynomial system is shown.
 
     p : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
-    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
-    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     t : double_float := 0.0;
     ans : character;
@@ -143,9 +142,9 @@ procedure ts_serhom is
   --   polynomial system is shown.
 
     p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
-    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     t : double_double := create(0.0);
     ans : character;
@@ -169,9 +168,9 @@ procedure ts_serhom is
   --   polynomial system is shown.
 
     p : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
-    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     t : quad_double := create(0.0);
     ans : character;
@@ -208,11 +207,11 @@ procedure ts_serhom is
     n : constant integer32 := hom'last;
     x : constant Standard_Complex_Series_Vectors.Vector
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,n,d);
-    cffhom : Standard_Complex_Series_VecVecs.VecVec(hom'range)
+    cffhom : constant Standard_Complex_Series_VecVecs.VecVec(hom'range)
            := Standard_CSeries_Poly_SysFun.Coeff(hom);
-    cshift : Standard_Complex_Series_VecVecs.VecVec(hom'range)
+    cshift : constant Standard_Complex_Series_VecVecs.VecVec(hom'range)
            := Standard_CSeries_Vector_Functions.Shift(cffhom,c);
-    f : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+    f : constant Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
       := Standard_CSeries_Poly_SysFun.Create(hom);
     y : constant Standard_Complex_Series_Vectors.Vector
       := Standard_CSeries_Poly_SysFun.Eval(hom,x);
@@ -244,9 +243,9 @@ procedure ts_serhom is
   --   Given in Standard_Homotopy is a homotopy system of nq equations.
   --   The user is prompted for a value of t and the system is shifted.
 
-    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
       := Standard_Homotopy.Homotopy_System;
-    s : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     c : double_float := 0.0;
     shifteds : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq);
@@ -290,11 +289,11 @@ procedure ts_serhom is
     n : constant integer32 := hom'last;
     x : constant DoblDobl_Complex_Series_Vectors.Vector
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
-    cffhom : DoblDobl_Complex_Series_VecVecs.VecVec(hom'range)
+    cffhom : constant DoblDobl_Complex_Series_VecVecs.VecVec(hom'range)
            := DoblDobl_CSeries_Poly_SysFun.Coeff(hom);
-    cshift : DoblDobl_Complex_Series_VecVecs.VecVec(hom'range)
+    cshift : constant DoblDobl_Complex_Series_VecVecs.VecVec(hom'range)
            := DoblDobl_CSeries_Vector_Functions.Shift(cffhom,c);
-    f : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+    f : constant DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
       := DoblDobl_CSeries_Poly_SysFun.Create(hom);
     y : constant DoblDobl_Complex_Series_Vectors.Vector
       := DoblDobl_CSeries_Poly_SysFun.Eval(hom,x);
@@ -326,9 +325,9 @@ procedure ts_serhom is
   --   Given in DoblDobl_Homotopy is a homotopy system of nq equations.
   --   The user is prompted for a value of t and the system is shifted.
 
-    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := DoblDobl_Homotopy.Homotopy_System;
-    s : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     zero : constant double_double := create(0.0);
     c : double_double := zero;
@@ -373,11 +372,11 @@ procedure ts_serhom is
     n : constant integer32 := hom'last;
     x : constant QuadDobl_Complex_Series_Vectors.Vector
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
-    cffhom : QuadDobl_Complex_Series_VecVecs.VecVec(hom'range)
+    cffhom : constant QuadDobl_Complex_Series_VecVecs.VecVec(hom'range)
            := QuadDobl_CSeries_Poly_SysFun.Coeff(hom);
-    cshift : QuadDobl_Complex_Series_VecVecs.VecVec(hom'range)
+    cshift : constant QuadDobl_Complex_Series_VecVecs.VecVec(hom'range)
            := QuadDobl_CSeries_Vector_Functions.Shift(cffhom,c);
-    f : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
+    f : constant QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(hom'range)
       := QuadDobl_CSeries_Poly_SysFun.Create(hom);
     y : constant QuadDobl_Complex_Series_Vectors.Vector
       := QuadDobl_CSeries_Poly_SysFun.Eval(hom,x);
@@ -409,9 +408,9 @@ procedure ts_serhom is
   --   Given in QuadDobl_Homotopy is a homotopy system of nq equations.
   --   The user is prompted for a value of t and the system is shifted.
 
-    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+    h : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
       := QuadDobl_Homotopy.Homotopy_System;
-    s : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
+    s : constant QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
       := Series_and_Homotopies.Create(h,nq+1);
     zero : constant quad_double := create(0.0);
     c : quad_double := zero;

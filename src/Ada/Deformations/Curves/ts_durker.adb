@@ -11,7 +11,7 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
-with Standard_Durand_Kerner;             use Standard_Durand_Kerner;
+with Standard_Durand_Kerner;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
@@ -31,8 +31,8 @@ with Multprec_Complex_Numbers_io;        use Multprec_Complex_Numbers_io;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vector_Tools;      use Multprec_Complex_Vector_Tools;
 with Multprec_Random_Vectors;            use Multprec_Random_Vectors;
-with Multprec_Durand_Kerner;             use Multprec_Durand_Kerner;
-with Hybrid_Durand_Kerner;               use Hybrid_Durand_Kerner;
+with Multprec_Durand_Kerner;
+with Hybrid_Durand_Kerner;
 
 procedure ts_durker is
 
@@ -198,7 +198,7 @@ procedure ts_durker is
     new Hybrid_Durand_Kerner.Reporting_Durand_Kerner(Multprec_Write);
 
   procedure Standard_Root_Finder
-              ( n : in natural32; p : in Standard_Complex_Vectors.Vector;
+              ( p : in Standard_Complex_Vectors.Vector;
                 z,res : in out Standard_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -206,7 +206,6 @@ procedure ts_durker is
   --   and whether intermediate output is wanted.
 
   -- ON ENTRY :
-  --   n        degree of the polynomial;
   --   p        vector or range 0..n with the coefficient of the polynomial;
   --   z        initial approximations of the roots;
   --   res      residuals at the initial approximations.
@@ -244,7 +243,7 @@ procedure ts_durker is
   end Standard_Root_Finder;
 
   procedure DoblDobl_Root_Finder
-              ( n : in natural32; p : in DoblDobl_Complex_Vectors.Vector;
+              ( p : in DoblDobl_Complex_Vectors.Vector;
                 z,res : in out DoblDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -291,7 +290,7 @@ procedure ts_durker is
   end DoblDobl_Root_Finder;
 
   procedure QuadDobl_Root_Finder
-             ( n : in natural32; p : in QuadDobl_Complex_Vectors.Vector;
+             ( p : in QuadDobl_Complex_Vectors.Vector;
                z,res : in out QuadDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -338,12 +337,11 @@ procedure ts_durker is
   end QuadDobl_Root_Finder;
 
   procedure Multprec_Root_Finder
-              ( n,size : in natural32; p : Multprec_Complex_Vectors.Vector;
+              ( p : Multprec_Complex_Vectors.Vector;
                 z,res : in out Multprec_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
-  --   Specifications are the same as the Standard_Root_Finder, except for
-  --   size which indicates the size of the numbers.
+  --   Specifications are the same as the Standard_Root_Finder.
 
     max,nb : natural32 := 0;
     eps : Floating_Number;
@@ -374,7 +372,7 @@ procedure ts_durker is
   end Multprec_Root_Finder;
 
   procedure Hybrid_Root_Finder
-              ( n,size : in natural32; p : Multprec_Complex_Vectors.Vector;
+              ( p : Multprec_Complex_Vectors.Vector;
                 z,res : in out Multprec_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -419,7 +417,7 @@ procedure ts_durker is
     put("Give "); put(n+1,1);
     put_line(" complex coefficients of p(x) :");
     Standard_Read(p);
-    Standard_Root_Finder(natural32(n),p,z,res);
+    Standard_Root_Finder(p,z,res);
   end Standard_User_Given_Test;
 
   procedure Multprec_User_Given_Test
@@ -435,7 +433,7 @@ procedure ts_durker is
     put_line(" complex coefficients of p(x) :");
     Multprec_Read(p);
     Set_Size(p,size);
-    Multprec_Root_Finder(natural32(n),size,p,z,res);
+    Multprec_Root_Finder(p,z,res);
   end Multprec_User_Given_Test;
 
   procedure Standard_Random_Test ( n : in integer32 ) is
@@ -445,7 +443,7 @@ procedure ts_durker is
     res : Standard_Complex_Vectors.Vector(1..n) := z;
 
   begin
-    Standard_Root_Finder(natural32(n),p,z,res);
+    Standard_Root_Finder(p,z,res);
   end Standard_Random_Test;
 
   procedure DoblDobl_Random_Test ( n : in integer32 ) is
@@ -455,7 +453,7 @@ procedure ts_durker is
     res : DoblDobl_Complex_Vectors.Vector(1..n) := z;
 
   begin
-    DoblDobl_Root_Finder(natural32(n),p,z,res);
+    DoblDobl_Root_Finder(p,z,res);
   end DoblDobl_Random_Test;
 
   procedure QuadDobl_Random_Test ( n : in integer32 ) is
@@ -465,7 +463,7 @@ procedure ts_durker is
     res : QuadDobl_Complex_Vectors.Vector(1..n) := z;
 
   begin
-    QuadDobl_Root_Finder(natural32(n),p,z,res);
+    QuadDobl_Root_Finder(p,z,res);
   end QuadDobl_Random_Test;
 
   procedure Multprec_Random_Test
@@ -477,7 +475,7 @@ procedure ts_durker is
     res : Multprec_Complex_Vectors.Vector(1..n) := z;
 
   begin
-    Multprec_Root_Finder(natural32(n),size,p,z,res);
+    Multprec_Root_Finder(p,z,res);
   end Multprec_Random_Test;
 
   procedure Hybrid_Random_Test
@@ -489,7 +487,7 @@ procedure ts_durker is
     res : Multprec_Complex_Vectors.Vector(1..n) := z;
 
   begin
-    Hybrid_Root_Finder(natural32(n),size,p,z,res);
+    Hybrid_Root_Finder(p,z,res);
   end Hybrid_Random_Test;
 
   procedure Two_Stage_Hybrid_Random_Test
@@ -509,12 +507,12 @@ procedure ts_durker is
   begin
     new_line;
     put_line("Starting initial approximations in standard arithmetic.");
-    Standard_Root_Finder(natural32(n),stp,stz,stres);
+    Standard_Root_Finder(stp,stz,stres);
     new_line;
     put_line("Refining initial approximations in multi-precision arithmetic.");
     mpz := Create(stz);
     mpres := Create(stres);
-    Multprec_Root_Finder(natural32(n),size,mpp,mpz,mpres);
+    Multprec_Root_Finder(mpp,mpz,mpres);
   end Two_Stage_Hybrid_Random_Test;
 
   procedure Main is

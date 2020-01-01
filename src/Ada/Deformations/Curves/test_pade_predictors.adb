@@ -23,10 +23,7 @@ with QuadDobl_Complex_Poly_SysFun;
 with Standard_Complex_Series_Vectors_io;
 with DoblDobl_Complex_Series_Vectors_io;
 with QuadDobl_Complex_Series_Vectors_io;
-with QuadDobl_CSeries_Poly_Systems;
-with QuadDobl_CSeries_Poly_SysFun;
 with Series_and_Homotopies;
-with Series_and_Predictors;
 with Test_Series_Predictors;
 with Standard_Pade_Approximants_io;
 with DoblDobl_Pade_Approximants_io;
@@ -37,7 +34,6 @@ package body Test_Pade_Predictors is
 
   procedure Standard_Check_Prediction
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                srv,eva : in Standard_Complex_Series_Vectors.Vector;
                 pv : in Standard_Pade_Approximants.Pade_Vector;
                 step : in double_float ) is
 
@@ -58,7 +54,6 @@ package body Test_Pade_Predictors is
 
   procedure DoblDobl_Check_Prediction
               ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                srv,eva : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in DoblDobl_Pade_Approximants.Pade_Vector;
                 step : in double_double ) is
 
@@ -79,7 +74,6 @@ package body Test_Pade_Predictors is
 
   procedure QuadDobl_Check_Prediction
               ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                srv,eva : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : in QuadDobl_Pade_Approximants.Pade_Vector;
                 step : in quad_double ) is
 
@@ -112,7 +106,7 @@ package body Test_Pade_Predictors is
     loop
       put("Give the step size : "); get(step);
       Test_Series_Predictors.Standard_Check_Prediction(hom,srv,eva,step);
-      Standard_Check_Prediction(hom,srv,eva,pv,step);
+      Standard_Check_Prediction(hom,pv,step);
       put("Check another step size ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -134,7 +128,7 @@ package body Test_Pade_Predictors is
     loop
       put("Give the step size : "); get(step);
       Test_Series_Predictors.DoblDobl_Check_Prediction(hom,srv,eva,step);
-      DoblDobl_Check_Prediction(hom,srv,eva,pv,step);
+      DoblDobl_Check_Prediction(hom,pv,step);
       put("Check another step size ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -156,7 +150,7 @@ package body Test_Pade_Predictors is
     loop
       put("Give the step size : "); get(step);
       Test_Series_Predictors.QuadDobl_Check_Prediction(hom,srv,eva,step);
-      QuadDobl_Check_Prediction(hom,srv,eva,pv,step);
+      QuadDobl_Check_Prediction(hom,pv,step);
       put("Check another step size ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');

@@ -1,7 +1,6 @@
 with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
@@ -20,9 +19,6 @@ with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
-with Standard_Deflation_Trees_io;
-with DoblDobl_Deflation_Trees_io;
-with QuadDobl_Deflation_Trees_io;
 with Jacobian_Rabinowitsch_Trick;       use Jacobian_Rabinowitsch_Trick;
 
 procedure ts_jacrabin is

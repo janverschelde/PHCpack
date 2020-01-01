@@ -1,3 +1,7 @@
+Wed 1 Jan 2020 : for compiler warnings, modified test_pade_predictors,
+  ts_padepred.adb, ts_sernew.adb, ts_serpade.adb, ts_serpred.adb,
+  ts_sersol.adb, ts_serhom.adb, ts_jacrabin.adb, ts_durker.adb.
+
 Wed 28 Aug 2019 : updated homotopy_pade_approximants with the computation
   of a threshold index and zero checks on the solution error norm estimate.
 

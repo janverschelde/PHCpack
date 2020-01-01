@@ -225,7 +225,6 @@ procedure ts_serpade is
   --   of complex numbers in standard double precision.
 
     res : Standard_Complex_Vectors.Vector(0..dim);
-    plus : boolean := true;
 
   begin
     for k in res'range loop
@@ -243,7 +242,6 @@ procedure ts_serpade is
   --   of complex numbers in double double precision.
 
     res : DoblDobl_Complex_Vectors.Vector(0..dim);
-    plus : boolean := true;
 
   begin
     for k in res'range loop
@@ -261,7 +259,6 @@ procedure ts_serpade is
   --   of complex numbers in quad double precision.
 
     res : QuadDobl_Complex_Vectors.Vector(0..dim);
-    plus : boolean := true;
 
   begin
     for k in res'range loop
@@ -1279,7 +1276,7 @@ procedure ts_serpade is
 
     lnk : constant Standard_Complex_Solutions.Link_to_Solution
         := Standard_Complex_Solutions.Head_Of(sols);
-    sol : Standard_Complex_Solutions.Solution := lnk.all;
+    sol : constant Standard_Complex_Solutions.Solution := lnk.all;
     nbt : constant natural32 := natural32(numdeg+dendeg+1);
     nit : constant natural32 := 4*nbt;
     srv : Standard_Complex_Series_Vectors.Vector(sol.v'range);
@@ -1319,7 +1316,7 @@ procedure ts_serpade is
 
     lnk : constant DoblDobl_Complex_Solutions.Link_to_Solution
         := DoblDobl_Complex_Solutions.Head_Of(sols);
-    sol : DoblDobl_Complex_Solutions.Solution := lnk.all;
+    sol : constant DoblDobl_Complex_Solutions.Solution := lnk.all;
     nbt : constant natural32 := natural32(numdeg+dendeg+1);
     nit : constant natural32 := 4*nbt;
     srv : DoblDobl_Complex_Series_Vectors.Vector(sol.v'range);
@@ -1359,7 +1356,7 @@ procedure ts_serpade is
 
     lnk : constant QuadDobl_Complex_Solutions.Link_to_Solution
         := QuadDobl_Complex_Solutions.Head_Of(sols);
-    sol : QuadDobl_Complex_Solutions.Solution := lnk.all;
+    sol : constant QuadDobl_Complex_Solutions.Solution := lnk.all;
     nbt : constant natural32 := natural32(numdeg+dendeg+1);
     nit : constant natural32 := 4*nbt;
     srv : QuadDobl_Complex_Series_Vectors.Vector(sol.v'range);

@@ -34,17 +34,14 @@ package Test_Pade_Predictors is
 
   procedure Standard_Check_Prediction
               ( hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
-                srv,eva : in Standard_Complex_Series_Vectors.Vector;
                 pv : in Standard_Pade_Approximants.Pade_Vector;
                 step : in double_float );
   procedure DoblDobl_Check_Prediction
               ( hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
-                srv,eva : in DoblDobl_Complex_Series_Vectors.Vector;
                 pv : in DoblDobl_Pade_Approximants.Pade_Vector;
                 step : in double_double );
   procedure QuadDobl_Check_Prediction
               ( hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
-                srv,eva : in QuadDobl_Complex_Series_Vectors.Vector;
                 pv : in QuadDobl_Pade_Approximants.Pade_Vector;
                 step : in quad_double );
 

@@ -1,4 +1,4 @@
-Univariate solvers and plane algebraic curves in PHCpack version 2.4.71
+Univariate solvers and algebraic curves in PHCpack version 2.4.75
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,
@@ -11,7 +11,12 @@ curves provides good development and testing cases for the predictors.
 New in 2.3.79 is the introduction of higher-order extrapolators.
 
 The addition of Newton's method to compute power series solutions
-is entirely new in release 2.4.21.
+is entirely new in release 2.4.21.  The power series are the input
+to the algorithms to compute rational, Pade approximants for the
+solution paths in a polynomial homotopy.  Since version 2.4.61,
+phc -u provides access to a robust path tracker, with a priori step
+control and detection of the nearest singularity via the application
+of the theorem of Fabry.
 
 -------------------------------------------------------------------------------
 file name                        : short description

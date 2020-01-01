@@ -37,7 +37,7 @@ procedure ts_sersol is
 --   Test on the development of series as solutions of polynomial systems.
 
   procedure Run_Newton
-             ( nq,idx,dim : in integer32; echelon : in boolean;
+             ( nq,dim : in integer32; echelon : in boolean;
                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                s : in Standard_Complex_Series_VecVecs.VecVec ) is
 
@@ -47,13 +47,11 @@ procedure ts_sersol is
 
   -- ON ENTRY :
   --   nq      number of equations in p;
-  --   idx     index to the series parameter;
   --   dim     number of coordinates in the series;
   --   echelon is the flag for the echelon Newton's method to be used;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a sequence of series to start Newton's method at.
 
-    len : constant integer32 := s'last;
     maxdeg,nbrit : integer32 := 0;
 
   begin
@@ -78,7 +76,7 @@ procedure ts_sersol is
   end Run_Newton;
 
   procedure Run_Newton
-             ( nq,idx,dim : in integer32; echelon : in boolean;
+             ( nq,dim : in integer32; echelon : in boolean;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in DoblDobl_Complex_Series_VecVecs.VecVec ) is
 
@@ -88,13 +86,11 @@ procedure ts_sersol is
 
   -- ON ENTRY :
   --   nq      number of equations in p;
-  --   idx     index to the series parameter;
   --   dim     number of coordinates in the series;
   --   echelon is the flag for the echelon Newton's method to be used;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a sequence of series to start Newton's method at.
 
-    len : constant integer32 := s'last;
     maxdeg,nbrit : integer32 := 0;
 
   begin
@@ -119,7 +115,7 @@ procedure ts_sersol is
   end Run_Newton;
 
   procedure Run_Newton
-             ( nq,idx,dim : in integer32; echelon : in boolean;
+             ( nq,dim : in integer32; echelon : in boolean;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in QuadDobl_Complex_Series_VecVecs.VecVec ) is
 
@@ -129,13 +125,11 @@ procedure ts_sersol is
 
   -- ON ENTRY :
   --   nq      number of equations in p;
-  --   idx     index to the series parameter;
   --   dim     number of coordinates in the series;
   --   echelon is the flag for the echelon Newton's method to be used;
   --   p       a polynomial of nq equations in nv unknowns;
   --   s       a sequence of series to start Newton's method at.
 
-    len : constant integer32 := s'last;
     maxdeg,nbrit : integer32 := 0;
 
   begin
@@ -187,7 +181,7 @@ procedure ts_sersol is
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(nq,idx,dim,echelon,srp,srv);
+    Run_Newton(nq,dim,echelon,srp,srv);
     Standard_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
 
@@ -218,7 +212,7 @@ procedure ts_sersol is
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(nq,idx,dim,echelon,srp,srv);
+    Run_Newton(nq,dim,echelon,srp,srv);
     DoblDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
 
@@ -249,7 +243,7 @@ procedure ts_sersol is
         := Complex_Series_and_Polynomials.System_to_Series_System(p,idx);
 
   begin
-    Run_Newton(nq,idx,dim,echelon,srp,srv);
+    Run_Newton(nq,dim,echelon,srp,srv);
     QuadDobl_CSeries_Poly_Systems.Clear(srp);
   end Run_Newton;
 
@@ -373,11 +367,11 @@ procedure ts_sersol is
     Complex_Series_and_Polynomials_io.get(srv);
     declare
       s : Standard_Complex_Series_VecVecs.VecVec(1..1);
-      srp : Standard_CSeries_Poly_Systems.Poly_Sys(lp'range)
+      srp : constant Standard_CSeries_Poly_Systems.Poly_Sys(lp'range)
           := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     begin
       s(1) := srv;
-      Run_Newton(nq,idx,nv,echelon,srp,s);
+      Run_Newton(nq,nv,echelon,srp,s);
     end;
   end Standard_Test_at_Series;
 
@@ -411,11 +405,11 @@ procedure ts_sersol is
     Complex_Series_and_Polynomials_io.get(srv);
     declare
       s : DoblDobl_Complex_Series_VecVecs.VecVec(1..1);
-      srp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(lp'range)
+      srp : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(lp'range)
           := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     begin
       s(1) := srv;
-      Run_Newton(nq,idx,nv,echelon,srp,s);
+      Run_Newton(nq,nv,echelon,srp,s);
     end;
   end DoblDobl_Test_at_Series;
 
@@ -449,11 +443,11 @@ procedure ts_sersol is
     Complex_Series_and_Polynomials_io.get(srv);
     declare
       s : QuadDobl_Complex_Series_VecVecs.VecVec(1..1);
-      srp : QuadDobl_CSeries_Poly_Systems.Poly_Sys(lp'range)
+      srp : constant QuadDobl_CSeries_Poly_Systems.Poly_Sys(lp'range)
           := Complex_Series_and_Polynomials.System_to_Series_System(lp.all,idx);
     begin
       s(1) := srv;
-      Run_Newton(nq,idx,nv,echelon,srp,s);
+      Run_Newton(nq,nv,echelon,srp,s);
     end;
   end QuadDobl_Test_at_Series;
 
