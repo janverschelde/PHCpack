@@ -1,7 +1,4 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
-with Standard_Complex_Vectors;          use Standard_Complex_Vectors;
 with Standard_Complex_Norms_Equals;
 
 package body Standard_Truncated_Series is

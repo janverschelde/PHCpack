@@ -12,7 +12,7 @@ package body Standard_Algebraic_Series2 is
                   verbose : boolean := false ) return Series is
 
     res : Series(c.deg) := Create(0.0,c.deg);
-    cpc : Series(c.deg) := c;
+    cpc : constant Series(c.deg) := c;
     wrk,dx : Series(c.deg);
     fac : constant Complex_Number := Create(0.5);
     tol : constant double_float := 1.0E-13;
@@ -40,7 +40,7 @@ package body Standard_Algebraic_Series2 is
                   verbose : boolean := false ) return Series is
 
     res : Series(c.deg) := Create(0.0,c.deg);
-    cpc : Series(c.deg) := c;
+    cpc : constant Series(c.deg) := c;
     wrk,dx : Series(c.deg);
     denominator : constant double_float := 1.0/double_float(n);
     fac : constant Complex_Number := Create(denominator);

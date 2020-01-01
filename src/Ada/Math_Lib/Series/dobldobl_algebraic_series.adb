@@ -18,7 +18,6 @@ package body DoblDobl_Algebraic_Series is
     zero : constant double_double := create(0.0);
     one : constant double_double := create(integer32(1));
     two : constant double_double := create(integer32(2));
-    ctwo : constant Complex_Number := create(two);
     half : constant double_double := one/two;
     fac : constant Complex_Number := Create(half);
     tol : constant double_float := 1.0E-24;

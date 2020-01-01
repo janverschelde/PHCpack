@@ -4,8 +4,6 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Series;
 with Standard_Complex_Series_io;         use Standard_Complex_Series_io;
 with Standard_Complex_Series_Vectors;
@@ -74,9 +72,9 @@ procedure ts_sercffpol is
       := Standard_CSeries_Poly_Functions.Eval(p,x);
     m : constant integer32
       := integer32(Standard_CSeries_Polynomials.Number_of_Terms(p));
-    c : Standard_Complex_Series_Vectors.Vector(1..m)
+    c : constant Standard_Complex_Series_Vectors.Vector(1..m)
       := Standard_CSeries_Poly_Functions.Coeff(p);
-    f : Standard_CSeries_Poly_Functions.Eval_Coeff_Poly
+    f : constant Standard_CSeries_Poly_Functions.Eval_Coeff_Poly
       := Standard_CSeries_Poly_Functions.Create(p);
     z : constant Standard_Complex_Series.Link_to_Series
       := Standard_CSeries_Poly_Functions.Eval(f,c,x);
@@ -103,13 +101,13 @@ procedure ts_sercffpol is
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     y : constant Standard_Complex_Series_Vectors.Vector
       := Standard_CSeries_Poly_SysFun.Eval(p,x);
-    c : Standard_Complex_Series_VecVecs.VecVec(p'range)
+    c : constant Standard_Complex_Series_VecVecs.VecVec(p'range)
       := Standard_CSeries_Poly_SysFun.Coeff(p);
-    f : Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(p'range)
+    f : constant Standard_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(p'range)
       := Standard_CSeries_Poly_SysFun.Create(p);
     z : constant Standard_Complex_Series_Vectors.Vector
       := Standard_CSeries_Poly_SysFun.Eval(f,c,x);
-    jpm : Standard_CSeries_Jaco_Matrices.Jaco_Mat(p'range,1..n)
+    jpm : constant Standard_CSeries_Jaco_Matrices.Jaco_Mat(p'range,1..n)
         := Standard_CSeries_Jaco_Matrices.Create(p);
     ejm : Standard_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(p'range,1..n);
     mlt : Standard_CSeries_Jaco_Matrices.Mult_Factors(p'range,1..n);
@@ -150,9 +148,9 @@ procedure ts_sercffpol is
       := DoblDobl_CSeries_Poly_Functions.Eval(p,x);
     m : constant integer32
       := integer32(DoblDobl_CSeries_Polynomials.Number_of_Terms(p));
-    c : DoblDobl_Complex_Series_Vectors.Vector(1..m)
+    c : constant DoblDobl_Complex_Series_Vectors.Vector(1..m)
       := DoblDobl_CSeries_Poly_Functions.Coeff(p);
-    f : DoblDobl_CSeries_Poly_Functions.Eval_Coeff_Poly
+    f : constant DoblDobl_CSeries_Poly_Functions.Eval_Coeff_Poly
       := DoblDobl_CSeries_Poly_Functions.Create(p);
     z : constant DoblDobl_Complex_Series.Link_to_Series
       := DoblDobl_CSeries_Poly_Functions.Eval(f,c,x);
@@ -179,13 +177,13 @@ procedure ts_sercffpol is
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     y : constant DoblDobl_Complex_Series_Vectors.Vector
       := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
-    c : DoblDobl_Complex_Series_VecVecs.VecVec(p'range)
+    c : constant DoblDobl_Complex_Series_VecVecs.VecVec(p'range)
       := DoblDobl_CSeries_Poly_SysFun.Coeff(p);
-    f : DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(p'range)
+    f : constant DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(p'range)
       := DoblDobl_CSeries_Poly_SysFun.Create(p);
     z : constant DoblDobl_Complex_Series_Vectors.Vector
       := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
-    jpm : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,1..n)
+    jpm : constant DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,1..n)
         := DoblDobl_CSeries_Jaco_Matrices.Create(p);
     ejm : DoblDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(p'range,1..n);
     mlt : DoblDobl_CSeries_Jaco_Matrices.Mult_Factors(p'range,1..n);
@@ -226,9 +224,9 @@ procedure ts_sercffpol is
       := QuadDobl_CSeries_Poly_Functions.Eval(p,x);
     m : constant integer32
       := integer32(QuadDobl_CSeries_Polynomials.Number_of_Terms(p));
-    c : QuadDobl_Complex_Series_Vectors.Vector(1..m)
+    c : constant QuadDobl_Complex_Series_Vectors.Vector(1..m)
       := QuadDobl_CSeries_Poly_Functions.Coeff(p);
-    f : QuadDobl_CSeries_Poly_Functions.Eval_Coeff_Poly
+    f : constant QuadDobl_CSeries_Poly_Functions.Eval_Coeff_Poly
       := QuadDobl_CSeries_Poly_Functions.Create(p);
     z : constant QuadDobl_Complex_Series.Link_to_Series
       := QuadDobl_CSeries_Poly_Functions.Eval(f,c,x);
@@ -255,13 +253,13 @@ procedure ts_sercffpol is
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     y : constant QuadDobl_Complex_Series_Vectors.Vector
       := QuadDobl_CSeries_Poly_SysFun.Eval(p,x);
-    c : QuadDobl_Complex_Series_VecVecs.VecVec(p'range)
+    c : constant QuadDobl_Complex_Series_VecVecs.VecVec(p'range)
       := QuadDobl_CSeries_Poly_SysFun.Coeff(p);
-    f : QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(p'range)
+    f : constant QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys(p'range)
       := QuadDobl_CSeries_Poly_SysFun.Create(p);
     z : constant QuadDobl_Complex_Series_Vectors.Vector
       := QuadDobl_CSeries_Poly_SysFun.Eval(f,c,x);
-    jpm : QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,1..n)
+    jpm : constant QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,1..n)
         := QuadDobl_CSeries_Jaco_Matrices.Create(p);
     ejm : QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat(p'range,1..n);
     mlt : QuadDobl_CSeries_Jaco_Matrices.Mult_Factors(p'range,1..n);

@@ -1,3 +1,11 @@
+Wed 1 Jan 2020 : for compiler warnings, modified standard_truncated_series.adb, 
+  ts_pstrunc.adb, {standard,dobldobl,quaddobl}_random_series.adb,
+  dobldobl_algebraic_series.adb, standard_algebraic_series2.adb,
+  {dobldobl,quaddobl}_complex_series_functions, ts_series.adb, ts_series2.adb,
+  {dobldobl,quaddobl}_complex_series_transforms.adb, ts_cseries.adb,
+  ts_servec.adb, standard_dense_series2, standard_dense_series.adb,
+  ts_sercffpol.adb, ts_csersys.adb.
+
 Mon 30 Dec 2019 : updates in complex_series_and_polynomials.adb and in
   standard_complex_series_functions for compiler warnings.
 

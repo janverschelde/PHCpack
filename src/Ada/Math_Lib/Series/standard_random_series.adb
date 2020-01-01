@@ -29,9 +29,9 @@ package body Standard_Random_Series is
              ( first,last,degree : integer32 )
              return Standard_Dense_Vector_Series.Vector is
 
-    rnd : Standard_Dense_Series_Vectors.Vector(first..last)
+    rnd : constant Standard_Dense_Series_Vectors.Vector(first..last)
         := Random_Series_Vector(first,last,degree);
-    res : Standard_Dense_Vector_Series.Vector
+    res : constant Standard_Dense_Vector_Series.Vector
         := Standard_Dense_Vector_Series.Create(rnd); 
 
   begin

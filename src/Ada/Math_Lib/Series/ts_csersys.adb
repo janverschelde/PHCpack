@@ -47,8 +47,6 @@ procedure ts_csersys is
   --   series will be evaluated.
   --   The idx is the index of the variable used as series variable.
 
-    use Standard_CSeries_Polynomials;
-
     vx : integer32 := 1;
 
   begin
@@ -73,8 +71,6 @@ procedure ts_csersys is
   --   series will be evaluated.
   --   The idx is the index of the variable used as series variable.
 
-    use DoblDobl_CSeries_Polynomials;
-
     vx : integer32 := 1;
 
   begin
@@ -98,8 +94,6 @@ procedure ts_csersys is
   --   The dim is the number of variables in the system where the
   --   series will be evaluated.
   --   The idx is the index of the variable used as series variable.
-
-    use QuadDobl_CSeries_Polynomials;
 
     vx : integer32 := 1;
 

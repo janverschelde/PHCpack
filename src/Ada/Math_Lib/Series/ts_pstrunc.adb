@@ -51,7 +51,8 @@ procedure ts_pstrunc is
   --   The test succeeds if the product of the first random series
   --   with its computed inverse results in one.
 
-    c : Standard_Complex_Vectors.Vector(0..degree) := Random_Vector(0,degree);
+    c : constant Standard_Complex_Vectors.Vector(0..degree)
+      := Random_Vector(0,degree);
     x,r : Standard_Complex_Vectors.Vector(0..degree);
 
   begin
@@ -75,7 +76,8 @@ procedure ts_pstrunc is
   --   Generates a truncated series with random coefficients
   --   of the given degree and computes its square root.
 
-    c : Standard_Complex_Vectors.Vector(0..degree) := Random_Vector(0,degree);
+    c : constant Standard_Complex_Vectors.Vector(0..degree)
+      := Random_Vector(0,degree);
     x,y,dyc : Standard_Complex_Vectors.Vector(0..degree);
 
   begin

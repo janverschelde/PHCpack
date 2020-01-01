@@ -1,5 +1,4 @@
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with QuadDobl_Mathematical_Functions;
 with QuadDobl_Complex_Numbers_Polar;
 
 package body QuadDobl_Complex_Series_Transforms is
@@ -25,8 +24,6 @@ package body QuadDobl_Complex_Series_Transforms is
   procedure Coefficient_Modulus_Transform
               ( s : in out Series;
                 idx : in integer32; maxcff : in quad_double ) is
-
-    use QuadDobl_Mathematical_Functions;
 
     ddidx : constant quad_double := create(idx);
     epn : constant quad_double := 1.0/ddidx;

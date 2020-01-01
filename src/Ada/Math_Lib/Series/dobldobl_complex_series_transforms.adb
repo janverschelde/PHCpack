@@ -1,5 +1,4 @@
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with DoblDobl_Mathematical_Functions;
 with DoblDobl_Complex_Numbers_Polar;
 
 package body DoblDobl_Complex_Series_Transforms is
@@ -25,8 +24,6 @@ package body DoblDobl_Complex_Series_Transforms is
   procedure Coefficient_Modulus_Transform
               ( s : in out Series;
                 idx : in integer32; maxcff : in double_double ) is
-
-    use DoblDobl_Mathematical_Functions;
 
     ddidx : constant double_double := create(idx);
     epn : constant double_double := 1.0/ddidx;

@@ -702,7 +702,7 @@ procedure ts_series is
     use Standard_Complex_Numbers;
     use Standard_Dense_Series;
 
-    s : Series := Random_Series(degree);
+    s : constant Series := Random_Series(degree);
     rc : double_float := 0.0;
     shifteds : Series;
     cc,y,z : Complex_Number;
@@ -735,7 +735,7 @@ procedure ts_series is
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Dense_Series;
 
-    s : Series := Random_Series(degree);
+    s : constant Series := Random_Series(degree);
     zero : constant double_double := create(0.0);
     rc : double_double := zero;
     shifteds : Series;
@@ -769,7 +769,7 @@ procedure ts_series is
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Dense_Series;
 
-    s : Series := Random_Series(degree);
+    s : constant Series := Random_Series(degree);
     zero : constant quad_double := create(0.0);
     rc : quad_double := zero;
     shifteds : Series;

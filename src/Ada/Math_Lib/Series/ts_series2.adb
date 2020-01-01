@@ -8,11 +8,8 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
-with Standard_Complex_Vectors;
-with Standard_Random_Vectors;
 with Standard_Dense_Series2;
 with Standard_Dense_Series2_io;          use Standard_Dense_Series2_io;
-with Standard_Algebraic_Series2;
 with Standard_Algebraic_Series2;
 with Standard_Dense_Series_Norms2;
 with Random_Series_Generators;           use Random_Series_Generators;
@@ -59,7 +56,7 @@ procedure ts_series2 is
     use Standard_Complex_Numbers;
     use Standard_Dense_Series2;
 
-    s : Link_to_Series := Create(1,degree);
+    s : constant Link_to_Series := Create(1,degree);
     t,x,y,z : Link_to_Series;
 
   begin
@@ -274,7 +271,7 @@ procedure ts_series2 is
     use Standard_Complex_Numbers;
     use Standard_Dense_Series2;
 
-    s : Series(degree) := Random_Series(degree);
+    s : constant Series(degree) := Random_Series(degree);
     rc : double_float := 0.0;
     shifteds : Series(degree);
     cc,y,z : Complex_Number;

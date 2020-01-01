@@ -49,7 +49,7 @@ procedure ts_cseries is
   --   Basic test on the construction of a series
   --   in standard double precision.
 
-    i : integer := 123;
+    i : constant integer := 123;
     first : constant Standard_Complex_Series.Series
           := Standard_Complex_Series.Create(i);
     second : Standard_Complex_Series.Series(4);
@@ -76,7 +76,7 @@ procedure ts_cseries is
   --   Basic test on the construction of a series
   --   in double double precision.
 
-    i : integer := 123;
+    i : constant integer := 123;
     first : constant DoblDobl_Complex_Series.Series
           := DoblDobl_Complex_Series.Create(i);
     second : DoblDobl_Complex_Series.Series(4);
@@ -103,7 +103,7 @@ procedure ts_cseries is
   --   Basic test on the construction of a series
   --   in quad double precision.
 
-    i : integer := 123;
+    i : constant integer := 123;
     first : constant QuadDobl_Complex_Series.Series
           := QuadDobl_Complex_Series.Create(i);
     second : QuadDobl_Complex_Series.Series(4);
@@ -134,7 +134,7 @@ procedure ts_cseries is
     use Standard_Complex_Numbers;
     use Standard_Complex_Series;
 
-    s : Link_to_Series := Create(1,degree);
+    s : constant Link_to_Series := Create(1,degree);
     t,x,y,z : Link_to_Series;
 
   begin
@@ -161,7 +161,7 @@ procedure ts_cseries is
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Series;
 
-    s : Link_to_Series := Create(1,degree);
+    s : constant Link_to_Series := Create(1,degree);
     t,x,y,z : Link_to_Series;
     minone : constant double_double := create(-1.0);
 
@@ -189,7 +189,7 @@ procedure ts_cseries is
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Series;
 
-    s : Link_to_Series := Create(1,degree);
+    s : constant Link_to_Series := Create(1,degree);
     t,x,y,z : Link_to_Series;
     minone : constant quad_double := create(-1.0);
 
@@ -801,9 +801,7 @@ procedure ts_cseries is
   --   Tests the computation of powers on series of the given degree,
   --   in standard double precision.
 
-    use Standard_Complex_Numbers;
     use Standard_Complex_Series;
-    use Standard_Complex_Series_Functions;
 
     s : constant Series(degree)
       := Standard_Complex_Random_Series.Random_Series(degree);
@@ -832,9 +830,7 @@ procedure ts_cseries is
   --   Tests the computation of powers on series of the given degree,
   --   in double double precision.
 
-    use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Series;
-    use DoblDobl_Complex_Series_Functions;
 
     s : constant Series(degree)
       := DoblDobl_Complex_Random_Series.Random_Series(degree);
@@ -863,9 +859,7 @@ procedure ts_cseries is
   --   Tests the computation of powers on series of the given degree,
   --   in quad double precision.
 
-    use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Series;
-    use QuadDobl_Complex_Series_Functions;
 
     s : constant Series(degree)
       := QuadDobl_Complex_Random_Series.Random_Series(degree);

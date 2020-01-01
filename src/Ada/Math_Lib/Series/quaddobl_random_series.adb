@@ -29,9 +29,9 @@ package body QuadDobl_Random_Series is
              ( first,last,degree : integer32 )
              return QuadDobl_Dense_Vector_Series.Vector is
 
-    rnd : QuadDobl_Dense_Series_Vectors.Vector(first..last)
+    rnd : constant QuadDobl_Dense_Series_Vectors.Vector(first..last)
         := Random_Series_Vector(first,last,degree);
-    res : QuadDobl_Dense_Vector_Series.Vector
+    res : constant QuadDobl_Dense_Vector_Series.Vector
         := QuadDobl_Dense_Vector_Series.Create(rnd); 
 
   begin

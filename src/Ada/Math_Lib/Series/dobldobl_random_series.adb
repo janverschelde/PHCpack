@@ -29,9 +29,9 @@ package body DoblDobl_Random_Series is
              ( first,last,degree : integer32 )
              return DoblDobl_Dense_Vector_Series.Vector is
 
-    rnd : DoblDobl_Dense_Series_Vectors.Vector(first..last)
+    rnd : constant DoblDobl_Dense_Series_Vectors.Vector(first..last)
         := Random_Series_Vector(first,last,degree);
-    res : DoblDobl_Dense_Vector_Series.Vector
+    res : constant DoblDobl_Dense_Vector_Series.Vector
         := DoblDobl_Dense_Vector_Series.Create(rnd); 
 
   begin

@@ -2,11 +2,9 @@ with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
 with Standard_Dense_Series;
 with Standard_Dense_Series_io;            use Standard_Dense_Series_io;
 with Standard_Dense_Series_Vectors;
-with Standard_Dense_Series_Vectors_io;    use Standard_Dense_Series_Vectors_io;
 with Standard_Series_Vector_Norms;
 with DoblDobl_Dense_Series;
 with DoblDobl_Dense_Series_io;            use DoblDobl_Dense_Series_io;
@@ -143,9 +141,9 @@ procedure ts_servec is
   --   with series of the given degree, in standard double precision.
   --   Tests the computation of the norm and the normalization.
 
-    sv : Standard_Dense_Series_Vectors.Vector(1..dim)
+    sv : constant Standard_Dense_Series_Vectors.Vector(1..dim)
        := Standard_Random_Series.Random_Series_Vector(1,dim,degree);
-    vs : Standard_Dense_Vector_Series.Vector
+    vs : constant Standard_Dense_Vector_Series.Vector
        := Standard_Dense_Vector_Series.Create(sv);
 
   begin
@@ -161,9 +159,9 @@ procedure ts_servec is
   --   with series of the given degree, in double double precision.
   --   Tests the computation of the norm and the normalization.
 
-    sv : DoblDobl_Dense_Series_Vectors.Vector(1..dim)
+    sv : constant DoblDobl_Dense_Series_Vectors.Vector(1..dim)
        := DoblDobl_Random_Series.Random_Series_Vector(1,dim,degree);
-    vs : DoblDobl_Dense_Vector_Series.Vector
+    vs : constant DoblDobl_Dense_Vector_Series.Vector
        := DoblDobl_Dense_Vector_Series.Create(sv);
 
   begin
@@ -179,9 +177,9 @@ procedure ts_servec is
   --   with series of the given degree, in quad double precision.
   --   Tests the computation of the norm and the normalization.
 
-    sv : QuadDobl_Dense_Series_Vectors.Vector(1..dim)
+    sv : constant QuadDobl_Dense_Series_Vectors.Vector(1..dim)
        := QuadDobl_Random_Series.Random_Series_Vector(1,dim,degree);
-    vs : QuadDobl_Dense_Vector_Series.Vector
+    vs : constant QuadDobl_Dense_Vector_Series.Vector
        := QuadDobl_Dense_Vector_Series.Create(sv);
 
   begin
