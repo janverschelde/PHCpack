@@ -50,10 +50,8 @@ with QuadDobl_Solution_Diagnostics;
 with Standard_Parameter_Systems;
 with Standard_Parameter_Solutions;
 with Standard_Quad_Sweepers;
-with DoblDobl_Parameter_Systems;
 with DoblDobl_Parameter_Solutions;
 with DoblDobl_Quad_Sweepers;
-with QuadDobl_Parameter_Systems;
 with QuadDobl_Parameter_Solutions;
 with QuadDobl_Quad_Sweepers;
 with Complex_Convex_Continuation;
@@ -66,8 +64,6 @@ with QuadDobl_PolySys_Container;
 with QuadDobl_Solutions_Container;
 -- output for debugging purposes:
 --with Symbol_Table_io;
-with Standard_Natural_Numbers_io; use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers_io; use Standard_Integer_Numbers_io;
 --with Standard_Integer_Vectors_io; use Standard_Integer_Vectors_io;
 --with Standard_Complex_Solutions_io; use Standard_Complex_Solutions_io;
 
@@ -298,7 +294,7 @@ function use_sweep ( job : integer32;
     precision : constant natural32 := natural32(v_a(v_a'first));
     startortarget : constant natural32 := natural32(v_a(v_a'first+1));
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
-    dim : constant integer32 := integer32(v_b(v_b'first));
+   -- dim : constant integer32 := integer32(v_b(v_b'first));
 
     use Standard_Complex_Vectors;
     use DoblDobl_Complex_Vectors;
@@ -367,14 +363,14 @@ function use_sweep ( job : integer32;
 
     lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
-    sols : Standard_Complex_Solutions.Solution_List
+    sols : constant Standard_Complex_Solutions.Solution_List
          := Standard_Solutions_Container.Retrieve;
-    nb_equ : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Equations;
+   -- nb_equ : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Equations;
     nb_var : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Variables;
-    nb_par : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Parameters;
+   -- nb_par : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Parameters;
     indpar : constant Standard_Integer_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Indices;
     indvar : constant Standard_Integer_Vectors.Vector
@@ -382,9 +378,9 @@ function use_sweep ( job : integer32;
     nv : constant integer32 := indvar'last;
     vrsols : Standard_Complex_Solutions.Solution_List
            := Standard_Parameter_Solutions.Select_Variables(sols,nv,indvar);
-    startv : Standard_Complex_Vectors.Link_to_Vector
+    startv : constant Standard_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Start;
-    target : Standard_Complex_Vectors.Link_to_Vector
+    target : constant Standard_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Target;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
@@ -407,8 +403,6 @@ function use_sweep ( job : integer32;
 
     procedure Par_Con is
       new Standard_Silent_Parameter_Continuation(Eval_Pars,Diff_Pars);
-
-    use Standard_Complex_Solutions;
 
   begin
   -- put("The number of equations : "); put(nb_equ,1); new_line;
@@ -440,14 +434,14 @@ function use_sweep ( job : integer32;
 
     lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := DoblDobl_PolySys_Container.Retrieve;
-    sols : DoblDobl_Complex_Solutions.Solution_List
+    sols : constant DoblDobl_Complex_Solutions.Solution_List
          := DoblDobl_Solutions_Container.Retrieve;
-    nb_equ : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Equations;
+   -- nb_equ : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Equations;
     nb_var : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Variables;
-    nb_par : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Parameters;
+   -- nb_par : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Parameters;
     indpar : constant Standard_Integer_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Indices;
     indvar : constant Standard_Integer_Vectors.Vector
@@ -455,9 +449,9 @@ function use_sweep ( job : integer32;
     nv : constant integer32 := indvar'last;
     vrsols : DoblDobl_Complex_Solutions.Solution_List
            := DoblDobl_Parameter_Solutions.Select_Variables(sols,nv,indvar);
-    startv : DoblDobl_Complex_Vectors.Link_to_Vector
+    startv : constant DoblDobl_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Start;
-    target : DoblDobl_Complex_Vectors.Link_to_Vector
+    target : constant DoblDobl_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Target;
     gamma : constant DoblDobl_Complex_Numbers.Complex_Number
           := DoblDobl_Random_Numbers.Random1;
@@ -504,14 +498,14 @@ function use_sweep ( job : integer32;
 
     lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := QuadDobl_PolySys_Container.Retrieve;
-    sols : QuadDobl_Complex_Solutions.Solution_List
+    sols : constant QuadDobl_Complex_Solutions.Solution_List
          := QuadDobl_Solutions_Container.Retrieve;
-    nb_equ : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Equations;
+   -- nb_equ : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Equations;
     nb_var : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Variables;
-    nb_par : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Parameters;
+   -- nb_par : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Parameters;
     indpar : constant Standard_Integer_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Indices;
     indvar : constant Standard_Integer_Vectors.Vector
@@ -519,9 +513,9 @@ function use_sweep ( job : integer32;
     nv : constant integer32 := indvar'last;
     vrsols : QuadDobl_Complex_Solutions.Solution_List
            := QuadDobl_Parameter_Solutions.Select_Variables(sols,nv,indvar);
-    startv : QuadDobl_Complex_Vectors.Link_to_Vector
+    startv : constant QuadDobl_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Start;
-    target : QuadDobl_Complex_Vectors.Link_to_Vector
+    target : constant QuadDobl_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Target;
     gamma : constant QuadDobl_Complex_Numbers.Complex_Number
           := QuadDobl_Random_Numbers.Random1;
@@ -607,19 +601,19 @@ function use_sweep ( job : integer32;
 
     lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
-    sols : Standard_Complex_Solutions.Solution_List
+    sols : constant Standard_Complex_Solutions.Solution_List
          := Standard_Solutions_Container.Retrieve;
     nb_equ : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Equations;
     nb_var : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Variables;
-    nb_par : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Parameters;
-    indpar : constant Standard_Integer_Vectors.Link_to_Vector
-           := Parameter_Homotopy_State.Get_Indices;
-    startv : Standard_Complex_Vectors.Link_to_Vector
+   -- nb_par : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Parameters;
+   -- indpar : constant Standard_Integer_Vectors.Link_to_Vector
+   --        := Parameter_Homotopy_State.Get_Indices;
+    startv : constant Standard_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Start;
-    target : Standard_Complex_Vectors.Link_to_Vector
+    target : constant Standard_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Target;
     dx : Standard_Complex_Vectors.Vector(1..nb_var);
     rx,rdx : Standard_Floating_Vectors.Vector(1..nb_var);
@@ -707,19 +701,19 @@ function use_sweep ( job : integer32;
 
     lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := DoblDobl_PolySys_Container.Retrieve;
-    sols : DoblDobl_Complex_Solutions.Solution_List
+    sols : constant DoblDobl_Complex_Solutions.Solution_List
          := DoblDobl_Solutions_Container.Retrieve;
     nb_equ : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Equations;
     nb_var : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Variables;
-    nb_par : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Parameters;
-    indpar : constant Standard_Integer_Vectors.Link_to_Vector
-           := Parameter_Homotopy_State.Get_Indices;
-    startv : DoblDobl_Complex_Vectors.Link_to_Vector
+   -- nb_par : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Parameters;
+   -- indpar : constant Standard_Integer_Vectors.Link_to_Vector
+   --        := Parameter_Homotopy_State.Get_Indices;
+    startv : constant DoblDobl_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Start;
-    target : DoblDobl_Complex_Vectors.Link_to_Vector
+    target : constant DoblDobl_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Target;
     dx : DoblDobl_Complex_Vectors.Vector(1..nb_var);
     rx,rdx : Double_Double_Vectors.Vector(1..nb_var);
@@ -809,19 +803,19 @@ function use_sweep ( job : integer32;
 
     lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := QuadDobl_PolySys_Container.Retrieve;
-    sols : QuadDobl_Complex_Solutions.Solution_List
+    sols : constant QuadDobl_Complex_Solutions.Solution_List
          := QuadDobl_Solutions_Container.Retrieve;
     nb_equ : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Equations;
     nb_var : constant integer32
            := Parameter_Homotopy_State.Get_Number_of_Variables;
-    nb_par : constant integer32
-           := Parameter_Homotopy_State.Get_Number_of_Parameters;
-    indpar : constant Standard_Integer_Vectors.Link_to_Vector
-           := Parameter_Homotopy_State.Get_Indices;
-    startv : QuadDobl_Complex_Vectors.Link_to_Vector
+   -- nb_par : constant integer32
+   --        := Parameter_Homotopy_State.Get_Number_of_Parameters;
+   -- indpar : constant Standard_Integer_Vectors.Link_to_Vector
+   --        := Parameter_Homotopy_State.Get_Indices;
+    startv : constant QuadDobl_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Start;
-    target : QuadDobl_Complex_Vectors.Link_to_Vector
+    target : constant QuadDobl_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Target;
     dx : QuadDobl_Complex_Vectors.Vector(1..nb_var);
     rx,rdx : Quad_Double_Vectors.Vector(1..nb_var);

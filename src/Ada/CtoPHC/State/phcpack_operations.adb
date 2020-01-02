@@ -60,7 +60,7 @@ with DoblDobl_Diagonal_Solutions;        use DoblDobl_Diagonal_Solutions;
 with QuadDobl_Diagonal_Solutions;        use QuadDobl_Diagonal_Solutions;
 with Extrinsic_Diagonal_Homotopies;      use Extrinsic_Diagonal_Homotopies;
 with Multitasking_Continuation;          use Multitasking_Continuation;
-with Numerical_Tropisms_Container;       use Numerical_Tropisms_Container;
+with Numerical_Tropisms_Container;
 
 package body PHCpack_Operations is
 
@@ -1529,7 +1529,7 @@ package body PHCpack_Operations is
 
   procedure Standard_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
 
-    use Standard_Complex_Polynomials,Standard_Complex_Solutions;
+    use Standard_Complex_Solutions;
 
    -- k : constant natural32
    --   := Number_of_Unknowns(st_target_sys(st_target_sys'first)) - a;
@@ -1562,7 +1562,7 @@ package body PHCpack_Operations is
 
   procedure DoblDobl_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
 
-    use DoblDobl_Complex_Polynomials,DoblDobl_Complex_Solutions;
+    use DoblDobl_Complex_Solutions;
 
    -- k : constant natural32
    --   := Number_of_Unknowns(dd_target_sys(dd_target_sys'first)) - a;
@@ -1592,7 +1592,7 @@ package body PHCpack_Operations is
 
   procedure QuadDobl_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
 
-    use QuadDobl_Complex_Polynomials,QuadDobl_Complex_Solutions;
+    use QuadDobl_Complex_Solutions;
 
    -- k : constant natural32
    --   := Number_of_Unknowns(qd_target_sys(qd_target_sys'first)) - a;
@@ -2924,9 +2924,8 @@ package body PHCpack_Operations is
 
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_IncFix_Continuation;
-    use Drivers_for_Poly_Continuation;
 
-    k : natural32 := 2;
+    k : constant natural32 := 2;
     r : Complex_Number; 
     epsxa : constant double_float := 1.0E-13;
     epsfa : constant double_float := 1.0E-13;
@@ -3022,9 +3021,8 @@ package body PHCpack_Operations is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
     use DoblDobl_IncFix_Continuation;
-    use Drivers_for_Poly_Continuation;
 
-    k : natural32 := 2;
+    k : constant natural32 := 2;
     r : Complex_Number; 
     timer : Timing_Widget;
     nbequ : constant integer32 := dd_target_laur_sys'last;
@@ -3105,9 +3103,8 @@ package body PHCpack_Operations is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
     use QuadDobl_IncFix_Continuation;
-    use Drivers_for_Poly_Continuation;
 
-    k : natural32 := 2;
+    k : constant natural32 := 2;
     r : Complex_Number; 
     timer : Timing_Widget;
     nbequ : constant integer32 := qd_target_laur_sys'last;

@@ -26,7 +26,7 @@ function use_reduction ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     diagonalize : constant integer32 := integer32(v_a(v_a'first));
-    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
     diagonal,inconsistent,infinite : boolean := false;
 
@@ -50,7 +50,7 @@ function use_reduction ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     diagonalize : constant integer32 := integer32(v_a(v_a'first));
-    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := DoblDobl_PolySys_Container.Retrieve;
     diagonal,inconsistent,infinite : boolean := false;
 
@@ -74,7 +74,7 @@ function use_reduction ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     diagonalize : constant integer32 := integer32(v_a(v_a'first));
-    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := QuadDobl_PolySys_Container.Retrieve;
     diagonal,inconsistent,infinite : boolean := false;
 
@@ -103,7 +103,7 @@ function use_reduction ( job : integer32;
     equrmax : constant natural32 := natural32(v_a(v_a'first));
     spolmax : constant natural32 := natural32(v_a(v_a'first+1));
     rpolmax : constant natural32 := natural32(v_a(v_a'first+2));
-    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
     eqcnt,spcnt,rpcnt : natural32 := 0;
     res : Standard_Complex_Poly_Systems.Poly_Sys(lp'range);

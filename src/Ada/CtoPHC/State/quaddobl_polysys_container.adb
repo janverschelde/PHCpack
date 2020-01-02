@@ -1,5 +1,5 @@
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
-with Standard_Natural_Vectors;          use Standard_Natural_Vectors;
+with Standard_Natural_Vectors;
 
 package body QuadDobl_PolySys_Container is
 

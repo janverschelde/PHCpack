@@ -1,5 +1,5 @@
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
-with Standard_Natural_Vectors;          use Standard_Natural_Vectors;
+with Standard_Natural_Vectors;
 
 package body DoblDobl_PolySys_Container is
 

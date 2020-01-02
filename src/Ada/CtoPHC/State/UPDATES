@@ -1,3 +1,7 @@
+Wed 1 Jan 2020 : for compiler warnings, modified use_reduction.adb,
+  {standard,dobldobl,quaddobl}_polysys_container.adb, phcpack_operations.adb,
+  use_sweep.adb.
+
 Sat 7 Sep 2019 : added 3 jobs to use_solcon and use_c2phc4c to read solutions
   from file, given a file name.
 
