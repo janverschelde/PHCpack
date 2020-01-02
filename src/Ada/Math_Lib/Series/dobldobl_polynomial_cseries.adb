@@ -16,7 +16,7 @@ package body DoblDobl_Polynomial_CSeries is
     procedure Add_Term ( t : in DoblDobl_CSeries_Polynomials.Term;
                          cont : out boolean ) is
 
-      cf : DoblDobl_Complex_Series.Link_to_Series := t.cf;
+      cf : constant DoblDobl_Complex_Series.Link_to_Series := t.cf;
    
     begin
       for k in 0..cf.deg loop

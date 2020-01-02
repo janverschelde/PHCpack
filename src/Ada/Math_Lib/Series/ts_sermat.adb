@@ -175,9 +175,9 @@ procedure ts_sermat is
     A : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
       := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
     wrk : Standard_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
-    x : Standard_Dense_Series_Vectors.Vector(1..n)
+    x : constant Standard_Dense_Series_Vectors.Vector(1..n)
       := Standard_Random_Series.Random_Series_Vector(1,n,degree);
-    b : Standard_Dense_Series_Vectors.Vector(1..n) := A*x;
+    b : constant Standard_Dense_Series_Vectors.Vector(1..n) := A*x;
     y : Standard_Dense_Series_Vectors.Vector(1..n) := b;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
@@ -221,9 +221,9 @@ procedure ts_sermat is
     A : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
       := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
     wrk : DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
-    x : DoblDobl_Dense_Series_Vectors.Vector(1..n)
+    x : constant DoblDobl_Dense_Series_Vectors.Vector(1..n)
       := DoblDobl_Random_Series.Random_Series_Vector(1,n,degree);
-    b : DoblDobl_Dense_Series_Vectors.Vector(1..n) := A*x;
+    b : constant DoblDobl_Dense_Series_Vectors.Vector(1..n) := A*x;
     y : DoblDobl_Dense_Series_Vectors.Vector(1..n) := b;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
@@ -267,9 +267,9 @@ procedure ts_sermat is
     A : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
       := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
     wrk : QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
-    x : QuadDobl_Dense_Series_Vectors.Vector(1..n)
+    x : constant QuadDobl_Dense_Series_Vectors.Vector(1..n)
       := QuadDobl_Random_Series.Random_Series_Vector(1,n,degree);
-    b : QuadDobl_Dense_Series_Vectors.Vector(1..n) := A*x;
+    b : constant QuadDobl_Dense_Series_Vectors.Vector(1..n) := A*x;
     y : QuadDobl_Dense_Series_Vectors.Vector(1..n) := b;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;

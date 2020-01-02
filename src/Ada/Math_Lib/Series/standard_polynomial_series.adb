@@ -13,7 +13,7 @@ package body Standard_Polynomial_Series is
     procedure Add_Term ( t : in Standard_Series_Polynomials.Term;
                          cont : out boolean ) is
 
-      cf : Standard_Dense_Series.Series := t.cf;
+      cf : constant Standard_Dense_Series.Series := t.cf;
    
     begin
       for k in 0..cf.deg loop

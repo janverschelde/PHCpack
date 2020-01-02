@@ -1,3 +1,8 @@
+Thu 2 Jan 2020 : for compiler warnings, modified ts_sersys.adb,
+  {standard,dobldobl,quaddobl}_polynomial_cseries.adb, ts_sermat.adb,
+  ts_cservec.adb, ts_csermat.adb, ts_cserlin.adb,
+  {standard,dobldobl,quaddobl}_polynomial_series.adb.
+
 Wed 1 Jan 2020 : for compiler warnings, modified standard_truncated_series.adb, 
   ts_pstrunc.adb, {standard,dobldobl,quaddobl}_random_series.adb,
   dobldobl_algebraic_series.adb, standard_algebraic_series2.adb,

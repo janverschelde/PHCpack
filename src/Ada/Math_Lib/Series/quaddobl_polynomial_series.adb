@@ -14,7 +14,7 @@ package body QuadDobl_Polynomial_Series is
     procedure Add_Term ( t : in QuadDobl_Series_Polynomials.Term;
                          cont : out boolean ) is
 
-      cf : QuadDobl_Dense_Series.Series := t.cf;
+      cf : constant QuadDobl_Dense_Series.Series := t.cf;
    
     begin
       for k in 0..cf.deg loop

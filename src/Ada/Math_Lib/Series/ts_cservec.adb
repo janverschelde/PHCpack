@@ -2,9 +2,6 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Complex_Vectors;
-with Standard_Random_Vectors;
 with Standard_Complex_Series;
 with Standard_Complex_Series_io;         use Standard_Complex_Series_io;
 with DoblDobl_Complex_Series;
@@ -12,14 +9,8 @@ with DoblDobl_Complex_Series_io;         use DoblDobl_Complex_Series_io;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_io;         use QuadDobl_Complex_Series_io;
 with Standard_Complex_Series_Vectors;
-with Standard_Complex_Series_Vectors_io; use Standard_Complex_Series_Vectors_io;
-with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_Vectors;
-with DoblDobl_Complex_Series_Vectors_io; use DoblDobl_Complex_Series_Vectors_io;
-with DoblDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_Vectors;
-with QuadDobl_Complex_Series_Vectors_io; use QuadDobl_Complex_Series_Vectors_io;
-with QuadDobl_Complex_Series_VecVecs;
 with Standard_Complex_Vector_Series;
 with Standard_Complex_Vector_Series_io;  use Standard_Complex_Vector_Series_io;
 with DoblDobl_Complex_Vector_Series;
@@ -150,9 +141,9 @@ procedure ts_cservec is
   --   with series of the given degree, in standard double precision.
   --   Tests the computation of the norm and the normalization.
 
-    sv : Standard_Complex_Series_Vectors.Vector(1..dim)
+    sv : constant Standard_Complex_Series_Vectors.Vector(1..dim)
        := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,degree);
-    vs : Standard_Complex_Vector_Series.Vector(degree)
+    vs : constant Standard_Complex_Vector_Series.Vector(degree)
        := Standard_Complex_Vector_Series.Create(sv);
 
   begin
@@ -168,9 +159,9 @@ procedure ts_cservec is
   --   with series of the given degree, in double double precision.
   --   Tests the computation of the norm and the normalization.
 
-    sv : DoblDobl_Complex_Series_Vectors.Vector(1..dim)
+    sv : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
        := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,degree);
-    vs : DoblDobl_Complex_Vector_Series.Vector(degree)
+    vs : constant DoblDobl_Complex_Vector_Series.Vector(degree)
        := DoblDobl_Complex_Vector_Series.Create(sv);
 
   begin
@@ -186,9 +177,9 @@ procedure ts_cservec is
   --   with series of the given degree, in double double precision.
   --   Tests the computation of the norm and the normalization.
 
-    sv : QuadDobl_Complex_Series_Vectors.Vector(1..dim)
+    sv : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
        := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,degree);
-    vs : QuadDobl_Complex_Vector_Series.Vector(degree)
+    vs : constant QuadDobl_Complex_Vector_Series.Vector(degree)
        := QuadDobl_Complex_Vector_Series.Create(sv);
 
   begin

@@ -202,9 +202,9 @@ procedure ts_csermat is
     A : constant Standard_Complex_Series_Matrices.Matrix(1..n,1..n)
       := Standard_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,degree);
     wrk : Standard_Complex_Series_Matrices.Matrix(1..n,1..n);
-    x : Standard_Complex_Series_Vectors.Vector(1..n)
+    x : constant Standard_Complex_Series_Vectors.Vector(1..n)
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,n,degree);
-    b : Standard_Complex_Series_Vectors.Vector(1..n) := A*x;
+    b : constant Standard_Complex_Series_Vectors.Vector(1..n) := A*x;
     y : Standard_Complex_Series_Vectors.Vector(1..n);
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
@@ -250,9 +250,9 @@ procedure ts_csermat is
     A : constant DoblDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
       := DoblDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,degree);
     wrk : DoblDobl_Complex_Series_Matrices.Matrix(1..n,1..n);
-    x : DoblDobl_Complex_Series_Vectors.Vector(1..n)
+    x : constant DoblDobl_Complex_Series_Vectors.Vector(1..n)
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,n,degree);
-    b : DoblDobl_Complex_Series_Vectors.Vector(1..n) := A*x;
+    b : constant DoblDobl_Complex_Series_Vectors.Vector(1..n) := A*x;
     y : DoblDobl_Complex_Series_Vectors.Vector(1..n);
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
@@ -298,9 +298,9 @@ procedure ts_csermat is
     A : constant QuadDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
       := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,degree);
     wrk : QuadDobl_Complex_Series_Matrices.Matrix(1..n,1..n);
-    x : QuadDobl_Complex_Series_Vectors.Vector(1..n)
+    x : constant QuadDobl_Complex_Series_Vectors.Vector(1..n)
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,degree);
-    b : QuadDobl_Complex_Series_Vectors.Vector(1..n) := A*x;
+    b : constant QuadDobl_Complex_Series_Vectors.Vector(1..n) := A*x;
     y : QuadDobl_Complex_Series_Vectors.Vector(1..n);
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
