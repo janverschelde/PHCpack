@@ -20,7 +20,6 @@ procedure ts_mapsols_io is
 
     use Standard_Complex_Solutions;
     use Standard_Complex_Solutions_io;
-    use Standard_Maple_Solutions_io;
 
     outfile : file_type;
     sols : Solution_List;
@@ -45,7 +44,6 @@ procedure ts_mapsols_io is
 
     use Multprec_Complex_Solutions;
     use Multprec_Complex_Solutions_io;
-    use Multprec_Maple_Solutions_io;
 
     outfile : file_type;
     sols : Solution_List;
@@ -70,7 +68,6 @@ procedure ts_mapsols_io is
 
     use Standard_Complex_Solutions;
     use Standard_Complex_Solutions_io;
-    use Standard_Maple_Solutions_io;
 
     infile,outfile : file_type;
     sols : Solution_List;
@@ -99,7 +96,6 @@ procedure ts_mapsols_io is
 
     use Multprec_Complex_Solutions;
     use Multprec_Complex_Solutions_io;
-    use Multprec_Maple_Solutions_io;
 
     infile,outfile : file_type;
     sols : Solution_List;

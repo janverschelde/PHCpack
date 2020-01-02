@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Numbers_io;                         use Numbers_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -27,6 +26,9 @@ procedure ts_sols is
     new_line; 
     put_line("Reading the polynomial system.");
     get(lp);
+    new_line;
+    put_line("The polynomial system :");
+    put(lp.all);
     new_line;
     Read(sols);
     new_line;
@@ -100,7 +102,7 @@ procedure ts_sols is
 
     solfile,outfile : file_type;
     sols,sols_last : Solution_List;
-    n,len,dim,nbr : natural32;
+    n,len,dim,nbr : natural32 := 0;
     ans : character;
 
   begin

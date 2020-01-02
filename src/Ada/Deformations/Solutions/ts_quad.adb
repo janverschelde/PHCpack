@@ -20,9 +20,6 @@ with Standard_Point_Lists;               use Standard_Point_Lists;
 with Standard_Quad_Trees;                use Standard_Quad_Trees;
 with Standard_Quad_Trees_io;             use Standard_Quad_Trees_io;
 with Standard_Condition_Report;          use Standard_Condition_Report;
-with DoblDobl_Quad_Trees;
-with QuadDobl_Quad_Trees;
-with Drivers_for_Condition_Tables;       use Drivers_for_Condition_Tables;
 with Standard_Select_Solutions;
 
 procedure ts_quad is
@@ -201,8 +198,8 @@ procedure ts_quad is
 
     timer : Timing_Widget;
     s : Solution(integer32(dim));
-    h1 : Vector(1..integer32(dim)) := Random_Vector(1,integer32(dim));
-    h2 : Vector(1..integer32(dim)) := Random_Vector(1,integer32(dim));
+    h1 : constant Vector(1..integer32(dim)) := Random_Vector(1,integer32(dim));
+    h2 : constant Vector(1..integer32(dim)) := Random_Vector(1,integer32(dim));
     freq : natural32 := 1024; -- frequency updater
     first,last : Point_List;
 

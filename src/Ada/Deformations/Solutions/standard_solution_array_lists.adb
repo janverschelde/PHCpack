@@ -3,8 +3,6 @@ with Standard_Integer_Numbers;             use Standard_Integer_Numbers;
 
 package body Standard_Solution_Array_Lists is
 
-  use Lists_of_Solution_Arrays;
-
 -- CREATORS :
 
   function Create ( s : Solution_Array ) return Solution_Array_List is

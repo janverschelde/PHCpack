@@ -11,9 +11,9 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with Standard_Random_Numbers;            use Standard_Random_Numbers;
-with DoblDobl_Random_Numbers;            use DoblDobl_Random_Numbers;
-with QuadDobl_Random_Numbers;            use QuadDobl_Random_Numbers;
+with Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;
 with Standard_Point_Lists;
 with Standard_Quad_Trees;
 with DoblDobl_Point_Lists;
@@ -222,7 +222,7 @@ procedure ts_quadpart is
 
     use Standard_Point_Lists;
 
-    pl : Point_List := Random_Points(n);
+    pl : constant Point_List := Random_Points(n);
 
   begin
     Quadrant_Partition(pl);
@@ -235,7 +235,7 @@ procedure ts_quadpart is
 
     use DoblDobl_Point_Lists;
 
-    pl : Point_List := Random_Points(n);
+    pl : constant Point_List := Random_Points(n);
 
   begin
     Quadrant_Partition(pl);
@@ -248,7 +248,7 @@ procedure ts_quadpart is
 
     use QuadDobl_Point_Lists;
 
-    pl : Point_List := Random_Points(n);
+    pl : constant Point_List := Random_Points(n);
 
   begin
     Quadrant_Partition(pl);

@@ -17,7 +17,6 @@ procedure ts_dicsols_io is
 
     use Standard_Complex_Solutions;
     use Standard_Complex_Solutions_io;
-    use Standard_Dictionary_Solutions_io;
 
     outfile : file_type;
     sols : Solution_List;
@@ -42,7 +41,6 @@ procedure ts_dicsols_io is
 
     use Standard_Complex_Solutions;
     use Standard_Complex_Solutions_io;
-    use Standard_Dictionary_Solutions_io;
 
     infile,outfile : file_type;
     sols : Solution_List;

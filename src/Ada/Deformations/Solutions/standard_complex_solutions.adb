@@ -3,8 +3,6 @@ with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 
 package body Standard_Complex_Solutions is
 
-  use List_of_Solutions;
-
 -- CREATORS :
 
   function Create ( sl : Solution_List ) return Solution_Array is

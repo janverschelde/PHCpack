@@ -1,3 +1,7 @@
+Thu 2 Jan 2020 : for compiler warnings, modified ts_quad, ts_quadpart,
+  standard_complex_solutions.adb, standard_complex_solutions_io.adb,
+  standard_solution_array_lists.adb, ts_sols, ts_mapsols_io, ts_dicsols_io.
+
 Sun 24 Mar 2019 : added functions and procedures to *mixed_residuals to
   evaluate the formulas for the mixed residuals directly, given evaluations.
 
