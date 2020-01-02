@@ -50,19 +50,22 @@ package Series_and_Predictors is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
-                eva : out Standard_Complex_Series_Vectors.Vector );
+                eva : out Standard_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
   procedure Newton_Prediction
               ( maxdeg,nit : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
-                eva : out DoblDobl_Complex_Series_Vectors.Vector );
+                eva : out DoblDobl_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
   procedure Newton_Prediction
               ( maxdeg,nit : in integer32;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
-                eva : out QuadDobl_Complex_Series_Vectors.Vector );
+                eva : out QuadDobl_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method on the homotopy in hom,
@@ -92,21 +95,24 @@ package Series_and_Predictors is
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
                 eva : out Standard_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Newton_Prediction
               ( file : in file_type; maxdeg,nit : in integer32;
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
                 eva : out DoblDobl_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Newton_Prediction
               ( file : in file_type; maxdeg,nit : in integer32;
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
                 eva : out QuadDobl_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method on the homotopy in hom,
@@ -141,7 +147,8 @@ package Series_and_Predictors is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
-                eva : out Standard_Complex_Series_Vectors.Vector );
+                eva : out Standard_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
   procedure Newton_Prediction
               ( maxdeg,nit : in integer32;
                 fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -150,7 +157,8 @@ package Series_and_Predictors is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
-                eva : out DoblDobl_Complex_Series_Vectors.Vector );
+                eva : out DoblDobl_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
   procedure Newton_Prediction
               ( maxdeg,nit : in integer32;
                 fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -159,7 +167,8 @@ package Series_and_Predictors is
                 mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
-                eva : out QuadDobl_Complex_Series_Vectors.Vector );
+                eva : out QuadDobl_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method on the homotopy in hom,
@@ -195,7 +204,8 @@ package Series_and_Predictors is
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
                 eva : out Standard_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Newton_Prediction
               ( file : in file_type; maxdeg,nit : in integer32;
                 fhm : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -205,7 +215,8 @@ package Series_and_Predictors is
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
                 eva : out DoblDobl_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
   procedure Newton_Prediction
               ( file : in file_type; maxdeg,nit : in integer32;
                 fhm : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -215,7 +226,8 @@ package Series_and_Predictors is
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
                 eva : out QuadDobl_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false );
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method on the homotopy in hom,

@@ -31,15 +31,19 @@ package body Series_and_Predictors is
                 hom : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
-                eva : out Standard_Complex_Series_Vectors.Vector ) is
+                eva : out Standard_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 1 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if hom'last = sol'last
-     then Run_LU_Newton(maxdeg,nit,hom,srv,info);
-     else Run_QR_Newton(maxdeg,nit,hom,srv);
+     then Run_LU_Newton(maxdeg,nit,hom,srv,info,vrblvl=>vrblvl-1);
+     else Run_QR_Newton(maxdeg,nit,hom,srv,vrblvl=>vrblvl-1);
     end if;
     eva := Standard_CSeries_Poly_SysFun.Eval(hom,srv);
   end Newton_Prediction;
@@ -49,15 +53,19 @@ package body Series_and_Predictors is
                 hom : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
-                eva : out DoblDobl_Complex_Series_Vectors.Vector ) is
+                eva : out DoblDobl_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 2 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if hom'last = sol'last
-     then Run_LU_Newton(maxdeg,nit,hom,srv,info);
-     else Run_QR_Newton(maxdeg,nit,hom,srv);
+     then Run_LU_Newton(maxdeg,nit,hom,srv,info,vrblvl=>vrblvl-1);
+     else Run_QR_Newton(maxdeg,nit,hom,srv,vrblvl=>vrblvl-1);
     end if;
     eva := DoblDobl_CSeries_Poly_SysFun.Eval(hom,srv);
   end Newton_Prediction;
@@ -67,15 +75,19 @@ package body Series_and_Predictors is
                 hom : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
-                eva : out QuadDobl_Complex_Series_Vectors.Vector ) is
+                eva : out QuadDobl_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 3 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if hom'last = sol'last
-     then Run_LU_Newton(maxdeg,nit,hom,srv,info);
-     else Run_QR_Newton(maxdeg,nit,hom,srv);
+     then Run_LU_Newton(maxdeg,nit,hom,srv,info,vrblvl=>vrblvl-1);
+     else Run_QR_Newton(maxdeg,nit,hom,srv,vrblvl=>vrblvl-1);
     end if;
     eva := QuadDobl_CSeries_Poly_SysFun.Eval(hom,srv);
   end Newton_Prediction;
@@ -86,11 +98,15 @@ package body Series_and_Predictors is
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
                 eva : out Standard_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 4...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
       put_line(file,"The solution :");
@@ -101,17 +117,17 @@ package body Series_and_Predictors is
     end if;
     if hom'last = sol'last then
       if not verbose then
-        Run_LU_Newton(maxdeg,nit,hom,srv,info);
+        Run_LU_Newton(maxdeg,nit,hom,srv,info,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,maxdeg,nit,hom,srv,info,true);
+        Run_LU_Newton(file,maxdeg,nit,hom,srv,info,true,vrblvl=>vrblvl-1);
       end if;
     else
       if not verbose then
-        Run_QR_Newton(maxdeg,nit,hom,srv);
+        Run_QR_Newton(maxdeg,nit,hom,srv,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(file,maxdeg,nit,hom,srv,true);
+        Run_QR_Newton(file,maxdeg,nit,hom,srv,true,vrblvl=>vrblvl-1);
       end if;
     end if;
     eva := Standard_CSeries_Poly_SysFun.Eval(hom,srv);
@@ -127,11 +143,15 @@ package body Series_and_Predictors is
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
                 eva : out DoblDobl_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 5 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
       put_line(file,"The solution :");
@@ -142,17 +162,17 @@ package body Series_and_Predictors is
     end if;
     if hom'last = sol'last then
       if not verbose then
-        Run_LU_Newton(maxdeg,nit,hom,srv,info);
+        Run_LU_Newton(maxdeg,nit,hom,srv,info,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,maxdeg,nit,hom,srv,info,true);
+        Run_LU_Newton(file,maxdeg,nit,hom,srv,info,true,vrblvl=>vrblvl-1);
       end if;
     else
       if not verbose then
-        Run_QR_Newton(maxdeg,nit,hom,srv);
+        Run_QR_Newton(maxdeg,nit,hom,srv,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(file,maxdeg,nit,hom,srv,true);
+        Run_QR_Newton(file,maxdeg,nit,hom,srv,true,vrblvl=>vrblvl-1);
       end if;
     end if;
     eva := DoblDobl_CSeries_Poly_SysFun.Eval(hom,srv);
@@ -168,11 +188,15 @@ package body Series_and_Predictors is
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
                 eva : out QuadDobl_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 6 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
       put_line(file,"The solution :");
@@ -183,17 +207,17 @@ package body Series_and_Predictors is
     end if;
     if hom'last = sol'last then
       if not verbose then
-        Run_LU_Newton(maxdeg,nit,hom,srv,info);
+        Run_LU_Newton(maxdeg,nit,hom,srv,info,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,maxdeg,nit,hom,srv,info,true);
+        Run_LU_Newton(file,maxdeg,nit,hom,srv,info,true,vrblvl=>vrblvl-1);
       end if;
     else
       if not verbose then
-        Run_QR_Newton(maxdeg,nit,hom,srv);
+        Run_QR_Newton(maxdeg,nit,hom,srv,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(file,maxdeg,nit,hom,srv,true);
+        Run_QR_Newton(file,maxdeg,nit,hom,srv,true,vrblvl=>vrblvl-1);
       end if;
     end if;
     eva := QuadDobl_CSeries_Poly_SysFun.Eval(hom,srv);
@@ -213,15 +237,19 @@ package body Series_and_Predictors is
                 mlt : in Standard_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
-                eva : out Standard_Complex_Series_Vectors.Vector ) is
+                eva : out Standard_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 7 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if fhm'last = sol'last
-     then Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info);
-     else Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv);
+     then Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,vrblvl=>vrblvl-1);
+     else Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,vrblvl=>vrblvl-1);
     end if;
     eva := Standard_CSeries_Poly_SysFun.Eval(fhm,fcf,srv);
   end Newton_Prediction;
@@ -234,15 +262,19 @@ package body Series_and_Predictors is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
-                eva : out DoblDobl_Complex_Series_Vectors.Vector ) is
+                eva : out DoblDobl_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 8 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if fhm'last = sol'last
-     then Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info);
-     else Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv);
+     then Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,vrblvl=>vrblvl-1);
+     else Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,vrblvl=>vrblvl-1);
     end if;
     eva := DoblDobl_CSeries_Poly_SysFun.Eval(fhm,fcf,srv);
   end Newton_Prediction;
@@ -255,15 +287,19 @@ package body Series_and_Predictors is
                 mlt : in QuadDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
-                eva : out QuadDobl_Complex_Series_Vectors.Vector ) is
+                eva : out QuadDobl_Complex_Series_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 9 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if fhm'last = sol'last
-     then Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info);
-     else Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv);
+     then Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,vrblvl=>vrblvl-1);
+     else Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,vrblvl=>vrblvl-1);
     end if;
     eva := QuadDobl_CSeries_Poly_SysFun.Eval(fhm,fcf,srv);
   end Newton_Prediction;
@@ -277,11 +313,15 @@ package body Series_and_Predictors is
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Complex_Series_Vectors.Vector;
                 eva : out Standard_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 10 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
       put_line(file,"The solution :");
@@ -292,17 +332,19 @@ package body Series_and_Predictors is
     end if;
     if fhm'last = sol'last then
       if not verbose then
-        Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info);
+        Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,true);
+        Run_LU_Newton
+          (file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,true,vrblvl=>vrblvl-1);
       end if;
     else
       if not verbose then
-        Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv);
+        Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,true);
+        Run_QR_Newton
+          (file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,true,vrblvl=>vrblvl-1);
       end if;
     end if;
     eva := Standard_CSeries_Poly_SysFun.Eval(fhm,fcf,srv);
@@ -321,11 +363,15 @@ package body Series_and_Predictors is
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Complex_Series_Vectors.Vector;
                 eva : out DoblDobl_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 11 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
       put_line(file,"The solution :");
@@ -336,17 +382,19 @@ package body Series_and_Predictors is
     end if;
     if fhm'last = sol'last then
       if not verbose then
-        Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info);
+        Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,true);
+        Run_LU_Newton
+          (file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,true,vrblvl=>vrblvl-1);
       end if;
     else
       if not verbose then
-        Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv);
+        Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,true);
+        Run_QR_Newton
+          (file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,true,vrblvl=>vrblvl-1);
       end if;
     end if;
     eva := DoblDobl_CSeries_Poly_SysFun.Eval(fhm,fcf,srv);
@@ -365,11 +413,15 @@ package body Series_and_Predictors is
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Complex_Series_Vectors.Vector;
                 eva : out QuadDobl_Complex_Series_Vectors.Vector;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in series_and_predictors.Newton_Prediction 12 ...");
+    end if;
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
       put_line(file,"The solution :");
@@ -380,17 +432,19 @@ package body Series_and_Predictors is
     end if;
     if fhm'last = sol'last then
       if not verbose then
-        Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info);
+        Run_LU_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,true);
+        Run_LU_Newton
+          (file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,info,true,vrblvl=>vrblvl-1);
       end if;
     else
       if not verbose then
-        Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv);
+        Run_QR_Newton(maxdeg,nit,fhm,fcf,ejm,mlt,srv,vrblvl=>vrblvl-1);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,true);
+        Run_QR_Newton
+          (file,maxdeg,nit,fhm,fcf,ejm,mlt,srv,true,vrblvl=>vrblvl-1);
       end if;
     end if;
     eva := QuadDobl_CSeries_Poly_SysFun.Eval(fhm,fcf,srv);

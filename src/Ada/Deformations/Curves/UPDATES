@@ -1,3 +1,6 @@
+Thu 2 Jan 2020 : added verbose level to power_series_methods, modified
+  series_and_predictors, {standard,dobldobl,quaddobl}_pade_trackers.adb.
+
 Wed 1 Jan 2020 : for compiler warnings, modified test_pade_predictors,
   ts_padepred.adb, ts_sernew.adb, ts_serpade.adb, ts_serpred.adb,
   ts_sersol.adb, ts_serhom.adb, ts_jacrabin.adb, ts_durker.adb.

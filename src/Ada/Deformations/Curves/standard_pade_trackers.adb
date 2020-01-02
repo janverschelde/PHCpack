@@ -305,7 +305,8 @@ package body Standard_Pade_Trackers is
     if vrblvl > 0
      then put_line("-> in standard_pade_trackers.Step_Control 1 ...");
     end if;
-    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol,srv,eva);
+    Series_and_Predictors.Newton_Prediction
+      (maxdeg,nit,hom,sol,srv,eva,vrblvl=>vrblvl-1);
    -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     sstep := 1.0; -- disable series step --  pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
@@ -348,7 +349,7 @@ package body Standard_Pade_Trackers is
      then put_line("-> in standard_pade_trackers.Step_Control 2 ...");
     end if;
     Series_and_Predictors.Newton_Prediction
-      (maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva);
+      (maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,vrblvl=>vrblvl-1);
    -- sstep := Series_and_Predictors.Set_Step_Size(eva,tolcff,alpha);
     sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
     Series_and_Predictors.Pade_Approximants(srv,pv,poles,frp,cfp);
@@ -389,7 +390,7 @@ package body Standard_Pade_Trackers is
      then put_line("-> in standard_pade_trackers.Step_Control 3 ...");
     end if;
     Series_and_Predictors.Newton_Prediction
-      (file,maxdeg,nit,hom,sol,srv,eva,false); -- verbose);
+      (file,maxdeg,nit,hom,sol,srv,eva,false,vrblvl=>vrblvl-1); -- verbose);
    -- sstep := Series_and_Predictors.Set_Step_Size
    --            (file,eva,tolcff,alpha,verbose);
     sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
@@ -466,7 +467,8 @@ package body Standard_Pade_Trackers is
      then put_line("-> in standard_pade_trackers.Step_Control 4 ...");
     end if;
     Series_and_Predictors.Newton_Prediction
-      (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false); -- verbose);
+      (file,maxdeg,nit,fhm,fcf,ejm,mlt,sol,srv,eva,false,vrblvl=>vrblvl-1);
+   -- verbose);
    -- sstep := Series_and_Predictors.Set_Step_Size
    --            (file,eva,tolcff,alpha,verbose);
     sstep := 1.0; -- disable series step -- pars.sbeta*sstep;
