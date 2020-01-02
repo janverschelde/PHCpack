@@ -51,9 +51,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 2 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -100,9 +100,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 4 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -149,9 +149,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 6 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -198,9 +198,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 8 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
     else
-      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if 1.0 + rcond /= 1.0 then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -247,9 +247,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 10 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
     else
-      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -296,9 +296,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 12 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond);
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
     else
-      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond);
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
       put(file,"rcond : "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -353,9 +353,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 14 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -409,9 +409,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 16 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -465,9 +465,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_LU_Newton 18 ...");
     end if;
     if not verbose then
-      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -515,9 +515,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_QR_Newton 2 ...");
     end if;
     if not verbose then
-      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -565,9 +565,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_QR_Newton 4 ...");
     end if;
     if not verbose then
-      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -615,9 +615,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_QR_Newton 6 ...");
     end if;
     if not verbose then
-      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -673,9 +673,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_QR_Newton 8 ...");
     end if;
     if not verbose then
-      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -729,9 +729,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_QR_Newton 10 ...");
     end if;
     if not verbose then
-      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -785,9 +785,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_QR_Newton 12 ...");
     end if;
     if not verbose then
-      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
     else
-      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info);
+      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
       if info /= 0 then
         put(file,"info = "); put(file,info,1); new_line(file);
       else
@@ -837,9 +837,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_SVD_Newton 2 ...");
     end if;
     if not verbose then
-      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond);
+      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
     else
-      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond);
+      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if 1.0 + rcond /= 1.0 then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -887,9 +887,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_SVD_Newton 4 ...");
     end if;
     if not verbose then
-      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond);
+      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
     else
-      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond);
+      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then 
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -937,9 +937,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_SVD_Newton 6 ...");
     end if;
     if not verbose then
-      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond);
+      SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
     else
-      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond);
+      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
       put(file,"rcond = "); put(file,rcond,3); new_line(file);
       if one + rcond /= one then
         Complex_Series_and_Polynomials.Filter(s,tol);
@@ -987,9 +987,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_Echelon_Newton 2 ...");
     end if;
     if not verbose then
-      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det);
+      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det,vrblvl-1);
     else
-      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det);
+      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det,vrblvl-1);
       put(file,"det : "); put(file,det); new_line(file);
       Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");
@@ -1039,9 +1039,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_Echelon_Newton 4 ...");
     end if;
     if not verbose then
-      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det);
+      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det,vrblvl-1);
     else
-      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det);
+      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det,vrblvl-1);
       put(file,"det : "); put(file,det); new_line(file);
       Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");
@@ -1087,9 +1087,9 @@ package body Power_Series_Methods is
      then put_line("-> in power_series_methods.Run_Echelon_Newton 6 ...");
     end if;
     if not verbose then
-      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det);
+      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det,vrblvl-1);
     else
-      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det);
+      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det,vrblvl-1);
       put(file,"det : "); put(file,det); new_line(file);
       Complex_Series_and_Polynomials.Filter(s,tol);
       put_line(file,"The updated power series solution :");

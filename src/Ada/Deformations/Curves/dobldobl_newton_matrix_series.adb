@@ -2,7 +2,6 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
-with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_io;
 with DoblDobl_CSeries_Vector_Norms;
 with DoblDobl_Complex_Series_Matrices;
@@ -22,7 +21,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(p'range);
@@ -31,6 +30,9 @@ package body DoblDobl_Newton_Matrix_Series is
     mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 1 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     DoblDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
@@ -55,13 +57,16 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Step(p,jp,degree,x,info);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 2 ...");
+    end if;
+    LU_Newton_Step(p,jp,degree,x,info,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Step;
 
@@ -71,7 +76,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(p'range);
@@ -81,6 +86,9 @@ package body DoblDobl_Newton_Matrix_Series is
     nrm : double_double;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 3 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     put_line(file,"The evaluated series :");
     for i in px'range loop
@@ -122,13 +130,16 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Step(file,p,jp,degree,x,info);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 4 ...");
+    end if;
+    LU_Newton_Step(file,p,jp,degree,x,info,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Step;
 
@@ -141,7 +152,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(f'range);
@@ -150,6 +161,9 @@ package body DoblDobl_Newton_Matrix_Series is
     mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 5 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
     DoblDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
@@ -178,7 +192,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(f'range);
@@ -188,6 +202,9 @@ package body DoblDobl_Newton_Matrix_Series is
     nrm : double_double;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 6 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
     put_line(file,"The evaluated series :");
     for i in px'range loop
@@ -231,7 +248,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double ) is
+                rcond : out double_double; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(p'range);
@@ -241,6 +258,9 @@ package body DoblDobl_Newton_Matrix_Series is
     one : constant double_double := create(1.0);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 7 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     DoblDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
@@ -265,13 +285,16 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double ) is
+                rcond : out double_double; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Step(p,jp,degree,x,rcond);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 8 ...");
+    end if;
+    LU_Newton_Step(p,jp,degree,x,rcond,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Step;
 
@@ -281,7 +304,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double ) is
+                rcond : out double_double; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(p'range);
@@ -292,6 +315,9 @@ package body DoblDobl_Newton_Matrix_Series is
     nrm : double_double;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 9 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     put_line(file,"The evaluated series :");
     for i in px'range loop
@@ -332,13 +358,16 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double ) is
+                rcond : out double_double; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Step(file,p,jp,degree,x,rcond);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Step 10 ...");
+    end if;
+    LU_Newton_Step(file,p,jp,degree,x,rcond,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Step;
 
@@ -349,7 +378,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     wp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(p'range);
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
@@ -362,6 +391,9 @@ package body DoblDobl_Newton_Matrix_Series is
     wjp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(jp'range(1),jp'range(2));
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Step 1 ...");
+    end if;
     DoblDobl_CSeries_Poly_Systems.Copy(p,wp);
     Complex_Series_and_Polynomials.Set_degree(wp,degree);
     px := DoblDobl_CSeries_Poly_SysFun.Eval(wp,x);
@@ -399,13 +431,16 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    QR_Newton_Step(p,jp,degree,x,info);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Step 2 ...");
+    end if;
+    QR_Newton_Step(p,jp,degree,x,info,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Step;
 
@@ -415,7 +450,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     wp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(p'range);
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
@@ -428,6 +463,9 @@ package body DoblDobl_Newton_Matrix_Series is
     wjp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(jm'range(1),jm'range(2));
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Step 3 ...");
+    end if;
     DoblDobl_CSeries_Poly_Systems.Copy(p,wp);
     Complex_Series_and_Polynomials.Set_degree(wp,degree);
     px := DoblDobl_CSeries_Poly_SysFun.Eval(wp,x);
@@ -481,12 +519,15 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Step 4 ...");
+    end if;
     QR_Newton_Step(file,p,jp,degree,x,info);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Step;
@@ -500,7 +541,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(f'range);
@@ -511,6 +552,9 @@ package body DoblDobl_Newton_Matrix_Series is
     tol : constant double_float := 1.0E-26;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Step 5 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
     nrm := DoblDobl_CSeries_Vector_Norms.Max_Norm(px);
     if nrm > tol then
@@ -542,7 +586,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(f'range);
@@ -553,6 +597,9 @@ package body DoblDobl_Newton_Matrix_Series is
     tol : constant double_float := 1.0E-26;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Step 6 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(f,c,x);
     put_line(file,"The evaluated series :");
     for i in px'range loop
@@ -598,7 +645,8 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double ) is
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 ) is
 
     wp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(p'range);
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
@@ -609,9 +657,12 @@ package body DoblDobl_Newton_Matrix_Series is
     nrm : double_double;
     tol : constant double_float := 1.0E-26;
     wjp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(jp'range(1),jp'range(2));
-    one : double_double := create(1.0);
+    one : constant double_double := create(1.0);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.SVD_Newton_Step 1 ...");
+    end if;
     DoblDobl_CSeries_Poly_Systems.Copy(p,wp);
     Complex_Series_and_Polynomials.Set_degree(wp,degree);
     px := DoblDobl_CSeries_Poly_SysFun.Eval(wp,x);
@@ -649,13 +700,17 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double ) is
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    SVD_Newton_Step(p,jp,degree,x,info,rcond);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.SVD_Newton_Step 2 ...");
+    end if;
+    SVD_Newton_Step(p,jp,degree,x,info,rcond,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Step;
 
@@ -665,7 +720,8 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double ) is
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 ) is
 
     wp : DoblDobl_CSeries_Poly_Systems.Poly_Sys(p'range);
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
@@ -679,6 +735,9 @@ package body DoblDobl_Newton_Matrix_Series is
     one : constant double_double := create(1.0);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.SVD_Newton_Step 3 ...");
+    end if;
     DoblDobl_CSeries_Poly_Systems.Copy(p,wp);
     Complex_Series_and_Polynomials.Set_degree(wp,degree);
     px := DoblDobl_CSeries_Poly_SysFun.Eval(wp,x);
@@ -731,13 +790,17 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double ) is
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    SVD_Newton_Step(file,p,jp,degree,x,info,rcond);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.SVD_Newton_Step 4 ...");
+    end if;
+    SVD_Newton_Step(file,p,jp,degree,x,info,rcond,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Step;
 
@@ -748,7 +811,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number ) is
+                det : out Complex_Number; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(p'range);
@@ -757,6 +820,9 @@ package body DoblDobl_Newton_Matrix_Series is
     mj : DoblDobl_Complex_Matrix_Series.Matrix(degree);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.Echelon_Newton_Step 1 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     DoblDobl_Complex_Series_Vectors.Min(px);
     Complex_Series_and_Polynomials.Set_degree(px,degree);
@@ -779,13 +845,16 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number ) is
+                det : out Complex_Number; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    Echelon_Newton_Step(p,jp,degree,x,det);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.Echelon_Newton_Step 2 ...");
+    end if;
+    Echelon_Newton_Step(p,jp,degree,x,det,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end Echelon_Newton_Step;
 
@@ -795,7 +864,7 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number ) is
+                det : out Complex_Number; vrblvl : in integer32 := 0 ) is
 
     dx : DoblDobl_Complex_Series_Vectors.Vector(x'range);
     px : DoblDobl_Complex_Series_Vectors.Vector(p'range);
@@ -805,6 +874,9 @@ package body DoblDobl_Newton_Matrix_Series is
     nrm : double_double;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.Echelon_Newton_Step 3 ...");
+    end if;
     px := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     put_line(file,"The evaluated series :");
     for i in px'range loop
@@ -844,13 +916,16 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number ) is
+                det : out Complex_Number; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    Echelon_Newton_Step(file,p,jp,degree,x,det);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.Echelon_Newton_Step 4 ...");
+    end if;
+    Echelon_Newton_Step(file,p,jp,degree,x,det,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end Echelon_Newton_Step;
 
@@ -861,11 +936,14 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 1 ...");
+    end if;
     for i in 1..nbrit loop
-      LU_Newton_Step(p,jp,degree,x,info);
+      LU_Newton_Step(p,jp,degree,x,info,vrblvl-1);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -876,13 +954,16 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 2 ...");
+    end if;
+    LU_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -892,12 +973,15 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 3 ...");
+    end if;
     for i in 1..nbrit loop
       put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
-      LU_Newton_Step(file,p,jp,degree,x,info);
+      LU_Newton_Step(file,p,jp,degree,x,info,vrblvl-1);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -909,13 +993,16 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 4 ...");
+    end if;
+    LU_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -928,11 +1015,13 @@ package body DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
-
+                info : out integer32; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 5 ...");
+    end if;
     for i in 1..nbrit loop
-      LU_Newton_Step(f,c,ejm,mlt,degree,x,info);
+      LU_Newton_Step(f,c,ejm,mlt,degree,x,info,vrblvl-1);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -947,11 +1036,14 @@ package body DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 6 ...");
+    end if;
     for i in 1..nbrit loop
       put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
-      LU_Newton_Step(file,f,c,ejm,mlt,degree,x,info);
+      LU_Newton_Step(file,f,c,ejm,mlt,degree,x,info,vrblvl-1);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -965,13 +1057,16 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double ) is
+                rcond : out double_double; vrblvl : in integer32 := 0 ) is
 
     one : constant double_double := create(1.0);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 7 ...");
+    end if;
     for i in 1..nbrit loop
-      LU_Newton_Step(p,jp,degree,x,rcond);
+      LU_Newton_Step(p,jp,degree,x,rcond,vrblvl-1);
       exit when (one + rcond = one); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -982,13 +1077,16 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double ) is
+                rcond : out double_double; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,rcond);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 8 ...");
+    end if;
+    LU_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,rcond,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -998,14 +1096,17 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double ) is
+                rcond : out double_double; vrblvl : in integer32 := 0 ) is
 
     one : constant double_double := create(1.0);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 9 ...");
+    end if;
     for i in 1..nbrit loop
       put(file,"LU Newton step "); put(file,i,1); put_line(file," :");
-      LU_Newton_Step(file,p,jp,degree,x,rcond);
+      LU_Newton_Step(file,p,jp,degree,x,rcond,vrblvl-1);
       exit when (one + rcond = one); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -1017,13 +1118,16 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double ) is
+                rcond : out double_double; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    LU_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,rcond);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.LU_Newton_Steps 10 ...");
+    end if;
+    LU_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,rcond,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end LU_Newton_Steps;
 
@@ -1034,11 +1138,13 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
-
+                info : out integer32; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Steps 1 ...");
+    end if;
     for i in 1..nbrit loop
-      QR_Newton_Step(p,jp,degree,x,info);
+      QR_Newton_Step(p,jp,degree,x,info,vrblvl-1);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -1049,13 +1155,16 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    QR_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Steps 2 ...");
+    end if;
+    QR_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Steps;
 
@@ -1065,12 +1174,14 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
-
+                info : out integer32; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Steps 3 ...");
+    end if;
     for i in 1..nbrit loop
       put(file,"QR Newton step "); put(file,i,1); put_line(file," :");
-      QR_Newton_Step(file,p,jp,degree,x,info);
+      QR_Newton_Step(file,p,jp,degree,x,info,vrblvl-1);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -1082,13 +1193,16 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    QR_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Steps 4 ...");
+    end if;
+    QR_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end QR_Newton_Steps;
 
@@ -1101,10 +1215,13 @@ package body DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Steps 5 ...");
+    end if;
     for i in 1..nbrit loop
-      QR_Newton_Step(f,c,ejm,mlt,degree,x,info);
+      QR_Newton_Step(f,c,ejm,mlt,degree,x,info,vrblvl-1);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -1119,11 +1236,14 @@ package body DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 ) is
+                info : out integer32; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.QR_Newton_Steps 6 ...");
+    end if;
     for i in 1..nbrit loop
       put(file,"QR Newton step "); put(file,i,1); put_line(file," :");
-      QR_Newton_Step(file,f,c,ejm,mlt,degree,x,info);
+      QR_Newton_Step(file,f,c,ejm,mlt,degree,x,info,vrblvl-1);
       exit when (info /= 0); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -1137,13 +1257,17 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double ) is
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 ) is
 
     one : constant double_double := create(1.0);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.SVD_Newton_Steps 1 ...");
+    end if;
     for i in 1..nbrit loop
-      SVD_Newton_Step(p,jp,degree,x,info,rcond);
+      SVD_Newton_Step(p,jp,degree,x,info,rcond,vrblvl-1);
       exit when (one + rcond = one); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -1154,13 +1278,17 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double ) is
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    SVD_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info,rcond);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.SVD_Newton_Steps 2 ...");
+    end if;
+    SVD_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,info,rcond,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Steps;
 
@@ -1170,14 +1298,18 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double ) is
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 ) is
 
     one : constant double_double := create(1.0);
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.SVD_Newton_Steps 3 ...");
+    end if;
     for i in 1..nbrit loop
       put(file,"SVD Newton step "); put(file,i,1); put_line(file," :");
-      SVD_Newton_Step(file,p,jp,degree,x,info,rcond);
+      SVD_Newton_Step(file,p,jp,degree,x,info,rcond,vrblvl-1);
       exit when (one + rcond = one); -- stop if Jacobian matrix is singular
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
@@ -1189,13 +1321,17 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double ) is
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    SVD_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info,rcond);
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_newton_matrix_series.SVD_Newton_Steps 4 ...");
+    end if;
+    SVD_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,info,rcond,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end SVD_Newton_Steps;
 
@@ -1206,10 +1342,14 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number ) is
+                det : out Complex_Number; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line
+        ("-> in dobldobl_newton_matrix_series.Echelon_Newton_Steps 1 ...");
+    end if;
     for i in 1..nbrit loop
-      Echelon_Newton_Step(p,jp,degree,x,det);
+      Echelon_Newton_Step(p,jp,degree,x,det,vrblvl-1);
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
@@ -1219,13 +1359,17 @@ package body DoblDobl_Newton_Matrix_Series is
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number ) is
+                det : out Complex_Number; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    Echelon_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,det);
+    if vrblvl > 0 then
+      put_line
+        ("-> in dobldobl_newton_matrix_series.Echelon_Newton_Steps 2 ...");
+    end if;
+    Echelon_Newton_Steps(p,jp,degree,maxdeg,nbrit,x,det,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end Echelon_Newton_Steps;
 
@@ -1235,11 +1379,15 @@ package body DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number ) is
+                det : out Complex_Number; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line
+        ("-> in dobldobl_newton_matrix_series.Echelon_Newton_Steps 3 ...");
+    end if;
     for i in 1..nbrit loop
       put(file,"Echelon Newton step "); put(file,i,1); put_line(file," :");
-      Echelon_Newton_Step(file,p,jp,degree,x,det);
+      Echelon_Newton_Step(file,p,jp,degree,x,det,vrblvl-1);
       exit when (i = nbrit); -- do not double degree after last step
       Standard_Newton_Matrix_Series.Double_Degree_with_Threshold(degree,maxdeg);
     end loop;
@@ -1250,13 +1398,17 @@ package body DoblDobl_Newton_Matrix_Series is
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number ) is
+                det : out Complex_Number; vrblvl : in integer32 := 0 ) is
 
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
 
   begin
-    Echelon_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,det);
+    if vrblvl > 0 then
+      put_line
+        ("-> in dobldobl_newton_matrix_series.Echelon_Newton_Steps 4 ...");
+    end if;
+    Echelon_Newton_Steps(file,p,jp,degree,maxdeg,nbrit,x,det,vrblvl-1);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
   end Echelon_Newton_Steps;
 

@@ -24,25 +24,25 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs one step with Newton's method on the square system p,
@@ -56,7 +56,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   p        a polynomial system with series coefficients;
   --   jp       Jacobi matrix of the system p;
   --   degree   the degree at which to solve the linear system;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   x        updated approximation for the series solution;
@@ -73,7 +74,7 @@ package DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
                 f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -82,7 +83,7 @@ package DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs one step with Newton's method on the square system p,
@@ -98,7 +99,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   ejm      coefficient-parameter matrix of all derivatives;
   --   mlt      multiplication factors for the derivatives;
   --   degree   the degree at which to solve the linear system;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   x        updated approximation for the series solution;
@@ -113,25 +115,25 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double );
+                rcond : out double_double; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double );
+                rcond : out double_double; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double );
+                rcond : out double_double; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double );
+                rcond : out double_double; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs one step with Newton's method on the square system p,
@@ -145,7 +147,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   p        a polynomial system with series coefficients;
   --   jp       Jacobi matrix of the system p;
   --   degree   the degree at which to solve the linear system;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   x        updated approximation for the series solution;
@@ -160,25 +163,25 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs one step with Newton's method on the system p,
@@ -192,7 +195,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   p        a polynomial system with series coefficients;
   --   jp       Jacobi matrix of the system p;
   --   degree   the degree at which to solve the linear system;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   x        updated approximation for the series solution;
@@ -209,7 +213,7 @@ package DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( file : in file_type;
                 f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -218,7 +222,7 @@ package DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs one step with Newton's method on the system p,
@@ -234,7 +238,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   ejm      coefficient-parameter matrix of all derivatives;
   --   mlt      multiplication factors for the derivatives;
   --   degree   the degree at which to solve the linear system;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   x        updated approximation for the series solution;
@@ -249,25 +254,29 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double );
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double );
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double );
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double );
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs one step with Newton's method on the system p,
@@ -281,7 +290,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   p        a polynomial system with series coefficients;
   --   jp       Jacobi matrix of the system p;
   --   degree   the degree at which to solve the linear system;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   x        updated approximation for the series solution;
@@ -296,25 +306,25 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number );
+                det : out Complex_Number; vrblvl : in integer32 := 0 );
   procedure Echelon_Newton_Step
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number );
+                det : out Complex_Number; vrblvl : in integer32 := 0 );
   procedure Echelon_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number );
+                det : out Complex_Number; vrblvl : in integer32 := 0 );
   procedure Echelon_Newton_Step
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number );
+                det : out Complex_Number; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs one step with Newton's method on the system p,
@@ -328,7 +338,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   p        a polynomial system with series coefficients;
   --   jp       Jacobi matrix of the system p;
   --   degree   the degree at which to solve the linear system;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   x        updated approximation for the series solution;
@@ -343,25 +354,25 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does a number of Newton steps on the square system p,
@@ -377,7 +388,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   degree   the degree at start of the computations;
   --   maxdeg   the maximal degree of the series in the steps;
   --   nbrit    total number of Newton steps;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   degree   last degree of the computation;
@@ -395,7 +407,7 @@ package DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -404,7 +416,7 @@ package DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does a number of Newton steps on the square system p,
@@ -421,7 +433,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   mlt      multiplication factors for the derivatives;
   --   degree   the degree at start of the computations;
   --   nbrit    total number of Newton steps;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   degree   last degree of the computation;
@@ -437,25 +450,25 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double );
+                rcond : out double_double; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double );
+                rcond : out double_double; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double );
+                rcond : out double_double; vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                rcond : out double_double );
+                rcond : out double_double; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does a number of Newton steps on the square system p,
@@ -471,7 +484,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   degree   the degree at start of the computations;
   --   maxdeg   the maximal degree of the series in the steps;
   --   nbrit    total number of Newton steps;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   degree   last degree of the computation;
@@ -487,25 +501,25 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does a number of Newton steps on the system p,
@@ -521,7 +535,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   degree   the degree at start of the computations;
   --   maxdeg   the maximal degree of the series in the steps;
   --   nbrit    total number of Newton steps;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   degree   last degree of the computation;
@@ -539,7 +554,7 @@ package DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( file : in file_type;
                 f : in DoblDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
@@ -548,7 +563,7 @@ package DoblDobl_Newton_Matrix_Series is
                 mlt : in DoblDobl_CSeries_Jaco_Matrices.Mult_Factors;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32 );
+                info : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does a number of Newton steps on the system p,
@@ -566,7 +581,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   degree   the degree at start of the computations;
   --   maxdeg   the maximal degree of the series in the steps;
   --   nbrit    total number of Newton steps;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   degree   last degree of the computation;
@@ -582,25 +598,29 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double );
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double );
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double );
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                info : out integer32; rcond : out double_double );
+                info : out integer32; rcond : out double_double;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does a number of Newton steps on the system p,
@@ -616,7 +636,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   degree   the degree at start of the computations;
   --   maxdeg   the maximal degree of the series in the steps;
   --   nbrit    total number of Newton steps;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   degree   last degree of the computation;
@@ -632,25 +653,25 @@ package DoblDobl_Newton_Matrix_Series is
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number );
+                det : out Complex_Number; vrblvl : in integer32 := 0 );
   procedure Echelon_Newton_Steps
               ( p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number );
+                det : out Complex_Number; vrblvl : in integer32 := 0 );
   procedure Echelon_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 jp : in DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number );
+                det : out Complex_Number; vrblvl : in integer32 := 0 );
   procedure Echelon_Newton_Steps
               ( file : in file_type;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                 degree : in out integer32; maxdeg,nbrit : in integer32;
                 x : in out DoblDobl_Complex_Series_Vectors.Vector;
-                det : out Complex_Number );
+                det : out Complex_Number; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does a number of Newton steps on the square system p,
@@ -665,7 +686,8 @@ package DoblDobl_Newton_Matrix_Series is
   --   jp       Jacobi matrix of the system p;
   --   degree   the degree at start of the computations;
   --   nbrit    total number of Newton steps;
-  --   x        current approximation for the series solution.
+  --   x        current approximation for the series solution;
+  --   vrblvl   if > 0, then the name of the procedure is written.
 
   -- ON RETURN :
   --   degree   last degree of the computation;
