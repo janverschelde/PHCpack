@@ -2,7 +2,6 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Integer_Vectors;
-with Standard_Complex_Series;
 with Standard_Complex_Series_io;
 with Standard_CSeries_Vector_Norms;
 with Standard_Complex_Series_Matrices;

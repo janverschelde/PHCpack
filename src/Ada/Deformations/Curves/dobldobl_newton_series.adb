@@ -1,6 +1,5 @@
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
-with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_io;
 with DoblDobl_Complex_Series_Matrices;
 with DoblDobl_Series_Linear_Solvers;    use DoblDobl_Series_Linear_Solvers;

@@ -221,7 +221,7 @@ package body Standard_Series_Least_Squares is
 
   function Create ( x : double_float; deg : integer32 ) return Series is
 
-    cx : Complex_Number := Create(x);
+    cx : constant Complex_Number := Create(x);
 
   begin
     return Create(cx,deg);

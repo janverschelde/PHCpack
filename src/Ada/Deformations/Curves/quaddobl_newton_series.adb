@@ -1,6 +1,5 @@
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
-with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_io;
 with QuadDobl_Complex_Series_Matrices;
 with QuadDobl_Series_Linear_Solvers;    use QuadDobl_Series_Linear_Solvers;

@@ -1,4 +1,3 @@
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;            use QuadDobl_Complex_Numbers;
 with QuadDobl_Mathematical_Functions;     use QuadDobl_Mathematical_Functions;
@@ -222,7 +221,7 @@ package body QuadDobl_Series_Least_Squares is
 
   function Create ( x : quad_double; deg : integer32 ) return Series is
 
-    cx : Complex_Number := Create(x);
+    cx : constant Complex_Number := Create(x);
 
   begin
     return Create(cx,deg);

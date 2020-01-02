@@ -1,4 +1,3 @@
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Double_Double_Numbers;               use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;            use DoblDobl_Complex_Numbers;
 with DoblDobl_Mathematical_Functions;     use DoblDobl_Mathematical_Functions;
@@ -222,7 +221,7 @@ package body DoblDobl_Series_Least_Squares is
 
   function Create ( x : double_double; deg : integer32 ) return Series is
 
-    cx : Complex_Number := Create(x);
+    cx : constant Complex_Number := Create(x);
 
   begin
     return Create(cx,deg);
