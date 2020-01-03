@@ -118,6 +118,7 @@ ts_csersin                         : test on solving singular linear systems
 standard_series_matrix_solvers     : linearization for standard series systems
 dobldobl_series_matrix_solvers     : linearization for dobldobl series systems
 quaddobl_series_matrix_solvers     : linearization for quaddobl series systems
+series_coefficient_vectors         : flatten data structure
 ts_cserlin                         : test on linearization
 ts_cserinv                         : test on inverting singular problems
 ------------------------------------------------------------------------------

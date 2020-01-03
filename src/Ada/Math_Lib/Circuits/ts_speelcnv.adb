@@ -80,6 +80,7 @@ with QuadDobl_CSeries_Jaco_Matrices;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
+with Series_Coefficient_Vectors;         use Series_Coefficient_Vectors;
 with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Complex_Series_and_Polynomials;     use Complex_Series_and_Polynomials;

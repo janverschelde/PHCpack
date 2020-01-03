@@ -36,6 +36,7 @@ with DoblDobl_CSeries_Poly_Functions;
 with QuadDobl_CSeries_Polynomials;
 with QuadDobl_CSeries_Polynomials_io;    use QuadDobl_CSeries_Polynomials_io;
 with QuadDobl_CSeries_Poly_Functions;
+with Series_Coefficient_Vectors;         use Series_Coefficient_Vectors;
 with Exponent_Indices;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;

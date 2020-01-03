@@ -1,3 +1,6 @@
+Fri 3 Jan 2020 : extracted code from series_polynomial_gradients, which
+  modified random_convolution_circuits.adb, ts_speelser, and ts_speelcnv.
+
 Mon 30 Dec 2019 : added functions to evaluation_differentiation_errors
   to compare results computed by the multitasked versions.
 

@@ -1,9 +1,6 @@
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
-with Standard_Complex_VecVecs;
-with DoblDobl_Complex_VecVecs;
-with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Series_Vectors;
 with Standard_CSeries_Polynomials;
 with Standard_CSeries_Poly_Systems;
@@ -148,33 +145,5 @@ package Series_Polynomial_Gradients is
   -- DESCRIPTION :
   --   Evaluates the gradient of p at x, for testing purposes,
   --   in double, double double, or quad double precision.
-
-  function Standard_Series_Coefficients
-             ( s : Standard_Complex_Series_Vectors.Vector )
-             return Standard_Complex_VecVecs.VecVec;
-  function DoblDobl_Series_Coefficients
-             ( s : DoblDobl_Complex_Series_Vectors.Vector )
-             return DoblDobl_Complex_VecVecs.VecVec;
-  function QuadDobl_Series_Coefficients
-             ( s : QuadDobl_Complex_Series_Vectors.Vector )
-             return QuadDobl_Complex_VecVecs.VecVec;
-
-  -- DESCRIPTION :
-  --   Returns the coefficients of the series in the vector of vectors.
-  --   The range of the k-th vector is 0..s(k).deg.
-
-  --function Standard_Series_Coefficients
-  --           ( s : Standard_Dense_Series_Vectors.Vector )
-  --           return Standard_Complex_VecVecs.VecVec;
-  --function DoblDobl_Series_Coefficients
-  --           ( s : DoblDobl_Dense_Series_Vectors.Vector )
-  --           return DoblDobl_Complex_VecVecs.VecVec;
-  --function QuadDobl_Series_Coefficients
-  --           ( s : QuadDobl_Dense_Series_Vectors.Vector )
-  --           return QuadDobl_Complex_VecVecs.VecVec;
-
-  -- DESCRIPTION :
-  --   Returns the coefficients of the series in the vector of vectors.
-  --   The range of the k-th vector is 0..s(k).deg.
 
 end Series_Polynomial_Gradients;

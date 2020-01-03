@@ -16,7 +16,7 @@ with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Complex_Random_Series;
 with QuadDobl_Random_Series_Vectors;
 with Exponent_Indices;
-with Series_Polynomial_Gradients;
+with Series_Coefficient_Vectors;
 
 package body Random_Convolution_Circuits is
 
@@ -63,7 +63,7 @@ package body Random_Convolution_Circuits is
     res.xps := Random_Exponents(dim,nbr,pwr);
     res.idx := Exponent_Indices.Exponent_Index(res.xps);
     res.fac := Exponent_Indices.Factor_Index(res.xps);
-    res.cff := Series_Polynomial_Gradients.Standard_Series_Coefficients(polcff);
+    res.cff := Series_Coefficient_Vectors.Standard_Series_Coefficients(polcff);
     res.cst := new Standard_Complex_Vectors.Vector'(cstcff);
     res.forward := Allocate_Coefficients(dim-1,deg);
     res.backward := Allocate_Coefficients(dim-2,deg);
@@ -91,7 +91,7 @@ package body Random_Convolution_Circuits is
     res.xps := Random_Exponents(dim,nbr,pwr);
     res.idx := Exponent_Indices.Exponent_Index(res.xps);
     res.fac := Exponent_Indices.Factor_Index(res.xps);
-    res.cff := Series_Polynomial_Gradients.DoblDobl_Series_Coefficients(polcff);
+    res.cff := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(polcff);
     res.cst := new DoblDobl_Complex_Vectors.Vector'(cstcff);
     res.forward := Allocate_Coefficients(dim-1,deg);
     res.backward := Allocate_Coefficients(dim-2,deg);
@@ -119,7 +119,7 @@ package body Random_Convolution_Circuits is
     res.xps := Random_Exponents(dim,nbr,pwr);
     res.idx := Exponent_Indices.Exponent_Index(res.xps);
     res.fac := Exponent_Indices.Factor_Index(res.xps);
-    res.cff := Series_Polynomial_Gradients.QuadDobl_Series_Coefficients(polcff);
+    res.cff := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(polcff);
     res.cst := new QuadDobl_Complex_Vectors.Vector'(cstcff);
     res.forward := Allocate_Coefficients(dim-1,deg);
     res.backward := Allocate_Coefficients(dim-2,deg);
