@@ -1,3 +1,6 @@
+Fri 3 Jan 2020 : for compiler warnings, modified
+  {standard,dobldobl,quaddobl}_matrix_series_solvers.adb.
+
 Thu 2 Jan 2020 : for compiler warnings, modified ts_sersys.adb,
   {standard,dobldobl,quaddobl}_polynomial_cseries.adb, ts_sermat.adb,
   ts_cservec.adb, ts_csermat.adb, ts_cserlin.adb,

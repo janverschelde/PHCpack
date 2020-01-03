@@ -306,7 +306,7 @@ package body QuadDobl_Matrix_Series_Solvers is
     hlm : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
         := Hermite_Laurent_Matrix(A.cff(0..deg));
     x : QuadDobl_Complex_Vectors.Vector(1..ncols);
-    rhs : QuadDobl_Complex_Vectors.Vector(1..nrows)
+    rhs : constant QuadDobl_Complex_Vectors.Vector(1..nrows)
         := Hermite_Laurent_Vector(b.cff(0..deg));
     U : QuadDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);

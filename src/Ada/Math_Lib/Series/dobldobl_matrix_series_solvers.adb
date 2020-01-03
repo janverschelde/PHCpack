@@ -306,7 +306,7 @@ package body DoblDobl_Matrix_Series_Solvers is
     hlm : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
         := Hermite_Laurent_Matrix(A.cff(0..deg));
     x : DoblDobl_Complex_Vectors.Vector(1..ncols);
-    rhs : DoblDobl_Complex_Vectors.Vector(1..nrows)
+    rhs : constant DoblDobl_Complex_Vectors.Vector(1..nrows)
         := Hermite_Laurent_Vector(b.cff(0..deg));
     U : DoblDobl_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
