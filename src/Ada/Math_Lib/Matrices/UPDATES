@@ -1,3 +1,6 @@
+Sat 4 Jan 2020 : instantiated dobdobl_complex_vecmats_io and
+  quaddobl_complex_vecmats_io.
+
 Mon 10 Jun 2019 : fixed bug in multiplication of matrix by a number in
   generic_matrices.adb, found by compiler warning.
 
