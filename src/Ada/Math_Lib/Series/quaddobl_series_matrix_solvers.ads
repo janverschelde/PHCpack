@@ -3,7 +3,9 @@ with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;            use QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_VecMats;
 with QuadDobl_Complex_Vector_Series;
 with QuadDobl_Complex_Matrix_Series;
 
@@ -369,5 +371,146 @@ package QuadDobl_Series_Matrix_Solvers is
   --            series with negative exponents,
   --            if xn.deg > 0, the xn.cff(k) stores the coefficient with
   --            t**(-k) in the Laurent series of the solution.
+
+-- ON FLATTENED DATA STRUCTURES :
+
+  procedure Solve_Lead_by_lufac
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
+
+  -- DESCRIPTION :
+  --   Applies LU factorization and back substitution to compute the
+  --   constant coefficient of the solution series to A*x = b.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A are square.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series.
+
+  -- ON RETURN :
+  --   A        A(0) contains the output of lufac on A(0);
+  --   b        b(0) is the constant coefficient of the solution,
+  --            provided info = 0, otherwise b(0) is unchanged;
+  --   ipvt     pivoting information on the LU factorization of A(0);
+  --   info     returned by lufac, if nonzero, then the lead coefficient
+  --            matrix was deemed singular by lufac.
+
+  procedure Solve_Lead_by_lufco
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out quad_double );
+
+  -- DESCRIPTION :
+  --   Applies LU factorization and back substitution to compute the
+  --   constant coefficient of the solution series to A*x = b.
+  --   An estimate for the inverse of the condition number is returned.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A are square.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series.
+
+  -- ON RETURN :
+  --   A        A(0) contains the output of lufco on A(0);
+  --   b        b(0) is the constant coefficient of the solution,
+  --            provided 1.0 + rcond /= 1.0, otherwise b(0) is unchanged;
+  --   ipvt     pivoting information on the LU factorization of A(0);
+  --   rcond    computed by lufco, if 1.0 + rcond = 1.0, then the lead
+  --            coefficient matrix should be considered as singular.
+
+  procedure Solve_Next_by_lusolve
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                idx : in integer32;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies LU back substitution, calling lusolve,
+  --   on the linear system with a modified right hand side vector,
+  --   using previously computed coefficient series vector of x.
+
+  -- REQUIRED :
+  --   All coefficients up to idx-1 are defined and A*x = b is square.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series,
+  --            A(0) contains the output of lufac or lufco;
+  --   b        the right hand side coefficients of a vector series,
+  --            b(k) for k in 0..idx-1 contains the solutions;
+  --   ipvt     output of Solve_Lead_by_lufac, contains the pivoting
+  --            information in the LU factorization of A(0);
+  --   idx      current coefficient index of the solution,
+  --            b(k) for k in range 0..idx-1 have been computed,
+  --            b(idx) will be computed;
+  --   wrk      work vector, allocated of range at least A(0)'range(1).
+
+  -- ON RETURN :
+  --   b        computed coefficient at idx with respect to input.
+
+  procedure Solve_by_lufac
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Solves the linear system A*x = b, using LU factorization on the
+  --   leading coefficient matrix of A, without condition number estimate.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A are square.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series;
+  --   wrk      work vector, allocated of range at least A(0)'range(1).
+
+  -- ON RETURN :
+  --   A        A(0) contains the output of lufac on A(0);
+  --   b        b contains the coefficients of the solution series x,
+  --            provided info = 0, otherwise b is unchanged;
+  --   ipvt     pivoting information on the LU factorization of A(0);
+  --   info     returned by lufac, if nonzero, then the lead coefficient
+  --            matrix was deemed singular by lufac.
+
+  procedure Solve_by_lufco
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out quad_double;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Solves the linear system A*x = b, using LU factorization on the
+  --   leading coefficient matrix of A, with condition number estimate.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A are square.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series;
+  --   wrk      work vector, allocated of range at least A(0)'range(1).
+
+  -- ON RETURN :
+  --   A        A(0) contains the output of lufac on A(0);
+  --   b        b contains the coefficients of the solution series x,
+  --            provided info = 0, otherwise b is unchanged;
+  --   ipvt     pivoting information on the LU factorization of A(0);
+  --   rcond    computed by lufco, if 1.0 + rcond = 1.0, then the lead
+  --            coefficient matrix should be considered as singular.
 
 end QuadDobl_Series_Matrix_Solvers;

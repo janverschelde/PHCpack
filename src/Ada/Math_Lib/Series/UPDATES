@@ -1,3 +1,7 @@
+Sat 4 Jan 2020 : added double double and quad double versions for the LU
+  solvers with linearization on matrix series, in the packages
+  {dobldobl,quaddobl}_series_matrix_solvers, tested by ts_cserlin2.
+
 Fri 3 Jan 2020 : for compiler warnings, modified
   {standard,dobldobl,quaddobl}_matrix_series_solvers.adb.
   New package series_coefficient_vectors, with code taken from the package
