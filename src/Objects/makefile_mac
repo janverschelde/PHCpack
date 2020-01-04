@@ -66,12 +66,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-# GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-GNATFLAGS=-gnatv -gnatwa -gnatVa
+#GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+#GNATFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -633,6 +633,10 @@ ts_serlin2:
 ts_cserlin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin.adb \
               -o $(BIN)/ts_cserlin
+
+ts_cserlin2:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin2.adb \
+              -o $(BIN)/ts_cserlin2
 
 ts_serinv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serinv.adb \
