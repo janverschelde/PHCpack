@@ -427,6 +427,42 @@ package QuadDobl_Series_Matrix_Solvers is
   --   rcond    computed by lufco, if 1.0 + rcond = 1.0, then the lead
   --            coefficient matrix should be considered as singular.
 
+  procedure Solve_Lead_by_QRLS
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x0 : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                qraux : out QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
+
+  -- DESCRIPTION :
+  --   Applies QR decomposition and least squares solving to compute the
+  --   constant coefficient of the solution series A*x = b.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A have the same dimensions.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series;
+  --   x0       space allocated for the leading coefficient of the solution;
+  --   w1       work space vector of range 1..n, n = number of rows;
+  --   w2       work space vector of range 1..n, n = number of rows;
+  --   w3       work space vector of range 1..n, n = number of rows;
+  --   w4       work space vector of range 1..n, n = number of rows;
+  --   w5       work space vector of range 1..n, n = number of rows.
+
+  -- ON RETURN :
+  --   A        A(0) contains QR decomposition of A(0);
+  --   x0       the constant coefficient of the solution,
+  --            if info /= 0, then b(0) may be inaccurate.
+  --   qraux    information to recover the orthogonal part;
+  --   ipvt     pivoting information if that was requested;
+  --   info     is zero of nonsingular, otherwise, a nonzero info
+  --            indicates a singular matrix.
+
   procedure Solve_Next_by_lusolve
               ( A : in QuadDobl_Complex_VecMats.VecMat;
                 b : in QuadDobl_Complex_VecVecs.VecVec;
@@ -456,6 +492,46 @@ package QuadDobl_Series_Matrix_Solvers is
 
   -- ON RETURN :
   --   b        computed coefficient at idx with respect to input.
+
+  procedure Solve_Next_by_QRLS
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                qraux : in QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                idx : in integer32; info : out integer32;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies QR decomposition and least squares solving to compute the
+  --   next coefficient of the solution series A*x = b.
+
+  -- REQUIRED :
+  --   All coefficients in x up to idx-1 are defined.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series,
+  --            A(0) contains the QR decomposition of the lead matrix,
+  --            obtained as output of Solve_Lead_by_QRLS;
+  --   b        the right hand side coefficients of a vector series;
+  --   x        x(k) for k in 0..idx-1 contains the solutions;
+  --   qraux    information to recover the orthogonal part,
+  --            as output of Solve_Lead_by_QRLS;
+  --   w1       work space vector of range 1..n, n = number of rows;
+  --   w2       work space vector of range 1..n, n = number of rows;
+  --   w3       work space vector of range 1..n, n = number of rows;
+  --   w4       work space vector of range 1..n, n = number of rows;
+  --   w5       work space vector of range 1..n, n = number of rows.
+  --   idx      current coefficient index of x,
+  --            b(k) for k in range 0..idx-1 have been computed,
+  --            b(idx) will be computed;
+  --   wrk      allocated work space for the matrix-by-vector computations.
+
+  -- ON RETURN :
+  --   info     is zero of nonsingular, otherwise, a nonzero info
+  --            indicates a singular matrix;
+  --   b        updated right hand side after back substitution;
+  --   x        computed coefficient at idx with respect to input.
 
   procedure Solve_by_lufac
               ( A : in QuadDobl_Complex_VecMats.VecMat;
@@ -512,5 +588,44 @@ package QuadDobl_Series_Matrix_Solvers is
   --   ipvt     pivoting information on the LU factorization of A(0);
   --   rcond    computed by lufco, if 1.0 + rcond = 1.0, then the lead
   --            coefficient matrix should be considered as singular.
+
+  procedure Solve_by_QRLS
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                qraux : out QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Solves the linear system A*x = b, using the QR decomposition of the
+  --   leading coefficient matrix of A for least squares solving.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A have the same dimension.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series;
+  --   x        space allocated for the solution series;
+  --   w1       work space vector of range 1..n, n = number of rows;
+  --   w2       work space vector of range 1..n, n = number of rows;
+  --   w3       work space vector of range 1..n, n = number of rows;
+  --   w4       work space vector of range 1..n, n = number of rows;
+  --   w5       work space vector of range 1..n, n = number of rows.
+  --   wrk      work vector, allocated of range at least A(0)'range(1).
+
+  -- ON RETURN :
+  --   A        A(0) contains the output of QRD on A(0);
+  --   b        modified right hand side vectors after back substitution;
+  --   x        contains the coefficients of the solution series x,
+  --            provided info = 0,
+  --   qraux    information to recover the orthogonal part;
+  --   ipvt     pivoting information if that was requested;
+  --   info     is zero of nonsingular, otherwise, a nonzero info
+  --            indicates a singular matrix.
 
 end QuadDobl_Series_Matrix_Solvers;
