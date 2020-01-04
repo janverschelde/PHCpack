@@ -2,7 +2,10 @@ Fri 3 Jan 2020 : for compiler warnings, modified
   {standard,dobldobl,quaddobl}_matrix_series_solvers.adb.
   New package series_coefficient_vectors, with code taken from the package
   ../Circuits/series_polynomial_gradients, to flatten the data types in
-  the linearized matrix series solvers.
+  the linearized matrix series solvers.  Extended series_coefficient_vectors
+  with functions for vectors of matrices, added linearized solvers to
+  standard_series_matrix_solvers for flattened data typed, tested by
+  the new test procedure ts_cserlin2.
 
 Thu 2 Jan 2020 : for compiler warnings, modified ts_sersys.adb,
   {standard,dobldobl,quaddobl}_polynomial_cseries.adb, ts_sermat.adb,

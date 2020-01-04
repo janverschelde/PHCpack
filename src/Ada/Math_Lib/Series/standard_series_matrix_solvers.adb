@@ -287,7 +287,7 @@ package body Standard_Series_Matrix_Solvers is
     hlm : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols)
         := Standard_Interpolating_CSeries.Hermite_Laurent_Matrix(A.cff(0..deg));
     x : Standard_Complex_Vectors.Vector(1..ncols);
-    rhs : Standard_Complex_Vectors.Vector(1..nrows)
+    rhs : constant Standard_Complex_Vectors.Vector(1..nrows)
         := Standard_Interpolating_CSeries.Hermite_Laurent_Vector(b.cff(0..deg));
     U : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
     row_ipvt : Standard_Integer_Vectors.Vector(1..nrows);
@@ -321,5 +321,120 @@ package body Standard_Series_Matrix_Solvers is
       end loop;
     end if;
   end Echelon_Solve;
+
+-- ON FLATTENED DATA STRUCTURES :
+
+  procedure Solve_Lead_by_lufac
+              ( A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 ) is
+
+    a0lu : constant Standard_Complex_Matrices.Link_to_Matrix := A(0);
+    dim : constant integer32 := a0lu'last(1);
+ 
+  begin
+    lufac(a0lu.all,dim,ipvt,info);
+    if info = 0
+     then lusolve(a0lu.all,dim,ipvt,b(0).all);
+    end if;
+  end Solve_Lead_by_lufac;
+
+  procedure Solve_Lead_by_lufco
+              ( A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float ) is
+
+    a0lu : constant Standard_Complex_Matrices.Link_to_Matrix := A(0);
+    dim : constant integer32 := a0lu'last(1);
+ 
+  begin
+    lufco(a0lu.all,dim,ipvt,rcond);
+    if 1.0 + rcond /= 1.0
+     then lusolve(a0lu.all,dim,ipvt,b(0).all);
+    end if;
+  end Solve_Lead_by_lufco;
+
+  procedure Matrix_Vector_Multiply
+              ( A : in Standard_Complex_Matrices.Link_to_Matrix;
+                x,y : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION : computes y = A*x.
+
+  -- REQUIRED : y'range = A'range(1) and x'range = A'range(2).
+
+  begin
+    for i in y'range loop
+      y(i) := A(i,A'first(2))*x(x'first);
+      for j in x'first+1..x'last loop
+        y(i) := y(i) + A(i,j)*x(j);
+      end loop;
+    end loop;
+  end Matrix_Vector_Multiply;
+
+  procedure Subtract ( x,y : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION : x := x - y.
+
+  -- REQUIRED : x'range = y'range.
+
+  begin
+    for i in x'range loop
+      x(i) := x(i) - y(i);
+    end loop;
+  end Subtract;
+
+  procedure Solve_Next_by_lusolve
+              ( A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                idx : in integer32;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Matrices;
+
+    dim : constant integer32 := wrk'last;
+
+  begin
+    Matrix_Vector_Multiply(A(idx),b(0),wrk); -- wrk = A(idx)*b(0)
+    Subtract(b(idx),wrk);                    -- b(idx) := b(idx) - wrk
+    for k in 1..(idx-1) loop
+      Matrix_Vector_Multiply(A(idx-k),b(k),wrk); -- wrk = A(idx-k)*b(k)
+      Subtract(b(idx),wrk);                      -- b(idx) := b(idx) - wrk
+    end loop;
+    lusolve(A(0).all,dim,ipvt,b(idx).all);
+  end Solve_Next_by_lusolve;
+
+  procedure Solve_by_lufac
+              ( A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Solve_Lead_by_lufac(A,b,ipvt,info);
+    if info = 0 then
+      for k in 1..b'last loop
+        Solve_Next_by_lusolve(A,b,ipvt,k,wrk);
+      end loop;
+    end if;
+  end Solve_by_lufac;
+
+  procedure Solve_by_lufco
+              ( A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Solve_Lead_by_lufco(A,b,ipvt,rcond);
+    if 1.0 + rcond /= 1.0 then
+      for k in 1..b'last loop
+        Solve_Next_by_lusolve(A,b,ipvt,k,wrk);
+      end loop;
+    end if;
+  end Solve_by_lufco;
 
 end Standard_Series_Matrix_Solvers;

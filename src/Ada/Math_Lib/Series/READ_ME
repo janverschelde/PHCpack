@@ -120,6 +120,7 @@ dobldobl_series_matrix_solvers     : linearization for dobldobl series systems
 quaddobl_series_matrix_solvers     : linearization for quaddobl series systems
 series_coefficient_vectors         : flatten data structure
 ts_cserlin                         : test on linearization
+ts_cserlin2                        : for flattened data structures
 ts_cserinv                         : test on inverting singular problems
 ------------------------------------------------------------------------------
 standard_cseries_polynomials       : polynomials with series as coefficients
