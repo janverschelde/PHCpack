@@ -998,25 +998,6 @@ package body Witness_Sets_io is
     return res;
   end Remove_Slices;
 
-  procedure Set_rco
-              ( sols : in out Standard_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Sets the rco of every solution to 1.  This is a patch...
-
-    use Standard_Complex_Solutions;
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-
-  begin
-    while not Is_Null(tmp) loop
-      ls := Head_Of(tmp);
-      ls.rco := 1.0;
-      Set_Head(tmp,ls);
-      tmp := Tail_Of(tmp);
-    end loop;
-  end Set_rco;
-
 -- TARGET ROUTINES :
 
   procedure Add_Slack_Symbols ( k : in natural32 ) is
@@ -1509,7 +1490,6 @@ package body Witness_Sets_io is
       new_line;
       Read(sols);
     end if;
-   -- Set_rco(sols);
     dim := Count_Embed_Symbols(n,"zz");
     Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
     if dim > 1
@@ -1540,7 +1520,6 @@ package body Witness_Sets_io is
       new_line;
       Read(sols);
     end if;
-   -- Set_rco(sols);
     dim := Count_Embed_Symbols(n,"zz");
     Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
     if dim > 1
@@ -1571,7 +1550,6 @@ package body Witness_Sets_io is
       new_line;
       Read(sols);
     end if;
-   -- Set_rco(sols);
     dim := Count_Embed_Symbols(n,"zz");
     Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
     if dim > 1
@@ -1603,7 +1581,6 @@ package body Witness_Sets_io is
       new_line;
       Read(sols);
     end if;
-   -- Set_rco(sols);
     dim := Count_Embed_Symbols(n,"zz");
     Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
     if dim > 1
@@ -1634,7 +1611,6 @@ package body Witness_Sets_io is
       new_line;
       Read(sols);
     end if;
-   -- Set_rco(sols);
     dim := Count_Embed_Symbols(n,"zz");
     Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
     if dim > 1
@@ -1666,7 +1642,6 @@ package body Witness_Sets_io is
       new_line;
       Read(sols);
     end if;
-   -- Set_rco(sols);
     dim := Count_Embed_Symbols(n,"zz");
     Swap_Symbols_to_End(n,dim,"zz",lp.all,sols);
     if dim > 1
