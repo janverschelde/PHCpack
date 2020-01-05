@@ -384,6 +384,26 @@ package body QuadDobl_Series_Matrix_Solvers is
     QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x0.all,w4,w5,110,info);
   end Solve_Lead_by_QRLS;
 
+  procedure Solve_Lead_by_SVD
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x0 : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                S : out QuadDobl_Complex_Vectors.Vector;
+                U,V : out QuadDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out quad_double;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
+
+    lead : constant QuadDobl_Complex_Matrices.Link_to_Matrix := A(0);
+    n : constant integer32 := lead'last(1);
+    p : constant integer32 := lead'last(2);
+    job : constant integer32 := 11;
+
+  begin
+    SVD(lead.all,n,p,S,wrk.all,U,V,job,info);
+    rcond := Inverse_Condition_Number(S);
+    x0.all := Solve(U,V,S,b(0).all);
+  end Solve_Lead_by_SVD;
+
   procedure Matrix_Vector_Multiply
               ( A : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                 x,y : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
@@ -459,6 +479,25 @@ package body QuadDobl_Series_Matrix_Solvers is
     QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
   end Solve_Next_by_QRLS;
 
+  procedure Solve_Next_by_SVD
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : in QuadDobl_Complex_Vectors.Vector;
+                U,V : in QuadDobl_Complex_Matrices.Matrix;
+                idx : in integer32;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Matrix_Vector_Multiply(A(idx),x(0),wrk);     -- wrk = A(idx)*x(0)
+    Subtract(b(idx),wrk);                        -- b(idx) := b(idx) - wrk
+    for k in 1..(idx-1) loop
+      Matrix_Vector_Multiply(A(idx-k),x(k),wrk); -- wrk = A(idx-k)*x(k)
+      Subtract(b(idx),wrk);                      -- b(idx) := b(idx) - wrk
+    end loop;
+    x(idx).all := Solve(U,V,S,b(idx).all);
+  end Solve_Next_by_SVD;
+
+
   procedure Solve_by_lufac
               ( A : in QuadDobl_Complex_VecMats.VecMat;
                 b : in QuadDobl_Complex_VecVecs.VecVec;
@@ -509,5 +548,26 @@ package body QuadDobl_Series_Matrix_Solvers is
       end loop;
     end if;
   end Solve_by_QRLS;
+
+  procedure Solve_by_SVD
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : out QuadDobl_Complex_Vectors.Vector;
+                U,V : out QuadDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out quad_double;
+                ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
+
+    one : constant quad_double := create(1.0);
+
+  begin
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    if one + rcond /= one then
+      for k in 1..b'last loop
+        Solve_Next_by_SVD(A,b,x,S,U,V,k,wrkv);
+      end loop;
+    end if;
+  end Solve_by_SVD;
 
 end QuadDobl_Series_Matrix_Solvers;

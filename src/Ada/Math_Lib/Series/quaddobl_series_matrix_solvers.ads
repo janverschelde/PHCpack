@@ -463,6 +463,56 @@ package QuadDobl_Series_Matrix_Solvers is
   --   info     is zero of nonsingular, otherwise, a nonzero info
   --            indicates a singular matrix.
 
+  procedure Solve_Lead_by_SVD
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x0 : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                S : out QuadDobl_Complex_Vectors.Vector;
+                U,V : out QuadDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out quad_double;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the SVD decomposition of the lead coefficient of A
+  --   to compute the next coefficient of the solution series A*x = b.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A have the same dimensions.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series;
+  --   x0       space allocated for the leading coefficient of the solution;
+  --   wrk      allocated work space of range 1..p, p = A(0)'last(2).
+
+  -- ON RETURN :
+  --   A        A(0) used as work space to compute the SVD;
+  --   S        vector of range 1..mm, where mm = min(n+1,p),
+  --            where n = A(0)'last(1) and p = A(0)'last(2),
+  --            the first min(n,p) entries of s contain the singular values
+  --            of x arranged in descending order of magnitude;
+  --   U        matrix with n rows and k columns, 
+  --            if joba = 1, then k = n, if joba >= 2 then k = min(n,p),
+  --            u contains the matrix of left singular vectors,
+  --            u is not referenced if joba = 0, if n <= p or if joba > 2,
+  --            then u may be identified with x in the subroutine call;
+  --   V        matrix with p rows and p columns,
+  --            v contains the matrix of right singular vectors,
+  --            v is not referenced if jobb = 0, if p <= n, then v may be
+  --            identified with x in the subroutine call;
+  --   info     the singular values (and their corresponding singular vectors)
+  --            s(info+1),s(info+2),...,s(m) are correct (here m=min(n,p)),
+  --            thus if info = 0, all the singular values and their vectors
+  --            are correct, in any event, the matrix b = ctrans(u)*x*v is
+  --            the bidiagonal matrix with the elements of s on its diagonal
+  --            and the elements of e on its super diagonal (ctrans(u) is the
+  --            conjugate-transpose of u), thus the singular values of x 
+  --            and b are the same;
+  --   rcond    is the outcome of Inverse_Condition_Number(S),
+  --            the inverse condition number based on the singular values;
+  --   x        the constant coefficient of the solution.
+
   procedure Solve_Next_by_lusolve
               ( A : in QuadDobl_Complex_VecMats.VecMat;
                 b : in QuadDobl_Complex_VecVecs.VecVec;
@@ -530,6 +580,39 @@ package QuadDobl_Series_Matrix_Solvers is
   -- ON RETURN :
   --   info     is zero of nonsingular, otherwise, a nonzero info
   --            indicates a singular matrix;
+  --   b        updated right hand side after back substitution;
+  --   x        computed coefficient at idx with respect to input.
+
+  procedure Solve_Next_by_SVD
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : in QuadDobl_Complex_Vectors.Vector;
+                U,V : in QuadDobl_Complex_Matrices.Matrix;
+                idx : in integer32;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the SVD decomposition of the lead coefficient of A
+  --   to compute the next coefficient of the solution series A*x = b.
+
+  -- REQUIRED :
+  --   All coefficients in x up to idx-1 are defined.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series,
+  --   b        the right hand side as a vector series;
+  --   S        singular values of the lead coefficient of A,
+  --            computed by Solve_Lead_by_SVD;
+  --   U,V      computed by Solve_Lead_by_SVD;
+  --   idx      current coefficient index of x,
+  --            x(k) for k in range 0..idx-1 have been computed,
+  --            x(idx) will be computed;
+  --   x        previously computed coefficients of the solution,
+  --            at the very least, x(0) must be defined;
+  --   wrk      work space allocated for the right hand side computations.
+
+  -- ON RETURN :
   --   b        updated right hand side after back substitution;
   --   x        computed coefficient at idx with respect to input.
 
@@ -627,5 +710,40 @@ package QuadDobl_Series_Matrix_Solvers is
   --   ipvt     pivoting information if that was requested;
   --   info     is zero of nonsingular, otherwise, a nonzero info
   --            indicates a singular matrix.
+
+  procedure Solve_by_SVD
+              ( A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : out QuadDobl_Complex_Vectors.Vector;
+                U,V : out QuadDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out quad_double;
+                ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Solves the linear system A*x = b, using the SVD of the
+  --   leading coefficient matrix of A for least squares solving.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A have the same dimension.
+
+  -- ON ENTRY :
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series;
+  --   x        space allocated for the solution series;
+  --   ewrk     work space allocated for the SVD of the lead A(0);
+  --   wrkv     work space vector for the next coefficient computation.
+
+  -- ON RETURN :
+  --   A        A(0) modified as work space in SVD computation;
+  --   b        modified right hand side vectors after back substitution;
+  --   S,U,V    see the output of Solve_Lead_by_SVD;
+  --   info     see the output of Solve_Lead_by_SVD;
+  --   rcond    inverse condition number computed from the singular
+  --            values of the lead coefficient of A;
+  --   x        all coefficients of the solution series up to b'last,
+  --            provided rcond /= 0.0.
 
 end QuadDobl_Series_Matrix_Solvers;
