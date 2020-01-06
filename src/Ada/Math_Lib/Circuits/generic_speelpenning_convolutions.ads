@@ -106,6 +106,17 @@ package Generic_Speelpenning_Convolutions is
   --   truncated to degree deg and initialized to zero.
   --   The vector on return has range 1..dim.
 
+  function Linearized_Allocation
+             ( dim,deg : integer32 ) return VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns allocated space for the coefficients of the series
+  --   truncated to degree deg and initialized to zero,
+  --   in linearized form.
+  --   The vector on return has range 0..deg and represents a series
+  --   truncated to degree deg and with vectors of range 1..dim as
+  --   its coefficients.
+
   function Allocate_Coefficients
              ( nbq,nvr,deg : integer32 ) return VecMats.VecMat;
 
@@ -304,12 +315,13 @@ package Generic_Speelpenning_Convolutions is
   --   pwt          power table of the values in x.
   --   yd           work space of range 1..x'last+1 to contain the
   --                gradient and the value of the circuits in c;
-  --   vy           allocated space for the values of the circuits at x;
+  --   vy           allocated space for the values of the circuits at x,
+  --                done by the above procedure Linearized_Allocation,
   --   vm           space allocated for a series of some fixed degree
   --                with matrix coefficients.
 
   -- ON RETURN :
-  --   vy           values of the circuits at x;
+  --   vy           values of the circuits at x, in linearized form;
   --   vm           the evaluated circuits at x as a series 
   --                of some fixe degree with matrix coefficients.
 

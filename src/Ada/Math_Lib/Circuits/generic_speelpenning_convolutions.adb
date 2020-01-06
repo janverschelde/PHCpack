@@ -136,6 +136,22 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Allocate_Coefficients;
 
+  function Linearized_Allocation
+             ( dim,deg : integer32 ) return VecVecs.VecVec is
+
+    res : VecVecs.VecVec(0..deg);
+
+  begin
+    for k in 0..deg loop
+      declare
+        cff : constant Vectors.Vector(1..dim) := (1..dim => Ring.zero);
+      begin
+        res(k) := new Vectors.Vector'(cff);
+      end;
+    end loop;
+    return res;
+  end Linearized_Allocation;
+
   function Allocate_Coefficients
              ( nbq,nvr,deg : integer32 ) return VecMats.VecMat is
 
@@ -472,10 +488,10 @@ package body Generic_Speelpenning_Convolutions is
   begin
     for i in c'range loop
       EvalDiff(c(i).all,x,pwt,yd);
-      vleft := vy(i);
       vright := yd(x'last+1);
-      for j in vleft'range loop
-        vleft(j) := vright(j);
+      for j in vright'range loop   -- the j-th coefficient of vright is
+        vleft := vy(j);            -- assigned to the j-th vector of vy
+        vleft(i) := vright(j);     -- at position i
         vright(j) := Ring.zero;    -- reset the value to zero
       end loop;
       for j in 1..x'last loop
