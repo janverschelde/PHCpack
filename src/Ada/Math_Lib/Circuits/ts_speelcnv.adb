@@ -18,19 +18,16 @@ with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
-with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
 with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
-with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
-with QuadDobl_Complex_VecMats;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems;
@@ -86,7 +83,6 @@ with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Complex_Series_and_Polynomials;     use Complex_Series_and_Polynomials;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
-with Linearized_Series_Coefficients;     use Linearized_Series_Coefficients;
 
 procedure ts_speelcnv is
 
@@ -363,8 +359,9 @@ procedure ts_speelcnv is
 
     use Standard_Speelpenning_Convolutions;
 
-    c : Convolution_Circuits
+    c : constant Convolution_Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    s : Link_to_System := Create(c,dim,deg);
     p : Standard_CSeries_Poly_Systems.Poly_Sys(1..dim) := Standard_System(c);
     x : Standard_Complex_Series_Vectors.Vector(1..dim)
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -376,31 +373,20 @@ procedure ts_speelcnv is
        := Standard_CSeries_Jaco_Matrices.Create(p);
     jm : Standard_Complex_Series_Matrices.Matrix(1..dim,1..dim)
        := Standard_CSeries_Jaco_Matrices.Eval(jp,x);
-    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
-        := Exponent_Maxima(c,dim);
-    pwt : Link_to_VecVecVec := Create(xcff,mxe);
-    yd : Standard_Complex_VecVecs.VecVec(1..dim+1)
-       := Allocate_Coefficients(dim+1,deg);
-    vy : Standard_Complex_VecVecs.VecVec(0..deg)
-       := Linearized_Allocation(dim,deg);
-    yv : Standard_Complex_VecVecs.VecVec(1..dim)
-       := Allocate_Coefficients(dim,deg);
-    vm : Standard_Complex_VecMats.VecMat(0..deg)
-       := Allocate_Coefficients(dim,dim,deg);
     err : double_float;
 
   begin
     put_line("the polynomial system :");
     Standard_CSeries_Poly_Systems_io.put(p);
-    EvalDiff(c,xcff,pwt,yd,vy,vm);
+    Compute(s.pwt,s.mxe,xcff);
+    EvalDiff(s,xcff);
     put_line("The evaluation values :"); put_line(px);
-    Delinearize(vy,yv);
-    put_line("The coefficient vectors of the evaluation :"); put_line(yv);
-    err := Difference(px,yv);
+    put_line("The coefficient vectors of the evaluation :"); put_line(s.yv);
+    err := Difference(px,s.yv);
     put("The error :"); put(err,3); new_line;
-    for i in vm'range loop
+    for i in s.vm'range loop
       put("The matrix "); put(i,1); put_line(" :");
-      put(vm(i).all);
+      put(s.vm(i).all);
     end loop;
     for i in 1..dim loop
       for j in 1..dim loop
@@ -409,20 +395,15 @@ procedure ts_speelcnv is
         put(jm(i,j));
       end loop;
     end loop;
-    err := Difference(jm,vm);
+    err := Difference(jm,s.vm);
     put("The error :"); put(err,3); new_line;
-    Clear(c);
+    Clear(s); -- Clear(c) is not needed, the Clear(s) does Clear(s.crc)
     Standard_CSeries_Poly_Systems.Clear(p);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
-    Clear(pwt);
     Standard_Complex_Series_Vectors.Clear(x);
     Standard_Complex_Series_Vectors.Clear(px);
     Standard_Complex_Series_Matrices.Clear(jm);
     Standard_Complex_VecVecs.Clear(xcff);
-    Standard_Complex_VecVecs.Clear(yd);
-    Standard_Complex_VecVecs.Clear(vy);
-    Standard_Complex_VecVecs.Clear(yv);
-    Standard_Complex_VecMats.Clear(vm);
   end Standard_System_Test;
 
   procedure DoblDobl_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
@@ -439,8 +420,9 @@ procedure ts_speelcnv is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    c : Convolution_Circuits
+    c : constant Convolution_Circuits
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    s : Link_to_System := Create(c,dim,deg);
     p : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := DoblDobl_System(c);
     x : DoblDobl_Complex_Series_Vectors.Vector(1..dim)
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -452,31 +434,20 @@ procedure ts_speelcnv is
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
     jm : DoblDobl_Complex_Series_Matrices.Matrix(1..dim,1..dim)
        := DoblDobl_CSeries_Jaco_Matrices.Eval(jp,x);
-    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
-        := Exponent_Maxima(c,dim);
-    pwt : Link_to_VecVecVec := Create(xcff,mxe);
-    yd : DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
-       := Allocate_Coefficients(dim+1,deg);
-    vy : DoblDobl_Complex_VecVecs.VecVec(0..deg)
-       := Linearized_Allocation(dim,deg);
-    yv : DoblDobl_Complex_VecVecs.VecVec(1..dim)
-       := Allocate_Coefficients(dim,deg);
-    vm : DoblDobl_Complex_VecMats.VecMat(0..deg)
-       := Allocate_Coefficients(dim,dim,deg);
     err : double_double;
 
   begin
     put_line("the polynomial system :");
     DoblDobl_CSeries_Poly_Systems_io.put(p);
-    EvalDiff(c,xcff,pwt,yd,vy,vm);
+    Compute(s.pwt,s.mxe,xcff);
+    EvalDiff(s,xcff);
     put_line("The evaluation values :"); put_line(px);
-    Delinearize(vy,yv);
-    put_line("The coefficient vectors of the evaluation :"); put_line(yv);
-    err := Difference(px,yv);
+    put_line("The coefficient vectors of the evaluation :"); put_line(s.yv);
+    err := Difference(px,s.yv);
     put("The error : "); put(err,3); new_line;
-    for i in vm'range loop
+    for i in s.vm'range loop
       put("The matrix "); put(i,1); put_line(" :");
-      put(vm(i).all);
+      put(s.vm(i).all);
     end loop;
     for i in 1..dim loop
       for j in 1..dim loop
@@ -485,20 +456,15 @@ procedure ts_speelcnv is
         put(jm(i,j));
       end loop;
     end loop;
-    err := Difference(jm,vm);
+    err := Difference(jm,s.vm);
     put("The error : "); put(err,3); new_line;
-    Clear(c);
+    Clear(s);
     DoblDobl_CSeries_Poly_Systems.Clear(p);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
-    Clear(pwt);
     DoblDobl_Complex_Series_Vectors.Clear(x);
     DoblDobl_Complex_Series_Vectors.Clear(px);
     DoblDobl_Complex_Series_Matrices.Clear(jm);
     DoblDobl_Complex_VecVecs.Clear(xcff);
-    DoblDobl_Complex_VecVecs.Clear(yd);
-    DoblDobl_Complex_VecVecs.Clear(vy);
-    DoblDobl_Complex_VecVecs.Clear(yv);
-    DoblDobl_Complex_VecMats.Clear(vm);
   end DoblDobl_System_Test;
 
   procedure QuadDobl_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
@@ -515,8 +481,9 @@ procedure ts_speelcnv is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    c : Convolution_Circuits
+    c : constant Convolution_Circuits
       := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    s : Link_to_System := Create(c,dim,deg);
     p : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := QuadDobl_System(c);
     x : QuadDobl_Complex_Series_Vectors.Vector(1..dim)
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -528,31 +495,20 @@ procedure ts_speelcnv is
        := QuadDobl_CSeries_Jaco_Matrices.Create(p);
     jm : QuadDobl_Complex_Series_Matrices.Matrix(1..dim,1..dim)
        := QuadDobl_CSeries_Jaco_Matrices.Eval(jp,x);
-    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
-        := Exponent_Maxima(c,dim);
-    pwt : Link_to_VecVecVec := Create(xcff,mxe);
-    yd : QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
-       := Allocate_Coefficients(dim+1,deg);
-    vy : QuadDobl_Complex_VecVecs.VecVec(0..deg)
-       := Linearized_Allocation(dim,deg);
-    yv : QuadDobl_Complex_VecVecs.VecVec(1..dim)
-       := Allocate_Coefficients(dim,deg);
-    vm : QuadDobl_Complex_VecMats.VecMat(0..deg)
-       := Allocate_Coefficients(dim,dim,deg);
     err : quad_double;
 
   begin
     put_line("the polynomial system :");
     QuadDobl_CSeries_Poly_Systems_io.put(p);
-    EvalDiff(c,xcff,pwt,yd,vy,vm);
+    Compute(s.pwt,s.mxe,xcff);
+    EvalDiff(s,xcff);
     put_line("The evaluation values :"); put_line(px);
-    Delinearize(vy,yv);
-    put_line("The coefficient vectors of the evaluation :"); put_line(yv);
-    err := Difference(px,yv);
+    put_line("The coefficient vectors of the evaluation :"); put_line(s.yv);
+    err := Difference(px,s.yv);
     put("The error : "); put(err,3); new_line;
-    for i in vm'range loop
+    for i in s.vm'range loop
       put("The matrix "); put(i,1); put_line(" :");
-      put(vm(i).all);
+      put(s.vm(i).all);
     end loop;
     for i in 1..dim loop
       for j in 1..dim loop
@@ -561,20 +517,15 @@ procedure ts_speelcnv is
         put(jm(i,j));
       end loop;
     end loop;
-    err := Difference(jm,vm);
+    err := Difference(jm,s.vm);
     put("The error : "); put(err,3); new_line;
-    Clear(c);
+    Clear(s);
     QuadDobl_CSeries_Poly_Systems.Clear(p);
     QuadDobl_CSeries_Jaco_Matrices.Clear(jp);
-    Clear(pwt);
     QuadDobl_Complex_Series_Vectors.Clear(x);
     QuadDobl_Complex_Series_Vectors.Clear(px);
     QuadDobl_Complex_Series_Matrices.Clear(jm);
     QuadDobl_Complex_VecVecs.Clear(xcff);
-    QuadDobl_Complex_VecVecs.Clear(yd);
-    QuadDobl_Complex_VecVecs.Clear(vy);
-    QuadDobl_Complex_VecVecs.Clear(yv);
-    QuadDobl_Complex_VecMats.Clear(vm);
   end QuadDobl_System_Test;
 
   procedure Standard_Input_Test ( deg : in integer32 ) is
@@ -597,6 +548,7 @@ procedure ts_speelcnv is
       dim : constant integer32 := p'last;
       c : constant Convolution_Circuits(p'range)
         := Make_Convolution_Circuits(p.all,d);
+      q : Link_to_System := Create(c,dim,deg);
       x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
         := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
       jp : constant Standard_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
@@ -607,22 +559,15 @@ procedure ts_speelcnv is
          := Standard_CSeries_Poly_SysFun.Eval(s,x);
       xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
            := Standard_Series_Coefficients(x);
-      mxe : constant Standard_Integer_Vectors.Vector(1..dim)
-          := Exponent_Maxima(c,dim);
-      pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
-      yd : constant Standard_Complex_VecVecs.VecVec(1..dim+1)
-         := Allocate_Coefficients(dim+1,deg);
-      vy : constant Standard_Complex_VecVecs.VecVec(1..dim)
-         := Allocate_Coefficients(dim,deg);
-      vm : constant Standard_Complex_VecMats.VecMat(0..deg)
-         := Allocate_Coefficients(dim,dim,deg);
       err : double_float;
     begin
-      EvalDiff(c,xcff,pwt,yd,vy,vm);
-      err := Difference(sx,vy);
+      Compute(q.pwt,q.mxe,xcff);
+      EvalDiff(q,xcff);
+      err := Difference(sx,q.yv);
       put("The evaluation error : "); put(err,3); new_line;
-      err := Difference(jm,vm);
+      err := Difference(jm,q.vm);
       put("The differentiation error : "); put(err,3); new_line;
+      Clear(q);
     end;
   end Standard_Input_Test;
 
@@ -646,6 +591,7 @@ procedure ts_speelcnv is
       dim : constant integer32 := p'last;
       c : constant Convolution_Circuits(p'range)
         := Make_Convolution_Circuits(p.all,d);
+      q : Link_to_System := Create(c,dim,deg);
       x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
         := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
       jp : constant DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
@@ -656,22 +602,15 @@ procedure ts_speelcnv is
          := DoblDobl_CSeries_Poly_SysFun.Eval(s,x);
       xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
            := DoblDobl_Series_Coefficients(x);
-      mxe : constant Standard_Integer_Vectors.Vector(1..dim)
-          := Exponent_Maxima(c,dim);
-      pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
-      yd : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
-         := Allocate_Coefficients(dim+1,deg);
-      vy : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
-         := Allocate_Coefficients(dim,deg);
-      vm : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
-         := Allocate_Coefficients(dim,dim,deg);
       err : double_double;
     begin
-      EvalDiff(c,xcff,pwt,yd,vy,vm);
-      err := Difference(sx,vy);
+      Compute(q.pwt,q.mxe,xcff);
+      EvalDiff(q,xcff);
+      err := Difference(sx,q.yv);
       put("The evaluation error : "); put(err,3); new_line;
-      err := Difference(jm,vm);
+      err := Difference(jm,q.vm);
       put("The differentiation error : "); put(err,3); new_line;
+      Clear(q);
     end;
   end DoblDobl_Input_Test;
 
@@ -695,6 +634,7 @@ procedure ts_speelcnv is
       dim : constant integer32 := p'last;
       c : constant Convolution_Circuits(p'range)
         := Make_Convolution_Circuits(p.all,d);
+      q : Link_to_System := Create(c,dim,deg);
       x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
         := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
       jp : constant QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
@@ -705,22 +645,15 @@ procedure ts_speelcnv is
          := QuadDobl_CSeries_Poly_SysFun.Eval(s,x);
       xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
            := QuadDobl_Series_Coefficients(x);
-      mxe : constant Standard_Integer_Vectors.Vector(1..dim)
-          := Exponent_Maxima(c,dim);
-      pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
-      yd : constant QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
-         := Allocate_Coefficients(dim+1,deg);
-      vy : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
-         := Allocate_Coefficients(dim,deg);
-      vm : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
-         := Allocate_Coefficients(dim,dim,deg);
       err : quad_double;
     begin
-      EvalDiff(c,xcff,pwt,yd,vy,vm);
-      err := Difference(sx,vy);
+      Compute(q.pwt,q.mxe,xcff);
+      EvalDiff(q,xcff);
+      err := Difference(sx,q.yv);
       put("The evaluation error : "); put(err,3); new_line;
-      err := Difference(jm,vm);
+      err := Difference(jm,q.vm);
       put("The differentiation error : "); put(err,3); new_line;
+      Clear(q);
     end;
   end QuadDobl_Input_Test;
 

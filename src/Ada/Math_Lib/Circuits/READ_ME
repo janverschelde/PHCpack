@@ -64,7 +64,6 @@ series_polynomial_gradients        : collects test utilities
 random_convolution_circuits        : generation of random circuits for testing
 system_convolution_circuits        : make circuits from polynomials and systems
 evaluation_differentiation_errors  : functions for differences of computations
-linearized_series_coefficients     : delinearize procedures for series
 ts_speelser                        : test reverse mode on power series
 ts_speelcnv                        : convolutions for series polynomials
 -------------------------------------------------------------------------------

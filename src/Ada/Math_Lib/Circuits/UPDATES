@@ -1,5 +1,9 @@
 Mon 6 Jan 2020 : to generic_speelpenning_convolutions added operations to
-  allocate and compute the power table.
+  allocate and compute the power table.  Added a system type to the
+  generic_speelpenning_convolutions to encapsulate the work space along
+  with the convolution circuits and added encapsulated EvalDiff procedures.
+  The package Linearized_Series_Coefficients is obsolete as the Delinearize
+  is moved into the generic_speelpenning_convolutions; tested by ts_speelcnv.
 
 Sun 5 Jan 2020 : in generic_speelpenning_convolutions turned the representation
   of the evaluated series in linearized form, tested by ts_speelcnv.

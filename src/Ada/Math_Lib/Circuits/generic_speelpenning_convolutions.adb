@@ -26,6 +26,33 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Exponent_Maxima;
 
+  function Create ( c : Convolution_Circuits;
+                    dim,deg : integer32 ) return System is
+
+    neq : constant integer32 := c'last;
+    res : System(neq,neq+1,dim,deg);
+
+  begin
+    res.crc := c;
+    res.mxe := Exponent_Maxima(c,dim);
+    res.pwt := Allocate(res.mxe,deg);
+    res.yd := Allocate_Coefficients(dim+1,deg);
+    res.vy := Linearized_Allocation(dim,deg);
+    res.yv := Allocate_Coefficients(dim,deg);
+    res.vm := Allocate_Coefficients(neq,dim,deg);
+    return res;
+  end Create;
+
+  function Create ( c : Convolution_Circuits;
+                    dim,deg : integer32 ) return Link_to_System is
+
+    res_rep : constant System(c'last,c'last+1,dim,deg) := Create(c,dim,deg);
+    res : constant Link_to_System := new System'(res_rep);
+
+  begin
+    return res;
+  end Create;
+
   function Create ( x : VecVecs.VecVec;
                     d : Standard_Integer_Vectors.Vector )
                   return Link_to_VecVecVec is
@@ -92,6 +119,8 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
   end Compute;
 
+-- DEALLOCATORS :
+
   procedure Clear ( pwt : in out Link_to_VecVecVec ) is
 
     procedure free is new unchecked_deallocation(VecVecVec,Link_to_VecVecVec);
@@ -149,6 +178,27 @@ package body Generic_Speelpenning_Convolutions is
     if c /= null then
       Clear(c.all);
       free(c);
+    end if;
+  end Clear;
+
+  procedure Clear ( s : in out System ) is
+  begin
+    Clear(s.crc);
+    Clear(s.pwt);
+    VecVecs.Clear(s.yd);
+    VecVecs.Clear(s.vy);
+    VecVecs.Clear(s.yv);
+    VecMats.Clear(s.vm);
+  end Clear;
+
+  procedure Clear ( s : in out Link_to_System ) is
+
+    procedure free is new unchecked_deallocation(System,Link_to_System);
+
+  begin
+    if s /= null then
+      Clear(s.all);
+      free(s);
     end if;
   end Clear;
 
@@ -543,6 +593,33 @@ package body Generic_Speelpenning_Convolutions is
         end loop;
       end loop;
     end loop;
+  end EvalDiff;
+
+  procedure Delinearize ( vy,yv : in VecVecs.VecVec ) is
+  begin
+    for k in vy'range loop
+      declare
+        vyk : constant Vectors.Link_to_Vector := vy(k);
+        left : Vectors.Link_to_Vector;
+      begin
+        for i in yv'range loop  -- vyk holds k-th coefficient of all series
+          left := yv(i);        -- so we assign to coefficients of series i
+          left(k) := vyk(i);    -- at position k the i-th value of vyk
+        end loop;
+      end;
+    end loop;
+  end Delinearize;
+
+  procedure EvalDiff ( s : in System; x : in VecVecs.VecVec ) is
+  begin
+    EvalDiff(s.crc,x,s.pwt,s.yd,s.vy,s.vm);
+    Delinearize(s.vy,s.yv);
+  end EvalDiff;
+
+  procedure EvalDiff ( s : in Link_to_System; x : in VecVecs.VecVec ) is
+  begin
+    EvalDiff(s.crc,x,s.pwt,s.yd,s.vy,s.vm);
+    Delinearize(s.vy,s.yv);
   end EvalDiff;
 
 end Generic_Speelpenning_Convolutions;

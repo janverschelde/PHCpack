@@ -55,6 +55,33 @@ package Generic_Speelpenning_Convolutions is
 
   type Link_to_Convolution_Circuits is access Convolution_Circuits;
 
+-- A system stores the sequence of convolution circuits for each polynomial
+-- and the work space to hold auxiliary results and the final outcomes.
+
+  type System ( neq,neq1,dim,deg : integer32 ) is record
+    crc : Convolution_Circuits(1..neq); -- circuits for the equations
+    mxe : Standard_Integer_Vectors.Vector(1..dim); -- exponent maxima
+    pwt : Link_to_VecVecVec;      -- the power table
+    yd : VecVecs.VecVec(1..neq1); -- work space for EvalDiff on one circuit
+    vy : VecVecs.VecVec(0..deg);  -- linearized evaluated power series
+    yv : VecVecs.VecVec(1..neq);  -- delinearized evaluated power series
+    vm : VecMats.VecMat(0..deg);  -- differentiation result as matrix series
+  end record;
+
+  type Link_to_System is access System;
+
+-- CONSTRUCTORS :
+
+  function Create ( c : Convolution_Circuits;
+                    dim,deg : integer32 ) return System;
+  function Create ( c : Convolution_Circuits;
+                    dim,deg : integer32 ) return Link_to_System;
+
+  -- DESCRIPTION:
+  --   The system on return stores the convolution circuits in crc,
+  --   contains the values for the exponent maxima in mxe, and
+  --   has allocated space for pwt, yd, vy, yv, and vm.
+
   function Exponent_Maxima
              ( c : Convolution_Circuits; dim : integer32 )
              return Standard_Integer_Vectors.Vector;
@@ -115,6 +142,12 @@ package Generic_Speelpenning_Convolutions is
 
   -- DESCRIPTION :
   --   Deallocates the space occupied by the convolution circuits.
+
+  procedure Clear ( s : in out System );
+  procedure Clear ( s : in out Link_to_System );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by the system s.
 
 -- ALLOCATORS :
 
@@ -351,5 +384,27 @@ package Generic_Speelpenning_Convolutions is
   --   vy           values of the circuits at x, in linearized form;
   --   vm           the evaluated circuits at x as a series 
   --                of some fixe degree with matrix coefficients.
+
+  procedure Delinearize ( vy,yv : in VecVecs.VecVec );
+
+  --  DESCRIPTION :
+  --    Converts the linearized representation in vy into the vector yv
+  --    of coefficient vectors of the series.
+  --    This conversion is convenient for the difference computation
+  --    and needed in the application of Newton's method.
+
+  -- REQUIRED :
+  --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
+  --   then yv'range = 1..dimension and yv(k)'range = 0..degree.
+
+  procedure EvalDiff ( s : in System; x : in VecVecs.VecVec );
+  procedure EvalDiff ( s : in Link_to_System; x : in VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Wraps the EvalDiff on the convolution circuits in s.crc.
+
+  -- REQUIRED :
+  --   All data in s are allocated properly with respect to dimension
+  --   and degree, the power table s.pwt is up to data with the given x.
 
 end Generic_Speelpenning_Convolutions;
