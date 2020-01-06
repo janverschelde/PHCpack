@@ -1,3 +1,6 @@
+Mon 6 Jan 2020 : to generic_speelpenning_convolutions added operations to
+  allocate and compute the power table.
+
 Sun 5 Jan 2020 : in generic_speelpenning_convolutions turned the representation
   of the evaluated series in linearized form, tested by ts_speelcnv.
   Extracted the Delinearize procedures out of ts_speelcnv into a new

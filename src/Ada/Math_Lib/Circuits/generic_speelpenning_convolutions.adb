@@ -52,6 +52,46 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Create;
 
+  function Allocate ( mxe : Standard_Integer_Vectors.Vector;
+                      deg : integer32 )
+                    return Link_to_VecVecVec is
+
+    res : Link_to_VecVecVec;
+    pwt : VecVecVec(mxe'range);
+
+  begin
+    for i in mxe'range loop
+      if mxe(i) > 2 then
+        declare
+          xpw : constant VecVecs.VecVec(1..mxe(i)-2)
+              := Allocate_Coefficients(mxe(i)-2,deg);
+        begin
+          pwt(i) := new VecVecs.VecVec'(xpw);
+        end;
+      end if;
+    end loop;
+    res := new VecVecVec'(pwt);
+    return res;
+  end Allocate;
+
+  procedure Compute ( pwt : in Link_to_VecVecVec;
+                      mxe : in Standard_Integer_Vectors.Vector;
+                      x : in VecVecs.VecVec ) is
+
+    xpw : VecVecs.Link_to_VecVec;
+
+  begin
+    for i in x'range loop
+      if mxe(i) > 2 then
+        xpw := pwt(i);
+        Multiply(x(i),x(i),xpw(1));
+        for k in 2..(mxe(i)-2) loop
+          Multiply(xpw(k-1),x(i),xpw(k));
+        end loop;
+      end if;
+    end loop;
+  end Compute;
+
   procedure Clear ( pwt : in out Link_to_VecVecVec ) is
 
     procedure free is new unchecked_deallocation(VecVecVec,Link_to_VecVecVec);

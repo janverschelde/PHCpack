@@ -73,6 +73,33 @@ package Generic_Speelpenning_Convolutions is
   --   for i in d'range = x'range, in the power table.
   --   The i-th entry in the power table contains the powers of x(i),
   --   if d(i) > 1, starting with x(i)^2 at the first position.
+  --   The Create(x,d) combines the function Allocate(d,deg) 
+  --   and the Compute(pwt,d,x) procedure below.
+
+  function Allocate ( mxe : Standard_Integer_Vectors.Vector;
+                      deg : integer32 )
+                    return Link_to_VecVecVec;
+
+  -- DESCRIPTION :
+  --   Allocates space for the power table, given the exponent maxima
+  --   for each variable in mxe and the degrees of the power series in deg.
+
+  procedure Compute ( pwt : in Link_to_VecVecVec;
+                      mxe : in Standard_Integer_Vectors.Vector;
+                      x : in VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Computes the powers in the allocated power table for the
+  --   coefficients in the power series in x.
+
+  -- REQUIRED : pwt = Allocate(mxe,deg) has been executed,
+  --   and pwt'range = x'range.
+
+  -- ON ENTRY :
+  --   pwt      allocated power table for the exponent maxima in mxe
+  --            and for power series of the degree of the series in x;
+  --   mxe      exponent maxima for each variable in the system;
+  --   x        coefficient of power series.
 
 -- DEALLOCATORS :
 
