@@ -23,7 +23,7 @@ with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_Random_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Random_Series_Vectors;
-with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
+with Series_Coefficient_Vectors;         use Series_Coefficient_Vectors;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -67,10 +67,10 @@ procedure ts_mtadcnv is
     pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
     yd : constant Standard_Complex_VecVecs.VecVec(1..dim+1)
        := Allocate_Coefficients(dim+1,deg);
-    vy1 : constant Standard_Complex_VecVecs.VecVec(1..dim)
-        := Allocate_Coefficients(dim,deg);
-    vy2 : constant Standard_Complex_VecVecs.VecVec(1..dim)
-        := Allocate_Coefficients(dim,deg);
+    vy1 : constant Standard_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant Standard_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
     vm1 : constant Standard_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     vm2 : constant Standard_Complex_VecMats.VecMat(0..deg)
@@ -129,10 +129,10 @@ procedure ts_mtadcnv is
     pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
     yd : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
        := Allocate_Coefficients(dim+1,deg);
-    vy1 : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
-        := Allocate_Coefficients(dim,deg);
-    vy2 : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
-        := Allocate_Coefficients(dim,deg);
+    vy1 : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
     vm1 : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     vm2 : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
@@ -191,10 +191,10 @@ procedure ts_mtadcnv is
     pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
     yd : constant QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
        := Allocate_Coefficients(dim+1,deg);
-    vy1 : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
-        := Allocate_Coefficients(dim,deg);
-    vy2 : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
-        := Allocate_Coefficients(dim,deg);
+    vy1 : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
     vm1 : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     vm2 : constant QuadDobl_Complex_VecMats.VecMat(0..deg)

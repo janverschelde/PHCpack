@@ -102,11 +102,11 @@ package body Multitasked_AlgoDiff_Convolutions is
     begin
       while idx <= c'last loop
         EvalDiff(c(idx).all,x,pwt,yd(i).all);
-        vleft := vy(idx);
         ydi := yd(i);
         vright := ydi(x'last+1);
-        for j in vleft'range loop
-          vleft(j) := vright(j);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
           vright(j) := Standard_Complex_Numbers.Create(0.0);
         end loop;
         for j in 1..x'last loop
@@ -146,11 +146,11 @@ package body Multitasked_AlgoDiff_Convolutions is
         put_line("task " & Multitasking.to_string(i)
                          & " done computing circuit "
                          & Multitasking.to_string(idx));
-        vleft := vy(idx);
         ydi := yd(i);
         vright := ydi(x'last+1);
-        for j in vleft'range loop
-          vleft(j) := vright(j);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
           vright(j) := Standard_Complex_Numbers.Create(0.0);
         end loop;
         for j in 1..x'last loop
@@ -211,11 +211,11 @@ package body Multitasked_AlgoDiff_Convolutions is
     begin
       while idx <= c'last loop
         EvalDiff(c(idx).all,x,pwt,yd(i).all);
-        vleft := vy(idx);
         ydi := yd(i);
         vright := ydi(x'last+1);
-        for j in vleft'range loop
-          vleft(j) := vright(j);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
           vright(j) := DoblDobl_Complex_Numbers.Create(integer32(0));
         end loop;
         for j in 1..x'last loop
@@ -255,11 +255,11 @@ package body Multitasked_AlgoDiff_Convolutions is
         put_line("task " & Multitasking.to_string(i)
                          & " done computing circuit "
                          & Multitasking.to_string(idx));
-        vleft := vy(idx);
         ydi := yd(i);
         vright := ydi(x'last+1);
-        for j in vleft'range loop
-          vleft(j) := vright(j);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
           vright(j) := DoblDobl_Complex_Numbers.Create(integer32(0));
         end loop;
         for j in 1..x'last loop
@@ -320,11 +320,11 @@ package body Multitasked_AlgoDiff_Convolutions is
     begin
       while idx <= c'last loop
         EvalDiff(c(idx).all,x,pwt,yd(i).all);
-        vleft := vy(idx);
         ydi := yd(i);
         vright := ydi(x'last+1);
-        for j in vleft'range loop
-          vleft(j) := vright(j);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
           vright(j) := QuadDobl_Complex_Numbers.Create(integer32(0));
         end loop;
         for j in 1..x'last loop
@@ -364,11 +364,11 @@ package body Multitasked_AlgoDiff_Convolutions is
         put_line("task " & Multitasking.to_string(i)
                          & " done computing circuit "
                          & Multitasking.to_string(idx));
-        vleft := vy(idx);
         ydi := yd(i);
         vright := ydi(x'last+1);
-        for j in vleft'range loop
-          vleft(j) := vright(j);
+        for j in vright'range loop
+          vleft := vy(j);
+          vleft(idx) := vright(j);
           vright(j) := QuadDobl_Complex_Numbers.Create(integer32(0));
         end loop;
         for j in 1..x'last loop
