@@ -65,3 +65,5 @@ mainfac                          : routine called by main dispatcher
 black_box_factorization          : routine called by black-box solver (phc -b)
 phc_factor                       : Ada routine for C interface
 ------------------------------------------------------------------------------
+ts_serwit                        : series developments on curves
+------------------------------------------------------------------------------

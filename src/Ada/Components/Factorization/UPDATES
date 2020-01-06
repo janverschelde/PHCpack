@@ -1,3 +1,6 @@
+Sun 5 Jan 2020 : new test procedure ts_serwit on Newton's methods to 
+  compute power series with convolution circuits.
+
 Sat 7 Apr 2018 : removed code from homotopy_membership_filters to a new
   package cascade_membership_filters, for filtering superwitness sets.
 
