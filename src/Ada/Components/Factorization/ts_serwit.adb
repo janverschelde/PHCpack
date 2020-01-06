@@ -12,7 +12,6 @@ with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Systems;
 with Standard_Series_Matrix_Solvers;
-with Linearized_Series_Coefficients;     use Linearized_Series_Coefficients;
 with Standard_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Standard_Complex_Solutions;
@@ -123,44 +122,83 @@ procedure ts_serwit is
   procedure Standard_Newton_Step
               ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
                 s : in Standard_Complex_VecVecs.VecVec;
-                dim,deg : in integer32 ) is
+                dim,deg : in integer32;
+                mxe : in Standard_Integer_Vectors.Vector;
+                yd,vy,yv : in Standard_Complex_VecVecs.VecVec;
+                vm : in Standard_Complex_VecMats.VecMat;
+                pwt : in Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --   Applies one Newton step on the convolution circuits c,
   --   departing from the series coefficients in s.
 
-    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
-        := Standard_Speelpenning_Convolutions.Exponent_Maxima(c,dim);
-    yd : Standard_Complex_VecVecs.VecVec(1..dim+1)
-       := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim+1,deg);
-    vy : Standard_Complex_VecVecs.VecVec(0..deg)
-       := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
-    yv : Standard_Complex_VecVecs.VecVec(1..dim)
-       := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
-    vm : Standard_Complex_VecMats.VecMat(0..deg)
-       := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,dim,deg);
-    pwt : Standard_Speelpenning_Convolutions.Link_to_VecVecVec
-        := Standard_Speelpenning_Convolutions.Create(s,mxe);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+  -- ON ENTRY :
+  --   c        convolution circuits;
+  --   s        vector of coefficients of power series;
+  --   dim      number of variables in the system;
+  --   deg      degree of the power series;
+  --   mxe      maximal exponents of the circuits for each variable;
+  --   yd       allocated work space of range 1..dim+1 for coefficients
+  --            of power series truncated to degree deg;
+  --   vy       allocated space of range 0..deg, to store the evaluated
+  --            series in linearized represenation;
+  --   yv       allocated space of range 1..dim, to store the evaluated
+  --            series as a vector of coefficient vectors;
+  --   vm       allocated space of range 0..deg to store the coefficient
+  --            matrices in the series of degree deg;
+  --   pwt      allocated space for the power table;
+  --   ipvt     vector for the pivoting information in the LU factorization;
+  --   wrk      work space for the matrix series solver.
+
     info : integer32;
+
+  begin
+    put_line("s :"); put_line(s);
+    Standard_Speelpenning_Convolutions.EvalDiff(c,s,pwt,yd,vy,vm);
+    put_line("vy :"); put_line(vy);
+    Minus(vy);
+    Standard_Series_Matrix_Solvers.Solve_by_lufac(vm,vy,ipvt,info,wrk);
+    put_line("dx :"); put_line(vy);
+    Standard_Speelpenning_Convolutions.Delinearize(vy,yv);
+    Update(s,yv);
+  end Standard_Newton_Step;
+
+  procedure Standard_Newton_Steps
+              ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+                s : in Standard_Complex_VecVecs.VecVec;
+                dim,deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Applies several Newton steps on the convolution circuits c,
+  --   departing from the series coefficients in s.
+
+    use Standard_Speelpenning_Convolutions;
+
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Maxima(c,dim);
+    yd : Standard_Complex_VecVecs.VecVec(1..dim+1)
+       := Allocate_Coefficients(dim+1,deg);
+    vy : Standard_Complex_VecVecs.VecVec(0..deg)
+       := Linearized_Allocation(dim,deg);
+    yv : Standard_Complex_VecVecs.VecVec(1..dim)
+       := Allocate_Coefficients(dim,deg);
+    vm : Standard_Complex_VecMats.VecMat(0..deg)
+       := Allocate_Coefficients(dim,dim,deg);
+    pwt : Link_to_VecVecVec := Create(s,mxe);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim);
     ans : character;
 
   begin
     loop
-      put_line("s :"); put_line(s);
-      Standard_Speelpenning_Convolutions.EvalDiff(c,s,pwt,yd,vy,vm);
-      put_line("vy :"); put_line(vy);
-      Minus(vy);
-      Standard_Series_Matrix_Solvers.Solve_by_lufac(vm,vy,ipvt,info,wrk);
-      put_line("dx :"); put_line(vy);
-      Delinearize(vy,yv);
-      Update(s,yv);
+      Standard_Newton_Step(c,s,dim,deg,mxe,yd,vy,yv,vm,pwt,ipvt,wrk);
       put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
-  end Standard_Newton_Step;
+  end Standard_Newton_Steps;
 
   procedure Standard_Test ( degree : in integer32 ) is
 
@@ -192,7 +230,7 @@ procedure ts_serwit is
       for i in c'range loop
         put_line(c(i).cff);
       end loop;
-      Standard_Newton_Step(c,s,lp'last,degree);
+      Standard_Newton_Steps(c,s,lp'last,degree);
     end;
   end Standard_Test;
 

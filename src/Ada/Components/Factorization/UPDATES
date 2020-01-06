@@ -1,3 +1,6 @@
+Mon 6 Jan 2020 : updated ts_serwit for the removal of the package
+  linearized_series_coefficients.
+
 Sun 5 Jan 2020 : new test procedure ts_serwit on Newton's methods to 
   compute power series with convolution circuits.
 
