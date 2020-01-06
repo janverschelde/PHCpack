@@ -1,5 +1,7 @@
 Sun 5 Jan 2020 : in generic_speelpenning_convolutions turned the representation
   of the evaluated series in linearized form, tested by ts_speelcnv.
+  Extracted the Delinearize procedures out of ts_speelcnv into a new
+  package Linearized_Series_Coefficients.
 
 Fri 3 Jan 2020 : extracted code from series_polynomial_gradients, which
   modified random_convolution_circuits.adb, ts_speelser, and ts_speelcnv.

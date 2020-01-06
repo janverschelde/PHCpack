@@ -86,6 +86,7 @@ with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Complex_Series_and_Polynomials;     use Complex_Series_and_Polynomials;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
+with Linearized_Series_Coefficients;     use Linearized_Series_Coefficients;
 
 procedure ts_speelcnv is
 
@@ -347,81 +348,6 @@ procedure ts_speelcnv is
     put("Sum of errors : "); put(sumerr,3); new_line;
     Clear(pwt);
   end QuadDobl_Test;
-
-  procedure Delinearize ( vy,yv : in Standard_Complex_VecVecs.VecVec ) is
-
-  --  DESCRIPTION :
-  --    Converts the linearized representation in vy into the vector yv
-  --    of coefficient vectors of the series.
-  --    This conversion is convenient for the difference computation.
-
-  -- REQUIRED :
-  --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
-  --   then yv'range = 1..dimension and yv(k)'range = 0..degree.
-
-  begin
-    for k in vy'range loop
-      declare
-        vyk : constant Standard_Complex_Vectors.Link_to_Vector := vy(k);
-        left : Standard_Complex_Vectors.Link_to_Vector;
-      begin
-        for i in yv'range loop  -- vyk holds k-th coefficient of all series
-          left := yv(i);        -- so we assign to coefficients of series i
-          left(k) := vyk(i);    -- at position k the i-th value of vyk
-        end loop;
-      end;
-    end loop;
-  end Delinearize;
-
-  procedure Delinearize ( vy,yv : in DoblDobl_Complex_VecVecs.VecVec ) is
-
-  --  DESCRIPTION :
-  --    Converts the linearized representation in vy into the vector yv
-  --    of coefficient vectors of the series.
-  --    This conversion is convenient for the difference computation.
-
-  -- REQUIRED :
-  --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
-  --   then yv'range = 1..dimension and yv(k)'range = 0..degree.
-
-  begin
-    for k in vy'range loop
-      declare
-        vyk : constant DoblDobl_Complex_Vectors.Link_to_Vector := vy(k);
-        left : DoblDobl_Complex_Vectors.Link_to_Vector;
-      begin
-        for i in yv'range loop  -- vyk holds k-th coefficient of all series
-          left := yv(i);        -- so we assign to coefficients of series i
-          left(k) := vyk(i);    -- at position k the i-th value of vyk
-        end loop;
-      end;
-    end loop;
-  end Delinearize;
-
-  procedure Delinearize ( vy,yv : in QuadDobl_Complex_VecVecs.VecVec ) is
-
-  --  DESCRIPTION :
-  --    Converts the linearized representation in vy into the vector yv
-  --    of coefficient vectors of the series.
-  --    This conversion is convenient for the difference computation.
-
-  -- REQUIRED :
-  --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
-  --   then yv'range = 1..dimension and yv(k)'range = 0..degree.
-
-  begin
-    for k in vy'range loop
-      declare
-        vyk : constant QuadDobl_Complex_Vectors.Link_to_Vector := vy(k);
-        left : QuadDobl_Complex_Vectors.Link_to_Vector;
-      begin
-        for i in yv'range loop  -- vyk holds k-th coefficient of all series
-          left := yv(i);        -- so we assign to coefficients of series i
-          left(k) := vyk(i);    -- at position k the i-th value of vyk
-        end loop;
-      end;
-    end loop;
-  end Delinearize;
 
   procedure Standard_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
