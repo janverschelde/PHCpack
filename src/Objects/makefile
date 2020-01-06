@@ -1334,7 +1334,7 @@ ts_squemb:
 # Test programs in the Components/Factorization library :
 
 test_factorization: ts_irco ts_combfac ts_newfac ts_factor \
-                    ts_hypfac ts_monfac # ts_rwpoly ts_ifactor
+                    ts_hypfac ts_monfac ts_serwit # ts_rwpoly ts_ifactor
 
 ts_rwpoly:
 	make -f $(MAKEFILE) ts_rwpoly
@@ -1359,6 +1359,9 @@ ts_hypfac:
 
 ts_monfac:
 	make -f $(MAKEFILE) ts_monfac
+
+ts_serwit:
+	make -f $(MAKEFILE) ts_serwit
 
 # Test programs in the Components/Decomposition library :
 

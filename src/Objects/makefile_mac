@@ -1558,6 +1558,9 @@ ts_hypfac:
 ts_monfac:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_monfac.adb -o $(BIN)/ts_monfac
 
+ts_serwit:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serwit.adb -o $(BIN)/ts_serwit
+
 # Test programs in the Components/Decomposition library :
 
 ts_irdeco:
