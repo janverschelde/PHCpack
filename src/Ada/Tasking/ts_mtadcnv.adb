@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with duration_io;
 with Ada.Calendar;
 with Communications_with_User;           use Communications_with_User;
 with Time_Stamps;
@@ -64,7 +65,7 @@ procedure ts_mtadcnv is
          := Standard_Series_Coefficients(x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Maxima(c,dim);
-    pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
     yd : constant Standard_Complex_VecVecs.VecVec(1..dim+1)
        := Allocate_Coefficients(dim+1,deg);
     vy1 : constant Standard_Complex_VecVecs.VecVec(0..deg)
@@ -77,16 +78,23 @@ procedure ts_mtadcnv is
         := Allocate_Coefficients(dim,dim,deg);
     err : double_float;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup : Duration;
+
+    use Ada.Calendar; -- for the difference operator on Duration
 
   begin
     put_line("running on one task ...");
     seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
     seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
     put("running with "); put(nbt,1); put_line(" tasks ...");
     multstart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
     Standard_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
     multstop := Ada.Calendar.Clock;
+    mult_elapsed := multstop - multstart;
     err := Difference(vy1,vy2);
     put("the error of evaluation : "); put(err,3); new_line;
     err := Difference(vm1,vm2);
@@ -97,6 +105,12 @@ procedure ts_mtadcnv is
     new_line;
     put_line("Elapsed time without multitasking : ");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    new_line;
+    if seri_elapsed + 1.0 /= 1.0 then
+      speedup := seri_elapsed/mult_elapsed;
+      put("The speedup : ");
+      duration_io.put(speedup,1,3); new_line;
+    end if;
   end Standard_Random_Test;
 
   procedure DoblDobl_Random_Test
@@ -126,7 +140,7 @@ procedure ts_mtadcnv is
          := DoblDobl_Series_Coefficients(x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Maxima(c,dim);
-    pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
     yd : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
        := Allocate_Coefficients(dim+1,deg);
     vy1 : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
@@ -139,16 +153,23 @@ procedure ts_mtadcnv is
         := Allocate_Coefficients(dim,dim,deg);
     err : double_double;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup : Duration;
+
+    use Ada.Calendar; -- for the difference operator on Duration
 
   begin
     put_line("running on one task ...");
     seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
     seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
     put("running with "); put(nbt,1); put_line(" tasks ...");
     multstart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
     DoblDobl_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
     multstop := Ada.Calendar.Clock;
+    mult_elapsed := multstop - multstart;
     err := Difference(vy1,vy2);
     put("the error of evaluation : "); put(err,3); new_line;
     err := Difference(vm1,vm2);
@@ -159,6 +180,12 @@ procedure ts_mtadcnv is
     new_line;
     put_line("Elapsed time without multitasking : ");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    new_line;
+    if seri_elapsed + 1.0 /= 1.0 then
+      speedup := seri_elapsed/mult_elapsed;
+      put("The speedup : ");
+      duration_io.put(speedup,1,3); new_line;
+    end if;
   end DoblDobl_Random_Test;
 
   procedure QuadDobl_Random_Test
@@ -188,7 +215,7 @@ procedure ts_mtadcnv is
          := QuadDobl_Series_Coefficients(x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim)
         := Exponent_Maxima(c,dim);
-    pwt : constant Link_to_VecVecVec := Create(xcff,mxe);
+    pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
     yd : constant QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
        := Allocate_Coefficients(dim+1,deg);
     vy1 : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
@@ -201,16 +228,23 @@ procedure ts_mtadcnv is
         := Allocate_Coefficients(dim,dim,deg);
     err : quad_double;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup : Duration;
+
+    use Ada.Calendar; -- for the difference operator on Duration
 
   begin
     put_line("running on one task ...");
     seristart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
     seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
     put("running with "); put(nbt,1); put_line(" tasks ...");
     multstart := Ada.Calendar.Clock;
+    Compute(pwt,mxe,xcff);
     QuadDobl_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
     multstop := Ada.Calendar.Clock;
+    mult_elapsed := multstop - multstart;
     err := Difference(vy1,vy2);
     put("the error of evaluation : "); put(err,3); new_line;
     err := Difference(vm1,vm2);
@@ -221,6 +255,12 @@ procedure ts_mtadcnv is
     new_line;
     put_line("Elapsed time without multitasking : ");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    new_line;
+    if seri_elapsed + 1.0 /= 1.0 then
+      speedup := seri_elapsed/mult_elapsed;
+      put("The speedup : ");
+      duration_io.put(speedup,1,3); new_line;
+    end if;
   end QuadDobl_Random_Test;
 
   procedure Main is

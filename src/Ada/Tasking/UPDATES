@@ -1,3 +1,6 @@
+Tue 7 Jan 2020 : speedup computation and separate power table computations
+  in ts_mtadcnv.
+
 Sun 5 Jan 2020 : updates in multitasked_algodiff_convolutions.adb and the
   tests in ts_mtadcnv for the linearized evaluated convolution circuits.
 
