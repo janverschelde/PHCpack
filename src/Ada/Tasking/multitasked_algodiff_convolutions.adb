@@ -76,6 +76,7 @@ package body Multitasked_AlgoDiff_Convolutions is
               ( nbt : in integer32;
                 c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
                 x : in Standard_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
                 pwt : in Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
                 vy : in Standard_Complex_VecVecs.VecVec;
                 vm : in Standard_Complex_VecMats.VecMat;
@@ -86,7 +87,8 @@ package body Multitasked_AlgoDiff_Convolutions is
     dim : constant integer32 := c'last; -- assuming square circuits
     deg : constant integer32 := vm'last;
     yd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
-    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
 
     procedure Silent_Job ( i,n : integer32 ) is
 
@@ -98,8 +100,25 @@ package body Multitasked_AlgoDiff_Convolutions is
       ydi : Standard_Complex_VecVecs.Link_to_VecVec;
       vleft,vright : Standard_Complex_Vectors.Link_to_Vector;
       mleft : Standard_Complex_Matrices.Link_to_Matrix;
+      xpw : Standard_Complex_VecVecs.Link_to_VecVec;
  
     begin
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
       while idx <= c'last loop
         EvalDiff(c(idx).all,x,pwt,yd(i).all);
         ydi := yd(i);
@@ -119,7 +138,7 @@ package body Multitasked_AlgoDiff_Convolutions is
         end loop;
         idx := idx + n;
       end loop;
-      done(i) := true;
+      alldone(i) := true;
     end Silent_Job;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
@@ -133,10 +152,27 @@ package body Multitasked_AlgoDiff_Convolutions is
       ydi : Standard_Complex_VecVecs.Link_to_VecVec;
       vleft,vright : Standard_Complex_Vectors.Link_to_Vector;
       mleft : Standard_Complex_Matrices.Link_to_Matrix;
+      xpw : Standard_Complex_VecVecs.Link_to_VecVec;
  
     begin
       put_line("number of circuits : " & Multitasking.to_string(c'last));
       put_line("number of tasks : " & Multitasking.to_string(n));
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset index for evaluation and differentation
       while idx <= c'last loop
         put_line("considering circuit " & Multitasking.to_string(idx));
         put_line("task " & Multitasking.to_string(i)
@@ -166,7 +202,7 @@ package body Multitasked_AlgoDiff_Convolutions is
         put_line("idx after increment : " & Multitasking.to_string(idx));
       end loop;
       put_line("task " & Multitasking.to_string(i) & " is done.");
-      done(i) := true;
+      alldone(i) := true;
     end Report_Job;
     procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
 
@@ -176,8 +212,8 @@ package body Multitasked_AlgoDiff_Convolutions is
      else silent_do_jobs(nbt);
     end if;
    -- make sure main task does not terminate before all worker tasks
-    while not Multitasking.all_true(nbt,done) loop
-      delay 0.1;
+    while not Multitasking.all_true(nbt,alldone) loop
+      delay 0.001;
     end loop;
   end Standard_Multitasked_EvalDiff;
 
@@ -185,6 +221,7 @@ package body Multitasked_AlgoDiff_Convolutions is
               ( nbt : in integer32;
                 c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
                 pwt : in DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
                 vy : in DoblDobl_Complex_VecVecs.VecVec;
                 vm : in DoblDobl_Complex_VecMats.VecMat;
@@ -195,7 +232,8 @@ package body Multitasked_AlgoDiff_Convolutions is
     dim : constant integer32 := c'last; -- assuming square circuits
     deg : constant integer32 := vm'last;
     yd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
-    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
 
     procedure Silent_Job ( i,n : integer32 ) is
 
@@ -207,8 +245,25 @@ package body Multitasked_AlgoDiff_Convolutions is
       ydi : DoblDobl_Complex_VecVecs.Link_to_VecVec;
       vleft,vright : DoblDobl_Complex_Vectors.Link_to_Vector;
       mleft : DoblDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : DoblDobl_Complex_VecVecs.Link_to_VecVec;
  
     begin
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset index for evaluation and differentiation
       while idx <= c'last loop
         EvalDiff(c(idx).all,x,pwt,yd(i).all);
         ydi := yd(i);
@@ -228,7 +283,7 @@ package body Multitasked_AlgoDiff_Convolutions is
         end loop;
         idx := idx + n;
       end loop;
-      done(i) := true;
+      alldone(i) := true;
     end Silent_Job;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
@@ -242,10 +297,27 @@ package body Multitasked_AlgoDiff_Convolutions is
       ydi : DoblDobl_Complex_VecVecs.Link_to_VecVec;
       vleft,vright : DoblDobl_Complex_Vectors.Link_to_Vector;
       mleft : DoblDobl_Complex_Matrices.Link_to_Matrix;
- 
+      xpw : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+
     begin
       put_line("number of circuits : " & Multitasking.to_string(c'last));
       put_line("number of tasks : " & Multitasking.to_string(n));
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
       while idx <= c'last loop
         put_line("considering circuit " & Multitasking.to_string(idx));
         put_line("task " & Multitasking.to_string(i)
@@ -275,7 +347,7 @@ package body Multitasked_AlgoDiff_Convolutions is
         put_line("idx after increment : " & Multitasking.to_string(idx));
       end loop;
       put_line("task " & Multitasking.to_string(i) & " is done.");
-      done(i) := true;
+      alldone(i) := true;
     end Report_Job;
     procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
 
@@ -285,8 +357,8 @@ package body Multitasked_AlgoDiff_Convolutions is
      else silent_do_jobs(nbt);
     end if;
    -- make sure main task does not terminate before all worker tasks
-    while not Multitasking.all_true(nbt,done) loop
-      delay 0.1;
+    while not Multitasking.all_true(nbt,alldone) loop
+      delay 0.001;
     end loop;
   end DoblDobl_Multitasked_EvalDiff;
 
@@ -294,6 +366,7 @@ package body Multitasked_AlgoDiff_Convolutions is
               ( nbt : in integer32;
                 c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
                 pwt : in QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
@@ -304,7 +377,8 @@ package body Multitasked_AlgoDiff_Convolutions is
     dim : constant integer32 := c'last; -- assuming square circuits
     deg : constant integer32 := vm'last;
     yd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
-    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
 
     procedure Silent_Job ( i,n : integer32 ) is
 
@@ -316,8 +390,25 @@ package body Multitasked_AlgoDiff_Convolutions is
       ydi : QuadDobl_Complex_VecVecs.Link_to_VecVec;
       vleft,vright : QuadDobl_Complex_Vectors.Link_to_Vector;
       mleft : QuadDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : QuadDobl_Complex_VecVecs.Link_to_VecVec;
  
     begin
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
       while idx <= c'last loop
         EvalDiff(c(idx).all,x,pwt,yd(i).all);
         ydi := yd(i);
@@ -337,7 +428,7 @@ package body Multitasked_AlgoDiff_Convolutions is
         end loop;
         idx := idx + n;
       end loop;
-      done(i) := true;
+      alldone(i) := true;
     end Silent_Job;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
@@ -351,10 +442,27 @@ package body Multitasked_AlgoDiff_Convolutions is
       ydi : QuadDobl_Complex_VecVecs.Link_to_VecVec;
       vleft,vright : QuadDobl_Complex_Vectors.Link_to_Vector;
       mleft : QuadDobl_Complex_Matrices.Link_to_Matrix;
+      xpw : QuadDobl_Complex_VecVecs.Link_to_VecVec;
  
     begin
       put_line("number of circuits : " & Multitasking.to_string(c'last));
       put_line("number of tasks : " & Multitasking.to_string(n));
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          xpw := pwt(idx);
+          Multiply(x(idx),x(idx),xpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(xpw(k-1),x(idx),xpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
       while idx <= c'last loop
         put_line("considering circuit " & Multitasking.to_string(idx));
         put_line("task " & Multitasking.to_string(i)
@@ -384,7 +492,7 @@ package body Multitasked_AlgoDiff_Convolutions is
         put_line("idx after increment : " & Multitasking.to_string(idx));
       end loop;
       put_line("task " & Multitasking.to_string(i) & " is done.");
-      done(i) := true;
+      alldone(i) := true;
     end Report_Job;
     procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
 
@@ -394,8 +502,8 @@ package body Multitasked_AlgoDiff_Convolutions is
      else silent_do_jobs(nbt);
     end if;
    -- make sure main task does not terminate before all worker tasks
-    while not Multitasking.all_true(nbt,done) loop
-      delay 0.1;
+    while not Multitasking.all_true(nbt,alldone) loop
+      delay 0.001;
     end loop;
   end QuadDobl_Multitasked_EvalDiff;
 

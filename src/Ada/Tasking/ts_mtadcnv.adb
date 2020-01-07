@@ -91,8 +91,7 @@ procedure ts_mtadcnv is
     seri_elapsed := seristop - seristart;
     put("running with "); put(nbt,1); put_line(" tasks ...");
     multstart := Ada.Calendar.Clock;
-    Compute(pwt,mxe,xcff);
-    Standard_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
+    Standard_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
     multstop := Ada.Calendar.Clock;
     mult_elapsed := multstop - multstart;
     err := Difference(vy1,vy2);
@@ -166,8 +165,7 @@ procedure ts_mtadcnv is
     seri_elapsed := seristop - seristart;
     put("running with "); put(nbt,1); put_line(" tasks ...");
     multstart := Ada.Calendar.Clock;
-    Compute(pwt,mxe,xcff);
-    DoblDobl_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
+    DoblDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
     multstop := Ada.Calendar.Clock;
     mult_elapsed := multstop - multstart;
     err := Difference(vy1,vy2);
@@ -241,8 +239,7 @@ procedure ts_mtadcnv is
     seri_elapsed := seristop - seristart;
     put("running with "); put(nbt,1); put_line(" tasks ...");
     multstart := Ada.Calendar.Clock;
-    Compute(pwt,mxe,xcff);
-    QuadDobl_Multitasked_EvalDiff(nbt,c,xcff,pwt,vy2,vm2,output);
+    QuadDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
     multstop := Ada.Calendar.Clock;
     mult_elapsed := multstop - multstart;
     err := Difference(vy1,vy2);
