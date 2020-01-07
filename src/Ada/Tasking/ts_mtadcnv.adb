@@ -39,7 +39,7 @@ procedure ts_mtadcnv is
 --   polynomial systems at truncated power series with multitasking.
 
   procedure Standard_Random_Test
-              ( dim,deg,nbr,pwr,nbt : in integer32;
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
 
   -- DESCRIPTION :
@@ -79,41 +79,46 @@ procedure ts_mtadcnv is
     err : double_float;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
     seri_elapsed,mult_elapsed,speedup : Duration;
+    ans : character;
 
     use Ada.Calendar; -- for the difference operator on Duration
 
   begin
-    put_line("running on one task ...");
+    put_line("Running on one task ...");
     seristart := Ada.Calendar.Clock;
     Compute(pwt,mxe,xcff);
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
-    put("running with "); put(nbt,1); put_line(" tasks ...");
-    multstart := Ada.Calendar.Clock;
-    Standard_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
-    multstop := Ada.Calendar.Clock;
-    mult_elapsed := multstop - multstart;
-    err := Difference(vy1,vy2);
-    put("the error of evaluation : "); put(err,3); new_line;
-    err := Difference(vm1,vm2);
-    put("the error of differentiation : "); put(err,3); new_line;
-    new_line;
-    put_line("Elapsed time on multitasking : ");
-    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-    new_line;
-    put_line("Elapsed time without multitasking : ");
+    put_line("-> Elapsed time without multitasking : ");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-    new_line;
-    if seri_elapsed + 1.0 /= 1.0 then
-      speedup := seri_elapsed/mult_elapsed;
-      put("The speedup : ");
-      duration_io.put(speedup,1,3); new_line;
-    end if;
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      Standard_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(vy1,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(vm1,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
   end Standard_Random_Test;
 
   procedure DoblDobl_Random_Test
-              ( dim,deg,nbr,pwr,nbt : in integer32;
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
 
   -- DESCRIPTION :
@@ -153,41 +158,47 @@ procedure ts_mtadcnv is
     err : double_double;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
     seri_elapsed,mult_elapsed,speedup : Duration;
+    ans : character;
 
     use Ada.Calendar; -- for the difference operator on Duration
 
   begin
-    put_line("running on one task ...");
+    put_line("Running on one task ...");
     seristart := Ada.Calendar.Clock;
     Compute(pwt,mxe,xcff);
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
-    put("running with "); put(nbt,1); put_line(" tasks ...");
-    multstart := Ada.Calendar.Clock;
-    DoblDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
-    multstop := Ada.Calendar.Clock;
-    mult_elapsed := multstop - multstart;
-    err := Difference(vy1,vy2);
-    put("the error of evaluation : "); put(err,3); new_line;
-    err := Difference(vm1,vm2);
-    put("the error of differentiation : "); put(err,3); new_line;
     new_line;
-    put_line("Elapsed time on multitasking : ");
-    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-    new_line;
-    put_line("Elapsed time without multitasking : ");
+    put_line("-> Elapsed time without multitasking : ");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-    new_line;
-    if seri_elapsed + 1.0 /= 1.0 then
-      speedup := seri_elapsed/mult_elapsed;
-      put("The speedup : ");
-      duration_io.put(speedup,1,3); new_line;
-    end if;
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      DoblDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(vy1,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(vm1,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
   end DoblDobl_Random_Test;
 
   procedure QuadDobl_Random_Test
-              ( dim,deg,nbr,pwr,nbt : in integer32;
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
 
   -- DESCRIPTION :
@@ -227,37 +238,43 @@ procedure ts_mtadcnv is
     err : quad_double;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
     seri_elapsed,mult_elapsed,speedup : Duration;
+    ans : character;
 
     use Ada.Calendar; -- for the difference operator on Duration
 
   begin
-    put_line("running on one task ...");
+    put_line("Running on one task ...");
     seristart := Ada.Calendar.Clock;
     Compute(pwt,mxe,xcff);
     EvalDiff(c,xcff,pwt,yd,vy1,vm1);
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
-    put("running with "); put(nbt,1); put_line(" tasks ...");
-    multstart := Ada.Calendar.Clock;
-    QuadDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
-    multstop := Ada.Calendar.Clock;
-    mult_elapsed := multstop - multstart;
-    err := Difference(vy1,vy2);
-    put("the error of evaluation : "); put(err,3); new_line;
-    err := Difference(vm1,vm2);
-    put("the error of differentiation : "); put(err,3); new_line;
-    new_line;
-    put_line("Elapsed time on multitasking : ");
-    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-    new_line;
-    put_line("Elapsed time without multitasking : ");
+    put_line("-> Elapsed time without multitasking : ");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-    new_line;
-    if seri_elapsed + 1.0 /= 1.0 then
-      speedup := seri_elapsed/mult_elapsed;
-      put("The speedup : ");
-      duration_io.put(speedup,1,3); new_line;
-    end if;
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      QuadDobl_Multitasked_EvalDiff(nbt,c,xcff,mxe,pwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(vy1,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(vm1,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
   end QuadDobl_Random_Test;
 
   procedure Main is
