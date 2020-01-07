@@ -1,3 +1,6 @@
+Tue 7 Jan 2020 : extracted the instantation of duration_io from 
+  time_stamps.adb to a separate file duration_io.ads.
+
 Tue 31 Dec 2019 : modified time_stamps.adb for compiler warning.
 
 Sun 2 Jun 2019 : in machines.adb, replaced pragma interface by pragma import.

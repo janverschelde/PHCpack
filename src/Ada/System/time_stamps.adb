@@ -1,4 +1,5 @@
 with integer_io;                      use integer_io;
+with duration_io;
 
 package body Time_Stamps is
 
@@ -111,8 +112,6 @@ package body Time_Stamps is
     milliseconds : constant integer
                  := integer((the_seconds - wholeseconds)*1000.0);
     difsec : constant integer := integer(wholeseconds);
-
-    package duration_io is new text_io.fixed_io(duration);
 
   begin
     put(file,"The total elapsed wall clock time is ");

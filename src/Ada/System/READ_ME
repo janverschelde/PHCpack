@@ -14,6 +14,8 @@ file name                 : short description
 natural_io                : instantiation of text_io with natural
 integer_io                : instantiation of text_io with integer
 long_integer_io           : instantiation of text_io with long_integer
+duration_io               : instantiation of text_io with duration
+------------------------------------------------------------------------------
 time_stamps               : date, time, and elapsed time
 system_call               : allows to execute UNIX system commands
 machines                  : specific system calls
@@ -42,4 +44,4 @@ A package like Unix_Command_Line is available in some form in most Ada
 compiling systems.  For encapsulation purposes it is included here.
 
 The file scanning operations are part of the database management of the
-system input files to PHC.
+system input files to PHCpack.
