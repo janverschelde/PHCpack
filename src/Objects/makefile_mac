@@ -520,6 +520,9 @@ ts_speelcnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speelcnv.adb \
               -o $(BIN)/ts_speelcnv
 
+ts_fabry:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_fabry.adb -o $(BIN)/ts_fabry
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
