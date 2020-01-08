@@ -1,3 +1,6 @@
+Wed 8 Jan 2020 : new package convergence_radius_estimates to apply the
+  ratio theorem of Fabry, with tests in ts_fabry.
+
 Mon 6 Jan 2020 : to generic_speelpenning_convolutions added operations to
   allocate and compute the power table.  Added a system type to the
   generic_speelpenning_convolutions to encapsulate the work space along

@@ -66,4 +66,6 @@ system_convolution_circuits        : make circuits from polynomials and systems
 evaluation_differentiation_errors  : functions for differences of computations
 ts_speelser                        : test reverse mode on power series
 ts_speelcnv                        : convolutions for series polynomials
+convergence_radius_estimates       : applies ratio theorem of Fabry
+ts_fabry                           : test on the Fabry ratio theorem
 -------------------------------------------------------------------------------
