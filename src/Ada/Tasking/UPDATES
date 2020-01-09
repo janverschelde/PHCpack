@@ -1,3 +1,6 @@
+Thu 9 Jan 2020 : with new ts_mtserlin, started development of multitasked
+  solving of matrix series with linearization.
+
 Tue 7 Jan 2020 : speedup computation and separate power table computations
   in ts_mtadcnv.  Added multitasked computation of the power table to
   multitasked_algodiff_convolutions.  Added a loop to each test in ts_mtadcnv
