@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -13,12 +14,26 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
+with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_VecMats_io;        use Standard_Complex_VecMats_io;
+with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_VecMats;
+with DoblDobl_Complex_VecMats_io;        use DoblDobl_Complex_VecMats_io;
+with DoblDobl_Complex_Singular_Values;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_VecMats;
+with QuadDobl_Complex_VecMats_io;        use QuadDobl_Complex_VecMats_io;
+with QuadDobl_Complex_Singular_Values;
 with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;
@@ -178,11 +193,21 @@ procedure ts_cserlin2 is
           := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
     ys : Standard_Complex_Vector_Series.Vector(d);
     ipvt : Standard_Integer_Vectors.Vector(1..n);
+    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..n);
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..n);
+    ewrk : constant Standard_Complex_Vectors.Link_to_Vector
+         := new Standard_Complex_Vectors.Vector(1..m);
+    xsol : Standard_Complex_VecVecs.VecVec(0..d);
     ans : character;
     rcond : double_float;
     info : integer32;
+    mm : constant integer32
+       := Standard_Complex_Singular_Values.Min0(n,m);
+    S : Standard_Complex_Vectors.Vector(1..mm);
+    U : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    V : Standard_Complex_Matrices.Matrix(1..m,1..m);
+    timer1,timer2 : Timing_Widget;
 
   begin
     put_line("The coefficients of the matrix series :"); put(As);
@@ -194,27 +219,49 @@ procedure ts_cserlin2 is
     put_line("The coefficients of the vector series b :"); put(bs);
     put_line("The coefficients of the vector series b :"); put_line(bscff);
     if n > m then
-      new_line;
       put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
+      for i in xsol'range loop
+        xsol(i) := new Standard_Complex_Vectors.Vector(1..m);
+      end loop;
       if ans = 'y' then
+        tstart(timer1);
         Solve_by_SVD(As,bs,info,rcond,ys);
+        tstop(timer1);
+        put("rcond : "); put(rcond,3); new_line;
+        tstart(timer2);
+        Solve_by_SVD(vm,bscff,xsol,S,U,V,info,rcond,ewrk,wrk);
+        tstop(timer2);
         put("rcond : "); put(rcond,3); new_line;
       else
+        tstart(timer1);
         Solve_by_QRLS(As,bs,info,ys);
+        tstop(timer1);
+        put("info : "); put(info,1); new_line;
+        tstart(timer2);
+        Solve_by_QRLS(vm,bscff,xsol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+        tstop(timer2);
         put("info : "); put(info,1); new_line;
       end if;
     else
       new_line;
       put("Condition number wanted ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y' then
+        tstart(timer1);
         Solve_by_lufco(As,bs,rcond,ys);
+        tstop(timer1);
         put("rcond : "); put(rcond,3); new_line;
+        tstart(timer2);
         Solve_by_lufco(vm,bscff,ipvt,rcond,wrk);
+        tstop(timer2);
         put("rcond : "); put(rcond,3); new_line;
       else
+        tstart(timer1);
         Solve_by_lufac(As,bs,info,ys);
+        tstop(timer1);
         put("info : "); put(info,1); new_line;
+        tstart(timer2);
         Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+        tstop(timer2);
         put("info : "); put(info,1); new_line;
       end if;
     end if;
@@ -222,20 +269,31 @@ procedure ts_cserlin2 is
     put_line(xs.cff(0));
     put_line("The computed leading vector series of the solution :");
     put_line(ys.cff(0));
-    put_line("The computed leading vector series of the solution :");
-    put_line(bscff(0));
+    if n > m then
+      put_line("The computed leading vector series of the solution :");
+      put_line(xsol(0));
+    else
+      put_line("The computed leading vector series of the solution :");
+      put_line(bscff(0));
+    end if;
     for k in 1..bs.deg loop
       put("The generated term "); put(k,1);
-      put_line(" of the vector series of the solution :");
-      put_line(xs.cff(k));
+      put_line(" of the vector series of the solution :"); put_line(xs.cff(k));
       put("The computed term "); put(k,1);
-      put_line(" of the vector series of the solution :");
-      put_line(ys.cff(k));
-      put("The computed term "); put(k,1);
-      put_line(" of the vector series of the solution :");
-      put_line(bscff(k));
+      put_line(" of the vector series of the solution :"); put_line(ys.cff(k));
+      if n > m then
+        put("The computed term "); put(k,1);
+        put_line(" of the vector series of the solution :"); put_line(xsol(k));
+      else
+        put("The computed term "); put(k,1);
+        put_line(" of the vector series of the solution :"); put_line(bscff(k));
+      end if;
     end loop;
     Write_Difference(xs,ys);
+    new_line;
+    print_times(standard_output,timer1,"first series solver");
+    new_line;
+    print_times(standard_output,timer2,"second series solver");
   end Standard_Test;
 
   procedure DoblDobl_Test ( n,m,d : in integer32 ) is
@@ -253,6 +311,8 @@ procedure ts_cserlin2 is
        := DoblDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,m,d);
     As : constant DoblDobl_Complex_Matrix_Series.Matrix 
        := DoblDobl_Complex_Matrix_Series.Create(sA); 
+    vm : constant DoblDobl_Complex_VecMats.VecMat(0..As.deg)
+       := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(As);
     sx : constant DoblDobl_Complex_Series_Vectors.Vector(1..m)
        := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,m,d);
     xs : constant DoblDobl_Complex_Vector_Series.Vector(d)
@@ -260,34 +320,80 @@ procedure ts_cserlin2 is
     sb : constant DoblDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
     bs : constant DoblDobl_Complex_Vector_Series.Vector(d)
        := DoblDobl_Complex_Vector_Series.Create(sb);
+    sbcff : constant DoblDobl_Complex_VecVecs.VecVec(1..n)
+          := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(sb);
+    bscff : constant DoblDobl_Complex_VecVecs.VecVec(0..bs.deg)
+          := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(bs);
     ys : DoblDobl_Complex_Vector_Series.Vector(d);
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..n);
+    wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
+        := new DoblDobl_Complex_Vectors.Vector(1..n);
+    ewrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
+         := new DoblDobl_Complex_Vectors.Vector(1..m);
+    xsol : DoblDobl_Complex_VecVecs.VecVec(0..d);
     ans : character;
     rcond : double_double;
     info : integer32;
+    mm : constant integer32
+       := DoblDobl_Complex_Singular_Values.Min0(n,m);
+    S : DoblDobl_Complex_Vectors.Vector(1..mm);
+    U : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+    V : DoblDobl_Complex_Matrices.Matrix(1..m,1..m);
+    timer1,timer2 : Timing_Widget;
 
   begin
     put_line("The coefficients of the matrix series :"); put(As);
+    put_line("The coefficient matrices : "); put(vm);
     put_line("The exact solution x :"); put_line(sx);
     put_line("The coefficients of the vector series x :"); put(xs);
     put_line("The right hand side vector b :"); put_line(sb);
+    put_line("The coefficients of b : "); put_line(sbcff);
     put_line("The coefficients of the vector series b :"); put(bs);
-    new_line;
+    put_line("The coefficients of the vector series b :"); put_line(bscff);
     if n > m then
       put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
+      for i in xsol'range loop
+        xsol(i) := new DoblDobl_Complex_Vectors.Vector(1..m);
+      end loop;
       if ans = 'y' then
+        tstart(timer1);
         Solve_by_SVD(As,bs,info,rcond,ys);
+        tstop(timer1);
+        put("rcond : "); put(rcond,3); new_line;
+        tstart(timer2);
+        Solve_by_SVD(vm,bscff,xsol,S,U,V,info,rcond,ewrk,wrk);
+        tstop(timer2);
         put("rcond : "); put(rcond,3); new_line;
       else
+        tstart(timer1);
         Solve_by_QRLS(As,bs,info,ys);
+        tstop(timer1);
+        put("info : "); put(info,1); new_line;
+        tstart(timer2);
+        Solve_by_QRLS(vm,bscff,xsol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+        tstop(timer2);
         put("info : "); put(info,1); new_line;
       end if;
     else
       put("Condition number wanted ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y' then
+        tstart(timer1);
         Solve_by_lufco(As,bs,rcond,ys);
+        tstop(timer1);
+        put("rcond : "); put(rcond,3); new_line;
+        tstart(timer2);
+        Solve_by_lufco(vm,bscff,ipvt,rcond,wrk);
+        tstop(timer2);
         put("rcond : "); put(rcond,3); new_line;
       else
+        tstart(timer1);
         Solve_by_lufac(As,bs,info,ys);
+        tstop(timer1);
+        put("info : "); put(info,1); new_line;
+        tstart(timer2);
+        Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+        tstop(timer2);
         put("info : "); put(info,1); new_line;
       end if;
     end if;
@@ -295,15 +401,31 @@ procedure ts_cserlin2 is
     put_line(xs.cff(0));
     put_line("The computed leading vector series of the solution :");
     put_line(ys.cff(0));
+    if n > m then
+      put_line("The computed leading vector series of the solution :");
+      put_line(xsol(0));
+    else
+      put_line("The computed leading vector series of the solution :");
+      put_line(bscff(0));
+    end if;
     for k in 1..bs.deg loop
       put("The generated term "); put(k,1);
-      put_line(" of the vector series of the solution :");
-      put_line(xs.cff(k));
+      put_line(" of the vector series of the solution :"); put_line(xs.cff(k));
       put("The computed term "); put(k,1);
-      put_line(" of the vector series of the solution :");
-      put_line(ys.cff(k));
+      put_line(" of the vector series of the solution :"); put_line(ys.cff(k));
+      if n > m then
+        put("The computed term "); put(k,1);
+        put_line(" of the vector series of the solution :"); put_line(xsol(k));
+      else
+        put("The computed term "); put(k,1);
+        put_line(" of the vector series of the solution :"); put_line(bscff(k));
+      end if;
     end loop;
     Write_Difference(xs,ys);
+    new_line;
+    print_times(standard_output,timer1,"first series solver");
+    new_line;
+    print_times(standard_output,timer2,"second series solver");
   end DoblDobl_Test;
 
   procedure QuadDobl_Test ( n,m,d : in integer32 ) is
@@ -321,6 +443,8 @@ procedure ts_cserlin2 is
        := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,m,d);
     As : constant QuadDobl_Complex_Matrix_Series.Matrix 
        := QuadDobl_Complex_Matrix_Series.Create(sA); 
+    vm : constant QuadDobl_Complex_VecMats.VecMat(0..As.deg)
+       := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(As);
     sx : constant QuadDobl_Complex_Series_Vectors.Vector(1..m)
        := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,m,d);
     xs : constant QuadDobl_Complex_Vector_Series.Vector(d)
@@ -328,34 +452,80 @@ procedure ts_cserlin2 is
     sb : constant QuadDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
     bs : constant QuadDobl_Complex_Vector_Series.Vector(d)
        := QuadDobl_Complex_Vector_Series.Create(sb);
+    sbcff : constant QuadDobl_Complex_VecVecs.VecVec(1..n)
+          := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(sb);
+    bscff : constant QuadDobl_Complex_VecVecs.VecVec(0..bs.deg)
+          := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(bs);
     ys : QuadDobl_Complex_Vector_Series.Vector(d);
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..n);
+    wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
+        := new QuadDobl_Complex_Vectors.Vector(1..n);
+    ewrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
+         := new QuadDobl_Complex_Vectors.Vector(1..m);
+    xsol : QuadDobl_Complex_VecVecs.VecVec(0..d);
     ans : character;
     rcond : quad_double;
     info : integer32;
+    mm : constant integer32
+       := QuadDobl_Complex_Singular_Values.Min0(n,m);
+    S : QuadDobl_Complex_Vectors.Vector(1..mm);
+    U : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+    V : QuadDobl_Complex_Matrices.Matrix(1..m,1..m);
+    timer1,timer2 : Timing_Widget;
 
   begin
     put_line("The coefficients of the matrix series :"); put(As);
+    put_line("The coefficient matrices : "); put(vm);
     put_line("The exact solution x :"); put_line(sx);
     put_line("The coefficients of the vector series x :"); put(xs);
     put_line("The right hand side vector b :"); put_line(sb);
+    put_line("The coefficients of b : "); put_line(sbcff);
     put_line("The coefficients of the vector series b :"); put(bs);
-    new_line;
+    put_line("The coefficients of the vector series b :"); put_line(bscff);
     if n > m then
       put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
+      for i in xsol'range loop
+        xsol(i) := new QuadDobl_Complex_Vectors.Vector(1..m);
+      end loop;
       if ans = 'y' then
+        tstart(timer1);
         Solve_by_SVD(As,bs,info,rcond,ys);
+        tstop(timer1);
+        put("rcond : "); put(rcond,3); new_line;
+        tstart(timer2);
+        Solve_by_SVD(vm,bscff,xsol,S,U,V,info,rcond,ewrk,wrk);
+        tstop(timer2);
         put("rcond : "); put(rcond,3); new_line;
       else
+        tstart(timer1);
         Solve_by_QRLS(As,bs,info,ys);
+        tstop(timer1);
+        put("info : "); put(info,1); new_line;
+        tstart(timer2);
+        Solve_by_QRLS(vm,bscff,xsol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+        tstop(timer2);
         put("info : "); put(info,1); new_line;
       end if;
     else
       put("Condition number wanted ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y' then
+        tstart(timer1);
         Solve_by_lufco(As,bs,rcond,ys);
+        tstop(timer1);
+        put("rcond : "); put(rcond,3); new_line;
+        tstart(timer2);
+        Solve_by_lufco(vm,bscff,ipvt,rcond,wrk);
+        tstop(timer2);
         put("rcond : "); put(rcond,3); new_line;
       else
+        tstart(timer1);
         Solve_by_lufac(As,bs,info,ys);
+        tstop(timer1);
+        put("info : "); put(info,1); new_line;
+        tstart(timer2);
+        Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+        tstop(timer2);
         put("info : "); put(info,1); new_line;
       end if;
     end if;
@@ -363,15 +533,31 @@ procedure ts_cserlin2 is
     put_line(xs.cff(0));
     put_line("The computed leading vector series of the solution :");
     put_line(ys.cff(0));
+    if n > m then
+      put_line("The computed leading vector series of the solution :");
+      put_line(xsol(0));
+    else
+      put_line("The computed leading vector series of the solution :");
+      put_line(bscff(0));
+    end if;
     for k in 1..bs.deg loop
       put("The generated term "); put(k,1);
-      put_line(" of the vector series of the solution :");
-      put_line(xs.cff(k));
+      put_line(" of the vector series of the solution :"); put_line(xs.cff(k));
       put("The computed term "); put(k,1);
-      put_line(" of the vector series of the solution :");
-      put_line(ys.cff(k));
+      put_line(" of the vector series of the solution :"); put_line(ys.cff(k));
+      if n > m then
+        put("The computed term "); put(k,1);
+        put_line(" of the vector series of the solution :"); put_line(xsol(k));
+      else
+        put("The computed term "); put(k,1);
+        put_line(" of the vector series of the solution :"); put_line(bscff(k));
+      end if;
     end loop;
     Write_Difference(xs,ys);
+    new_line;
+    print_times(standard_output,timer1,"first series solver");
+    new_line;
+    print_times(standard_output,timer2,"second series solver");
   end QuadDobl_Test;
 
   procedure Main is
