@@ -2880,6 +2880,10 @@ ts_mtadcnv:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtadcnv.adb \
               -o $(BIN)/ts_mtadcnv
 
+ts_mtserlin:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtserlin.adb \
+              -o $(BIN)/ts_mtserlin
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
