@@ -1,3 +1,6 @@
+Fri 10 Jan 2020 : extended newton_convolutions with procedures with QRLS
+  and SVD, tested by ts_fabry.
+
 Wed 8 Jan 2020 : new package convergence_radius_estimates to apply the
   ratio theorem of Fabry, with tests in ts_fabry.  New package
   newton_convolutions with code taken from ts_fabry.

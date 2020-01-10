@@ -20,12 +20,15 @@ with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
+with Standard_Complex_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
+with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
-with QUadDobl_Complex_VecVecs;
-with QUadDobl_Complex_VecVecs_io;        use QUadDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs_io;        use QUadDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_Matrices;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -163,72 +166,198 @@ procedure ts_fabry is
   procedure Standard_Newton_Steps
               ( s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
-                dim : in integer32 ) is
+                dim,deg : in integer32; maxit : in natural32 := 100 ) is
 
   -- DESCRIPTION :
   --   Applies several Newton steps on the system of convolution circuits s,
   --   departing from the series coefficients in scf.
 
     info : integer32;
+    rcond : double_float;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim);
+    ewrk : Standard_Complex_Vectors.Link_to_Vector
+        := new Standard_Complex_Vectors.Vector(1..dim);
+    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..dim);
+    svl : Standard_Complex_Vectors.Vector(1..dim+1);
+    U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    dx : Standard_Complex_VecVecs.VecVec(1..dim);
+    xd : Standard_Complex_VecVecs.VecVec(0..deg);
     ans : character;
+    usesvd,useqrls,needrcond : boolean := false;
 
   begin
-    loop
-      Standard_Newton_Step(s,scf,info,ipvt,wrk);
+    put("Solve with SVD ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    usesvd := (ans = 'y');
+    if not usesvd then
+      put("Apply least squares with QR ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      useqrls := (ans = 'y');
+      if not useqrls then
+        put("Need condition number estimate ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        needrcond := (ans = 'y');
+      end if;
+    end if;
+    if useqrls or usesvd then
+      dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
+      xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
+    end if;
+    for k in 1..maxit loop
+      put("Step "); put(k,1); put_line(" :");
+      if usesvd then
+        SVD_Newton_Step
+          (standard_output,s,scf,dx,xd,svl,U,V,info,rcond,ewrk,wrk);
+      elsif useqrls then
+        QR_Newton_Step
+          (standard_output,s,scf,dx,xd,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+      else
+        if needrcond then
+          LU_Newton_Step(standard_output,s,scf,rcond,ipvt,wrk);
+          put("rcond :"); put(rcond,3); new_line;
+        else
+          LU_Newton_Step(standard_output,s,scf,info,ipvt,wrk);
+          put("info : "); put(info,1); new_line;
+        end if;
+      end if;
       put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
     Standard_Complex_Vectors.Clear(wrk);
+    Standard_Complex_Vectors.Clear(ewrk);
   end Standard_Newton_Steps;
 
   procedure DoblDobl_Newton_Steps
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in DoblDobl_Complex_VecVecs.VecVec;
-                dim : in integer32 ) is
+                dim,deg : in integer32; maxit : in natural32 := 100 ) is
 
   -- DESCRIPTION :
   --   Applies several Newton steps on the system of convolution circuits s,
   --   departing from the series coefficients in scf.
 
     info : integer32;
+    rcond : double_double;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    ewrk : DoblDobl_Complex_Vectors.Link_to_Vector
+        := new DoblDobl_Complex_Vectors.Vector(1..dim);
     wrk : DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector(1..dim);
+    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..dim);
+    svl : DoblDobl_Complex_Vectors.Vector(1..dim+1);
+    U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    dx : DoblDobl_Complex_VecVecs.VecVec(1..dim);
+    xd : DoblDobl_Complex_VecVecs.VecVec(0..deg);
     ans : character;
+    usesvd,useqrls,needrcond : boolean := false;
 
   begin
-    loop
-      DoblDobl_Newton_Step(s,scf,info,ipvt,wrk);
+    put("Solve with SVD ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    usesvd := (ans = 'y');
+    if not usesvd then
+      put("Apply least squares with QR ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      useqrls := (ans = 'y');
+      if not useqrls then
+        put("Need condition number estimate ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        needrcond := (ans = 'y');
+      end if;
+    end if;
+    if useqrls or usesvd then
+      dx := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
+      xd := DoblDobl_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
+    end if;
+    for k in 1..maxit loop
+      put("Step "); put(k,1); put_line(" :");
+      if usesvd then
+        SVD_Newton_Step
+          (standard_output,s,scf,dx,xd,svl,U,V,info,rcond,ewrk,wrk);
+      elsif useqrls then
+        QR_Newton_Step
+          (standard_output,s,scf,dx,xd,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+      else
+        if needrcond then
+          LU_Newton_Step(standard_output,s,scf,rcond,ipvt,wrk);
+          put("rcond : "); put(rcond,3); new_line;
+        else
+          LU_Newton_Step(standard_output,s,scf,info,ipvt,wrk);
+          put("info : "); put(info,1); new_line;
+        end if;
+      end if;
       put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
+    DoblDobl_Complex_Vectors.Clear(ewrk);
     DoblDobl_Complex_Vectors.Clear(wrk);
   end DoblDobl_Newton_Steps;
 
   procedure QuadDobl_Newton_Steps
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
-                dim : in integer32 ) is
+                dim,deg : in integer32; maxit : in natural32 := 100 ) is
 
   -- DESCRIPTION :
   --   Applies several Newton steps on the system of convolution circuits s,
   --   departing from the series coefficients in scf.
 
     info : integer32;
+    rcond : quad_double;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    ewrk : QuadDobl_Complex_Vectors.Link_to_Vector
+         := new QuadDobl_Complex_Vectors.Vector(1..dim);
     wrk : QuadDobl_Complex_Vectors.Link_to_Vector
         := new QuadDobl_Complex_Vectors.Vector(1..dim);
+    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..dim);
+    svl : QuadDobl_Complex_Vectors.Vector(1..dim+1);
+    U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    dx : QuadDobl_Complex_VecVecs.VecVec(1..dim);
+    xd : QuadDobl_Complex_VecVecs.VecVec(0..deg);
     ans : character;
+    usesvd,useqrls,needrcond : boolean;
 
   begin
-    loop
-      QuadDobl_Newton_Step(s,scf,info,ipvt,wrk);
+    put("Solve with SVD ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    usesvd := (ans = 'y');
+    if not usesvd then
+      put("Apply least squares with QR ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      useqrls := (ans = 'y');
+      if not useqrls then
+        put("Need condition number estimate ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        needrcond := (ans = 'y');
+      end if;
+    end if;
+    if useqrls or usesvd then
+      dx := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
+      xd := QuadDobl_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
+    end if;
+    for k in 1..maxit loop
+      put("Step "); put(k,1); put_line(" :");
+      if usesvd then
+        SVD_Newton_Step
+          (standard_output,s,scf,dx,xd,svl,U,V,info,rcond,ewrk,wrk);
+      elsif useqrls then
+        QR_Newton_Step
+          (standard_output,s,scf,dx,xd,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+      else
+        if needrcond then
+          LU_Newton_Step(standard_output,s,scf,rcond,ipvt,wrk);
+          put("rcond : "); put(rcond,3); new_line;
+        else
+          LU_Newton_Step(standard_output,s,scf,info,ipvt,wrk);
+          put("info : "); put(info,1); new_line;
+        end if;
+      end if;
       put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
+    QuadDobl_Complex_Vectors.Clear(ewrk);
     QuadDobl_Complex_Vectors.Clear(wrk);
   end QuadDobl_Newton_Steps;
 
@@ -267,7 +396,7 @@ procedure ts_fabry is
       for i in c'range loop
         put_line(c(i).cff);
       end loop;
-      Standard_Newton_Steps(s,scf,lp'last);
+      Standard_Newton_Steps(s,scf,lp'last,degree);
       Clear(s);
       Convergence_Radius_Estimates.Fabry(scf,z,r,err,fail);
       if not fail then
@@ -313,7 +442,7 @@ procedure ts_fabry is
       for i in c'range loop
         put_line(c(i).cff);
       end loop;
-      DoblDobl_Newton_Steps(s,scf,lp'last);
+      DoblDobl_Newton_Steps(s,scf,lp'last,degree);
       Clear(s);
       Convergence_Radius_Estimates.Fabry(scf,z,r,err,fail);
       if not fail then
@@ -359,7 +488,7 @@ procedure ts_fabry is
       for i in c'range loop
         put_line(c(i).cff);
       end loop;
-      QuadDobl_Newton_Steps(s,scf,lp'last);
+      QuadDobl_Newton_Steps(s,scf,lp'last,degree);
       Clear(s);
       Convergence_Radius_Estimates.Fabry(scf,z,r,err,fail);
       if not fail then
@@ -389,7 +518,7 @@ procedure ts_fabry is
     put_line("  0. standard double precision");
     put_line("  1. double double precision");
     put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision :");
+    put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(prc,"012");
     case prc is
       when '0' => Standard_Test(deg);
