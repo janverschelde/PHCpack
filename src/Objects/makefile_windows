@@ -9,7 +9,8 @@
 
 gpp=g++
 # gpp=/cygdrive/c/tools/msys64/mingw64/bin/gcc
-gcc=/cygdrive/c/tools/msys64/mingw64/bin/gcc
+gcc=gcc
+# /cygdrive/c/tools/msys64/mingw64/bin/gcc
 
 # The QD library is compiled in the folder where QD_ROOT refers to.
 # The QD library needs to be downloaded separately and installed in
@@ -81,7 +82,7 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  get_clock.o get_clocks_per_sec.o corecount.o \
                  $(QD_LIB)/libqd.a -o $(BIN)/phc -lm \
---LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive"
+--LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -Wl,--no-whole-archive"
 
 # Test program to see if compiler works, "hello world" :
 
@@ -304,6 +305,44 @@ ts_subs:
 
 ts_tabform:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tabform -o $(BIN)/ts_tabform
+
+# Test programs for Math_Lib/Circuits :
+
+ts_cffsup:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cffsup -o $(BIN)/ts_cffsup
+
+ts_gradcirc:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_gradcirc -o $(BIN)/ts_gradcirc
+
+ts_speel:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speel -o $(BIN)/ts_speel
+
+ts_speelsys:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speelsys.adb \
+                 -o $(BIN)/ts_speelsys
+
+ts_cycfun:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cycfun.adb -o $(BIN)/ts_cycfun
+
+ts_vmpeval:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpeval.adb \
+              -o $(BIN)/ts_vmpeval
+
+ts_vmpdiff:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpdiff.adb \
+              -o $(BIN)/ts_vmpdiff
+
+ts_speelser:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speelser.adb \
+              -o $(BIN)/ts_speelser
+
+ts_speelcnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speelcnv.adb \
+              -o $(BIN)/ts_speelcnv
+
+ts_fabry:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_fabry.adb -o $(BIN)/ts_fabry
+
 
 # Test programs for Math_Lib/Supports :
 
@@ -1436,4 +1475,4 @@ phcpy2c.so:
 # cleaning up the object files :
 
 clean:
-	/bin/rm -f  *.o *.ali lib.a
+	del  *.o *.ali lib.a
