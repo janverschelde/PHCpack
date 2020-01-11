@@ -1,3 +1,7 @@
+Sat 11 Jan 2020 : new package newton_power_convolutions to run several
+  Newton steps on power series, with convolution circuits and linearization,
+  tested by ts_sernewcnv.
+
 Thu 2 Jan 2020 : added verbose level to power_series_methods, modified
   series_and_predictors, {standard,dobldobl,quaddobl}_pade_trackers.adb.
   Added verbose level in {standard,dobldobl,quaddobl}_newton_matrix_series,

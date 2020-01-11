@@ -48,6 +48,9 @@ series_and_solutions             : making series from solution vectors
 power_series_methods             : Newton's method on power series solutions
 ts_sersol                        : test on series and solutions
 -------------------------------------------------------------------------------
+newton_power_convolutions        : Newton on power series with convolutions
+ts_sernewcnv                     : test on Newton power series convolutions
+-------------------------------------------------------------------------------
 series_and_homotopies            : homotopies as systems with series coeffs
 ts_serhom                        : test on series and homotopies
 homotopy_series_readers          : reads a homotopy for power series
