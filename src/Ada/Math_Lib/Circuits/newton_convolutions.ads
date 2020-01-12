@@ -66,7 +66,7 @@ package Newton_Convolutions is
   procedure LU_Newton_Step
               ( s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
-                info : out integer32;
+                absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
@@ -74,14 +74,14 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
-                info : out integer32;
+                absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in DoblDobl_Complex_VecVecs.VecVec;
-                info : out integer32;
+                absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
@@ -89,14 +89,14 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in DoblDobl_Complex_VecVecs.VecVec;
-                info : out integer32;
+                absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
-                info : out integer32;
+                absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
@@ -104,7 +104,7 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
-                info : out integer32;
+                absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
@@ -125,6 +125,7 @@ package Newton_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
+  --   absdx    the absolute value of the last component of the update dx;
   --   info     info from the LU factorization;
   --   ipvt     pivoting of the LU factorization on the lead matrix.
 
@@ -133,7 +134,7 @@ package Newton_Convolutions is
   procedure LU_Newton_Step
               ( s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
-                rcond : out double_float;
+                absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
@@ -141,14 +142,14 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
-                rcond : out double_float;
+                absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in DoblDobl_Complex_VecVecs.VecVec;
-                rcond : out double_double;
+                absdx,rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
@@ -156,14 +157,14 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in DoblDobl_Complex_VecVecs.VecVec;
-                rcond : out double_double;
+                absdx,rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
-                rcond : out quad_double;
+                absdx,rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
@@ -171,7 +172,7 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
-                rcond : out quad_double;
+                absdx,rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
@@ -192,6 +193,7 @@ package Newton_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
+  --   absdx    the absolute value of the last component of the update dx;
   --   rcond    estimate for the inverse of the condition number,
   --            if close to zero, then the Jacobian matrix at scf is
   --            ill conditioned and scf may be wrongly updated.
@@ -202,6 +204,7 @@ package Newton_Convolutions is
   procedure QR_Newton_Step
               ( s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
+                absdx : out double_float;
                 qraux : out Standard_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
                 info : out integer32;
@@ -212,6 +215,7 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
+                absdx : out double_float;
                 qraux : out Standard_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
                 info : out integer32;
@@ -221,6 +225,7 @@ package Newton_Convolutions is
   procedure QR_Newton_Step
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in DoblDobl_Complex_VecVecs.VecVec;
+                absdx : out double_double;
                 qraux : out DoblDobl_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
                 info : out integer32;
@@ -231,6 +236,7 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in DoblDobl_Complex_VecVecs.VecVec;
+                absdx : out double_double;
                 qraux : out DoblDobl_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
                 info : out integer32;
@@ -240,6 +246,7 @@ package Newton_Convolutions is
   procedure QR_Newton_Step
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in QuadDobl_Complex_VecVecs.VecVec;
+                absdx : out quad_double;
                 qraux : out QuadDobl_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
                 info : out integer32;
@@ -250,6 +257,7 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in QuadDobl_Complex_VecVecs.VecVec;
+                absdx : out quad_double;
                 qraux : out QuadDobl_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
                 info : out integer32;
@@ -281,9 +289,9 @@ package Newton_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
-  --   rcond    estimate for the inverse of the condition number,
-  --            if close to zero, then the Jacobian matrix at scf is
-  --            ill conditioned and scf may be wrongly updated;
+  --   dx       delinearized update to the coefficients;
+  --   xd       update to the coefficients, in linearized form;
+  --   absdx    the absolute value of the last component of the update dx;
   --   ipvt     pivoting of the LU factorization on the lead matrix.
 
 -- ONE NEWTON STEP WITH SVD :
@@ -291,6 +299,7 @@ package Newton_Convolutions is
   procedure SVD_Newton_Step
               ( s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
+                absdx : out double_float;
                 svl : out Standard_Complex_Vectors.Vector;
                 U,V : out Standard_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_float;
@@ -301,6 +310,7 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
+                absdx : out double_float;
                 svl : out Standard_Complex_Vectors.Vector;
                 U,V : out Standard_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_float;
@@ -310,6 +320,7 @@ package Newton_Convolutions is
   procedure SVD_Newton_Step
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in DoblDobl_Complex_VecVecs.VecVec;
+                absdx : out double_double;
                 svl : out DoblDobl_Complex_Vectors.Vector;
                 U,V : out DoblDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_double;
@@ -320,6 +331,7 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in DoblDobl_Complex_VecVecs.VecVec;
+                absdx : out double_double;
                 svl : out DoblDobl_Complex_Vectors.Vector;
                 U,V : out DoblDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_double;
@@ -329,6 +341,7 @@ package Newton_Convolutions is
   procedure SVD_Newton_Step
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in QuadDobl_Complex_VecVecs.VecVec;
+                absdx : out quad_double;
                 svl : out QuadDobl_Complex_Vectors.Vector;
                 U,V : out QuadDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out quad_double;
@@ -339,6 +352,7 @@ package Newton_Convolutions is
               ( file : in file_type;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf,dx,xd : in QuadDobl_Complex_VecVecs.VecVec;
+                absdx : out quad_double;
                 svl : out QuadDobl_Complex_Vectors.Vector;
                 U,V : out QuadDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out quad_double;
@@ -365,6 +379,9 @@ package Newton_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
+  --   absdx    the absolute value of the last component of the update dx;
+  --   dx       delinearized update to the coefficients;
+  --   xd       update to the coefficients, in linearized form;
   --   svl      vector of range 1..mm, where mm = min(n+1,p),
   --            where n = A(0)'last(1) and p = A(0)'last(2),
   --            the first min(n,p) entries of s contain the singular values

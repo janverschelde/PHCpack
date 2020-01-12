@@ -173,7 +173,7 @@ procedure ts_fabry is
   --   departing from the series coefficients in scf.
 
     info : integer32;
-    rcond : double_float;
+    rcond,absdx : double_float;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim);
@@ -209,20 +209,22 @@ procedure ts_fabry is
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
         SVD_Newton_Step
-          (standard_output,s,scf,dx,xd,svl,U,V,info,rcond,ewrk,wrk);
+          (standard_output,s,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrk);
       elsif useqrls then
         QR_Newton_Step
-          (standard_output,s,scf,dx,xd,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+          (standard_output,s,scf,dx,xd,absdx,
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,rcond,ipvt,wrk);
-          put("rcond :"); put(rcond,3); new_line;
+          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk);
+          put("  rcond :"); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,info,ipvt,wrk);
-          put("info : "); put(info,1); new_line;
+          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk);
+          put("  info : "); put(info,1); new_line;
         end if;
       end if;
-      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      put("absdx :"); put(absdx,3);
+      put("  Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
     Standard_Complex_Vectors.Clear(wrk);
@@ -239,7 +241,7 @@ procedure ts_fabry is
   --   departing from the series coefficients in scf.
 
     info : integer32;
-    rcond : double_double;
+    absdx,rcond : double_double;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     ewrk : DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector(1..dim);
@@ -275,20 +277,22 @@ procedure ts_fabry is
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
         SVD_Newton_Step
-          (standard_output,s,scf,dx,xd,svl,U,V,info,rcond,ewrk,wrk);
+          (standard_output,s,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrk);
       elsif useqrls then
         QR_Newton_Step
-          (standard_output,s,scf,dx,xd,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+          (standard_output,s,scf,dx,xd,absdx,
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,rcond,ipvt,wrk);
-          put("rcond : "); put(rcond,3); new_line;
+          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk);
+          put("  rcond : "); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,info,ipvt,wrk);
-          put("info : "); put(info,1); new_line;
+          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk);
+          put("  info : "); put(info,1); new_line;
         end if;
       end if;
-      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      put("absdx : "); put(absdx,3);
+      put("  Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
     DoblDobl_Complex_Vectors.Clear(ewrk);
@@ -305,7 +309,7 @@ procedure ts_fabry is
   --   departing from the series coefficients in scf.
 
     info : integer32;
-    rcond : quad_double;
+    absdx,rcond : quad_double;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     ewrk : QuadDobl_Complex_Vectors.Link_to_Vector
          := new QuadDobl_Complex_Vectors.Vector(1..dim);
@@ -341,20 +345,22 @@ procedure ts_fabry is
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
         SVD_Newton_Step
-          (standard_output,s,scf,dx,xd,svl,U,V,info,rcond,ewrk,wrk);
+          (standard_output,s,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrk);
       elsif useqrls then
         QR_Newton_Step
-          (standard_output,s,scf,dx,xd,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+          (standard_output,s,scf,dx,xd,absdx,
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,rcond,ipvt,wrk);
+          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk);
           put("rcond : "); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,info,ipvt,wrk);
+          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk);
           put("info : "); put(info,1); new_line;
         end if;
       end if;
-      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      put("absdx : "); put(absdx,3);
+      put("  Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
     QuadDobl_Complex_Vectors.Clear(ewrk);
