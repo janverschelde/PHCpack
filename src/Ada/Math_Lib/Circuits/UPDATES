@@ -1,5 +1,6 @@
 Sat 11 Jan 2020 : added an extra output parameter to the Newton step
   procedures in newton_convolutions, tested by ts_fabry.
+  Added function to newton_convolutions for the max computation.
 
 Fri 10 Jan 2020 : extended newton_convolutions with procedures with QRLS
   and SVD, tested by ts_fabry.

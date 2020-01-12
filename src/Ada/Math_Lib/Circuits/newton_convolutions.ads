@@ -61,6 +61,23 @@ package Newton_Convolutions is
   -- REQUIRED : x'range = y'range, and for all k in x'range
   --   x(k)'range = y(k)'range.
 
+  function Max ( v : Standard_Complex_Vectors.Link_to_Vector )
+               return double_float;
+  function Max ( v : DoblDobl_Complex_Vectors.Link_to_Vector )
+               return double_double;
+  function Max ( v : QuadDobl_Complex_Vectors.Link_to_Vector )
+               return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the largest absolute value over all values in v.
+
+  function Max ( v : Standard_Complex_VecVecs.VecVec ) return double_float;
+  function Max ( v : DoblDobl_Complex_VecVecs.VecVec ) return double_double;
+  function Max ( v : QuadDobl_Complex_VecVecs.VecVec ) return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the largest absolute value over all values in v.
+
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step
@@ -125,7 +142,7 @@ package Newton_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
-  --   absdx    the absolute value of the last component of the update dx;
+  --   absdx    the absolute value of the maximal component of the update dx;
   --   info     info from the LU factorization;
   --   ipvt     pivoting of the LU factorization on the lead matrix.
 
@@ -193,7 +210,7 @@ package Newton_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
-  --   absdx    the absolute value of the last component of the update dx;
+  --   absdx    the absolute value of the maximal component of the update dx;
   --   rcond    estimate for the inverse of the condition number,
   --            if close to zero, then the Jacobian matrix at scf is
   --            ill conditioned and scf may be wrongly updated.
@@ -291,7 +308,7 @@ package Newton_Convolutions is
   --   scf      updated coefficients of the series solution;
   --   dx       delinearized update to the coefficients;
   --   xd       update to the coefficients, in linearized form;
-  --   absdx    the absolute value of the last component of the update dx;
+  --   absdx    the absolute value of the maximal component of the update dx;
   --   ipvt     pivoting of the LU factorization on the lead matrix.
 
 -- ONE NEWTON STEP WITH SVD :
@@ -379,7 +396,7 @@ package Newton_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
-  --   absdx    the absolute value of the last component of the update dx;
+  --   absdx    the absolute value of the maximal component of the update dx;
   --   dx       delinearized update to the coefficients;
   --   xd       update to the coefficients, in linearized form;
   --   svl      vector of range 1..mm, where mm = min(n+1,p),

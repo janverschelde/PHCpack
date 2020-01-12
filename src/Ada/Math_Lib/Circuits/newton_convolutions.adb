@@ -2,11 +2,8 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
-with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers;
-with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_VecVecs_io;        use QUadDobl_Complex_VecVecs_io;
@@ -159,6 +156,99 @@ package body Newton_Convolutions is
     end loop;
   end Update;
 
+  function Max ( v : Standard_Complex_Vectors.Link_to_Vector )
+               return double_float is
+
+    res : double_float := Standard_Complex_Numbers.AbsVal(v(v'first));
+    val : double_float;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := Standard_Complex_Numbers.AbsVal(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( v : DoblDobl_Complex_Vectors.Link_to_Vector )
+               return double_double is
+
+    res : double_double := DoblDobl_Complex_Numbers.AbsVal(v(v'first));
+    val : double_double;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := DoblDobl_Complex_Numbers.AbsVal(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( v : QuadDobl_Complex_Vectors.Link_to_Vector )
+               return quad_double is
+
+    res : quad_double := QuadDobl_Complex_Numbers.AbsVal(v(v'first));
+    val : quad_double;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := QuadDobl_Complex_Numbers.AbsVal(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( v : Standard_Complex_VecVecs.VecVec ) return double_float is
+
+    res : double_float := Max(v(v'first));
+    val : double_float;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := Max(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( v : DoblDobl_Complex_VecVecs.VecVec ) return double_double is
+
+    res : double_double := Max(v(v'first));
+    val : double_double;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := Max(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( v : QuadDobl_Complex_VecVecs.VecVec ) return quad_double is
+
+    res : quad_double := Max(v(v'first));
+    val : quad_double;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := Max(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step
@@ -168,10 +258,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    dx : Standard_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 1 ...");
@@ -181,8 +267,7 @@ package body Newton_Convolutions is
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    absdx := Standard_Complex_Numbers.AbsVal(dx);
+    absdx := max(s.yv);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -194,10 +279,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    dx : Standard_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 2 ...");
@@ -210,10 +291,8 @@ package body Newton_Convolutions is
     Standard_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,dx); new_line(file);
-    absdx := Standard_Complex_Numbers.Absval(dx);
-    put(file,"last |dx| :"); put(file,absdx,3); new_line(file);
+    absdx := Max(s.yv);
+    put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -224,10 +303,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    dx : DoblDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 3 ...");
@@ -237,8 +312,7 @@ package body Newton_Convolutions is
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    absdx := DoblDobl_Complex_Numbers.AbsVal(dx);
+    absdx := Max(s.yv);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -250,10 +324,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    dx : DoblDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 4 ...");
@@ -266,10 +336,8 @@ package body Newton_Convolutions is
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,dx); new_line(file);
-    absdx := DoblDobl_Complex_Numbers.Absval(dx);
-    put(file,"last |dx| : "); put(file,absdx,3); new_line(file);
+    absdx := Max(s.yv);
+    put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -280,10 +348,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    dx : QuadDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 5 ...");
@@ -293,8 +357,7 @@ package body Newton_Convolutions is
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    absdx := QuadDobl_Complex_Numbers.AbsVal(dx);
+    absdx := Max(s.yv);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -306,10 +369,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    dx : QuadDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 6 ...");
@@ -322,10 +381,8 @@ package body Newton_Convolutions is
     QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,dx); new_line(file);
-    absdx := QuadDobl_Complex_Numbers.Absval(dx);
-    put(file,"last |dx| : "); put(file,absdx,3); new_line(file);
+    absdx := Max(s.yv);
+    put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -338,10 +395,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    dx : Standard_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 7 ...");
@@ -351,8 +404,7 @@ package body Newton_Convolutions is
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    absdx := Standard_Complex_Numbers.AbsVal(dx);
+    absdx := Max(s.yv);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -364,10 +416,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    dx : Standard_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 8 ...");
@@ -380,10 +428,8 @@ package body Newton_Convolutions is
     Standard_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,dx); new_line(file);
-    absdx := Standard_Complex_Numbers.Absval(dx);
-    put(file,"last |dx| :"); put(file,absdx,3); new_line(file);
+    absdx := Max(s.yv);
+    put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -394,10 +440,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    dx : DoblDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 9 ...");
@@ -407,8 +449,7 @@ package body Newton_Convolutions is
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    absdx := DoblDobl_Complex_Numbers.AbsVal(dx);
+    absdx := Max(s.vy);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -420,10 +461,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    dx : DoblDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 10 ...");
@@ -436,10 +473,8 @@ package body Newton_Convolutions is
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,dx); new_line(file);
-    absdx := DoblDobl_Complex_Numbers.Absval(dx);
-    put(file,"last |dx| : "); put(file,absdx,3); new_line(file);
+    absdx := Max(s.yv);
+    put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -450,10 +485,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    dx : QuadDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 11 ...");
@@ -463,8 +494,7 @@ package body Newton_Convolutions is
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    absdx := QuadDobl_Complex_Numbers.AbsVal(dx);
+    absdx := Max(s.yv);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -476,10 +506,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    dx : QuadDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 12 ...");
@@ -492,10 +518,8 @@ package body Newton_Convolutions is
     QuadDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    lnk := s.yv(s.yv'last); dx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,dx); new_line(file);
-    absdx := QuadDobl_Complex_Numbers.Absval(dx);
-    put(file,"last |dx| :"); put(file,absdx,3); new_line(file);
+    absdx := Max(s.yv);
+    put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
     Update(scf,s.yv);
   end LU_Newton_Step;
 
@@ -511,10 +535,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    ldx : Standard_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 1 ...");
@@ -525,8 +545,7 @@ package body Newton_Convolutions is
     Standard_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    absdx := Standard_Complex_Numbers.AbsVal(ldx);
+    absdx := Max(dx);
     Update(scf,dx);
   end QR_Newton_Step;
 
@@ -541,10 +560,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    ldx : Standard_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 2 ...");
@@ -558,10 +573,8 @@ package body Newton_Convolutions is
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,xd);
     Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,ldx); new_line(file);
-    absdx := Standard_Complex_Numbers.AbsVal(ldx);
-    put(file,"last |dx| :"); put(file,absdx,3); new_line(file);
+    absdx := Max(dx);
+    put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
     Update(scf,dx);
   end QR_Newton_Step;
 
@@ -575,10 +588,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    ldx : DoblDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 3 ...");
@@ -589,8 +598,7 @@ package body Newton_Convolutions is
     DoblDobl_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    absdx := DoblDobl_Complex_Numbers.AbsVal(ldx);
+    absdx := Max(dx);
     Update(scf,dx);
   end QR_Newton_Step;
 
@@ -605,10 +613,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    ldx : DoblDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 4 ...");
@@ -622,10 +626,8 @@ package body Newton_Convolutions is
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,xd);
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,ldx); new_line(file);
-    absdx := DoblDobl_Complex_Numbers.AbsVal(ldx);
-    put(file,"last |dx| : "); put(file,absdx,3); new_line(file);
+    absdx := Max(dx);
+    put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,dx);
   end QR_Newton_Step;
 
@@ -639,10 +641,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    ldx : QuadDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 5 ...");
@@ -653,8 +651,7 @@ package body Newton_Convolutions is
     QuadDobl_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    absdx := QuadDobl_Complex_Numbers.AbsVal(ldx);
+    absdx := Max(dx);
     Update(scf,dx);
   end QR_Newton_Step;
 
@@ -669,10 +666,6 @@ package body Newton_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    ldx : QuadDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 6 ...");
@@ -686,10 +679,8 @@ package body Newton_Convolutions is
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,xd);
     QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,ldx); new_line(file);
-    absdx := QuadDobl_Complex_Numbers.AbsVal(ldx);
-    put(file,"last |dx| : "); put(file,absdx,3); new_line(file);
+    absdx := Max(dx);
+    put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,dx);
   end QR_Newton_Step;
 
@@ -705,10 +696,6 @@ package body Newton_Convolutions is
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    ldx : Standard_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 1 ...");
@@ -719,8 +706,7 @@ package body Newton_Convolutions is
     Standard_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    absdx := Standard_Complex_Numbers.AbsVal(ldx);
+    absdx := Max(dx);
     Update(scf,dx);
   end SVD_Newton_Step;
 
@@ -735,10 +721,6 @@ package body Newton_Convolutions is
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    ldx : Standard_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 2 ...");
@@ -752,10 +734,8 @@ package body Newton_Convolutions is
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
     put_line(file,"dx :"); put_line(file,xd);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,ldx); new_line(file);
-    absdx := Standard_Complex_Numbers.AbsVal(ldx);
-    put(file,"last |dx| : "); put(file,absdx,3); new_line(file);
+    absdx := Max(dx);
+    put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,dx);
   end SVD_Newton_Step;
 
@@ -769,10 +749,6 @@ package body Newton_Convolutions is
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    ldx : DoblDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 3 ...");
@@ -783,8 +759,7 @@ package body Newton_Convolutions is
     DoblDobl_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    absdx := DoblDobl_Complex_Numbers.AbsVal(ldx);
+    absdx := Max(dx);
     Update(scf,dx);
   end SVD_Newton_Step;
 
@@ -799,10 +774,6 @@ package body Newton_Convolutions is
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    ldx : DoblDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 4 ...");
@@ -816,10 +787,8 @@ package body Newton_Convolutions is
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     put_line(file,"dx :"); put_line(file,xd);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,ldx); new_line(file);
-    absdx := DoblDobl_Complex_Numbers.AbsVal(ldx);
-    put(file,"last |dx| : "); put(file,absdx,3); new_line(file);
+    absdx := Max(dx);
+    put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,dx);
   end SVD_Newton_Step;
 
@@ -833,10 +802,6 @@ package body Newton_Convolutions is
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    ldx : QuadDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 5 ...");
@@ -847,8 +812,7 @@ package body Newton_Convolutions is
     QuadDobl_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    absdx := QuadDobl_Complex_Numbers.AbsVal(ldx);
+    absdx := Max(dx);
     Update(scf,dx);
   end SVD_Newton_Step;
 
@@ -863,10 +827,6 @@ package body Newton_Convolutions is
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    ldx : QuadDobl_Complex_Numbers.Complex_Number;
-
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 6 ...");
@@ -880,10 +840,8 @@ package body Newton_Convolutions is
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     put_line(file,"dx :"); put_line(file,xd);
-    lnk := dx(dx'last); ldx := lnk(lnk'last);
-    put(file,"last dx : "); put(file,ldx); new_line(file);
-    absdx := QuadDobl_Complex_Numbers.AbsVal(ldx);
-    put(file,"last |dx| : "); put(file,absdx,3); new_line(file);
+    absdx := Max(dx);
+    put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,dx);
   end SVD_Newton_Step;
 
