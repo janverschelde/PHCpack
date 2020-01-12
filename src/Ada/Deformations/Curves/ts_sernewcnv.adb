@@ -16,10 +16,13 @@ with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_Matrices;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -155,6 +158,261 @@ procedure ts_sernewcnv is
     end loop;
   end Add_Parameter_to_Constant;
 
+  procedure Standard_Run
+              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in double precision on the first solution
+  --   in the list sols of the system p.
+
+    use Standard_Speelpenning_Convolutions;
+
+    c : constant Convolution_Circuits(p'range)
+      := Make_Convolution_Circuits(p.all,natural32(deg));
+    s : constant Link_to_System := Create(c,p'last,deg);
+    sol : constant Standard_Complex_Solutions.Link_to_Solution
+        := Standard_Complex_Solutions.Head_Of(sols);
+    dim : constant integer32 := sol.n;
+    scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
+        := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+    info,nbrit,maxit : integer32 := 0;
+    ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
+    ewrk : Standard_Complex_Vectors.Link_to_Vector
+        := new Standard_Complex_Vectors.Vector(1..dim);
+    wrk : Standard_Complex_Vectors.Link_to_Vector
+        := new Standard_Complex_Vectors.Vector(1..sol.n);
+    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..dim);
+    dx : Standard_Complex_VecVecs.VecVec(1..dim);
+    xd : Standard_Complex_VecVecs.VecVec(0..deg);
+    svl : Standard_Complex_Vectors.Vector(1..dim+1);
+    U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    absdx,rcond : double_float;
+    tol : constant double_float := 1.0E-14;
+    ans : character;
+    usesvd,useqrls,needrcond,fail : boolean;
+
+  begin
+    Add_Parameter_to_Constant(s);
+    new_line;
+    put("Give the number of iterations : "); get(maxit);
+    put("Solve with singular value decomposition ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    usesvd := (ans = 'y');
+    if not usesvd then
+      put("Solve with least squares and QR ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      useqrls := (ans = 'y');
+      if not useqrls then
+        put("Estimate condition number ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        needrcond := (ans = 'y');
+      end if;
+    end if;
+    if useqrls or usesvd then
+      dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
+      xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
+      if usesvd then
+        SVD_Newton_Steps
+          (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
+           svl,U,V,info,rcond,ewrk,wrk);
+        put("rcond :"); put(rcond,3); new_line;
+      else
+        QR_Newton_Steps
+          (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+      end if;
+    elsif needrcond then
+      LU_Newton_Steps
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk);
+      put("rcond :"); put(rcond,3); new_line;
+    else
+      LU_Newton_Steps
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
+    end if;
+    if fail then
+      put("Failed to reach"); put(tol,3);
+      put("  absdx : "); put(absdx,3); new_line;
+    else
+      put("Reached"); put(tol,3);
+      put("  absdx : "); put(absdx,3); new_line;
+    end if;
+    put("after "); put(nbrit,1); put_line(" iterations.");
+    Standard_Complex_Vectors.Clear(ewrk);
+    Standard_Complex_Vectors.Clear(wrk);
+  end Standard_Run;
+
+  procedure DoblDobl_Run
+              ( p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in double double precision on the first solution
+  --   in the list sols of the system p.
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    c : constant Convolution_Circuits(p'range)
+      := Make_Convolution_Circuits(p.all,natural32(deg));
+    s : constant Link_to_System := Create(c,p'last,deg);
+    sol : constant DoblDobl_Complex_Solutions.Link_to_Solution
+        := DoblDobl_Complex_Solutions.Head_Of(sols);
+    dim : constant integer32 := sol.n;
+    scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
+        := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+    info,nbrit,maxit : integer32 := 0;
+    ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
+    ewrk : DoblDobl_Complex_Vectors.Link_to_Vector
+        := new DoblDobl_Complex_Vectors.Vector(1..dim);
+    wrk : DoblDobl_Complex_Vectors.Link_to_Vector
+        := new DoblDobl_Complex_Vectors.Vector(1..sol.n);
+    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..dim);
+    dx : DoblDobl_Complex_VecVecs.VecVec(1..dim);
+    xd : DoblDobl_Complex_VecVecs.VecVec(0..deg);
+    svl : DoblDobl_Complex_Vectors.Vector(1..dim+1);
+    U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    absdx,rcond : double_double;
+    tol : constant double_float := 1.0E-14;
+    ans : character;
+    usesvd,useqrls,needrcond,fail : boolean;
+
+  begin
+    Add_Parameter_to_Constant(s);
+    new_line;
+    put("Give the number of iterations : "); get(maxit);
+    put("Solve with singular value decomposition ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    usesvd := (ans = 'y');
+    if not usesvd then
+      put("Solve with least squares and QR ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      useqrls := (ans = 'y');
+      if not useqrls then
+        put("Estimate condition number ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        needrcond := (ans = 'y');
+      end if;
+    end if;
+    if useqrls or usesvd then
+      dx := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
+      xd := DoblDobl_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
+      if usesvd then
+        SVD_Newton_Steps
+          (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
+           svl,U,V,info,rcond,ewrk,wrk);
+        put("rcond : "); put(rcond,3); new_line;
+      else
+        QR_Newton_Steps
+          (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+      end if;
+    elsif needrcond then
+      LU_Newton_Steps
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk);
+      put("rcond : "); put(rcond,3); new_line;
+    else
+      LU_Newton_Steps
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
+    end if;
+    if fail then
+      put("Failed to reach"); put(tol,3);
+      put("  absdx : "); put(absdx,3); new_line;
+    else
+      put("Reached"); put(tol,3);
+      put("  absdx : "); put(absdx,3); new_line;
+    end if;
+    put("after "); put(nbrit,1); put_line(" iterations.");
+    DoblDobl_Complex_Vectors.Clear(ewrk);
+    DoblDobl_Complex_Vectors.Clear(wrk);
+  end DoblDobl_Run;
+
+  procedure QuadDobl_Run
+              ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in quad double precision on the first solution
+  --   in the list sols of the system p.
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    c : constant Convolution_Circuits(p'range)
+      := Make_Convolution_Circuits(p.all,natural32(deg));
+    s : constant Link_to_System := Create(c,p'last,deg);
+    sol : constant QuadDobl_Complex_Solutions.Link_to_Solution
+        := QuadDobl_Complex_Solutions.Head_Of(sols);
+    dim : constant integer32 := sol.n;
+    scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
+        := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+    info,nbrit,maxit : integer32 := 0;
+    ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
+    ewrk : QuadDobl_Complex_Vectors.Link_to_Vector
+        := new QuadDobl_Complex_Vectors.Vector(1..dim);
+    wrk : QuadDobl_Complex_Vectors.Link_to_Vector
+        := new QuadDobl_Complex_Vectors.Vector(1..sol.n);
+    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..dim);
+    dx : QuadDobl_Complex_VecVecs.VecVec(1..dim);
+    xd : QuadDobl_Complex_VecVecs.VecVec(0..deg);
+    svl : QuadDobl_Complex_Vectors.Vector(1..dim+1);
+    U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    absdx,rcond : quad_double;
+    tol : constant double_float := 1.0E-14;
+    ans : character;
+    usesvd,useqrls,needrcond,fail : boolean;
+
+  begin
+    Add_Parameter_to_Constant(s);
+    new_line;
+    put("Give the number of iterations : "); get(maxit);
+    put("Solve with singular value decomposition ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    usesvd := (ans = 'y');
+    if not usesvd then
+      put("Solve with least squares and QR ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      useqrls := (ans = 'y');
+      if not useqrls then
+        put("Estimate condition number ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        needrcond := (ans = 'y');
+      end if;
+    end if;
+    if useqrls or usesvd then
+      dx := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
+      xd := QuadDobl_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
+      if usesvd then
+        SVD_Newton_Steps
+          (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
+           svl,U,V,info,rcond,ewrk,wrk);
+        put("rcond : "); put(rcond,3); new_line;
+      else
+        QR_Newton_Steps
+          (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+      end if;
+    elsif needrcond then
+      LU_Newton_Steps
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk);
+      put("rcond : "); put(rcond,3); new_line;
+    else
+      LU_Newton_Steps
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
+    end if;
+    if fail then
+      put("Failed to reach"); put(tol,3);
+      put("  absdx : "); put(absdx,3); new_line;
+    else
+      put("Reached"); put(tol,3);
+      put("  absdx : "); put(absdx,3); new_line;
+    end if;
+    put("after "); put(nbrit,1); put_line(" iterations.");
+    QuadDobl_Complex_Vectors.Clear(ewrk);
+    QuadDobl_Complex_Vectors.Clear(wrk);
+  end QuadDobl_Run;
+
   procedure Standard_Test ( deg : in integer32 ) is
 
   -- DESCRIPTION :
@@ -166,8 +424,6 @@ procedure ts_sernewcnv is
     sols : Standard_Complex_Solutions.Solution_List;
     dim,nbr : natural32;
 
-    use Standard_Speelpenning_Convolutions;
-
   begin
     new_line;
     put_line("Reading a polynomial system with solutions ...");
@@ -177,37 +433,7 @@ procedure ts_sernewcnv is
     new_line;
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
-    declare
-      c : constant Convolution_Circuits(lp'range)
-        := Make_Convolution_Circuits(lp.all,natural32(deg));
-      s : constant Link_to_System := Create(c,lp'last,deg);
-      sol : constant Standard_Complex_Solutions.Link_to_Solution
-          := Standard_Complex_Solutions.Head_Of(sols);
-      scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
-          := Newton_Convolutions.Series_Coefficients(sol.v,deg);
-      info,nbrit,maxit : integer32 := 0;
-      ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
-      wrk : Standard_Complex_Vectors.Link_to_Vector
-          := new Standard_Complex_Vectors.Vector(1..sol.n);
-      absdx : double_float;
-      tol : constant double_float := 1.0E-14;
-      fail : boolean;
-    begin
-      Add_Parameter_to_Constant(s);
-      new_line;
-      put("Give the number of iterations : "); get(maxit);
-      LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
-      if fail then
-        put("Failed to reach"); put(tol,3);
-        put("  absdx : "); put(absdx,3); new_line;
-      else
-        put("Reached"); put(tol,3);
-        put("  absdx : "); put(absdx,3); new_line;
-      end if;
-      put("after "); put(nbrit,1); put_line(" iterations.");
-      Standard_Complex_Vectors.Clear(wrk);
-    end;
+    Standard_Run(lp,sols,deg);
   end Standard_Test;
 
   procedure DoblDobl_Test ( deg : in integer32 ) is
@@ -221,8 +447,6 @@ procedure ts_sernewcnv is
     sols : DoblDobl_Complex_Solutions.Solution_List;
     dim,nbr : natural32;
 
-    use DoblDobl_Speelpenning_Convolutions;
-
   begin
     new_line;
     put_line("Reading a polynomial system with solutions ...");
@@ -232,37 +456,7 @@ procedure ts_sernewcnv is
     new_line;
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
-    declare
-      c : constant Convolution_Circuits(lp'range)
-        := Make_Convolution_Circuits(lp.all,natural32(deg));
-      s : constant Link_to_System := Create(c,lp'last,deg);
-      sol : constant DoblDobl_Complex_Solutions.Link_to_Solution
-          := DoblDobl_Complex_Solutions.Head_Of(sols);
-      scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
-          := Newton_Convolutions.Series_Coefficients(sol.v,deg);
-      info,nbrit,maxit : integer32 := 0;
-      ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
-      wrk : DoblDobl_Complex_Vectors.Link_to_Vector
-          := new DoblDobl_Complex_Vectors.Vector(1..sol.n);
-      absdx : double_double;
-      tol : constant double_float := 1.0E-14;
-      fail : boolean;
-    begin
-      Add_Parameter_to_Constant(s);
-      new_line;
-      put("Give the number of iterations : "); get(maxit);
-      LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
-      if fail then
-        put("Failed to reach"); put(tol,3);
-        put("  absdx : "); put(absdx,3); new_line;
-      else
-        put("Reached"); put(tol,3);
-        put("  absdx : "); put(absdx,3); new_line;
-      end if;
-      put("after "); put(nbrit,1); put_line(" iterations.");
-      DoblDobl_Complex_Vectors.Clear(wrk);
-    end;
+    DoblDobl_Run(lp,sols,deg);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test ( deg : in integer32 ) is
@@ -276,8 +470,6 @@ procedure ts_sernewcnv is
     sols : QuadDobl_Complex_Solutions.Solution_List;
     dim,nbr : natural32;
 
-    use QuadDobl_Speelpenning_Convolutions;
-
   begin
     new_line;
     put_line("Reading a polynomial system with solutions ...");
@@ -287,37 +479,7 @@ procedure ts_sernewcnv is
     new_line;
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
-    declare
-      c : constant Convolution_Circuits(lp'range)
-        := Make_Convolution_Circuits(lp.all,natural32(deg));
-      s : constant Link_to_System := Create(c,lp'last,deg);
-      sol : constant QuadDobl_Complex_Solutions.Link_to_Solution
-          := QuadDobl_Complex_Solutions.Head_Of(sols);
-      scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
-          := Newton_Convolutions.Series_Coefficients(sol.v,deg);
-      info,nbrit,maxit : integer32 := 0;
-      ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
-      wrk : QuadDobl_Complex_Vectors.Link_to_Vector
-          := new QuadDobl_Complex_Vectors.Vector(1..sol.n);
-      absdx : quad_double;
-      tol : constant double_float := 1.0E-14;
-      fail : boolean;
-    begin
-      Add_Parameter_to_Constant(s);
-      new_line;
-      put("Give the number of iterations : "); get(maxit);
-      LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
-      if fail then
-        put("Failed to reach"); put(tol,3);
-        put("  absdx : "); put(absdx,3); new_line;
-      else
-        put("Reached"); put(tol,3);
-        put("  absdx : "); put(absdx,3); new_line;
-      end if;
-      put("after "); put(nbrit,1); put_line(" iterations.");
-      QuadDobl_Complex_Vectors.Clear(wrk);
-    end;
+    QuadDobl_Run(lp,sols,deg);
   end QuadDobl_Test;
 
   procedure Main is
