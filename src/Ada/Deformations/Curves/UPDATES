@@ -1,3 +1,6 @@
+Mon 13 Jan 2020 : extracted code from ts_sernewcnv into the new package
+  homotopy_convolution_circuits, in the ../../Math_Lib/Circuits folder.
+
 Sat 11 Jan 2020 : new package newton_power_convolutions to run several
   Newton steps on power series, with convolution circuits and linearization,
   tested by ts_sernewcnv.  Extended newton_power_convolutions with versions

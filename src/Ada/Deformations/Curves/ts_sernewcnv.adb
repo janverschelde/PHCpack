@@ -10,9 +10,6 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -36,6 +33,7 @@ with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
+with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Newton_Convolutions;
 with Newton_Power_Convolutions;          use Newton_Power_Convolutions;
 
@@ -44,119 +42,6 @@ procedure ts_sernewcnv is
 -- DESCRIPTION :
 --   Procedure to develop the linearized Newton's method for power series,
 --   on convolution circuits.
-
-  procedure Add_Parameter_to_Constant
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
-                deg : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Adds the continuation parameter t to the constant of c.
-
-  -- REQUIRED : the coefficients in the power series of c
-  --   have degree at least deg.
-
-    use Standard_Complex_Numbers;
-    use Standard_Complex_Vectors;
-
-  begin
-    if c.cst /= null then
-      c.cst(1) := Create(1.0);
-    else
-      c.cst := new Standard_Complex_Vectors.Vector'(0..deg => Create(0.0));
-      c.cst(1) := Create(1.0);
-    end if;
-  end Add_Parameter_to_Constant;
-
-  procedure Add_Parameter_to_Constant
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
-                deg : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Adds the continuation parameter t to the constant of c.
-
-  -- REQUIRED : the coefficients in the power series of c
-  --   have degree at least deg.
-
-    use DoblDobl_Complex_Numbers;
-    use DoblDobl_Complex_Vectors;
-
-  begin
-    if c.cst /= null then
-      c.cst(1) := Create(integer32(1));
-    else
-      c.cst := new DoblDobl_Complex_Vectors.Vector'
-                     (0..deg => Create(integer32(0)));
-      c.cst(1) := Create(integer32(1));
-    end if;
-  end Add_Parameter_to_Constant;
-
-  procedure Add_Parameter_to_Constant
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
-                deg : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Adds the continuation parameter t to the constant of c.
-
-  -- REQUIRED : the coefficients in the power series of c
-  --   have degree at least deg.
-
-    use QuadDobl_Complex_Numbers;
-    use QuadDobl_Complex_Vectors;
-
-  begin
-    if c.cst /= null then
-      c.cst(1) := Create(integer32(1));
-    else
-      c.cst := new QuadDobl_Complex_Vectors.Vector'
-                     (0..deg => Create(integer32(0)));
-      c.cst(1) := Create(integer32(1));
-    end if;
-  end Add_Parameter_to_Constant;
-
-  procedure Add_Parameter_to_Constant
-              ( s : in Standard_Speelpenning_Convolutions.Link_to_System ) is
-
-  -- DESCRIPTION :
-  --   Adds the continuation parameter to every circuit in s.
-
-  -- REQUIRED : s /= null.
-
-  begin
-    for k in s.crc'range loop
-      Add_Parameter_to_Constant(s.crc(k),s.deg);
-    end loop;
-  end Add_Parameter_to_Constant;
-
-  procedure Add_Parameter_to_Constant
-              ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System ) is
-
-  -- DESCRIPTION :
-  --   Adds the continuation parameter to every circuit in s.
-
-  -- REQUIRED : s /= null.
-
-  begin
-    for k in s.crc'range loop
-      Add_Parameter_to_Constant(s.crc(k),s.deg);
-    end loop;
-  end Add_Parameter_to_Constant;
-
-  procedure Add_Parameter_to_Constant
-              ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System ) is
-
-  -- DESCRIPTION :
-  --   Adds the continuation parameter to every circuit in s.
-
-  -- REQUIRED : s /= null.
-
-  begin
-    for k in s.crc'range loop
-      Add_Parameter_to_Constant(s.crc(k),s.deg);
-    end loop;
-  end Add_Parameter_to_Constant;
 
   procedure Standard_Run
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
