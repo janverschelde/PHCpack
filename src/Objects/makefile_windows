@@ -483,6 +483,72 @@ ts_muldef:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_muldef.adb
 	gnatbl -o $(BIN)/ts_muldef ts_muldef.ali
 
+# Test programs for the Deformations/Curves library :
+
+ts_durker:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_durker.adb \
+                 -o $(BIN)/ts_durker
+
+ts_extrapol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_extrapol.adb \
+                 -o $(BIN)/ts_extrapol
+
+ts_extrapts:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_extrapts.adb \
+                 -o $(BIN)/ts_extrapts
+
+ts_sernew:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sernew.adb \
+                 -o $(BIN)/ts_sernew
+
+ts_sersol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersol.adb \
+                 -o $(BIN)/ts_sersol
+
+ts_serhom:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serhom.adb \
+                 -o $(BIN)/ts_serhom
+
+ts_serpred:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpred.adb \
+                 -o $(BIN)/ts_serpred
+
+ts_serpath:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpath.adb \
+                 -o $(BIN)/ts_serpath
+
+ts_serpade:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpade.adb \
+                 -o $(BIN)/ts_serpade
+
+ts_padepred:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_padepred.adb \
+                 -o $(BIN)/ts_padepred
+
+ts_jacrabin:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_jacrabin.adb \
+                 -o $(BIN)/ts_jacrabin
+
+ts_nxtpadsol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_nxtpadsol.adb \
+                 -o $(BIN)/ts_nxtpadsol
+
+ts_hesscrit:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesscrit.adb \
+                 -o $(BIN)/ts_hesscrit
+
+ts_hesspred:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesspred.adb \
+                 -o $(BIN)/ts_hesspred
+
+ts_predstep:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_predstep.adb \
+                 -o $(BIN)/ts_predstep
+
+ts_sernewcnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sernewcnv.adb \
+                 -o $(BIN)/ts_sernewcnv
+
 # Test programs for the Continuation library :
 
 ts_preco:
