@@ -102,6 +102,9 @@ and massive parallelism on
 a :index:`Graphics Processing Unit (GPU)`,
 one will need to compile the source code.
 
+Compiling from Source
+=====================
+
 The :index:`source code` is under :index:`version control` 
 at :index:`github`,
 at <https://github.com/janverschelde/PHCpack>.
@@ -123,6 +126,12 @@ of a compilation of the QD library under a user account.
 On Linux systems, the qdlib.a must have been compiled with
 the -fPIC option for the shared object file for the C extension
 module of phcpy.
+
+Alternatively, the executable phc can be built without the
+dependency on the installed QDlib.  The makefile contains
+the instructions for the ``make phc_noqd`` compilation.
+For this compilation, a working version of the gnu-ada compiler
+should be available at the front of the execution path.
 
 The software has been compiled with many versions of gcc 
 on Linux, Mac OS X, and Windows computers.
@@ -1001,7 +1010,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 #. Simon Telen and Marc Van Barel:
    **A stabilized normal form algorithm for generic systems of 
    polynomial equations**.
-   * Journal of Computational and Applied Mathematics*
+   *Journal of Computational and Applied Mathematics*
    342(November 2018): 119-132, 2018. 
 
 #. S. Telen, B. Mourrain, and M. Van Barel:
