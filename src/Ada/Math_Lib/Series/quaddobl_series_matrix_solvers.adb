@@ -407,11 +407,6 @@ package body QuadDobl_Series_Matrix_Solvers is
   procedure Matrix_Vector_Multiply
               ( A : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                 x,y : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION : computes y = A*x.
-
-  -- REQUIRED : y'range = A'range(1) and x'range = A'range(2).
-
   begin
     for i in y'range loop
       y(i) := A(i,A'first(2))*x(x'first);
@@ -422,11 +417,6 @@ package body QuadDobl_Series_Matrix_Solvers is
   end Matrix_Vector_Multiply;
 
   procedure Subtract ( x,y : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION : x := x - y.
-
-  -- REQUIRED : x'range = y'range.
-
   begin
     for i in x'range loop
       x(i) := x(i) - y(i);

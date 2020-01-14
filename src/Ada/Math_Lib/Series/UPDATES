@@ -1,3 +1,7 @@
+Tue 14 Jan 2020 : in standard_series_matrix_solvers, exported the
+  auxiliary procedures for the matrix-vector multiply and the subtract.
+  Did so likewise for {dobldobl,quaddobl}_series_matrix_solvers.
+
 Thu 9 Jan 2020 : added timers to ts_cserlin2.adb.
 
 Sat 4 Jan 2020 : added double double and quad double versions for the LU

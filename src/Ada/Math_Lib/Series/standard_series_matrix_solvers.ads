@@ -513,6 +513,20 @@ package Standard_Series_Matrix_Solvers is
   --            the inverse condition number based on the singular values;
   --   x        the constant coefficient of the solution.
 
+  procedure Matrix_Vector_Multiply
+              ( A : in Standard_Complex_Matrices.Link_to_Matrix;
+                x,y : in Standard_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION : computes y = A*x.
+
+  -- REQUIRED : y'range = A'range(1) and x'range = A'range(2).
+
+  procedure Subtract ( x,y : in Standard_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION : x := x - y.
+
+  -- REQUIRED : x'range = y'range.
+
   procedure Solve_Next_by_lusolve
               ( A : in Standard_Complex_VecMats.VecMat;
                 b : in Standard_Complex_VecVecs.VecVec;
