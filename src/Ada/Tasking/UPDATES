@@ -1,3 +1,5 @@
+Wed 15 Jan 2020 : improved ts_mtserlin with indexing errors fixed.
+
 Tue 14 Jan 2020 : updated ts_mtserlin with the control flow of the tasking.
   Fixed an index error in ts_mtserlin.
 
