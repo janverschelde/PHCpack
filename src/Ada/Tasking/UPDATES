@@ -1,4 +1,5 @@
 Tue 14 Jan 2020 : updated ts_mtserlin with the control flow of the tasking.
+  Fixed an index error in ts_mtserlin.
 
 Thu 9 Jan 2020 : with new ts_mtserlin, started development of multitasked
   solving of matrix series with linearization.

@@ -79,19 +79,21 @@ procedure ts_mtserlin is
         put_line("Task " & Multitasking.to_string(i)
                          & " updates b(" 
                          & Multitasking.to_string(myjob) & ")");
-       -- Matrix_Vector_Multiply(A(myjob),b(idx-1),wrk(i));
-       -- Subtract(b(myjob),wrk(i));
+        Matrix_Vector_Multiply(A(myjob),b(idx-1),wrk(i));
+        Subtract(b(myjob),wrk(i));
         myjob := myjob + n;
         if myjob = b'last + 1 then
           put_line("Task " & Multitasking.to_string(i)
                            & " solves for x(" 
                            & Multitasking.to_string(idx) & ")");
-         -- lusolve(A(0).all,ipvt'last,ipvt,b(idx).all);
-        elsif i = 1 and (n > b'last-idx-2) then
-          put_line("Task " & Multitasking.to_string(i)
-                           & " solves for x(" 
-                           & Multitasking.to_string(idx) & ")");
-         -- lusolve(A(0).all,ipvt'last,ipvt,b(idx).all);
+          lusolve(A(0).all,ipvt'last,ipvt,b(idx).all);
+        elsif myjob > n then
+          if i = 1 and (n > b'last-idx-2) then
+            put_line("Task " & Multitasking.to_string(i)
+                             & " solves for x(" 
+                             & Multitasking.to_string(idx) & ")");
+            lusolve(A(0).all,ipvt'last,ipvt,b(idx).all);
+	  end if;
         end if;
       end loop;
       done(i) := true;
