@@ -1,4 +1,7 @@
 with text_io;                            use text_io;
+with duration_io;
+with Ada.Calendar;
+with Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -166,17 +169,34 @@ procedure ts_mtserlin is
     return err;
   end Error;
 
-  procedure Standard_Test ( nbt,n,d : in integer32 ) is
+  procedure Show_Speedup ( serial,multi : in duration ) is
+
+  -- DESCRIPTION :
+  --   On input are the elapsed serial and multitasked times.
+  --   If serial /= 0.0, then the speedup is shown.
+
+    speedup : Duration;
+ 
+  begin
+    if serial + 1.0 /= 1.0 then
+      speedup := serial/multi;
+      put("The speedup : ");
+      duration_io.put(speedup,1,3); new_line;
+    end if;
+  end Show_Speedup;
+
+  procedure Standard_Test ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates an n-by-n matrix of series of degree d,
-  --   with complex coefficients in standard double precision.
-  --   Converts an n-by-n matrix of series of degree d with standard
-  --   double precision complex coefficients into a matrix series.
+  --   with complex coefficients and a solution of the same dimension
+  --   and degree, in double precision,
+  --   Prompts then the user for the number of tasks and runs the test.
 
     use Standard_Complex_Series_Matrices;
     use Standard_Series_Matrix_Solvers;
 
+    nbt : integer32 := 0;
     sA : constant Standard_Complex_Series_Matrices.Matrix(1..n,1..n)
        := Standard_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
     As : constant Standard_Complex_Matrix_Series.Matrix 
@@ -201,6 +221,10 @@ procedure ts_mtserlin is
     ans : character;
     nbrotp,output : boolean;
     err : double_float;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    mult_elapsed,seri_elapsed : Duration := 0.0;
+
+    use Ada.Calendar;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
@@ -217,32 +241,56 @@ procedure ts_mtserlin is
       put_line("The coefficients of the vector series b :"); put(bs);
       put_line("The coefficients of the vector series b :"); put_line(bscff);
     end if;
-    if nbt > 1 then
-      Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-    elsif nbt = 1 then
-      put("Run multitasked code ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      if ans = 'y'
-       then Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-       else Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+    loop
+      new_line;
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      if nbt > 1 then
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+        multstop := Ada.Calendar.Clock;
+        mult_elapsed := multstop - multstart;
+        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        Show_Speedup(seri_elapsed,mult_elapsed);
+      elsif nbt = 1 then
+        put("Run multitasked code ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          multstart := Ada.Calendar.Clock;
+          Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+          multstop := Ada.Calendar.Clock;
+          mult_elapsed := multstop - multstart;
+          put("-> Elapsed time with one task :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+          Show_Speedup(seri_elapsed,mult_elapsed);
+        else
+          seristart := Ada.Calendar.Clock;
+          Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+          seristop := Ada.Calendar.Clock;
+          seri_elapsed := seristop - seristart;
+          put_line("-> Elapsed time without multitasking : ");
+          Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+        end if;
       end if;
-    end if;
-    put("info : "); put(info,1); new_line;
-    err := Error(xs,bscff,nbrotp);
-    put("Sum of errors :"); put(err,3); new_line;
+      put("info : "); put(info,1); new_line;
+      err := Error(xs,bscff,nbrotp);
+      put("Sum of errors :"); put(err,3); new_line;
+    end loop;
   end Standard_Test;
 
-  procedure DoblDobl_Test ( nbt,n,d : in integer32 ) is
+  procedure DoblDobl_Test ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates an n-by-n matrix of series of degree d,
-  --   with complex coefficients in standard double precision.
-  --   Converts an n-by-n matrix of series of degree d with double
-  --   double precision complex coefficients into a matrix series.
+  --   with complex coefficients and a solution of the same dimension
+  --   and degree, in double double precision,
+  --   Prompts then the user for the number of tasks and runs the test.
 
     use DoblDobl_Complex_Series_Matrices;
     use DoblDobl_Series_Matrix_Solvers;
 
+    nbt : integer32 := 0;
     sA : constant DoblDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
        := DoblDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
     As : constant DoblDobl_Complex_Matrix_Series.Matrix 
@@ -267,6 +315,10 @@ procedure ts_mtserlin is
     ans : character;
     nbrotp,output : boolean;
     err : double_double;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    mult_elapsed,seri_elapsed : Duration := 0.0;
+
+    use Ada.Calendar;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
@@ -283,32 +335,56 @@ procedure ts_mtserlin is
       put_line("The coefficients of the vector series b :"); put(bs);
       put_line("The coefficients of the vector series b :"); put_line(bscff);
     end if;
-    if nbt > 1 then
-      Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-    elsif nbt = 1 then
-      put("Run multitasked code ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      if ans = 'y'
-       then Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-       else Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+    loop
+      new_line;
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      if nbt > 1 then
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+        multstop := Ada.Calendar.Clock;
+        mult_elapsed := multstop - multstart;
+        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        Show_Speedup(seri_elapsed,mult_elapsed);
+      elsif nbt = 1 then
+        put("Run multitasked code ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          multstart := Ada.Calendar.Clock;
+          Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+          multstop := Ada.Calendar.Clock;
+          mult_elapsed := multstop - multstart;
+          put("-> Elapsed time with one task :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+          Show_Speedup(seri_elapsed,mult_elapsed);
+        else
+          seristart := Ada.Calendar.Clock;
+          Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+          seristop := Ada.Calendar.Clock;
+          seri_elapsed := seristop - seristart;
+          put_line("-> Elapsed time without multitasking : ");
+          Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+        end if;
       end if;
-    end if;
-    put("info : "); put(info,1); new_line;
-    err := Error(xs,bscff,nbrotp);
-    put("Sum of errors : "); put(err,3); new_line;
+      put("info : "); put(info,1); new_line;
+      err := Error(xs,bscff,nbrotp);
+      put("Sum of errors : "); put(err,3); new_line;
+    end loop;
   end DoblDobl_Test;
 
-  procedure QuadDobl_Test ( nbt,n,d : in integer32 ) is
+  procedure QuadDobl_Test ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates an n-by-n matrix of series of degree d,
-  --   with complex coefficients in standard double precision.
-  --   Converts an n-by-n matrix of series of degree d with quad
-  --   double precision complex coefficients into a matrix series.
+  --   with complex coefficients and a solution of the same dimension
+  --   and degree, in quad double precision,
+  --   Prompts then the user for the number of tasks.
 
     use QuadDobl_Complex_Series_Matrices;
     use QuadDobl_Series_Matrix_Solvers;
 
+    nbt : integer32 := 0;
     sA : constant QuadDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
        := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
     As : constant QuadDobl_Complex_Matrix_Series.Matrix 
@@ -333,6 +409,10 @@ procedure ts_mtserlin is
     ans : character;
     nbrotp,output : boolean;
     err : quad_double;
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
+
+    use Ada.Calendar;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
@@ -349,19 +429,42 @@ procedure ts_mtserlin is
       put_line("The coefficients of the vector series b :"); put(bs);
       put_line("The coefficients of the vector series b :"); put_line(bscff);
     end if;
-    if nbt > 1 then
-      Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-    elsif nbt = 1 then
-      put("Run multitasked code ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      if ans = 'y'
-       then Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-       else Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+    loop
+      new_line;
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      if nbt > 1 then
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+        multstop := Ada.Calendar.Clock;
+        mult_elapsed := multstop - multstart;
+        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        Show_Speedup(seri_elapsed,mult_elapsed);
+      elsif nbt = 1 then
+        put("Run multitasked code ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          multstart := Ada.Calendar.Clock;
+          Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+          multstop := Ada.Calendar.Clock;
+          mult_elapsed := multstop - multstart;
+          put("-> Elapsed time with one task :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+          Show_Speedup(seri_elapsed,mult_elapsed);
+        else
+          seristart := Ada.Calendar.Clock;
+          Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+          seristop := Ada.Calendar.Clock;
+          seri_elapsed := seristop - seristart;
+          put_line("-> Elapsed time without multitasking : ");
+          Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+        end if;
       end if;
-    end if;
-    put("info : "); put(info,1); new_line;
-    err := Error(xs,bscff,nbrotp);
-    put("Sum of errors : "); put(err,3); new_line;
+      put("info : "); put(info,1); new_line;
+      err := Error(xs,bscff,nbrotp);
+      put("Sum of errors : "); put(err,3); new_line;
+    end loop;
   end QuadDobl_Test;
 
   procedure Main is
@@ -370,7 +473,7 @@ procedure ts_mtserlin is
   --   Prompts the user for the dimension of the linear system,
   --   the degrees of the series in the system, and the number of tasks.
 
-    nbt,dim,deg : integer32 := 0;
+    dim,deg : integer32 := 0;
     ans : character;
 
   begin
@@ -378,7 +481,6 @@ procedure ts_mtserlin is
     put_line("Testing the linearization of systems of power series ...");
     put("  Give the number of equations and variables : "); get(dim);
     put("  Give the degree of the series : "); get(deg);
-    put("  Give the number of tasks : "); get(nbt);
     new_line;
     put_line("MENU for the working precision :");
     put_line("  0. double precision");
@@ -388,9 +490,9 @@ procedure ts_mtserlin is
     Ask_Alternative(ans,"012");
     new_line;
     case ans is
-      when '0' => Standard_Test(nbt,dim,deg);
-      when '1' => DoblDobl_Test(nbt,dim,deg);
-      when '2' => QuadDobl_Test(nbt,dim,deg);
+      when '0' => Standard_Test(dim,deg);
+      when '1' => DoblDobl_Test(dim,deg);
+      when '2' => QuadDobl_Test(dim,deg);
       when others => null;
     end case;
   end Main;
