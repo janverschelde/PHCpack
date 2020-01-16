@@ -1,3 +1,5 @@
+Thu 16 Jan 2020 : fixed overflow error in standard_random_number.adb.
+
 Thu 26 Dec 2019 : modified {standard,multprec}_complex_numbers_io.adb,
   generic_complex_numbers.adb, standard_parse_numbers_io.adb, and
   standard_mathematical_functions.adb for compiler warnings.

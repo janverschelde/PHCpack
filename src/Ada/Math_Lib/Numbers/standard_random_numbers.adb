@@ -80,9 +80,12 @@ package body Standard_Random_Numbers is
   function Random return double_float is
 
     x : double_float;
-
+    p : constant integer64 := integer64(a)*integer64(seed);
+    m64 : constant integer64 := integer64(m);
+    pmodm : constant integer64 := p mod m64;
+     
   begin
-    seed := a*seed mod m;
+    seed := integer32(pmodm);
     x := double_float(seed)/double_float(m);
     x := 2.0 * x - 1.0;
     return x;
