@@ -9,6 +9,18 @@ with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with Standard_Complex_VecMats;
 with Standard_Complex_VecMats_io;        use Standard_Complex_VecMats_io;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
+with DoblDobl_Complex_VecMats;
+with DoblDobl_Complex_VecMats_io;        use DoblDobl_Complex_VecMats_io;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_VecMats;
+with QuadDobl_Complex_VecMats_io;        use QuadDobl_Complex_VecMats_io;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_Vectors_io; use Standard_Complex_Series_Vectors_io;
 with Standard_Complex_Series_Matrices;
@@ -19,6 +31,26 @@ with Standard_Complex_Matrix_Series_io;  use Standard_Complex_Matrix_Series_io;
 with Standard_Random_Series_Vectors;
 with Standard_Random_Series_Matrices;
 with Standard_Series_Matrix_Solvers;
+with DoblDobl_Complex_Series_Vectors;
+with DoblDobl_Complex_Series_Vectors_io; use DoblDobl_Complex_Series_Vectors_io;
+with DoblDobl_Complex_Series_Matrices;
+with DoblDobl_Complex_Vector_Series;
+with DoblDobl_Complex_Vector_Series_io;  use DoblDobl_Complex_Vector_Series_io;
+with DoblDobl_Complex_Matrix_Series;
+with DoblDobl_Complex_Matrix_Series_io;  use DoblDobl_Complex_Matrix_Series_io;
+with DoblDobl_Random_Series_Vectors;
+with DoblDobl_Random_Series_Matrices;
+with DoblDobl_Series_Matrix_Solvers;
+with QuadDobl_Complex_Series_Vectors;
+with QuadDobl_Complex_Series_Vectors_io; use QuadDobl_Complex_Series_Vectors_io;
+with QuadDobl_Complex_Series_Matrices;
+with QuadDobl_Complex_Vector_Series;
+with QuadDobl_Complex_Vector_Series_io;  use QuadDobl_Complex_Vector_Series_io;
+with QuadDobl_Complex_Matrix_Series;
+with QuadDobl_Complex_Matrix_Series_io;  use QuadDobl_Complex_Matrix_Series_io;
+with QuadDobl_Random_Series_Vectors;
+with QuadDobl_Random_Series_Matrices;
+with QuadDobl_Series_Matrix_Solvers;
 with Series_Coefficient_Vectors;
 with Multitasked_Series_Linearization;   use Multitasked_Series_Linearization;
 
@@ -98,6 +130,146 @@ procedure ts_mtserlin is
     end loop;
   end Standard_Test;
 
+  procedure DoblDobl_Test ( nbt,n,d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates an n-by-n matrix of series of degree d,
+  --   with complex coefficients in standard double precision.
+  --   Converts an n-by-n matrix of series of degree d with double
+  --   double precision complex coefficients into a matrix series.
+
+    use DoblDobl_Complex_Series_Matrices;
+    use DoblDobl_Series_Matrix_Solvers;
+
+    sA : constant DoblDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
+       := DoblDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
+    As : constant DoblDobl_Complex_Matrix_Series.Matrix 
+       := DoblDobl_Complex_Matrix_Series.Create(sA); 
+    vm : constant DoblDobl_Complex_VecMats.VecMat(0..As.deg)
+       := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(As);
+    sx : constant DoblDobl_Complex_Series_Vectors.Vector(1..n)
+       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
+    xs : constant DoblDobl_Complex_Vector_Series.Vector(d)
+       := DoblDobl_Complex_Vector_Series.Create(sx);
+    sb : constant DoblDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
+    bs : constant DoblDobl_Complex_Vector_Series.Vector(d)
+       := DoblDobl_Complex_Vector_Series.Create(sb);
+    sbcff : constant DoblDobl_Complex_VecVecs.VecVec(1..n)
+          := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(sb);
+    bscff : constant DoblDobl_Complex_VecVecs.VecVec(0..bs.deg)
+          := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(bs);
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
+        := new DoblDobl_Complex_Vectors.Vector(1..n);
+    info : integer32;
+    ans : character;
+    output : boolean;
+
+  begin
+    put_line("The coefficients of the matrix series :"); put(As);
+    put_line("The coefficient matrices : "); put(vm);
+    put_line("The exact solution x :"); put_line(sx);
+    put_line("The coefficients of the vector series x :"); put(xs);
+    put_line("The right hand side vector b :"); put_line(sb);
+    put_line("The coefficients of b : "); put_line(sbcff);
+    put_line("The coefficients of the vector series b :"); put(bs);
+    put_line("The coefficients of the vector series b :"); put_line(bscff);
+    put("Output during multitasking ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    if nbt > 1 then
+      Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+    elsif nbt = 1 then
+      put("Run multitasked code ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+       else Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+      end if;
+    end if;
+    put("info : "); put(info,1); new_line;
+    put_line("The generated leading vector series of the solution :");
+    put_line(xs.cff(0));
+    put_line("The computed leading vector series of the solution :");
+    put_line(bscff(0));
+    for k in 1..bs.deg loop
+      put("The generated term "); put(k,1);
+      put_line(" of the vector series of the solution :"); put_line(xs.cff(k));
+      put("The computed term "); put(k,1);
+      put_line(" of the vector series of the solution :"); put_line(bscff(k));
+    end loop;
+  end DoblDobl_Test;
+
+  procedure QuadDobl_Test ( nbt,n,d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates an n-by-n matrix of series of degree d,
+  --   with complex coefficients in standard double precision.
+  --   Converts an n-by-n matrix of series of degree d with quad
+  --   double precision complex coefficients into a matrix series.
+
+    use QuadDobl_Complex_Series_Matrices;
+    use QuadDobl_Series_Matrix_Solvers;
+
+    sA : constant QuadDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
+       := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
+    As : constant QuadDobl_Complex_Matrix_Series.Matrix 
+       := QuadDobl_Complex_Matrix_Series.Create(sA); 
+    vm : constant QuadDobl_Complex_VecMats.VecMat(0..As.deg)
+       := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(As);
+    sx : constant QuadDobl_Complex_Series_Vectors.Vector(1..n)
+       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
+    xs : constant QuadDobl_Complex_Vector_Series.Vector(d)
+       := QuadDobl_Complex_Vector_Series.Create(sx);
+    sb : constant QuadDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
+    bs : constant QuadDobl_Complex_Vector_Series.Vector(d)
+       := QuadDobl_Complex_Vector_Series.Create(sb);
+    sbcff : constant QuadDobl_Complex_VecVecs.VecVec(1..n)
+          := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(sb);
+    bscff : constant QuadDobl_Complex_VecVecs.VecVec(0..bs.deg)
+          := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(bs);
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
+        := new QuadDobl_Complex_Vectors.Vector(1..n);
+    info : integer32;
+    ans : character;
+    output : boolean;
+
+  begin
+    put_line("The coefficients of the matrix series :"); put(As);
+    put_line("The coefficient matrices : "); put(vm);
+    put_line("The exact solution x :"); put_line(sx);
+    put_line("The coefficients of the vector series x :"); put(xs);
+    put_line("The right hand side vector b :"); put_line(sb);
+    put_line("The coefficients of b : "); put_line(sbcff);
+    put_line("The coefficients of the vector series b :"); put(bs);
+    put_line("The coefficients of the vector series b :"); put_line(bscff);
+    put("Output during multitasking ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    if nbt > 1 then
+      Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+    elsif nbt = 1 then
+      put("Run multitasked code ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
+       else Solve_by_lufac(vm,bscff,ipvt,info,wrk);
+      end if;
+    end if;
+    put("info : "); put(info,1); new_line;
+    put_line("The generated leading vector series of the solution :");
+    put_line(xs.cff(0));
+    put_line("The computed leading vector series of the solution :");
+    put_line(bscff(0));
+    for k in 1..bs.deg loop
+      put("The generated term "); put(k,1);
+      put_line(" of the vector series of the solution :"); put_line(xs.cff(k));
+      put("The computed term "); put(k,1);
+      put_line(" of the vector series of the solution :"); put_line(bscff(k));
+    end loop;
+  end QuadDobl_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -105,6 +277,7 @@ procedure ts_mtserlin is
   --   the degrees of the series in the system, and the number of tasks.
 
     nbt,dim,deg : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
@@ -113,7 +286,19 @@ procedure ts_mtserlin is
     put("  Give the degree of the series : "); get(deg);
     put("  Give the number of tasks : "); get(nbt);
     new_line;
-    Standard_Test(nbt,dim,deg);
+    put_line("MENU for the working precision :");
+    put_line(" 0. double precision");
+    put_line(" 1. double double precision");
+    put_line(" 2. quad double precision");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    new_line;
+    case ans is
+      when '0' => Standard_Test(nbt,dim,deg);
+      when '1' => DoblDobl_Test(nbt,dim,deg);
+      when '2' => QuadDobl_Test(nbt,dim,deg);
+      when others => null;
+    end case;
   end Main;
 
 begin
