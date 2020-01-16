@@ -97,5 +97,6 @@ ts_mtcelidx                       : test on pipelining cell indices
 -------------------------------------------------------------------------------
 multitasked_algodiff_convolutions : multitasked AD for power series
 ts_mtadcnv                        : test on multitasked AD for power series
+multitasked_series_linearization  : multitasked linearized series solver
 ts_mtserlin                       : develop multitasked matrix series solver
 -------------------------------------------------------------------------------

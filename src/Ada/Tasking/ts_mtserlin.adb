@@ -2,16 +2,13 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
-with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_VecMats_io;        use Standard_Complex_VecMats_io;
-with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_Vectors_io; use Standard_Complex_Series_Vectors_io;
 with Standard_Complex_Series_Matrices;
@@ -23,220 +20,13 @@ with Standard_Random_Series_Vectors;
 with Standard_Random_Series_Matrices;
 with Standard_Series_Matrix_Solvers;
 with Series_Coefficient_Vectors;
-with Multitasking;
+with Multitasked_Series_Linearization;   use Multitasked_Series_Linearization;
 
 procedure ts_mtserlin is
 
 -- DESCRIPTION :
 --   Tests the linearization of solving linear systems of truncated series
 --   with multitasking.
-
-  procedure MV_Multiply
-             ( dim : in integer32;
-               A : in Standard_Complex_Matrices.Link_to_Matrix;
-               x,y : in Standard_Complex_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION :
-  --   Multiplies the matrix A with the vector x and stores the
-  --   result in the vector y, with explicitly declared index variables.
-
-  -- REQUIRED : all vectors and matrices have the same dimension dim.
-
-    use Standard_Complex_Numbers;
-
-    Ak,AL : integer32 := 1;
-
-  begin
-    while Ak <= dim loop
-      y(Ak) := A(Ak,1)*x(1);
-      AL := 2;
-      while AL <= dim loop
-        y(Ak) := y(Ak) + A(Ak,AL)*x(AL);
-        AL := AL + 1;
-      end loop;
-      Ak := Ak + 1;
-    end loop;
-  end MV_Multiply;
-
-  procedure V_Subtract
-              ( dim : in integer32;
-                x,y : in Standard_Complex_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION :
-  --   Subtracts from the vector x the vector y,
-  --   with explicitly declared index variables.
-
-  -- REQUIRED : both x and y have range 1..dim.
-
-    idx : integer32 := 1;
-
-    use Standard_Complex_Numbers;
-
-  begin
-    while idx <= dim loop
-      x(idx) := x(idx) - y(idx);
-      idx := idx + 1;
-    end loop;
-  end V_Subtract;
-
-  procedure Multitasked_Solve_Next_by_lufac
-              ( idx,nbt : in integer32;
-                A : in Standard_Complex_VecMats.VecMat;
-                b : in Standard_Complex_VecVecs.VecVec;
-                ipvt : in Standard_Integer_Vectors.Vector;
-                wrk : in Standard_Complex_VecVecs.VecVec;
-                output : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Applies multitasking for the backsubstitution to solve 
-  --   the matrix series equation
-  --   defined by the matrix series in A and right hand side in b.
-
-  -- REQUIRED :
-  --   A'last = b'last >= 0.  Moreover, the system is square,
-  --   and idx is in range 1..b'last.
-
-  -- ON ENTRY :
-  --   idx      index of the stage, all solutions in b(k),
-  --            for k from 0 to idx-1 have been computed.
-  --   nbt      the number of tasks;
-  --   A        the coefficient matrix as a matrix series,
-  --            A(0) contains the LU factorization of A(0);
-  --   b        coefficients of vector series,
-  --            for k < idx: b(k) is the k-th solution block,
-  --            for k >= idx: b(k) is the (updated) right hand side vector;
-  --   wrk      allocated work space for the nbt tasks;
-  --   output   flag to indicate the extra output is needed.
-
-  -- ON RETURN :
-  --   b        all coefficients of the solution series up to b(idx),
-  --            provided info = 0, and updated right hand side vectors.
-
-    dim : constant integer32 := ipvt'last;
-    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
-
-    procedure Silent_Job ( i,n : integer32 ) is
-
-    -- DESCRIPTION :
-    --   Task i out of n will update a right hand side vector,
-    --   or solve for component idx, without intermediate output.
-
-      myjob : integer32 := idx+i-1;
-
-    begin
-      while myjob <= b'last loop
-        MV_Multiply(dim,A(myjob-idx+1),b(idx-1),wrk(i));
-        V_Subtract(dim,b(myjob),wrk(i));
-        myjob := myjob + n;
-        if myjob = b'last + 1 then
-          lusolve(A(0).all,ipvt'last,ipvt,b(idx).all);
-        elsif myjob > b'last then
-          if i = 1 and (n > b'last-idx) then
-            lusolve(A(0).all,ipvt'last,ipvt,b(idx).all);
-	  end if;
-        end if;
-      end loop;
-      done(i) := true;
-    end Silent_Job;
-    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
-
-    procedure Report_Job ( i,n : integer32 ) is
-
-    -- DESCRIPTION :
-    --   Task i out of n will update a right hand side vector,
-    --   or solve for component idx, with intermediate output.
-
-      myjob : integer32 := idx+i-1;
-
-    begin
-      while myjob <= b'last loop
-        put_line("Task " & Multitasking.to_string(i)
-                         & " updates b(" 
-                         & Multitasking.to_string(myjob) & ")");
-        MV_Multiply(dim,A(myjob-idx+1),b(idx-1),wrk(i));
-        V_Subtract(dim,b(myjob),wrk(i));
-        myjob := myjob + n;
-        if myjob = b'last + 1 then
-          put_line("Task " & Multitasking.to_string(i)
-                           & " solves for x(" 
-                           & Multitasking.to_string(idx) & ")");
-          lusolve(A(0).all,ipvt'last,ipvt,b(idx).all);
-        elsif myjob > b'last then
-          if i = 1 and (n > b'last-idx) then
-            put_line("Task " & Multitasking.to_string(i)
-                             & " solves for x(" 
-                             & Multitasking.to_string(idx) & ")");
-            lusolve(A(0).all,ipvt'last,ipvt,b(idx).all);
-	  end if;
-        end if;
-      end loop;
-      done(i) := true;
-    end Report_Job;
-    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
-
-  begin
-    if output
-     then report_do_jobs(nbt);
-     else silent_do_jobs(nbt);
-    end if;
-   -- make sure main task does not terminate before all worker tasks finish
-    while not Multitasking.all_true(nbt,done) loop
-      delay 0.001;
-    end loop;
-  end Multitasked_Solve_Next_by_lufac;
-
-  procedure Multitasked_Solve_by_lufac
-              ( nbt : in integer32;
-                A : in Standard_Complex_VecMats.VecMat;
-                b : in Standard_Complex_VecVecs.VecVec;
-                ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; output : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Applies multitasking to solve the matrix series equation
-  --   defined by the matrix series in A and right hand side in b.
-
-  -- REQUIRED :
-  --   A'last >= 0 and b'last >= 0.  Moreover, the system is square.
-
-  -- ON ENTRY :
-  --   nbt      the number of tasks;
-  --   A        the coefficient matrix as a matrix series;
-  --   b        the right hand side as a vector series;
-  --   output   if true, then intermediate output is written,
-  --            otherwise, the multitasking remains silent.
-
-  -- ON RETURN :
-  --   info     if info /= 0, then the lead coefficient matrix of A
-  --            was deemed singular and x is undefined,
-  --            if info = 0, then the system is regular;
-  --   x        all coefficients of the solution series up to b.deg,
-  --            provided info = 0.
-
-    use Standard_Series_Matrix_Solvers;
-
-    wrk : Standard_Complex_VecVecs.VecVec(1..nbt);
-
-  begin
-    Solve_Lead_by_lufac(A,b,ipvt,info);
-    if info = 0 then
-      for k in wrk'range loop -- allocate work space for each task
-        declare
-          cff : constant Standard_Complex_Vectors.Vector(0..ipvt'last)
-              := (0..ipvt'last => Standard_Complex_Numbers.Create(0.0));
-        begin
-          wrk(k) := new Standard_Complex_Vectors.Vector'(cff);
-        end;
-      end loop;
-      for k in 1..b'last loop
-        if output then
-          put("calling multitasked solve next for k = ");
-          put(k,1); put_line(" ...");
-        end if;
-        Multitasked_Solve_Next_by_lufac(k,nbt,A,b,ipvt,wrk,output);
-      end loop;
-    end if;
-  end Multitasked_Solve_by_lufac;
 
   procedure Standard_Test ( nbt,n,d : in integer32 ) is
 
