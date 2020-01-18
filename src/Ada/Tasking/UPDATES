@@ -1,5 +1,6 @@
 Sat 18 Jan 2020 : start of setup of ts_mtnewton, to develop multitasked
   Newton on power series with convolutions and linearization.
+  Added procedures to ts_mtnewton, for various precisions.
 
 Thu 16 Jan 2020 : extended multitasked_series_linearization with versions
   for double double and quad double arithmetic, tested by ts_mtserlin.
