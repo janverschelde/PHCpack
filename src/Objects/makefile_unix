@@ -2888,6 +2888,10 @@ ts_mtserlin:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtserlin.adb \
               -o $(BIN)/ts_mtserlin
 
+ts_mtnewton:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtnewton.adb \
+              -o $(BIN)/ts_mtnewton
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \

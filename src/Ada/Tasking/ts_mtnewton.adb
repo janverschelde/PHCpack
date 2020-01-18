@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
@@ -38,7 +39,7 @@ procedure ts_mtnewton is
      dim : constant integer32 := sol'last;
      scf : constant Standard_Complex_VecVecs.VecVec(1..dim)
          := Newton_Convolutions.Series_Coefficients(sol,deg);
-     deg,maxit,nbt : integer32 := 0;
+     maxit,nbt : integer32 := 0;
 
    begin
      Add_Parameter_to_Constant(s);
@@ -56,7 +57,7 @@ procedure ts_mtnewton is
      sols : Standard_Complex_Solutions.Solution_List;
      nbr,dim : natural32;
      ls : Standard_Complex_Solutions.Link_to_Solution;
-     deg : integer32;
+     deg : integer32 := 0;
 
    begin
      new_line;
