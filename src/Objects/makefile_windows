@@ -197,6 +197,37 @@ ts_intval:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_intval.adb
 	gnatbl -o $(BIN)/ts_intval ts_intval.ali
 
+# Test programs for Math_Lib/QD :
+
+ts_dbldbl:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_dbldbl.adb -o $(BIN)/ts_dbldbl
+
+ts_qddbl:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_qddbl.adb -o $(BIN)/ts_qddbl
+
+ts_ddcmplx:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ddcmplx.adb \
+                 -o $(BIN)/ts_ddcmplx
+
+ts_qdcmplx:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_qdcmplx.adb \
+                 -o $(BIN)/ts_qdcmplx
+
+ts_mpddcv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mpddcv.adb -o $(BIN)/ts_mpddcv
+
+ts_mpqdcv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mpqdcv.adb -o $(BIN)/ts_mpqdcv
+
+ts_ddfun:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ddfun.adb -o $(BIN)/ts_ddfun
+
+ts_qdfun:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_qdfun.adb -o $(BIN)/ts_qdfun
+
+ts_cmpexp:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cmpexp.adb -o $(BIN)/ts_cmpexp
+
 # Test programs for Math_Lib/Vectors :
 
 ts_natvec:
