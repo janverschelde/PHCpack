@@ -32,8 +32,7 @@ with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Newton_Convolutions;
-with Multitasked_AlgoDiff_Convolutions;  use Multitasked_AlgoDiff_Convolutions;
-with Multitasked_Series_Linearization;   use Multitasked_Series_Linearization;
+with Multitasked_Newton_Convolutions;    use Multitasked_Newton_Convolutions;
 
 procedure ts_mtnewton is
 
@@ -43,108 +42,6 @@ procedure ts_mtnewton is
 --   and linearization to solve the matrix series equations,
 --   in double, double double, and quad double arithmetic,
 --   with multitasking for shared memory parallel computers.
-
-  procedure Multitasked_LU_Newton_Step
-              ( nbt : in integer32;
-                s : in Standard_Speelpenning_Convolutions.Link_to_System;
-                x : in Standard_Complex_VecVecs.VecVec;
-                absdx : out double_float; info : out integer32;
-                ipvt : out Standard_Integer_Vectors.Vector;
-                output : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Does one step with Newton's method using the LU factorization
-  --   with multitasking in standard double precision.
-
-  -- ON ENTRY :
-  --   nbt      the number of tasks;
-  --   s        a system of convolution circuits with a parameter;
-  --   x        vector of coefficients of power series;
-  --   output   if true, then the multitasked procedures write to screen,
-  --            otherwise, the computations remain silent.
-
-  -- ON RETURN :
-  --   x        updated coefficients of the series solution;
-  --   absdx    the absolute value of the maximal component update dx;
-  --   info     info from the LU factorization;
-  --   ipvt     pivoting information about the LU factorization.
-
-  begin
-    Standard_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
-    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,output);
-    Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
-  end Multitasked_LU_Newton_Step;
-
-  procedure Multitasked_LU_Newton_Step
-              ( nbt : in integer32;
-                s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                x : in DoblDobl_Complex_VecVecs.VecVec;
-                absdx : out double_double; info : out integer32;
-                ipvt : out Standard_Integer_Vectors.Vector;
-                output : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Does one step with Newton's method using the LU factorization
-  --   with multitasking in double double precision.
-
-  -- ON ENTRY :
-  --   nbt      the number of tasks;
-  --   s        a system of convolution circuits with a parameter;
-  --   x        vector of coefficients of power series;
-  --   output   if true, then the multitasked procedures write to screen,
-  --            otherwise, the computations remain silent.
-
-  -- ON RETURN :
-  --   x        updated coefficients of the series solution;
-  --   absdx    the absolute value of the maximal component update dx;
-  --   info     info from the LU factorization;
-  --   ipvt     pivoting information about the LU factorization.
-
-  begin
-    DoblDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
-    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,output);
-    DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
-  end Multitasked_LU_Newton_Step;
-
-  procedure Multitasked_LU_Newton_Step
-              ( nbt : in integer32;
-                s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                x : in QuadDobl_Complex_VecVecs.VecVec;
-                absdx : out quad_double; info : out integer32;
-                ipvt : out Standard_Integer_Vectors.Vector;
-                output : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Does one step with Newton's method using the LU factorization
-  --   with multitasking in quad double precision.
-
-  -- ON ENTRY :
-  --   nbt      the number of tasks;
-  --   s        a system of convolution circuits with a parameter;
-  --   x        vector of coefficients of power series;
-  --   output   if true, then the multitasked procedures write to screen,
-  --            otherwise, the computations remain silent.
-
-  -- ON RETURN :
-  --   x        updated coefficients of the series solution;
-  --   absdx    the absolute value of the maximal component update dx;
-  --   info     info from the LU factorization;
-  --   ipvt     pivoting information about the LU factorization.
-
-  begin
-    QuadDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
-    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,output);
-    QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
-  end Multitasked_LU_Newton_Step;
 
   procedure Standard_Run
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -164,23 +61,29 @@ procedure ts_mtnewton is
      scf : constant Standard_Complex_VecVecs.VecVec(1..dim)
          := Newton_Convolutions.Series_Coefficients(sol,deg);
      ipvt : Standard_Integer_Vectors.Vector(1..dim);
-     info,maxit,nbt : integer32 := 0;
+     info,maxit,nbrit,nbt : integer32 := 0;
      ans : character;
-     otp : boolean;
+     otp,fail : boolean;
+     tol : constant double_float := 1.0E-12;
      absdx : double_float;
 
    begin
      Add_Parameter_to_Constant(s);
      new_line;
-     put("Give the number of iterations : "); get(maxit);
+     put("Give the maximum number of iterations : "); get(maxit);
      put("Give the number of tasks : "); get(nbt);
      put("Output during multitasking ? (y/n) ");
      Ask_Yes_or_No(ans);
      otp := (ans = 'y');
-     for k in 1..maxit loop
-       Multitasked_LU_Newton_Step(nbt,s,scf,absdx,info,ipvt,otp);
-       put("absdx : "); put(absdx,3); new_line;
-     end loop;
+     Multitasked_LU_Newton_Steps
+       (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,otp);
+     put("#steps : "); put(nbrit,1);
+     put("  absdx :"); put(absdx,3);
+     if fail
+      then put("  failed to reach tolerance");
+      else put("  succeeded to reach tolerance");
+     end if;
+     put(tol,3); new_line;
    end Standard_Run;
 
   procedure DoblDobl_Run
@@ -201,23 +104,29 @@ procedure ts_mtnewton is
      scf : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
          := Newton_Convolutions.Series_Coefficients(sol,deg);
      ipvt : Standard_Integer_Vectors.Vector(1..dim);
-     info,maxit,nbt : integer32 := 0;
+     info,maxit,nbrit,nbt : integer32 := 0;
      ans : character;
-     otp : boolean;
+     fail,otp : boolean;
+     tol : constant double_double := create(1.0E-24);
      absdx : double_double;
 
    begin
      Add_Parameter_to_Constant(s);
      new_line;
-     put("Give the number of iterations : "); get(maxit);
+     put("Give the maximum number of iterations : "); get(maxit);
      put("Give the number of tasks : "); get(nbt);
      put("Output during multitasking ? (y/n) ");
      Ask_Yes_or_No(ans);
      otp := (ans = 'y');
-     for k in 1..maxit loop
-       Multitasked_LU_Newton_Step(nbt,s,scf,absdx,info,ipvt,otp);
-       put("absdx : "); put(absdx,3); new_line;
-     end loop;
+     Multitasked_LU_Newton_Steps
+       (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,otp);
+     put("#steps : "); put(nbrit,1);
+     put("  absdx : "); put(absdx,3);
+     if fail
+      then put("  failed to reach tolerance ");
+      else put("  succeeded to reach tolerance ");
+     end if;
+     put(tol,3); new_line;
    end DoblDobl_Run;
 
   procedure QuadDobl_Run
@@ -238,23 +147,29 @@ procedure ts_mtnewton is
      scf : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
          := Newton_Convolutions.Series_Coefficients(sol,deg);
      ipvt : Standard_Integer_Vectors.Vector(1..dim);
-     info,maxit,nbt : integer32 := 0;
+     info,maxit,nbrit,nbt : integer32 := 0;
      ans : character;
-     otp : boolean;
+     fail,otp : boolean;
+     tol : constant quad_double := create(1.0E-48);
      absdx : quad_double;
 
    begin
      Add_Parameter_to_Constant(s);
      new_line;
-     put("Give the number of iterations : "); get(maxit);
+     put("Give the maximum number of iterations : "); get(maxit);
      put("Give the number of tasks : "); get(nbt);
      put("Output during multitasking ? (y/n) ");
      Ask_Yes_or_No(ans);
      otp := (ans = 'y');
-     for k in 1..maxit loop
-       Multitasked_LU_Newton_Step(nbt,s,scf,absdx,info,ipvt,otp);
-       put("absdx : "); put(absdx,3); new_line;
-     end loop;
+     Multitasked_LU_Newton_Steps
+       (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,otp);
+     put("#steps : "); put(nbrit,1);
+     put("  absdx : "); put(absdx,3);
+     if fail
+      then put("  failed to reach tolerance ");
+      else put("  succeeded to reach tolerance ");
+     end if;
+     put(tol,3); new_line;
    end QuadDobl_Run;
 
    procedure Standard_Test is

@@ -99,5 +99,6 @@ multitasked_algodiff_convolutions : multitasked AD for power series
 ts_mtadcnv                        : test on multitasked AD for power series
 multitasked_series_linearization  : multitasked linearized series solver
 ts_mtserlin                       : develop multitasked matrix series solver
-ts_mtnewton                       : multitasked Newton on power series
+multitasked_newton_convolutions   : multitasked Newton on power series
+ts_mtnewton                       : test on multitasked Newton on power series
 -------------------------------------------------------------------------------
