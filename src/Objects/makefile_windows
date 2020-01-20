@@ -41,11 +41,11 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Basic_Timer \
  -I$(PHCAda)/Math_Lib/Divisors -I$(PHCAda)/Math_Lib/Reduction \
  -I$(PHCAda)/Math_Lib/Polynomials -I$(PHCAda)/Math_Lib/Functions \
  -I$(PHCAda)/Math_Lib/Supports -I$(PHCAda)/Math_Lib/Circuits \
- -I$(PHCAda)/Math_Lib/Series \
+ -I$(PHCAda)/Math_Lib/Series -I$(PHCAda)/Math_Lib/AD \
  -I$(PHCAda)/Deformations/Solutions -I$(PHCAda)/Deformations/Homotopy \
- -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/End_Games \
- -I$(PHCAda)/Deformations/Sweep -I$(PHCAda)/Deformations/Trackers \
- -I$(PHCAda)/Deformations/Curves -I$(PHCAda)/Deformations/Continuation \
+ -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/Curves \
+ -I$(PHCAda)/Deformations/End_Games -I$(PHCAda)/Deformations/Sweep \
+ -I$(PHCAda)/Deformations/Trackers -I$(PHCAda)/Deformations/Continuation \
  -I$(PHCAda)/Root_Counts/Product -I$(PHCAda)/Root_Counts/Binomials \
  -I$(PHCAda)/Root_Counts/Implift -I$(PHCAda)/Root_Counts/Stalift \
  -I$(PHCAda)/Root_Counts/Dynlift -I$(PHCAda)/Root_Counts/Symmetry \
@@ -86,6 +86,26 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
                  get_clock.o get_clocks_per_sec.o corecount.o \
                  $(QD_LIB)/libqd.a -o $(BIN)/phc -lm \
+--LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -Wl,--no-whole-archive"
+
+phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
+        inputData.o outputData.o iTest.o fTest.o reltab.o \
+        simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o \
+        parameter.o lib2path_d.o
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) pieri_solver.adb
+	gnatmake -c $(INCLULIBS) -I$(PHCAda)/PHCtoC/Main_noqd \
+		    $(GNATFLAGS) phctop.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind phctop use_c2phc pieri_solver
+	gnatlink phctop syscon.o solcon.o phcpack.o feedback.o \
+                 lib.a parameter.o lib2path_d.o \
+                 inputData.o outputData.o iTest.o fTest.o reltab.o \
+                 simplex4phc.o mvc4phc.o demicsrun4phc.o \
+                 get_clock.o get_clocks_per_sec.o corecount.o \
+                 -o $(BIN)/phc -lm \
 --LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -Wl,--no-whole-archive"
 
 # Test program to see if compiler works, "hello world" :
@@ -666,10 +686,6 @@ ts_fewsolve:
 ts_impvol:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_impvol.adb
 	gnatbl -o $(BIN)/ts_impvol ts_impvol.ali
-
-ts_durker:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_durker.adb
-	gnatbl -o $(BIN)/ts_durker ts_durker.ali
 
 ts_drivimpl:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_drivimpl.adb
@@ -1428,11 +1444,17 @@ parameter.o:
 	$(gpp) -O3 -I$(PHCgpu)/Path/Host \
                -c $(PHCgpu)/Path/Host/parameter.cpp -o parameter.o
 
+lib2path_d.o:
+	$(gpp) -O3 -I$(PHCLib) \
+                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly3 \
+                   -I$(PHCgpu)/Path/Host2 \
+               -c $(PHCgpu)/Path/Host2/lib2path_d.cpp -o lib2path_d.o
+
 lib2path.o:
 	$(gpp) -O3 -I$(PHCLib) -I$(QD_ROOT)/include \
-                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly2 \
-                   -I$(PHCgpu)/Path/Host \
-               -c $(PHCgpu)/Path/Host/lib2path.cpp -o lib2path.o
+                   -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly3 \
+                   -I$(PHCgpu)/Path/Host2 \
+               -c $(PHCgpu)/Path/Host2/lib2path.cpp -o lib2path.o
 
 # Test programs for the Tasking :
 
