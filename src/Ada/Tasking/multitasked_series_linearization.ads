@@ -1,4 +1,7 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -56,21 +59,21 @@ package Multitasked_Series_Linearization is
 
   -- REQUIRED : both x and y have range 1..dim.
 
-  procedure Multitasked_Solve_Next_by_lufac
+  procedure Multitasked_Solve_Next_by_lusolve
               ( idx,nbt : in integer32;
                 A : in Standard_Complex_VecMats.VecMat;
                 b : in Standard_Complex_VecVecs.VecVec;
                 ipvt : in Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
-  procedure Multitasked_Solve_Next_by_lufac
+  procedure Multitasked_Solve_Next_by_lusolve
               ( idx,nbt : in integer32;
                 A : in DoblDobl_Complex_VecMats.VecMat;
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 ipvt : in Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
-  procedure Multitasked_Solve_Next_by_lufac
+  procedure Multitasked_Solve_Next_by_lusolve
               ( idx,nbt : in integer32;
                 A : in QuadDobl_Complex_VecMats.VecMat;
                 b : in QuadDobl_Complex_VecVecs.VecVec;
@@ -79,7 +82,7 @@ package Multitasked_Series_Linearization is
                 output : in boolean := true );
 
   -- DESCRIPTION :
-  --   Applies multitasking for the backsubstitution
+  --   Applies multitasking for the backsubstitution (lusolve)
   --   to solve the matrix series equation
   --   defined by the matrix series in A and right hand side in b,
   --   in double, double double, and quad double precision.
@@ -101,8 +104,47 @@ package Multitasked_Series_Linearization is
   --   output   flag to indicate the extra output is needed.
 
   -- ON RETURN :
-  --   b        all coefficients of the solution series up to b(idx),
-  --            provided info = 0, and updated right hand side vectors.
+  --   b        all coefficients of the solution series up to b(idx)
+  --            and updated right hand side vectors.
+
+  procedure Multitasked_Solve_Loop_by_lusolve
+              ( nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_lusolve
+              ( nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_lusolve
+              ( nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                output : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Allocates work space for every task and
+  --   repeatedly calls the Multitasked_Solve_Next_by_lusolve
+  --   to solve the linear system of power series,
+  --   defined by the matrix series in A and right hand side in b,
+  --   in double, double double, or quad double precision.
+
+  -- REQUIRED :
+  --   A'last = b'last >= 0.  Moreover, the system is square.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   A        the coefficient matrix as a matrix series;
+  --   b        the right hand side as a vector series;
+  --   output   if true, then intermediate output is written,
+  --            otherwise, the multitasking remains silent.
+
+  -- ON RETURN :
+  --   b        all coefficients of the solution series.
 
   procedure Multitasked_Solve_by_lufac
               ( nbt : in integer32;
@@ -125,10 +167,11 @@ package Multitasked_Series_Linearization is
 
   -- DESCRIPTION :
   --   Applies multitasking to solve the matrix series equation
-  --   defined by the matrix series in A and right hand side in b.
+  --   defined by the matrix series in A and right hand side in b,
+  --   in double, double double, or quad double precision.
 
   -- REQUIRED :
-  --   A'last >= 0 and b'last >= 0.  Moreover, the system is square.
+  --   A'last = b'last >= 0.  Moreover, the system is square.
 
   -- ON ENTRY :
   --   nbt      the number of tasks;
@@ -141,7 +184,49 @@ package Multitasked_Series_Linearization is
   --   info     if info /= 0, then the lead coefficient matrix of A
   --            was deemed singular and x is undefined,
   --            if info = 0, then the system is regular;
-  --   x        all coefficients of the solution series up to b.deg,
+  --   b        all coefficients of the solution series,
   --            provided info = 0.
+
+  procedure Multitasked_Solve_by_lufco
+              ( nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float; output : in boolean := true );
+  procedure Multitasked_Solve_by_lufco
+              ( nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_double; output : in boolean := true );
+  procedure Multitasked_Solve_by_lufco
+              ( nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out quad_double; output : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Applies multitasking to solve the matrix series equation
+  --   defined by the matrix series in A and right hand side in b,
+  --   with an estimate for the inverse of the condition number.
+
+  -- REQUIRED :
+  --   A'last = b'last >= 0.  Moreover, the system is square.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   A        the coefficient matrix as a matrix series;
+  --   b        the right hand side as a vector series;
+  --   output   if true, then intermediate output is written,
+  --            otherwise, the multitasking remains silent.
+
+  -- ON RETURN :
+  --   rcond    estimate for the inverse of the condition number,
+  --            if rcond + 1.0 = 1.0, then the lead coefficient matrix of A
+  --            was deemed singular and x is undefined,
+  --            if rcond + 1.0 /= 1.0, then the system is regular;
+  --   b        all coefficients of the solution series,
+  --            provided rcond + 1.0 /= 1.0.
 
 end Multitasked_Series_Linearization;

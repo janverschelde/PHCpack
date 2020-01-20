@@ -1,3 +1,6 @@
+Sun 19 Jan 2020 : to multitasked_series_linearization, added procedures
+  that return an estimate for the inverse condition number.
+
 Sat 18 Jan 2020 : start of setup of ts_mtnewton, to develop multitasked
   Newton on power series with convolutions and linearization.
   Added procedures to ts_mtnewton, for various precisions.
