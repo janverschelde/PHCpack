@@ -114,6 +114,57 @@ package body Newton_Convolutions is
     end loop;
   end Minus;
 
+  procedure Power_Divide
+	      ( x : in Standard_Complex_VecVecs.VecVec;
+	        f : in double_float ) is
+
+    fac : double_float := f;
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for k in 1..x'last loop
+      lnk := x(k);
+      for i in lnk'range loop
+        Standard_Complex_Numbers.Div(lnk(i),fac);
+      end loop;
+      fac := f*fac;
+    end loop;
+  end Power_Divide;
+
+  procedure Power_Divide
+	      ( x : in DoblDobl_Complex_VecVecs.VecVec;
+	        f : in double_double ) is
+
+    fac : double_double := f;
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for k in 1..x'last loop
+      lnk := x(k);
+      for i in lnk'range loop
+        DoblDobl_Complex_Numbers.Div(lnk(i),fac);
+      end loop;
+      fac := f*fac;
+    end loop;
+  end Power_Divide;
+
+  procedure Power_Divide
+	      ( x : in QuadDobl_Complex_VecVecs.VecVec;
+	        f : in quad_double ) is
+
+    fac : quad_double := f;
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for k in 2..x'last loop
+      lnk := x(k);
+      for i in lnk'range loop
+        QuadDobl_Complex_Numbers.Div(lnk(i),fac);
+      end loop;
+      fac := f*fac;
+    end loop;
+  end Power_Divide;
+
   procedure Update ( x,y : in Standard_Complex_VecVecs.VecVec ) is
 
     xcf,ycf : Standard_Complex_Vectors.Link_to_Vector;
@@ -257,6 +308,7 @@ package body Newton_Convolutions is
                 absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -266,6 +318,9 @@ package body Newton_Convolutions is
     Standard_Speelpenning_Convolutions.EvalDiff(s,scf);
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
+    if scaledx
+     then Power_Divide(s.vy,1.0);
+    end if;
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := max(s.yv);
     Update(scf,s.yv);
@@ -278,6 +333,7 @@ package body Newton_Convolutions is
                 absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -290,6 +346,10 @@ package body Newton_Convolutions is
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
+    if scaledx then
+      Power_Divide(s.vy,1.0);
+      put_line(file,"scaled dx :"); put_line(file,s.vy);
+    end if;
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
@@ -302,7 +362,11 @@ package body Newton_Convolutions is
                 absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant double_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 3 ...");
@@ -311,6 +375,9 @@ package body Newton_Convolutions is
     DoblDobl_Speelpenning_Convolutions.EvalDiff(s,scf);
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
+    if scaledx
+     then Power_Divide(s.vy,fac);
+    end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     Update(scf,s.yv);
@@ -323,7 +390,11 @@ package body Newton_Convolutions is
                 absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant double_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 4 ...");
@@ -335,6 +406,10 @@ package body Newton_Convolutions is
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
+    if scaledx then
+      Power_Divide(s.vy,fac);
+      put_line(file,"scaled dx :"); put_line(file,s.vy);
+    end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
@@ -347,7 +422,11 @@ package body Newton_Convolutions is
                 absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant quad_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 5 ...");
@@ -356,6 +435,9 @@ package body Newton_Convolutions is
     QuadDobl_Speelpenning_Convolutions.EvalDiff(s,scf);
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
+    if scaledx
+     then Power_Divide(s.vy,fac);
+    end if;
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     Update(scf,s.yv);
@@ -368,7 +450,11 @@ package body Newton_Convolutions is
                 absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant quad_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 6 ...");
@@ -380,6 +466,10 @@ package body Newton_Convolutions is
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
+    if scaledx then
+      Power_Divide(s.vy,fac);
+      put_line(file,"scaled dx :"); put_line(file,s.vy);
+    end if;
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
@@ -394,6 +484,7 @@ package body Newton_Convolutions is
                 absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -403,6 +494,9 @@ package body Newton_Convolutions is
     Standard_Speelpenning_Convolutions.EvalDiff(s,scf);
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
+    if scaledx
+     then Power_Divide(s.vy,1.0);
+    end if;
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     Update(scf,s.yv);
@@ -415,6 +509,7 @@ package body Newton_Convolutions is
                 absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -427,6 +522,10 @@ package body Newton_Convolutions is
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
+    if scaledx then
+      Power_Divide(s.vy,1.0);
+      put_line(file,"scaled dx :"); put_line(file,s.vy);
+    end if;
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
@@ -439,7 +538,11 @@ package body Newton_Convolutions is
                 absdx,rcond  : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant double_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 9 ...");
@@ -448,6 +551,9 @@ package body Newton_Convolutions is
     DoblDobl_Speelpenning_Convolutions.EvalDiff(s,scf);
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
+    if scaledx
+     then Power_Divide(s.vy,fac);
+    end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.vy);
     Update(scf,s.yv);
@@ -460,7 +566,11 @@ package body Newton_Convolutions is
                 absdx,rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant double_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 10 ...");
@@ -472,6 +582,10 @@ package body Newton_Convolutions is
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
+    if scaledx then
+      Power_Divide(s.vy,fac);
+      put_line(file,"scaled dx :"); put_line(file,s.vy);
+    end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
@@ -484,7 +598,11 @@ package body Newton_Convolutions is
                 absdx,rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant quad_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 11 ...");
@@ -493,6 +611,9 @@ package body Newton_Convolutions is
     QuadDobl_Speelpenning_Convolutions.EvalDiff(s,scf);
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
+    if scaledx
+     then Power_Divide(s.vy,fac);
+    end if;
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     Update(scf,s.yv);
@@ -505,7 +626,11 @@ package body Newton_Convolutions is
                 absdx,rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant quad_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.LU_Newton_Step 12 ...");
@@ -517,6 +642,10 @@ package body Newton_Convolutions is
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
+    if scaledx then
+      Power_Divide(s.vy,fac);
+      put_line(file,"scaled dx :"); put_line(file,s.vy);
+    end if;
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Max(s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
@@ -534,6 +663,7 @@ package body Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -544,6 +674,9 @@ package body Newton_Convolutions is
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+    if scaledx
+     then Power_Divide(xd,1.0);
+    end if;
     Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     Update(scf,dx);
@@ -559,6 +692,7 @@ package body Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -572,6 +706,10 @@ package body Newton_Convolutions is
     Standard_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,xd);
+    if scaledx then
+      Power_Divide(xd,1.0);
+      put(file,"scaled dx :"); put_line(file,xd);
+    end if;
     Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
@@ -587,7 +725,11 @@ package body Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant double_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 3 ...");
@@ -597,6 +739,9 @@ package body Newton_Convolutions is
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+    if scaledx
+     then Power_Divide(xd,fac);
+    end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     Update(scf,dx);
@@ -612,7 +757,11 @@ package body Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant double_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 4 ...");
@@ -625,6 +774,10 @@ package body Newton_Convolutions is
     DoblDobl_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,xd);
+    if scaledx then
+      Power_Divide(xd,fac);
+      put(file,"scaled dx :"); put_line(file,xd);
+    end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
@@ -640,7 +793,11 @@ package body Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant quad_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 5 ...");
@@ -650,6 +807,9 @@ package body Newton_Convolutions is
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+    if scaledx
+     then Power_Divide(xd,fac);
+    end if;
     QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     Update(scf,dx);
@@ -665,7 +825,11 @@ package body Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant quad_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.QR_Newton_Step 6 ...");
@@ -678,6 +842,10 @@ package body Newton_Convolutions is
     QuadDobl_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,xd);
+    if scaledx then
+      Power_Divide(xd,fac);
+      put(file,"scaled dx :"); put_line(file,xd);
+    end if;
     QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
@@ -695,6 +863,7 @@ package body Newton_Convolutions is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -705,6 +874,9 @@ package body Newton_Convolutions is
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
+    if scaledx
+     then Power_Divide(xd,1.0);
+    end if;
     Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     Update(scf,dx);
@@ -720,6 +892,7 @@ package body Newton_Convolutions is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -732,8 +905,12 @@ package body Newton_Convolutions is
     Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
-    Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
     put_line(file,"dx :"); put_line(file,xd);
+    if scaledx then
+      Power_Divide(xd,1.0);
+      put(file,"scaled dx :"); put_line(file,xd);
+    end if;
+    Standard_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,dx);
@@ -748,7 +925,11 @@ package body Newton_Convolutions is
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant double_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 3 ...");
@@ -758,6 +939,9 @@ package body Newton_Convolutions is
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
+    if scaledx
+     then Power_Divide(xd,fac);
+    end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     Update(scf,dx);
@@ -773,7 +957,11 @@ package body Newton_Convolutions is
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant double_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 4 ...");
@@ -785,8 +973,12 @@ package body Newton_Convolutions is
     Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
-    DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     put_line(file,"dx :"); put_line(file,xd);
+    if scaledx then
+      Power_Divide(xd,fac);
+      put(file,"scaled dx :"); put_line(file,xd);
+    end if;
+    DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,dx);
@@ -801,7 +993,11 @@ package body Newton_Convolutions is
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant quad_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 5 ...");
@@ -811,6 +1007,9 @@ package body Newton_Convolutions is
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
+    if scaledx
+     then Power_Divide(xd,fac);
+    end if;
     QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     Update(scf,dx);
@@ -826,7 +1025,11 @@ package body Newton_Convolutions is
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
+
+    fac : constant quad_double := create(1.0);
+
   begin
     if vrblvl > 0 then
       put_line("-> in newton_convolutions.SVD_Newton_Step 6 ...");
@@ -838,8 +1041,12 @@ package body Newton_Convolutions is
     Minus(s.vy);
     QuadDobl_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
-    QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     put_line(file,"dx :"); put_line(file,xd);
+    if scaledx then
+      Power_Divide(xd,fac);
+      put(file,"scaled dx :"); put_line(file,xd);
+    end if;
+    QuadDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
     absdx := Max(dx);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
     Update(scf,dx);

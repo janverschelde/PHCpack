@@ -76,19 +76,18 @@ procedure ts_fabry is
     dx : Standard_Complex_VecVecs.VecVec(1..dim);
     xd : Standard_Complex_VecVecs.VecVec(0..deg);
     ans : character;
-    usesvd,useqrls,needrcond : boolean := false;
+    scale,usesvd,useqrls,needrcond : boolean := false;
 
   begin
-    put("Solve with SVD ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
+    scale := (ans = 'y');
+    put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
     usesvd := (ans = 'y');
     if not usesvd then
-      put("Apply least squares with QR ? (y/n) ");
-      Ask_Yes_or_No(ans);
+      put("Apply least squares with QR ? (y/n) "); Ask_Yes_or_No(ans);
       useqrls := (ans = 'y');
       if not useqrls then
-        put("Need condition number estimate ? (y/n) ");
-        Ask_Yes_or_No(ans);
+        put("Need condition number estimate ? (y/n) "); Ask_Yes_or_No(ans);
         needrcond := (ans = 'y');
       end if;
     end if;
@@ -100,17 +99,18 @@ procedure ts_fabry is
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
         SVD_Newton_Step
-          (standard_output,s,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrk);
+          (standard_output,s,scf,dx,xd,absdx,svl,U,V,
+           info,rcond,ewrk,wrk,scale);
       elsif useqrls then
         QR_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,
-           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk);
+          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
           put("  rcond :"); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk);
+          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk,scale);
           put("  info : "); put(info,1); new_line;
         end if;
       end if;
@@ -144,19 +144,18 @@ procedure ts_fabry is
     dx : DoblDobl_Complex_VecVecs.VecVec(1..dim);
     xd : DoblDobl_Complex_VecVecs.VecVec(0..deg);
     ans : character;
-    usesvd,useqrls,needrcond : boolean := false;
+    scale,usesvd,useqrls,needrcond : boolean := false;
 
   begin
-    put("Solve with SVD ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
+    scale := (ans = 'y');
+    put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
     usesvd := (ans = 'y');
     if not usesvd then
-      put("Apply least squares with QR ? (y/n) ");
-      Ask_Yes_or_No(ans);
+      put("Apply least squares with QR ? (y/n) "); Ask_Yes_or_No(ans);
       useqrls := (ans = 'y');
       if not useqrls then
-        put("Need condition number estimate ? (y/n) ");
-        Ask_Yes_or_No(ans);
+        put("Need condition number estimate ? (y/n) "); Ask_Yes_or_No(ans);
         needrcond := (ans = 'y');
       end if;
     end if;
@@ -168,17 +167,18 @@ procedure ts_fabry is
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
         SVD_Newton_Step
-          (standard_output,s,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrk);
+          (standard_output,s,scf,dx,xd,absdx,svl,U,V,
+           info,rcond,ewrk,wrk,scale);
       elsif useqrls then
         QR_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,
-           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk);
+          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
           put("  rcond : "); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk);
+          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk,scale);
           put("  info : "); put(info,1); new_line;
         end if;
       end if;
@@ -212,19 +212,18 @@ procedure ts_fabry is
     dx : QuadDobl_Complex_VecVecs.VecVec(1..dim);
     xd : QuadDobl_Complex_VecVecs.VecVec(0..deg);
     ans : character;
-    usesvd,useqrls,needrcond : boolean;
+    scale,usesvd,useqrls,needrcond : boolean;
 
   begin
-    put("Solve with SVD ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
+    scale := (ans = 'y');
+    put("Solve with SVD ? (y/n) "); Ask_Yes_or_No(ans);
     usesvd := (ans = 'y');
     if not usesvd then
-      put("Apply least squares with QR ? (y/n) ");
-      Ask_Yes_or_No(ans);
+      put("Apply least squares with QR ? (y/n) "); Ask_Yes_or_No(ans);
       useqrls := (ans = 'y');
       if not useqrls then
-        put("Need condition number estimate ? (y/n) ");
-        Ask_Yes_or_No(ans);
+        put("Need condition number estimate ? (y/n) "); Ask_Yes_or_No(ans);
         needrcond := (ans = 'y');
       end if;
     end if;
@@ -236,17 +235,18 @@ procedure ts_fabry is
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
         SVD_Newton_Step
-          (standard_output,s,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrk);
+          (standard_output,s,scf,dx,xd,absdx,svl,U,V,
+           info,rcond,ewrk,wrk,scale);
       elsif useqrls then
         QR_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,
-           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk);
+          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
           put("rcond : "); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk);
+          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk,scale);
           put("info : "); put(info,1); new_line;
         end if;
       end if;

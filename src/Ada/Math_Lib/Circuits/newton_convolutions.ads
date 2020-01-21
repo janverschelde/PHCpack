@@ -51,6 +51,24 @@ package Newton_Convolutions is
   -- DESCRIPTION :
   --   Flips the sign of all coefficients in v.
 
+  procedure Power_Divide
+	      ( x : in Standard_Complex_VecVecs.VecVec;
+                f : in double_float );
+  procedure Power_Divide
+	      ( x : in DoblDobl_Complex_VecVecs.VecVec;
+                f : in double_double );
+  procedure Power_Divide
+	      ( x : in QuadDobl_Complex_VecVecs.VecVec;
+                f : in quad_double );
+
+  -- DESCRIPTION :
+  --   Divides all numbers in x(k) by f**k, for k > 0.
+
+  -- REQUIRED :
+  --   x contains the linearized representation of a vector of power series,
+  --   that is: x(k) contains all coefficients with t^k, for all components
+  --   of the vector of power series.
+
   procedure Update ( x,y : in Standard_Complex_VecVecs.VecVec );
   procedure Update ( x,y : in DoblDobl_Complex_VecVecs.VecVec );
   procedure Update ( x,y : in QuadDobl_Complex_VecVecs.VecVec );
@@ -86,6 +104,7 @@ package Newton_Convolutions is
                 absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
@@ -94,6 +113,7 @@ package Newton_Convolutions is
                 absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -101,6 +121,7 @@ package Newton_Convolutions is
                 absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
@@ -109,6 +130,7 @@ package Newton_Convolutions is
                 absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -116,6 +138,7 @@ package Newton_Convolutions is
                 absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
@@ -124,6 +147,7 @@ package Newton_Convolutions is
                 absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -138,6 +162,8 @@ package Newton_Convolutions is
   --   s        system of convolution circuits;
   --   scf      vector of coefficients of power series;
   --   wrk      work space for the matrix series solver;
+  --   scaledx  if true, then the k-th component of the update dx
+  --            is divided by k!, otherwise no scaling to dx is applied;
   --   vrblvl   if positive, the name of the procedure is written to screen.
 
   -- ON RETURN :
@@ -154,6 +180,7 @@ package Newton_Convolutions is
                 absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
@@ -162,6 +189,7 @@ package Newton_Convolutions is
                 absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -169,6 +197,7 @@ package Newton_Convolutions is
                 absdx,rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
@@ -177,6 +206,7 @@ package Newton_Convolutions is
                 absdx,rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -184,6 +214,7 @@ package Newton_Convolutions is
                 absdx,rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
               ( file : in file_type;
@@ -192,6 +223,7 @@ package Newton_Convolutions is
                 absdx,rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -206,6 +238,8 @@ package Newton_Convolutions is
   --   s        system of convolution circuits;
   --   scf      vector of coefficients of power series;
   --   wrk      work space for the matrix series solver;
+  --   scaledx  if true, then the k-th component of the update dx
+  --            is divided by k!, otherwise no scaling to dx is applied;
   --   vrblvl   if positive, the name of the procedure is written to screen.
 
   -- ON RETURN :
@@ -227,6 +261,7 @@ package Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( file : in file_type;
@@ -238,6 +273,7 @@ package Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -248,6 +284,7 @@ package Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( file : in file_type;
@@ -259,6 +296,7 @@ package Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -269,6 +307,7 @@ package Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
               ( file : in file_type;
@@ -280,6 +319,7 @@ package Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -302,6 +342,8 @@ package Newton_Convolutions is
   --   w4       work space vector of range 1..n, n = number of rows;
   --   w5       work space vector of range 1..n, n = number of rows.
   --   wrk      work space for the matrix series solver;
+  --   scaledx  if true, then the k-th component of the update dx
+  --            is divided by k!, otherwise no scaling to dx is applied;
   --   vrblvl   if positive, the name of the procedure is written to screen.
 
   -- ON RETURN :
@@ -322,6 +364,7 @@ package Newton_Convolutions is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
               ( file : in file_type;
@@ -333,6 +376,7 @@ package Newton_Convolutions is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -343,6 +387,7 @@ package Newton_Convolutions is
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
               ( file : in file_type;
@@ -354,6 +399,7 @@ package Newton_Convolutions is
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -364,6 +410,7 @@ package Newton_Convolutions is
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
               ( file : in file_type;
@@ -375,7 +422,8 @@ package Newton_Convolutions is
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
-                vrblvl : in integer32 := 0 );
+		scaledx : in boolean := true;
+		vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies one Newton step on the convolution circuits c,
@@ -391,7 +439,9 @@ package Newton_Convolutions is
   --   dx       work space for the update to scf, delinearized;
   --   xd       work space for the update to scf, in linearized format;
   --   ewrk     work space allocated for the SVD of the lead A(0);
-  --   wrkv     work space vector for the next coefficient computation.
+  --   wrkv     work space vector for the next coefficient computation;
+  --   scaledx  if true, then the k-th component of the update dx
+  --            is divided by k!, otherwise no scaling to dx is applied;
   --   vrblvl   if positive, the name of the procedure is written to screen.
 
   -- ON RETURN :

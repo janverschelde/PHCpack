@@ -1,3 +1,6 @@
+Mon 20 Jan 2020 : to newton_convolutions, added input parameter to flag
+  the scaling of the coefficient vectors, adjusted ts_fabry.
+
 Mon 13 Jan 2020 : new package homotopy_convolution_circuits to add a
   continuation parameter to convolution circuits, with code taken from
   ts_fabry and from ../../Deformations/ts_sernewcnv.
