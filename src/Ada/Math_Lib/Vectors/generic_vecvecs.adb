@@ -28,6 +28,18 @@ package body Generic_VecVecs is
     return res;
   end Create_Copy;
 
+  procedure Copy ( v : in VecVec; w : in out VecVec ) is
+  begin
+    Clear(w);
+    for i in v'range loop
+      declare
+        vec : constant Vector := v(i).all;
+      begin
+        w(i) := new Vector'(vec);
+      end;
+    end loop;
+  end Copy;
+
   procedure Clear ( v : in out VecVec ) is
   begin
     for i in v'range loop

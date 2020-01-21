@@ -2,6 +2,18 @@ with unchecked_deallocation;
 
 package body Generic_VecMats is
 
+  procedure Copy ( v : in VecMat; w : in out VecMat ) is
+  begin
+    Clear(w);
+    for i in v'range loop
+      declare
+        mat : constant Matrix := v(i).all;
+      begin
+        w(i) := new Matrix'(mat);
+      end;
+    end loop; 
+  end Copy;
+
   procedure Clear ( v : in out VecMat ) is
   begin
     for i in v'range loop

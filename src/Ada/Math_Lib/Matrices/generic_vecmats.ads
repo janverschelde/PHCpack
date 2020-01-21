@@ -15,6 +15,14 @@ package Generic_VecMats is
   type VecMat is array ( integer32 range <> ) of Link_to_Matrix;
   type Link_to_VecMat is access VecMat;
 
+  procedure Copy ( v : in VecMat; w : in out VecMat );
+
+  -- DESCRIPTION :
+  --   Makes a deep copy of all matrices in v to the matrices in w,
+  --   after performing a deep clear on w.
+
+  -- REQUIRED : v'range = w'range.
+
   procedure Clear ( v : in out VecMat );
   procedure Shallow_Clear ( v : in out Link_to_VecMat );
   procedure Deep_Clear ( v : in out Link_to_VecMat );

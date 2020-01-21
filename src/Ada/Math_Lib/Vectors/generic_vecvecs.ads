@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Abstract_Ring,Generic_Vectors;
+with Abstract_Ring;
+with Generic_Vectors;
 
 generic
 
@@ -20,6 +21,13 @@ package Generic_VecVecs is
 
   -- DESCRIPTION :
   --   The object on return is a copy of the given v.
+
+  procedure Copy ( v : in VecVec; w : in out VecVec );
+
+  -- DESCRIPTION :
+  --   Makes a deep copy of v into w, after clearing w first.
+
+  -- REQUIRED : v'range = w'range.
 
   procedure Clear ( v : in out VecVec );
   procedure Clear ( v : in out Array_of_VecVecs );
