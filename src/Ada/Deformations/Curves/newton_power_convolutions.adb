@@ -13,6 +13,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -20,7 +21,7 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 1 ...");
     end if;
     for k in 1..nbrit loop
-      LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -36,6 +37,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -44,7 +46,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -59,6 +61,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -66,7 +69,7 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 3 ...");
     end if;
     for k in 1..nbrit loop
-      LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -82,6 +85,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -90,7 +94,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -105,6 +109,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -112,7 +117,7 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 5 ...");
     end if;
     for k in 1..nbrit loop
-      LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -128,6 +133,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -136,7 +142,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -153,6 +159,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -160,7 +167,7 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 7 ...");
     end if;
     for k in 1..nbrit loop
-      LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -176,6 +183,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -184,7 +192,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -199,6 +207,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -206,7 +215,7 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 9 ...");
     end if;
     for k in 1..nbrit loop
-      LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -222,6 +231,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -230,7 +240,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -245,6 +255,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -252,7 +263,7 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 11 ...");
     end if;
     for k in 1..nbrit loop
-      LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -268,6 +279,7 @@ package body Newton_Power_Convolutions is
                 fail : out boolean; rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -276,7 +288,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,vrblvl-1);
+      LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -296,6 +308,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -304,7 +317,8 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       QR_Newton_Step
-        (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,vrblvl-1);
+        (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
+         scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -323,6 +337,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -332,7 +347,8 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       QR_Newton_Step
-        (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,vrblvl-1);
+        (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
+         scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -350,6 +366,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -358,7 +375,8 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       QR_Newton_Step
-        (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,vrblvl-1);
+        (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
+	 scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -377,6 +395,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -386,7 +405,8 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       QR_Newton_Step
-        (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,vrblvl-1);
+        (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
+         scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -404,6 +424,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -412,7 +433,8 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       QR_Newton_Step
-        (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,vrblvl-1);
+        (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
+	 scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -431,6 +453,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -440,7 +463,8 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       QR_Newton_Step
-        (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,vrblvl-1);
+        (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
+         scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -460,6 +484,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -468,7 +493,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       SVD_Newton_Step
-        (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,vrblvl-1);
+        (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -487,6 +512,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -496,7 +522,7 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       SVD_Newton_Step
-        (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,vrblvl-1);
+        (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -514,6 +540,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -522,7 +549,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       SVD_Newton_Step
-        (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,vrblvl-1);
+        (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -541,6 +568,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -550,7 +578,7 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       SVD_Newton_Step
-        (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,vrblvl-1);
+        (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -568,6 +596,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -576,7 +605,7 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       SVD_Newton_Step
-        (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,vrblvl-1);
+        (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -595,6 +624,7 @@ package body Newton_Power_Convolutions is
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     fail := true; nbrit := maxit;
@@ -604,7 +634,7 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       SVD_Newton_Step
-        (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,vrblvl-1);
+        (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;

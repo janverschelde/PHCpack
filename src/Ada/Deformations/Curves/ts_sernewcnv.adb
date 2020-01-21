@@ -76,22 +76,22 @@ procedure ts_sernewcnv is
     absdx,rcond : double_float;
     tol : constant double_float := 1.0E-14;
     ans : character;
-    usesvd,useqrls,needrcond,fail : boolean;
+    scale,usesvd,useqrls,needrcond,fail : boolean;
 
   begin
     Add_Parameter_to_Constant(s);
     new_line;
     put("Give the number of iterations : "); get(maxit);
+    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
+    scale := (ans = 'y');
     put("Solve with singular value decomposition ? (y/n) ");
     Ask_Yes_or_No(ans);
     usesvd := (ans = 'y');
     if not usesvd then
-      put("Solve with least squares and QR ? (y/n) ");
-      Ask_Yes_or_No(ans);
+      put("Solve with least squares and QR ? (y/n) "); Ask_Yes_or_No(ans);
       useqrls := (ans = 'y');
       if not useqrls then
-        put("Estimate condition number ? (y/n) ");
-        Ask_Yes_or_No(ans);
+        put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
         needrcond := (ans = 'y');
       end if;
     end if;
@@ -101,20 +101,20 @@ procedure ts_sernewcnv is
       if usesvd then
         SVD_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
-           svl,U,V,info,rcond,ewrk,wrk);
+           svl,U,V,info,rcond,ewrk,wrk,scale);
         put("rcond :"); put(rcond,3); new_line;
       else
         QR_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
-           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
     elsif needrcond then
       LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk);
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond :"); put(rcond,3); new_line;
     else
       LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk,scale);
     end if;
     if fail then
       put("Failed to reach"); put(tol,3);
@@ -161,22 +161,22 @@ procedure ts_sernewcnv is
     absdx,rcond : double_double;
     tol : constant double_float := 1.0E-14;
     ans : character;
-    usesvd,useqrls,needrcond,fail : boolean;
+    scale,usesvd,useqrls,needrcond,fail : boolean;
 
   begin
     Add_Parameter_to_Constant(s);
     new_line;
     put("Give the number of iterations : "); get(maxit);
+    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
+    scale := (ans = 'y');
     put("Solve with singular value decomposition ? (y/n) ");
     Ask_Yes_or_No(ans);
     usesvd := (ans = 'y');
     if not usesvd then
-      put("Solve with least squares and QR ? (y/n) ");
-      Ask_Yes_or_No(ans);
+      put("Solve with least squares and QR ? (y/n) "); Ask_Yes_or_No(ans);
       useqrls := (ans = 'y');
       if not useqrls then
-        put("Estimate condition number ? (y/n) ");
-        Ask_Yes_or_No(ans);
+        put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
         needrcond := (ans = 'y');
       end if;
     end if;
@@ -186,20 +186,20 @@ procedure ts_sernewcnv is
       if usesvd then
         SVD_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
-           svl,U,V,info,rcond,ewrk,wrk);
+           svl,U,V,info,rcond,ewrk,wrk,scale);
         put("rcond : "); put(rcond,3); new_line;
       else
         QR_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
-           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
     elsif needrcond then
       LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk);
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond : "); put(rcond,3); new_line;
     else
       LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk,scale);
     end if;
     if fail then
       put("Failed to reach"); put(tol,3);
@@ -246,22 +246,22 @@ procedure ts_sernewcnv is
     absdx,rcond : quad_double;
     tol : constant double_float := 1.0E-14;
     ans : character;
-    usesvd,useqrls,needrcond,fail : boolean;
+    scale,usesvd,useqrls,needrcond,fail : boolean;
 
   begin
     Add_Parameter_to_Constant(s);
     new_line;
     put("Give the number of iterations : "); get(maxit);
+    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
+    scale := (ans = 'y');
     put("Solve with singular value decomposition ? (y/n) ");
     Ask_Yes_or_No(ans);
     usesvd := (ans = 'y');
     if not usesvd then
-      put("Solve with least squares and QR ? (y/n) ");
-      Ask_Yes_or_No(ans);
+      put("Solve with least squares and QR ? (y/n) "); Ask_Yes_or_No(ans);
       useqrls := (ans = 'y');
       if not useqrls then
-        put("Estimate condition number ? (y/n) ");
-        Ask_Yes_or_No(ans);
+        put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
         needrcond := (ans = 'y');
       end if;
     end if;
@@ -271,20 +271,20 @@ procedure ts_sernewcnv is
       if usesvd then
         SVD_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
-           svl,U,V,info,rcond,ewrk,wrk);
+           svl,U,V,info,rcond,ewrk,wrk,scale);
         put("rcond : "); put(rcond,3); new_line;
       else
         QR_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
-           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk);
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
     elsif needrcond then
       LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk);
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond : "); put(rcond,3); new_line;
     else
       LU_Newton_Steps
-        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk);
+        (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk,scale);
     end if;
     if fail then
       put("Failed to reach"); put(tol,3);
