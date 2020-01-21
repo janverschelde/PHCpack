@@ -185,6 +185,237 @@ procedure ts_mtserlin is
     end if;
   end Show_Speedup;
 
+  procedure Standard_Run
+              ( nbt,dim : in integer32;
+                vm : in Standard_Complex_VecMats.VecMat;
+                vb : in Standard_Complex_VecVecs.VecVec;
+                xs : in Standard_Complex_Vector_Series.Vector;
+                mltelp,serelp : in out Duration;
+                output,nbrotp : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Does a run with nbt tasks in double precision.
+  --   Solves the linearized matrix series system defined by vm and vb.
+  --   Prints the elapsed time and if defined, the speedup.
+  --   Prints the difference between the computed and the generated solution.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks is 1 or larger;
+  --   dim      dimension of the matrices in vm;
+  --   vm       matrices in the series equation;
+  --   vb       right hand side vector of the equation;
+  --   xs       the generated solution to the matrix series equation;
+  --   serelp   the previous elapsed wall clock time of a serial run;
+  --   mltelp   the previous elapsed wall clock time of a multitasked run;
+  --   output   if true, the multitasked run is verbose, else silent;
+  --   nbrotp   if true, all numbers are shown, else not.
+
+  -- ON RETURN :
+  --   serelp   updated elapsed wall clock time of a serial run,
+  --            if nbt = 1 and the user did not want multitasking;
+  --   mltelp   updated elapsed wall clock time of a multitasked run,
+  --            if nbt > 1.
+
+    ans : character;
+    err : double_float;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    wrk : constant Standard_Complex_Vectors.Link_to_Vector
+        := new Standard_Complex_Vectors.Vector(1..dim);
+    wks : constant Standard_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,dim);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+
+    use Ada.Calendar;
+
+  begin
+    if nbt > 1 then
+      multstart := Ada.Calendar.Clock;
+      Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+      put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      Show_Speedup(serelp,mltelp);
+    elsif nbt = 1 then
+      put("Run multitasked code ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        put_line("-> Elapsed time with one task :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        Show_Speedup(serelp,mltelp);
+      else
+        seristart := Ada.Calendar.Clock;
+        Standard_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        seristop := Ada.Calendar.Clock;
+        serelp := seristop - seristart;
+        put_line("-> Elapsed time without multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      end if;
+    end if;
+    put("info : "); put(info,1); new_line;
+    err := Error(xs,vb,nbrotp);
+    put("Sum of errors :"); put(err,3); new_line;
+  end Standard_Run;
+
+  procedure DoblDobl_Run
+              ( nbt,dim : in integer32;
+                vm : in DoblDobl_Complex_VecMats.VecMat;
+                vb : in DoblDobl_Complex_VecVecs.VecVec;
+                xs : in DoblDobl_Complex_Vector_Series.Vector;
+                mltelp,serelp : in out Duration;
+                output,nbrotp : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Does a run with nbt tasks in double double precision.
+  --   Solves the linearized matrix series system defined by vm and vb.
+  --   Prints the elapsed time and if defined, the speedup.
+  --   Prints the difference between the computed and the generated solution.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks is 1 or larger;
+  --   dim      dimension of the matrices in vm;
+  --   vm       matrices in the series equation;
+  --   vb       right hand side vector of the equation;
+  --   xs       the generated solution to the matrix series equation;
+  --   serelp   the previous elapsed wall clock time of a serial run;
+  --   mltelp   the previous elapsed wall clock time of a multitasked run;
+  --   output   if true, the multitasked run is verbose, else silent;
+  --   nbrotp   if true, all numbers are shown, else not.
+
+  -- ON RETURN :
+  --   serelp   updated elapsed wall clock time of a serial run,
+  --            if nbt = 1 and the user did not want multitasking;
+  --   mltelp   updated elapsed wall clock time of a multitasked run,
+  --            if nbt > 1.
+
+    ans : character;
+    err : double_double;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
+        := new DoblDobl_Complex_Vectors.Vector(1..dim);
+    wks : constant DoblDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,dim);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+
+    use Ada.Calendar;
+
+  begin
+    if nbt > 1 then
+      multstart := Ada.Calendar.Clock;
+      Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+      put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      Show_Speedup(serelp,mltelp);
+    elsif nbt = 1 then
+      put("Run multitasked code ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        put_line("-> Elapsed time with one task :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        Show_Speedup(serelp,mltelp);
+      else
+        seristart := Ada.Calendar.Clock;
+        DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        seristop := Ada.Calendar.Clock;
+        serelp := seristop - seristart;
+        put_line("-> Elapsed time without multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      end if;
+    end if;
+    put("info : "); put(info,1); new_line;
+    err := Error(xs,vb,nbrotp);
+    put("Sum of errors : "); put(err,3); new_line;
+  end DoblDobl_Run;
+
+  procedure QuadDobl_Run
+              ( nbt,dim : in integer32;
+                vm : in QuadDobl_Complex_VecMats.VecMat;
+                vb : in QuadDobl_Complex_VecVecs.VecVec;
+                xs : in QuadDobl_Complex_Vector_Series.Vector;
+                mltelp,serelp : in out Duration;
+                output,nbrotp : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Does a run with nbt tasks in double double precision.
+  --   Solves the linearized matrix series system defined by vm and vb.
+  --   Prints the elapsed time and if defined, the speedup.
+  --   Prints the difference between the computed and the generated solution.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks is 1 or larger;
+  --   dim      dimension of the matrices in vm;
+  --   vm       matrices in the series equation;
+  --   vb       right hand side vector of the equation;
+  --   xs       the generated solution to the matrix series equation;
+  --   serelp   the previous elapsed wall clock time of a serial run;
+  --   mltelp   the previous elapsed wall clock time of a multitasked run;
+  --   output   if true, the multitasked run is verbose, else silent;
+  --   nbrotp   if true, all numbers are shown, else not.
+
+  -- ON RETURN :
+  --   serelp   updated elapsed wall clock time of a serial run,
+  --            if nbt = 1 and the user did not want multitasking;
+  --   mltelp   updated elapsed wall clock time of a multitasked run,
+  --            if nbt > 1.
+
+    ans : character;
+    err : quad_double;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
+        := new QuadDobl_Complex_Vectors.Vector(1..dim);
+    wks : constant QuadDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,dim);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+
+    use Ada.Calendar;
+
+  begin
+    if nbt > 1 then
+      multstart := Ada.Calendar.Clock;
+      Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+      put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      Show_Speedup(serelp,mltelp);
+    elsif nbt = 1 then
+      put("Run multitasked code ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        put_line("-> Elapsed time with one task :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        Show_Speedup(serelp,mltelp);
+      else
+        seristart := Ada.Calendar.Clock;
+        QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        seristop := Ada.Calendar.Clock;
+        serelp := seristop - seristart;
+        put_line("-> Elapsed time without multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      end if;
+    end if;
+    put("info : "); put(info,1); new_line;
+    err := Error(xs,vb,nbrotp);
+    put("Sum of errors : "); put(err,3); new_line;
+  end QuadDobl_Run;
+
   procedure Standard_Test ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
@@ -193,16 +424,16 @@ procedure ts_mtserlin is
   --   and degree, in double precision,
   --   Prompts then the user for the number of tasks and runs the test.
 
-    use Standard_Complex_Series_Matrices;
-    use Standard_Series_Matrix_Solvers;
+    use Standard_Complex_Series_Matrices; -- for the sA*sx operation
 
     nbt : integer32 := 0;
     sA : constant Standard_Complex_Series_Matrices.Matrix(1..n,1..n)
        := Standard_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
     As : constant Standard_Complex_Matrix_Series.Matrix 
        := Standard_Complex_Matrix_Series.Create(sA); 
-    vm : constant Standard_Complex_VecMats.VecMat(0..As.deg)
-       := Series_Coefficient_Vectors.Standard_Series_Coefficients(As);
+    vmbackup : constant Standard_Complex_VecMats.VecMat(0..As.deg)
+             := Series_Coefficient_Vectors.Standard_Series_Coefficients(As);
+    vm : Standard_Complex_VecMats.VecMat(vmbackup'range);
     sx : constant Standard_Complex_Series_Vectors.Vector(1..n)
        := Standard_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     xs : constant Standard_Complex_Vector_Series.Vector(d)
@@ -214,17 +445,10 @@ procedure ts_mtserlin is
           := Series_Coefficient_Vectors.Standard_Series_Coefficients(sb);
     bscff : constant Standard_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
-    ipvt : Standard_Integer_Vectors.Vector(1..n);
-    wrk : constant Standard_Complex_Vectors.Link_to_Vector
-        := new Standard_Complex_Vectors.Vector(1..n);
-    info : integer32;
+    bswrk : Standard_Complex_VecVecs.VecVec(bscff'range);
     ans : character;
     nbrotp,output : boolean;
-    err : double_float;
-    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
     mult_elapsed,seri_elapsed : Duration := 0.0;
-
-    use Ada.Calendar;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
@@ -233,7 +457,7 @@ procedure ts_mtserlin is
     output := (ans = 'y');
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
-      put_line("The coefficient matrices : "); put(vm);
+      put_line("The coefficient matrices : "); put(vmbackup);
       put_line("The exact solution x :"); put_line(sx);
       put_line("The coefficients of the vector series x :"); put(xs);
       put_line("The right hand side vector b :"); put_line(sb);
@@ -245,37 +469,9 @@ procedure ts_mtserlin is
       new_line;
       put("Give the number of tasks (0 to exit) : "); get(nbt);
       exit when (nbt = 0);
-      if nbt > 1 then
-        multstart := Ada.Calendar.Clock;
-        Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-        multstop := Ada.Calendar.Clock;
-        mult_elapsed := multstop - multstart;
-        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
-        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        Show_Speedup(seri_elapsed,mult_elapsed);
-      elsif nbt = 1 then
-        put("Run multitasked code ? (y/n) ");
-        Ask_Yes_or_No(ans);
-        if ans = 'y' then
-          multstart := Ada.Calendar.Clock;
-          Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-          multstop := Ada.Calendar.Clock;
-          mult_elapsed := multstop - multstart;
-          put("-> Elapsed time with one task :");
-          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-          Show_Speedup(seri_elapsed,mult_elapsed);
-        else
-          seristart := Ada.Calendar.Clock;
-          Solve_by_lufac(vm,bscff,ipvt,info,wrk);
-          seristop := Ada.Calendar.Clock;
-          seri_elapsed := seristop - seristart;
-          put_line("-> Elapsed time without multitasking : ");
-          Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-        end if;
-      end if;
-      put("info : "); put(info,1); new_line;
-      err := Error(xs,bscff,nbrotp);
-      put("Sum of errors :"); put(err,3); new_line;
+      Standard_Complex_VecMats.Copy(vmbackup,vm);
+      Standard_Complex_VecVecs.Copy(bscff,bswrk);
+      Standard_Run(nbt,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,output,nbrotp);
     end loop;
   end Standard_Test;
 
@@ -287,16 +483,16 @@ procedure ts_mtserlin is
   --   and degree, in double double precision,
   --   Prompts then the user for the number of tasks and runs the test.
 
-    use DoblDobl_Complex_Series_Matrices;
-    use DoblDobl_Series_Matrix_Solvers;
+    use DoblDobl_Complex_Series_Matrices; -- for the sA*sx operation
 
     nbt : integer32 := 0;
     sA : constant DoblDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
        := DoblDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
     As : constant DoblDobl_Complex_Matrix_Series.Matrix 
        := DoblDobl_Complex_Matrix_Series.Create(sA); 
-    vm : constant DoblDobl_Complex_VecMats.VecMat(0..As.deg)
-       := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(As);
+    vmbackup : constant DoblDobl_Complex_VecMats.VecMat(0..As.deg)
+             := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(As);
+    vm : DoblDobl_Complex_VecMats.VecMat(vmbackup'range);
     sx : constant DoblDobl_Complex_Series_Vectors.Vector(1..n)
        := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     xs : constant DoblDobl_Complex_Vector_Series.Vector(d)
@@ -308,17 +504,10 @@ procedure ts_mtserlin is
           := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(sb);
     bscff : constant DoblDobl_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(bs);
-    ipvt : Standard_Integer_Vectors.Vector(1..n);
-    wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
-        := new DoblDobl_Complex_Vectors.Vector(1..n);
-    info : integer32;
+    bswrk : DoblDobl_Complex_VecVecs.VecVec(bscff'range);
     ans : character;
     nbrotp,output : boolean;
-    err : double_double;
-    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
     mult_elapsed,seri_elapsed : Duration := 0.0;
-
-    use Ada.Calendar;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
@@ -327,7 +516,7 @@ procedure ts_mtserlin is
     output := (ans = 'y');
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
-      put_line("The coefficient matrices : "); put(vm);
+      put_line("The coefficient matrices : "); put(vmbackup);
       put_line("The exact solution x :"); put_line(sx);
       put_line("The coefficients of the vector series x :"); put(xs);
       put_line("The right hand side vector b :"); put_line(sb);
@@ -339,37 +528,9 @@ procedure ts_mtserlin is
       new_line;
       put("Give the number of tasks (0 to exit) : "); get(nbt);
       exit when (nbt = 0);
-      if nbt > 1 then
-        multstart := Ada.Calendar.Clock;
-        Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-        multstop := Ada.Calendar.Clock;
-        mult_elapsed := multstop - multstart;
-        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
-        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        Show_Speedup(seri_elapsed,mult_elapsed);
-      elsif nbt = 1 then
-        put("Run multitasked code ? (y/n) ");
-        Ask_Yes_or_No(ans);
-        if ans = 'y' then
-          multstart := Ada.Calendar.Clock;
-          Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-          multstop := Ada.Calendar.Clock;
-          mult_elapsed := multstop - multstart;
-          put("-> Elapsed time with one task :");
-          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-          Show_Speedup(seri_elapsed,mult_elapsed);
-        else
-          seristart := Ada.Calendar.Clock;
-          Solve_by_lufac(vm,bscff,ipvt,info,wrk);
-          seristop := Ada.Calendar.Clock;
-          seri_elapsed := seristop - seristart;
-          put_line("-> Elapsed time without multitasking : ");
-          Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-        end if;
-      end if;
-      put("info : "); put(info,1); new_line;
-      err := Error(xs,bscff,nbrotp);
-      put("Sum of errors : "); put(err,3); new_line;
+      DoblDobl_Complex_VecMats.Copy(vmbackup,vm);
+      DoblDobl_Complex_VecVecs.Copy(bscff,bswrk);
+      DoblDobl_Run(nbt,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,output,nbrotp);
     end loop;
   end DoblDobl_Test;
 
@@ -381,16 +542,16 @@ procedure ts_mtserlin is
   --   and degree, in quad double precision,
   --   Prompts then the user for the number of tasks.
 
-    use QuadDobl_Complex_Series_Matrices;
-    use QuadDobl_Series_Matrix_Solvers;
+    use QuadDobl_Complex_Series_Matrices; -- for the sA*sx operation
 
     nbt : integer32 := 0;
     sA : constant QuadDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
        := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
     As : constant QuadDobl_Complex_Matrix_Series.Matrix 
        := QuadDobl_Complex_Matrix_Series.Create(sA); 
-    vm : constant QuadDobl_Complex_VecMats.VecMat(0..As.deg)
-       := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(As);
+    vmbackup : constant QuadDobl_Complex_VecMats.VecMat(0..As.deg)
+             := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(As);
+    vm : QuadDobl_Complex_VecMats.VecMat(vmbackup'range);
     sx : constant QuadDobl_Complex_Series_Vectors.Vector(1..n)
        := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     xs : constant QuadDobl_Complex_Vector_Series.Vector(d)
@@ -402,17 +563,10 @@ procedure ts_mtserlin is
           := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(sb);
     bscff : constant QuadDobl_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(bs);
-    ipvt : Standard_Integer_Vectors.Vector(1..n);
-    wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
-        := new QuadDobl_Complex_Vectors.Vector(1..n);
-    info : integer32;
+    bswrk : QuadDobl_Complex_VecVecs.VecVec(bscff'range);
     ans : character;
     nbrotp,output : boolean;
-    err : quad_double;
-    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
     seri_elapsed,mult_elapsed : Duration := 0.0;
-
-    use Ada.Calendar;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
@@ -421,7 +575,7 @@ procedure ts_mtserlin is
     output := (ans = 'y');
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
-      put_line("The coefficient matrices : "); put(vm);
+      put_line("The coefficient matrices : "); put(vmbackup);
       put_line("The exact solution x :"); put_line(sx);
       put_line("The coefficients of the vector series x :"); put(xs);
       put_line("The right hand side vector b :"); put_line(sb);
@@ -433,37 +587,9 @@ procedure ts_mtserlin is
       new_line;
       put("Give the number of tasks (0 to exit) : "); get(nbt);
       exit when (nbt = 0);
-      if nbt > 1 then
-        multstart := Ada.Calendar.Clock;
-        Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-        multstop := Ada.Calendar.Clock;
-        mult_elapsed := multstop - multstart;
-        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
-        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        Show_Speedup(seri_elapsed,mult_elapsed);
-      elsif nbt = 1 then
-        put("Run multitasked code ? (y/n) ");
-        Ask_Yes_or_No(ans);
-        if ans = 'y' then
-          multstart := Ada.Calendar.Clock;
-          Multitasked_Solve_by_lufac(nbt,vm,bscff,ipvt,info,output);
-          multstop := Ada.Calendar.Clock;
-          mult_elapsed := multstop - multstart;
-          put("-> Elapsed time with one task :");
-          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-          Show_Speedup(seri_elapsed,mult_elapsed);
-        else
-          seristart := Ada.Calendar.Clock;
-          Solve_by_lufac(vm,bscff,ipvt,info,wrk);
-          seristop := Ada.Calendar.Clock;
-          seri_elapsed := seristop - seristart;
-          put_line("-> Elapsed time without multitasking : ");
-          Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-        end if;
-      end if;
-      put("info : "); put(info,1); new_line;
-      err := Error(xs,bscff,nbrotp);
-      put("Sum of errors : "); put(err,3); new_line;
+      QuadDobl_Complex_VecMats.Copy(vmbackup,vm);
+      QuadDobl_Complex_VecVecs.Copy(bscff,bswrk);
+      QuadDobl_Run(nbt,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,output,nbrotp);
     end loop;
   end QuadDobl_Test;
 

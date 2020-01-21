@@ -1,3 +1,7 @@
+Tue 21 Jan 2020 : improved multitasked_series_linearization with better
+  tests in ts_mtserlin and similar changes in multitasked_newton_convolutions,
+  tested by ts_mtnewton.
+
 Mon 20 Jan 2020 : added wall clock timer to ts_mtnewton.adb.
 
 Sun 19 Jan 2020 : to multitasked_series_linearization, added procedures

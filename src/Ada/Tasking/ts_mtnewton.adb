@@ -35,6 +35,7 @@ with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Newton_Convolutions;
+with Multitasked_Series_Linearization;
 with Multitasked_Newton_Convolutions;    use Multitasked_Newton_Convolutions;
 
 procedure ts_mtnewton is
@@ -47,6 +48,240 @@ procedure ts_mtnewton is
 --   with multitasking for shared memory parallel computers.
 
   procedure Standard_Run
+              ( nbt,dim,deg,maxit : in integer32;
+                s : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sol : in Standard_Complex_Vectors.Vector;
+                serelp,mltelp : in out Duration;
+                output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method with nbt tasks in double precision.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   dim      number of equations and variables;
+  --   deg      degree of the truncated series;
+  --   maxit    maximum number of iterations;
+  --   s        system of convolution circuits;
+  --   sol      leading coefficients of the solution vector;
+  --   serelp   the previous elapsed wall clock time of a serial run;
+  --   mltelp   the previous elapsed wall clock time of a multitasked run;
+  --   output   if true, then the run is verbose, else silent;
+
+  -- ON RETURN :
+  --   serelp   updated elapsed wall clock time of a serial run,
+  --            if nbt = 1 and the user did not want multitasking;
+  --   mltelp   updated elapsed wall clock time of a multitasked run,
+  --            if nbt > 1.
+
+    scf : Standard_Complex_VecVecs.VecVec(1..dim);
+    wks : Standard_Complex_VecVecs.VecVec(1..nbt)
+        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info,nbrit : integer32 := 0;
+    fail : boolean;
+    tol : constant double_float := 1.0E-12;
+    absdx : double_float;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    speedup : Duration := 0.0;
+
+    use Ada.Calendar; -- for the difference operation on Duration
+
+  begin
+    new_line;
+    put("Running with "); put(nbt,1); put_line(" tasks ...");
+    scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+    if nbt = 1
+     then seristart := Ada.Calendar.Clock;
+     else multstart := Ada.Calendar.Clock;
+    end if;
+    Multitasked_LU_Newton_Steps
+      (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+       info,ipvt,wks,output);
+    if nbt = 1 then
+      seristop := Ada.Calendar.Clock;
+      serelp := seristop - seristart;
+    else
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstop;
+    end if;
+    put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
+    if fail
+     then put("  failed to reach tolerance");
+     else put("  succeeded to reach tolerance");
+    end if;
+    put(tol,3); new_line;
+    if nbt = 1 then
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    else
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+    end if;
+    Standard_Complex_VecVecs.Clear(scf);
+    Standard_Complex_VecVecs.Clear(wks);
+  end Standard_Run;
+
+  procedure DoblDobl_Run
+              ( nbt,dim,deg,maxit : in integer32;
+                s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                serelp,mltelp : in out Duration;
+                output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method with nbt tasks in double precision.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   dim      number of equations and variables;
+  --   deg      degree of the truncated series;
+  --   maxit    maximum number of iterations;
+  --   s        system of convolution circuits;
+  --   sol      leading coefficients of the solution vector;
+  --   serelp   the previous elapsed wall clock time of a serial run;
+  --   mltelp   the previous elapsed wall clock time of a multitasked run;
+  --   output   if true, then the run is verbose, else silent;
+
+  -- ON RETURN :
+  --   serelp   updated elapsed wall clock time of a serial run,
+  --            if nbt = 1 and the user did not want multitasking;
+  --   mltelp   updated elapsed wall clock time of a multitasked run,
+  --            if nbt > 1.
+
+    scf : DoblDobl_Complex_VecVecs.VecVec(1..dim);
+    wks : DoblDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info,nbrit : integer32 := 0;
+    fail : boolean;
+    tol : constant double_double := create(1.0E-24);
+    absdx : double_double;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    speedup : Duration := 0.0;
+
+    use Ada.Calendar; -- for the difference operation on Duration
+
+  begin
+    new_line;
+    put("Running with "); put(nbt,1); put_line(" tasks ...");
+    scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+    if nbt = 1
+     then seristart := Ada.Calendar.Clock;
+     else multstart := Ada.Calendar.Clock;
+    end if;
+    Multitasked_LU_Newton_Steps
+      (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+       info,ipvt,wks,output);
+    if nbt = 1 then
+      seristop := Ada.Calendar.Clock;
+      serelp := seristop - seristart;
+    else
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstop;
+    end if;
+    put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
+    if fail
+     then put("  failed to reach tolerance ");
+     else put("  succeeded to reach tolerance ");
+    end if;
+    put(tol,3); new_line;
+    if nbt = 1 then
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    else
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+    end if;
+    DoblDobl_Complex_VecVecs.Clear(scf);
+    DoblDobl_Complex_VecVecs.Clear(wks);
+  end DoblDobl_Run;
+
+  procedure QuadDobl_Run
+              ( nbt,dim,deg,maxit : in integer32;
+                s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                serelp,mltelp : in out Duration;
+                output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method with nbt tasks in double precision.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   dim      number of equations and variables;
+  --   deg      degree of the truncated series;
+  --   maxit    maximum number of iterations;
+  --   s        system of convolution circuits;
+  --   sol      leading coefficients of the solution vector;
+  --   serelp   the previous elapsed wall clock time of a serial run;
+  --   mltelp   the previous elapsed wall clock time of a multitasked run;
+  --   output   if true, then the run is verbose, else silent;
+
+  -- ON RETURN :
+  --   serelp   updated elapsed wall clock time of a serial run,
+  --            if nbt = 1 and the user did not want multitasking;
+  --   mltelp   updated elapsed wall clock time of a multitasked run,
+  --            if nbt > 1.
+
+    scf : QuadDobl_Complex_VecVecs.VecVec(1..dim);
+    wks : QuadDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info,nbrit : integer32 := 0;
+    fail : boolean;
+    tol : constant quad_double := create(1.0E-48);
+    absdx : quad_double;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    speedup : Duration := 0.0;
+
+    use Ada.Calendar; -- for the difference operation on Duration
+
+  begin
+    new_line;
+    put("Running with "); put(nbt,1); put_line(" tasks ...");
+    scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+    if nbt = 1
+     then seristart := Ada.Calendar.Clock;
+     else multstart := Ada.Calendar.Clock;
+    end if;
+    Multitasked_LU_Newton_Steps
+      (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+       info,ipvt,wks,output);
+    if nbt = 1 then
+      seristop := Ada.Calendar.Clock;
+      serelp := seristop - seristart;
+    else
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstop;
+    end if;
+    put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
+    if fail
+     then put("  failed to reach tolerance ");
+     else put("  succeeded to reach tolerance ");
+    end if;
+    put(tol,3); new_line;
+    if nbt = 1 then
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    else
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+    end if;
+    QuadDobl_Complex_VecVecs.Clear(scf);
+    QuadDobl_Complex_VecVecs.Clear(wks);
+  end QuadDobl_Run;
+
+  procedure Standard_Run_Loop
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 	        sol : in Standard_Complex_Vectors.Vector;
 	        deg : in integer32 ) is
@@ -61,17 +296,10 @@ procedure ts_mtnewton is
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
-    scf : Standard_Complex_VecVecs.VecVec(1..dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
-    info,maxit,nbrit,nbt : integer32 := 0;
+    maxit,nbt : integer32 := 0;
     ans : character;
-    otp,fail : boolean;
-    tol : constant double_float := 1.0E-12;
-    absdx : double_float;
-    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration := 0.0;
-
-    use Ada.Calendar; -- for the difference operation on Duration
+    otp : boolean;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
 
   begin
     Add_Parameter_to_Constant(s);
@@ -82,42 +310,11 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
-      new_line;
-      put("Running with "); put(nbt,1); put_line(" tasks ...");
-      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
-      if nbt = 1
-       then seristart := Ada.Calendar.Clock;
-       else multstart := Ada.Calendar.Clock;
-      end if;
-      Multitasked_LU_Newton_Steps
-        (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,otp);
-      if nbt = 1 then
-        seristop := Ada.Calendar.Clock;
-        seri_elapsed := seristop - seristart;
-      else
-        multstop := Ada.Calendar.Clock;
-        mult_elapsed := multstop - multstop;
-      end if;
-      put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
-      if fail
-       then put("  failed to reach tolerance");
-       else put("  succeeded to reach tolerance");
-      end if;
-      put(tol,3); new_line;
-      if nbt = 1 then
-        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-      else
-        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        if seri_elapsed + 1.0 /= 1.0 then
-          speedup := seri_elapsed/mult_elapsed;
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-        end if;
-      end if;
+      Standard_Run(nbt,dim,deg,maxit,s,sol,seri_elapsed,mult_elapsed,otp);
     end loop;
-  end Standard_Run;
+  end Standard_Run_Loop;
 
-  procedure DoblDobl_Run
+  procedure DoblDobl_Run_Loop
               ( p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 	        sol : in DoblDobl_Complex_Vectors.Vector;
 	        deg : in integer32 ) is
@@ -126,23 +323,16 @@ procedure ts_mtnewton is
   --   Runs Newton's method in double double precision on a solution sol
   --   of the system p, with power series of degree deg.
 
-     use DoblDobl_Speelpenning_Convolutions;
+    use DoblDobl_Speelpenning_Convolutions;
 
-     c : constant Convolution_Circuits(p'range)
-      := Make_Convolution_Circuits(p.all,natural32(deg));
-     s : constant Link_to_System := Create(c,p'last,deg);
-     dim : constant integer32 := sol'last;
-     scf : DoblDobl_Complex_VecVecs.VecVec(1..dim);
-     ipvt : Standard_Integer_Vectors.Vector(1..dim);
-     info,maxit,nbrit,nbt : integer32 := 0;
-     ans : character;
-     fail,otp : boolean;
-     tol : constant double_double := create(1.0E-24);
-     absdx : double_double;
-     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-     seri_elapsed,mult_elapsed,speedup : Duration := 0.0;
-
-     use Ada.Calendar; -- for the difference operation on Duration
+    c : constant Convolution_Circuits(p'range)
+     := Make_Convolution_Circuits(p.all,natural32(deg));
+    s : constant Link_to_System := Create(c,p'last,deg);
+    dim : constant integer32 := sol'last;
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp : boolean;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
 
   begin
     Add_Parameter_to_Constant(s);
@@ -153,42 +343,11 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
-      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
-      new_line;
-      put_line("Running with "); put(nbt,1); put_line(" tasks ...");
-      if nbt = 1
-       then seristart := Ada.Calendar.Clock;
-       else multstart := Ada.Calendar.Clock;
-      end if;
-      Multitasked_LU_Newton_Steps
-        (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,otp);
-      if nbt = 1 then
-        seristop := Ada.Calendar.Clock;
-        seri_elapsed := seristop - seristart;
-      else
-        multstop := Ada.Calendar.Clock;
-        mult_elapsed := multstop - multstart;
-      end if;
-      put("#steps : "); put(nbrit,1); put("  absdx : "); put(absdx,3);
-      if fail
-       then put("  failed to reach tolerance ");
-       else put("  succeeded to reach tolerance ");
-      end if;
-      put(tol,3); new_line;
-      if nbt = 1 then
-        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-      else
-        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        if seri_elapsed + 1.0 /= 1.0 then
-          speedup := seri_elapsed/mult_elapsed;
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-        end if;
-      end if;
+      DoblDobl_Run(nbt,dim,deg,maxit,s,sol,seri_elapsed,mult_elapsed,otp);
     end loop;
-  end DoblDobl_Run;
+  end DoblDobl_Run_Loop;
 
-  procedure QuadDobl_Run
+  procedure QuadDobl_Run_Loop
               ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 	        sol : in QuadDobl_Complex_Vectors.Vector;
 	        deg : in integer32 ) is
@@ -203,17 +362,10 @@ procedure ts_mtnewton is
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
-    scf : QuadDobl_Complex_VecVecs.VecVec(1..dim);
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
-    info,maxit,nbrit,nbt : integer32 := 0;
+    maxit,nbt : integer32 := 0;
     ans : character;
-    fail,otp : boolean;
-    tol : constant quad_double := create(1.0E-48);
-    absdx : quad_double;
-    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration := 0.0;
-
-    use Ada.Calendar; -- for the difference operation on Duration
+    otp : boolean;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
 
   begin
     Add_Parameter_to_Constant(s);
@@ -224,40 +376,9 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
-      new_line;
-      put("Running with "); put(nbt,1); put_line(" tasks ...");
-      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
-      if nbt = 1
-       then seristart := Ada.Calendar.Clock;
-       else multstart := Ada.Calendar.Clock;
-      end if;
-      Multitasked_LU_Newton_Steps
-        (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,otp);
-      if nbt = 1 then
-        seristop := Ada.Calendar.Clock;
-        seri_elapsed := seristop - seristart;
-      else
-        multstop := Ada.Calendar.Clock;
-        mult_elapsed := multstop - multstart;
-      end if;
-      put("#steps : "); put(nbrit,1); put("  absdx : "); put(absdx,3);
-      if fail
-       then put("  failed to reach tolerance ");
-       else put("  succeeded to reach tolerance ");
-      end if;
-      put(tol,3); new_line;
-      if nbt = 1 then
-        Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-      else
-        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        if seri_elapsed + 1.0 /= 1.0 then
-          speedup := seri_elapsed/mult_elapsed;
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-        end if;
-      end if;
+      QuadDobl_Run(nbt,dim,deg,maxit,s,sol,seri_elapsed,mult_elapsed,otp);
     end loop;
-  end QuadDobl_Run;
+  end QuadDobl_Run_Loop;
 
   procedure Standard_Test is
 
@@ -283,7 +404,7 @@ procedure ts_mtnewton is
     put(dim,1); put_line(".");
     new_line;
     put("Give the degree of the series : "); get(deg);
-    Standard_Run(lp,ls.v,deg);
+    Standard_Run_Loop(lp,ls.v,deg);
   end Standard_Test;
 
   procedure DoblDobl_Test is
@@ -310,7 +431,7 @@ procedure ts_mtnewton is
     put(dim,1); put_line(".");
     new_line;
     put("Give the degree of the series : "); get(deg);
-    DoblDobl_Run(lp,ls.v,deg);
+    DoblDobl_Run_Loop(lp,ls.v,deg);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test is
@@ -337,7 +458,7 @@ procedure ts_mtnewton is
     put(dim,1); put_line(".");
     new_line;
     put("Give the degree of the series : "); get(deg);
-    QuadDobl_Run(lp,ls.v,deg);
+    QuadDobl_Run_Loop(lp,ls.v,deg);
   end QuadDobl_Test;
 
   procedure Main is

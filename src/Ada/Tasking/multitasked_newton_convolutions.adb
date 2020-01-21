@@ -16,11 +16,12 @@ package body Multitasked_Newton_Convolutions is
                 x : in Standard_Complex_VecVecs.VecVec;
                 absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     Standard_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
     Newton_Convolutions.Minus(s.vy);
-    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,output);
+    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,wrk,output);
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Newton_Convolutions.Max(s.yv);
     Newton_Convolutions.Update(x,s.yv);
@@ -32,11 +33,12 @@ package body Multitasked_Newton_Convolutions is
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     DoblDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
     Newton_Convolutions.Minus(s.vy);
-    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,output);
+    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,wrk,output);
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Newton_Convolutions.Max(s.yv);
     Newton_Convolutions.Update(x,s.yv);
@@ -48,11 +50,12 @@ package body Multitasked_Newton_Convolutions is
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     QuadDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
     Newton_Convolutions.Minus(s.vy);
-    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,output);
+    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,wrk,output);
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Newton_Convolutions.Max(s.yv);
     Newton_Convolutions.Update(x,s.yv);
@@ -68,11 +71,12 @@ package body Multitasked_Newton_Convolutions is
 		tol : in double_float; absdx : out double_float; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit loop
-      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,output);
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -87,12 +91,13 @@ package body Multitasked_Newton_Convolutions is
 		tol : in double_float; absdx : out double_float; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,output);
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
       put(file,"  info : "); put(file,info,1);
       put(file,"  absdx :"); put(file,absdx,3); new_line(file);
       if absdx <= tol
@@ -109,11 +114,12 @@ package body Multitasked_Newton_Convolutions is
 		tol : in double_double; absdx : out double_double; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit loop
-      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,output);
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -128,12 +134,13 @@ package body Multitasked_Newton_Convolutions is
 		tol : in double_double; absdx : out double_double; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,output);
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
       put(file,"  info : "); put(file,info,1);
       put(file,"  absdx : "); put(file,absdx,3); new_line(file);
       if absdx <= tol
@@ -150,11 +157,12 @@ package body Multitasked_Newton_Convolutions is
 		tol : in quad_double; absdx : out quad_double; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit loop
-      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,output);
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
       if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
@@ -169,12 +177,13 @@ package body Multitasked_Newton_Convolutions is
 		tol : in quad_double; absdx : out quad_double; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,output);
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
       put(file,"  info : "); put(file,info,1);
       put(file,"  absdx : "); put(file,absdx,3); new_line(file);
       if absdx <= tol

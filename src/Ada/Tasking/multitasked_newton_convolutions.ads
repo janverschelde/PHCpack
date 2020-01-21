@@ -28,6 +28,7 @@ package Multitasked_Newton_Convolutions is
                 x : in Standard_Complex_VecVecs.VecVec;
                 absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Step
               ( nbt : in integer32;
@@ -35,6 +36,7 @@ package Multitasked_Newton_Convolutions is
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Step
               ( nbt : in integer32;
@@ -42,6 +44,7 @@ package Multitasked_Newton_Convolutions is
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false );
 
   -- DESCRIPTION :
@@ -52,6 +55,8 @@ package Multitasked_Newton_Convolutions is
   --   nbt      the number of tasks;
   --   s        a system of convolution circuits with a parameter;
   --   x        vector of coefficients of power series;
+  --   wrk      work space as a vector of vectors of range 1..nbt,
+  --            with every vector of range 1..dim, dim = A(0)'last(1);
   --   output   if true, then the multitasked procedures write to screen,
   --            otherwise, the computations remain silent.
 
@@ -71,6 +76,7 @@ package Multitasked_Newton_Convolutions is
 		tol : in double_float; absdx : out double_float; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Steps
               ( file : in file_type; nbt : in integer32;
@@ -80,6 +86,7 @@ package Multitasked_Newton_Convolutions is
 		tol : in double_float; absdx : out double_float; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Steps
               ( nbt : in integer32;
@@ -89,6 +96,7 @@ package Multitasked_Newton_Convolutions is
 		tol : in double_double; absdx : out double_double; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Steps
               ( file : in file_type; nbt : in integer32;
@@ -98,6 +106,7 @@ package Multitasked_Newton_Convolutions is
 		tol : in double_double; absdx : out double_double; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Steps
               ( nbt : in integer32;
@@ -107,6 +116,7 @@ package Multitasked_Newton_Convolutions is
 		tol : in quad_double; absdx : out quad_double; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false );
   procedure Multitasked_LU_Newton_Steps
               ( file : in file_type; nbt : in integer32;
@@ -116,6 +126,7 @@ package Multitasked_Newton_Convolutions is
 		tol : in quad_double; absdx : out quad_double; 
 		fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false );
 
   -- DESCRIPTION :
@@ -129,6 +140,8 @@ package Multitasked_Newton_Convolutions is
   --   x        vector of coefficients of power series;
   --   maxit    maximum number of iterations;
   --   tol      tolerance on absdx, using as stop criterium;
+  --   wrk      work space as a vector of vectors of range 1..nbt,
+  --            with every vector of range 1..dim, dim = A(0)'last(1);
   --   output   if true, then the multitasked procedures write to screen,
   --            otherwise, the computations remain silent.
 
