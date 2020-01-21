@@ -1,3 +1,5 @@
+Mon 20 Jan 2020 : added wall clock timer to ts_mtnewton.adb.
+
 Sun 19 Jan 2020 : to multitasked_series_linearization, added procedures
   that return an estimate for the inverse condition number.
 
