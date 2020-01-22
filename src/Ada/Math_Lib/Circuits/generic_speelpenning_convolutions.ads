@@ -204,6 +204,18 @@ package Generic_Speelpenning_Convolutions is
 
   -- REQUIRED : first'last = second'last = product'last.
 
+-- PLAIN EVALUATION AT A NUMBER :
+
+  function Eval ( c : Convolution_Circuit;
+                  x : Vectors.Vector ) return Ring.number;
+  function Eval ( c : Convolution_Circuits;
+                  x : Vectors.Vector ) return Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the evaluation of c at the number x,
+  --   via a straighforward sum of evaluated terms, at t = 0,
+  --   only considering the leading coefficients of power series.
+
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
   procedure Speel ( x : in VecVecs.VecVec;

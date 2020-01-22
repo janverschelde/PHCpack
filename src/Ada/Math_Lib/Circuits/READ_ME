@@ -70,4 +70,5 @@ ts_speelcnv                        : convolutions for series polynomials
 newton_convolutions                : Newton with convolution circuits
 convergence_radius_estimates       : applies ratio theorem of Fabry
 ts_fabry                           : test on the Fabry ratio theorem
+ts_evalcnv                         : test on plain evaluation
 -------------------------------------------------------------------------------
