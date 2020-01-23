@@ -322,12 +322,58 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Eval;
 
+  function Eval ( c : Convolution_Circuit; x : Vectors.Vector;
+                  t : Ring.number ) return Ring.number is
+
+    use Ring,Vectors;
+
+    res,val : number;
+    pwr : Standard_Integer_Vectors.Link_to_Vector;
+    pcf : Vectors.Link_to_Vector;
+
+  begin
+    if c.cst = null then
+      Copy(zero,res);
+    else
+      Copy(c.cst(c.cst'last),res);
+      for k in reverse 0..c.cst'last-1 loop
+        Mul(res,t);
+        Add(res,c.cst(k));
+      end loop;
+    end if;
+    for k in 1..c.nbr loop
+      pcf := c.cff(k);
+      Copy(pcf(pcf'last),val);
+      for k in reverse 0..pcf'last-1 loop
+        Mul(val,t);
+        Add(val,pcf(k));
+      end loop;
+      pwr := c.xps(k);
+      for i in pwr'range loop
+        for j in 1..pwr(i) loop
+          Mul(val,x(i));
+        end loop;
+      end loop;
+      Add(res,val);
+    end loop;
+    return res;
+  end Eval;
+
   function Eval ( c : Link_to_Convolution_Circuit;
                   x : Vectors.Vector ) return Ring.number is
   begin
     if c = null
      then return Ring.zero;
      else return Eval(c.all,x);
+    end if;
+  end Eval;
+
+  function Eval ( c : Link_to_Convolution_Circuit; x : Vectors.Vector;
+                  t : Ring.number ) return Ring.number is
+  begin
+    if c = null
+     then return Ring.zero;
+     else return Eval(c.all,x,t);
     end if;
   end Eval;
 
@@ -339,6 +385,18 @@ package body Generic_Speelpenning_Convolutions is
   begin
     for i in c'range loop
       res(i) := Eval(c(i),x);
+    end loop;
+    return res;
+  end Eval;
+
+  function Eval ( c : Convolution_Circuits; x : Vectors.Vector;
+                  t : Ring.number ) return Vectors.Vector is
+
+    res : Vectors.Vector(c'range);
+
+  begin
+    for i in c'range loop
+      res(i) := Eval(c(i),x,t);
     end loop;
     return res;
   end Eval;

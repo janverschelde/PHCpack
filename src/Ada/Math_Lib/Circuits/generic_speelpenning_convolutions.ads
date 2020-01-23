@@ -218,6 +218,17 @@ package Generic_Speelpenning_Convolutions is
   --   via a straighforward sum of evaluated terms, at t = 0,
   --   only considering the leading coefficients of power series.
 
+  function Eval ( c : Convolution_Circuit; x : Vectors.Vector;
+                  t : Ring.number ) return Ring.number;
+  function Eval ( c : Link_to_Convolution_Circuit; x : Vectors.Vector;
+                  t : Ring.number ) return Ring.number;
+  function Eval ( c : Convolution_Circuits; x : Vectors.Vector;
+                  t : Ring.number ) return Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the evaluation of c at the number x and t for the series
+  --   parameter via a straighforward sum of evaluated terms.
+
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
   procedure Speel ( x : in VecVecs.VecVec;

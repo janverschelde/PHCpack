@@ -270,4 +270,123 @@ package body Homotopy_Convolution_Circuits is
     end loop;
   end Set_Solution_Constant;
 
+  procedure Newton_Homotopy
+              ( c : in Standard_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in Standard_Complex_Vectors.Vector ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Speelpenning_Convolutions;
+
+    y : Complex_Number;
+    deg : integer32;
+
+  begin
+    if c /= null then
+      y := Eval(c,z);
+      if c.cst /= null then
+        c.cst(0) := c.cst(0) - y;
+        c.cst(1) := y;
+        for k in 2..c.cst'last loop
+          c.cst(k) := Create(0.0);
+        end loop;
+      else
+        deg := c.cff(1)'last;
+        c.cst := new Standard_Complex_Vectors.Vector'(0..deg => Create(0.0));
+        c.cst(0) := -y;
+        c.cst(1) := y;   -- c turned into c - y + t*y
+      end if;
+    end if;
+  end Newton_Homotopy;
+
+  procedure Newton_Homotopy
+              ( c : in DoblDobl_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Speelpenning_Convolutions;
+
+    y : Complex_Number;
+    deg : integer32;
+    zero : constant double_double := create(0.0);
+
+  begin
+    if c /= null then
+      y := Eval(c,z);
+      if c.cst /= null then
+        c.cst(0) := c.cst(0) - y;
+        c.cst(1) := y;
+        for k in 2..c.cst'last loop
+          c.cst(k) := Create(zero);
+        end loop;
+      else
+        deg := c.cff(1)'last;
+        c.cst := new DoblDobl_Complex_Vectors.Vector'(0..deg => Create(zero));
+        c.cst(0) := -y;
+        c.cst(1) := y;   -- c turned into c - y + t*y
+      end if;
+    end if;
+  end Newton_Homotopy;
+
+  procedure Newton_Homotopy 
+              ( c : in QuadDobl_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Speelpenning_Convolutions;
+
+    y : Complex_Number;
+    deg : integer32;
+    zero : constant quad_double := create(0.0);
+
+  begin
+    if c /= null then
+      y := Eval(c,z);
+      if c.cst /= null then
+        c.cst(0) := c.cst(0) - y;
+        c.cst(1) := y;
+        for k in 2..c.cst'last loop
+          c.cst(k) := Create(zero);
+        end loop;
+      else
+        deg := c.cff(1)'last;
+        c.cst := new QuadDobl_Complex_Vectors.Vector'(0..deg => Create(zero));
+        c.cst(0) := -y;
+        c.cst(1) := y;   -- c turned into c - y + t*y
+      end if;
+    end if;
+  end Newton_Homotopy;
+
+  procedure Newton_Homotopy
+              ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in Standard_Complex_Vectors.Vector ) is
+  begin
+    for k in c'range loop
+      Newton_Homotopy(c(k),z);
+    end loop;
+  end Newton_Homotopy;
+
+  procedure Newton_Homotopy
+              ( c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in DoblDobl_Complex_Vectors.Vector ) is
+  begin
+    for k in c'range loop
+      Newton_Homotopy(c(k),z);
+    end loop;
+  end Newton_Homotopy;
+
+  procedure Newton_Homotopy
+              ( c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in QuadDobl_Complex_Vectors.Vector ) is
+  begin
+    for k in c'range loop
+      Newton_Homotopy(c(k),z);
+    end loop;
+  end Newton_Homotopy;
+
 end Homotopy_Convolution_Circuits;

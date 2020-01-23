@@ -1,3 +1,7 @@
+Thu 23 Jan 2020 : added another eval to generic_speelpenning_convolutions
+  to test the Newton homotopy of homotopy_convolution_circuits,
+  tested by ts_evalcnv.
+
 Wed 22 Jan 2020 : new Eval function in generic_speelpenning_convolutions,
   tested by the procedure ts_evalcnv.  Added to homotopy_convolution_circuits
   procedures to modify the constant coefficients so a given vector is

@@ -102,4 +102,38 @@ package Homotopy_Convolution_Circuits is
   -- DESCRIPTION :
   --   Sets the constant of each circuit in c so that z becomes a solution.
 
+  procedure Newton_Homotopy
+              ( c : in Standard_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in Standard_Complex_Vectors.Vector );
+  procedure Newton_Homotopy
+              ( c : in DoblDobl_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in DoblDobl_Complex_Vectors.Vector );
+  procedure Newton_Homotopy
+              ( c : in QuadDobl_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Let y = Eval(c,z), then the constant of c becomes -y + t*y, so
+  --   at t = 0, z is a solution of c, and at t = 1, z is the original c.
+
+  -- REQUIRED : the degree of the power series in c is at least one.
+
+  procedure Newton_Homotopy
+              ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in Standard_Complex_Vectors.Vector );
+  procedure Newton_Homotopy
+              ( c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in DoblDobl_Complex_Vectors.Vector );
+  procedure Newton_Homotopy
+              ( c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Constructs a Newton homotopy for all circuits in c.
+
+  -- REQUIRED : the degree of all power series in c is at least one.
+
 end Homotopy_Convolution_Circuits;

@@ -62,11 +62,14 @@ procedure ts_evalcnv is
       := Standard_Random_Vectors.Random_Vector(1,integer32(dim));
     y : constant Standard_Complex_Vectors.Vector(p'range)
       := Standard_Complex_Poly_SysFun.Eval(p,x);
-    c : constant Convolution_Circuits(p'range)
-      := Make_Convolution_Circuits(p,0);
-    z : Standard_Complex_Vectors.Vector(p'range) := Eval(c,x);
+    c0 : constant Convolution_Circuits(p'range)
+       := Make_Convolution_Circuits(p,0);
+    c1 : constant Convolution_Circuits(p'range)
+       := Make_Convolution_Circuits(p,1);
+    z : Standard_Complex_Vectors.Vector(p'range) := Eval(c0,x);
     val : Complex_Number;
     err : double_float := 0.0;
+    t_one : constant Complex_Number := Create(1.0);
 
   begin
     put("Evaluation at "); put(dim,1); put_line(" random numbers ...");
@@ -80,10 +83,16 @@ procedure ts_evalcnv is
       err := err + Standard_Complex_Numbers.AbsVal(val);
     end loop;
     put("The sum of errors :"); put(err,2); new_line;
-    Set_Solution_Constant(c,x);
-    z := Eval(c,x);
+    Set_Solution_Constant(c0,x);
+    z := Eval(c0,x);
     put_line("Evaluation after setting the solution constant :");
     put_line(z);
+    put_line("Constructing a Newton homotopy ...");
+    Newton_Homotopy(c1,x);
+    z := Eval(c1,x);
+    put_line("Evaluation at t = 0 : "); put_line(z);
+    z := Eval(c1,x,t_one);
+    put_line("Evaluation at t = 1 : "); put_line(z);
   end Standard_Test;
 
   procedure DoblDobl_Test ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
@@ -103,11 +112,14 @@ procedure ts_evalcnv is
       := DoblDobl_Random_Vectors.Random_Vector(1,integer32(dim));
     y : constant DoblDobl_Complex_Vectors.Vector(p'range)
       := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
-    c : constant Convolution_Circuits(p'range)
-      := Make_Convolution_Circuits(p,0);
-    z : DoblDobl_Complex_Vectors.Vector(p'range) := Eval(c,x);
+    c0 : constant Convolution_Circuits(p'range)
+       := Make_Convolution_Circuits(p,0);
+    c1 : constant Convolution_Circuits(p'range)
+       := Make_Convolution_Circuits(p,1);
+    z : DoblDobl_Complex_Vectors.Vector(p'range) := Eval(c0,x);
     val : Complex_Number;
     err : double_double := create(0.0);
+    t_one : constant Complex_Number := Create(integer32(1));
 
   begin
     put("Evaluation at "); put(dim,1); put_line(" random numbers ...");
@@ -121,10 +133,16 @@ procedure ts_evalcnv is
       err := err + DoblDobl_Complex_Numbers.AbsVal(val);
     end loop;
     put("The sum of errors : "); put(err,2); new_line;
-    Set_Solution_Constant(c,x);
-    z := Eval(c,x);
+    Set_Solution_Constant(c0,x);
+    z := Eval(c0,x);
     put_line("Evaluation after setting the solution constant :");
     put_line(z);
+    put_line("Constructing a Newton homotopy ...");
+    Newton_Homotopy(c1,x);
+    z := Eval(c1,x);
+    put_line("Evaluation at t = 0 : "); put_line(z);
+    z := Eval(c1,x,t_one);
+    put_line("Evaluation at t = 1 : "); put_line(z);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
@@ -144,11 +162,14 @@ procedure ts_evalcnv is
       := QuadDobl_Random_Vectors.Random_Vector(1,integer32(dim));
     y : constant QuadDobl_Complex_Vectors.Vector(p'range)
       := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
-    c : constant Convolution_Circuits(p'range)
-      := Make_Convolution_Circuits(p,0);
-    z : QuadDobl_Complex_Vectors.Vector(p'range) := Eval(c,x);
+    c0 : constant Convolution_Circuits(p'range)
+       := Make_Convolution_Circuits(p,0);
+    c1 : constant Convolution_Circuits(p'range)
+       := Make_Convolution_Circuits(p,1);
+    z : QuadDobl_Complex_Vectors.Vector(p'range) := Eval(c0,x);
     val : Complex_Number;
     err : quad_double := create(0.0);
+    t_one : constant Complex_Number := Create(integer32(1));
 
   begin
     put("Evaluation at "); put(dim,1); put_line(" random numbers ...");
@@ -162,10 +183,16 @@ procedure ts_evalcnv is
       err := err + QuadDobl_Complex_Numbers.AbsVal(val);
     end loop;
     put("The sum of errors : "); put(err,2); new_line;
-    Set_Solution_Constant(c,x);
-    z := Eval(c,x);
+    Set_Solution_Constant(c0,x);
+    z := Eval(c0,x);
     put_line("Evaluation after setting the solution constant :");
     put_line(z);
+    put_line("Constructing a Newton homotopy ...");
+    Newton_Homotopy(c1,x);
+    z := Eval(c1,x);
+    put_line("Evaluation at t = 0 : "); put_line(z);
+    z := Eval(c1,x,t_one);
+    put_line("Evaluation at t = 1 : "); put_line(z);
   end QuadDobl_Test;
 
   procedure Main is
