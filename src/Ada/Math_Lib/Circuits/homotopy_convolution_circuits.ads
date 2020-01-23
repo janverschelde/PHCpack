@@ -1,4 +1,7 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -69,5 +72,34 @@ package Homotopy_Convolution_Circuits is
   --   Adds the continuation parameter to every circuit in s.
 
   -- REQUIRED : s /= null.
+
+  procedure Set_Solution_Constant
+              ( c : in Standard_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in Standard_Complex_Vectors.Vector );
+  procedure Set_Solution_Constant
+              ( c : in DoblDobl_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in DoblDobl_Complex_Vectors.Vector );
+  procedure Set_Solution_Constant
+              ( c : in QuadDobl_Speelpenning_Convolutions.
+                       Link_to_Convolution_Circuit;
+                z : in QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Sets the constant of c so that z becomes a solution.
+
+  procedure Set_Solution_Constant
+              ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in Standard_Complex_Vectors.Vector );
+  procedure Set_Solution_Constant
+              ( c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in DoblDobl_Complex_Vectors.Vector );
+  procedure Set_Solution_Constant
+              ( c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+                z : in QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Sets the constant of each circuit in c so that z becomes a solution.
 
 end Homotopy_Convolution_Circuits;

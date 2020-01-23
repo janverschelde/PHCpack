@@ -208,6 +208,8 @@ package Generic_Speelpenning_Convolutions is
 
   function Eval ( c : Convolution_Circuit;
                   x : Vectors.Vector ) return Ring.number;
+  function Eval ( c : Link_to_Convolution_Circuit;
+                  x : Vectors.Vector ) return Ring.number;
   function Eval ( c : Convolution_Circuits;
                   x : Vectors.Vector ) return Vectors.Vector;
 

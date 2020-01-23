@@ -1,5 +1,7 @@
 Wed 22 Jan 2020 : new Eval function in generic_speelpenning_convolutions,
-  tested by the procedure ts_evalcnv.
+  tested by the procedure ts_evalcnv.  Added to homotopy_convolution_circuits
+  procedures to modify the constant coefficients so a given vector is
+  a solution, tested by ts_evalcnv.
 
 Mon 20 Jan 2020 : to newton_convolutions, added input parameter to flag
   the scaling of the coefficient vectors, adjusted ts_fabry.
