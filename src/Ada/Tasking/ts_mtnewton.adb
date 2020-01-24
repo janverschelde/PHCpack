@@ -34,6 +34,7 @@ with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
+with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Newton_Convolutions;
 with Multitasked_Series_Linearization;
 with Multitasked_Newton_Convolutions;    use Multitasked_Newton_Convolutions;
@@ -48,9 +49,9 @@ procedure ts_mtnewton is
 --   with multitasking for shared memory parallel computers.
 
   procedure Standard_Run
-              ( nbt,dim,deg,maxit : in integer32;
+              ( nbt,dim,maxit : in integer32;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
-                sol : in Standard_Complex_Vectors.Vector;
+                scf : in Standard_Complex_VecVecs.VecVec;
                 serelp,mltelp : in out Duration;
                 output : in boolean ) is
 
@@ -60,10 +61,9 @@ procedure ts_mtnewton is
   -- ON ENTRY :
   --   nbt      the number of tasks;
   --   dim      number of equations and variables;
-  --   deg      degree of the truncated series;
   --   maxit    maximum number of iterations;
   --   s        system of convolution circuits;
-  --   sol      leading coefficients of the solution vector;
+  --   scf      its leading coefficients are solution vector;
   --   serelp   the previous elapsed wall clock time of a serial run;
   --   mltelp   the previous elapsed wall clock time of a multitasked run;
   --   output   if true, then the run is verbose, else silent;
@@ -74,7 +74,6 @@ procedure ts_mtnewton is
   --   mltelp   updated elapsed wall clock time of a multitasked run,
   --            if nbt > 1.
 
-    scf : Standard_Complex_VecVecs.VecVec(1..dim);
     wks : Standard_Complex_VecVecs.VecVec(1..nbt)
         := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
@@ -90,7 +89,6 @@ procedure ts_mtnewton is
   begin
     new_line;
     put("Running with "); put(nbt,1); put_line(" tasks ...");
-    scf := Newton_Convolutions.Series_Coefficients(sol,deg);
     if nbt = 1
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
@@ -121,14 +119,13 @@ procedure ts_mtnewton is
         duration_io.put(speedup,1,3); new_line;
       end if;
     end if;
-    Standard_Complex_VecVecs.Clear(scf);
     Standard_Complex_VecVecs.Clear(wks);
   end Standard_Run;
 
   procedure DoblDobl_Run
-              ( nbt,dim,deg,maxit : in integer32;
+              ( nbt,dim,maxit : in integer32;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                sol : in DoblDobl_Complex_Vectors.Vector;
+                scf : in DoblDobl_Complex_VecVecs.VecVec;
                 serelp,mltelp : in out Duration;
                 output : in boolean ) is
 
@@ -138,10 +135,9 @@ procedure ts_mtnewton is
   -- ON ENTRY :
   --   nbt      the number of tasks;
   --   dim      number of equations and variables;
-  --   deg      degree of the truncated series;
   --   maxit    maximum number of iterations;
   --   s        system of convolution circuits;
-  --   sol      leading coefficients of the solution vector;
+  --   scf      its leading coefficients are the solution vector;
   --   serelp   the previous elapsed wall clock time of a serial run;
   --   mltelp   the previous elapsed wall clock time of a multitasked run;
   --   output   if true, then the run is verbose, else silent;
@@ -152,7 +148,6 @@ procedure ts_mtnewton is
   --   mltelp   updated elapsed wall clock time of a multitasked run,
   --            if nbt > 1.
 
-    scf : DoblDobl_Complex_VecVecs.VecVec(1..dim);
     wks : DoblDobl_Complex_VecVecs.VecVec(1..nbt)
         := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
@@ -168,7 +163,6 @@ procedure ts_mtnewton is
   begin
     new_line;
     put("Running with "); put(nbt,1); put_line(" tasks ...");
-    scf := Newton_Convolutions.Series_Coefficients(sol,deg);
     if nbt = 1
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
@@ -199,14 +193,13 @@ procedure ts_mtnewton is
         duration_io.put(speedup,1,3); new_line;
       end if;
     end if;
-    DoblDobl_Complex_VecVecs.Clear(scf);
     DoblDobl_Complex_VecVecs.Clear(wks);
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
-              ( nbt,dim,deg,maxit : in integer32;
+              ( nbt,dim,maxit : in integer32;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                sol : in QuadDobl_Complex_Vectors.Vector;
+                scf : in QuadDobl_Complex_VecVecs.VecVec;
                 serelp,mltelp : in out Duration;
                 output : in boolean ) is
 
@@ -219,7 +212,7 @@ procedure ts_mtnewton is
   --   deg      degree of the truncated series;
   --   maxit    maximum number of iterations;
   --   s        system of convolution circuits;
-  --   sol      leading coefficients of the solution vector;
+  --   scf      its leading coefficients are the solution vector;
   --   serelp   the previous elapsed wall clock time of a serial run;
   --   mltelp   the previous elapsed wall clock time of a multitasked run;
   --   output   if true, then the run is verbose, else silent;
@@ -230,7 +223,6 @@ procedure ts_mtnewton is
   --   mltelp   updated elapsed wall clock time of a multitasked run,
   --            if nbt > 1.
 
-    scf : QuadDobl_Complex_VecVecs.VecVec(1..dim);
     wks : QuadDobl_Complex_VecVecs.VecVec(1..nbt)
         := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
@@ -246,7 +238,6 @@ procedure ts_mtnewton is
   begin
     new_line;
     put("Running with "); put(nbt,1); put_line(" tasks ...");
-    scf := Newton_Convolutions.Series_Coefficients(sol,deg);
     if nbt = 1
      then seristart := Ada.Calendar.Clock;
      else multstart := Ada.Calendar.Clock;
@@ -277,7 +268,6 @@ procedure ts_mtnewton is
         duration_io.put(speedup,1,3); new_line;
       end if;
     end if;
-    QuadDobl_Complex_VecVecs.Clear(scf);
     QuadDobl_Complex_VecVecs.Clear(wks);
   end QuadDobl_Run;
 
@@ -296,6 +286,7 @@ procedure ts_mtnewton is
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
+    scf : Standard_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
     otp : boolean;
@@ -310,7 +301,9 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
-      Standard_Run(nbt,dim,deg,maxit,s,sol,seri_elapsed,mult_elapsed,otp);
+      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+      Standard_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,otp);
+      Standard_Complex_VecVecs.Clear(scf);
     end loop;
   end Standard_Run_Loop;
 
@@ -326,9 +319,10 @@ procedure ts_mtnewton is
     use DoblDobl_Speelpenning_Convolutions;
 
     c : constant Convolution_Circuits(p'range)
-     := Make_Convolution_Circuits(p.all,natural32(deg));
+      := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
+    scf : DoblDobl_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
     otp : boolean;
@@ -343,7 +337,9 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
-      DoblDobl_Run(nbt,dim,deg,maxit,s,sol,seri_elapsed,mult_elapsed,otp);
+      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+      DoblDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,otp);
+      DoblDobl_Complex_VecVecs.Clear(scf);
     end loop;
   end DoblDobl_Run_Loop;
 
@@ -362,6 +358,7 @@ procedure ts_mtnewton is
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
+    scf : QuadDobl_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
     otp : boolean;
@@ -376,7 +373,9 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
-      QuadDobl_Run(nbt,dim,deg,maxit,s,sol,seri_elapsed,mult_elapsed,otp);
+      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+      QuadDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,otp);
+      QuadDobl_Complex_VecVecs.Clear(scf);
     end loop;
   end QuadDobl_Run_Loop;
 
@@ -461,12 +460,127 @@ procedure ts_mtnewton is
     QuadDobl_Run_Loop(lp,ls.v,deg);
   end QuadDobl_Test;
 
+  procedure Standard_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Newton homotopy in double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use Standard_Complex_VecVecs;
+    use Standard_Speelpenning_Convolutions;
+
+    s : Link_to_System;
+    x : Link_to_VecVec;
+    scf : VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp : boolean;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
+
+  begin
+    Standard_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      Standard_Complex_VecVecs.Copy(x.all,scf);
+      Standard_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,otp);
+      Standard_Complex_VecVecs.Clear(scf);
+    end loop;
+  end Standard_Random_Test;
+
+  procedure DoblDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Newton homotopy in double double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use DoblDobl_Complex_VecVecs;
+    use DoblDobl_Speelpenning_Convolutions;
+
+    s : Link_to_System;
+    x : Link_to_VecVec;
+    scf : VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp : boolean;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
+
+  begin
+    DoblDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      DoblDobl_Complex_VecVecs.Copy(x.all,scf);
+      DoblDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,otp);
+      DoblDobl_Complex_VecVecs.Clear(scf);
+    end loop;
+  end DoblDobl_Random_Test;
+
+  procedure QuadDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Newton homotopy in quad double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    use QuadDobl_Complex_VecVecs;
+    use QuadDobl_Speelpenning_Convolutions;
+
+    s : Link_to_System;
+    x : Link_to_VecVec;
+    scf : VecVec(1..dim);
+    maxit,nbt : integer32 := 0;
+    ans : character;
+    otp : boolean;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
+
+  begin
+    QuadDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    new_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    loop
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt = 0);
+      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      QuadDobl_Complex_VecVecs.Copy(x.all,scf);
+      QuadDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,otp);
+      QuadDobl_Complex_VecVecs.Clear(scf);
+    end loop;
+  end QuadDobl_Random_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
   --   Launches the test after prompting for the precision.
 
-    ans : character;
+    prc,ans : character;
+    dim,deg,nbr,pwr : integer32 := 0;
 
   begin
     new_line;
@@ -477,13 +591,29 @@ procedure ts_mtnewton is
     put_line("  1. double double precision");
     put_line("  2. quad double precision");
     put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(ans,"012");
-    case ans is
-      when '0' => Standard_Test;
-      when '1' => DoblDobl_Test;
-      when '2' => QuadDobl_Test;
-      when others => null;
-    end case;
+    Ask_Alternative(prc,"012");
+    new_line;
+    put("Generate a random problem ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans ='y' then
+      new_line;
+      put("Give the dimension : "); get(dim);
+      put("Give the degree of the power series : "); get(deg);
+      put("Give the number of terms in each circuit : "); get(nbr);
+      put("Give the largest power of the variables : "); get(pwr);
+      case prc is
+        when '0' => Standard_Random_Test(dim,deg,nbr,pwr);
+        when '1' => DoblDobl_Random_Test(dim,deg,nbr,pwr);
+        when '2' => QuadDobl_Random_Test(dim,deg,nbr,pwr);
+        when others => null;
+      end case;
+    else
+      case prc is
+        when '0' => Standard_Test;
+        when '1' => DoblDobl_Test;
+        when '2' => QuadDobl_Test;
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin
