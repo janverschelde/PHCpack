@@ -101,7 +101,7 @@ procedure ts_mtnewton is
       serelp := seristop - seristart;
     else
       multstop := Ada.Calendar.Clock;
-      mltelp := multstop - multstop;
+      mltelp := multstop - multstart;
     end if;
     put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
     if fail
@@ -175,7 +175,7 @@ procedure ts_mtnewton is
       serelp := seristop - seristart;
     else
       multstop := Ada.Calendar.Clock;
-      mltelp := multstop - multstop;
+      mltelp := multstop - multstart;
     end if;
     put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
     if fail
@@ -250,7 +250,7 @@ procedure ts_mtnewton is
       serelp := seristop - seristart;
     else
       multstop := Ada.Calendar.Clock;
-      mltelp := multstop - multstop;
+      mltelp := multstop - multstart;
     end if;
     put("#steps : "); put(nbrit,1); put("  absdx :"); put(absdx,3);
     if fail

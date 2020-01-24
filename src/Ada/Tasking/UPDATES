@@ -1,3 +1,5 @@
+Fri 24 Jan 2020 : fixed bug in timer in ts_mtnewton.
+
 Thu 23 Jan 2020 : updated ts_mtnewton with a random Newton homotopy.
 
 Tue 21 Jan 2020 : improved multitasked_series_linearization with better
