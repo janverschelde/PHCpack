@@ -1,3 +1,6 @@
+Sat 25 Jan 2020 : added function to quaddobl_complex_numbers_cv to convert
+  a quad double complex number into a double double complex number.
+
 Thu 26 Dec 2019 : modified {dobldobl,quaddobl}_random_numbers.adb 
   and {dobldobl,quaddobl}_complex_numbers_io.adb for compiler warnings.
 

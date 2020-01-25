@@ -1,4 +1,5 @@
 with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Multprec_Complex_Numbers;
 
@@ -22,12 +23,15 @@ package QuadDobl_Complex_Numbers_cv is
   function QuadDobl_Complex_to_Standard
              ( c : QuadDobl_Complex_Numbers.Complex_Number )
              return Standard_Complex_Numbers.Complex_Number;
+  function QuadDobl_Complex_to_DoblDobl
+             ( c : QuadDobl_Complex_Numbers.Complex_Number )
+             return DoblDobl_Complex_Numbers.Complex_Number;
   function QuadDobl_Complex_to_Multprec
              ( c : QuadDobl_Complex_Numbers.Complex_Number )
              return Multprec_Complex_Numbers.Complex_Number;
 
   -- DESCRIPTION :
-  --   Converts a quad double complex number
-  --   into a standard or multiprecision complex number.
+  --   Converts a quad double complex number into
+  --   a double, double double, or multiprecision complex number.
 
 end QuadDobl_Complex_Numbers_cv;

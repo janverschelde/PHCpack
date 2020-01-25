@@ -1,5 +1,6 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Multprec_QuadDobl_Convertors;       use Multprec_QuadDobl_Convertors;
 
@@ -51,6 +52,21 @@ package body QuadDobl_Complex_Numbers_cv is
     res := Standard_Complex_Numbers.Create(rre,rim);
     return res;
   end QuadDobl_Complex_to_Standard;
+
+  function QuadDobl_Complex_to_DoblDobl
+             ( c : QuadDobl_Complex_Numbers.Complex_Number )
+             return DoblDobl_Complex_Numbers.Complex_Number is
+
+    res : DoblDobl_Complex_Numbers.Complex_Number;
+    cre : constant quad_double := QuadDobl_Complex_Numbers.REAL_PART(c);
+    cim : constant quad_double := QuadDobl_Complex_Numbers.IMAG_PART(c);
+    rre : constant double_double := to_double_double(cre);
+    rim : constant double_double := to_double_double(cim);
+
+  begin
+    res := DoblDobl_Complex_Numbers.Create(rre,rim);
+    return res;
+  end QuadDobl_Complex_to_DoblDobl;
 
   function QuadDobl_Complex_to_Multprec
              ( c : QuadDobl_Complex_Numbers.Complex_Number )
