@@ -24,13 +24,13 @@ package Random_Convolution_Circuits is
 
   function Standard_Random_Convolution_Circuit
              ( dim,deg,nbr,pwr : integer32 )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuit;
+             return Standard_Speelpenning_Convolutions.Circuit;
   function DoblDobl_Random_Convolution_Circuit
              ( dim,deg,nbr,pwr : integer32 )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuit;
+             return DoblDobl_Speelpenning_Convolutions.Circuit;
   function QuadDobl_Random_Convolution_Circuit
              ( dim,deg,nbr,pwr : integer32 )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuit;
+             return QuadDobl_Speelpenning_Convolutions.Circuit;
 
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and coefficients
@@ -45,13 +45,13 @@ package Random_Convolution_Circuits is
 
   function Standard_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : integer32 )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuits;
+             return Standard_Speelpenning_Convolutions.Circuits;
   function DoblDobl_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : integer32 )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+             return DoblDobl_Speelpenning_Convolutions.Circuits;
   function QuadDobl_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : integer32 )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+             return QuadDobl_Speelpenning_Convolutions.Circuits;
 
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and coefficients

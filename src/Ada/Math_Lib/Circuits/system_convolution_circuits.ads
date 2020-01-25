@@ -24,15 +24,15 @@ package System_Convolution_Circuits is
   function Make_Convolution_Circuit
              ( p : Standard_Complex_Polynomials.Poly;
                d : natural32 )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuit;
+             return Standard_Speelpenning_Convolutions.Circuit;
   function Make_Convolution_Circuit
              ( p : DoblDobl_Complex_Polynomials.Poly;
                d : natural32 )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuit;
+             return DoblDobl_Speelpenning_Convolutions.Circuit;
   function Make_Convolution_Circuit
              ( p : QuadDobl_Complex_Polynomials.Poly;
                d : natural32 )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuit;
+             return QuadDobl_Speelpenning_Convolutions.Circuit;
 
   -- DESCRIPTION :
   --   Returns the convolution circuit representation of the polynomial p,
@@ -41,13 +41,13 @@ package System_Convolution_Circuits is
 
   function Make_Convolution_Circuit
              ( p : Standard_CSeries_Polynomials.Poly )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuit;
+             return Standard_Speelpenning_Convolutions.Circuit;
   function Make_Convolution_Circuit
              ( p : DoblDobl_CSeries_Polynomials.Poly )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuit;
+             return DoblDobl_Speelpenning_Convolutions.Circuit;
   function Make_Convolution_Circuit
              ( p : QuadDobl_CSeries_Polynomials.Poly )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuit;
+             return QuadDobl_Speelpenning_Convolutions.Circuit;
 
   -- DESCRIPTION :
   --   Returns the convolution circuit representation of the polynomial p,
@@ -56,15 +56,15 @@ package System_Convolution_Circuits is
   function Make_Convolution_Circuits
              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                d : natural32 )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuits;
+             return Standard_Speelpenning_Convolutions.Circuits;
   function Make_Convolution_Circuits
              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                d : natural32 )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+             return DoblDobl_Speelpenning_Convolutions.Circuits;
   function Make_Convolution_Circuits
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                d : natural32 )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+             return QuadDobl_Speelpenning_Convolutions.Circuits;
 
   -- DESCRIPTION :
   --   Returns the convolution circuits representation of the polynomials in p,
@@ -73,16 +73,53 @@ package System_Convolution_Circuits is
 
   function Make_Convolution_Circuits
              ( p : Standard_CSeries_Poly_Systems.Poly_Sys )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuits;
+             return Standard_Speelpenning_Convolutions.Circuits;
   function Make_Convolution_Circuits
              ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+             return DoblDobl_Speelpenning_Convolutions.Circuits;
   function Make_Convolution_Circuits
              ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+             return QuadDobl_Speelpenning_Convolutions.Circuits;
 
   -- DESCRIPTION :
   --   Returns the convolution circuits representation of the polynomials in p,
   --   in double, double double, or quad double precision.
+
+  function to_double
+	     ( c : DoblDobl_Speelpenning_Convolutions.Circuit )
+	     return Standard_Speelpenning_Convolutions.Circuit;
+  function to_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+	     return Standard_Speelpenning_Convolutions.Circuit;
+  function to_double
+	     ( c : DoblDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return Standard_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return Standard_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_double
+	     ( c : DoblDobl_Speelpenning_Convolutions.Circuits )
+	     return Standard_Speelpenning_Convolutions.Circuits;
+  function to_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuits )
+	     return Standard_Speelpenning_Convolutions.Circuits;
+
+  -- DESCRIPTION :
+  --   Turns the coefficients in c to double precision
+  --   and copies all data of c, and allocates the work space.
+
+  function to_double_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+	     return DoblDobl_Speelpenning_Convolutions.Circuit;
+  function to_double_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_double_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuits )
+	     return DoblDobl_Speelpenning_Convolutions.Circuits;
+
+  -- DESCRIPTION :
+  --   Turns the coefficients in c to double double precision
+  --   and copies all data of c, and allocates the work space.
 
 end System_Convolution_Circuits;

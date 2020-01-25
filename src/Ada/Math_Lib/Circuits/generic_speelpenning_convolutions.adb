@@ -4,7 +4,7 @@ with Exponent_Indices;
 package body Generic_Speelpenning_Convolutions is
 
   function Exponent_Maxima
-             ( c : Convolution_Circuits; dim : integer32 )
+             ( c : Circuits; dim : integer32 )
              return Standard_Integer_Vectors.Vector is
 
     res : Standard_Integer_Vectors.Vector(1..dim)
@@ -26,8 +26,7 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Exponent_Maxima;
 
-  function Create ( c : Convolution_Circuits;
-                    dim,deg : integer32 ) return System is
+  function Create ( c : Circuits; dim,deg : integer32 ) return System is
 
     neq : constant integer32 := c'last;
     res : System(neq,neq+1,dim,deg);
@@ -43,7 +42,7 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Create;
 
-  function Create ( c : Convolution_Circuits;
+  function Create ( c : Circuits;
                     dim,deg : integer32 ) return Link_to_System is
 
     res_rep : constant System(c'last,c'last+1,dim,deg) := Create(c,dim,deg);
@@ -134,7 +133,7 @@ package body Generic_Speelpenning_Convolutions is
     end if;
   end Clear;
 
-  procedure Clear ( c : in out Convolution_Circuit ) is
+  procedure Clear ( c : in out Circuit ) is
   begin
     Standard_Integer_VecVecs.Clear(c.xps);
     Standard_Integer_VecVecs.Clear(c.idx);
@@ -148,11 +147,10 @@ package body Generic_Speelpenning_Convolutions is
     Vectors.Clear(c.acc);
   end Clear;
 
-  procedure Clear ( c : in out Link_to_Convolution_Circuit ) is
+  procedure Clear ( c : in out Link_to_Circuit ) is
 
     procedure free is
-      new unchecked_deallocation(Convolution_Circuit,
-                                 Link_to_Convolution_Circuit);
+      new unchecked_deallocation(Circuit,Link_to_Circuit);
 
   begin
     if c /= null then
@@ -161,18 +159,17 @@ package body Generic_Speelpenning_Convolutions is
     end if;
   end Clear;
 
-  procedure Clear ( c : in out Convolution_Circuits ) is
+  procedure Clear ( c : in out Circuits ) is
   begin
     for k in c'range loop
       Clear(c(k));
     end loop;
   end Clear;
 
-  procedure Clear ( c : in out Link_to_Convolution_Circuits ) is
+  procedure Clear ( c : in out Link_to_Circuits ) is
 
     procedure free is
-      new unchecked_deallocation(Convolution_Circuits,
-                                 Link_to_Convolution_Circuits);
+      new unchecked_deallocation(Circuits,Link_to_Circuits);
 
   begin
     if c /= null then
@@ -294,8 +291,7 @@ package body Generic_Speelpenning_Convolutions is
 
 -- PLAIN EVALUATION AT A NUMBER :
 
-  function Eval ( c : Convolution_Circuit;
-                  x : Vectors.Vector ) return Ring.number is
+  function Eval ( c : Circuit; x : Vectors.Vector ) return Ring.number is
 
     use Ring,Vectors;
 
@@ -322,8 +318,8 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Eval;
 
-  function Eval ( c : Convolution_Circuit; x : Vectors.Vector;
-                  t : Ring.number ) return Ring.number is
+  function Eval ( c : Circuit; x : Vectors.Vector; t : Ring.number )
+                return Ring.number is
 
     use Ring,Vectors;
 
@@ -359,8 +355,8 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Eval;
 
-  function Eval ( c : Link_to_Convolution_Circuit;
-                  x : Vectors.Vector ) return Ring.number is
+  function Eval ( c : Link_to_Circuit; x : Vectors.Vector )
+                return Ring.number is
   begin
     if c = null
      then return Ring.zero;
@@ -368,8 +364,8 @@ package body Generic_Speelpenning_Convolutions is
     end if;
   end Eval;
 
-  function Eval ( c : Link_to_Convolution_Circuit; x : Vectors.Vector;
-                  t : Ring.number ) return Ring.number is
+  function Eval ( c : Link_to_Circuit; x : Vectors.Vector; t : Ring.number )
+	        return Ring.number is
   begin
     if c = null
      then return Ring.zero;
@@ -377,8 +373,7 @@ package body Generic_Speelpenning_Convolutions is
     end if;
   end Eval;
 
-  function Eval ( c : Convolution_Circuits;
-                  x : Vectors.Vector ) return Vectors.Vector is
+  function Eval ( c : Circuits; x : Vectors.Vector ) return Vectors.Vector is
 
     res : Vectors.Vector(c'range);
 
@@ -389,8 +384,8 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Eval;
 
-  function Eval ( c : Convolution_Circuits; x : Vectors.Vector;
-                  t : Ring.number ) return Vectors.Vector is
+  function Eval ( c : Circuits; x : Vectors.Vector; t : Ring.number )
+                return Vectors.Vector is
 
     res : Vectors.Vector(c'range);
 
@@ -664,22 +659,17 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
   end Speel;
 
-  procedure EvalDiff ( c : in Convolution_Circuit;
-                       x : in VecVecs.VecVec;
-                       pwt : in Link_to_VecVecVec;
-                       yd : in VecVecs.VecVec ) is
+  procedure EvalDiff ( c : in Circuit; x : in VecVecs.VecVec;
+                       pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec ) is
   begin
     Speel(c.xps,c.idx,c.fac,c.cff,x,c.forward,c.backward,c.cross,yd,
           c.wrk,c.acc,pwt);
     Update(yd(yd'last),c.cst);
   end EvalDiff;
 
-  procedure EvalDiff ( c : in Convolution_Circuits;
-                       x : in VecVecs.VecVec;
-                       pwt : in Link_to_VecVecVec;
-                       yd : in VecVecs.VecVec;
-                       vy : in VecVecs.VecVec;
-                       vm : in VecMats.VecMat ) is
+  procedure EvalDiff ( c : in Circuits; x : in VecVecs.VecVec;
+                       pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec;
+                       vy : in VecVecs.VecVec; vm : in VecMats.VecMat ) is
 
     vleft,vright : Vectors.Link_to_Vector;
     mleft : Matrices.Link_to_Matrix;

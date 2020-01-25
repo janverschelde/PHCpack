@@ -359,7 +359,7 @@ procedure ts_speelcnv is
 
     use Standard_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : constant Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     s : Link_to_System := Create(c,dim,deg);
     p : Standard_CSeries_Poly_Systems.Poly_Sys(1..dim) := Standard_System(c);
@@ -420,7 +420,7 @@ procedure ts_speelcnv is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : constant Circuits
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     s : Link_to_System := Create(c,dim,deg);
     p : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := DoblDobl_System(c);
@@ -481,7 +481,7 @@ procedure ts_speelcnv is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : constant Circuits
       := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     s : Link_to_System := Create(c,dim,deg);
     p : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := QuadDobl_System(c);
@@ -546,8 +546,7 @@ procedure ts_speelcnv is
       s : constant Standard_CSeries_Poly_Systems.Poly_Sys(p'range)
         := System_to_Series_System(p.all);
       dim : constant integer32 := p'last;
-      c : constant Convolution_Circuits(p'range)
-        := Make_Convolution_Circuits(p.all,d);
+      c : constant Circuits(p'range) := Make_Convolution_Circuits(p.all,d);
       q : Link_to_System := Create(c,dim,deg);
       x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
         := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -589,8 +588,7 @@ procedure ts_speelcnv is
       s : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(p'range)
         := System_to_Series_System(p.all);
       dim : constant integer32 := p'last;
-      c : constant Convolution_Circuits(p'range)
-        := Make_Convolution_Circuits(p.all,d);
+      c : constant Circuits(p'range) := Make_Convolution_Circuits(p.all,d);
       q : Link_to_System := Create(c,dim,deg);
       x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
         := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -632,8 +630,7 @@ procedure ts_speelcnv is
       s : constant QuadDobl_CSeries_Poly_Systems.Poly_Sys(p'range)
         := System_to_Series_System(p.all);
       dim : constant integer32 := p'last;
-      c : constant Convolution_Circuits(p'range)
-        := Make_Convolution_Circuits(p.all,d);
+      c : constant Circuits(p'range) := Make_Convolution_Circuits(p.all,d);
       q : Link_to_System := Create(c,dim,deg);
       x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
         := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);

@@ -277,7 +277,7 @@ procedure ts_fabry is
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
     declare
-      c : constant Convolution_Circuits(lp'range)
+      c : constant Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(degree));
       s : Link_to_System := Create(c,lp'last,degree);
       sol : constant Standard_Complex_Solutions.Link_to_Solution
@@ -323,7 +323,7 @@ procedure ts_fabry is
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
     declare
-      c : constant Convolution_Circuits(lp'range)
+      c : constant Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(degree));
       s : Link_to_System := Create(c,lp'last,degree);
       sol : constant DoblDobl_Complex_Solutions.Link_to_Solution
@@ -369,7 +369,7 @@ procedure ts_fabry is
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
     declare
-      c : constant Convolution_Circuits(lp'range)
+      c : constant Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(degree));
       s : Link_to_System := Create(c,lp'last,degree);
       sol : constant QuadDobl_Complex_Solutions.Link_to_Solution

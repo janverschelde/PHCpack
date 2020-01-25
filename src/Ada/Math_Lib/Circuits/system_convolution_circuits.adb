@@ -4,7 +4,11 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
+with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors_cv;        use DoblDobl_Complex_Vectors_cv;
+with QuadDobl_Complex_Vectors_cv;        use QuadDobl_Complex_Vectors_cv;
+with Varbprec_VecVec_Conversions;
 with Standard_Complex_Series;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Series;
@@ -167,7 +171,7 @@ package body System_Convolution_Circuits is
   function Make_Convolution_Circuit
              ( p : Standard_Complex_Polynomials.Poly;
                d : natural32 )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuit is
+             return Standard_Speelpenning_Convolutions.Circuit is
 
     use Standard_Speelpenning_Convolutions;
 
@@ -183,7 +187,7 @@ package body System_Convolution_Circuits is
     nbr : constant integer32
         := integer32(Standard_Complex_Polynomials.Number_of_Terms(p))
            - Nonzero_Constant(cst);
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     idx : integer32 := 0;
 
     procedure Visit_Term ( t : in Standard_Complex_Polynomials.Term;
@@ -230,7 +234,7 @@ package body System_Convolution_Circuits is
   function Make_Convolution_Circuit
              ( p : DoblDobl_Complex_Polynomials.Poly;
                d : natural32 )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuit is
+             return DoblDobl_Speelpenning_Convolutions.Circuit is
 
     use DoblDobl_Speelpenning_Convolutions;
 
@@ -246,7 +250,7 @@ package body System_Convolution_Circuits is
     nbr : constant integer32
         := integer32(DoblDobl_Complex_Polynomials.Number_of_Terms(p))
            - Nonzero_Constant(cst);
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     idx : integer32 := 0;
 
     procedure Visit_Term ( t : in DoblDobl_Complex_Polynomials.Term;
@@ -293,7 +297,7 @@ package body System_Convolution_Circuits is
   function Make_Convolution_Circuit
              ( p : QuadDobl_Complex_Polynomials.Poly;
                d : natural32 )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuit is
+             return QuadDobl_Speelpenning_Convolutions.Circuit is
 
     use QuadDobl_Speelpenning_Convolutions;
 
@@ -309,7 +313,7 @@ package body System_Convolution_Circuits is
     nbr : constant integer32
         := integer32(QuadDobl_Complex_Polynomials.Number_of_Terms(p))
            - Nonzero_Constant(cst);
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     idx : integer32 := 0;
 
     procedure Visit_Term ( t : in QuadDobl_Complex_Polynomials.Term;
@@ -355,7 +359,7 @@ package body System_Convolution_Circuits is
 
   function Make_Convolution_Circuit
              ( p : Standard_CSeries_Polynomials.Poly )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuit is
+             return Standard_Speelpenning_Convolutions.Circuit is
 
     use Standard_Speelpenning_Convolutions;
 
@@ -368,7 +372,7 @@ package body System_Convolution_Circuits is
     nbr : constant integer32
         := integer32(Standard_CSeries_Polynomials.Number_of_Terms(p))
            - Nonzero_Constant(cst);
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     idx,deg : integer32 := 0;
 
     procedure Visit_Term ( t : in Standard_CSeries_Polynomials.Term;
@@ -412,7 +416,7 @@ package body System_Convolution_Circuits is
 
   function Make_Convolution_Circuit
              ( p : DoblDobl_CSeries_Polynomials.Poly )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuit is
+             return DoblDobl_Speelpenning_Convolutions.Circuit is
 
     use DoblDobl_Speelpenning_Convolutions;
 
@@ -425,7 +429,7 @@ package body System_Convolution_Circuits is
     nbr : constant integer32
         := integer32(DoblDobl_CSeries_Polynomials.Number_of_Terms(p))
            - Nonzero_Constant(cst);
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     idx,deg : integer32 := 0;
 
     procedure Visit_Term ( t : in DoblDobl_CSeries_Polynomials.Term;
@@ -469,7 +473,7 @@ package body System_Convolution_Circuits is
 
   function Make_Convolution_Circuit
              ( p : QuadDobl_CSeries_Polynomials.Poly )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuit is
+             return QuadDobl_Speelpenning_Convolutions.Circuit is
 
     use QuadDobl_Speelpenning_Convolutions;
 
@@ -482,7 +486,7 @@ package body System_Convolution_Circuits is
     nbr : constant integer32
         := integer32(QuadDobl_CSeries_Polynomials.Number_of_Terms(p))
            - Nonzero_Constant(cst);
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     idx,deg : integer32 := 0;
 
     procedure Visit_Term ( t : in QuadDobl_CSeries_Polynomials.Term;
@@ -527,15 +531,15 @@ package body System_Convolution_Circuits is
   function Make_Convolution_Circuits
              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                d : natural32 )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuits is
+             return Standard_Speelpenning_Convolutions.Circuits is
 
     use Standard_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(p'range);
+    res : Circuits(p'range);
 
   begin
     for i in p'range loop
-      res(i) := new Convolution_Circuit'(Make_Convolution_Circuit(p(i),d));
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i),d));
     end loop;
     return res;
   end Make_Convolution_Circuits;
@@ -543,15 +547,15 @@ package body System_Convolution_Circuits is
   function Make_Convolution_Circuits
              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
                d : natural32 )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuits is
+             return DoblDobl_Speelpenning_Convolutions.Circuits is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(p'range);
+    res : Circuits(p'range);
 
   begin
     for i in p'range loop
-      res(i) := new Convolution_Circuit'(Make_Convolution_Circuit(p(i),d));
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i),d));
     end loop;
     return res;
   end Make_Convolution_Circuits;
@@ -559,62 +563,252 @@ package body System_Convolution_Circuits is
   function Make_Convolution_Circuits
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                d : natural32 )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuits is
+             return QuadDobl_Speelpenning_Convolutions.Circuits is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(p'range);
+    res : Circuits(p'range);
 
   begin
     for i in p'range loop
-      res(i) := new Convolution_Circuit'(Make_Convolution_Circuit(p(i),d));
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i),d));
     end loop;
     return res;
   end Make_Convolution_Circuits;
 
   function Make_Convolution_Circuits
              ( p : Standard_CSeries_Poly_Systems.Poly_Sys )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuits is
+             return Standard_Speelpenning_Convolutions.Circuits is
 
     use Standard_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(p'range);
+    res : Circuits(p'range);
 
   begin
     for i in p'range loop
-      res(i) := new Convolution_Circuit'(Make_Convolution_Circuit(p(i)));
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i)));
     end loop;
     return res;
   end Make_Convolution_Circuits;
 
   function Make_Convolution_Circuits
              ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuits is
+             return DoblDobl_Speelpenning_Convolutions.Circuits is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(p'range);
+    res : Circuits(p'range);
 
   begin
     for i in p'range loop
-      res(i) := new Convolution_Circuit'(Make_Convolution_Circuit(p(i)));
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i)));
     end loop;
     return res;
   end Make_Convolution_Circuits;
 
   function Make_Convolution_Circuits
              ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuits is
+             return QuadDobl_Speelpenning_Convolutions.Circuits is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(p'range);
+    res : Circuits(p'range);
 
   begin
     for i in p'range loop
-      res(i) := new Convolution_Circuit'(Make_Convolution_Circuit(p(i)));
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i)));
     end loop;
     return res;
   end Make_Convolution_Circuits;
+
+  function to_double
+	     ( c : DoblDobl_Speelpenning_Convolutions.Circuit )
+	     return Standard_Speelpenning_Convolutions.Circuit is
+
+    use DoblDobl_Complex_Vectors;
+    use Standard_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : Standard_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.dd2d(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant Standard_Complex_Vectors.Vector(c.cst'range)
+            := DoblDobl_Complex_to_Standard(c.cst.all);
+      begin
+        res.cst := new Standard_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_double;
+
+  function to_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+	     return Standard_Speelpenning_Convolutions.Circuit is
+
+    use QuadDobl_Complex_Vectors;
+    use Standard_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : Standard_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.qd2d(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant Standard_Complex_Vectors.Vector(c.cst'range)
+            := QuadDobl_Complex_to_Standard(c.cst.all);
+      begin
+        res.cst := new Standard_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_double;
+
+  function to_double_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+	     return DoblDobl_Speelpenning_Convolutions.Circuit is
+
+    use QuadDobl_Complex_Vectors;
+    use DoblDobl_Speelpenning_Convolutions;
+
+    n : constant integer32 := c.nbr;
+    d : constant integer32 := c.dim;
+    d1 : constant integer32 := d-1;
+    d2 : constant integer32 := d-2;
+    deg : constant integer32 := c.cff(1)'last;
+    res : DoblDobl_Speelpenning_Convolutions.Circuit(n,d,d1,d2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Varbprec_VecVec_Conversions.qd2dd(c.cff);
+    if c.cst /= null then
+      declare
+        cst : constant DoblDobl_Complex_Vectors.Vector(c.cst'range)
+            := QuadDobl_Complex_to_DoblDobl(c.cst.all);
+      begin
+        res.cst := new DoblDobl_Complex_Vectors.Vector'(cst);
+      end;
+    end if;
+    res.forward := Allocate_Coefficients(d1,deg);
+    res.backward := Allocate_Coefficients(d2,deg);
+    res.cross := Allocate_Coefficients(d2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end to_double_double;
+
+  function to_double
+	     ( c : DoblDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return Standard_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : Standard_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new Standard_Speelpenning_Convolutions.Circuit'(to_double(c.all));
+    end if;
+    return res;
+  end to_double;
+
+  function to_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return Standard_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : Standard_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new Standard_Speelpenning_Convolutions.Circuit'(to_double(c.all));
+    end if;
+    return res;
+  end to_double;
+
+  function to_double_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_Circuit is
+
+    res : DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      res := new DoblDobl_Speelpenning_Convolutions.Circuit'
+                   (to_double_double(c.all));
+    end if;
+    return res;
+  end to_double_double;
+
+  function to_double
+	     ( c : DoblDobl_Speelpenning_Convolutions.Circuits )
+	     return Standard_Speelpenning_Convolutions.Circuits is
+
+    res : Standard_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double(c(k));
+    end loop;
+    return res;
+  end to_double;
+
+  function to_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuits )
+	     return Standard_Speelpenning_Convolutions.Circuits is
+
+    res : Standard_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double(c(k));
+    end loop;
+    return res;
+  end to_double;
+
+  function to_double_double
+	     ( c : QuadDobl_Speelpenning_Convolutions.Circuits )
+	     return DoblDobl_Speelpenning_Convolutions.Circuits is
+
+    res : DoblDobl_Speelpenning_Convolutions.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double_double(c(k));
+    end loop;
+    return res;
+  end to_double_double;
 
 end System_Convolution_Circuits;

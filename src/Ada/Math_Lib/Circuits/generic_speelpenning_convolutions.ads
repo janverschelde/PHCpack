@@ -36,7 +36,7 @@ package Generic_Speelpenning_Convolutions is
 -- coefficient vectors of power series using the reverse mode of
 -- algorithmic differentiation.
 
-  type Convolution_Circuit ( nbr,dim,dim1,dim2 : integer32 ) is record
+  type Circuit ( nbr,dim,dim1,dim2 : integer32 ) is record
     xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponent vectors
     idx : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponent indices
     fac : Standard_Integer_VecVecs.VecVec(1..nbr); -- factor indices
@@ -48,18 +48,17 @@ package Generic_Speelpenning_Convolutions is
     wrk,acc : Vectors.Link_to_Vector;         -- series coefficients
   end record;
 
-  type Link_to_Convolution_Circuit is access Convolution_Circuit;
+  type Link_to_Circuit is access Circuit;
 
-  type Convolution_Circuits is
-    array ( integer32 range <> ) of Link_to_Convolution_Circuit;
+  type Circuits is array ( integer32 range <> ) of Link_to_Circuit;
 
-  type Link_to_Convolution_Circuits is access Convolution_Circuits;
+  type Link_to_Circuits is access Circuits;
 
 -- A system stores the sequence of convolution circuits for each polynomial
 -- and the work space to hold auxiliary results and the final outcomes.
 
   type System ( neq,neq1,dim,deg : integer32 ) is record
-    crc : Convolution_Circuits(1..neq); -- circuits for the equations
+    crc : Circuits(1..neq); -- circuits for the equations
     mxe : Standard_Integer_Vectors.Vector(1..dim); -- exponent maxima
     pwt : Link_to_VecVecVec;      -- the power table
     yd : VecVecs.VecVec(1..neq1); -- work space for EvalDiff on one circuit
@@ -72,10 +71,8 @@ package Generic_Speelpenning_Convolutions is
 
 -- CONSTRUCTORS :
 
-  function Create ( c : Convolution_Circuits;
-                    dim,deg : integer32 ) return System;
-  function Create ( c : Convolution_Circuits;
-                    dim,deg : integer32 ) return Link_to_System;
+  function Create ( c : Circuits; dim,deg : integer32 ) return System;
+  function Create ( c : Circuits; dim,deg : integer32 ) return Link_to_System;
 
   -- DESCRIPTION:
   --   The system on return stores the convolution circuits in crc,
@@ -83,7 +80,7 @@ package Generic_Speelpenning_Convolutions is
   --   has allocated space for pwt, yd, vy, yv, and vm.
 
   function Exponent_Maxima
-             ( c : Convolution_Circuits; dim : integer32 )
+             ( c : Circuits; dim : integer32 )
              return Standard_Integer_Vectors.Vector;
 
   -- DESCRIPTION :
@@ -135,10 +132,10 @@ package Generic_Speelpenning_Convolutions is
   -- DESCRIPTION :
   --   Deallocates the space occupied by the power table pwt.
 
-  procedure Clear ( c : in out Convolution_Circuit );
-  procedure Clear ( c : in out Link_to_Convolution_Circuit );
-  procedure Clear ( c : in out Convolution_Circuits );
-  procedure Clear ( c : in out Link_to_Convolution_Circuits );
+  procedure Clear ( c : in out Circuit );
+  procedure Clear ( c : in out Link_to_Circuit );
+  procedure Clear ( c : in out Circuits );
+  procedure Clear ( c : in out Link_to_Circuits );
 
   -- DESCRIPTION :
   --   Deallocates the space occupied by the convolution circuits.
@@ -206,23 +203,20 @@ package Generic_Speelpenning_Convolutions is
 
 -- PLAIN EVALUATION AT A NUMBER :
 
-  function Eval ( c : Convolution_Circuit;
-                  x : Vectors.Vector ) return Ring.number;
-  function Eval ( c : Link_to_Convolution_Circuit;
-                  x : Vectors.Vector ) return Ring.number;
-  function Eval ( c : Convolution_Circuits;
-                  x : Vectors.Vector ) return Vectors.Vector;
+  function Eval ( c : Circuit; x : Vectors.Vector ) return Ring.number;
+  function Eval ( c : Link_to_Circuit; x : Vectors.Vector ) return Ring.number;
+  function Eval ( c : Circuits; x : Vectors.Vector ) return Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the evaluation of c at the number x,
   --   via a straighforward sum of evaluated terms, at t = 0,
   --   only considering the leading coefficients of power series.
 
-  function Eval ( c : Convolution_Circuit; x : Vectors.Vector;
+  function Eval ( c : Circuit; x : Vectors.Vector;
                   t : Ring.number ) return Ring.number;
-  function Eval ( c : Link_to_Convolution_Circuit; x : Vectors.Vector;
+  function Eval ( c : Link_to_Circuit; x : Vectors.Vector;
                   t : Ring.number ) return Ring.number;
-  function Eval ( c : Convolution_Circuits; x : Vectors.Vector;
+  function Eval ( c : Circuits; x : Vectors.Vector;
                   t : Ring.number ) return Vectors.Vector;
 
   -- DESCRIPTION :
@@ -374,22 +368,17 @@ package Generic_Speelpenning_Convolutions is
   --                of the sum of products, evaluated at x,
   --                yd(k) is the k-th partial derivative at x.
 
-  procedure EvalDiff ( c : in Convolution_Circuit;
-                       x : in VecVecs.VecVec;
-                       pwt : in Link_to_VecVecVec;
-                       yd : in VecVecs.VecVec );
+  procedure EvalDiff ( c : in Circuit; x : in VecVecs.VecVec;
+                       pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Wraps the Speel procedure for the convolution circuit c,
   --   to evaluate at x, with the aid of the power table pwt.
   --   The result is placed in yd.
 
-  procedure EvalDiff ( c : in Convolution_Circuits;
-                       x : in VecVecs.VecVec;
-                       pwt : in Link_to_VecVecVec;
-                       yd : in VecVecs.VecVec;
-                       vy : in VecVecs.VecVec;
-                       vm : in VecMats.VecMat );
+  procedure EvalDiff ( c : in Circuits; x : in VecVecs.VecVec;
+                       pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec;
+                       vy : in VecVecs.VecVec; vm : in VecMats.VecMat );
 
   -- DESCRIPTION :
   --   Evaluates and differentiates the convolution circuits in c at x.

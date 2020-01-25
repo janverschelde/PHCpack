@@ -10,7 +10,7 @@ with QuadDobl_CSeries_Poly_Functions;
 package body Series_Polynomial_Gradients is
 
   function Standard_Polynomial
-             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuit )
+             ( c : Standard_Speelpenning_Convolutions.Circuit )
              return Standard_CSeries_Polynomials.Poly is
 
     res : Standard_CSeries_Polynomials.Poly
@@ -35,7 +35,7 @@ package body Series_Polynomial_Gradients is
   end Standard_Polynomial;
 
   function DoblDobl_Polynomial
-             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuit )
+             ( c : DoblDobl_Speelpenning_Convolutions.Circuit )
              return DoblDobl_CSeries_Polynomials.Poly is
 
     res : DoblDobl_CSeries_Polynomials.Poly
@@ -60,7 +60,7 @@ package body Series_Polynomial_Gradients is
   end DoblDobl_Polynomial;
 
   function QuadDobl_Polynomial
-             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuit )
+             ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
              return QuadDobl_CSeries_Polynomials.Poly is
 
     res : QuadDobl_CSeries_Polynomials.Poly
@@ -85,7 +85,7 @@ package body Series_Polynomial_Gradients is
   end QuadDobl_Polynomial;
 
   function Standard_System
-             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuits )
+             ( c : Standard_Speelpenning_Convolutions.Circuits )
              return Standard_CSeries_Poly_Systems.Poly_Sys is
 
     res : Standard_CSeries_Poly_Systems.Poly_Sys(c'range);
@@ -98,7 +98,7 @@ package body Series_Polynomial_Gradients is
   end Standard_System;
 
   function DoblDobl_System
-             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuits )
+             ( c : DoblDobl_Speelpenning_Convolutions.Circuits )
              return DoblDobl_CSeries_Poly_Systems.Poly_Sys is
 
     res : DoblDobl_CSeries_Poly_Systems.Poly_Sys(c'range);
@@ -111,7 +111,7 @@ package body Series_Polynomial_Gradients is
   end DoblDobl_System;
 
   function QuadDobl_System
-             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuits )
+             ( c : QuadDobl_Speelpenning_Convolutions.Circuits )
              return QuadDobl_CSeries_Poly_Systems.Poly_Sys is
 
     res : QuadDobl_CSeries_Poly_Systems.Poly_Sys(c'range);

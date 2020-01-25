@@ -22,13 +22,13 @@ package Series_Polynomial_Gradients is
 --   The functions are mainly wrappers and used for testing purposes.
 
   function Standard_Polynomial
-             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuit )
+             ( c : Standard_Speelpenning_Convolutions.Circuit )
              return Standard_CSeries_Polynomials.Poly;
   function DoblDobl_Polynomial
-             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuit )
+             ( c : DoblDobl_Speelpenning_Convolutions.Circuit )
              return DoblDobl_CSeries_Polynomials.Poly;
   function QuadDobl_Polynomial
-             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuit )
+             ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
              return QuadDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
@@ -36,13 +36,13 @@ package Series_Polynomial_Gradients is
   --   in double, double double, and quad double precision.
 
   function Standard_System
-             ( c : Standard_Speelpenning_Convolutions.Convolution_Circuits )
+             ( c : Standard_Speelpenning_Convolutions.Circuits )
              return Standard_CSeries_Poly_Systems.Poly_Sys;
   function DoblDobl_System
-             ( c : DoblDobl_Speelpenning_Convolutions.Convolution_Circuits )
+             ( c : DoblDobl_Speelpenning_Convolutions.Circuits )
              return DoblDobl_CSeries_Poly_Systems.Poly_Sys;
   function QuadDobl_System
-             ( c : QuadDobl_Speelpenning_Convolutions.Convolution_Circuits )
+             ( c : QuadDobl_Speelpenning_Convolutions.Circuits )
              return QuadDobl_CSeries_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :

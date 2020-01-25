@@ -7,8 +7,7 @@ with QuadDobl_Complex_Numbers;
 package body Homotopy_Convolution_Circuits is
 
   procedure Add_Continuation_Parameter
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit ) is
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit ) is
 
     cf : Standard_Complex_Vectors.Link_to_Vector;
 
@@ -25,8 +24,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Continuation_Parameter;
 
   procedure Add_Continuation_Parameter
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit ) is
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit ) is
 
     cf : DoblDobl_Complex_Vectors.Link_to_Vector;
     one : constant double_double := create(1.0);
@@ -44,8 +42,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Continuation_Parameter;
 
   procedure Add_Continuation_Parameter
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit ) is
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit ) is
 
     cf : QuadDobl_Complex_Vectors.Link_to_Vector;
     one : constant quad_double := create(1.0);
@@ -63,8 +60,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Continuation_Parameter;
 
   procedure Add_Continuation_Parameter
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Convolution_Circuits ) is
+              ( c : in Standard_Speelpenning_Convolutions.Circuits ) is
   begin
     for k in c'range loop
       Add_Continuation_Parameter(c(k));
@@ -72,8 +68,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Continuation_Parameter;
 
   procedure Add_Continuation_Parameter
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Convolution_Circuits ) is
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits ) is
   begin
     for k in c'range loop
       Add_Continuation_Parameter(c(k));
@@ -81,8 +76,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Continuation_Parameter;
 
   procedure Add_Continuation_Parameter
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Convolution_Circuits ) is
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits ) is
   begin
     for k in c'range loop
       Add_Continuation_Parameter(c(k));
@@ -90,8 +84,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Continuation_Parameter;
 
   procedure Add_Parameter_to_Constant
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
                 deg : in integer32 ) is
 
     use Standard_Complex_Numbers;
@@ -107,8 +100,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Parameter_to_Constant;
 
   procedure Add_Parameter_to_Constant
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 deg : in integer32 ) is
 
     use DoblDobl_Complex_Numbers;
@@ -125,8 +117,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Parameter_to_Constant;
 
   procedure Add_Parameter_to_Constant
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 deg : in integer32 ) is
 
     use QuadDobl_Complex_Numbers;
@@ -167,8 +158,7 @@ package body Homotopy_Convolution_Circuits is
   end Add_Parameter_to_Constant;
 
   procedure Set_Solution_Constant
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in Standard_Complex_Vectors.Vector ) is
 
     use Standard_Complex_Numbers;
@@ -192,8 +182,7 @@ package body Homotopy_Convolution_Circuits is
   end Set_Solution_Constant;
 
   procedure Set_Solution_Constant
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in DoblDobl_Complex_Vectors.Vector ) is
 
     use DoblDobl_Complex_Numbers;
@@ -218,8 +207,7 @@ package body Homotopy_Convolution_Circuits is
   end Set_Solution_Constant;
 
   procedure Set_Solution_Constant
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in QuadDobl_Complex_Vectors.Vector ) is
 
     use QuadDobl_Complex_Numbers;
@@ -244,7 +232,7 @@ package body Homotopy_Convolution_Circuits is
   end Set_Solution_Constant;
 
   procedure Set_Solution_Constant
-              ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
                 z : in Standard_Complex_Vectors.Vector ) is
   begin
     for k in c'range loop
@@ -253,7 +241,7 @@ package body Homotopy_Convolution_Circuits is
   end Set_Solution_Constant;
 
   procedure Set_Solution_Constant
-              ( c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
                 z : in DoblDobl_Complex_Vectors.Vector ) is
   begin
     for k in c'range loop
@@ -262,7 +250,7 @@ package body Homotopy_Convolution_Circuits is
   end Set_Solution_Constant;
 
   procedure Set_Solution_Constant
-              ( c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 z : in QuadDobl_Complex_Vectors.Vector ) is
   begin
     for k in c'range loop
@@ -271,8 +259,7 @@ package body Homotopy_Convolution_Circuits is
   end Set_Solution_Constant;
 
   procedure Newton_Homotopy
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in Standard_Complex_Vectors.Vector ) is
 
     use Standard_Complex_Numbers;
@@ -301,8 +288,7 @@ package body Homotopy_Convolution_Circuits is
   end Newton_Homotopy;
 
   procedure Newton_Homotopy
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in DoblDobl_Complex_Vectors.Vector ) is
 
     use DoblDobl_Complex_Numbers;
@@ -332,8 +318,7 @@ package body Homotopy_Convolution_Circuits is
   end Newton_Homotopy;
 
   procedure Newton_Homotopy 
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in QuadDobl_Complex_Vectors.Vector ) is
 
     use QuadDobl_Complex_Numbers;
@@ -363,7 +348,7 @@ package body Homotopy_Convolution_Circuits is
   end Newton_Homotopy;
 
   procedure Newton_Homotopy
-              ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
                 z : in Standard_Complex_Vectors.Vector ) is
   begin
     for k in c'range loop
@@ -372,7 +357,7 @@ package body Homotopy_Convolution_Circuits is
   end Newton_Homotopy;
 
   procedure Newton_Homotopy
-              ( c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
                 z : in DoblDobl_Complex_Vectors.Vector ) is
   begin
     for k in c'range loop
@@ -381,7 +366,7 @@ package body Homotopy_Convolution_Circuits is
   end Newton_Homotopy;
 
   procedure Newton_Homotopy
-              ( c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 z : in QuadDobl_Complex_Vectors.Vector ) is
   begin
     for k in c'range loop

@@ -15,44 +15,35 @@ package Homotopy_Convolution_Circuits is
 --   to the coefficients of the convolution circuits.
 
   procedure Add_Continuation_Parameter
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit );
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit );
   procedure Add_Continuation_Parameter
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit );
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit );
   procedure Add_Continuation_Parameter
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit );
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit );
 
   -- DESCRIPTION :
   --   To every coefficient adds 't' as the linear coefficient
   --   in all power series coefficients of the circuit.
 
   procedure Add_Continuation_Parameter
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Convolution_Circuits );
+              ( c : in Standard_Speelpenning_Convolutions.Circuits );
   procedure Add_Continuation_Parameter
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Convolution_Circuits );
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits );
   procedure Add_Continuation_Parameter
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Convolution_Circuits );
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits );
 
   -- DESCRIPTION :
   --   To every coefficient adds 't' as the linear coefficient
   --   in all power series coefficients of the circuits.
 
   procedure Add_Parameter_to_Constant
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
                 deg : in integer32 );
   procedure Add_Parameter_to_Constant
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 deg : in integer32 );
   procedure Add_Parameter_to_Constant
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 deg : in integer32 );
 
   -- DESCRIPTION :
@@ -74,45 +65,39 @@ package Homotopy_Convolution_Circuits is
   -- REQUIRED : s /= null.
 
   procedure Set_Solution_Constant
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in Standard_Complex_Vectors.Vector );
   procedure Set_Solution_Constant
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in DoblDobl_Complex_Vectors.Vector );
   procedure Set_Solution_Constant
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Sets the constant of c so that z becomes a solution.
 
   procedure Set_Solution_Constant
-              ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
                 z : in Standard_Complex_Vectors.Vector );
   procedure Set_Solution_Constant
-              ( c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
                 z : in DoblDobl_Complex_Vectors.Vector );
   procedure Set_Solution_Constant
-              ( c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 z : in QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Sets the constant of each circuit in c so that z becomes a solution.
 
   procedure Newton_Homotopy
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in Standard_Complex_Vectors.Vector );
   procedure Newton_Homotopy
-              ( c : in DoblDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in DoblDobl_Complex_Vectors.Vector );
   procedure Newton_Homotopy
-              ( c : in QuadDobl_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -122,13 +107,13 @@ package Homotopy_Convolution_Circuits is
   -- REQUIRED : the degree of the power series in c is at least one.
 
   procedure Newton_Homotopy
-              ( c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
                 z : in Standard_Complex_Vectors.Vector );
   procedure Newton_Homotopy
-              ( c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
                 z : in DoblDobl_Complex_Vectors.Vector );
   procedure Newton_Homotopy
-              ( c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 z : in QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :

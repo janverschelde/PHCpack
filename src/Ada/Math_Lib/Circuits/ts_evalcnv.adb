@@ -67,10 +67,8 @@ procedure ts_evalcnv is
       := Standard_Random_Vectors.Random_Vector(1,integer32(dim));
     y : constant Standard_Complex_Vectors.Vector(p'range)
       := Standard_Complex_Poly_SysFun.Eval(p,x);
-    c0 : constant Convolution_Circuits(p'range)
-       := Make_Convolution_Circuits(p,0);
-    c1 : constant Convolution_Circuits(p'range)
-       := Make_Convolution_Circuits(p,1);
+    c0 : constant Circuits(p'range) := Make_Convolution_Circuits(p,0);
+    c1 : constant Circuits(p'range) := Make_Convolution_Circuits(p,1);
     z : Standard_Complex_Vectors.Vector(p'range) := Eval(c0,x);
     val : Complex_Number;
     err : double_float := 0.0;
@@ -117,10 +115,8 @@ procedure ts_evalcnv is
       := DoblDobl_Random_Vectors.Random_Vector(1,integer32(dim));
     y : constant DoblDobl_Complex_Vectors.Vector(p'range)
       := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
-    c0 : constant Convolution_Circuits(p'range)
-       := Make_Convolution_Circuits(p,0);
-    c1 : constant Convolution_Circuits(p'range)
-       := Make_Convolution_Circuits(p,1);
+    c0 : constant Circuits(p'range) := Make_Convolution_Circuits(p,0);
+    c1 : constant Circuits(p'range) := Make_Convolution_Circuits(p,1);
     z : DoblDobl_Complex_Vectors.Vector(p'range) := Eval(c0,x);
     val : Complex_Number;
     err : double_double := create(0.0);
@@ -167,10 +163,8 @@ procedure ts_evalcnv is
       := QuadDobl_Random_Vectors.Random_Vector(1,integer32(dim));
     y : constant QuadDobl_Complex_Vectors.Vector(p'range)
       := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
-    c0 : constant Convolution_Circuits(p'range)
-       := Make_Convolution_Circuits(p,0);
-    c1 : constant Convolution_Circuits(p'range)
-       := Make_Convolution_Circuits(p,1);
+    c0 : constant Circuits(p'range) := Make_Convolution_Circuits(p,0);
+    c1 : constant Circuits(p'range) := Make_Convolution_Circuits(p,1);
     z : QuadDobl_Complex_Vectors.Vector(p'range) := Eval(c0,x);
     val : Complex_Number;
     err : quad_double := create(0.0);

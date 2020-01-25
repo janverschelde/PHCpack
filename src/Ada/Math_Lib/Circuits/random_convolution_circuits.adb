@@ -51,11 +51,11 @@ package body Random_Convolution_Circuits is
 
   function Standard_Random_Convolution_Circuit
              ( dim,deg,nbr,pwr : in integer32 )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuit is
+             return Standard_Speelpenning_Convolutions.Circuit is
 
     use Standard_Speelpenning_Convolutions;
 
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     polcff : constant Standard_Complex_Series_Vectors.Vector(1..nbr)
            := Standard_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
     rancst : constant Standard_Complex_Series.Series
@@ -79,11 +79,11 @@ package body Random_Convolution_Circuits is
 
   function DoblDobl_Random_Convolution_Circuit
              ( dim,deg,nbr,pwr : in integer32 )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuit is
+             return DoblDobl_Speelpenning_Convolutions.Circuit is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     polcff : constant DoblDobl_Complex_Series_Vectors.Vector(1..nbr)
            := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
     rancst : constant DoblDobl_Complex_Series.Series
@@ -107,11 +107,11 @@ package body Random_Convolution_Circuits is
 
   function QuadDobl_Random_Convolution_Circuit
              ( dim,deg,nbr,pwr : in integer32 )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuit is
+             return QuadDobl_Speelpenning_Convolutions.Circuit is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    res : Convolution_Circuit(nbr,dim,dim-1,dim-2);
+    res : Circuit(nbr,dim,dim-1,dim-2);
     polcff : constant QuadDobl_Complex_Series_Vectors.Vector(1..nbr)
            := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
     rancst : constant QuadDobl_Complex_Series.Series
@@ -135,19 +135,19 @@ package body Random_Convolution_Circuits is
 
   function Standard_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : in integer32 )
-             return Standard_Speelpenning_Convolutions.Convolution_Circuits is
+             return Standard_Speelpenning_Convolutions.Circuits is
 
     use Standard_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(1..dim);
+    res : Circuits(1..dim);
 
   begin
     for k in 1..dim loop
       declare
-        c : constant Convolution_Circuit(nbr,dim,dim-1,dim-2)
+        c : constant Circuit(nbr,dim,dim-1,dim-2)
           := Standard_Random_Convolution_Circuit(dim,deg,nbr,pwr);
       begin
-        res(k) := new Convolution_Circuit'(c);
+        res(k) := new Circuit'(c);
       end;
     end loop;
     return res;
@@ -155,19 +155,19 @@ package body Random_Convolution_Circuits is
 
   function DoblDobl_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : in integer32 )
-             return DoblDobl_Speelpenning_Convolutions.Convolution_Circuits is
+             return DoblDobl_Speelpenning_Convolutions.Circuits is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(1..dim);
+    res : Circuits(1..dim);
 
   begin
     for k in 1..dim loop
       declare
-        c : constant Convolution_Circuit(nbr,dim,dim-1,dim-2)
+        c : constant Circuit(nbr,dim,dim-1,dim-2)
           := DoblDobl_Random_Convolution_Circuit(dim,deg,nbr,pwr);
       begin
-        res(k) := new Convolution_Circuit'(c);
+        res(k) := new Circuit'(c);
       end;
     end loop;
     return res;
@@ -175,19 +175,19 @@ package body Random_Convolution_Circuits is
 
   function QuadDobl_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : in integer32 )
-             return QuadDobl_Speelpenning_Convolutions.Convolution_Circuits is
+             return QuadDobl_Speelpenning_Convolutions.Circuits is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    res : Convolution_Circuits(1..dim);
+    res : Circuits(1..dim);
 
   begin
     for k in 1..dim loop
       declare
-        c : constant Convolution_Circuit(nbr,dim,dim-1,dim-2)
+        c : constant Circuit(nbr,dim,dim-1,dim-2)
           := QuadDobl_Random_Convolution_Circuit(dim,deg,nbr,pwr);
       begin
-        res(k) := new Convolution_Circuit'(c);
+        res(k) := new Circuit'(c);
       end;
     end loop;
     return res;
@@ -197,7 +197,7 @@ package body Random_Convolution_Circuits is
              ( dim,deg,nbr,pwr : integer32 )
              return Standard_Speelpenning_Convolutions.Link_to_System is
 
-    c : constant Standard_Speelpenning_Convolutions.Convolution_Circuits
+    c : constant Standard_Speelpenning_Convolutions.Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
 
   begin
@@ -208,7 +208,7 @@ package body Random_Convolution_Circuits is
              ( dim,deg,nbr,pwr : integer32 )
              return DoblDobl_Speelpenning_Convolutions.Link_to_System is
 
-    c : constant DoblDobl_Speelpenning_Convolutions.Convolution_Circuits
+    c : constant DoblDobl_Speelpenning_Convolutions.Circuits
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
 
   begin
@@ -219,7 +219,7 @@ package body Random_Convolution_Circuits is
              ( dim,deg,nbr,pwr : integer32 )
              return QuadDobl_Speelpenning_Convolutions.Link_to_System is
 
-    c : constant QuadDobl_Speelpenning_Convolutions.Convolution_Circuits
+    c : constant QuadDobl_Speelpenning_Convolutions.Circuits
       := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
 
   begin

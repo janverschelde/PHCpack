@@ -1,3 +1,9 @@
+Sat 25 Jan 2020 : added functions to system_convolution_circuits.
+  Shortened the names *Convolution_Circuit* into *Circuit* in
+  generic_speelpenning_convolutions, modified system_convolution_circuits,
+  random_convolution_circuits, homotopy_convolution_circuits,
+  series_polynomial_gradients, ts_speelcnv, ts_fabry, ts_evalcnv.
+
 Thu 23 Jan 2020 : added another eval to generic_speelpenning_convolutions
   to test the Newton homotopy of homotopy_convolution_circuits,
   tested by ts_evalcnv.  To random_convolution_circuits, added procedures
