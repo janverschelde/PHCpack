@@ -54,7 +54,7 @@ procedure ts_sernewcnv is
 
     use Standard_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits(p'range)
+    c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     sol : constant Standard_Complex_Solutions.Link_to_Solution
@@ -139,7 +139,7 @@ procedure ts_sernewcnv is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits(p'range)
+    c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     sol : constant DoblDobl_Complex_Solutions.Link_to_Solution
@@ -224,7 +224,7 @@ procedure ts_sernewcnv is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits(p'range)
+    c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     sol : constant QuadDobl_Complex_Solutions.Link_to_Solution

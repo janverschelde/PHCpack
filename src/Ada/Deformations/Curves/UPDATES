@@ -1,3 +1,5 @@
+Sat 25 Jan 2020 : updated ts_sernewcnv for Convolution_Circuit name change.
+
 Mon 20 Jan 2020 : added a scale option to newton_power_convolutions,
   with ts_sernewcnv prompting the user for the value of this flag.
 
