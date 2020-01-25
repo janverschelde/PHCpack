@@ -1,4 +1,5 @@
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Multprec_Complex_Vectors;
 
@@ -22,12 +23,15 @@ package QuadDobl_Complex_Vectors_cv is
   function QuadDobl_Complex_to_Standard
              ( v : QuadDobl_Complex_Vectors.Vector )
              return Standard_Complex_Vectors.Vector;
+  function QuadDobl_Complex_to_DoblDobl
+             ( v : QuadDobl_Complex_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector;
   function QuadDobl_Complex_to_Multprec
              ( v : QuadDobl_Complex_Vectors.Vector )
              return Multprec_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
-  --   Converts a vector of quad double complex numbers
-  --   into a vector of standard or multiprecision complex numbers.
+  --   Converts a vector of quad double complex numbers into a vector
+  --   of double, double double, or multiprecision complex numbers.
 
 end QuadDobl_Complex_Vectors_cv;

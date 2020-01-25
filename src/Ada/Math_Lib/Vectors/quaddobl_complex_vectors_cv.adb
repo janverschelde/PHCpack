@@ -1,3 +1,4 @@
+with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 
 package body QuadDobl_Complex_Vectors_cv is
@@ -40,6 +41,19 @@ package body QuadDobl_Complex_Vectors_cv is
     end loop;
     return res;
   end QuadDobl_Complex_to_Standard;
+
+  function QuadDobl_Complex_to_DoblDobl
+             ( v : QuadDobl_Complex_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(v'range);
+
+  begin
+    for i in v'range loop
+      res(i) := QuadDobl_Complex_to_DoblDobl(v(i));
+    end loop;
+    return res;
+  end QuadDobl_Complex_to_DoblDobl;
 
   function QuadDobl_Complex_to_Multprec
              ( v : QuadDobl_Complex_Vectors.Vector )

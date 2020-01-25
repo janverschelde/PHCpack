@@ -1,3 +1,6 @@
+Sat 25 Jan 2020 : added to quaddobl_complex_vectors_cv to convert a vector
+  of complex numbers in quad double precision into double double precision.
+
 Tue 21 Jan 2020 : added a copy procedure to generic_vecvecs.
 
 Tue 30 Jan 2018 : new package boolean_vectors and boolean_vectors_io
