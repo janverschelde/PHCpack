@@ -173,24 +173,29 @@ ts_filescan:
 # Test programs for the library Numbers :
 
 ts_strnum:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_strnum.adb
-	gnatbl -o $(BIN)/ts_strnum ts_strnum.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_strnum.adb -o $(BIN)/ts_strnum
 
 ts_printf:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_printf.adb
-	gnatbl -o $(BIN)/ts_printf ts_printf.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_printf.adb -o $(BIN)/ts_printf
 
-ts_intnum:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_intnum.adb
-	gnatbl -o $(BIN)/ts_intnum ts_intnum.ali
+ts_intnum: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_intnum.adb -o $(BIN)/ts_intnum \
+                 -largs get_clock.o get_clocks_per_sec.o
 
-ts_natnum:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_natnum.adb
-	gnatbl -o $(BIN)/ts_natnum ts_natnum.ali
+ts_natnum: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_natnum.adb -o $(BIN)/ts_natnum \
+                 -largs get_clock.o get_clocks_per_sec.o
+
+ts_natdiv: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_natdiv.adb \
+              -o $(BIN)/ts_natdiv -largs get_clock.o get_clocks_per_sec.o
+
+ts_longflt:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_longflt.adb \
+                 -o $(BIN)/ts_longflt
 
 ts_karat:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_karat.adb
-	gnatbl -o $(BIN)/ts_karat ts_karat.ali
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_karat.adb -o $(BIN)/ts_karat
 
 ts_fltnum: get_clock.o get_clocks_per_sec.o
 	gnatmake -o $(BIN)/ts_fltnum $(INCLULIBS) $(GNATFLAGS) \
@@ -202,21 +207,30 @@ ts_cmpnum: get_clock.o get_clocks_per_sec.o
                     ts_cmpnum.adb \
                  -largs get_clock.o get_clocks_per_sec.o
 
+ts_plrexp:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_plrexp.adb -o $(BIN)/ts_plrexp
+
 ts_random:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_random.adb
-	gnatbl -o $(BIN)/ts_random ts_random.ali
+	gnatmake  $(INCLULIBS) $(GNATFLAGS) ts_random.adb -o $(BIN)/ts_random
 
 ts_extran:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_extran.adb
-	gnatbl -o $(BIN)/ts_extran ts_extran.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_extran.adb -o $(BIN)/ts_extran
 
 ts_matfun: get_clock.o get_clocks_per_sec.o
 	gnatmake -o $(BIN)/ts_matfun $(INCLULIBS) $(GNATFLAGS) ts_matfun.adb \
                  -largs get_clock.o get_clocks_per_sec.o
 
 ts_intval:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_intval.adb
-	gnatbl -o $(BIN)/ts_intval ts_intval.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_intval.adb -o $(BIN)/ts_intval
+
+ts_mpcst:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mpcst.adb -o $(BIN)/ts_mpcst
+
+ts_numbio:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_numbio.adb -o $(BIN)/ts_numbio
+
+ts_isnan:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_isnan.adb -o $(BIN)/ts_isnan
 
 # Test programs for Math_Lib/QD :
 
@@ -252,112 +266,123 @@ ts_cmpexp:
 # Test programs for Math_Lib/Vectors :
 
 ts_natvec:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_natvec.adb
-	gnatbl -o $(BIN)/ts_natvec ts_natvec.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_natvec.adb \
+              -o $(BIN)/ts_natvec
 
 ts_intvec:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_intvec.adb
-	gnatbl -o $(BIN)/ts_intvec ts_intvec.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_intvec.adb \
+              -o $(BIN)/ts_intvec
 
 ts_fltvec:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_fltvec.adb
-	gnatbl -o $(BIN)/ts_fltvec ts_fltvec.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_fltvec.adb \
+              -o $(BIN)/ts_fltvec
 
 ts_cmpvec:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_cmpvec.adb
-	gnatbl -o $(BIN)/ts_cmpvec ts_cmpvec.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cmpvec.adb \
+              -o $(BIN)/ts_cmpvec
+
+ts_ddvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddvec.adb -o $(BIN)/ts_ddvec
+
+ts_qdvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_qdvec.adb -o $(BIN)/ts_qdvec
+
+ts_strvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_strvec.adb -o $(BIN)/ts_strvec
 
 ts_nesvec:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_nesvec.adb
-	gnatbl -o $(BIN)/ts_nesvec ts_nesvec.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_nesvec.adb \
+              -o $(BIN)/ts_nesvec
 
 # Test programs for Matrices and linear-system solvers :
 
 ts_natmat:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_natmat.adb
-	gnatbl -o $(BIN)/ts_natmat ts_natmat.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_natmat.adb \
+              -o $(BIN)/ts_natmat
 
 ts_intmat:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_intmat.adb
-	gnatbl -o $(BIN)/ts_intmat ts_intmat.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_intmat.adb \
+              -o $(BIN)/ts_intmat
 
 ts_fltmat:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_fltmat.adb
-	gnatbl -o $(BIN)/ts_fltmat ts_fltmat.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_fltmat.adb \
+              -o $(BIN)/ts_fltmat
 
 ts_fltdls:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_fltdls.adb
-	gnatbl -o $(BIN)/ts_fltdls ts_fltdls.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_fltdls.adb \
+              -o $(BIN)/ts_fltdls
 
 ts_cmpmat:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_cmpmat.adb
-	gnatbl -o $(BIN)/ts_cmpmat ts_cmpmat.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cmpmat.adb \
+              -o $(BIN)/ts_cmpmat
+
+ts_ddmat:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddmat.adb -o $(BIN)/ts_ddmat
+
+ts_qdmat:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_qdmat.adb -o $(BIN)/ts_qdmat
 
 ts_gcd:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gcd.adb
-	gnatbl -o $(BIN)/ts_gcd ts_gcd.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gcd.adb -o $(BIN)/ts_gcd
 
 ts_qrd: get_clock.o get_clocks_per_sec.o
 	gnatmake -o $(BIN)/ts_qrd $(INCLULIBS) $(GNATFLAGS) ts_qrd.adb \
                  -largs get_clock.o get_clocks_per_sec.o
 
 ts_svd:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_svd.adb
-	gnatbl -o $(BIN)/ts_svd ts_svd.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_svd.adb -o $(BIN)/ts_svd
 
 ts_rowred:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_rowred.adb
-	gnatbl -o $(BIN)/ts_rowred ts_rowred.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_rowred.adb \
+              -o $(BIN)/ts_rowred
 
 ts_eigval:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_eigval.adb
-	gnatbl -o $(BIN)/ts_eigval ts_eigval.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_eigval.adb \
+              -o $(BIN)/ts_eigval
 
 # Test programs for Math_Lib/Polynomials :
 
 ts_randpoly:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_randpoly.adb
-	gnatbl -o $(BIN)/ts_randpoly ts_randpoly.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_randpoly.adb \
+              -o $(BIN)/ts_randpoly
 
 ts_expvec:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_expvec.adb
-	gnatbl -o $(BIN)/ts_expvec ts_expvec.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_expvec.adb \
+              -o $(BIN)/ts_expvec
 
 ts_poly:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_poly.adb
-	gnatbl -o $(BIN)/ts_poly ts_poly.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_poly.adb \
+              -o $(BIN)/ts_poly
 
 ts_laurpoly:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_laurpoly.adb
-	gnatbl -o $(BIN)/ts_laurpoly ts_laurpoly.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_laurpoly.adb \
+              -o $(BIN)/ts_laurpoly
 
 ts_rpol:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_rpol.adb
-	gnatbl -o $(BIN)/ts_rpol ts_rpol.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_rpol.adb \
+              -o $(BIN)/ts_rpol
 
 ts_polmat:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_polmat.adb
-	gnatbl -o $(BIN)/ts_polmat ts_polmat.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_polmat.adb \
+              -o $(BIN)/ts_polmat
 
 ts_jaco:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_jaco.adb
-	gnatbl -o $(BIN)/ts_jaco ts_jaco.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_jaco.adb -o $(BIN)/ts_jaco
 
 ts_evaline:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_evaline.adb
-	gnatbl -o $(BIN)/ts_evaline ts_evaline.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_evaline.adb \
+              -o $(BIN)/ts_evaline
 
 ts_lineva:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_lineva.adb
-	gnatbl -o $(BIN)/ts_lineva ts_lineva.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_lineva.adb \
+              -o $(BIN)/ts_lineva
 
 ts_parse:
-	gnatmake -c $(INCLULIBS) $(GNATFLABS) ts_parse.adb
-	gnatbl -o $(BIN)/ts_parse ts_parse.ali
+	gnatmake $(INCLULIBS) $(GNATFLABS) ts_parse.adb \
+              -o $(BIN)/ts_parse
 
 ts_subs:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_subs
-	gnatbl -o $(BIN)/ts_subs ts_subs.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_subs -o $(BIN)/ts_subs
 
 ts_tabform:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tabform -o $(BIN)/ts_tabform
@@ -370,23 +395,25 @@ ts_cffsup:
 ts_gradcirc:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_gradcirc -o $(BIN)/ts_gradcirc
 
-ts_speel:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speel -o $(BIN)/ts_speel
+ts_speel: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speel -o $(BIN)/ts_speel \
+                 -largs get_clock.o get_clocks_per_sec.o
 
-ts_speelsys:
+ts_speelsys: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speelsys.adb \
-                 -o $(BIN)/ts_speelsys
+                 -o $(BIN)/ts_speelsys -largs get_clock.o get_clocks_per_sec.o
 
-ts_cycfun:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cycfun.adb -o $(BIN)/ts_cycfun
+ts_cycfun: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cycfun.adb \
+              -o $(BIN)/ts_cycfun -largs get_clock.o get_clocks_per_sec.o
 
 ts_vmpeval:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpeval.adb \
               -o $(BIN)/ts_vmpeval
 
-ts_vmpdiff:
+ts_vmpdiff: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpdiff.adb \
-              -o $(BIN)/ts_vmpdiff
+              -o $(BIN)/ts_vmpdiff -largs get_clock.o get_clocks_per_sec.o
 
 ts_speelser:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speelser.adb \
@@ -406,140 +433,137 @@ ts_evalcnv:
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_basex.adb
-	gnatbl -o $(BIN)/ts_basex ts_basex.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_basex.adb \
+              -o $(BIN)/ts_basex
 
 ts_feasi:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_feasi.adb
-	gnatbl -o $(BIN)/ts_feasi ts_feasi.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_feasi.adb \
+              -o $(BIN)/ts_feasi
 
 ts_enurs:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_enurs.adb
-	gnatbl -o $(BIN)/ts_enurs ts_enurs.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_enurs.adb \
+              -o $(BIN)/ts_enurs
 
 ts_diclp:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_diclp.adb
-	gnatbl -o $(BIN)/ts_diclp ts_diclp.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_diclp.adb \
+              -o $(BIN)/ts_diclp
 
 ts_givrot:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_givrot.adb
-	gnatbl -o $(BIN)/ts_givrot ts_givrot.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_givrot.adb \
+              -o $(BIN)/ts_givrot
 
 ts_lstvec:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_lstvec.adb
-	gnatbl -o $(BIN)/ts_lstvec ts_lstvec.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_lstvec.adb \
+              -o $(BIN)/ts_lstvec
 
 ts_fvector:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_fvector.adb
-	gnatbl -o $(BIN)/ts_fvector ts_fvector.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_fvector.adb \
+              -o $(BIN)/ts_fvector
 
 # Test programs for the Homotopy library :
 
 ts_sols:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_sols.adb
-	gnatbl -o $(BIN)/ts_sols ts_sols.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sols.adb -o $(BIN)/ts_sols
 
 ts_mapsols_io:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_mapsols_io.adb
-	gnatbl -o $(BIN)/ts_mapsols_io ts_mapsols_io.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mapsols_io.adb \
+              -o $(BIN)/ts_mapsols_io
 
 ts_grepsols:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_grepsols.adb
-	gnatbl -o $(BIN)/ts_grepsols ts_grepsols.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_grepsols.adb \
+              -o $(BIN)/ts_grepsols
 
 mergesols:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) mergesols.adb
-	gnatbl -o $(BIN)/mergesols mergesols.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) mergesols.adb \
+              -o $(BIN)/mergesols
 
 ts_splitjoin:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_splitjoin.adb
-	gnatbl -o $(BIN)/ts_splitjoin ts_splitjoin.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_splitjoin.adb \
+              -o $(BIN)/ts_splitjoin
 
 ts_hash:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_hash.adb
-	gnatbl -o $(BIN)/ts_hash ts_hash.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hash.adb -o $(BIN)/ts_hash
 
 ts_solar:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_solar.adb
-	gnatbl -o $(BIN)/ts_solar ts_solar.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_solar.adb \
+              -o $(BIN)/ts_solar
 
 ts_drivscal: get_clock.o get_clocks_per_sec.o
 	gnatmake -o $(BIN)/ts_drivscal $(INCLULIBS) $(GNATFLAGS) \
-             ts_drivscal.adb -largs get_clock.o get_clocks_per_sec.o
+                    ts_drivscal.adb -largs get_clock.o get_clocks_per_sec.o
 
 ts_scal:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_scal.adb
-	gnatbl -o $(BIN)/ts_scal ts_scal.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_scal.adb -o $(BIN)/ts_scal
 
 ts_drivred:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_drivred.adb
-	gnatbl -o $(BIN)/ts_drivred ts_drivred.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivred.adb \
+              -o $(BIN)/ts_drivred
 
 ts_homotopy:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_homotopy.adb
-	gnatbl -o $(BIN)/ts_homotopy ts_homotopy.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_homotopy.adb \
+              -o $(BIN)/ts_homotopy
 
 ts_homline:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_homline.adb
-	gnatbl -o $(BIN)/ts_homline ts_homline.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_homline.adb \
+              -o $(BIN)/ts_homline
 
 ts_linsol:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_linsol.adb
-	gnatbl -o $(BIN)/ts_linsol ts_linsol.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_linsol.adb \
+              -o $(BIN)/ts_linsol
 
 # Test programs for the Newton library :
 
 ts_mreseva:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_mreseva.adb
-	gnatbl -o $(BIN)/ts_mreseva ts_mreseva.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mreseva.adb \
+              -o $(BIN)/ts_mreseva
 
 ts_rootrefi:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_rootrefi.adb
-	gnatbl -o $(BIN)/ts_rootrefi ts_rootrefi.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_rootrefi.adb \
+              -o $(BIN)/ts_rootrefi
 
 ts_newton:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_newton.adb
-	gnatbl -o $(BIN)/ts_newton ts_newton.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_newton.adb \
+              -o $(BIN)/ts_newton
 
 ts_realnewt:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_realnewt.adb
-	gnatbl -o $(BIN)/ts_realnewt ts_realnewt.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_realnewt.adb \
+              -o $(BIN)/ts_realnewt
 
 ts_numdif:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_numdif.adb
-	gnatbl -o $(BIN)/ts_numdif ts_numdif.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_numdif.adb \
+              -o $(BIN)/ts_numdif
 
 ts_jactrees:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_jactrees.adb
-	gnatbl -o $(BIN)/ts_jactrees ts_jactrees.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_jactrees.adb \
+              -o $(BIN)/ts_jactrees
 
 ts_deftrees:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_deftrees.adb
-	gnatbl -o $(BIN)/ts_deftrees ts_deftrees.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_deftrees.adb \
+              -o $(BIN)/ts_deftrees
 
 ts_deflate:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_deflate.adb
-	gnatbl -o $(BIN)/ts_deflate ts_deflate.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_deflate.adb \
+              -o $(BIN)/ts_deflate
 
 ts_straight:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_straight.adb
-	gnatbl -o $(BIN)/ts_straight ts_straight.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_straight.adb \
+              -o $(BIN)/ts_straight
 
 ts_stair:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_stair.adb
-	gnatbl -o $(BIN)/ts_stair ts_stair.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_stair.adb \
+              -o $(BIN)/ts_stair
 
 ts_defmat:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_defmat.adb
-	gnatbl -o $(BIN)/ts_defmat ts_defmat.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_defmat.adb \
+              -o $(BIN)/ts_defmat
 
 ts_multip:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_multip.adb
-	gnatbl -o $(BIN)/ts_multip ts_multip.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_multip.adb \
+              -o $(BIN)/ts_multip
 
 ts_muldef:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_muldef.adb
-	gnatbl -o $(BIN)/ts_muldef ts_muldef.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_muldef.adb \
+              -o $(BIN)/ts_muldef
 
 # Test programs for the Deformations/Curves library :
 
@@ -610,16 +634,16 @@ ts_sernewcnv:
 # Test programs for the Continuation library :
 
 ts_preco:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_preco.adb
-	gnatbl -o $(BIN)/ts_preco ts_preco.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_preco.adb \
+              -o $(BIN)/ts_preco
 
 ts_path:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_path.adb
-	gnatbl -o $(BIN)/ts_path ts_path.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_path.adb \
+              -o $(BIN)/ts_path
 
 ts_vlprs:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_vlprs.adb
-	gnatbl -o $(BIN)/ts_vlprs ts_vlprs.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_vlprs.adb \
+              -o $(BIN)/ts_vlprs
 
 ts_poco: get_clock.o get_clocks_per_sec.o
 	gnatmake -o $(BIN)/ts_poco $(INCLULIBS) $(GNATFLAGS) ts_poco.adb \
@@ -634,40 +658,38 @@ ts_realcont: get_clock.o get_clocks_per_sec.o
                     ts_realcont.adb -largs get_clock.o get_clocks_per_sec.o
 
 ts_exp:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_exp.adb
-	gnatbl -o $(BIN)/ts_exp ts_exp.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_exp.adb -o $(BIN)/ts_exp
 
 mypoco:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) mypoco.adb
-	gnatbl -o $(BIN)/mypoco mypoco.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) mypoco.adb -o $(BIN)/mypoco
 
 # Test programs for the Root_Counts/Product homotopies library :
 
 ts_startsys:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_startsys.adb
-	gnatbl -o $(BIN)/ts_startsys ts_startsys.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_startsys.adb \
+              -o $(BIN)/ts_startsys
 
 ts_drivmhom:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_drivmhom.adb
-	gnatbl -o $(BIN)/ts_drivmhom ts_drivmhom.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivmhom.adb \
+              -o $(BIN)/ts_drivmhom
 
 ts_drivmuho:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_drivmuho.adb
-	gnatbl -o $(BIN)/ts_drivmuho ts_drivmuho.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivmuho.adb \
+              -o $(BIN)/ts_drivmuho
 
 ts_drivss:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_drivss.adb
-	gnatbl -o $(BIN)/ts_drivss ts_drivss.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivss.adb \
+              -o $(BIN)/ts_drivss
 
 # Test programs in the Root_Counts/Simpomials library :
 
 ts_fewsys:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_fewsys.adb
-	gnatbl -o $(BIN)/ts_fewsys ts_fewsys.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_fewsys.adb \
+              -o $(BIN)/ts_fewsys
 
 ts_spasol:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_spasol.adb
-	gnatbl -o $(BIN)/ts_spasol ts_spasol.ali
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_spasol.adb \
+              -o $(BIN)/ts_spasol
 
 # Test programs for the Implicit lifting library :
 
