@@ -33,7 +33,7 @@ package Multitasked_AlgoDiff_Convolutions is
 
   procedure Standard_Multitasked_EvalDiff
               ( nbt : in integer32;
-                c : in Standard_Speelpenning_Convolutions.Convolution_Circuits;
+                c : in Standard_Speelpenning_Convolutions.Circuits;
                 x : in Standard_Complex_VecVecs.VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
                 pwt : in Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
@@ -42,7 +42,7 @@ package Multitasked_AlgoDiff_Convolutions is
                 output : in boolean := false );
   procedure DoblDobl_Multitasked_EvalDiff
               ( nbt : in integer32;
-                c : in DoblDobl_Speelpenning_Convolutions.Convolution_Circuits;
+                c : in DoblDobl_Speelpenning_Convolutions.Circuits;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
                 pwt : in DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
@@ -51,7 +51,7 @@ package Multitasked_AlgoDiff_Convolutions is
                 output : in boolean := false );
   procedure QuadDobl_Multitasked_EvalDiff
               ( nbt : in integer32;
-                c : in QuadDobl_Speelpenning_Convolutions.Convolution_Circuits;
+                c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
                 pwt : in QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;

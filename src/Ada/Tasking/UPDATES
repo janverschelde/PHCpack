@@ -1,3 +1,6 @@
+Sat 25 Jan 2020 : updates in multitasked_algodiff_convolutions, ts_mtadcnv,
+  and ts_mtnewton for the name change Convolution_Circuit.
+
 Fri 24 Jan 2020 : fixed bug in timer in ts_mtnewton.
 
 Thu 23 Jan 2020 : updated ts_mtnewton with a random Newton homotopy.

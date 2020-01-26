@@ -282,7 +282,7 @@ procedure ts_mtnewton is
 
     use Standard_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits(p'range)
+    c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
@@ -318,7 +318,7 @@ procedure ts_mtnewton is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits(p'range)
+    c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
@@ -354,7 +354,7 @@ procedure ts_mtnewton is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits(p'range)
+    c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;

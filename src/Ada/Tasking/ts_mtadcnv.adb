@@ -57,7 +57,7 @@ procedure ts_mtadcnv is
 
     use Standard_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : constant Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -136,7 +136,7 @@ procedure ts_mtadcnv is
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : constant Circuits
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -216,7 +216,7 @@ procedure ts_mtadcnv is
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    c : constant Convolution_Circuits
+    c : constant Circuits
       := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
