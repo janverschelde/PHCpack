@@ -96,6 +96,27 @@ package Newton_Convolutions is
   -- DESCRIPTION :
   --   Returns the largest absolute value over all values in v.
 
+  procedure MaxIdx ( v : in Standard_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out double_float; idx : out integer32 );
+  procedure MaxIdx ( v : in DoblDobl_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out double_double; idx : out integer32 );
+  procedure MaxIdx ( v : in QuadDobl_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out quad_double; idx : out integer32 );
+
+  -- DESCRIPTION :
+  --   Returns in idx the highest index in v for which 
+  --   maxval = Max(v(idx)) <= tol.
+  --   If idx < v'first, then already Max(v(v'first)) > tol,
+  --   otherwise for all k from v'first to idx, Max(v(k)) <= tol.
+
+  -- REQUIRED :
+  --   The vector v stores the updates to the coefficients of a power series
+  --   in linearized form, that is: v(k) stores all coefficients with t^k,
+  --   for k in v'range.
+
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step

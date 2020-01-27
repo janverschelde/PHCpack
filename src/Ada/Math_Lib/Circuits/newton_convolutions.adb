@@ -300,6 +300,75 @@ package body Newton_Convolutions is
     return res;
   end Max;
 
+  procedure MaxIdx ( v : in Standard_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out double_float; idx : out integer32 ) is
+
+    val : double_float;
+
+  begin
+    maxval := Max(v(v'first));
+    if maxval > tol then
+      idx := v'first-1;
+    else
+      for k in v'first+1..v'last loop
+        val := Max(v(k));
+        if val < tol then
+          maxval := val;
+        else
+          idx := k-1; return;
+        end if;
+      end loop;
+    end if;
+    idx := v'last;
+  end MaxIdx;
+
+  procedure MaxIdx ( v : in DoblDobl_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out double_double; idx : out integer32 ) is
+
+    val : double_double;
+
+  begin
+    maxval := Max(v(v'first));
+    if maxval > tol then
+      idx := v'first-1;
+    else
+      for k in v'first+1..v'last loop
+        val := Max(v(k));
+        if val < tol then
+          maxval := val;
+        else
+          idx := k-1; return;
+        end if;
+      end loop;
+    end if;
+    idx := v'last;
+  end MaxIdx;
+
+  procedure MaxIdx ( v : in QuadDobl_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out quad_double; idx : out integer32 ) is
+
+    val : quad_double;
+
+  begin
+    maxval := Max(v(v'first));
+    if maxval > tol then
+      idx := v'first-1;
+    else
+      for k in v'first+1..v'last loop
+        val := Max(v(k));
+        if val < tol then
+          maxval := val;
+        else
+          idx := k-1; return;
+        end if;
+      end loop;
+    end if;
+    idx := v'last;
+  end MaxIdx;
+
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step
@@ -308,7 +377,7 @@ package body Newton_Convolutions is
                 absdx : out double_float; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -362,7 +431,7 @@ package body Newton_Convolutions is
                 absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
 
     fac : constant double_double := create(1.0);
@@ -390,7 +459,7 @@ package body Newton_Convolutions is
                 absdx : out double_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
 
     fac : constant double_double := create(1.0);
@@ -422,7 +491,7 @@ package body Newton_Convolutions is
                 absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
 
     fac : constant quad_double := create(1.0);
@@ -450,7 +519,7 @@ package body Newton_Convolutions is
                 absdx : out quad_double; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
 
     fac : constant quad_double := create(1.0);
@@ -484,7 +553,7 @@ package body Newton_Convolutions is
                 absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -509,7 +578,7 @@ package body Newton_Convolutions is
                 absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
@@ -538,7 +607,7 @@ package body Newton_Convolutions is
                 absdx,rcond  : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
 
     fac : constant double_double := create(1.0);
@@ -566,7 +635,7 @@ package body Newton_Convolutions is
                 absdx,rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
 
     fac : constant double_double := create(1.0);
@@ -598,7 +667,7 @@ package body Newton_Convolutions is
                 absdx,rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
 
     fac : constant quad_double := create(1.0);
@@ -626,7 +695,7 @@ package body Newton_Convolutions is
                 absdx,rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
 
     fac : constant quad_double := create(1.0);
@@ -663,7 +732,7 @@ package body Newton_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scaledx : in boolean := true;
+                scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then

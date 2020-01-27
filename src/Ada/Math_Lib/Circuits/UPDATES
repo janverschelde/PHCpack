@@ -1,3 +1,7 @@
+Mon 27 Jan 2020 : to Newton_convolutions, added procedures to compute
+  the highest index of the coefficient vector of the update that is lower
+  than a given tolerance, to measure the convergence of Newton's method.
+
 Sat 25 Jan 2020 : added functions to system_convolution_circuits.
   Shortened the names *Convolution_Circuit* into *Circuit* in
   generic_speelpenning_convolutions, modified system_convolution_circuits,
