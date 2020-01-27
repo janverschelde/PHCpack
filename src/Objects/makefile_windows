@@ -718,58 +718,122 @@ ts_sys2vec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sys2vec.adb \
               -o $(BIN)/ts_sys2vec
 
-# Test programs for the Homotopy library :
+# Test programs for the Deformations/Solutions library :
+
+ts_solfilt:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_solfilt.adb \
+              -o $(BIN)/ts_solfilt
 
 ts_sols:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sols.adb -o $(BIN)/ts_sols
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sols.adb -o $(BIN)/ts_sols
 
-ts_mapsols_io:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mapsols_io.adb \
-              -o $(BIN)/ts_mapsols_io
+ts_ddsols:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddsols.adb -o $(BIN)/ts_ddsols
 
-ts_grepsols:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_grepsols.adb \
-              -o $(BIN)/ts_grepsols
-
-mergesols:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) mergesols.adb \
-              -o $(BIN)/mergesols
-
-ts_splitjoin:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_splitjoin.adb \
-              -o $(BIN)/ts_splitjoin
-
-ts_hash:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hash.adb -o $(BIN)/ts_hash
+ts_qdsols:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_qdsols.adb -o $(BIN)/ts_qdsols
 
 ts_solar:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_solar.adb \
-              -o $(BIN)/ts_solar
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_solar.adb -o $(BIN)/ts_solar
+
+ts_mapsols_io:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mapsols_io.adb \
+                 -o $(BIN)/ts_mapsols_io
+
+ts_dicsols_io:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dicsols_io.adb \
+                 -o $(BIN)/ts_dicsols_io
+
+ts_grepsols:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_grepsols.adb \
+                 -o $(BIN)/ts_grepsols
+
+mergesols:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) mergesols.adb -o $(BIN)/mergesols
+
+ts_contab:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_contab.adb -o $(BIN)/ts_contab
+
+ts_selsol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_selsol.adb -o $(BIN)/ts_selsol
+
+ts_solstr:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_solstr.adb -o $(BIN)/ts_solstr
+
+ts_quadpart: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_quadpart.adb \
+              -o $(BIN)/ts_quadpart \
+              -largs get_clock.o get_clocks_per_sec.o
+
+ts_quad: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_quad.adb -o $(BIN)/ts_quad \
+                -largs get_clock.o get_clocks_per_sec.o
+
+ts_soldrop:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_soldrop.adb \
+              -o $(BIN)/ts_soldrop
+
+ts_ptlists:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ptlists.adb \
+              -o $(BIN)/ts_ptlists
+
+ts_trasols_io:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_trasols_io.adb \
+              -o $(BIN)/ts_trasols_io
+
+ts_mixres:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mixres.adb -o $(BIN)/ts_mixres
+
+# Test programs for the Deformations/Homotopy library :
 
 ts_drivscal: get_clock.o get_clocks_per_sec.o
-	gnatmake -o $(BIN)/ts_drivscal $(INCLULIBS) $(GNATFLAGS) \
-                    ts_drivscal.adb -largs get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivscal \
+              -o $(BIN)/ts_drivscal \
+              -largs get_clock.o get_clocks_per_sec.o
 
 ts_scal:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_scal.adb -o $(BIN)/ts_scal
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_scal.adb -o $(BIN)/ts_scal
 
-ts_drivred:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivred.adb \
-              -o $(BIN)/ts_drivred
+ts_drivred: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivred.adb \
+              -o $(BIN)/ts_drivred \
+              -largs get_clock.o get_clocks_per_sec.o
 
 ts_homotopy:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_homotopy.adb \
-              -o $(BIN)/ts_homotopy
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_homotopy.adb \
+                 -o $(BIN)/ts_homotopy
 
 ts_homline:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_homline.adb \
-              -o $(BIN)/ts_homline
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_homline.adb \
+                 -o $(BIN)/ts_homline
 
 ts_linsol:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_linsol.adb \
-              -o $(BIN)/ts_linsol
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_linsol.adb -o $(BIN)/ts_linsol
 
-# Test programs for the Newton library :
+ts_qdhom:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_qdhom.adb -o $(BIN)/ts_qdhom
+
+ts_poldrop:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_poldrop.adb \
+              -o $(BIN)/ts_poldrop
+
+ts_evalhomt: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_evalhomt.adb \
+              -o $(BIN)/ts_evalhomt \
+              -largs get_clock.o get_clocks_per_sec.o
+
+ts_vmphom:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmphom.adb -o $(BIN)/ts_vmphom
+
+ts_scalplane:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_scalplane.adb \
+              -o $(BIN)/ts_scalplane
+
+ts_multproj:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_multproj.adb \
+              -o $(BIN)/ts_multproj
+
+# Test programs for the Deformations/Newton library :
 
 ts_mreseva:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mreseva.adb \
@@ -799,21 +863,24 @@ ts_deftrees:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_deftrees.adb \
               -o $(BIN)/ts_deftrees
 
-ts_deflate:
+ts_deflate: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_deflate.adb \
-              -o $(BIN)/ts_deflate
+              -o $(BIN)/ts_deflate \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_straight:
+ts_straight: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_straight.adb \
-              -o $(BIN)/ts_straight
+              -o $(BIN)/ts_straight \
+              -largs get_clock.o get_clocks_per_sec.o
 
 ts_stair:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_stair.adb \
               -o $(BIN)/ts_stair
 
-ts_defmat:
+ts_defmat: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_defmat.adb \
-              -o $(BIN)/ts_defmat
+              -o $(BIN)/ts_defmat \
+              -largs get_clock.o get_clocks_per_sec.o
 
 ts_multip:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_multip.adb \
@@ -823,89 +890,114 @@ ts_muldef:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_muldef.adb \
               -o $(BIN)/ts_muldef
 
+ts_deflop:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_deflop.adb -o $(BIN)/ts_deflop
+
+ts_ddnewt: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddnewt.adb \
+              -o $(BIN)/ts_ddnewt \
+              -largs get_clock.o get_clocks_per_sec.o
+
+ts_qdnewt: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_qdnewt.adb \
+              -o $(BIN)/ts_qdnewt \
+              -largs get_clock.o get_clocks_per_sec.o
+
+ts_vmpnewt:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpnewt.adb \
+              -o $(BIN)/ts_vmpnewt
+
 # Test programs for the Deformations/Curves library :
 
-ts_durker:
+ts_durker: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_durker.adb \
-                 -o $(BIN)/ts_durker
+              -o $(BIN)/ts_durker \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_extrapol:
+ts_extrapol: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_extrapol.adb \
-                 -o $(BIN)/ts_extrapol
+              -o $(BIN)/ts_extrapol \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_extrapts:
+ts_extrapts: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_extrapts.adb \
-                 -o $(BIN)/ts_extrapts
+              -o $(BIN)/ts_extrapts \
+              -largs get_clock.o get_clocks_per_sec.o
 
 ts_sernew:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sernew.adb \
-                 -o $(BIN)/ts_sernew
+              -o $(BIN)/ts_sernew
 
 ts_sersol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersol.adb \
-                 -o $(BIN)/ts_sersol
+              -o $(BIN)/ts_sersol
 
 ts_serhom:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serhom.adb \
-                 -o $(BIN)/ts_serhom
+              -o $(BIN)/ts_serhom
 
-ts_serpred:
+ts_serpred: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpred.adb \
-                 -o $(BIN)/ts_serpred
+              -o $(BIN)/ts_serpred \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_serpath:
+ts_serpath: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpath.adb \
-                 -o $(BIN)/ts_serpath
+              -o $(BIN)/ts_serpath \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_serpade:
+ts_serpade: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpade.adb \
-                 -o $(BIN)/ts_serpade
+              -o $(BIN)/ts_serpade \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_padepred:
+ts_padepred: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_padepred.adb \
-                 -o $(BIN)/ts_padepred
+              -o $(BIN)/ts_padepred \
+              -largs get_clock.o get_clocks_per_sec.o
 
 ts_jacrabin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_jacrabin.adb \
-                 -o $(BIN)/ts_jacrabin
+              -o $(BIN)/ts_jacrabin
 
-ts_nxtpadsol:
+ts_nxtpadsol: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_nxtpadsol.adb \
-                 -o $(BIN)/ts_nxtpadsol
+              -o $(BIN)/ts_nxtpadsol \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_hesscrit:
+ts_hesscrit: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesscrit.adb \
-                 -o $(BIN)/ts_hesscrit
+              -o $(BIN)/ts_hesscrit \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_hesspred:
+ts_hesspred: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesspred.adb \
-                 -o $(BIN)/ts_hesspred
+              -o $(BIN)/ts_hesspred \
+              -largs get_clock.o get_clocks_per_sec.o
 
-ts_predstep:
+ts_predstep: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_predstep.adb \
-                 -o $(BIN)/ts_predstep
+              -o $(BIN)/ts_predstep \
+              -largs get_clock.o get_clocks_per_sec.o
 
 ts_sernewcnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sernewcnv.adb \
-                 -o $(BIN)/ts_sernewcnv
+              -o $(BIN)/ts_sernewcnv
 
-# Test programs for the Continuation library :
-
-ts_preco:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_preco.adb \
-              -o $(BIN)/ts_preco
-
-ts_path:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_path.adb \
-              -o $(BIN)/ts_path
+# Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_vlprs.adb \
-              -o $(BIN)/ts_vlprs
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vlprs.adb -o $(BIN)/ts_vlprs
 
-ts_poco: get_clock.o get_clocks_per_sec.o
-	gnatmake -o $(BIN)/ts_poco $(INCLULIBS) $(GNATFLAGS) ts_poco.adb \
-                 -largs get_clock.o get_clocks_per_sec.o
+postpoco: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) postpoco.adb \
+              -o $(BIN)/postpoco \
+              -largs get_clock.o get_clocks_per_sec.o
+
+valipoco:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) valipoco.adb -o $(BIN)/valipoco
+
+# Test programs for the Deformations/Sweep library :
 
 ts_parcon: get_clock.o get_clocks_per_sec.o
 	gnatmake -o $(BIN)/ts_parcon $(INCLULIBS) $(GNATFLAGS) ts_parcon.adb \
@@ -914,6 +1006,53 @@ ts_parcon: get_clock.o get_clocks_per_sec.o
 ts_realcont: get_clock.o get_clocks_per_sec.o
 	gnatmake -o $(BIN)/ts_realcont $(INCLULIBS) $(GNATFLAGS) \
                     ts_realcont.adb -largs get_clock.o get_clocks_per_sec.o
+
+# Test programs for the Deformations/Trackers library :
+
+ts_preco:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_preco.adb \
+              -o $(BIN)/ts_preco
+
+ts_correct: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_correct.adb \
+              -o $(BIN)/ts_correct \
+              -largs get_clock.o get_clocks_per_sec.o
+
+ts_ortocor: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ortocor.adb \
+              -o $(BIN)/ts_ortocor \
+              -largs get_clock.o get_clocks_per_sec.o
+
+ts_path: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_path.adb \
+              -o $(BIN)/ts_path \
+              -largs get_clock.o get_clocks_per_sec.o
+
+ts_track: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_track.adb \
+              -o $(BIN)/ts_track \
+              -largs get_clock.o get_clocks_per_sec.o
+
+ts_nxtsol:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_nxtsol.adb \
+              -o $(BIN)/ts_nxtsol
+
+# Test programs for the Deformations/Continuation library :
+
+ts_pactun:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pactun.adb -o $(BIN)/ts_pactun
+
+ts_autotune:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_autotune.adb \
+              -o $(BIN)/ts_autotune
+
+ts_poco: get_clock.o get_clocks_per_sec.o
+	gnatmake -o $(BIN)/ts_poco $(INCLULIBS) $(GNATFLAGS) ts_poco.adb \
+                 -largs get_clock.o get_clocks_per_sec.o
+
+ts_bbpoco: get_clock.o get_clocks_per_sec.o
+	gnatmake -o $(BIN)/ts_bbpoco $(INCLULIBS) $(GNATFLAGS) ts_bbpoco.adb \
+                 -largs get_clock.o get_clocks_per_sec.o
 
 ts_exp:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_exp.adb -o $(BIN)/ts_exp
@@ -1459,10 +1598,6 @@ ts_monfac: get_clock.o get_clocks_per_sec.o
 	         -largs get_clock.o get_clocks_per_sec.o
 
 # Test programs in the Components/Decomposition library :
-
-ts_solfilt:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_solfilt.adb
-	gnatbl -o $(BIN)/ts_solfilt ts_solfilt.ali
 
 ts_irdeco:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_irdeco.adb
