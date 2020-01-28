@@ -1,3 +1,6 @@
+Mon 27 Jan 2020 : updated ts_serwit because of shortening of the name
+  Convolution_Circuit into Circuit.
+
 Mon 6 Jan 2020 : updated ts_serwit for the removal of the package
   linearized_series_coefficients.  Updated ts_serwit for the system
   encapsulation of the convolution circuits.

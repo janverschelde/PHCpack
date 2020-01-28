@@ -47,8 +47,7 @@ procedure ts_serwit is
   end Series_Coefficients;
 
   procedure Add_Continuation_Parameter
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Link_to_Convolution_Circuit ) is
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit ) is
 
   -- DESCRIPTION :
   --   To every coefficient adds 't' as the linear coefficient
@@ -69,8 +68,7 @@ procedure ts_serwit is
   end Add_Continuation_Parameter;
 
   procedure Add_Continuation_Parameter
-              ( c : in Standard_Speelpenning_Convolutions.
-                       Convolution_Circuits ) is
+              ( c : in Standard_Speelpenning_Convolutions.Circuits ) is
 
   -- DESCRIPTION :
   --   To every coefficient adds 't' as the linear coefficient
@@ -193,7 +191,7 @@ procedure ts_serwit is
     put("Read witness set of dimension "); 
     put(dim,1); put(" and degree "); put(deg,1); put_line(".");
     declare
-      c : constant Convolution_Circuits(lp'range)
+      c : constant Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(degree));
       s : Link_to_System := Create(c,lp'last,degree);
       sol : constant Standard_Complex_Solutions.Link_to_Solution
