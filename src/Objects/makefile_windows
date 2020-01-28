@@ -1900,33 +1900,125 @@ lib2path.o:
 # Test programs for the Tasking :
 
 corecount.o:
-	gcc -c $(PHCAda)/Tasking/corecountwindows.c -o corecount.o
+	$(gcc) -c $(PHCAda)/Tasking/corecount.c -o corecount.o
 
 ts_corecount: corecount.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_corecount.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb
 	gnatbind ts_corecount
 	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
 
+ts_mtmatvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmatvec.adb \
+                 -o $(BIN)/ts_mtmatvec
+
+ts_mtpolval:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtpolval.adb \
+                 -o $(BIN)/ts_mtpolval
+
+ts_mtlinsol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsol.adb \
+                 -o $(BIN)/ts_mtlinsol
+
+ts_mtlinsolV0:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsolV0.adb \
+                 -o $(BIN)/ts_mtlinsolV0
+
+ts_mtlinsolV1:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsolV1.adb \
+                 -o $(BIN)/ts_mtlinsolV1
+
+ts_mtlinsolV2:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsolV2.adb \
+                 -o $(BIN)/ts_mtlinsolV2
+
 ts_tasking:
-	gnatmake -o $(BIN)/ts_tasking  $(INCLULIBS) $(GNATFLAGS) ts_tasking.adb
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tasking.adb \
+                 -o $(BIN)/ts_tasking
+
+ts_protect:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_protect.adb \
+              -o $(BIN)/ts_protect
+
+ts_access:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_access.adb \
+              -o $(BIN)/ts_access
 
 ts_mutex:
-	gnatmake -o $(BIN)/ts_mutex  $(INCLULIBS) $(GNATFLAGS) ts_mutex.adb
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mutex.adb -o $(BIN)/ts_mutex
 
 ts_jobs:
-	gnatmake -o $(BIN)/ts_jobs $(INCLULIBS) $(GNATFLAGS) ts_jobs.adb
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_jobs.adb -o $(BIN)/ts_jobs
 
 ts_mtsols:
-	gnatmake -o $(BIN)/ts_mtsols $(INCLULIBS) $(GNATFLAGS) ts_mtsols.adb
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtsols.adb -o $(BIN)/ts_mtsols
 
 ts_mtcont: get_clock.o get_clocks_per_sec.o
-	gnatmake -o $(BIN)/ts_mtcont $(INCLULIBS) $(GNATFLAGS) ts_mtcont.adb
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtcont.adb \
+              -o $(BIN)/ts_mtcont -largs get_clock.o get_clocks_per_sec.o
 
 ts_mtstref:
-	gnatmake -o $(BIN)/ts_mtstref $(INCLULIBS) $(GNATFLAGS) ts_mtstref.adb
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtstref.adb \
+              -o $(BIN)/ts_mtstref
 
-ts_mtsharp:
-	gnatmake -o $(BIN)/ts_mtsharp $(INCLULIBS) $(GNATFLAGS) ts_mtsharp.adb
+ts_mtddref: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtddref.adb \
+              -o $(BIN)/ts_mtddref -largs get_clock.o get_clocks_per_sec.o
+
+ts_mtqdref: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtqdref.adb \
+              -o $(BIN)/ts_mtqdref -largs get_clock.o get_clocks_per_sec.o
+
+ts_mtsharp: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtsharp.adb \
+              -o $(BIN)/ts_mtsharp -largs get_clock.o get_clocks_per_sec.o
+
+ts_mtpolco:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtpolco.adb \
+                 -o $(BIN)/ts_mtpolco
+
+ts_mtsam:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtsam.adb -o $(BIN)/ts_mtsam
+
+ts_mtvol: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtvol.adb \
+              -o $(BIN)/ts_mtvol -largs get_clock.o get_clocks_per_sec.o
+
+ts_mtvolcon: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtvolcon.adb \
+              -o $(BIN)/ts_mtvolcon -largs get_clock.o get_clocks_per_sec.o
+
+ts_mtverify:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtverify.adb \
+              -o $(BIN)/ts_mtverify
+
+ts_mtmva: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmva.adb \
+              -o $(BIN)/ts_mtmva -largs get_clock.o get_clocks_per_sec.o
+
+ts_mtperm: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtperm.adb \
+              -o $(BIN)/ts_mtperm -largs get_clock.o get_clocks_per_sec.o
+
+ts_mtpermtrol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtpermtrol.adb \
+              -o $(BIN)/ts_mtpermtrol
+
+ts_mtmbthom: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmbthom.adb \
+              -o $(BIN)/ts_mtmbthom -largs get_clock.o get_clocks_per_sec.o
+
+ts_mtcelidx: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+             reltab.o mvc4phc.o demicsrun4phc.o \
+             get_clock.o get_clocks_per_sec.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_mtcelidx.adb \
+                 -o ts_demicsrun.o
+	gnatbind ts_mtcelidx use_c2phc
+	gnatlink ts_mtcelidx inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 get_clock.o get_clocks_per_sec.o \
+                 -o $(BIN)/ts_mtcelidx \
+                 --LINK=g++
 
 ts_mtadcnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtadcnv.adb \
@@ -1939,6 +2031,7 @@ ts_mtserlin:
 ts_mtnewton:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtnewton.adb \
               -o $(BIN)/ts_mtnewton
+
 
 # Test programs for the Main interactive drivers :
 
