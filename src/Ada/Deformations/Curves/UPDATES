@@ -1,3 +1,6 @@
+Mon 27 Jan 2020 : to newton_power_convolutions, added a verbose flag to
+  print the progress index.
+
 Sat 25 Jan 2020 : updated ts_sernewcnv for Convolution_Circuit name change.
 
 Mon 20 Jan 2020 : added a scale option to newton_power_convolutions,

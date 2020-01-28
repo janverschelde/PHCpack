@@ -33,7 +33,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+                scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type; 
@@ -44,7 +44,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+                scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( csr : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -54,7 +54,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+                scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type; 
@@ -65,7 +65,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+                scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( csr : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -75,7 +75,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+                scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type; 
@@ -86,7 +86,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+                scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -105,6 +105,7 @@ package Newton_Power_Convolutions is
   --   wrk      work space for the matrix series solver;
   --   scale    if true, then scaling is applied after the Newton steps,
   --            otherwise no scaling is applied;
+  --   verbose  if verbose, then the progress index will be written;
   --   vrblvl   if positive, the name of the procedure is written to screen.
 
   -- ON RETURN :
@@ -125,7 +126,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type; 
@@ -136,7 +137,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( csr : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -146,7 +147,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type; 
@@ -157,7 +158,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; rcond : out double_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( csr : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -167,7 +168,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type; 
@@ -178,7 +179,7 @@ package Newton_Power_Convolutions is
                 fail : out boolean; rcond : out quad_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -198,6 +199,7 @@ package Newton_Power_Convolutions is
   --   wrk      work space for the matrix series solver;
   --   scale    if true, then scaling is applied after the Newton steps,
   --            otherwise no scaling is applied;
+  --   verbose  if verbose, then the progress index will be written;
   --   vrblvl   if positive, the name of the procedure is written to screen.
 
   -- ON RETURN :
@@ -221,7 +223,7 @@ package Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( file : in file_type;
@@ -235,7 +237,7 @@ package Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( csr : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -248,7 +250,7 @@ package Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( file : in file_type;
@@ -262,7 +264,7 @@ package Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( csr : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -275,7 +277,7 @@ package Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Steps
               ( file : in file_type;
@@ -289,7 +291,7 @@ package Newton_Power_Convolutions is
                 info : out integer32;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -316,6 +318,7 @@ package Newton_Power_Convolutions is
   --   wrk      work space for the matrix series solver;
   --   scale    if true, then scaling is applied after the Newton steps,
   --            otherwise no scaling is applied;
+  --   verbose  if verbose, then the progress index will be written;
   --   vrblvl   if positive, the name of the procedure is written to screen.
 
   -- ON RETURN :
@@ -340,7 +343,7 @@ package Newton_Power_Convolutions is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Steps
               ( file : in file_type;
@@ -354,7 +357,7 @@ package Newton_Power_Convolutions is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Steps
               ( csr : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -367,7 +370,7 @@ package Newton_Power_Convolutions is
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Steps
               ( file : in file_type;
@@ -381,7 +384,7 @@ package Newton_Power_Convolutions is
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Steps
               ( csr : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -394,7 +397,7 @@ package Newton_Power_Convolutions is
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Steps
               ( file : in file_type;
@@ -408,7 +411,7 @@ package Newton_Power_Convolutions is
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
-		scale : in boolean := true;
+		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -430,6 +433,7 @@ package Newton_Power_Convolutions is
   --   wrkv     work space vector for the next coefficient computation;
   --   scale    if true, then scaling is applied after the Newton steps,
   --            otherwise no scaling is applied;
+  --   verbose  if verbose, then the progress index will be written;
   --   vrblvl   if positive, the name of the procedure is written to screen.
 
   -- ON RETURN :
