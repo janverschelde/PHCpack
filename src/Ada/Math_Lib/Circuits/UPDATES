@@ -1,3 +1,6 @@
+Wed 29 Jan 2020 : new procedure ts_hesscnv to develop the code to compute
+  the value of the Hessian of a circuit.
+
 Mon 27 Jan 2020 : to Newton_convolutions, added procedures to compute
   the highest index of the coefficient vector of the update that is lower
   than a given tolerance, to measure the convergence of Newton's method.

@@ -1,4 +1,4 @@
-Algorithmic differentiation and arithmetic circuits in PHCv2.4.75
+Algorithmic differentiation and arithmetic circuits in PHCv2.4.76
 
 This directory was created new in v2.3.98, with code that had been building
 up in the directory Functions.  In Functions, polynomials are evaluated by
@@ -71,4 +71,5 @@ newton_convolutions                : Newton with convolution circuits
 convergence_radius_estimates       : applies ratio theorem of Fabry
 ts_fabry                           : test on the Fabry ratio theorem
 ts_evalcnv                         : test on plain evaluation
+ts_hesscnv                         : test on plain Hessian computation
 -------------------------------------------------------------------------------
