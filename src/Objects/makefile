@@ -5,9 +5,9 @@
 # swap the # symbol in the following lines to use makefile_windows
 # or to use makefile_mac on a Mac OS x computer
 
-MAKEFILE = makefile_unix
+# MAKEFILE = makefile_unix
 # MAKEFILE = makefile_mac
-# MAKEFILE = makefile_windows
+MAKEFILE = makefile_windows
 
 # the main executable is phc
 
@@ -22,13 +22,27 @@ phc_noqd:
 phcpy2c2.so:
 	make -f $(MAKEFILE) phcpy2c2.so
 
+# for use with Sage :
+
+sage_phcpy2c2.so:
+	make -f $(MAKEFILE) sage_phcpy2c2.so
+
 # for phcpy on Python 3.5, make phcpy2c3.so
+# of for 3.6 and 3.7, do make phcpy2c36.so and make phcpy2c37.so
 
 phcpy2c3.so:
 	make -f $(MAKEFILE) phcpy2c3.so
 
-phcpy2c.a:
-	make -f $(MAKEFILE) phcpy2c.a
+phcpy2c36.so:
+	make -f $(MAKEFILE) phcpy2c36.so
+
+phcpy2c37.so:
+	make -f $(MAKEFILE) phcpy2c37.so
+
+# without the dependencies on GNAT, on Linux:
+
+phcpy2c2.a:
+	make -f $(MAKEFILE) phcpy2c2.a
 
 # with the double version of the Path library :
 
@@ -39,7 +53,7 @@ phcpy2cpath_d.so:
 
 testall: test_system test_math_lib test_deformations \
          test_root_counts test_schubert test_components \
-         test_main test_ctophc test_phctoc test_lib test_tasking test_mpi
+         test_main test_ctophc test_lib test_tasking test_mpi
 
 # Test program to see if compiler works, "hello world" :
 
@@ -154,9 +168,6 @@ ts_mpcst:
 ts_numbio:
 	make -f $(MAKEFILE) ts_numbio
 
-ts_isnan:
-	make -f $(MAKEFILE) ts_isnan
-
 # Test programs for Math_Lib/QD :
 
 test_qd: ts_dbldbl ts_qddbl ts_ddcmplx ts_qdcmplx ts_mpddcv ts_mpqdcv \
@@ -188,6 +199,9 @@ ts_qdfun:
 
 ts_cmpexp:
 	make -f $(MAKEFILE) ts_cmpexp
+
+ts_isnan:
+	make -f $(MAKEFILE) ts_isnan
 
 # Test programs for Math_Lib/Vectors :
 
@@ -397,7 +411,7 @@ ts_evddpol:
 
 test_circuits: ts_cffsup ts_speel ts_cycfun ts_speelsys ts_gradcirc \
                ts_vmpeval ts_vmpdiff ts_speelser ts_speelcnv ts_fabry \
-               ts_evalcnv
+               ts_evalcnv ts_hesscnv
 
 ts_cffsup:
 	make -f $(MAKEFILE) ts_cffsup
@@ -431,6 +445,9 @@ ts_fabry:
 
 ts_evalcnv:
 	make -f $(MAKEFILE) ts_evalcnv
+
+ts_hesscnv:
+	make -f $(MAKEFILE) ts_hesscnv
 
 # Test programs for Math_Lib/Supports :
 
@@ -466,7 +483,7 @@ ts_giftwrap:
 test_series: ts_pstrunc ts_bincff ts_series ts_series2 ts_cseries \
              ts_servec ts_servec2 ts_cservec ts_sermat ts_sermat2 ts_csermat \
              ts_seritp ts_seritp2 ts_cseritp ts_sersin ts_sersin2 ts_csersin \
-             ts_serlin ts_cserlin ts_cserlin ts_serinv ts_cserinv \
+             ts_serlin ts_serlin2 ts_cserlin ts_serinv ts_cserinv \
              ts_serpol ts_cserpol ts_sersys ts_csersys ts_sercffpol \
              ts_cserlin2
 
@@ -1056,7 +1073,7 @@ ts_mva:
 
 # Test programs for the Root_Counts/DEMiCs library :
 
-test_demics: ts_calldemics
+test_demics: ts_calldemics demics ts_inputData ts_demicsrun ts_outputData
 
 ts_calldemics:
 	make -f $(MAKEFILE) ts_calldemics
@@ -1591,7 +1608,7 @@ test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd ts_cpu2norm \
              ts_gpuonepath_d ts_gpuonepath_dd ts_gpuonepath_qd \
              ts_gpumanypaths_d ts_gpumanypaths_dd ts_gpumanypaths_qd \
              ts_gpupath_d ts_gpupath_dd ts_gpupath_qd \
-             ts_adepath_d ts_adepath_dd ts_adepath_qd ts_pathpars
+             ts_adepath_d ts_adepath_dd ts_adepath_qd ts_adepath ts_pathpars
 
 ts_cpu2norm_d:
 	make -f $(MAKEFILE) ts_cpu2norm_d
@@ -1662,14 +1679,17 @@ ts_adepath_dd:
 ts_adepath_qd:
 	make -f $(MAKEFILE) ts_adepath_qd
 
+ts_adepath:
+	make -f $(MAKEFILE) ts_adepath
+
+ademanypaths.o:
+	make -f $(MAKEFILE) ademanypaths.o
+
 lib2path.o:
 	make -f $(MAKEFILE) lib2path.o
 
 lib2path_d.o:
 	make -f $(MAKEFILE) lib2path_d.o
-
-ademanypaths.o:
-	make -f $(MAKEFILE) ademanypaths.o
 
 ts_ademanypaths:
 	make -f $(MAKEFILE) ts_ademanypaths
@@ -1681,8 +1701,8 @@ ts_pathpars:
 
 test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont \
               ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp ts_mtperm \
-              ts_mtpermctl ts_mtmbthom ts_mtcelidx ts_corecount \
-              ts_mtadcnv ts_mtserlin ts_mtnewton
+              ts_mtpermtrol ts_mtmbthom ts_mtcelidx ts_corecount \
+              ts_mtadcnv ts_mtserlin
 #             ts_mtmatvec ts_mtpolval ts_mtlinsol
 
 ts_corecount:
@@ -1751,8 +1771,8 @@ ts_mtmva:
 ts_mtperm:
 	make -f $(MAKEFILE) ts_mtperm
 
-ts_mtpermctl:
-	make -f $(MAKEFILE) ts_mtpermctl
+ts_mtpermtrol:
+	make -f $(MAKEFILE) ts_mtpermtrol
 
 ts_mtmbthom:
 	make -f $(MAKEFILE) ts_mtmbthom
