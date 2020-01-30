@@ -49,9 +49,50 @@ procedure ts_hesscnv is
           end if;
         end loop;
       end if;
-    elsif e(i) < 1 or e(j) < 0 then
-      null;
+    elsif ((e(i) >= 1) and (e(j) >= 1)) then
+      fac := double_float(e(i))*double_float(e(j));
+      res := Create(fac);
+      for k in 1..e(i)-1 loop
+        res := res*x(i);
+      end loop;
+      for k in 1..e(j)-1 loop
+        res := res*x(j);
+      end loop;
+      for k in e'range loop
+        if ((k /= i) and (k /= j)) then
+          for j in 1..e(k) loop
+            res := res*x(k);
+          end loop;
+        end if;
+      end loop;
     end if;
+    return res;
+  end Diff;
+
+  function Diff ( c : Standard_Speelpenning_Convolutions.Circuit;
+	          x : Standard_Complex_Vectors.Vector; i,j : integer32 )  
+                return Standard_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the value of the second derivative of the monomials
+  --   with exponents in c, with respect to i and j, evaluated at x.
+
+  -- REQUIRED : i is in e'range and j is in e'range, 
+  --   i and j can be the same if the second derivative
+  --   with the same i is requested.
+
+    use Standard_Complex_Numbers;
+
+    res : Complex_Number := Create(0.0);
+    d2x : Complex_Number;
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for k in c.xps'range loop
+      lnk := c.cff(k);
+      d2x := lnk(0)*Diff(x,c.xps(k).all,i,j);
+      res := res + d2x;
+    end loop;
     return res;
   end Diff;
 
@@ -77,7 +118,7 @@ procedure ts_hesscnv is
     end loop;
     put("Give the first index : "); get(idx1);
     put("Give the second index : "); get(idx2);
-    d := Diff(x,c.xps(1).all,idx1,idx2);
+    d := Diff(c,x,idx1,idx2);
     put("The value of the second derivative w.r.t. ");
     put(idx1,1); put(" and "); put(idx2,1); put_line(" :");
     put(d); new_line;

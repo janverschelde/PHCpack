@@ -1,3 +1,5 @@
+Thu 30 Jan 2020 : first version of the Diff on a circuit in ts_hesscnv.
+
 Wed 29 Jan 2020 : new procedure ts_hesscnv to develop the code to compute
   the value of the Hessian of a circuit.
 
