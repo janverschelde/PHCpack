@@ -522,6 +522,9 @@ ts_fabry:
 ts_evalcnv:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_evalcnv.adb -o $(BIN)/ts_evalcnv
 
+ts_hesscnv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hesscnv.adb -o $(BIN)/ts_hesscnv
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
