@@ -8,7 +8,12 @@ with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors;
 with Standard_Random_Vectors;
+with Standard_Complex_Series;
+with Standard_Complex_Series_Vectors;
+with Standard_CSeries_Polynomials;
+with Standard_CSeries_Poly_Functions;
 with Standard_Speelpenning_Convolutions;
+with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 
 procedure ts_hesscnv is
@@ -102,14 +107,21 @@ procedure ts_hesscnv is
   --   Uses the dimension, degree, number of terms, and largest power
   --   to generate a random circuit for testing.
 
+    use Standard_Complex_Series;
+    use Standard_Complex_Series_Vectors;
+    use Standard_CSeries_Polynomials;
     use Standard_Speelpenning_Convolutions;
 
     c : constant Circuit(nbr,dim,dim-1,dim-2)
       := Standard_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+    p : constant Poly := Standard_Polynomial(c);
+    q,h : Poly;
     d : Standard_Complex_Numbers.Complex_Number;
     x : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
+    sx : Standard_Complex_Series_Vectors.Vector(1..dim);
     idx1,idx2 : integer32 := 0;
+    eva : Standard_Complex_Series.Link_to_Series;
 
   begin
     put_line("The exponents : ");
@@ -122,6 +134,14 @@ procedure ts_hesscnv is
     put("The value of the second derivative w.r.t. ");
     put(idx1,1); put(" and "); put(idx2,1); put_line(" :");
     put(d); new_line;
+    q := Diff(p,idx1);
+    h := Diff(q,idx2);
+    for k in sx'range loop
+      sx(k) := new Series'(Create(x(k),deg));
+    end loop;
+    eva := Standard_CSeries_Poly_Functions.Eval(h,sx);
+    put_line("The value computed via symbolic differentiation :");
+    put(eva.cff(0)); new_line;
   end Test;
 
   procedure Main is
