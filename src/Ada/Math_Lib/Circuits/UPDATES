@@ -1,5 +1,6 @@
 Fri 31 Jan 2020 : completed a first test of the Hessian computation in
-  ts_hesscnv.
+  ts_hesscnv.  Extended generic_speelpenning_convolutions with the Diff
+  procedures to compute second derivatives, tested by ts_hesscnv.
 
 Thu 30 Jan 2020 : first version of the Diff on a circuit in ts_hesscnv.
 

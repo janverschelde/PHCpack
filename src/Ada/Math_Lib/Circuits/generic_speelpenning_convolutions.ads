@@ -223,6 +223,31 @@ package Generic_Speelpenning_Convolutions is
   --   Returns the evaluation of c at the number x and t for the series
   --   parameter via a straighforward sum of evaluated terms.
 
+-- SECOND DERIVATIVE AT A NUMBER :
+
+  function Diff ( x : Vectors.Vector;
+                  e : Standard_Integer_Vectors.Vector; i,j : integer32 )  
+                return Ring.number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the second derivative of the monomial
+  --   with exponents in e, with respect to i and j, evaluated at x.
+
+  -- REQUIRED : i is in e'range and j is in e'range, 
+  --   i and j can be the same if the second derivative
+  --   with the same i is requested.
+
+  function Diff ( c : Circuit; x : Vectors.Vector; i,j : integer32 )  
+                return Ring.number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the second derivative of the monomials
+  --   with exponents in c, with respect to i and j, evaluated at x.
+
+  -- REQUIRED : i is in e'range and j is in e'range, 
+  --   i and j can be the same if the second derivative
+  --   with the same i is requested.
+
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
   procedure Speel ( x : in VecVecs.VecVec;

@@ -396,6 +396,71 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Eval;
 
+-- SECOND DERIVATIVE AT A NUMBER :
+
+  function Diff ( x : Vectors.Vector;
+                  e : Standard_Integer_Vectors.Vector; i,j : integer32 )  
+                return Ring.number is
+
+    use Ring;
+
+    res : number := zero;
+    fac : integer32;
+
+  begin
+    if i = j then
+      if e(i) >= 2 then
+        fac := e(i)*(e(i)-1);
+        res := Create(integer(fac));
+        for k in 1..e(i)-2 loop
+          res := res*x(i);
+        end loop;
+        for k in e'range loop
+          if k /= i then
+            for j in 1..e(k) loop
+              res := res*x(k);
+            end loop;
+          end if;
+        end loop;
+      end if;
+    elsif ((e(i) >= 1) and (e(j) >= 1)) then
+      fac := e(i)*e(j);
+      res := Create(integer(fac));
+      for k in 1..e(i)-1 loop
+        res := res*x(i);
+      end loop;
+      for k in 1..e(j)-1 loop
+        res := res*x(j);
+      end loop;
+      for k in e'range loop
+        if ((k /= i) and (k /= j)) then
+          for j in 1..e(k) loop
+            res := res*x(k);
+          end loop;
+        end if;
+      end loop;
+    end if;
+    return res;
+  end Diff;
+
+  function Diff ( c : Circuit; x : Vectors.Vector; i,j : integer32 )  
+                return Ring.number is
+
+    use Ring;
+
+    res : Ring.number := zero;
+    d2x : Ring.number;
+    lnk : Vectors.Link_to_Vector;
+
+  begin
+    for k in c.xps'range loop
+      lnk := c.cff(k);
+      d2x := lnk(0)*Diff(x,c.xps(k).all,i,j);
+      Add(res,d2x);
+    end loop;
+    return res;
+  end Diff;
+
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
   procedure Speel ( x : in VecVecs.VecVec;
