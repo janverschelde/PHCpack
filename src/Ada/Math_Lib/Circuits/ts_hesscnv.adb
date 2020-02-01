@@ -41,6 +41,7 @@ with QuadDobl_CSeries_Poly_Functions;
 with QuadDobl_Speelpenning_Convolutions;
 with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
+with Hessian_Convolution_Circuits;
 
 procedure ts_hesscnv is
 
@@ -208,6 +209,7 @@ procedure ts_hesscnv is
       sx(k) := new Series'(Create(x(k),deg));
     end loop;
     for k in 1..dim loop
+      h := Hessian_Convolution_Circuits.Hessian(c(k),x);
       p := Standard_Polynomial(c(k).all);
       for i in 1..dim loop
         dp := Diff(p,i);
@@ -215,7 +217,6 @@ procedure ts_hesscnv is
           d2p := Diff(dp,j);
           eva := Standard_CSeries_Poly_Functions.Eval(d2p,sx);
           ph(i,j) := eva.cff(0); ph(j,i) := ph(i,j);
-          h(i,j) := Diff(c(k),x,i,j); h(j,i) := h(i,j);
           Standard_CSeries_Polynomials.Clear(d2p);
 	  err := ph(i,j) - h(i,j); val := AbsVal(err);
           errsum := errsum + val;
@@ -258,6 +259,7 @@ procedure ts_hesscnv is
       sx(k) := new Series'(Create(x(k),deg));
     end loop;
     for k in 1..dim loop
+      h := Hessian_Convolution_Circuits.Hessian(c(k),x);
       p := DoblDobl_Polynomial(c(k).all);
       for i in 1..dim loop
         dp := Diff(p,i);
@@ -265,7 +267,6 @@ procedure ts_hesscnv is
           d2p := Diff(dp,j);
           eva := DoblDobl_CSeries_Poly_Functions.Eval(d2p,sx);
           ph(i,j) := eva.cff(0); ph(j,i) := ph(i,j);
-          h(i,j) := Diff(c(k),x,i,j); h(j,i) := h(i,j);
           DoblDobl_CSeries_Polynomials.Clear(d2p);
 	  err := ph(i,j) - h(i,j); val := AbsVal(err);
           errsum := errsum + val;
@@ -308,6 +309,7 @@ procedure ts_hesscnv is
       sx(k) := new Series'(Create(x(k),deg));
     end loop;
     for k in 1..dim loop
+      h := Hessian_Convolution_Circuits.Hessian(c(k),x);
       p := QuadDobl_Polynomial(c(k).all);
       for i in 1..dim loop
         dp := Diff(p,i);
@@ -315,7 +317,6 @@ procedure ts_hesscnv is
           d2p := Diff(dp,j);
           eva := QuadDobl_CSeries_Poly_Functions.Eval(d2p,sx);
           ph(i,j) := eva.cff(0); ph(j,i) := ph(i,j);
-          h(i,j) := Diff(c(k),x,i,j); h(j,i) := h(i,j);
           QuadDobl_CSeries_Polynomials.Clear(d2p);
 	  err := ph(i,j) - h(i,j); val := AbsVal(err);
           errsum := errsum + val;
