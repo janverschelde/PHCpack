@@ -239,6 +239,8 @@ package Generic_Speelpenning_Convolutions is
 
   function Diff ( c : Circuit; x : Vectors.Vector; i,j : integer32 )  
                 return Ring.number;
+  function Diff ( c : Link_to_Circuit; x : Vectors.Vector; i,j : integer32 )  
+                return Ring.number;
 
   -- DESCRIPTION :
   --   Returns the value of the second derivative of the monomials

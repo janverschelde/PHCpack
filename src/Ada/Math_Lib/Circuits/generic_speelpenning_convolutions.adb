@@ -461,6 +461,16 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Diff;
 
+  function Diff ( c : Link_to_Circuit; x : Vectors.Vector; i,j : integer32 )  
+                return Ring.number is
+
+  begin
+    if c = null
+     then return Ring.zero;
+     else return Diff(c.all,x,i,j);
+    end if;
+  end Diff;
+
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
   procedure Speel ( x : in VecVecs.VecVec;
