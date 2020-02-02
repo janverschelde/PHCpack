@@ -2,6 +2,7 @@ Sat 1 Feb 2020 : added to generic_speelpenning_convolutions a function
   to compute the value of the second derivative for a link to a circuit.
   Extended ts_hesscnv with tests on Hessian matrices.
   New package hessian_convolution_circuits with some code of ts_hesscnv.
+  Added SVD to hessian_convolution_circuits.
 
 Fri 31 Jan 2020 : completed a first test of the Hessian computation in
   ts_hesscnv.  Extended generic_speelpenning_convolutions with the Diff

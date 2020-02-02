@@ -2,6 +2,9 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Complex_Singular_Values;
+with DoblDobl_Complex_Singular_Values;
+with QuadDobl_Complex_Singular_Values;
 
 package body Hessian_Convolution_Circuits is
 
@@ -175,5 +178,62 @@ package body Hessian_Convolution_Circuits is
     end loop;
     return res;
   end Hessians;
+
+  procedure Singular_Values
+              ( c : in Standard_Speelpenning_Convolutions.Circuit;
+                x : in Standard_Complex_Vectors.Vector;
+                A : out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Vectors.Vector ) is
+
+    n : constant integer32 := A'last(1);
+    p : constant integer32 := A'last(2);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    A := Hessian(c,x);
+    Standard_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuit;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                A : out DoblDobl_Complex_Matrices.Matrix;
+                U : out DoblDobl_Complex_Matrices.Matrix;
+                V : out DoblDobl_Complex_Matrices.Matrix;
+                e : out DoblDobl_Complex_Vectors.Vector;
+                s : out DoblDobl_Complex_Vectors.Vector ) is
+
+    n : constant integer32 := A'last(1);
+    p : constant integer32 := A'last(2);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    A := Hessian(c,x);
+    DoblDobl_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuit;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                A : out QuadDobl_Complex_Matrices.Matrix;
+                U : out QuadDobl_Complex_Matrices.Matrix;
+                V : out QuadDobl_Complex_Matrices.Matrix;
+                e : out QuadDobl_Complex_Vectors.Vector;
+                s : out QuadDobl_Complex_Vectors.Vector ) is
+
+    n : constant integer32 := A'last(1);
+    p : constant integer32 := A'last(2);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    A := Hessian(c,x);
+    QuadDobl_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
+  end Singular_Values;
 
 end Hessian_Convolution_Circuits;

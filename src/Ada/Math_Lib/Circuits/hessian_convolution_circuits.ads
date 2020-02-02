@@ -67,4 +67,34 @@ package Hessian_Convolution_Circuits is
   -- REQUIRED : for all i in c'range, either c(i) is null,
   --  or c(i).dim = x'last.
 
+   procedure Singular_Values
+               ( c : in Standard_Speelpenning_Convolutions.Circuit;
+                 x : in Standard_Complex_Vectors.Vector;
+                 A : out Standard_Complex_Matrices.Matrix;
+                 U : out Standard_Complex_Matrices.Matrix;
+                 V : out Standard_Complex_Matrices.Matrix;
+                 e : out Standard_Complex_Vectors.Vector;
+                 s : out Standard_Complex_Vectors.Vector );
+   procedure Singular_Values
+               ( c : in DoblDobl_Speelpenning_Convolutions.Circuit;
+                 x : in DoblDobl_Complex_Vectors.Vector;
+                 A : out DoblDobl_Complex_Matrices.Matrix;
+                 U : out DoblDobl_Complex_Matrices.Matrix;
+                 V : out DoblDobl_Complex_Matrices.Matrix;
+                 e : out DoblDobl_Complex_Vectors.Vector;
+                 s : out DoblDobl_Complex_Vectors.Vector );
+   procedure Singular_Values
+               ( c : in QuadDobl_Speelpenning_Convolutions.Circuit;
+                 x : in QuadDobl_Complex_Vectors.Vector;
+                 A : out QuadDobl_Complex_Matrices.Matrix;
+                 U : out QuadDobl_Complex_Matrices.Matrix;
+                 V : out QuadDobl_Complex_Matrices.Matrix;
+                 e : out QuadDobl_Complex_Vectors.Vector;
+                 s : out QuadDobl_Complex_Vectors.Vector );
+
+   -- DESCRIPTION :
+   --   Evaluates the circuit c at x, at the Hessian matrix A,
+   --   and computes the singular value decomposition of A,
+   --   in double, double double, or quad double precision;
+
 end Hessian_Convolution_Circuits;
