@@ -1,3 +1,6 @@
+Mon 3 Feb 2020 : to hessian_convolution_circuits, added procedures to
+  compute the singular values for link to circuits.
+
 Sat 1 Feb 2020 : added to generic_speelpenning_convolutions a function
   to compute the value of the second derivative for a link to a circuit.
   Extended ts_hesscnv with tests on Hessian matrices.

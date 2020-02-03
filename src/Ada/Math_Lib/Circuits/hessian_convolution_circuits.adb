@@ -236,4 +236,85 @@ package body Hessian_Convolution_Circuits is
     QuadDobl_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
   end Singular_Values;
 
+  procedure Singular_Values
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
+                x : in Standard_Complex_Vectors.Vector;
+                A : out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Vectors.Vector ) is
+
+    use Standard_Speelpenning_Convolutions;
+
+    n : constant integer32 := A'last(1);
+    p : constant integer32 := A'last(2);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    A := Hessian(c,x);
+    if c /= null then
+      Standard_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
+    else
+      for i in s'range loop
+        s(i) := Standard_Complex_Numbers.Create(integer(0));
+      end loop;
+    end if;
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                A : out DoblDobl_Complex_Matrices.Matrix;
+                U : out DoblDobl_Complex_Matrices.Matrix;
+                V : out DoblDobl_Complex_Matrices.Matrix;
+                e : out DoblDobl_Complex_Vectors.Vector;
+                s : out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    n : constant integer32 := A'last(1);
+    p : constant integer32 := A'last(2);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    A := Hessian(c,x);
+    if c /= null then
+      DoblDobl_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
+    else
+      for i in s'range loop
+        s(i) := DoblDobl_Complex_Numbers.Create(integer(0));
+      end loop;
+    end if;
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                A : out QuadDobl_Complex_Matrices.Matrix;
+                U : out QuadDobl_Complex_Matrices.Matrix;
+                V : out QuadDobl_Complex_Matrices.Matrix;
+                e : out QuadDobl_Complex_Vectors.Vector;
+                s : out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    n : constant integer32 := A'last(1);
+    p : constant integer32 := A'last(2);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    A := Hessian(c,x);
+    if c /= null then
+      QuadDobl_Complex_Singular_Values.SVD(A,n,p,s,e,u,v,job,info);
+    else
+      for i in s'range loop
+        s(i) := QuadDobl_Complex_Numbers.Create(integer(0));
+      end loop;
+    end if;
+  end Singular_Values;
+
 end Hessian_Convolution_Circuits;

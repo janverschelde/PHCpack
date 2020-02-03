@@ -76,6 +76,14 @@ package Hessian_Convolution_Circuits is
                  e : out Standard_Complex_Vectors.Vector;
                  s : out Standard_Complex_Vectors.Vector );
    procedure Singular_Values
+               ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
+                 x : in Standard_Complex_Vectors.Vector;
+                 A : out Standard_Complex_Matrices.Matrix;
+                 U : out Standard_Complex_Matrices.Matrix;
+                 V : out Standard_Complex_Matrices.Matrix;
+                 e : out Standard_Complex_Vectors.Vector;
+                 s : out Standard_Complex_Vectors.Vector );
+   procedure Singular_Values
                ( c : in DoblDobl_Speelpenning_Convolutions.Circuit;
                  x : in DoblDobl_Complex_Vectors.Vector;
                  A : out DoblDobl_Complex_Matrices.Matrix;
@@ -84,7 +92,23 @@ package Hessian_Convolution_Circuits is
                  e : out DoblDobl_Complex_Vectors.Vector;
                  s : out DoblDobl_Complex_Vectors.Vector );
    procedure Singular_Values
+               ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                 x : in DoblDobl_Complex_Vectors.Vector;
+                 A : out DoblDobl_Complex_Matrices.Matrix;
+                 U : out DoblDobl_Complex_Matrices.Matrix;
+                 V : out DoblDobl_Complex_Matrices.Matrix;
+                 e : out DoblDobl_Complex_Vectors.Vector;
+                 s : out DoblDobl_Complex_Vectors.Vector );
+   procedure Singular_Values
                ( c : in QuadDobl_Speelpenning_Convolutions.Circuit;
+                 x : in QuadDobl_Complex_Vectors.Vector;
+                 A : out QuadDobl_Complex_Matrices.Matrix;
+                 U : out QuadDobl_Complex_Matrices.Matrix;
+                 V : out QuadDobl_Complex_Matrices.Matrix;
+                 e : out QuadDobl_Complex_Vectors.Vector;
+                 s : out QuadDobl_Complex_Vectors.Vector );
+   procedure Singular_Values
+               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                  x : in QuadDobl_Complex_Vectors.Vector;
                  A : out QuadDobl_Complex_Matrices.Matrix;
                  U : out QuadDobl_Complex_Matrices.Matrix;
