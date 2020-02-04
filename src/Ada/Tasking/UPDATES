@@ -1,3 +1,6 @@
+Tue 4 Feb 2020 : new test procedure ts_mthessian to develop the multitasked
+  version of the singular value computation of the Hessians.
+
 Sat 25 Jan 2020 : updates in multitasked_algodiff_convolutions, ts_mtadcnv,
   and ts_mtnewton for the name change Convolution_Circuit.
 
