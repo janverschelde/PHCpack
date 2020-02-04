@@ -2898,6 +2898,10 @@ ts_mtnewton:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtnewton.adb \
               -o $(BIN)/ts_mtnewton
 
+ts_mthessian:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mthessian.adb \
+              -o $(BIN)/ts_mthessian
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \

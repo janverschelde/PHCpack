@@ -2036,6 +2036,9 @@ ts_mtnewton:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtnewton.adb \
               -o $(BIN)/ts_mtnewton
 
+ts_mthessian:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mthessian.adb \
+              -o $(BIN)/ts_mthessian
 
 # Test programs for the Main interactive drivers :
 
