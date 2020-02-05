@@ -7,6 +7,7 @@ with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
+with Standard_Complex_VecMats;
 with Standard_Speelpenning_Convolutions;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Hessian_Convolution_Circuits;       use Hessian_Convolution_Circuits;
@@ -39,10 +40,56 @@ procedure ts_mthessian is
     end loop;
   end Write_Singular_Values;
 
+  function Allocate ( nbr,dim : integer32 )
+                    return Standard_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Returns an array of range 1..nbr, with allocated dim-by-dim matrices.
+
+    res : Standard_Complex_VecMats.VecMat(1..nbr);
+
+  begin
+    for k in res'range loop
+      declare
+        mat : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+      begin
+        for i in 1..dim loop
+          for j in 1..dim loop
+            mat(i,j) := Standard_Complex_Numbers.Create(integer(0));
+          end loop;
+        end loop;
+        res(k) := new Standard_Complex_Matrices.Matrix'(mat);
+      end;
+    end loop;
+    return res;
+  end Allocate;
+
+  function Allocate ( nbr,dim : integer32 )
+                    return Standard_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns an array of range 1..nbr, with allocated vectors
+  --   of range 1..dim.
+
+    res : Standard_Complex_VecVecs.VecVec(1..nbr);
+
+  begin
+    for i in res'range loop
+      declare
+        v : constant Standard_Complex_Vectors.Vector(1..dim)
+          := (1..dim => Standard_Complex_Numbers.Create(integer(0)));
+      begin
+        res(i) := new Standard_Complex_Vectors.Vector'(v);
+      end;
+    end loop;
+    return res;
+  end Allocate;
+
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
-                x : in Standard_Complex_Vectors.Vector ) is
+                x : in Standard_Complex_Vectors.Vector;
+                values : in out Standard_Complex_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Evaluates all Hessians of the circuits in s at x
@@ -51,7 +98,15 @@ procedure ts_mthessian is
   -- ON ENTRY :
   --   nbt      the number of tasks;
   --   s        a system of convolution circuits;
-  --   x        coordinates of the point to evaluate the Hessians.
+  --   x        coordinates of the point to evaluate the Hessians;
+  --   values   space allocated for all singular values,
+  --            as a vector of range 1..s.dim.
+
+  -- ON RETURN :
+  --   values   values(k) contains the singular values of the k-th Hessian.
+
+    A,U,V : Standard_Complex_VecMats.VecMat(1..nbt);
+    e : Standard_Complex_VecVecs.VecVec(1..nbt);
 
     procedure Job ( i,n : integer32 ) is 
 
@@ -60,19 +115,32 @@ procedure ts_mthessian is
     --   for all k starting at 0 as long as i + k*n <= s.dim.
 
       idx : integer32 := i; 
+      pA,pU,pV : Standard_Complex_Matrices.Link_to_Matrix;
+      pe,vls : Standard_Complex_Vectors.Link_to_Vector;
 
     begin
       while idx <= s.dim loop
         put_line("task " & Multitasking.to_string(i)
                          & " computes Hessian "
                          & Multitasking.to_string(idx));
+        pA := A(i); pU := U(i); pV := V(i); pe := e(i);
+        vls := values(idx);
+        Singular_Values(s.crc(idx),x,pA.all,pU.all,pV.all,pe.all,vls.all);
         idx := idx + n;
       end loop;
     end Job;
     procedure do_jobs is new Multitasking.Reporting_Workers(Job);
 
   begin
+    A := Allocate(nbt,s.dim);
+    U := Allocate(nbt,s.dim);
+    V := Allocate(nbt,s.dim);
+    e := Allocate(nbt,s.dim);
     do_jobs(nbt);
+    Standard_Complex_VecMats.Clear(A);
+    Standard_Complex_VecMats.Clear(U);
+    Standard_Complex_VecMats.Clear(V);
+    Standard_Complex_VecVecs.Clear(e);
   end Multitasked_Singular_Values;
 
   procedure Standard_Random_Test
@@ -97,6 +165,7 @@ procedure ts_mthessian is
     A,U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     e : Standard_Complex_Vectors.Vector(1..dim);
     svl : Standard_Complex_VecVecs.VecVec(1..dim);
+    values : Standard_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
     nbt : integer32 := 0;
 
   begin
@@ -117,7 +186,9 @@ procedure ts_mthessian is
     Write_Singular_Values(svl);
     new_line;
     put("Give the number of tasks : "); get(nbt);
-    Multitasked_Singular_Values(nbt,s,vx);
+    Multitasked_Singular_Values(nbt,s,vx,values);
+    put_line("All singular values computed by multitasking :");
+    Write_Singular_Values(values);
   end Standard_Random_Test;
 
   procedure Main is

@@ -1,3 +1,5 @@
+Wed 5 Feb 2020 : first multitasked version in ts_mthessian.
+
 Tue 4 Feb 2020 : new test procedure ts_mthessian to develop the multitasked
   version of the singular value computation of the Hessians.
 
