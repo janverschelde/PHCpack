@@ -527,6 +527,10 @@ ts_evalcnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_evalcnv.adb \
               -o $(BIN)/ts_evalcnv
 
+ts_hesscnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesscnv.adb \
+              -o $(BIN)/ts_hesscnv
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
@@ -2431,6 +2435,10 @@ ts_mtserlin:
 ts_mtnewton:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtnewton.adb \
               -o $(BIN)/ts_mtnewton
+
+ts_mthessian:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mthessian.adb \
+              -o $(BIN)/ts_mthessian
 
 # Test programs for the Main interactive drivers :
 
