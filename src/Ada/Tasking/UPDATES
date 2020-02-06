@@ -1,3 +1,6 @@
+Thu 6 Feb 2020 : added to ts_mthessian a difference computation and
+  timers to compute the speedup.
+
 Wed 5 Feb 2020 : first multitasked version in ts_mthessian.
   New package multitasked_hessian_convolutions with code from ts_mthessian,
   with extensions for double double and quad double precision.
