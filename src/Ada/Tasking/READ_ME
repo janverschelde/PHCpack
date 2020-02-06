@@ -101,5 +101,6 @@ multitasked_series_linearization  : multitasked linearized series solver
 ts_mtserlin                       : develop multitasked matrix series solver
 multitasked_newton_convolutions   : multitasked Newton on power series
 ts_mtnewton                       : test on multitasked Newton on power series
+multitasked_hessian_convolutions  : multitasked Hessian criterion
 ts_mthessian                      : test on muttitasked SVD on the Hessians
 -------------------------------------------------------------------------------
