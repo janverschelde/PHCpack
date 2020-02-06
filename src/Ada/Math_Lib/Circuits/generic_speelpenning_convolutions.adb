@@ -396,6 +396,60 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Eval;
 
+-- FIRST DERIVATIVE AT A NUMBER :
+
+  function Diff ( x : Vectors.Vector;
+                  e : Standard_Integer_Vectors.Vector; i : integer32 )  
+                return Ring.number is
+
+    use Ring;
+
+    res : number := zero;
+
+  begin
+    if e(i) >= 1 then
+      res := Create(integer(e(i)));
+      for k in 1..e(i)-1 loop
+        res := res*x(i);
+      end loop;
+      for k in e'range loop
+        if k /= i then
+          for j in 1..e(k) loop
+            res := res*x(k);
+          end loop;
+        end if;
+      end loop;
+    end if;
+    return res;
+  end Diff;
+
+  function Diff ( c : Circuit; x : Vectors.Vector; i : integer32 )  
+                return Ring.number is
+
+    use Ring;
+
+    res : Ring.number := zero;
+    d1x : Ring.number;
+    lnk : Vectors.Link_to_Vector;
+
+  begin
+    for k in c.xps'range loop
+      lnk := c.cff(k);
+      d1x := lnk(0)*Diff(x,c.xps(k).all,i);
+      Add(res,d1x);
+    end loop;
+    return res;
+  end Diff;
+
+  function Diff ( c : Link_to_Circuit; x : Vectors.Vector; i : integer32 )  
+                return Ring.number is
+  begin
+    if c = null
+     then return Ring.zero;
+     else return Diff(c.all,x,i);
+    end if;
+  end Diff;
+
 -- SECOND DERIVATIVE AT A NUMBER :
 
   function Diff ( x : Vectors.Vector;
@@ -463,7 +517,6 @@ package body Generic_Speelpenning_Convolutions is
 
   function Diff ( c : Link_to_Circuit; x : Vectors.Vector; i,j : integer32 )  
                 return Ring.number is
-
   begin
     if c = null
      then return Ring.zero;

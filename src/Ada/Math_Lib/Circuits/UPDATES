@@ -1,3 +1,7 @@
+Thu 6 Feb 2020 : added simple computation of first derivatives to
+  generic_speelpenning_convolutions, applied in new package
+  jacobian_convolution_circuits, tested by ts_jacocnv.
+
 Mon 3 Feb 2020 : to hessian_convolution_circuits, added procedures to
   compute the singular values for link to circuits.
 
