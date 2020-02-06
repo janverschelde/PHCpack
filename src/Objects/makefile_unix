@@ -525,6 +525,9 @@ ts_evalcnv:
 ts_hesscnv:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_hesscnv.adb -o $(BIN)/ts_hesscnv
 
+ts_jacocnv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_jacocnv.adb -o $(BIN)/ts_jacocnv
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
