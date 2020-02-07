@@ -45,18 +45,21 @@ package Multitasked_Hessian_Convolutions is
               ( nbt : in integer32;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 x : in Standard_Complex_Vectors.Vector;
+                jmsvls : out Standard_Complex_Vectors.Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
                 verbose : in boolean := true );
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Vector;
+                jmsvls : out DoblDobl_Complex_Vectors.Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := true );
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Vector;
+                jmsvls : out QuadDobl_Complex_Vectors.Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := true );
 
@@ -74,6 +77,7 @@ package Multitasked_Hessian_Convolutions is
   --            otherwise, the jobs are preformed without output.
 
   -- ON RETURN :
+  --   jmsvls   singular values of the Jacobian matrix;
   --   values   values(k) contains the singular values of the k-th Hessian.
 
 end Multitasked_Hessian_Convolutions;

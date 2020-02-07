@@ -6,6 +6,7 @@ with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
 with Hessian_Convolution_Circuits;       use Hessian_Convolution_Circuits;
+with Jacobian_Convolution_Circuits;      use Jacobian_Convolution_Circuits;
 with Multitasking;
 
 package body Multitasked_Hessian_Convolutions is
@@ -128,6 +129,7 @@ package body Multitasked_Hessian_Convolutions is
               ( nbt : in integer32;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 x : in Standard_Complex_Vectors.Vector;
+                jmsvls : out Standard_Complex_Vectors.Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
 		verbose : in boolean := true ) is
 
@@ -139,6 +141,7 @@ package body Multitasked_Hessian_Convolutions is
     -- DESCRIPTION :
     --   Task i out of n will evaluate the Hessian with index i + k*n,
     --   for all k starting at 0 as long as i + k*n <= s.dim.
+    --   The first task computes the Jacobian and its singular values.
     --   Writes one line for each job to screen.
 
       idx : integer32 := i; 
@@ -146,6 +149,11 @@ package body Multitasked_Hessian_Convolutions is
       pe,vls : Standard_Complex_Vectors.Link_to_Vector;
 
     begin
+      if i = 1 then
+        put_line("the first first tasks compute the Jacobian and its SVD");
+        pA := A(1); pU := U(1); pV := V(1); pe := e(1);
+        Singular_Values(s.crc,x,pA.all,pU.all,pV.all,pe.all,jmsvls);
+      end if;
       while idx <= s.dim loop
         put_line("task " & Multitasking.to_string(i)
                          & " computes Hessian "
@@ -163,12 +171,17 @@ package body Multitasked_Hessian_Convolutions is
     -- DESCRIPTION :
     --   Task i out of n will evaluate the Hessian with index i + k*n,
     --   for all k starting at 0 as long as i + k*n <= s.dim.
+    --   The first task computes the Jacobian and its singular values.
 
       idx : integer32 := i; 
       pA,pU,pV : Standard_Complex_Matrices.Link_to_Matrix;
       pe,vls : Standard_Complex_Vectors.Link_to_Vector;
 
     begin
+      if i = 1 then
+        pA := A(1); pU := U(1); pV := V(1); pe := e(1);
+        Singular_Values(s.crc,x,pA.all,pU.all,pV.all,pe.all,jmsvls);
+      end if;
       while idx <= s.dim loop
         pA := A(i); pU := U(i); pV := V(i); pe := e(i);
         vls := values(idx);
@@ -197,6 +210,7 @@ package body Multitasked_Hessian_Convolutions is
               ( nbt : in integer32;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Vector;
+                jmsvls : out DoblDobl_Complex_Vectors.Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
 		verbose : in boolean := true ) is
 
@@ -208,6 +222,7 @@ package body Multitasked_Hessian_Convolutions is
     -- DESCRIPTION :
     --   Task i out of n will evaluate the Hessian with index i + k*n,
     --   for all k starting at 0 as long as i + k*n <= s.dim.
+    --   The first task computes the Jacobian and its singular values.
     --   Writes one line for each job to screen.
 
       idx : integer32 := i; 
@@ -215,6 +230,11 @@ package body Multitasked_Hessian_Convolutions is
       pe,vls : DoblDobl_Complex_Vectors.Link_to_Vector;
 
     begin
+      if i = 1 then
+        put_line("the first first tasks compute the Jacobian and its SVD");
+        pA := A(1); pU := U(1); pV := V(1); pe := e(1);
+        Singular_Values(s.crc,x,pA.all,pU.all,pV.all,pe.all,jmsvls);
+      end if;
       while idx <= s.dim loop
         put_line("task " & Multitasking.to_string(i)
                          & " computes Hessian "
@@ -232,12 +252,17 @@ package body Multitasked_Hessian_Convolutions is
     -- DESCRIPTION :
     --   Task i out of n will evaluate the Hessian with index i + k*n,
     --   for all k starting at 0 as long as i + k*n <= s.dim.
+    --   The first task computes the Jacobian and its singular values.
 
       idx : integer32 := i; 
       pA,pU,pV : DoblDobl_Complex_Matrices.Link_to_Matrix;
       pe,vls : DoblDobl_Complex_Vectors.Link_to_Vector;
 
     begin
+      if i = 1 then
+        pA := A(1); pU := U(1); pV := V(1); pe := e(1);
+        Singular_Values(s.crc,x,pA.all,pU.all,pV.all,pe.all,jmsvls);
+      end if;
       while idx <= s.dim loop
         pA := A(i); pU := U(i); pV := V(i); pe := e(i);
         vls := values(idx);
@@ -266,6 +291,7 @@ package body Multitasked_Hessian_Convolutions is
               ( nbt : in integer32;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Vector;
+                jmsvls : out QuadDobl_Complex_Vectors.Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
 		verbose : in boolean := true ) is
 
@@ -277,6 +303,7 @@ package body Multitasked_Hessian_Convolutions is
     -- DESCRIPTION :
     --   Task i out of n will evaluate the Hessian with index i + k*n,
     --   for all k starting at 0 as long as i + k*n <= s.dim.
+    --   The first task computes the Jacobian and its singular values.
     --   Writes one line for each job to screen.
 
       idx : integer32 := i; 
@@ -284,6 +311,11 @@ package body Multitasked_Hessian_Convolutions is
       pe,vls : QuadDobl_Complex_Vectors.Link_to_Vector;
 
     begin
+      if i = 1 then
+        put_line("the first first tasks compute the Jacobian and its SVD");
+        pA := A(1); pU := U(1); pV := V(1); pe := e(1);
+        Singular_Values(s.crc,x,pA.all,pU.all,pV.all,pe.all,jmsvls);
+      end if;
       while idx <= s.dim loop
         put_line("task " & Multitasking.to_string(i)
                          & " computes Hessian "
@@ -301,12 +333,17 @@ package body Multitasked_Hessian_Convolutions is
     -- DESCRIPTION :
     --   Task i out of n will evaluate the Hessian with index i + k*n,
     --   for all k starting at 0 as long as i + k*n <= s.dim.
+    --   The first task computes the Jacobian and its singular values.
 
       idx : integer32 := i; 
       pA,pU,pV : QuadDobl_Complex_Matrices.Link_to_Matrix;
       pe,vls : QuadDobl_Complex_Vectors.Link_to_Vector;
 
     begin
+      if i = 1 then
+        pA := A(1); pU := U(1); pV := V(1); pe := e(1);
+        Singular_Values(s.crc,x,pA.all,pU.all,pV.all,pe.all,jmsvls);
+      end if;
       while idx <= s.dim loop
         pA := A(i); pU := U(i); pV := V(i); pe := e(i);
         vls := values(idx);

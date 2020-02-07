@@ -29,6 +29,7 @@ with QuadDobl_Speelpenning_Convolutions;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Hessian_Convolution_Circuits;       use Hessian_Convolution_Circuits;
+with Jacobian_Convolution_Circuits;      use Jacobian_Convolution_Circuits;
 with Multitasked_Hessian_Convolutions;   use Multitasked_Hessian_Convolutions;
 
 procedure ts_mthessian is
@@ -39,10 +40,12 @@ procedure ts_mthessian is
 --   with multitasking for shared memory parallel computers.
 
   procedure Write_Singular_Values 
-              ( values : in Standard_Complex_VecVecs.VecVec ) is
+              ( values : in Standard_Complex_VecVecs.VecVec;
+                jmvals : in Standard_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Writes the singular values in values, line by line.
+  --   The vector jmvals contains the singular values of the Jacobian.
 
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     val : double_float;
@@ -56,13 +59,20 @@ procedure ts_mthessian is
       end loop;
       new_line;
     end loop;
+    for i in jmvals'range loop
+      val := Standard_Complex_Numbers.REAL_PART(jmvals(i));
+      put(val,3);
+    end loop;
+    new_line;
   end Write_Singular_Values;
 
   procedure Write_Singular_Values 
-              ( values : in DoblDobl_Complex_VecVecs.VecVec ) is
+              ( values : in DoblDobl_Complex_VecVecs.VecVec;
+                jmvals : in DoblDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Writes the singular values in values, line by line.
+  --   The vector jmvals contains the singular values of the Jacobian.
 
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     val : double_double;
@@ -76,13 +86,20 @@ procedure ts_mthessian is
       end loop;
       new_line;
     end loop;
+    for i in jmvals'range loop
+      val := DoblDobl_Complex_Numbers.REAL_PART(jmvals(i));
+      put(" "); put(val,3);
+    end loop;
+    new_line;
   end Write_Singular_Values;
 
   procedure Write_Singular_Values 
-              ( values : in QuadDobl_Complex_VecVecs.VecVec ) is
+              ( values : in QuadDobl_Complex_VecVecs.VecVec;
+                jmvals : in QuadDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Writes the singular values in values, line by line.
+  --   The vector jmvals contains the singular values of the Jacobian.
 
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     val : quad_double;
@@ -96,6 +113,11 @@ procedure ts_mthessian is
       end loop;
       new_line;
     end loop;
+    for i in jmvals'range loop
+      val := QuadDobl_Complex_Numbers.REAL_PART(jmvals(i));
+      put(" "); put(val,3);
+    end loop;
+    new_line;
   end Write_Singular_Values;
 
   procedure Standard_Random_Test
@@ -121,6 +143,7 @@ procedure ts_mthessian is
     e : Standard_Complex_Vectors.Vector(1..dim);
     svl : constant Standard_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
     values : Standard_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
+    jm1vls,jm2vls : Standard_Complex_Vectors.Vector(1..dim);
     ans : character;
     otp : boolean;
     nbt : integer32 := 0;
@@ -142,6 +165,7 @@ procedure ts_mthessian is
     end loop;
     put_line("Computing first without multitasking ...");
     seristart := Ada.Calendar.Clock;
+    Singular_Values(s.crc,vx,A,U,V,e,jm1vls);
     for i in 1..dim loop
       lnk := svl(i);
       Singular_Values(s.crc(i),vx,A,U,V,e,lnk.all);
@@ -151,21 +175,21 @@ procedure ts_mthessian is
     put_line("-> Elapsed time without multitasking :");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
     if otp
-     then put_line("All singular values :"); Write_Singular_Values(svl);
+     then put_line("All singular values :"); Write_Singular_Values(svl,jm1vls);
     end if;
     loop
       new_line;
       put("Give the number of tasks (0 to exit) : "); get(nbt);
       exit when (nbt <= 0);
       multstart := Ada.Calendar.Clock;
-      Multitasked_Singular_Values(nbt,s,vx,values,otp);
+      Multitasked_Singular_Values(nbt,s,vx,jm2vls,values,otp);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if otp then
         put_line("All singular values computed by multitasking :");
-        Write_Singular_Values(values);
+        Write_Singular_Values(values,jm2vls);
       end if;
       err := Difference(svl,values);
       put("The difference error : "); put(err,3); new_line;
@@ -200,6 +224,7 @@ procedure ts_mthessian is
     e : DoblDobl_Complex_Vectors.Vector(1..dim);
     svl : constant DoblDobl_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
     values : DoblDobl_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
+    jm1vls,jm2vls : DoblDobl_Complex_Vectors.Vector(1..dim);
     ans : character;
     otp : boolean;
     nbt : integer32 := 0;
@@ -221,6 +246,7 @@ procedure ts_mthessian is
     end loop;
     put_line("Computing first without multitasking ...");
     seristart := Ada.Calendar.Clock;
+    Singular_Values(s.crc,vx,A,U,V,e,jm1vls);
     for i in 1..dim loop
       lnk := svl(i);
       Singular_Values(s.crc(i),vx,A,U,V,e,lnk.all);
@@ -230,21 +256,21 @@ procedure ts_mthessian is
     put_line("-> Elapsed time without multitasking :");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
     if otp
-     then put_line("All singular values :"); Write_Singular_Values(svl);
+     then put_line("All singular values :"); Write_Singular_Values(svl,jm1vls);
     end if;
     loop
       new_line;
       put("Give the number of tasks (0 to exit) : "); get(nbt);
       exit when (nbt <= 0);
       multstart := Ada.Calendar.Clock;
-      Multitasked_Singular_Values(nbt,s,vx,values,otp);
+      Multitasked_Singular_Values(nbt,s,vx,jm2vls,values,otp);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if otp then
         put_line("All singular values computed by multitasking :");
-        Write_Singular_Values(values);
+        Write_Singular_Values(values,jm2vls);
       end if;
       err := Difference(svl,values);
       put("The difference error : "); put(err,3); new_line;
@@ -279,6 +305,7 @@ procedure ts_mthessian is
     e : QuadDobl_Complex_Vectors.Vector(1..dim);
     svl : constant QuadDobl_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
     values : QuadDobl_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
+    jm1vls,jm2vls : QuadDobl_Complex_Vectors.Vector(1..dim);
     ans : character;
     otp : boolean;
     nbt : integer32 := 0;
@@ -300,6 +327,7 @@ procedure ts_mthessian is
     end loop;
     put_line("Computing first without multitasking ...");
     seristart := Ada.Calendar.Clock;
+    Singular_Values(s.crc,vx,A,U,V,e,jm1vls);
     for i in 1..dim loop
       lnk := svl(i);
       Singular_Values(s.crc(i),vx,A,U,V,e,lnk.all);
@@ -309,21 +337,21 @@ procedure ts_mthessian is
     put_line("-> Elapsed time without multitasking :");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
     if otp
-     then put_line("All singular values :"); Write_Singular_Values(svl);
+     then put_line("All singular values :"); Write_Singular_Values(svl,jm1vls);
     end if;
     loop
       new_line;
       put("Give the number of tasks (0 to exit) : "); get(nbt);
       exit when (nbt <= 0);
       multstart := Ada.Calendar.Clock;
-      Multitasked_Singular_Values(nbt,s,vx,values,otp);
+      Multitasked_Singular_Values(nbt,s,vx,jm2vls,values,otp);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if otp then
         put_line("All singular values computed by multitasking :");
-        Write_Singular_Values(values);
+        Write_Singular_Values(values,jm2vls);
       end if;
       err := Difference(svl,values);
       put("The difference error : "); put(err,3); new_line;
