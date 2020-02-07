@@ -1,4 +1,7 @@
 with text_io;                            use text_io;
+with Standard_Mathematical_Functions;
+with DoblDobl_Mathematical_Functions;
+with QuadDobl_Mathematical_Functions;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
@@ -367,5 +370,68 @@ package body Multitasked_Hessian_Convolutions is
     QuadDobl_Complex_VecMats.Clear(V);
     QuadDobl_Complex_VecVecs.Clear(e);
   end Multitasked_Singular_Values;
+
+  function Standard_Distance
+              ( jmsvls : Standard_Complex_Vectors.Vector;
+                values : Standard_Complex_VecVecs.VecVec )
+              return double_float is
+
+    sigma1 : constant double_float
+           := Standard_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last));
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    sumvls : double_float := 0.0;
+    val,nrm : double_float;
+
+  begin
+    for k in values'range loop
+      lnk := values(k);
+      val := Standard_Complex_Numbers.REAL_PART(lnk(lnk'first));
+      sumvls := sumvls + val*val;
+    end loop;
+    nrm := Standard_Mathematical_Functions.SQRT(sumvls);
+    return (2.0*sigma1)/nrm;
+  end Standard_Distance;
+
+  function DoblDobl_Distance
+              ( jmsvls : DoblDobl_Complex_Vectors.Vector;
+                values : DoblDobl_Complex_VecVecs.VecVec )
+              return double_double is
+
+    sigma1 : constant double_double
+           := DoblDobl_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last));
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    sumvls : double_double := create(0.0);
+    val,nrm : double_double;
+
+  begin
+    for k in values'range loop
+      lnk := values(k);
+      val := DoblDobl_Complex_Numbers.REAL_PART(lnk(lnk'first));
+      sumvls := sumvls + val*val;
+    end loop;
+    nrm := DoblDobl_Mathematical_Functions.SQRT(sumvls);
+    return (2.0*sigma1)/nrm;
+  end DoblDobl_Distance;
+
+  function QuadDobl_Distance
+              ( jmsvls : QuadDobl_Complex_Vectors.Vector;
+                values : QuadDobl_Complex_VecVecs.VecVec )
+              return quad_double is
+
+    sigma1 : constant quad_double
+           := QuadDobl_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last));
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    sumvls : quad_double := create(0.0);
+    val,nrm : quad_double;
+
+  begin
+    for k in values'range loop
+      lnk := values(k);
+      val := QuadDobl_Complex_Numbers.REAL_PART(lnk(lnk'first));
+      sumvls := sumvls + val*val;
+    end loop;
+    nrm := QuadDobl_Mathematical_Functions.SQRT(sumvls);
+    return (2.0*sigma1)/nrm;
+  end QuadDobl_Distance;
 
 end Multitasked_Hessian_Convolutions;

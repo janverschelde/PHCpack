@@ -147,7 +147,7 @@ procedure ts_mthessian is
     ans : character;
     otp : boolean;
     nbt : integer32 := 0;
-    err : double_float;
+    err,eta : double_float;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
     seri_elapsed,mult_elapsed,speedup : Duration;
 
@@ -192,7 +192,9 @@ procedure ts_mthessian is
         Write_Singular_Values(values,jm2vls);
       end if;
       err := Difference(svl,values);
+      eta := Standard_Distance(jm2vls,values);
       put("The difference error : "); put(err,3); new_line;
+      put("Estimate for the distance : "); put(eta,3); new_line;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
         put("The speedup : ");
@@ -228,7 +230,7 @@ procedure ts_mthessian is
     ans : character;
     otp : boolean;
     nbt : integer32 := 0;
-    err : double_double;
+    err,eta : double_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
     seri_elapsed,mult_elapsed,speedup : Duration;
 
@@ -273,7 +275,9 @@ procedure ts_mthessian is
         Write_Singular_Values(values,jm2vls);
       end if;
       err := Difference(svl,values);
+      eta := DoblDobl_Distance(jm2vls,values);
       put("The difference error : "); put(err,3); new_line;
+      put("Estimate for the distance : "); put(eta,3); new_line;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
         put("The speedup : ");
@@ -309,7 +313,7 @@ procedure ts_mthessian is
     ans : character;
     otp : boolean;
     nbt : integer32 := 0;
-    err : quad_double;
+    err,eta : quad_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
     seri_elapsed,mult_elapsed,speedup : Duration;
 
@@ -354,7 +358,9 @@ procedure ts_mthessian is
         Write_Singular_Values(values,jm2vls);
       end if;
       err := Difference(svl,values);
+      eta := QuadDobl_Distance(jm2vls,values);
       put("The difference error : "); put(err,3); new_line;
+      put("Estimate for the distance : "); put(eta,3); new_line;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
         put("The speedup : ");

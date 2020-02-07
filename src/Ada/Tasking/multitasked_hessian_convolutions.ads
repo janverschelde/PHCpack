@@ -1,4 +1,7 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -79,5 +82,28 @@ package Multitasked_Hessian_Convolutions is
   -- ON RETURN :
   --   jmsvls   singular values of the Jacobian matrix;
   --   values   values(k) contains the singular values of the k-th Hessian.
+
+  function Standard_Distance
+              ( jmsvls : Standard_Complex_Vectors.Vector;
+                values : Standard_Complex_VecVecs.VecVec )
+              return double_float;
+  function DoblDobl_Distance
+              ( jmsvls : DoblDobl_Complex_Vectors.Vector;
+                values : DoblDobl_Complex_VecVecs.VecVec )
+              return double_double;
+  function QuadDobl_Distance
+              ( jmsvls : QuadDobl_Complex_Vectors.Vector;
+                values : QuadDobl_Complex_VecVecs.VecVec )
+              return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns an estimate to the distance to the nearest solution
+  --   based on the smallest singular value of the Jacobian matrix
+  --   and the largest singular values of the Hessian matrices,
+  --   in double, double double, or in quad double precision.
+
+  -- ON ENTRY :
+  --   jmsvls   the vector of singular values of the Jacobian matrix;
+  --   values   all singular values of the Hessian matrices.
 
 end Multitasked_Hessian_Convolutions;
