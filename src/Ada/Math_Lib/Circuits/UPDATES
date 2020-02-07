@@ -1,3 +1,7 @@
+Fri 7 Feb 2020 : to system_convolution_circuits, added functions to
+  convert systems in quad double precision to double and double doubles,
+  as needed for benchmarking on the same randomly generated tests.
+
 Thu 6 Feb 2020 : added simple computation of first derivatives to
   generic_speelpenning_convolutions, applied in new package
   jacobian_convolution_circuits, tested by ts_jacocnv.

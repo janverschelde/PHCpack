@@ -811,4 +811,84 @@ package body System_Convolution_Circuits is
     return res;
   end to_double_double;
 
+  function to_double
+             ( s : QuadDobl_Speelpenning_Convolutions.System )
+             return Standard_Speelpenning_Convolutions.System is
+
+    res : Standard_Speelpenning_Convolutions.System(s.neq,s.neq1,s.dim,s.deg);
+
+    use Standard_Speelpenning_Convolutions;
+
+  begin
+    res.crc := to_double(s.crc);
+    Standard_Integer_Vectors.Copy(s.mxe,res.mxe);
+    res.pwt := Allocate(res.mxe,s.deg);
+    res.yd := Allocate_Coefficients(s.dim+1,s.deg);
+    res.vy := Linearized_Allocation(s.dim,s.deg);
+    res.yv := Allocate_Coefficients(s.dim,s.deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,s.deg);
+    return res;
+  end to_double;
+
+  function to_double
+             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System )
+             return Standard_Speelpenning_Convolutions.Link_to_System is
+
+    res : Standard_Speelpenning_Convolutions.Link_to_System;
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        ds : constant Standard_Speelpenning_Convolutions.System
+                        (s.neq,s.neq1,s.dim,s.deg)
+           := to_double(s.all);
+      begin
+        res := new Standard_Speelpenning_Convolutions.System'(ds);
+      end;
+    end if;
+    return res;
+  end to_double;
+
+  function to_double_double
+             ( s : QuadDobl_Speelpenning_Convolutions.System )
+             return DoblDobl_Speelpenning_Convolutions.System is
+
+    res : DoblDobl_Speelpenning_Convolutions.System(s.neq,s.neq1,s.dim,s.deg);
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    res.crc := to_double_double(s.crc);
+    Standard_Integer_Vectors.Copy(s.mxe,res.mxe);
+    res.pwt := Allocate(res.mxe,s.deg);
+    res.yd := Allocate_Coefficients(s.dim+1,s.deg);
+    res.vy := Linearized_Allocation(s.dim,s.deg);
+    res.yv := Allocate_Coefficients(s.dim,s.deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,s.deg);
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_System is
+
+    res : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        ds : constant DoblDobl_Speelpenning_Convolutions.System
+                        (s.neq,s.neq1,s.dim,s.deg)
+           := to_double_double(s.all);
+      begin
+        res := new DoblDobl_Speelpenning_Convolutions.System'(ds);
+      end;
+    end if;
+    return res;
+  end to_double_double;
+
 end System_Convolution_Circuits;
