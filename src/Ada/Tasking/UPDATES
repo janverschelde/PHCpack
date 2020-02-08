@@ -1,3 +1,5 @@
+Sat 8 Feb 2020 : extended the benchmark test in ts_mthessian.
+
 Fri 7 Feb 2020 : to multitasked_hessian_convolutions, added the computation
   of the eta constant, tested in ts_mthessian.  Added a benchmark test for
   all precisions to ts_mthessian.

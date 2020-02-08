@@ -425,6 +425,240 @@ procedure ts_mthessian is
     return res;
   end to_double;
 
+  procedure Standard_Benchmark
+              ( file : in file_type; nbruns,inc : in integer32;
+                s : in Standard_Speelpenning_Convolutions.Link_to_System;
+                x : in Standard_Complex_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   s        system in one parameter;
+  --   x        some point to evaluate at;
+  --   verbose  if extra output is needed.
+
+    dim : constant integer32 := s.dim;
+    A,U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    e : Standard_Complex_Vectors.Vector(1..dim);
+    svl : constant Standard_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    jm1vls : Standard_Complex_Vectors.Vector(1..dim);
+    jm2vls : Standard_Complex_Vectors.Vector(1..dim);
+    values : Standard_Complex_VecVecs.VecVec(1..dim);
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup :  Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    if verbose
+     then put_line(file,"Computing first without multitasking ...");
+     else put_line(file,"double precision");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Singular_Values(s.crc,x,A,U,V,e,jm1vls);
+    for i in 1..dim loop
+      lnk := svl(i);
+      Singular_Values(s.crc(i),x,A,U,V,e,lnk.all);
+    end loop;
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    if verbose then
+      put_line(file,"-> Elapsed time without multitasking :");
+      Time_Stamps.Write_Elapsed_Time(file,seristart,seristop);
+      put_line(file,"running in double precision ...");
+    else
+      put(file,"  1 : ");
+      duration_io.put(file,seri_elapsed,1,3); put_line(file," : 1.000");
+    end if;
+    for k in 1..nbruns loop
+      values := Allocate(dim,dim);
+      multstart := Ada.Calendar.Clock;
+      Multitasked_Singular_Values(nbt,s,x,jm2vls,values,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        put(file,"-> Elapsed time with "); put(file,nbt,1);
+        put_line(file," tasks :");
+        Time_Stamps.Write_Elapsed_Time(file,multstart,multstop);
+      else
+        put(file,nbt,3); put(file," : ");
+        duration_io.put(file,mult_elapsed,1,3); put(file," : ");
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        if verbose
+         then put(file,"The speedup : ");
+        end if;
+        duration_io.put(file,speedup,1,3); new_line(file);
+      end if;
+      nbt := nbt + inc;
+      Standard_Complex_VecVecs.Clear(values);
+    end loop;
+  end Standard_Benchmark;
+
+  procedure DoblDobl_Benchmark
+              ( file : in file_type; nbruns,inc : in integer32;
+                s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in double double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbrun    the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   s        system in one parameter;
+  --   x        some point to evaluate at;
+  --   verbose  if extra output is needed.
+
+    dim : constant integer32 := s.dim;
+    A,U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    e : DoblDobl_Complex_Vectors.Vector(1..dim);
+    svl : constant DoblDobl_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    jm1vls : DoblDobl_Complex_Vectors.Vector(1..dim);
+    jm2vls : DoblDobl_Complex_Vectors.Vector(1..dim);
+    values : DoblDobl_Complex_VecVecs.VecVec(1..dim);
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup :  Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    if verbose
+     then put_line(file,"Computing first without multitasking ...");
+     else put_line(file,"double double precision");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Singular_Values(s.crc,x,A,U,V,e,jm1vls);
+    for i in 1..dim loop
+      lnk := svl(i);
+      Singular_Values(s.crc(i),x,A,U,V,e,lnk.all);
+    end loop;
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    if verbose then
+      put_line(file,"-> Elapsed time without multitasking :");
+      Time_Stamps.Write_Elapsed_Time(file,seristart,seristop);
+      put_line(file,"running in double double precision ...");
+    else
+      put(file,"  1 : ");
+      duration_io.put(file,seri_elapsed,1,3); put_line(file," : 1.000");
+    end if;
+    for k in 1..nbruns loop
+      values := Allocate(dim,dim);
+      multstart := Ada.Calendar.Clock;
+      Multitasked_Singular_Values(nbt,s,x,jm2vls,values,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        put(file,"-> Elapsed time with "); put(file,nbt,1);
+        put_line(file," tasks :");
+        Time_Stamps.Write_Elapsed_Time(file,multstart,multstop);
+      else
+        put(file,nbt,3); put(file," : ");
+        duration_io.put(file,mult_elapsed,1,3); put(file," : ");
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        if verbose
+         then put(file,"The speedup : ");
+        end if;
+        duration_io.put(file,speedup,1,3); new_line(file);
+      end if;
+      nbt := nbt + inc;
+      DoblDobl_Complex_VecVecs.Clear(values);
+    end loop;
+  end DoblDobl_Benchmark;
+
+  procedure QuadDobl_Benchmark
+              ( file : in file_type; nbruns,inc : in integer32;
+                s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in quad double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment to the number of tasks;
+  --   s        system in one parameter;
+  --   x        some point to evaluate at;
+  --   verbose  if extra output needs to be written.
+
+    dim : constant integer32 := s.dim;
+    A,U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    e : QuadDobl_Complex_Vectors.Vector(1..dim);
+    svl : constant QuadDobl_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    jm1vls : QuadDobl_Complex_Vectors.Vector(1..dim);
+    jm2vls : QuadDobl_Complex_Vectors.Vector(1..dim);
+    values : QuadDobl_Complex_VecVecs.VecVec(1..dim);
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup :  Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    if verbose
+     then put_line(file,"Computing first without multitasking ...");
+     else put_line(file,"quad double precision");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Singular_Values(s.crc,x,A,U,V,e,jm1vls);
+    for i in 1..dim loop
+      lnk := svl(i);
+      Singular_Values(s.crc(i),x,A,U,V,e,lnk.all);
+    end loop;
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    if verbose then
+      put_line(file,"-> Elapsed time without multitasking :");
+      Time_Stamps.Write_Elapsed_Time(file,seristart,seristop);
+      put_line(file,"running in quad double precision ...");
+    else
+      put(file,"  1 : ");
+      duration_io.put(file,seri_elapsed,1,3); put_line(file," : 1.000");
+    end if;
+    for k in 1..nbruns loop
+      values := Allocate(dim,dim);
+      multstart := Ada.Calendar.Clock;
+      Multitasked_Singular_Values(nbt,s,x,jm2vls,values,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        put(file,"-> Elapsed time with "); put(file,nbt,1);
+        put_line(file," tasks :");
+        Time_Stamps.Write_Elapsed_Time(file,multstart,multstop);
+      else
+        put(file,nbt,3); put(file," : ");
+        duration_io.put(file,mult_elapsed,1,3); put(file," : ");
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        if verbose
+         then put(file,"The speedup : ");
+        end if;
+        duration_io.put(file,speedup,1,3); new_line(file);
+      end if;
+      nbt := nbt + inc;
+      QuadDobl_Complex_VecVecs.Clear(values);
+    end loop;
+  end QuadDobl_Benchmark;
+
   procedure Benchmark ( dim,deg,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
@@ -443,24 +677,21 @@ procedure ts_mthessian is
     qdx : QuadDobl_Complex_VecVecs.Link_to_VecVec;
     ddx : DoblDobl_Complex_VecVecs.Link_to_VecVec;
     d_x : Standard_Complex_VecVecs.Link_to_VecVec;
-    qd_values : QuadDobl_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
-    dd_values : DoblDobl_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
-    d_values : Standard_Complex_VecVecs.VecVec(1..dim) := Allocate(dim,dim);
-    qd_jmvls : QuadDobl_Complex_Vectors.Vector(1..dim);
-    dd_jmvls : DoblDobl_Complex_Vectors.Vector(1..dim);
-    d_jmvls : Standard_Complex_Vectors.Vector(1..dim);
     qdlnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     ddlnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     dlnk : Standard_Complex_Vectors.Link_to_Vector;
     qdvx : QuadDobl_Complex_Vectors.Vector(1..dim);
     ddvx : DoblDobl_Complex_Vectors.Vector(1..dim);
     dvx : Standard_Complex_Vectors.Vector(1..dim);
-    nbt : integer32 := 0;
-    start,stop : Ada.Calendar.Time;
+    file : file_type;
 
   begin
     new_line;
-    put("Give the number of tasks : "); get(nbt);
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
     QuadDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,qds,qdx);
     dds := System_Convolution_Circuits.to_double_double(qds);
     ddx := to_double_double(qdx);
@@ -470,24 +701,9 @@ procedure ts_mthessian is
       qdlnk := qdx(i); ddlnk := ddx(i); dlnk := d_x(i);
       qdvx(i) := qdlnk(0); ddvx(i) := ddlnk(0); dvx(i) := dlnk(0);
     end loop;
-    put_line("running in double precision ...");
-    start := Ada.Calendar.Clock;
-    Multitasked_Singular_Values(nbt,d_s,dvx,d_jmvls,d_values,false);
-    stop := Ada.Calendar.Clock;
-    put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
-    Time_Stamps.Write_Elapsed_Time(standard_output,start,stop);
-    put_line("running in double double precision ...");
-    start := Ada.Calendar.Clock;
-    Multitasked_Singular_Values(nbt,dds,ddvx,dd_jmvls,dd_values,false);
-    stop := Ada.Calendar.Clock;
-    put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
-    Time_Stamps.Write_Elapsed_Time(standard_output,start,stop);
-    put_line("running in quad double precision ...");
-    start := Ada.Calendar.Clock;
-    Multitasked_Singular_Values(nbt,qds,qdvx,qd_jmvls,qd_values,false);
-    stop := Ada.Calendar.Clock;
-    put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
-    Time_Stamps.Write_Elapsed_Time(standard_output,start,stop);
+    Standard_Benchmark(file,5,2,d_s,dvx);
+    DoblDobl_Benchmark(file,5,2,dds,ddvx);
+    QuadDobl_Benchmark(file,5,2,qds,qdvx);
   end Benchmark;
 
   procedure Main is
