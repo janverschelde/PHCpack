@@ -1,5 +1,6 @@
 Fri 7 Feb 2020 : to multitasked_hessian_convolutions, added the computation
-  of the eta constant, tested in ts_mthessian.
+  of the eta constant, tested in ts_mthessian.  Added a benchmark test for
+  all precisions to ts_mthessian.
 
 Thu 6 Feb 2020 : added to ts_mthessian a difference computation and
   timers to compute the speedup.  Added the computation of the Jacobian
