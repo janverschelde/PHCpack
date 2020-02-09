@@ -1,3 +1,6 @@
+Sun 9 Feb 2020 : updated ts_mthessian with prompting the number of runs
+  and the increment for benchmarking.
+
 Sat 8 Feb 2020 : extended the benchmark test in ts_mthessian.
 
 Fri 7 Feb 2020 : to multitasked_hessian_convolutions, added the computation

@@ -684,8 +684,12 @@ procedure ts_mthessian is
     ddvx : DoblDobl_Complex_Vectors.Vector(1..dim);
     dvx : Standard_Complex_Vectors.Vector(1..dim);
     file : file_type;
-
+    nbruns,inc : integer32 := 0;
+ 
   begin
+    new_line;
+    put("Give the number of multitasked runs : "); get(nbruns);
+    put("Give the increment on the tasks : "); get(inc); skip_line;
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
@@ -701,9 +705,9 @@ procedure ts_mthessian is
       qdlnk := qdx(i); ddlnk := ddx(i); dlnk := d_x(i);
       qdvx(i) := qdlnk(0); ddvx(i) := ddlnk(0); dvx(i) := dlnk(0);
     end loop;
-    Standard_Benchmark(file,5,2,d_s,dvx);
-    DoblDobl_Benchmark(file,5,2,dds,ddvx);
-    QuadDobl_Benchmark(file,5,2,qds,qdvx);
+    Standard_Benchmark(file,nbruns,inc,d_s,dvx);
+    DoblDobl_Benchmark(file,nbruns,inc,dds,ddvx);
+    QuadDobl_Benchmark(file,nbruns,inc,qds,qdvx);
   end Benchmark;
 
   procedure Main is
