@@ -371,60 +371,6 @@ procedure ts_mthessian is
     end loop;
   end QuadDobl_Random_Test;
 
-  function to_double_double
-             ( v : QuadDobl_Complex_VecVecs.Link_to_VecVec )
-             return DoblDobl_Complex_VecVecs.Link_to_VecVec is
-
-  -- DESCRIPTION :
-  --   Returns the vector v converted to double double precision.
-
-  -- REQUIRED : v /= null;
-
-    res : DoblDobl_Complex_VecVecs.Link_to_VecVec;
-    ddv : DoblDobl_Complex_VecVecs.VecVec(v'range);
-
-    use QuadDobl_Complex_Vectors_cv;
-
-  begin
-    for i in ddv'range loop
-      declare
-        vec : constant DoblDobl_Complex_Vectors.Vector
-            := QuadDobl_Complex_to_DoblDobl(v(i).all);
-      begin
-        ddv(i) := new DoblDobl_Complex_Vectors.Vector'(vec);
-      end;
-    end loop;
-    res := new DoblDobl_Complex_VecVecs.VecVec'(ddv);
-    return res;
-  end to_double_double;
-
-  function to_double
-             ( v : QuadDobl_Complex_VecVecs.Link_to_VecVec )
-             return Standard_Complex_VecVecs.Link_to_VecVec is
-
-  -- DESCRIPTION :
-  --   Returns the vector v converted to double precision.
-
-  -- REQUIRED : v /= null;
-
-    res : Standard_Complex_VecVecs.Link_to_VecVec;
-    ddv : Standard_Complex_VecVecs.VecVec(v'range);
-
-    use QuadDobl_Complex_Vectors_cv;
-
-  begin
-    for i in ddv'range loop
-      declare
-        vec : constant Standard_Complex_Vectors.Vector
-            := QuadDobl_Complex_to_Standard(v(i).all);
-      begin
-        ddv(i) := new Standard_Complex_Vectors.Vector'(vec);
-      end;
-    end loop;
-    res := new Standard_Complex_VecVecs.VecVec'(ddv);
-    return res;
-  end to_double;
-
   procedure Standard_Benchmark
               ( file : in file_type; nbruns,inc : in integer32;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -698,9 +644,9 @@ procedure ts_mthessian is
     new_line;
     QuadDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,qds,qdx);
     dds := System_Convolution_Circuits.to_double_double(qds);
-    ddx := to_double_double(qdx);
+    ddx := QuadDobl_Complex_Vectors_cv.to_double_double(qdx);
     d_s := System_Convolution_Circuits.to_double(qds);
-    d_x := to_double(qdx);
+    d_x := QuadDobl_Complex_Vectors_cv.to_double(qdx);
     for i in 1..dim loop
       qdlnk := qdx(i); ddlnk := ddx(i); dlnk := d_x(i);
       qdvx(i) := qdlnk(0); ddvx(i) := ddlnk(0); dvx(i) := dlnk(0);

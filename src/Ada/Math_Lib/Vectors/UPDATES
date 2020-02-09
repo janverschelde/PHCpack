@@ -1,3 +1,6 @@
+Sun 9 Feb 2020 : added to quaddobl_complex_vectors_cv functions to convert
+  vectors of vectors from quad duoble to double and double double precision.
+
 Sat 25 Jan 2020 : added to quaddobl_complex_vectors_cv to convert a vector
   of complex numbers in quad double precision into double double precision.
 
