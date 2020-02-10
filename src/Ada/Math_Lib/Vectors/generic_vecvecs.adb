@@ -32,11 +32,13 @@ package body Generic_VecVecs is
   begin
     Clear(w);
     for i in v'range loop
-      declare
-        vec : constant Vector := v(i).all;
-      begin
-        w(i) := new Vector'(vec);
-      end;
+      if v(i) /= null then
+        declare
+          vec : constant Vector := v(i).all;
+        begin
+          w(i) := new Vector'(vec);
+        end;
+      end if;
     end loop;
   end Copy;
 
