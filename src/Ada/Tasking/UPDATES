@@ -1,3 +1,5 @@
+Mon 10 Feb 2020 : improved benchmark procedures in ts_mtnewton.
+
 Sun 9 Feb 2020 : updated ts_mthessian with prompting the number of runs
   and the increment for benchmarking.  Moved the to_double_double and the
   to_double functions from ts_mthessian to quaddobl_complex_vectors_cv.
