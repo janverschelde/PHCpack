@@ -20,6 +20,7 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vectors_cv;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -574,6 +575,165 @@ procedure ts_mtnewton is
     end loop;
   end QuadDobl_Random_Test;
 
+  procedure Standard_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                s : in Standard_Speelpenning_Convolutions.Link_to_System;
+                x : in Standard_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   maxit    the maximum number of iterations;
+  --   s        system in one parameter;
+  --   x        some point to evaluate at;
+  --   verbose  if extra output is needed.
+
+    scf : Standard_Complex_VecVecs.VecVec(1..s.dim);
+    nbt : integer32 := 2;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
+
+  begin
+    Standard_Complex_VecVecs.Copy(x.all,scf);
+    Standard_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,false);
+    Standard_Complex_VecVecs.Clear(scf);
+    for k in 1..nbruns loop
+      Standard_Complex_VecVecs.Copy(x.all,scf);
+      Standard_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,false);
+      Standard_Complex_VecVecs.Clear(scf);
+      nbt := nbt + inc;
+    end loop;
+  end Standard_Benchmark;
+
+  procedure DoblDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in double double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   maxit    the maximum number of iterations;
+  --   s        system in one parameter;
+  --   x        some point to evaluate at;
+  --   verbose  if extra output is needed.
+
+    scf : DoblDobl_Complex_VecVecs.VecVec(1..s.dim);
+    nbt : integer32 := 2;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
+
+  begin
+    DoblDobl_Complex_VecVecs.Copy(x.all,scf);
+    DoblDobl_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,false);
+    DoblDobl_Complex_VecVecs.Clear(scf);
+    for k in 1..nbruns loop
+      DoblDobl_Complex_VecVecs.Copy(x.all,scf);
+      DoblDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,false);
+      DoblDobl_Complex_VecVecs.Clear(scf);
+      nbt := nbt + inc;
+    end loop;
+  end DoblDobl_Benchmark;
+
+  procedure QuadDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in quad double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   maxit    the maximum number of iterations;
+  --   s        system in one parameter;
+  --   x        some point to evaluate at;
+  --   verbose  if extra output is needed.
+
+    scf : QuadDobl_Complex_VecVecs.VecVec(1..s.dim);
+    nbt : integer32 := 2;
+    seri_elapsed,mult_elapsed : Duration := 0.0;
+
+  begin
+    QuadDobl_Complex_VecVecs.Copy(x.all,scf);
+    QuadDobl_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,false);
+    QuadDobl_Complex_VecVecs.Clear(scf);
+    for k in 1..nbruns loop
+      QuadDobl_Complex_VecVecs.Copy(x.all,scf);
+      QuadDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,false);
+      QuadDobl_Complex_VecVecs.Clear(scf);
+      nbt := nbt + inc;
+    end loop;
+  end QuadDobl_Benchmark;
+
+  procedure Benchmark ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Newton homotopy in quad double precision,
+  --   and runs benchmark tests in all three precisions.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    qds : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+    dds : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+    d_s : Standard_Speelpenning_Convolutions.Link_to_System;
+    qdx : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+    ddx : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+    d_x : Standard_Complex_VecVecs.Link_to_VecVec;
+    file : file_type;
+    nbruns,inc,maxit : integer32 := 0;
+ 
+  begin
+    new_line;
+    put("Give the number of multitasked runs : "); get(nbruns);
+    put("Give the increment on the tasks : "); get(inc); skip_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    skip_line;
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    QuadDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,qds,qdx);
+    dds := System_Convolution_Circuits.to_double_double(qds);
+    ddx := QuadDobl_Complex_Vectors_cv.to_double_double(qdx);
+    d_s := System_Convolution_Circuits.to_double(qds);
+    d_x := QuadDobl_Complex_Vectors_cv.to_double(qdx);
+    Standard_Benchmark(file,nbruns,inc,maxit,d_s,d_x);
+    DoblDobl_Benchmark(file,nbruns,inc,maxit,dds,ddx);
+    QuadDobl_Benchmark(file,nbruns,inc,maxit,qds,qdx);
+  end Benchmark;
+
+  procedure Prompt_for_Dimensions
+              ( dim,deg,nbr,pwr : in out integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user of the dimensions of the random input data.
+
+  begin
+    new_line;
+    put("Give the dimension : "); get(dim);
+    put("Give the degree of the power series : "); get(deg);
+    put("Give the number of terms in each circuit : "); get(nbr);
+    put("Give the largest power of the variables : "); get(pwr);
+  end Prompt_for_Dimensions;           
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -586,33 +746,36 @@ procedure ts_mtnewton is
     new_line;
     put_line("Testing Newton's method on power series ...");
     new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. standard double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(prc,"012");
-    new_line;
-    put("Generate a random problem ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans ='y' then
-      new_line;
-      put("Give the dimension : "); get(dim);
-      put("Give the degree of the power series : "); get(deg);
-      put("Give the number of terms in each circuit : "); get(nbr);
-      put("Give the largest power of the variables : "); get(pwr);
-      case prc is
-        when '0' => Standard_Random_Test(dim,deg,nbr,pwr);
-        when '1' => DoblDobl_Random_Test(dim,deg,nbr,pwr);
-        when '2' => QuadDobl_Random_Test(dim,deg,nbr,pwr);
-        when others => null;
-      end case;
+    put("Benchmark for all precisions ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Prompt_for_Dimensions(dim,deg,nbr,pwr);
+      Benchmark(dim,deg,nbr,pwr);
     else
-      case prc is
-        when '0' => Standard_Test;
-        when '1' => DoblDobl_Test;
-        when '2' => QuadDobl_Test;
-        when others => null;
-      end case;
+      put_line("MENU for the working precision :");
+      put_line("  0. standard double precision");
+      put_line("  1. double double precision");
+      put_line("  2. quad double precision");
+      put("Type 0, 1, or 2 to select the precision : ");
+      Ask_Alternative(prc,"012");
+      new_line;
+      put("Generate a random problem ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans ='y' then
+        Prompt_for_Dimensions(dim,deg,nbr,pwr);
+        case prc is
+          when '0' => Standard_Random_Test(dim,deg,nbr,pwr);
+          when '1' => DoblDobl_Random_Test(dim,deg,nbr,pwr);
+          when '2' => QuadDobl_Random_Test(dim,deg,nbr,pwr);
+          when others => null;
+        end case;
+      else
+        case prc is
+          when '0' => Standard_Test;
+          when '1' => DoblDobl_Test;
+          when '2' => QuadDobl_Test;
+          when others => null;
+        end case;
+      end if;
     end if;
   end Main;
 
