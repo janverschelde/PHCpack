@@ -38,6 +38,9 @@ package QuadDobl_Complex_Vectors_cv is
   --   of double, double double, or multiprecision complex numbers.
 
   function to_double_double
+             ( v : QuadDobl_Complex_VecVecs.VecVec )
+             return DoblDobl_Complex_VecVecs.VecVec;
+  function to_double_double
              ( v : QuadDobl_Complex_VecVecs.Link_to_VecVec )
              return DoblDobl_Complex_VecVecs.Link_to_VecVec;
 
@@ -46,6 +49,9 @@ package QuadDobl_Complex_Vectors_cv is
 
   -- REQUIRED : v /= null;
 
+  function to_double
+             ( v : QuadDobl_Complex_VecVecs.VecVec )
+             return Standard_Complex_VecVecs.VecVec;
   function to_double
              ( v : QuadDobl_Complex_VecVecs.Link_to_VecVec )
              return Standard_Complex_VecVecs.Link_to_VecVec;

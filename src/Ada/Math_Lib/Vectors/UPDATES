@@ -1,5 +1,6 @@
 Mon 10 Feb 2020 : added check in the copy of generic_vecvecs.adb,
   in case some entries in the original vector of vectors are null.
+  Added two more convertor functions to quaddobl_complex_vectors_cv.
 
 Sun 9 Feb 2020 : added to quaddobl_complex_vectors_cv functions to convert
   vectors of vectors from quad duoble to double and double double precision.

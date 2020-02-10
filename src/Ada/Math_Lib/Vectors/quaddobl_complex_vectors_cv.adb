@@ -68,6 +68,24 @@ package body QuadDobl_Complex_Vectors_cv is
   end QuadDobl_Complex_to_Multprec;
 
   function to_double_double
+             ( v : QuadDobl_Complex_VecVecs.VecVec )
+             return DoblDobl_Complex_VecVecs.VecVec is
+
+    res : DoblDobl_Complex_VecVecs.VecVec(v'range);
+
+  begin
+    for i in res'range loop
+      declare
+        vec : constant DoblDobl_Complex_Vectors.Vector
+            := QuadDobl_Complex_to_DoblDobl(v(i).all);
+      begin
+        res(i) := new DoblDobl_Complex_Vectors.Vector'(vec);
+      end;
+    end loop;
+    return res;
+  end to_double_double;
+
+  function to_double_double
              ( v : QuadDobl_Complex_VecVecs.Link_to_VecVec )
              return DoblDobl_Complex_VecVecs.Link_to_VecVec is
 
@@ -86,6 +104,24 @@ package body QuadDobl_Complex_Vectors_cv is
     res := new DoblDobl_Complex_VecVecs.VecVec'(ddv);
     return res;
   end to_double_double;
+
+  function to_double
+             ( v : QuadDobl_Complex_VecVecs.VecVec )
+             return Standard_Complex_VecVecs.VecVec is
+
+    res : Standard_Complex_VecVecs.VecVec(v'range);
+
+  begin
+    for i in res'range loop
+      declare
+        vec : constant Standard_Complex_Vectors.Vector
+            := QuadDobl_Complex_to_Standard(v(i).all);
+      begin
+        res(i) := new Standard_Complex_Vectors.Vector'(vec);
+      end;
+    end loop;
+    return res;
+  end to_double;
 
   function to_double
              ( v : QuadDobl_Complex_VecVecs.Link_to_VecVec )
