@@ -13,6 +13,9 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -37,6 +40,7 @@ with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Newton_Convolutions;
+with Convergence_Radius_Estimates;
 with Multitasked_Series_Linearization;
 with Multitasked_Newton_Convolutions;    use Multitasked_Newton_Convolutions;
 
@@ -48,6 +52,57 @@ procedure ts_mtnewton is
 --   and linearization to solve the matrix series equations,
 --   in double, double double, and quad double arithmetic,
 --   with multitasking for shared memory parallel computers.
+
+  procedure Apply_Fabry
+              ( c : in Standard_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Estimates the radius of convergence of the power series
+  --   with the application of the theorem of Fabry,
+  --   in double precision.
+
+    z : Standard_Complex_Numbers.Complex_Number;
+    r,e : double_float;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in DoblDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Estimates the radius of convergence of the power series
+  --   with the application of the theorem of Fabry,
+  --   in double double precision.
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+    r,e : double_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in QuadDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Estimates the radius of convergence of the power series
+  --   with the application of the theorem of Fabry,
+  --   in quad double precision.
+
+    z : QuadDobl_Complex_Numbers.Complex_Number;
+    r,e : quad_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,verbose);
+  end Apply_Fabry;
 
   procedure Standard_Run
               ( nbt,dim,maxit : in integer32;
@@ -120,6 +175,7 @@ procedure ts_mtnewton is
        else put("  succeeded to reach tolerance");
       end if;
       put(tol,3); new_line;
+      Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -210,6 +266,7 @@ procedure ts_mtnewton is
        else put("  succeeded to reach tolerance ");
       end if;
       put(tol,3); new_line;
+      Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -235,7 +292,7 @@ procedure ts_mtnewton is
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
                 serelp,mltelp,speedup : in out Duration;
-                output : in boolean; verbose : in boolean := false ) is
+                output : in boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method with nbt tasks in double precision.
@@ -302,6 +359,7 @@ procedure ts_mtnewton is
        else put("  succeeded to reach tolerance ");
       end if;
       put(tol,3); new_line;
+      Apply_Fabry(scf,verbose);
     end if;
     if nbt = 1 then
       if verbose then
@@ -829,6 +887,7 @@ procedure ts_mtnewton is
       Prompt_for_Dimensions(dim,deg,nbr,pwr);
       Benchmark(dim,deg,nbr,pwr);
     else
+      new_line;
       put_line("MENU for the working precision :");
       put_line("  0. standard double precision");
       put_line("  1. double double precision");
