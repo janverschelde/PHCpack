@@ -11,25 +11,30 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with QuadDobl_Complex_Numbers_cv;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
+with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_VecMats_io;        use Standard_Complex_VecMats_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
+with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_VecMats;
 with DoblDobl_Complex_VecMats_io;        use DoblDobl_Complex_VecMats_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats;
 with QuadDobl_Complex_VecMats_io;        use QuadDobl_Complex_VecMats_io;
+with QuadDobl_Complex_Vectors_cv;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_Vectors_io; use Standard_Complex_Series_Vectors_io;
 with Standard_Complex_Series_Matrices;
@@ -168,6 +173,28 @@ procedure ts_mtserlin is
     end loop;
     return err;
   end Error;
+
+  function Compute_Speedup
+             ( serial,multi : duration;
+               verbose : boolean := false ) return duration is
+
+  -- DESCRIPTION :
+  --   On input are the elapsed serial and multitasked times.
+  --   The speedup is computed if serial /= 0.0.
+  --   If verbose, then the speedup is shown.
+
+    speedup : Duration := 0.0;
+ 
+  begin
+    if serial + 1.0 /= 1.0 then
+      speedup := serial/multi;
+      if verbose then
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+    end if;
+    return speedup;
+  end Compute_Speedup;
 
   procedure Show_Speedup ( serial,multi : in duration ) is
 
@@ -593,6 +620,344 @@ procedure ts_mtserlin is
     end loop;
   end QuadDobl_Test;
 
+  function to_double_double
+             ( A : QuadDobl_Complex_Matrices.Matrix )
+             return DoblDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the double double equivalent to the matrix A.
+
+    res : DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
+
+    use QuadDobl_Complex_Numbers_cv;
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := QuadDobl_Complex_to_DoblDobl(A(i,j));
+      end loop;
+    end loop;
+    return res;
+  end to_double_double;
+
+  function to_double
+             ( A : QuadDobl_Complex_Matrices.Matrix )
+             return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the double precision equivalent to the matrix A.
+
+    res : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2));
+
+    use QuadDobl_Complex_Numbers_cv;
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := QuadDobl_Complex_to_Standard(A(i,j));
+      end loop;
+    end loop;
+    return res;
+  end to_double;
+
+  function to_double_double
+             ( A : QuadDobl_Complex_VecMats.VecMat )
+             return DoblDobl_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Converts every matrix in A to double double precision.
+
+    res : DoblDobl_Complex_VecMats.VecMat(A'range);
+    lnk : QuadDobl_Complex_Matrices.Link_to_Matrix;
+
+  begin
+    for i in A'range loop
+      lnk := A(i);
+      declare
+        B : constant DoblDobl_Complex_Matrices.Matrix(lnk'range(1),lnk'range(2))
+          := to_double_double(lnk.all);
+      begin
+        res(i) := new DoblDobl_Complex_Matrices.Matrix'(B);
+      end;
+    end loop;
+    return res;
+  end to_double_double;
+
+  function to_double
+             ( A : QuadDobl_Complex_VecMats.VecMat )
+             return Standard_Complex_VecMats.VecMat is
+
+  -- DESCRIPTION :
+  --   Converts every matrix in A to double precision.
+
+    res : Standard_Complex_VecMats.VecMat(A'range);
+    lnk : QuadDobl_Complex_Matrices.Link_to_Matrix;
+
+  begin
+    for i in A'range loop
+      lnk := A(i);
+      declare
+        B : constant Standard_Complex_Matrices.Matrix(lnk'range(1),lnk'range(2))
+          := to_double(lnk.all);
+      begin
+        res(i) := new Standard_Complex_Matrices.Matrix'(B);
+      end;
+    end loop;
+    return res;
+  end to_double;
+
+  procedure Standard_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+		verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs multitasked benchmarks in double precision. 
+
+  -- ON ENTRY :
+  --   file     file opened for output to write speedups;
+  --   n        number of equations and variables;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   A        matrices in the linear system;
+  --   b        right hand side vector of the linear system;
+  --   verbose  writes timings if true, otherwise stays silent.
+
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    wrk : constant Standard_Complex_Vectors.Link_to_Vector
+        := new Standard_Complex_Vectors.Vector(1..n);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
+    nbt : integer32 := 0;
+    vm : Standard_Complex_VecMats.VecMat(A'range);
+    bw : Standard_Complex_VecVecs.VecVec(b'range);
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"double precision");
+    Standard_Complex_VecMats.Copy(A,vm);
+    Standard_Complex_VecVecs.Copy(b,bw);
+    seristart := Ada.Calendar.Clock;
+    Standard_Series_Matrix_Solvers.Solve_by_lufac(vm,bw,ipvt,info,wrk);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : "); duration_io.put(file,serelp,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;
+    for k in 1..nbruns loop
+      declare
+        wks : Standard_Complex_VecVecs.VecVec(1..nbt)
+            := Allocate_Work_Space(nbt,n);
+      begin
+        Standard_Complex_VecMats.Copy(A,vm);
+        Standard_Complex_VecVecs.Copy(b,bw);
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bw,ipvt,info,wks,false);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        if verbose then
+          put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        end if;
+	speedup := Compute_Speedup(serelp,mltelp,verbose);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mltelp,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+        Standard_Complex_VecVecs.Clear(wks);
+        nbt := nbt + inc;
+      end;
+    end loop;
+  end Standard_Benchmark;
+
+  procedure DoblDobl_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs multitasked benchmarks in double double precision. 
+
+  -- ON ENTRY :
+  --   file     file opened for output to write speedups;
+  --   n        number of equations and variables;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   A        matrices in the linear system;
+  --   b        right hand side vector of the linear system;
+  --   verbose  writes timings if true, otherwise stays silent.
+
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
+        := new DoblDobl_Complex_Vectors.Vector(1..n);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
+    vm : DoblDobl_Complex_VecMats.VecMat(A'range);
+    bw : DoblDobl_Complex_VecVecs.VecVec(b'range);
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"double double precision");
+    DoblDobl_Complex_VecMats.Copy(A,vm);
+    DoblDobl_Complex_VecVecs.Copy(b,bw);
+    seristart := Ada.Calendar.Clock;
+    DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,bw,ipvt,info,wrk);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : "); duration_io.put(file,serelp,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;
+    for k in 1..nbruns loop
+      declare
+        wks : DoblDobl_Complex_VecVecs.VecVec(1..nbt)
+            := Allocate_Work_Space(nbt,n);
+      begin
+        DoblDobl_Complex_VecMats.Copy(A,vm);
+        DoblDobl_Complex_VecVecs.Copy(b,bw);
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bw,ipvt,info,wks,false);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        if verbose then
+          put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        end if;
+	speedup := Compute_Speedup(serelp,mltelp,verbose);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mltelp,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+        DoblDobl_Complex_VecVecs.Clear(wks);
+        nbt := nbt + inc;
+      end;
+    end loop;
+  end DoblDobl_Benchmark;
+
+  procedure QuadDobl_Benchmark
+              ( file : in file_type; n,nbruns,inc : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs multitasked benchmarks in quad double precision. 
+
+  -- ON ENTRY :
+  --   file     file opened for output to write speedups;
+  --   n        number of equations and variables;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   A        matrices in the linear system;
+  --   b        right hand side vector of the linear system;
+  --   verbose  writes timings if true, otherwise stays silent.
+
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
+        := new QuadDobl_Complex_Vectors.Vector(1..n);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
+    vm : QuadDobl_Complex_VecMats.VecMat(A'range);
+    bw : QuadDobl_Complex_VecVecs.VecVec(b'range);
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    put_line(file,"quad double precision");
+    QuadDobl_Complex_VecMats.Copy(A,vm);
+    QuadDobl_Complex_VecVecs.Copy(b,bw);
+    seristart := Ada.Calendar.Clock;
+    QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,bw,ipvt,info,wrk);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : "); duration_io.put(file,serelp,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;
+    for k in 1..nbruns loop
+      declare
+        wks : QuadDobl_Complex_VecVecs.VecVec(1..nbt)
+            := Allocate_Work_Space(nbt,n);
+      begin
+        QuadDobl_Complex_VecMats.Copy(A,vm);
+        QuadDobl_Complex_VecVecs.Copy(b,bw);
+        multstart := Ada.Calendar.Clock;
+        Multitasked_Solve_by_lufac(nbt,vm,bw,ipvt,info,wks,false);
+        multstop := Ada.Calendar.Clock;
+        mltelp := multstop - multstart;
+        if verbose then
+          put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+          Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+        end if;
+	speedup := Compute_Speedup(serelp,mltelp,verbose);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mltelp,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+        QuadDobl_Complex_VecVecs.Clear(wks);
+        nbt := nbt + inc;
+      end;
+    end loop;
+  end QuadDobl_Benchmark;
+
+  procedure Benchmark ( n,d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-dimensional linear system of power series
+  --   of degree in double, double double, and quad double precision.
+
+    use QuadDobl_Complex_Series_Matrices; -- for the sA*sx operation
+
+    sA : constant QuadDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
+       := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
+    As : constant QuadDobl_Complex_Matrix_Series.Matrix 
+       := QuadDobl_Complex_Matrix_Series.Create(sA); 
+    qd_vm : constant QuadDobl_Complex_VecMats.VecMat(0..As.deg)
+          := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(As);
+    dd_vm : constant DoblDobl_Complex_VecMats.VecMat(qd_vm'range)
+          := to_double_double(qd_vm);
+    d_vm : constant Standard_Complex_VecMats.VecMat(qd_vm'range)
+         := to_double(qd_vm);
+    sx : constant QuadDobl_Complex_Series_Vectors.Vector(1..n)
+       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
+    sb : constant QuadDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
+    bs : constant QuadDobl_Complex_Vector_Series.Vector(d)
+       := QuadDobl_Complex_Vector_Series.Create(sb);
+    qd_bscff : constant QuadDobl_Complex_VecVecs.VecVec(0..bs.deg)
+             := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(bs);
+    dd_bscff : constant DoblDobl_Complex_VecVecs.VecVec(0..bs.deg)
+             := QuadDobl_Complex_Vectors_cv.to_double_double(qd_bscff);
+    d_bscff : constant Standard_Complex_VecVecs.VecVec(0..bs.deg)
+            := QuadDobl_Complex_Vectors_cv.to_double(qd_bscff);
+    nbruns,inc : integer32 := 0;
+    file : file_type;
+
+  begin
+    new_line;
+    put("Give the number of multitasked runs : "); get(nbruns);
+    put("Give the increment on the tasks : "); get(inc);
+    skip_line;
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    Standard_Benchmark(file,n,nbruns,inc,d_vm,d_bscff);
+    DoblDobl_Benchmark(file,n,nbruns,inc,dd_vm,dd_bscff);
+    QuadDobl_Benchmark(file,n,nbruns,inc,qd_vm,qd_bscff);
+  end Benchmark;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -608,19 +973,25 @@ procedure ts_mtserlin is
     put("  Give the number of equations and variables : "); get(dim);
     put("  Give the degree of the series : "); get(deg);
     new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(ans,"012");
-    new_line;
-    case ans is
-      when '0' => Standard_Test(dim,deg);
-      when '1' => DoblDobl_Test(dim,deg);
-      when '2' => QuadDobl_Test(dim,deg);
-      when others => null;
-    end case;
+    put("Benchmarking for all precisions ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Benchmark(dim,deg);
+    else
+      new_line;
+      put_line("MENU for the working precision :");
+      put_line("  0. double precision");
+      put_line("  1. double double precision");
+      put_line("  2. quad double precision");
+      put("Type 0, 1, or 2 to select the precision : ");
+      Ask_Alternative(ans,"012");
+      new_line;
+      case ans is
+        when '0' => Standard_Test(dim,deg);
+        when '1' => DoblDobl_Test(dim,deg);
+        when '2' => QuadDobl_Test(dim,deg);
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin
