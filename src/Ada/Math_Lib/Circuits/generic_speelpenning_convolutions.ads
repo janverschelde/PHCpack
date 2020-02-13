@@ -275,6 +275,19 @@ package Generic_Speelpenning_Convolutions is
 
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
+  procedure Speel ( x : in Vectors.Vector;
+                    forward,backward,cross : in VecVecs.VecVec );
+  procedure Speel ( x : in Vectors.Vector;
+                    idx : in Standard_Integer_Vectors.Vector;
+                    forward,backward,cross : in VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Applies the reverse mode of algorithmic differentiation to
+  --   the point x, instead of a power series.
+  --   For the auxiliary vectors forward, backward, and cross,
+  --   only the number at position 0 is used.
+  --   All parameters have the same meaning as the Speel procedures below.
+
   procedure Speel ( x : in VecVecs.VecVec;
                     forward,backward,cross : in VecVecs.VecVec );
   procedure Speel ( x : in VecVecs.VecVec;

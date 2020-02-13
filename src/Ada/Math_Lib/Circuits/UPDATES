@@ -1,3 +1,6 @@
+Wed 12 Feb 2020 : to generic_speelpenning_convolutions, added two speel
+  functions to evaluate and differentiate efficiently at a product.
+
 Fri 7 Feb 2020 : to system_convolution_circuits, added functions to
   convert systems in quad double precision to double and double doubles,
   as needed for benchmarking on the same randomly generated tests.

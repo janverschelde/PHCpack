@@ -526,6 +526,38 @@ package body Generic_Speelpenning_Convolutions is
 
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
+  procedure Speel ( x : in Vectors.Vector;
+                    forward,backward,cross : in VecVecs.VecVec ) is
+
+    p,q,r : Vectors.Link_to_Vector;
+
+    use Ring;
+
+  begin
+    p := forward(1);
+    p(0) := x(1)*x(2);
+    for k in 3..x'last loop
+      p := forward(k-1); q := forward(k-2); p(0) := q(0)*x(k);
+    end loop;
+    if x'last > 2 then
+      p := backward(1);
+      p(0) := x(x'last)*x(x'last-1);
+      for k in 2..x'last-2 loop
+        p := backward(k); q := backward(k-1); p(0) := x(x'last-k)*q(0);
+      end loop;
+      if x'last = 3 then
+        p := cross(1); p(0) := x(1)*x(3);
+      else
+        p := cross(1); q := backward(x'last-3); p(0) := x(1)*q(0);
+        for k in 2..x'last-3 loop
+          r := cross(k); p := forward(k-1); q := backward(x'last-2-k);
+          r(0) := p(0)*q(0);
+        end loop;
+        r := cross(x'last-2); p := forward(x'last-3); r(0) := x(x'last)*p(0);
+      end if;
+    end if;
+  end Speel;
+
   procedure Speel ( x : in VecVecs.VecVec;
                     forward,backward,cross : in VecVecs.VecVec ) is
   begin
@@ -546,6 +578,39 @@ package body Generic_Speelpenning_Convolutions is
           Multiply(forward(k-1),backward(x'last-2-k),cross(k));
         end loop;
         Multiply(forward(x'last-3),x(x'last),cross(x'last-2));
+      end if;
+    end if;
+  end Speel;
+
+  procedure Speel ( x : in Vectors.Vector;
+                    idx : in Standard_Integer_Vectors.Vector;
+                    forward,backward,cross : in VecVecs.VecVec ) is
+
+    p,q,r : Vectors.Link_to_Vector;
+
+    use Ring;
+
+  begin
+    p := forward(1); p(0) := x(idx(1))*x(idx(2));
+    for k in 3..idx'last loop
+      p := forward(k-1); q := forward(k-1); p(0) := x(idx(k))*q(0);
+    end loop;
+    if idx'last > 2 then
+      p := backward(1); p(0) := x(idx(idx'last))*x(idx(idx'last-1));
+      for k in 2..idx'last-2 loop
+        p := backward(k); q := backward(k-1); p(0) := x(idx(idx'last-k))*q(0);
+      end loop;
+      if idx'last = 3 then
+        p := cross(1); p(0) := x(idx(1))*x(idx(3));
+      else
+        p := cross(1); q := backward(idx'last-3); p(0) := x(idx(1))*q(0);
+        for k in 2..idx'last-3 loop
+          r := cross(k);
+          p := backward(idx'last-2-k); q := backward(idx'last-2-k);
+          r(0) := p(0)*q(0);
+        end loop;
+        r := cross(idx'last-2); p := forward(idx'last-3);
+        r(0) := x(idx(idx'last))*p(0);
       end if;
     end if;
   end Speel;
