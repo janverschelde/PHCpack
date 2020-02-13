@@ -1,3 +1,5 @@
+Thu 13 Feb 2020 : bug fix in a benchmark procedure in ts_mtserlin.
+
 Tue 11 Feb 2020 : added the application of Fabry's theorem to ts_mtnewton.
 
 Mon 10 Feb 2020 : improved benchmark procedures in ts_mtnewton.

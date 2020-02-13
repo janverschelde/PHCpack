@@ -730,7 +730,7 @@ procedure ts_mtserlin is
         := new Standard_Complex_Vectors.Vector(1..n);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
     serelp,mltelp,speedup : duration;
-    nbt : integer32 := 0;
+    nbt : integer32 := 2;
     vm : Standard_Complex_VecMats.VecMat(A'range);
     bw : Standard_Complex_VecVecs.VecVec(b'range);
 
