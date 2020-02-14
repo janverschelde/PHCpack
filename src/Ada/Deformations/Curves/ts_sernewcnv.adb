@@ -45,24 +45,32 @@ procedure ts_sernewcnv is
 
   procedure Standard_Run
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in Standard_Complex_Solutions.Solution_List;
-                deg : in integer32 ) is
+                sol : in Standard_Complex_Solutions.Link_to_Solution;
+                deg,maxit : in integer32;
+                scale,usesvd,useqrls,lurcond : in boolean ) is
 
   -- DESCRIPTION :
-  --   Runs Newton's method in double precision on the first solution
-  --   in the list sols of the system p.
+  --   Runs Newton's method in double precision.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   sol      a solution;
+  --   deg      degree of the power series;
+  --   maxit    maximum number of iterations;
+  --   scale    if scaling is needed;
+  --   usesvd   for singular value decomposition;
+  --   useqrls  for least squares after QR decomposition;
+  --   lurcond  lu with condition number estimate.
 
     use Standard_Speelpenning_Convolutions;
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
-    sol : constant Standard_Complex_Solutions.Link_to_Solution
-        := Standard_Complex_Solutions.Head_Of(sols);
     dim : constant integer32 := sol.n;
     scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
         := Newton_Convolutions.Series_Coefficients(sol.v,deg);
-    info,nbrit,maxit : integer32 := 0;
+    info,nbrit : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
     ewrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim);
@@ -75,26 +83,10 @@ procedure ts_sernewcnv is
     U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     absdx,rcond : double_float;
     tol : constant double_float := 1.0E-14;
-    ans : character;
-    scale,usesvd,useqrls,needrcond,fail : boolean;
+    fail : boolean;
 
   begin
     Add_Parameter_to_Constant(s);
-    new_line;
-    put("Give the number of iterations : "); get(maxit);
-    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
-    scale := (ans = 'y');
-    put("Solve with singular value decomposition ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    usesvd := (ans = 'y');
-    if not usesvd then
-      put("Solve with least squares and QR ? (y/n) "); Ask_Yes_or_No(ans);
-      useqrls := (ans = 'y');
-      if not useqrls then
-        put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
-        needrcond := (ans = 'y');
-      end if;
-    end if;
     if useqrls or usesvd then
       dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
@@ -108,7 +100,7 @@ procedure ts_sernewcnv is
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
-    elsif needrcond then
+    elsif lurcond then
       LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond :"); put(rcond,3); new_line;
@@ -130,24 +122,32 @@ procedure ts_sernewcnv is
 
   procedure DoblDobl_Run
               ( p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in DoblDobl_Complex_Solutions.Solution_List;
-                deg : in integer32 ) is
+                sol : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                deg,maxit : in integer32;
+                scale,usesvd,useqrls,lurcond : in boolean ) is
 
   -- DESCRIPTION :
-  --   Runs Newton's method in double double precision on the first solution
-  --   in the list sols of the system p.
+  --   Runs Newton's method in double double precision.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   sol      a solution;
+  --   deg      degree of the power series;
+  --   maxit    maximum number of iterations;
+  --   scale    if scaling is needed;
+  --   usesvd   for singular value decomposition;
+  --   useqrls  for least squares after QR decomposition;
+  --   lurcond  lu with condition number estimate.
 
     use DoblDobl_Speelpenning_Convolutions;
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
-    sol : constant DoblDobl_Complex_Solutions.Link_to_Solution
-        := DoblDobl_Complex_Solutions.Head_Of(sols);
     dim : constant integer32 := sol.n;
     scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
         := Newton_Convolutions.Series_Coefficients(sol.v,deg);
-    info,nbrit,maxit : integer32 := 0;
+    info,nbrit : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
     ewrk : DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector(1..dim);
@@ -160,26 +160,10 @@ procedure ts_sernewcnv is
     U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     absdx,rcond : double_double;
     tol : constant double_float := 1.0E-14;
-    ans : character;
-    scale,usesvd,useqrls,needrcond,fail : boolean;
+    fail : boolean;
 
   begin
     Add_Parameter_to_Constant(s);
-    new_line;
-    put("Give the number of iterations : "); get(maxit);
-    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
-    scale := (ans = 'y');
-    put("Solve with singular value decomposition ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    usesvd := (ans = 'y');
-    if not usesvd then
-      put("Solve with least squares and QR ? (y/n) "); Ask_Yes_or_No(ans);
-      useqrls := (ans = 'y');
-      if not useqrls then
-        put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
-        needrcond := (ans = 'y');
-      end if;
-    end if;
     if useqrls or usesvd then
       dx := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := DoblDobl_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
@@ -193,7 +177,7 @@ procedure ts_sernewcnv is
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
-    elsif needrcond then
+    elsif lurcond then
       LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond : "); put(rcond,3); new_line;
@@ -215,24 +199,32 @@ procedure ts_sernewcnv is
 
   procedure QuadDobl_Run
               ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in QuadDobl_Complex_Solutions.Solution_List;
-                deg : in integer32 ) is
+                sol : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                deg,maxit : in integer32;
+                scale,usesvd,useqrls,lurcond : in boolean ) is
 
   -- DESCRIPTION :
-  --   Runs Newton's method in quad double precision on the first solution
-  --   in the list sols of the system p.
+  --   Runs Newton's method in quad double precision.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   sol      a solution;
+  --   deg      degree of the power series;
+  --   maxit    maximum number of iterations;
+  --   scale    if scaling is needed;
+  --   usesvd   for singular value decomposition;
+  --   useqrls  for least squares after QR decomposition;
+  --   lurcond  lu with condition number estimate.
 
     use QuadDobl_Speelpenning_Convolutions;
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
     s : constant Link_to_System := Create(c,p'last,deg);
-    sol : constant QuadDobl_Complex_Solutions.Link_to_Solution
-        := QuadDobl_Complex_Solutions.Head_Of(sols);
     dim : constant integer32 := sol.n;
     scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
         := Newton_Convolutions.Series_Coefficients(sol.v,deg);
-    info,nbrit,maxit : integer32 := 0;
+    info,nbrit : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
     ewrk : QuadDobl_Complex_Vectors.Link_to_Vector
         := new QuadDobl_Complex_Vectors.Vector(1..dim);
@@ -245,26 +237,10 @@ procedure ts_sernewcnv is
     U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     absdx,rcond : quad_double;
     tol : constant double_float := 1.0E-14;
-    ans : character;
-    scale,usesvd,useqrls,needrcond,fail : boolean;
+    fail : boolean;
 
   begin
     Add_Parameter_to_Constant(s);
-    new_line;
-    put("Give the number of iterations : "); get(maxit);
-    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
-    scale := (ans = 'y');
-    put("Solve with singular value decomposition ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    usesvd := (ans = 'y');
-    if not usesvd then
-      put("Solve with least squares and QR ? (y/n) "); Ask_Yes_or_No(ans);
-      useqrls := (ans = 'y');
-      if not useqrls then
-        put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
-        needrcond := (ans = 'y');
-      end if;
-    end if;
     if useqrls or usesvd then
       dx := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := QuadDobl_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
@@ -278,7 +254,7 @@ procedure ts_sernewcnv is
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
-    elsif needrcond then
+    elsif lurcond then
       LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond : "); put(rcond,3); new_line;
@@ -296,6 +272,102 @@ procedure ts_sernewcnv is
     put("after "); put(nbrit,1); put_line(" iterations.");
     QuadDobl_Complex_Vectors.Clear(ewrk);
     QuadDobl_Complex_Vectors.Clear(wrk);
+  end QuadDobl_Run;
+
+  procedure Prompt_for_Parameters
+              ( maxit : out integer32;
+                scale,usesvd,useqrls,lurcond : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the parameters of a run.
+
+  -- ON RETURN :
+  --   maxit    maximum number of iterations;
+  --   scale    if scaling is needed;
+  --   usesvd   for singular value decomposition;
+  --   useqrls  for least squares after QR decomposition;
+  --   lurcond  lu with condition number estimate.
+
+    ans : character;
+
+  begin
+    new_line;
+    maxit := 0;
+    put("Give the number of iterations : "); get(maxit);
+    put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
+    scale := (ans = 'y');
+    put("Solve with singular value decomposition ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    usesvd := (ans = 'y');
+    if usesvd then
+      useqrls := false; lurcond := false;
+    else
+      put("Solve with least squares and QR ? (y/n) "); Ask_Yes_or_No(ans);
+      useqrls := (ans = 'y');
+      if useqrls then
+        lurcond := false;
+      else
+        put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+        lurcond := (ans = 'y');
+      end if;
+    end if;
+  end Prompt_for_Parameters;
+
+  procedure Standard_Run
+              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in double precision on the first solution
+  --   in the list sols of the system p.
+
+    sol : constant Standard_Complex_Solutions.Link_to_Solution
+        := Standard_Complex_Solutions.Head_Of(sols);
+    maxit : integer32 := 0;
+    scale,usesvd,useqrls,needrcond : boolean := false;
+
+  begin
+    Prompt_for_Parameters(maxit,scale,usesvd,useqrls,needrcond);
+    Standard_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
+  end Standard_Run;
+
+  procedure DoblDobl_Run
+              ( p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in double double precision on the first solution
+  --   in the list sols of the system p.
+
+    sol : constant DoblDobl_Complex_Solutions.Link_to_Solution
+        := DoblDobl_Complex_Solutions.Head_Of(sols);
+    maxit : integer32 := 0;
+    scale,usesvd,useqrls,needrcond : boolean;
+
+  begin
+    Prompt_for_Parameters(maxit,scale,usesvd,useqrls,needrcond);
+    DoblDobl_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
+  end DoblDobl_Run;
+
+  procedure QuadDobl_Run
+              ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in quad double precision on the first solution
+  --   in the list sols of the system p.
+
+    sol : constant QuadDobl_Complex_Solutions.Link_to_Solution
+        := QuadDobl_Complex_Solutions.Head_Of(sols);
+    maxit : integer32 := 0;
+    scale,usesvd,useqrls,needrcond : boolean;
+
+  begin
+    Prompt_for_Parameters(maxit,scale,usesvd,useqrls,needrcond);
+    QuadDobl_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
   end QuadDobl_Run;
 
   procedure Standard_Test ( deg : in integer32 ) is
