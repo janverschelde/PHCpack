@@ -852,6 +852,12 @@ global optimization, and computational physics:
    Available as
    ftp://ftp.esat.kuleuven.be/pub/stadius/nvervliet/vanderstukken2017systems1.pdf
 
+#. A.D. Viquerat:
+   **A continuation-based method for finding laminated composite stacking
+   sequences.**
+   *Composite Structures* 238 (2020) 111872.
+   https://doi.org/10.1016/j.compstruct.2020.111872
+
 #. C.W. Wampler:
    **Isotropic coordinates, circularity and Bezout numbers:
    planar kinematics from a new perspective**.
@@ -924,7 +930,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-111. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+112. Ali Baharev, Ferenc Domes, Arnold Neumaier:
      **A robust approach for finding all well-separated solutions of
      sparse systems of nonlinear equations**.
      *Numerical Algorithms* 76:163-189, 2017.
@@ -1029,7 +1035,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-133. Bo Dong, Bo Yu, and Yan Yu:
+134. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -1048,7 +1054,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-136. B. Sturmfels:
+137. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
