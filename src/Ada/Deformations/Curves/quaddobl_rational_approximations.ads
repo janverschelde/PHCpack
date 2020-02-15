@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -139,11 +140,30 @@ package QuadDobl_Rational_Approximations is
 
   function Evaluate
               ( num,den : QuadDobl_Complex_Vectors.Vector;
+                x : quad_double ) return Complex_Number;
+  function Evaluate
+              ( num,den : QuadDobl_Complex_Vectors.Vector;
                 x : Complex_Number ) return Complex_Number;
 
   -- DESCRIPTION :
   --   Given the coefficients of the numerator in num
   --   and the coefficients of the denominator in den,
   --   return the value of the rational approximation at x.
+
+  procedure Evaluate
+              ( num,den : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in quad_double;
+                eva : out QuadDobl_Complex_Vectors.Vector );
+  procedure Evaluate
+              ( num,den : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in Complex_Number;
+                eva : out QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates the numerator and denominator polynomial defined
+  --   by the coefficients in num and den at x.
+  --   The result of the evalution is in the vector eva.
+
+  -- REQUIRED : num'range = den'range = eva'range.
 
 end QuadDobl_Rational_Approximations;

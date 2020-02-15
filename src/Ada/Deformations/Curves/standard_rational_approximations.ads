@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
@@ -140,11 +141,30 @@ package Standard_Rational_Approximations is
 
   function Evaluate
               ( num,den : Standard_Complex_Vectors.Vector;
+                x : double_float ) return Complex_Number;
+  function Evaluate
+              ( num,den : Standard_Complex_Vectors.Vector;
                 x : Complex_Number ) return Complex_Number;
 
   -- DESCRIPTION :
   --   Given the coefficients of the numerator in num
   --   and the coefficients of the denominator in den,
   --   return the value of the rational approximation at x.
+
+  procedure Evaluate
+              ( num,den : in Standard_Complex_VecVecs.VecVec;
+                x : in double_float;
+                eva : out Standard_Complex_Vectors.Vector );
+  procedure Evaluate
+              ( num,den : in Standard_Complex_VecVecs.VecVec;
+                x : in Complex_Number;
+                eva : out Standard_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates the numerator and denominator polynomial defined
+  --   by the coefficients in num and den at x.
+  --   The result of the evalution is in the vector eva.
+
+  -- REQUIRED : num'range = den'range = eva'range.
 
 end Standard_Rational_Approximations;

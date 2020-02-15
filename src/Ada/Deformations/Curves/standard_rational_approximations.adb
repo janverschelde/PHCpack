@@ -173,4 +173,35 @@ package body Standard_Rational_Approximations is
     return res;
   end Evaluate;
 
+  function Evaluate
+              ( num,den : Standard_Complex_Vectors.Vector;
+                x : double_float ) return Complex_Number is
+
+    cx : constant Complex_Number := Create(x);
+
+  begin
+    return Evaluate(num,den,cx);
+  end Evaluate;
+
+  procedure Evaluate
+              ( num,den : in Standard_Complex_VecVecs.VecVec;
+                x : in Complex_Number;
+                eva : out Standard_Complex_Vectors.Vector ) is
+  begin
+    for k in eva'range loop
+      eva(k) := Evaluate(num(k).all,den(k).all,x);
+    end loop;
+  end Evaluate;
+
+  procedure Evaluate
+              ( num,den : in Standard_Complex_VecVecs.VecVec;
+                x : in double_float;
+                eva : out Standard_Complex_Vectors.Vector ) is
+
+    cx : constant Complex_Number := Create(x);
+
+  begin
+    Evaluate(num,den,cx,eva);
+  end Evaluate;
+
 end Standard_Rational_Approximations;

@@ -1,5 +1,6 @@
 Sat 15 Feb 2020 : new test procedure ts_ratapp to test the new thread safe
-  procedures to construct rational approximations.
+  procedures to construct rational approximations.  Added extra evaluation
+  operations to {standard,dobldobl,quaddobl}_rational_approximations.
 
 Fri 14 Feb 2020 : improved organization of tests in ts_sernewcnv.
   Added procedures to standard_rational_approximations for thread safety.

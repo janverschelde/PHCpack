@@ -1,5 +1,4 @@
 with text_io;                           use text_io;
-with Double_Double_Numbers;             use Double_Double_Numbers;
 with DoblDobl_Complex_Matrices_io;      use DoblDobl_Complex_Matrices_io;
 with DoblDobl_Complex_Linear_Solvers;   use DoblDobl_Complex_Linear_Solvers;
 
@@ -175,6 +174,37 @@ package body DoblDobl_Rational_Approximations is
 
   begin
     return res;
+  end Evaluate;
+
+  function Evaluate
+              ( num,den : DoblDobl_Complex_Vectors.Vector;
+                x : double_double ) return Complex_Number is
+
+    cx : constant Complex_Number := create(x);
+
+  begin
+    return Evaluate(num,den,cx);
+  end Evaluate;
+
+  procedure Evaluate
+              ( num,den : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in Complex_Number;
+                eva : out DoblDobl_Complex_Vectors.Vector ) is
+  begin
+    for k in eva'range loop
+      eva(k) := Evaluate(num(k).all,den(k).all,x);
+    end loop;
+  end Evaluate;
+
+  procedure Evaluate
+              ( num,den : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in double_double;
+                eva : out DoblDobl_Complex_Vectors.Vector ) is
+
+    cx : constant Complex_Number := Create(x);
+
+  begin
+    Evaluate(num,den,cx,eva);
   end Evaluate;
 
 end DoblDobl_Rational_Approximations;

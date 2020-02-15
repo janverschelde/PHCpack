@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with DoblDobl_Complex_Vectors;
@@ -139,11 +140,30 @@ package DoblDobl_Rational_Approximations is
 
   function Evaluate
               ( num,den : DoblDobl_Complex_Vectors.Vector;
+                x : double_double ) return Complex_Number;
+  function Evaluate
+              ( num,den : DoblDobl_Complex_Vectors.Vector;
                 x : Complex_Number ) return Complex_Number;
 
   -- DESCRIPTION :
   --   Given the coefficients of the numerator in num
   --   and the coefficients of the denominator in den,
   --   return the value of the rational approximation at x.
+
+  procedure Evaluate
+              ( num,den : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in double_double;
+                eva : out DoblDobl_Complex_Vectors.Vector );
+  procedure Evaluate
+              ( num,den : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in Complex_Number;
+                eva : out DoblDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates the numerator and denominator polynomial defined
+  --   by the coefficients in num and den at x.
+  --   The result of the evalution is in the vector eva.
+
+  -- REQUIRED : num'range = den'range = eva'range.
 
 end DoblDobl_Rational_Approximations;

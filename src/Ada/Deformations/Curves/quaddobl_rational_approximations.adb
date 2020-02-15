@@ -1,5 +1,4 @@
 with text_io;                           use text_io;
-with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Matrices_io;      use QuadDobl_Complex_Matrices_io;
 with QuadDobl_Complex_Linear_Solvers;   use QuadDobl_Complex_Linear_Solvers;
 
@@ -175,6 +174,37 @@ package body QuadDobl_Rational_Approximations is
 
   begin
     return res;
+  end Evaluate;
+
+  function Evaluate
+              ( num,den : QuadDobl_Complex_Vectors.Vector;
+                x : quad_double ) return Complex_Number is
+
+    cx : constant Complex_Number := create(x);
+
+  begin
+    return Evaluate(num,den,cx);
+  end Evaluate;
+
+  procedure Evaluate
+              ( num,den : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in Complex_Number;
+                eva : out QuadDobl_Complex_Vectors.Vector ) is
+  begin
+    for k in eva'range loop
+      eva(k) := Evaluate(num(k).all,den(k).all,x);
+    end loop;
+  end Evaluate;
+
+  procedure Evaluate
+              ( num,den : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in quad_double;
+                eva : out QuadDobl_Complex_Vectors.Vector ) is
+
+    cx : constant Complex_Number := Create(x);
+
+  begin
+    Evaluate(num,den,cx,eva);
   end Evaluate;
 
 end QuadDobl_Rational_Approximations;
