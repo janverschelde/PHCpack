@@ -1,4 +1,5 @@
 Fri 14 Feb 2020 : improved organization of tests in ts_sernewcnv.
+  Added procedures to standard_rational_approximations for thread safety.
 
 Mon 27 Jan 2020 : to newton_power_convolutions, added a verbose flag to
   print the progress index.
