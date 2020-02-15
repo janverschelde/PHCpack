@@ -1,5 +1,8 @@
 with text_io;                            use text_io;
+with duration_io;
+with Ada.Calendar;
 with Communications_with_User;           use Communications_with_User;
+with Time_Stamps;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -28,270 +31,12 @@ with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
-with Multitasking;
+with Multitasked_Pade_Approximations;    use Multitasked_Pade_Approximations;
 
 procedure ts_mtratapp is
 
 -- DESCRIPTION :
 --   Development of multitasked algorithms for rational approximations.
-
-  procedure Standard_Multitasking
-              ( nbtasks,numdeg,dendeg : in integer32;
-                cff : in Standard_Complex_VecVecs.VecVec;
-                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
-		t : in double_float;
-                eva : out Standard_Complex_Vectors.Vector;
-                output : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Constructs rational approximations with multitasking,
-  --   in double precision.
-
-  -- ON ENTRY :
-  --   nbtasks   the number of tasks;
-  --   numdeg    degree of the numerators;
-  --   dendeg    degree of the denominators;
-  --   cff       coefficients of the power series;
-  --   numcff    allocated space for the numerator coefficients;
-  --   dencff    allocated space for the numerator coefficients;
-  --   t         value to evaluate the rational approximations;
-  --   output    true if the tasks are verbose,
-  --             false if no output during the multitasking.
-
-  -- ON RETURN :
-  --   numcff    coefficients of the numerators;
-  --   dencff    coefficients of the denominators;
-  --   eva       evaluated rational approximants at t.
-
-    use Standard_Rational_Approximations;
-
-    procedure Silent_Job ( i,n : in integer32 ) is
-
-    -- DESCRIPTION :
-    --   Task i out of n will construct a rational approximation
-    --   without intermediate output.
-
-      idx : integer32 := i;
-      mat : Standard_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
-      rhs : Standard_Complex_Vectors.Vector(1..dendeg);
-      ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
-      info : integer32;
-      icff,inum,iden : Standard_Complex_Vectors.Link_to_Vector;
-
-    begin
-      while idx <= cff'last loop
-        icff := cff(idx); inum := numcff(idx); iden := dencff(idx);
-        Pade(numdeg,dendeg,icff.all,inum.all,iden.all,mat,rhs,ipvt,info,false);
-        eva(idx) := Evaluate(inum.all,iden.all,t);
-        idx := idx + n;
-      end loop;
-    end Silent_Job;
-    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
-
-    procedure Report_Job ( i,n : in integer32 ) is
-
-    -- DESCRIPTION :
-    --   Task i out of n will construct a rational approximation
-    --   with intermediate output.
-
-      idx : integer32 := i;
-      mat : Standard_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
-      rhs : Standard_Complex_Vectors.Vector(1..dendeg);
-      ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
-      info : integer32;
-      icff,inum,iden : Standard_Complex_Vectors.Link_to_Vector;
-
-    begin
-      while idx <= cff'last loop
-        put_line("Task " & Multitasking.to_string(i)
-                         & " computes component "
-                         & Multitasking.to_string(idx));
-        icff := cff(idx); inum := numcff(idx); iden := dencff(idx);
-        Pade(numdeg,dendeg,icff.all,inum.all,iden.all,mat,rhs,ipvt,info,false);
-        eva(idx) := Evaluate(inum.all,iden.all,t);
-        idx := idx + n;
-      end loop;
-    end Report_Job;
-    procedure report_do_jobs is new Multitasking.Reporting_Workers(Report_Job);
-
-  begin
-    if output
-     then report_do_jobs(nbtasks);
-     else silent_do_jobs(nbtasks);
-    end if;
-  end Standard_Multitasking;
-
-  procedure DoblDobl_Multitasking
-              ( nbtasks,numdeg,dendeg : in integer32;
-                cff : in DoblDobl_Complex_VecVecs.VecVec;
-                numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
-		t : in double_double;
-                eva : out DoblDobl_Complex_Vectors.Vector;
-                output : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Constructs rational approximations with multitasking,
-  --   in double double precision.
-
-  -- ON ENTRY :
-  --   nbtasks   the number of tasks;
-  --   numdeg    degree of the numerators;
-  --   dendeg    degree of the denominators;
-  --   cff       coefficients of the power series;
-  --   numcff    allocated space for the numerator coefficients;
-  --   dencff    allocated space for the numerator coefficients;
-  --   t         value to evaluate the rational approximations;
-  --   output    true if the tasks are verbose,
-  --             false if no output during the multitasking.
-
-  -- ON RETURN :
-  --   numcff    coefficients of the numerators;
-  --   dencff    coefficients of the denominators;
-  --   eva       evaluated rational approximants at t.
-
-    use DoblDobl_Rational_Approximations;
-
-    procedure Silent_Job ( i,n : in integer32 ) is
-
-    -- DESCRIPTION :
-    --   Task i out of n will construct a rational approximation
-    --   without intermediate output.
-
-      idx : integer32 := i;
-      mat : DoblDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
-      rhs : DoblDobl_Complex_Vectors.Vector(1..dendeg);
-      ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
-      info : integer32;
-      icff,inum,iden : DoblDobl_Complex_Vectors.Link_to_Vector;
-
-    begin
-      while idx <= cff'last loop
-        icff := cff(idx); inum := numcff(idx); iden := dencff(idx);
-        Pade(numdeg,dendeg,icff.all,inum.all,iden.all,mat,rhs,ipvt,info,false);
-        eva(idx) := Evaluate(inum.all,iden.all,t);
-        idx := idx + n;
-      end loop;
-    end Silent_Job;
-    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
-
-    procedure Report_Job ( i,n : in integer32 ) is
-
-    -- DESCRIPTION :
-    --   Task i out of n will construct a rational approximation
-    --   with intermediate output.
-
-      idx : integer32 := i;
-      mat : DoblDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
-      rhs : DoblDobl_Complex_Vectors.Vector(1..dendeg);
-      ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
-      info : integer32;
-      icff,inum,iden : DoblDobl_Complex_Vectors.Link_to_Vector;
-
-    begin
-      while idx <= cff'last loop
-        put_line("Task " & Multitasking.to_string(i)
-                         & " computes component "
-                         & Multitasking.to_string(idx));
-        icff := cff(idx); inum := numcff(idx); iden := dencff(idx);
-        Pade(numdeg,dendeg,icff.all,inum.all,iden.all,mat,rhs,ipvt,info,false);
-        eva(idx) := Evaluate(inum.all,iden.all,t);
-        idx := idx + n;
-      end loop;
-    end Report_Job;
-    procedure report_do_jobs is new Multitasking.Reporting_Workers(Report_Job);
-
-  begin
-    if output
-     then report_do_jobs(nbtasks);
-     else silent_do_jobs(nbtasks);
-    end if;
-  end DoblDobl_Multitasking;
-
-  procedure QuadDobl_Multitasking
-              ( nbtasks,numdeg,dendeg : in integer32;
-                cff : in QuadDobl_Complex_VecVecs.VecVec;
-                numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
-		t : in quad_double;
-                eva : out QuadDobl_Complex_Vectors.Vector;
-                output : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Constructs rational approximations with multitasking,
-  --   in quad double precision.
-
-  -- ON ENTRY :
-  --   nbtasks   the number of tasks;
-  --   numdeg    degree of the numerators;
-  --   dendeg    degree of the denominators;
-  --   cff       coefficients of the power series;
-  --   numcff    allocated space for the numerator coefficients;
-  --   dencff    allocated space for the numerator coefficients;
-  --   t         value to evaluate the rational approximations;
-  --   output    true if the tasks are verbose,
-  --             false if no output during the multitasking.
-
-  -- ON RETURN :
-  --   numcff    coefficients of the numerators;
-  --   dencff    coefficients of the denominators;
-  --   eva       evaluated rational approximants at t.
-
-    use QuadDobl_Rational_Approximations;
-
-    procedure Silent_Job ( i,n : in integer32 ) is
-
-    -- DESCRIPTION :
-    --   Task i out of n will construct a rational approximation
-    --   without intermediate output.
-
-      idx : integer32 := i;
-      mat : QuadDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
-      rhs : QuadDobl_Complex_Vectors.Vector(1..dendeg);
-      ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
-      info : integer32;
-      icff,inum,iden : QuadDobl_Complex_Vectors.Link_to_Vector;
-
-    begin
-      while idx <= cff'last loop
-        icff := cff(idx); inum := numcff(idx); iden := dencff(idx);
-        Pade(numdeg,dendeg,icff.all,inum.all,iden.all,mat,rhs,ipvt,info,false);
-        eva(idx) := Evaluate(inum.all,iden.all,t);
-        idx := idx + n;
-      end loop;
-    end Silent_Job;
-    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
-
-    procedure Report_Job ( i,n : in integer32 ) is
-
-    -- DESCRIPTION :
-    --   Task i out of n will construct a rational approximation
-    --   with intermediate output.
-
-      idx : integer32 := i;
-      mat : QuadDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
-      rhs : QuadDobl_Complex_Vectors.Vector(1..dendeg);
-      ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
-      info : integer32;
-      icff,inum,iden : QuadDobl_Complex_Vectors.Link_to_Vector;
-
-    begin
-      while idx <= cff'last loop
-        put_line("Task " & Multitasking.to_string(i)
-                         & " computes component "
-                         & Multitasking.to_string(idx));
-        icff := cff(idx); inum := numcff(idx); iden := dencff(idx);
-        Pade(numdeg,dendeg,icff.all,inum.all,iden.all,mat,rhs,ipvt,info,false);
-        eva(idx) := Evaluate(inum.all,iden.all,t);
-        idx := idx + n;
-      end loop;
-    end Report_Job;
-    procedure report_do_jobs is new Multitasking.Reporting_Workers(Report_Job);
-
-  begin
-    if output
-     then report_do_jobs(nbtasks);
-     else silent_do_jobs(nbtasks);
-    end if;
-  end QuadDobl_Multitasking;
 
   procedure Standard_Test ( nbr,numdeg,dendeg : in integer32 ) is
 
@@ -318,7 +63,10 @@ procedure ts_mtratapp is
     t : constant double_float := 0.1;
     eva1,eva2 : Standard_Complex_Vectors.Vector(1..nbr);
     otp : boolean;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
 
+    use Ada.Calendar;
     use Standard_Complex_Numbers;
     use Standard_Rational_Approximations;
 
@@ -347,13 +95,25 @@ procedure ts_mtratapp is
     end loop;
     new_line;
     put_line("Computing without multitasking ...");
+    seristart := Ada.Calendar.Clock;
     Pade_Vector(numdeg,dendeg,cff,numcff1,dencff1,mat,rhs,ipvt,info,false);
     Evaluate(numcff1,dencff1,t,eva1);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
     new_line;
     put("Give the number of tasks : "); get(nbtasks);
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
     otp := (ans = 'y');
+    multstart := Ada.Calendar.Clock;
     Standard_Multitasking(nbtasks,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,otp);
+    multstop := Ada.Calendar.Clock;
+    mltelp := multstop - multstart;
+    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+    if serelp + 1.0 /= 1.0 then
+      speedup := serelp/mltelp;
+      put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+    end if;
     err := Difference(numcff1,numcff2);
     put("  the error in numerator coefficients : "); put(err,3); new_line;
     err := Difference(dencff1,dencff2);
@@ -391,7 +151,10 @@ procedure ts_mtratapp is
     t : constant double_double := create(0.1);
     eva1,eva2 : DoblDobl_Complex_Vectors.Vector(1..nbr);
     otp : boolean;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
 
+    use Ada.Calendar;
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Rational_Approximations;
 
@@ -420,13 +183,25 @@ procedure ts_mtratapp is
     end loop;
     new_line;
     put_line("Computing without multitasking ...");
+    seristart := Ada.Calendar.Clock;
     Pade_Vector(numdeg,dendeg,cff,numcff1,dencff1,mat,rhs,ipvt,info,false);
     Evaluate(numcff1,dencff1,t,eva1);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
     new_line;
     put("Give the number of tasks : "); get(nbtasks);
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
     otp := (ans = 'y');
+    multstart := Ada.Calendar.Clock;
     DoblDobl_Multitasking(nbtasks,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,otp);
+    multstop := Ada.Calendar.Clock;
+    mltelp := multstop - multstart;
+    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+    if serelp + 1.0 /= 1.0 then
+      speedup := serelp/mltelp;
+      put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+    end if;
     err := Difference(numcff1,numcff2);
     put("  the error in numerator coefficients : "); put(err,3); new_line;
     err := Difference(dencff1,dencff2);
@@ -464,7 +239,10 @@ procedure ts_mtratapp is
     t : constant quad_double := create(0.1);
     eva1,eva2 : QuadDobl_Complex_Vectors.Vector(1..nbr);
     otp : boolean;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
 
+    use Ada.Calendar;
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Rational_Approximations;
 
@@ -493,13 +271,25 @@ procedure ts_mtratapp is
     end loop;
     new_line;
     put_line("Computing without multitasking ...");
+    seristart := Ada.Calendar.Clock;
     Pade_Vector(numdeg,dendeg,cff,numcff1,dencff1,mat,rhs,ipvt,info,false);
     Evaluate(numcff1,dencff1,t,eva1);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
     new_line;
     put("Give the number of tasks : "); get(nbtasks);
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
     otp := (ans = 'y');
+    multstart := Ada.Calendar.Clock;
     QuadDobl_Multitasking(nbtasks,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,otp);
+    multstop := Ada.Calendar.Clock;
+    mltelp := multstop - multstart;
+    Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+    if serelp + 1.0 /= 1.0 then
+      speedup := serelp/mltelp;
+      put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+    end if;
     err := Difference(numcff1,numcff2);
     put("  the error in numerator coefficients : "); put(err,3); new_line;
     err := Difference(dencff1,dencff2);

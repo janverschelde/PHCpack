@@ -1,5 +1,7 @@
 Sat 15 Feb 2020 : new test procedure ts_ratapp to develop the multitasked
   construction and evaluation of rational approximations.
+  New package multitasked_pade_approximations, tested by ts_mtratapp,
+  with timers added.
 
 Thu 13 Feb 2020 : bug fix in a benchmark procedure in ts_mtserlin.
 
