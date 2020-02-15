@@ -1,7 +1,5 @@
 with text_io;                           use text_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
-with Standard_Integer_Vectors;
 with DoblDobl_Complex_Matrices_io;      use DoblDobl_Complex_Matrices_io;
 with DoblDobl_Complex_Linear_Solvers;   use DoblDobl_Complex_Linear_Solvers;
 
@@ -59,15 +57,36 @@ package body DoblDobl_Rational_Approximations is
     return res;
   end Numerator_Coefficients;
 
+  procedure Assign_Numerator_Coefficients
+              ( numdeg,dendeg : in integer32;
+                dencff,sercff : in DoblDobl_Complex_Vectors.Vector;
+                cff : out DoblDobl_Complex_Vectors.Vector ) is
+
+    mindeg : integer32;
+
+  begin
+    cff(0) := sercff(0);
+    if dendeg <= numdeg
+     then mindeg := dendeg;
+     else mindeg := numdeg;
+    end if;
+    for i in 1..numdeg loop
+      cff(i) := sercff(i);
+      for j in 1..i loop
+        exit when (j > mindeg);
+        cff(i) := cff(i) + dencff(j)*sercff(i-j);
+      end loop; 
+    end loop;
+  end Assign_Numerator_Coefficients;
+
   procedure Pade ( numdeg,dendeg : in integer32;
                    cff : in DoblDobl_Complex_Vectors.Vector;
                    numcff,dencff : out DoblDobl_Complex_Vectors.Vector;
+                   mat : in out DoblDobl_Complex_Matrices.Matrix;
+                   rhs : in out DoblDobl_Complex_Vectors.Vector;
+                   ipvt : in out Standard_Integer_Vectors.Vector;
                    info : out integer32; verbose : in boolean := false ) is
 
-    dim : constant integer32 := numdeg + dendeg;
-    mat : DoblDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
-    rhs : DoblDobl_Complex_Vectors.Vector(1..dendeg);
-    ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
     zero : constant double_double := create(0.0);
     cmplx_zero : constant Complex_Number := create(zero);
     one : constant double_double := create(1.0);
@@ -95,10 +114,43 @@ package body DoblDobl_Rational_Approximations is
          then return;
         end if;
       end loop;
-      numcff := Numerator_Coefficients(numdeg,dendeg,dencff,cff);
+     -- numcff := Numerator_Coefficients(numdeg,dendeg,dencff,cff);
+      Assign_Numerator_Coefficients(numdeg,dendeg,dencff,cff,numcff);
       info := 0; -- ignore the singular coefficient matrix
     end if;
   end Pade;
+
+  procedure Pade ( numdeg,dendeg : in integer32;
+                   cff : in DoblDobl_Complex_Vectors.Vector;
+                   numcff,dencff : out DoblDobl_Complex_Vectors.Vector;
+                   info : out integer32; verbose : in boolean := false ) is
+
+    mat : DoblDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
+    rhs : DoblDobl_Complex_Vectors.Vector(1..dendeg);
+    ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
+
+  begin
+    Pade(numdeg,dendeg,cff,numcff,dencff,mat,rhs,ipvt,info,verbose);
+  end Pade;
+
+  procedure Pade_Vector
+              ( numdeg,dendeg : in integer32;
+                cff : in DoblDobl_Complex_VecVecs.VecVec;
+                numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
+                mat : in out DoblDobl_Complex_Matrices.Matrix;
+                rhs : in out DoblDobl_Complex_Vectors.Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false ) is
+
+    lnkcff,lnknum,lnkden : DoblDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in cff'range loop
+      lnkcff := cff(i); lnknum := numcff(i); lnkden := dencff(i);
+      Pade(numdeg,dendeg,lnkcff.all,lnknum.all,lnkden.all,
+           mat,rhs,ipvt,info,verbose);
+    end loop;
+  end Pade_Vector;
 
   function Evaluate
               ( p : DoblDobl_Complex_Vectors.Vector;

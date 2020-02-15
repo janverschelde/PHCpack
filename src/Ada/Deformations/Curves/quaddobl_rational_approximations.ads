@@ -1,6 +1,8 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
+with Standard_Integer_Vectors;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
 
 package QuadDobl_Rational_Approximations is
@@ -43,6 +45,32 @@ package QuadDobl_Rational_Approximations is
   --   dencff   coefficients of the denominator;
   --   sercff   coefficients of the power series.
 
+  procedure Assign_Numerator_Coefficients
+              ( numdeg,dendeg : in integer32;
+                dencff,sercff : in QuadDobl_Complex_Vectors.Vector;
+                cff : out QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Assigns the coefficients of the numerator in the rational approximation.
+
+  -- ON ENTRY :
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator;
+  --   dencff   coefficients of the denominator;
+  --   sercff   coefficients of the power series.
+
+  -- ON RETURN :
+  --   cff      vector of range 0..numdeg with the coefficients of
+  --            the numerator in the rational approximation.
+
+  procedure Pade
+              ( numdeg,dendeg : in integer32;
+                cff : in QuadDobl_Complex_Vectors.Vector;
+                numcff,dencff : out QuadDobl_Complex_Vectors.Vector;
+                mat : in out QuadDobl_Complex_Matrices.Matrix;
+                rhs : in out QuadDobl_Complex_Vectors.Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false );
   procedure Pade
               ( numdeg,dendeg : in integer32;
                 cff : in QuadDobl_Complex_Vectors.Vector;
@@ -50,14 +78,16 @@ package QuadDobl_Rational_Approximations is
                 info : out integer32; verbose : in boolean := false );
 
   -- DESCRIPTION :
-  --   Tests the construction in standard floating point arithmetic
-  --   for a series with coefficients given in cff.
+  --   Constructs a Pade approximants for a series with coefficients in cff.
   --   The simplest textbook definition is applied in the computation.
 
   -- ON ENTRY :
   --   numdeg   degree of the numerator;
   --   dendeg   degree of the denominator;
   --   cff      coefficients of the power series;
+  --   mat      square matrix of dimension dendeg, used as work space;
+  --   rhs      right hand side vector, of dimension dendeg;
+  --   ipvt     pivoting information vector of the LU factorization;
   --   verbose  if verbose, then the matrices are written to screen.
 
   -- ON RETURN :
@@ -67,6 +97,38 @@ package QuadDobl_Rational_Approximations is
   --            worked, otherwise, info indicates a zero column.
 
   -- REQUIRED : cff'range = 0..numdeg+dendeg.
+
+  procedure Pade_Vector
+              ( numdeg,dendeg : in integer32;
+                cff : in QuadDobl_Complex_VecVecs.VecVec;
+                numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
+                mat : in out QuadDobl_Complex_Matrices.Matrix;
+                rhs : in out QuadDobl_Complex_Vectors.Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Computes the coefficients of a vector of rational approximations,
+  --   for a given vector of coefficient vectors of power series.
+
+  -- ON ENTRY :
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator;
+  --   cff      coefficients of the power series.
+  --   numcff   memory allocated for the coefficients of the numerators;
+  --   dencff   memory allocated for the coefficients of the denominators;
+  --   mat      square matrix of dimension dendeg, used as work space;
+  --   rhs      right hand side vector, of dimension dendeg;
+  --   ipvt     pivoting information vector of the LU factorization;
+  --   verbose  if verbose, then the matrices are written to screen.
+
+  -- ON RETURN :
+  --   numcff   coefficients of the numerators, if info is nonzero;
+  --   dencff   coefficients of the denominators, if info is nonzero;
+  --   info     if zero, then the partial pivoting in the LU factorization
+  --            worked, otherwise, info indicates a zero column.
+
+  -- REQUIRED : cff(i)'range = 0..numdeg+dendeg, for i in cff'range.
 
   function Evaluate
               ( p : QuadDobl_Complex_Vectors.Vector;
