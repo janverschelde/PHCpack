@@ -992,6 +992,10 @@ ts_sernewcnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sernewcnv.adb \
               -o $(BIN)/ts_sernewcnv
 
+ts_ratapp:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ratapp.adb \
+              -o $(BIN)/ts_ratapp
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:

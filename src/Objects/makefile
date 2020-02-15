@@ -397,7 +397,7 @@ ts_evddpol:
 
 test_circuits: ts_cffsup ts_speel ts_cycfun ts_speelsys ts_gradcirc \
                ts_vmpeval ts_vmpdiff ts_speelser ts_speelcnv ts_fabry \
-               ts_evalcnv ts_hesscnv
+               ts_evalcnv ts_hesscnv ts_jacocnv
 
 ts_cffsup:
 	make -f $(MAKEFILE) ts_cffsup
@@ -434,6 +434,9 @@ ts_evalcnv:
 
 ts_hesscnv:
 	make -f $(MAKEFILE) ts_hesscnv
+
+ts_jacocnv:
+	make -f $(MAKEFILE) ts_jacocnv
 
 # Test programs for Math_Lib/Supports :
 
@@ -740,7 +743,7 @@ ts_vmpnewt:
 test_curves: ts_durker ts_extrapol ts_extrapts \
              ts_sernew ts_sersol ts_serhom ts_serpred ts_serpath ts_serpade \
              ts_padepred ts_jacrabin ts_nxtpadsol ts_hesscrit ts_hesspred \
-             ts_predstep ts_sernewcnv
+             ts_predstep ts_sernewcnv ts_ratapp
 
 ts_durker:
 	make -f $(MAKEFILE) ts_durker
@@ -789,6 +792,9 @@ ts_predstep:
 
 ts_sernewcnv:
 	make -f $(MAKEFILE) ts_sernewcnv
+
+ts_ratapp:
+	make -f $(MAKEFILE) ts_ratapp
 
 # Test programs for the Deformations/End_Games library :
 
