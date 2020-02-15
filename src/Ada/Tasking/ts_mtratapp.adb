@@ -38,6 +38,148 @@ procedure ts_mtratapp is
 -- DESCRIPTION :
 --   Development of multitasked algorithms for rational approximations.
 
+  procedure Standard_Allocate
+              ( nbr,numdeg,dendeg : in integer32;
+                cff : out Standard_Complex_VecVecs.VecVec;
+                numcff1,numcff2 : out Standard_Complex_VecVecs.VecVec;
+                dencff1,dencff2 : out Standard_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Generates the input series coefficients and allocates space
+  --   for the numerators and the denominators, in double precision.
+
+  -- ON ENTRY :
+  --   nbr       the number of components in the vector of approximants;
+  --   numdeg    degree of the numerators;
+  --   dendeg    degree of the denominators.
+
+  -- ON RETURN :
+  --   cff       random coefficients for a series;
+  --   numcff1   first space allocated for numerator coefficients;
+  --   numcff2   second space allocated for numerator coefficients;
+  --   dencff1   first space allocated for denominator coefficients;
+  --   dencff2   second space allocated for denominator coefficients.
+
+    dim : constant integer32 := numdeg + dendeg;
+
+  begin
+    for k in 1..nbr loop
+      declare
+        kcff : constant Standard_Complex_Vectors.Vector(0..dim)
+             := Standard_Random_Vectors.Random_Vector(0,dim);
+        knum1 : constant Standard_Complex_Vectors.Vector(0..numdeg)
+              := (0..numdeg => Standard_Complex_Numbers.Create(integer(0)));
+        knum2 : constant Standard_Complex_Vectors.Vector(0..numdeg)
+              := (0..numdeg => Standard_Complex_Numbers.Create(integer(0)));
+        kden1 : constant Standard_Complex_Vectors.Vector(0..dendeg)
+              := (0..numdeg => Standard_Complex_Numbers.Create(integer(0)));
+        kden2 : constant Standard_Complex_Vectors.Vector(0..dendeg)
+              := (0..numdeg => Standard_Complex_Numbers.Create(integer(0)));
+      begin
+        cff(k) := new Standard_Complex_Vectors.Vector'(kcff);
+        numcff1(k) := new Standard_Complex_Vectors.Vector'(knum1);
+        numcff2(k) := new Standard_Complex_Vectors.Vector'(knum2);
+        dencff1(k) := new Standard_Complex_Vectors.Vector'(kden1);
+        dencff2(k) := new Standard_Complex_Vectors.Vector'(kden2);
+      end;
+    end loop;
+  end Standard_Allocate;
+
+  procedure DoblDobl_Allocate
+              ( nbr,numdeg,dendeg : in integer32;
+                cff : out DoblDobl_Complex_VecVecs.VecVec;
+                numcff1,numcff2 : out DoblDobl_Complex_VecVecs.VecVec;
+                dencff1,dencff2 : out DoblDobl_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Generates the input series coefficients and allocates space
+  --   for the numerators and the denominators, in double double precision.
+
+  -- ON ENTRY :
+  --   nbr       the number of components in the vector of approximants;
+  --   numdeg    degree of the numerators;
+  --   dendeg    degree of the denominators.
+
+  -- ON RETURN :
+  --   cff       random coefficients for a series;
+  --   numcff1   first space allocated for numerator coefficients;
+  --   numcff2   second space allocated for numerator coefficients;
+  --   dencff1   first space allocated for denominator coefficients;
+  --   dencff2   second space allocated for denominator coefficients.
+
+    dim : constant integer32 := numdeg + dendeg;
+
+  begin
+    for k in 1..nbr loop
+      declare
+        kcff : constant DoblDobl_Complex_Vectors.Vector(0..dim)
+             := DoblDobl_Random_Vectors.Random_Vector(0,dim);
+        knum1 : constant DoblDobl_Complex_Vectors.Vector(0..numdeg)
+              := (0..numdeg => DoblDobl_Complex_Numbers.Create(integer(0)));
+        knum2 : constant DoblDobl_Complex_Vectors.Vector(0..numdeg)
+              := (0..numdeg => DoblDobl_Complex_Numbers.Create(integer(0)));
+        kden1 : constant DoblDobl_Complex_Vectors.Vector(0..dendeg)
+              := (0..numdeg => DoblDobl_Complex_Numbers.Create(integer(0)));
+        kden2 : constant DoblDobl_Complex_Vectors.Vector(0..dendeg)
+              := (0..numdeg => DoblDobl_Complex_Numbers.Create(integer(0)));
+      begin
+        cff(k) := new DoblDobl_Complex_Vectors.Vector'(kcff);
+        numcff1(k) := new DoblDobl_Complex_Vectors.Vector'(knum1);
+        numcff2(k) := new DoblDobl_Complex_Vectors.Vector'(knum2);
+        dencff1(k) := new DoblDobl_Complex_Vectors.Vector'(kden1);
+        dencff2(k) := new DoblDobl_Complex_Vectors.Vector'(kden2);
+      end;
+    end loop;
+  end DoblDobl_Allocate;
+
+  procedure QuadDobl_Allocate
+              ( nbr,numdeg,dendeg : in integer32;
+                cff : out QuadDobl_Complex_VecVecs.VecVec;
+                numcff1,numcff2 : out QuadDobl_Complex_VecVecs.VecVec;
+                dencff1,dencff2 : out QuadDobl_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Generates the input series coefficients and allocates space
+  --   for the numerators and the denominators, in quad double precision.
+
+  -- ON ENTRY :
+  --   nbr       the number of components in the vector of approximants;
+  --   numdeg    degree of the numerators;
+  --   dendeg    degree of the denominators.
+
+  -- ON RETURN :
+  --   cff       random coefficients for a series;
+  --   numcff1   first space allocated for numerator coefficients;
+  --   numcff2   second space allocated for numerator coefficients;
+  --   dencff1   first space allocated for denominator coefficients;
+  --   dencff2   second space allocated for denominator coefficients.
+
+    dim : constant integer32 := numdeg + dendeg;
+
+  begin
+    null;
+    for k in 1..nbr loop
+      declare
+        kcff : constant QuadDobl_Complex_Vectors.Vector(0..dim)
+             := QuadDobl_Random_Vectors.Random_Vector(0,dim);
+        knum1 : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
+              := (0..numdeg => QuadDobl_Complex_Numbers.Create(integer(0)));
+        knum2 : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
+              := (0..numdeg => QuadDobl_Complex_Numbers.Create(integer(0)));
+        kden1 : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
+              := (0..numdeg => QuadDobl_Complex_Numbers.Create(integer(0)));
+        kden2 : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
+              := (0..numdeg => QuadDobl_Complex_Numbers.Create(integer(0)));
+      begin
+        cff(k) := new QuadDobl_Complex_Vectors.Vector'(kcff);
+        numcff1(k) := new QuadDobl_Complex_Vectors.Vector'(knum1);
+        numcff2(k) := new QuadDobl_Complex_Vectors.Vector'(knum2);
+        dencff1(k) := new QuadDobl_Complex_Vectors.Vector'(kden1);
+        dencff2(k) := new QuadDobl_Complex_Vectors.Vector'(kden2);
+      end;
+    end loop;
+  end QuadDobl_Allocate;
+
   procedure Standard_Test ( nbr,numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
@@ -49,7 +191,6 @@ procedure ts_mtratapp is
   --   numdeg    degree of the numerators;
   --   dendeg    degree of the denominators.
 
-    dim : constant integer32 := numdeg + dendeg;
     cff : Standard_Complex_VecVecs.VecVec(1..nbr);
     numcff1,numcff2 : Standard_Complex_VecVecs.VecVec(1..nbr);
     dencff1,dencff2 : Standard_Complex_VecVecs.VecVec(1..nbr);
@@ -73,26 +214,7 @@ procedure ts_mtratapp is
   begin
     new_line;
     put_line("Allocating and generating data ...");
-    for k in 1..nbr loop
-      declare
-        kcff : constant Standard_Complex_Vectors.Vector(0..dim)
-             := Standard_Random_Vectors.Random_Vector(0,dim);
-        knum1 : constant Standard_Complex_Vectors.Vector(0..numdeg)
-              := (0..numdeg => Standard_Complex_Numbers.Create(integer(0)));
-        knum2 : constant Standard_Complex_Vectors.Vector(0..numdeg)
-              := (0..numdeg => Standard_Complex_Numbers.Create(integer(0)));
-        kden1 : constant Standard_Complex_Vectors.Vector(0..dendeg)
-              := (0..numdeg => Standard_Complex_Numbers.Create(integer(0)));
-        kden2 : constant Standard_Complex_Vectors.Vector(0..dendeg)
-              := (0..numdeg => Standard_Complex_Numbers.Create(integer(0)));
-      begin
-        cff(k) := new Standard_Complex_Vectors.Vector'(kcff);
-        numcff1(k) := new Standard_Complex_Vectors.Vector'(knum1);
-        numcff2(k) := new Standard_Complex_Vectors.Vector'(knum2);
-        dencff1(k) := new Standard_Complex_Vectors.Vector'(kden1);
-        dencff2(k) := new Standard_Complex_Vectors.Vector'(kden2);
-      end;
-    end loop;
+    Standard_Allocate(nbr,numdeg,dendeg,cff,numcff1,numcff2,dencff1,dencff2);
     new_line;
     put_line("Computing without multitasking ...");
     seristart := Ada.Calendar.Clock;
@@ -137,7 +259,6 @@ procedure ts_mtratapp is
   --   numdeg    degree of the numerators;
   --   dendeg    degree of the denominators.
 
-    dim : constant integer32 := numdeg + dendeg;
     cff : DoblDobl_Complex_VecVecs.VecVec(1..nbr);
     numcff1,numcff2 : DoblDobl_Complex_VecVecs.VecVec(1..nbr);
     dencff1,dencff2 : DoblDobl_Complex_VecVecs.VecVec(1..nbr);
@@ -161,26 +282,7 @@ procedure ts_mtratapp is
   begin
     new_line;
     put_line("Allocating and generating data ...");
-    for k in 1..nbr loop
-      declare
-        kcff : constant DoblDobl_Complex_Vectors.Vector(0..dim)
-             := DoblDobl_Random_Vectors.Random_Vector(0,dim);
-        knum1 : constant DoblDobl_Complex_Vectors.Vector(0..numdeg)
-              := (0..numdeg => DoblDobl_Complex_Numbers.Create(integer(0)));
-        knum2 : constant DoblDobl_Complex_Vectors.Vector(0..numdeg)
-              := (0..numdeg => DoblDobl_Complex_Numbers.Create(integer(0)));
-        kden1 : constant DoblDobl_Complex_Vectors.Vector(0..dendeg)
-              := (0..numdeg => DoblDobl_Complex_Numbers.Create(integer(0)));
-        kden2 : constant DoblDobl_Complex_Vectors.Vector(0..dendeg)
-              := (0..numdeg => DoblDobl_Complex_Numbers.Create(integer(0)));
-      begin
-        cff(k) := new DoblDobl_Complex_Vectors.Vector'(kcff);
-        numcff1(k) := new DoblDobl_Complex_Vectors.Vector'(knum1);
-        numcff2(k) := new DoblDobl_Complex_Vectors.Vector'(knum2);
-        dencff1(k) := new DoblDobl_Complex_Vectors.Vector'(kden1);
-        dencff2(k) := new DoblDobl_Complex_Vectors.Vector'(kden2);
-      end;
-    end loop;
+    DoblDobl_Allocate(nbr,numdeg,dendeg,cff,numcff1,numcff2,dencff1,dencff2);
     new_line;
     put_line("Computing without multitasking ...");
     seristart := Ada.Calendar.Clock;
@@ -225,7 +327,6 @@ procedure ts_mtratapp is
   --   numdeg    degree of the numerators;
   --   dendeg    degree of the denominators.
 
-    dim : constant integer32 := numdeg + dendeg;
     cff : QuadDobl_Complex_VecVecs.VecVec(1..nbr);
     numcff1,numcff2 : QuadDobl_Complex_VecVecs.VecVec(1..nbr);
     dencff1,dencff2 : QuadDobl_Complex_VecVecs.VecVec(1..nbr);
@@ -249,26 +350,7 @@ procedure ts_mtratapp is
   begin
     new_line;
     put_line("Allocating and generating data ...");
-    for k in 1..nbr loop
-      declare
-        kcff : constant QuadDobl_Complex_Vectors.Vector(0..dim)
-             := QuadDobl_Random_Vectors.Random_Vector(0,dim);
-        knum1 : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
-              := (0..numdeg => QuadDobl_Complex_Numbers.Create(integer(0)));
-        knum2 : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
-              := (0..numdeg => QuadDobl_Complex_Numbers.Create(integer(0)));
-        kden1 : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
-              := (0..numdeg => QuadDobl_Complex_Numbers.Create(integer(0)));
-        kden2 : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
-              := (0..numdeg => QuadDobl_Complex_Numbers.Create(integer(0)));
-      begin
-        cff(k) := new QuadDobl_Complex_Vectors.Vector'(kcff);
-        numcff1(k) := new QuadDobl_Complex_Vectors.Vector'(knum1);
-        numcff2(k) := new QuadDobl_Complex_Vectors.Vector'(knum2);
-        dencff1(k) := new QuadDobl_Complex_Vectors.Vector'(kden1);
-        dencff2(k) := new QuadDobl_Complex_Vectors.Vector'(kden2);
-      end;
-    end loop;
+    QuadDobl_Allocate(nbr,numdeg,dendeg,cff,numcff1,numcff2,dencff1,dencff2);
     new_line;
     put_line("Computing without multitasking ...");
     seristart := Ada.Calendar.Clock;
@@ -301,6 +383,207 @@ procedure ts_mtratapp is
     put("  the error in the evaluation : "); put(err,3); new_line;
   end QuadDobl_Test;
 
+  procedure Standard_Benchmark
+              ( file : in file_type;
+                nbr,numdeg,dendeg,nbruns,inc : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbr      number of components;
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+
+    cff : Standard_Complex_VecVecs.VecVec(1..nbr);
+    numcff1,numcff2 : Standard_Complex_VecVecs.VecVec(1..nbr);
+    dencff1,dencff2 : Standard_Complex_VecVecs.VecVec(1..nbr);
+    mat : Standard_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
+    rhs : Standard_Complex_Vectors.Vector(1..dendeg);
+    ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
+    info : integer32;
+    t : constant double_float := 0.1;
+    eva1,eva2 : Standard_Complex_Vectors.Vector(1..nbr);
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+    use Standard_Rational_Approximations;
+
+  begin
+    put_line(file,"double precision");
+    Standard_Allocate(nbr,numdeg,dendeg,cff,numcff1,numcff2,dencff1,dencff2);
+    seristart := Ada.Calendar.Clock;
+    Pade_Vector(numdeg,dendeg,cff,numcff1,dencff1,mat,rhs,ipvt,info,false);
+    Evaluate(numcff1,dencff1,t,eva1);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,serelp,1,3); new_line(file);
+    for k in 1..nbruns loop
+      multstart := Ada.Calendar.Clock;
+      Standard_Multitasking(nbt,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,false);
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+      if serelp + 1.0 /= 1.0
+       then speedup := serelp/mltelp;
+       else speedup := 0.0;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mltelp,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      nbt := nbt + inc;
+    end loop;
+  end Standard_Benchmark;
+
+  procedure DoblDobl_Benchmark
+              ( file : in file_type;
+                nbr,numdeg,dendeg,nbruns,inc : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in double double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbr      number of components;
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+
+    cff : DoblDobl_Complex_VecVecs.VecVec(1..nbr);
+    numcff1,numcff2 : DoblDobl_Complex_VecVecs.VecVec(1..nbr);
+    dencff1,dencff2 : DoblDobl_Complex_VecVecs.VecVec(1..nbr);
+    mat : DoblDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
+    rhs : DoblDobl_Complex_Vectors.Vector(1..dendeg);
+    ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
+    info : integer32;
+    t : constant double_double := create(0.1);
+    eva1,eva2 : DoblDobl_Complex_Vectors.Vector(1..nbr);
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+    use DoblDobl_Rational_Approximations;
+
+  begin
+    put_line(file,"double double precision");
+    DoblDobl_Allocate(nbr,numdeg,dendeg,cff,numcff1,numcff2,dencff1,dencff2);
+    seristart := Ada.Calendar.Clock;
+    Pade_Vector(numdeg,dendeg,cff,numcff1,dencff1,mat,rhs,ipvt,info,false);
+    Evaluate(numcff1,dencff1,t,eva1);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,serelp,1,3); new_line(file);
+    for k in 1..nbruns loop
+      multstart := Ada.Calendar.Clock;
+      DoblDobl_Multitasking(nbt,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,false);
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+      if serelp + 1.0 /= 1.0
+       then speedup := serelp/mltelp;
+       else speedup := 0.0;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mltelp,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      nbt := nbt + inc;
+    end loop;
+  end DoblDobl_Benchmark;
+
+  procedure QuadDobl_Benchmark
+              ( file : in file_type;
+                nbr,numdeg,dendeg,nbruns,inc : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in quad double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbr      number of components;
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+
+    cff : QuadDobl_Complex_VecVecs.VecVec(1..nbr);
+    numcff1,numcff2 : QuadDobl_Complex_VecVecs.VecVec(1..nbr);
+    dencff1,dencff2 : QuadDobl_Complex_VecVecs.VecVec(1..nbr);
+    mat : QuadDobl_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
+    rhs : QuadDobl_Complex_Vectors.Vector(1..dendeg);
+    ipvt : Standard_Integer_Vectors.Vector(1..dendeg);
+    info : integer32;
+    t : constant quad_double := create(0.1);
+    eva1,eva2 : QuadDobl_Complex_Vectors.Vector(1..nbr);
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    serelp,mltelp,speedup : duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+    use QuadDobl_Rational_Approximations;
+
+  begin
+    put_line(file,"quad double precision");
+    QuadDobl_Allocate(nbr,numdeg,dendeg,cff,numcff1,numcff2,dencff1,dencff2);
+    seristart := Ada.Calendar.Clock;
+    Pade_Vector(numdeg,dendeg,cff,numcff1,dencff1,mat,rhs,ipvt,info,false);
+    Evaluate(numcff1,dencff1,t,eva1);
+    seristop := Ada.Calendar.Clock;
+    serelp := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,serelp,1,3); new_line(file);
+    for k in 1..nbruns loop
+      multstart := Ada.Calendar.Clock;
+      QuadDobl_Multitasking(nbt,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,false);
+      multstop := Ada.Calendar.Clock;
+      mltelp := multstop - multstart;
+      if serelp + 1.0 /= 1.0
+       then speedup := serelp/mltelp;
+       else speedup := 0.0;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mltelp,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      nbt := nbt + inc;
+    end loop;
+  end QuadDobl_Benchmark;
+
+  procedure Benchmark ( nbr,numdeg,dendeg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates random problems
+  --   and runs benchmark tests in all three precisions.
+
+  -- ON ENTRY :
+  --   nbr      number of components;
+  --   numdeg   degree of the numerator;
+  --   dendeg   degree of the denominator.
+
+    file : file_type;
+    nbruns,inc : integer32 := 0;
+ 
+  begin
+    new_line;
+    put("Give the number of multitasked runs : "); get(nbruns);
+    put("Give the increment on the tasks : "); get(inc);
+    skip_line;
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    Standard_Benchmark(file,nbr,numdeg,dendeg,nbruns,inc);
+    DoblDobl_Benchmark(file,nbr,numdeg,dendeg,nbruns,inc);
+    QuadDobl_Benchmark(file,nbr,numdeg,dendeg,nbruns,inc);
+  end Benchmark;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -308,7 +591,7 @@ procedure ts_mtratapp is
   --   and then launches the test.
 
     numdeg,dendeg,nbr : integer32 := 0;
-    precision : character;
+    ans,precision : character;
 
   begin
     new_line;
@@ -318,18 +601,25 @@ procedure ts_mtratapp is
     put("Give the degree of the denominator : "); get(dendeg);
     put("Give the number of components : "); get(nbr);
     new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(precision,"012");
-    case precision is
-      when '0' => Standard_Test(nbr,numdeg,dendeg);
-      when '1' => DoblDobl_Test(nbr,numdeg,dendeg);
-      when '2' => QuadDobl_Test(nbr,numdeg,dendeg);
-      when others => null;
-    end case;
+    put("Benchmark for all precisions ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Benchmark(nbr,numdeg,dendeg);
+    else
+      new_line;
+      put_line("MENU for the working precision :");
+      put_line("  0. double precision");
+      put_line("  1. double double precision");
+      put_line("  2. quad double precision");
+      put("Type 0, 1, or 2 to select the precision : ");
+      Ask_Alternative(precision,"012");
+      case precision is
+        when '0' => Standard_Test(nbr,numdeg,dendeg);
+        when '1' => DoblDobl_Test(nbr,numdeg,dendeg);
+        when '2' => QuadDobl_Test(nbr,numdeg,dendeg);
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 begin
