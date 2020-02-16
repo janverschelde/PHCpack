@@ -552,6 +552,10 @@ ts_jacocnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_jacocnv.adb \
               -o $(BIN)/ts_jacocnv
 
+ts_shiftcnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_shiftcnv.adb \
+              -o $(BIN)/ts_shiftcnv
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
