@@ -1,3 +1,5 @@
+Sun 16 Feb 2020 : improved the test on the shift in ts_cseries.
+
 Tue 14 Jan 2020 : in standard_series_matrix_solvers, exported the
   auxiliary procedures for the matrix-vector multiply and the subtract.
   Did so likewise for {dobldobl,quaddobl}_series_matrix_solvers.

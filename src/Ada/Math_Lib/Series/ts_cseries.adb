@@ -707,18 +707,18 @@ procedure ts_cseries is
     put_line("on a random series s :"); put(s);
     put("Give a real constant for the shift : "); get(rc);
     shifteds := Shift(s,rc);
-    y := Eval(s,rc);
+    y := Eval(s,-rc);
     z := Eval(shifteds,0.0);
-    put("s(shift constant) : "); put(y); new_line;
-    put("shifted series(0) : "); put(z); new_line;
+    put("s(-shift constant) : "); put(y); new_line;
+    put(" shifted series(0) : "); put(z); new_line;
     new_line;
     put_line("Testing with a complex shift ...");
     put("Give a complex number for the shift : "); get(cc);
     shifteds := Shift(s,cc);
-    y := Eval(s,cc);
+    y := Eval(s,-cc);
     z := Eval(shifteds,0.0);
-    put("s(shift constant) : "); put(y); new_line;
-    put("shifted series(0) : "); put(z); new_line;
+    put("s(-shift constant) : "); put(y); new_line;
+    put(" shifted series(0) : "); put(z); new_line;
   end Standard_Test_Shift;
 
   procedure DoblDobl_Test_Shift ( degree : in integer32 ) is
@@ -744,18 +744,18 @@ procedure ts_cseries is
     put_line("on a random series s :"); put(s);
     put("Give a real constant for the shift : "); get(rc);
     shifteds := Shift(s,rc);
-    y := Eval(s,rc);
+    y := Eval(s,-rc);
     z := Eval(shifteds,zero);
-    put("s(shift constant) : "); put(y); new_line;
-    put("shifted series(0) : "); put(z); new_line;
+    put("s(-shift constant) : "); put(y); new_line;
+    put(" shifted series(0) : "); put(z); new_line;
     new_line;
     put_line("Testing with a complex shift ...");
     put("Give a complex number for the shift : "); get(cc);
     shifteds := Shift(s,cc);
-    y := Eval(s,cc);
+    y := Eval(s,-cc);
     z := Eval(shifteds,zero);
-    put("s(shift constant) : "); put(y); new_line;
-    put("shifted series(0) : "); put(z); new_line;
+    put("s(-shift constant) : "); put(y); new_line;
+    put(" shifted series(0) : "); put(z); new_line;
   end DoblDobl_Test_Shift;
 
   procedure QuadDobl_Test_Shift ( degree : in integer32 ) is
@@ -781,18 +781,18 @@ procedure ts_cseries is
     put_line("on a random series s :"); put(s);
     put("Give a real constant for the shift : "); get(rc);
     shifteds := Shift(s,rc);
-    y := Eval(s,rc);
+    y := Eval(s,-rc);
     z := Eval(shifteds,zero);
-    put("s(shift constant) : "); put(y); new_line;
-    put("shifted series(0) : "); put(z); new_line;
+    put("s(-shift constant) : "); put(y); new_line;
+    put(" shifted series(0) : "); put(z); new_line;
     new_line;
     put_line("Testing with a complex shift ...");
     put("Give a complex number for the shift : "); get(cc);
     shifteds := Shift(s,cc);
-    y := Eval(s,cc);
+    y := Eval(s,-cc);
     z := Eval(shifteds,zero);
-    put("s(shift constant) : "); put(y); new_line;
-    put("shifted series(0) : "); put(z); new_line;
+    put("s(-shift constant) : "); put(y); new_line;
+    put(" shifted series(0) : "); put(z); new_line;
   end QuadDobl_Test_Shift;
 
   procedure Standard_Test_Power ( degree : in integer32 ) is
