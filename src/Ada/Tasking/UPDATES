@@ -1,3 +1,6 @@
+Mon 17 Feb 2020 : new package multitasked_shift_circuits, tested by
+  ts_mtshiftcnv, with multitasked code to shift coefficients of circuits.
+
 Sat 15 Feb 2020 : new test procedure ts_ratapp to develop the multitasked
   construction and evaluation of rational approximations.
   New package multitasked_pade_approximations, tested by ts_mtratapp,

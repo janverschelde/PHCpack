@@ -105,4 +105,6 @@ multitasked_hessian_convolutions  : multitasked Hessian criterion
 ts_mthessian                      : test on muttitasked SVD on the Hessians
 multitasked_pade_approximations   : multitasked rational approximations
 ts_mtratapp                       : test on multitasked rational approximations
+multitasked_shift_circuits        : multitasked shift of circuit coefficients
+ts_mtshiftcnv                     : test on multitasked shift of circuits
 -------------------------------------------------------------------------------
