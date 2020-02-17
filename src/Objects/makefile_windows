@@ -2056,6 +2056,10 @@ ts_mtratapp:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtratapp.adb \
               -o $(BIN)/ts_mtratapp
 
+ts_mtshiftcnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtshiftcnv.adb \
+              -o $(BIN)/ts_mtshiftcnv
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco:
