@@ -108,6 +108,27 @@ package Generic_Speelpenning_Convolutions is
   --   Allocates space for the power table, given the exponent maxima
   --   for each variable in mxe and the degrees of the power series in deg.
 
+  procedure Copy ( c_from : in Circuit; c_to : out Circuit );
+
+  -- DESCRIPTION :
+  --   Makes a deep copy from c_from to the circuit(s) c_to.
+
+  -- REQUIRED :
+  --   c_from and c_to have the same nbr, dim, dim1, and dim2.
+
+  procedure Copy ( c_from : in Link_to_Circuit; c_to : out Link_to_Circuit );
+
+  -- DESCRIPTION :
+  --   Makes a deep copy from c_from to the circuit(s) c_to.
+  --   The circuit c_to is deallocated before the copy.
+
+  procedure Copy ( c_from : in Circuits; c_to : out Circuits );
+
+  -- DESCRIPTION :
+  --   Makes a deep copy from c_from to the circuit(s) c_to.
+
+  -- REQUIRED : c_from'range = c_to'range.
+
   procedure Compute ( pwt : in Link_to_VecVecVec;
                       mxe : in Standard_Integer_Vectors.Vector;
                       x : in VecVecs.VecVec );

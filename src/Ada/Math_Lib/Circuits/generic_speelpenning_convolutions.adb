@@ -100,6 +100,49 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Allocate;
 
+  procedure Copy ( c_from : in Circuit; c_to : out Circuit ) is
+
+    use Vectors;
+
+  begin
+    Standard_Integer_VecVecs.Copy(c_from.xps,c_to.xps);
+    Standard_Integer_VecVecs.Copy(c_from.idx,c_to.idx);
+    Standard_Integer_VecVecs.Copy(c_from.fac,c_to.fac);
+    VecVecs.Copy(c_from.cff,c_to.cff);
+    if c_from.cst /= null
+     then c_to.cst := new Vectors.Vector'(c_from.cst.all);
+    end if;
+    VecVecs.Copy(c_from.forward,c_to.forward);
+    VecVecs.Copy(c_from.backward,c_to.backward);
+    VecVecs.Copy(c_from.cross,c_to.cross);
+    if c_from.wrk /= null
+     then c_to.wrk := new Vectors.Vector'(c_from.wrk.all);
+    end if;
+    if c_from.acc /= null
+     then c_to.acc := new Vectors.Vector'(c_from.acc.all);
+    end if;
+  end Copy;
+
+  procedure Copy ( c_from : in Link_to_Circuit; c_to : out Link_to_Circuit ) is
+  begin
+    Clear(c_to); -- if c_from = null, then c_to becomes null as well
+    if c_from /= null then
+      declare
+        crc : Circuit(c_from.nbr,c_from.dim,c_from.dim1,c_from.dim2);
+      begin
+        Copy(c_from.all,crc);
+        c_to := new Circuit'(crc);
+      end;
+    end if;
+  end Copy;
+
+  procedure Copy ( c_from : in Circuits; c_to : out Circuits ) is
+  begin
+    for k in c_from'range loop
+      Copy(c_from(k),c_to(k));
+    end loop;
+  end Copy;
+
   procedure Compute ( pwt : in Link_to_VecVecVec;
                       mxe : in Standard_Integer_Vectors.Vector;
                       x : in VecVecs.VecVec ) is

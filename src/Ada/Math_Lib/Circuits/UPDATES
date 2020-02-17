@@ -1,3 +1,5 @@
+Mon 17 Feb 2020 : added copy procedures to generic_speelpenning_convolutions.
+
 Sun 16 Feb 2020 : new test procedure ts_shiftcnv to develop a thread safe
   version of shifting the coefficients of a power series.
   New package shift_convolution_circuits, tested by ts_shiftcnv.
