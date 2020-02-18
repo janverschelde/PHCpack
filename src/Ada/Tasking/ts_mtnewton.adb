@@ -393,8 +393,8 @@ procedure ts_mtnewton is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
-    s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
+    s : constant Link_to_System := Create(c,dim,deg);
     scf : Standard_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
@@ -429,8 +429,8 @@ procedure ts_mtnewton is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
-    s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
+    s : constant Link_to_System := Create(c,dim,deg);
     scf : DoblDobl_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
@@ -465,8 +465,8 @@ procedure ts_mtnewton is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
-    s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol'last;
+    s : constant Link_to_System := Create(c,dim,deg);
     scf : QuadDobl_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;

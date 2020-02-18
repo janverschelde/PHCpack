@@ -1,3 +1,5 @@
+Tue 18 Feb 2020 : fixed ts_mtnewton to work with nonsquare systems.
+
 Mon 17 Feb 2020 : new package multitasked_shift_circuits, tested by
   ts_mtshiftcnv, with multitasked code to shift coefficients of circuits.
   Added benchmark test to ts_mtshiftcnv.
