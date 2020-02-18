@@ -67,10 +67,10 @@ procedure ts_fabry is
     rcond,absdx : double_float;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     wrk : Standard_Complex_Vectors.Link_to_Vector
-        := new Standard_Complex_Vectors.Vector(1..dim);
+        := new Standard_Complex_Vectors.Vector(1..s.neq);
     ewrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim);
-    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..dim);
+    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..s.neq);
     svl : Standard_Complex_Vectors.Vector(1..dim+1);
     U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     dx : Standard_Complex_VecVecs.VecVec(1..dim);
@@ -137,8 +137,8 @@ procedure ts_fabry is
     ewrk : DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector(1..dim);
     wrk : DoblDobl_Complex_Vectors.Link_to_Vector
-        := new DoblDobl_Complex_Vectors.Vector(1..dim);
-    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..dim);
+        := new DoblDobl_Complex_Vectors.Vector(1..s.neq);
+    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..s.neq);
     svl : DoblDobl_Complex_Vectors.Vector(1..dim+1);
     U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     dx : DoblDobl_Complex_VecVecs.VecVec(1..dim);
@@ -205,8 +205,8 @@ procedure ts_fabry is
     ewrk : QuadDobl_Complex_Vectors.Link_to_Vector
          := new QuadDobl_Complex_Vectors.Vector(1..dim);
     wrk : QuadDobl_Complex_Vectors.Link_to_Vector
-        := new QuadDobl_Complex_Vectors.Vector(1..dim);
-    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..dim);
+        := new QuadDobl_Complex_Vectors.Vector(1..s.neq);
+    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..s.neq);
     svl : QuadDobl_Complex_Vectors.Vector(1..dim+1);
     U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     dx : QuadDobl_Complex_VecVecs.VecVec(1..dim);
@@ -258,30 +258,33 @@ procedure ts_fabry is
     QuadDobl_Complex_Vectors.Clear(wrk);
   end QuadDobl_Newton_Steps;
 
-  procedure Standard_Test ( degree : in integer32 ) is
+  procedure Standard_Test is
 
   -- DESCRIPTION :
-  --   Prompts the user for a witness set.
+  --   Prompts the user for a polynomial system with solutions.
 
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
-    nbr,dim : natural32;
+    sol : Standard_Complex_Solutions.Link_to_Solution;
+    dim,degree : integer32 := 0;
+    nbr : natural32;
 
     use Standard_Speelpenning_Convolutions;
 
   begin
     Standard_System_and_Solutions_io.get(lp,sols);
-    dim := natural32(lp'last);
     nbr := Standard_Complex_Solutions.Length_Of(sols);
+    sol := Standard_Complex_Solutions.Head_Of(sols);
+    dim := sol.n;
     new_line;
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
+    new_line;
+    put("Give the degree of the power series : "); get(degree);
     declare
       c : constant Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(degree));
-      s : Link_to_System := Create(c,lp'last,degree);
-      sol : constant Standard_Complex_Solutions.Link_to_Solution
-          := Standard_Complex_Solutions.Head_Of(sols);
+      s : Link_to_System := Create(c,dim,degree);
       scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
           := Series_Coefficients(sol.v,degree);
       z : Standard_Complex_Numbers.Complex_Number;
@@ -304,30 +307,33 @@ procedure ts_fabry is
     end;
   end Standard_Test;
 
-  procedure DoblDobl_Test ( degree : in integer32 ) is
+  procedure DoblDobl_Test is
 
   -- DESCRIPTION :
   --   Prompts the user for a polynomial system with solutions.
 
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
-    nbr,dim : natural32;
+    sol : DoblDobl_Complex_Solutions.Link_to_Solution;
+    dim,degree : integer32 := 0;
+    nbr : natural32;
 
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
     DoblDobl_System_and_Solutions_io.get(lp,sols);
-    dim := natural32(lp'last);
     nbr := DoblDobl_Complex_Solutions.Length_Of(sols);
+    sol := DoblDobl_Complex_Solutions.Head_Of(sols);
+    dim := sol.n;
     new_line;
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
+    new_line;
+    put("Give the degree of the power series : "); get(degree);
     declare
       c : constant Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(degree));
-      s : Link_to_System := Create(c,lp'last,degree);
-      sol : constant DoblDobl_Complex_Solutions.Link_to_Solution
-          := DoblDobl_Complex_Solutions.Head_Of(sols);
+      s : Link_to_System := Create(c,dim,degree);
       scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
           := Series_Coefficients(sol.v,degree);
       z : DoblDobl_Complex_Numbers.Complex_Number;
@@ -350,30 +356,33 @@ procedure ts_fabry is
     end;
   end DoblDobl_Test;
 
-  procedure QuadDobl_Test ( degree : in integer32 ) is
+  procedure QuadDobl_Test is
 
   -- DESCRIPTION :
   --   Prompts the user for a polynomial system with solutions.
 
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
-    nbr,dim : natural32;
+    sol : QuadDobl_Complex_Solutions.Link_to_Solution;
+    dim,degree : integer32 := 0;
+    nbr : natural32;
 
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
     QuadDobl_System_and_Solutions_io.get(lp,sols);
-    dim := natural32(lp'last);
     nbr := QuadDobl_Complex_Solutions.Length_Of(sols);
+    sol := QuadDobl_Complex_Solutions.Head_Of(sols);
+    dim := sol.n;
     new_line;
     put("Read "); put(nbr,1); put(" solutions in dimension ");
     put(dim,1); put_line(".");
+    new_line;
+    put("Give the degree of the power series : "); get(degree);
     declare
       c : constant Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(degree));
-      s : Link_to_System := Create(c,lp'last,degree);
-      sol : constant QuadDobl_Complex_Solutions.Link_to_Solution
-          := QuadDobl_Complex_Solutions.Head_Of(sols);
+      s : Link_to_System := Create(c,dim,degree);
       scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
           := Series_Coefficients(sol.v,degree);
       z : QuadDobl_Complex_Numbers.Complex_Number;
@@ -402,14 +411,11 @@ procedure ts_fabry is
   --   Prompts the user for the degree of the series,
   --   and for the precision.  Launches the tests.
 
-    deg : integer32 := 0;
     prc : character;
 
   begin
     new_line;
     put_line("Developing series starting at a regular solution ...");
-    new_line;
-    put("Give the degree of the power series : "); get(deg); skip_line;
     new_line;
     put_line("MENU for the working precision :");
     put_line("  0. standard double precision");
@@ -418,9 +424,9 @@ procedure ts_fabry is
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(prc,"012");
     case prc is
-      when '0' => Standard_Test(deg);
-      when '1' => DoblDobl_Test(deg);
-      when '2' => QuadDobl_Test(deg);
+      when '0' => Standard_Test;
+      when '1' => DoblDobl_Test;
+      when '2' => QuadDobl_Test;
       when others => null;
     end case;
   end Main;

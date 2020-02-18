@@ -35,9 +35,9 @@ package body Generic_Speelpenning_Convolutions is
     res.crc := c;
     res.mxe := Exponent_Maxima(c,dim);
     res.pwt := Allocate(res.mxe,deg);
-    res.yd := Allocate_Coefficients(dim+1,deg);
-    res.vy := Linearized_Allocation(dim,deg);
-    res.yv := Allocate_Coefficients(dim,deg);
+    res.yd := Allocate_Coefficients(neq+1,deg);
+    res.vy := Linearized_Allocation(neq,deg);
+    res.yv := Allocate_Coefficients(neq,deg);
     res.vm := Allocate_Coefficients(neq,dim,deg);
     return res;
   end Create;
