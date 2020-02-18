@@ -3,6 +3,7 @@ with duration_io;
 with Ada.Calendar;
 with Time_Stamps;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -24,6 +25,15 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors_cv;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with Standard_System_and_Solutions_io;
+with DoblDobl_Complex_Solutions;
+with DoblDobl_System_and_Solutions_io;
+with QuadDobl_Complex_Solutions;
+with QuadDobl_System_and_Solutions_io;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -33,6 +43,7 @@ with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Hessian_Convolution_Circuits;       use Hessian_Convolution_Circuits;
 with Jacobian_Convolution_Circuits;      use Jacobian_Convolution_Circuits;
 with Multitasked_Hessian_Convolutions;   use Multitasked_Hessian_Convolutions;
+with Newton_Convolutions;
 
 procedure ts_mthessian is
 
@@ -122,23 +133,22 @@ procedure ts_mthessian is
     new_line;
   end Write_Singular_Values;
 
-  procedure Standard_Random_Test
-              ( dim,deg,nbr,pwr : in integer32 ) is
+  procedure Standard_Test
+              ( dim : in integer32;
+                s : in Standard_Speelpenning_Convolutions.Link_to_System;
+                x : in Standard_Complex_VecVecs.Link_to_VecVec ) is
 
   -- DESCRIPTION :
-  --   Generates a random Newton homotopy in double precision.
+  --   Runs the test in double precision.
 
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;
-  --   deg      degree of the power series;
-  --   nbr      number of products;
-  --   pwr      largest power of the variables.
+  --   s        a system of convolution circuits;
+  --   x        coefficients of a start solution.
 
     use Standard_Complex_VecVecs;
     use Standard_Speelpenning_Convolutions;
 
-    s : Link_to_System;
-    x : Link_to_VecVec;
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     vx : Standard_Complex_Vectors.Vector(1..dim);
     A,U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -160,7 +170,6 @@ procedure ts_mthessian is
     put("Extra output wanted ? (y/n) ");
     Ask_Yes_or_No(ans);
     otp := (ans = 'y');
-    Standard_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
     for i in 1..dim loop
       lnk := x(i);
       vx(i) := lnk(0);
@@ -203,25 +212,24 @@ procedure ts_mthessian is
         duration_io.put(speedup,1,3); new_line;
       end if;
     end loop;
-  end Standard_Random_Test;
+  end Standard_Test;
 
-  procedure DoblDobl_Random_Test
-              ( dim,deg,nbr,pwr : in integer32 ) is
+  procedure DoblDobl_Test
+              ( dim : in integer32;
+                s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in DoblDobl_Complex_VecVecs.Link_to_VecVec ) is
 
   -- DESCRIPTION :
-  --   Generates a random Newton homotopy in double double precision.
+  --   Runs the test in double double precision.
 
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;
-  --   deg      degree of the power series;
-  --   nbr      number of products;
-  --   pwr      largest power of the variables.
+  --   s        a system of convolution circuits;
+  --   x        coefficients of a start solution.
 
     use DoblDobl_Complex_VecVecs;
     use DoblDobl_Speelpenning_Convolutions;
 
-    s : Link_to_System;
-    x : Link_to_VecVec;
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     vx : DoblDobl_Complex_Vectors.Vector(1..dim);
     A,U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -243,7 +251,6 @@ procedure ts_mthessian is
     put("Extra output wanted ? (y/n) ");
     Ask_Yes_or_No(ans);
     otp := (ans = 'y');
-    DoblDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
     for i in 1..dim loop
       lnk := x(i);
       vx(i) := lnk(0);
@@ -286,25 +293,24 @@ procedure ts_mthessian is
         duration_io.put(speedup,1,3); new_line;
       end if;
     end loop;
-  end DoblDobl_Random_Test;
+  end DoblDobl_Test;
 
-  procedure QuadDobl_Random_Test
-              ( dim,deg,nbr,pwr : in integer32 ) is
+  procedure QuadDobl_Test
+              ( dim : in integer32;
+                s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in QuadDobl_Complex_VecVecs.Link_to_VecVec ) is
 
   -- DESCRIPTION :
-  --   Generates a random Newton homotopy in quad double precision.
+  --   Runs the test in quad double precision.
 
   -- ON ENTRY :
   --   dim      dimension of the exponent vectors;
-  --   deg      degree of the power series;
-  --   nbr      number of products;
-  --   pwr      largest power of the variables.
+  --   s        a system of convolution circuits;
+  --   x        coefficients of a start solution.
 
     use QuadDobl_Complex_VecVecs;
     use QuadDobl_Speelpenning_Convolutions;
 
-    s : Link_to_System;
-    x : Link_to_VecVec;
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     vx : QuadDobl_Complex_Vectors.Vector(1..dim);
     A,U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -326,7 +332,6 @@ procedure ts_mthessian is
     put("Extra output wanted ? (y/n) ");
     Ask_Yes_or_No(ans);
     otp := (ans = 'y');
-    QuadDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
     for i in 1..dim loop
       lnk := x(i);
       vx(i) := lnk(0);
@@ -369,7 +374,180 @@ procedure ts_mthessian is
         duration_io.put(speedup,1,3); new_line;
       end if;
     end loop;
+  end QuadDobl_Test;
+
+  procedure Standard_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Newton homotopy in double precision
+  --   and then launches the test.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    s : Standard_Speelpenning_Convolutions.Link_to_System;
+    x : Standard_Complex_VecVecs.Link_to_VecVec;
+
+  begin
+    new_line;
+    put_line("Generating a random Newton homotopy ...");
+    Standard_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    Standard_Test(dim,s,x);
+  end Standard_Random_Test;
+
+  procedure DoblDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Newton homotopy in double double precision,
+  --   and then launches the test.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    s : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+    x : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+
+  begin
+    new_line;
+    put_line("Generating a random Newton homotopy ...");
+    DoblDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    DoblDobl_Test(dim,s,x);
+  end DoblDobl_Random_Test;
+
+  procedure QuadDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Newton homotopy in quad double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
+    s : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+    x : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+
+  begin
+    new_line;
+    put_line("Generating a random Newton homotopy ...");
+    QuadDobl_Random_Newton_Homotopy(dim,deg,nbr,pwr,s,x);
+    QuadDobl_Test(dim,s,x);
   end QuadDobl_Random_Test;
+
+  procedure Standard_User_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system with solutions
+  --   and launches the test in double precision.
+
+    use System_Convolution_Circuits;
+    use Standard_Speelpenning_Convolutions;
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : Standard_Complex_Solutions.Solution_List;
+    ls : Standard_Complex_Solutions.Link_to_Solution;
+    dim,deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system with solutions ...");
+    Standard_System_and_Solutions_io.get(lp,sols);
+    ls := Standard_Complex_Solutions.Head_Of(sols);
+    dim := ls.n;
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    declare
+      c : constant Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+      s : constant Link_to_System := Create(c,dim,deg);
+      scf : constant Standard_Complex_VecVecs.VecVec(1..dim)
+          := Newton_Convolutions.Series_Coefficients(ls.v,deg);
+      x : constant Standard_Complex_VecVecs.Link_to_VecVec
+        := new Standard_Complex_VecVecs.VecVec'(scf);
+    begin
+      Standard_Test(dim,s,x);
+    end;
+  end Standard_User_Test;
+
+  procedure DoblDobl_User_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system with solutions
+  --   and launches the test in double double precision.
+
+    use System_Convolution_Circuits;
+    use DoblDobl_Speelpenning_Convolutions;
+
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+    ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+    dim,deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system with solutions ...");
+    DoblDobl_System_and_Solutions_io.get(lp,sols);
+    ls := DoblDobl_Complex_Solutions.Head_Of(sols);
+    dim := ls.n;
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    declare
+      c : constant Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+      s : constant Link_to_System := Create(c,dim,deg);
+      scf : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
+          := Newton_Convolutions.Series_Coefficients(ls.v,deg);
+      x : constant DoblDobl_Complex_VecVecs.Link_to_VecVec
+        := new DoblDobl_Complex_VecVecs.VecVec'(scf);
+    begin
+      DoblDobl_Test(dim,s,x);
+    end;
+  end DoblDobl_User_Test;
+
+  procedure QuadDobl_User_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system with solutions
+  --   and launches the test in quad double precision.
+
+    use System_Convolution_Circuits;
+    use QuadDobl_Speelpenning_Convolutions;
+
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    dim,deg : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system with solutions ...");
+    QuadDobl_System_and_Solutions_io.get(lp,sols);
+    ls := QuadDobl_Complex_Solutions.Head_Of(sols);
+    dim := ls.n;
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    declare
+      c : constant Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+      s : constant Link_to_System := Create(c,dim,deg);
+      scf : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
+          := Newton_Convolutions.Series_Coefficients(ls.v,deg);
+      x : constant QuadDobl_Complex_VecVecs.Link_to_VecVec
+        := new QuadDobl_Complex_VecVecs.VecVec'(scf);
+    begin
+      QuadDobl_Test(dim,s,x);
+    end;
+  end QuadDobl_User_Test;
 
   procedure Standard_Benchmark
               ( file : in file_type; nbruns,inc : in integer32;
@@ -656,6 +834,26 @@ procedure ts_mthessian is
     QuadDobl_Benchmark(file,nbruns,inc,qds,qdvx);
   end Benchmark;
 
+  function Prompt_for_Precision return character is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the work precision
+  --   and returns '0', '1', or '2',
+  --   for double, double double, or quad double precision.
+
+    precision : character;
+
+  begin
+    new_line;
+    put_line("MENU for the working precision :");
+    put_line("  0. double precision");
+    put_line("  1. double double precision");
+    put_line("  2. quad double precision");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(precision,"012");
+    return precision;
+  end Prompt_for_Precision;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -669,29 +867,33 @@ procedure ts_mthessian is
     new_line;
     put_line("Testing the Hessian criterion ...");
     new_line;
-    put("Give the dimension : "); get(dim);
-    put("Give the degree of the power series : "); get(deg);
-    put("Give the number of terms in each circuit : "); get(nbr);
-    put("Give the largest power of the variables : "); get(pwr);
-    new_line;
-    put("Benchmark for all precisions ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      Benchmark(dim,deg,nbr,pwr);
-    else
-      new_line;
-      put_line("MENU for the working precision :");
-      put_line("  0. double precision");
-      put_line("  1. double double precision");
-      put_line("  2. quad double precision");
-      put("Type 0, 1, or 2 to select the precision : ");
-      Ask_Alternative(precision,"012");
+    put("Generate a random system ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'n' then
+      precision := Prompt_for_Precision;
       case precision is
-        when '0' => Standard_Random_Test(dim,deg,nbr,pwr);
-        when '1' => DoblDobl_Random_Test(dim,deg,nbr,pwr);
-        when '2' => QuadDobl_Random_Test(dim,deg,nbr,pwr);
+        when '0' => Standard_User_Test;
+        when '1' => DoblDobl_User_Test;
+        when '2' => QuadDobl_User_Test;
         when others => null;
       end case;
+    else
+      put("Give the dimension : "); get(dim);
+      put("Give the degree of the power series : "); get(deg);
+      put("Give the number of terms in each circuit : "); get(nbr);
+      put("Give the largest power of the variables : "); get(pwr);
+      new_line;
+      put("Benchmark for all precisions ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Benchmark(dim,deg,nbr,pwr);
+      else
+        precision := Prompt_for_Precision;
+        case precision is
+          when '0' => Standard_Random_Test(dim,deg,nbr,pwr);
+          when '1' => DoblDobl_Random_Test(dim,deg,nbr,pwr);
+          when '2' => QuadDobl_Random_Test(dim,deg,nbr,pwr);
+          when others => null;
+        end case;
+      end if;
     end if;
   end Main;
 
