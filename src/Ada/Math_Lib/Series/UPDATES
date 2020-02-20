@@ -1,3 +1,8 @@
+Wed 19 Feb 2020 : to binomial_coefficients added functions to compute the
+  binomial coefficients with doubles, double doubles, and quad doubles.
+  Applied the changes in *_complex_series_functions.adb so overflow no
+  longer occurs when shifting coefficients of power series of large degrees.
+
 Sun 16 Feb 2020 : improved the test on the shift in ts_cseries.
 
 Tue 14 Jan 2020 : in standard_series_matrix_solvers, exported the

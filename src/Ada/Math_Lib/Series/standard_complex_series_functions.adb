@@ -159,7 +159,8 @@ package body Standard_Complex_Series_Functions is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := double_float(sgn*binomial(i,j));
+       -- bcf := double_float(sgn*binomial(i,j)); -- causes overflow
+        bcf := double_float(sgn)*binomial(i,j);
         bcf := bcf*(c**(natural(i-j)));
         res.cff(j) := res.cff(j) + s.cff(i)*bcf;
         sgn := -sgn;
@@ -185,7 +186,8 @@ package body Standard_Complex_Series_Functions is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := double_float(sgn*binomial(i,j));
+       -- bcf := double_float(sgn*binomial(i,j)); -- causes overflow
+        bcf := double_float(sgn)*binomial(i,j);
         rcf := bcf*(c**(natural(i-j)));
         res.cff(j) := res.cff(j) + s.cff(i)*rcf;
         sgn := -sgn;

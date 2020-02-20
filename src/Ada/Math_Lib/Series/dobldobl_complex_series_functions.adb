@@ -177,7 +177,9 @@ package body DoblDobl_Complex_Series_Functions is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := double_double_numbers.create(sgn*binomial(i,j));
+       -- bcf := double_double_numbers.create(sgn*binomial(i,j));
+        bcf := binomial(i,j);
+        bcf := double_double_numbers.create(sgn)*bcf;
         bcf := bcf*(c**(natural(i-j)));
         res.cff(j) := res.cff(j) + s.cff(i)*bcf;
         sgn := -sgn;
@@ -203,7 +205,9 @@ package body DoblDobl_Complex_Series_Functions is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := double_double_numbers.create(sgn*binomial(i,j));
+       -- bcf := double_double_numbers.create(sgn*binomial(i,j));
+        bcf := binomial(i,j);
+        bcf := double_double_numbers.create(sgn)*bcf;
         rcf := bcf*(c**(natural(i-j)));
         res.cff(j) := res.cff(j) + s.cff(i)*rcf;
         sgn := -sgn;
