@@ -1,3 +1,6 @@
+Wed 19 Feb 2020 : in shift_convolution_circuits.adb, applied the double,
+  double double, and quad double versions of the binomial coefficients.
+
 Tue 18 Feb 2020 : modifications in generic_speelpenning_convolutions.adb,
   newton_convolutions.adb, and ts_fabry.adb for nonsquare problems.
 

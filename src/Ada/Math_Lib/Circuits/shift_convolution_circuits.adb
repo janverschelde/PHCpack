@@ -19,7 +19,8 @@ package body Shift_Convolution_Circuits is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := double_float(sgn*binomial(i,j));
+       -- bcf := double_float(sgn*binomial(i,j));
+        bcf := double_float(sgn)*binomial(i,j);
         bcf := bcf*(t**(natural(i-j)));
         wrk(j) := wrk(j) + c(i)*bcf;
         sgn := -sgn;
@@ -45,7 +46,8 @@ package body Shift_Convolution_Circuits is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := double_float(sgn*binomial(i,j));
+       -- bcf := double_float(sgn*binomial(i,j));
+        bcf := double_float(sgn)*binomial(i,j);
         rcf := bcf*(t**(natural(i-j)));
         wrk(j) := wrk(j) + c(i)*rcf;
         sgn := -sgn;
@@ -70,7 +72,9 @@ package body Shift_Convolution_Circuits is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := double_double_numbers.create(sgn*binomial(i,j));
+       -- bcf := double_double_numbers.create(sgn*binomial(i,j));
+        bcf := binomial(i,j);
+        bcf := double_double_numbers.create(sgn)*bcf;
         bcf := bcf*(t**(natural(i-j)));
         wrk(j) := wrk(j) + c(i)*bcf;
         sgn := -sgn;
@@ -96,7 +100,9 @@ package body Shift_Convolution_Circuits is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := double_double_numbers.create(sgn*binomial(i,j));
+       -- bcf := double_double_numbers.create(sgn*binomial(i,j));
+        bcf := binomial(i,j);
+        bcf := double_double_numbers.create(sgn)*bcf;
         rcf := bcf*(t**(natural(i-j)));
         wrk(j) := wrk(j) + c(i)*rcf;
         sgn := -sgn;
@@ -121,7 +127,9 @@ package body Shift_Convolution_Circuits is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := quad_double_numbers.create(sgn*binomial(i,j));
+       -- bcf := quad_double_numbers.create(sgn*binomial(i,j));
+        bcf := binomial(i,j);
+        bcf := quad_double_numbers.create(sgn)*bcf;
         bcf := bcf*(t**(natural(i-j)));
         wrk(j) := wrk(j) + c(i)*bcf;
         sgn := -sgn;
@@ -147,7 +155,9 @@ package body Shift_Convolution_Circuits is
        else sgn := -1;
       end if;
       for j in 0..i loop
-        bcf := quad_double_numbers.create(sgn*binomial(i,j));
+       -- bcf := quad_double_numbers.create(sgn*binomial(i,j));
+        bcf := binomial(i,j);
+        bcf := quad_double_numbers.create(sgn)*bcf;
         rcf := bcf*(t**(natural(i-j)));
         wrk(j) := wrk(j) + c(i)*rcf;
         sgn := -sgn;
