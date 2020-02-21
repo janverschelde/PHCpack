@@ -1,3 +1,5 @@
+Fri 21 Feb 2020 : improved ts_sernewcnv for overdetermined problems.
+
 Sat 15 Feb 2020 : new test procedure ts_ratapp to test the new thread safe
   procedures to construct rational approximations.  Added extra evaluation
   operations to {standard,dobldobl,quaddobl}_rational_approximations.

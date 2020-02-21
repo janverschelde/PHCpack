@@ -275,11 +275,14 @@ procedure ts_sernewcnv is
   end QuadDobl_Run;
 
   procedure Prompt_for_Parameters
-              ( maxit : out integer32;
+              ( overdt : in boolean; maxit : out integer32;
                 scale,usesvd,useqrls,lurcond : out boolean ) is
 
   -- DESCRIPTION :
   --   Prompts the user for the parameters of a run.
+
+  -- ON ENTRY :
+  --   overdt   if overdetermined or not.
 
   -- ON RETURN :
   --   maxit    maximum number of iterations;
@@ -301,9 +304,11 @@ procedure ts_sernewcnv is
     usesvd := (ans = 'y');
     if usesvd then
       useqrls := false; lurcond := false;
+    elsif overdt then
+      useqrls := true; lurcond := false;
     else
-      put("Solve with least squares and QR ? (y/n) "); Ask_Yes_or_No(ans);
-      useqrls := (ans = 'y');
+      put("Solve with least squares and QR ? (y/n) ");
+      Ask_Yes_or_No(ans); useqrls := (ans = 'y');
       if useqrls then
         lurcond := false;
       else
@@ -316,7 +321,7 @@ procedure ts_sernewcnv is
   procedure Standard_Run
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
-                deg : in integer32 ) is
+                dim,deg : in integer32 ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method in double precision on the first solution
@@ -326,16 +331,17 @@ procedure ts_sernewcnv is
         := Standard_Complex_Solutions.Head_Of(sols);
     maxit : integer32 := 0;
     scale,usesvd,useqrls,needrcond : boolean := false;
+    overdet : constant boolean := (p'last > dim);
 
   begin
-    Prompt_for_Parameters(maxit,scale,usesvd,useqrls,needrcond);
+    Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond);
     Standard_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
   end Standard_Run;
 
   procedure DoblDobl_Run
               ( p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
-                deg : in integer32 ) is
+                dim,deg : in integer32 ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method in double double precision on the first solution
@@ -345,16 +351,17 @@ procedure ts_sernewcnv is
         := DoblDobl_Complex_Solutions.Head_Of(sols);
     maxit : integer32 := 0;
     scale,usesvd,useqrls,needrcond : boolean;
+    overdet : constant boolean := (p'last > dim);
 
   begin
-    Prompt_for_Parameters(maxit,scale,usesvd,useqrls,needrcond);
+    Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond);
     DoblDobl_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
               ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
-                deg : in integer32 ) is
+                dim,deg : in integer32 ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method in quad double precision on the first solution
@@ -364,9 +371,10 @@ procedure ts_sernewcnv is
         := QuadDobl_Complex_Solutions.Head_Of(sols);
     maxit : integer32 := 0;
     scale,usesvd,useqrls,needrcond : boolean;
+    overdet : constant boolean := (p'last > dim);
 
   begin
-    Prompt_for_Parameters(maxit,scale,usesvd,useqrls,needrcond);
+    Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond);
     QuadDobl_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
   end QuadDobl_Run;
 
@@ -379,18 +387,23 @@ procedure ts_sernewcnv is
 
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
-    dim,nbr : natural32;
+    nbr : natural32;
+    dim : integer32;
 
   begin
     new_line;
     put_line("Reading a polynomial system with solutions ...");
     Standard_System_and_Solutions_io.get(lp,sols);
-    dim := natural32(lp'last);
     nbr := Standard_Complex_Solutions.Length_Of(sols);
-    new_line;
-    put("Read "); put(nbr,1); put(" solutions in dimension ");
-    put(dim,1); put_line(".");
-    Standard_Run(lp,sols,deg);
+    if nbr = 0 then
+      put_line("No solutions ?");
+    else
+      dim := Standard_Complex_Solutions.Head_Of(sols).n;
+      new_line;
+      put("Read "); put(nbr,1); put(" solutions in dimension ");
+      put(dim,1); put_line(".");
+      Standard_Run(lp,sols,dim,deg);
+    end if;
   end Standard_Test;
 
   procedure DoblDobl_Test ( deg : in integer32 ) is
@@ -402,18 +415,23 @@ procedure ts_sernewcnv is
 
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
-    dim,nbr : natural32;
+    nbr : natural32;
+    dim : integer32;
 
   begin
     new_line;
     put_line("Reading a polynomial system with solutions ...");
     DoblDobl_System_and_Solutions_io.get(lp,sols);
-    dim := natural32(lp'last);
     nbr := DoblDobl_Complex_Solutions.Length_Of(sols);
-    new_line;
-    put("Read "); put(nbr,1); put(" solutions in dimension ");
-    put(dim,1); put_line(".");
-    DoblDobl_Run(lp,sols,deg);
+    if nbr = 0 then
+      put_line("No solutions ?");
+    else
+      dim := DoblDobl_Complex_Solutions.Head_Of(sols).n;
+      new_line;
+      put("Read "); put(nbr,1); put(" solutions in dimension ");
+      put(dim,1); put_line(".");
+      DoblDobl_Run(lp,sols,dim,deg);
+    end if;
   end DoblDobl_Test;
 
   procedure QuadDobl_Test ( deg : in integer32 ) is
@@ -425,18 +443,23 @@ procedure ts_sernewcnv is
 
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
-    dim,nbr : natural32;
+    nbr : natural32;
+    dim : integer32;
 
   begin
     new_line;
     put_line("Reading a polynomial system with solutions ...");
     QuadDobl_System_and_Solutions_io.get(lp,sols);
-    dim := natural32(lp'last);
     nbr := QuadDobl_Complex_Solutions.Length_Of(sols);
-    new_line;
-    put("Read "); put(nbr,1); put(" solutions in dimension ");
-    put(dim,1); put_line(".");
-    QuadDobl_Run(lp,sols,deg);
+    if nbr = 0 then
+      put_line("No solutions ?");
+    else
+      dim := QuadDobl_Complex_Solutions.Head_Of(sols).n;
+      new_line;
+      put("Read "); put(nbr,1); put(" solutions in dimension ");
+      put(dim,1); put_line(".");
+      QuadDobl_Run(lp,sols,dim,deg);
+    end if;
   end QuadDobl_Test;
 
   procedure Main is
