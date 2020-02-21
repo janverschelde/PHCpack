@@ -1,4 +1,6 @@
 Fri 21 Feb 2020 : improved ts_sernewcnv for overdetermined problems.
+  Fixed the passing of the proper dim parameter in the creation of
+  the systems of convolution circuits in ts_sernewcnv.
 
 Sat 15 Feb 2020 : new test procedure ts_ratapp to test the new thread safe
   procedures to construct rational approximations.  Added extra evaluation

@@ -66,8 +66,8 @@ procedure ts_sernewcnv is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
-    s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol.n;
+    s : constant Link_to_System := Create(c,dim,deg);
     scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
         := Newton_Convolutions.Series_Coefficients(sol.v,deg);
     info,nbrit : integer32 := 0;
@@ -143,8 +143,8 @@ procedure ts_sernewcnv is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
-    s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol.n;
+    s : constant Link_to_System := Create(c,dim,deg);
     scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
         := Newton_Convolutions.Series_Coefficients(sol.v,deg);
     info,nbrit : integer32 := 0;
@@ -220,8 +220,8 @@ procedure ts_sernewcnv is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
-    s : constant Link_to_System := Create(c,p'last,deg);
     dim : constant integer32 := sol.n;
+    s : constant Link_to_System := Create(c,dim,deg);
     scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
         := Newton_Convolutions.Series_Coefficients(sol.v,deg);
     info,nbrit : integer32 := 0;
