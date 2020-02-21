@@ -3,6 +3,7 @@ with duration_io;
 with Ada.Calendar;
 with Communications_with_User;           use Communications_with_User;
 with Time_Stamps;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -26,6 +27,15 @@ with DoblDobl_Random_Series_Vectors;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_Random_Series_Vectors;
 with Series_Coefficient_Vectors;         use Series_Coefficient_Vectors;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -40,27 +50,24 @@ procedure ts_mtadcnv is
 --   Development of algorithmic differentiation to evaluate and differentiate
 --   polynomial systems at truncated power series with multitasking.
 
-  procedure Standard_Random_Test
-              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+  procedure Standard_Test
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Generates a random convolution circuit and applies multitasking
-  --   to evaluate and differentiate with multitasking,
+  --   Applies multitasking to evaluate and differentiate c,
   --   in double precision.  Compares with the one task run.
 
   -- ON ENTRY :
+  --   c        a sequence of convolution circuits;
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
-  --   nbr      number of products;
-  --   pwr      largest power of the variables;
   --   nbt      the number of tasks;
   --   output   flag for output during multitasking.
 
     use Standard_Speelpenning_Convolutions;
 
-    c : constant Circuits
-      := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
     xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
@@ -117,29 +124,26 @@ procedure ts_mtadcnv is
       exit when (ans /= 'y');
       put("Give the number of tasks : "); get(nbt);
     end loop;
-  end Standard_Random_Test;
+  end Standard_Test;
 
-  procedure DoblDobl_Random_Test
-              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+  procedure DoblDobl_Test
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Generates a random convolution circuit and applies multitasking
-  --   to evaluate and differentiate with multitasking,
+  --   Applies multitasking to evaluate and differentiate c,
   --   in double double precision.  Compares with the one task run.
 
   -- ON ENTRY :
+  --   c        a sequence of convolution circuits;
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
-  --   nbr      number of products;
-  --   pwr      largest power of the variables;
   --   nbt      the number of tasks;
   --   output   flag for output during multitasking.
 
     use DoblDobl_Speelpenning_Convolutions;
 
-    c : constant Circuits
-      := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
     xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
@@ -197,29 +201,26 @@ procedure ts_mtadcnv is
       exit when (ans /= 'y');
       put("Give the number of tasks : "); get(nbt);
     end loop;
-  end DoblDobl_Random_Test;
+  end DoblDobl_Test;
 
-  procedure QuadDobl_Random_Test
-              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+  procedure QuadDobl_Test
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Generates a random convolution circuit and applies multitasking
-  --   to evaluate and differentiate with multitasking,
+  --   Applies multitasking to evaluate and differentiate c,
   --   in double double precision.  Compares with the one task run.
 
   -- ON ENTRY :
+  --   c        a sequence of convolution circuits;
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
-  --   nbr      number of products;
-  --   pwr      largest power of the variables;
   --   nbt      the number of tasks;
   --   output   flag for output during multitasking.
 
     use QuadDobl_Speelpenning_Convolutions;
 
-    c : constant Circuits
-      := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
     xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
@@ -277,7 +278,85 @@ procedure ts_mtadcnv is
       exit when (ans /= 'y');
       put("Give the number of tasks : "); get(nbt);
     end loop;
+  end QuadDobl_Test;
+
+  procedure QuadDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Generates a random convolution circuit and applies multitasking
+  --   to evaluate and differentiate with multitasking,
+  --   in double double precision.  Compares with the one task run.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables;
+  --   nbt      the number of tasks;
+  --   output   flag for output during multitasking.
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    c : constant Circuits
+      := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    QuadDobl_Test(c,dim,deg,nbt,output);
   end QuadDobl_Random_Test;
+
+  procedure Standard_Random_Test
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Generates a random convolution circuit and applies multitasking
+  --   to evaluate and differentiate with multitasking,
+  --   in double precision.  Compares with the one task run.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables;
+  --   nbt      the number of tasks;
+  --   output   flag for output during multitasking.
+
+    use Standard_Speelpenning_Convolutions;
+
+    c : constant Circuits
+      := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    Standard_Test(c,dim,deg,nbt,output);
+  end Standard_Random_Test;
+
+  procedure DoblDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Generates a random convolution circuit and applies multitasking
+  --   to evaluate and differentiate with multitasking,
+  --   in double double precision.  Compares with the one task run.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables;
+  --   nbt      the number of tasks;
+  --   output   flag for output during multitasking.
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    c : constant Circuits
+      := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    DoblDobl_Test(c,dim,deg,nbt,output);
+  end DoblDobl_Random_Test;
 
   procedure Standard_Benchmark
               ( file : in file_type; deg,nbruns,inc : in integer32;
@@ -580,6 +659,115 @@ procedure ts_mtadcnv is
     QuadDobl_Benchmark(file,deg,nbruns,inc,qd_c,qd_xcff,mxe,false);
   end Benchmark;
 
+  function Prompt_for_Precision return character is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the precision and returns '0', '1', or '2'
+  --   respectively for double, double double, or quad double precision.
+
+    res : character;
+
+  begin
+    new_line;
+    put_line("MENU for the working precision :");
+    put_line("  0. standard double precision");
+    put_line("  1. double double precision");
+    put_line("  2. quad double precision");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(res,"012");
+    return res;
+  end Prompt_for_Precision;
+
+  procedure Standard_Test_Problem is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system
+  --   and launches the test in double precision.
+
+    use Standard_Speelpenning_Convolutions;
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    deg,nbt : integer32 := 0;
+    answer : character;
+    dim : natural32;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    dim := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    put("Give the number of tasks : "); get(nbt);
+    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    declare
+      c : constant Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+    begin
+      Standard_Test(c,integer32(dim),deg,nbt,answer = 'y');
+    end;
+  end Standard_Test_Problem;
+
+  procedure DoblDobl_Test_Problem is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system
+  --   and launches the test in double double precision.
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    deg,nbt : integer32 := 0;
+    dim : natural32;
+    answer : character;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    dim := DoblDobl_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    put("Give the number of tasks : "); get(nbt);
+    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    declare
+      c : constant Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+    begin
+      DoblDobl_Test(c,integer32(dim),deg,nbt,answer = 'y');
+    end;
+  end DoblDobl_Test_Problem;
+
+  procedure QuadDobl_Test_Problem is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system
+  --   and launches the test in quad double precision.
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    deg,nbt : integer32 := 0;
+    dim : natural32;
+    answer : character;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    dim := QuadDobl_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+    new_line;
+    put("Give the degree of the series : "); get(deg);
+    put("Give the number of tasks : "); get(nbt);
+    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    declare
+      c : constant Circuits(lp'range)
+        := Make_Convolution_Circuits(lp.all,natural32(deg));
+    begin
+      QuadDobl_Test(c,integer32(dim),deg,nbt,answer = 'y');
+    end;
+  end QuadDobl_Test_Problem;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -593,30 +781,39 @@ procedure ts_mtadcnv is
 
   begin
     new_line;
-    put("Give the dimension : "); get(dim);
-    put("Give the degree of the series : "); get(deg);
-    put("Give the number of monomials : "); get(nbr);
-    put("Give the highest power of each variable : "); get(pwr);
-    put("Benchmarking for all precisions ? (y/n) "); Ask_Yes_or_No(answer);
-    if answer  = 'y' then
-      Benchmark(dim,deg,nbr,pwr);
-    else
-      put("Give the number of tasks : "); get(nbt);
-      put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
-      new_line;
-      put_line("MENU for the working precision :");
-      put_line("  0. standard double precision");
-      put_line("  1. double double precision");
-      put_line("  2. quad double precision");
-      put("Type 0, 1, or 2 to select the precision : ");
-      Ask_Alternative(precision,"012");
-      new_line;
+    put_line("Testing the multitasked evaluation and differentiation ...");
+    new_line;
+    put("Test on random problems ? (y/n) ");
+    Ask_Yes_or_No(answer);
+    if answer /= 'y' then
+      precision := Prompt_for_Precision;
       case precision is
-        when '0' => Standard_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
-        when '1' => DoblDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
-        when '2' => QuadDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+        when '0' => Standard_Test_Problem;
+        when '1' => DoblDobl_Test_Problem;
+        when '2' => QuadDobl_Test_Problem;
         when others => null;
       end case;
+    else
+      new_line;
+      put("Give the dimension : "); get(dim);
+      put("Give the degree of the series : "); get(deg);
+      put("Give the number of monomials : "); get(nbr);
+      put("Give the highest power of each variable : "); get(pwr);
+      put("Benchmarking for all precisions ? (y/n) "); Ask_Yes_or_No(answer);
+      if answer  = 'y' then
+        Benchmark(dim,deg,nbr,pwr);
+      else
+        put("Give the number of tasks : "); get(nbt);
+        put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+        precision := Prompt_for_Precision;
+        new_line;
+        case precision is
+          when '0' => Standard_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '1' => DoblDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when '2' => QuadDobl_Random_Test(dim,deg,nbr,pwr,nbt,answer = 'y');
+          when others => null;
+        end case;
+      end if;
     end if;
   end Main;
 

@@ -1,3 +1,5 @@
+Thu 20 Feb 2020 : to ts_mtadcnv, added test procedures for user given input.
+
 Tue 18 Feb 2020 : fixed ts_mtnewton to work with nonsquare systems.
   Extended ts_mthessian, so the user can provide a system with solutions.
 
