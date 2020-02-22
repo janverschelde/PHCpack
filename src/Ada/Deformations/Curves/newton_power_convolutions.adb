@@ -37,7 +37,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -74,7 +74,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -109,7 +109,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -146,7 +146,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -181,7 +181,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -218,7 +218,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -255,7 +255,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -292,7 +292,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -327,7 +327,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -364,7 +364,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -399,7 +399,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -436,7 +436,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -478,7 +478,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -520,7 +520,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -560,7 +560,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -602,7 +602,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -642,7 +642,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -684,7 +684,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -725,7 +725,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -766,7 +766,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -805,7 +805,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -846,7 +846,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -885,7 +885,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -926,7 +926,7 @@ package body Newton_Power_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if maxval <= tol
+      if absdx <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;

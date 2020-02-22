@@ -1,3 +1,5 @@
+Sat 22 Feb 2020 : fixed stop criterion in newton_power_convolutions.adb.
+
 Fri 21 Feb 2020 : improved ts_sernewcnv for overdetermined problems.
   Fixed the passing of the proper dim parameter in the creation of
   the systems of convolution circuits in ts_sernewcnv.
