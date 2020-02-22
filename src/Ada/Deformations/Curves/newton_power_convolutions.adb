@@ -29,15 +29,15 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -66,15 +66,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -100,16 +100,16 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 3 ...");
     end if;
     for k in 1..nbrit loop
+      LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -138,15 +138,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -173,15 +173,15 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       LU_Newton_Step(csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -210,15 +210,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       LU_Newton_Step(file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -247,15 +247,15 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -284,15 +284,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -319,15 +319,15 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -356,15 +356,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -391,15 +391,15 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       LU_Newton_Step(csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -428,15 +428,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
       LU_Newton_Step(file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -470,15 +470,15 @@ package body Newton_Power_Convolutions is
       QR_Newton_Step
         (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -512,15 +512,15 @@ package body Newton_Power_Convolutions is
       QR_Newton_Step
         (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -552,15 +552,15 @@ package body Newton_Power_Convolutions is
       QR_Newton_Step
         (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
 	 scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -594,15 +594,15 @@ package body Newton_Power_Convolutions is
       QR_Newton_Step
         (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -634,15 +634,15 @@ package body Newton_Power_Convolutions is
       QR_Newton_Step
         (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
 	 scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -676,15 +676,15 @@ package body Newton_Power_Convolutions is
       QR_Newton_Step
         (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -717,15 +717,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       SVD_Newton_Step
         (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -758,15 +758,15 @@ package body Newton_Power_Convolutions is
       put(file,"Step "); put(file,k,1); put_line(file," :");
       SVD_Newton_Step
         (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -797,15 +797,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       SVD_Newton_Step
         (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -838,15 +838,15 @@ package body Newton_Power_Convolutions is
       put(file,"Step "); put(file,k,1); put_line(file," :");
       SVD_Newton_Step
         (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -877,15 +877,15 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       SVD_Newton_Step
         (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;
@@ -918,15 +918,15 @@ package body Newton_Power_Convolutions is
       put(file,"Step "); put(file,k,1); put_line(file," :");
       SVD_Newton_Step
         (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
+      MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
-        MaxIdx(csr.vy,tol,maxval,idx);
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
          then put_line(" too large");
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
+      if maxval <= tol
        then fail := false; nbrit := k; exit;
       end if;
     end loop;

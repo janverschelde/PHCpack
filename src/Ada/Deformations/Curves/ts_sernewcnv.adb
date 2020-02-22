@@ -66,6 +66,7 @@ procedure ts_sernewcnv is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
+    neq : constant integer32 := p'last;
     dim : constant integer32 := sol.n;
     s : constant Link_to_System := Create(c,dim,deg);
     scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
@@ -75,8 +76,8 @@ procedure ts_sernewcnv is
     ewrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim);
     wrk : Standard_Complex_Vectors.Link_to_Vector
-        := new Standard_Complex_Vectors.Vector(1..sol.n);
-    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..dim);
+        := new Standard_Complex_Vectors.Vector(1..neq);
+    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..neq);
     dx : Standard_Complex_VecVecs.VecVec(1..dim);
     xd : Standard_Complex_VecVecs.VecVec(0..deg);
     svl : Standard_Complex_Vectors.Vector(1..dim+1);
@@ -143,6 +144,7 @@ procedure ts_sernewcnv is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
+    neq : constant integer32 := p'last;
     dim : constant integer32 := sol.n;
     s : constant Link_to_System := Create(c,dim,deg);
     scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
@@ -152,8 +154,8 @@ procedure ts_sernewcnv is
     ewrk : DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector(1..dim);
     wrk : DoblDobl_Complex_Vectors.Link_to_Vector
-        := new DoblDobl_Complex_Vectors.Vector(1..sol.n);
-    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..dim);
+        := new DoblDobl_Complex_Vectors.Vector(1..neq);
+    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..neq);
     dx : DoblDobl_Complex_VecVecs.VecVec(1..dim);
     xd : DoblDobl_Complex_VecVecs.VecVec(0..deg);
     svl : DoblDobl_Complex_Vectors.Vector(1..dim+1);
@@ -220,6 +222,7 @@ procedure ts_sernewcnv is
 
     c : constant Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
+    neq : constant integer32 := p'last;
     dim : constant integer32 := sol.n;
     s : constant Link_to_System := Create(c,dim,deg);
     scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
@@ -229,8 +232,8 @@ procedure ts_sernewcnv is
     ewrk : QuadDobl_Complex_Vectors.Link_to_Vector
         := new QuadDobl_Complex_Vectors.Vector(1..dim);
     wrk : QuadDobl_Complex_Vectors.Link_to_Vector
-        := new QuadDobl_Complex_Vectors.Vector(1..sol.n);
-    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..dim);
+        := new QuadDobl_Complex_Vectors.Vector(1..neq);
+    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..neq);
     dx : QuadDobl_Complex_VecVecs.VecVec(1..dim);
     xd : QuadDobl_Complex_VecVecs.VecVec(0..deg);
     svl : QuadDobl_Complex_Vectors.Vector(1..dim+1);
