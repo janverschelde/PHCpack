@@ -470,19 +470,12 @@ package Newton_Convolutions is
   --   absdx    the absolute value of the maximal component of the update dx;
   --   dx       delinearized update to the coefficients;
   --   xd       update to the coefficients, in linearized form;
-  --   svl      vector of range 1..mm, where mm = min(n+1,p),
-  --            where n = A(0)'last(1) and p = A(0)'last(2),
+  --   svl      vector of range 1..min(n+1,p), where n = A(0)'last(1)
+  --            and p = A(0)'last(2),
   --            the first min(n,p) entries of s contain the singular values
   --            of x arranged in descending order of magnitude;
-  --   U        matrix with n rows and k columns, 
-  --            if joba = 1, then k = n, if joba >= 2 then k = min(n,p),
-  --            u contains the matrix of left singular vectors,
-  --            u is not referenced if joba = 0, if n <= p or if joba > 2,
-  --            then u may be identified with x in the subroutine call;
-  --   V        matrix with p rows and p columns,
-  --            v contains the matrix of right singular vectors,
-  --            v is not referenced if jobb = 0, if p <= n, then v may be
-  --            identified with x in the subroutine call;
+  --   U        matrix with n rows and n columns;
+  --   V        matrix with p rows and p columns;
   --   info     the singular values (and their corresponding singular vectors)
   --            s(info+1),s(info+2),...,s(m) are correct (here m=min(n,p)),
   --            thus if info = 0, all the singular values and their vectors

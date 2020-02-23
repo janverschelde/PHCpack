@@ -1,3 +1,5 @@
+Sun 23 Feb 2020 : fixed the documentation in newton_convolutions.ads.
+
 Wed 19 Feb 2020 : in shift_convolution_circuits.adb, applied the double,
   double double, and quad double versions of the binomial coefficients.
 
