@@ -1,3 +1,5 @@
+Sun 23 Feb 2020 : fixed dimensions for the SVD in ts_sernewcnv.adb.
+
 Sat 22 Feb 2020 : fixed stop criterion in newton_power_convolutions.adb.
 
 Fri 21 Feb 2020 : improved ts_sernewcnv for overdetermined problems.

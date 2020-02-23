@@ -81,7 +81,8 @@ procedure ts_sernewcnv is
     dx : Standard_Complex_VecVecs.VecVec(1..dim);
     xd : Standard_Complex_VecVecs.VecVec(0..deg);
     svl : Standard_Complex_Vectors.Vector(1..dim+1);
-    U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    U : Standard_Complex_Matrices.Matrix(1..neq,1..neq);
+    V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     absdx,rcond : double_float;
     tol : constant double_float := 1.0E-14;
     fail : boolean;
@@ -159,7 +160,8 @@ procedure ts_sernewcnv is
     dx : DoblDobl_Complex_VecVecs.VecVec(1..dim);
     xd : DoblDobl_Complex_VecVecs.VecVec(0..deg);
     svl : DoblDobl_Complex_Vectors.Vector(1..dim+1);
-    U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    U : DoblDobl_Complex_Matrices.Matrix(1..neq,1..neq);
+    V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     absdx,rcond : double_double;
     tol : constant double_float := 1.0E-14;
     fail : boolean;
@@ -237,7 +239,8 @@ procedure ts_sernewcnv is
     dx : QuadDobl_Complex_VecVecs.VecVec(1..dim);
     xd : QuadDobl_Complex_VecVecs.VecVec(0..deg);
     svl : QuadDobl_Complex_Vectors.Vector(1..dim+1);
-    U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    U : QuadDobl_Complex_Matrices.Matrix(1..neq,1..neq);
+    V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     absdx,rcond : quad_double;
     tol : constant double_float := 1.0E-14;
     fail : boolean;
