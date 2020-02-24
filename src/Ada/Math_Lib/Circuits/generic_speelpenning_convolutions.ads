@@ -57,11 +57,11 @@ package Generic_Speelpenning_Convolutions is
 -- A system stores the sequence of convolution circuits for each polynomial
 -- and the work space to hold auxiliary results and the final outcomes.
 
-  type System ( neq,neq1,dim,deg : integer32 ) is record
+  type System ( neq,neq1,dim,dim1,deg : integer32 ) is record
     crc : Circuits(1..neq); -- circuits for the equations
     mxe : Standard_Integer_Vectors.Vector(1..dim); -- exponent maxima
     pwt : Link_to_VecVecVec;      -- the power table
-    yd : VecVecs.VecVec(1..neq1); -- work space for EvalDiff on one circuit
+    yd : VecVecs.VecVec(1..dim1); -- work space for EvalDiff on one circuit
     vy : VecVecs.VecVec(0..deg);  -- linearized evaluated power series
     yv : VecVecs.VecVec(1..neq);  -- delinearized evaluated power series
     vm : VecMats.VecMat(0..deg);  -- differentiation result as matrix series

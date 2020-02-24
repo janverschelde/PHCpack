@@ -815,7 +815,8 @@ package body System_Convolution_Circuits is
              ( s : QuadDobl_Speelpenning_Convolutions.System )
              return Standard_Speelpenning_Convolutions.System is
 
-    res : Standard_Speelpenning_Convolutions.System(s.neq,s.neq1,s.dim,s.deg);
+    res : Standard_Speelpenning_Convolutions.System
+            (s.neq,s.neq1,s.dim,s.dim1,s.deg);
 
     use Standard_Speelpenning_Convolutions;
 
@@ -842,7 +843,7 @@ package body System_Convolution_Circuits is
     if s /= null then
       declare
         ds : constant Standard_Speelpenning_Convolutions.System
-                        (s.neq,s.neq1,s.dim,s.deg)
+                        (s.neq,s.neq1,s.dim,s.dim+1,s.deg)
            := to_double(s.all);
       begin
         res := new Standard_Speelpenning_Convolutions.System'(ds);
@@ -855,7 +856,8 @@ package body System_Convolution_Circuits is
              ( s : QuadDobl_Speelpenning_Convolutions.System )
              return DoblDobl_Speelpenning_Convolutions.System is
 
-    res : DoblDobl_Speelpenning_Convolutions.System(s.neq,s.neq1,s.dim,s.deg);
+    res : DoblDobl_Speelpenning_Convolutions.System
+            (s.neq,s.neq1,s.dim,s.dim1,s.deg);
 
     use DoblDobl_Speelpenning_Convolutions;
 
@@ -882,7 +884,7 @@ package body System_Convolution_Circuits is
     if s /= null then
       declare
         ds : constant DoblDobl_Speelpenning_Convolutions.System
-                        (s.neq,s.neq1,s.dim,s.deg)
+                        (s.neq,s.neq1,s.dim,s.dim1,s.deg)
            := to_double_double(s.all);
       begin
         res := new DoblDobl_Speelpenning_Convolutions.System'(ds);

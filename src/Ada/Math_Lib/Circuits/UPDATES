@@ -1,3 +1,7 @@
+Mon 24 Feb 2020 : for circuits coming from overdetermined systems, an
+  extra parameter is needed to represent a system, updated 
+  generic_speelpenning_convolutions and system_convolution_circuits.adb.
+
 Sun 23 Feb 2020 : fixed the documentation in newton_convolutions.ads.
 
 Wed 19 Feb 2020 : in shift_convolution_circuits.adb, applied the double,

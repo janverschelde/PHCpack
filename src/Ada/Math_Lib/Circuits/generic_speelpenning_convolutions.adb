@@ -29,13 +29,14 @@ package body Generic_Speelpenning_Convolutions is
   function Create ( c : Circuits; dim,deg : integer32 ) return System is
 
     neq : constant integer32 := c'last;
-    res : System(neq,neq+1,dim,deg);
+    res : System(neq,neq+1,dim,dim+1,deg);
 
   begin
     res.crc := c;
     res.mxe := Exponent_Maxima(c,dim);
     res.pwt := Allocate(res.mxe,deg);
-    res.yd := Allocate_Coefficients(neq+1,deg);
+   -- res.yd := Allocate_Coefficients(neq+1,deg);
+    res.yd := Allocate_Coefficients(dim+1,deg);
     res.vy := Linearized_Allocation(neq,deg);
     res.yv := Allocate_Coefficients(neq,deg);
     res.vm := Allocate_Coefficients(neq,dim,deg);
@@ -45,7 +46,8 @@ package body Generic_Speelpenning_Convolutions is
   function Create ( c : Circuits;
                     dim,deg : integer32 ) return Link_to_System is
 
-    res_rep : constant System(c'last,c'last+1,dim,deg) := Create(c,dim,deg);
+    res_rep : constant System(c'last,c'last+1,dim,dim+1,deg)
+            := Create(c,dim,deg);
     res : constant Link_to_System := new System'(res_rep);
 
   begin
