@@ -8,7 +8,7 @@ with Generic_VecMats;
 
 generic
 
-  with package Ring_io is new Abstract_Ring_io(<>);  use Ring_io.Ring;
+  with package Ring_io is new Abstract_Ring_io(<>);
   with package Vectors is new Generic_Vectors(Ring_io.Ring);
   with package Matrices is new Generic_Matrices(Ring_io.Ring,Vectors);
   with package Matrices_io is new Generic_Matrices_io(Ring_io,Vectors,Matrices);
