@@ -162,6 +162,63 @@ package Multitasked_Series_Linearization is
   -- ON RETURN :
   --   b        all coefficients of the solution series.
 
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                qraux : in Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                qraux : in DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                qraux : in QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Allocates work space for every task and
+  --   repeatedly calls the Multitasked_Solve_Next_by_QRLS
+  --   to solve the linear system of power series,
+  --   defined by the matrix series in A and right hand side in b,
+  --   in double, double double, or quad double precision.
+
+  -- REQUIRED :
+  --   A'last = b'last >= 0.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   A        the coefficient matrix as a matrix series;
+  --   b        the right hand side as a vector series;
+  --   wrk      work space as a vector of vectors of range 1..nbt,
+  --   x        space allocated for the solution series;
+  --   qraux    information to recover the orthogonal part;
+  --   w1       work space vector of range 1..n, n = number of rows;
+  --   w2       work space vector of range 1..n, n = number of rows;
+  --   w3       work space vector of range 1..n, n = number of rows;
+  --   w4       work space vector of range 1..n, n = number of rows;
+  --   w5       work space vector of range 1..n, n = number of rows.
+  --            with every vector of range 1..dim, dim = A(0)'last(1);
+  --   output   if true, then intermediate output is written,
+  --            otherwise, the multitasking remains silent.
+
+  -- ON RETURN :
+  --   x        all coefficients of the solution series.
+
   procedure Multitasked_Solve_by_lufac
               ( nbt : in integer32;
                 A : in Standard_Complex_VecMats.VecMat;

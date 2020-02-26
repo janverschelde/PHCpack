@@ -471,6 +471,45 @@ package body Multitasked_Series_Linearization is
     end loop;
   end Multitasked_Solve_Loop_by_lusolve;
 
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                qraux : in Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+  begin
+    null;
+  end Multitasked_Solve_Loop_by_QRLS;
+
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                qraux : in DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+  begin
+    null;
+  end Multitasked_Solve_Loop_by_QRLS;
+
+  procedure Multitasked_Solve_Loop_by_QRLS
+              ( nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                qraux : in QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+  begin
+    null;
+  end Multitasked_Solve_Loop_by_QRLS;
+
   procedure Multitasked_Solve_by_lufac
               ( nbt : in integer32;
                 A : in Standard_Complex_VecMats.VecMat;
