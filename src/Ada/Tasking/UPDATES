@@ -1,5 +1,6 @@
 Wed 26 Feb 2020 : added more procedures to multitasked_series_linearization
-  for solving overdetermined linear systems of power series.
+  for solving overdetermined linear systems of power series.  Modifications
+  in multitasked_series_linearization for the work space allocations.
 
 Tue 25 Feb 2020 : added procedures to multitasked_series_linearization for
   the solving of the linear system with QR and Least Squares.

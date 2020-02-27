@@ -141,7 +141,7 @@ package Multitasked_Series_Linearization is
                 output : in boolean := true );
 
   -- DESCRIPTION :
-  --   Allocates work space for every task and
+  --   With allocated work space for every task,
   --   repeatedly calls the Multitasked_Solve_Next_by_lusolve
   --   to solve the linear system of power series,
   --   defined by the matrix series in A and right hand side in b,
@@ -169,7 +169,7 @@ package Multitasked_Series_Linearization is
                 x : in Standard_Complex_VecVecs.VecVec;
                 qraux : in Standard_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
-                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Loop_by_QRLS
               ( nbt : in integer32;
@@ -178,7 +178,7 @@ package Multitasked_Series_Linearization is
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 qraux : in DoblDobl_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
-                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Loop_by_QRLS
               ( nbt : in integer32;
@@ -187,11 +187,11 @@ package Multitasked_Series_Linearization is
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 qraux : in QuadDobl_Complex_Vectors.Vector;
                 w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
-                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
   -- DESCRIPTION :
-  --   Allocates work space for every task and
+  --   With allocated work space for every task,
   --   repeatedly calls the Multitasked_Solve_Next_by_QRLS
   --   to solve the linear system of power series,
   --   defined by the matrix series in A and right hand side in b,
@@ -225,7 +225,7 @@ package Multitasked_Series_Linearization is
                 x : in Standard_Complex_VecVecs.VecVec;
                 S : in Standard_Complex_Vectors.Vector;
                 U,V : in Standard_Complex_Matrices.Matrix;
-                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Loop_by_SVD
               ( nbt : in integer32;
@@ -234,7 +234,7 @@ package Multitasked_Series_Linearization is
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 S : in DoblDobl_Complex_Vectors.Vector;
                 U,V : in DoblDobl_Complex_Matrices.Matrix;
-                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Loop_by_SVD
               ( nbt : in integer32;
@@ -243,11 +243,11 @@ package Multitasked_Series_Linearization is
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 S : in QuadDobl_Complex_Vectors.Vector;
                 U,V : in QuadDobl_Complex_Matrices.Matrix;
-                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
   -- DESCRIPTION :
-  --   Allocates work space for every task and
+  --   With allocated work space for every task,
   --   repeatedly calls the Multitasked_Solve_Next_by_SVD
   --   to solve the linear system of power series,
   --   defined by the matrix series in A and right hand side in b,
@@ -378,7 +378,7 @@ package Multitasked_Series_Linearization is
                 w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
-                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_by_QRLS
               ( nbt : in integer32; 
@@ -389,7 +389,7 @@ package Multitasked_Series_Linearization is
                 w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
-                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_by_QRLS
               ( nbt : in integer32; 
@@ -400,7 +400,7 @@ package Multitasked_Series_Linearization is
                 w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
-                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
   -- DESCRIPTION :
@@ -423,7 +423,8 @@ package Multitasked_Series_Linearization is
   --   w3       work space vector of range 1..n, n = number of rows;
   --   w4       work space vector of range 1..n, n = number of rows;
   --   w5       work space vector of range 1..n, n = number of rows.
-  --   wrk      work vector, allocated of range at least A(0)'range(1).
+  --   wrk      work space as a vector of vectors of range 1..nbt,
+  --            with every vector of range at least A(0)'range(1);
   --   output   if true, then intermediate output is written,
   --            otherwise, the multitasking remains silent.
 
@@ -446,7 +447,7 @@ package Multitasked_Series_Linearization is
                 U,V : out Standard_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
-                wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+                wrkv : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_by_SVD
               ( nbt : in integer32;
@@ -457,7 +458,7 @@ package Multitasked_Series_Linearization is
                 U,V : out DoblDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-                wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_by_SVD
               ( nbt : in integer32;
@@ -468,7 +469,7 @@ package Multitasked_Series_Linearization is
                 U,V : out QuadDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-                wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
   -- DESCRIPTION :
@@ -487,7 +488,8 @@ package Multitasked_Series_Linearization is
   --   b        the right hand side coefficients of a vector series;
   --   x        space allocated for the solution series;
   --   ewrk     work space allocated for the SVD of the lead A(0);
-  --   wrkv     work space vector for the next coefficient computation;
+  --   wrkv     work space vectors for the next coefficient computation,
+  --            of range 1..nbt, one for every task;
   --   output   if true, then intermediate output is written,
   --            otherwise, the multitasking remains silent.
 
