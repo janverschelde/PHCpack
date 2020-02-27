@@ -204,7 +204,6 @@ package Multitasked_Series_Linearization is
   --   nbt      the number of tasks;
   --   A        the coefficient matrix as a matrix series;
   --   b        the right hand side as a vector series;
-  --   wrk      work space as a vector of vectors of range 1..nbt,
   --   x        space allocated for the solution series;
   --   qraux    information to recover the orthogonal part;
   --   w1       work space vector of range 1..n, n = number of rows;
@@ -218,6 +217,58 @@ package Multitasked_Series_Linearization is
 
   -- ON RETURN :
   --   x        all coefficients of the solution series.
+
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                S : in Standard_Complex_Vectors.Vector;
+                U,V : in Standard_Complex_Matrices.Matrix;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                S : in DoblDobl_Complex_Vectors.Vector;
+                U,V : in DoblDobl_Complex_Matrices.Matrix;
+                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : in QuadDobl_Complex_Vectors.Vector;
+                U,V : in QuadDobl_Complex_Matrices.Matrix;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Allocates work space for every task and
+  --   repeatedly calls the Multitasked_Solve_Next_by_SVD
+  --   to solve the linear system of power series,
+  --   defined by the matrix series in A and right hand side in b,
+  --   in double, double double, or quad double precision.
+
+  -- REQUIRED :
+  --   A'last = b'last >= 0.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   A        the coefficient matrix as a matrix series;
+  --   b        the right hand side as a vector series;
+  --   x        lead x(0) of the solution has been computed;
+  --   S,U,V    see the output of Solve_Lead_by_SVD;
+  --   wrk      work space vector for the next coefficient computation;
+  --   output   if true, then intermediate output is written,
+  --            otherwise, the multitasking remains silent.
+
+  -- ON RETURN :
+  --   b        modified right hand side vectors after back substitution;
+  --   x        coefficient vectors of the solution.
 
   procedure Multitasked_Solve_by_lufac
               ( nbt : in integer32;
@@ -385,5 +436,69 @@ package Multitasked_Series_Linearization is
   --   ipvt     pivoting information if that was requested;
   --   info     is zero of nonsingular, otherwise, a nonzero info
   --            indicates a singular matrix.
+
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                S : out Standard_Complex_Vectors.Vector;
+                U,V : out Standard_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out double_float;
+                ewrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                S : out DoblDobl_Complex_Vectors.Vector;
+                U,V : out DoblDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out double_double;
+                ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : out QuadDobl_Complex_Vectors.Vector;
+                U,V : out QuadDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out quad_double;
+                ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Solves the linear system A*x = b, using the SVD of the
+  --   leading coefficient matrix of A for least squares solving,
+  --   in double, double double, or quad double precision,
+  --   with multitasking.
+
+  -- REQUIRED :
+  --   A'range = b'range = 0..deg, for deg >= 0.
+  --   Moreover, all matrices in A have the same dimension.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   A        the coefficient matrices in the matrix series;
+  --   b        the right hand side coefficients of a vector series;
+  --   x        space allocated for the solution series;
+  --   ewrk     work space allocated for the SVD of the lead A(0);
+  --   wrkv     work space vector for the next coefficient computation;
+  --   output   if true, then intermediate output is written,
+  --            otherwise, the multitasking remains silent.
+
+  -- ON RETURN :
+  --   A        A(0) modified as work space in SVD computation;
+  --   b        modified right hand side vectors after back substitution;
+  --   S,U,V    see the output of Solve_Lead_by_SVD;
+  --   info     see the output of Solve_Lead_by_SVD;
+  --   rcond    inverse condition number computed from the singular
+  --            values of the lead coefficient of A;
+  --   x        all coefficients of the solution series up to b'last,
+  --            provided rcond /= 0.0.
 
 end Multitasked_Series_Linearization;

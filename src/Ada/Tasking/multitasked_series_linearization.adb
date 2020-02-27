@@ -481,7 +481,12 @@ package body Multitasked_Series_Linearization is
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 output : in boolean := true ) is
   begin
-    null;
+    for k in 1..b'last loop
+      if output then
+        put("calling multitasked solve next for k = ");
+        put(k,1); put_line(" ...");
+      end if;
+    end loop;
   end Multitasked_Solve_Loop_by_QRLS;
 
   procedure Multitasked_Solve_Loop_by_QRLS
@@ -494,7 +499,12 @@ package body Multitasked_Series_Linearization is
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 output : in boolean := true ) is
   begin
-    null;
+    for k in 1..b'last loop
+      if output then
+        put("calling multitasked solve next for k = ");
+        put(k,1); put_line(" ...");
+      end if;
+    end loop;
   end Multitasked_Solve_Loop_by_QRLS;
 
   procedure Multitasked_Solve_Loop_by_QRLS
@@ -507,8 +517,67 @@ package body Multitasked_Series_Linearization is
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 output : in boolean := true ) is
   begin
-    null;
+    for k in 1..b'last loop
+      if output then
+        put("calling multitasked solve next for k = ");
+        put(k,1); put_line(" ...");
+      end if;
+    end loop;
   end Multitasked_Solve_Loop_by_QRLS;
+
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                S : in Standard_Complex_Vectors.Vector;
+                U,V : in Standard_Complex_Matrices.Matrix;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+  begin
+    for k in 1..b'last loop
+      if output then
+        put("calling multitasked solve next for k = ");
+        put(k,1); put_line(" ...");
+      end if;
+    end loop;
+  end Multitasked_Solve_Loop_by_SVD;
+
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                S : in DoblDobl_Complex_Vectors.Vector;
+                U,V : in DoblDobl_Complex_Matrices.Matrix;
+                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+  begin
+    for k in 1..b'last loop
+      if output then
+        put("calling multitasked solve next for k = ");
+        put(k,1); put_line(" ...");
+      end if;
+    end loop;
+  end Multitasked_Solve_Loop_by_SVD;
+
+  procedure Multitasked_Solve_Loop_by_SVD
+              ( nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : in QuadDobl_Complex_Vectors.Vector;
+                U,V : in QuadDobl_Complex_Matrices.Matrix;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+  begin
+    for k in 1..b'last loop
+      if output then
+        put("calling multitasked solve next for k = ");
+        put(k,1); put_line(" ...");
+      end if;
+    end loop;
+  end Multitasked_Solve_Loop_by_SVD;
 
   procedure Multitasked_Solve_by_lufac
               ( nbt : in integer32;
@@ -622,6 +691,10 @@ package body Multitasked_Series_Linearization is
 
   begin
     Solve_Lead_by_QRLS(A,b,x(0),qraux,w1,w2,w3,w4,w5,ipvt,info);
+    if info = 0 then
+      Multitasked_Solve_Loop_by_QRLS
+        (nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
+    end if;
   end Multitasked_Solve_by_QRLS;
 
   procedure Multitasked_Solve_by_QRLS
@@ -640,6 +713,10 @@ package body Multitasked_Series_Linearization is
 
   begin
     Solve_Lead_by_QRLS(A,b,x(0),qraux,w1,w2,w3,w4,w5,ipvt,info);
+    if info = 0 then
+      Multitasked_Solve_Loop_by_QRLS
+        (nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
+    end if;
   end Multitasked_Solve_by_QRLS;
 
   procedure Multitasked_Solve_by_QRLS
@@ -658,6 +735,77 @@ package body Multitasked_Series_Linearization is
 
   begin
     Solve_Lead_by_QRLS(A,b,x(0),qraux,w1,w2,w3,w4,w5,ipvt,info);
+    if info = 0 then
+      Multitasked_Solve_Loop_by_QRLS
+        (nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
+    end if;
   end Multitasked_Solve_by_QRLS;
+
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                S : out Standard_Complex_Vectors.Vector;
+                U,V : out Standard_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out double_float;
+                ewrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+
+    use Standard_Series_Matrix_Solvers;
+
+  begin
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    if 1.0 + rcond /= 1.0
+     then Multitasked_Solve_Loop_by_SVD(nbt,A,b,x,S,U,V,wrkv,output);
+    end if;
+  end Multitasked_Solve_by_SVD;
+
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                S : out DoblDobl_Complex_Vectors.Vector;
+                U,V : out DoblDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out double_double;
+                ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+
+    use DoblDobl_Series_Matrix_Solvers;
+
+    one : constant double_double := create(integer(1));
+
+  begin
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    if one + rcond /= one
+     then Multitasked_Solve_Loop_by_SVD(nbt,A,b,x,S,U,V,wrkv,output);
+    end if;
+  end Multitasked_Solve_by_SVD;
+
+  procedure Multitasked_Solve_by_SVD
+              ( nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : out QuadDobl_Complex_Vectors.Vector;
+                U,V : out QuadDobl_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out quad_double;
+                ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                output : in boolean := true ) is
+
+    use QuadDobl_Series_Matrix_Solvers;
+
+    one : constant quad_double := create(integer(1));
+
+  begin
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    if one + rcond /= one
+     then Multitasked_Solve_Loop_by_SVD(nbt,A,b,x,S,U,V,wrkv,output);
+    end if;
+  end Multitasked_Solve_by_SVD;
 
 end Multitasked_Series_Linearization;
