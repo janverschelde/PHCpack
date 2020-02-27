@@ -67,6 +67,9 @@ with QuadDobl_Random_Series_Matrices;
 with QuadDobl_Series_Matrix_Solvers;
 with Series_Coefficient_Vectors;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
+with Standard_Speelpenning_Convolutions;
+with DoblDobl_Speelpenning_Convolutions;
+with QuadDobl_Speelpenning_Convolutions;
 with Multitasked_Series_Linearization;   use Multitasked_Series_Linearization;
 
 procedure ts_mtserlin is
@@ -213,7 +216,7 @@ procedure ts_mtserlin is
   end Show_Speedup;
 
   procedure Standard_Run
-              ( nbt,dim : in integer32;
+              ( nbt,neq,nvr : in integer32;
                 vm : in Standard_Complex_VecMats.VecMat;
                 vb : in Standard_Complex_VecVecs.VecVec;
                 xs : in Standard_Complex_Vector_Series.Vector;
@@ -226,9 +229,12 @@ procedure ts_mtserlin is
   --   Prints the elapsed time and if defined, the speedup.
   --   Prints the difference between the computed and the generated solution.
 
+  -- REQUIRED : neq >= nvr.
+
   -- ON ENTRY :
   --   nbt      the number of tasks is 1 or larger;
-  --   dim      dimension of the matrices in vm;
+  --   neq      number of equations, number of rows in the matrices;
+  --   nvr      number of variables, number of columns in the matrices;
   --   vm       matrices in the series equation;
   --   vb       right hand side vector of the equation;
   --   xs       the generated solution to the matrix series equation;
@@ -245,12 +251,16 @@ procedure ts_mtserlin is
 
     ans : character;
     err : double_float;
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..nvr);
     info : integer32;
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
-        := new Standard_Complex_Vectors.Vector(1..dim);
+        := new Standard_Complex_Vectors.Vector(1..neq);
     wks : constant Standard_Complex_VecVecs.VecVec(1..nbt)
-        := Allocate_Work_Space(nbt,dim);
+        := Allocate_Work_Space(nbt,neq);
+    deg : constant integer32 := vm'last;
+    sol : constant Standard_Complex_VecVecs.VecVec(0..deg)
+        := Standard_Speelpenning_Convolutions.Linearized_Allocation(nvr,deg);
+    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
     use Ada.Calendar;
@@ -277,7 +287,12 @@ procedure ts_mtserlin is
         Show_Speedup(serelp,mltelp);
       else
         seristart := Ada.Calendar.Clock;
-        Standard_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        if neq > nvr then
+          Standard_Series_Matrix_Solvers.Solve_by_QRLS
+            (vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+        else
+          Standard_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        end if;
         seristop := Ada.Calendar.Clock;
         serelp := seristop - seristart;
         put_line("-> Elapsed time without multitasking : ");
@@ -285,12 +300,15 @@ procedure ts_mtserlin is
       end if;
     end if;
     put("info : "); put(info,1); new_line;
-    err := Error(xs,vb,nbrotp);
+    if neq > nvr
+     then err := Error(xs,sol,nbrotp);
+     else err := Error(xs,vb,nbrotp);
+    end if;
     put("Sum of errors :"); put(err,3); new_line;
   end Standard_Run;
 
   procedure DoblDobl_Run
-              ( nbt,dim : in integer32;
+              ( nbt,neq,nvr : in integer32;
                 vm : in DoblDobl_Complex_VecMats.VecMat;
                 vb : in DoblDobl_Complex_VecVecs.VecVec;
                 xs : in DoblDobl_Complex_Vector_Series.Vector;
@@ -305,7 +323,8 @@ procedure ts_mtserlin is
 
   -- ON ENTRY :
   --   nbt      the number of tasks is 1 or larger;
-  --   dim      dimension of the matrices in vm;
+  --   neq      number of equations, number of rows in the matrices;
+  --   nvr      number of variables, number of columns in the matrices;
   --   vm       matrices in the series equation;
   --   vb       right hand side vector of the equation;
   --   xs       the generated solution to the matrix series equation;
@@ -322,12 +341,16 @@ procedure ts_mtserlin is
 
     ans : character;
     err : double_double;
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..nvr);
     info : integer32;
     wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
-        := new DoblDobl_Complex_Vectors.Vector(1..dim);
+        := new DoblDobl_Complex_Vectors.Vector(1..neq);
     wks : constant DoblDobl_Complex_VecVecs.VecVec(1..nbt)
-        := Allocate_Work_Space(nbt,dim);
+        := Allocate_Work_Space(nbt,neq);
+    deg : constant integer32 := vm'last;
+    sol : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
+        := DoblDobl_Speelpenning_Convolutions.Linearized_Allocation(nvr,deg);
+    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
     use Ada.Calendar;
@@ -354,7 +377,12 @@ procedure ts_mtserlin is
         Show_Speedup(serelp,mltelp);
       else
         seristart := Ada.Calendar.Clock;
-        DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        if neq > nvr then
+          DoblDobl_Series_Matrix_Solvers.Solve_by_QRLS
+            (vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+        else
+          DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        end if;
         seristop := Ada.Calendar.Clock;
         serelp := seristop - seristart;
         put_line("-> Elapsed time without multitasking : ");
@@ -362,12 +390,15 @@ procedure ts_mtserlin is
       end if;
     end if;
     put("info : "); put(info,1); new_line;
-    err := Error(xs,vb,nbrotp);
+    if neq > nvr
+     then err := Error(xs,sol,nbrotp);
+     else err := Error(xs,vb,nbrotp);
+    end if;
     put("Sum of errors : "); put(err,3); new_line;
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
-              ( nbt,dim : in integer32;
+              ( nbt,neq,nvr : in integer32;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
                 vb : in QuadDobl_Complex_VecVecs.VecVec;
                 xs : in QuadDobl_Complex_Vector_Series.Vector;
@@ -382,7 +413,8 @@ procedure ts_mtserlin is
 
   -- ON ENTRY :
   --   nbt      the number of tasks is 1 or larger;
-  --   dim      dimension of the matrices in vm;
+  --   neq      number of equations, number of rows in the matrices;
+  --   nvr      number of variables, number of columns;
   --   vm       matrices in the series equation;
   --   vb       right hand side vector of the equation;
   --   xs       the generated solution to the matrix series equation;
@@ -399,12 +431,16 @@ procedure ts_mtserlin is
 
     ans : character;
     err : quad_double;
-    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..neq);
     info : integer32;
     wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
-        := new QuadDobl_Complex_Vectors.Vector(1..dim);
+        := new QuadDobl_Complex_Vectors.Vector(1..neq);
     wks : constant QuadDobl_Complex_VecVecs.VecVec(1..nbt)
-        := Allocate_Work_Space(nbt,dim);
+        := Allocate_Work_Space(nbt,neq);
+    deg : constant integer32 := vm'last;
+    sol : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
+        := QuadDobl_Speelpenning_Convolutions.Linearized_Allocation(nvr,deg);
+    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
     use Ada.Calendar;
@@ -431,7 +467,12 @@ procedure ts_mtserlin is
         Show_Speedup(serelp,mltelp);
       else
         seristart := Ada.Calendar.Clock;
-        QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        if neq > nvr then
+          QuadDobl_Series_Matrix_Solvers.Solve_by_QRLS
+            (vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+        else
+          QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
+        end if;
         seristop := Ada.Calendar.Clock;
         serelp := seristop - seristart;
         put_line("-> Elapsed time without multitasking : ");
@@ -439,14 +480,17 @@ procedure ts_mtserlin is
       end if;
     end if;
     put("info : "); put(info,1); new_line;
-    err := Error(xs,vb,nbrotp);
+    if neq > nvr
+     then err := Error(xs,sol,nbrotp);
+     else err := Error(xs,vb,nbrotp);
+    end if;
     put("Sum of errors : "); put(err,3); new_line;
   end QuadDobl_Run;
 
-  procedure Standard_Test ( n,d : in integer32 ) is
+  procedure Standard_Test ( m,n,d : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates an n-by-n matrix of series of degree d,
+  --   Generates an m-by-n matrix of series of degree d,
   --   with complex coefficients and a solution of the same dimension
   --   and degree, in double precision,
   --   Prompts then the user for the number of tasks and runs the test.
@@ -454,8 +498,8 @@ procedure ts_mtserlin is
     use Standard_Complex_Series_Matrices; -- for the sA*sx operation
 
     nbt : integer32 := 0;
-    sA : constant Standard_Complex_Series_Matrices.Matrix(1..n,1..n)
-       := Standard_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
+    sA : constant Standard_Complex_Series_Matrices.Matrix(1..m,1..n)
+       := Standard_Random_Series_Matrices.Random_Series_Matrix(1,m,1,n,d);
     As : constant Standard_Complex_Matrix_Series.Matrix 
        := Standard_Complex_Matrix_Series.Create(sA); 
     vmbackup : constant Standard_Complex_VecMats.VecMat(0..As.deg)
@@ -465,23 +509,23 @@ procedure ts_mtserlin is
        := Standard_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     xs : constant Standard_Complex_Vector_Series.Vector(d)
        := Standard_Complex_Vector_Series.Create(sx);
-    sb : constant Standard_Complex_Series_Vectors.Vector(1..n) := sA*sx;
+    sb : constant Standard_Complex_Series_Vectors.Vector(1..m) := sA*sx;
     bs : constant Standard_Complex_Vector_Series.Vector(d)
        := Standard_Complex_Vector_Series.Create(sb);
-    sbcff : constant Standard_Complex_VecVecs.VecVec(1..n)
+    sbcff : constant Standard_Complex_VecVecs.VecVec(1..m)
           := Series_Coefficient_Vectors.Standard_Series_Coefficients(sb);
     bscff : constant Standard_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
     bswrk : Standard_Complex_VecVecs.VecVec(bscff'range);
     ans : character;
-    nbrotp,output : boolean;
+    nbrotp,otp : boolean;
     mult_elapsed,seri_elapsed : Duration := 0.0;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
     nbrotp := (ans = 'y');
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
-    output := (ans = 'y');
+    otp := (ans = 'y');
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
       put_line("The coefficient matrices : "); put(vmbackup);
@@ -498,14 +542,14 @@ procedure ts_mtserlin is
       exit when (nbt = 0);
       Standard_Complex_VecMats.Copy(vmbackup,vm);
       Standard_Complex_VecVecs.Copy(bscff,bswrk);
-      Standard_Run(nbt,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,output,nbrotp);
+      Standard_Run(nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp);
     end loop;
   end Standard_Test;
 
-  procedure DoblDobl_Test ( n,d : in integer32 ) is
+  procedure DoblDobl_Test ( m,n,d : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates an n-by-n matrix of series of degree d,
+  --   Generates an m-by-n matrix of series of degree d,
   --   with complex coefficients and a solution of the same dimension
   --   and degree, in double double precision,
   --   Prompts then the user for the number of tasks and runs the test.
@@ -513,8 +557,8 @@ procedure ts_mtserlin is
     use DoblDobl_Complex_Series_Matrices; -- for the sA*sx operation
 
     nbt : integer32 := 0;
-    sA : constant DoblDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
-       := DoblDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
+    sA : constant DoblDobl_Complex_Series_Matrices.Matrix(1..m,1..n)
+       := DoblDobl_Random_Series_Matrices.Random_Series_Matrix(1,m,1,n,d);
     As : constant DoblDobl_Complex_Matrix_Series.Matrix 
        := DoblDobl_Complex_Matrix_Series.Create(sA); 
     vmbackup : constant DoblDobl_Complex_VecMats.VecMat(0..As.deg)
@@ -524,23 +568,23 @@ procedure ts_mtserlin is
        := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     xs : constant DoblDobl_Complex_Vector_Series.Vector(d)
        := DoblDobl_Complex_Vector_Series.Create(sx);
-    sb : constant DoblDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
+    sb : constant DoblDobl_Complex_Series_Vectors.Vector(1..m) := sA*sx;
     bs : constant DoblDobl_Complex_Vector_Series.Vector(d)
        := DoblDobl_Complex_Vector_Series.Create(sb);
-    sbcff : constant DoblDobl_Complex_VecVecs.VecVec(1..n)
+    sbcff : constant DoblDobl_Complex_VecVecs.VecVec(1..m)
           := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(sb);
     bscff : constant DoblDobl_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(bs);
     bswrk : DoblDobl_Complex_VecVecs.VecVec(bscff'range);
     ans : character;
-    nbrotp,output : boolean;
+    nbrotp,otp : boolean;
     mult_elapsed,seri_elapsed : Duration := 0.0;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
     nbrotp := (ans = 'y');
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
-    output := (ans = 'y');
+    otp := (ans = 'y');
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
       put_line("The coefficient matrices : "); put(vmbackup);
@@ -557,14 +601,14 @@ procedure ts_mtserlin is
       exit when (nbt = 0);
       DoblDobl_Complex_VecMats.Copy(vmbackup,vm);
       DoblDobl_Complex_VecVecs.Copy(bscff,bswrk);
-      DoblDobl_Run(nbt,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,output,nbrotp);
+      DoblDobl_Run(nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp);
     end loop;
   end DoblDobl_Test;
 
-  procedure QuadDobl_Test ( n,d : in integer32 ) is
+  procedure QuadDobl_Test ( m,n,d : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates an n-by-n matrix of series of degree d,
+  --   Generates an m-by-n matrix of series of degree d,
   --   with complex coefficients and a solution of the same dimension
   --   and degree, in quad double precision,
   --   Prompts then the user for the number of tasks.
@@ -572,8 +616,8 @@ procedure ts_mtserlin is
     use QuadDobl_Complex_Series_Matrices; -- for the sA*sx operation
 
     nbt : integer32 := 0;
-    sA : constant QuadDobl_Complex_Series_Matrices.Matrix(1..n,1..n)
-       := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,n,1,n,d);
+    sA : constant QuadDobl_Complex_Series_Matrices.Matrix(1..m,1..n)
+       := QuadDobl_Random_Series_Matrices.Random_Series_Matrix(1,m,1,n,d);
     As : constant QuadDobl_Complex_Matrix_Series.Matrix 
        := QuadDobl_Complex_Matrix_Series.Create(sA); 
     vmbackup : constant QuadDobl_Complex_VecMats.VecMat(0..As.deg)
@@ -583,23 +627,23 @@ procedure ts_mtserlin is
        := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     xs : constant QuadDobl_Complex_Vector_Series.Vector(d)
        := QuadDobl_Complex_Vector_Series.Create(sx);
-    sb : constant QuadDobl_Complex_Series_Vectors.Vector(1..n) := sA*sx;
+    sb : constant QuadDobl_Complex_Series_Vectors.Vector(1..m) := sA*sx;
     bs : constant QuadDobl_Complex_Vector_Series.Vector(d)
        := QuadDobl_Complex_Vector_Series.Create(sb);
-    sbcff : constant QuadDobl_Complex_VecVecs.VecVec(1..n)
+    sbcff : constant QuadDobl_Complex_VecVecs.VecVec(1..m)
           := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(sb);
     bscff : constant QuadDobl_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(bs);
     bswrk : QuadDobl_Complex_VecVecs.VecVec(bscff'range);
     ans : character;
-    nbrotp,output : boolean;
+    nbrotp,otp : boolean;
     seri_elapsed,mult_elapsed : Duration := 0.0;
 
   begin
     put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
     nbrotp := (ans = 'y');
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
-    output := (ans = 'y');
+    otp := (ans = 'y');
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
       put_line("The coefficient matrices : "); put(vmbackup);
@@ -616,7 +660,7 @@ procedure ts_mtserlin is
       exit when (nbt = 0);
       QuadDobl_Complex_VecMats.Copy(vmbackup,vm);
       QuadDobl_Complex_VecVecs.Copy(bscff,bswrk);
-      QuadDobl_Run(nbt,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,output,nbrotp);
+      QuadDobl_Run(nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp);
     end loop;
   end QuadDobl_Test;
 
@@ -964,18 +1008,19 @@ procedure ts_mtserlin is
   --   Prompts the user for the dimension of the linear system,
   --   the degrees of the series in the system, and the number of tasks.
 
-    dim,deg : integer32 := 0;
+    neq,nvr,deg : integer32 := 0;
     ans : character;
 
   begin
     new_line;
     put_line("Testing the linearization of systems of power series ...");
-    put("  Give the number of equations and variables : "); get(dim);
+    put("  Give the number of equations : "); get(neq);
+    put("  Give the number of variables : "); get(nvr);
     put("  Give the degree of the series : "); get(deg);
     new_line;
     put("Benchmarking for all precisions ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y' then
-      Benchmark(dim,deg);
+      Benchmark(nvr,deg);
     else
       new_line;
       put_line("MENU for the working precision :");
@@ -986,9 +1031,9 @@ procedure ts_mtserlin is
       Ask_Alternative(ans,"012");
       new_line;
       case ans is
-        when '0' => Standard_Test(dim,deg);
-        when '1' => DoblDobl_Test(dim,deg);
-        when '2' => QuadDobl_Test(dim,deg);
+        when '0' => Standard_Test(neq,nvr,deg);
+        when '1' => DoblDobl_Test(neq,nvr,deg);
+        when '2' => QuadDobl_Test(neq,nvr,deg);
         when others => null;
       end case;
     end if;
