@@ -1,5 +1,6 @@
 Fri 28 Feb 2020 : adjusted ts_mtserlin so the QRLS with multitasking
-  is called for the overdetermined problems.
+  is called for the overdetermined problems.  Changes in ts_mtserlin
+  and multitasked_series_linearization for the application of QRLS.
 
 Thu 27 Feb 2020 : updated ts_mtserlin to test overdetermined problems.
   Add procedures to multitasked_series_linearization to apply least squares

@@ -53,6 +53,28 @@ package Multitasked_Series_Linearization is
 
   -- REQUIRED : all vectors and matrices have the same dimension dim.
 
+  procedure MV_Multiply
+             ( nrows,ncols : in integer32;
+               A : in Standard_Complex_Matrices.Link_to_Matrix;
+               x,y : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure MV_Multiply
+             ( nrows,ncols : in integer32;
+               A : in DoblDobl_Complex_Matrices.Link_to_Matrix;
+               x,y : in DoblDobl_Complex_Vectors.Link_to_Vector );
+  procedure MV_Multiply
+             ( nrows,ncols : in integer32;
+               A : in QuadDobl_Complex_Matrices.Link_to_Matrix;
+               x,y : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Multiplies the matrix A with the vector x and stores the
+  --   result in the vector y, with explicitly declared index variables,
+  --   in double, double double, or quad double precision.
+
+  -- REQUIRED : the number of rows of the matrix A is nrows and
+  --   the number of columns of the matrix A is ncols, nrows >= ncols;
+  --   the vector x has range 1..nbcols and the range of y is 1..nrows.
+
   procedure V_Subtract
               ( dim : in integer32;
                 x,y : in Standard_Complex_Vectors.Link_to_Vector );
@@ -172,7 +194,8 @@ package Multitasked_Series_Linearization is
   --   w3       work space vector of range 1..n, n = number of rows;
   --   w4       work space vector of range 1..n, n = number of rows;
   --   w5       work space vector of range 1..n, n = number of rows.
-  --   wrk      allocated work space for the nbt tasks;
+  --   wrk      work space as a vector of vectors of range 1..nbt,
+  --            with every vector of range at least A(0)'range(1);
   --   output   flag to indicate the extra output is needed.
 
   -- ON RETURN :
@@ -274,6 +297,8 @@ package Multitasked_Series_Linearization is
   --   w4       work space vector of range 1..n, n = number of rows;
   --   w5       work space vector of range 1..n, n = number of rows.
   --            with every vector of range 1..dim, dim = A(0)'last(1);
+  --   wrk      work space as a vector of vectors of range 1..nbt,
+  --            with every vector of range at least A(0)'range(1);
   --   output   if true, then intermediate output is written,
   --            otherwise, the multitasking remains silent.
 
