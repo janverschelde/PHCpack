@@ -1,4 +1,6 @@
 Thu 27 Feb 2020 : updated ts_mtserlin to test overdetermined problems.
+  Add procedures to multitasked_series_linearization to apply least squares
+  solving with multitasking.
 
 Wed 26 Feb 2020 : added more procedures to multitasked_series_linearization
   for solving overdetermined linear systems of power series.  Modifications

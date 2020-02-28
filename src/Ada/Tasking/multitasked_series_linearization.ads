@@ -118,6 +118,68 @@ package Multitasked_Series_Linearization is
   --   b        all coefficients of the solution series up to b(idx)
   --            and updated right hand side vectors.
 
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                qraux : in Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                qraux : in DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                qraux : in QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Applies multitasking to the least squares solving of the matrix series
+  --   equation defined by the matrix series in A and right hand side in b,
+  --   in double, double double, and quad double precision.
+
+  -- REQUIRED :
+  --   A'last = b'last >= 0 and all coefficients in x up to idx-1
+  --   have been defined, for idx is in range 1..b'last.
+
+  -- ON ENTRY :
+  --   idx      index of the stage, all solutions in b(k),
+  --            for k from 0 to idx-1 have been computed.
+  --   nbt      the number of tasks;
+  --   A        the coefficient matrix as a matrix series,
+  --            A(0) contains the LU factorization of A(0);
+  --   b        coefficients of vector series,
+  --            for k < idx: b(k) is the k-th solution block,
+  --            for k >= idx: b(k) is the (updated) right hand side vector;
+  --   x        x(k) for k in 0..idx-1 contains the solutoins;
+  --   qraux    information to recover the orthogonal part,
+  --            as output of Solve_Lead_by_QRLS;
+  --   w1       work space vector of range 1..n, n = number of rows;
+  --   w2       work space vector of range 1..n, n = number of rows;
+  --   w3       work space vector of range 1..n, n = number of rows;
+  --   w4       work space vector of range 1..n, n = number of rows;
+  --   w5       work space vector of range 1..n, n = number of rows.
+  --   wrk      allocated work space for the nbt tasks;
+  --   output   flag to indicate the extra output is needed.
+
+  -- ON RETURN :
+  --   b        all coefficients of the solution series up to b(idx)
+  --            and updated right hand side vectors;
+  --   x        computed coefficient at idx with respect to input.
+
   procedure Multitasked_Solve_Loop_by_lusolve
               ( nbt : in integer32;
                 A : in Standard_Complex_VecMats.VecMat;

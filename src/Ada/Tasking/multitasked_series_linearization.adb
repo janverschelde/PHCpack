@@ -4,8 +4,11 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
+with Standard_Complex_QR_Least_Squares;  use Standard_Complex_QR_Least_Squares;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
+with DoblDobl_Complex_QR_Least_Squares;  use DoblDobl_Complex_QR_Least_Squares;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
+with QuadDobl_Complex_QR_Least_Squares;  use QuadDobl_Complex_QR_Least_Squares;
 with Standard_Series_Matrix_Solvers;
 with DoblDobl_Series_Matrix_Solvers;
 with QuadDobl_Series_Matrix_Solvers;
@@ -420,6 +423,270 @@ package body Multitasked_Series_Linearization is
     end loop;
   end Multitasked_Solve_Next_by_lusolve;
 
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                qraux : in Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                wrk : in Standard_Complex_VecVecs.VecVec;
+                output : in boolean := true ) is
+
+    dim : constant integer32 := qraux'last;
+    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    lead : constant Standard_Complex_Matrices.Link_to_Matrix := A(0);
+    nrows : constant integer32 := lead'last(1);
+    ncols : constant integer32 := lead'last(2);
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, without intermediate output.
+
+      myjob : integer32 := idx+i-1;
+      info : integer32;
+
+    begin
+      while myjob <= b'last loop
+        MV_Multiply(dim,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(dim,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, with intermediate output.
+
+      myjob : integer32 := idx+i-1;
+      info : integer32;
+
+    begin
+      while myjob <= b'last loop
+        put_line("Task " & Multitasking.to_string(i)
+                         & " updates b(" 
+                         & Multitasking.to_string(myjob) & ")");
+        MV_Multiply(dim,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(dim,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          put_line("Task " & Multitasking.to_string(i)
+                           & " solves for x(" 
+                           & Multitasking.to_string(idx) & ")");
+          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            put_line("Task " & Multitasking.to_string(i)
+                             & " solves for x(" 
+                             & Multitasking.to_string(idx) & ")");
+            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks finish
+    while not Multitasking.all_true(nbt,done) loop
+      delay 0.001;
+    end loop;
+  end Multitasked_Solve_Next_by_QRLS;
+
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                qraux : in DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true ) is
+
+    dim : constant integer32 := qraux'last;
+    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    lead : constant DoblDobl_Complex_Matrices.Link_to_Matrix := A(0);
+    nrows : constant integer32 := lead'last(1);
+    ncols : constant integer32 := lead'last(2);
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, without intermediate output.
+
+      myjob : integer32 := idx+i-1;
+      info : integer32;
+
+    begin
+      while myjob <= b'last loop
+        MV_Multiply(dim,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(dim,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, with intermediate output.
+
+      myjob : integer32 := idx+i-1;
+      info : integer32;
+
+    begin
+      while myjob <= b'last loop
+        put_line("Task " & Multitasking.to_string(i)
+                         & " updates b(" 
+                         & Multitasking.to_string(myjob) & ")");
+        MV_Multiply(dim,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(dim,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          put_line("Task " & Multitasking.to_string(i)
+                           & " solves for x(" 
+                           & Multitasking.to_string(idx) & ")");
+          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            put_line("Task " & Multitasking.to_string(i)
+                             & " solves for x(" 
+                             & Multitasking.to_string(idx) & ")");
+            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks finish
+    while not Multitasking.all_true(nbt,done) loop
+      delay 0.001;
+    end loop;
+  end Multitasked_Solve_Next_by_QRLS;
+
+  procedure Multitasked_Solve_Next_by_QRLS
+              ( idx,nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                qraux : in QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true ) is
+
+    dim : constant integer32 := qraux'last;
+    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    lead : constant QuadDobl_Complex_Matrices.Link_to_Matrix := A(0);
+    nrows : constant integer32 := lead'last(1);
+    ncols : constant integer32 := lead'last(2);
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, without intermediate output.
+
+      myjob : integer32 := idx+i-1;
+      info : integer32;
+
+    begin
+      while myjob <= b'last loop
+        MV_Multiply(dim,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(dim,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, with intermediate output.
+
+      myjob : integer32 := idx+i-1;
+      info : integer32;
+
+    begin
+      while myjob <= b'last loop
+        put_line("Task " & Multitasking.to_string(i)
+                         & " updates b(" 
+                         & Multitasking.to_string(myjob) & ")");
+        MV_Multiply(dim,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(dim,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          put_line("Task " & Multitasking.to_string(i)
+                           & " solves for x(" 
+                           & Multitasking.to_string(idx) & ")");
+          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            put_line("Task " & Multitasking.to_string(i)
+                             & " solves for x(" 
+                             & Multitasking.to_string(idx) & ")");
+            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks finish
+    while not Multitasking.all_true(nbt,done) loop
+      delay 0.001;
+    end loop;
+  end Multitasked_Solve_Next_by_QRLS;
+
   procedure Multitasked_Solve_Loop_by_lusolve
               ( nbt : in integer32;
                 A : in Standard_Complex_VecMats.VecMat;
@@ -486,6 +753,8 @@ package body Multitasked_Series_Linearization is
         put("calling multitasked solve next for k = ");
         put(k,1); put_line(" ...");
       end if;
+      Multitasked_Solve_Next_by_QRLS
+        (k,nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
     end loop;
   end Multitasked_Solve_Loop_by_QRLS;
 
@@ -504,6 +773,8 @@ package body Multitasked_Series_Linearization is
         put("calling multitasked solve next for k = ");
         put(k,1); put_line(" ...");
       end if;
+      Multitasked_Solve_Next_by_QRLS
+        (k,nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
     end loop;
   end Multitasked_Solve_Loop_by_QRLS;
 
@@ -522,6 +793,8 @@ package body Multitasked_Series_Linearization is
         put("calling multitasked solve next for k = ");
         put(k,1); put_line(" ...");
       end if;
+      Multitasked_Solve_Next_by_QRLS
+        (k,nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
     end loop;
   end Multitasked_Solve_Loop_by_QRLS;
 
