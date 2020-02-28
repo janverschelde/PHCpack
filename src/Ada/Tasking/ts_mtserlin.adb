@@ -268,7 +268,12 @@ procedure ts_mtserlin is
   begin
     if nbt > 1 then
       multstart := Ada.Calendar.Clock;
-      Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      if neq > nvr then
+        Multitasked_Solve_by_QRLS
+          (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+      else
+        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      end if;
       multstop := Ada.Calendar.Clock;
       mltelp := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
@@ -279,7 +284,12 @@ procedure ts_mtserlin is
       Ask_Yes_or_No(ans);
       if ans = 'y' then
         multstart := Ada.Calendar.Clock;
-        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        if neq > nvr then
+          Multitasked_Solve_by_QRLS
+            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        else
+          Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        end if;
         multstop := Ada.Calendar.Clock;
         mltelp := multstop - multstart;
         put_line("-> Elapsed time with one task :");
@@ -358,7 +368,12 @@ procedure ts_mtserlin is
   begin
     if nbt > 1 then
       multstart := Ada.Calendar.Clock;
-      Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      if neq > nvr then
+        Multitasked_Solve_by_QRLS
+          (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+      else
+        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      end if;
       multstop := Ada.Calendar.Clock;
       mltelp := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
@@ -369,7 +384,12 @@ procedure ts_mtserlin is
       Ask_Yes_or_No(ans);
       if ans = 'y' then
         multstart := Ada.Calendar.Clock;
-        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        if neq > nvr then
+          Multitasked_Solve_by_QRLS
+            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        else
+          Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        end if;
         multstop := Ada.Calendar.Clock;
         mltelp := multstop - multstart;
         put_line("-> Elapsed time with one task :");
@@ -448,7 +468,12 @@ procedure ts_mtserlin is
   begin
     if nbt > 1 then
       multstart := Ada.Calendar.Clock;
-      Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      if neq > nvr then
+        Multitasked_Solve_by_QRLS
+          (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+      else
+        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+      end if;
       multstop := Ada.Calendar.Clock;
       mltelp := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
@@ -459,7 +484,12 @@ procedure ts_mtserlin is
       Ask_Yes_or_No(ans);
       if ans = 'y' then
         multstart := Ada.Calendar.Clock;
-        Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        if neq > nvr then
+          Multitasked_Solve_by_QRLS
+            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        else
+          Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
+        end if;
         multstop := Ada.Calendar.Clock;
         mltelp := multstop - multstart;
         put_line("-> Elapsed time with one task :");
