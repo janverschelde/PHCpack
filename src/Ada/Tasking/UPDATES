@@ -1,3 +1,7 @@
+Sat 29 Feb 2020 : added separate vector of work space vectors to the
+  multitasked_series_linearization for the QRLS application, tested
+  by ts_mtserlin.
+
 Fri 28 Feb 2020 : adjusted ts_mtserlin so the QRLS with multitasking
   is called for the overdetermined problems.  Changes in ts_mtserlin
   and multitasked_series_linearization for the application of QRLS.

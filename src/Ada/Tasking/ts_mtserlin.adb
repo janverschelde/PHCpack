@@ -260,7 +260,9 @@ procedure ts_mtserlin is
     deg : constant integer32 := vm'last;
     sol : constant Standard_Complex_VecVecs.VecVec(0..deg)
         := Standard_Speelpenning_Convolutions.Linearized_Allocation(nvr,deg);
-    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..neq);
+    qraux,u1,u2,u3,u4,u5 : Standard_Complex_Vectors.Vector(1..neq);
+    w1,w2,w3,w4,w5 : Standard_Complex_VecVecs.VecVec(1..nbt)
+                   := Allocate_Work_Space(nbt,neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
     use Ada.Calendar;
@@ -299,7 +301,7 @@ procedure ts_mtserlin is
         seristart := Ada.Calendar.Clock;
         if neq > nvr then
           Standard_Series_Matrix_Solvers.Solve_by_QRLS
-            (vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+            (vm,vb,sol,qraux,u1,u2,u3,u4,u5,ipvt,info,wrk);
         else
           Standard_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
         end if;
@@ -360,7 +362,9 @@ procedure ts_mtserlin is
     deg : constant integer32 := vm'last;
     sol : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
         := DoblDobl_Speelpenning_Convolutions.Linearized_Allocation(nvr,deg);
-    qraux,w1,w2,w3,w4,w5 : DoblDobl_Complex_Vectors.Vector(1..neq);
+    qraux,u1,u2,u3,u4,u5 : DoblDobl_Complex_Vectors.Vector(1..neq);
+    w1,w2,w3,w4,w5 : DoblDobl_Complex_VecVecs.VecVec(1..nbt)
+                   := Allocate_Work_Space(nbt,neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
     use Ada.Calendar;
@@ -399,7 +403,7 @@ procedure ts_mtserlin is
         seristart := Ada.Calendar.Clock;
         if neq > nvr then
           DoblDobl_Series_Matrix_Solvers.Solve_by_QRLS
-            (vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+            (vm,vb,sol,qraux,u1,u2,u3,u4,u5,ipvt,info,wrk);
         else
           DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
         end if;
@@ -460,7 +464,9 @@ procedure ts_mtserlin is
     deg : constant integer32 := vm'last;
     sol : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
         := QuadDobl_Speelpenning_Convolutions.Linearized_Allocation(nvr,deg);
-    qraux,w1,w2,w3,w4,w5 : QuadDobl_Complex_Vectors.Vector(1..neq);
+    qraux,u1,u2,u3,u4,u5 : QuadDobl_Complex_Vectors.Vector(1..neq);
+    w1,w2,w3,w4,w5 : QuadDobl_Complex_VecVecs.VecVec(1..nbt)
+                   := Allocate_Work_Space(nbt,neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
 
     use Ada.Calendar;
@@ -499,7 +505,7 @@ procedure ts_mtserlin is
         seristart := Ada.Calendar.Clock;
         if neq > nvr then
           QuadDobl_Series_Matrix_Solvers.Solve_by_QRLS
-            (vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
+            (vm,vb,sol,qraux,u1,u2,u3,u4,u5,ipvt,info,wrk);
         else
           QuadDobl_Series_Matrix_Solvers.Solve_by_lufac(vm,vb,ipvt,info,wrk);
         end if;

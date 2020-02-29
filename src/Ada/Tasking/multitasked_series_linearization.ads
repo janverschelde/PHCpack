@@ -146,7 +146,7 @@ package Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 qraux : in Standard_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_VecVecs.VecVec;
                 wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Next_by_QRLS
@@ -155,7 +155,7 @@ package Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 qraux : in DoblDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_VecVecs.VecVec;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Next_by_QRLS
@@ -164,7 +164,7 @@ package Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 qraux : in QuadDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_VecVecs.VecVec;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
@@ -189,11 +189,16 @@ package Multitasked_Series_Linearization is
   --   x        x(k) for k in 0..idx-1 contains the solutoins;
   --   qraux    information to recover the orthogonal part,
   --            as output of Solve_Lead_by_QRLS;
-  --   w1       work space vector of range 1..n, n = number of rows;
-  --   w2       work space vector of range 1..n, n = number of rows;
-  --   w3       work space vector of range 1..n, n = number of rows;
-  --   w4       work space vector of range 1..n, n = number of rows;
-  --   w5       work space vector of range 1..n, n = number of rows.
+  --   w1       vector of work space vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows;
+  --   w2       vector of work space vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows;
+  --   w3       vector of work space vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows;
+  --   w4       vector of work space vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows;
+  --   w5       vector of work space vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows.
   --   wrk      work space as a vector of vectors of range 1..nbt,
   --            with every vector of range at least A(0)'range(1);
   --   output   flag to indicate the extra output is needed.
@@ -253,7 +258,7 @@ package Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 qraux : in Standard_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_VecVecs.VecVec;
                 wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Loop_by_QRLS
@@ -262,7 +267,7 @@ package Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 qraux : in DoblDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_VecVecs.VecVec;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Loop_by_QRLS
@@ -271,7 +276,7 @@ package Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 qraux : in QuadDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_VecVecs.VecVec;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
@@ -291,12 +296,16 @@ package Multitasked_Series_Linearization is
   --   b        the right hand side as a vector series;
   --   x        space allocated for the solution series;
   --   qraux    information to recover the orthogonal part;
-  --   w1       work space vector of range 1..n, n = number of rows;
-  --   w2       work space vector of range 1..n, n = number of rows;
-  --   w3       work space vector of range 1..n, n = number of rows;
-  --   w4       work space vector of range 1..n, n = number of rows;
-  --   w5       work space vector of range 1..n, n = number of rows.
-  --            with every vector of range 1..dim, dim = A(0)'last(1);
+  --   w1       vector of work space vectors of range 1..nbt,
+  --            each work space vector of range 1..n, n = number of rows;
+  --   w2       vector of work space vectors of range 1..nbt,
+  --            each work space vector of range 1..n, n = number of rows;
+  --   w3       vector of work space vectors of range 1..nbt,
+  --            each work space vector of range 1..n, n = number of rows;
+  --   w4       vector of work space vectors of range 1..nbt,
+  --            each work space vector of range 1..n, n = number of rows;
+  --   w5       vector of work space vectors of range 1..nbt,
+  --            each work space vector of range 1..n, n = number of rows.
   --   wrk      work space as a vector of vectors of range 1..nbt,
   --            with every vector of range at least A(0)'range(1);
   --   output   if true, then intermediate output is written,
@@ -462,7 +471,7 @@ package Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 qraux : out Standard_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 wrk : in Standard_Complex_VecVecs.VecVec;
@@ -473,7 +482,7 @@ package Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 qraux : out DoblDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
@@ -484,7 +493,7 @@ package Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 qraux : out QuadDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
@@ -505,12 +514,17 @@ package Multitasked_Series_Linearization is
   --   A        the coefficient matrix as a matrix series;
   --   b        the right hand side as a vector series;
   --   x        space allocated for the solution series;
-  --   w1       work space vector of range 1..n, n = number of rows;
-  --   w2       work space vector of range 1..n, n = number of rows;
-  --   w3       work space vector of range 1..n, n = number of rows;
-  --   w4       work space vector of range 1..n, n = number of rows;
-  --   w5       work space vector of range 1..n, n = number of rows.
-  --   wrk      work space as a vector of vectors of range 1..nbt,
+  --   w1       work space vector of vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows;
+  --   w2       work space vector of vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows;
+  --   w3       work space vector of vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows;
+  --   w4       work space vector of vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows;
+  --   w5       work space vector of vectors of range 1..nbt,
+  --            each work space vector has range 1..n, n = number of rows.
+  --   wrk      work space as a vector has vectors of range 1..nbt,
   --            with every vector of range at least A(0)'range(1);
   --   output   if true, then intermediate output is written,
   --            otherwise, the multitasking remains silent.

@@ -560,7 +560,7 @@ package body Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 qraux : in Standard_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_VecVecs.VecVec;
                 wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true ) is
 
@@ -577,6 +577,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
+      lw1 : Standard_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : Standard_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : Standard_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : Standard_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : Standard_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -584,12 +589,14 @@ package body Multitasked_Series_Linearization is
         V_Subtract(nrows,b(myjob),wrk(i));
         myjob := myjob + n;
         if myjob = b'last + 1 then
-          w1 := b(idx).all;
-          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+          lw1.all := b(idx).all;
+          QRLS(lead.all,nrows,ncols,qraux,
+	        lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
-            w1 := b(idx).all;
-            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+            lw1.all := b(idx).all;
+            QRLS(lead.all,nrows,ncols,qraux,
+	         lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
 	  end if;
         end if;
       end loop;
@@ -605,6 +612,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
+      lw1 : Standard_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : Standard_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : Standard_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : Standard_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : Standard_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -618,15 +630,17 @@ package body Multitasked_Series_Linearization is
           put_line("Task " & Multitasking.to_string(i)
                            & " solves for x(" 
                            & Multitasking.to_string(idx) & ")");
-          w1 := b(idx).all;
-          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+          lw1.all := b(idx).all;
+          QRLS(lead.all,nrows,ncols,qraux,
+               lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
             put_line("Task " & Multitasking.to_string(i)
                              & " solves for x(" 
                              & Multitasking.to_string(idx) & ")");
-            w1 := b(idx).all;
-            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+            lw1.all := b(idx).all;
+            QRLS(lead.all,nrows,ncols,qraux,
+                 lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
 	  end if;
         end if;
       end loop;
@@ -651,7 +665,7 @@ package body Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 qraux : in DoblDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_VecVecs.VecVec;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true ) is
 
@@ -668,6 +682,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
+      lw1 : DoblDobl_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : DoblDobl_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : DoblDobl_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : DoblDobl_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : DoblDobl_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -675,12 +694,14 @@ package body Multitasked_Series_Linearization is
         V_Subtract(nrows,b(myjob),wrk(i));
         myjob := myjob + n;
         if myjob = b'last + 1 then
-          w1 := b(idx).all;
-          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+          lw1.all := b(idx).all;
+          QRLS(lead.all,nrows,ncols,qraux,
+	       lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
-            w1 := b(idx).all;
-            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+            lw1.all := b(idx).all;
+            QRLS(lead.all,nrows,ncols,qraux,
+	         lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
 	  end if;
         end if;
       end loop;
@@ -696,6 +717,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
+      lw1 : DoblDobl_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : DoblDobl_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : DoblDobl_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : DoblDobl_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : DoblDobl_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -709,15 +735,17 @@ package body Multitasked_Series_Linearization is
           put_line("Task " & Multitasking.to_string(i)
                            & " solves for x(" 
                            & Multitasking.to_string(idx) & ")");
-          w1 := b(idx).all;
-          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+          lw1.all := b(idx).all;
+          QRLS(lead.all,nrows,ncols,qraux,
+               lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
             put_line("Task " & Multitasking.to_string(i)
                              & " solves for x(" 
                              & Multitasking.to_string(idx) & ")");
-            w1 := b(idx).all;
-            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+            lw1.all := b(idx).all;
+            QRLS(lead.all,nrows,ncols,qraux,
+                 lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
 	  end if;
         end if;
       end loop;
@@ -742,7 +770,7 @@ package body Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 qraux : in QuadDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_VecVecs.VecVec;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true ) is
 
@@ -759,6 +787,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
+      lw1 : QuadDobl_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : QuadDobl_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : QuadDobl_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : QuadDobl_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : QuadDobl_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -766,12 +799,14 @@ package body Multitasked_Series_Linearization is
         V_Subtract(nrows,b(myjob),wrk(i));
         myjob := myjob + n;
         if myjob = b'last + 1 then
-          w1 := b(idx).all;
-          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+          lw1.all := b(idx).all;
+          QRLS(lead.all,nrows,ncols,qraux,
+	       lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
-            w1 := b(idx).all;
-            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+            lw1.all := b(idx).all;
+            QRLS(lead.all,nrows,ncols,qraux,
+                 lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
 	  end if;
         end if;
       end loop;
@@ -787,6 +822,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
+      lw1 : QuadDobl_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : QuadDobl_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : QuadDobl_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : QuadDobl_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : QuadDobl_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -800,15 +840,17 @@ package body Multitasked_Series_Linearization is
           put_line("Task " & Multitasking.to_string(i)
                            & " solves for x(" 
                            & Multitasking.to_string(idx) & ")");
-          w1 := b(idx).all;
-          QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+          lw1.all := b(idx).all;
+          QRLS(lead.all,nrows,ncols,qraux,
+               lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
             put_line("Task " & Multitasking.to_string(i)
                              & " solves for x(" 
                              & Multitasking.to_string(idx) & ")");
-            w1 := b(idx).all;
-            QRLS(lead.all,nrows,ncols,qraux,w1,w2,w3,x(idx).all,w4,w5,110,info);
+            lw1.all := b(idx).all;
+            QRLS(lead.all,nrows,ncols,qraux,
+                 lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
 	  end if;
         end if;
       end loop;
@@ -884,7 +926,7 @@ package body Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 qraux : in Standard_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_VecVecs.VecVec;
                 wrk : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true ) is
   begin
@@ -904,7 +946,7 @@ package body Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 qraux : in DoblDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_VecVecs.VecVec;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true ) is
   begin
@@ -924,7 +966,7 @@ package body Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 qraux : in QuadDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_VecVecs.VecVec;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true ) is
   begin
@@ -1094,7 +1136,7 @@ package body Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 qraux : out Standard_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 wrk : in Standard_Complex_VecVecs.VecVec;
@@ -1103,7 +1145,8 @@ package body Multitasked_Series_Linearization is
     use Standard_Series_Matrix_Solvers;
 
   begin
-    Solve_Lead_by_QRLS(A,b,x(0),qraux,w1,w2,w3,w4,w5,ipvt,info);
+    Solve_Lead_by_QRLS(A,b,x(0),qraux,
+      w1(1).all,w2(1).all,w3(1).all,w4(1).all,w5(1).all,ipvt,info);
     if info = 0 then
       Multitasked_Solve_Loop_by_QRLS
         (nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
@@ -1116,7 +1159,7 @@ package body Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 qraux : out DoblDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out DoblDobl_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 wrk : in DoblDobl_Complex_VecVecs.VecVec;
@@ -1125,7 +1168,8 @@ package body Multitasked_Series_Linearization is
     use DoblDobl_Series_Matrix_Solvers;
 
   begin
-    Solve_Lead_by_QRLS(A,b,x(0),qraux,w1,w2,w3,w4,w5,ipvt,info);
+    Solve_Lead_by_QRLS(A,b,x(0),qraux,
+      w1(1).all,w2(1).all,w3(1).all,w4(1).all,w5(1).all,ipvt,info);
     if info = 0 then
       Multitasked_Solve_Loop_by_QRLS
         (nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
@@ -1138,7 +1182,7 @@ package body Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 qraux : out QuadDobl_Complex_Vectors.Vector;
-                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out QuadDobl_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 wrk : in QuadDobl_Complex_VecVecs.VecVec;
@@ -1147,7 +1191,8 @@ package body Multitasked_Series_Linearization is
     use QuadDobl_Series_Matrix_Solvers;
 
   begin
-    Solve_Lead_by_QRLS(A,b,x(0),qraux,w1,w2,w3,w4,w5,ipvt,info);
+    Solve_Lead_by_QRLS(A,b,x(0),qraux,
+      w1(1).all,w2(1).all,w3(1).all,w4(1).all,w5(1).all,ipvt,info);
     if info = 0 then
       Multitasked_Solve_Loop_by_QRLS
         (nbt,A,b,x,qraux,w1,w2,w3,w4,w5,wrk,output);
