@@ -35,6 +35,9 @@ with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats;
 with QuadDobl_Complex_VecMats_io;        use QuadDobl_Complex_VecMats_io;
 with QuadDobl_Complex_Vectors_cv;
+with Standard_Complex_Singular_Values;
+with DoblDobl_Complex_Singular_Values;
+with QuadDobl_Complex_Singular_Values;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_Vectors_io; use Standard_Complex_Series_Vectors_io;
 with Standard_Complex_Series_Matrices;
@@ -221,7 +224,7 @@ procedure ts_mtserlin is
                 vb : in Standard_Complex_VecVecs.VecVec;
                 xs : in Standard_Complex_Vector_Series.Vector;
                 mltelp,serelp : in out Duration;
-                output,nbrotp : in boolean ) is
+                output,nbrotp,usesvd : in boolean ) is
 
   -- DESCRIPTION :
   --   Does a run with nbt tasks in double precision.
@@ -241,7 +244,8 @@ procedure ts_mtserlin is
   --   serelp   the previous elapsed wall clock time of a serial run;
   --   mltelp   the previous elapsed wall clock time of a multitasked run;
   --   output   if true, the multitasked run is verbose, else silent;
-  --   nbrotp   if true, all numbers are shown, else not.
+  --   nbrotp   if true, all numbers are shown, else not;
+  --   usesvd   if SVD has to be used when neq > nvr.
 
   -- ON RETURN :
   --   serelp   updated elapsed wall clock time of a serial run,
@@ -255,6 +259,8 @@ procedure ts_mtserlin is
     info : integer32;
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..neq);
+    ewrk : constant Standard_Complex_Vectors.Link_to_Vector
+         := new Standard_Complex_Vectors.Vector(1..neq);
     wks : constant Standard_Complex_VecVecs.VecVec(1..nbt)
         := Allocate_Work_Space(nbt,neq);
     deg : constant integer32 := vm'last;
@@ -264,6 +270,12 @@ procedure ts_mtserlin is
     w1,w2,w3,w4,w5 : Standard_Complex_VecVecs.VecVec(1..nbt)
                    := Allocate_Work_Space(nbt,neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    rcond : double_float;
+    mm : constant integer32
+       := Standard_Complex_Singular_Values.Min0(neq,nvr);
+    S : Standard_Complex_Vectors.Vector(1..mm);
+    U : Standard_Complex_Matrices.Matrix(1..neq,1..neq);
+    V : Standard_Complex_Matrices.Matrix(1..nvr,1..nvr);
 
     use Ada.Calendar;
 
@@ -271,8 +283,13 @@ procedure ts_mtserlin is
     if nbt > 1 then
       multstart := Ada.Calendar.Clock;
       if neq > nvr then
-        Multitasked_Solve_by_QRLS
-          (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        if usesvd then
+          Multitasked_Solve_by_SVD
+            (nbt,vm,vb,sol,S,U,V,info,rcond,ewrk,wks,output);
+        else
+          Multitasked_Solve_by_QRLS
+           (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        end if;
       else
         Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
       end if;
@@ -325,7 +342,7 @@ procedure ts_mtserlin is
                 vb : in DoblDobl_Complex_VecVecs.VecVec;
                 xs : in DoblDobl_Complex_Vector_Series.Vector;
                 mltelp,serelp : in out Duration;
-                output,nbrotp : in boolean ) is
+                output,nbrotp,usesvd : in boolean ) is
 
   -- DESCRIPTION :
   --   Does a run with nbt tasks in double double precision.
@@ -343,7 +360,8 @@ procedure ts_mtserlin is
   --   serelp   the previous elapsed wall clock time of a serial run;
   --   mltelp   the previous elapsed wall clock time of a multitasked run;
   --   output   if true, the multitasked run is verbose, else silent;
-  --   nbrotp   if true, all numbers are shown, else not.
+  --   nbrotp   if true, all numbers are shown, else not;
+  --   usesvd   if SVD has to be used when neq > nvr.
 
   -- ON RETURN :
   --   serelp   updated elapsed wall clock time of a serial run,
@@ -357,6 +375,8 @@ procedure ts_mtserlin is
     info : integer32;
     wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector(1..neq);
+    ewrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
+         := new DoblDobl_Complex_Vectors.Vector(1..neq);
     wks : constant DoblDobl_Complex_VecVecs.VecVec(1..nbt)
         := Allocate_Work_Space(nbt,neq);
     deg : constant integer32 := vm'last;
@@ -366,6 +386,12 @@ procedure ts_mtserlin is
     w1,w2,w3,w4,w5 : DoblDobl_Complex_VecVecs.VecVec(1..nbt)
                    := Allocate_Work_Space(nbt,neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    rcond : double_double;
+    mm : constant integer32
+       := DoblDobl_Complex_Singular_Values.Min0(neq,nvr);
+    S : DoblDobl_Complex_Vectors.Vector(1..mm);
+    U : DoblDobl_Complex_Matrices.Matrix(1..neq,1..neq);
+    V : DoblDobl_Complex_Matrices.Matrix(1..nvr,1..nvr);
 
     use Ada.Calendar;
 
@@ -373,8 +399,13 @@ procedure ts_mtserlin is
     if nbt > 1 then
       multstart := Ada.Calendar.Clock;
       if neq > nvr then
-        Multitasked_Solve_by_QRLS
-          (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        if usesvd then
+          Multitasked_Solve_by_SVD
+            (nbt,vm,vb,sol,S,U,V,info,rcond,ewrk,wks,output);
+        else
+          Multitasked_Solve_by_QRLS
+            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        end if;
       else
         Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
       end if;
@@ -427,7 +458,7 @@ procedure ts_mtserlin is
                 vb : in QuadDobl_Complex_VecVecs.VecVec;
                 xs : in QuadDobl_Complex_Vector_Series.Vector;
                 mltelp,serelp : in out Duration;
-                output,nbrotp : in boolean ) is
+                output,nbrotp,usesvd : in boolean ) is
 
   -- DESCRIPTION :
   --   Does a run with nbt tasks in double double precision.
@@ -445,7 +476,8 @@ procedure ts_mtserlin is
   --   serelp   the previous elapsed wall clock time of a serial run;
   --   mltelp   the previous elapsed wall clock time of a multitasked run;
   --   output   if true, the multitasked run is verbose, else silent;
-  --   nbrotp   if true, all numbers are shown, else not.
+  --   nbrotp   if true, all numbers are shown, else not;
+  --   usesvd   if SVD has to be used when neq > nvr.
 
   -- ON RETURN :
   --   serelp   updated elapsed wall clock time of a serial run,
@@ -461,6 +493,8 @@ procedure ts_mtserlin is
         := new QuadDobl_Complex_Vectors.Vector(1..neq);
     wks : constant QuadDobl_Complex_VecVecs.VecVec(1..nbt)
         := Allocate_Work_Space(nbt,neq);
+    ewrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
+         := new QuadDobl_Complex_Vectors.Vector(1..neq);
     deg : constant integer32 := vm'last;
     sol : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
         := QuadDobl_Speelpenning_Convolutions.Linearized_Allocation(nvr,deg);
@@ -468,6 +502,12 @@ procedure ts_mtserlin is
     w1,w2,w3,w4,w5 : QuadDobl_Complex_VecVecs.VecVec(1..nbt)
                    := Allocate_Work_Space(nbt,neq);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    rcond : quad_double;
+    mm : constant integer32
+       := QuadDobl_Complex_Singular_Values.Min0(neq,nvr);
+    S : QuadDobl_Complex_Vectors.Vector(1..mm);
+    U : QuadDobl_Complex_Matrices.Matrix(1..neq,1..neq);
+    V : QuadDobl_Complex_Matrices.Matrix(1..nvr,1..nvr);
 
     use Ada.Calendar;
 
@@ -475,8 +515,13 @@ procedure ts_mtserlin is
     if nbt > 1 then
       multstart := Ada.Calendar.Clock;
       if neq > nvr then
-        Multitasked_Solve_by_QRLS
-          (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        if usesvd then
+          Multitasked_Solve_by_SVD
+            (nbt,vm,vb,sol,S,U,V,info,rcond,ewrk,wks,output);
+        else
+          Multitasked_Solve_by_QRLS
+            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+        end if;
       else
         Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
       end if;
@@ -523,6 +568,39 @@ procedure ts_mtserlin is
     put("Sum of errors : "); put(err,3); new_line;
   end QuadDobl_Run;
 
+  procedure Prompt_for_Flags
+              ( neq,nvr : in integer32; 
+                nbrotp,otp,usesvd : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for output flags and whether SVD has
+  --   to be used when the number of equations is larger than
+  --   the number of variables.
+
+  -- ON ENTRY :
+  --   neq      number of equations;
+  --   nvr      number of variables.
+
+  -- ON RETURN :
+  --   nbropt   output of numbeers;
+  --   opt      output during multitasking;
+  --   usesvd   if SVD needs to be used when neq > nvr.
+
+    ans : character;
+
+  begin
+    put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
+    nbrotp := (ans = 'y');
+    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
+    otp := (ans = 'y');
+    if neq > nvr then
+      put("Use singular value decomposition ? (y/n) "); Ask_Yes_or_No(ans);
+      usesvd := (ans = 'y');
+    else
+      usesvd := false;
+    end if;
+  end Prompt_for_Flags;
+
   procedure Standard_Test ( m,n,d : in integer32 ) is
 
   -- DESCRIPTION :
@@ -553,15 +631,11 @@ procedure ts_mtserlin is
     bscff : constant Standard_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
     bswrk : Standard_Complex_VecVecs.VecVec(bscff'range);
-    ans : character;
-    nbrotp,otp : boolean;
+    nbrotp,otp,usesvd : boolean;
     mult_elapsed,seri_elapsed : Duration := 0.0;
 
   begin
-    put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
-    nbrotp := (ans = 'y');
-    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
-    otp := (ans = 'y');
+    Prompt_for_Flags(m,n,nbrotp,otp,usesvd);
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
       put_line("The coefficient matrices : "); put(vmbackup);
@@ -578,7 +652,8 @@ procedure ts_mtserlin is
       exit when (nbt = 0);
       Standard_Complex_VecMats.Copy(vmbackup,vm);
       Standard_Complex_VecVecs.Copy(bscff,bswrk);
-      Standard_Run(nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp);
+      Standard_Run
+        (nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp,usesvd);
     end loop;
   end Standard_Test;
 
@@ -612,15 +687,11 @@ procedure ts_mtserlin is
     bscff : constant DoblDobl_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.DoblDobl_Series_Coefficients(bs);
     bswrk : DoblDobl_Complex_VecVecs.VecVec(bscff'range);
-    ans : character;
-    nbrotp,otp : boolean;
+    nbrotp,otp,usesvd : boolean;
     mult_elapsed,seri_elapsed : Duration := 0.0;
 
   begin
-    put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
-    nbrotp := (ans = 'y');
-    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
-    otp := (ans = 'y');
+    Prompt_for_Flags(m,n,nbrotp,otp,usesvd);
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
       put_line("The coefficient matrices : "); put(vmbackup);
@@ -637,7 +708,8 @@ procedure ts_mtserlin is
       exit when (nbt = 0);
       DoblDobl_Complex_VecMats.Copy(vmbackup,vm);
       DoblDobl_Complex_VecVecs.Copy(bscff,bswrk);
-      DoblDobl_Run(nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp);
+      DoblDobl_Run
+        (nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp,usesvd);
     end loop;
   end DoblDobl_Test;
 
@@ -671,15 +743,11 @@ procedure ts_mtserlin is
     bscff : constant QuadDobl_Complex_VecVecs.VecVec(0..bs.deg)
           := Series_Coefficient_Vectors.QuadDobl_Series_Coefficients(bs);
     bswrk : QuadDobl_Complex_VecVecs.VecVec(bscff'range);
-    ans : character;
-    nbrotp,otp : boolean;
+    nbrotp,otp,usesvd : boolean;
     seri_elapsed,mult_elapsed : Duration := 0.0;
 
   begin
-    put("Output of numbers ? (y/n) "); Ask_Yes_or_No(ans);
-    nbrotp := (ans = 'y');
-    put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
-    otp := (ans = 'y');
+    Prompt_for_Flags(m,n,nbrotp,otp,usesvd);
     if nbrotp then
       put_line("The coefficients of the matrix series :"); put(As);
       put_line("The coefficient matrices : "); put(vmbackup);
@@ -696,7 +764,8 @@ procedure ts_mtserlin is
       exit when (nbt = 0);
       QuadDobl_Complex_VecMats.Copy(vmbackup,vm);
       QuadDobl_Complex_VecVecs.Copy(bscff,bswrk);
-      QuadDobl_Run(nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp);
+      QuadDobl_Run
+        (nbt,m,n,vm,bswrk,xs,mult_elapsed,seri_elapsed,otp,nbrotp,usesvd);
     end loop;
   end QuadDobl_Test;
 
