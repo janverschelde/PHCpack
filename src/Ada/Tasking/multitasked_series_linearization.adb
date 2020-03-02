@@ -5,10 +5,13 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_QR_Least_Squares;  use Standard_Complex_QR_Least_Squares;
+with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with DoblDobl_Complex_QR_Least_Squares;  use DoblDobl_Complex_QR_Least_Squares;
+with DoblDobl_Complex_Singular_Values;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_QR_Least_Squares;  use QuadDobl_Complex_QR_Least_Squares;
+with QuadDobl_Complex_Singular_Values;
 with Standard_Series_Matrix_Solvers;
 with DoblDobl_Series_Matrix_Solvers;
 with QuadDobl_Series_Matrix_Solvers;
@@ -577,11 +580,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
-      lw1 : Standard_Complex_Vectors.Link_to_Vector := w1(i);
-      lw2 : Standard_Complex_Vectors.Link_to_Vector := w2(i);
-      lw3 : Standard_Complex_Vectors.Link_to_Vector := w3(i);
-      lw4 : Standard_Complex_Vectors.Link_to_Vector := w4(i);
-      lw5 : Standard_Complex_Vectors.Link_to_Vector := w5(i);
+      lw1 : constant Standard_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : constant Standard_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : constant Standard_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : constant Standard_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : constant Standard_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -591,7 +594,7 @@ package body Multitasked_Series_Linearization is
         if myjob = b'last + 1 then
           lw1.all := b(idx).all;
           QRLS(lead.all,nrows,ncols,qraux,
-	        lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
+               lw1.all,lw2.all,lw3.all,x(idx).all,lw4.all,lw5.all,110,info);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
             lw1.all := b(idx).all;
@@ -612,11 +615,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
-      lw1 : Standard_Complex_Vectors.Link_to_Vector := w1(i);
-      lw2 : Standard_Complex_Vectors.Link_to_Vector := w2(i);
-      lw3 : Standard_Complex_Vectors.Link_to_Vector := w3(i);
-      lw4 : Standard_Complex_Vectors.Link_to_Vector := w4(i);
-      lw5 : Standard_Complex_Vectors.Link_to_Vector := w5(i);
+      lw1 : constant Standard_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : constant Standard_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : constant Standard_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : constant Standard_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : constant Standard_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -682,11 +685,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
-      lw1 : DoblDobl_Complex_Vectors.Link_to_Vector := w1(i);
-      lw2 : DoblDobl_Complex_Vectors.Link_to_Vector := w2(i);
-      lw3 : DoblDobl_Complex_Vectors.Link_to_Vector := w3(i);
-      lw4 : DoblDobl_Complex_Vectors.Link_to_Vector := w4(i);
-      lw5 : DoblDobl_Complex_Vectors.Link_to_Vector := w5(i);
+      lw1 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -717,11 +720,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
-      lw1 : DoblDobl_Complex_Vectors.Link_to_Vector := w1(i);
-      lw2 : DoblDobl_Complex_Vectors.Link_to_Vector := w2(i);
-      lw3 : DoblDobl_Complex_Vectors.Link_to_Vector := w3(i);
-      lw4 : DoblDobl_Complex_Vectors.Link_to_Vector := w4(i);
-      lw5 : DoblDobl_Complex_Vectors.Link_to_Vector := w5(i);
+      lw1 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : constant DoblDobl_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -787,11 +790,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
-      lw1 : QuadDobl_Complex_Vectors.Link_to_Vector := w1(i);
-      lw2 : QuadDobl_Complex_Vectors.Link_to_Vector := w2(i);
-      lw3 : QuadDobl_Complex_Vectors.Link_to_Vector := w3(i);
-      lw4 : QuadDobl_Complex_Vectors.Link_to_Vector := w4(i);
-      lw5 : QuadDobl_Complex_Vectors.Link_to_Vector := w5(i);
+      lw1 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -822,11 +825,11 @@ package body Multitasked_Series_Linearization is
 
       myjob : integer32 := idx+i-1;
       info : integer32;
-      lw1 : QuadDobl_Complex_Vectors.Link_to_Vector := w1(i);
-      lw2 : QuadDobl_Complex_Vectors.Link_to_Vector := w2(i);
-      lw3 : QuadDobl_Complex_Vectors.Link_to_Vector := w3(i);
-      lw4 : QuadDobl_Complex_Vectors.Link_to_Vector := w4(i);
-      lw5 : QuadDobl_Complex_Vectors.Link_to_Vector := w5(i);
+      lw1 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w1(i);
+      lw2 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w2(i);
+      lw3 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w3(i);
+      lw4 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w4(i);
+      lw5 : constant QuadDobl_Complex_Vectors.Link_to_Vector := w5(i);
 
     begin
       while myjob <= b'last loop
@@ -868,6 +871,267 @@ package body Multitasked_Series_Linearization is
       delay 0.001;
     end loop;
   end Multitasked_Solve_Next_by_QRLS;
+
+  procedure Multitasked_Solve_Next_by_SVD
+              ( idx,nbt : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                S : in Standard_Complex_Vectors.Vector;
+                U,V : in Standard_Complex_Matrices.Matrix;
+                wrk : in Standard_Complex_VecVecs.VecVec;
+                output : in boolean := true ) is
+
+    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    lead : constant Standard_Complex_Matrices.Link_to_Matrix := A(0);
+    nrows : constant integer32 := lead'last(1);
+    ncols : constant integer32 := lead'last(2);
+
+    use Standard_Complex_Singular_Values;
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, without intermediate output.
+
+      myjob : integer32 := idx+i-1;
+
+    begin
+      while myjob <= b'last loop
+        MV_Multiply(nrows,ncols,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(nrows,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          x(idx).all := Solve(U,V,S,b(idx).all);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            x(idx).all := Solve(U,V,S,b(idx).all);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, with intermediate output.
+
+      myjob : integer32 := idx+i-1;
+
+    begin
+      while myjob <= b'last loop
+        put_line("Task " & Multitasking.to_string(i)
+                         & " updates b(" 
+                         & Multitasking.to_string(myjob) & ")");
+        MV_Multiply(nrows,ncols,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(nrows,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          put_line("Task " & Multitasking.to_string(i)
+                           & " solves for x(" 
+                           & Multitasking.to_string(idx) & ")");
+          x(idx).all := Solve(U,V,S,b(idx).all);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            put_line("Task " & Multitasking.to_string(i)
+                             & " solves for x(" 
+                             & Multitasking.to_string(idx) & ")");
+            x(idx).all := Solve(U,V,S,b(idx).all);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks finish
+    while not Multitasking.all_true(nbt,done) loop
+      delay 0.001;
+    end loop;
+  end Multitasked_Solve_Next_by_SVD;
+
+  procedure Multitasked_Solve_Next_by_SVD
+              ( idx,nbt : in integer32;
+                A : in DoblDobl_Complex_VecMats.VecMat;
+                b : in DoblDobl_Complex_VecVecs.VecVec;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                S : in DoblDobl_Complex_Vectors.Vector;
+                U,V : in DoblDobl_Complex_Matrices.Matrix;
+                wrk : in DoblDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true ) is
+
+    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    lead : constant DoblDobl_Complex_Matrices.Link_to_Matrix := A(0);
+    nrows : constant integer32 := lead'last(1);
+    ncols : constant integer32 := lead'last(2);
+
+    use DoblDobl_Complex_Singular_Values;
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, without intermediate output.
+
+      myjob : integer32 := idx+i-1;
+
+    begin
+      while myjob <= b'last loop
+        MV_Multiply(nrows,ncols,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(nrows,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          x(idx).all := Solve(U,V,S,b(idx).all);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            x(idx).all := Solve(U,V,S,b(idx).all);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, with intermediate output.
+
+      myjob : integer32 := idx+i-1;
+
+    begin
+      while myjob <= b'last loop
+        put_line("Task " & Multitasking.to_string(i)
+                         & " updates b(" 
+                         & Multitasking.to_string(myjob) & ")");
+        MV_Multiply(nrows,ncols,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(nrows,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          put_line("Task " & Multitasking.to_string(i)
+                           & " solves for x(" 
+                           & Multitasking.to_string(idx) & ")");
+          x(idx).all := Solve(U,V,S,b(idx).all);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            put_line("Task " & Multitasking.to_string(i)
+                             & " solves for x(" 
+                             & Multitasking.to_string(idx) & ")");
+            x(idx).all := Solve(U,V,S,b(idx).all);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks finish
+    while not Multitasking.all_true(nbt,done) loop
+      delay 0.001;
+    end loop;
+  end Multitasked_Solve_Next_by_SVD;
+
+  procedure Multitasked_Solve_Next_by_SVD
+              ( idx,nbt : in integer32;
+                A : in QuadDobl_Complex_VecMats.VecMat;
+                b : in QuadDobl_Complex_VecVecs.VecVec;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                S : in QuadDobl_Complex_Vectors.Vector;
+                U,V : in QuadDobl_Complex_Matrices.Matrix;
+                wrk : in QuadDobl_Complex_VecVecs.VecVec;
+                output : in boolean := true ) is
+
+    done : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    lead : constant QuadDobl_Complex_Matrices.Link_to_Matrix := A(0);
+    nrows : constant integer32 := lead'last(1);
+    ncols : constant integer32 := lead'last(2);
+
+    use QuadDobl_Complex_Singular_Values;
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, without intermediate output.
+
+      myjob : integer32 := idx+i-1;
+
+    begin
+      while myjob <= b'last loop
+        MV_Multiply(nrows,ncols,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(nrows,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          x(idx).all := Solve(U,V,S,b(idx).all);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            x(idx).all := Solve(U,V,S,b(idx).all);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will update a right hand side vector,
+    --   or solve for component idx, with intermediate output.
+
+      myjob : integer32 := idx+i-1;
+
+    begin
+      while myjob <= b'last loop
+        put_line("Task " & Multitasking.to_string(i)
+                         & " updates b(" 
+                         & Multitasking.to_string(myjob) & ")");
+        MV_Multiply(nrows,ncols,A(myjob-idx+1),x(idx-1),wrk(i));
+        V_Subtract(nrows,b(myjob),wrk(i));
+        myjob := myjob + n;
+        if myjob = b'last + 1 then
+          put_line("Task " & Multitasking.to_string(i)
+                           & " solves for x(" 
+                           & Multitasking.to_string(idx) & ")");
+          x(idx).all := Solve(U,V,S,b(idx).all);
+        elsif myjob > b'last then
+          if i = 1 and (n > b'last-idx) then
+            put_line("Task " & Multitasking.to_string(i)
+                             & " solves for x(" 
+                             & Multitasking.to_string(idx) & ")");
+            x(idx).all := Solve(U,V,S,b(idx).all);
+	  end if;
+        end if;
+      end loop;
+      done(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
+  begin
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks finish
+    while not Multitasking.all_true(nbt,done) loop
+      delay 0.001;
+    end loop;
+  end Multitasked_Solve_Next_by_SVD;
 
   procedure Multitasked_Solve_Loop_by_lusolve
               ( nbt : in integer32;
@@ -995,6 +1259,7 @@ package body Multitasked_Series_Linearization is
         put("calling multitasked solve next for k = ");
         put(k,1); put_line(" ...");
       end if;
+      Multitasked_Solve_Next_by_SVD(k,nbt,A,b,x,S,U,V,wrk,output);
     end loop;
   end Multitasked_Solve_Loop_by_SVD;
 
@@ -1013,6 +1278,7 @@ package body Multitasked_Series_Linearization is
         put("calling multitasked solve next for k = ");
         put(k,1); put_line(" ...");
       end if;
+      Multitasked_Solve_Next_by_SVD(k,nbt,A,b,x,S,U,V,wrk,output);
     end loop;
   end Multitasked_Solve_Loop_by_SVD;
 
@@ -1031,6 +1297,7 @@ package body Multitasked_Series_Linearization is
         put("calling multitasked solve next for k = ");
         put(k,1); put_line(" ...");
       end if;
+      Multitasked_Solve_Next_by_SVD(k,nbt,A,b,x,S,U,V,wrk,output);
     end loop;
   end Multitasked_Solve_Loop_by_SVD;
 

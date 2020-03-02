@@ -1,3 +1,6 @@
+Mon 2 Mar 2020 : added procedures to multitasked_series_linearization to
+  make the SVD solver work for one task.
+
 Sun 1 Mar 2020 : added tests on the SVD in ts_mtserlin.
 
 Sat 29 Feb 2020 : added separate vector of work space vectors to the
