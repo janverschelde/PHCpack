@@ -274,8 +274,12 @@ procedure ts_mtserlin is
     mm : constant integer32
        := Standard_Complex_Singular_Values.Min0(neq,nvr);
     S : Standard_Complex_Vectors.Vector(1..mm);
-    U : Standard_Complex_Matrices.Matrix(1..neq,1..neq);
+    U,Ut : Standard_Complex_Matrices.Matrix(1..neq,1..neq);
     V : Standard_Complex_Matrices.Matrix(1..nvr,1..nvr);
+    utb : constant Standard_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,neq);
+    sub : constant Standard_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,nvr);
 
     use Ada.Calendar;
 
@@ -285,7 +289,7 @@ procedure ts_mtserlin is
       if neq > nvr then
         if usesvd then
           Multitasked_Solve_by_SVD
-            (nbt,vm,vb,sol,S,U,V,info,rcond,ewrk,wks,output);
+            (nbt,vm,vb,sol,S,U,Ut,V,info,rcond,ewrk,wks,utb,sub,output);
         else
           Multitasked_Solve_by_QRLS
            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
@@ -304,8 +308,13 @@ procedure ts_mtserlin is
       if ans = 'y' then
         multstart := Ada.Calendar.Clock;
         if neq > nvr then
-          Multitasked_Solve_by_QRLS
-            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+          if usesvd then
+            Multitasked_Solve_by_SVD
+              (nbt,vm,vb,sol,S,U,Ut,V,info,rcond,ewrk,wks,utb,sub,output);
+          else
+            Multitasked_Solve_by_QRLS
+              (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+          end if;
         else
           Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
         end if;
@@ -390,8 +399,12 @@ procedure ts_mtserlin is
     mm : constant integer32
        := DoblDobl_Complex_Singular_Values.Min0(neq,nvr);
     S : DoblDobl_Complex_Vectors.Vector(1..mm);
-    U : DoblDobl_Complex_Matrices.Matrix(1..neq,1..neq);
+    U,Ut : DoblDobl_Complex_Matrices.Matrix(1..neq,1..neq);
     V : DoblDobl_Complex_Matrices.Matrix(1..nvr,1..nvr);
+    utb : constant DoblDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,neq);
+    sub : constant DoblDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,nvr);
 
     use Ada.Calendar;
 
@@ -401,7 +414,7 @@ procedure ts_mtserlin is
       if neq > nvr then
         if usesvd then
           Multitasked_Solve_by_SVD
-            (nbt,vm,vb,sol,S,U,V,info,rcond,ewrk,wks,output);
+            (nbt,vm,vb,sol,S,U,Ut,V,info,rcond,ewrk,wks,utb,sub,output);
         else
           Multitasked_Solve_by_QRLS
             (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
@@ -420,8 +433,13 @@ procedure ts_mtserlin is
       if ans = 'y' then
         multstart := Ada.Calendar.Clock;
         if neq > nvr then
-          Multitasked_Solve_by_QRLS
-            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+          if usesvd then
+            Multitasked_Solve_by_SVD
+              (nbt,vm,vb,sol,S,U,Ut,V,info,rcond,ewrk,wks,utb,sub,output);
+          else
+            Multitasked_Solve_by_QRLS
+              (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+          end if;
         else
           Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
         end if;
@@ -506,8 +524,12 @@ procedure ts_mtserlin is
     mm : constant integer32
        := QuadDobl_Complex_Singular_Values.Min0(neq,nvr);
     S : QuadDobl_Complex_Vectors.Vector(1..mm);
-    U : QuadDobl_Complex_Matrices.Matrix(1..neq,1..neq);
+    U,Ut : QuadDobl_Complex_Matrices.Matrix(1..neq,1..neq);
     V : QuadDobl_Complex_Matrices.Matrix(1..nvr,1..nvr);
+    utb : constant QuadDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,neq);
+    sub : constant QuadDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Allocate_Work_Space(nbt,nvr);
 
     use Ada.Calendar;
 
@@ -517,7 +539,7 @@ procedure ts_mtserlin is
       if neq > nvr then
         if usesvd then
           Multitasked_Solve_by_SVD
-            (nbt,vm,vb,sol,S,U,V,info,rcond,ewrk,wks,output);
+            (nbt,vm,vb,sol,S,U,Ut,V,info,rcond,ewrk,wks,utb,sub,output);
         else
           Multitasked_Solve_by_QRLS
             (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
@@ -536,8 +558,13 @@ procedure ts_mtserlin is
       if ans = 'y' then
         multstart := Ada.Calendar.Clock;
         if neq > nvr then
-          Multitasked_Solve_by_QRLS
-            (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+          if usesvd then
+            Multitasked_Solve_by_SVD
+              (nbt,vm,vb,sol,S,U,Ut,V,info,rcond,ewrk,wks,utb,sub,output);
+          else
+            Multitasked_Solve_by_QRLS
+              (nbt,vm,vb,sol,qraux,w1,w2,w3,w4,w5,ipvt,info,wks,output);
+          end if;
         else
           Multitasked_Solve_by_lufac(nbt,vm,vb,ipvt,info,wks,output);
         end if;

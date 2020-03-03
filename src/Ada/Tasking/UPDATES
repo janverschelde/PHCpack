@@ -1,3 +1,6 @@
+Tue 3 Mar 2020 : added work space vectors the solve_by_SVD procedures in
+  multitasked_series_linearization, tested by ts_mtserlin.
+
 Mon 2 Mar 2020 : added procedures to multitasked_series_linearization to
   make the SVD solver work for one task.  Applied the new procedure Solve
   in the SVD solver to have all local vectors as work space vectors.

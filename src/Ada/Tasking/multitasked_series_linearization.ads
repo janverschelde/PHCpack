@@ -214,8 +214,8 @@ package Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 S : in Standard_Complex_Vectors.Vector;
-                U,V : in Standard_Complex_Matrices.Matrix;
-                wrk : in Standard_Complex_VecVecs.VecVec;
+                Ut,V : in Standard_Complex_Matrices.Matrix;
+                wrk,utb,sub : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Next_by_SVD
               ( idx,nbt : in integer32;
@@ -223,8 +223,8 @@ package Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 S : in DoblDobl_Complex_Vectors.Vector;
-                U,V : in DoblDobl_Complex_Matrices.Matrix;
-                wrk : in DoblDobl_Complex_VecVecs.VecVec;
+                Ut,V : in DoblDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Next_by_SVD
               ( idx,nbt : in integer32;
@@ -232,8 +232,8 @@ package Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 S : in QuadDobl_Complex_Vectors.Vector;
-                U,V : in QuadDobl_Complex_Matrices.Matrix;
-                wrk : in QuadDobl_Complex_VecVecs.VecVec;
+                Ut,V : in QuadDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
   -- DESCRIPTION :
@@ -257,10 +257,14 @@ package Multitasked_Series_Linearization is
   --            for k >= idx: b(k) is the (updated) right hand side vector;
   --   x        x(k) for k in 0..idx-1 contains the solutoins;
   --   S        vector of singular values;
-  --   U        matrix U in the SVD;
+  --   Ut       the conjugate transpose of the U matrix in the SVD;
   --   V        matrix V in the SVD;
   --   wrk      work space as a vector of vectors of range 1..nbt,
   --            with every vector of range at least A(0)'range(1);
+  --   utb      work space as a vector of vectors of range 1..nbt,
+  --            for the product of Ut with b, of range U'range(2);
+  --   sub      work space as a vector of vectors of range 1..nbt,
+  --            for the product with v, ofr ange v'range(1);
   --   output   flag to indicate the extra output is needed.
 
   -- ON RETURN :
@@ -380,8 +384,8 @@ package Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 S : in Standard_Complex_Vectors.Vector;
-                U,V : in Standard_Complex_Matrices.Matrix;
-                wrk : in Standard_Complex_VecVecs.VecVec;
+                Ut,V : in Standard_Complex_Matrices.Matrix;
+                wrk,utb,sub : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Loop_by_SVD
               ( nbt : in integer32;
@@ -389,8 +393,8 @@ package Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 S : in DoblDobl_Complex_Vectors.Vector;
-                U,V : in DoblDobl_Complex_Matrices.Matrix;
-                wrk : in DoblDobl_Complex_VecVecs.VecVec;
+                Ut,V : in DoblDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_Loop_by_SVD
               ( nbt : in integer32;
@@ -398,8 +402,8 @@ package Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 S : in QuadDobl_Complex_Vectors.Vector;
-                U,V : in QuadDobl_Complex_Matrices.Matrix;
-                wrk : in QuadDobl_Complex_VecVecs.VecVec;
+                Ut,V : in QuadDobl_Complex_Matrices.Matrix;
+                wrk,utb,sub : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
   -- DESCRIPTION :
@@ -417,8 +421,13 @@ package Multitasked_Series_Linearization is
   --   A        the coefficient matrix as a matrix series;
   --   b        the right hand side as a vector series;
   --   x        lead x(0) of the solution has been computed;
-  --   S,U,V    see the output of Solve_Lead_by_SVD;
+  --   S,V      see the output of Solve_Lead_by_SVD;
+  --   Ut       the conjugate transpose of the U matrix of the SVD;
   --   wrk      work space vector for the next coefficient computation;
+  --   utb      work space as a vector of vectors of range 1..nbt,
+  --            for the product of Ut with b, of range U'range(2);
+  --   sub      work space as a vector of vectors of range 1..nbt,
+  --            for the product with v, ofr ange v'range(1);
   --   output   if true, then intermediate output is written,
   --            otherwise, the multitasking remains silent.
 
@@ -605,10 +614,10 @@ package Multitasked_Series_Linearization is
                 b : in Standard_Complex_VecVecs.VecVec;
                 x : in Standard_Complex_VecVecs.VecVec;
                 S : out Standard_Complex_Vectors.Vector;
-                U,V : out Standard_Complex_Matrices.Matrix;
+                U,Ut,V : out Standard_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
-                wrkv : in Standard_Complex_VecVecs.VecVec;
+                wrkv,utb,sub : in Standard_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_by_SVD
               ( nbt : in integer32;
@@ -616,10 +625,10 @@ package Multitasked_Series_Linearization is
                 b : in DoblDobl_Complex_VecVecs.VecVec;
                 x : in DoblDobl_Complex_VecVecs.VecVec;
                 S : out DoblDobl_Complex_Vectors.Vector;
-                U,V : out DoblDobl_Complex_Matrices.Matrix;
+                U,Ut,V : out DoblDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_double;
                 ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-                wrkv : in DoblDobl_Complex_VecVecs.VecVec;
+                wrkv,utb,sub : in DoblDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
   procedure Multitasked_Solve_by_SVD
               ( nbt : in integer32;
@@ -627,10 +636,10 @@ package Multitasked_Series_Linearization is
                 b : in QuadDobl_Complex_VecVecs.VecVec;
                 x : in QuadDobl_Complex_VecVecs.VecVec;
                 S : out QuadDobl_Complex_Vectors.Vector;
-                U,V : out QuadDobl_Complex_Matrices.Matrix;
+                U,Ut,V : out QuadDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out quad_double;
                 ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-                wrkv : in QuadDobl_Complex_VecVecs.VecVec;
+                wrkv,utb,sub : in QuadDobl_Complex_VecVecs.VecVec;
                 output : in boolean := true );
 
   -- DESCRIPTION :
@@ -651,6 +660,10 @@ package Multitasked_Series_Linearization is
   --   ewrk     work space allocated for the SVD of the lead A(0);
   --   wrkv     work space vectors for the next coefficient computation,
   --            of range 1..nbt, one for every task;
+  --   utb      work space as a vector of vectors of range 1..nbt,
+  --            for the product of Ut with b, of range U'range(2);
+  --   sub      work space as a vector of vectors of range 1..nbt,
+  --            for the product with v, ofr ange v'range(1);
   --   output   if true, then intermediate output is written,
   --            otherwise, the multitasking remains silent.
 
@@ -658,6 +671,7 @@ package Multitasked_Series_Linearization is
   --   A        A(0) modified as work space in SVD computation;
   --   b        modified right hand side vectors after back substitution;
   --   S,U,V    see the output of Solve_Lead_by_SVD;
+  --   Ut       the conjugate transpose of U, used in the solver;
   --   info     see the output of Solve_Lead_by_SVD;
   --   rcond    inverse condition number computed from the singular
   --            values of the lead coefficient of A;
