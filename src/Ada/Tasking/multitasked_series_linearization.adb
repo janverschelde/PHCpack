@@ -886,6 +886,10 @@ package body Multitasked_Series_Linearization is
     lead : constant Standard_Complex_Matrices.Link_to_Matrix := A(0);
     nrows : constant integer32 := lead'last(1);
     ncols : constant integer32 := lead'last(2);
+    Ut : constant Standard_Complex_Matrices.Matrix(u'range(2),u'range(1))
+       := Standard_Complex_Singular_Values.Conjugate_Transpose(U);
+    utb : Standard_Complex_Vectors.Vector(U'range(2));
+    sub : Standard_Complex_Vectors.Vector(V'range(1));
 
     use Standard_Complex_Singular_Values;
 
@@ -903,10 +907,12 @@ package body Multitasked_Series_Linearization is
         V_Subtract(nrows,b(myjob),wrk(i));
         myjob := myjob + n;
         if myjob = b'last + 1 then
-          x(idx).all := Solve(U,V,S,b(idx).all);
+          -- x(idx).all := Solve(U,V,S,b(idx).all);
+          Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
-            x(idx).all := Solve(U,V,S,b(idx).all);
+            -- x(idx).all := Solve(U,V,S,b(idx).all);
+            Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
 	  end if;
         end if;
       end loop;
@@ -934,13 +940,15 @@ package body Multitasked_Series_Linearization is
           put_line("Task " & Multitasking.to_string(i)
                            & " solves for x(" 
                            & Multitasking.to_string(idx) & ")");
-          x(idx).all := Solve(U,V,S,b(idx).all);
+          -- x(idx).all := Solve(U,V,S,b(idx).all);
+          Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
             put_line("Task " & Multitasking.to_string(i)
                              & " solves for x(" 
                              & Multitasking.to_string(idx) & ")");
-            x(idx).all := Solve(U,V,S,b(idx).all);
+            -- x(idx).all := Solve(U,V,S,b(idx).all);
+            Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
 	  end if;
         end if;
       end loop;
@@ -973,6 +981,10 @@ package body Multitasked_Series_Linearization is
     lead : constant DoblDobl_Complex_Matrices.Link_to_Matrix := A(0);
     nrows : constant integer32 := lead'last(1);
     ncols : constant integer32 := lead'last(2);
+    Ut : constant DoblDobl_Complex_Matrices.Matrix(u'range(2),u'range(1))
+       := DoblDobl_Complex_Singular_Values.Conjugate_Transpose(U);
+    utb : DoblDobl_Complex_Vectors.Vector(U'range(2));
+    sub : DoblDobl_Complex_Vectors.Vector(V'range(1));
 
     use DoblDobl_Complex_Singular_Values;
 
@@ -990,10 +1002,12 @@ package body Multitasked_Series_Linearization is
         V_Subtract(nrows,b(myjob),wrk(i));
         myjob := myjob + n;
         if myjob = b'last + 1 then
-          x(idx).all := Solve(U,V,S,b(idx).all);
+          -- x(idx).all := Solve(U,V,S,b(idx).all);
+          Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
-            x(idx).all := Solve(U,V,S,b(idx).all);
+            -- x(idx).all := Solve(U,V,S,b(idx).all);
+            Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
 	  end if;
         end if;
       end loop;
@@ -1021,13 +1035,15 @@ package body Multitasked_Series_Linearization is
           put_line("Task " & Multitasking.to_string(i)
                            & " solves for x(" 
                            & Multitasking.to_string(idx) & ")");
-          x(idx).all := Solve(U,V,S,b(idx).all);
+          -- x(idx).all := Solve(U,V,S,b(idx).all);
+          Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
             put_line("Task " & Multitasking.to_string(i)
                              & " solves for x(" 
                              & Multitasking.to_string(idx) & ")");
-            x(idx).all := Solve(U,V,S,b(idx).all);
+            -- x(idx).all := Solve(U,V,S,b(idx).all);
+            Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
 	  end if;
         end if;
       end loop;
@@ -1060,6 +1076,10 @@ package body Multitasked_Series_Linearization is
     lead : constant QuadDobl_Complex_Matrices.Link_to_Matrix := A(0);
     nrows : constant integer32 := lead'last(1);
     ncols : constant integer32 := lead'last(2);
+    Ut : constant QuadDobl_Complex_Matrices.Matrix(u'range(2),u'range(1))
+       := QuadDobl_Complex_Singular_Values.Conjugate_Transpose(U);
+    utb : QuadDobl_Complex_Vectors.Vector(U'range(2));
+    sub : QuadDobl_Complex_Vectors.Vector(V'range(1));
 
     use QuadDobl_Complex_Singular_Values;
 
@@ -1077,10 +1097,12 @@ package body Multitasked_Series_Linearization is
         V_Subtract(nrows,b(myjob),wrk(i));
         myjob := myjob + n;
         if myjob = b'last + 1 then
-          x(idx).all := Solve(U,V,S,b(idx).all);
+          -- x(idx).all := Solve(U,V,S,b(idx).all);
+          Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
-            x(idx).all := Solve(U,V,S,b(idx).all);
+            -- x(idx).all := Solve(U,V,S,b(idx).all);
+            Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
 	  end if;
         end if;
       end loop;
@@ -1108,13 +1130,15 @@ package body Multitasked_Series_Linearization is
           put_line("Task " & Multitasking.to_string(i)
                            & " solves for x(" 
                            & Multitasking.to_string(idx) & ")");
-          x(idx).all := Solve(U,V,S,b(idx).all);
+          -- x(idx).all := Solve(U,V,S,b(idx).all);
+          Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
         elsif myjob > b'last then
           if i = 1 and (n > b'last-idx) then
             put_line("Task " & Multitasking.to_string(i)
                              & " solves for x(" 
                              & Multitasking.to_string(idx) & ")");
-            x(idx).all := Solve(U,V,S,b(idx).all);
+            -- x(idx).all := Solve(U,V,S,b(idx).all);
+            Solve(Ut,V,S,b(idx).all,utb,sub,x(idx).all);
 	  end if;
         end if;
       end loop;
