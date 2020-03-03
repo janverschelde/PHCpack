@@ -119,4 +119,24 @@ package Standard_Complex_Singular_Values is
   --   or in case tol is provided, singular values s(i) for which
   --   AbsVal(s(i)) < tol are ignored.
 
+  procedure Solve ( ut,v : in Matrix; s,b : in Vector;
+                    utb,sub : in out Vector; sol : out Vector );
+
+  -- DESCRIPTION :
+  --   Version of Solve with all local variables as vectors passed
+  --   as workspace vectors.
+
+  -- ON ENTRY :
+  --   ut       the conjugated transpose of the U matrix in the SVD;
+  --   v        the V matrix in the SVD;
+  --   s        vector of singular values;
+  --   b        the righthand side vector of the linear system;
+  --   utb      work space for the product ut*b, of range u'range(2);
+  --   sub      work space vector of range v(1)'range.
+
+  -- ON RETURN :
+  --   utb      equals ut*b;
+  --   sub      used as work space;
+  --   sol      the solution equals v*sub.
+
 end Standard_Complex_Singular_Values;

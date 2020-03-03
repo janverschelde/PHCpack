@@ -1022,6 +1022,19 @@ package body Standard_Complex_Singular_Values is
     return v*sub;
   end Solve;
 
+  procedure Solve ( ut,v : in Matrix; s,b : in Vector;
+                    utb,sub : in out Vector; sol : out Vector ) is
+  begin
+    utb := ut*b;
+    sub := (v'range(1) => Create(0.0));
+    for i in s'range loop
+      exit when (AbsVal(s(i)) + 1.0 = 1.0);
+      exit when ((i > sub'last) or (i > utb'last));
+      sub(i) := utb(i)/s(i);
+    end loop;
+    sol := v*sub;
+  end Solve;
+
   function Solve ( u,v : Matrix; s,b : Vector; tol : double_float )
                  return Vector is
 

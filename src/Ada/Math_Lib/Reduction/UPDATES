@@ -1,3 +1,6 @@
+Mon 2 Mar 2020 : added another solve() to *_complex_singular_values.a* for
+  a thread safe application in the multitasked solvers.
+
 Wed 19 Dec 2018 : defined the max norm for complex matrices in the packages
   {standard,dobldobl,quaddobl}_complex_matrix_norms.
 
