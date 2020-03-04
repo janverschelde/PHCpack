@@ -1,3 +1,5 @@
+Wed 4 Mar 2020 : modifications to ts_padepred.adb for compiler warnings.
+
 Sun 23 Feb 2020 : fixed dimensions for the SVD in ts_sernewcnv.adb.
 
 Sat 22 Feb 2020 : fixed stop criterion in newton_power_convolutions.adb.
