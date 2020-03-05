@@ -34,6 +34,22 @@ package body System_Convolution_Circuits is
     return true;
   end Is_Zero;
 
+  function Is_Zero ( d : Standard_CSeries_Polynomials.Degrees )
+                   return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all entries of d are zero,
+  --   return false otherwise.
+
+  begin
+    for i in d'range loop
+      if d(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
   function Is_Zero ( d : DoblDobl_Complex_Polynomials.Degrees )
                    return boolean is
 
@@ -50,7 +66,39 @@ package body System_Convolution_Circuits is
     return true;
   end Is_Zero;
 
+  function Is_Zero ( d : DoblDobl_CSeries_Polynomials.Degrees )
+                   return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all entries of d are zero,
+  --   return false otherwise.
+
+  begin
+    for i in d'range loop
+      if d(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
   function Is_Zero ( d : QuadDobl_Complex_Polynomials.Degrees )
+                   return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all entries of d are zero,
+  --   return false otherwise.
+
+  begin
+    for i in d'range loop
+      if d(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
+  function Is_Zero ( d : QuadDobl_CSeries_Polynomials.Degrees )
                    return boolean is
 
   -- DESCRIPTION :
@@ -381,7 +429,7 @@ package body System_Convolution_Circuits is
       use Standard_CSeries_Polynomials;
 
     begin
-      if t.dg /= zero then
+      if not Is_Zero(t.dg) then
         idx := idx + 1;
         res.cff(idx) := new Standard_Complex_Vectors.Vector'(t.cf.cff);
         declare
@@ -438,7 +486,7 @@ package body System_Convolution_Circuits is
       use DoblDobl_CSeries_Polynomials;
 
     begin
-      if t.dg /= zero then
+      if not Is_Zero(t.dg) then
         idx := idx + 1;
         res.cff(idx) := new DoblDobl_Complex_Vectors.Vector'(t.cf.cff);
         declare
@@ -495,7 +543,7 @@ package body System_Convolution_Circuits is
       use QuadDobl_CSeries_Polynomials;
 
     begin
-      if t.dg /= zero then
+      if not Is_Zero(t.dg) then
         idx := idx + 1;
         res.cff(idx) := new QuadDobl_Complex_Vectors.Vector'(t.cf.cff);
         declare

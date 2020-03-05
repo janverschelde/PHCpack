@@ -1,3 +1,6 @@
+Thu 5 Mar 2020 : bug fix in system_convolution_circuits.adb, added Is_Zero
+  functions for the degrees of cseries polynomials.
+
 Mon 24 Feb 2020 : for circuits coming from overdetermined systems, an
   extra parameter is needed to represent a system, updated 
   generic_speelpenning_convolutions and system_convolution_circuits.adb.
