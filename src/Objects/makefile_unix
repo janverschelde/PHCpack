@@ -863,6 +863,10 @@ ts_padepred:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_padepred.adb \
               -o $(BIN)/ts_padepred
 
+ts_padepcnv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_padepcnv.adb \
+              -o $(BIN)/ts_padepcnv
+
 ts_jacrabin:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_jacrabin.adb \
               -o $(BIN)/ts_jacrabin

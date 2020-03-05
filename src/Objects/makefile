@@ -746,7 +746,7 @@ ts_vmpnewt:
 test_curves: ts_durker ts_extrapol ts_extrapts \
              ts_sernew ts_sersol ts_serhom ts_serpred ts_serpath ts_serpade \
              ts_padepred ts_jacrabin ts_nxtpadsol ts_hesscrit ts_hesspred \
-             ts_predstep ts_sernewcnv ts_ratapp
+             ts_predstep ts_sernewcnv ts_ratapp ts_padepcnv
 
 ts_durker:
 	make -f $(MAKEFILE) ts_durker
@@ -777,6 +777,9 @@ ts_serpade:
 
 ts_padepred:
 	make -f $(MAKEFILE) ts_padepred
+
+ts_padepcnv:
+	make -f $(MAKEFILE) ts_padepcnv
 
 ts_jacrabin:
 	make -f $(MAKEFILE) ts_jacrabin
