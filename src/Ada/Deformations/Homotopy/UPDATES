@@ -1,3 +1,6 @@
+Thu 5 Mar 2020 : new package artificial_parameter_homotopy_io to prompt
+  user for the data in an artificial parameter homotopy.
+
 Sat 17 Aug 2019 : added affine coordinate transformations for solutions in
   multi-homogeneous coordinates, to multi_projective_transformations.
   Extended multi_projective_transformations and affine_transformations

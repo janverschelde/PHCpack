@@ -1,4 +1,4 @@
-Homotopies, scaling and reduction in PHCv2.4.72
+Homotopies, scaling and reduction in PHCv2.4.76
 
 The Creators in the package Homotopy allow more accessibility constants for
 the Cheater's homotopy.  A multiprecision version of the homotopy package
@@ -70,4 +70,6 @@ ts_poldrop                         : interactive test on dropping
 random_conditioned_homotopies      : homotopy with middle conditioned system
 varbprec_homotopy                  : variable precision homotopy
 ts_vmphom                          : test variable precision homotopies
+------------------------------------------------------------------------------
+artificial_parameter_homotopy_io   : prompts for artificial-parameter htpy
 ------------------------------------------------------------------------------

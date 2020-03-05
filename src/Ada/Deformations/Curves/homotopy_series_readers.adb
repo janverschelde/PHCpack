@@ -4,18 +4,13 @@ with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
 with Standard_Integer_Vectors;
-with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
-with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
-with Standard_System_and_Solutions_io;
 with DoblDobl_Homotopy;
 with DoblDobl_Coefficient_Homotopy;
-with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Homotopy;
 with QuadDobl_Coefficient_Homotopy;
-with QuadDobl_System_and_Solutions_io;
+with Artificial_Parameter_Homotopy_io;
 with Projective_Transformations;         use Projective_Transformations;
 with Multi_Projective_Transformations;   use Multi_Projective_Transformations;
 with Homogenization;                     use Homogenization;
@@ -204,11 +199,7 @@ package body Homotopy_Series_Readers is
     ans : character;
 
   begin
-    new_line;
-    put_line("Reading the target system ..."); get(target);
-    new_line;
-    put_line("Reading the start system and its solutions ...");
-    Standard_System_and_Solutions_io.get(start,sols);
+    Artificial_Parameter_Homotopy_io.get(target,start,sols);
     if not rabin then
       if homcrd then
         Standard_Projective_Transformation(target,start,sols);
@@ -256,11 +247,7 @@ package body Homotopy_Series_Readers is
     ans : character;
 
   begin
-    new_line;
-    put_line("Reading the target system ..."); get(target);
-    new_line;
-    put_line("Reading the start system and its solutions ...");
-    DoblDobl_System_and_Solutions_io.get(start,sols);
+    Artificial_Parameter_Homotopy_io.get(target,start,sols);
     if not rabin then
       if homcrd
        then DoblDobl_Projective_Transformation(target,start,sols);
@@ -308,11 +295,7 @@ package body Homotopy_Series_Readers is
     ans : character;
 
   begin
-    new_line;
-    put_line("Reading the target system ..."); get(target);
-    new_line;
-    put_line("Reading the start system ...");
-    QuadDobl_System_and_Solutions_io.get(start,sols);
+    Artificial_Parameter_Homotopy_io.get(target,start,sols);
     if not rabin then
       if homcrd
        then QuadDobl_Projective_Transformation(target,start,sols);
