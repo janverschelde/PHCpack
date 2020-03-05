@@ -1,4 +1,6 @@
 Wed 4 Mar 2020 : modifications to ts_padepred.adb for compiler warnings.
+  New test procedures ts_padepcnv to develop the Pade predictor based
+  on convolution circuits.
 
 Sun 23 Feb 2020 : fixed dimensions for the SVD in ts_sernewcnv.adb.
 
