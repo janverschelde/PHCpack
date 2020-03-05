@@ -646,7 +646,7 @@ ts_mixres:
 
 test_homotopy: ts_quad ts_drivscal ts_scal ts_drivred ts_homotopy \
                ts_homline ts_linsol ts_qdhom ts_poldrop ts_evalhomt ts_vmphom \
-               ts_scalplane ts_multproj
+               ts_scalplane ts_multproj ts_homcnv
 
 ts_drivscal:
 	make -f $(MAKEFILE) ts_drivscal
@@ -683,6 +683,9 @@ ts_scalplane:
 
 ts_multproj:
 	make -f $(MAKEFILE) ts_multproj
+
+ts_homcnv:
+	make -f $(MAKEFILE) ts_homcnv
 
 # Test programs for the Deformations/Newton library :
 

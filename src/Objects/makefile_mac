@@ -812,6 +812,10 @@ ts_multproj:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_multproj.adb \
               -o $(BIN)/ts_multproj
 
+ts_homcnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_homcnv.adb \
+              -o $(BIN)/ts_homcnv
+
 # Test programs for the Deformations/Newton library :
 
 ts_mreseva:
