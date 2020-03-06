@@ -1,3 +1,6 @@
+Fri 6 Mar 2020 : added more functions to system_convolution_circuits,
+  to return the system structures with the allocated work space.
+
 Thu 5 Mar 2020 : bug fix in system_convolution_circuits.adb, added Is_Zero
   functions for the degrees of cseries polynomials.
 

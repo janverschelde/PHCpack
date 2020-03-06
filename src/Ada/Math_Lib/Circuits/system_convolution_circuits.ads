@@ -85,6 +85,36 @@ package System_Convolution_Circuits is
   --   Returns the convolution circuits representation of the polynomials in p,
   --   in double, double double, or quad double precision.
 
+  function Make_Convolution_System
+             ( p : Standard_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return Standard_Speelpenning_Convolutions.System;
+  function Make_Convolution_System
+             ( p : Standard_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return Standard_Speelpenning_Convolutions.Link_to_System;
+  function Make_Convolution_System
+             ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return DoblDobl_Speelpenning_Convolutions.System;
+  function Make_Convolution_System
+             ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_System;
+  function Make_Convolution_System
+             ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return QuadDobl_Speelpenning_Convolutions.System;
+  function Make_Convolution_System
+             ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return QuadDobl_Speelpenning_Convolutions.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Wraps the making of the convolution circuits of the polynomials in p,
+  --   allocating all work space, for degree d of the power series,
+  --   in double, double double, or quad double precision.
+
   function to_double
 	     ( c : DoblDobl_Speelpenning_Convolutions.Circuit )
 	     return Standard_Speelpenning_Convolutions.Circuit;

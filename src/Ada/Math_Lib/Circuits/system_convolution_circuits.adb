@@ -669,6 +669,117 @@ package body System_Convolution_Circuits is
     return res;
   end Make_Convolution_Circuits;
 
+  function Make_Convolution_System
+             ( p : Standard_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return Standard_Speelpenning_Convolutions.System is
+
+    use Standard_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    c : constant Circuits(p'range) := Make_Convolution_Circuits(p);
+    dim : constant integer32 := c(c'first).dim;
+    deg : constant integer32 := integer32(d);
+    res : constant System(neq,neq+1,dim,dim+1,deg) := Create(c,dim,deg);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
+             ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return DoblDobl_Speelpenning_Convolutions.System is
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    c : constant Circuits(p'range) := Make_Convolution_Circuits(p);
+    dim : constant integer32 := c(c'first).dim;
+    deg : constant integer32 := integer32(d);
+    res : constant System(neq,neq+1,dim,dim+1,deg) := Create(c,dim,deg);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
+             ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return QuadDobl_Speelpenning_Convolutions.System is
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    c : constant Circuits(p'range) := Make_Convolution_Circuits(p);
+    dim : constant integer32 := c(c'first).dim;
+    deg : constant integer32 := integer32(d);
+    res : constant System(neq,neq+1,dim,dim+1,deg) := Create(c,dim,deg);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
+             ( p : Standard_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return Standard_Speelpenning_Convolutions.Link_to_System is
+
+    use Standard_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    nvr : constant natural32
+        := Standard_CSeries_Polynomials.Number_of_Unknowns(p(p'first));
+    dim : constant integer32 := integer32(nvr);
+    deg : constant integer32 := integer32(d);
+    s : constant System(neq,neq+1,dim,dim+1,deg)
+      := Make_Convolution_System(p,d);
+    res : constant Link_to_System := new System'(s);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
+             ( p : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_System is
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    nvr : constant natural32
+        := DoblDobl_CSeries_Polynomials.Number_of_Unknowns(p(p'first));
+    dim : constant integer32 := integer32(nvr);
+    deg : constant integer32 := integer32(d);
+    s : constant System(neq,neq+1,dim,dim+1,deg)
+      := Make_Convolution_System(p,d);
+    res : constant Link_to_System := new System'(s);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
+             ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return QuadDobl_Speelpenning_Convolutions.Link_to_System is
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    nvr : constant natural32
+        := QuadDobl_CSeries_Polynomials.Number_of_Unknowns(p(p'first));
+    dim : constant integer32 := integer32(nvr);
+    deg : constant integer32 := integer32(d);
+    s : constant System(neq,neq+1,dim,dim+1,deg)
+      := Make_Convolution_System(p,d);
+    res : constant Link_to_System := new System'(s);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
   function to_double
 	     ( c : DoblDobl_Speelpenning_Convolutions.Circuit )
 	     return Standard_Speelpenning_Convolutions.Circuit is
