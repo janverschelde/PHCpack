@@ -8,12 +8,9 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
-with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Complex_VecVecs;
 with Standard_Integer_VecVecs_io;
-with Standard_Complex_Matrices;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with Standard_Homotopy;
@@ -24,10 +21,10 @@ with Series_and_Homotopies;
 with Test_Series_Predictors;
 with Standard_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
-with Newton_Convolutions;
 with Newton_Power_Convolutions;          use Newton_Power_Convolutions;
 with Convergence_Radius_Estimates;
 with Standard_Rational_Approximations;
+with Standard_Predictor_Convolutions;
 
 procedure ts_padepcnv is
 
@@ -46,13 +43,13 @@ procedure ts_padepcnv is
     use Standard_Complex_Solutions;
     use Standard_Rational_Approximations;
     use Standard_Speelpenning_Convolutions;
+    use Standard_Predictor_Convolutions;
   
+    neq : constant integer32 := chom.crc'last;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     info,maxit,nbrit : integer32 := 0; 
     tol : constant double_float := 1.0E-12;
-    wrk : Standard_Complex_Vectors.Link_to_Vector
-        := new Standard_Complex_Vectors.Vector(chom.crc'range);
     absdx : double_float;
     fail : boolean;
     ans : character;
@@ -62,49 +59,35 @@ procedure ts_padepcnv is
     for k in 1..Length_Of(sols) loop
       ls := Head_Of(tmp);
       declare
-        scf : constant Standard_Complex_VecVecs.VecVec(1..ls.n)
-            := Newton_Convolutions.Series_Coefficients(ls.v,deg);
-        ipvt : Standard_Integer_Vectors.Vector(1..ls.n);
+        prd : Link_to_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
         z : Standard_Complex_Numbers.Complex_Number;
         r,err : double_float;
-        rpiv : Standard_Integer_Vectors.Vector(1..dendeg);
-        mat : Standard_Complex_Matrices.Matrix(1..dendeg,1..dendeg);
-        rhs : Standard_Complex_Vectors.Vector(1..dendeg);
-        knum : constant Standard_Complex_Vectors.Vector(0..numdeg)
-             := (0..numdeg => Standard_Complex_Numbers.Create(0.0));
-        kden : constant Standard_Complex_Vectors.Vector(0..dendeg)
-             := (0..dendeg => Standard_Complex_Numbers.Create(0.0));
-        numcff : Standard_Complex_VecVecs.VecVec(1..ls.n);
-        dencff : Standard_Complex_VecVecs.VecVec(1..ls.n);
         eva : Standard_Complex_Vectors.Vector(1..ls.n);
         res : Standard_Complex_Vectors.Vector(chom.crc'range);
       begin
         LU_Newton_Steps
-          (standard_output,chom,scf,maxit,nbrit,tol,absdx,fail,
-           info,ipvt,wrk,false);
-        Convergence_Radius_Estimates.Fabry(scf,z,r,err,fail);
+          (standard_output,chom,prd.sol,maxit,nbrit,tol,absdx,fail,
+           info,prd.newtpiv,prd.wrk,false);
+        Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
         if not fail then
           put("z : "); put(z); 
           put("  error estimate :"); put(err,3); new_line;
           put("estimated radius :"); put(r,3); new_line;
         end if;
-        for k in scf'range loop
-          numcff(k) := new Standard_Complex_Vectors.Vector'(knum);
-          dencff(k) := new Standard_Complex_Vectors.Vector'(kden);
-        end loop;
-        Pade_Vector(numdeg,dendeg,scf,numcff,dencff,mat,rhs,rpiv,info,false);
-        Evaluate(numcff,dencff,r/2.0,eva);
+        Pade_Vector(numdeg,dendeg,prd.sol,prd.numcff,prd.dencff,
+                    prd.mat,prd.rhs,prd.padepiv,info,false);
+        Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
         z := Standard_Complex_Numbers.Create(r/2.0);
         res := Eval(chom.crc,eva,z);
         put_line("Evaluation of the predicted solution : ");
         put_line(res);
+        Clear(prd);
       end;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Tail_Of(tmp);
     end loop;
-    Standard_Complex_Vectors.Clear(wrk);
   end Standard_Prediction;
 
   procedure Standard_Test_Prediction

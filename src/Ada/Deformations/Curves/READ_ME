@@ -79,6 +79,7 @@ test_pade_predictors             : procedure to help testing Pade predictors
 jacobian_rabinowitsch_trick      : application of the Rabinowitsch trick
 ts_jacrabin                      : test application of Rabinowitsch trick
 ts_padepred                      : test the Pade predictors
+standard_predictor_convolutions  : predictor for convolution homotopies
 ts_padepcnv                      : Pade predictors for convolution circuits
 ts_predstep                      : test setting of step size
 -------------------------------------------------------------------------------
