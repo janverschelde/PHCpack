@@ -1,3 +1,6 @@
+Fri 6 Mar 2020 : updates to the ts_padepcnv to develop a predictor
+  for homotopies given by convolution circuits.
+
 Thu 5 Mar 2020 : updated homotopy_series_readers.adb to use the get
   procedures of the new package artificial_parameter_homotopy_io.
 
