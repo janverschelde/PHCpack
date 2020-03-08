@@ -61,7 +61,7 @@ procedure ts_padepcnv is
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_Predictor;
                 maxit : in integer32; tol : in double_float;
-                fail : out boolean ) is
+                fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd,
@@ -79,10 +79,17 @@ procedure ts_padepcnv is
     info,nbrit : integer32;
 
   begin
-    LU_Newton_Steps
-      (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-       info,prd.newtpiv,prd.wrk,false);
-    Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    if output then
+      LU_Newton_Steps
+        (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    else
+      LU_Newton_Steps
+        (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
+    end if;
     if not fail then
       put("z : "); put(z); 
       put("  error estimate :"); put(err,3); new_line;
@@ -101,7 +108,7 @@ procedure ts_padepcnv is
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_Predictor;
                 maxit : in integer32; tol : in double_float;
-                fail : out boolean ) is
+                fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd,
@@ -119,10 +126,17 @@ procedure ts_padepcnv is
     info,nbrit : integer32;
 
   begin
-    LU_Newton_Steps
-      (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-       info,prd.newtpiv,prd.wrk,false);
-    Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    if output then
+      LU_Newton_Steps
+        (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    else
+      LU_Newton_Steps
+        (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
+    end if;
     if not fail then
       put("z : "); put(z); 
       put("  error estimate :"); put(err,3); new_line;
@@ -141,7 +155,7 @@ procedure ts_padepcnv is
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_Predictor;
                 maxit : in integer32; tol : in double_float;
-                fail : out boolean ) is
+                fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd,
@@ -159,10 +173,17 @@ procedure ts_padepcnv is
     info,nbrit : integer32;
 
   begin
-    LU_Newton_Steps
-      (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-       info,prd.newtpiv,prd.wrk,false);
-    Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    if output then
+      LU_Newton_Steps
+        (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    else
+      LU_Newton_Steps
+        (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
+    end if;
     if not fail then
       put("z : "); put(z); 
       put("  error estimate :"); put(err,3); new_line;
@@ -194,17 +215,19 @@ procedure ts_padepcnv is
     ls : Link_to_Solution;
     maxit : integer32 := 0; 
     tol : constant double_float := 1.0E-12;
-    fail : boolean;
+    fail,otp : boolean;
     ans : character;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
+    put("Output during Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
+    otp := (ans = 'y');
     for k in 1..Length_Of(sols) loop
       ls := Head_Of(tmp);
       declare
         prd : Link_to_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
       begin
-        Standard_Prediction(chom,prd,maxit,tol,fail);
+        Standard_Prediction(chom,prd,maxit,tol,fail,otp);
         Clear(prd);
       end;
       put("Continue to the next solution ? (y/n) ");
@@ -231,17 +254,19 @@ procedure ts_padepcnv is
     ls : Link_to_Solution;
     maxit : integer32 := 0; 
     tol : constant double_float := 1.0E-24;
-    fail : boolean;
+    fail,otp : boolean;
     ans : character;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
+    put("Output during Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
+    otp := (ans = 'y');
     for k in 1..Length_Of(sols) loop
       ls := Head_Of(tmp);
       declare
         prd : Link_to_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
       begin
-        DoblDobl_Prediction(chom,prd,maxit,tol,fail);
+        DoblDobl_Prediction(chom,prd,maxit,tol,fail,otp);
         Clear(prd);
       end;
       put("Continue to the next solution ? (y/n) ");
@@ -268,17 +293,19 @@ procedure ts_padepcnv is
     ls : Link_to_Solution;
     maxit : integer32 := 0; 
     tol : constant double_float := 1.0E-48;
-    fail : boolean;
+    fail,otp : boolean;
     ans : character;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
+    put("Output during Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
+    otp := (ans = 'y');
     for k in 1..Length_Of(sols) loop
       ls := Head_Of(tmp);
       declare
         prd : Link_to_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
       begin
-        QuadDobl_Prediction(chom,prd,maxit,tol,fail);
+        QuadDobl_Prediction(chom,prd,maxit,tol,fail,otp);
         Clear(prd);
       end;
       put("Continue to the next solution ? (y/n) ");
