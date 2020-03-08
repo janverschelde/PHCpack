@@ -1,5 +1,6 @@
 Sat 7 Mar 2020 : new package standard_predictor_convolutions, tested
-  by ts_padepcnv.
+  by ts_padepcnv.  Added {dobldobl,quaddobl}_predictor_convolutions,
+  with tests in ts_padepcnv.
 
 Fri 6 Mar 2020 : updates to the ts_padepcnv to develop a predictor
   for homotopies given by convolution circuits.
