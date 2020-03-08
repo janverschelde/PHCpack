@@ -314,6 +314,7 @@ package body Generic_Speelpenning_Convolutions is
 
   begin
     for i in values'range loop
+      exit when (i > inc'last);
       values(i) := values(i) + inc(i);
     end loop;
   end Update;
@@ -899,10 +900,15 @@ package body Generic_Speelpenning_Convolutions is
 
   procedure EvalDiff ( c : in Circuit; x : in VecVecs.VecVec;
                        pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec ) is
+
+    use Vectors;
+
   begin
     Speel(c.xps,c.idx,c.fac,c.cff,x,c.forward,c.backward,c.cross,yd,
           c.wrk,c.acc,pwt);
-    Update(yd(yd'last),c.cst);
+    if c.cst /= null
+     then Update(yd(yd'last),c.cst);
+    end if;
   end EvalDiff;
 
   procedure EvalDiff ( c : in Circuits; x : in VecVecs.VecVec;

@@ -478,7 +478,7 @@ package body System_Convolution_Circuits is
     res.idx := Exponent_Indices.Exponent_Index(res.xps);
     res.fac := Exponent_Indices.Factor_Index(res.xps);
     res.cst := new Standard_Complex_Vectors.Vector'(cst.cff);
-    deg := res.cst'last;
+    deg := res.cff(1)'last;
     res.forward := Allocate_Coefficients(dim-1,deg);
     res.backward := Allocate_Coefficients(dim-2,deg);
     res.cross := Allocate_Coefficients(dim-2,deg);
@@ -535,7 +535,7 @@ package body System_Convolution_Circuits is
     res.idx := Exponent_Indices.Exponent_Index(res.xps);
     res.fac := Exponent_Indices.Factor_Index(res.xps);
     res.cst := new DoblDobl_Complex_Vectors.Vector'(cst.cff);
-    deg := res.cst'last;
+    deg := res.cff(1)'last;
     res.forward := Allocate_Coefficients(dim-1,deg);
     res.backward := Allocate_Coefficients(dim-2,deg);
     res.cross := Allocate_Coefficients(dim-2,deg);
@@ -592,7 +592,7 @@ package body System_Convolution_Circuits is
     res.idx := Exponent_Indices.Exponent_Index(res.xps);
     res.fac := Exponent_Indices.Factor_Index(res.xps);
     res.cst := new QuadDobl_Complex_Vectors.Vector'(cst.cff);
-    deg := res.cst'last;
+    deg := res.cff(1)'last;
     res.forward := Allocate_Coefficients(dim-1,deg);
     res.backward := Allocate_Coefficients(dim-2,deg);
     res.cross := Allocate_Coefficients(dim-2,deg);

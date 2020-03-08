@@ -1,4 +1,6 @@
 Sat 7 Mar 2020 : bug fix in system_convolution_circuits.adb.
+  Another bug fix in system_convolution_circuits.adb and also bug fixedl
+  in the Update() of generic_speelpenning_convolutions.adb.
 
 Fri 6 Mar 2020 : added more functions to system_convolution_circuits,
   to return the system structures with the allocated work space.
