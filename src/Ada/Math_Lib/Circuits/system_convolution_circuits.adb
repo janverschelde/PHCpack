@@ -175,12 +175,21 @@ package body System_Convolution_Circuits is
   -- DESCRIPTION :
   --   Returns 1 if s /= null, 0 otherwise.
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Series;
 
+    cmplxzero : constant Complex_Number := Create(0.0);
+
   begin
-    if s = null
-     then return 0;
-     else return 1;
+    if s = null then
+      return 0;
+    else 
+      for k in s.cff'range loop
+        if s.cff(k) /= cmplxzero
+         then return 1;
+        end if;
+      end loop;
+      return 0;
     end if;
   end Nonzero_Constant;
 
@@ -191,12 +200,21 @@ package body System_Convolution_Circuits is
   -- DESCRIPTION :
   --   Returns 1 if s /= null, 0 otherwise.
 
+    use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Series;
 
+    cmplxzero : constant Complex_Number := Create(integer(0));
+
   begin
-    if s = null
-     then return 0;
-     else return 1;
+    if s = null then
+      return 0;
+    else
+      for k in s.cff'range loop
+        if s.cff(k) /= cmplxzero
+         then return 1;
+        end if;
+      end loop;
+      return 0;
     end if;
   end Nonzero_Constant;
 
@@ -207,12 +225,21 @@ package body System_Convolution_Circuits is
   -- DESCRIPTION :
   --   Returns 1 if s /= null, 0 otherwise.
 
+    use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Series;
 
+    cmplxzero : constant Complex_Number := create(integer(0));
+
   begin
-    if s = null
-     then return 0;
-     else return 1;
+    if s = null then
+      return 0;
+    else
+      for k in s.cff'range loop
+        if s.cff(k) /= cmplxzero
+         then return 1;
+        end if;
+      end loop;
+      return 0;
     end if;
   end Nonzero_Constant;
 
