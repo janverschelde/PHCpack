@@ -1,13 +1,14 @@
 with unchecked_deallocation;
 with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
+with QuadDobl_Speelpenning_Convolutions;
 with Newton_Convolutions;
 
 package body QuadDobl_Predictor_Convolutions is
 
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
-	            neq,deg,numdeg,dendeg : integer32 ) return Predictor is
+                    neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor is
 
-    res : Predictor(sol'last,deg,numdeg,dendeg);
+    res : LU_Predictor(sol'last,deg,numdeg,dendeg);
     zero : constant Complex_Number := Create(integer(0));
     knum : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
          := (0..numdeg => zero);
@@ -25,24 +26,83 @@ package body QuadDobl_Predictor_Convolutions is
   end Create;
 
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
-	            neq,deg,numdeg,dendeg : integer32 ) 
-                  return Link_to_Predictor is
+                    neq,deg,numdeg,dendeg : integer32 )
+                  return SVD_Predictor is
 
-    prd : constant Predictor(sol'last,deg,numdeg,dendeg)
+    dim : constant integer32 := sol'last;
+    res : SVD_Predictor(neq,dim,dim+1,deg,numdeg,dendeg);
+    zero : constant Complex_Number := Create(integer(0));
+    knum : constant QuadDobl_Complex_Vectors.Vector(0..numdeg)
+         := (0..numdeg => zero);
+    kden : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
+         := (0..dendeg => zero);
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    res.sol := Newton_Convolutions.Series_Coefficients(sol,deg);
+    res.wrk := new QuadDobl_Complex_Vectors.Vector'(1..neq => zero);
+    res.ewrk := new QuadDobl_Complex_Vectors.Vector'(1..dim => zero);
+    res.dx := Allocate_Coefficients(dim,deg);
+    res.xd := Linearized_Allocation(dim,deg);
+    for k in sol'range loop
+      res.numcff(k) := new QuadDobl_Complex_Vectors.Vector'(knum);
+      res.dencff(k) := new QuadDobl_Complex_Vectors.Vector'(kden);
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( sol : QuadDobl_Complex_Vectors.Vector;
+                    neq,deg,numdeg,dendeg : integer32 ) 
+                  return Link_to_LU_Predictor is
+
+    prd : constant LU_Predictor(sol'last,deg,numdeg,dendeg)
         := Create(sol,neq,deg,numdeg,dendeg);
-    res : constant Link_to_Predictor := new Predictor'(prd);
+    res : constant Link_to_LU_Predictor := new LU_Predictor'(prd);
 
   begin
     return res;
   end Create;
 
-  procedure Clear ( p : in out Link_to_Predictor ) is
+  function Create ( sol : QuadDobl_Complex_Vectors.Vector;
+                    neq,deg,numdeg,dendeg : integer32 ) 
+                  return Link_to_SVD_Predictor is
 
-    procedure free is new unchecked_deallocation(Predictor,Link_to_Predictor);
+    dim : constant integer32 := sol'last;
+    prd : constant SVD_Predictor(neq,dim,dim+1,deg,numdeg,dendeg)
+        := Create(sol,neq,deg,numdeg,dendeg);
+    res : constant Link_to_SVD_Predictor := new SVD_Predictor'(prd);
+
+  begin
+    return res;
+  end Create;
+
+  procedure Clear ( p : in out Link_to_LU_Predictor ) is
+
+    procedure free is
+      new unchecked_deallocation(LU_Predictor,Link_to_LU_Predictor);
 
   begin
     if p /= null then
       QuadDobl_Complex_VecVecs.Clear(p.sol);
+      QuadDobl_Complex_VecVecs.Clear(p.numcff);
+      QuadDobl_Complex_VecVecs.Clear(p.dencff);
+      free(p);
+    end if;
+  end Clear;
+
+  procedure Clear ( p : in out Link_to_SVD_Predictor ) is
+
+    procedure free is
+      new unchecked_deallocation(SVD_Predictor,Link_to_SVD_Predictor);
+
+  begin
+    if p /= null then
+      QuadDobl_Complex_VecVecs.Clear(p.sol);
+      QuadDobl_Complex_Vectors.Clear(p.wrk);
+      QuadDobl_Complex_Vectors.Clear(p.ewrk);
+      QuadDobl_Complex_VecVecs.Clear(p.dx);
+      QuadDobl_Complex_VecVecs.Clear(p.xd);
       QuadDobl_Complex_VecVecs.Clear(p.numcff);
       QuadDobl_Complex_VecVecs.Clear(p.dencff);
       free(p);

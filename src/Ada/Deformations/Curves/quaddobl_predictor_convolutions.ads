@@ -20,7 +20,7 @@ package QuadDobl_Predictor_Convolutions is
 --   The work space (wrk below) for Newton's method on power series
 --   has a dimension equal to the number of equations in the homotopy.
 
-  type Predictor ( dim,deg,numdeg,dendeg : integer32 ) is record
+  type LU_Predictor ( dim,deg,numdeg,dendeg : integer32 ) is record
     sol : QuadDobl_Complex_VecVecs.VecVec(1..dim);        -- degree deg series
     wrk : QuadDobl_Complex_Vectors.Link_to_Vector;        -- Newton work space
     numcff : QuadDobl_Complex_VecVecs.VecVec(1..dim);     -- numerator coeffs
@@ -30,14 +30,45 @@ package QuadDobl_Predictor_Convolutions is
     mat : Matrix(1..dendeg,1..dendeg); -- matrix for rational approximation
     rhs : QuadDobl_Complex_Vectors.Vector(1..dendeg);
   end record;
+  type Link_to_LU_Predictor is access LU_Predictor;
 
-  type Link_to_Predictor is access Predictor;
+-- DATA STRUCTURE FOR SVD :
+--   The predictor with the Singular Value Decomposition works for systems
+--   that are overdetermined, with more equations than variables.
+--   The number of equations is stored in the neq attribute,
+--   the number of variables is stored in the dim attribute.
+--   The number of variables plus one is the dim1 attribute.
+--   The update in Newton's method is stored twice, once as dx,
+--   as a vector of power series, and once as xd, in linearized format,
+--   as a series with vector coefficients. 
+
+  type SVD_Predictor ( neq,dim,dim1,deg,numdeg,dendeg : integer32 ) is record
+    sol : QuadDobl_Complex_VecVecs.VecVec(1..dim);        -- degree deg series
+    wrk : QuadDobl_Complex_Vectors.Link_to_Vector;        -- of range 1..neq
+    dx : QuadDobl_Complex_VecVecs.VecVec(1..dim);         -- vector of series
+    xd : QuadDobl_Complex_VecVecs.VecVec(0..deg);         -- series of vectors
+    svl : QuadDobl_Complex_Vectors.Vector(1..dim1);       -- singular values
+    U : QuadDobl_Complex_Matrices.Matrix(1..neq,1..neq);  -- U in SVD
+    V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);  -- V in SVD
+    ewrk : QuadDobl_Complex_Vectors.Link_to_Vector;       -- of range 1..dim
+    numcff : QuadDobl_Complex_VecVecs.VecVec(1..dim);     -- numerator coeffs
+    dencff : QuadDobl_Complex_VecVecs.VecVec(1..dim);     -- denominator coeffs
+    padepiv : Standard_Integer_Vectors.Vector(1..dendeg); -- pivots for Pade
+    mat : Matrix(1..dendeg,1..dendeg); -- matrix for the rational approximation
+    rhs : QuadDobl_Complex_Vectors.Vector(1..dendeg); -- right hand side
+  end record;
+  type Link_to_SVD_Predictor is access SVD_Predictor;
 
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
-	            neq,deg,numdeg,dendeg : integer32 ) return Predictor;
+                    neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor;
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
-	            neq,deg,numdeg,dendeg : integer32 )
-                  return Link_to_Predictor;
+                    neq,deg,numdeg,dendeg : integer32 )
+                  return Link_to_LU_Predictor;
+  function Create ( sol : QuadDobl_Complex_Vectors.Vector;
+	            neq,deg,numdeg,dendeg : integer32 ) return SVD_Predictor;
+  function Create ( sol : QuadDobl_Complex_Vectors.Vector;
+                    neq,deg,numdeg,dendeg : integer32 )
+                  return Link_to_SVD_Predictor;
 
   -- DESCRIPTION :
   --   Given a solution vector and dimensions,
@@ -53,9 +84,11 @@ package QuadDobl_Predictor_Convolutions is
   -- ON RETURN :
   --   data allocated to run the Newton-Fabry-Pade predictor.
 
-  procedure Clear ( p : in out Link_to_Predictor );
+  procedure Clear ( p : in out Link_to_LU_Predictor );
+  procedure Clear ( p : in out Link_to_SVD_Predictor );
 
   -- DESCRIPTION :
-  --   Deallocates the memory for the series and rational approximation.
+  --   Deallocates the memory for the series, the work space,
+  --   and the rational approximation.
 
 end QuadDobl_Predictor_Convolutions;
