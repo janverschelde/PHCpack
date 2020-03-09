@@ -1,8 +1,11 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
+with Standard_Speelpenning_Convolutions; use Standard_Speelpenning_Convolutions;
 
 package Standard_Predictor_Convolutions is
 
@@ -83,6 +86,63 @@ package Standard_Predictor_Convolutions is
 
   -- ON RETURN :
   --   data allocated to run the Newton-Fabry-Pade predictor.
+
+  procedure Predict
+              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float; output : in boolean );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the power series in prd with LU,
+  --   applies Fabry's theorem and constructs Pade approximants
+  --   to predict the next solution, in double precision.
+
+  -- ON ENTRY :
+  --   hom      homotopy convolution circuit system
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   maxit    maximum number of iterations in Newton's method;
+  --   tol      tolerance on the correction term;
+  --   output   flag to indicate extra output during computations.
+
+  -- ON RETURN :
+  --   prd      contains solution series and Pade approximants;
+  --   nbrit    number of iterations done;
+  --   absdx    absolute value of the last corrector step;
+  --   fail     indicates failure status;
+  --   z        closest singularity estimated by Fabry's theorem;
+  --   rad      estimates radius of convergence of the series;
+  --   err      error estimate on the location of z.
+
+  procedure Predict
+              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float; output : in boolean );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the power series in prd with SVD,
+  --   applies Fabry's theorem and constructs Pade approximants
+  --   to predict the next solution, in double precision.
+
+  -- ON ENTRY :
+  --   hom      homotopy convolution circuit system
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   maxit    maximum number of iterations in Newton's method;
+  --   tol      tolerance on the correction term;
+  --   output   flag to indicate extra output during computations.
+
+  -- ON RETURN :
+  --   prd      contains solution series and Pade approximants;
+  --   nbrit    number of iterations done;
+  --   absdx    absolute value of the last corrector step;
+  --   rcond    estimate for the inverse of the condition number;
+  --   fail     indicates failure status;
+  --   z        closest singularity estimated by Fabry's theorem;
+  --   rad      estimates radius of convergence of the series;
+  --   err      error estimate on the location of z.
 
   procedure Clear ( p : in out Link_to_LU_Predictor );
   procedure Clear ( p : in out Link_to_SVD_Predictor );

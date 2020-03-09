@@ -1,5 +1,6 @@
 Mon 9 Mar 2020 : added SVD predictor types to the packages on convolution
   homotopies: *_predictor_convolutions, tested by ts_padepcnv.
+  Add Predict procedures to *_predictor_convolutions, tested by ts_padepcnv.
 
 Sun 8 Mar 2020 : better control of output in ts_padepcnv.
   Added SVD to ts_padepcnv.

@@ -43,8 +43,6 @@ with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
-with Newton_Power_Convolutions;          use Newton_Power_Convolutions;
-with Convergence_Radius_Estimates;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
@@ -87,32 +85,23 @@ procedure ts_padepcnv is
     r,err,absdx : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     res : Standard_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    nbrit : integer32;
 
   begin
-    if output then
-      LU_Newton_Steps
-        (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-         info,prd.newtpiv,prd.wrk,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    Predict(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    put("#iterations : "); put(nbrit,1);
+    put("  |dx| :"); put(absdx,3); new_line;
+    if fail then
+      put_line("Predictor failed!");
     else
-      LU_Newton_Steps
-        (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-         info,prd.newtpiv,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
-    end if;
-    if not fail then
       put("z : "); put(z); 
       put("  error estimate :"); put(err,3); new_line;
       put("estimated radius :"); put(r,3); new_line;
     end if;
-    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
-                prd.mat,prd.rhs,prd.padepiv,info,false);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := Standard_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : ");
-    put_line(res);
+    put_line("Evaluation of the predicted solution : "); put_line(res);
   end Standard_LU_Prediction;
 
   procedure Standard_SVD_Prediction
@@ -145,33 +134,25 @@ procedure ts_padepcnv is
     r,err,absdx,rcond : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     res : Standard_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    nbrit : integer32;
 
   begin
-    if output then
-      SVD_Newton_Steps
-        (standard_output,hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,
-         fail, prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
-      put("rcond :"); put(rcond,3); new_line;
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    Predict(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    put("#iterations : "); put(nbrit,1);
+    put("  |dx| :"); put(absdx,3);
+    put("  rcond :"); put(rcond,3); new_line;
+    put_line("The singular values : "); put_line(prd.svl);
+    if fail then
+      put_line("Predictor failed!");
     else
-      SVD_Newton_Steps
-        (hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,fail,
-         prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
-    end if;
-    if not fail then
       put("z : "); put(z); 
       put("  error estimate :"); put(err,3); new_line;
       put("estimated radius :"); put(r,3); new_line;
     end if;
-    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
-                prd.mat,prd.rhs,prd.padepiv,info,false);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := Standard_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : ");
-    put_line(res);
+    put_line("Evaluation of the predicted solution : "); put_line(res);
   end Standard_SVD_Prediction;
 
   procedure DoblDobl_LU_Prediction
@@ -209,32 +190,23 @@ procedure ts_padepcnv is
     r,err,absdx : double_double;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    nbrit : integer32;
 
   begin
-    if output then
-      LU_Newton_Steps
-        (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-         info,prd.newtpiv,prd.wrk,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    Predict(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    put("#iterations : "); put(nbrit,1);
+    put("  |dx| : "); put(absdx,3); new_line;
+    if fail then
+      put_line("Predictor failed!");
     else
-      LU_Newton_Steps
-        (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-         info,prd.newtpiv,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
-    end if;
-    if not fail then
       put("z : "); put(z); 
-      put("  error estimate :"); put(err,3); new_line;
-      put("estimated radius :"); put(r,3); new_line;
+      put("  error estimate : "); put(err,3); new_line;
+      put("estimated radius : "); put(r,3); new_line;
     end if;
-    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
-                prd.mat,prd.rhs,prd.padepiv,info,false);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := DoblDobl_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : ");
-    put_line(res);
+    put_line("Evaluation of the predicted solution : "); put_line(res);
   end DoblDobl_LU_Prediction;
 
   procedure DoblDobl_SVD_Prediction
@@ -267,33 +239,25 @@ procedure ts_padepcnv is
     r,err,absdx,rcond : double_double;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    nbrit : integer32;
 
   begin
-    if output then
-      SVD_Newton_Steps
-        (standard_output,hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,
-         fail, prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
-      put("rcond : "); put(rcond,3); new_line;
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    Predict(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    put("#iterations : "); put(nbrit,1);
+    put("  |dx| : "); put(absdx,3);
+    put("  rcond : "); put(rcond,3); new_line;
+    put_line("The singular values : "); put_line(prd.svl);
+    if fail then
+      put_line("Predictor failed!");
     else
-      SVD_Newton_Steps
-        (hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,fail,
-         prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
-    end if;
-    if not fail then
       put("z : "); put(z); 
       put("  error estimate : "); put(err,3); new_line;
       put("estimated radius : "); put(r,3); new_line;
     end if;
-    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
-                prd.mat,prd.rhs,prd.padepiv,info,false);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := DoblDobl_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : ");
-    put_line(res);
+    put_line("Evaluation of the predicted solution : "); put_line(res);
   end DoblDobl_SVD_Prediction;
 
   procedure QuadDobl_LU_Prediction
@@ -331,32 +295,23 @@ procedure ts_padepcnv is
     r,err,absdx : quad_double;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    nbrit : integer32;
 
   begin
-    if output then
-      LU_Newton_Steps
-        (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-         info,prd.newtpiv,prd.wrk,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    Predict(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    put("#iterations : "); put(nbrit,1);
+    put("  |dx| : "); put(absdx,3); new_line;
+    if fail then
+      put_line("Predictor failed!");
     else
-      LU_Newton_Steps
-        (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
-         info,prd.newtpiv,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
-    end if;
-    if not fail then
       put("z : "); put(z); 
       put("  error estimate : "); put(err,3); new_line;
       put("estimated radius : "); put(r,3); new_line;
     end if;
-    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
-                prd.mat,prd.rhs,prd.padepiv,info,false);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := QuadDobl_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : ");
-    put_line(res);
+    put_line("Evaluation of the predicted solution : "); put_line(res);
   end QuadDobl_LU_Prediction;
 
   procedure QuadDobl_SVD_Prediction
@@ -389,33 +344,25 @@ procedure ts_padepcnv is
     r,err,absdx,rcond : quad_double;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    nbrit : integer32;
 
   begin
-    if output then
-      SVD_Newton_Steps
-        (standard_output,hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,
-         fail, prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
-      put("rcond : "); put(rcond,3); new_line;
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail);
+    Predict(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    put("#iterations : "); put(nbrit,1);
+    put("  |dx| : "); put(absdx,3);
+    put("  rcond : "); put(rcond,3); new_line;
+    put_line("The singular values : "); put_line(prd.svl);
+    if fail then
+      put_line("Predictor failed!");
     else
-      SVD_Newton_Steps
-        (hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,fail,
-         prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,r,err,fail,false);
-    end if;
-    if not fail then
       put("z : "); put(z); 
       put("  error estimate : "); put(err,3); new_line;
       put("estimated radius : "); put(r,3); new_line;
     end if;
-    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
-                prd.mat,prd.rhs,prd.padepiv,info,false);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := QuadDobl_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : ");
-    put_line(res);
+    put_line("Evaluation of the predicted solution : "); put_line(res);
   end QuadDobl_SVD_Prediction;
 
   procedure Standard_Run_Prediction

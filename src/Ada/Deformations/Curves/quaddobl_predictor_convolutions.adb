@@ -1,7 +1,9 @@
 with unchecked_deallocation;
-with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
-with QuadDobl_Speelpenning_Convolutions;
+with text_io;                            use text_io;
+with QuadDobl_Rational_Approximations;
 with Newton_Convolutions;
+with Newton_Power_Convolutions;
+with Convergence_Radius_Estimates;
 
 package body QuadDobl_Predictor_Convolutions is
 
@@ -37,8 +39,6 @@ package body QuadDobl_Predictor_Convolutions is
     kden : constant QuadDobl_Complex_Vectors.Vector(0..dendeg)
          := (0..dendeg => zero);
 
-    use QuadDobl_Speelpenning_Convolutions;
-
   begin
     res.sol := Newton_Convolutions.Series_Coefficients(sol,deg);
     res.wrk := new QuadDobl_Complex_Vectors.Vector'(1..neq => zero);
@@ -49,6 +49,7 @@ package body QuadDobl_Predictor_Convolutions is
       res.numcff(k) := new QuadDobl_Complex_Vectors.Vector'(knum);
       res.dencff(k) := new QuadDobl_Complex_Vectors.Vector'(kden);
     end loop;
+    res.svl := (res.svl'range => zero);
     return res;
   end Create;
 
@@ -76,6 +77,64 @@ package body QuadDobl_Predictor_Convolutions is
   begin
     return res;
   end Create;
+
+  procedure Predict
+              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out quad_double;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out quad_double; output : in boolean ) is
+
+    use QuadDobl_Rational_Approximations;
+    use Newton_Power_Convolutions;
+
+    info : integer32;
+
+  begin
+    nbrit := 0;
+    if output then
+      LU_Newton_Steps
+        (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail);
+    else
+      LU_Newton_Steps
+        (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,false);
+    end if;
+    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
+                prd.mat,prd.rhs,prd.padepiv,info,false);
+  end Predict;
+
+  procedure Predict
+              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out quad_double;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out quad_double; output : in boolean ) is
+
+    use QuadDobl_Rational_Approximations;
+    use Newton_Power_Convolutions;
+
+    info : integer32;
+
+  begin
+    nbrit := 0;
+    if output then
+      SVD_Newton_Steps
+        (standard_output,hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,
+         fail, prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail);
+    else
+      SVD_Newton_Steps
+        (hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,fail,
+         prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,false);
+    end if;
+    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
+                prd.mat,prd.rhs,prd.padepiv,info,false);
+  end Predict;
 
   procedure Clear ( p : in out Link_to_LU_Predictor ) is
 
