@@ -63,6 +63,23 @@ package DoblDobl_Predictor_Convolutions is
   end record;
   type Link_to_SVD_Predictor is access SVD_Predictor;
 
+-- DATA STRUCTURE FOR CURVATURE :
+--   The singular values of the Hessians are computed to estimate the
+--   distance from the current solution to the nearest path.
+--   With the data structure we store the work space and the largest
+--   singular values of the Hessians.  At spot zero, we keep the smallest
+--   singular value of the Jacobian matrix at the solution.
+
+  type SVD_Hessians ( dim,dim1 : integer32 ) is record   -- dim1 = dim+1
+    H : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim); -- work Hessian
+    U : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim); -- work U of SVD
+    V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim); -- work V of SVD
+    svl : DoblDobl_Complex_Vectors.Vector(1..dim1);      -- work values
+    ewrk : DoblDobl_Complex_Vectors.Vector(1..dim);      -- work values
+    vals : DoblDobl_Complex_Vectors.Vector(0..dim);      -- singular values
+  end record;
+  type Link_to_SVD_Hessians is access SVD_Hessians;
+
   function Create ( sol : DoblDobl_Complex_Vectors.Vector;
 	            neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor;
   function Create ( sol : DoblDobl_Complex_Vectors.Vector;
@@ -145,11 +162,24 @@ package DoblDobl_Predictor_Convolutions is
   --   rad      estimates radius of convergence of the series;
   --   err      error estimate on the location of z.
 
+  procedure Second
+              ( hom : in Link_to_System; svh : in Link_to_SVD_Hessians;
+                sol : in DoblDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Computes the Hessians for the convolution circuits in hom
+  --   at the solution sol and stores the results in svh.
+
   procedure Clear ( p : in out Link_to_LU_Predictor );
   procedure Clear ( p : in out Link_to_SVD_Predictor );
 
   -- DESCRIPTION :
   --   Deallocates the memory for the series, the work space,
   --   and the rational approximation.
+
+  procedure Clear ( h : in out Link_to_SVD_Hessians );
+
+  -- DESCRIPTION :
+  --   Deallocates the memory occupied by h.
 
 end DoblDobl_Predictor_Convolutions;

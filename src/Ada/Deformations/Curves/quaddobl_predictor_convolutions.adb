@@ -1,9 +1,11 @@
 with unchecked_deallocation;
 with text_io;                            use text_io;
+with QuadDobl_Complex_Singular_Values;
 with QuadDobl_Rational_Approximations;
 with Newton_Convolutions;
 with Newton_Power_Convolutions;
 with Convergence_Radius_Estimates;
+with Hessian_Convolution_Circuits;
 
 package body QuadDobl_Predictor_Convolutions is
 
@@ -136,6 +138,25 @@ package body QuadDobl_Predictor_Convolutions is
                 prd.mat,prd.rhs,prd.padepiv,info,false);
   end Predict;
 
+  procedure Second
+              ( hom : in Link_to_System; svh : in Link_to_SVD_Hessians;
+                sol : in QuadDobl_Complex_Vectors.Vector ) is
+
+    n : constant integer32 := svh.dim;
+    p : constant integer32 := svh.dim;
+    job : constant integer32 := 11;
+    info : integer32;
+
+    use QuadDobl_Complex_Singular_Values;
+
+  begin
+    for k in hom.crc'range loop
+      svh.H := Hessian_Convolution_Circuits.Hessian(hom.crc(k),sol);
+      SVD(svh.H,n,p,svh.svl,svh.ewrk,svh.U,svh.V,job,info);
+      svh.vals(k) := svh.svl(1);
+    end loop;
+  end Second;
+
   procedure Clear ( p : in out Link_to_LU_Predictor ) is
 
     procedure free is
@@ -165,6 +186,17 @@ package body QuadDobl_Predictor_Convolutions is
       QuadDobl_Complex_VecVecs.Clear(p.numcff);
       QuadDobl_Complex_VecVecs.Clear(p.dencff);
       free(p);
+    end if;
+  end Clear;
+
+  procedure Clear ( h : in out Link_to_SVD_Hessians ) is
+
+    procedure free is
+      new unchecked_deallocation(SVD_Hessians,Link_to_SVD_Hessians);
+
+  begin
+    if h /= null
+     then free(h);
     end if;
   end Clear;
 

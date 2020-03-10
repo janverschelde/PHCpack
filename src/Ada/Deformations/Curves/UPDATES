@@ -1,4 +1,6 @@
 Tue 10 Mar 2020 : added comparison checks to ts_hesspcnv.
+  Extended *_predictor_convolutions with the singular values of Hessians,
+  tested by ts_padepcnv.
 
 Mon 9 Mar 2020 : added SVD predictor types to the packages on convolution
   homotopies: *_predictor_convolutions, tested by ts_padepcnv.

@@ -58,6 +58,7 @@ procedure ts_padepcnv is
   procedure Standard_LU_Prediction
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 fail : out boolean; output : in boolean ) is
 
@@ -69,12 +70,14 @@ procedure ts_padepcnv is
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
     use Standard_Rational_Approximations;
@@ -84,6 +87,8 @@ procedure ts_padepcnv is
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    sol : Standard_Complex_Vectors.Vector(1..prd.dim);
     res : Standard_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
 
@@ -98,6 +103,12 @@ procedure ts_padepcnv is
       put("  error estimate :"); put(err,3); new_line;
       put("estimated radius :"); put(r,3); new_line;
     end if;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); sol(k) := lnk(0);
+    end loop;
+    svh.vals(0) := Standard_Complex_Numbers.Create(1.0);
+    Second(hom,svh,sol);
+    put_line("All singular values : "); put_line(svh.vals);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := Standard_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
@@ -107,6 +118,7 @@ procedure ts_padepcnv is
   procedure Standard_SVD_Prediction
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_SVD_Predictor;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 fail : out boolean; output : in boolean ) is
 
@@ -118,12 +130,14 @@ procedure ts_padepcnv is
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
     use Standard_Rational_Approximations;
@@ -133,6 +147,8 @@ procedure ts_padepcnv is
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    sol : Standard_Complex_Vectors.Vector(1..prd.dim);
     res : Standard_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
 
@@ -149,6 +165,12 @@ procedure ts_padepcnv is
       put("  error estimate :"); put(err,3); new_line;
       put("estimated radius :"); put(r,3); new_line;
     end if;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); sol(k) := lnk(0);
+    end loop;
+    svh.vals(0) := prd.svl(prd.dim);
+    Second(hom,svh,sol);
+    put_line("All singular values : "); put_line(svh.vals);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := Standard_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
@@ -158,6 +180,7 @@ procedure ts_padepcnv is
   procedure DoblDobl_LU_Prediction
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 fail : out boolean; output : in boolean ) is
 
@@ -174,12 +197,14 @@ procedure ts_padepcnv is
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
     use DoblDobl_Rational_Approximations;
@@ -189,6 +214,8 @@ procedure ts_padepcnv is
     z : DoblDobl_Complex_Numbers.Complex_Number;
     r,err,absdx : double_double;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    sol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
 
@@ -203,6 +230,12 @@ procedure ts_padepcnv is
       put("  error estimate : "); put(err,3); new_line;
       put("estimated radius : "); put(r,3); new_line;
     end if;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); sol(k) := lnk(0);
+    end loop;
+    svh.vals(0) := DoblDobl_Complex_Numbers.Create(integer(1));
+    Second(hom,svh,sol);
+    put_line("All singular values : "); put_line(svh.vals);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := DoblDobl_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
@@ -212,6 +245,7 @@ procedure ts_padepcnv is
   procedure DoblDobl_SVD_Prediction
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 fail : out boolean; output : in boolean ) is
 
@@ -223,12 +257,14 @@ procedure ts_padepcnv is
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
     use DoblDobl_Rational_Approximations;
@@ -238,6 +274,8 @@ procedure ts_padepcnv is
     z : DoblDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond : double_double;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    sol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
 
@@ -254,6 +292,12 @@ procedure ts_padepcnv is
       put("  error estimate : "); put(err,3); new_line;
       put("estimated radius : "); put(r,3); new_line;
     end if;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); sol(k) := lnk(0);
+    end loop;
+    svh.vals(0) := prd.svl(prd.dim);
+    Second(hom,svh,sol);
+    put_line("All singular values : "); put_line(svh.vals);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := DoblDobl_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
@@ -263,6 +307,7 @@ procedure ts_padepcnv is
   procedure QuadDobl_LU_Prediction
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 fail : out boolean; output : in boolean ) is
 
@@ -279,12 +324,14 @@ procedure ts_padepcnv is
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
     use QuadDobl_Rational_Approximations;
@@ -294,6 +341,8 @@ procedure ts_padepcnv is
     z : QuadDobl_Complex_Numbers.Complex_Number;
     r,err,absdx : quad_double;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    sol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
 
@@ -308,6 +357,12 @@ procedure ts_padepcnv is
       put("  error estimate : "); put(err,3); new_line;
       put("estimated radius : "); put(r,3); new_line;
     end if;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); sol(k) := lnk(0);
+    end loop;
+    svh.vals(0) := QuadDobl_Complex_Numbers.Create(integer(1));
+    Second(hom,svh,sol);
+    put_line("All singular values : "); put_line(svh.vals);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := QuadDobl_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
@@ -317,6 +372,7 @@ procedure ts_padepcnv is
   procedure QuadDobl_SVD_Prediction
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 fail : out boolean; output : in boolean ) is
 
@@ -328,12 +384,14 @@ procedure ts_padepcnv is
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
     use QuadDobl_Rational_Approximations;
@@ -343,6 +401,8 @@ procedure ts_padepcnv is
     z : QuadDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond : quad_double;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    sol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
 
@@ -359,6 +419,12 @@ procedure ts_padepcnv is
       put("  error estimate : "); put(err,3); new_line;
       put("estimated radius : "); put(r,3); new_line;
     end if;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); sol(k) := lnk(0);
+    end loop;
+    svh.vals(0) := prd.svl(prd.dim);
+    Second(hom,svh,sol);
+    put_line("All singular values : "); put_line(svh.vals);
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := QuadDobl_Complex_Numbers.Create(r/2.0);
     res := Eval(hom.crc,eva,z);
@@ -378,6 +444,7 @@ procedure ts_padepcnv is
     use Standard_Predictor_Convolutions;
   
     neq : constant integer32 := chom.crc'last;
+    dim : integer32;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     maxit : integer32 := 0; 
@@ -391,20 +458,30 @@ procedure ts_padepcnv is
     otp := (ans = 'y');
     put("Use SVD ? (y/n) "); Ask_Yes_or_No(ans); usesvd := (ans = 'y');
     for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      if usesvd then
-        declare
-          prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-        begin
-          Standard_SVD_Prediction(chom,prd,maxit,tol,fail,otp); Clear(prd);
-        end;
-      else
-        declare
-          prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-        begin
-          Standard_LU_Prediction(chom,prd,maxit,tol,fail,otp); Clear(prd);
-        end;
-      end if;
+      ls := Head_Of(tmp); dim := ls.v'last;
+      declare
+        hss : SVD_Hessians(dim,dim+1);
+        svh : Link_to_SVD_Hessians;
+      begin
+        hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
+        svh := new SVD_Hessians'(hss);
+        if usesvd then
+          declare
+            prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
+          begin
+            Standard_SVD_Prediction(chom,prd,svh,maxit,tol,fail,otp);
+            Clear(prd);
+          end;
+        else
+          declare
+            prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
+          begin
+            Standard_LU_Prediction(chom,prd,svh,maxit,tol,fail,otp);
+            Clear(prd);
+          end;
+        end if;
+        Clear(svh);
+      end;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -425,12 +502,15 @@ procedure ts_padepcnv is
     use DoblDobl_Predictor_Convolutions;
   
     neq : constant integer32 := chom.crc'last;
+    dim : integer32;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     maxit : integer32 := 0; 
     tol : constant double_float := 1.0E-24;
     fail,otp,usesvd : boolean;
     ans : character;
+    zero : constant DoblDobl_Complex_Numbers.Complex_Number
+         := DoblDobl_Complex_Numbers.Create(integer(0));
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -438,20 +518,30 @@ procedure ts_padepcnv is
     otp := (ans = 'y');
     put("Use SVD ? (y/n) "); Ask_Yes_or_No(ans); usesvd := (ans = 'y');
     for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      if usesvd then
-        declare
-          prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-        begin
-          DoblDobl_SVD_Prediction(chom,prd,maxit,tol,fail,otp); Clear(prd);
-        end;
-      else
-        declare
-          prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-        begin
-          DoblDobl_LU_Prediction(chom,prd,maxit,tol,fail,otp); Clear(prd);
-        end;
-      end if;
+      ls := Head_Of(tmp); dim := ls.v'last;
+      declare
+        hss : SVD_Hessians(dim,dim+1);
+        svh : Link_to_SVD_Hessians;
+      begin
+        hss.vals := (hss.vals'range => zero);
+        svh := new SVD_Hessians'(hss);
+        if usesvd then
+          declare
+            prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
+          begin
+            DoblDobl_SVD_Prediction(chom,prd,svh,maxit,tol,fail,otp);
+            Clear(prd);
+          end;
+        else
+          declare
+            prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
+          begin
+            DoblDobl_LU_Prediction(chom,prd,svh,maxit,tol,fail,otp);
+            Clear(prd);
+          end;
+        end if;
+        Clear(svh);
+      end;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -472,12 +562,15 @@ procedure ts_padepcnv is
     use QuadDobl_Predictor_Convolutions;
   
     neq : constant integer32 := chom.crc'last;
+    dim : integer32;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     maxit : integer32 := 0; 
     tol : constant double_float := 1.0E-48;
     fail,otp,usesvd : boolean;
     ans : character;
+    zero : constant QuadDobl_Complex_Numbers.Complex_Number
+         := QuadDobl_Complex_Numbers.Create(integer(0));
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -485,20 +578,30 @@ procedure ts_padepcnv is
     otp := (ans = 'y');
     put("Use SVD ? (y/n) "); Ask_Yes_or_No(ans); usesvd := (ans = 'y');
     for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      if usesvd then
-        declare
-          prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-        begin
-          QuadDobl_SVD_Prediction(chom,prd,maxit,tol,fail,otp); Clear(prd);
-        end;
-      else
-        declare
-          prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-        begin
-          QuadDobl_LU_Prediction(chom,prd,maxit,tol,fail,otp); Clear(prd);
-        end;
-      end if;
+      ls := Head_Of(tmp); dim := ls.v'last;
+      declare
+        hss : SVD_Hessians(dim,dim+1);
+        svh : Link_to_SVD_Hessians;
+      begin
+        hss.vals := (hss.vals'range => zero);
+        svh := new SVD_Hessians'(hss);
+        if usesvd then
+          declare
+            prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
+          begin
+            QuadDobl_SVD_Prediction(chom,prd,svh,maxit,tol,fail,otp);
+            Clear(prd);
+          end;
+        else
+          declare
+            prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
+          begin
+            QuadDobl_LU_Prediction(chom,prd,svh,maxit,tol,fail,otp);
+            Clear(prd);
+          end;
+        end if;
+        Clear(svh);
+      end;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
