@@ -995,6 +995,11 @@ ts_hesspred: get_clock.o get_clocks_per_sec.o
               -o $(BIN)/ts_hesspred \
               -largs get_clock.o get_clocks_per_sec.o
 
+ts_hesspcnv: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesspcnv.adb \
+              -o $(BIN)/ts_hesspcnv \
+              -largs get_clock.o get_clocks_per_sec.o
+
 ts_predstep: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_predstep.adb \
               -o $(BIN)/ts_predstep \
