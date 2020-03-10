@@ -939,6 +939,10 @@ ts_hesspred:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesspred.adb \
                  -o $(BIN)/ts_hesspred
 
+ts_hesspcnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_hesspcnv.adb \
+                 -o $(BIN)/ts_hesspcnv
+
 ts_predstep:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_predstep.adb \
                  -o $(BIN)/ts_predstep
