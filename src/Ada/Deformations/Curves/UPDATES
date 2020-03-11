@@ -1,5 +1,6 @@
 Wed 11 Mar 2020 : moved the distance functions from ts_padepcnv into
-  the *_predictor_convolution packages.
+  the *_predictor_convolution packages.  Computed the SVD for the Jacobian
+  in the LU predictor in ts_padepcnv and applied the pole step.
 
 Tue 10 Mar 2020 : added comparison checks to ts_hesspcnv.
   Extended *_predictor_convolutions with the singular values of Hessians,
