@@ -1,5 +1,6 @@
 with unchecked_deallocation;
 with text_io;                            use text_io;
+with DoblDobl_Mathematical_Functions;
 with DoblDobl_Complex_Singular_Values;
 with DoblDobl_Rational_Approximations;
 with Newton_Convolutions;
@@ -156,6 +157,25 @@ package body DoblDobl_Predictor_Convolutions is
       svh.vals(k) := svh.svl(1);
     end loop;
   end Second;
+
+  function DoblDobl_Distance
+              ( svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians )
+              return double_double is
+
+    sigma1 : constant double_double
+           := DoblDobl_Complex_Numbers.REAL_PART(svh.vals(0));
+    accsum,acc,nrm : double_double := create(0.0);
+
+  begin
+    for k in 1..svh.dim loop
+      acc := DoblDobl_Complex_Numbers.REAL_PART(svh.vals(k));
+      accsum := accsum + acc*acc; 
+    end loop;
+    nrm := DoblDobl_Mathematical_Functions.SQRT(accsum);
+    return (2.0*sigma1)/nrm;
+  end DoblDobl_Distance;
+
+-- DESTRUCTORS :
 
   procedure Clear ( p : in out Link_to_LU_Predictor ) is
 

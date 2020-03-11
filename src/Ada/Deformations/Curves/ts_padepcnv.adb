@@ -10,9 +10,6 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with Standard_Mathematical_Functions;
-with DoblDobl_Mathematical_Functions;
-with QuadDobl_Mathematical_Functions;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers;
@@ -57,69 +54,6 @@ procedure ts_padepcnv is
 
 -- DESCRIPTION :
 --   Development of the Pade predictor on convolution circuits.
-
-  function Standard_Distance
-              ( svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians )
-              return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the estimate to the distance to the nearest solution,
-  --   based on the singular values in svh.
-
-    sigma1 : constant double_float
-           := Standard_Complex_Numbers.REAL_PART(svh.vals(0));
-    accsum,acc,nrm : double_float := 0.0;
-
-  begin
-    for k in 1..svh.dim loop
-      acc := Standard_Complex_Numbers.REAL_PART(svh.vals(k));
-      accsum := accsum + acc*acc; 
-    end loop;
-    nrm := Standard_Mathematical_Functions.SQRT(accsum);
-    return (2.0*sigma1)/nrm;
-  end Standard_Distance;
-
-  function DoblDobl_Distance
-              ( svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians )
-              return double_double is
-
-  -- DESCRIPTION :
-  --   Returns the estimate to the distance to the nearest solution,
-  --   based on the singular values in svh.
-
-    sigma1 : constant double_double
-           := DoblDobl_Complex_Numbers.REAL_PART(svh.vals(0));
-    accsum,acc,nrm : double_double := create(0.0);
-
-  begin
-    for k in 1..svh.dim loop
-      acc := DoblDobl_Complex_Numbers.REAL_PART(svh.vals(k));
-      accsum := accsum + acc*acc; 
-    end loop;
-    nrm := DoblDobl_Mathematical_Functions.SQRT(accsum);
-    return (2.0*sigma1)/nrm;
-  end DoblDobl_Distance;
-
-  function QuadDobl_Distance
-              ( svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians )
-              return quad_double is
-
-  -- DESCRIPTION :
-  --   Returns the estimate to the distance to the nearest solution,
-  --   based on the singular values in svh.
-
-    sigma1 : constant quad_double
-           := QuadDobl_Complex_Numbers.REAL_PART(svh.vals(0));
-    accsum,acc,nrm : quad_double := create(0.0);
-
-  begin
-    for k in 1..svh.dim loop
-      acc := QuadDobl_Complex_Numbers.REAL_PART(svh.vals(k));
-      accsum := accsum + acc*acc; 
-    end loop;
-    nrm := QuadDobl_Mathematical_Functions.SQRT(accsum);
-    return (2.0*sigma1)/nrm;
-  end QuadDobl_Distance;
 
   procedure Standard_LU_Prediction
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -175,7 +109,7 @@ procedure ts_padepcnv is
     svh.vals(0) := Standard_Complex_Numbers.Create(1.0);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := Standard_Distance(svh);
+    eta := Standard_Predictor_Convolutions.Standard_Distance(svh);
     put("  eta :"); put(eta,3); new_line;
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := Standard_Complex_Numbers.Create(r/2.0);
@@ -239,7 +173,7 @@ procedure ts_padepcnv is
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := Standard_Distance(svh);
+    eta := Standard_Predictor_Convolutions.Standard_Distance(svh);
     put("  eta :"); put(eta,3); new_line;
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := Standard_Complex_Numbers.Create(r/2.0);
@@ -306,7 +240,7 @@ procedure ts_padepcnv is
     svh.vals(0) := DoblDobl_Complex_Numbers.Create(integer(1));
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := DoblDobl_Distance(svh);
+    eta := DoblDobl_Predictor_Convolutions.DoblDobl_Distance(svh);
     put("  eta : "); put(eta,3); new_line;
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := DoblDobl_Complex_Numbers.Create(r/2.0);
@@ -370,7 +304,7 @@ procedure ts_padepcnv is
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := DoblDobl_Distance(svh);
+    eta := DoblDobl_Predictor_Convolutions.DoblDobl_Distance(svh);
     put("  eta : "); put(eta,3); new_line;
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := DoblDobl_Complex_Numbers.Create(r/2.0);
@@ -437,7 +371,7 @@ procedure ts_padepcnv is
     svh.vals(0) := QuadDobl_Complex_Numbers.Create(integer(1));
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := QuadDobl_Distance(svh);
+    eta := QuadDobl_Predictor_Convolutions.QuadDobl_Distance(svh);
     put("  eta : "); put(eta,3); new_line;
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := QuadDobl_Complex_Numbers.Create(r/2.0);
@@ -501,7 +435,7 @@ procedure ts_padepcnv is
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := QuadDobl_Distance(svh);
+    eta := QuadDobl_Predictor_Convolutions.QuadDobl_Distance(svh);
     put("  eta : "); put(eta,3); new_line;
     Evaluate(prd.numcff,prd.dencff,r/2.0,eva);
     z := QuadDobl_Complex_Numbers.Create(r/2.0);

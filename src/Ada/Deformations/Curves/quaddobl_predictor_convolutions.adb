@@ -1,5 +1,6 @@
 with unchecked_deallocation;
 with text_io;                            use text_io;
+with QuadDobl_Mathematical_Functions;
 with QuadDobl_Complex_Singular_Values;
 with QuadDobl_Rational_Approximations;
 with Newton_Convolutions;
@@ -156,6 +157,25 @@ package body QuadDobl_Predictor_Convolutions is
       svh.vals(k) := svh.svl(1);
     end loop;
   end Second;
+
+  function QuadDobl_Distance
+              ( svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians )
+              return quad_double is
+
+    sigma1 : constant quad_double
+           := QuadDobl_Complex_Numbers.REAL_PART(svh.vals(0));
+    accsum,acc,nrm : quad_double := create(0.0);
+
+  begin
+    for k in 1..svh.dim loop
+      acc := QuadDobl_Complex_Numbers.REAL_PART(svh.vals(k));
+      accsum := accsum + acc*acc; 
+    end loop;
+    nrm := QuadDobl_Mathematical_Functions.SQRT(accsum);
+    return (2.0*sigma1)/nrm;
+  end QuadDobl_Distance;
+
+-- DESTRUCTORS :
 
   procedure Clear ( p : in out Link_to_LU_Predictor ) is
 

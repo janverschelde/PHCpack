@@ -169,6 +169,16 @@ package Standard_Predictor_Convolutions is
   --   Computes the Hessians for the convolution circuits in hom
   --   at the solution sol and stores the results in svh.
 
+  function Standard_Distance
+              ( svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians )
+              return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the estimate to the distance to the nearest solution,
+  --   based on the singular values in svh.
+
+-- DESTRUCTORS :
+
   procedure Clear ( p : in out Link_to_LU_Predictor );
   procedure Clear ( p : in out Link_to_SVD_Predictor );
 
