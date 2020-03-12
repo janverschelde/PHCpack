@@ -1,3 +1,5 @@
+Thu 12 Mar 2020 : extended and improved ts_padepcnv.
+
 Wed 11 Mar 2020 : moved the distance functions from ts_padepcnv into
   the *_predictor_convolution packages.  Computed the SVD for the Jacobian
   in the LU predictor in ts_padepcnv and applied the pole step.

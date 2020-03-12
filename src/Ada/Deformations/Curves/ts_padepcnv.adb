@@ -44,6 +44,7 @@ with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with Complex_Series_and_Polynomials;
 with Series_and_Homotopies;
+with Series_and_Predictors;
 with Test_Series_Predictors;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
@@ -53,6 +54,7 @@ with Jacobian_Convolution_Circuits;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
+with Homotopy_Pade_Approximants;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
@@ -67,7 +69,7 @@ procedure ts_padepcnv is
                 prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1 : in double_float;
+                alpha,beta1,beta2 : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -83,6 +85,7 @@ procedure ts_padepcnv is
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -96,7 +99,7 @@ procedure ts_padepcnv is
     use Standard_Predictor_Convolutions;
 
     z : Standard_Complex_Numbers.Complex_Number;
-    r,err,absdx,eta,pole_step,nrm : double_float;
+    r,err,absdx,pole_step,eta,nrm,curv_step : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol : Standard_Complex_Vectors.Vector(1..prd.dim);
@@ -112,8 +115,10 @@ procedure ts_padepcnv is
     else
       put("z : "); put(z); 
       put("  error estimate :"); put(err,3); new_line;
-      put("estimated radius :"); put(r,3); new_line;
+      put("estimated radius :"); put(r,3);
     end if;
+    pole_step := beta1*r;
+    put("  pole step :"); put(pole_step,3); new_line;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -124,8 +129,12 @@ procedure ts_padepcnv is
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
     eta := Standard_Predictor_Convolutions.Standard_Distance(svh);
-    put("  eta :"); put(eta,3); new_line;
-    pole_step := beta1*r;
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := Standard_Complex_Vector_Norms.Norm2(res);
+    curv_step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
+    put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
+    put("  curv_step :"); put(curv_step,3); new_line;
     Evaluate(prd.numcff,prd.dencff,pole_step,eva);
     z := Standard_Complex_Numbers.Create(pole_step);
     res := Eval(hom.crc,eva,z);
@@ -143,7 +152,7 @@ procedure ts_padepcnv is
                 prd : in Standard_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1 : in double_float;
+                alpha,beta1,beta2 : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -159,6 +168,7 @@ procedure ts_padepcnv is
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -171,7 +181,7 @@ procedure ts_padepcnv is
     use Standard_Predictor_Convolutions;
 
     z : Standard_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,eta,pole_step,nrm : double_float;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol : Standard_Complex_Vectors.Vector(1..prd.dim);
@@ -189,8 +199,10 @@ procedure ts_padepcnv is
     else
       put("z : "); put(z); 
       put("  error estimate :"); put(err,3); new_line;
-      put("estimated radius :"); put(r,3); new_line;
+      put("estimated radius :"); put(r,3);
     end if;
+    pole_step := beta1*r;
+    put("  pole step :"); put(pole_step,3); new_line;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -198,8 +210,12 @@ procedure ts_padepcnv is
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
     eta := Standard_Predictor_Convolutions.Standard_Distance(svh);
-    put("  eta :"); put(eta,3); new_line;
-    pole_step := beta1*r;
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := Standard_Complex_Vector_Norms.Norm2(res);
+    curv_step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
+    put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
+    put("  curv_step :"); put(curv_step,3); new_line;
     Evaluate(prd.numcff,prd.dencff,pole_step,eva);
     z := Standard_Complex_Numbers.Create(pole_step);
     res := Eval(hom.crc,eva,z);
@@ -217,7 +233,7 @@ procedure ts_padepcnv is
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1 : in double_float;
+                alpha,beta1,beta2 : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -237,7 +253,8 @@ procedure ts_padepcnv is
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
-  --   beta1    multiplication factor on the pole step;
+  --   beta1    multiplication factor on the pole radius;
+  --   beta2    multiplication factor on the curvature step;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -251,7 +268,8 @@ procedure ts_padepcnv is
     use DoblDobl_Predictor_Convolutions;
 
     z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,eta,pole_step,nrm : double_double;
+    r,err,absdx,pole_step,eta,nrm : double_double;
+    curv_step : double_float;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
@@ -267,8 +285,10 @@ procedure ts_padepcnv is
     else
       put("z : "); put(z); 
       put("  error estimate : "); put(err,3); new_line;
-      put("estimated radius : "); put(r,3); new_line;
+      put("estimated radius : "); put(r,3);
     end if;
+    pole_step := beta1*r;
+    put("  pole step : "); put(pole_step,3); new_line;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -279,14 +299,19 @@ procedure ts_padepcnv is
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
     eta := DoblDobl_Predictor_Convolutions.DoblDobl_Distance(svh);
-    put("  eta : "); put(eta,3); new_line;
-    pole_step := beta1*r;
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
+    curv_step := Series_and_Predictors.Step_Distance
+                   (prd.deg,beta2,hi_part(eta),hi_part(nrm));
+    put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
+    put("  curv_step : "); put(curv_step,3); new_line;
     Evaluate(prd.numcff,prd.dencff,pole_step,eva);
     z := DoblDobl_Complex_Numbers.Create(pole_step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual :"); put(nrm,3);
+    put("The predictor residual : "); put(nrm,3);
     if nrm < alpha
      then put_line("  okay");
      else put(" > "); put(alpha,3); new_line;
@@ -298,7 +323,7 @@ procedure ts_padepcnv is
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1 : in double_float;
+                alpha,beta1,beta2 : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -314,6 +339,7 @@ procedure ts_padepcnv is
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -326,7 +352,8 @@ procedure ts_padepcnv is
     use DoblDobl_Predictor_Convolutions;
 
     z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,eta,pole_step,nrm : double_double;
+    r,err,absdx,rcond,pole_step,eta,nrm : double_double;
+    curv_step : double_float;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
@@ -344,8 +371,10 @@ procedure ts_padepcnv is
     else
       put("z : "); put(z); 
       put("  error estimate : "); put(err,3); new_line;
-      put("estimated radius : "); put(r,3); new_line;
+      put("estimated radius : "); put(r,3);
     end if;
+    pole_step := beta1*r;
+    put("  pole step : "); put(pole_step,3); new_line;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -353,14 +382,19 @@ procedure ts_padepcnv is
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
     eta := DoblDobl_Predictor_Convolutions.DoblDobl_Distance(svh);
-    put("  eta : "); put(eta,3); new_line;
-    pole_step := beta1*r;
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
+    curv_step := Series_and_Predictors.Step_Distance
+                   (prd.deg,beta2,hi_part(eta),hi_part(nrm));
+    put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
+    put("  curv_step : "); put(curv_step,3); new_line;
     Evaluate(prd.numcff,prd.dencff,pole_step,eva);
     z := DoblDobl_Complex_Numbers.Create(pole_step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual :"); put(nrm,3);
+    put("The predictor residual : "); put(nrm,3);
     if nrm < alpha
      then put_line("  okay");
      else put(" > "); put(alpha,3); new_line;
@@ -372,7 +406,7 @@ procedure ts_padepcnv is
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1 : in double_float;
+                alpha,beta1,beta2 : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -393,6 +427,7 @@ procedure ts_padepcnv is
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -406,7 +441,8 @@ procedure ts_padepcnv is
     use QuadDobl_Predictor_Convolutions;
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,eta,pole_step,nrm : quad_double;
+    r,err,absdx,pole_step,eta,nrm : quad_double;
+    curv_step : double_float;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
@@ -422,8 +458,10 @@ procedure ts_padepcnv is
     else
       put("z : "); put(z); 
       put("  error estimate : "); put(err,3); new_line;
-      put("estimated radius : "); put(r,3); new_line;
+      put("estimated radius : "); put(r,3);
     end if;
+    pole_step := beta1*r;
+    put("  pole step : "); put(pole_step,3); new_line;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -434,8 +472,13 @@ procedure ts_padepcnv is
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
     eta := QuadDobl_Predictor_Convolutions.QuadDobl_Distance(svh);
-    put("  eta : "); put(eta,3); new_line;
-    pole_step := beta1*r;
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
+    curv_step := Series_and_Predictors.Step_Distance
+                   (prd.deg,beta2,hihi_part(eta),hihi_part(nrm));
+    put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
+    put("  curv_step : "); put(curv_step,3); new_line;
     Evaluate(prd.numcff,prd.dencff,pole_step,eva);
     z := QuadDobl_Complex_Numbers.Create(pole_Step);
     res := Eval(hom.crc,eva,z);
@@ -453,7 +496,7 @@ procedure ts_padepcnv is
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1 : in double_float;
+                alpha,beta1,beta2 : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -469,6 +512,7 @@ procedure ts_padepcnv is
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -481,7 +525,8 @@ procedure ts_padepcnv is
     use QuadDobl_Predictor_Convolutions;
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,eta,pole_step,nrm : quad_double;
+    r,err,absdx,rcond,pole_step,eta,nrm : quad_double;
+    curv_step : double_float;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
@@ -499,8 +544,10 @@ procedure ts_padepcnv is
     else
       put("z : "); put(z); 
       put("  error estimate : "); put(err,3); new_line;
-      put("estimated radius : "); put(r,3); new_line;
+      put("estimated radius : "); put(r,3);
     end if;
+    pole_step := beta1*r;
+    put("  pole step : "); put(pole_step,3); new_line;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -508,14 +555,19 @@ procedure ts_padepcnv is
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
     eta := QuadDobl_Predictor_Convolutions.QuadDobl_Distance(svh);
-    put("  eta : "); put(eta,3); new_line;
-    pole_step := beta1*r;
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
+    curv_step := Series_and_Predictors.Step_Distance
+                   (prd.deg,beta2,hihi_part(eta),hihi_part(nrm));
+    put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
+    put("  curv_step : "); put(curv_step,3); new_line;
     Evaluate(prd.numcff,prd.dencff,pole_step,eva);
     z := QuadDobl_Complex_Numbers.Create(pole_step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual :"); put(nrm,3);
+    put("The predictor residual : "); put(nrm,3);
     if nrm < alpha
      then put_line("  okay");
      else put(" > "); put(alpha,3); new_line;
@@ -544,6 +596,7 @@ procedure ts_padepcnv is
     ans : character;
     alpha : constant double_float := 1.0E-3;
     beta1 : constant double_float := 5.0E-1;
+    beta2 : constant double_float := 5.0E-3;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -563,7 +616,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             Standard_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
             Clear(prd);
           end;
         else
@@ -571,7 +624,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             Standard_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
             Clear(prd);
           end;
         end if;
@@ -608,6 +661,7 @@ procedure ts_padepcnv is
          := DoblDobl_Complex_Numbers.Create(integer(0));
     alpha : constant double_float := 1.0E-3;
     beta1 : constant double_float := 5.0E-1;
+    beta2 : constant double_float := 5.0E-3;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -627,7 +681,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             DoblDobl_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
             Clear(prd);
           end;
         else
@@ -635,7 +689,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             DoblDobl_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
             Clear(prd);
           end;
         end if;
@@ -672,6 +726,7 @@ procedure ts_padepcnv is
          := QuadDobl_Complex_Numbers.Create(integer(0));
     alpha : constant double_float := 1.0E-3;
     beta1 : constant double_float := 5.0E-1;
+    beta2 : constant double_float := 5.0E-3;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -691,7 +746,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             QuadDobl_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
             Clear(prd);
           end;
         else
@@ -699,7 +754,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             QuadDobl_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
             Clear(prd);
           end;
         end if;
@@ -713,7 +768,7 @@ procedure ts_padepcnv is
   end QuadDobl_Run_Prediction;
 
   procedure Standard_Test_Prediction
-              ( nq,idxpar : in integer32;
+              ( nq,idxpar,numdeg,dendeg : in integer32;
                 sols : in Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
@@ -728,16 +783,13 @@ procedure ts_padepcnv is
     serhom : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom : Standard_Speelpenning_Convolutions.Link_to_System;
-    deg,numdeg,dendeg : integer32 := 0;
+    deg : constant integer32 := numdeg + dendeg + 2;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     zero : constant Standard_Complex_Numbers.Complex_Number
          := Standard_Complex_Numbers.Create(0.0);
 
   begin
-    put("Give the degree of the series : "); get(deg);
-    put("Give the degree of the numerator : "); get(numdeg);
-    put("Give the degree of the denominator : "); get(dendeg);
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
     cnvhom := Make_Convolution_System(serhom,natural32(deg));
     put_line("The exponents in the circuits :");
@@ -760,7 +812,7 @@ procedure ts_padepcnv is
   end Standard_Test_Prediction;
 
   procedure DoblDobl_Test_Prediction
-              ( nq,idxpar : in integer32;
+              ( nq,idxpar,numdeg,dendeg : in integer32;
                 sols : in DoblDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
@@ -775,16 +827,13 @@ procedure ts_padepcnv is
     serhom : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
-    deg,numdeg,dendeg : integer32 := 0;
+    deg : constant integer32 := numdeg + dendeg + 2;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     zero : constant DoblDobl_Complex_Numbers.Complex_Number
          := DoblDobl_Complex_Numbers.Create(integer(0));
 
   begin
-    put("Give the degree of the series : "); get(deg);
-    put("Give the degree of the numerator : "); get(numdeg);
-    put("Give the degree of the denominator : "); get(dendeg);
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
     cnvhom := Make_Convolution_System(serhom,natural32(deg));
     put_line("The exponents in the circuits :");
@@ -807,7 +856,7 @@ procedure ts_padepcnv is
   end DoblDobl_Test_Prediction;
 
   procedure QuadDobl_Test_Prediction
-              ( nq,idxpar : in integer32;
+              ( nq,idxpar,numdeg,dendeg : in integer32;
                 sols : in QuadDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
@@ -822,16 +871,13 @@ procedure ts_padepcnv is
     serhom : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
-    deg,numdeg,dendeg : integer32 := 0;
+    deg : constant integer32 := numdeg + dendeg + 2;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     zero : constant QuadDobl_Complex_Numbers.Complex_Number
          := QuadDobl_Complex_Numbers.Create(integer(0));
 
   begin
-    put("Give the degree of the series : "); get(deg);
-    put("Give the degree of the numerator : "); get(numdeg);
-    put("Give the degree of the denominator : "); get(dendeg);
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
     cnvhom := Make_Convolution_System(serhom,natural32(deg));
     put_line("The exponents in the circuits :");
@@ -853,7 +899,7 @@ procedure ts_padepcnv is
     QuadDobl_Run_Prediction(cnvhom,sols,deg,numdeg,dendeg);
   end QuadDobl_Test_Prediction;
 
-  procedure Standard_Main is
+  procedure Standard_Main ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
   --   Test on the operations of a homotopy with series coefficients,
@@ -866,18 +912,18 @@ procedure ts_padepcnv is
     Test_Series_Predictors.Standard_Homotopy_Reader(nbeq,idxpar,sols);
     new_line;
     if idxpar = 0 then
-      Standard_Test_Prediction(nbeq,nbeq+1,sols);
+      Standard_Test_Prediction(nbeq,nbeq+1,numdeg,dendeg,sols);
     else
       declare
         dropsols : constant Standard_Complex_Solutions.Solution_List
                  := Solution_Drops.Drop(sols,natural32(idxpar));
       begin
-        Standard_Test_Prediction(nbeq,idxpar,dropsols);
+        Standard_Test_Prediction(nbeq,idxpar,numdeg,dendeg,dropsols);
       end;
     end if;
   end Standard_Main;
 
-  procedure DoblDobl_Main is
+  procedure DoblDobl_Main ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
   --   Test on the operations of a homotopy with series coefficients,
@@ -890,18 +936,18 @@ procedure ts_padepcnv is
     Test_Series_Predictors.DoblDobl_Homotopy_Reader(nbeq,idxpar,sols);
     new_line;
     if idxpar = 0 then
-      DoblDobl_Test_Prediction(nbeq,nbeq+1,sols);
+      DoblDobl_Test_Prediction(nbeq,nbeq+1,numdeg,dendeg,sols);
     else
       declare
         dropsols : constant DoblDobl_Complex_Solutions.Solution_List
                  := Solution_Drops.Drop(sols,natural32(idxpar));
       begin
-        DoblDobl_Test_Prediction(nbeq,idxpar,dropsols);
+        DoblDobl_Test_Prediction(nbeq,idxpar,numdeg,dendeg,dropsols);
       end;
     end if;
   end DoblDobl_Main;
 
-  procedure QuadDobl_Main is
+  procedure QuadDobl_Main ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
   --   Test on the operations of a homotopy with series coefficients,
@@ -914,13 +960,13 @@ procedure ts_padepcnv is
     Test_Series_Predictors.QuadDobl_Homotopy_Reader(nbeq,idxpar,sols);
     new_line;
     if idxpar = 0 then
-      QuadDobl_Test_Prediction(nbeq,nbeq+1,sols);
+      QuadDobl_Test_Prediction(nbeq,nbeq+1,numdeg,dendeg,sols);
     else
       declare
         dropsols : constant QuadDobl_Complex_Solutions.Solution_List
                  := Solution_Drops.Drop(sols,natural32(idxpar));
       begin
-        QuadDobl_Test_Prediction(nbeq,idxpar,dropsols);
+        QuadDobl_Test_Prediction(nbeq,idxpar,numdeg,dendeg,dropsols);
       end;
     end if;
   end QuadDobl_Main;
@@ -928,10 +974,12 @@ procedure ts_padepcnv is
   procedure Main is
 
   -- DESCRIPTION :
-  --   Prompts the user for the working precision and then launches
+  --   Prompts the user for the working precision,
+  --   the degrees of the Pade approximants, and then launches
   --   the test corresponding to the selected precision.
 
     precision : character;
+    numdeg,dendeg : integer32 := 0;
 
   begin
     new_line;
@@ -941,10 +989,13 @@ procedure ts_padepcnv is
     put_line("  2. quad double precision");
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(precision,"012");
+    new_line;
+    put("Give the degree of the Pade numerator : "); get(numdeg);
+    put("Give the degree of the Pade denominator : "); get(dendeg);
     case precision is
-      when '0' => Standard_Main;
-      when '1' => DoblDobl_Main;
-      when '2' => QuadDobl_Main;
+      when '0' => Standard_Main(numdeg,dendeg);
+      when '1' => DoblDobl_Main(numdeg,dendeg);
+      when '2' => QuadDobl_Main(numdeg,dendeg);
       when others => null;
     end case;
   end Main;
