@@ -592,6 +592,129 @@ package body Homotopy_Pade_Approximants is
   end Threshold_Index;
 
   function Solution_Error_Estimate
+             ( sercff : Standard_Complex_Vectors.Link_to_Vector;
+               numcff,dencff : Standard_Complex_Vectors.Link_to_Vector )
+             return Standard_Complex_Numbers.Complex_Number is
+
+    res : Standard_Complex_Numbers.Complex_Number;
+    numdeg : constant integer32 := numcff'last;
+    dendeg : constant integer32 := dencff'last;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    tol : constant double_float := 1.0E-5;
+    topidx : constant integer32 := Threshold_Index(sercff.all,maxdeg,tol);
+
+  begin
+    if topidx < 0 then
+      res := Standard_Complex_Numbers.Create(1.0);
+    else
+      res := sercff(topidx);
+      for i in 1..dendeg loop
+        exit when (i > topidx);
+        res := res + dencff(i)*sercff(topidx-i);
+      end loop;
+      if topidx <= numdeg
+       then res := numcff(topidx) - res;
+      end if;
+    end if;
+    if Standard_Complex_Numbers.AbsVal(res) < tol
+     then res := Standard_Complex_Numbers.Create(1.0);
+    end if;
+    return res;
+  end Solution_Error_Estimate;
+
+  function Solution_Error_Estimate
+             ( sercff : DoblDobl_Complex_Vectors.Link_to_Vector;
+               numcff,dencff : DoblDobl_Complex_Vectors.Link_to_Vector )
+             return DoblDobl_Complex_Numbers.Complex_Number is
+
+    res : DoblDobl_Complex_Numbers.Complex_Number;
+    numdeg : constant integer32 := numcff'last;
+    dendeg : constant integer32 := dencff'last;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    tol : constant double_float := 1.0E-5;
+    topidx : constant integer32 := Threshold_Index(sercff.all,maxdeg,tol);
+
+  begin
+    if topidx < 0 then
+      res := DoblDobl_Complex_Numbers.Create(integer(1));
+    else
+      res := sercff(topidx);
+      for i in 1..dendeg loop
+        exit when (i > topidx);
+        res := res + dencff(i)*sercff(topidx-i);
+      end loop;
+      if topidx <= numdeg
+       then res := numcff(topidx) - res;
+      end if;
+    end if;
+    if DoblDobl_Complex_Numbers.AbsVal(res) < tol
+     then res := DoblDobl_Complex_Numbers.Create(integer(1));
+    end if;
+    return res;
+  end Solution_Error_Estimate;
+
+  function Solution_Error_Estimate
+             ( sercff : QuadDobl_Complex_Vectors.Link_to_Vector;
+               numcff,dencff : QuadDobl_Complex_Vectors.Link_to_Vector )
+             return QuadDobl_Complex_Numbers.Complex_Number is
+
+    res : QuadDobl_Complex_Numbers.Complex_Number;
+    numdeg : constant integer32 := numcff'last;
+    dendeg : constant integer32 := dencff'last;
+    maxdeg : constant integer32 := numdeg + dendeg + 2;
+    tol : constant double_float := 1.0E-5;
+    topidx : constant integer32 := Threshold_Index(sercff.all,maxdeg,tol);
+
+  begin
+    if topidx < 0 then
+      res := QuadDobl_Complex_Numbers.Create(integer(1));
+    else
+      res := sercff(topidx);
+      for i in 1..dendeg loop
+        exit when (i > topidx);
+        res := res + dencff(i)*sercff(topidx-i);
+      end loop;
+      if topidx <= numdeg
+       then res := numcff(topidx) - res;
+      end if;
+    end if;
+    if QuadDobl_Complex_Numbers.AbsVal(res) < tol
+     then res := QuadDobl_Complex_Numbers.Create(integer(1));
+    end if;
+    return res;
+  end Solution_Error_Estimate;
+
+  procedure Solution_Error
+             ( servec : in Standard_Complex_VecVecs.VecVec;
+               numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+               err : out Standard_Complex_Vectors.Vector ) is
+  begin
+    for k in err'range loop
+      err(k) := Solution_Error_Estimate(servec(k),numcff(k),dencff(k));
+    end loop;
+  end Solution_Error;
+
+  procedure Solution_Error
+             ( servec : in DoblDobl_Complex_VecVecs.VecVec;
+               numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
+               err : out DoblDobl_Complex_Vectors.Vector ) is
+  begin
+    for k in err'range loop
+      err(k) := Solution_Error_Estimate(servec(k),numcff(k),dencff(k));
+    end loop;
+  end Solution_Error;
+
+  procedure Solution_Error
+             ( servec : in QuadDobl_Complex_VecVecs.VecVec;
+               numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
+               err : out QuadDobl_Complex_Vectors.Vector ) is
+  begin
+    for k in err'range loop
+      err(k) := Solution_Error_Estimate(servec(k),numcff(k),dencff(k));
+    end loop;
+  end Solution_Error;
+
+  function Solution_Error_Estimate
              ( s : Standard_Complex_Series.Link_to_Series;
                p : Standard_Pade_Approximants.Pade )
              return Standard_Complex_Numbers.Complex_Number is

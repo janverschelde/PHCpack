@@ -247,6 +247,47 @@ package Homotopy_Pade_Approximants is
   --   then -1 is returned.
 
   function Solution_Error_Estimate
+             ( sercff : Standard_Complex_Vectors.Link_to_Vector;
+               numcff,dencff : Standard_Complex_Vectors.Link_to_Vector )
+             return Standard_Complex_Numbers.Complex_Number;
+  function Solution_Error_Estimate
+             ( sercff : DoblDobl_Complex_Vectors.Link_to_Vector;
+               numcff,dencff : DoblDobl_Complex_Vectors.Link_to_Vector )
+             return DoblDobl_Complex_Numbers.Complex_Number;
+  function Solution_Error_Estimate
+             ( sercff : QuadDobl_Complex_Vectors.Link_to_Vector;
+               numcff,dencff : QuadDobl_Complex_Vectors.Link_to_Vector )
+             return QuadDobl_Complex_Numbers.Complex_Number;
+
+  -- DESCRIPTION :
+  --   Given in sercff are the coefficients of a series,
+  --   the numerator and denominator coefficients in numcff and dencff,
+  --   of the Pade approximant constructed on the series,
+  --   returns an estimate for a component of the solution vector.
+
+  -- REQUIRED : sercff'last = numcff'last + dencff'last + 2.
+
+  procedure Solution_Error
+             ( servec : in Standard_Complex_VecVecs.VecVec;
+               numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+               err : out Standard_Complex_Vectors.Vector );
+  procedure Solution_Error
+             ( servec : in DoblDobl_Complex_VecVecs.VecVec;
+               numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
+               err : out DoblDobl_Complex_Vectors.Vector );
+  procedure Solution_Error
+             ( servec : in QuadDobl_Complex_VecVecs.VecVec;
+               numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
+               err : out QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Returns in err the estimate for the error on the solution
+  --   based on the series with coefficients in servec and on
+  --   the coefficients of the Pade approximants in numcff and dencff,
+  --   where the degree of each series is numdeg + dendeg + 2,
+  --   numdeg = numcff'last and dendeg = dencff'last.
+
+  function Solution_Error_Estimate
              ( s : Standard_Complex_Series.Link_to_Series;
                p : Standard_Pade_Approximants.Pade )
              return Standard_Complex_Numbers.Complex_Number;
