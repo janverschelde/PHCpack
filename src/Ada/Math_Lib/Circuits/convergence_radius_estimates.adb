@@ -1,5 +1,4 @@
 with text_io;                            use text_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
@@ -54,51 +53,78 @@ package body Convergence_Radius_Estimates is
 
   procedure Fabry ( c : in Standard_Complex_Vectors.Vector;
                     z : out Standard_Complex_Numbers.Complex_Number;
-                    e : out double_float; fail : out boolean ) is
+                    e : out double_float; fail : out boolean;
+                    offset : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers;
 
   begin
-    fail := Is_Zero(c(c'last));
+    fail := Is_Zero(c(c'last-offset));
     if not fail then
-      z := c(c'last-1)/c(c'last);
-      if Is_Zero(c(c'last-1))
-       then e := 1.0;
-       else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+      if offset = 0 then
+        z := c(c'last-1)/c(c'last);
+        if Is_Zero(c(c'last-1))
+         then e := 1.0;
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+        end if;
+      else -- offset should be > 0, typically 2
+        z := c(c'last-1-offset)/c(c'last-offset);
+        if Is_Zero(c(c'last))
+         then e := 1.0;
+         else e := AbsVal(z - c(c'last-1)/c(c'last));
+        end if;
       end if;
     end if;
   end Fabry;
 
   procedure Fabry ( c : in DoblDobl_Complex_Vectors.Vector;
                     z : out DoblDobl_Complex_Numbers.Complex_Number;
-                    e : out double_double; fail : out boolean ) is
+                    e : out double_double; fail : out boolean;
+                    offset : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Numbers;
 
   begin
-    fail := Is_Zero(c(c'last));
+    fail := Is_Zero(c(c'last-offset));
     if not fail then
-      z := c(c'last-1)/c(c'last);
-      if Is_Zero(c(c'last-1))
-       then e := create(1.0);
-       else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+      if offset = 0 then
+        z := c(c'last-1)/c(c'last);
+        if Is_Zero(c(c'last-1))
+         then e := create(1.0);
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+        end if;
+      else -- offset should be > 0, typically 2
+        z := c(c'last-1-offset)/c(c'last-offset);
+        if Is_Zero(c(c'last))
+         then e := create(1.0);
+         else e := AbsVal(z - c(c'last-1)/c(c'last));
+        end if;
       end if;
     end if;
   end Fabry;
 
   procedure Fabry ( c : in QuadDobl_Complex_Vectors.Vector;
                     z : out QuadDobl_Complex_Numbers.Complex_Number;
-                    e : out quad_double; fail : out boolean ) is
+                    e : out quad_double; fail : out boolean;
+                    offset : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Numbers;
 
   begin
-    fail := Is_Zero(c(c'last));
+    fail := Is_Zero(c(c'last-offset));
     if not fail then
-      z := c(c'last-1)/c(c'last);
-      if Is_Zero(c(c'last-1))
-       then e := create(1.0);
-       else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+      if offset = 0 then
+        z := c(c'last-1)/c(c'last);
+        if Is_Zero(c(c'last-1))
+         then e := create(1.0);
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+        end if;
+      else -- offset should be > 0, typically 2
+        z := c(c'last-1-offset)/c(c'last-offset);
+        if Is_Zero(c(c'last))
+         then e := create(1.0);
+         else e := AbsVal(z - c(c'last-1)/c(c'last));
+        end if;
       end if;
     end if;
   end Fabry;
@@ -107,6 +133,7 @@ package body Convergence_Radius_Estimates is
                     z : out Standard_Complex_Numbers.Complex_Number;
                     r : out double_float;
                     e : out double_float; fail : out boolean;
+                    offset : in integer32 := 0;
                     verbose : in boolean := true ) is
 
     use Standard_Complex_Numbers;
@@ -118,7 +145,7 @@ package body Convergence_Radius_Estimates is
   begin
     fail := true;
     for k in c'range loop
-      Fabry(c(k).all,zk,ek,kfail);
+      Fabry(c(k).all,zk,ek,kfail,offset);
       if verbose then
         if kfail
          then put_line("zero last coefficient");
@@ -144,6 +171,7 @@ package body Convergence_Radius_Estimates is
                     z : out DoblDobl_Complex_Numbers.Complex_Number;
                     r : out double_double;
                     e : out double_double; fail : out boolean;
+                    offset : in integer32 := 0;
                     verbose : in boolean := true ) is
 
     use DoblDobl_Complex_Numbers;
@@ -155,7 +183,7 @@ package body Convergence_Radius_Estimates is
   begin
     fail := true;
     for k in c'range loop
-      Fabry(c(k).all,zk,ek,kfail);
+      Fabry(c(k).all,zk,ek,kfail,offset);
       if verbose then
         if kfail
          then put_line("zero last coefficient");
@@ -181,6 +209,7 @@ package body Convergence_Radius_Estimates is
                     z : out QuadDobl_Complex_Numbers.Complex_Number;
                     r : out quad_double;
                     e : out quad_double; fail : out boolean;
+                    offset : in integer32 := 0;
                     verbose : in boolean := true ) is
 
     use QuadDobl_Complex_Numbers;
@@ -192,7 +221,7 @@ package body Convergence_Radius_Estimates is
   begin
     fail := true;
     for k in c'range loop
-      Fabry(c(k).all,zk,ek,kfail);
+      Fabry(c(k).all,zk,ek,kfail,offset);
       if verbose then
         if kfail
          then put_line("zero last coefficient");

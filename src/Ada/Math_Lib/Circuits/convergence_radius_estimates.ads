@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -31,13 +32,16 @@ package Convergence_Radius_Estimates is
 
   procedure Fabry ( c : in Standard_Complex_Vectors.Vector;
                     z : out Standard_Complex_Numbers.Complex_Number;
-                    e : out double_float; fail : out boolean );
+                    e : out double_float; fail : out boolean;
+                    offset : in integer32 := 0 );
   procedure Fabry ( c : in DoblDobl_Complex_Vectors.Vector;
                     z : out DoblDobl_Complex_Numbers.Complex_Number;
-                    e : out double_double; fail : out boolean );
+                    e : out double_double; fail : out boolean;
+                    offset : in integer32 := 0 );
   procedure Fabry ( c : in QuadDobl_Complex_Vectors.Vector;
                     z : out QuadDobl_Complex_Numbers.Complex_Number;
-                    e : out quad_double; fail : out boolean );
+                    e : out quad_double; fail : out boolean;
+                    offset : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies the ratio theorem of Fabry to return the singular point
@@ -47,30 +51,39 @@ package Convergence_Radius_Estimates is
 
   -- ON ENTRY:
   --   c            the coefficients of a power series, starting at index 0
-  --                and ending at the degree of truncation.
+  --                and ending at the degree of truncation;
+  --   offset       by default 0, but for longer series, to coincide
+  --                with the pole in the Pade approximants for a linear
+  --                denominator, offset should be set to 2, in particular:
+  --                for [L,1], the pole is c(L)/c(L+1), while the degree
+  --                of truncation is L+1+2 (L+M+2 in general),
+  --                so z = c(c'last-3)/c(c'last-2), if c(c'last-2) /= 0.
 
   -- ON RETURN :
-  --   z            the quotient of c(c'last-1)/c(c'last),
-  --                if c(c'last) /= zero;
+  --   z            the quotient of c(c'last-1-offset)/c(c'last-offset),
+  --                if c(c'last-offset) /= zero;
   --   e            error estimate of the difference between
   --                |c(c'last-1)/c(c'last) - c(c'last-2)/c(c'last-1)|,
   --                only if fail is false;
-  --   fail         true if c(c'last) equals zero, false otherwise.
+  --   fail         true if c(c'last-offset) equals zero, false otherwise.
 
   procedure Fabry ( c : in Standard_Complex_VecVecs.VecVec;
                     z : out Standard_Complex_Numbers.Complex_Number;
                     r : out double_float;
                     e : out double_float; fail : out boolean;
+                    offset : in integer32 := 0;
                     verbose : in boolean := true );
   procedure Fabry ( c : in DoblDobl_Complex_VecVecs.VecVec;
                     z : out DoblDobl_Complex_Numbers.Complex_Number;
                     r : out double_double;
                     e : out double_double; fail : out boolean;
+                    offset : in integer32 := 0;
                     verbose : in boolean := true );
   procedure Fabry ( c : in QuadDobl_Complex_VecVecs.VecVec;
                     z : out QuadDobl_Complex_Numbers.Complex_Number;
                     r : out quad_double;
                     e : out quad_double; fail : out boolean;
+                    offset : in integer32 := 0;
                     verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -81,6 +94,9 @@ package Convergence_Radius_Estimates is
 
   -- ON ENTRY:
   --   c            the coefficients of a vector of power series;
+  --   offset       by default 0, but for longer series, to coincide
+  --                with the pole in the Pade approximants for a linear
+  --                denominator, offset should be set to 1;
   --   verbose      writes all results for all series if true.
 
   -- ON RETURN :

@@ -1,3 +1,6 @@
+Thu 12 Mar 2020 : added an offset index to the convergence_radius_estimates
+  so the estimate corresponds to the pole of an [L,1]-approximant.
+
 Sat 7 Mar 2020 : bug fix in system_convolution_circuits.adb.
   Another bug fix in system_convolution_circuits.adb and also bug fixedl
   in the Update() of generic_speelpenning_convolutions.adb.
