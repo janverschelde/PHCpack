@@ -18,6 +18,7 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs_io;
 with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
@@ -119,6 +120,14 @@ procedure ts_padepcnv is
     end if;
     pole_step := beta1*r;
     put("  pole step :"); put(pole_step,3); new_line;
+    if output then
+      for k in prd.numcff'range loop
+        put("Numerator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.numcff(k));
+        put("Denominator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.dencff(k));
+      end loop;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -203,6 +212,14 @@ procedure ts_padepcnv is
     end if;
     pole_step := beta1*r;
     put("  pole step :"); put(pole_step,3); new_line;
+    if output then
+      for k in prd.numcff'range loop
+        put("Numerator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.numcff(k));
+        put("Denominator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.dencff(k));
+      end loop;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -289,6 +306,14 @@ procedure ts_padepcnv is
     end if;
     pole_step := beta1*r;
     put("  pole step : "); put(pole_step,3); new_line;
+    if output then
+      for k in prd.numcff'range loop
+        put("Numerator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.numcff(k));
+        put("Denominator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.dencff(k));
+      end loop;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -375,6 +400,14 @@ procedure ts_padepcnv is
     end if;
     pole_step := beta1*r;
     put("  pole step : "); put(pole_step,3); new_line;
+    if output then
+      for k in prd.numcff'range loop
+        put("Numerator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.numcff(k));
+        put("Denominator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.dencff(k));
+      end loop;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -462,6 +495,14 @@ procedure ts_padepcnv is
     end if;
     pole_step := beta1*r;
     put("  pole step : "); put(pole_step,3); new_line;
+    if output then
+      for k in prd.numcff'range loop
+        put("Numerator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.numcff(k));
+        put("Denominator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.dencff(k));
+      end loop;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -548,6 +589,14 @@ procedure ts_padepcnv is
     end if;
     pole_step := beta1*r;
     put("  pole step : "); put(pole_step,3); new_line;
+    if output then
+      for k in prd.numcff'range loop
+        put("Numerator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.numcff(k));
+        put("Denominator coefficients at "); put(k,1); put_line(" :");
+        put_line(prd.dencff(k));
+      end loop;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -789,12 +838,24 @@ procedure ts_padepcnv is
     zero : constant Standard_Complex_Numbers.Complex_Number
          := Standard_Complex_Numbers.Create(0.0);
 
+    use Standard_Complex_Vectors;
+
   begin
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
     cnvhom := Make_Convolution_System(serhom,natural32(deg));
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
+    end loop;
+    put_line("The coefficients in the circuits :");
+    for k in cnvhom.crc'range loop
+      Standard_Complex_VecVecs_io.put_line(cnvhom.crc(k).cff);
+    end loop;
+    put_line("The constant coefficients :");
+    for k in cnvhom.crc'range loop
+      if cnvhom.crc(k).cst /= null
+       then put_line(cnvhom.crc(k).cst); new_line;
+      end if;
     end loop;
     put_line("Checking the start solutions ...");
     for k in 1..Length_Of(sols) loop

@@ -2,6 +2,8 @@ Thu 12 Mar 2020 : extended and improved ts_padepcnv.  In the specifications
   of the Predictor Convolution packages, documented the requirement on the
   degree of the power series, relative to the degrees of the approximants.
   Small update in ts_padepred.adb for the verbose flag.
+  Applied the offset index in *_predictor_convolutions.adb, tested by
+  ts_padepcnv, with also some modifications in ts_padepred.
 
 Wed 11 Mar 2020 : moved the distance functions from ts_padepcnv into
   the *_predictor_convolution packages.  Computed the SVD for the Jacobian

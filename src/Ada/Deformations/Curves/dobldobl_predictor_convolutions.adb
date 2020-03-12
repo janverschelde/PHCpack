@@ -99,12 +99,12 @@ package body DoblDobl_Predictor_Convolutions is
       LU_Newton_Steps
         (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
          info,prd.newtpiv,prd.wrk,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2);
     else
       LU_Newton_Steps
         (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
          info,prd.newtpiv,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
@@ -128,12 +128,12 @@ package body DoblDobl_Predictor_Convolutions is
       SVD_Newton_Steps
         (standard_output,hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,
          fail, prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2);
     else
       SVD_Newton_Steps
         (hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,fail,
          prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
