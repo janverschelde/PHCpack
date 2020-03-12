@@ -19,6 +19,8 @@ with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;
+ use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;
@@ -65,7 +67,7 @@ procedure ts_padepred is
     pv : Standard_Pade_Approximants.Pade_Vector(srv'range);
     poles : Standard_Complex_VecVecs.VecVec(pv'range);
     degnum,degden : integer32 := 0;
-    verbose : constant boolean := false;
+    verbose : constant boolean := true;
     frp : double_float;
 
   begin
@@ -73,13 +75,18 @@ procedure ts_padepred is
     put("Give the number of Newton iterations : "); get(nit);
     put("Give the maximal degree of the series : "); get(maxdeg);
    -- Test_Pade_Predictors.Standard_Test_Pade_Prediction(neq,sol,pv);
-    Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
+    if verbose then
+      Series_and_Predictors.Newton_Prediction
+        (standard_output,maxdeg,nit,hom,sol.v,srv,eva,true);
+    else
+      Series_and_Predictors.Newton_Prediction(maxdeg,nit,hom,sol.v,srv,eva);
+    end if;
     put("Give the degree of the numerator : "); get(degnum);
     put("Give the degree of the denominator : "); get(degden);
     pv := Standard_Pade_Approximants.Create(degnum,degden,srv,verbose);
     poles := Homotopy_Pade_Approximants.Standard_Poles(pv);
     frp := Homotopy_Pade_Approximants.Closest_Pole(poles);
-    put("The smallest forward pole : "); put(frp,3); new_line;
+    put("The closest pole : "); put(frp,3); new_line;
     Test_Pade_Predictors.Standard_Step_Prediction(hom,srv,eva,pv);
     new_line;
     put_line("Setting the step size based on the power series ...");
@@ -279,6 +286,7 @@ procedure ts_padepred is
     ans : character;
 
   begin
+    put_line("The homotopy system : "); put(h);
     put("Compute the global forward pole radius ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
