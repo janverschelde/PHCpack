@@ -23,6 +23,8 @@ package Standard_Predictor_Convolutions is
 --   The work space (wrk below) for Newton's method on power series
 --   has a dimension equal to the number of equations in the homotopy.
 
+-- REQUIRED : deg >= numdeg + dendeg + 2.
+
   type LU_Predictor ( dim,deg,numdeg,dendeg : integer32 ) is record
     sol : Standard_Complex_VecVecs.VecVec(1..dim);        -- degree deg series
     wrk : Standard_Complex_Vectors.Link_to_Vector;        -- Newton work space

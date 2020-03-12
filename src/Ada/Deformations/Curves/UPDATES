@@ -1,4 +1,6 @@
-Thu 12 Mar 2020 : extended and improved ts_padepcnv.
+Thu 12 Mar 2020 : extended and improved ts_padepcnv.  In the specifications
+  of the Predictor Convolution packages, documented the requirement on the
+  degree of the power series, relative to the degrees of the approximants.
 
 Wed 11 Mar 2020 : moved the distance functions from ts_padepcnv into
   the *_predictor_convolution packages.  Computed the SVD for the Jacobian
