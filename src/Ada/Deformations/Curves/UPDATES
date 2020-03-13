@@ -1,3 +1,7 @@
+Fri 13 Mar 2020 : added functions to series_and_predictors to evaluate
+  a formula for the distance in double double and quad double precision.
+  Added functions to ts_padepcnv to compute the minimum step size.
+
 Thu 12 Mar 2020 : extended and improved ts_padepcnv.  In the specifications
   of the Predictor Convolution packages, documented the requirement on the
   degree of the power series, relative to the degrees of the approximants.

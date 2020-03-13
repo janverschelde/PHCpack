@@ -374,6 +374,12 @@ package Series_and_Predictors is
   function Step_Distance
              ( k : integer32; beta,eta,errnrm : double_float )
              return double_float;
+  function Step_Distance
+             ( k : integer32; beta,eta,errnrm : double_double )
+             return double_double;
+  function Step_Distance
+             ( k : integer32; beta,eta,errnrm : quad_double )
+             return quad_double;
 
   -- DESCRIPTION :
   --   Returns the k-th root of the ratio (beta*eta)/errnrm,

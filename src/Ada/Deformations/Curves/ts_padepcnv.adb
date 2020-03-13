@@ -65,12 +65,69 @@ procedure ts_padepcnv is
 -- DESCRIPTION :
 --   Development of the Pade predictor on convolution circuits.
 
+  function Minimum ( a,b,c : double_float ) return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the minimum of a, b, and c.
+
+  begin
+    if a < b then    -- the minimum is either a or c
+      if a < c
+       then return a;
+       else return c;
+      end if;
+    else             -- the minimum is either b or c
+      if b < c
+       then return b;
+       else return c;
+      end if;
+    end if;
+  end Minimum;
+
+  function Minimum ( a,b,c : double_double ) return double_double is
+
+  -- DESCRIPTION :
+  --   Returns the minimum of a, b, and c.
+
+  begin
+    if a < b then    -- the minimum is either a or c
+      if a < c
+       then return a;
+       else return c;
+      end if;
+    else             -- the minimum is either b or c
+      if b < c
+       then return b;
+       else return c;
+      end if;
+    end if;
+  end Minimum;
+
+  function Minimum ( a,b,c : quad_double ) return quad_double is
+
+  -- DESCRIPTION :
+  --   Returns the minimum of a, b, and c.
+
+  begin
+    if a < b then    -- the minimum is either a or c
+      if a < c
+       then return a;
+       else return c;
+      end if;
+    else             -- the minimum is either b or c
+      if b < c
+       then return b;
+       else return c;
+      end if;
+    end if;
+  end Minimum;
+
   procedure Standard_LU_Prediction
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2 : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -87,6 +144,7 @@ procedure ts_padepcnv is
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -100,7 +158,7 @@ procedure ts_padepcnv is
     use Standard_Predictor_Convolutions;
 
     z : Standard_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm,curv_step : double_float;
+    r,err,absdx,pole_step,eta,nrm,curv_step,step : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol : Standard_Complex_Vectors.Vector(1..prd.dim);
@@ -144,8 +202,10 @@ procedure ts_padepcnv is
     curv_step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
     put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
     put("  curv_step :"); put(curv_step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,pole_step,eva);
-    z := Standard_Complex_Numbers.Create(pole_step);
+    step := Minimum(pole_step,curv_step,maxstep);
+    put("the step :"); put(step,3); new_line;
+    Evaluate(prd.numcff,prd.dencff,step,eva);
+    z := Standard_Complex_Numbers.Create(step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := Standard_Complex_Vector_Norms.Max_Norm(res);
@@ -161,7 +221,7 @@ procedure ts_padepcnv is
                 prd : in Standard_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2 : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -178,6 +238,7 @@ procedure ts_padepcnv is
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -190,7 +251,7 @@ procedure ts_padepcnv is
     use Standard_Predictor_Convolutions;
 
     z : Standard_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm,curv_step : double_float;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol : Standard_Complex_Vectors.Vector(1..prd.dim);
@@ -233,8 +294,10 @@ procedure ts_padepcnv is
     curv_step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
     put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
     put("  curv_step :"); put(curv_step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,pole_step,eva);
-    z := Standard_Complex_Numbers.Create(pole_step);
+    step := Minimum(pole_step,curv_step,maxstep);
+    put("the step :"); put(step,3); new_line;
+    Evaluate(prd.numcff,prd.dencff,step,eva);
+    z := Standard_Complex_Numbers.Create(step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := Standard_Complex_Vector_Norms.Max_Norm(res);
@@ -250,7 +313,7 @@ procedure ts_padepcnv is
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2 : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -272,6 +335,7 @@ procedure ts_padepcnv is
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor on the pole radius;
   --   beta2    multiplication factor on the curvature step;
+  --   maxstep  the maximum step size;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -285,13 +349,14 @@ procedure ts_padepcnv is
     use DoblDobl_Predictor_Convolutions;
 
     z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm : double_double;
-    curv_step : double_float;
+    r,err,absdx,pole_step,eta,nrm,curv_step,step : double_double;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     info,nbrit : integer32;
+    dd_maxstep : constant double_double := create(maxstep);
+    dd_beta2 : constant double_double := create(beta2);
 
   begin
     Predict(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
@@ -327,12 +392,13 @@ procedure ts_padepcnv is
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance
-                   (prd.deg,beta2,hi_part(eta),hi_part(nrm));
+    curv_step := Series_and_Predictors.Step_Distance(prd.deg,dd_beta2,eta,nrm);
     put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
     put("  curv_step : "); put(curv_step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,pole_step,eva);
-    z := DoblDobl_Complex_Numbers.Create(pole_step);
+    step := Minimum(pole_step,curv_step,dd_maxstep);
+    put("the step : "); put(step,3); new_line;
+    Evaluate(prd.numcff,prd.dencff,step,eva);
+    z := DoblDobl_Complex_Numbers.Create(step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
@@ -348,7 +414,7 @@ procedure ts_padepcnv is
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2 : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -365,6 +431,7 @@ procedure ts_padepcnv is
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -377,13 +444,14 @@ procedure ts_padepcnv is
     use DoblDobl_Predictor_Convolutions;
 
     z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm : double_double;
-    curv_step : double_float;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step : double_double;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
+    dd_maxstep : constant double_double := create(maxstep);
+    dd_beta2 : constant double_double := create(beta2);
 
   begin
     Predict(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
@@ -418,12 +486,13 @@ procedure ts_padepcnv is
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance
-                   (prd.deg,beta2,hi_part(eta),hi_part(nrm));
+    curv_step := Series_and_Predictors.Step_Distance(prd.deg,dd_beta2,eta,nrm);
     put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
     put("  curv_step : "); put(curv_step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,pole_step,eva);
-    z := DoblDobl_Complex_Numbers.Create(pole_step);
+    step := Minimum(pole_step,curv_step,dd_maxstep);
+    put("the step : "); put(step,3); new_line;
+    Evaluate(prd.numcff,prd.dencff,step,eva);
+    z := DoblDobl_Complex_Numbers.Create(step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
@@ -439,7 +508,7 @@ procedure ts_padepcnv is
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2 : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -461,6 +530,7 @@ procedure ts_padepcnv is
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -474,13 +544,14 @@ procedure ts_padepcnv is
     use QuadDobl_Predictor_Convolutions;
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm : quad_double;
-    curv_step : double_float;
+    r,err,absdx,pole_step,eta,nrm,curv_step,step : quad_double;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     info,nbrit : integer32;
+    qd_maxstep : constant quad_double := create(maxstep);
+    qd_beta2 : constant quad_double := create(beta2);
 
   begin
     Predict(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
@@ -516,12 +587,13 @@ procedure ts_padepcnv is
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance
-                   (prd.deg,beta2,hihi_part(eta),hihi_part(nrm));
+    curv_step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
     put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
     put("  curv_step : "); put(curv_step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,pole_step,eva);
-    z := QuadDobl_Complex_Numbers.Create(pole_Step);
+    step := Minimum(pole_step,curv_step,qd_maxstep);
+    put("the step : "); put(step,3); new_line;
+    Evaluate(prd.numcff,prd.dencff,step,eva);
+    z := QuadDobl_Complex_Numbers.Create(step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(res);
@@ -537,7 +609,7 @@ procedure ts_padepcnv is
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2 : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; output : in boolean ) is
 
   -- DESCRIPTION :
@@ -554,6 +626,7 @@ procedure ts_padepcnv is
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size;
   --   output   flag to indicate extra output during computations.
 
   -- ON RETURN :
@@ -566,13 +639,14 @@ procedure ts_padepcnv is
     use QuadDobl_Predictor_Convolutions;
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm : quad_double;
-    curv_step : double_float;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step : quad_double;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
+    qd_maxstep : constant quad_double := create(maxstep);
+    qd_beta2 : constant quad_double := create(beta2);
 
   begin
     Predict(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
@@ -607,12 +681,13 @@ procedure ts_padepcnv is
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance
-                   (prd.deg,beta2,hihi_part(eta),hihi_part(nrm));
+    curv_step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
     put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
     put("  curv_step : "); put(curv_step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,pole_step,eva);
-    z := QuadDobl_Complex_Numbers.Create(pole_step);
+    step := Minimum(pole_step,curv_step,qd_maxstep);
+    put("the step : "); put(step,3); new_line;
+    Evaluate(prd.numcff,prd.dencff,step,eva);
+    z := QuadDobl_Complex_Numbers.Create(step);
     res := Eval(hom.crc,eva,z);
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(res);
@@ -646,6 +721,7 @@ procedure ts_padepcnv is
     alpha : constant double_float := 1.0E-3;
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
+    maxstep : constant double_float := 1.0E-1;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -665,7 +741,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             Standard_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         else
@@ -673,7 +749,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             Standard_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         end if;
@@ -711,6 +787,7 @@ procedure ts_padepcnv is
     alpha : constant double_float := 1.0E-3;
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
+    maxstep : constant double_float := 1.0E-1;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -730,7 +807,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             DoblDobl_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         else
@@ -738,7 +815,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             DoblDobl_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         end if;
@@ -776,6 +853,7 @@ procedure ts_padepcnv is
     alpha : constant double_float := 1.0E-3;
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
+    maxstep : constant double_float := 1.0E-1;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -795,7 +873,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             QuadDobl_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         else
@@ -803,7 +881,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             QuadDobl_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,fail,otp);
+              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         end if;

@@ -825,6 +825,34 @@ package body Series_and_Predictors is
   end Step_Distance;
 
   function Step_Distance
+             ( k : integer32; beta,eta,errnrm : double_double )
+             return double_double is
+
+    ratio : constant double_double := (beta*eta)/errnrm;
+    one : constant double_double := create(1.0);
+    kdd : constant double_double := create(integer(k));
+    pwr : constant double_double := one/kdd;
+    res : constant double_double := ratio**pwr;
+
+  begin
+    return res;
+  end Step_Distance;
+
+  function Step_Distance
+             ( k : integer32; beta,eta,errnrm : quad_double )
+             return quad_double is
+
+    ratio : constant quad_double := (beta*eta)/errnrm;
+    one : constant quad_double := create(1.0);
+    kqd : constant quad_double := create(integer(k));
+    pwr : constant quad_double := one/kqd;
+    res : constant quad_double := ratio**pwr;
+
+  begin
+    return res;
+  end Step_Distance;
+
+  function Step_Distance
             ( k : integer32; beta,tval : double_float;
               jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
               hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
