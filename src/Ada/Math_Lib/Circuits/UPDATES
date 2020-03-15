@@ -1,3 +1,6 @@
+Sat 14 Mar 2020 : new package residual_convolution_circuits for the computation
+  of mixed residuals, tested by ts_evalcnv.
+
 Thu 12 Mar 2020 : added an offset index to the convergence_radius_estimates
   so the estimate corresponds to the pole of an [L,1]-approximant.
 

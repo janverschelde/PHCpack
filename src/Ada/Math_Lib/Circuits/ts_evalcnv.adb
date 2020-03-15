@@ -43,6 +43,10 @@ with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
+with Standard_Mixed_Residuals;
+with DoblDobl_Mixed_Residuals;
+with QuadDobl_Mixed_Residuals;
+with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 
 procedure ts_evalcnv is
 
@@ -65,7 +69,7 @@ procedure ts_evalcnv is
         := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
     x : constant Standard_Complex_Vectors.Vector(1..integer32(dim))
       := Standard_Random_Vectors.Random_Vector(1,integer32(dim));
-    y : constant Standard_Complex_Vectors.Vector(p'range)
+    y : Standard_Complex_Vectors.Vector(p'range)
       := Standard_Complex_Poly_SysFun.Eval(p,x);
     c0 : constant Circuits(p'range) := Make_Convolution_Circuits(p,0);
     c1 : constant Circuits(p'range) := Make_Convolution_Circuits(p,1);
@@ -73,6 +77,9 @@ procedure ts_evalcnv is
     val : Complex_Number;
     err : double_float := 0.0;
     t_one : constant Complex_Number := Create(1.0);
+    ac0 : constant Circuits(p'range) := AbsVal(c0);
+    abp : constant Standard_Complex_Poly_Systems.Poly_Sys(p'range)
+        := Standard_Mixed_Residuals.AbsVal(p);
 
   begin
     put("Evaluation at "); put(dim,1); put_line(" random numbers ...");
@@ -96,6 +103,12 @@ procedure ts_evalcnv is
     put_line("Evaluation at t = 0 : "); put_line(z);
     z := Eval(c1,x,t_one);
     put_line("Evaluation at t = 1 : "); put_line(z);
+    new_line;
+    put_line("Evaluating at system with absolute coefficients ...");
+    y := Standard_Complex_Poly_SysFun.Eval(abp,x);
+    put_line("Evaluation of the system at random numbers :"); put_line(y);
+    z := Eval(ac0,x);
+    put_line("Evaluation of the circuits at random numbers :"); put_line(z);
   end Standard_Test;
 
   procedure DoblDobl_Test ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
@@ -113,7 +126,7 @@ procedure ts_evalcnv is
         := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
     x : constant DoblDobl_Complex_Vectors.Vector(1..integer32(dim))
       := DoblDobl_Random_Vectors.Random_Vector(1,integer32(dim));
-    y : constant DoblDobl_Complex_Vectors.Vector(p'range)
+    y : DoblDobl_Complex_Vectors.Vector(p'range)
       := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
     c0 : constant Circuits(p'range) := Make_Convolution_Circuits(p,0);
     c1 : constant Circuits(p'range) := Make_Convolution_Circuits(p,1);
@@ -121,6 +134,9 @@ procedure ts_evalcnv is
     val : Complex_Number;
     err : double_double := create(0.0);
     t_one : constant Complex_Number := Create(integer32(1));
+    ac0 : constant Circuits(p'range) := AbsVal(c0);
+    abp : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range)
+        := DoblDobl_Mixed_Residuals.AbsVal(p);
 
   begin
     put("Evaluation at "); put(dim,1); put_line(" random numbers ...");
@@ -144,6 +160,12 @@ procedure ts_evalcnv is
     put_line("Evaluation at t = 0 : "); put_line(z);
     z := Eval(c1,x,t_one);
     put_line("Evaluation at t = 1 : "); put_line(z);
+    new_line;
+    put_line("Evaluating at system with absolute coefficients ...");
+    y := DoblDobl_Complex_Poly_SysFun.Eval(abp,x);
+    put_line("Evaluation of the system at random numbers :"); put_line(y);
+    z := Eval(ac0,x);
+    put_line("Evaluation of the circuits at random numbers :"); put_line(z);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
@@ -161,7 +183,7 @@ procedure ts_evalcnv is
         := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
     x : constant QuadDobl_Complex_Vectors.Vector(1..integer32(dim))
       := QuadDobl_Random_Vectors.Random_Vector(1,integer32(dim));
-    y : constant QuadDobl_Complex_Vectors.Vector(p'range)
+    y : QuadDobl_Complex_Vectors.Vector(p'range)
       := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     c0 : constant Circuits(p'range) := Make_Convolution_Circuits(p,0);
     c1 : constant Circuits(p'range) := Make_Convolution_Circuits(p,1);
@@ -169,6 +191,9 @@ procedure ts_evalcnv is
     val : Complex_Number;
     err : quad_double := create(0.0);
     t_one : constant Complex_Number := Create(integer32(1));
+    ac0 : constant Circuits(p'range) := AbsVal(c0);
+    abp : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range)
+        := QuadDobl_Mixed_Residuals.AbsVal(p);
 
   begin
     put("Evaluation at "); put(dim,1); put_line(" random numbers ...");
@@ -192,6 +217,12 @@ procedure ts_evalcnv is
     put_line("Evaluation at t = 0 : "); put_line(z);
     z := Eval(c1,x,t_one);
     put_line("Evaluation at t = 1 : "); put_line(z);
+    new_line;
+    put_line("Evaluating at system with absolute coefficients ...");
+    y := QuadDobl_Complex_Poly_SysFun.Eval(abp,x);
+    put_line("Evaluation of the system at random numbers :"); put_line(y);
+    z := Eval(ac0,x);
+    put_line("Evaluation of the circuits at random numbers :"); put_line(z);
   end QuadDobl_Test;
 
   procedure Standard_Random_Test
