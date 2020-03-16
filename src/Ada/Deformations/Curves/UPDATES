@@ -1,3 +1,5 @@
+Sun 15 Mar 2020 : added computation of mixed residuals to ts_padepcnv.
+
 Fri 13 Mar 2020 : added functions to series_and_predictors to evaluate
   a formula for the distance in double double and quad double precision.
   Added functions to ts_padepcnv to compute the minimum step size.

@@ -12,10 +12,13 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with Standard_Complex_Numbers_Polar;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers_Polar;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers_Polar;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs_io;
@@ -40,6 +43,9 @@ with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Solution_Drops;
+with Standard_Mixed_Residuals;
+with DoblDobl_Mixed_Residuals;
+with QuadDobl_Mixed_Residuals;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
@@ -52,6 +58,7 @@ with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Jacobian_Convolution_Circuits;
+with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
@@ -122,8 +129,71 @@ procedure ts_padepcnv is
     end if;
   end Minimum;
 
+  function Mixed_Residual
+              ( valres,absres : in Standard_Complex_Vectors.Vector )
+              return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the mixed residual for the evaluation in valres of the
+  --   convolutions at a point, and for absres the evaluated convolutions
+  --   with radii as coefficients at the absolute values of the point.
+
+    res : double_float := 0.0;
+    len : constant double_float := double_float(valres'last);
+
+    use Standard_Complex_Numbers_Polar;
+
+  begin
+    for k in valres'range loop 
+      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
+    end loop;
+    return (res/len);
+  end Mixed_Residual;
+
+  function Mixed_Residual
+              ( valres,absres : in DoblDobl_Complex_Vectors.Vector )
+              return double_double is
+
+  -- DESCRIPTION :
+  --   Returns the mixed residual for the evaluation in valres of the
+  --   convolutions at a point, and for absres the evaluated convolutions
+  --   with radii as coefficients at the absolute values of the point.
+
+    res : double_double := Create(0.0);
+    len : constant double_double := create(integer(valres'last));
+
+    use DoblDobl_Complex_Numbers_Polar;
+
+  begin
+    for k in valres'range loop 
+      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
+    end loop;
+    return (res/len);
+  end Mixed_Residual;
+
+  function Mixed_Residual
+              ( valres,absres : in QuadDobl_Complex_Vectors.Vector )
+              return quad_double is
+
+  -- DESCRIPTION :
+  --   Returns the mixed residual for the evaluation in valres of the
+  --   convolutions at a point, and for absres the evaluated convolutions
+  --   with radii as coefficients at the absolute values of the point.
+
+    res : quad_double := Create(0.0);
+    len : constant quad_double := create(integer(valres'last));
+
+    use QuadDobl_Complex_Numbers_Polar;
+
+  begin
+    for k in valres'range loop 
+      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
+    end loop;
+    return (res/len);
+  end Mixed_Residual;
+
   procedure Standard_LU_Prediction
-              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+              ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
@@ -137,6 +207,7 @@ procedure ts_padepcnv is
 
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coeffiecients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
@@ -158,11 +229,11 @@ procedure ts_padepcnv is
     use Standard_Predictor_Convolutions;
 
     z : Standard_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm,curv_step,step : double_float;
+    r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     lnk : Standard_Complex_Vectors.Link_to_Vector;
-    sol : Standard_Complex_Vectors.Vector(1..prd.dim);
-    res : Standard_Complex_Vectors.Vector(hom.crc'range);
+    sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
+    res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
     info,nbrit : integer32;
 
   begin
@@ -210,7 +281,11 @@ procedure ts_padepcnv is
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := Standard_Complex_Vector_Norms.Max_Norm(res);
     put("The predictor residual :"); put(nrm,3);
-    if nrm < alpha
+    radsol := Standard_Mixed_Residuals.AbsVal(eva);
+    absres := Eval(abh.crc,radsol,z);
+    mixres := Mixed_Residual(res,absres);
+    put("  mixres :"); put(mixres,3);
+    if mixres < alpha
      then put_line("  okay");
      else put(" >"); put(alpha,3); new_line;
     end if;
@@ -218,6 +293,7 @@ procedure ts_padepcnv is
 
   procedure Standard_SVD_Prediction
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
@@ -231,6 +307,7 @@ procedure ts_padepcnv is
 
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
@@ -251,11 +328,11 @@ procedure ts_padepcnv is
     use Standard_Predictor_Convolutions;
 
     z : Standard_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step : double_float;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : double_float;
     eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     lnk : Standard_Complex_Vectors.Link_to_Vector;
-    sol : Standard_Complex_Vectors.Vector(1..prd.dim);
-    res : Standard_Complex_Vectors.Vector(hom.crc'range);
+    sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
+    res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
 
   begin
@@ -302,7 +379,11 @@ procedure ts_padepcnv is
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := Standard_Complex_Vector_Norms.Max_Norm(res);
     put("The predictor residual :"); put(nrm,3);
-    if nrm < alpha
+    radsol := Standard_Mixed_Residuals.AbsVal(sol);
+    absres := Eval(abh.crc,radsol,z);
+    mixres := Mixed_Residual(res,absres);
+    put("  mixres :"); put(mixres,3);
+    if mixres < alpha
      then put_line("  okay");
      else put(" > "); put(alpha,3); new_line;
     end if;
@@ -310,6 +391,7 @@ procedure ts_padepcnv is
 
   procedure DoblDobl_LU_Prediction
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
@@ -328,6 +410,7 @@ procedure ts_padepcnv is
 
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
@@ -349,11 +432,11 @@ procedure ts_padepcnv is
     use DoblDobl_Predictor_Convolutions;
 
     z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm,curv_step,step : double_double;
+    r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : double_double;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    sol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
-    res : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
+    sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
+    res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     info,nbrit : integer32;
     dd_maxstep : constant double_double := create(maxstep);
     dd_beta2 : constant double_double := create(beta2);
@@ -403,7 +486,11 @@ procedure ts_padepcnv is
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
     put("The predictor residual : "); put(nrm,3);
-    if nrm < alpha
+    radsol := DoblDobl_Mixed_Residuals.AbsVal(eva);
+    absres := Eval(abh.crc,radsol,z);
+    mixres := Mixed_Residual(res,absres);
+    put("  mixres : "); put(mixres,3);
+    if mixres < alpha
      then put_line("  okay");
      else put(" > "); put(alpha,3); new_line;
     end if;
@@ -411,6 +498,7 @@ procedure ts_padepcnv is
 
   procedure DoblDobl_SVD_Prediction
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
@@ -424,6 +512,7 @@ procedure ts_padepcnv is
 
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
@@ -444,11 +533,11 @@ procedure ts_padepcnv is
     use DoblDobl_Predictor_Convolutions;
 
     z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step : double_double;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : double_double;
     eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    sol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
-    res : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
+    sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
+    res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
     dd_maxstep : constant double_double := create(maxstep);
     dd_beta2 : constant double_double := create(beta2);
@@ -497,7 +586,11 @@ procedure ts_padepcnv is
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
     put("The predictor residual : "); put(nrm,3);
-    if nrm < alpha
+    radsol := DoblDobl_Mixed_Residuals.AbsVal(eva);
+    absres := Eval(abh.crc,radsol,z);
+    mixres := Mixed_Residual(res,absres);
+    put("  mixres : "); put(mixres,3);
+    if mixres < alpha
      then put_line("  okay");
      else put(" > "); put(alpha,3); new_line;
     end if;
@@ -505,6 +598,7 @@ procedure ts_padepcnv is
 
   procedure QuadDobl_LU_Prediction
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
@@ -523,6 +617,7 @@ procedure ts_padepcnv is
 
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
@@ -544,11 +639,11 @@ procedure ts_padepcnv is
     use QuadDobl_Predictor_Convolutions;
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm,curv_step,step : quad_double;
+    r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : quad_double;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    sol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
-    res : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
+    sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
+    res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     info,nbrit : integer32;
     qd_maxstep : constant quad_double := create(maxstep);
     qd_beta2 : constant quad_double := create(beta2);
@@ -598,7 +693,11 @@ procedure ts_padepcnv is
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(res);
     put("The predictor residual :"); put(nrm,3);
-    if nrm < alpha
+    radsol := QuadDobl_Mixed_Residuals.AbsVal(eva);
+    absres := Eval(abh.crc,radsol,z);
+    mixres := Mixed_Residual(res,absres);
+    put("  mixres : "); put(mixres,3);
+    if mixres < alpha
      then put_line("  okay");
      else put(" > "); put(alpha,3); new_line;
     end if;
@@ -606,6 +705,7 @@ procedure ts_padepcnv is
 
   procedure QuadDobl_SVD_Prediction
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
@@ -619,6 +719,7 @@ procedure ts_padepcnv is
 
   -- ON ENTRY :
   --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   maxit    maximum number of iterations in Newton's method;
@@ -639,11 +740,11 @@ procedure ts_padepcnv is
     use QuadDobl_Predictor_Convolutions;
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step : quad_double;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : quad_double;
     eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    sol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
-    res : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
+    sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
+    res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit : integer32;
     qd_maxstep : constant quad_double := create(maxstep);
     qd_beta2 : constant quad_double := create(beta2);
@@ -692,7 +793,11 @@ procedure ts_padepcnv is
     put_line("Evaluation of the predicted solution : "); put_line(res);
     nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(res);
     put("The predictor residual : "); put(nrm,3);
-    if nrm < alpha
+    radsol := QuadDobl_Mixed_Residuals.AbsVal(eva);
+    absres := Eval(abh.crc,radsol,z);
+    mixres := Mixed_Residual(res,absres);
+    put("  mixres : "); put(mixres,3);
+    if mixres < alpha
      then put_line("  okay");
      else put(" > "); put(alpha,3); new_line;
     end if;
@@ -700,6 +805,7 @@ procedure ts_padepcnv is
 
   procedure Standard_Run_Prediction
               ( chom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 deg,numdeg,dendeg : in integer32 ) is
 
@@ -741,7 +847,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             Standard_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
+              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         else
@@ -749,7 +855,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             Standard_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
+              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         end if;
@@ -764,6 +870,7 @@ procedure ts_padepcnv is
 
   procedure DoblDobl_Run_Prediction
               ( chom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 deg,numdeg,dendeg : in integer32 ) is
 
@@ -807,7 +914,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             DoblDobl_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
+              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         else
@@ -815,7 +922,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             DoblDobl_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
+              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         end if;
@@ -830,6 +937,7 @@ procedure ts_padepcnv is
 
   procedure QuadDobl_Run_Prediction
               ( chom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 deg,numdeg,dendeg : in integer32 ) is
 
@@ -873,7 +981,7 @@ procedure ts_padepcnv is
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             QuadDobl_SVD_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
+              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         else
@@ -881,7 +989,7 @@ procedure ts_padepcnv is
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
             QuadDobl_LU_Prediction
-              (chom,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
+              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
             Clear(prd);
           end;
         end if;
@@ -909,7 +1017,7 @@ procedure ts_padepcnv is
         := Standard_Homotopy.Homotopy_System;
     serhom : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
-    cnvhom : Standard_Speelpenning_Convolutions.Link_to_System;
+    cnvhom,abshom : Standard_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
@@ -921,6 +1029,7 @@ procedure ts_padepcnv is
   begin
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
     cnvhom := Make_Convolution_System(serhom,natural32(deg));
+    abshom := Residual_Convolution_System(cnvhom);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
@@ -947,7 +1056,7 @@ procedure ts_padepcnv is
       end;
       tmp := Tail_Of(tmp);
     end loop;
-    Standard_Run_Prediction(cnvhom,sols,deg,numdeg,dendeg);
+    Standard_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end Standard_Test_Prediction;
 
   procedure DoblDobl_Test_Prediction
@@ -965,7 +1074,7 @@ procedure ts_padepcnv is
         := DoblDobl_Homotopy.Homotopy_System;
     serhom : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
-    cnvhom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+    cnvhom,abshom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
@@ -975,6 +1084,7 @@ procedure ts_padepcnv is
   begin
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
     cnvhom := Make_Convolution_System(serhom,natural32(deg));
+    abshom := Residual_Convolution_System(cnvhom);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
@@ -991,7 +1101,7 @@ procedure ts_padepcnv is
       end;
       tmp := Tail_Of(tmp);
     end loop;
-    DoblDobl_Run_Prediction(cnvhom,sols,deg,numdeg,dendeg);
+    DoblDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end DoblDobl_Test_Prediction;
 
   procedure QuadDobl_Test_Prediction
@@ -1009,7 +1119,7 @@ procedure ts_padepcnv is
         := QuadDobl_Homotopy.Homotopy_System;
     serhom : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
-    cnvhom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+    cnvhom,abshom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
@@ -1019,6 +1129,7 @@ procedure ts_padepcnv is
   begin
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
     cnvhom := Make_Convolution_System(serhom,natural32(deg));
+    abshom := Residual_Convolution_System(cnvhom);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
@@ -1035,7 +1146,7 @@ procedure ts_padepcnv is
       end;
       tmp := Tail_Of(tmp);
     end loop;
-    QuadDobl_Run_Prediction(cnvhom,sols,deg,numdeg,dendeg);
+    QuadDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end QuadDobl_Test_Prediction;
 
   procedure Standard_Main ( numdeg,dendeg : in integer32 ) is
