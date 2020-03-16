@@ -470,4 +470,18 @@ package body QuadDobl_Mixed_Residuals is
     return res;
   end Residual;
 
+  function Mixed_Residual
+              ( valres,absres : in QuadDobl_Complex_Vectors.Vector )
+              return quad_double is
+
+    res : quad_double := Create(0.0);
+    len : constant quad_double := create(integer(valres'last));
+
+  begin
+    for k in valres'range loop 
+      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
+    end loop;
+    return (res/len);
+  end Mixed_Residual;
+
 end QuadDobl_Mixed_Residuals;

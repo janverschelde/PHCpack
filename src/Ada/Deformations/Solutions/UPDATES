@@ -1,3 +1,6 @@
+Mon 16 Mar 2020 : to {standard,dobldobl,quaddobl}_mixed_residuals, added
+  functions to compute the mixed residuals directly from vectors.
+
 Thu 2 Jan 2020 : for compiler warnings, modified ts_quad, ts_quadpart,
   standard_complex_solutions.adb, standard_complex_solutions_io.adb,
   standard_solution_array_lists.adb, ts_sols, ts_mapsols_io, ts_dicsols_io.

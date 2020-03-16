@@ -470,4 +470,18 @@ package body DoblDobl_Mixed_Residuals is
     return res;
   end Residual;
 
+  function Mixed_Residual
+              ( valres,absres : in DoblDobl_Complex_Vectors.Vector )
+              return double_double is
+
+    res : double_double := Create(0.0);
+    len : constant double_double := create(integer(valres'last));
+
+  begin
+    for k in valres'range loop 
+      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
+    end loop;
+    return (res/len);
+  end Mixed_Residual;
+
 end DoblDobl_Mixed_Residuals;

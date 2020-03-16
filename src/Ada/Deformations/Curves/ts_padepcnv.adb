@@ -12,13 +12,10 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
-with Standard_Complex_Numbers_Polar;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
-with DoblDobl_Complex_Numbers_Polar;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
-with QuadDobl_Complex_Numbers_Polar;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs_io;
@@ -129,69 +126,6 @@ procedure ts_padepcnv is
     end if;
   end Minimum;
 
-  function Mixed_Residual
-              ( valres,absres : in Standard_Complex_Vectors.Vector )
-              return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the mixed residual for the evaluation in valres of the
-  --   convolutions at a point, and for absres the evaluated convolutions
-  --   with radii as coefficients at the absolute values of the point.
-
-    res : double_float := 0.0;
-    len : constant double_float := double_float(valres'last);
-
-    use Standard_Complex_Numbers_Polar;
-
-  begin
-    for k in valres'range loop 
-      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
-    end loop;
-    return (res/len);
-  end Mixed_Residual;
-
-  function Mixed_Residual
-              ( valres,absres : in DoblDobl_Complex_Vectors.Vector )
-              return double_double is
-
-  -- DESCRIPTION :
-  --   Returns the mixed residual for the evaluation in valres of the
-  --   convolutions at a point, and for absres the evaluated convolutions
-  --   with radii as coefficients at the absolute values of the point.
-
-    res : double_double := Create(0.0);
-    len : constant double_double := create(integer(valres'last));
-
-    use DoblDobl_Complex_Numbers_Polar;
-
-  begin
-    for k in valres'range loop 
-      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
-    end loop;
-    return (res/len);
-  end Mixed_Residual;
-
-  function Mixed_Residual
-              ( valres,absres : in QuadDobl_Complex_Vectors.Vector )
-              return quad_double is
-
-  -- DESCRIPTION :
-  --   Returns the mixed residual for the evaluation in valres of the
-  --   convolutions at a point, and for absres the evaluated convolutions
-  --   with radii as coefficients at the absolute values of the point.
-
-    res : quad_double := Create(0.0);
-    len : constant quad_double := create(integer(valres'last));
-
-    use QuadDobl_Complex_Numbers_Polar;
-
-  begin
-    for k in valres'range loop 
-      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
-    end loop;
-    return (res/len);
-  end Mixed_Residual;
-
   procedure Standard_LU_Prediction
               ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
@@ -283,7 +217,7 @@ procedure ts_padepcnv is
     put("The predictor residual :"); put(nrm,3);
     radsol := Standard_Mixed_Residuals.AbsVal(eva);
     absres := Eval(abh.crc,radsol,z);
-    mixres := Mixed_Residual(res,absres);
+    mixres := Standard_Mixed_Residuals.Mixed_Residual(res,absres);
     put("  mixres :"); put(mixres,3);
     if mixres < alpha
      then put_line("  okay");
@@ -381,7 +315,7 @@ procedure ts_padepcnv is
     put("The predictor residual :"); put(nrm,3);
     radsol := Standard_Mixed_Residuals.AbsVal(sol);
     absres := Eval(abh.crc,radsol,z);
-    mixres := Mixed_Residual(res,absres);
+    mixres := Standard_Mixed_Residuals.Mixed_Residual(res,absres);
     put("  mixres :"); put(mixres,3);
     if mixres < alpha
      then put_line("  okay");
@@ -488,7 +422,7 @@ procedure ts_padepcnv is
     put("The predictor residual : "); put(nrm,3);
     radsol := DoblDobl_Mixed_Residuals.AbsVal(eva);
     absres := Eval(abh.crc,radsol,z);
-    mixres := Mixed_Residual(res,absres);
+    mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(res,absres);
     put("  mixres : "); put(mixres,3);
     if mixres < alpha
      then put_line("  okay");
@@ -588,7 +522,7 @@ procedure ts_padepcnv is
     put("The predictor residual : "); put(nrm,3);
     radsol := DoblDobl_Mixed_Residuals.AbsVal(eva);
     absres := Eval(abh.crc,radsol,z);
-    mixres := Mixed_Residual(res,absres);
+    mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(res,absres);
     put("  mixres : "); put(mixres,3);
     if mixres < alpha
      then put_line("  okay");
@@ -695,7 +629,7 @@ procedure ts_padepcnv is
     put("The predictor residual :"); put(nrm,3);
     radsol := QuadDobl_Mixed_Residuals.AbsVal(eva);
     absres := Eval(abh.crc,radsol,z);
-    mixres := Mixed_Residual(res,absres);
+    mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(res,absres);
     put("  mixres : "); put(mixres,3);
     if mixres < alpha
      then put_line("  okay");
@@ -795,7 +729,7 @@ procedure ts_padepcnv is
     put("The predictor residual : "); put(nrm,3);
     radsol := QuadDobl_Mixed_Residuals.AbsVal(eva);
     absres := Eval(abh.crc,radsol,z);
-    mixres := Mixed_Residual(res,absres);
+    mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(res,absres);
     put("  mixres : "); put(mixres,3);
     if mixres < alpha
      then put_line("  okay");

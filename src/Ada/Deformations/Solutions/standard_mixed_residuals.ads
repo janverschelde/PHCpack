@@ -184,4 +184,13 @@ package Standard_Mixed_Residuals is
   --   where abp = AbsVal(pol).  If a file is provided, then one line
   --   for every polynomial is written to the output file.
 
+  function Mixed_Residual
+              ( valres,absres : in Standard_Complex_Vectors.Vector )
+              return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the mixed residual for the evaluation in valres of the
+  --   convolutions at a point, and for absres the evaluated convolutions
+  --   with radii as coefficients at the absolute values of the point.
+
 end Standard_Mixed_Residuals;

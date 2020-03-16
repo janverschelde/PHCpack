@@ -469,4 +469,18 @@ package body Standard_Mixed_Residuals is
     return res;
   end Residual;
 
+  function Mixed_Residual
+              ( valres,absres : in Standard_Complex_Vectors.Vector )
+              return double_float is
+
+    res : double_float := 0.0;
+    len : constant double_float := double_float(valres'last);
+
+  begin
+    for k in valres'range loop 
+      res := res + Radius(valres(k))/(Radius(absres(k)) + 1.0);
+    end loop;
+    return (res/len);
+  end Mixed_Residual;
+
 end Standard_Mixed_Residuals;
