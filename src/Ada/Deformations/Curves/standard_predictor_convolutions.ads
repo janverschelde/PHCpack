@@ -106,7 +106,7 @@ package Standard_Predictor_Convolutions is
   -- ON RETURN :
   --   data allocated to run the Newton-Fabry-Pade predictor.
 
-  procedure Predict
+  procedure Newton_Fabry
               ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
@@ -134,7 +134,7 @@ package Standard_Predictor_Convolutions is
   --   rad      estimates radius of convergence of the series;
   --   err      error estimate on the location of z.
 
-  procedure Predict
+  procedure Newton_Fabry
               ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
@@ -171,13 +171,47 @@ package Standard_Predictor_Convolutions is
   --   Computes the Hessians for the convolution circuits in hom
   --   at the solution sol and stores the results in svh.
 
-  function Standard_Distance
-              ( svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians )
-              return double_float;
+  function Distance ( svh : in Link_to_SVD_Hessians ) return double_float;
 
   -- DESCRIPTION :
   --   Returns the estimate to the distance to the nearest solution,
   --   based on the singular values in svh.
+
+  procedure Predictor_Feedback
+              ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+                step : in out double_float; alpha : in double_float;
+                eva,radsol : in out Standard_Complex_Vectors.Vector;
+                res,absres : in out Standard_Complex_Vectors.Vector;
+                nrm,mixres : out double_float; nbfail : out integer32;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Given a step size, runs a predictor feedback loop,
+  --   cutting the step size each time in half, until the
+  --   mixed residual is less than the tolerance.
+
+  -- ON ENTRY :
+  --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coeffiecients, for mixed residuals;
+  --   numcff   coefficients of the numerator of the Pade approximants;
+  --   dencff   coefficients of the denominator of the Pade approximants;
+  --   step     current step size;
+  --   alpha    tolerance on the mixed predictor residual;
+  --   eva      work space of range 1..hom.dim for Pade evaluation;
+  --   radsol   work space for the radii of eva;
+  --   res      work space of hom.crc'range for evaluation of eva;
+  --   absres   work space of abh.crc'range for evaluation of radsol;
+  --   verbose  flag for extra output if true.
+
+  -- ON RETURN :
+  --   step     shorter step size if nbfail > 0;
+  --   eva      predicted solution by evaluation of Pade approximants;
+  --   radsol   radii of the predicted solution;
+  --   res      evaluation of the predicted solution eva;
+  --   absres   evaluation of the radii of the prediction radsol;
+  --   nrm      max norm of the components in res;
+  --   mixres   mixed residual.
 
 -- DESTRUCTORS :
 

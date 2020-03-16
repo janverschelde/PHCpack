@@ -1,7 +1,11 @@
 with unchecked_deallocation;
 with text_io;                            use text_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Mathematical_Functions;
+with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_Vector_Norms;
 with Standard_Complex_Singular_Values;
+with Standard_Mixed_Residuals;
 with Standard_Rational_Approximations;
 with Newton_Convolutions;
 with Newton_Power_Convolutions;
@@ -81,7 +85,7 @@ package body Standard_Predictor_Convolutions is
     return res;
   end Create;
 
-  procedure Predict
+  procedure Newton_Fabry
               ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
@@ -108,9 +112,9 @@ package body Standard_Predictor_Convolutions is
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
-  end Predict;
+  end Newton_Fabry;
 
-  procedure Predict
+  procedure Newton_Fabry
               ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
@@ -137,7 +141,7 @@ package body Standard_Predictor_Convolutions is
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
-  end Predict;
+  end Newton_Fabry;
 
   procedure Second
               ( hom : in Link_to_System; svh : in Link_to_SVD_Hessians;
@@ -158,9 +162,7 @@ package body Standard_Predictor_Convolutions is
     end loop;
   end Second;
 
-  function Standard_Distance
-              ( svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians )
-              return double_float is
+  function Distance ( svh : in Link_to_SVD_Hessians ) return double_float is
 
     sigma1 : constant double_float
            := Standard_Complex_Numbers.REAL_PART(svh.vals(0));
@@ -173,7 +175,50 @@ package body Standard_Predictor_Convolutions is
     end loop;
     nrm := Standard_Mathematical_Functions.SQRT(accsum);
     return (2.0*sigma1)/nrm;
-  end Standard_Distance;
+  end Distance;
+
+  procedure Predictor_Feedback
+              ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+                step : in out double_float; alpha : in double_float;
+                eva,radsol : in out Standard_Complex_Vectors.Vector;
+                res,absres : in out Standard_Complex_Vectors.Vector;
+                nrm,mixres : out double_float; nbfail : out integer32;
+                verbose : in boolean := true ) is
+
+    z : Standard_Complex_Numbers.Complex_Number;
+
+  begin
+    nbfail := 0;
+    loop
+      if verbose
+       then put("the step :"); put(step,3); new_line;
+      end if;
+      Standard_Rational_Approximations.Evaluate(numcff,dencff,step,eva);
+      z := Standard_Complex_Numbers.Create(step);
+      res := Standard_Speelpenning_Convolutions.Eval(hom.crc,eva,z);
+      nrm := Standard_Complex_Vector_Norms.Max_Norm(res);
+      radsol := Standard_Mixed_Residuals.AbsVal(eva);
+      absres := Standard_Speelpenning_Convolutions.Eval(abh.crc,radsol,z);
+      mixres := Standard_Mixed_Residuals.Mixed_Residual(res,absres);
+      if verbose then
+        put_line("Evaluation of the predicted solution : "); put_line(res);
+        put("The predictor residual :"); put(nrm,3);
+        put("  mixres :"); put(mixres,3);
+      end if;
+      if mixres < alpha then
+        if verbose
+         then put_line("  okay");
+        end if;
+        exit;
+      else
+        if verbose
+         then put(" >"); put(alpha,3); new_line;
+        end if;
+        step := step/2.0; nbfail := nbfail + 1;
+      end if;
+    end loop;
+  end Predictor_Feedback;
 
 -- DESTRUCTORS :
 

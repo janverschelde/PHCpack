@@ -1,7 +1,12 @@
 with unchecked_deallocation;
 with text_io;                            use text_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with DoblDobl_Mathematical_Functions;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Complex_Singular_Values;
+with DoblDobl_Mixed_Residuals;
 with DoblDobl_Rational_Approximations;
 with Newton_Convolutions;
 with Newton_Power_Convolutions;
@@ -81,7 +86,7 @@ package body DoblDobl_Predictor_Convolutions is
     return res;
   end Create;
 
-  procedure Predict
+  procedure Newton_Fabry
               ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_double;
@@ -108,9 +113,9 @@ package body DoblDobl_Predictor_Convolutions is
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
-  end Predict;
+  end Newton_Fabry;
 
-  procedure Predict
+  procedure Newton_Fabry
               ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_double;
@@ -137,7 +142,7 @@ package body DoblDobl_Predictor_Convolutions is
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
-  end Predict;
+  end Newton_Fabry;
 
   procedure Second
               ( hom : in Link_to_System; svh : in Link_to_SVD_Hessians;
@@ -158,9 +163,7 @@ package body DoblDobl_Predictor_Convolutions is
     end loop;
   end Second;
 
-  function DoblDobl_Distance
-              ( svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians )
-              return double_double is
+  function Distance ( svh : in Link_to_SVD_Hessians ) return double_double is
 
     sigma1 : constant double_double
            := DoblDobl_Complex_Numbers.REAL_PART(svh.vals(0));
@@ -173,7 +176,50 @@ package body DoblDobl_Predictor_Convolutions is
     end loop;
     nrm := DoblDobl_Mathematical_Functions.SQRT(accsum);
     return (2.0*sigma1)/nrm;
-  end DoblDobl_Distance;
+  end Distance;
+
+  procedure Predictor_Feedback
+              ( hom,abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
+                step : in out double_double; alpha : in double_float;
+                eva,radsol : in out DoblDobl_Complex_Vectors.Vector;
+                res,absres : in out DoblDobl_Complex_Vectors.Vector;
+                nrm,mixres : out double_double; nbfail : out integer32;
+                verbose : in boolean := true ) is
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    nbfail := 0;
+    loop
+      if verbose
+       then put("the step : "); put(step,3); new_line;
+      end if;
+      DoblDobl_Rational_Approximations.Evaluate(numcff,dencff,step,eva);
+      z := DoblDobl_Complex_Numbers.Create(step);
+      res := DoblDobl_Speelpenning_Convolutions.Eval(hom.crc,eva,z);
+      nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
+      radsol := DoblDobl_Mixed_Residuals.AbsVal(eva);
+      absres := DoblDobl_Speelpenning_Convolutions.Eval(abh.crc,radsol,z);
+      mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(res,absres);
+      if verbose then
+        put_line("Evaluation of the predicted solution : "); put_line(res);
+        put("The predictor residual : "); put(nrm,3);
+        put("  mixres : "); put(mixres,3);
+      end if;
+      if mixres < alpha then
+        if verbose
+         then put_line("  okay");
+        end if;
+        exit;
+      else
+        if verbose
+         then put(" > "); put(alpha,3); new_line;
+        end if;
+        step := step/2.0; nbfail := nbfail + 1;
+      end if;
+    end loop;
+  end Predictor_Feedback;
 
 -- DESTRUCTORS :
 

@@ -40,9 +40,6 @@ with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
 with Solution_Drops;
-with Standard_Mixed_Residuals;
-with DoblDobl_Mixed_Residuals;
-with QuadDobl_Mixed_Residuals;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
@@ -56,9 +53,6 @@ with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Jacobian_Convolution_Circuits;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
-with Standard_Rational_Approximations;
-with DoblDobl_Rational_Approximations;
-with QuadDobl_Rational_Approximations;
 with Homotopy_Pade_Approximants;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
@@ -158,7 +152,6 @@ procedure ts_padepcnv is
   --   fail     indicates failure status.
 
     use Standard_Complex_Singular_Values;
-    use Standard_Rational_Approximations;
     use Standard_Speelpenning_Convolutions;
     use Standard_Predictor_Convolutions;
 
@@ -168,10 +161,10 @@ procedure ts_padepcnv is
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
     res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    info,nbrit,nbfail : integer32;
 
   begin
-    Predict(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
     put("#iterations : "); put(nbrit,1);
     put("  |dx| :"); put(absdx,3); new_line;
     if fail then
@@ -200,7 +193,7 @@ procedure ts_padepcnv is
     svh.vals(0) := svh.svl(svh.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := Standard_Predictor_Convolutions.Standard_Distance(svh);
+    eta := Standard_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := Standard_Complex_Vector_Norms.Norm2(res);
@@ -208,21 +201,8 @@ procedure ts_padepcnv is
     put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
     put("  curv_step :"); put(curv_step,3); new_line;
     step := Minimum(pole_step,curv_step,maxstep);
-    put("the step :"); put(step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,step,eva);
-    z := Standard_Complex_Numbers.Create(step);
-    res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : "); put_line(res);
-    nrm := Standard_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual :"); put(nrm,3);
-    radsol := Standard_Mixed_Residuals.AbsVal(eva);
-    absres := Eval(abh.crc,radsol,z);
-    mixres := Standard_Mixed_Residuals.Mixed_Residual(res,absres);
-    put("  mixres :"); put(mixres,3);
-    if mixres < alpha
-     then put_line("  okay");
-     else put(" >"); put(alpha,3); new_line;
-    end if;
+    Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
+      eva,radsol,res,absres,nrm,mixres,nbfail,true);
   end Standard_LU_Prediction;
 
   procedure Standard_SVD_Prediction
@@ -257,7 +237,6 @@ procedure ts_padepcnv is
   --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
-    use Standard_Rational_Approximations;
     use Standard_Speelpenning_Convolutions;
     use Standard_Predictor_Convolutions;
 
@@ -267,10 +246,10 @@ procedure ts_padepcnv is
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
     res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
-    nbrit : integer32;
+    nbrit,nbfail : integer32;
 
   begin
-    Predict(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
     put("#iterations : "); put(nbrit,1);
     put("  |dx| :"); put(absdx,3);
     put("  rcond :"); put(rcond,3); new_line;
@@ -298,7 +277,7 @@ procedure ts_padepcnv is
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := Standard_Predictor_Convolutions.Standard_Distance(svh);
+    eta := Standard_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := Standard_Complex_Vector_Norms.Norm2(res);
@@ -306,21 +285,8 @@ procedure ts_padepcnv is
     put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
     put("  curv_step :"); put(curv_step,3); new_line;
     step := Minimum(pole_step,curv_step,maxstep);
-    put("the step :"); put(step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,step,eva);
-    z := Standard_Complex_Numbers.Create(step);
-    res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : "); put_line(res);
-    nrm := Standard_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual :"); put(nrm,3);
-    radsol := Standard_Mixed_Residuals.AbsVal(sol);
-    absres := Eval(abh.crc,radsol,z);
-    mixres := Standard_Mixed_Residuals.Mixed_Residual(res,absres);
-    put("  mixres :"); put(mixres,3);
-    if mixres < alpha
-     then put_line("  okay");
-     else put(" > "); put(alpha,3); new_line;
-    end if;
+    Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
+      eva,radsol,res,absres,nrm,mixres,nbfail,true);
   end Standard_SVD_Prediction;
 
   procedure DoblDobl_LU_Prediction
@@ -361,7 +327,6 @@ procedure ts_padepcnv is
   --   fail     indicates failure status.
 
     use DoblDobl_Complex_Singular_Values;
-    use DoblDobl_Rational_Approximations;
     use DoblDobl_Speelpenning_Convolutions;
     use DoblDobl_Predictor_Convolutions;
 
@@ -371,12 +336,12 @@ procedure ts_padepcnv is
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    info,nbrit,nbfail : integer32;
     dd_maxstep : constant double_double := create(maxstep);
     dd_beta2 : constant double_double := create(beta2);
 
   begin
-    Predict(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
     put("#iterations : "); put(nbrit,1);
     put("  |dx| : "); put(absdx,3); new_line;
     if fail then
@@ -405,7 +370,7 @@ procedure ts_padepcnv is
     svh.vals(0) := svh.svl(svh.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := DoblDobl_Predictor_Convolutions.DoblDobl_Distance(svh);
+    eta := DoblDobl_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
@@ -413,21 +378,8 @@ procedure ts_padepcnv is
     put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
     put("  curv_step : "); put(curv_step,3); new_line;
     step := Minimum(pole_step,curv_step,dd_maxstep);
-    put("the step : "); put(step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,step,eva);
-    z := DoblDobl_Complex_Numbers.Create(step);
-    res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : "); put_line(res);
-    nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual : "); put(nrm,3);
-    radsol := DoblDobl_Mixed_Residuals.AbsVal(eva);
-    absres := Eval(abh.crc,radsol,z);
-    mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(res,absres);
-    put("  mixres : "); put(mixres,3);
-    if mixres < alpha
-     then put_line("  okay");
-     else put(" > "); put(alpha,3); new_line;
-    end if;
+    Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
+      eva,radsol,res,absres,nrm,mixres,nbfail,true);
   end DoblDobl_LU_Prediction;
 
   procedure DoblDobl_SVD_Prediction
@@ -462,7 +414,6 @@ procedure ts_padepcnv is
   --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
-    use DoblDobl_Rational_Approximations;
     use DoblDobl_Speelpenning_Convolutions;
     use DoblDobl_Predictor_Convolutions;
 
@@ -472,12 +423,12 @@ procedure ts_padepcnv is
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
-    nbrit : integer32;
+    nbrit,nbfail : integer32;
     dd_maxstep : constant double_double := create(maxstep);
     dd_beta2 : constant double_double := create(beta2);
 
   begin
-    Predict(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
     put("#iterations : "); put(nbrit,1);
     put("  |dx| : "); put(absdx,3);
     put("  rcond : "); put(rcond,3); new_line;
@@ -505,7 +456,7 @@ procedure ts_padepcnv is
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := DoblDobl_Predictor_Convolutions.DoblDobl_Distance(svh);
+    eta := DoblDobl_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
@@ -513,21 +464,8 @@ procedure ts_padepcnv is
     put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
     put("  curv_step : "); put(curv_step,3); new_line;
     step := Minimum(pole_step,curv_step,dd_maxstep);
-    put("the step : "); put(step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,step,eva);
-    z := DoblDobl_Complex_Numbers.Create(step);
-    res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : "); put_line(res);
-    nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual : "); put(nrm,3);
-    radsol := DoblDobl_Mixed_Residuals.AbsVal(eva);
-    absres := Eval(abh.crc,radsol,z);
-    mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(res,absres);
-    put("  mixres : "); put(mixres,3);
-    if mixres < alpha
-     then put_line("  okay");
-     else put(" > "); put(alpha,3); new_line;
-    end if;
+    Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
+      eva,radsol,res,absres,nrm,mixres,nbfail,true);
   end DoblDobl_SVD_Prediction;
 
   procedure QuadDobl_LU_Prediction
@@ -568,7 +506,6 @@ procedure ts_padepcnv is
   --   fail     indicates failure status.
 
     use QuadDobl_Complex_Singular_Values;
-    use QuadDobl_Rational_Approximations;
     use QuadDobl_Speelpenning_Convolutions;
     use QuadDobl_Predictor_Convolutions;
 
@@ -578,12 +515,12 @@ procedure ts_padepcnv is
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit : integer32;
+    info,nbrit,nbfail : integer32;
     qd_maxstep : constant quad_double := create(maxstep);
     qd_beta2 : constant quad_double := create(beta2);
 
   begin
-    Predict(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
     put("#iterations : "); put(nbrit,1);
     put("  |dx| : "); put(absdx,3); new_line;
     if fail then
@@ -612,7 +549,7 @@ procedure ts_padepcnv is
     svh.vals(0) := svh.svl(svh.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := QuadDobl_Predictor_Convolutions.QuadDobl_Distance(svh);
+    eta := QuadDobl_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
@@ -620,21 +557,9 @@ procedure ts_padepcnv is
     put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
     put("  curv_step : "); put(curv_step,3); new_line;
     step := Minimum(pole_step,curv_step,qd_maxstep);
-    put("the step : "); put(step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,step,eva);
-    z := QuadDobl_Complex_Numbers.Create(step);
-    res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : "); put_line(res);
-    nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual :"); put(nrm,3);
-    radsol := QuadDobl_Mixed_Residuals.AbsVal(eva);
-    absres := Eval(abh.crc,radsol,z);
-    mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(res,absres);
-    put("  mixres : "); put(mixres,3);
-    if mixres < alpha
-     then put_line("  okay");
-     else put(" > "); put(alpha,3); new_line;
-    end if;
+    Predictor_Feedback
+      (hom,abh,prd.numcff,prd.dencff,step,alpha,
+       eva,radsol,res,absres,nrm,mixres,nbfail,true);
   end QuadDobl_LU_Prediction;
 
   procedure QuadDobl_SVD_Prediction
@@ -669,7 +594,6 @@ procedure ts_padepcnv is
   --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
-    use QuadDobl_Rational_Approximations;
     use QuadDobl_Speelpenning_Convolutions;
     use QuadDobl_Predictor_Convolutions;
 
@@ -679,12 +603,12 @@ procedure ts_padepcnv is
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
-    nbrit : integer32;
+    nbrit,nbfail : integer32;
     qd_maxstep : constant quad_double := create(maxstep);
     qd_beta2 : constant quad_double := create(beta2);
 
   begin
-    Predict(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
     put("#iterations : "); put(nbrit,1);
     put("  |dx| : "); put(absdx,3);
     put("  rcond : "); put(rcond,3); new_line;
@@ -712,7 +636,7 @@ procedure ts_padepcnv is
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
     put_line("All singular values : "); put_line(svh.vals);
-    eta := QuadDobl_Predictor_Convolutions.QuadDobl_Distance(svh);
+    eta := QuadDobl_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
@@ -720,21 +644,9 @@ procedure ts_padepcnv is
     put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
     put("  curv_step : "); put(curv_step,3); new_line;
     step := Minimum(pole_step,curv_step,qd_maxstep);
-    put("the step : "); put(step,3); new_line;
-    Evaluate(prd.numcff,prd.dencff,step,eva);
-    z := QuadDobl_Complex_Numbers.Create(step);
-    res := Eval(hom.crc,eva,z);
-    put_line("Evaluation of the predicted solution : "); put_line(res);
-    nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(res);
-    put("The predictor residual : "); put(nrm,3);
-    radsol := QuadDobl_Mixed_Residuals.AbsVal(eva);
-    absres := Eval(abh.crc,radsol,z);
-    mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(res,absres);
-    put("  mixres : "); put(mixres,3);
-    if mixres < alpha
-     then put_line("  okay");
-     else put(" > "); put(alpha,3); new_line;
-    end if;
+    Predictor_Feedback
+      (hom,abh,prd.numcff,prd.dencff,step,alpha,
+       eva,radsol,res,absres,nrm,mixres,nbfail,true);
   end QuadDobl_SVD_Prediction;
 
   procedure Standard_Run_Prediction
