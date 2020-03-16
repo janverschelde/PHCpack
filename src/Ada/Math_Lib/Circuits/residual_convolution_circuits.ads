@@ -63,4 +63,29 @@ package Residual_Convolution_Circuits is
   --   Returns a copy of c. except for the coefficients,
   --   which are replaced by the radii of the coefficients of .
 
+  function Residual_Convolution_System
+             ( s : Standard_Speelpenning_Convolutions.System )
+             return Standard_Speelpenning_Convolutions.System;
+  function Residual_Convolution_System
+             ( s : Standard_Speelpenning_Convolutions.Link_to_System )
+             return Standard_Speelpenning_Convolutions.Link_to_System;
+  function Residual_Convolution_System
+             ( s : DoblDobl_Speelpenning_Convolutions.System )
+             return DoblDobl_Speelpenning_Convolutions.System;
+  function Residual_Convolution_System
+             ( s : DoblDobl_Speelpenning_Convolutions.Link_to_System )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_System;
+  function Residual_Convolution_System
+             ( s : QuadDobl_Speelpenning_Convolutions.System )
+             return QuadDobl_Speelpenning_Convolutions.System;
+  function Residual_Convolution_System
+             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System )
+             return QuadDobl_Speelpenning_Convolutions.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns a copy of the system s where the circuits are the
+  --   result of the above AbsVal function.
+  --   The work space of s is not copied, but the system on return
+  --   has allocated work space of the proper dimensions.
+
 end Residual_Convolution_Circuits;

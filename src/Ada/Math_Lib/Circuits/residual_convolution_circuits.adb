@@ -235,4 +235,106 @@ package body Residual_Convolution_Circuits is
     return res;
   end AbsVal;
 
+  function Residual_Convolution_System
+             ( s : Standard_Speelpenning_Convolutions.System )
+             return Standard_Speelpenning_Convolutions.System is
+
+    use  Standard_Speelpenning_Convolutions;
+
+    crc : constant Circuits(s.crc'range) := AbsVal(s.crc);
+    res : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
+        := Create(crc,s.dim,s.deg);
+
+  begin
+    return res;
+  end Residual_Convolution_System;
+
+  function Residual_Convolution_System
+             ( s : DoblDobl_Speelpenning_Convolutions.System )
+             return DoblDobl_Speelpenning_Convolutions.System is
+
+    use  DoblDobl_Speelpenning_Convolutions;
+
+    crc : constant Circuits(s.crc'range) := AbsVal(s.crc);
+    res : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
+        := Create(crc,s.dim,s.deg);
+
+  begin
+    return res;
+  end Residual_Convolution_System;
+
+  function Residual_Convolution_System
+             ( s : QuadDobl_Speelpenning_Convolutions.System )
+             return QuadDobl_Speelpenning_Convolutions.System is
+
+    use  QuadDobl_Speelpenning_Convolutions;
+
+    crc : constant Circuits(s.crc'range) := AbsVal(s.crc);
+    res : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
+        := Create(crc,s.dim,s.deg);
+
+  begin
+    return res;
+  end Residual_Convolution_System;
+
+  function Residual_Convolution_System
+             ( s : Standard_Speelpenning_Convolutions.Link_to_System )
+             return Standard_Speelpenning_Convolutions.Link_to_System is
+
+    use  Standard_Speelpenning_Convolutions;
+
+    res : Link_to_System;
+
+  begin
+    if s /= null then
+      declare
+        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
+            := Residual_Convolution_System(s.all);
+      begin
+        res := new System'(sys);
+      end;
+    end if;
+    return res;
+  end Residual_Convolution_System;
+
+  function Residual_Convolution_System
+             ( s : DoblDobl_Speelpenning_Convolutions.Link_to_System )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_System is
+
+    use  DoblDobl_Speelpenning_Convolutions;
+
+    res : Link_to_System;
+
+  begin
+    if s /= null then
+      declare
+        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
+            := Residual_Convolution_System(s.all);
+      begin
+        res := new System'(sys);
+      end;
+    end if;
+    return res;
+  end Residual_Convolution_System;
+
+  function Residual_Convolution_System
+             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System )
+             return QuadDobl_Speelpenning_Convolutions.Link_to_System is
+
+    use  QuadDobl_Speelpenning_Convolutions;
+
+    res : Link_to_System;
+
+  begin
+    if s /= null then
+      declare
+        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
+            := Residual_Convolution_System(s.all);
+      begin
+        res := new System'(sys);
+      end;
+    end if;
+    return res;
+  end Residual_Convolution_System;
+
 end Residual_Convolution_Circuits;
