@@ -18,14 +18,17 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;
 with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
+with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_VecVecs;
 with Standard_Integer_VecVecs_io;
 with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;
@@ -120,6 +123,147 @@ procedure ts_padepcnv is
     end if;
   end Minimum;
 
+  procedure Newton_Fabry_Report 
+              ( file : in file_type;
+                nbrit : in integer32; absdx : in double_float;
+                fail : in boolean;
+                z : in Standard_Complex_Numbers.Complex_Number;
+                r,err,step : in double_float;
+                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+                output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Writes the results of the Newton-Fabry-Pade predictor,
+  --   in double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbrit    number of iterations done with Newton's method;
+  --   absdx    absolute value of last corrector;
+  --   fail     true if required tolerance was not reached;
+  --   z        estimate for the closest singularity;
+  --   r        radius of z;
+  --   err      error on the estimate z;
+  --   step     the pole step, equals beta1*r;
+  --   numcff   coefficients of the numerator of the Pade approximants;
+  --   dencff   coefficients of the denominator of the Pade approximants;
+  --   output   if true, then numcff and dencff are written to screen.
+
+  begin
+    put(file,"#iterations : "); put(file,nbrit,1);
+    put(file,"  |dx| :"); put(file,absdx,3); new_line(file);
+    if fail then
+      put_line(file,"Predictor failed!");
+    else
+      put(file,"z : "); put(file,z); 
+      put(file,"  error estimate :"); put(file,err,3); new_line(file);
+      put(file,"estimated radius :"); put(file,r,3);
+    end if;
+    put(file,"  pole step :"); put(file,step,3); new_line(file);
+    if output then
+      for k in numcff'range loop
+        put(file,"Numerator coefficients at "); put(file,k,1);
+        put_line(file," :"); put_line(file,numcff(k));
+        put(file,"Denominator coefficients at "); put(file,k,1);
+        put_line(file," :"); put_line(file,dencff(k));
+      end loop;
+    end if;
+  end Newton_Fabry_Report;
+
+  procedure Newton_Fabry_Report 
+              ( file : in file_type;
+                nbrit : in integer32; absdx : in double_double;
+                fail : in boolean;
+                z : in DoblDobl_Complex_Numbers.Complex_Number;
+                r,err,step : in double_double;
+                numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
+                output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Writes the results of the Newton-Fabry-Pade predictor,
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbrit    number of iterations done with Newton's method;
+  --   absdx    absolute value of last corrector;
+  --   fail     true if required tolerance was not reached;
+  --   z        estimate for the closest singularity;
+  --   r        radius of z;
+  --   err      error on the estimate z;
+  --   step     the pole step, equals beta1*r;
+  --   numcff   coefficients of the numerator of the Pade approximants;
+  --   dencff   coefficients of the denominator of the Pade approximants;
+  --   output   if true, then numcff and dencff are written to screen.
+
+  begin
+    put(file,"#iterations : "); put(file,nbrit,1);
+    put(file,"  |dx| : "); put(file,absdx,3); new_line(file);
+    if fail then
+      put_line(file,"Predictor failed!");
+    else
+      put(file,"z : "); put(file,z); 
+      put(file,"  error estimate : "); put(file,err,3); new_line(file);
+      put(file,"estimated radius : "); put(file,r,3);
+    end if;
+    put(file,"  pole step : "); put(file,step,3); new_line(file);
+    if output then
+      for k in numcff'range loop
+        put(file,"Numerator coefficients at "); put(file,k,1);
+        put_line(file," :"); put_line(file,numcff(k));
+        put(file,"Denominator coefficients at "); put(file,k,1);
+        put_line(file," :"); put_line(file,dencff(k));
+      end loop;
+    end if;
+  end Newton_Fabry_Report;
+
+  procedure Newton_Fabry_Report 
+              ( file : in file_type;
+                nbrit : in integer32; absdx : in quad_double;
+                fail : in boolean;
+                z : in QuadDobl_Complex_Numbers.Complex_Number;
+                r,err,step : in quad_double;
+                numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
+                output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Writes the results of the Newton-Fabry-Pade predictor,
+  --   in quad double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbrit    number of iterations done with Newton's method;
+  --   absdx    absolute value of last corrector;
+  --   fail     true if required tolerance was not reached;
+  --   z        estimate for the closest singularity;
+  --   r        radius of z;
+  --   err      error on the estimate z;
+  --   step     the pole step, equals beta1*r;
+  --   numcff   coefficients of the numerator of the Pade approximants;
+  --   dencff   coefficients of the denominator of the Pade approximants;
+  --   output   if true, then numcff and dencff are written to screen.
+
+  begin
+    put(file,"#iterations : "); put(file,nbrit,1);
+    put(file,"  |dx| : "); put(file,absdx,3); new_line(file);
+    if fail then
+      put_line(file,"Predictor failed!");
+    else
+      put(file,"z : "); put(file,z); 
+      put(file,"  error estimate : "); put(file,err,3); new_line(file);
+      put(file,"estimated radius : "); put(file,r,3);
+    end if;
+    put(file,"  pole step : "); put(file,step,3); new_line(file);
+    if output then
+      for k in numcff'range loop
+        put(file,"Numerator coefficients at "); put(file,k,1);
+        put_line(file," :"); put_line(file,numcff(k));
+        put(file,"Denominator coefficients at "); put(file,k,1);
+        put_line(file," :"); put_line(file,dencff(k));
+      end loop;
+    end if;
+  end Newton_Fabry_Report;
+
   procedure Standard_LU_Prediction
               ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
@@ -165,25 +309,9 @@ procedure ts_padepcnv is
 
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
-    put("#iterations : "); put(nbrit,1);
-    put("  |dx| :"); put(absdx,3); new_line;
-    if fail then
-      put_line("Predictor failed!");
-    else
-      put("z : "); put(z); 
-      put("  error estimate :"); put(err,3); new_line;
-      put("estimated radius :"); put(r,3);
-    end if;
     pole_step := beta1*r;
-    put("  pole step :"); put(pole_step,3); new_line;
-    if output then
-      for k in prd.numcff'range loop
-        put("Numerator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.numcff(k));
-        put("Denominator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.dencff(k));
-      end loop;
-    end if;
+    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+      pole_step,prd.numcff,prd.dencff,output);
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -250,27 +378,9 @@ procedure ts_padepcnv is
 
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
-    put("#iterations : "); put(nbrit,1);
-    put("  |dx| :"); put(absdx,3);
-    put("  rcond :"); put(rcond,3); new_line;
-    put_line("The singular values : "); put_line(prd.svl);
-    if fail then
-      put_line("Predictor failed!");
-    else
-      put("z : "); put(z); 
-      put("  error estimate :"); put(err,3); new_line;
-      put("estimated radius :"); put(r,3);
-    end if;
     pole_step := beta1*r;
-    put("  pole step :"); put(pole_step,3); new_line;
-    if output then
-      for k in prd.numcff'range loop
-        put("Numerator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.numcff(k));
-        put("Denominator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.dencff(k));
-      end loop;
-    end if;
+    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+      pole_step,prd.numcff,prd.dencff,output);
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -342,25 +452,9 @@ procedure ts_padepcnv is
 
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
-    put("#iterations : "); put(nbrit,1);
-    put("  |dx| : "); put(absdx,3); new_line;
-    if fail then
-      put_line("Predictor failed!");
-    else
-      put("z : "); put(z); 
-      put("  error estimate : "); put(err,3); new_line;
-      put("estimated radius : "); put(r,3);
-    end if;
     pole_step := beta1*r;
-    put("  pole step : "); put(pole_step,3); new_line;
-    if output then
-      for k in prd.numcff'range loop
-        put("Numerator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.numcff(k));
-        put("Denominator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.dencff(k));
-      end loop;
-    end if;
+    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+      pole_step,prd.numcff,prd.dencff,output);
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -429,27 +523,9 @@ procedure ts_padepcnv is
 
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
-    put("#iterations : "); put(nbrit,1);
-    put("  |dx| : "); put(absdx,3);
-    put("  rcond : "); put(rcond,3); new_line;
-    put_line("The singular values : "); put_line(prd.svl);
-    if fail then
-      put_line("Predictor failed!");
-    else
-      put("z : "); put(z); 
-      put("  error estimate : "); put(err,3); new_line;
-      put("estimated radius : "); put(r,3);
-    end if;
     pole_step := beta1*r;
-    put("  pole step : "); put(pole_step,3); new_line;
-    if output then
-      for k in prd.numcff'range loop
-        put("Numerator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.numcff(k));
-        put("Denominator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.dencff(k));
-      end loop;
-    end if;
+    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+      pole_step,prd.numcff,prd.dencff,output);
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -521,25 +597,9 @@ procedure ts_padepcnv is
 
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
-    put("#iterations : "); put(nbrit,1);
-    put("  |dx| : "); put(absdx,3); new_line;
-    if fail then
-      put_line("Predictor failed!");
-    else
-      put("z : "); put(z); 
-      put("  error estimate : "); put(err,3); new_line;
-      put("estimated radius : "); put(r,3);
-    end if;
     pole_step := beta1*r;
-    put("  pole step : "); put(pole_step,3); new_line;
-    if output then
-      for k in prd.numcff'range loop
-        put("Numerator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.numcff(k));
-        put("Denominator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.dencff(k));
-      end loop;
-    end if;
+    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+      pole_step,prd.numcff,prd.dencff,output);
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -609,27 +669,9 @@ procedure ts_padepcnv is
 
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
-    put("#iterations : "); put(nbrit,1);
-    put("  |dx| : "); put(absdx,3);
-    put("  rcond : "); put(rcond,3); new_line;
-    put_line("The singular values : "); put_line(prd.svl);
-    if fail then
-      put_line("Predictor failed!");
-    else
-      put("z : "); put(z); 
-      put("  error estimate : "); put(err,3); new_line;
-      put("estimated radius : "); put(r,3);
-    end if;
     pole_step := beta1*r;
-    put("  pole step : "); put(pole_step,3); new_line;
-    if output then
-      for k in prd.numcff'range loop
-        put("Numerator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.numcff(k));
-        put("Denominator coefficients at "); put(k,1); put_line(" :");
-        put_line(prd.dencff(k));
-      end loop;
-    end if;
+    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+      pole_step,prd.numcff,prd.dencff,output);
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;

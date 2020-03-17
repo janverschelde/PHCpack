@@ -1,3 +1,5 @@
+Tue 17 Mar 2020 : added reporting procedure to ts_padepcnv.
+
 Mon 16 Mar 2020 : moved functions for the mixed residual computations from
   ts_padepcnv to {standard,dobldobl,quaddobl}_mixed_residuals.
   Moved the predictor feedback loop from ts_padepcnv to the packages
