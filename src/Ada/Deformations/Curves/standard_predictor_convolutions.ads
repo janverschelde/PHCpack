@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
@@ -106,8 +107,35 @@ package Standard_Predictor_Convolutions is
   -- ON RETURN :
   --   data allocated to run the Newton-Fabry-Pade predictor.
 
+  procedure Newton_Fabry_Report 
+              ( file : in file_type;
+                nbrit : in integer32; absdx : in double_float;
+                fail : in boolean;
+                z : in Standard_Complex_Numbers.Complex_Number;
+                r,err,step : in double_float;
+                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+                output : in boolean );
+
+  -- DESCRIPTION :
+  --   Writes the results of the Newton-Fabry-Pade predictor,
+  --   in double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbrit    number of iterations done with Newton's method;
+  --   absdx    absolute value of last corrector;
+  --   fail     true if required tolerance was not reached;
+  --   z        estimate for the closest singularity;
+  --   r        radius of z;
+  --   err      error on the estimate z;
+  --   step     the pole step, equals beta1*r;
+  --   numcff   coefficients of the numerator of the Pade approximants;
+  --   dencff   coefficients of the denominator of the Pade approximants;
+  --   output   if true, then numcff and dencff are written to screen.
+
   procedure Newton_Fabry
-              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+              ( file : in file_type;
+                hom : in Link_to_System; prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
@@ -119,11 +147,12 @@ package Standard_Predictor_Convolutions is
   --   to predict the next solution, in double precision.
 
   -- ON ENTRY :
+  --   file     for writing data to if output;
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
-  --   output   flag to indicate extra output during computations.
+  --   output   flag to indicate data output during computations.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -135,7 +164,8 @@ package Standard_Predictor_Convolutions is
   --   err      error estimate on the location of z.
 
   procedure Newton_Fabry
-              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+              ( file : in file_type;
+                hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
@@ -147,11 +177,12 @@ package Standard_Predictor_Convolutions is
   --   to predict the next solution, in double precision.
 
   -- ON ENTRY :
+  --   file     for writing data to if output;
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
-  --   output   flag to indicate extra output during computations.
+  --   output   flag to indicate data output during computations.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -178,7 +209,9 @@ package Standard_Predictor_Convolutions is
   --   based on the singular values in svh.
 
   procedure Predictor_Feedback
-              ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; alpha : in double_float;
                 eva,radsol : in out Standard_Complex_Vectors.Vector;
@@ -192,6 +225,7 @@ package Standard_Predictor_Convolutions is
   --   mixed residual is less than the tolerance.
 
   -- ON ENTRY :
+  --   file     to write extra output to if verbose;
   --   hom      homotopy convolution circuit system
   --   abh      circuits with radii as coeffiecients, for mixed residuals;
   --   numcff   coefficients of the numerator of the Pade approximants;

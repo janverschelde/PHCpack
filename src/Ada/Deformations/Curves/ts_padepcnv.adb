@@ -11,24 +11,17 @@ with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
-with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers;
-with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Complex_VecVecs;
-with Standard_Complex_VecVecs_io;
 with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
-with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
-with QuadDobl_Complex_VecVecs;
 with Standard_Integer_VecVecs_io;
 with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;
@@ -57,6 +50,7 @@ with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Jacobian_Convolution_Circuits;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Homotopy_Pade_Approximants;
+with Three_Way_Minima;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
@@ -65,204 +59,6 @@ procedure ts_padepcnv is
 
 -- DESCRIPTION :
 --   Development of the Pade predictor on convolution circuits.
-
-  function Minimum ( a,b,c : double_float ) return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the minimum of a, b, and c.
-
-  begin
-    if a < b then    -- the minimum is either a or c
-      if a < c
-       then return a;
-       else return c;
-      end if;
-    else             -- the minimum is either b or c
-      if b < c
-       then return b;
-       else return c;
-      end if;
-    end if;
-  end Minimum;
-
-  function Minimum ( a,b,c : double_double ) return double_double is
-
-  -- DESCRIPTION :
-  --   Returns the minimum of a, b, and c.
-
-  begin
-    if a < b then    -- the minimum is either a or c
-      if a < c
-       then return a;
-       else return c;
-      end if;
-    else             -- the minimum is either b or c
-      if b < c
-       then return b;
-       else return c;
-      end if;
-    end if;
-  end Minimum;
-
-  function Minimum ( a,b,c : quad_double ) return quad_double is
-
-  -- DESCRIPTION :
-  --   Returns the minimum of a, b, and c.
-
-  begin
-    if a < b then    -- the minimum is either a or c
-      if a < c
-       then return a;
-       else return c;
-      end if;
-    else             -- the minimum is either b or c
-      if b < c
-       then return b;
-       else return c;
-      end if;
-    end if;
-  end Minimum;
-
-  procedure Newton_Fabry_Report 
-              ( file : in file_type;
-                nbrit : in integer32; absdx : in double_float;
-                fail : in boolean;
-                z : in Standard_Complex_Numbers.Complex_Number;
-                r,err,step : in double_float;
-                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
-                output : in boolean ) is
-
-  -- DESCRIPTION :
-  --   Writes the results of the Newton-Fabry-Pade predictor,
-  --   in double precision.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nbrit    number of iterations done with Newton's method;
-  --   absdx    absolute value of last corrector;
-  --   fail     true if required tolerance was not reached;
-  --   z        estimate for the closest singularity;
-  --   r        radius of z;
-  --   err      error on the estimate z;
-  --   step     the pole step, equals beta1*r;
-  --   numcff   coefficients of the numerator of the Pade approximants;
-  --   dencff   coefficients of the denominator of the Pade approximants;
-  --   output   if true, then numcff and dencff are written to screen.
-
-  begin
-    put(file,"#iterations : "); put(file,nbrit,1);
-    put(file,"  |dx| :"); put(file,absdx,3); new_line(file);
-    if fail then
-      put_line(file,"Predictor failed!");
-    else
-      put(file,"z : "); put(file,z); 
-      put(file,"  error estimate :"); put(file,err,3); new_line(file);
-      put(file,"estimated radius :"); put(file,r,3);
-    end if;
-    put(file,"  pole step :"); put(file,step,3); new_line(file);
-    if output then
-      for k in numcff'range loop
-        put(file,"Numerator coefficients at "); put(file,k,1);
-        put_line(file," :"); put_line(file,numcff(k));
-        put(file,"Denominator coefficients at "); put(file,k,1);
-        put_line(file," :"); put_line(file,dencff(k));
-      end loop;
-    end if;
-  end Newton_Fabry_Report;
-
-  procedure Newton_Fabry_Report 
-              ( file : in file_type;
-                nbrit : in integer32; absdx : in double_double;
-                fail : in boolean;
-                z : in DoblDobl_Complex_Numbers.Complex_Number;
-                r,err,step : in double_double;
-                numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
-                output : in boolean ) is
-
-  -- DESCRIPTION :
-  --   Writes the results of the Newton-Fabry-Pade predictor,
-  --   in double double precision.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nbrit    number of iterations done with Newton's method;
-  --   absdx    absolute value of last corrector;
-  --   fail     true if required tolerance was not reached;
-  --   z        estimate for the closest singularity;
-  --   r        radius of z;
-  --   err      error on the estimate z;
-  --   step     the pole step, equals beta1*r;
-  --   numcff   coefficients of the numerator of the Pade approximants;
-  --   dencff   coefficients of the denominator of the Pade approximants;
-  --   output   if true, then numcff and dencff are written to screen.
-
-  begin
-    put(file,"#iterations : "); put(file,nbrit,1);
-    put(file,"  |dx| : "); put(file,absdx,3); new_line(file);
-    if fail then
-      put_line(file,"Predictor failed!");
-    else
-      put(file,"z : "); put(file,z); 
-      put(file,"  error estimate : "); put(file,err,3); new_line(file);
-      put(file,"estimated radius : "); put(file,r,3);
-    end if;
-    put(file,"  pole step : "); put(file,step,3); new_line(file);
-    if output then
-      for k in numcff'range loop
-        put(file,"Numerator coefficients at "); put(file,k,1);
-        put_line(file," :"); put_line(file,numcff(k));
-        put(file,"Denominator coefficients at "); put(file,k,1);
-        put_line(file," :"); put_line(file,dencff(k));
-      end loop;
-    end if;
-  end Newton_Fabry_Report;
-
-  procedure Newton_Fabry_Report 
-              ( file : in file_type;
-                nbrit : in integer32; absdx : in quad_double;
-                fail : in boolean;
-                z : in QuadDobl_Complex_Numbers.Complex_Number;
-                r,err,step : in quad_double;
-                numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
-                output : in boolean ) is
-
-  -- DESCRIPTION :
-  --   Writes the results of the Newton-Fabry-Pade predictor,
-  --   in quad double precision.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nbrit    number of iterations done with Newton's method;
-  --   absdx    absolute value of last corrector;
-  --   fail     true if required tolerance was not reached;
-  --   z        estimate for the closest singularity;
-  --   r        radius of z;
-  --   err      error on the estimate z;
-  --   step     the pole step, equals beta1*r;
-  --   numcff   coefficients of the numerator of the Pade approximants;
-  --   dencff   coefficients of the denominator of the Pade approximants;
-  --   output   if true, then numcff and dencff are written to screen.
-
-  begin
-    put(file,"#iterations : "); put(file,nbrit,1);
-    put(file,"  |dx| : "); put(file,absdx,3); new_line(file);
-    if fail then
-      put_line(file,"Predictor failed!");
-    else
-      put(file,"z : "); put(file,z); 
-      put(file,"  error estimate : "); put(file,err,3); new_line(file);
-      put(file,"estimated radius : "); put(file,r,3);
-    end if;
-    put(file,"  pole step : "); put(file,step,3); new_line(file);
-    if output then
-      for k in numcff'range loop
-        put(file,"Numerator coefficients at "); put(file,k,1);
-        put_line(file," :"); put_line(file,numcff(k));
-        put(file,"Denominator coefficients at "); put(file,k,1);
-        put_line(file," :"); put_line(file,dencff(k));
-      end loop;
-    end if;
-  end Newton_Fabry_Report;
 
   procedure Standard_LU_Prediction
               ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -310,7 +106,8 @@ procedure ts_padepcnv is
     info,nbrit,nbfail : integer32;
 
   begin
-    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
+                 z,r,err,output);
     pole_step := beta1*r;
     if verbose then
       Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
@@ -336,9 +133,9 @@ procedure ts_padepcnv is
       put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
       put("  curv_step :"); put(curv_step,3); new_line;
     end if;
-    step := Minimum(pole_step,curv_step,maxstep);
-    Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
-      eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    step := Three_Way_Minima.Minimum(pole_step,curv_step,maxstep);
+    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
+      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end Standard_LU_Prediction;
 
   procedure Standard_SVD_Prediction
@@ -387,7 +184,8 @@ procedure ts_padepcnv is
     nbrit,nbfail : integer32;
 
   begin
-    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,
+                 z,r,err,output);
     pole_step := beta1*r;
     if verbose then
       Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
@@ -410,9 +208,9 @@ procedure ts_padepcnv is
       put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
       put("  curv_step :"); put(curv_step,3); new_line;
     end if;
-    step := Minimum(pole_step,curv_step,maxstep);
-    Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
-      eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    step := Three_Way_Minima.Minimum(pole_step,curv_step,maxstep);
+    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
+      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end Standard_SVD_Prediction;
 
   procedure DoblDobl_LU_Prediction
@@ -469,7 +267,8 @@ procedure ts_padepcnv is
     dd_beta2 : constant double_double := create(beta2);
 
   begin
-    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
+                 z,r,err,output);
     pole_step := beta1*r;
     if verbose then
       Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
@@ -495,9 +294,9 @@ procedure ts_padepcnv is
       put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
       put("  curv_step : "); put(curv_step,3); new_line;
     end if;
-    step := Minimum(pole_step,curv_step,dd_maxstep);
-    Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
-      eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    step := Three_Way_Minima.Minimum(pole_step,curv_step,dd_maxstep);
+    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
+      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end DoblDobl_LU_Prediction;
 
   procedure DoblDobl_SVD_Prediction
@@ -548,7 +347,8 @@ procedure ts_padepcnv is
     dd_beta2 : constant double_double := create(beta2);
 
   begin
-    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,
+                 z,r,err,output);
     pole_step := beta1*r;
     if verbose then
       Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
@@ -571,9 +371,9 @@ procedure ts_padepcnv is
       put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
       put("  curv_step : "); put(curv_step,3); new_line;
     end if;
-    step := Minimum(pole_step,curv_step,dd_maxstep);
-    Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
-      eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    step := Three_Way_Minima.Minimum(pole_step,curv_step,dd_maxstep);
+    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
+      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end DoblDobl_SVD_Prediction;
 
   procedure QuadDobl_LU_Prediction
@@ -630,7 +430,8 @@ procedure ts_padepcnv is
     qd_beta2 : constant quad_double := create(beta2);
 
   begin
-    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
+                 z,r,err,output);
     pole_step := beta1*r;
     if verbose then
       Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
@@ -656,10 +457,9 @@ procedure ts_padepcnv is
       put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
       put("  curv_step : "); put(curv_step,3); new_line;
     end if;
-    step := Minimum(pole_step,curv_step,qd_maxstep);
-    Predictor_Feedback
-      (hom,abh,prd.numcff,prd.dencff,step,alpha,
-       eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    step := Three_Way_Minima.Minimum(pole_step,curv_step,qd_maxstep);
+    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
+      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end QuadDobl_LU_Prediction;
 
   procedure QuadDobl_SVD_Prediction
@@ -710,7 +510,8 @@ procedure ts_padepcnv is
     qd_beta2 : constant quad_double := create(beta2);
 
   begin
-    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,
+      z,r,err,output);
     pole_step := beta1*r;
     if verbose then
       Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
@@ -731,10 +532,9 @@ procedure ts_padepcnv is
       put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
       put("  curv_step : "); put(curv_step,3); new_line;
     end if;
-    step := Minimum(pole_step,curv_step,qd_maxstep);
-    Predictor_Feedback
-      (hom,abh,prd.numcff,prd.dencff,step,alpha,
-       eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    step := Three_Way_Minima.Minimum(pole_step,curv_step,qd_maxstep);
+    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
+      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end QuadDobl_SVD_Prediction;
 
   procedure Standard_Run_Prediction
@@ -967,16 +767,6 @@ procedure ts_padepcnv is
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
-    end loop;
-    put_line("The coefficients in the circuits :");
-    for k in cnvhom.crc'range loop
-      Standard_Complex_VecVecs_io.put_line(cnvhom.crc(k).cff);
-    end loop;
-    put_line("The constant coefficients :");
-    for k in cnvhom.crc'range loop
-      if cnvhom.crc(k).cst /= null
-       then put_line(cnvhom.crc(k).cst); new_line;
-      end if;
     end loop;
     put_line("Checking the start solutions ...");
     for k in 1..Length_Of(sols) loop

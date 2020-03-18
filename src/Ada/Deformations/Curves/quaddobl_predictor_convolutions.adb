@@ -1,7 +1,8 @@
 with unchecked_deallocation;
-with text_io;                            use text_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with QuadDobl_Mathematical_Functions;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
@@ -86,8 +87,38 @@ package body QuadDobl_Predictor_Convolutions is
     return res;
   end Create;
 
+  procedure Newton_Fabry_Report 
+              ( file : in file_type;
+                nbrit : in integer32; absdx : in quad_double;
+                fail : in boolean;
+                z : in QuadDobl_Complex_Numbers.Complex_Number;
+                r,err,step : in quad_double;
+                numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
+                output : in boolean ) is
+  begin
+    put(file,"#iterations : "); put(file,nbrit,1);
+    put(file,"  |dx| : "); put(file,absdx,3); new_line(file);
+    if fail then
+      put_line(file,"Predictor failed!");
+    else
+      put(file,"z : "); put(file,z); 
+      put(file,"  error estimate : "); put(file,err,3); new_line(file);
+      put(file,"estimated radius : "); put(file,r,3);
+    end if;
+    put(file,"  pole step : "); put(file,step,3); new_line(file);
+    if output then
+      for k in numcff'range loop
+        put(file,"Numerator coefficients at "); put(file,k,1);
+        put_line(file," :"); put_line(file,numcff(k));
+        put(file,"Denominator coefficients at "); put(file,k,1);
+        put_line(file," :"); put_line(file,dencff(k));
+      end loop;
+    end if;
+  end Newton_Fabry_Report;
+
   procedure Newton_Fabry
-              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+              ( file : in file_type;
+                hom : in Link_to_System; prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out quad_double;
                 fail : out boolean; z : out Complex_Number;
@@ -102,9 +133,9 @@ package body QuadDobl_Predictor_Convolutions is
     nbrit := 0;
     if output then
       LU_Newton_Steps
-        (standard_output,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+        (file,hom,prd.sol,maxit,nbrit,tol,absdx,fail,
          info,prd.newtpiv,prd.wrk,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2);
+      Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
       LU_Newton_Steps
         (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
@@ -116,7 +147,8 @@ package body QuadDobl_Predictor_Convolutions is
   end Newton_Fabry;
 
   procedure Newton_Fabry
-              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+              ( file : in file_type;
+                hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out quad_double;
                 fail : out boolean; z : out Complex_Number;
@@ -131,9 +163,9 @@ package body QuadDobl_Predictor_Convolutions is
     nbrit := 0;
     if output then
       SVD_Newton_Steps
-        (standard_output,hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,
+        (file,hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,
          fail, prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2);
+      Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
       SVD_Newton_Steps
         (hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,fail,
@@ -179,7 +211,9 @@ package body QuadDobl_Predictor_Convolutions is
   end Distance;
 
   procedure Predictor_Feedback
-              ( hom,abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
                 step : in out quad_double; alpha : in double_float;
                 eva,radsol : in out QuadDobl_Complex_Vectors.Vector;
@@ -192,8 +226,9 @@ package body QuadDobl_Predictor_Convolutions is
   begin
     nbfail := 0;
     loop
-      if verbose
-       then put("the step : "); put(step,3); new_line;
+      if verbose then
+        put(file,"step in predictor feedback loop : ");
+        put(file,step,3); new_line(file);
       end if;
       QuadDobl_Rational_Approximations.Evaluate(numcff,dencff,step,eva);
       z := QuadDobl_Complex_Numbers.Create(step);
@@ -203,18 +238,19 @@ package body QuadDobl_Predictor_Convolutions is
       absres := QuadDobl_Speelpenning_Convolutions.Eval(abh.crc,radsol,z);
       mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(res,absres);
       if verbose then
-        put_line("Evaluation of the predicted solution : "); put_line(res);
-        put("The predictor residual :"); put(nrm,3);
-        put("  mixres : "); put(mixres,3);
+        put_line(file,"Evaluation of the predicted solution : ");
+        put_line(file,res);
+        put(file,"The predictor residual :"); put(file,nrm,3);
+        put(file,"  mixres : "); put(file,mixres,3);
       end if;
       if mixres < alpha then
         if verbose
-         then put_line("  okay");
+         then put_line(file,"  okay");
         end if;
         exit;
       else
         if verbose
-         then put(" > "); put(alpha,3); new_line;
+         then put(file," > "); put(file,alpha,3); new_line(file);
         end if;
         step := step/2.0; nbfail := nbfail + 1;
       end if;

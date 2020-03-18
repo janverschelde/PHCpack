@@ -80,6 +80,7 @@ test_pade_predictors             : procedure to help testing Pade predictors
 jacobian_rabinowitsch_trick      : application of the Rabinowitsch trick
 ts_jacrabin                      : test application of Rabinowitsch trick
 ts_padepred                      : test the Pade predictors
+three_way_minima                 : minima of three numbers
 standard_predictor_convolutions  : double predictor on convolution homotopies
 dobldobl_predictor_convolutions  : dobldobl predictor on convolution homotopies
 quaddobl_predictor_convolutions  : quaddobl predictor on convolution homotopies
