@@ -1,4 +1,3 @@
-with text_io;                            use text_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
@@ -226,6 +225,129 @@ package body Convergence_Radius_Estimates is
         if kfail
          then put_line("zero last coefficient");
          else put(zk); put("  error estimate : "); put(ek,3); new_line;
+        end if;
+      end if;
+      if not kfail then
+        if k = c'first then
+          z := zk; e := ek;
+          r := QuadDobl_Complex_Numbers_Polar.Radius(z);
+        else
+          rad := QuadDobl_Complex_Numbers_Polar.Radius(zk);
+          if rad < r
+           then z := zk; e := ek; r := rad;
+          end if;
+        end if;
+        fail := false;
+      end if;
+    end loop;
+  end Fabry;
+
+  procedure Fabry ( file : in file_type;
+                    c : in Standard_Complex_VecVecs.VecVec;
+                    z : out Standard_Complex_Numbers.Complex_Number;
+                    r : out double_float;
+                    e : out double_float; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true ) is
+
+    use Standard_Complex_Numbers;
+
+    zk : Complex_Number;
+    ek,rad : double_float;
+    kfail : boolean;
+
+  begin
+    fail := true;
+    for k in c'range loop
+      Fabry(c(k).all,zk,ek,kfail,offset);
+      if verbose then
+        if kfail then
+          put_line(file,"zero last coefficient");
+        else
+          put(file,zk); put(file,"  error estimate :");
+          put(file,ek,3); new_line(file);
+        end if;
+      end if;
+      if not kfail then
+        if k = c'first then
+          z := zk; e := ek;
+          r := Standard_Complex_Numbers_Polar.Radius(z);
+        else
+          rad := Standard_Complex_Numbers_Polar.Radius(zk);
+          if rad < r
+           then z := zk; e := ek; r := rad;
+          end if;
+        end if;
+        fail := false;
+      end if;
+    end loop;
+  end Fabry;
+
+  procedure Fabry ( file : in file_type;
+                    c : in DoblDobl_Complex_VecVecs.VecVec;
+                    z : out DoblDobl_Complex_Numbers.Complex_Number;
+                    r : out double_double;
+                    e : out double_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    zk : Complex_Number;
+    ek,rad : double_double;
+    kfail : boolean;
+
+  begin
+    fail := true;
+    for k in c'range loop
+      Fabry(c(k).all,zk,ek,kfail,offset);
+      if verbose then
+        if kfail then
+          put_line(file,"zero last coefficient");
+        else
+          put(file,zk); put(file,"  error estimate : ");
+          put(file,ek,3); new_line(file);
+        end if;
+      end if;
+      if not kfail then
+        if k = c'first then
+          z := zk; e := ek;
+          r := DoblDobl_Complex_Numbers_Polar.Radius(z);
+        else
+          rad := DoblDobl_Complex_Numbers_Polar.Radius(zk);
+          if rad < r
+           then z := zk; e := ek; r := rad;
+          end if;
+        end if;
+        fail := false;
+      end if;
+    end loop;
+  end Fabry;
+
+  procedure Fabry ( file : in file_type;
+                    c : in QuadDobl_Complex_VecVecs.VecVec;
+                    z : out QuadDobl_Complex_Numbers.Complex_Number;
+                    r : out quad_double;
+                    e : out quad_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    zk : Complex_Number;
+    ek,rad : quad_double;
+    kfail : boolean;
+
+  begin
+    fail := true;
+    for k in c'range loop
+      Fabry(c(k).all,zk,ek,kfail,offset);
+      if verbose then
+        if kfail then
+          put_line(file,"zero last coefficient");
+        else
+          put(file,zk); put(file,"  error estimate : ");
+          put(file,ek,3); new_line(file);
         end if;
       end if;
       if not kfail then

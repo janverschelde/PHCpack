@@ -1,3 +1,6 @@
+Wed 18 Mar 2020 : added procedures to convergence_radius_estimates to write
+  the results to file if in verbose mode.
+
 Sun 15 Mar 2020 : added functions to residual_convolution_circuits to return
   a system of circuits for the computation of mixed residuals.
 

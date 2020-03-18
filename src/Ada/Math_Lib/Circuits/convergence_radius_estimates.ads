@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -73,13 +74,34 @@ package Convergence_Radius_Estimates is
                     e : out double_float; fail : out boolean;
                     offset : in integer32 := 0;
                     verbose : in boolean := true );
+  procedure Fabry ( file : in file_type;
+                    c : in Standard_Complex_VecVecs.VecVec;
+                    z : out Standard_Complex_Numbers.Complex_Number;
+                    r : out double_float;
+                    e : out double_float; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
   procedure Fabry ( c : in DoblDobl_Complex_VecVecs.VecVec;
                     z : out DoblDobl_Complex_Numbers.Complex_Number;
                     r : out double_double;
                     e : out double_double; fail : out boolean;
                     offset : in integer32 := 0;
                     verbose : in boolean := true );
+  procedure Fabry ( file : in file_type;
+                    c : in DoblDobl_Complex_VecVecs.VecVec;
+                    z : out DoblDobl_Complex_Numbers.Complex_Number;
+                    r : out double_double;
+                    e : out double_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
   procedure Fabry ( c : in QuadDobl_Complex_VecVecs.VecVec;
+                    z : out QuadDobl_Complex_Numbers.Complex_Number;
+                    r : out quad_double;
+                    e : out quad_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
+  procedure Fabry ( file : in file_type;
+                    c : in QuadDobl_Complex_VecVecs.VecVec;
                     z : out QuadDobl_Complex_Numbers.Complex_Number;
                     r : out quad_double;
                     e : out quad_double; fail : out boolean;
@@ -93,11 +115,13 @@ package Convergence_Radius_Estimates is
   -- REQUIRED : for all k in c'range: c(k)'last >= 2.
 
   -- ON ENTRY:
+  --   file         for write results to if verbose;
   --   c            the coefficients of a vector of power series;
   --   offset       by default 0, but for longer series, to coincide
   --                with the pole in the Pade approximants for a linear
   --                denominator, offset should be set to 1;
-  --   verbose      writes all results for all series if true.
+  --   verbose      writes all results for all series if true,
+  --                to file or to standard output if no file provided.
 
   -- ON RETURN :
   --   z            the smallest quotient over all series in c,
