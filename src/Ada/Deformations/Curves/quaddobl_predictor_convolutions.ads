@@ -209,6 +209,64 @@ package QuadDobl_Predictor_Convolutions is
   --   Returns the estimate to the distance to the nearest solution,
   --   based on the singular values in svh.
 
+  procedure Hesse_Pade
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                res : out QuadDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out quad_double;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Computes the singular values of the Hessians and estimates the
+  --   distance to the closest path to determine the step size.
+
+  -- ON ENTRY :
+  --   file     to write the output to if verbose;
+  --   hom      homotopy convolution circuit system
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
+  --   sol      the leading coefficients of the solution series;
+  --   beta2    multiplication factor for the curvature step;
+  --   verbose  flag for intermediate numerical output.
+
+  -- ON RETURN :
+  --   res      solution error estimated by Pade approximants in prd,
+  --            the range of res is hom.crc'range;
+  --   nrm      2-norm of res;
+  --   step     computed curvature step.
+
+  procedure Hesse_Pade
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                res : out QuadDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out quad_double;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Computes the singular values of the Hessians and estimates the
+  --   distance to the closest path to determine the step size.
+
+  -- ON ENTRY :
+  --   file     to write the output to if verbose;
+  --   hom      homotopy convolution circuit system
+  --   prd      predictor data for SVD Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
+  --   sol      the leading coefficients of the solution series;
+  --   beta2    multiplication factor for the curvature step;
+  --   verbose  flag for intermediate numerical output.
+
+  -- ON RETURN :
+  --   res      solution error estimated by Pade approximants in prd,
+  --            the range of res is hom.crc'range;
+  --   nrm      2-norm of res;
+  --   step     computed curvature step.
+
   procedure Predictor_Feedback
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;

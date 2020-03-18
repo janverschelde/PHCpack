@@ -1,7 +1,8 @@
 Wed 18 Mar 2020 : new package three_way_minima, tested by ts_padepcnv,
   moved output procedures from ts_padepcnv to the predictor convolutions,
   to {standard,dobldobl,quaddobl}_predictor_convolutions, and added file
-  type parameters to write output to file.
+  type parameters to write output to file.  New Hesse_Pade procedures in
+  *_predictor_convolutions, with code from ts_padepcnv.
 
 Tue 17 Mar 2020 : added reporting procedure to ts_padepcnv.
   Added verbose option to the predictor test procedures in ts_padepcnv.

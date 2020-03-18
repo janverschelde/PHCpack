@@ -5,27 +5,18 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
-with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
-with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
-with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
-with QuadDobl_Complex_Vector_Norms;
 with Standard_Integer_VecVecs_io;
-with Standard_Complex_Singular_Values;
-with DoblDobl_Complex_Singular_Values;
-with QuadDobl_Complex_Singular_Values;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -41,15 +32,12 @@ with DoblDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Poly_Systems;
 with Complex_Series_and_Polynomials;
 with Series_and_Homotopies;
-with Series_and_Predictors;
 with Test_Series_Predictors;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
-with Jacobian_Convolution_Circuits;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
-with Homotopy_Pade_Approximants;
 with Three_Way_Minima;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
@@ -93,7 +81,6 @@ procedure ts_padepcnv is
   --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
-    use Standard_Complex_Singular_Values;
     use Standard_Speelpenning_Convolutions;
     use Standard_Predictor_Convolutions;
 
@@ -103,7 +90,7 @@ procedure ts_padepcnv is
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
     res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit,nbfail : integer32;
+    nbrit,nbfail : integer32;
 
   begin
     Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
@@ -116,23 +103,8 @@ procedure ts_padepcnv is
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
-   -- with LU, the system should be square, so the svh work space works
-    svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
-    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
-    svh.vals(0) := svh.svl(svh.dim);
-    Second(hom,svh,sol);
-    if verbose
-     then put_line("All singular values : "); put_line(svh.vals);
-    end if;
-    eta := Standard_Predictor_Convolutions.Distance(svh);
-    Homotopy_Pade_Approximants.Solution_Error
-      (prd.sol,prd.numcff,prd.dencff,res);
-    nrm := Standard_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
-    if verbose then
-      put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
-      put("  curv_step :"); put(curv_step,3); new_line;
-    end if;
+    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+               eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
@@ -194,20 +166,8 @@ procedure ts_padepcnv is
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
-    svh.vals(0) := prd.svl(prd.dim);
-    Second(hom,svh,sol);
-    if verbose
-     then put_line("All singular values : "); put_line(svh.vals);
-    end if;
-    eta := Standard_Predictor_Convolutions.Distance(svh);
-    Homotopy_Pade_Approximants.Solution_Error
-      (prd.sol,prd.numcff,prd.dencff,res);
-    nrm := Standard_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
-    if verbose then
-      put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
-      put("  curv_step :"); put(curv_step,3); new_line;
-    end if;
+    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+               eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
@@ -252,7 +212,6 @@ procedure ts_padepcnv is
   --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
-    use DoblDobl_Complex_Singular_Values;
     use DoblDobl_Speelpenning_Convolutions;
     use DoblDobl_Predictor_Convolutions;
 
@@ -262,9 +221,8 @@ procedure ts_padepcnv is
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit,nbfail : integer32;
+    nbrit,nbfail : integer32;
     dd_maxstep : constant double_double := create(maxstep);
-    dd_beta2 : constant double_double := create(beta2);
 
   begin
     Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
@@ -277,23 +235,8 @@ procedure ts_padepcnv is
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
-   -- with LU, the system should be square, so the svh work space works
-    svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
-    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
-    svh.vals(0) := svh.svl(svh.dim);
-    Second(hom,svh,sol);
-    if verbose
-     then put_line("All singular values : "); put_line(svh.vals);
-    end if;
-    eta := DoblDobl_Predictor_Convolutions.Distance(svh);
-    Homotopy_Pade_Approximants.Solution_Error
-      (prd.sol,prd.numcff,prd.dencff,res);
-    nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance(prd.deg,dd_beta2,eta,nrm);
-    if verbose then
-      put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
-      put("  curv_step : "); put(curv_step,3); new_line;
-    end if;
+    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+               eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,dd_maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
@@ -344,7 +287,6 @@ procedure ts_padepcnv is
     res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit,nbfail : integer32;
     dd_maxstep : constant double_double := create(maxstep);
-    dd_beta2 : constant double_double := create(beta2);
 
   begin
     Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,
@@ -357,20 +299,8 @@ procedure ts_padepcnv is
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
-    svh.vals(0) := prd.svl(prd.dim);
-    Second(hom,svh,sol);
-    if verbose
-     then put_line("All singular values : "); put_line(svh.vals);
-    end if;
-    eta := DoblDobl_Predictor_Convolutions.Distance(svh);
-    Homotopy_Pade_Approximants.Solution_Error
-      (prd.sol,prd.numcff,prd.dencff,res);
-    nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance(prd.deg,dd_beta2,eta,nrm);
-    if verbose then
-      put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
-      put("  curv_step : "); put(curv_step,3); new_line;
-    end if;
+    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+               eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,dd_maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
@@ -415,7 +345,6 @@ procedure ts_padepcnv is
   --   svh      contains largest singular values of all Hessians;
   --   fail     indicates failure status.
 
-    use QuadDobl_Complex_Singular_Values;
     use QuadDobl_Speelpenning_Convolutions;
     use QuadDobl_Predictor_Convolutions;
 
@@ -425,9 +354,8 @@ procedure ts_padepcnv is
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
-    info,nbrit,nbfail : integer32;
+    nbrit,nbfail : integer32;
     qd_maxstep : constant quad_double := create(maxstep);
-    qd_beta2 : constant quad_double := create(beta2);
 
   begin
     Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
@@ -440,23 +368,8 @@ procedure ts_padepcnv is
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
-   -- with LU, the system should be square, so the svh work space works
-    svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
-    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
-    svh.vals(0) := svh.svl(svh.dim);
-    Second(hom,svh,sol);
-    if verbose
-     then put_line("All singular values : "); put_line(svh.vals);
-    end if;
-    eta := QuadDobl_Predictor_Convolutions.Distance(svh);
-    Homotopy_Pade_Approximants.Solution_Error
-      (prd.sol,prd.numcff,prd.dencff,res);
-    nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
-    if verbose then
-      put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
-      put("  curv_step : "); put(curv_step,3); new_line;
-    end if;
+    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+               eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,qd_maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
@@ -507,7 +420,6 @@ procedure ts_padepcnv is
     res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit,nbfail : integer32;
     qd_maxstep : constant quad_double := create(maxstep);
-    qd_beta2 : constant quad_double := create(beta2);
 
   begin
     Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,
@@ -520,18 +432,8 @@ procedure ts_padepcnv is
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
-    svh.vals(0) := prd.svl(prd.dim);
-    Second(hom,svh,sol);
-    put_line("All singular values : "); put_line(svh.vals);
-    eta := QuadDobl_Predictor_Convolutions.Distance(svh);
-    Homotopy_Pade_Approximants.Solution_Error
-      (prd.sol,prd.numcff,prd.dencff,res);
-    nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
-    curv_step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
-    if verbose then
-      put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
-      put("  curv_step : "); put(curv_step,3); new_line;
-    end if;
+    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+               eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,qd_maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);

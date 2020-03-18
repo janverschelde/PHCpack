@@ -12,7 +12,10 @@ with QuadDobl_Rational_Approximations;
 with Newton_Convolutions;
 with Newton_Power_Convolutions;
 with Convergence_Radius_Estimates;
+with Jacobian_Convolution_Circuits;
 with Hessian_Convolution_Circuits;
+with Homotopy_Pade_Approximants;
+with Series_and_Predictors;
 
 package body QuadDobl_Predictor_Convolutions is
 
@@ -209,6 +212,71 @@ package body QuadDobl_Predictor_Convolutions is
     nrm := QuadDobl_Mathematical_Functions.SQRT(accsum);
     return (2.0*sigma1)/nrm;
   end Distance;
+
+  procedure Hesse_Pade
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                res : out QuadDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out quad_double;
+                verbose : in boolean := true ) is
+
+    info : integer32;
+    qd_beta2 : constant quad_double := create(beta2);
+
+    use QuadDobl_Complex_Singular_Values;
+
+  begin -- with LU, the system is square so svh.H work space works
+    svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
+    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
+    svh.vals(0) := svh.svl(svh.dim);
+    Second(hom,svh,sol);
+    if verbose
+     then put_line(file,"All singular values : "); put_line(file,svh.vals);
+    end if;
+    eta := Distance(svh);
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
+    step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
+    if verbose then
+      put(file,"eta :"); put(file,eta,3);
+      put(file,"  nrm :"); put(file,nrm,3);
+      put(file,"  curv_step :"); put(file,step,3); new_line(file);
+    end if;
+  end Hesse_Pade;
+
+  procedure Hesse_Pade
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                res : out QuadDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out quad_double;
+                verbose : in boolean := true ) is
+
+    qd_beta2 : constant quad_double := create(beta2);
+
+  begin
+    svh.vals(0) := prd.svl(prd.dim);
+    Second(hom,svh,sol);
+    if verbose
+     then put_line(file,"All singular values : "); put_line(file,svh.vals);
+    end if;
+    eta := Distance(svh);
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
+    step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
+    if verbose then
+      put(file,"eta :"); put(file,eta,3);
+      put(file,"  nrm :"); put(file,nrm,3);
+      put(file,"  curv_step :"); put(file,step,3); new_line(file);
+    end if;
+  end Hesse_Pade;
 
   procedure Predictor_Feedback
               ( file : in file_type;
