@@ -1,4 +1,5 @@
 Tue 17 Mar 2020 : added reporting procedure to ts_padepcnv.
+  Added verbose option to the predictor test procedures in ts_padepcnv.
 
 Mon 16 Mar 2020 : moved functions for the mixed residual computations from
   ts_padepcnv to {standard,dobldobl,quaddobl}_mixed_residuals.

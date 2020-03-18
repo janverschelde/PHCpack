@@ -270,7 +270,8 @@ procedure ts_padepcnv is
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; output : in boolean ) is
+                fail : out boolean; output : in boolean := false;
+                verbose : in boolean := false ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with LU,
@@ -288,7 +289,8 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
-  --   output   flag to indicate extra output during computations.
+  --   output   flag to indicate data output during computations;
+  --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -310,8 +312,10 @@ procedure ts_padepcnv is
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
     pole_step := beta1*r;
-    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-      pole_step,prd.numcff,prd.dencff,output);
+    if verbose then
+      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+        pole_step,prd.numcff,prd.dencff,output);
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -320,17 +324,21 @@ procedure ts_padepcnv is
     SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
     svh.vals(0) := svh.svl(svh.dim);
     Second(hom,svh,sol);
-    put_line("All singular values : "); put_line(svh.vals);
+    if verbose
+     then put_line("All singular values : "); put_line(svh.vals);
+    end if;
     eta := Standard_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := Standard_Complex_Vector_Norms.Norm2(res);
     curv_step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
-    put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
-    put("  curv_step :"); put(curv_step,3); new_line;
+    if verbose then
+      put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
+      put("  curv_step :"); put(curv_step,3); new_line;
+    end if;
     step := Minimum(pole_step,curv_step,maxstep);
     Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
-      eva,radsol,res,absres,nrm,mixres,nbfail,true);
+      eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end Standard_LU_Prediction;
 
   procedure Standard_SVD_Prediction
@@ -340,7 +348,8 @@ procedure ts_padepcnv is
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; output : in boolean ) is
+		fail : out boolean; output : in boolean := false;
+                verbose : in boolean := false ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with SVD,
@@ -358,7 +367,8 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size
-  --   output   flag to indicate extra output during computations.
+  --   output   flag to indicate data output during computations;
+  --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -379,24 +389,30 @@ procedure ts_padepcnv is
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
     pole_step := beta1*r;
-    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-      pole_step,prd.numcff,prd.dencff,output);
+    if verbose then
+      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+        pole_step,prd.numcff,prd.dencff,output);
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
-    put_line("All singular values : "); put_line(svh.vals);
+    if verbose
+     then put_line("All singular values : "); put_line(svh.vals);
+    end if;
     eta := Standard_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := Standard_Complex_Vector_Norms.Norm2(res);
     curv_step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
-    put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
-    put("  curv_step :"); put(curv_step,3); new_line;
+    if verbose then
+      put("eta :"); put(eta,3); put("  nrm :"); put(nrm,3);
+      put("  curv_step :"); put(curv_step,3); new_line;
+    end if;
     step := Minimum(pole_step,curv_step,maxstep);
     Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
-      eva,radsol,res,absres,nrm,mixres,nbfail,true);
+      eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end Standard_SVD_Prediction;
 
   procedure DoblDobl_LU_Prediction
@@ -406,7 +422,8 @@ procedure ts_padepcnv is
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; output : in boolean ) is
+		fail : out boolean; output : in boolean := false;
+                verbose : in boolean := false ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with LU,
@@ -429,7 +446,8 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor on the pole radius;
   --   beta2    multiplication factor on the curvature step;
   --   maxstep  the maximum step size;
-  --   output   flag to indicate extra output during computations.
+  --   output   flag to indicate data output during computations;
+  --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -453,8 +471,10 @@ procedure ts_padepcnv is
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
     pole_step := beta1*r;
-    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-      pole_step,prd.numcff,prd.dencff,output);
+    if verbose then
+      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+        pole_step,prd.numcff,prd.dencff,output);
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -463,17 +483,21 @@ procedure ts_padepcnv is
     SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
     svh.vals(0) := svh.svl(svh.dim);
     Second(hom,svh,sol);
-    put_line("All singular values : "); put_line(svh.vals);
+    if verbose
+     then put_line("All singular values : "); put_line(svh.vals);
+    end if;
     eta := DoblDobl_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
     curv_step := Series_and_Predictors.Step_Distance(prd.deg,dd_beta2,eta,nrm);
-    put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
-    put("  curv_step : "); put(curv_step,3); new_line;
+    if verbose then
+      put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
+      put("  curv_step : "); put(curv_step,3); new_line;
+    end if;
     step := Minimum(pole_step,curv_step,dd_maxstep);
     Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
-      eva,radsol,res,absres,nrm,mixres,nbfail,true);
+      eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end DoblDobl_LU_Prediction;
 
   procedure DoblDobl_SVD_Prediction
@@ -483,7 +507,8 @@ procedure ts_padepcnv is
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; output : in boolean ) is
+		fail : out boolean; output : in boolean := false;
+                verbose : in boolean := false ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with SVD,
@@ -501,7 +526,8 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
-  --   output   flag to indicate extra output during computations.
+  --   output   flag to indicate extra output during computations;
+  --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -524,24 +550,30 @@ procedure ts_padepcnv is
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
     pole_step := beta1*r;
-    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-      pole_step,prd.numcff,prd.dencff,output);
+    if verbose then
+      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+        pole_step,prd.numcff,prd.dencff,output);
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
-    put_line("All singular values : "); put_line(svh.vals);
+    if verbose
+     then put_line("All singular values : "); put_line(svh.vals);
+    end if;
     eta := DoblDobl_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
     curv_step := Series_and_Predictors.Step_Distance(prd.deg,dd_beta2,eta,nrm);
-    put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
-    put("  curv_step : "); put(curv_step,3); new_line;
+    if verbose then
+      put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
+      put("  curv_step : "); put(curv_step,3); new_line;
+    end if;
     step := Minimum(pole_step,curv_step,dd_maxstep);
     Predictor_Feedback(hom,abh,prd.numcff,prd.dencff,step,alpha,
-      eva,radsol,res,absres,nrm,mixres,nbfail,true);
+      eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end DoblDobl_SVD_Prediction;
 
   procedure QuadDobl_LU_Prediction
@@ -551,7 +583,8 @@ procedure ts_padepcnv is
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; output : in boolean ) is
+		fail : out boolean; output : in boolean := false;
+                verbose : in boolean := false ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd,
@@ -574,7 +607,8 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
-  --   output   flag to indicate extra output during computations.
+  --   output   flag to indicate data output during computations;
+  --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -598,8 +632,10 @@ procedure ts_padepcnv is
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
     pole_step := beta1*r;
-    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-      pole_step,prd.numcff,prd.dencff,output);
+    if verbose then
+      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+        pole_step,prd.numcff,prd.dencff,output);
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -608,18 +644,22 @@ procedure ts_padepcnv is
     SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
     svh.vals(0) := svh.svl(svh.dim);
     Second(hom,svh,sol);
-    put_line("All singular values : "); put_line(svh.vals);
+    if verbose
+     then put_line("All singular values : "); put_line(svh.vals);
+    end if;
     eta := QuadDobl_Predictor_Convolutions.Distance(svh);
     Homotopy_Pade_Approximants.Solution_Error
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
     curv_step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
-    put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
-    put("  curv_step : "); put(curv_step,3); new_line;
+    if verbose then
+      put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
+      put("  curv_step : "); put(curv_step,3); new_line;
+    end if;
     step := Minimum(pole_step,curv_step,qd_maxstep);
     Predictor_Feedback
       (hom,abh,prd.numcff,prd.dencff,step,alpha,
-       eva,radsol,res,absres,nrm,mixres,nbfail,true);
+       eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end QuadDobl_LU_Prediction;
 
   procedure QuadDobl_SVD_Prediction
@@ -629,7 +669,8 @@ procedure ts_padepcnv is
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; output : in boolean ) is
+                fail : out boolean; output : in boolean := false;
+                verbose : in boolean := false ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with SVD,
@@ -647,7 +688,8 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
-  --   output   flag to indicate extra output during computations.
+  --   output   flag to indicate extra output during computations;
+  --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -670,8 +712,10 @@ procedure ts_padepcnv is
   begin
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
     pole_step := beta1*r;
-    Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-      pole_step,prd.numcff,prd.dencff,output);
+    if verbose then
+      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
+        pole_step,prd.numcff,prd.dencff,output);
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); sol(k) := lnk(0);
     end loop;
@@ -683,12 +727,14 @@ procedure ts_padepcnv is
       (prd.sol,prd.numcff,prd.dencff,res);
     nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
     curv_step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
-    put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
-    put("  curv_step : "); put(curv_step,3); new_line;
+    if verbose then
+      put("eta : "); put(eta,3); put("  nrm : "); put(nrm,3);
+      put("  curv_step : "); put(curv_step,3); new_line;
+    end if;
     step := Minimum(pole_step,curv_step,qd_maxstep);
     Predictor_Feedback
       (hom,abh,prd.numcff,prd.dencff,step,alpha,
-       eva,radsol,res,absres,nrm,mixres,nbfail,true);
+       eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end QuadDobl_SVD_Prediction;
 
   procedure Standard_Run_Prediction
@@ -734,16 +780,16 @@ procedure ts_padepcnv is
           declare
             prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
-            Standard_SVD_Prediction
-              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
+            Standard_SVD_Prediction(chom,abh,prd,svh,maxit,tol,alpha,
+              beta1,beta2,maxstep,fail,otp,true);
             Clear(prd);
           end;
         else
           declare
             prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
           begin
-            Standard_LU_Prediction
-              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
+            Standard_LU_Prediction(chom,abh,prd,svh,maxit,tol,alpha,
+              beta1,beta2,maxstep,fail,otp,true);
             Clear(prd);
           end;
         end if;
