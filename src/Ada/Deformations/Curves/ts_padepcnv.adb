@@ -86,7 +86,6 @@ procedure ts_padepcnv is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : double_float;
-    eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
     res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
@@ -107,7 +106,7 @@ procedure ts_padepcnv is
                eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end Standard_LU_Prediction;
 
   procedure Standard_SVD_Prediction
@@ -149,7 +148,6 @@ procedure ts_padepcnv is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : double_float;
-    eva : Standard_Complex_Vectors.Vector(1..prd.dim);
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
     res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
@@ -170,7 +168,7 @@ procedure ts_padepcnv is
                eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end Standard_SVD_Prediction;
 
   procedure DoblDobl_LU_Prediction
@@ -217,7 +215,6 @@ procedure ts_padepcnv is
 
     z : DoblDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : double_double;
-    eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
@@ -239,7 +236,7 @@ procedure ts_padepcnv is
                eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,dd_maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end DoblDobl_LU_Prediction;
 
   procedure DoblDobl_SVD_Prediction
@@ -281,7 +278,6 @@ procedure ts_padepcnv is
 
     z : DoblDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : double_double;
-    eva : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
@@ -303,7 +299,7 @@ procedure ts_padepcnv is
                eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,dd_maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end DoblDobl_SVD_Prediction;
 
   procedure QuadDobl_LU_Prediction
@@ -350,7 +346,6 @@ procedure ts_padepcnv is
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : quad_double;
-    eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
@@ -372,7 +367,7 @@ procedure ts_padepcnv is
                eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,qd_maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end QuadDobl_LU_Prediction;
 
   procedure QuadDobl_SVD_Prediction
@@ -414,7 +409,6 @@ procedure ts_padepcnv is
 
     z : QuadDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : quad_double;
-    eva : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
     res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
@@ -436,7 +430,7 @@ procedure ts_padepcnv is
                eta,nrm,curv_step,verbose);
     step := Three_Way_Minima.Minimum(pole_step,curv_step,qd_maxstep);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,eva,radsol,res,absres,nrm,mixres,nbfail,verbose);
+      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end QuadDobl_SVD_Prediction;
 
   procedure Standard_Run_Prediction
@@ -659,6 +653,7 @@ procedure ts_padepcnv is
     ls : Link_to_Solution;
     zero : constant Standard_Complex_Numbers.Complex_Number
          := Standard_Complex_Numbers.Create(0.0);
+    ans : character;
 
     use Standard_Complex_Vectors;
 
@@ -670,18 +665,23 @@ procedure ts_padepcnv is
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant Standard_Complex_Vectors.Vector
-          := Standard_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :");
-        put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
+    new_line;
+    put("Check all start solutions ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Checking the start solutions ...");
+      for k in 1..Length_Of(sols) loop
+        ls := Head_Of(tmp);
+        declare
+          y : constant Standard_Complex_Vectors.Vector
+            := Standard_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
+        begin
+          put("Value at solution "); put(k,1); put_line(" :");
+          put_line(y);
+        end;
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
     Standard_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end Standard_Test_Prediction;
 
@@ -706,6 +706,7 @@ procedure ts_padepcnv is
     ls : Link_to_Solution;
     zero : constant DoblDobl_Complex_Numbers.Complex_Number
          := DoblDobl_Complex_Numbers.Create(integer(0));
+    ans : character;
 
   begin
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
@@ -715,18 +716,23 @@ procedure ts_padepcnv is
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant DoblDobl_Complex_Vectors.Vector
-          := DoblDobl_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :");
-        put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
+    new_line;
+    put("Check all start solutions ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Checking the start solutions ...");
+      for k in 1..Length_Of(sols) loop
+        ls := Head_Of(tmp);
+        declare
+          y : constant DoblDobl_Complex_Vectors.Vector
+            := DoblDobl_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
+        begin
+          put("Value at solution "); put(k,1); put_line(" :");
+          put_line(y);
+        end;
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
     DoblDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end DoblDobl_Test_Prediction;
 
@@ -751,6 +757,7 @@ procedure ts_padepcnv is
     ls : Link_to_Solution;
     zero : constant QuadDobl_Complex_Numbers.Complex_Number
          := QuadDobl_Complex_Numbers.Create(integer(0));
+    ans : character;
 
   begin
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
@@ -760,18 +767,23 @@ procedure ts_padepcnv is
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant QuadDobl_Complex_Vectors.Vector
-          := QuadDobl_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :");
-        put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
+    new_line;
+    put("Check all start solutions ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("Checking the start solutions ...");
+      for k in 1..Length_Of(sols) loop
+        ls := Head_Of(tmp);
+        declare
+          y : constant QuadDobl_Complex_Vectors.Vector
+            := QuadDobl_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
+        begin
+          put("Value at solution "); put(k,1); put_line(" :");
+          put_line(y);
+        end;
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
     QuadDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end QuadDobl_Test_Prediction;
 

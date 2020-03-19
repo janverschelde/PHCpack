@@ -1,3 +1,6 @@
+Thu 19 Mar 2020 : eliminated a superfluous vector variable in the Prediction
+  procedures of ts_padepcnv, added a prompt for checking all start solutions.
+
 Wed 18 Mar 2020 : new package three_way_minima, tested by ts_padepcnv,
   moved output procedures from ts_padepcnv to the predictor convolutions,
   to {standard,dobldobl,quaddobl}_predictor_convolutions, and added file
