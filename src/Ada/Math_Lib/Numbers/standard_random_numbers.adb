@@ -93,8 +93,13 @@ package body Standard_Random_Numbers is
 
   procedure Random_Double_Float 
               ( seed : in out integer32; f : out double_float ) is
+
+    p : constant integer64 := integer64(a)*integer64(seed);
+    m64 : constant integer64 := integer64(m);
+    pmodm : constant integer64 := p mod m64;
+
   begin
-    seed := a*seed mod m;
+    seed := integer32(pmodm); -- a*seed mod m;
     f := double_float(seed)/double_float(m);
     f := 2.0 * f - 1.0;
   end Random_Double_Float;
