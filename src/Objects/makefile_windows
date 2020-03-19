@@ -71,7 +71,7 @@ GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp
 
 phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
         inputData.o outputData.o iTest.o fTest.o reltab.o \
-        simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o \
+        simplex4phc.o mvc4phc.o demicsrun4phc.o corecountwindows.o \
         parameter.o lib2path.o
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
@@ -85,13 +85,13 @@ phc: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
                  lib.a parameter.o lib2path.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
-                 get_clock.o get_clocks_per_sec.o corecount.o \
+                 get_clock.o get_clocks_per_sec.o corecountwindows.o \
                  $(QD_LIB)/libqd.a -o $(BIN)/phc -lm \
 --LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -Wl,--no-whole-archive"
 
 phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
         inputData.o outputData.o iTest.o fTest.o reltab.o \
-        simplex4phc.o mvc4phc.o demicsrun4phc.o corecount.o \
+        simplex4phc.o mvc4phc.o demicsrun4phc.o corecountwindows.o \
         parameter.o lib2path_d.o
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
@@ -105,7 +105,7 @@ phc_noqd: lib.a feedback.o get_clock.o get_clocks_per_sec.o  \
                  lib.a parameter.o lib2path_d.o \
                  inputData.o outputData.o iTest.o fTest.o reltab.o \
                  simplex4phc.o mvc4phc.o demicsrun4phc.o \
-                 get_clock.o get_clocks_per_sec.o corecount.o \
+                 get_clock.o get_clocks_per_sec.o corecountwindows.o \
                  -o $(BIN)/phc -lm \
 --LINK="g++ -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -Wl,--no-whole-archive"
 
@@ -1928,13 +1928,13 @@ lib2path.o:
 
 # Test programs for the Tasking :
 
-corecount.o:
-	$(gcc) -c $(PHCAda)/Tasking/corecount.c -o corecount.o
+corecountwindows.o:
+	$(gcc) -c $(PHCAda)/Tasking/corecountwindows.c -o corecountwindows.o
 
-ts_corecount: corecount.o
+ts_corecount: corecountwindows.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_corecount.adb
 	gnatbind ts_corecount
-	gnatlink ts_corecount corecount.o -o $(BIN)/ts_corecount
+	gnatlink ts_corecount corecountwindows.o -o $(BIN)/ts_corecount
 
 ts_mtmatvec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmatvec.adb \
