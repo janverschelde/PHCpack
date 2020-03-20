@@ -66,6 +66,15 @@ package DoblDobl_Predictor_Convolutions is
   end record;
   type Link_to_SVD_Predictor is access SVD_Predictor;
 
+  type Predictor_Type is (LU, SVD);
+
+  type Predictor ( kind : Predictor_Type := SVD ) is record
+    case kind is
+      when LU  => ludata : Link_to_LU_Predictor;
+      when SVD => svdata : Link_to_SVD_Predictor;
+    end case;
+  end record;
+
 -- DATA STRUCTURE FOR CURVATURE :
 --   The singular values of the Hessians are computed to estimate the
 --   distance from the current solution to the nearest path.
@@ -84,12 +93,12 @@ package DoblDobl_Predictor_Convolutions is
   type Link_to_SVD_Hessians is access SVD_Hessians;
 
   function Create ( sol : DoblDobl_Complex_Vectors.Vector;
-	            neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor;
+                    neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor;
   function Create ( sol : DoblDobl_Complex_Vectors.Vector;
                     neq,deg,numdeg,dendeg : integer32 )
                   return Link_to_LU_Predictor;
   function Create ( sol : DoblDobl_Complex_Vectors.Vector;
-	            neq,deg,numdeg,dendeg : integer32 ) return SVD_Predictor;
+                    neq,deg,numdeg,dendeg : integer32 ) return SVD_Predictor;
   function Create ( sol : DoblDobl_Complex_Vectors.Vector;
                     neq,deg,numdeg,dendeg : integer32 )
                   return Link_to_SVD_Predictor;
@@ -107,6 +116,28 @@ package DoblDobl_Predictor_Convolutions is
 
   -- ON RETURN :
   --   data allocated to run the Newton-Fabry-Pade predictor.
+
+  function Create ( p : Link_to_LU_Predictor ) return Predictor;
+  function Create ( p : Link_to_SVD_Predictor ) return Predictor;
+
+  -- DESCRIPTION :
+  --   Returns an instance of the predictor of the corresponding kind.
+
+  function Create ( sol : DoblDobl_Complex_Vectors.Vector;
+                    neq,deg,numdeg,dendeg : integer32;
+                    kind : Predictor_Type ) return Predictor;
+
+  -- DESCRIPTION :
+  --   Given solution vector, dimensions, and the kind,
+  --   returns the corresponding predictor.
+
+  procedure Set_Lead_Coefficients
+              ( p : in Predictor;
+                s : in DoblDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Sets the leading coefficients of the data in the predictor p
+  --   with the values in the vector s. 
 
   procedure Newton_Fabry_Report 
               ( file : in file_type;
@@ -314,6 +345,11 @@ package DoblDobl_Predictor_Convolutions is
   -- DESCRIPTION :
   --   Deallocates the memory for the series, the work space,
   --   and the rational approximation.
+
+  procedure Clear ( p : in out Predictor );
+
+  -- DESCRIPTION :
+  --   Deallocates the memory allocated to p.
 
   procedure Clear ( h : in out Link_to_SVD_Hessians );
 

@@ -65,6 +65,15 @@ package Standard_Predictor_Convolutions is
   end record;
   type Link_to_SVD_Predictor is access SVD_Predictor;
 
+  type Predictor_Type is (LU, SVD);
+
+  type Predictor ( kind : Predictor_Type := SVD ) is record
+    case kind is
+      when LU  => ludata : Link_to_LU_Predictor;
+      when SVD => svdata : Link_to_SVD_Predictor;
+    end case;
+  end record;
+
 -- DATA STRUCTURE FOR CURVATURE :
 --   The singular values of the Hessians are computed to estimate the
 --   distance from the current solution to the nearest path.
@@ -106,6 +115,28 @@ package Standard_Predictor_Convolutions is
 
   -- ON RETURN :
   --   data allocated to run the Newton-Fabry-Pade predictor.
+
+  function Create ( p : Link_to_LU_Predictor ) return Predictor;
+  function Create ( p : Link_to_SVD_Predictor ) return Predictor;
+
+  -- DESCRIPTION :
+  --   Returns an instance of the predictor of the corresponding kind.
+
+  function Create ( sol : Standard_Complex_Vectors.Vector;
+	            neq,deg,numdeg,dendeg : integer32;
+                    kind : Predictor_Type ) return Predictor;
+
+  -- DESCRIPTION :
+  --   Given solution vector, dimensions, and the kind,
+  --   returns the corresponding predictor.
+
+  procedure Set_Lead_Coefficients
+              ( p : in Predictor;
+                s : in Standard_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Sets the leading coefficients of the data in the predictor p
+  --   with the values in the vector s. 
 
   procedure Newton_Fabry_Report 
               ( file : in file_type;
@@ -211,8 +242,8 @@ package Standard_Predictor_Convolutions is
   procedure Hesse_Pade
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
-                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                prd : in Link_to_LU_Predictor;
+                svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
@@ -240,8 +271,8 @@ package Standard_Predictor_Convolutions is
   procedure Hesse_Pade
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                prd : in Standard_Predictor_Convolutions.Link_to_SVD_Predictor;
-                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                prd : in Link_to_SVD_Predictor;
+                svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
@@ -313,6 +344,11 @@ package Standard_Predictor_Convolutions is
   -- DESCRIPTION :
   --   Deallocates the memory for the series, the work space,
   --   and the rational approximation.
+
+  procedure Clear ( p : in out Predictor );
+
+  -- DESCRIPTION :
+  --   Deallocates the memory allocated to p.
 
   procedure Clear ( h : in out Link_to_SVD_Hessians );
 

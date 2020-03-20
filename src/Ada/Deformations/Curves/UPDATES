@@ -1,3 +1,6 @@
+Fri 20 Mar 2020 : used discriminant records for a new predictor type in
+  {standard,dobldobl,quaddobl}_predictor_convolutions, tested by ts_padepcnv.
+
 Thu 19 Mar 2020 : eliminated a superfluous vector variable in the Prediction
   procedures of ts_padepcnv, added a prompt for checking all start solutions.
 

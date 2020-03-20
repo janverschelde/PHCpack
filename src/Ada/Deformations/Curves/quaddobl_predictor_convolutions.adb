@@ -90,6 +90,67 @@ package body QuadDobl_Predictor_Convolutions is
     return res;
   end Create;
 
+  function Create ( p : Link_to_LU_Predictor ) return Predictor is
+
+    res : Predictor(LU);
+
+  begin
+    res.ludata := p;
+    return res;
+  end Create;
+
+  function Create ( p : Link_to_SVD_Predictor ) return Predictor is
+
+    res : Predictor(SVD);
+
+  begin
+    res.svdata := p;
+    return res;
+  end Create;
+
+  function Create ( sol : QuadDobl_Complex_Vectors.Vector;
+                    neq,deg,numdeg,dendeg : integer32;
+                    kind : Predictor_Type ) return Predictor is
+  begin
+    case kind is
+      when LU =>
+        declare
+          res : Predictor(LU);
+        begin
+          res.ludata := Create(sol,neq,deg,numdeg,dendeg);
+          return res;
+        end;
+      when SVD =>
+        declare
+          res : Predictor(SVD);
+        begin
+          res.svdata := Create(sol,neq,deg,numdeg,dendeg);
+          return res;
+        end;
+    end case;
+  end Create;
+
+  procedure Set_Lead_Coefficients
+              ( p : in Predictor;
+                s : in QuadDobl_Complex_Vectors.Vector ) is
+
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    case p.kind is
+      when LU =>
+        for k in p.ludata.sol'range loop
+          lnk := p.ludata.sol(k);
+          lnk(0) := s(k);
+        end loop;
+      when SVD =>
+        for k in p.svdata.sol'range loop
+          lnk := p.svdata.sol(k);
+          lnk(0) := s(k);
+        end loop;
+    end case;
+  end Set_Lead_Coefficients;
+
   procedure Newton_Fabry_Report 
               ( file : in file_type;
                 nbrit : in integer32; absdx : in quad_double;
@@ -242,9 +303,9 @@ package body QuadDobl_Predictor_Convolutions is
     nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
     step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
     if verbose then
-      put(file,"eta :"); put(file,eta,3);
-      put(file,"  nrm :"); put(file,nrm,3);
-      put(file,"  curv_step :"); put(file,step,3); new_line(file);
+      put(file,"eta : "); put(file,eta,3);
+      put(file,"  nrm : "); put(file,nrm,3);
+      put(file,"  curv_step : "); put(file,step,3); new_line(file);
     end if;
   end Hesse_Pade;
 
@@ -272,9 +333,9 @@ package body QuadDobl_Predictor_Convolutions is
     nrm := QuadDobl_Complex_Vector_Norms.Norm2(res);
     step := Series_and_Predictors.Step_Distance(prd.deg,qd_beta2,eta,nrm);
     if verbose then
-      put(file,"eta :"); put(file,eta,3);
-      put(file,"  nrm :"); put(file,nrm,3);
-      put(file,"  curv_step :"); put(file,step,3); new_line(file);
+      put(file,"eta : "); put(file,eta,3);
+      put(file,"  nrm : "); put(file,nrm,3);
+      put(file,"  curv_step : "); put(file,step,3); new_line(file);
     end if;
   end Hesse_Pade;
 
@@ -308,7 +369,7 @@ package body QuadDobl_Predictor_Convolutions is
       if verbose then
         put_line(file,"Evaluation of the predicted solution : ");
         put_line(file,res);
-        put(file,"The predictor residual :"); put(file,nrm,3);
+        put(file,"The predictor residual : "); put(file,nrm,3);
         put(file,"  mixres : "); put(file,mixres,3);
       end if;
       if mixres < alpha then
@@ -357,6 +418,14 @@ package body QuadDobl_Predictor_Convolutions is
       QuadDobl_Complex_VecVecs.Clear(p.dencff);
       free(p);
     end if;
+  end Clear;
+
+  procedure Clear ( p : in out Predictor ) is
+  begin
+    case p.kind is
+      when LU  => Clear(p.ludata);
+      when SVD => Clear(p.svdata);
+    end case;
   end Clear;
 
   procedure Clear ( h : in out Link_to_SVD_Hessians ) is

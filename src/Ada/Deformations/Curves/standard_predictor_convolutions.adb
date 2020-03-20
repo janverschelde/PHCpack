@@ -89,6 +89,67 @@ package body Standard_Predictor_Convolutions is
     return res;
   end Create;
 
+  function Create ( p : Link_to_LU_Predictor ) return Predictor is
+
+    res : Predictor(LU);
+
+  begin
+    res.ludata := p;
+    return res;
+  end Create;
+
+  function Create ( p : Link_to_SVD_Predictor ) return Predictor is
+
+    res : Predictor(SVD);
+
+  begin
+    res.svdata := p;
+    return res;
+  end Create;
+
+  function Create ( sol : Standard_Complex_Vectors.Vector;
+	            neq,deg,numdeg,dendeg : integer32;
+                    kind : Predictor_Type ) return Predictor is
+  begin
+    case kind is
+      when LU =>
+        declare
+          res : Predictor(LU);
+        begin
+          res.ludata := Create(sol,neq,deg,numdeg,dendeg);
+          return res;
+        end;
+      when SVD =>
+        declare
+          res : Predictor(SVD);
+        begin
+          res.svdata := Create(sol,neq,deg,numdeg,dendeg);
+          return res;
+        end;
+    end case;
+  end Create;
+
+  procedure Set_Lead_Coefficients
+              ( p : in Predictor;
+                s : in Standard_Complex_Vectors.Vector ) is
+
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    case p.kind is
+      when LU =>
+        for k in p.ludata.sol'range loop
+          lnk := p.ludata.sol(k);
+          lnk(0) := s(k);
+        end loop;
+      when SVD =>
+        for k in p.svdata.sol'range loop
+          lnk := p.svdata.sol(k);
+          lnk(0) := s(k);
+        end loop;
+    end case;
+  end Set_Lead_Coefficients;
+
   procedure Newton_Fabry_Report 
               ( file : in file_type;
                 nbrit : in integer32; absdx : in double_float;
@@ -215,8 +276,8 @@ package body Standard_Predictor_Convolutions is
   procedure Hesse_Pade
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
-                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                prd : in Link_to_LU_Predictor;
+                svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
@@ -230,7 +291,7 @@ package body Standard_Predictor_Convolutions is
     svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
     SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
     svh.vals(0) := svh.svl(svh.dim);
-    Standard_Predictor_Convolutions.Second(hom,svh,sol);
+    Second(hom,svh,sol);
     if verbose
      then put_line(file,"All singular values : "); put_line(file,svh.vals);
     end if;
@@ -249,15 +310,15 @@ package body Standard_Predictor_Convolutions is
   procedure Hesse_Pade
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                prd : in Standard_Predictor_Convolutions.Link_to_SVD_Predictor;
-                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                prd : in Link_to_SVD_Predictor;
+                svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
                 verbose : in boolean := true ) is
   begin
     svh.vals(0) := prd.svl(prd.dim);
-    Standard_Predictor_Convolutions.Second(hom,svh,sol);
+    Second(hom,svh,sol);
     if verbose
      then put_line(file,"All singular values : "); put_line(file,svh.vals);
     end if;
@@ -353,6 +414,14 @@ package body Standard_Predictor_Convolutions is
       Standard_Complex_VecVecs.Clear(p.dencff);
       free(p);
     end if;
+  end Clear;
+
+  procedure Clear ( p : in out Predictor ) is
+  begin
+    case p.kind is
+      when LU  => Clear(p.ludata);
+      when SVD => Clear(p.svdata);
+    end case;
   end Clear;
 
   procedure Clear ( h : in out Link_to_SVD_Hessians ) is

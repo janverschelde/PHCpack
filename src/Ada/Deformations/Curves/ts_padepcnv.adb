@@ -447,9 +447,9 @@ procedure ts_padepcnv is
     use Standard_Predictor_Convolutions;
   
     neq : constant integer32 := chom.crc'last;
-    dim : integer32;
+    ls : Link_to_Solution := Head_Of(sols);
+    dim : constant integer32 := ls.v'last;
     tmp : Solution_List := sols;
-    ls : Link_to_Solution;
     maxit : integer32 := 0; 
     tol : constant double_float := 1.0E-12;
     fail,otp,usesvd : boolean;
@@ -458,44 +458,36 @@ procedure ts_padepcnv is
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
+    prd : Predictor;
+    hss : SVD_Hessians(dim,dim+1);
+    svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
     put("Output during Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
     otp := (ans = 'y');
     put("Use SVD ? (y/n) "); Ask_Yes_or_No(ans); usesvd := (ans = 'y');
+    if usesvd
+     then prd := Create(ls.v,neq,deg,numdeg,dendeg,SVD);
+     else prd := Create(ls.v,neq,deg,numdeg,dendeg,LU);
+    end if;
     for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp); dim := ls.v'last;
-      declare
-        hss : SVD_Hessians(dim,dim+1);
-        svh : Link_to_SVD_Hessians;
-      begin
-        hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
-        svh := new SVD_Hessians'(hss);
-        if usesvd then
-          declare
-            prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-          begin
-            Standard_SVD_Prediction(chom,abh,prd,svh,maxit,tol,alpha,
-              beta1,beta2,maxstep,fail,otp,true);
-            Clear(prd);
-          end;
-        else
-          declare
-            prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-          begin
-            Standard_LU_Prediction(chom,abh,prd,svh,maxit,tol,alpha,
-              beta1,beta2,maxstep,fail,otp,true);
-            Clear(prd);
-          end;
-        end if;
-        Clear(svh);
-      end;
+      ls := Head_Of(tmp);
+      Set_Lead_Coefficients(prd,ls.v);
+      hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
+      if usesvd then
+        Standard_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
+          beta1,beta2,maxstep,fail,otp,true);
+      else
+        Standard_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
+          beta1,beta2,maxstep,fail,otp,true);
+      end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Tail_Of(tmp);
     end loop;
+    Clear(prd); Clear(svh);
   end Standard_Run_Prediction;
 
   procedure DoblDobl_Run_Prediction
@@ -512,9 +504,9 @@ procedure ts_padepcnv is
     use DoblDobl_Predictor_Convolutions;
   
     neq : constant integer32 := chom.crc'last;
-    dim : integer32;
+    ls : Link_to_Solution := Head_Of(sols);
+    dim : constant integer32 := ls.v'last;
     tmp : Solution_List := sols;
-    ls : Link_to_Solution;
     maxit : integer32 := 0; 
     tol : constant double_float := 1.0E-24;
     fail,otp,usesvd : boolean;
@@ -525,44 +517,36 @@ procedure ts_padepcnv is
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
+    prd : Predictor;
+    hss : SVD_Hessians(dim,dim+1);
+    svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
     put("Output during Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
     otp := (ans = 'y');
     put("Use SVD ? (y/n) "); Ask_Yes_or_No(ans); usesvd := (ans = 'y');
+    if usesvd
+     then prd := Create(ls.v,neq,deg,numdeg,dendeg,SVD);
+     else prd := Create(ls.v,neq,deg,numdeg,dendeg,LU);
+    end if;
     for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp); dim := ls.v'last;
-      declare
-        hss : SVD_Hessians(dim,dim+1);
-        svh : Link_to_SVD_Hessians;
-      begin
-        hss.vals := (hss.vals'range => zero);
-        svh := new SVD_Hessians'(hss);
-        if usesvd then
-          declare
-            prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-          begin
-            DoblDobl_SVD_Prediction
-              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
-            Clear(prd);
-          end;
-        else
-          declare
-            prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-          begin
-            DoblDobl_LU_Prediction
-              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
-            Clear(prd);
-          end;
-        end if;
-        Clear(svh);
-      end;
+      ls := Head_Of(tmp);
+      Set_Lead_Coefficients(prd,ls.v);
+      hss.vals := (hss.vals'range => zero);
+      if usesvd then
+        DoblDobl_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
+          beta1,beta2,maxstep,fail,otp,true);
+      else
+        DoblDobl_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
+          beta1,beta2,maxstep,fail,otp,true);
+      end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Tail_Of(tmp);
     end loop;
+    Clear(prd); Clear(svh);
   end DoblDobl_Run_Prediction;
 
   procedure QuadDobl_Run_Prediction
@@ -579,9 +563,9 @@ procedure ts_padepcnv is
     use QuadDobl_Predictor_Convolutions;
   
     neq : constant integer32 := chom.crc'last;
-    dim : integer32;
+    ls : Link_to_Solution := Head_Of(sols);
+    dim : constant integer32 := ls.v'last;
     tmp : Solution_List := sols;
-    ls : Link_to_Solution;
     maxit : integer32 := 0; 
     tol : constant double_float := 1.0E-48;
     fail,otp,usesvd : boolean;
@@ -592,44 +576,36 @@ procedure ts_padepcnv is
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
+    prd : Predictor;
+    hss : SVD_Hessians(dim,dim+1);
+    svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
     put("Output during Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
     otp := (ans = 'y');
     put("Use SVD ? (y/n) "); Ask_Yes_or_No(ans); usesvd := (ans = 'y');
+    if usesvd
+     then prd := Create(ls.v,neq,deg,numdeg,dendeg,SVD);
+     else prd := Create(ls.v,neq,deg,numdeg,dendeg,LU);
+    end if;
     for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp); dim := ls.v'last;
-      declare
-        hss : SVD_Hessians(dim,dim+1);
-        svh : Link_to_SVD_Hessians;
-      begin
-        hss.vals := (hss.vals'range => zero);
-        svh := new SVD_Hessians'(hss);
-        if usesvd then
-          declare
-            prd : Link_to_SVD_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-          begin
-            QuadDobl_SVD_Prediction
-              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
-            Clear(prd);
-          end;
-        else
-          declare
-            prd : Link_to_LU_Predictor := Create(ls.v,neq,deg,numdeg,dendeg);
-          begin
-            QuadDobl_LU_Prediction
-              (chom,abh,prd,svh,maxit,tol,alpha,beta1,beta2,maxstep,fail,otp);
-            Clear(prd);
-          end;
-        end if;
-        Clear(svh);
-      end;
+      ls := Head_Of(tmp);
+      Set_Lead_Coefficients(prd,ls.v);
+      hss.vals := (hss.vals'range => zero);
+      if usesvd then
+        QuadDobl_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
+          beta1,beta2,maxstep,fail,otp,true);
+      else
+        QuadDobl_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
+          beta1,beta2,maxstep,fail,otp,true);
+      end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Tail_Of(tmp);
     end loop;
+    Clear(prd); Clear(svh);
   end QuadDobl_Run_Prediction;
 
   procedure Standard_Test_Prediction
