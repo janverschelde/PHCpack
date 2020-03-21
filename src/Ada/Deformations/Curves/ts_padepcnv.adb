@@ -231,6 +231,96 @@ procedure ts_padepcnv is
     Clear(prd); Clear(svh);
   end QuadDobl_Run_Prediction;
 
+  procedure Standard_Check_Solutions
+              ( chom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Given in chom is a system of convolution circuits for a homotopy
+  --   and in sols a list of solutions, in double precision.
+  --   Writes the result of the evaluation of each solution at the circuits.
+
+    use Standard_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+
+  begin
+    put_line("Checking the start solutions ...");
+    for k in 1..Length_Of(sols) loop
+      ls := Head_Of(tmp);
+      declare
+        y : constant Standard_Complex_Vectors.Vector
+          := Standard_Speelpenning_Convolutions.Eval(chom.crc,ls.v,zero);
+      begin
+        put("Value at solution "); put(k,1); put_line(" :"); put_line(y);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Standard_Check_Solutions;
+
+  procedure DoblDobl_Check_Solutions
+              ( chom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Given in chom is a system of convolution circuits for a homotopy
+  --   and in sols a list of solutions, in double double precision.
+  --   Writes the result of the evaluation of each solution at the circuits.
+
+    use DoblDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    zero : constant DoblDobl_Complex_Numbers.Complex_Number
+         := DoblDobl_Complex_Numbers.Create(integer(0));
+
+  begin
+    put_line("Checking the start solutions ...");
+    for k in 1..Length_Of(sols) loop
+      ls := Head_Of(tmp);
+      declare
+        y : constant DoblDobl_Complex_Vectors.Vector
+          := DoblDobl_Speelpenning_Convolutions.Eval(chom.crc,ls.v,zero);
+      begin
+        put("Value at solution "); put(k,1); put_line(" :"); put_line(y);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end DoblDobl_Check_Solutions;
+
+  procedure QuadDobl_Check_Solutions
+              ( chom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Given in chom is a system of convolution circuits for a homotopy
+  --   and in sols a list of solutions, in quad double precision.
+  --   Writes the result of the evaluation of each solution at the circuits.
+
+    use QuadDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    zero : constant QuadDobl_Complex_Numbers.Complex_Number
+         := QuadDobl_Complex_Numbers.Create(integer(0));
+
+  begin
+    put_line("Checking the start solutions ...");
+    for k in 1..Length_Of(sols) loop
+      ls := Head_Of(tmp);
+      declare
+        y : constant QuadDobl_Complex_Vectors.Vector
+          := QuadDobl_Speelpenning_Convolutions.Eval(chom.crc,ls.v,zero);
+      begin
+        put("Value at solution "); put(k,1); put_line(" :"); put_line(y);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end QuadDobl_Check_Solutions;
+
   procedure Standard_Test_Prediction
               ( nq,idxpar,numdeg,dendeg : in integer32;
                 sols : in Standard_Complex_Solutions.Solution_List ) is
@@ -240,21 +330,13 @@ procedure ts_padepcnv is
   --   and sols contains the solutions of the start system.
   --   The parameter idxpar is the index to the continuation parameter.
 
-    use Standard_Complex_Solutions;
-
     hom : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
         := Standard_Homotopy.Homotopy_System;
     serhom : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom,abshom : Standard_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant Standard_Complex_Numbers.Complex_Number
-         := Standard_Complex_Numbers.Create(0.0);
     ans : character;
-
-    use Standard_Complex_Vectors;
 
   begin
     Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
@@ -265,21 +347,9 @@ procedure ts_padepcnv is
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
     new_line;
-    put("Check all start solutions ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      put_line("Checking the start solutions ...");
-      for k in 1..Length_Of(sols) loop
-        ls := Head_Of(tmp);
-        declare
-          y : constant Standard_Complex_Vectors.Vector
-            := Standard_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-        begin
-          put("Value at solution "); put(k,1); put_line(" :");
-          put_line(y);
-        end;
-        tmp := Tail_Of(tmp);
-      end loop;
+    put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Standard_Check_Solutions(cnvhom,sols);
     end if;
     Standard_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end Standard_Test_Prediction;
@@ -293,18 +363,12 @@ procedure ts_padepcnv is
   --   and sols contains the solutions of the start system.
   --   The parameter idxpar is the index to the continuation parameter.
 
-    use DoblDobl_Complex_Solutions;
-
     hom : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
         := DoblDobl_Homotopy.Homotopy_System;
     serhom : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom,abshom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant DoblDobl_Complex_Numbers.Complex_Number
-         := DoblDobl_Complex_Numbers.Create(integer(0));
     ans : character;
 
   begin
@@ -316,21 +380,9 @@ procedure ts_padepcnv is
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
     new_line;
-    put("Check all start solutions ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      put_line("Checking the start solutions ...");
-      for k in 1..Length_Of(sols) loop
-        ls := Head_Of(tmp);
-        declare
-          y : constant DoblDobl_Complex_Vectors.Vector
-            := DoblDobl_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-        begin
-          put("Value at solution "); put(k,1); put_line(" :");
-          put_line(y);
-        end;
-        tmp := Tail_Of(tmp);
-      end loop;
+    put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then DoblDobl_Check_Solutions(cnvhom,sols);
     end if;
     DoblDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end DoblDobl_Test_Prediction;
@@ -344,18 +396,12 @@ procedure ts_padepcnv is
   --   and sols contains the solutions of the start system.
   --   The parameter idxpar is the index to the continuation parameter.
 
-    use QuadDobl_Complex_Solutions;
-
     hom : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
         := QuadDobl_Homotopy.Homotopy_System;
     serhom : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom,abshom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant QuadDobl_Complex_Numbers.Complex_Number
-         := QuadDobl_Complex_Numbers.Create(integer(0));
     ans : character;
 
   begin
@@ -367,21 +413,9 @@ procedure ts_padepcnv is
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
     new_line;
-    put("Check all start solutions ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      put_line("Checking the start solutions ...");
-      for k in 1..Length_Of(sols) loop
-        ls := Head_Of(tmp);
-        declare
-          y : constant QuadDobl_Complex_Vectors.Vector
-            := QuadDobl_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-        begin
-          put("Value at solution "); put(k,1); put_line(" :");
-          put_line(y);
-        end;
-        tmp := Tail_Of(tmp);
-      end loop;
+    put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then QuadDobl_Check_Solutions(cnvhom,sols);
     end if;
     QuadDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end QuadDobl_Test_Prediction;
