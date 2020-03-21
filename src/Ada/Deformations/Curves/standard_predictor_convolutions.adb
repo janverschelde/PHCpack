@@ -338,10 +338,9 @@ package body Standard_Predictor_Convolutions is
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Predictor_Vectors;
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; alpha : in double_float;
-                eva,radsol : in out Standard_Complex_Vectors.Vector;
-                res,absres : in out Standard_Complex_Vectors.Vector;
                 nrm,mixres : out double_float; nbfail : out integer32;
                 verbose : in boolean := true ) is
 
@@ -354,16 +353,16 @@ package body Standard_Predictor_Convolutions is
         put(file,"step in the predictor feedback loop :");
         put(file,step,3); new_line(file);
       end if;
-      Standard_Rational_Approximations.Evaluate(numcff,dencff,step,eva);
+      Standard_Rational_Approximations.Evaluate(numcff,dencff,step,psv.sol);
       z := Standard_Complex_Numbers.Create(step);
-      res := Standard_Speelpenning_Convolutions.Eval(hom.crc,eva,z);
-      nrm := Standard_Complex_Vector_Norms.Max_Norm(res);
-      radsol := Standard_Mixed_Residuals.AbsVal(eva);
-      absres := Standard_Speelpenning_Convolutions.Eval(abh.crc,radsol,z);
-      mixres := Standard_Mixed_Residuals.Mixed_Residual(res,absres);
+      psv.res := Eval(hom.crc,psv.sol,z);
+      nrm := Standard_Complex_Vector_Norms.Max_Norm(psv.res);
+      psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
+      psv.radres := Eval(abh.crc,psv.radsol,z);
+      mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put_line(file,"Evaluation of the predicted solution : ");
-        put_line(file,res);
+        put_line(file,psv.res);
         put(file,"The predictor residual :"); put(file,nrm,3);
         put(file,"  mixres :"); put(file,mixres,3);
       end if;

@@ -15,7 +15,7 @@ package Standard_Predictor_Convolutions is
 --   for the next solution on a path defined by a polynomial homotopy,
 --   represented by convolution circuits, in double precision.
 
--- DATA STRUCTURE :
+-- DATA STRUCTURE FOR LU :
 --   The predictor type stores a solution in a vector of dimension dim,
 --   of power series of degree deg, for a rational approximation of degrees
 --   numdeg and dendeg, respectively of numerator and denominator.
@@ -72,6 +72,13 @@ package Standard_Predictor_Convolutions is
       when LU  => ludata : Link_to_LU_Predictor;
       when SVD => svdata : Link_to_SVD_Predictor;
     end case;
+  end record;
+
+  type Predictor_Vectors ( dim,neq : integer32 ) is record
+    sol : Standard_Complex_Vectors.Vector(1..dim);    -- solution work space
+    radsol : Standard_Complex_Vectors.Vector(1..dim); -- radii of sol(k)
+    res : Standard_Complex_Vectors.Vector(1..neq);    -- residual work space
+    radres : Standard_Complex_Vectors.Vector(1..neq); -- evaluated at radsol
   end record;
 
 -- DATA STRUCTURE FOR CURVATURE :
@@ -301,10 +308,9 @@ package Standard_Predictor_Convolutions is
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Predictor_Vectors;
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; alpha : in double_float;
-                eva,radsol : in out Standard_Complex_Vectors.Vector;
-                res,absres : in out Standard_Complex_Vectors.Vector;
                 nrm,mixres : out double_float; nbfail : out integer32;
                 verbose : in boolean := true );
 
@@ -317,6 +323,7 @@ package Standard_Predictor_Convolutions is
   --   file     to write extra output to if verbose;
   --   hom      homotopy convolution circuit system
   --   abh      circuits with radii as coeffiecients, for mixed residuals;
+  --   psv      work space for solution vectors and residuals;
   --   numcff   coefficients of the numerator of the Pade approximants;
   --   dencff   coefficients of the denominator of the Pade approximants;
   --   step     current step size;
@@ -329,10 +336,10 @@ package Standard_Predictor_Convolutions is
 
   -- ON RETURN :
   --   step     shorter step size if nbfail > 0;
-  --   eva      predicted solution by evaluation of Pade approximants;
-  --   radsol   radii of the predicted solution;
-  --   res      evaluation of the predicted solution eva;
-  --   absres   evaluation of the radii of the prediction radsol;
+  --   psv      psv.sol prediction by evaluation of Pade approximants,
+  --            psv.radsol contains radii of the predicted solution,
+  --            psv.res is the evaluation of the predicted solution, and
+  --            psv.radres is the evaluation of psv.radsol;
   --   nrm      max norm of the components in res;
   --   mixres   mixed residual.
 

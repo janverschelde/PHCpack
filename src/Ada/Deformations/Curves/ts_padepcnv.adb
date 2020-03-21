@@ -52,6 +52,7 @@ procedure ts_padepcnv is
               ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
@@ -68,6 +69,7 @@ procedure ts_padepcnv is
   --   abh      circuits with radii as coeffiecients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
+  --   psv      work space for solution vectors and residuals;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
@@ -83,6 +85,10 @@ procedure ts_padepcnv is
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
   --   fail     indicates failure status;
   --   nbpole   updated number of times pole step was minimal;
   --   nbhess   updated number of times curve step was minimal;
@@ -94,8 +100,6 @@ procedure ts_padepcnv is
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : double_float;
     lnk : Standard_Complex_Vectors.Link_to_Vector;
-    sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
-    res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
     nbrit,nbfail : integer32;
 
   begin
@@ -107,14 +111,14 @@ procedure ts_padepcnv is
         pole_step,prd.numcff,prd.dencff,output);
     end if;
     for k in prd.sol'range loop
-      lnk := prd.sol(k); sol(k) := lnk(0);
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
                eta,nrm,curv_step,verbose);
     Three_Way_Minima.Minimum
       (pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
+      step,alpha,nrm,mixres,nbfail,verbose);
   end Standard_LU_Prediction;
 
   procedure Standard_SVD_Prediction
@@ -122,6 +126,7 @@ procedure ts_padepcnv is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Standard_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
@@ -138,6 +143,7 @@ procedure ts_padepcnv is
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
+  --   psv      work space for solution vectors and residuals;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
@@ -153,6 +159,10 @@ procedure ts_padepcnv is
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
   --   fail     indicates failure status;
   --   nbpole   updated number of times pole step was minimal;
   --   nbhess   updated number of times curve step was minimal;
@@ -164,8 +174,6 @@ procedure ts_padepcnv is
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : double_float;
     lnk : Standard_Complex_Vectors.Link_to_Vector;
-    sol,radsol : Standard_Complex_Vectors.Vector(1..prd.dim);
-    res,absres : Standard_Complex_Vectors.Vector(hom.crc'range);
     nbrit,nbfail : integer32;
 
   begin
@@ -177,14 +185,14 @@ procedure ts_padepcnv is
         pole_step,prd.numcff,prd.dencff,output);
     end if;
     for k in prd.sol'range loop
-      lnk := prd.sol(k); sol(k) := lnk(0);
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
                eta,nrm,curv_step,verbose);
     Three_Way_Minima.Minimum
       (pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
+      step,alpha,nrm,mixres,nbfail,verbose);
   end Standard_SVD_Prediction;
 
   procedure DoblDobl_LU_Prediction
@@ -192,6 +200,7 @@ procedure ts_padepcnv is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
 		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
@@ -213,6 +222,7 @@ procedure ts_padepcnv is
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
+  --   psv      work space for solution vectors and residuals;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
@@ -228,6 +238,10 @@ procedure ts_padepcnv is
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
   --   fail     indicates failure status;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the curve step was minimal;
@@ -239,8 +253,6 @@ procedure ts_padepcnv is
     z : DoblDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : double_double;
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
-    res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit,nbfail : integer32;
     dd_maxstep : constant double_double := create(maxstep);
 
@@ -253,14 +265,14 @@ procedure ts_padepcnv is
         pole_step,prd.numcff,prd.dencff,output);
     end if;
     for k in prd.sol'range loop
-      lnk := prd.sol(k); sol(k) := lnk(0);
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
                eta,nrm,curv_step,verbose);
     Three_Way_Minima.Minimum
       (pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
+      step,alpha,nrm,mixres,nbfail,verbose);
   end DoblDobl_LU_Prediction;
 
   procedure DoblDobl_SVD_Prediction
@@ -268,6 +280,7 @@ procedure ts_padepcnv is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
 		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
@@ -284,6 +297,7 @@ procedure ts_padepcnv is
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
+  --   psv      work space for solution vectors and residuals;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
@@ -299,6 +313,10 @@ procedure ts_padepcnv is
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
   --   fail     indicates failure status;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the curve step was minimal;
@@ -310,8 +328,6 @@ procedure ts_padepcnv is
     z : DoblDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : double_double;
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    sol,radsol : DoblDobl_Complex_Vectors.Vector(1..prd.dim);
-    res,absres : DoblDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit,nbfail : integer32;
     dd_maxstep : constant double_double := create(maxstep);
 
@@ -324,14 +340,14 @@ procedure ts_padepcnv is
         pole_step,prd.numcff,prd.dencff,output);
     end if;
     for k in prd.sol'range loop
-      lnk := prd.sol(k); sol(k) := lnk(0);
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
                eta,nrm,curv_step,verbose);
     Three_Way_Minima.Minimum
       (pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
+      step,alpha,nrm,mixres,nbfail,verbose);
   end DoblDobl_SVD_Prediction;
 
   procedure QuadDobl_LU_Prediction
@@ -339,6 +355,7 @@ procedure ts_padepcnv is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
 		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
@@ -360,6 +377,7 @@ procedure ts_padepcnv is
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
+  --   psv      work space for solution vectors and residuals;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
@@ -375,6 +393,10 @@ procedure ts_padepcnv is
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
   --   fail     indicates failure status;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the curve step was minimal;
@@ -386,8 +408,6 @@ procedure ts_padepcnv is
     z : QuadDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : quad_double;
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
-    res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit,nbfail : integer32;
     qd_maxstep : constant quad_double := create(maxstep);
 
@@ -400,14 +420,14 @@ procedure ts_padepcnv is
         pole_step,prd.numcff,prd.dencff,output);
     end if;
     for k in prd.sol'range loop
-      lnk := prd.sol(k); sol(k) := lnk(0);
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
                eta,nrm,curv_step,verbose);
     Three_Way_Minima.Minimum
       (pole_step,curv_step,qd_maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
+      step,alpha,nrm,mixres,nbfail,verbose);
   end QuadDobl_LU_Prediction;
 
   procedure QuadDobl_SVD_Prediction
@@ -415,6 +435,7 @@ procedure ts_padepcnv is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
                 fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
@@ -431,6 +452,7 @@ procedure ts_padepcnv is
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
+  --   psv      work space for solution vectors and residuals;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   alpha    tolerance on the predictor residual;
@@ -446,6 +468,10 @@ procedure ts_padepcnv is
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
   --   fail     indicates failure status;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the curve step was minimal;
@@ -457,8 +483,6 @@ procedure ts_padepcnv is
     z : QuadDobl_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : quad_double;
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    sol,radsol : QuadDobl_Complex_Vectors.Vector(1..prd.dim);
-    res,absres : QuadDobl_Complex_Vectors.Vector(hom.crc'range);
     nbrit,nbfail : integer32;
     qd_maxstep : constant quad_double := create(maxstep);
 
@@ -471,14 +495,14 @@ procedure ts_padepcnv is
         pole_step,prd.numcff,prd.dencff,output);
     end if;
     for k in prd.sol'range loop
-      lnk := prd.sol(k); sol(k) := lnk(0);
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
+    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
                eta,nrm,curv_step,verbose);
     Three_Way_Minima.Minimum
       (pole_step,curv_step,qd_maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
-      alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
+    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
+      step,alpha,nrm,mixres,nbfail,verbose);
   end QuadDobl_SVD_Prediction;
 
   procedure Standard_Run_Prediction
@@ -507,6 +531,7 @@ procedure ts_padepcnv is
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
     prd : Predictor;
+    psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
@@ -525,10 +550,10 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
       if usesvd then
-        Standard_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
+        Standard_SVD_Prediction(chom,abh,prd.svdata,svh,psv,maxit,tol,alpha,
           beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       else
-        Standard_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
+        Standard_LU_Prediction(chom,abh,prd.ludata,svh,psv,maxit,tol,alpha,
           beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
@@ -567,6 +592,7 @@ procedure ts_padepcnv is
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
     prd : Predictor;
+    psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
@@ -585,10 +611,10 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => zero);
       if usesvd then
-        DoblDobl_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
+        DoblDobl_SVD_Prediction(chom,abh,prd.svdata,svh,psv,maxit,tol,alpha,
           beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       else
-        DoblDobl_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
+        DoblDobl_LU_Prediction(chom,abh,prd.ludata,svh,psv,maxit,tol,alpha,
           beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
@@ -627,6 +653,7 @@ procedure ts_padepcnv is
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
     prd : Predictor;
+    psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
@@ -645,10 +672,10 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => zero);
       if usesvd then
-        QuadDobl_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
+        QuadDobl_SVD_Prediction(chom,abh,prd.svdata,svh,psv,maxit,tol,alpha,
           beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       else
-        QuadDobl_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
+        QuadDobl_LU_Prediction(chom,abh,prd.ludata,svh,psv,maxit,tol,alpha,
           beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");

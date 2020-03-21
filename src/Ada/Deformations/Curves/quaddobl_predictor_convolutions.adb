@@ -343,10 +343,9 @@ package body QuadDobl_Predictor_Convolutions is
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Predictor_Vectors;
                 numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
                 step : in out quad_double; alpha : in double_float;
-                eva,radsol : in out QuadDobl_Complex_Vectors.Vector;
-                res,absres : in out QuadDobl_Complex_Vectors.Vector;
                 nrm,mixres : out quad_double; nbfail : out integer32;
                 verbose : in boolean := true ) is
 
@@ -359,16 +358,16 @@ package body QuadDobl_Predictor_Convolutions is
         put(file,"step in predictor feedback loop : ");
         put(file,step,3); new_line(file);
       end if;
-      QuadDobl_Rational_Approximations.Evaluate(numcff,dencff,step,eva);
+      QuadDobl_Rational_Approximations.Evaluate(numcff,dencff,step,psv.sol);
       z := QuadDobl_Complex_Numbers.Create(step);
-      res := QuadDobl_Speelpenning_Convolutions.Eval(hom.crc,eva,z);
-      nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(res);
-      radsol := QuadDobl_Mixed_Residuals.AbsVal(eva);
-      absres := QuadDobl_Speelpenning_Convolutions.Eval(abh.crc,radsol,z);
-      mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(res,absres);
+      psv.res := Eval(hom.crc,psv.sol,z);
+      nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(psv.res);
+      psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
+      psv.radres := Eval(abh.crc,psv.radsol,z);
+      mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put_line(file,"Evaluation of the predicted solution : ");
-        put_line(file,res);
+        put_line(file,psv.res);
         put(file,"The predictor residual : "); put(file,nrm,3);
         put(file,"  mixres : "); put(file,mixres,3);
       end if;

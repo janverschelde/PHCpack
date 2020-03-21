@@ -16,7 +16,7 @@ package QuadDobl_Predictor_Convolutions is
 --   for the next solution on a path defined by a polynomial homotopy,
 --   represented by convolution circuits, in quad double precision.
 
--- DATA STRUCTURE :
+-- DATA STRUCTURE FOR LU :
 --   The predictor type stores a solution in a vector of dimension dim,
 --   of power series of degree deg, for a rational approximation of degrees
 --   numdeg and dendeg, respectively of numerator and denominator.
@@ -73,6 +73,13 @@ package QuadDobl_Predictor_Convolutions is
       when LU  => ludata : Link_to_LU_Predictor;
       when SVD => svdata : Link_to_SVD_Predictor;
     end case;
+  end record;
+
+  type Predictor_Vectors ( dim,neq : integer32 ) is record
+    sol : QuadDobl_Complex_Vectors.Vector(1..dim);    -- solution work space
+    radsol : QuadDobl_Complex_Vectors.Vector(1..dim); -- radii of sol(k)
+    res : QuadDobl_Complex_Vectors.Vector(1..neq);    -- residual work space
+    radres : QuadDobl_Complex_Vectors.Vector(1..neq); -- evaluated at radsol
   end record;
 
 -- DATA STRUCTURE FOR CURVATURE :
@@ -302,10 +309,9 @@ package QuadDobl_Predictor_Convolutions is
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Predictor_Vectors;
                 numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
                 step : in out quad_double; alpha : in double_float;
-                eva,radsol : in out QuadDobl_Complex_Vectors.Vector;
-                res,absres : in out QuadDobl_Complex_Vectors.Vector;
                 nrm,mixres : out quad_double; nbfail : out integer32;
                 verbose : in boolean := true );
 
@@ -318,6 +324,7 @@ package QuadDobl_Predictor_Convolutions is
   --   file     to write output to if verbose;
   --   hom      homotopy convolution circuit system
   --   abh      circuits with radii as coeffiecients, for mixed residuals;
+  --   psv      work space for solution vectors and residuals;
   --   numcff   coefficients of the numerator of the Pade approximants;
   --   dencff   coefficients of the denominator of the Pade approximants;
   --   step     current step size;
@@ -330,10 +337,10 @@ package QuadDobl_Predictor_Convolutions is
 
   -- ON RETURN :
   --   step     shorter step size if nbfail > 0;
-  --   eva      predicted solution by evaluation of Pade approximants;
-  --   radsol   radii of the predicted solution;
-  --   res      evaluation of the predicted solution eva;
-  --   absres   evaluation of the radii of the prediction radsol;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
   --   nrm      max norm of the components in res;
   --   mixres   mixed residual.
 
