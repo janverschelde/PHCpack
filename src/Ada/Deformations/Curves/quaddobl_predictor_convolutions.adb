@@ -502,6 +502,17 @@ package body QuadDobl_Predictor_Convolutions is
     end case;
   end Clear;
 
+  procedure Clear ( p : in out Link_to_Predictor_Vectors ) is
+
+    procedure free is
+      new unchecked_deallocation(Predictor_Vectors,Link_to_Predictor_Vectors);
+
+  begin
+    if p /= null
+     then free(p);
+    end if;
+  end Clear;
+
   procedure Clear ( h : in out Link_to_SVD_Hessians ) is
 
     procedure free is
@@ -511,6 +522,34 @@ package body QuadDobl_Predictor_Convolutions is
     if h /= null
      then free(h);
     end if;
+  end Clear;
+
+  procedure Clear ( p : in out LU_Predictor_Array ) is
+  begin
+    for i in p'range loop
+      Clear(p(i));
+    end loop;
+  end Clear;
+
+  procedure Clear ( p : in out SVD_Predictor_Array ) is
+  begin
+    for i in p'range loop
+      Clear(p(i));
+    end loop;
+  end Clear;
+
+  procedure Clear ( p : in out Predictor_Vectors_Array ) is
+  begin
+    for i in p'range loop
+      Clear(p(i));
+    end loop;
+  end Clear;
+
+  procedure Clear ( h : in out SVD_Hessians_Array ) is
+  begin
+    for i in h'range loop
+      Clear(h(i));
+    end loop;
   end Clear;
 
 end QuadDobl_Predictor_Convolutions;

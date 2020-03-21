@@ -38,7 +38,11 @@ package QuadDobl_Predictor_Convolutions is
     mat : Matrix(1..dendeg,1..dendeg); -- matrix for rational approximation
     rhs : QuadDobl_Complex_Vectors.Vector(1..dendeg);
   end record;
+
   type Link_to_LU_Predictor is access LU_Predictor;
+
+  type LU_Predictor_Array is
+    array ( integer32 range <> ) of Link_to_LU_Predictor;
 
 -- DATA STRUCTURE FOR SVD :
 --   The predictor with the Singular Value Decomposition works for systems
@@ -65,7 +69,11 @@ package QuadDobl_Predictor_Convolutions is
     mat : Matrix(1..dendeg,1..dendeg); -- matrix for the rational approximation
     rhs : QuadDobl_Complex_Vectors.Vector(1..dendeg); -- right hand side
   end record;
+
   type Link_to_SVD_Predictor is access SVD_Predictor;
+
+  type SVD_Predictor_Array is
+    array ( integer32 range <> ) of Link_to_SVD_Predictor;
 
   type Predictor_Type is (LU, SVD);
 
@@ -83,6 +91,11 @@ package QuadDobl_Predictor_Convolutions is
     radres : QuadDobl_Complex_Vectors.Vector(1..neq); -- evaluated at radsol
   end record;
 
+  type Link_to_Predictor_Vectors is access Predictor_Vectors;
+
+  type Predictor_Vectors_Array is
+    array ( integer32 range <> ) of Link_to_Predictor_Vectors;
+
 -- DATA STRUCTURE FOR CURVATURE :
 --   The singular values of the Hessians are computed to estimate the
 --   distance from the current solution to the nearest path.
@@ -98,7 +111,11 @@ package QuadDobl_Predictor_Convolutions is
     ewrk : QuadDobl_Complex_Vectors.Vector(1..dim);      -- work values
     vals : QuadDobl_Complex_Vectors.Vector(0..dim);      -- singular values
   end record;
+
   type Link_to_SVD_Hessians is access SVD_Hessians;
+
+  type SVD_Hessians_Array is
+    array ( integer32 range <> ) of Link_to_SVD_Hessians;
 
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
                     neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor;
@@ -458,9 +475,22 @@ package QuadDobl_Predictor_Convolutions is
   -- DESCRIPTION :
   --   Deallocates the memory allocated to p.
 
+  procedure Clear ( p : in out Link_to_Predictor_Vectors );
+
+  -- DESCRIPTION :
+  --   Deallocates the memory occupied by p.
+
   procedure Clear ( h : in out Link_to_SVD_Hessians );
 
   -- DESCRIPTION :
   --   Deallocates the memory occupied by h.
+
+  procedure Clear ( p : in out LU_Predictor_Array );
+  procedure Clear ( p : in out SVD_Predictor_Array );
+  procedure Clear ( p : in out Predictor_Vectors_Array );
+  procedure Clear ( h : in out SVD_Hessians_Array );
+
+  -- DESCRIPTION :
+  --   Deallocates the memory occupied by the array.
 
 end QuadDobl_Predictor_Convolutions;

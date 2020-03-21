@@ -1,5 +1,6 @@
 Sat 21 Mar 2020 : moved predictor procedures from ts_padepcnv to the
   {standard,dobldobl,quaddobl}_predictor_convolutions packages.
+  Added array types to all predictor_convolutions packages.
 
 Fri 20 Mar 2020 : used discriminant records for a new predictor type in
   {standard,dobldobl,quaddobl}_predictor_convolutions, tested by ts_padepcnv.
