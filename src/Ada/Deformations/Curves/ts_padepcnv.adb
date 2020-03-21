@@ -38,7 +38,6 @@ with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
-with Three_Way_Minima;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
@@ -47,463 +46,6 @@ procedure ts_padepcnv is
 
 -- DESCRIPTION :
 --   Development of the Pade predictor on convolution circuits.
-
-  procedure Standard_LU_Prediction
-              ( hom,abh : in Standard_Speelpenning_Convolutions.Link_to_System;
-                prd : in Standard_Predictor_Convolutions.Link_to_LU_Predictor;
-                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
-                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
-                maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false;
-                verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Runs Newton's method on the power series in prd with LU,
-  --   applies Fabry's theorem and constructs Pade approximants
-  --   to predict the next solution, in double precision.
-
-  -- ON ENTRY :
-  --   hom      homotopy convolution circuit system
-  --   abh      circuits with radii as coeffiecients, for mixed residuals;
-  --   prd      predictor data for LU Newton and Pade approximants;
-  --   svh      data for the curvature estimation;
-  --   psv      work space for solution vectors and residuals;
-  --   maxit    maximum number of iterations in Newton's method;
-  --   tol      tolerance on the correction term;
-  --   alpha    tolerance on the predictor residual;
-  --   beta1    multiplication factor for the pole radius;
-  --   beta2    multiplication factor for the curvature step;
-  --   maxstep  the maximum step size;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the curve step was minimal;
-  --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate data output during computations;
-  --   verbose  flag for intermediate numerical output.
-
-  -- ON RETURN :
-  --   prd      contains solution series and Pade approximants;
-  --   svh      contains largest singular values of all Hessians;
-  --   psv      psv.sol contains the predicted solution,
-  --            psv.radsol has the radii of the psv.sol components,
-  --            psv.res is the residual of psv.sol, and
-  --            psv.radres contains the evaluation at psv.radsol;
-  --   fail     indicates failure status;
-  --   nbpole   updated number of times pole step was minimal;
-  --   nbhess   updated number of times curve step was minimal;
-  --   nbmaxm   updated number of times maximum step size was minimal.
-
-    use Standard_Speelpenning_Convolutions;
-    use Standard_Predictor_Convolutions;
-
-    z : Standard_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : double_float;
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    nbrit,nbfail : integer32;
-
-  begin
-    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
-                 z,r,err,output);
-    pole_step := beta1*r;
-    if verbose then
-      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-        pole_step,prd.numcff,prd.dencff,output);
-    end if;
-    for k in prd.sol'range loop
-      lnk := prd.sol(k); psv.sol(k) := lnk(0);
-    end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
-    Three_Way_Minima.Minimum
-      (pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
-      step,alpha,nrm,mixres,nbfail,verbose);
-  end Standard_LU_Prediction;
-
-  procedure Standard_SVD_Prediction
-              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
-                prd : in Standard_Predictor_Convolutions.Link_to_SVD_Predictor;
-                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
-                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
-                maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false;
-                verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Runs Newton's method on the power series in prd with SVD,
-  --   applies Fabry's theorem and constructs Pade approximants
-  --   to predict the next solution, in double precision.
-
-  -- ON ENTRY :
-  --   hom      homotopy convolution circuit system
-  --   abh      circuits with radii as coefficients, for mixed residuals;
-  --   prd      predictor data for LU Newton and Pade approximants;
-  --   svh      data for the curvature estimation;
-  --   psv      work space for solution vectors and residuals;
-  --   maxit    maximum number of iterations in Newton's method;
-  --   tol      tolerance on the correction term;
-  --   alpha    tolerance on the predictor residual;
-  --   beta1    multiplication factor for the pole radius;
-  --   beta2    multiplication factor for the curvature step;
-  --   maxstep  the maximum step size;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the curve step was minimal;
-  --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate data output during computations;
-  --   verbose  flag for intermediate numerical output.
-
-  -- ON RETURN :
-  --   prd      contains solution series and Pade approximants;
-  --   svh      contains largest singular values of all Hessians;
-  --   psv      psv.sol contains the predicted solution,
-  --            psv.radsol has the radii of the psv.sol components,
-  --            psv.res is the residual of psv.sol, and
-  --            psv.radres contains the evaluation at psv.radsol;
-  --   fail     indicates failure status;
-  --   nbpole   updated number of times pole step was minimal;
-  --   nbhess   updated number of times curve step was minimal;
-  --   nbmaxm   updated number of times maximum step size was minimal.
-
-    use Standard_Speelpenning_Convolutions;
-    use Standard_Predictor_Convolutions;
-
-    z : Standard_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : double_float;
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    nbrit,nbfail : integer32;
-
-  begin
-    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,
-                 z,r,err,output);
-    pole_step := beta1*r;
-    if verbose then
-      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-        pole_step,prd.numcff,prd.dencff,output);
-    end if;
-    for k in prd.sol'range loop
-      lnk := prd.sol(k); psv.sol(k) := lnk(0);
-    end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
-    Three_Way_Minima.Minimum
-      (pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
-      step,alpha,nrm,mixres,nbfail,verbose);
-  end Standard_SVD_Prediction;
-
-  procedure DoblDobl_LU_Prediction
-              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
-                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
-                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
-                maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
-		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false;
-                verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Runs Newton's method on the power series in prd with LU,
-  --   applies Fabry's theorem and constructs Pade approximants
-  --   to predict the next solution, in double double precision.
-
-  -- DESCRIPTION :
-  --   Runs Newton's method on the power series in prd,
-  --   applies Fabry's theorem and constructs Pade approximants
-  --   to predict the next solution, in double precision.
-
-  -- ON ENTRY :
-  --   hom      homotopy convolution circuit system
-  --   abh      circuits with radii as coefficients, for mixed residuals;
-  --   prd      predictor data for LU Newton and Pade approximants;
-  --   svh      data for the curvature estimation;
-  --   psv      work space for solution vectors and residuals;
-  --   maxit    maximum number of iterations in Newton's method;
-  --   tol      tolerance on the correction term;
-  --   alpha    tolerance on the predictor residual;
-  --   beta1    multiplication factor on the pole radius;
-  --   beta2    multiplication factor on the curvature step;
-  --   maxstep  the maximum step size;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the curve step was minimal;
-  --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate data output during computations;
-  --   verbose  flag for intermediate numerical output.
-
-  -- ON RETURN :
-  --   prd      contains solution series and Pade approximants;
-  --   svh      contains largest singular values of all Hessians;
-  --   psv      psv.sol contains the predicted solution,
-  --            psv.radsol has the radii of the psv.sol components,
-  --            psv.res is the residual of psv.sol, and
-  --            psv.radres contains the evaluation at psv.radsol;
-  --   fail     indicates failure status;
-  --   nbpole   updated number of times the pole step was minimal;
-  --   nbhess   updated number of times the curve step was minimal;
-  --   nbmaxm   updated number of times the maximum step size was minimal.
-
-    use DoblDobl_Speelpenning_Convolutions;
-    use DoblDobl_Predictor_Convolutions;
-
-    z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : double_double;
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    nbrit,nbfail : integer32;
-    dd_maxstep : constant double_double := create(maxstep);
-
-  begin
-    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
-                 z,r,err,output);
-    pole_step := beta1*r;
-    if verbose then
-      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-        pole_step,prd.numcff,prd.dencff,output);
-    end if;
-    for k in prd.sol'range loop
-      lnk := prd.sol(k); psv.sol(k) := lnk(0);
-    end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
-    Three_Way_Minima.Minimum
-      (pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
-      step,alpha,nrm,mixres,nbfail,verbose);
-  end DoblDobl_LU_Prediction;
-
-  procedure DoblDobl_SVD_Prediction
-              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
-                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
-                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
-                maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
-		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false;
-                verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Runs Newton's method on the power series in prd with SVD,
-  --   applies Fabry's theorem and constructs Pade approximants
-  --   to predict the next solution, in double double precision.
-
-  -- ON ENTRY :
-  --   hom      homotopy convolution circuit system
-  --   abh      circuits with radii as coefficients, for mixed residuals;
-  --   prd      predictor data for LU Newton and Pade approximants;
-  --   svh      data for the curvature estimation;
-  --   psv      work space for solution vectors and residuals;
-  --   maxit    maximum number of iterations in Newton's method;
-  --   tol      tolerance on the correction term;
-  --   alpha    tolerance on the predictor residual;
-  --   beta1    multiplication factor for the pole radius;
-  --   beta2    multiplication factor for the curvature step;
-  --   maxstep  the maximum step size;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the curve step was minimal;
-  --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate extra output during computations;
-  --   verbose  flag for intermediate numerical output.
-
-  -- ON RETURN :
-  --   prd      contains solution series and Pade approximants;
-  --   svh      contains largest singular values of all Hessians;
-  --   psv      psv.sol contains the predicted solution,
-  --            psv.radsol has the radii of the psv.sol components,
-  --            psv.res is the residual of psv.sol, and
-  --            psv.radres contains the evaluation at psv.radsol;
-  --   fail     indicates failure status;
-  --   nbpole   updated number of times the pole step was minimal;
-  --   nbhess   updated number of times the curve step was minimal;
-  --   nbmaxm   updated number of times the maximum step size was minimal.
-
-    use DoblDobl_Speelpenning_Convolutions;
-    use DoblDobl_Predictor_Convolutions;
-
-    z : DoblDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : double_double;
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    nbrit,nbfail : integer32;
-    dd_maxstep : constant double_double := create(maxstep);
-
-  begin
-    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,
-                 z,r,err,output);
-    pole_step := beta1*r;
-    if verbose then
-      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-        pole_step,prd.numcff,prd.dencff,output);
-    end if;
-    for k in prd.sol'range loop
-      lnk := prd.sol(k); psv.sol(k) := lnk(0);
-    end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
-    Three_Way_Minima.Minimum
-      (pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
-      step,alpha,nrm,mixres,nbfail,verbose);
-  end DoblDobl_SVD_Prediction;
-
-  procedure QuadDobl_LU_Prediction
-              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
-                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
-                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
-                maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
-		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false;
-                verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Runs Newton's method on the power series in prd,
-  --   applies Fabry's theorem and constructs Pade approximants
-  --   to predict the next solution, in quad double precision.
-
-  -- DESCRIPTION :
-  --   Runs Newton's method on the power series in prd,
-  --   applies Fabry's theorem and constructs Pade approximants
-  --   to predict the next solution, in double precision.
-
-  -- ON ENTRY :
-  --   hom      homotopy convolution circuit system
-  --   abh      circuits with radii as coefficients, for mixed residuals;
-  --   prd      predictor data for LU Newton and Pade approximants;
-  --   svh      data for the curvature estimation;
-  --   psv      work space for solution vectors and residuals;
-  --   maxit    maximum number of iterations in Newton's method;
-  --   tol      tolerance on the correction term;
-  --   alpha    tolerance on the predictor residual;
-  --   beta1    multiplication factor for the pole radius;
-  --   beta2    multiplication factor for the curvature step;
-  --   maxstep  the maximum step size;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the curve step was minimal;
-  --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate data output during computations;
-  --   verbose  flag for intermediate numerical output.
-
-  -- ON RETURN :
-  --   prd      contains solution series and Pade approximants;
-  --   svh      contains largest singular values of all Hessians;
-  --   psv      psv.sol contains the predicted solution,
-  --            psv.radsol has the radii of the psv.sol components,
-  --            psv.res is the residual of psv.sol, and
-  --            psv.radres contains the evaluation at psv.radsol;
-  --   fail     indicates failure status;
-  --   nbpole   updated number of times the pole step was minimal;
-  --   nbhess   updated number of times the curve step was minimal;
-  --   nbmaxm   updated number of times the maximum step size was minimal.
-
-    use QuadDobl_Speelpenning_Convolutions;
-    use QuadDobl_Predictor_Convolutions;
-
-    z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,pole_step,eta,nrm,curv_step,step,mixres : quad_double;
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    nbrit,nbfail : integer32;
-    qd_maxstep : constant quad_double := create(maxstep);
-
-  begin
-    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,fail,
-                 z,r,err,output);
-    pole_step := beta1*r;
-    if verbose then
-      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-        pole_step,prd.numcff,prd.dencff,output);
-    end if;
-    for k in prd.sol'range loop
-      lnk := prd.sol(k); psv.sol(k) := lnk(0);
-    end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
-    Three_Way_Minima.Minimum
-      (pole_step,curv_step,qd_maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
-      step,alpha,nrm,mixres,nbfail,verbose);
-  end QuadDobl_LU_Prediction;
-
-  procedure QuadDobl_SVD_Prediction
-              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
-                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
-                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
-                maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false;
-                verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Runs Newton's method on the power series in prd with SVD,
-  --   applies Fabry's theorem and constructs Pade approximants
-  --   to predict the next solution, in quad double precision.
-
-  -- ON ENTRY :
-  --   hom      homotopy convolution circuit system
-  --   abh      circuits with radii as coefficients, for mixed residuals;
-  --   prd      predictor data for LU Newton and Pade approximants;
-  --   svh      data for the curvature estimation;
-  --   psv      work space for solution vectors and residuals;
-  --   maxit    maximum number of iterations in Newton's method;
-  --   tol      tolerance on the correction term;
-  --   alpha    tolerance on the predictor residual;
-  --   beta1    multiplication factor for the pole radius;
-  --   beta2    multiplication factor for the curvature step;
-  --   maxstep  the maximum step size;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the curve step was minimal;
-  --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate extra output during computations;
-  --   verbose  flag for intermediate numerical output.
-
-  -- ON RETURN :
-  --   prd      contains solution series and Pade approximants;
-  --   svh      contains largest singular values of all Hessians;
-  --   psv      psv.sol contains the predicted solution,
-  --            psv.radsol has the radii of the psv.sol components,
-  --            psv.res is the residual of psv.sol, and
-  --            psv.radres contains the evaluation at psv.radsol;
-  --   fail     indicates failure status;
-  --   nbpole   updated number of times the pole step was minimal;
-  --   nbhess   updated number of times the curve step was minimal;
-  --   nbmaxm   updated number of times the maximum step size was minimal.
-
-    use QuadDobl_Speelpenning_Convolutions;
-    use QuadDobl_Predictor_Convolutions;
-
-    z : QuadDobl_Complex_Numbers.Complex_Number;
-    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,step,mixres : quad_double;
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    nbrit,nbfail : integer32;
-    qd_maxstep : constant quad_double := create(maxstep);
-
-  begin
-    Newton_Fabry(standard_output,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,
-      z,r,err,output);
-    pole_step := beta1*r;
-    if verbose then
-      Newton_Fabry_Report(standard_output,nbrit,absdx,fail,z,r,err,
-        pole_step,prd.numcff,prd.dencff,output);
-    end if;
-    for k in prd.sol'range loop
-      lnk := prd.sol(k); psv.sol(k) := lnk(0);
-    end loop;
-    Hesse_Pade(standard_output,hom,prd,svh,psv.sol,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
-    Three_Way_Minima.Minimum
-      (pole_step,curv_step,qd_maxstep,step,nbpole,nbhess,nbmaxm);
-    Predictor_Feedback(standard_output,hom,abh,psv,prd.numcff,prd.dencff,
-      step,alpha,nrm,mixres,nbfail,verbose);
-  end QuadDobl_SVD_Prediction;
 
   procedure Standard_Run_Prediction
               ( chom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -535,6 +77,7 @@ procedure ts_padepcnv is
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
+    step : double_float;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -550,11 +93,11 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
       if usesvd then
-        Standard_SVD_Prediction(chom,abh,prd.svdata,svh,psv,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
+        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
+          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
       else
-        Standard_LU_Prediction(chom,abh,prd.ludata,svh,psv,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
+        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
+          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -596,6 +139,7 @@ procedure ts_padepcnv is
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
+    step : double_double;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -611,11 +155,11 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => zero);
       if usesvd then
-        DoblDobl_SVD_Prediction(chom,abh,prd.svdata,svh,psv,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
+        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
+          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
       else
-        DoblDobl_LU_Prediction(chom,abh,prd.ludata,svh,psv,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
+        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
+          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -657,6 +201,7 @@ procedure ts_padepcnv is
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
+    step : quad_double;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -672,11 +217,11 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => zero);
       if usesvd then
-        QuadDobl_SVD_Prediction(chom,abh,prd.svdata,svh,psv,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
+        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
+          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
       else
-        QuadDobl_LU_Prediction(chom,abh,prd.ludata,svh,psv,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
+        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
+          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);

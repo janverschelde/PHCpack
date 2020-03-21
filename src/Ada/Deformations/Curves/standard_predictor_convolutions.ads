@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
@@ -342,6 +343,102 @@ package Standard_Predictor_Convolutions is
   --            psv.radres is the evaluation of psv.radsol;
   --   nrm      max norm of the components in res;
   --   mixres   mixed residual.
+
+-- MAIN PREDICTOR PROCEDURES :
+
+  procedure LU_Prediction
+              ( file : in file_type; hom,abh : in Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the power series in prd with LU,
+  --   applies Fabry's theorem and constructs Pade approximants
+  --   to predict the next solution.
+
+  -- ON ENTRY :
+  --   file     to write extra output to if output and/or verbose;
+  --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coeffiecients, for mixed residuals;
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
+  --   psv      work space for solution vectors and residuals;
+  --   maxit    maximum number of iterations in Newton's method;
+  --   tol      tolerance on the correction term;
+  --   alpha    tolerance on the predictor residual;
+  --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
+  --   output   flag to indicate data output during computations;
+  --   verbose  flag for intermediate numerical output.
+
+  -- ON RETURN :
+  --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
+  --   fail     indicates failure status;
+  --   step     the step size;
+  --   nbpole   updated number of times pole step was minimal;
+  --   nbhess   updated number of times curve step was minimal;
+  --   nbmaxm   updated number of times maximum step size was minimal.
+
+  procedure SVD_Prediction
+              ( file : in file_type; hom,abh : in Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the power series in prd with SVD,
+  --   applies Fabry's theorem and constructs Pade approximants
+  --   to predict the next solution.
+
+  -- ON ENTRY :
+  --   file     to write extra output to if output and/or verbose;
+  --   hom      homotopy convolution circuit system
+  --   abh      circuits with radii as coefficients, for mixed residuals;
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
+  --   psv      work space for solution vectors and residuals;
+  --   maxit    maximum number of iterations in Newton's method;
+  --   tol      tolerance on the correction term;
+  --   alpha    tolerance on the predictor residual;
+  --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
+  --   output   flag to indicate data output during computations;
+  --   verbose  flag for intermediate numerical output.
+
+  -- ON RETURN :
+  --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
+  --   fail     indicates failure status;
+  --   step     the step size;
+  --   nbpole   updated number of times pole step was minimal;
+  --   nbhess   updated number of times curve step was minimal;
+  --   nbmaxm   updated number of times maximum step size was minimal.
 
 -- DESTRUCTORS :
 

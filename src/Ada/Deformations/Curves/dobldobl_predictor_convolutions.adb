@@ -16,6 +16,7 @@ with Jacobian_Convolution_Circuits;
 with Hessian_Convolution_Circuits;
 with Homotopy_Pade_Approximants;
 with Series_and_Predictors;
+with Three_Way_Minima;
 
 package body DoblDobl_Predictor_Convolutions is
 
@@ -384,6 +385,80 @@ package body DoblDobl_Predictor_Convolutions is
       end if;
     end loop;
   end Predictor_Feedback;
+
+-- MAIN PREDICTOR PROCEDURES :
+
+  procedure LU_Prediction
+              ( file : in file_type; hom,abh : in Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
+                fail : out boolean; step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
+                verbose : in boolean := false ) is
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+    r,err,absdx,pole_step,eta,nrm,curv_step,mixres : double_double;
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    nbrit,nbfail : integer32;
+    dd_maxstep : constant double_double := create(maxstep);
+
+    use Three_Way_Minima;
+
+  begin
+    Newton_Fabry(file,hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    pole_step := beta1*r;
+    if verbose then
+      Newton_Fabry_Report(file,nbrit,absdx,fail,z,r,err,
+        pole_step,prd.numcff,prd.dencff,output);
+    end if;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
+    end loop;
+    Hesse_Pade(file,hom,prd,svh,psv.sol,psv.res,beta2,
+               eta,nrm,curv_step,verbose);
+    Minimum(pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
+    Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
+      step,alpha,nrm,mixres,nbfail,verbose);
+  end LU_Prediction;
+
+  procedure SVD_Prediction
+              ( file : in file_type; hom,abh : in Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep : in double_float;
+                fail : out boolean; step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
+                verbose : in boolean := false ) is
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,mixres : double_double;
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    nbrit,nbfail : integer32;
+    dd_maxstep : constant double_double := create(maxstep);
+
+    use Three_Way_Minima;
+
+  begin
+    Newton_Fabry(file,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+    pole_step := beta1*r;
+    if verbose then
+      Newton_Fabry_Report(file,nbrit,absdx,fail,z,r,err,
+        pole_step,prd.numcff,prd.dencff,output);
+    end if;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
+    end loop;
+    Hesse_Pade(file,hom,prd,svh,psv.sol,psv.res,beta2,
+               eta,nrm,curv_step,verbose);
+    Minimum(pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
+    Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
+      step,alpha,nrm,mixres,nbfail,verbose);
+  end SVD_Prediction;
 
 -- DESTRUCTORS :
 
