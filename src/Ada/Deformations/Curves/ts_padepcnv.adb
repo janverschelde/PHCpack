@@ -54,7 +54,8 @@ procedure ts_padepcnv is
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; output : in boolean := false;
+                fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
                 verbose : in boolean := false ) is
 
   -- DESCRIPTION :
@@ -73,13 +74,19 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
   --   output   flag to indicate data output during computations;
   --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
-  --   fail     indicates failure status.
+  --   fail     indicates failure status;
+  --   nbpole   updated number of times pole step was minimal;
+  --   nbhess   updated number of times curve step was minimal;
+  --   nbmaxm   updated number of times maximum step size was minimal.
 
     use Standard_Speelpenning_Convolutions;
     use Standard_Predictor_Convolutions;
@@ -104,7 +111,8 @@ procedure ts_padepcnv is
     end loop;
     Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
                eta,nrm,curv_step,verbose);
-    step := Three_Way_Minima.Minimum(pole_step,curv_step,maxstep);
+    Three_Way_Minima.Minimum
+      (pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end Standard_LU_Prediction;
@@ -116,7 +124,8 @@ procedure ts_padepcnv is
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-		fail : out boolean; output : in boolean := false;
+                fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
                 verbose : in boolean := false ) is
 
   -- DESCRIPTION :
@@ -134,14 +143,20 @@ procedure ts_padepcnv is
   --   alpha    tolerance on the predictor residual;
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
-  --   maxstep  the maximum step size
+  --   maxstep  the maximum step size;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
   --   output   flag to indicate data output during computations;
   --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
-  --   fail     indicates failure status.
+  --   fail     indicates failure status;
+  --   nbpole   updated number of times pole step was minimal;
+  --   nbhess   updated number of times curve step was minimal;
+  --   nbmaxm   updated number of times maximum step size was minimal.
 
     use Standard_Speelpenning_Convolutions;
     use Standard_Predictor_Convolutions;
@@ -166,7 +181,8 @@ procedure ts_padepcnv is
     end loop;
     Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
                eta,nrm,curv_step,verbose);
-    step := Three_Way_Minima.Minimum(pole_step,curv_step,maxstep);
+    Three_Way_Minima.Minimum
+      (pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end Standard_SVD_Prediction;
@@ -178,7 +194,8 @@ procedure ts_padepcnv is
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-		fail : out boolean; output : in boolean := false;
+		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
                 verbose : in boolean := false ) is
 
   -- DESCRIPTION :
@@ -202,13 +219,19 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor on the pole radius;
   --   beta2    multiplication factor on the curvature step;
   --   maxstep  the maximum step size;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
   --   output   flag to indicate data output during computations;
   --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
-  --   fail     indicates failure status.
+  --   fail     indicates failure status;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the curve step was minimal;
+  --   nbmaxm   updated number of times the maximum step size was minimal.
 
     use DoblDobl_Speelpenning_Convolutions;
     use DoblDobl_Predictor_Convolutions;
@@ -234,7 +257,8 @@ procedure ts_padepcnv is
     end loop;
     Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
                eta,nrm,curv_step,verbose);
-    step := Three_Way_Minima.Minimum(pole_step,curv_step,dd_maxstep);
+    Three_Way_Minima.Minimum
+      (pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end DoblDobl_LU_Prediction;
@@ -246,7 +270,8 @@ procedure ts_padepcnv is
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-		fail : out boolean; output : in boolean := false;
+		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
                 verbose : in boolean := false ) is
 
   -- DESCRIPTION :
@@ -265,13 +290,19 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
   --   output   flag to indicate extra output during computations;
   --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
-  --   fail     indicates failure status.
+  --   fail     indicates failure status;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the curve step was minimal;
+  --   nbmaxm   updated number of times the maximum step size was minimal.
 
     use DoblDobl_Speelpenning_Convolutions;
     use DoblDobl_Predictor_Convolutions;
@@ -297,7 +328,8 @@ procedure ts_padepcnv is
     end loop;
     Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
                eta,nrm,curv_step,verbose);
-    step := Three_Way_Minima.Minimum(pole_step,curv_step,dd_maxstep);
+    Three_Way_Minima.Minimum
+      (pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end DoblDobl_SVD_Prediction;
@@ -309,7 +341,8 @@ procedure ts_padepcnv is
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-		fail : out boolean; output : in boolean := false;
+		fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
                 verbose : in boolean := false ) is
 
   -- DESCRIPTION :
@@ -333,13 +366,19 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
   --   output   flag to indicate data output during computations;
   --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
-  --   fail     indicates failure status.
+  --   fail     indicates failure status;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the curve step was minimal;
+  --   nbmaxm   updated number of times the maximum step size was minimal.
 
     use QuadDobl_Speelpenning_Convolutions;
     use QuadDobl_Predictor_Convolutions;
@@ -365,7 +404,8 @@ procedure ts_padepcnv is
     end loop;
     Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
                eta,nrm,curv_step,verbose);
-    step := Three_Way_Minima.Minimum(pole_step,curv_step,qd_maxstep);
+    Three_Way_Minima.Minimum
+      (pole_step,curv_step,qd_maxstep,step,nbpole,nbhess,nbmaxm);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end QuadDobl_LU_Prediction;
@@ -377,7 +417,8 @@ procedure ts_padepcnv is
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 maxit : in integer32; tol : in double_float;
                 alpha,beta1,beta2,maxstep : in double_float;
-                fail : out boolean; output : in boolean := false;
+                fail : out boolean; nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
                 verbose : in boolean := false ) is
 
   -- DESCRIPTION :
@@ -396,13 +437,19 @@ procedure ts_padepcnv is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
   --   output   flag to indicate extra output during computations;
   --   verbose  flag for intermediate numerical output.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
   --   svh      contains largest singular values of all Hessians;
-  --   fail     indicates failure status.
+  --   fail     indicates failure status;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the curve step was minimal;
+  --   nbmaxm   updated number of times the maximum step size was minimal.
 
     use QuadDobl_Speelpenning_Convolutions;
     use QuadDobl_Predictor_Convolutions;
@@ -428,7 +475,8 @@ procedure ts_padepcnv is
     end loop;
     Hesse_Pade(standard_output,hom,prd,svh,sol,res,beta2,
                eta,nrm,curv_step,verbose);
-    step := Three_Way_Minima.Minimum(pole_step,curv_step,qd_maxstep);
+    Three_Way_Minima.Minimum
+      (pole_step,curv_step,qd_maxstep,step,nbpole,nbhess,nbmaxm);
     Predictor_Feedback(standard_output,hom,abh,prd.numcff,prd.dencff,step,
       alpha,sol,radsol,res,absres,nrm,mixres,nbfail,verbose);
   end QuadDobl_SVD_Prediction;
@@ -461,6 +509,7 @@ procedure ts_padepcnv is
     prd : Predictor;
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
+    nbpole,nbhess,nbmaxm : natural32 := 0;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -477,10 +526,10 @@ procedure ts_padepcnv is
       hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
       if usesvd then
         Standard_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,otp,true);
+          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       else
         Standard_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,otp,true);
+          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -520,6 +569,7 @@ procedure ts_padepcnv is
     prd : Predictor;
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
+    nbpole,nbhess,nbmaxm : natural32 := 0;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -536,10 +586,10 @@ procedure ts_padepcnv is
       hss.vals := (hss.vals'range => zero);
       if usesvd then
         DoblDobl_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,otp,true);
+          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       else
         DoblDobl_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,otp,true);
+          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -579,6 +629,7 @@ procedure ts_padepcnv is
     prd : Predictor;
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
+    nbpole,nbhess,nbmaxm : natural32 := 0;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -595,10 +646,10 @@ procedure ts_padepcnv is
       hss.vals := (hss.vals'range => zero);
       if usesvd then
         QuadDobl_SVD_Prediction(chom,abh,prd.svdata,svh,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,otp,true);
+          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       else
         QuadDobl_LU_Prediction(chom,abh,prd.ludata,svh,maxit,tol,alpha,
-          beta1,beta2,maxstep,fail,otp,true);
+          beta1,beta2,maxstep,fail,nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
