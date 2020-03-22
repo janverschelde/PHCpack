@@ -2207,13 +2207,7 @@ procedure ts_sernew is
     put_line("  4. test lower triangular echelon form for any system.");
     put("Type 1, 2, 3, or 4 to select the test : ");
     Ask_Alternative(ans,"1234");
-    new_line;
-    put_line("MENU to set the working precision :");
-    put_line("  0. standard double precision;");
-    put_line("  1. double double precision; or");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the working precision : ");
-    Ask_Alternative(prc,"012");
+    prc := Prompt_for_Precision;
     case ans is
       when '1' =>
         case prc is 

@@ -248,16 +248,9 @@ procedure ts_hesscrit is
   --   Prompts the user for the precision and then launches
   --   the corresponding test.
 
-    ans : character;
+    ans : constant character := Prompt_for_Precision;
 
   begin
-    new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. standard double precision;");
-    put_line("  1. double double precision;");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(ans,"012");
     case ans is
       when '0' => Standard_Main;
       when '1' => DoblDobl_Main;

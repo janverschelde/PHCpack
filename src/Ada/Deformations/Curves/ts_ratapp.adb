@@ -309,12 +309,7 @@ procedure ts_ratapp is
     put("Give the degree of the denominator : "); get(dendeg);
     dim := numdeg+dendeg;
     new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(precision,"012");
+    precision := Prompt_for_Precision;
     new_line;
     put("Test vector ? (y/n) "); Ask_Yes_or_No(ans);
     if ans /= 'y' then

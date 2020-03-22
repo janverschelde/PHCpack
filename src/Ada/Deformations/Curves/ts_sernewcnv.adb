@@ -12,7 +12,9 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecs_io;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
@@ -89,6 +91,12 @@ procedure ts_sernewcnv is
 
   begin
     Add_Parameter_to_Constant(s);
+    put_line("The coefficients of the circuits : ");
+    for k in s.crc'range loop
+      Standard_Complex_VecVecs_io.put_line(s.crc(k).cff);
+      put("The constant of circuit "); put(k,1); put_line(" :");
+      Standard_Complex_Vectors_io.put_line(s.crc(k).cst);
+    end loop;
     if useqrls or usesvd then
       dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
@@ -482,13 +490,7 @@ procedure ts_sernewcnv is
     put_line("Linearized Newton on power series with convolution circuits.");
     new_line;
     put("Give the degree of the power series : "); get(deg); skip_line;
-    new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. standard double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, 2 to select the precision : ");
-    Ask_Alternative(ans,"012");
+    ans := Prompt_for_Precision;
     case ans is
       when '0' => Standard_Test(deg);
       when '1' => DoblDobl_Test(deg);

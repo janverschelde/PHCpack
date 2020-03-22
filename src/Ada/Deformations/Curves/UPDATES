@@ -1,5 +1,8 @@
 Sun 22 Mar 2020 : new packages test_predictor_convolutions, with code
-  taken from ts_padepcnv and ts_hesspcnv.
+  taken from ts_padepcnv and ts_hesspcnv.  Updated 14 other test procedures
+  ts_jacrabin, ts_serhom, ts_sernew, ts_sernewcnv, ts_sersol, ts_serpade,
+  ts_serpath, ts_serpred, ts_predstep, ts_hesscrit, ts_hesspred, ts_ratapp,
+  ts_padepred, ts_nxtpadsol to use the prompt for the precision.
 
 Sat 21 Mar 2020 : moved predictor procedures from ts_padepcnv to the
   {standard,dobldobl,quaddobl}_predictor_convolutions packages.

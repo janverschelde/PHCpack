@@ -153,16 +153,12 @@ procedure ts_jacrabin is
 
   procedure Main is
 
-    ans : character;
+  -- DESCRIPTION :
+  --   Prompts for the precision and launches the tests.
+
+    ans : constant character := Prompt_for_Precision;
 
   begin
-    new_line;
-    put_line("MENU for the precision :");
-    put_line("  0. standard double precision;");
-    put_line("  1. double double precision;");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(ans,"012");
     case ans is
       when '0' => Standard_Main;
       when '1' => DoblDobl_Main;

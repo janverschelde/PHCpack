@@ -457,21 +457,14 @@ procedure ts_sersol is
   --   Prompts the user to select the working precision
   --   and then launches the corresponding test.
 
-    prc,ans : character;
+    prc : constant character := Prompt_for_Precision;
+    ans : character;
     echelon : boolean;
 
   begin
     new_line;
-    put_line("MENU to select the working precision :");
-    put_line("  0. standard double precision;");
-    put_line("  1. double double precision;");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the working precision : ");
-    Ask_Alternative(prc,"012");
-    new_line;
     put("Use the lower triangular echelon form ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    echelon := (ans = 'y');
+    Ask_Yes_or_No(ans); echelon := (ans = 'y');
     new_line;
     put("Start Newton's method at zero order ? (y/n) ");
     Ask_Yes_or_No(ans);

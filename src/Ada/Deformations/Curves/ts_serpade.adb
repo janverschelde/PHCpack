@@ -1524,13 +1524,7 @@ procedure ts_serpade is
     put("Give the degree of the denominator : "); get(degden);
     dim := degnum + degden;
     put("The dimension : "); put(dim,1); new_line;
-    new_line;
-    put_line("MENU for the precision :");
-    put_line("  0. standard double precision,");
-    put_line("  1. double double precision, or");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(prc,"012");
+    prc := Prompt_for_Precision;
     case prc is
       when '0' =>
         case ans is 
