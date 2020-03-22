@@ -1,3 +1,6 @@
+Sun 22 Mar 2020 : adjusted the menu to prompt for the precision in
+  communications_with_user.adb.
+
 Tue 7 Jan 2020 : extracted the instantation of duration_io from 
   time_stamps.adb to a separate file duration_io.ads.
 
