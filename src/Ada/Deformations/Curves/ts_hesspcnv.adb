@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -14,11 +13,8 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
-with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with Standard_Integer_VecVecs_io;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
@@ -57,6 +53,7 @@ with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Jacobian_Convolution_Circuits;
 with Hessian_Convolution_Circuits;
+with Test_Predictor_Convolutions;
 
 procedure ts_hesspcnv is
 
@@ -300,10 +297,7 @@ procedure ts_hesspcnv is
     serhom : constant Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom : Standard_Speelpenning_Convolutions.Link_to_System;
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant Standard_Complex_Numbers.Complex_Number
-         := Standard_Complex_Numbers.Create(0.0);
+    ans : character;
 
   begin
     cnvhom := Make_Convolution_System(serhom,0);
@@ -311,18 +305,10 @@ procedure ts_hesspcnv is
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant Standard_Complex_Vectors.Vector
-          := Standard_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :");
-        put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
+    put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Test_Predictor_Convolutions.Standard_Check_Solutions(cnvhom,sols);
+    end if;
     Standard_Test(hom,cnvhom,Head_Of(sols).v);
   end Standard_Test_Prediction;
 
@@ -342,10 +328,7 @@ procedure ts_hesspcnv is
     serhom : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant DoblDobl_Complex_Numbers.Complex_Number
-         := DoblDobl_Complex_Numbers.Create(integer(0));
+    ans : character;
 
   begin
     cnvhom := Make_Convolution_System(serhom,0);
@@ -353,18 +336,10 @@ procedure ts_hesspcnv is
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant DoblDobl_Complex_Vectors.Vector
-          := DoblDobl_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :");
-        put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
+    put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Test_Predictor_Convolutions.DoblDobl_Check_Solutions(cnvhom,sols);
+    end if;
     DoblDobl_Test(hom,cnvhom,Head_Of(sols).v);
   end DoblDobl_Test_Prediction;
 
@@ -384,10 +359,7 @@ procedure ts_hesspcnv is
     serhom : constant QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
            := Series_and_Homotopies.Create(hom,idxpar);
     cnvhom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant QuadDobl_Complex_Numbers.Complex_Number
-         := QuadDobl_Complex_Numbers.Create(integer(0));
+    ans : character;
 
   begin
     cnvhom := Make_Convolution_System(serhom,0);
@@ -395,18 +367,10 @@ procedure ts_hesspcnv is
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
     end loop;
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant QuadDobl_Complex_Vectors.Vector
-          := QuadDobl_Speelpenning_Convolutions.Eval(cnvhom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :");
-        put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
+    put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Test_Predictor_Convolutions.QuadDobl_Check_Solutions(cnvhom,sols);
+    end if;
     QuadDobl_Test(hom,cnvhom,Head_Of(sols).v);
   end QuadDobl_Test_Prediction;
 
@@ -488,16 +452,9 @@ procedure ts_hesspcnv is
   --   Prompts the user for the working precision and then launches
   --   the test corresponding to the selected precision.
 
-    precision : character;
+    precision : constant character := Prompt_for_Precision;
 
   begin
-    new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(precision,"012");
     case precision is
       when '0' => Standard_Main;
       when '1' => DoblDobl_Main;

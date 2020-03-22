@@ -1,7 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -10,12 +9,6 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
-with Standard_Complex_Vectors;
-with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
-with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with Standard_Integer_VecVecs_io;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -41,6 +34,7 @@ with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
+With Test_Predictor_Convolutions;
 
 procedure ts_padepcnv is
 
@@ -231,96 +225,6 @@ procedure ts_padepcnv is
     Clear(prd); Clear(svh);
   end QuadDobl_Run_Prediction;
 
-  procedure Standard_Check_Solutions
-              ( chom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                sols : in Standard_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Given in chom is a system of convolution circuits for a homotopy
-  --   and in sols a list of solutions, in double precision.
-  --   Writes the result of the evaluation of each solution at the circuits.
-
-    use Standard_Complex_Solutions;
-
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant Standard_Complex_Numbers.Complex_Number
-         := Standard_Complex_Numbers.Create(0.0);
-
-  begin
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant Standard_Complex_Vectors.Vector
-          := Standard_Speelpenning_Convolutions.Eval(chom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :"); put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
-  end Standard_Check_Solutions;
-
-  procedure DoblDobl_Check_Solutions
-              ( chom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Given in chom is a system of convolution circuits for a homotopy
-  --   and in sols a list of solutions, in double double precision.
-  --   Writes the result of the evaluation of each solution at the circuits.
-
-    use DoblDobl_Complex_Solutions;
-
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant DoblDobl_Complex_Numbers.Complex_Number
-         := DoblDobl_Complex_Numbers.Create(integer(0));
-
-  begin
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant DoblDobl_Complex_Vectors.Vector
-          := DoblDobl_Speelpenning_Convolutions.Eval(chom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :"); put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
-  end DoblDobl_Check_Solutions;
-
-  procedure QuadDobl_Check_Solutions
-              ( chom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Given in chom is a system of convolution circuits for a homotopy
-  --   and in sols a list of solutions, in quad double precision.
-  --   Writes the result of the evaluation of each solution at the circuits.
-
-    use QuadDobl_Complex_Solutions;
-
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    zero : constant QuadDobl_Complex_Numbers.Complex_Number
-         := QuadDobl_Complex_Numbers.Create(integer(0));
-
-  begin
-    put_line("Checking the start solutions ...");
-    for k in 1..Length_Of(sols) loop
-      ls := Head_Of(tmp);
-      declare
-        y : constant QuadDobl_Complex_Vectors.Vector
-          := QuadDobl_Speelpenning_Convolutions.Eval(chom.crc,ls.v,zero);
-      begin
-        put("Value at solution "); put(k,1); put_line(" :"); put_line(y);
-      end;
-      tmp := Tail_Of(tmp);
-    end loop;
-  end QuadDobl_Check_Solutions;
-
   procedure Standard_Test_Prediction
               ( nq,idxpar,numdeg,dendeg : in integer32;
                 sols : in Standard_Complex_Solutions.Solution_List ) is
@@ -348,8 +252,8 @@ procedure ts_padepcnv is
     end loop;
     new_line;
     put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then Standard_Check_Solutions(cnvhom,sols);
+    if ans = 'y' then
+      Test_Predictor_Convolutions.Standard_Check_Solutions(cnvhom,sols);
     end if;
     Standard_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end Standard_Test_Prediction;
@@ -381,8 +285,8 @@ procedure ts_padepcnv is
     end loop;
     new_line;
     put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then DoblDobl_Check_Solutions(cnvhom,sols);
+    if ans = 'y' then
+      Test_Predictor_Convolutions.DoblDobl_Check_Solutions(cnvhom,sols);
     end if;
     DoblDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end DoblDobl_Test_Prediction;
@@ -414,8 +318,8 @@ procedure ts_padepcnv is
     end loop;
     new_line;
     put("Check all start solutions ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then QuadDobl_Check_Solutions(cnvhom,sols);
+    if ans = 'y' then
+      Test_Predictor_Convolutions.QuadDobl_Check_Solutions(cnvhom,sols);
     end if;
     QuadDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end QuadDobl_Test_Prediction;
@@ -499,17 +403,10 @@ procedure ts_padepcnv is
   --   the degrees of the Pade approximants, and then launches
   --   the test corresponding to the selected precision.
 
-    precision : character;
+    precision : constant character := Prompt_for_Precision;
     numdeg,dendeg : integer32 := 0;
 
   begin
-    new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(precision,"012");
     new_line;
     put("Give the degree of the Pade numerator : "); get(numdeg);
     put("Give the degree of the Pade denominator : "); get(dendeg);

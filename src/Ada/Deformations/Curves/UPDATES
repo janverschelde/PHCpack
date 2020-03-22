@@ -1,3 +1,6 @@
+Sun 22 Mar 2020 : new packages test_predictor_convolutions, with code
+  taken from ts_padepcnv and ts_hesspcnv.
+
 Sat 21 Mar 2020 : moved predictor procedures from ts_padepcnv to the
   {standard,dobldobl,quaddobl}_predictor_convolutions packages.
   Added array types to all predictor_convolutions packages.

@@ -84,6 +84,7 @@ three_way_minima                 : minima of three numbers
 standard_predictor_convolutions  : double predictor on convolution homotopies
 dobldobl_predictor_convolutions  : dobldobl predictor on convolution homotopies
 quaddobl_predictor_convolutions  : quaddobl predictor on convolution homotopies
+test_predictor_convolutions      : checks start solutions
 ts_padepcnv                      : Pade predictors for convolution circuits
 ts_predstep                      : test setting of step size
 -------------------------------------------------------------------------------
