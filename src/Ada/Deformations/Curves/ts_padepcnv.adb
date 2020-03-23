@@ -10,26 +10,15 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Integer_VecVecs_io;
-with Standard_Complex_Poly_Systems;
-with DoblDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
-with Standard_Homotopy;
-with DoblDobl_Homotopy;
-with QuadDobl_Homotopy;
-with Solution_Drops;
-with Standard_CSeries_Poly_Systems;
-with DoblDobl_CSeries_Poly_Systems;
-with QuadDobl_CSeries_Poly_Systems;
-with Complex_Series_and_Polynomials;
-with Series_and_Homotopies;
-with Test_Series_Predictors;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
-with System_Convolution_Circuits;        use System_Convolution_Circuits;
+with Standard_Homotopy_Convolutions_io;
+with DoblDobl_Homotopy_Convolutions_io;
+with QuadDobl_Homotopy_Convolutions_io;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
@@ -225,26 +214,19 @@ procedure ts_padepcnv is
     Clear(prd); Clear(svh);
   end QuadDobl_Run_Prediction;
 
-  procedure Standard_Test_Prediction
-              ( nq,idxpar,numdeg,dendeg : in integer32;
-                sols : in Standard_Complex_Solutions.Solution_List ) is
+  procedure Standard_Test_Prediction ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
-  --   The Standard_Homotopy is initialized with nq equations
-  --   and sols contains the solutions of the start system.
-  --   The parameter idxpar is the index to the continuation parameter.
+  --   Prompts the user for a homotopy to test the prediction.
 
-    hom : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
-        := Standard_Homotopy.Homotopy_System;
-    serhom : Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
-           := Series_and_Homotopies.Create(hom,idxpar);
+    sols : Standard_Complex_Solutions.Solution_List;
     cnvhom,abshom : Standard_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
+    idxpar : integer32;
     ans : character;
 
   begin
-    Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
-    cnvhom := Make_Convolution_System(serhom,natural32(deg));
+    Standard_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
@@ -258,26 +240,19 @@ procedure ts_padepcnv is
     Standard_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end Standard_Test_Prediction;
 
-  procedure DoblDobl_Test_Prediction
-              ( nq,idxpar,numdeg,dendeg : in integer32;
-                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+  procedure DoblDobl_Test_Prediction ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
-  --   The DoblDobl_Homotopy is initialized with nq equations
-  --   and sols contains the solutions of the start system.
-  --   The parameter idxpar is the index to the continuation parameter.
+  --   Prompts the user for a homotopy to test the prediction.
 
-    hom : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-        := DoblDobl_Homotopy.Homotopy_System;
-    serhom : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-           := Series_and_Homotopies.Create(hom,idxpar);
+    sols : DoblDobl_Complex_Solutions.Solution_List;
     cnvhom,abshom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
+    idxpar : integer32;
     ans : character;
 
   begin
-    Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
-    cnvhom := Make_Convolution_System(serhom,natural32(deg));
+    DoblDobl_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
@@ -291,26 +266,19 @@ procedure ts_padepcnv is
     DoblDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end DoblDobl_Test_Prediction;
 
-  procedure QuadDobl_Test_Prediction
-              ( nq,idxpar,numdeg,dendeg : in integer32;
-                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+  procedure QuadDobl_Test_Prediction ( numdeg,dendeg : in integer32 ) is
 
   -- DESCRIPTION :
-  --   The QuadDobl_Homotopy is initialized with nq equations
-  --   and sols contains the solutions of the start system.
-  --   The parameter idxpar is the index to the continuation parameter.
+  --   Prompts the user for a homotopy to test the prediction.
 
-    hom : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-        := QuadDobl_Homotopy.Homotopy_System;
-    serhom : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-           := Series_and_Homotopies.Create(hom,idxpar);
+    sols : QuadDobl_Complex_Solutions.Solution_List;
     cnvhom,abshom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
     deg : constant integer32 := numdeg + dendeg + 2;
+    idxpar : integer32;
     ans : character;
 
   begin
-    Complex_Series_and_Polynomials.Set_Degree(serhom,deg);
-    cnvhom := Make_Convolution_System(serhom,natural32(deg));
+    QuadDobl_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
@@ -323,78 +291,6 @@ procedure ts_padepcnv is
     end if;
     QuadDobl_Run_Prediction(cnvhom,abshom,sols,deg,numdeg,dendeg);
   end QuadDobl_Test_Prediction;
-
-  procedure Standard_Main ( numdeg,dendeg : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Test on the operations of a homotopy with series coefficients,
-  --   in standard double precision.
-
-    nbeq,idxpar : integer32;
-    sols : Standard_Complex_Solutions.Solution_List;
-
-  begin
-    Test_Series_Predictors.Standard_Homotopy_Reader(nbeq,idxpar,sols);
-    new_line;
-    if idxpar = 0 then
-      Standard_Test_Prediction(nbeq,nbeq+1,numdeg,dendeg,sols);
-    else
-      declare
-        dropsols : constant Standard_Complex_Solutions.Solution_List
-                 := Solution_Drops.Drop(sols,natural32(idxpar));
-      begin
-        Standard_Test_Prediction(nbeq,idxpar,numdeg,dendeg,dropsols);
-      end;
-    end if;
-  end Standard_Main;
-
-  procedure DoblDobl_Main ( numdeg,dendeg : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Test on the operations of a homotopy with series coefficients,
-  --   in double double precision.
-
-    nbeq,idxpar : integer32;
-    sols : DoblDobl_Complex_Solutions.Solution_List;
-
-  begin
-    Test_Series_Predictors.DoblDobl_Homotopy_Reader(nbeq,idxpar,sols);
-    new_line;
-    if idxpar = 0 then
-      DoblDobl_Test_Prediction(nbeq,nbeq+1,numdeg,dendeg,sols);
-    else
-      declare
-        dropsols : constant DoblDobl_Complex_Solutions.Solution_List
-                 := Solution_Drops.Drop(sols,natural32(idxpar));
-      begin
-        DoblDobl_Test_Prediction(nbeq,idxpar,numdeg,dendeg,dropsols);
-      end;
-    end if;
-  end DoblDobl_Main;
-
-  procedure QuadDobl_Main ( numdeg,dendeg : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Test on the operations of a homotopy with series coefficients,
-  --   in quad double precision.
-
-    nbeq,idxpar : integer32;
-    sols : QuadDobl_Complex_Solutions.Solution_List;
-
-  begin
-    Test_Series_Predictors.QuadDobl_Homotopy_Reader(nbeq,idxpar,sols);
-    new_line;
-    if idxpar = 0 then
-      QuadDobl_Test_Prediction(nbeq,nbeq+1,numdeg,dendeg,sols);
-    else
-      declare
-        dropsols : constant QuadDobl_Complex_Solutions.Solution_List
-                 := Solution_Drops.Drop(sols,natural32(idxpar));
-      begin
-        QuadDobl_Test_Prediction(nbeq,idxpar,numdeg,dendeg,dropsols);
-      end;
-    end if;
-  end QuadDobl_Main;
 
   procedure Main is
 
@@ -411,9 +307,9 @@ procedure ts_padepcnv is
     put("Give the degree of the Pade numerator : "); get(numdeg);
     put("Give the degree of the Pade denominator : "); get(dendeg);
     case precision is
-      when '0' => Standard_Main(numdeg,dendeg);
-      when '1' => DoblDobl_Main(numdeg,dendeg);
-      when '2' => QuadDobl_Main(numdeg,dendeg);
+      when '0' => Standard_Test_Prediction(numdeg,dendeg);
+      when '1' => DoblDobl_Test_Prediction(numdeg,dendeg);
+      when '2' => QuadDobl_Test_Prediction(numdeg,dendeg);
       when others => null;
     end case;
   end Main;

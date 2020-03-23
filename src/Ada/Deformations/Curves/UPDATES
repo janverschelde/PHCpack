@@ -1,3 +1,7 @@
+Mon 23 Mar 2020 : new {standard,dobldobl_quaddobl}_homotopy_convolutions_io,
+  packages for prompting homotopies represented by convolution circuits,
+  tested by ts_padepcnv and ts_hesspcnv.
+
 Sun 22 Mar 2020 : new packages test_predictor_convolutions, with code
   taken from ts_padepcnv and ts_hesspcnv.  Updated 14 other test procedures
   ts_jacrabin, ts_serhom, ts_sernew, ts_sernewcnv, ts_sersol, ts_serpade,

@@ -69,24 +69,27 @@ homotopy_pade_approximants       : wraps series Newton and Pade creators
 ts_serpade                       : test rational approximations given series
 ts_ratapp                        : test on thread safe constructions
 ------------------------------------------------------------------------------
-singular_values_of_hessians      : wraps SVD for the Hessian criterion
-ts_hesscrit                      : test development of the Hessian criterion
-ts_hesspred                      : test step size based on nearest solution
-ts_hesspcnv                      : test on Hessian criterion on convolutions
-series_and_predictors            : apply power series to predict solutions
-test_series_predictors           : procedure to help in the testing
-ts_serpred                       : test on series predictor
-test_pade_predictors             : procedure to help testing Pade predictors
-jacobian_rabinowitsch_trick      : application of the Rabinowitsch trick
-ts_jacrabin                      : test application of Rabinowitsch trick
-ts_padepred                      : test the Pade predictors
-three_way_minima                 : minima of three numbers
-standard_predictor_convolutions  : double predictor on convolution homotopies
-dobldobl_predictor_convolutions  : dobldobl predictor on convolution homotopies
-quaddobl_predictor_convolutions  : quaddobl predictor on convolution homotopies
-test_predictor_convolutions      : checks start solutions
-ts_padepcnv                      : Pade predictors for convolution circuits
-ts_predstep                      : test setting of step size
+standard_homotopy_convolutions_io : prompts for double homotopy convolutions
+dobldobl_homotopy_convolutions_io : prompts for dobldobl homotopy convolutions
+quaddobl_homotopy_convolutions_io : prompts for quaddobl homotopy convolutions
+singular_values_of_hessians       : wraps SVD for the Hessian criterion
+ts_hesscrit                       : test development of the Hessian criterion
+ts_hesspred                       : test step size based on nearest solution
+ts_hesspcnv                       : test on Hessian criterion on convolutions
+series_and_predictors             : apply power series to predict solutions
+test_series_predictors            : procedure to help in the testing
+ts_serpred                        : test on series predictor
+test_pade_predictors              : procedure to help testing Pade predictors
+jacobian_rabinowitsch_trick       : application of the Rabinowitsch trick
+ts_jacrabin                       : test application of Rabinowitsch trick
+ts_padepred                       : test the Pade predictors
+three_way_minima                  : minima of three numbers
+standard_predictor_convolutions   : double predictor convolution homotopies
+dobldobl_predictor_convolutions   : dobldobl predictor convolution homotopies
+quaddobl_predictor_convolutions   : quaddobl predictor convolution homotopies
+test_predictor_convolutions       : checks start solutions
+ts_padepcnv                       : Pade predictors for convolution circuits
+ts_predstep                       : test setting of step size
 -------------------------------------------------------------------------------
 homotopy_continuation_parameters    : parameters and tolerances
 homotopy_continuation_parameters_io : output and tuning of arameters 

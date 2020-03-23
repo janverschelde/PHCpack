@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -41,16 +40,12 @@ with QuadDobl_Complex_Solutions;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
-with Solution_Drops;
-with Standard_CSeries_Poly_Systems;
-with DoblDobl_CSeries_Poly_Systems;
-with QuadDobl_CSeries_Poly_Systems;
-with Series_and_Homotopies;
-with Test_Series_Predictors;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
-with System_Convolution_Circuits;        use System_Convolution_Circuits;
+with Standard_Homotopy_Convolutions_io;
+with DoblDobl_Homotopy_Convolutions_io;
+with QuadDobl_Homotopy_Convolutions_io;
 with Jacobian_Convolution_Circuits;
 with Hessian_Convolution_Circuits;
 with Test_Predictor_Convolutions;
@@ -112,8 +107,7 @@ procedure ts_hesspcnv is
   end AbsSum;
 
   procedure Standard_Test
-              ( polh : in Standard_Complex_Poly_Systems.Poly_Sys;
-                cnvh : in Standard_Speelpenning_Convolutions.Link_to_System;
+              ( cnvh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 solv : in Standard_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -122,11 +116,12 @@ procedure ts_hesspcnv is
   --   of the convolution circuits, in double precision.
 
   -- ON ENTRY :
-  --   polh     polynomials in an artificial-parameter homotopy,
-  --            the last variable in polh is the continuation parameter t;
   --   cnvh     convolution circuit representation of the homotopy,
-  --            the continuation parameter t is the series parameter.
+  --            the continuation parameter t is the series parameter;
+  --   solv     a start solution for t = 0.
 
+    polh : constant Standard_Complex_Poly_Systems.Poly_Sys
+         := Standard_Homotopy.Homotopy_System;
     zero : constant Standard_Complex_Numbers.Complex_Number
          := Standard_Complex_Numbers.Create(0.0);
     polht0 : constant Standard_Complex_Poly_Systems.Poly_Sys(polh'range)
@@ -168,8 +163,7 @@ procedure ts_hesspcnv is
   end Standard_Test;
 
   procedure DoblDobl_Test
-              ( polh : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                cnvh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+              ( cnvh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 solv : in DoblDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -178,12 +172,12 @@ procedure ts_hesspcnv is
   --   of the convolution circuits, in double double precision.
 
   -- ON ENTRY :
-  --   polh     polynomials in an artificial-parameter homotopy,
-  --            the last variable in polh is the continuation parameter t;
   --   cnvh     convolution circuit representation of the homotopy,
   --            the continuation parameter t is the series parameter;
   --   solv     a start solution for t = 0.
 
+    polh : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+         := DoblDobl_Homotopy.Homotopy_System;
     zero : constant DoblDobl_Complex_Numbers.Complex_Number
          := DoblDobl_Complex_Numbers.Create(integer(0));
     polht0 : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(polh'range)
@@ -225,8 +219,7 @@ procedure ts_hesspcnv is
   end DoblDobl_Test;
 
   procedure QuadDobl_Test
-              ( polh : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                cnvh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+              ( cnvh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 solv : in QuadDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -235,12 +228,12 @@ procedure ts_hesspcnv is
   --   of the convolution circuits, in double double precision.
 
   -- ON ENTRY :
-  --   polh     polynomials in an artificial-parameter homotopy,
-  --            the last variable in polh is the continuation parameter t;
   --   cnvh     convolution circuit representation of the homotopy,
   --            the continuation parameter t is the series parameter;
   --   solv     a start solution for t = 0.
 
+    polh : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+         := QuadDobl_Homotopy.Homotopy_System;
     zero : constant QuadDobl_Complex_Numbers.Complex_Number
          := QuadDobl_Complex_Numbers.Create(integer(0));
     polht0 : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(polh'range)
@@ -281,26 +274,18 @@ procedure ts_hesspcnv is
     end loop;
   end QuadDobl_Test;
 
-  procedure Standard_Test_Prediction
-              ( nq,idxpar : in integer32;
-                sols : in Standard_Complex_Solutions.Solution_List ) is
+  procedure Standard_Test_Prediction is
 
   -- DESCRIPTION :
-  --   The Standard_Homotopy is initialized with nq equations
-  --   and sols contains the solutions of the start system.
-  --   The parameter idxpar is the index to the continuation parameter.
+  --   Prompts the user for a homotopy to test the prediction.
 
-    use Standard_Complex_Solutions;
-
-    hom : constant Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
-        := Standard_Homotopy.Homotopy_System;
-    serhom : constant Standard_CSeries_Poly_Systems.Poly_Sys(1..nq)
-           := Series_and_Homotopies.Create(hom,idxpar);
+    sols : Standard_Complex_Solutions.Solution_List;
     cnvhom : Standard_Speelpenning_Convolutions.Link_to_System;
+    idxpar : integer32;
     ans : character;
 
   begin
-    cnvhom := Make_Convolution_System(serhom,0);
+    Standard_Homotopy_Convolutions_io.get(0,cnvhom,sols,idxpar);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
@@ -309,29 +294,21 @@ procedure ts_hesspcnv is
     if ans = 'y' then
       Test_Predictor_Convolutions.Standard_Check_Solutions(cnvhom,sols);
     end if;
-    Standard_Test(hom,cnvhom,Head_Of(sols).v);
+    Standard_Test(cnvhom,Standard_Complex_Solutions.Head_Of(sols).v);
   end Standard_Test_Prediction;
 
-  procedure DoblDobl_Test_Prediction
-              ( nq,idxpar : in integer32;
-                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+  procedure DoblDobl_Test_Prediction is
 
   -- DESCRIPTION :
-  --   The DoblDobl_Homotopy is initialized with nq equations
-  --   and sols contains the solutions of the start system.
-  --   The parameter idxpar is the index to the continuation parameter.
+  --   Prompts the user for a homotopy to test the prediction.
 
-    use DoblDobl_Complex_Solutions;
-
-    hom : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-        := DoblDobl_Homotopy.Homotopy_System;
-    serhom : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-           := Series_and_Homotopies.Create(hom,idxpar);
+    sols : DoblDobl_Complex_Solutions.Solution_List;
     cnvhom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+    idxpar : integer32;
     ans : character;
 
   begin
-    cnvhom := Make_Convolution_System(serhom,0);
+    DoblDobl_Homotopy_Convolutions_io.get(0,cnvhom,sols,idxpar);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
@@ -340,29 +317,21 @@ procedure ts_hesspcnv is
     if ans = 'y' then
       Test_Predictor_Convolutions.DoblDobl_Check_Solutions(cnvhom,sols);
     end if;
-    DoblDobl_Test(hom,cnvhom,Head_Of(sols).v);
+    DoblDobl_Test(cnvhom,DoblDobl_Complex_Solutions.Head_Of(sols).v);
   end DoblDobl_Test_Prediction;
 
-  procedure QuadDobl_Test_Prediction
-              ( nq,idxpar : in integer32;
-                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+  procedure QuadDobl_Test_Prediction is
 
   -- DESCRIPTION :
-  --   The QuadDobl_Homotopy is initialized with nq equations
-  --   and sols contains the solutions of the start system.
-  --   The parameter idxpar is the index to the continuation parameter.
+  --   Prompts the user for a homotopy to test the prediction.
 
-    use QuadDobl_Complex_Solutions;
-
-    hom : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
-        := QuadDobl_Homotopy.Homotopy_System;
-    serhom : constant QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..nq)
-           := Series_and_Homotopies.Create(hom,idxpar);
+    sols : QuadDobl_Complex_Solutions.Solution_List;
     cnvhom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+    idxpar : integer32;
     ans : character;
 
   begin
-    cnvhom := Make_Convolution_System(serhom,0);
+    QuadDobl_Homotopy_Convolutions_io.get(0,cnvhom,sols,idxpar);
     put_line("The exponents in the circuits :");
     for k in cnvhom.crc'range loop
       Standard_Integer_VecVecs_io.put(cnvhom.crc(k).xps);
@@ -371,80 +340,8 @@ procedure ts_hesspcnv is
     if ans = 'y' then
       Test_Predictor_Convolutions.QuadDobl_Check_Solutions(cnvhom,sols);
     end if;
-    QuadDobl_Test(hom,cnvhom,Head_Of(sols).v);
+    QuadDobl_Test(cnvhom,QuadDobl_Complex_Solutions.Head_Of(sols).v);
   end QuadDobl_Test_Prediction;
-
-  procedure Standard_Main is
-
-  -- DESCRIPTION :
-  --   Test on the operations of a homotopy with series coefficients,
-  --   in standard double precision.
-
-    nbeq,idxpar : integer32;
-    sols : Standard_Complex_Solutions.Solution_List;
-
-  begin
-    Test_Series_Predictors.Standard_Homotopy_Reader(nbeq,idxpar,sols);
-    new_line;
-    if idxpar = 0 then
-      Standard_Test_Prediction(nbeq,nbeq+1,sols);
-    else
-      declare
-        dropsols : constant Standard_Complex_Solutions.Solution_List
-                 := Solution_Drops.Drop(sols,natural32(idxpar));
-      begin
-        Standard_Test_Prediction(nbeq,idxpar,dropsols);
-      end;
-    end if;
-  end Standard_Main;
-
-  procedure DoblDobl_Main is
-
-  -- DESCRIPTION :
-  --   Test on the operations of a homotopy with series coefficients,
-  --   in double double precision.
-
-    nbeq,idxpar : integer32;
-    sols : DoblDobl_Complex_Solutions.Solution_List;
-
-  begin
-    Test_Series_Predictors.DoblDobl_Homotopy_Reader(nbeq,idxpar,sols);
-    new_line;
-    if idxpar = 0 then
-      DoblDobl_Test_Prediction(nbeq,nbeq+1,sols);
-    else
-      declare
-        dropsols : constant DoblDobl_Complex_Solutions.Solution_List
-                 := Solution_Drops.Drop(sols,natural32(idxpar));
-      begin
-        DoblDobl_Test_Prediction(nbeq,idxpar,dropsols);
-      end;
-    end if;
-  end DoblDobl_Main;
-
-  procedure QuadDobl_Main is
-
-  -- DESCRIPTION :
-  --   Test on the operations of a homotopy with series coefficients,
-  --   in quad double precision.
-
-    nbeq,idxpar : integer32;
-    sols : QuadDobl_Complex_Solutions.Solution_List;
-
-  begin
-    Test_Series_Predictors.QuadDobl_Homotopy_Reader(nbeq,idxpar,sols);
-    new_line;
-    if idxpar = 0 then
-      QuadDobl_Test_Prediction(nbeq,nbeq+1,sols);
-    else
-      declare
-        dropsols : constant QuadDobl_Complex_Solutions.Solution_List
-                 := Solution_Drops.Drop(sols,natural32(idxpar));
-      begin
-        QuadDobl_Test_Prediction(nbeq,idxpar,dropsols);
-      end;
-    end if;
-  end QuadDobl_Main;
 
   procedure Main is
 
@@ -456,9 +353,9 @@ procedure ts_hesspcnv is
 
   begin
     case precision is
-      when '0' => Standard_Main;
-      when '1' => DoblDobl_Main;
-      when '2' => QuadDobl_Main;
+      when '0' => Standard_Test_Prediction;
+      when '1' => DoblDobl_Test_Prediction;
+      when '2' => QuadDobl_Test_Prediction;
       when others => null;
     end case;
   end Main;
