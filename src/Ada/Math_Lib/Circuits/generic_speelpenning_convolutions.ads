@@ -244,7 +244,7 @@ package Generic_Speelpenning_Convolutions is
   --   Returns the evaluation of c at the number x and t for the series
   --   parameter via a straighforward sum of evaluated terms.
 
--- FIRST DERIVATIVE AT A NUMBER :
+-- PLAIN FIRST DERIVATIVE AT A NUMBER :
 
   function Diff ( x : Vectors.Vector;
                   e : Standard_Integer_Vectors.Vector; i : integer32 )  
@@ -267,7 +267,7 @@ package Generic_Speelpenning_Convolutions is
 
   -- REQUIRED : i is in x'range.
 
--- SECOND DERIVATIVE AT A NUMBER :
+-- PLAIN SECOND DERIVATIVE AT A NUMBER :
 
   function Diff ( x : Vectors.Vector;
                   e : Standard_Integer_Vectors.Vector; i,j : integer32 )  
@@ -307,7 +307,7 @@ package Generic_Speelpenning_Convolutions is
   --   the point x, instead of a power series.
   --   For the auxiliary vectors forward, backward, and cross,
   --   only the number at position 0 is used.
-  --   All parameters have the same meaning as the Speel procedures below.
+  --   All parameters mean the same as in the Speel procedures below.
 
   procedure Speel ( x : in VecVecs.VecVec;
                     forward,backward,cross : in VecVecs.VecVec );
@@ -346,6 +346,21 @@ package Generic_Speelpenning_Convolutions is
   --                partial derivative of the product;
   --   cross        stores the cross products, cross(k) contains the
   --                coefficients of the partial derivative w.r.t. k+1.
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    x : in Vectors.Vector;
+                    forward,backward,cross,yd : in VecVecs.VecVec );
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    cff : in VecVecs.VecVec; x : in Vectors.Vector;
+                    forward,backward,cross,yd : in VecVecs.VecVec;
+                    wrk : in Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the reverse mode of algorithmic differentiation to
+  --   the point x, instead of a power series.
+  --   For the auxiliary vectors forward, backward, and cross,
+  --   only the number at position 0 is used.
+  --   All parameters mean the same as in the Speel procedures below.
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     x : in VecVecs.VecVec;

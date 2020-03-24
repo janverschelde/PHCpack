@@ -1,3 +1,6 @@
+Tue 24 Mar 2020 : extended procedures in generic_speelpenning_convolutions,
+  to apply the reverse mode on one point, tested by ts_speelcnv.
+
 Wed 18 Mar 2020 : added procedures to convergence_radius_estimates to write
   the results to file if in verbose mode.
 

@@ -687,6 +687,42 @@ package body Generic_Speelpenning_Convolutions is
   end Speel;
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    x : in Vectors.Vector;
+                    forward,backward,cross,yd : in VecVecs.VecVec ) is
+
+    use Standard_Integer_Vectors;
+    use Ring;
+
+    idk : Standard_Integer_Vectors.Link_to_Vector;
+    yptr : constant Vectors.Link_to_Vector := yd(yd'last);
+    p : Vectors.Link_to_Vector;
+
+  begin
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        if idk'last = 1 then
+          yptr(0) := yptr(0) + x(idk(1));
+          p := yd(idk(1)); p(0) := p(0) + Ring.one;
+        else
+          Speel(x,idk.all,forward,backward,cross);
+          yptr(0) := yptr(0) + forward(idk'last-1)(0);
+          if idk'last = 2 then
+            p := yd(idk(2)); p(0) := p(0) + x(idk(1));
+            p := yd(idk(1)); p(0) := p(0) + x(idk(2));
+          else -- idk'last > 2
+            p := yd(idk(1)); p(0) := p(0) + backward(idk'last-2)(0);
+            for j in idk'first+1..idk'last-1 loop
+              p := yd(idk(j)); p(0) := p(0) + cross(j-1)(0);
+            end loop;
+            p := yd(idk(idk'last)); p(0) := p(0) + forward(idk'last-2)(0);
+          end if;
+        end if;
+      end if;
+    end loop;
+  end Speel;
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     x : in VecVecs.VecVec;
                     forward,backward,cross,yd : in VecVecs.VecVec ) is
 
@@ -695,6 +731,7 @@ package body Generic_Speelpenning_Convolutions is
 
     idk : Standard_Integer_Vectors.Link_to_Vector;
     yptr : constant Vectors.Link_to_Vector := yd(yd'last);
+    p : Vectors.Link_to_Vector;
 
   begin
     for k in idx'range loop
@@ -702,7 +739,7 @@ package body Generic_Speelpenning_Convolutions is
       if idk /= null then
         if idk'last = 1 then
           Update(yptr,x(idk(1)));
-          yd(idk(1))(0) := yd(idk(1))(0) + Ring.one;
+          p := yd(idk(1)); p(0) := p(0) + Ring.one;
         else
           Speel(x,idk.all,forward,backward,cross);
           Update(yptr,forward(idk'last-1));
@@ -715,6 +752,48 @@ package body Generic_Speelpenning_Convolutions is
               Update(yd(idk(j)),cross(j-1));
             end loop;
             Update(yd(idk(idk'last)),forward(idk'last-2));
+          end if;
+        end if;
+      end if;
+    end loop;
+  end Speel;
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    cff : in VecVecs.VecVec; x : in Vectors.Vector;
+                    forward,backward,cross,yd : in VecVecs.VecVec;
+                    wrk : in Vectors.Link_to_Vector ) is
+
+    use Standard_Integer_Vectors;
+    use Ring;
+
+    idk : Standard_Integer_Vectors.Link_to_Vector;
+    yptr : constant Vectors.Link_to_Vector := yd(yd'last);
+    pcff,p : Vectors.Link_to_Vector;
+
+  begin
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        pcff := cff(k);
+        if idk'last = 1 then
+          yptr(0) := yptr(0) + pcff(0)*x(idk(1));
+          p := yd(idk(1)); p(0) := p(0) + pcff(0);
+        else
+          Speel(x,idk.all,forward,backward,cross);
+          wrk(0) := pcff(0)*forward(idk'last-1)(0);
+          yptr(0) := yptr(0) + wrk(0);
+          if idk'last = 2 then
+            p := yd(idk(2)); p(0) := p(0) + pcff(0)*x(idk(1));
+            p := yd(idk(1)); p(0) := p(0) + pcff(0)*x(idk(2));
+          else -- idk'last > 2
+            wrk(0) := pcff(0)*backward(idk'last-2)(0);
+            p := yd(idk(1)); p(0) := p(0) + wrk(0);
+            for j in idk'first+1..idk'last-1 loop
+              wrk(0) := pcff(0)*cross(j-1)(0);
+              p := yd(idk(j)); p(0) := p(0) + wrk(0);
+            end loop;
+            wrk(0) := pcff(0)*forward(idk'last-2)(0);
+            p := yd(idk(idk'last)); p(0) := p(0) + wrk(0);
           end if;
         end if;
       end if;

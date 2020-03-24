@@ -9,6 +9,8 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
@@ -90,6 +92,22 @@ procedure ts_speelcnv is
 --   Tests the evaluation of the gradient of a polynomial in many variables,
 --   in a power series of some fixed degree.
 
+  function Leading_Coefficients
+             ( s : Standard_Complex_Series_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the vector of leading coefficients of the vector s.
+
+    res : Standard_Complex_Vectors.Vector(s'range);
+
+  begin
+    for i in s'range loop
+      res(i) := s(i).cff(0);
+    end loop;
+    return res;
+  end Leading_Coefficients;
+
   procedure Standard_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
@@ -120,7 +138,10 @@ procedure ts_speelcnv is
         := Standard_Polynomial(dim,xps,polcff,false);
     x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xpt : constant Standard_Complex_Vectors.Vector(1..dim)
+        := Leading_Coefficients(x);
     y : Standard_Complex_Series.Link_to_Series;
+    ypt : Standard_Complex_Numbers.Complex_Number;
     grad : Standard_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
          := Standard_Series_Coefficients(x);
@@ -140,31 +161,37 @@ procedure ts_speelcnv is
         := Allocate_Coefficients(deg);
     err,sumerr : double_float := 0.0;
     pwt : Link_to_VecVecVec := Create(xcff,mxe);
+    crc : Circuit(nbr,dim,dim+1,dim+2);
 
   begin
-    put_line("Some random exponents :");
-    Standard_Integer_VecVecs_io.put(xps);
-    put_line("its exponent indices :");
-    Standard_Integer_VecVecs_io.put(idx);
-    put_line("its factor indices :");
-    Standard_Integer_VecVecs_io.put(fac);
+    crc.xps := xps; crc.idx := idx; crc.fac := fac; crc.cff := pcff;
+    put_line("Some random exponents :"); Standard_Integer_VecVecs_io.put(xps);
+    put_line("its exponent indices :"); Standard_Integer_VecVecs_io.put(idx);
+    put_line("its factor indices :"); Standard_Integer_VecVecs_io.put(fac);
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := Standard_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
-    put_line("The value of the product at the random series :");
+    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+   -- Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+    put_line("The value of the polynomial at the random series :");
     put(y); new_line;
-    put_line("The coefficient vector of the value of the product :");
+    ypt := Eval(crc,xpt);
+    put_line("The leading coefficient of the evaluated polynomial :");
+    put(ypt); new_line;
+    Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work);
+    put_line("The leading coefficients computed in reverse mode :");
+    for i in ygrad'range loop
+      put(ygrad(i)(0)); new_line;
+    end loop;
+    put_line("The coefficient vector of the value of the polynomial :");
     put_line(ygrad(ygrad'last));
     grad := Standard_Gradient(pol,x);
     err := Difference(y,ygrad(ygrad'last));
     put("The error :"); put(err,3); new_line;
     sumerr := err;
     for k in grad'range loop
-      put("derivative "); put(k,1); put_line(" :");
-      put(grad(k)); new_line;
+      put("derivative "); put(k,1); put_line(" :"); put(grad(k)); new_line;
       put("The coefficient vector of derivative ");
       put(k,1); put_line(" :"); put_line(ygrad(k));
       err := Difference(grad(k),ygrad(k));
@@ -657,20 +684,14 @@ procedure ts_speelcnv is
   procedure Main is
 
   -- DESCRIPTION :
-  --   Prompts the user for the degree, the dimension,
-  --   the number of monomials, and the precision.  Then runs the tests.
+  --   Prompts the user for the precision, degree, the dimension,
+  --   the number of monomials.  Then runs the tests.
 
     dim,deg,nbr,pwr : integer32 := 0;
-    precision,random,answer : character;
+    precision : constant character := Prompt_for_Precision;
+    random,answer : character;
 
   begin
-    new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. standard double precision");
-    put_line("  1. double double precision");
-    put_line("  2. quad double precision");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(precision,"012");
     new_line;
     put("Random polynomials ? (y/n) "); Ask_Yes_Or_No(random);
     if random = 'n' then
