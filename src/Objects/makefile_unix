@@ -903,6 +903,10 @@ ts_ratapp:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ratapp.adb \
               -o $(BIN)/ts_ratapp
 
+ts_corcnv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_corcnv.adb \
+              -o $(BIN)/ts_corcnv
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
