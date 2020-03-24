@@ -73,11 +73,12 @@ standard_homotopy_convolutions_io : prompts for double homotopy convolutions
 dobldobl_homotopy_convolutions_io : prompts for dobldobl homotopy convolutions
 quaddobl_homotopy_convolutions_io : prompts for quaddobl homotopy convolutions
 singular_values_of_hessians       : wraps SVD for the Hessian criterion
+series_and_predictors             : apply power series to predict solutions
+test_series_predictors            : procedure to help in the testing
 ts_hesscrit                       : test development of the Hessian criterion
 ts_hesspred                       : test step size based on nearest solution
 ts_hesspcnv                       : test on Hessian criterion on convolutions
-series_and_predictors             : apply power series to predict solutions
-test_series_predictors            : procedure to help in the testing
+ts_corcnv                         : tests corrector convolutions
 ts_serpred                        : test on series predictor
 test_pade_predictors              : procedure to help testing Pade predictors
 jacobian_rabinowitsch_trick       : application of the Rabinowitsch trick
