@@ -11,6 +11,10 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
@@ -108,6 +112,38 @@ procedure ts_speelcnv is
     return res;
   end Leading_Coefficients;
 
+  function Leading_Coefficients
+             ( s : DoblDobl_Complex_Series_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the vector of leading coefficients of the vector s.
+
+    res : DoblDobl_Complex_Vectors.Vector(s'range);
+
+  begin
+    for i in s'range loop
+      res(i) := s(i).cff(0);
+    end loop;
+    return res;
+  end Leading_Coefficients;
+
+  function Leading_Coefficients
+             ( s : QuadDobl_Complex_Series_Vectors.Vector )
+             return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the vector of leading coefficients of the vector s.
+
+    res : QuadDobl_Complex_Vectors.Vector(s'range);
+
+  begin
+    for i in s'range loop
+      res(i) := s(i).cff(0);
+    end loop;
+    return res;
+  end Leading_Coefficients;
+
   procedure Standard_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
@@ -179,6 +215,9 @@ procedure ts_speelcnv is
     ypt := Eval(crc,xpt);
     put_line("The leading coefficient of the evaluated polynomial :");
     put(ypt); new_line;
+    for i in ygrad'range loop
+      ygrad(i)(0) := Standard_Complex_Numbers.Create(0.0);
+    end loop;
     Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work);
     put_line("The leading coefficients computed in reverse mode :");
     for i in ygrad'range loop
@@ -232,7 +271,10 @@ procedure ts_speelcnv is
         := DoblDobl_Polynomial(dim,xps,polcff,false);
     x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xpt : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+        := Leading_Coefficients(x);
     y : DoblDobl_Complex_Series.Link_to_Series;
+    ypt : DoblDobl_Complex_Numbers.Complex_Number;
     grad : DoblDobl_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
          := DoblDobl_Series_Coefficients(x);
@@ -252,23 +294,33 @@ procedure ts_speelcnv is
         := Allocate_Coefficients(deg);
     err,sumerr : double_double;
     pwt : Link_to_VecVecVec := Create(xcff,mxe);
+    crc : Circuit(nbr,dim,dim+1,dim+2);
 
   begin
-    put_line("Some random exponents :");
-    Standard_Integer_VecVecs_io.put(xps);
-    put_line("its exponent indices :");
-    Standard_Integer_VecVecs_io.put(idx);
-    put_line("its factor indices :");
-    Standard_Integer_VecVecs_io.put(fac);
+    crc.xps := xps; crc.idx := idx; crc.fac := fac; crc.cff := pcff;
+    put_line("Some random exponents :"); Standard_Integer_VecVecs_io.put(xps);
+    put_line("its exponent indices :"); Standard_Integer_VecVecs_io.put(idx);
+    put_line("its factor indices :"); Standard_Integer_VecVecs_io.put(fac);
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := DoblDobl_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
-    put_line("The value of the product at the random series :");
+    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+   -- Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+    put_line("The value of the polynomial at the random series :");
     put(y); new_line;
-    put_line("The coefficient vector of the value of the product :");
+    ypt := Eval(crc,xpt);
+    put_line("The leading coefficient of the evaluated polynomial :");
+    put(ypt); new_line;
+    for i in ygrad'range loop
+      ygrad(i)(0) := DoblDobl_Complex_Numbers.Create(integer(0));
+    end loop;
+    Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work);
+    put_line("The leading coefficients computed in reverse mode :");
+    for i in ygrad'range loop
+      put(ygrad(i)(0)); new_line;
+    end loop;
+    put_line("The coefficient vector of the value of the polynomial :");
     put_line(ygrad(ygrad'last));
     grad := DoblDobl_Gradient(pol,x);
     err := Difference(y,ygrad(ygrad'last));
@@ -317,7 +369,10 @@ procedure ts_speelcnv is
         := QuadDobl_Polynomial(dim,xps,polcff,false);
     x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xpt : constant QuadDobl_Complex_Vectors.Vector(1..dim)
+        := Leading_Coefficients(x);
     y : QuadDobl_Complex_Series.Link_to_Series;
+    ypt : QuadDobl_Complex_Numbers.Complex_Number;
     grad : QuadDobl_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
          := QuadDobl_Series_Coefficients(x);
@@ -337,23 +392,33 @@ procedure ts_speelcnv is
         := Allocate_Coefficients(deg);
     err,sumerr : quad_double;
     pwt : Link_to_VecVecVec := Create(xcff,mxe);
+    crc : Circuit(nbr,dim,dim+1,dim+2);
 
   begin
-    put_line("Some random exponents :");
-    Standard_Integer_VecVecs_io.put(xps);
-    put_line("its exponent indices :");
-    Standard_Integer_VecVecs_io.put(idx);
-    put_line("its factor indices :");
-    Standard_Integer_VecVecs_io.put(fac);
+    crc.xps := xps; crc.idx := idx; crc.fac := fac; crc.cff := pcff;
+    put_line("Some random exponents :"); Standard_Integer_VecVecs_io.put(xps);
+    put_line("its exponent indices :"); Standard_Integer_VecVecs_io.put(idx);
+    put_line("its factor indices :"); Standard_Integer_VecVecs_io.put(fac);
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := QuadDobl_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+   -- Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The value of the product at the random series :");
     put(y); new_line;
-    put_line("The coefficient vector of the value of the product :");
+    ypt := Eval(crc,xpt);
+    put_line("The leading coefficient of the evaluated polynomial :");
+    put(ypt); new_line;
+    for i in ygrad'range loop
+      ygrad(i)(0) := QuadDobl_Complex_Numbers.Create(integer(0));
+    end loop;
+    Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work);
+    put_line("The leading coefficients computed in reverse mode :");
+    for i in ygrad'range loop
+      put(ygrad(i)(0)); new_line;
+    end loop;
+    put_line("The coefficient vector of the value of the polynomial :");
     put_line(ygrad(ygrad'last));
     grad := QuadDobl_Gradient(pol,x);
     err := Difference(y,ygrad(ygrad'last));

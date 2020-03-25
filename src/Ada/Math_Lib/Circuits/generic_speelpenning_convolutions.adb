@@ -825,10 +825,8 @@ package body Generic_Speelpenning_Convolutions is
           Multiply(pcff,forward(idk'last-1),wrk);
           Update(yptr,wrk);
           if idk'last = 2 then
-            Multiply(pcff,x(idk(1)),wrk);
-            Update(yd(idk(2)),wrk);
-            Multiply(pcff,x(idk(2)),wrk);
-            Update(yd(idk(1)),wrk);
+            Multiply(pcff,x(idk(1)),wrk); Update(yd(idk(2)),wrk);
+            Multiply(pcff,x(idk(2)),wrk); Update(yd(idk(1)),wrk);
           else -- idk'last > 2 
             Multiply(pcff,backward(idk'last-2),wrk);
             Update(yd(idk(1)),wrk);
