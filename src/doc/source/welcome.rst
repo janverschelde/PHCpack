@@ -927,10 +927,14 @@ global optimization, and computational physics:
    mechanisms based on a two-dimensional TEM image.**
    *Mechanisms and Machine Theory* 109:22-38, 2017.
 
+#. Lailai Zhu and Howard A. Stone: **Harnessing elasticity to generate
+   self-oscillation via an electrohydrodynamic instability.**
+   *J. Fluid Mech. 888, Article ID A31, 35 p., 2020.
+
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-112. Ali Baharev, Ferenc Domes, Arnold Neumaier:
+113. Ali Baharev, Ferenc Domes, Arnold Neumaier:
      **A robust approach for finding all well-separated solutions of
      sparse systems of nonlinear equations**.
      *Numerical Algorithms* 76:163-189, 2017.
@@ -1035,7 +1039,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-134. Bo Dong, Bo Yu, and Yan Yu:
+135. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -1054,7 +1058,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-137. B. Sturmfels:
+138. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
