@@ -1,3 +1,6 @@
+Wed 25 Mar 2020 : extended generic_speelpenning_convolutions with more
+  procedure to evaluate and differentiate at a point, tested by ts_speelcnv.
+
 Tue 24 Mar 2020 : extended procedures in generic_speelpenning_convolutions,
   to apply the reverse mode on one point, tested by ts_speelcnv.
   Extended ts_speelcnv with test in double double and quad double precision,

@@ -208,8 +208,8 @@ procedure ts_speelcnv is
     put_line("the polynomial :"); put(pol); new_line;
     y := Standard_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-   -- Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The value of the polynomial at the random series :");
     put(y); new_line;
     ypt := Eval(crc,xpt);
@@ -218,7 +218,10 @@ procedure ts_speelcnv is
     for i in ygrad'range loop
       ygrad(i)(0) := Standard_Complex_Numbers.Create(0.0);
     end loop;
-    Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work);
+    work(0) := Standard_Complex_Numbers.Create(0.0);
+    acc(0) := Standard_Complex_Numbers.Create(0.0);
+   -- Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xpt,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The leading coefficients computed in reverse mode :");
     for i in ygrad'range loop
       put(ygrad(i)(0)); new_line;
@@ -305,8 +308,8 @@ procedure ts_speelcnv is
     put_line("the polynomial :"); put(pol); new_line;
     y := DoblDobl_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-   -- Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The value of the polynomial at the random series :");
     put(y); new_line;
     ypt := Eval(crc,xpt);
@@ -315,7 +318,10 @@ procedure ts_speelcnv is
     for i in ygrad'range loop
       ygrad(i)(0) := DoblDobl_Complex_Numbers.Create(integer(0));
     end loop;
-    Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work);
+    work(0) := DoblDobl_Complex_Numbers.Create(integer(0));
+    acc(0) := DoblDobl_Complex_Numbers.Create(integer(0));
+   -- Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xpt,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The leading coefficients computed in reverse mode :");
     for i in ygrad'range loop
       put(ygrad(i)(0)); new_line;
@@ -403,8 +409,8 @@ procedure ts_speelcnv is
     put_line("the polynomial :"); put(pol); new_line;
     y := QuadDobl_CSeries_Poly_Functions.Eval(pol,x);
    -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-    Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-   -- Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The value of the product at the random series :");
     put(y); new_line;
     ypt := Eval(crc,xpt);
@@ -413,7 +419,10 @@ procedure ts_speelcnv is
     for i in ygrad'range loop
       ygrad(i)(0) := QuadDobl_Complex_Numbers.Create(integer(0));
     end loop;
-    Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work);
+    work(0) := QuadDobl_Complex_Numbers.Create(integer(0));
+    acc(0) := QuadDobl_Complex_Numbers.Create(integer(0));
+   -- Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work); -- all powers 1
+    Speel(xps,idx,fac,pcff,xpt,forward,backward,cross,ygrad,work,acc,pwt);
     put_line("The leading coefficients computed in reverse mode :");
     for i in ygrad'range loop
       put(ygrad(i)(0)); new_line;

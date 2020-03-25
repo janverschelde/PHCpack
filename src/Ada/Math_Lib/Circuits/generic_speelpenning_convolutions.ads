@@ -222,7 +222,7 @@ package Generic_Speelpenning_Convolutions is
 
   -- REQUIRED : first'last = second'last = product'last.
 
--- PLAIN EVALUATION AT A NUMBER :
+-- PLAIN EVALUATION AT A POINT (instead of at a series) :
 
   function Eval ( c : Circuit; x : Vectors.Vector ) return Ring.number;
   function Eval ( c : Link_to_Circuit; x : Vectors.Vector ) return Ring.number;
@@ -232,6 +232,7 @@ package Generic_Speelpenning_Convolutions is
   --   Returns the evaluation of c at the number x,
   --   via a straighforward sum of evaluated terms, at t = 0,
   --   only considering the leading coefficients of power series.
+  --   The above functions are only for testing purposes.
 
   function Eval ( c : Circuit; x : Vectors.Vector;
                   t : Ring.number ) return Ring.number;
@@ -243,8 +244,9 @@ package Generic_Speelpenning_Convolutions is
   -- DESCRIPTION :
   --   Returns the evaluation of c at the number x and t for the series
   --   parameter via a straighforward sum of evaluated terms.
+  --   The above functions are only for testing purposes.
 
--- PLAIN FIRST DERIVATIVE AT A NUMBER :
+-- PLAIN FIRST DERIVATIVE AT A POINT (instead of at a series) :
 
   function Diff ( x : Vectors.Vector;
                   e : Standard_Integer_Vectors.Vector; i : integer32 )  
@@ -264,10 +266,11 @@ package Generic_Speelpenning_Convolutions is
   -- DESCRIPTION :
   --   Returns the value of the first derivative of the monomials
   --   with exponents in c, with respect to i, evaluated at x.
+  --   This function is only for testing purposes.
 
   -- REQUIRED : i is in x'range.
 
--- PLAIN SECOND DERIVATIVE AT A NUMBER :
+-- PLAIN SECOND DERIVATIVE AT A POINT (instead of at a series) :
 
   function Diff ( x : Vectors.Vector;
                   e : Standard_Integer_Vectors.Vector; i,j : integer32 )  
@@ -303,11 +306,13 @@ package Generic_Speelpenning_Convolutions is
                     forward,backward,cross : in VecVecs.VecVec );
 
   -- DESCRIPTION :
-  --   Applies the reverse mode of algorithmic differentiation to
-  --   the point x, instead of a power series.
+  --   Applies the reverse mode of algorithmic differentiation at
+  --   the point x, instead of at a power series.
   --   For the auxiliary vectors forward, backward, and cross,
-  --   only the number at position 0 is used.
-  --   All parameters mean the same as in the Speel procedures below.
+  --   only the number at position 0 is used.  Except for x,
+  --   all parameters are the same as in the Speel procedures below.
+  --   In the arguments that are vectors of vectors, only the leading
+  --   coefficients at position 0 are used in the computations.
 
   procedure Speel ( x : in VecVecs.VecVec;
                     forward,backward,cross : in VecVecs.VecVec );
@@ -356,11 +361,13 @@ package Generic_Speelpenning_Convolutions is
                     wrk : in Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
-  --   Applies the reverse mode of algorithmic differentiation to
-  --   the point x, instead of a power series.
+  --   Applies the reverse mode of algorithmic differentiation at
+  --   the point x, instead of at a power series.
   --   For the auxiliary vectors forward, backward, and cross,
-  --   only the number at position 0 is used.
-  --   All parameters mean the same as in the Speel procedures below.
+  --   only the number at position 0 is used.  Except for x,
+  --   all parameters are the same as in the Speel procedures below.
+  --   In the arguments that are vectors of vectors, only the leading
+  --   coefficients at position 0 are used in the computations.
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     x : in VecVecs.VecVec;
@@ -393,6 +400,19 @@ package Generic_Speelpenning_Convolutions is
   --   yd           yd(x'last+1) contains the coefficient vector of the value
   --                of the sum of products, evaluated at x,
   --                yd(k) is the k-th partial derivative at x.
+
+  procedure Multiply_Factor
+                  ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                    x : in Vectors.Vector;
+                    cff,wrk,acc : in Vectors.Link_to_Vector;
+                    pwt : in Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Multiplies the coefficient with the common factor,
+  --   for a point x, instead of for a series.  Except for x,
+  --   all parameters are the same as in the procedure below.
+  --   In the vectors of vectors, only the leading coefficient at 0
+  --   is used in the computations.
 
   procedure Multiply_Factor
                   ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
@@ -432,6 +452,19 @@ package Generic_Speelpenning_Convolutions is
 
   -- ON RETURN :
   --   cff          coefficients multiplied with multiplier.
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    cff : in VecVecs.VecVec; x : in Vectors.Vector;
+                    forward,backward,cross,yd : in VecVecs.VecVec;
+                    wrk,acc : in Vectors.Link_to_Vector;
+                    pwt : in Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Evaluation and differentiation of a polynomial at a point x,
+  --   given in indexed format at a power series.  Except for x,
+  --   all parameters are the same as in the procedure below.
+  --   In the vectors of vectors, only the leading coefficients at 0
+  --   is used in the computations.
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;

@@ -580,16 +580,14 @@ package body Generic_Speelpenning_Convolutions is
     use Ring;
 
   begin
-    p := forward(1);
-    p(0) := x(1)*x(2);
+    p := forward(1); p(0) := x(1)*x(2);
     for k in 3..x'last loop
       p := forward(k-1); q := forward(k-2); p(0) := q(0)*x(k);
     end loop;
     if x'last > 2 then
-      p := backward(1);
-      p(0) := x(x'last)*x(x'last-1);
+      p := backward(1); p(0) := x(x'last)*x(x'last-1);
       for k in 2..x'last-2 loop
-        p := backward(k); q := backward(k-1); p(0) := x(x'last-k)*q(0);
+        p := backward(k); q := backward(k-1); p(0) := q(0)*x(x'last-k);
       end loop;
       if x'last = 3 then
         p := cross(1); p(0) := x(1)*x(3);
@@ -652,7 +650,7 @@ package body Generic_Speelpenning_Convolutions is
         p := cross(1); q := backward(idx'last-3); p(0) := x(idx(1))*q(0);
         for k in 2..idx'last-3 loop
           r := cross(k);
-          p := backward(idx'last-2-k); q := backward(idx'last-2-k);
+          p := forward(k-1); q := backward(idx'last-2-k);
           r(0) := p(0)*q(0);
         end loop;
         r := cross(idx'last-2); p := forward(idx'last-3);
@@ -844,6 +842,40 @@ package body Generic_Speelpenning_Convolutions is
 
   procedure Multiply_Factor
               ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                x : in Vectors.Vector;
+                cff,wrk,acc : in Vectors.Link_to_Vector;
+                pwt : in Link_to_VecVecVec ) is
+
+    pwx : VecVecs.Link_to_VecVec;
+    lpw : Vectors.Link_to_Vector;
+    powidx : integer32;
+
+    use Ring;
+
+  begin
+    pwx := pwt(facidx(facidx'first));
+    powidx := xpk(facidx(facidx'first));   -- power in power table
+    if powidx = 2 then
+      acc(0) := cff(0)*x(facidx(facidx'first));
+    else
+      lpw := pwx(powidx-2);  -- coefficients of higher powers
+      acc(0) := cff(0)*lpw(0);
+    end if;
+    for k in facidx'first+1..facidx'last loop
+      wrk(0) := acc(0);
+      pwx := pwt(facidx(k));
+      powidx := xpk(facidx(k));   -- power in power table
+      if powidx = 2 then
+        acc(0) := wrk(0)*x(facidx(k));
+      else
+        lpw := pwx(powidx-2);  -- coefficients of higher powers
+        acc(0) := wrk(0)*lpw(0);
+      end if;
+    end loop;
+  end Multiply_Factor;
+
+  procedure Multiply_Factor
+              ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
                 x : in VecVecs.VecVec;
                 cff,wrk,acc : in Vectors.Link_to_Vector;
                 pwt : in Link_to_VecVecVec ) is
@@ -889,6 +921,99 @@ package body Generic_Speelpenning_Convolutions is
   end Multiply_Power;
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    cff : in VecVecs.VecVec; x : in Vectors.Vector;
+                    forward,backward,cross,yd : in VecVecs.VecVec;
+                    wrk,acc : in Vectors.Link_to_Vector;
+                    pwt : in Link_to_VecVecVec ) is
+
+    use Standard_Integer_Vectors;
+    use Ring;
+
+    idk,xpk,fck : Standard_Integer_Vectors.Link_to_Vector;
+    yptr : constant Vectors.Link_to_Vector := yd(yd'last);
+    pcff,p : Vectors.Link_to_Vector;
+    factor : Ring.number;
+
+  begin
+    for k in idx'range loop
+      idk := idx(k);           -- the k-th exponent index 
+      if idk /= null then
+        xpk := xps(k);         -- the k-th exponent vector
+        fck := fac(k);         -- the k-th factor index
+        pcff := cff(k);
+        if idk'last = 1 then
+          if fck = null then
+            wrk(0) := pcff(0)*x(idk(1)); yptr(0) := yptr(0) + wrk(0);
+            p := yd(idk(1)); p(0) := p(0) + pcff(0);
+          else
+            Multiply_Factor(xpk,fck,x,pcff,wrk,acc,pwt);
+            wrk(0) := acc(0)*x(idk(1)); yptr(0) := yptr(0) + wrk(0);
+            factor := Ring.Create(integer(xpk(idk(1))));
+            Ring.mul(acc(0),factor);
+            p := yd(idk(1)); p(0) := p(0) + acc(0);
+          end if;
+        else
+          Speel(x,idk.all,forward,backward,cross);
+          if fck = null then
+            p := forward(idk'last-1); wrk(0) := pcff(0)*p(0);
+          else
+            Multiply_Factor(xpk,fck,x,pcff,wrk,acc,pwt);
+            p := forward(idk'last-1); wrk(0) := acc(0)*p(0);
+          end if;
+          yptr(0) := yptr(0) + wrk(0);
+          if idk'last = 2 then
+            if fck = null then
+              wrk(0) := pcff(0)*x(idk(1));
+              p := yd(idk(2)); p(0) := p(0) + wrk(0);
+              wrk(0) := pcff(0)*x(idk(2));
+              p := yd(idk(1)); p(0) := p(0) + wrk(0);
+            else -- use the common factor in acc
+              wrk(0) := acc(0)*x(idk(1));
+              if xpk(idk(2)) > 1 then
+                factor := Ring.Create(integer(xpk(idk(2))));
+                Ring.mul(wrk(0),factor);
+              end if;
+              p := yd(idk(2)); p(0) := p(0) + wrk(0);
+              wrk(0) := acc(0)*x(idk(2));
+              if xpk(idk(1)) > 1 then
+                factor := Ring.Create(integer(xpk(idk(1))));
+                Ring.mul(wrk(0),factor);
+              end if;
+              p := yd(idk(1)); p(0) := p(0) + wrk(0);
+            end if;
+          else -- idk'last > 2 
+            if fck = null then
+              p := backward(idk'last-2); wrk(0) := pcff(0)*p(0);
+              p := yd(idk(1)); p(0) := p(0) + wrk(0);
+              for j in idk'first+1..idk'last-1 loop
+                p := cross(j-1); wrk(0) := pcff(0)*p(0);
+                p := yd(idk(j)); p(0) := p(0) + wrk(0);
+              end loop;
+              p := forward(idk'last-2); wrk(0) := pcff(0)*p(0);
+              p := yd(idk(idk'last)); p(0) := p(0) + wrk(0);
+            else
+              p := backward(idk'last-2); wrk(0) := acc(0)*p(0);
+              factor := Ring.Create(integer(xpk(idk(1))));
+              Ring.mul(wrk(0),factor);
+              p := yd(idk(1)); p(0) := p(0) + wrk(0);
+              for j in idk'first+1..idk'last-1 loop
+                p := cross(j-1); wrk(0) := acc(0)*p(0);
+                factor := Ring.Create(integer(xpk(idk(j))));
+                Ring.mul(wrk(0),factor);
+                p := yd(idk(j)); p(0) := p(0) + wrk(0);
+              end loop;
+              p := forward(idk'last-2); wrk(0) := acc(0)*p(0);
+              factor := Ring.Create(integer(xpk(idk(idk'last))));
+              Ring.mul(wrk(0),factor);
+              p := yd(idk(idk'last)); p(0) := p(0) + wrk(0);
+            end if;
+          end if;
+        end if;
+      end if;
+    end loop;
+  end Speel;
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     cff : in VecVecs.VecVec; x : in VecVecs.VecVec;
                     forward,backward,cross,yd : in VecVecs.VecVec;
                     wrk,acc : in Vectors.Link_to_Vector;
@@ -909,15 +1034,12 @@ package body Generic_Speelpenning_Convolutions is
         pcff := cff(k);
         if idk'last = 1 then
           if fck = null then
-            Multiply(pcff,x(idk(1)),wrk);
-            Update(yptr,wrk);
+            Multiply(pcff,x(idk(1)),wrk); Update(yptr,wrk);
             Update(yd(idk(1)),pcff);
           else
             Multiply_Factor(xpk,fck,x,pcff,wrk,acc,pwt);
-            Multiply(acc,x(idk(1)),wrk);
-            Update(yptr,wrk);
-            Multiply_Power(xpk(idk(1)),acc);
-            Update(yd(idk(1)),acc);
+            Multiply(acc,x(idk(1)),wrk); Update(yptr,wrk);
+            Multiply_Power(xpk(idk(1)),acc); Update(yd(idk(1)),acc);
           end if;
         else
           Speel(x,idk.all,forward,backward,cross);
@@ -930,17 +1052,14 @@ package body Generic_Speelpenning_Convolutions is
           Update(yptr,wrk);
           if idk'last = 2 then
             if fck = null then
-              Multiply(pcff,x(idk(1)),wrk);
-              Update(yd(idk(2)),wrk);
-              Multiply(pcff,x(idk(2)),wrk);
-              Update(yd(idk(1)),wrk);
+              Multiply(pcff,x(idk(1)),wrk); Update(yd(idk(2)),wrk);
+              Multiply(pcff,x(idk(2)),wrk); Update(yd(idk(1)),wrk);
             else -- use the common factor in acc
               Multiply(acc,x(idk(1)),wrk);
               if xpk(idk(2)) > 1
                then Multiply_Power(xpk(idk(2)),wrk);
               end if;
-              Update(yd(idk(2)),wrk);
-              Multiply(acc,x(idk(2)),wrk);
+              Update(yd(idk(2)),wrk); Multiply(acc,x(idk(2)),wrk);
               if xpk(idk(1)) > 1
                then Multiply_Power(xpk(idk(1)),wrk);
               end if;
@@ -951,8 +1070,7 @@ package body Generic_Speelpenning_Convolutions is
               Multiply(pcff,backward(idk'last-2),wrk);
               Update(yd(idk(1)),wrk);
               for j in idk'first+1..idk'last-1 loop
-                Multiply(pcff,cross(j-1),wrk);
-                Update(yd(idk(j)),wrk);
+                Multiply(pcff,cross(j-1),wrk); Update(yd(idk(j)),wrk);
               end loop;
               Multiply(pcff,forward(idk'last-2),wrk);
               Update(yd(idk(idk'last)),wrk);
@@ -962,8 +1080,7 @@ package body Generic_Speelpenning_Convolutions is
               Update(yd(idk(1)),wrk);
               for j in idk'first+1..idk'last-1 loop
                 Multiply(acc,cross(j-1),wrk);
-                Multiply_Power(xpk(idk(j)),wrk);
-                Update(yd(idk(j)),wrk);
+                Multiply_Power(xpk(idk(j)),wrk); Update(yd(idk(j)),wrk);
               end loop;
               Multiply(acc,forward(idk'last-2),wrk);
               Multiply_Power(xpk(idk(idk'last)),wrk);
