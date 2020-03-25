@@ -639,7 +639,7 @@ package body Generic_Speelpenning_Convolutions is
   begin
     p := forward(1); p(0) := x(idx(1))*x(idx(2));
     for k in 3..idx'last loop
-      p := forward(k-1); q := forward(k-1); p(0) := x(idx(k))*q(0);
+      p := forward(k-1); q := forward(k-2); p(0) := x(idx(k))*q(0);
     end loop;
     if idx'last > 2 then
       p := backward(1); p(0) := x(idx(idx'last))*x(idx(idx'last-1));
