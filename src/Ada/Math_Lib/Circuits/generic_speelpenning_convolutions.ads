@@ -131,6 +131,16 @@ package Generic_Speelpenning_Convolutions is
 
   procedure Compute ( pwt : in Link_to_VecVecVec;
                       mxe : in Standard_Integer_Vectors.Vector;
+                      x : in Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Computes the powers in the allocated power table for the
+  --   coordinates of the point x.  Except for x, all parameters and
+  --   requirements are the same as in the Compute procedure below.
+  --   Only the leading coefficients, at position 0, in pwt are computed.
+
+  procedure Compute ( pwt : in Link_to_VecVecVec;
+                      mxe : in Standard_Integer_Vectors.Vector;
                       x : in VecVecs.VecVec );
 
   -- DESCRIPTION :
@@ -500,20 +510,39 @@ package Generic_Speelpenning_Convolutions is
   --                of the sum of products, evaluated at x,
   --                yd(k) is the k-th partial derivative at x.
 
+  procedure EvalDiff ( c : in Circuit; x : in Vectors.Vector;
+                       pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Wraps the Speel procedure for the convolution circuit c,
+  --   to evaluate at the point x, with the aid of the power table pwt.
+  --   The result is placed in yd.
+
   procedure EvalDiff ( c : in Circuit; x : in VecVecs.VecVec;
                        pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Wraps the Speel procedure for the convolution circuit c,
-  --   to evaluate at x, with the aid of the power table pwt.
+  --   to evaluate at the series x, with the aid of the power table pwt.
   --   The result is placed in yd.
+
+  procedure EvalDiff ( c : in Circuits; x : in Vectors.Vector;
+                       pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec;
+                       vy : in VecVecs.VecVec; vm : in VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiates the convolution circuits in c
+  --   at the point x.  Except for x, all parameters are the same
+  --   as the procedure EvalDiff below.  Only the leading coefficients,
+  --   at position 0, are used in the computations.
 
   procedure EvalDiff ( c : in Circuits; x : in VecVecs.VecVec;
                        pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec;
                        vy : in VecVecs.VecVec; vm : in VecMats.VecMat );
 
   -- DESCRIPTION :
-  --   Evaluates and differentiates the convolution circuits in c at x.
+  --   Evaluates and differentiates the convolution circuits in c
+  --   at the series x.
 
   -- ON ENTRY :
   --   c            an array of convolution circuits;
@@ -531,6 +560,13 @@ package Generic_Speelpenning_Convolutions is
   --   vm           the evaluated circuits at x as a series 
   --                of some fixe degree with matrix coefficients.
 
+  procedure Leading_Delinearize ( vy,yv : in VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Applies the delinearization only to the leading coefficients,
+  --   to the coefficients at position 0.
+  --   The same requirements hold as in the Delinearize procedure below.
+
   procedure Delinearize ( vy,yv : in VecVecs.VecVec );
 
   --  DESCRIPTION :
@@ -543,11 +579,20 @@ package Generic_Speelpenning_Convolutions is
   --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
   --   then yv'range = 1..dimension and yv(k)'range = 0..degree.
 
+  procedure EvalDiff ( s : in System; x : in Vectors.Vector );
+  procedure EvalDiff ( s : in Link_to_System; x : in Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Wraps the EvalDiff on the convolution circuits in s.crc,
+  --   at the points with coordinates in x.
+  --   The same requirements hold as the EvalDiff procedures below.
+
   procedure EvalDiff ( s : in System; x : in VecVecs.VecVec );
   procedure EvalDiff ( s : in Link_to_System; x : in VecVecs.VecVec );
 
   -- DESCRIPTION :
-  --   Wraps the EvalDiff on the convolution circuits in s.crc.
+  --   Wraps the EvalDiff on the convolution circuits in s.crc,
+  --   at the power series with coefficients in x.
 
   -- REQUIRED :
   --   All data in s are allocated properly with respect to dimension

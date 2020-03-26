@@ -147,6 +147,29 @@ package body Generic_Speelpenning_Convolutions is
 
   procedure Compute ( pwt : in Link_to_VecVecVec;
                       mxe : in Standard_Integer_Vectors.Vector;
+                      x : in Vectors.Vector ) is
+
+    xpw : VecVecs.Link_to_VecVec;
+    p,q : Vectors.Link_to_Vector;
+
+    use Ring;
+
+  begin
+    for i in x'range loop
+      if mxe(i) > 2 then
+        xpw := pwt(i);
+        p := xpw(1);
+        p(0) := x(i)*x(i);
+        for k in 2..(mxe(i)-2) loop
+          p := xpw(k); q := xpw(k-1);
+          p(0) := x(i)*q(0);
+        end loop;
+      end if;
+    end loop;
+  end Compute;
+
+  procedure Compute ( pwt : in Link_to_VecVecVec;
+                      mxe : in Standard_Integer_Vectors.Vector;
                       x : in VecVecs.VecVec ) is
 
     xpw : VecVecs.Link_to_VecVec;
@@ -1092,6 +1115,21 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
   end Speel;
 
+  procedure EvalDiff ( c : in Circuit; x : in Vectors.Vector;
+                       pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec ) is
+
+    use Ring,Vectors;
+
+    p : Link_to_Vector;
+
+  begin
+    Speel(c.xps,c.idx,c.fac,c.cff,x,c.forward,c.backward,c.cross,yd,
+          c.wrk,c.acc,pwt);
+    if c.cst /= null
+     then p := yd(yd'last); p(0) := p(0) + c.cst(0);
+    end if;
+  end EvalDiff;
+
   procedure EvalDiff ( c : in Circuit; x : in VecVecs.VecVec;
                        pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec ) is
 
@@ -1103,6 +1141,29 @@ package body Generic_Speelpenning_Convolutions is
     if c.cst /= null
      then Update(yd(yd'last),c.cst);
     end if;
+  end EvalDiff;
+
+  procedure EvalDiff ( c : in Circuits; x : in Vectors.Vector;
+                       pwt : in Link_to_VecVecVec; yd : in VecVecs.VecVec;
+                       vy : in VecVecs.VecVec; vm : in VecMats.VecMat ) is
+
+    vleft,vright : Vectors.Link_to_Vector;
+    mleft : Matrices.Link_to_Matrix;
+
+  begin
+    for i in c'range loop
+      EvalDiff(c(i).all,x,pwt,yd);
+      vright := yd(x'last+1);      -- the 0-th coefficient of vright is
+      vleft := vy(0);              -- assigned to the 0-th vector of vy
+      vleft(i) := vright(0);       -- at position i
+      vright(0) := Ring.zero;      -- reset the value to zero
+      for j in 1..x'last loop
+        vright := yd(j);           -- vm(0) is the Jacobian matrix at x
+        mleft := vm(0);            -- the row i in vm(k) is the equation
+        mleft(i,j) := vright(0);   -- the column j in vm(k) is the variable
+        vright(0) := Ring.zero;    -- reset the value to zero
+      end loop;
+    end loop;
   end EvalDiff;
 
   procedure EvalDiff ( c : in Circuits; x : in VecVecs.VecVec;
@@ -1132,6 +1193,18 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
   end EvalDiff;
 
+  procedure Leading_Delinearize ( vy,yv : in VecVecs.VecVec ) is
+
+    vy0 : constant Vectors.Link_to_Vector := vy(0);
+    left : Vectors.Link_to_Vector;
+
+  begin
+    for i in yv'range loop  -- vy0 holds 0-th coefficient of all series
+      left := yv(i);        -- so we assign to coefficients of series i
+      left(0) := vy0(i);    -- at position 0 the i-th value of vyk
+    end loop;
+  end Leading_Delinearize;
+
   procedure Delinearize ( vy,yv : in VecVecs.VecVec ) is
   begin
     for k in vy'range loop
@@ -1146,6 +1219,18 @@ package body Generic_Speelpenning_Convolutions is
       end;
     end loop;
   end Delinearize;
+
+  procedure EvalDiff ( s : in System; x : in Vectors.Vector ) is
+  begin
+    EvalDiff(s.crc,x,s.pwt,s.yd,s.vy,s.vm);
+    Leading_Delinearize(s.vy,s.yv);
+  end EvalDiff;
+
+  procedure EvalDiff ( s : in Link_to_System; x : in Vectors.Vector ) is
+  begin
+    EvalDiff(s.crc,x,s.pwt,s.yd,s.vy,s.vm);
+    Leading_Delinearize(s.vy,s.yv);
+  end EvalDiff;
 
   procedure EvalDiff ( s : in System; x : in VecVecs.VecVec ) is
   begin

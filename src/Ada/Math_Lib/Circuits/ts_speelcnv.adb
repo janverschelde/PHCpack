@@ -466,6 +466,8 @@ procedure ts_speelcnv is
     p : Standard_CSeries_Poly_Systems.Poly_Sys(1..dim) := Standard_System(c);
     x : Standard_Complex_Series_Vectors.Vector(1..dim)
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xpt : constant Standard_Complex_Vectors.Vector(1..dim)
+        := Leading_Coefficients(x);
     px : Standard_Complex_Series_Vectors.Vector(p'range)
        := Standard_CSeries_Poly_SysFun.Eval(p,x);
     xcff : Standard_Complex_VecVecs.VecVec(1..dim)
@@ -486,18 +488,31 @@ procedure ts_speelcnv is
     err := Difference(px,s.yv);
     put("The error :"); put(err,3); new_line;
     for i in s.vm'range loop
-      put("The matrix "); put(i,1); put_line(" :");
-      put(s.vm(i).all);
+      put("The matrix "); put(i,1); put_line(" :"); put(s.vm(i).all);
     end loop;
     for i in 1..dim loop
       for j in 1..dim loop
         put("the series of the Jacobian at ");
-        put(i,1); put(" and "); put(j,1); put_line(" :");
-        put(jm(i,j));
+        put(i,1); put(" and "); put(j,1); put_line(" :"); put(jm(i,j));
       end loop;
     end loop;
     err := Difference(jm,s.vm);
     put("The error :"); put(err,3); new_line;
+    Compute(s.pwt,s.mxe,xpt);
+    EvalDiff(s,xpt);
+    put_line("The evaluation at a point : ");
+    for k in s.yv'range loop
+      put(s.yv(k)(0)); new_line;
+      put(px(k).cff(0)); new_line;
+    end loop;
+    put_line("The Jacobian matrix at a point : "); put(s.vm(0).all);
+    put_line("The leading coefficients of the Jacobian :");
+    for i in 1..dim loop
+      for j in 1..dim loop
+        put(" "); put(jm(i,j).cff(0));
+      end loop;
+      new_line;
+    end loop;
     Clear(s); -- Clear(c) is not needed, the Clear(s) does Clear(s.crc)
     Standard_CSeries_Poly_Systems.Clear(p);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
@@ -527,6 +542,8 @@ procedure ts_speelcnv is
     p : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := DoblDobl_System(c);
     x : DoblDobl_Complex_Series_Vectors.Vector(1..dim)
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xpt : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+        := Leading_Coefficients(x);
     px : DoblDobl_Complex_Series_Vectors.Vector(p'range)
        := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     xcff : DoblDobl_Complex_VecVecs.VecVec(1..dim)
@@ -547,18 +564,31 @@ procedure ts_speelcnv is
     err := Difference(px,s.yv);
     put("The error : "); put(err,3); new_line;
     for i in s.vm'range loop
-      put("The matrix "); put(i,1); put_line(" :");
-      put(s.vm(i).all);
+      put("The matrix "); put(i,1); put_line(" :"); put(s.vm(i).all);
     end loop;
     for i in 1..dim loop
       for j in 1..dim loop
         put("the series of the Jacobian at ");
-        put(i,1); put(" and "); put(j,1); put_line(" :");
-        put(jm(i,j));
+        put(i,1); put(" and "); put(j,1); put_line(" :"); put(jm(i,j));
       end loop;
     end loop;
     err := Difference(jm,s.vm);
     put("The error : "); put(err,3); new_line;
+    Compute(s.pwt,s.mxe,xpt);
+    EvalDiff(s,xpt);
+    put_line("The evaluation at a point : ");
+    for k in s.yv'range loop
+      put(s.yv(k)(0)); new_line;
+      put(px(k).cff(0)); new_line;
+    end loop;
+    put_line("The Jacobian matrix at a point : "); put(s.vm(0).all);
+    put_line("The leading coefficients of the Jacobian :");
+    for i in 1..dim loop
+      for j in 1..dim loop
+        put(" "); put(jm(i,j).cff(0));
+      end loop;
+      new_line;
+    end loop;
     Clear(s);
     DoblDobl_CSeries_Poly_Systems.Clear(p);
     DoblDobl_CSeries_Jaco_Matrices.Clear(jp);
@@ -588,6 +618,8 @@ procedure ts_speelcnv is
     p : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := QuadDobl_System(c);
     x : QuadDobl_Complex_Series_Vectors.Vector(1..dim)
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xpt : constant QuadDobl_Complex_Vectors.Vector(1..dim)
+        := Leading_Coefficients(x);
     px : QuadDobl_Complex_Series_Vectors.Vector(p'range)
        := QuadDobl_CSeries_Poly_SysFun.Eval(p,x);
     xcff : QuadDobl_Complex_VecVecs.VecVec(1..dim)
@@ -608,18 +640,31 @@ procedure ts_speelcnv is
     err := Difference(px,s.yv);
     put("The error : "); put(err,3); new_line;
     for i in s.vm'range loop
-      put("The matrix "); put(i,1); put_line(" :");
-      put(s.vm(i).all);
+      put("The matrix "); put(i,1); put_line(" :"); put(s.vm(i).all);
     end loop;
     for i in 1..dim loop
       for j in 1..dim loop
         put("the series of the Jacobian at ");
-        put(i,1); put(" and "); put(j,1); put_line(" :");
-        put(jm(i,j));
+        put(i,1); put(" and "); put(j,1); put_line(" :"); put(jm(i,j));
       end loop;
     end loop;
     err := Difference(jm,s.vm);
     put("The error : "); put(err,3); new_line;
+    Compute(s.pwt,s.mxe,xpt);
+    EvalDiff(s,xpt);
+    put_line("The evaluation at a point : ");
+    for k in s.yv'range loop
+      put(s.yv(k)(0)); new_line;
+      put(px(k).cff(0)); new_line;
+    end loop;
+    put_line("The Jacobian matrix at a point : "); put(s.vm(0).all);
+    put_line("The leading coefficients of the Jacobian :");
+    for i in 1..dim loop
+      for j in 1..dim loop
+        put(" "); put(jm(i,j).cff(0));
+      end loop;
+      new_line;
+    end loop;
     Clear(s);
     QuadDobl_CSeries_Poly_Systems.Clear(p);
     QuadDobl_CSeries_Jaco_Matrices.Clear(jp);
