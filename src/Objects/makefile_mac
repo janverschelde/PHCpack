@@ -959,6 +959,10 @@ ts_corcnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_corcnv.adb \
                  -o $(BIN)/ts_corcnv
 
+ts_pcscnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pcscnv.adb \
+                 -o $(BIN)/ts_pcscnv
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
