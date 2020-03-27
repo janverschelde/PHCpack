@@ -1,3 +1,6 @@
+Fri 27 Mar 2020 : moved step_coefficients functions and procedures from
+  the ts_corcnv test procedure into the corrector_convolutions package.
+
 Thu 26 Mar 2020 : basic version of one Newton step in ts_corcnv.
   New package corrector_convolutions with LU correctors, with code from
   the text procedure ts_corcnv.  Added procedures to ts_corcnv to evaluate
