@@ -1,6 +1,7 @@
 Thu 26 Mar 2020 : basic version of one Newton step in ts_corcnv.
   New package corrector_convolutions with LU correctors, with code from
-  the text procedure ts_corcnv.
+  the text procedure ts_corcnv.  Added procedures to ts_corcnv to evaluate
+  the coefficients of the homotopy at a positive step size.
 
 Mon 23 Mar 2020 : new {standard,dobldobl_quaddobl}_homotopy_convolutions_io,
   packages for prompting homotopies represented by convolution circuits,
