@@ -1,20 +1,14 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs_io;
 with Standard_Complex_Vectors;
-with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
-with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
-with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
-with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -25,167 +19,12 @@ with Standard_Homotopy_Convolutions_io;
 with DoblDobl_Homotopy_Convolutions_io;
 with QuadDobl_Homotopy_Convolutions_io;
 with Test_Predictor_Convolutions;
+with Corrector_Convolutions;             use Corrector_Convolutions;
 
 procedure ts_corcnv is
 
 -- DESCRIPTION :
 --   Development of the corrector convolutions.
-
-  procedure LU_Newton_Step
-              ( file : in file_type;
-                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                sol : in out Standard_Complex_Vectors.Vector;
-                dx : out Standard_Complex_Vectors.Vector;
-                ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; verbose : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Does one Newton step with LU factorization,
-  --   in double precision.
-
-  -- ON ENTRY :
-  --   file     to write extra output to if verbose;
-  --   hom      convolution system for a homotopy;
-  --   sol      an initial value for a solution at t = 0;
-  --   verbose  flag to indicate if vectors need to be written.
-
-  -- ON RETURN :
-  --   sol      the updated solution;
-  --   dx       the update vector applied to the solution;
-  --   ipvt     pivoting information for the LU factorization;
-  --   info     zero is all went well, if nonzero,
-  --            then the matrix in hom.vm(0) may be singular.
-
-  begin
-    if verbose
-     then put_line(file,"The solution on input : "); put_line(file,sol);
-    end if;
-    Standard_Speelpenning_Convolutions.Compute(hom.pwt,hom.mxe,sol);
-    Standard_Speelpenning_Convolutions.EvalDiff(hom,sol);
-    for k in dx'range loop 
-      dx(k) := -hom.yv(k)(0);
-    end loop;
-    if verbose
-     then put_line(file,"The function value :"); put_line(file,dx);
-    end if;
-    lufac(hom.vm(0).all,hom.dim,ipvt,info);
-    if info = 0 then
-      lusolve(hom.vm(0).all,hom.dim,ipvt,dx);
-      if verbose
-       then put_line(file,"The update : "); put_line(file,dx);
-      end if;
-      for k in dx'range loop
-        sol(k) := sol(k) + dx(k);
-      end loop;
-      if verbose
-       then put_line(file,"The updated solution : "); put_line(file,sol);
-      end if;
-    end if;
-  end LU_Newton_Step;
-
-  procedure LU_Newton_Step
-              ( file : in file_type;
-                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                sol : in out DoblDobl_Complex_Vectors.Vector;
-                dx : out DoblDobl_Complex_Vectors.Vector;
-                ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; verbose : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Does one Newton step with LU factorization,
-  --   in double double precision.
-
-  -- ON ENTRY :
-  --   file     to write extra output to if verbose;
-  --   hom      convolution system for a homotopy;
-  --   sol      an initial value for a solution at t = 0;
-  --   verbose  flag to indicate if vectors need to be written.
-
-  -- ON RETURN :
-  --   sol      the updated solution;
-  --   dx       the update vector applied to the solution;
-  --   ipvt     pivoting information for the LU factorization;
-  --   info     zero is all went well, if nonzero,
-  --            then the matrix in hom.vm(0) may be singular.
-
-  begin
-    if verbose
-     then put_line(file,"The solution on input : "); put_line(file,sol);
-    end if;
-    DoblDobl_Speelpenning_Convolutions.Compute(hom.pwt,hom.mxe,sol);
-    DOblDobl_Speelpenning_Convolutions.EvalDiff(hom,sol);
-    for k in dx'range loop 
-      dx(k) := -hom.yv(k)(0);
-    end loop;
-    if verbose
-     then put_line(file,"The function value :"); put_line(file,dx);
-    end if;
-    lufac(hom.vm(0).all,hom.dim,ipvt,info);
-    if info = 0 then
-      lusolve(hom.vm(0).all,hom.dim,ipvt,dx);
-      if verbose
-       then put_line(file,"The update : "); put_line(file,dx);
-      end if;
-      for k in dx'range loop
-        sol(k) := sol(k) + dx(k);
-      end loop;
-      if verbose
-       then put_line(file,"The updated solution : "); put_line(file,sol);
-      end if;
-    end if;
-  end LU_Newton_Step;
-
-  procedure LU_Newton_Step
-              ( file : in file_type;
-                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                sol : in out QuadDobl_Complex_Vectors.Vector;
-                dx : out QuadDobl_Complex_Vectors.Vector;
-                ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; verbose : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Does one Newton step with LU factorization,
-  --   in quad double precision.
-
-  -- ON ENTRY :
-  --   file     to write extra output to if verbose;
-  --   hom      convolution system for a homotopy;
-  --   sol      an initial value for a solution at t = 0;
-  --   verbose  flag to indicate if vectors need to be written.
-
-  -- ON RETURN :
-  --   sol      the updated solution;
-  --   dx       the update vector applied to the solution;
-  --   ipvt     pivoting information for the LU factorization;
-  --   info     zero is all went well, if nonzero,
-  --            then the matrix in hom.vm(0) may be singular.
-
-  begin
-    if verbose
-     then put_line(file,"The solution on input : "); put_line(file,sol);
-    end if;
-    QuadDobl_Speelpenning_Convolutions.Compute(hom.pwt,hom.mxe,sol);
-    QuadDobl_Speelpenning_Convolutions.EvalDiff(hom,sol);
-    for k in dx'range loop 
-      dx(k) := -hom.yv(k)(0);
-    end loop;
-    if verbose
-     then put_line(file,"The function value :"); put_line(file,dx);
-    end if;
-    lufac(hom.vm(0).all,hom.dim,ipvt,info);
-    if info = 0 then
-      lusolve(hom.vm(0).all,hom.dim,ipvt,dx);
-      if verbose
-       then put_line(file,"The update : "); put_line(file,dx);
-      end if;
-      for k in dx'range loop
-        sol(k) := sol(k) + dx(k);
-      end loop;
-      if verbose
-       then put_line(file,"The updated solution : "); put_line(file,sol);
-      end if;
-    end if;
-  end LU_Newton_Step;
 
   procedure Standard_Run_Newton
               ( chom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -195,18 +34,27 @@ procedure ts_corcnv is
   --   Runs Newton's method on the homotopy in chom,
   --   starting at the solutions in sols, in double precision.
 
-    ls : constant Standard_Complex_Solutions.Link_to_Solution
-       := Standard_Complex_Solutions.Head_Of(sols);
+    use Standard_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution := Head_Of(sols);
     dx : Standard_Complex_Vectors.Vector(ls.v'range);
     ipvt : Standard_Integer_Vectors.Vector(dx'range);
-    info : integer32;
+    info,nbrit : integer32;
     ans : character;
+    maxit : constant integer32 := 4;
+    tol : constant double_float := 1.0E-12;
+    nrm : double_float;
+    fail : boolean;
 
   begin
-    loop
-      LU_Newton_Step(standard_output,chom,ls.v,dx,ipvt,info);
-      put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
+    while not Is_Null(tmp) loop
+      ls := Head_of(tmp);
+      LU_Newton_Steps
+        (standard_output,chom,ls.v,maxit,nbrit,tol,nrm,dx,ipvt,info,fail);
+      put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
+      tmp := Tail_Of(tmp);
     end loop;
   end Standard_Run_Newton;
 
@@ -218,18 +66,27 @@ procedure ts_corcnv is
   --   Runs Newton's method on the homotopy in chom,
   --   starting at the solutions in sols, in double double precision.
 
-    ls : constant DoblDobl_Complex_Solutions.Link_to_Solution
-       := DoblDobl_Complex_Solutions.Head_Of(sols);
+    use DoblDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution := Head_Of(sols);
     dx : DoblDobl_Complex_Vectors.Vector(ls.v'range);
     ipvt : Standard_Integer_Vectors.Vector(dx'range);
-    info : integer32;
+    info,nbrit : integer32;
     ans : character;
+    maxit : constant integer32 := 4;
+    tol : constant double_float := 1.0E-24;
+    nrm : double_double;
+    fail : boolean;
 
   begin
-    loop
-      LU_Newton_Step(standard_output,chom,ls.v,dx,ipvt,info);
-      put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
+    while not Is_Null(tmp) loop
+      ls := Head_of(tmp);
+      LU_Newton_Steps
+        (standard_output,chom,ls.v,maxit,nbrit,tol,nrm,dx,ipvt,info,fail);
+      put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
+      tmp := Tail_Of(tmp);
     end loop;
   end DoblDobl_Run_Newton;
 
@@ -241,18 +98,27 @@ procedure ts_corcnv is
   --   Runs Newton's method on the homotopy in chom,
   --   starting at the solutions in sols, in quad double precision.
 
-    ls : constant QuadDobl_Complex_Solutions.Link_to_Solution
-       := QuadDobl_Complex_Solutions.Head_Of(sols);
+    use QuadDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution := Head_Of(sols);
     dx : QuadDobl_Complex_Vectors.Vector(ls.v'range);
     ipvt : Standard_Integer_Vectors.Vector(dx'range);
-    info : integer32;
+    info,nbrit : integer32;
     ans : character;
+    maxit : constant integer32 := 4;
+    tol : constant double_float := 1.0E-48;
+    nrm : quad_double;
+    fail : boolean;
 
   begin
-    loop
-      LU_Newton_Step(standard_output,chom,ls.v,dx,ipvt,info);
-      put("Do another step ? (y/n) "); Ask_Yes_or_No(ans);
+    while not Is_Null(tmp) loop
+      ls := Head_of(tmp);
+      LU_Newton_Steps
+        (standard_output,chom,ls.v,maxit,nbrit,tol,nrm,dx,ipvt,info,fail);
+      put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
+      tmp := Tail_Of(tmp);
     end loop;
   end QuadDobl_Run_Newton;
 
