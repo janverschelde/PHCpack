@@ -92,6 +92,7 @@ quaddobl_predictor_convolutions   : quaddobl predictor convolution homotopies
 test_predictor_convolutions       : checks start solutions
 ts_padepcnv                       : Pade predictors for convolution circuits
 ts_predstep                       : test setting of step size
+ts_pcscnv                         : test predictor-corrector-shift step
 -------------------------------------------------------------------------------
 homotopy_continuation_parameters    : parameters and tolerances
 homotopy_continuation_parameters_io : output and tuning of arameters 

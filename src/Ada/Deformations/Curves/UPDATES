@@ -1,5 +1,6 @@
 Fri 27 Mar 2020 : moved step_coefficients functions and procedures from
   the ts_corcnv test procedure into the corrector_convolutions package.
+  New test procedure ts_pcscnv for one predictor-corrector-shift step.
 
 Thu 26 Mar 2020 : basic version of one Newton step in ts_corcnv.
   New package corrector_convolutions with LU correctors, with code from
