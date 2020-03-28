@@ -10,6 +10,9 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
+with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -35,6 +38,175 @@ procedure ts_pcscnv is
 --   Development of one predictor-corrector-shift step with
 --   a homotopy system of convolution circuits.
 
+  procedure Predictor_Corrector_Loop
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in out Standard_Complex_Vectors.Vector;
+                step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                fail : out boolean; verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Does one predictor-corrector step in double precision.
+
+  -- ON ENTRY :
+  --   file     to write the extra output to;
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   pars     values for the tolerances and parameters;
+  --   prd      work space for the Newton-Fabry-Pade predictor;
+  --   psv      work space vectors for the predictor;
+  --   svh      work space for Hessian convolutions;
+  --   sol      a start solution;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the Hessian step was minimal;
+  --   nbmaxm   number of times the maximum step was minimal;
+  --   verbose  flag for extra output.
+
+  -- ON RETURN :
+  --   sol      the corrected solution if not fail;
+  --   step     the step size;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the Hessian step was minimal;
+  --   nbmaxm   updated number of times the maximum step was minimal;
+  --   fail     true if the prescribed tolerance was not reached,
+  --            false otherwise.
+
+    use Standard_Predictor_Convolutions;
+
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    deg : constant integer32 := numdeg + dendeg + 2;
+    maxit : constant integer32 := 4;
+
+  begin
+    prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
+    Set_Lead_Coefficients(prd,sol);
+    svh.vals := (svh.vals'range => Standard_Complex_Numbers.Create(0.0));
+    SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
+      nbpole,nbhess,nbmaxm,false,verbose);
+  end Predictor_Corrector_Loop;
+
+  procedure Predictor_Corrector_Loop
+              ( file : in file_type;
+                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                prd : in out DoblDobl_Predictor_Convolutions.Predictor;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                fail : out boolean; verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Does one predictor-corrector step in double double precision.
+
+  -- ON ENTRY :
+  --   file     to write the extra output to;
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   pars     values for the tolerances and parameters;
+  --   prd      work space for the Newton-Fabry-Pade predictor;
+  --   psv      work space vectors for the predictor;
+  --   svh      work space for Hessian convolutions;
+  --   sol      a start solution;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the Hessian step was minimal;
+  --   nbmaxm   number of times the maximum step was minimal;
+  --   verbose  flag for extra output.
+
+  -- ON RETURN :
+  --   sol      the corrected solution if not fail;
+  --   step     the step size;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the Hessian step was minimal;
+  --   nbmaxm   updated number of times the maximum step was minimal;
+  --   fail     true if the prescribed tolerance was not reached,
+  --            false otherwise.
+
+    use DoblDobl_Predictor_Convolutions;
+
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    deg : constant integer32 := numdeg + dendeg + 2;
+    maxit : constant integer32 := 4;
+    zero : constant DoblDobl_Complex_Numbers.Complex_Number
+         := DoblDobl_Complex_Numbers.Create(integer(0));
+
+  begin
+    prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
+    Set_Lead_Coefficients(prd,sol);
+    svh.vals := (svh.vals'range => zero);
+    SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
+      nbpole,nbhess,nbmaxm,false,verbose);
+  end Predictor_Corrector_Loop;
+
+  procedure Predictor_Corrector_Loop
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                prd : in out QuadDobl_Predictor_Convolutions.Predictor;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                step : out quad_double;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                fail : out boolean; verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Does one predictor-corrector step in quad double precision.
+
+  -- ON ENTRY :
+  --   file     to write the extra output to;
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   pars     values for the tolerances and parameters;
+  --   prd      work space for the Newton-Fabry-Pade predictor;
+  --   psv      work space vectors for the predictor;
+  --   svh      work space for Hessian convolutions;
+  --   sol      a start solution;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the Hessian step was minimal;
+  --   nbmaxm   number of times the maximum step was minimal;
+  --   verbose  flag for extra output.
+
+  -- ON RETURN :
+  --   sol      the corrected solution if not fail;
+  --   step     the step size;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the Hessian step was minimal;
+  --   nbmaxm   updated number of times the maximum step was minimal;
+  --   fail     true if the prescribed tolerance was not reached,
+  --            false otherwise.
+
+    use QuadDobl_Predictor_Convolutions;
+
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    deg : constant integer32 := numdeg + dendeg + 2;
+    maxit : constant integer32 := 4;
+    zero : constant QuadDobl_Complex_Numbers.Complex_Number
+         := QuadDobl_Complex_Numbers.Create(integer(0));
+
+  begin
+    prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
+    Set_Lead_Coefficients(prd,sol);
+    svh.vals := (svh.vals'range => zero);
+    SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
+      nbpole,nbhess,nbmaxm,false,verbose);
+  end Predictor_Corrector_Loop;
+
   procedure Standard_Run
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -52,10 +224,6 @@ procedure ts_pcscnv is
 
     use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
 
-    numdeg : constant integer32 := integer32(pars.numdeg);
-    dendeg : constant integer32 := integer32(pars.dendeg);
-    deg : constant integer32 := numdeg + dendeg + 2;
-    maxit : constant integer32 := 4;
     prd : Predictor;
     psv : Predictor_Vectors(hom.dim,hom.neq);
     hss : SVD_Hessians(hom.dim,hom.dim+1);
@@ -70,17 +238,14 @@ procedure ts_pcscnv is
   begin
     loop
       ls := Head_Of(solsptr);
-      prd := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
-      Set_Lead_Coefficients(prd,ls.v);
-      hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
-      SVD_Prediction(standard_output,hom,abh,prd.svdata,svh,psv,maxit,
-        pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
-        nbpole,nbhess,nbmaxm,false,true);
+      Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
+        ls.v,step,nbpole,nbhess,nbmaxm,fail,true);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       solsptr := Tail_Of(solsptr);
     end loop;
+    Clear(svh);
   end Standard_Run;
 
   procedure DoblDobl_Run
@@ -100,10 +265,6 @@ procedure ts_pcscnv is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Predictor_Convolutions;
 
-    numdeg : constant integer32 := integer32(pars.numdeg);
-    dendeg : constant integer32 := integer32(pars.dendeg);
-    deg : constant integer32 := numdeg + dendeg + 2;
-    maxit : constant integer32 := 4;
     prd : Predictor;
     psv : Predictor_Vectors(hom.dim,hom.neq);
     hss : SVD_Hessians(hom.dim,hom.dim+1);
@@ -113,24 +274,19 @@ procedure ts_pcscnv is
     nbpole,nbhess,nbmaxm : natural32 := 0;
     step : double_double;
     fail : boolean;
-    zero : constant DoblDobl_Complex_Numbers.Complex_Number
-         := DoblDobl_Complex_Numbers.Create(integer(0));
     ans : character;
 
   begin
     loop
       ls := Head_Of(solsptr);
-      prd := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
-      Set_Lead_Coefficients(prd,ls.v);
-      hss.vals := (hss.vals'range => zero);
-      SVD_Prediction(standard_output,hom,abh,prd.svdata,svh,psv,maxit,
-        pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
-        nbpole,nbhess,nbmaxm,false,true);
+      Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
+        ls.v,step,nbpole,nbhess,nbmaxm,fail,true);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       solsptr := Tail_Of(solsptr);
     end loop;
+    Clear(svh);
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
@@ -150,10 +306,6 @@ procedure ts_pcscnv is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Predictor_Convolutions;
 
-    numdeg : constant integer32 := integer32(pars.numdeg);
-    dendeg : constant integer32 := integer32(pars.dendeg);
-    deg : constant integer32 := integer32(pars.numdeg + pars.dendeg + 2);
-    maxit : constant integer32 := 4;
     prd : Predictor;
     psv : Predictor_Vectors(hom.dim,hom.neq);
     hss : SVD_Hessians(hom.dim,hom.dim+1);
@@ -163,24 +315,19 @@ procedure ts_pcscnv is
     nbpole,nbhess,nbmaxm : natural32 := 0;
     step : quad_double;
     fail : boolean;
-    zero : constant QuadDobl_Complex_Numbers.Complex_Number
-         := QuadDobl_Complex_Numbers.Create(integer(0));
     ans : character;
 
   begin
     loop
       ls := Head_Of(solsptr);
-      prd := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
-      Set_Lead_Coefficients(prd,ls.v);
-      hss.vals := (hss.vals'range => zero);
-      SVD_Prediction(standard_output,hom,abh,prd.svdata,svh,psv,maxit,
-        pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
-        nbpole,nbhess,nbmaxm,false,true);
+      Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
+        ls.v,step,nbpole,nbhess,nbmaxm,fail,true);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       solsptr := Tail_Of(solsptr);
     end loop;
+    Clear(svh);
   end QuadDobl_Run;
 
   procedure Standard_Test is
