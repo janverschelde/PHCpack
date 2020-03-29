@@ -1,4 +1,5 @@
 Sat 28 Mar 2020 : new predictor_corrector_loop procedures in ts_pcscnv.
+  Added application of corrector in ts_pcscnv.
 
 Fri 27 Mar 2020 : moved step_coefficients functions and procedures from
   the ts_corcnv test procedure into the corrector_convolutions package.

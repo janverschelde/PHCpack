@@ -10,6 +10,7 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
+with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -31,6 +32,7 @@ with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
+with Corrector_Convolutions;             use Corrector_Convolutions;
 
 procedure ts_pcscnv is
 
@@ -47,6 +49,8 @@ procedure ts_pcscnv is
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 sol : in out Standard_Complex_Vectors.Vector;
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
                 step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
@@ -69,7 +73,9 @@ procedure ts_pcscnv is
   --   verbose  flag for extra output.
 
   -- ON RETURN :
-  --   sol      the corrected solution if not fail;
+  --   sol      the corrected solution;
+  --   dx       last update to the solution
+  --   ipvt     pivoting information for the LU Newton steps;
   --   step     the step size;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
@@ -83,6 +89,8 @@ procedure ts_pcscnv is
     dendeg : constant integer32 := integer32(pars.dendeg);
     deg : constant integer32 := numdeg + dendeg + 2;
     maxit : constant integer32 := 4;
+    info,nbrit : integer32 := 0;
+    nrm : double_float;
 
   begin
     prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
@@ -91,6 +99,10 @@ procedure ts_pcscnv is
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
+    sol := psv.sol;
+    Step_Coefficient(hom,step);
+    LU_Newton_Steps
+      (file,hom,sol,maxit,nbrit,pars.tolres,nrm,dx,ipvt,info,fail,verbose);
   end Predictor_Corrector_Loop;
 
   procedure Predictor_Corrector_Loop
@@ -102,6 +114,8 @@ procedure ts_pcscnv is
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
                 step : out double_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
@@ -124,7 +138,9 @@ procedure ts_pcscnv is
   --   verbose  flag for extra output.
 
   -- ON RETURN :
-  --   sol      the corrected solution if not fail;
+  --   sol      the corrected solution;
+  --   dx       last update to the solution;
+  --   ipvt     pivoting information for the LU Newton steps;
   --   step     the step size;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
@@ -140,6 +156,8 @@ procedure ts_pcscnv is
     maxit : constant integer32 := 4;
     zero : constant DoblDobl_Complex_Numbers.Complex_Number
          := DoblDobl_Complex_Numbers.Create(integer(0));
+    info,nbrit : integer32 := 0;
+    nrm : double_double;
 
   begin
     prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
@@ -148,6 +166,10 @@ procedure ts_pcscnv is
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
+    sol := psv.sol;
+    Step_Coefficient(hom,step);
+    LU_Newton_Steps
+      (file,hom,sol,maxit,nbrit,pars.tolres,nrm,dx,ipvt,info,fail,verbose);
   end Predictor_Corrector_Loop;
 
   procedure Predictor_Corrector_Loop
@@ -159,6 +181,8 @@ procedure ts_pcscnv is
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 sol : in out QuadDobl_Complex_Vectors.Vector;
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
                 step : out quad_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
@@ -181,7 +205,9 @@ procedure ts_pcscnv is
   --   verbose  flag for extra output.
 
   -- ON RETURN :
-  --   sol      the corrected solution if not fail;
+  --   sol      the corrected solution;
+  --   dx       last update to the solution;
+  --   ipvt     pivoting information for the LU Newton steps;
   --   step     the step size;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
@@ -197,6 +223,8 @@ procedure ts_pcscnv is
     maxit : constant integer32 := 4;
     zero : constant QuadDobl_Complex_Numbers.Complex_Number
          := QuadDobl_Complex_Numbers.Create(integer(0));
+    info,nbrit : integer32 := 0;
+    nrm : quad_double;
 
   begin
     prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
@@ -205,6 +233,10 @@ procedure ts_pcscnv is
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
+    sol := psv.sol;
+    Step_Coefficient(hom,step);
+    LU_Newton_Steps
+      (file,hom,sol,maxit,nbrit,pars.tolres,nrm,dx,ipvt,info,fail,verbose);
   end Predictor_Corrector_Loop;
 
   procedure Standard_Run
@@ -234,12 +266,14 @@ procedure ts_pcscnv is
     step : double_float;
     fail : boolean;
     ans : character;
+    ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
+    dx : Standard_Complex_Vectors.Vector(1..hom.dim);
 
   begin
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        ls.v,step,nbpole,nbhess,nbmaxm,fail,true);
+        ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -275,12 +309,14 @@ procedure ts_pcscnv is
     step : double_double;
     fail : boolean;
     ans : character;
+    ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
+    dx : DoblDobl_Complex_Vectors.Vector(1..hom.dim);
 
   begin
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        ls.v,step,nbpole,nbhess,nbmaxm,fail,true);
+        ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -316,12 +352,14 @@ procedure ts_pcscnv is
     step : quad_double;
     fail : boolean;
     ans : character;
+    ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
+    dx : QuadDobl_Complex_Vectors.Vector(1..hom.dim);
 
   begin
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        ls.v,step,nbpole,nbhess,nbmaxm,fail,true);
+        ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
