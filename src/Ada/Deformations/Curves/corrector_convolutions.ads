@@ -8,8 +8,11 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -20,6 +23,91 @@ package Corrector_Convolutions is
 --   The procedures in this package run Newton's method at a point,
 --   on the leading coefficients of systems of convolution circuits,
 --   to correct a solution after a predictor step.
+
+-- MANAGEMENT OF LEADING COEFFICIENTS :
+
+  procedure Store_Leading_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
+                lead : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Store_Leading_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                lead : in DoblDobl_Complex_Vectors.Link_to_Vector );
+  procedure Store_Leading_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                lead : in QuadDobl_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Stores the leading coefficients of c into the vector lead.
+
+  -- REQUIRED :
+  --   c /= null and lead /= 0,
+  --   lead'range = 0..c.nbr, where lead(0) is zero if c.cst is null.
+
+  procedure Restore_Leading_Coefficients
+              ( lead : in Standard_Complex_Vectors.Link_to_Vector;
+                c : in Standard_Speelpenning_Convolutions.Link_to_Circuit );
+  procedure Restore_Leading_Coefficients
+              ( lead : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit );
+  procedure Restore_Leading_Coefficients
+              ( lead : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit );
+
+  -- DESCRIPTION :
+  --   Restores the values of the leading coefficients of c,
+  --   using the values in the vector lead.
+
+  -- REQUIRED :
+  --   lead /= null and c /= null;
+  --   lead'range = 0..c.nbr, if c.cst is zero, then it will
+  --   not be assigned, regardless of the value of lead(0) is zero.
+
+  procedure Allocate_Leading_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+                lead : out Standard_Complex_VecVecs.Link_to_VecVec );
+  procedure Allocate_Leading_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+                lead : out DoblDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure Allocate_Leading_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+                lead : out QuadDobl_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Allocates space for the leading coefficients in c.
+
+  procedure Store_Leading_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+                lead : in Standard_Complex_VecVecs.Link_to_VecVec );
+  procedure Store_Leading_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+                lead : in DoblDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure Store_Leading_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+                lead : in QuadDobl_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Stores the leading coefficients of the circuits in c
+  --   into the vector of lead.
+
+  -- REQUIRED :
+  --   Allocate_Leading_Coefficients(c,lead) was executed.
+
+  procedure Restore_Leading_Coefficients
+              ( lead : in Standard_Complex_VecVecs.Link_to_VecVec;
+                c : in Standard_Speelpenning_Convolutions.Circuits );
+  procedure Restore_Leading_Coefficients
+              ( lead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                c : in DoblDobl_Speelpenning_Convolutions.Circuits );
+  procedure Restore_Leading_Coefficients
+              ( lead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                c : in QuadDobl_Speelpenning_Convolutions.Circuits );
+
+  -- DESCRIPTION :
+  --   Using the leading coefficients in lead, restores the leading
+  --   coefficients in the circuits c.
+
+  -- REQUIRED :
+  --   Store_Leading_Coefficients(c,lead) was executed.
 
 -- STEP COEFFICIENTS :
 --   The correct is applied to check whether a step size is good.
@@ -72,6 +160,8 @@ package Corrector_Convolutions is
   --   Replaces the leading coefficient of all series in hom by
   --   the series coefficient evaluated at t,
   --   in double, double double, and quad double precision.
+
+-- RUNNING NEWTON'S METHOD :
 
   procedure LU_Newton_Step
               ( file : in file_type;

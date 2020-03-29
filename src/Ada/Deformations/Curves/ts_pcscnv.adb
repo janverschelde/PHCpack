@@ -12,8 +12,11 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -268,18 +271,24 @@ procedure ts_pcscnv is
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : Standard_Complex_Vectors.Vector(1..hom.dim);
+    lead : Standard_Complex_VecVecs.Link_to_VecVec;
 
   begin
+    Allocate_Leading_Coefficients(hom.crc,lead);
+    Store_Leading_Coefficients(hom.crc,lead);
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
         ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      solsptr := Tail_Of(solsptr);
+      Restore_Leading_Coefficients(lead,hom.crc);
     end loop;
     Clear(svh);
+    Standard_Complex_VecVecs.Deep_Clear(lead);
   end Standard_Run;
 
   procedure DoblDobl_Run
@@ -311,18 +320,24 @@ procedure ts_pcscnv is
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : DoblDobl_Complex_Vectors.Vector(1..hom.dim);
+    lead : DoblDobl_Complex_VecVecs.Link_to_VecVec;
 
   begin
+    Allocate_Leading_Coefficients(hom.crc,lead);
+    Store_Leading_Coefficients(hom.crc,lead);
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
         ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      solsptr := Tail_Of(solsptr);
+      Restore_Leading_Coefficients(lead,hom.crc);
     end loop;
     Clear(svh);
+    DoblDobl_Complex_VecVecs.Deep_Clear(lead);
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
@@ -354,18 +369,24 @@ procedure ts_pcscnv is
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : QuadDobl_Complex_Vectors.Vector(1..hom.dim);
+    lead : QuadDobl_Complex_VecVecs.Link_to_VecVec;
 
   begin
+    Allocate_Leading_Coefficients(hom.crc,lead);
+    Store_Leading_Coefficients(hom.crc,lead);
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
         ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      solsptr := Tail_Of(solsptr);
+      Restore_Leading_Coefficients(lead,hom.crc);
     end loop;
     Clear(svh);
+    QuadDobl_Complex_VecVecs.Deep_Clear(lead);
   end QuadDobl_Run;
 
   procedure Standard_Test is
