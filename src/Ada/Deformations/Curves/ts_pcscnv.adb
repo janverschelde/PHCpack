@@ -51,7 +51,6 @@ procedure ts_pcscnv is
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
-                sol : in out Standard_Complex_Vectors.Vector;
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 step : out double_float;
@@ -67,16 +66,16 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   pars     values for the tolerances and parameters;
   --   prd      work space for the Newton-Fabry-Pade predictor;
-  --   psv      work space vectors for the predictor;
+  --   psv      work space vectors for the predictor,
+  --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
-  --   sol      a start solution;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
   --   verbose  flag for extra output.
 
   -- ON RETURN :
-  --   sol      the corrected solution;
+  --   psv.sol  the corrected solution;
   --   dx       last update to the solution
   --   ipvt     pivoting information for the LU Newton steps;
   --   step     the step size;
@@ -96,13 +95,12 @@ procedure ts_pcscnv is
     mixres : double_float;
 
   begin
-    prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
-    Set_Lead_Coefficients(prd,sol);
+    prd := Create(psv.sol,hom.neq,deg,numdeg,dendeg,SVD);
+    Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => Standard_Complex_Numbers.Create(0.0));
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
-    sol := psv.sol;
     Step_Coefficient(hom,step);
     Step_Coefficient(abh,step);
     LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
@@ -117,7 +115,6 @@ procedure ts_pcscnv is
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
-                sol : in out DoblDobl_Complex_Vectors.Vector;
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 step : out double_double;
@@ -133,16 +130,16 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   pars     values for the tolerances and parameters;
   --   prd      work space for the Newton-Fabry-Pade predictor;
-  --   psv      work space vectors for the predictor;
+  --   psv      work space vectors for the predictor,
+  --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
-  --   sol      a start solution;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
   --   verbose  flag for extra output.
 
   -- ON RETURN :
-  --   sol      the corrected solution;
+  --   psv.sol  the corrected solution;
   --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
   --   step     the step size;
@@ -164,13 +161,12 @@ procedure ts_pcscnv is
     mixres : double_double;
 
   begin
-    prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
-    Set_Lead_Coefficients(prd,sol);
+    prd := Create(psv.sol,hom.neq,deg,numdeg,dendeg,SVD);
+    Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => zero);
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
-    sol := psv.sol;
     Step_Coefficient(hom,step);
     Step_Coefficient(abh,step);
     LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
@@ -185,7 +181,6 @@ procedure ts_pcscnv is
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
-                sol : in out QuadDobl_Complex_Vectors.Vector;
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 step : out quad_double;
@@ -201,16 +196,16 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   pars     values for the tolerances and parameters;
   --   prd      work space for the Newton-Fabry-Pade predictor;
-  --   psv      work space vectors for the predictor;
+  --   psv      work space vectors for the predictor,
+  --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
-  --   sol      a start solution;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
   --   verbose  flag for extra output.
 
   -- ON RETURN :
-  --   sol      the corrected solution;
+  --   psv.sol  the corrected solution;
   --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
   --   step     the step size;
@@ -232,13 +227,12 @@ procedure ts_pcscnv is
     mixres : quad_double;
 
   begin
-    prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
-    Set_Lead_Coefficients(prd,sol);
+    prd := Create(psv.sol,hom.neq,deg,numdeg,dendeg,SVD);
+    Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => zero);
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
-    sol := psv.sol;
     Step_Coefficient(hom,step);
     Step_Coefficient(abh,step);
     LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
@@ -282,9 +276,9 @@ procedure ts_pcscnv is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
-      ls := Head_Of(solsptr);
+      ls := Head_Of(solsptr); psv.sol := ls.v;
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+        dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -335,9 +329,9 @@ procedure ts_pcscnv is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
-      ls := Head_Of(solsptr);
+      ls := Head_Of(solsptr); psv.sol := ls.v;
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+        dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -388,9 +382,9 @@ procedure ts_pcscnv is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
-      ls := Head_Of(solsptr);
+      ls := Head_Of(solsptr); psv.sol := ls.v;
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        ls.v,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+        dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
