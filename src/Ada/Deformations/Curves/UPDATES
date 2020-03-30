@@ -1,5 +1,7 @@
 Sun 29 Mar 2020 : added store and restore procedures for the leading
   coefficients to corrector_convolutions, tested by ts_pcscnv.
+  Added mixed residuals to corrector_convolutions, tested by ts_corcnv
+  and ts_pcscnv.
 
 Sat 28 Mar 2020 : new predictor_corrector_loop procedures in ts_pcscnv.
   Added application of corrector in ts_pcscnv.

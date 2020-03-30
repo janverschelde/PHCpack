@@ -93,7 +93,7 @@ procedure ts_pcscnv is
     deg : constant integer32 := numdeg + dendeg + 2;
     maxit : constant integer32 := 4;
     info,nbrit : integer32 := 0;
-    nrm : double_float;
+    mixres : double_float;
 
   begin
     prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
@@ -104,8 +104,9 @@ procedure ts_pcscnv is
       nbpole,nbhess,nbmaxm,false,verbose);
     sol := psv.sol;
     Step_Coefficient(hom,step);
-    LU_Newton_Steps
-      (file,hom,sol,maxit,nbrit,pars.tolres,nrm,dx,ipvt,info,fail,verbose);
+    Step_Coefficient(abh,step);
+    LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
+                    dx,ipvt,info,fail,verbose);
   end Predictor_Corrector_Loop;
 
   procedure Predictor_Corrector_Loop
@@ -160,7 +161,7 @@ procedure ts_pcscnv is
     zero : constant DoblDobl_Complex_Numbers.Complex_Number
          := DoblDobl_Complex_Numbers.Create(integer(0));
     info,nbrit : integer32 := 0;
-    nrm : double_double;
+    mixres : double_double;
 
   begin
     prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
@@ -171,8 +172,9 @@ procedure ts_pcscnv is
       nbpole,nbhess,nbmaxm,false,verbose);
     sol := psv.sol;
     Step_Coefficient(hom,step);
-    LU_Newton_Steps
-      (file,hom,sol,maxit,nbrit,pars.tolres,nrm,dx,ipvt,info,fail,verbose);
+    Step_Coefficient(abh,step);
+    LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
+                    dx,ipvt,info,fail,verbose);
   end Predictor_Corrector_Loop;
 
   procedure Predictor_Corrector_Loop
@@ -227,7 +229,7 @@ procedure ts_pcscnv is
     zero : constant QuadDobl_Complex_Numbers.Complex_Number
          := QuadDobl_Complex_Numbers.Create(integer(0));
     info,nbrit : integer32 := 0;
-    nrm : quad_double;
+    mixres : quad_double;
 
   begin
     prd := Create(sol,hom.neq,deg,numdeg,dendeg,SVD);
@@ -238,8 +240,9 @@ procedure ts_pcscnv is
       nbpole,nbhess,nbmaxm,false,verbose);
     sol := psv.sol;
     Step_Coefficient(hom,step);
-    LU_Newton_Steps
-      (file,hom,sol,maxit,nbrit,pars.tolres,nrm,dx,ipvt,info,fail,verbose);
+    Step_Coefficient(abh,step);
+    LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
+                    dx,ipvt,info,fail,verbose);
   end Predictor_Corrector_Loop;
 
   procedure Standard_Run
@@ -271,11 +274,13 @@ procedure ts_pcscnv is
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : Standard_Complex_Vectors.Vector(1..hom.dim);
-    lead : Standard_Complex_VecVecs.Link_to_VecVec;
+    homlead,abhlead : Standard_Complex_VecVecs.Link_to_VecVec;
 
   begin
-    Allocate_Leading_Coefficients(hom.crc,lead);
-    Store_Leading_Coefficients(hom.crc,lead);
+    Allocate_Leading_Coefficients(hom.crc,homlead);
+    Allocate_Leading_Coefficients(abh.crc,abhlead);
+    Store_Leading_Coefficients(hom.crc,homlead);
+    Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
@@ -285,10 +290,12 @@ procedure ts_pcscnv is
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      Restore_Leading_Coefficients(lead,hom.crc);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
     end loop;
     Clear(svh);
-    Standard_Complex_VecVecs.Deep_Clear(lead);
+    Standard_Complex_VecVecs.Deep_Clear(homlead);
+    Standard_Complex_VecVecs.Deep_Clear(abhlead);
   end Standard_Run;
 
   procedure DoblDobl_Run
@@ -320,11 +327,13 @@ procedure ts_pcscnv is
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : DoblDobl_Complex_Vectors.Vector(1..hom.dim);
-    lead : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+    homlead,abhlead : DoblDobl_Complex_VecVecs.Link_to_VecVec;
 
   begin
-    Allocate_Leading_Coefficients(hom.crc,lead);
-    Store_Leading_Coefficients(hom.crc,lead);
+    Allocate_Leading_Coefficients(hom.crc,homlead);
+    Allocate_Leading_Coefficients(abh.crc,abhlead);
+    Store_Leading_Coefficients(hom.crc,homlead);
+    Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
@@ -334,10 +343,12 @@ procedure ts_pcscnv is
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      Restore_Leading_Coefficients(lead,hom.crc);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
     end loop;
     Clear(svh);
-    DoblDobl_Complex_VecVecs.Deep_Clear(lead);
+    DoblDobl_Complex_VecVecs.Deep_Clear(homlead);
+    DoblDobl_Complex_VecVecs.Deep_Clear(abhlead);
   end DoblDobl_Run;
 
   procedure QuadDobl_Run
@@ -369,11 +380,13 @@ procedure ts_pcscnv is
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : QuadDobl_Complex_Vectors.Vector(1..hom.dim);
-    lead : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+    homlead,abhlead : QuadDobl_Complex_VecVecs.Link_to_VecVec;
 
   begin
-    Allocate_Leading_Coefficients(hom.crc,lead);
-    Store_Leading_Coefficients(hom.crc,lead);
+    Allocate_Leading_Coefficients(hom.crc,homlead);
+    Allocate_Leading_Coefficients(abh.crc,abhlead);
+    Store_Leading_Coefficients(hom.crc,homlead);
+    Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr);
       Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
@@ -383,10 +396,12 @@ procedure ts_pcscnv is
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      Restore_Leading_Coefficients(lead,hom.crc);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
     end loop;
     Clear(svh);
-    QuadDobl_Complex_VecVecs.Deep_Clear(lead);
+    QuadDobl_Complex_VecVecs.Deep_Clear(homlead);
+    QuadDobl_Complex_VecVecs.Deep_Clear(abhlead);
   end QuadDobl_Run;
 
   procedure Standard_Test is

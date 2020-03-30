@@ -5,12 +5,12 @@ with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
-with Standard_Complex_Vector_Norms;
-with DoblDobl_Complex_Vector_Norms;
-with QuadDobl_Complex_Vector_Norms;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
+with Standard_Mixed_Residuals;
+with DoblDobl_Mixed_Residuals;
+with QuadDobl_Mixed_Residuals;
 
 package body Corrector_Convolutions is
 
@@ -548,23 +548,30 @@ package body Corrector_Convolutions is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                sol : in out Standard_Complex_Vectors.Vector;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; nrmdx : out double_float; 
+                tol : in double_float; mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
                 verbose : in boolean := true ) is
+
+    use Standard_Speelpenning_Convolutions;
+
   begin
     fail := true;
     for k in 1..maxit loop
-      LU_Newton_Step(file,hom,sol,dx,ipvt,info,verbose);
-      nrmdx := Standard_Complex_Vector_Norms.Max_Norm(dx);
+      LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
+      psv.res := Eval(hom.crc,psv.sol);
+      psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
+      psv.radres := Eval(abh.crc,psv.radsol);
+      mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(k,1);
-        put(file,", |dx| :"); put(file,nrmdx,3); new_line(file);
+        put(file,", mixres :"); put(file,mixres,3); new_line(file);
       end if;
-      if nrmdx <= tol
+      if mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -574,23 +581,30 @@ package body Corrector_Convolutions is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                sol : in out DoblDobl_Complex_Vectors.Vector;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; nrmdx : out double_double; 
+                tol : in double_float; mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
                 verbose : in boolean := true ) is
+
+    use DoblDobl_Speelpenning_Convolutions;
+
   begin
     fail := true;
     for k in 1..maxit loop
-      LU_Newton_Step(file,hom,sol,dx,ipvt,info,verbose);
-      nrmdx := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
+      LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
+      psv.res := Eval(hom.crc,psv.sol);
+      psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
+      psv.radres := Eval(abh.crc,psv.radsol);
+      mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(k,1);
-        put(file,", |dx| : "); put(file,nrmdx,3); new_line(file);
+        put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if nrmdx <= tol
+      if mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -600,23 +614,30 @@ package body Corrector_Convolutions is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                sol : in out QuadDobl_Complex_Vectors.Vector;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; nrmdx : out quad_double; 
+                tol : in double_float; mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
                 verbose : in boolean := true ) is
+
+    use QuadDobl_Speelpenning_Convolutions;
+
   begin
     fail := true;
     for k in 1..maxit loop
-      LU_Newton_Step(file,hom,sol,dx,ipvt,info,verbose);
-      nrmdx := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
+      LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
+      psv.res := Eval(hom.crc,psv.sol);
+      psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
+      psv.radres := Eval(abh.crc,psv.radsol);
+      mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(k,1);
-        put(file,", |dx| : "); put(file,nrmdx,3); new_line(file);
+        put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if nrmdx <= tol
+      if mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;

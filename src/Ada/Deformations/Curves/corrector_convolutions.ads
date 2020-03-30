@@ -16,6 +16,9 @@ with QuadDobl_Complex_VecVecs;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
+with Standard_Predictor_Convolutions;
+with DoblDobl_Predictor_Convolutions;
+with QuadDobl_Predictor_Convolutions;
 
 package Corrector_Convolutions is
 
@@ -205,9 +208,10 @@ package Corrector_Convolutions is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                sol : in out Standard_Complex_Vectors.Vector;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; nrmdx : out double_float; 
+                tol : in double_float; mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -215,9 +219,10 @@ package Corrector_Convolutions is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
-                sol : in out DoblDobl_Complex_Vectors.Vector;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; nrmdx : out double_double; 
+                tol : in double_float; mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -225,9 +230,10 @@ package Corrector_Convolutions is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
-                sol : in out QuadDobl_Complex_Vectors.Vector;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; nrmdx : out quad_double; 
+                tol : in double_float; mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -240,19 +246,20 @@ package Corrector_Convolutions is
   -- ON ENTRY :
   --   file     to write extra output to if verbose;
   --   hom      convolution system for a homotopy;
-  --   sol      an initial value for a solution at t = 0;
+  --   abh      homotopy with radii for coefficients for mixed residual;
+  --   psv      psv.sol contains an initial value for a solution at t = 0;
   --   maxit    maximum number of iterations;
   --   tol      tolerance on the updatex dx;
   --   verbose  flag to indicate if vectors need to be written.
 
   -- ON RETURN :
-  --   sol      the updated solution;
-  --   nrmdx    max norm of the vector dx;
+  --   psv.sol  the updated solution;
+  --   mixres   the mixed residual;
   --   dx       the update vector applied to the solution;
   --   ipvt     pivoting information for the LU factorization;
   --   info     zero is all went well, if nonzero,
   --            then the matrix in hom.vm(0) may be singular;
-  --   fail     true if nrmdx > tol after maxit iterations,
+  --   fail     true if tolres > tol after maxit iterations,
   --            false otherwise.
 
 end Corrector_Convolutions;
