@@ -3,6 +3,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
@@ -99,8 +100,15 @@ procedure ts_pcscnv is
     Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => Standard_Complex_Numbers.Create(0.0));
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
+    if verbose then
+      if fail
+       then put(file,"Predictor failed to reach tolerance");
+       else put(file,"Predictor reached tolerance");
+      end if;
+      put(file,pars.alpha,3); put_line(file,".");
+    end if;
     Step_Coefficient(hom,step);
     Step_Coefficient(abh,step);
     LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
@@ -165,8 +173,15 @@ procedure ts_pcscnv is
     Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => zero);
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
+    if verbose then
+      if fail
+       then put(file,"Predictor failed to reach tolerance");
+       else put(file,"Predictor reached tolerance");
+      end if;
+      put(file,pars.alpha,3); put_line(file,".");
+    end if;
     Step_Coefficient(hom,step);
     Step_Coefficient(abh,step);
     LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
@@ -231,8 +246,15 @@ procedure ts_pcscnv is
     Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => zero);
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,fail,step,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,fail,step,
       nbpole,nbhess,nbmaxm,false,verbose);
+    if verbose then
+      if fail
+       then put(file,"Predictor failed to reach tolerance");
+       else put(file,"Predictor reached tolerance");
+      end if;
+      put(file,pars.alpha,3); put_line(file,".");
+    end if;
     Step_Coefficient(hom,step);
     Step_Coefficient(abh,step);
     LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,

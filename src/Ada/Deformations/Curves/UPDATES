@@ -1,3 +1,6 @@
+Mon 30 Mar 2020 : added minimum step size to *predictor_convolutions with
+  an explicit setting of the fail, tested by ts_padepcnv and ts_pcscnv.
+
 Sun 29 Mar 2020 : added store and restore procedures for the leading
   coefficients to corrector_convolutions, tested by ts_pcscnv.
   Added mixed residuals to corrector_convolutions, tested by ts_corcnv

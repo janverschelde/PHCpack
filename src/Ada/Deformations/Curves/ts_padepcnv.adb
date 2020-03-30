@@ -55,6 +55,7 @@ procedure ts_padepcnv is
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
+    minstep : constant double_float := 1.0E-6;
     prd : Predictor;
     psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
@@ -77,10 +78,12 @@ procedure ts_padepcnv is
       hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
       if usesvd then
         SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
+          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
+          otp,true);
       else
         LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
+          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
+          otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -117,6 +120,7 @@ procedure ts_padepcnv is
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
+    minstep : constant double_float := 1.0E-6;
     prd : Predictor;
     psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
@@ -139,10 +143,12 @@ procedure ts_padepcnv is
       hss.vals := (hss.vals'range => zero);
       if usesvd then
         SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
+          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
+          otp,true);
       else
         LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
+          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
+          otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -179,6 +185,7 @@ procedure ts_padepcnv is
     beta1 : constant double_float := 5.0E-1;
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
+    minstep : constant double_float := 1.0E-6;
     prd : Predictor;
     psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
@@ -201,10 +208,12 @@ procedure ts_padepcnv is
       hss.vals := (hss.vals'range => zero);
       if usesvd then
         SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
+          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
+          otp,true);
       else
         LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,fail,step,nbpole,nbhess,nbmaxm,otp,true);
+          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
+          otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);

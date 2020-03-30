@@ -341,7 +341,7 @@ package body Standard_Predictor_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Predictor_Vectors;
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
-                step : in out double_float; alpha : in double_float;
+                step : in out double_float; minstep,alpha : in double_float;
                 nrm,mixres : out double_float; nbfail : out integer32;
                 verbose : in boolean := true ) is
 
@@ -377,6 +377,7 @@ package body Standard_Predictor_Convolutions is
          then put(file," >"); put(file,alpha,3); new_line(file);
         end if;
         step := step/2.0; nbfail := nbfail + 1;
+        exit when (step < minstep);
       end if;
     end loop;
   end Predictor_Feedback;
@@ -388,7 +389,7 @@ package body Standard_Predictor_Convolutions is
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
+                alpha,beta1,beta2,maxstep,minstep : in double_float;
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false;
@@ -415,7 +416,8 @@ package body Standard_Predictor_Convolutions is
                eta,nrm,curv_step,verbose);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
-      step,alpha,nrm,mixres,nbfail,verbose);
+      step,minstep,alpha,nrm,mixres,nbfail,verbose);
+    fail := (mixres > alpha);
   end LU_Prediction;
 
   procedure SVD_Prediction
@@ -423,7 +425,7 @@ package body Standard_Predictor_Convolutions is
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
+                alpha,beta1,beta2,maxstep,minstep : in double_float;
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false;
@@ -450,7 +452,8 @@ package body Standard_Predictor_Convolutions is
                eta,nrm,curv_step,verbose);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
-      step,alpha,nrm,mixres,nbfail,verbose);
+      step,minstep,alpha,nrm,mixres,nbfail,verbose);
+    fail := (mixres > alpha);
   end SVD_Prediction;
 
 -- DESTRUCTORS :

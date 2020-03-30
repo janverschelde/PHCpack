@@ -329,14 +329,15 @@ package QuadDobl_Predictor_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Predictor_Vectors;
                 numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
-                step : in out quad_double; alpha : in double_float;
+                step : in out quad_double; minstep,alpha : in double_float;
                 nrm,mixres : out quad_double; nbfail : out integer32;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Given a step size, runs a predictor feedback loop,
-  --   cutting the step size each time in half, until the
-  --   mixed residual is less than the tolerance.
+  --   cutting the step size each time in half,
+  --   until the mixed residual is less than the tolerance,
+  --   or until the step becomes smaller than the minimum step size.
 
   -- ON ENTRY :
   --   file     to write output to if verbose;
@@ -346,6 +347,7 @@ package QuadDobl_Predictor_Convolutions is
   --   numcff   coefficients of the numerator of the Pade approximants;
   --   dencff   coefficients of the denominator of the Pade approximants;
   --   step     current step size;
+  --   minstep  the minimum step size;
   --   alpha    tolerance on the mixed predictor residual;
   --   eva      work space of range 1..hom.dim for Pade evaluation;
   --   radsol   work space for the radii of eva;
@@ -369,7 +371,7 @@ package QuadDobl_Predictor_Convolutions is
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
+                alpha,beta1,beta2,maxstep,minstep : in double_float;
                 fail : out boolean; step : out quad_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false; verbose : in boolean := false );
@@ -396,6 +398,7 @@ package QuadDobl_Predictor_Convolutions is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
+  --   minstep  the minimum step size;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the curve step was minimal;
   --   nbmaxm   number of times the maximum step size was minimal;
@@ -420,7 +423,7 @@ package QuadDobl_Predictor_Convolutions is
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep : in double_float;
+                alpha,beta1,beta2,maxstep,minstep : in double_float;
                 fail : out boolean; step : out quad_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false; verbose : in boolean := false );
@@ -442,6 +445,7 @@ package QuadDobl_Predictor_Convolutions is
   --   beta1    multiplication factor for the pole radius;
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
+  --   minstep  the minimum step size;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the curve step was minimal;
   --   nbmaxm   number of times the maximum step size was minimal;
