@@ -102,6 +102,32 @@ package body Generic_Speelpenning_Convolutions is
     return res;
   end Allocate;
 
+  procedure Copy ( v_from : in Link_to_VecVecVec;
+                   v_to : out Link_to_VecVecVec ) is
+
+    use VecVecs;
+
+  begin
+    Clear(v_to);
+    if v_from /= null then
+      declare
+        pwt : VecVecVec(v_from'range);
+      begin
+        for k in v_from'range loop
+          if v_from(k) /= null then
+            declare
+              vv : VecVecs.VecVec(v_from(k)'range);
+            begin
+              VecVecs.Copy(v_from(k).all,vv);
+              pwt(k) := new VecVecs.VecVec'(vv);
+            end;
+          end if;
+        end loop;
+        v_to := new VecVecVec'(pwt);
+      end;
+    end if;
+  end Copy;
+
   procedure Copy ( c_from : in Circuit; c_to : out Circuit ) is
 
     use Vectors;
@@ -143,6 +169,30 @@ package body Generic_Speelpenning_Convolutions is
     for k in c_from'range loop
       Copy(c_from(k),c_to(k));
     end loop;
+  end Copy;
+
+  procedure Copy ( s_from : in System; s_to : out System ) is
+  begin
+    Copy(s_from.crc,s_to.crc);
+    s_to.mxe := s_from.mxe;
+    Copy(s_from.pwt,s_to.pwt);
+    VecVecs.Copy(s_from.yd,s_to.yd);
+    VecVecs.Copy(s_from.vy,s_to.vy);
+    VecVecs.Copy(s_from.yv,s_to.yv);
+    VecMats.Copy(s_from.vm,s_to.vm);
+  end Copy;
+
+  procedure Copy ( s_from : in Link_to_System; s_to : out Link_to_System ) is
+  begin
+    Clear(s_to);
+    if s_from /= null then
+      declare
+        s : System(s_from.neq,s_from.neq1,s_from.dim,s_from.dim1,s_from.deg);
+      begin
+        Copy(s_from.all,s);
+        s_to := new System'(s);
+      end;
+    end if;
   end Copy;
 
   procedure Compute ( pwt : in Link_to_VecVecVec;
