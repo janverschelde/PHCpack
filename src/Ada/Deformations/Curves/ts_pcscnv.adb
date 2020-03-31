@@ -5,7 +5,9 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
@@ -32,6 +34,9 @@ with QuadDobl_Homotopy;
 with QuadDobl_Homotopy_Convolutions_io;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
+with Standard_Rational_Approximations;
+with DoblDobl_Rational_Approximations;
+with QuadDobl_Rational_Approximations;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
@@ -48,6 +53,7 @@ procedure ts_pcscnv is
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
@@ -65,6 +71,8 @@ procedure ts_pcscnv is
   --   file     to write the extra output to;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
+  --   homlead  leading coefficients for the circuits in hom;
+  --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
@@ -109,16 +117,27 @@ procedure ts_pcscnv is
       end if;
       put(file,pars.alpha,3); put_line(file,".");
     end if;
-    Step_Coefficient(hom,step);
-    Step_Coefficient(abh,step);
-    LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
-                    dx,ipvt,info,fail,verbose);
+    loop
+      Step_Coefficient(hom,step);
+      Step_Coefficient(abh,step);
+      LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
+                      dx,ipvt,info,fail,verbose);
+      exit when not fail;   
+      step := step/2.0;
+      put(file,"Reduced step size to"); put(file,step,3); put_line(file,".");
+      exit when (step < pars.minsize);
+      Standard_Rational_Approximations.Evaluate
+        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+    end loop;
   end Predictor_Corrector_Loop;
 
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
@@ -136,6 +155,8 @@ procedure ts_pcscnv is
   --   file     to write the extra output to;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
+  --   homlead  leading coefficients for the circuits in hom;
+  --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
@@ -182,16 +203,27 @@ procedure ts_pcscnv is
       end if;
       put(file,pars.alpha,3); put_line(file,".");
     end if;
-    Step_Coefficient(hom,step);
-    Step_Coefficient(abh,step);
-    LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
-                    dx,ipvt,info,fail,verbose);
+    loop
+      Step_Coefficient(hom,step);
+      Step_Coefficient(abh,step);
+      LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
+                      dx,ipvt,info,fail,verbose);
+      exit when not fail;
+      step := step/2.0;
+      put(file,"Reduced step size to "); put(file,step,3); put_line(file,".");
+      exit when (step < pars.minsize);
+      DoblDobl_Rational_Approximations.Evaluate
+        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+    end loop;
   end Predictor_Corrector_Loop;
 
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
@@ -209,6 +241,8 @@ procedure ts_pcscnv is
   --   file     to write the extra output to;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
+  --   homlead  leading coefficients for the circuits in hom;
+  --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
@@ -255,10 +289,20 @@ procedure ts_pcscnv is
       end if;
       put(file,pars.alpha,3); put_line(file,".");
     end if;
-    Step_Coefficient(hom,step);
-    Step_Coefficient(abh,step);
-    LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
-                    dx,ipvt,info,fail,verbose);
+    loop
+      Step_Coefficient(hom,step);
+      Step_Coefficient(abh,step);
+      LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
+                      dx,ipvt,info,fail,verbose);
+      exit when not fail;
+      step := step/2.0;
+      put(file,"Reduced step size to "); put(file,step,3); put_line(file,".");
+      exit when (step < pars.minsize);
+      QuadDobl_Rational_Approximations.Evaluate
+        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+    end loop;
   end Predictor_Corrector_Loop;
 
   procedure Standard_Run
@@ -299,8 +343,12 @@ procedure ts_pcscnv is
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+        pars,prd,psv,svh,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      if fail
+       then put_line("Predictor-Corrector loop failed.");
+       else put_line("Predictor-Corrector loop succeeded.");
+      end if;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -352,8 +400,12 @@ procedure ts_pcscnv is
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+        pars,prd,psv,svh,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      if fail
+       then put_line("Predictor-Corrector loop failed.");
+       else put_line("Predictor-Corrector loop succeeded.");
+      end if;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -405,8 +457,12 @@ procedure ts_pcscnv is
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      Predictor_Corrector_Loop(standard_output,hom,abh,pars,prd,psv,svh,
-        dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+        pars,prd,psv,svh,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+      if fail
+       then put_line("Predictor-Corrector loop failed.");
+       else put_line("Predictor-Corrector loop succeeded.");
+      end if;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
