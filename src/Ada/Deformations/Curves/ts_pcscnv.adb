@@ -60,6 +60,7 @@ procedure ts_pcscnv is
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out double_float;
                 step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
@@ -78,6 +79,9 @@ procedure ts_pcscnv is
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
+  --   endt     the end value for the homotopy continuation parameter t;
+  --   acct     accumulated sum of all successful steps, equals the
+  --            current value of the homotopy continuation parameter t;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
@@ -87,6 +91,7 @@ procedure ts_pcscnv is
   --   psv.sol  the corrected solution;
   --   dx       last update to the solution
   --   ipvt     pivoting information for the LU Newton steps;
+  --   acct     updated value for the homotopy continuation parameter t;
   --   step     the step size;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
@@ -108,8 +113,8 @@ procedure ts_pcscnv is
     Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => Standard_Complex_Numbers.Create(0.0));
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,fail,step,
-      nbpole,nbhess,nbmaxm,false,verbose);
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
+      endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
     if verbose then
       if fail
        then put(file,"Predictor failed to reach tolerance");
@@ -144,6 +149,7 @@ procedure ts_pcscnv is
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out double_double;
                 step : out double_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
@@ -162,6 +168,9 @@ procedure ts_pcscnv is
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
+  --   endt     the end value for the homotopy continuation parameter t;
+  --   acct     accumulated sum of all successful steps, equals the
+  --            current value of the homotopy continuation parameter t;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
@@ -172,6 +181,7 @@ procedure ts_pcscnv is
   --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
   --   step     the step size;
+  --   acct     updated value for the homotopy continuation parameter t;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
@@ -194,8 +204,8 @@ procedure ts_pcscnv is
     Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => zero);
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,fail,step,
-      nbpole,nbhess,nbmaxm,false,verbose);
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
+      endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
     if verbose then
       if fail
        then put(file,"Predictor failed to reach tolerance");
@@ -230,6 +240,7 @@ procedure ts_pcscnv is
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out quad_double;
                 step : out quad_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
@@ -248,6 +259,9 @@ procedure ts_pcscnv is
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
+  --   endt     the end value for the homotopy continuation parameter t;
+  --   acct     accumulated sum of all successful steps, equals the
+  --            current value of the homotopy continuation parameter t;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
@@ -257,6 +271,7 @@ procedure ts_pcscnv is
   --   psv.sol  the corrected solution;
   --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
+  --   acct     updated value for the homotopy continuation parameter t;
   --   step     the step size;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
@@ -280,8 +295,8 @@ procedure ts_pcscnv is
     Set_Lead_Coefficients(prd,psv.sol);
     svh.vals := (svh.vals'range => zero);
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,fail,step,
-      nbpole,nbhess,nbmaxm,false,verbose);
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
+      endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
     if verbose then
       if fail
        then put(file,"Predictor failed to reach tolerance");
@@ -329,7 +344,8 @@ procedure ts_pcscnv is
     solsptr : Solution_List := sols;
     ls : Link_to_Solution;
     nbpole,nbhess,nbmaxm : natural32 := 0;
-    step : double_float;
+    endt : constant double_float := 1.0;
+    acct,step : double_float := 0.0;
     fail : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -344,7 +360,8 @@ procedure ts_pcscnv is
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,prd,psv,svh,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+        pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+        fail,true);
       if fail
        then put_line("Predictor-Corrector loop failed.");
        else put_line("Predictor-Corrector loop succeeded.");
@@ -386,7 +403,8 @@ procedure ts_pcscnv is
     solsptr : Solution_List := sols;
     ls : Link_to_Solution;
     nbpole,nbhess,nbmaxm : natural32 := 0;
-    step : double_double;
+    endt : constant double_float := 1.0;
+    acct,step : double_double := create(0.0);
     fail : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -401,7 +419,8 @@ procedure ts_pcscnv is
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,prd,psv,svh,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+        pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+        fail,true);
       if fail
        then put_line("Predictor-Corrector loop failed.");
        else put_line("Predictor-Corrector loop succeeded.");
@@ -443,7 +462,8 @@ procedure ts_pcscnv is
     solsptr : Solution_List := sols;
     ls : Link_to_Solution;
     nbpole,nbhess,nbmaxm : natural32 := 0;
-    step : quad_double;
+    endt : constant double_float := 1.0;
+    acct,step : quad_double := create(0.0);
     fail : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -458,7 +478,8 @@ procedure ts_pcscnv is
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,prd,psv,svh,dx,ipvt,step,nbpole,nbhess,nbmaxm,fail,true);
+        pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+        fail,true);
       if fail
        then put_line("Predictor-Corrector loop failed.");
        else put_line("Predictor-Corrector loop succeeded.");

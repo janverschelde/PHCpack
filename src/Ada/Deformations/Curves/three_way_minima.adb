@@ -93,4 +93,51 @@ package body Three_Way_Minima is
     end if;
   end Minimum;
 
+  procedure Bounded_Update
+              ( t,step : in out double_float;
+                endt,minstep : in double_float ) is
+
+    t_backup : constant double_float := t;
+    endt_bound : constant double_float := endt - minstep;
+
+  begin
+    t := t + step;
+    if t >= endt_bound then
+      t := endt;
+      step := endt - t_backup;
+    end if;
+  end Bounded_Update;
+
+  procedure Bounded_Update
+              ( t,step : in out double_double;
+                endt,minstep : in double_float ) is
+
+    t_backup : constant double_double := t;
+    endt_bound : constant double_float := endt - minstep;
+    dd_endt : constant double_double := create(endt);
+
+  begin
+    t := t + step;
+    if t >= endt_bound then
+      t := dd_endt;
+      step := dd_endt - t_backup;
+    end if;
+  end Bounded_Update;
+
+  procedure Bounded_Update
+              ( t,step : in out quad_double;
+                endt,minstep : in double_float ) is
+
+    t_backup : constant quad_double := t;
+    endt_bound : constant double_float := endt - minstep;
+    qd_endt : constant quad_double := create(endt);
+
+  begin
+    t := t + step;
+    if t >= endt_bound then
+      t := qd_endt;
+      step := qd_endt - t_backup;
+    end if;
+  end Bounded_Update;
+
 end Three_Way_Minima;

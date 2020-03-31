@@ -371,7 +371,8 @@ package QuadDobl_Predictor_Convolutions is
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep,minstep : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out quad_double;
                 fail : out boolean; step : out quad_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false; verbose : in boolean := false );
@@ -399,6 +400,9 @@ package QuadDobl_Predictor_Convolutions is
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
   --   minstep  the minimum step size;
+  --   endt     the end value for the homotopy continuation parameter t;
+  --   acct     accumulated sum of all successful steps, equals the
+  --            current value of the homotopy continuation parameter t;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the curve step was minimal;
   --   nbmaxm   number of times the maximum step size was minimal;
@@ -423,7 +427,8 @@ package QuadDobl_Predictor_Convolutions is
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep,minstep : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out quad_double;
                 fail : out boolean; step : out quad_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false; verbose : in boolean := false );
@@ -446,6 +451,9 @@ package QuadDobl_Predictor_Convolutions is
   --   beta2    multiplication factor for the curvature step;
   --   maxstep  the maximum step size;
   --   minstep  the minimum step size;
+  --   endt     the end value for the homotopy continuation parameter t;
+  --   acct     accumulated sum of all successful steps, equals the
+  --            current value of the homotopy continuation parameter t;
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the curve step was minimal;
   --   nbmaxm   number of times the maximum step size was minimal;

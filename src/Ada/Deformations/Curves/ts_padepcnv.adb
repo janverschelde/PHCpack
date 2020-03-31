@@ -56,12 +56,13 @@ procedure ts_padepcnv is
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
     minstep : constant double_float := 1.0E-6;
+    endt : constant double_float := 1.0;
     prd : Predictor;
     psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
-    step : double_float;
+    acct,step : double_float := 0.0;
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -77,13 +78,13 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
       if usesvd then
-        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
-          otp,true);
+        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,
+          tol,alpha,beta1,beta2,maxstep,minstep,endt,acct,fail,step,
+          nbpole,nbhess,nbmaxm,otp,true);
       else
-        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
-          otp,true);
+        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,
+          tol,alpha,beta1,beta2,maxstep,minstep,endt,acct,fail,step,
+          nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -121,12 +122,13 @@ procedure ts_padepcnv is
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
     minstep : constant double_float := 1.0E-6;
+    endt : constant double_float := 1.0;
     prd : Predictor;
     psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
-    step : double_double;
+    acct,step : double_double := create(0.0);
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -142,13 +144,13 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => zero);
       if usesvd then
-        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
-          otp,true);
+        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,
+          tol,alpha,beta1,beta2,maxstep,minstep,endt,acct,fail,step,
+          nbpole,nbhess,nbmaxm,otp,true);
       else
-        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
-          otp,true);
+        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,
+          tol,alpha,beta1,beta2,maxstep,minstep,endt,acct,fail,step,
+          nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -186,12 +188,13 @@ procedure ts_padepcnv is
     beta2 : constant double_float := 5.0E-3;
     maxstep : constant double_float := 1.0E-1;
     minstep : constant double_float := 1.0E-6;
+    endt : constant double_float := 1.0;
     prd : Predictor;
     psv : Predictor_Vectors(dim,neq);
     hss : SVD_Hessians(dim,dim+1);
     svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
     nbpole,nbhess,nbmaxm : natural32 := 0;
-    step : quad_double;
+    acct,step : quad_double := create(0.0);
 
   begin
     put("Give the maximum number of iterations : "); get(maxit);
@@ -207,13 +210,13 @@ procedure ts_padepcnv is
       Set_Lead_Coefficients(prd,ls.v);
       hss.vals := (hss.vals'range => zero);
       if usesvd then
-        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
-          otp,true);
+        SVD_Prediction(standard_output,chom,abh,prd.svdata,svh,psv,maxit,
+          tol,alpha,beta1,beta2,maxstep,minstep,endt,acct,fail,step,
+          nbpole,nbhess,nbmaxm,otp,true);
       else
-        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,tol,
-          alpha,beta1,beta2,maxstep,minstep,fail,step,nbpole,nbhess,nbmaxm,
-          otp,true);
+        LU_Prediction(standard_output,chom,abh,prd.ludata,svh,psv,maxit,
+          tol,alpha,beta1,beta2,maxstep,minstep,endt,acct,fail,step,
+          nbpole,nbhess,nbmaxm,otp,true);
       end if;
       put("Continue to the next solution ? (y/n) ");
       Ask_Yes_or_No(ans);

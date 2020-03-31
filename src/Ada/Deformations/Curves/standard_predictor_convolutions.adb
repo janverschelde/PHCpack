@@ -389,7 +389,8 @@ package body Standard_Predictor_Convolutions is
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep,minstep : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false;
@@ -415,6 +416,7 @@ package body Standard_Predictor_Convolutions is
     Hesse_Pade(file,hom,prd,svh,psv.sol,psv.res,beta2,
                eta,nrm,curv_step,verbose);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
+    Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
       step,minstep,alpha,nrm,mixres,nbfail,verbose);
     fail := (mixres > alpha);
@@ -425,7 +427,8 @@ package body Standard_Predictor_Convolutions is
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
-                alpha,beta1,beta2,maxstep,minstep : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false;
@@ -451,6 +454,7 @@ package body Standard_Predictor_Convolutions is
     Hesse_Pade(file,hom,prd,svh,psv.sol,psv.res,beta2,
                eta,nrm,curv_step,verbose);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
+    Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
       step,minstep,alpha,nrm,mixres,nbfail,verbose);
     fail := (mixres > alpha);
