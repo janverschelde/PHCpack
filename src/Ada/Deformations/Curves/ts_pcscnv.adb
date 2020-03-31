@@ -124,7 +124,7 @@ procedure ts_pcscnv is
     end if;
     loop
       Step_Coefficient(hom,step);
-      Step_Coefficient(abh,step);
+      Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
                       dx,ipvt,info,fail,verbose);
       exit when not fail;   
@@ -215,7 +215,7 @@ procedure ts_pcscnv is
     end if;
     loop
       Step_Coefficient(hom,step);
-      Step_Coefficient(abh,step);
+      Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
                       dx,ipvt,info,fail,verbose);
       exit when not fail;
@@ -306,7 +306,7 @@ procedure ts_pcscnv is
     end if;
     loop
       Step_Coefficient(hom,step);
-      Step_Coefficient(abh,step);
+      Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
                       dx,ipvt,info,fail,verbose);
       exit when not fail;

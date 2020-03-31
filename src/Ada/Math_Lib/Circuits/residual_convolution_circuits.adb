@@ -103,7 +103,8 @@ package body Residual_Convolution_Circuits is
     end loop;
   end AbsVal;
 
-  function AbsVal ( c : Standard_Speelpenning_Convolutions.Circuit )
+  function AbsVal ( c : Standard_Speelpenning_Convolutions.Circuit;
+                    deg : integer32 := 0 )
                   return Standard_Speelpenning_Convolutions.Circuit is
 
     use Standard_Speelpenning_Convolutions;
@@ -111,13 +112,14 @@ package body Residual_Convolution_Circuits is
     res : Circuit(c.nbr,c.dim,c.dim1,c.dim2);
 
   begin
-    Copy(c,res);
+    res := Copy(c,deg); -- Copy(c,res);
     AbsVal(res.cff);
     AbsVal(res.cst);
     return res;
   end AbsVal;
 
-  function AbsVal ( c : DoblDobl_Speelpenning_Convolutions.Circuit )
+  function AbsVal ( c : DoblDobl_Speelpenning_Convolutions.Circuit;
+                    deg : integer32 := 0 )
                   return DoblDobl_Speelpenning_Convolutions.Circuit is
 
     use DoblDobl_Speelpenning_Convolutions;
@@ -125,13 +127,14 @@ package body Residual_Convolution_Circuits is
     res : Circuit(c.nbr,c.dim,c.dim1,c.dim2);
 
   begin
-    Copy(c,res);
+    res := Copy(c,deg); -- Copy(c,res);
     AbsVal(res.cff);
     AbsVal(res.cst);
     return res;
   end AbsVal;
 
-  function AbsVal ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+  function AbsVal ( c : QuadDobl_Speelpenning_Convolutions.Circuit;
+                    deg : integer32 := 0 )
                   return QuadDobl_Speelpenning_Convolutions.Circuit is
 
     use QuadDobl_Speelpenning_Convolutions;
@@ -139,13 +142,14 @@ package body Residual_Convolution_Circuits is
     res : Circuit(c.nbr,c.dim,c.dim1,c.dim2);
 
   begin
-    Copy(c,res);
+    res := Copy(c,deg); -- Copy(c,res);
     AbsVal(res.cff);
     AbsVal(res.cst);
     return res;
   end AbsVal;
 
-  function AbsVal ( c : Standard_Speelpenning_Convolutions.Link_to_Circuit )
+  function AbsVal ( c : Standard_Speelpenning_Convolutions.Link_to_Circuit;
+                    deg : integer32 := 0 )
                   return Standard_Speelpenning_Convolutions.Link_to_Circuit is
 
     use Standard_Speelpenning_Convolutions;
@@ -155,7 +159,8 @@ package body Residual_Convolution_Circuits is
   begin
     if c /= null then
       declare
-        crc : constant Circuit(c.nbr,c.dim,c.dim1,c.dim2) := AbsVal(c.all);
+        crc : constant Circuit(c.nbr,c.dim,c.dim1,c.dim2)
+            := AbsVal(c.all,deg);
       begin
         res := new Circuit'(crc);
       end;
@@ -163,7 +168,8 @@ package body Residual_Convolution_Circuits is
     return res;
   end AbsVal;
 
-  function AbsVal ( c : DoblDobl_Speelpenning_Convolutions.Link_to_Circuit )
+  function AbsVal ( c : DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                    deg : integer32 := 0 )
                   return DoblDobl_Speelpenning_Convolutions.Link_to_Circuit is
 
     use DoblDobl_Speelpenning_Convolutions;
@@ -173,7 +179,8 @@ package body Residual_Convolution_Circuits is
   begin
     if c /= null then
       declare
-        crc : constant Circuit(c.nbr,c.dim,c.dim1,c.dim2) := AbsVal(c.all);
+        crc : constant Circuit(c.nbr,c.dim,c.dim1,c.dim2)
+            := AbsVal(c.all,deg);
       begin
         res := new Circuit'(crc);
       end;
@@ -181,7 +188,8 @@ package body Residual_Convolution_Circuits is
     return res;
   end AbsVal;
 
-  function AbsVal ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit )
+  function AbsVal ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                    deg : integer32 := 0 )
                   return QuadDobl_Speelpenning_Convolutions.Link_to_Circuit is
 
     use QuadDobl_Speelpenning_Convolutions;
@@ -191,7 +199,8 @@ package body Residual_Convolution_Circuits is
   begin
     if c /= null then
       declare
-        crc : constant Circuit(c.nbr,c.dim,c.dim1,c.dim2) := AbsVal(c.all);
+        crc : constant Circuit(c.nbr,c.dim,c.dim1,c.dim2)
+            := AbsVal(c.all,deg);
       begin
         res := new Circuit'(crc);
       end;
@@ -199,86 +208,93 @@ package body Residual_Convolution_Circuits is
     return res;
   end AbsVal;
 
-  function AbsVal ( c : Standard_Speelpenning_Convolutions.Circuits )
+  function AbsVal ( c : Standard_Speelpenning_Convolutions.Circuits;
+                    deg : integer32 := 0 )
                   return Standard_Speelpenning_Convolutions.Circuits is
 
     res : Standard_Speelpenning_Convolutions.Circuits(c'range);
 
   begin
     for i in c'range loop
-      res(i) := AbsVal(c(i));
+      res(i) := AbsVal(c(i),deg);
     end loop;
     return res;
   end AbsVal;
 
-  function AbsVal ( c : DoblDobl_Speelpenning_Convolutions.Circuits )
+  function AbsVal ( c : DoblDobl_Speelpenning_Convolutions.Circuits;
+                    deg : integer32 := 0 )
                   return DoblDobl_Speelpenning_Convolutions.Circuits is
 
     res : DoblDobl_Speelpenning_Convolutions.Circuits(c'range);
 
   begin
     for i in c'range loop
-      res(i) := AbsVal(c(i));
+      res(i) := AbsVal(c(i),deg);
     end loop;
     return res;
   end AbsVal;
 
-  function AbsVal ( c : QuadDobl_Speelpenning_Convolutions.Circuits )
+  function AbsVal ( c : QuadDobl_Speelpenning_Convolutions.Circuits;
+                    deg : integer32 := 0 )
                   return QuadDobl_Speelpenning_Convolutions.Circuits is
 
     res : QuadDobl_Speelpenning_Convolutions.Circuits(c'range);
 
   begin
     for i in c'range loop
-      res(i) := AbsVal(c(i));
+      res(i) := AbsVal(c(i),deg);
     end loop;
     return res;
   end AbsVal;
 
   function Residual_Convolution_System
-             ( s : Standard_Speelpenning_Convolutions.System )
+             ( s : Standard_Speelpenning_Convolutions.System;
+               deg : integer32 := 0 )
              return Standard_Speelpenning_Convolutions.System is
 
     use  Standard_Speelpenning_Convolutions;
 
-    crc : constant Circuits(s.crc'range) := AbsVal(s.crc);
-    res : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
-        := Create(crc,s.dim,s.deg);
+    crc : constant Circuits(s.crc'range) := AbsVal(s.crc,deg);
+    res : constant System(s.neq,s.neq1,s.dim,s.dim1,deg)
+        := Create(crc,s.dim,deg);
 
   begin
     return res;
   end Residual_Convolution_System;
 
   function Residual_Convolution_System
-             ( s : DoblDobl_Speelpenning_Convolutions.System )
+             ( s : DoblDobl_Speelpenning_Convolutions.System;
+               deg : integer32 := 0 )
              return DoblDobl_Speelpenning_Convolutions.System is
 
     use  DoblDobl_Speelpenning_Convolutions;
 
-    crc : constant Circuits(s.crc'range) := AbsVal(s.crc);
-    res : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
-        := Create(crc,s.dim,s.deg);
+    crc : constant Circuits(s.crc'range) := AbsVal(s.crc,deg);
+    res : constant System(s.neq,s.neq1,s.dim,s.dim1,deg)
+        := Create(crc,s.dim,deg);
 
   begin
     return res;
   end Residual_Convolution_System;
 
   function Residual_Convolution_System
-             ( s : QuadDobl_Speelpenning_Convolutions.System )
+             ( s : QuadDobl_Speelpenning_Convolutions.System;
+               deg : integer32 := 0 )
              return QuadDobl_Speelpenning_Convolutions.System is
 
     use  QuadDobl_Speelpenning_Convolutions;
 
-    crc : constant Circuits(s.crc'range) := AbsVal(s.crc);
-    res : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
-        := Create(crc,s.dim,s.deg);
+    crc : constant Circuits(s.crc'range) := AbsVal(s.crc,deg);
+    res : constant System(s.neq,s.neq1,s.dim,s.dim1,deg)
+        := Create(crc,s.dim,deg);
 
   begin
     return res;
   end Residual_Convolution_System;
 
   function Residual_Convolution_System
-             ( s : Standard_Speelpenning_Convolutions.Link_to_System )
+             ( s : Standard_Speelpenning_Convolutions.Link_to_System;
+               deg : integer32 := 0 )
              return Standard_Speelpenning_Convolutions.Link_to_System is
 
     use  Standard_Speelpenning_Convolutions;
@@ -288,8 +304,8 @@ package body Residual_Convolution_Circuits is
   begin
     if s /= null then
       declare
-        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
-            := Residual_Convolution_System(s.all);
+        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,deg)
+            := Residual_Convolution_System(s.all,deg);
       begin
         res := new System'(sys);
       end;
@@ -298,7 +314,8 @@ package body Residual_Convolution_Circuits is
   end Residual_Convolution_System;
 
   function Residual_Convolution_System
-             ( s : DoblDobl_Speelpenning_Convolutions.Link_to_System )
+             ( s : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+               deg : integer32 := 0 )
              return DoblDobl_Speelpenning_Convolutions.Link_to_System is
 
     use  DoblDobl_Speelpenning_Convolutions;
@@ -308,8 +325,8 @@ package body Residual_Convolution_Circuits is
   begin
     if s /= null then
       declare
-        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
-            := Residual_Convolution_System(s.all);
+        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,deg)
+            := Residual_Convolution_System(s.all,deg);
       begin
         res := new System'(sys);
       end;
@@ -318,7 +335,8 @@ package body Residual_Convolution_Circuits is
   end Residual_Convolution_System;
 
   function Residual_Convolution_System
-             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System )
+             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+               deg : integer32 := 0 )
              return QuadDobl_Speelpenning_Convolutions.Link_to_System is
 
     use  QuadDobl_Speelpenning_Convolutions;
@@ -328,13 +346,175 @@ package body Residual_Convolution_Circuits is
   begin
     if s /= null then
       declare
-        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,s.deg)
-            := Residual_Convolution_System(s.all);
+        sys : constant System(s.neq,s.neq1,s.dim,s.dim1,deg)
+            := Residual_Convolution_System(s.all,deg);
       begin
         res := new System'(sys);
       end;
     end if;
     return res;
   end Residual_Convolution_System;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in Standard_Speelpenning_Convolutions.Circuit; 
+                c : in Standard_Speelpenning_Convolutions.Circuit ) is
+
+    radlnk,lnk : Standard_Complex_Vectors.Link_to_Vector;
+    rad : double_float;
+
+    use Standard_Complex_Vectors;
+
+  begin
+    for k in radc.cff'range loop
+      radlnk := radc.cff(k); lnk := c.cff(k);
+      rad := Standard_Complex_Numbers_Polar.Radius(lnk(0));
+      radlnk(0) := Standard_Complex_Numbers.Create(rad);
+    end loop;
+    if radc.cst /= null and c.cst /= null then
+      rad := Standard_Complex_Numbers_Polar.Radius(c.cst(0));
+      radc.cst(0) := Standard_Complex_Numbers.Create(rad);
+    end if;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in DoblDobl_Speelpenning_Convolutions.Circuit; 
+                c : in DoblDobl_Speelpenning_Convolutions.Circuit ) is
+
+    radlnk,lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    rad : double_double;
+
+    use DoblDobl_Complex_Vectors;
+
+  begin
+    for k in radc.cff'range loop
+      radlnk := radc.cff(k); lnk := c.cff(k);
+      rad := DoblDobl_Complex_Numbers_Polar.Radius(lnk(0));
+      radlnk(0) := DoblDobl_Complex_Numbers.Create(rad);
+    end loop;
+    if radc.cst /= null and c.cst /= null then
+      rad := DoblDobl_Complex_Numbers_Polar.Radius(c.cst(0));
+      radc.cst(0) := DoblDobl_Complex_Numbers.Create(rad);
+    end if;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in QuadDobl_Speelpenning_Convolutions.Circuit; 
+                c : in QuadDobl_Speelpenning_Convolutions.Circuit ) is
+
+    radlnk,lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    rad : quad_double;
+
+    use QuadDobl_Complex_Vectors;
+
+  begin
+    for k in radc.cff'range loop
+      radlnk := radc.cff(k); lnk := c.cff(k);
+      rad := QuadDobl_Complex_Numbers_Polar.Radius(lnk(0));
+      radlnk(0) := QuadDobl_Complex_Numbers.Create(rad);
+    end loop;
+    if radc.cst /= null and c.cst /= null then
+      rad := QuadDobl_Complex_Numbers_Polar.Radius(c.cst(0));
+      radc.cst(0) := QuadDobl_Complex_Numbers.Create(rad);
+    end if;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in Standard_Speelpenning_Convolutions.Link_to_Circuit; 
+                c : in Standard_Speelpenning_Convolutions.Link_to_Circuit ) is
+
+    use Standard_Speelpenning_Convolutions;
+
+  begin
+    if radc /= null and c /= null
+     then Update_Radii_of_Constants(radc.all,c.all);
+    end if;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit; 
+                c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit ) is
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    if radc /= null and c /= null
+     then Update_Radii_of_Constants(radc.all,c.all);
+    end if;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit; 
+                c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit ) is
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if radc /= null and c /= null
+     then Update_Radii_of_Constants(radc.all,c.all);
+    end if;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in Standard_Speelpenning_Convolutions.Circuits; 
+                c : in Standard_Speelpenning_Convolutions.Circuits ) is
+  begin
+    for k in radc'range loop
+      Update_Radii_of_Constants(radc(k),c(k));
+    end loop;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in DoblDobl_Speelpenning_Convolutions.Circuits; 
+                c : in DoblDobl_Speelpenning_Convolutions.Circuits ) is
+  begin
+    for k in radc'range loop
+      Update_Radii_of_Constants(radc(k),c(k));
+    end loop;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( radc : in QuadDobl_Speelpenning_Convolutions.Circuits; 
+                c : in QuadDobl_Speelpenning_Convolutions.Circuits ) is
+  begin
+    for k in radc'range loop
+      Update_Radii_of_Constants(radc(k),c(k));
+    end loop;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( rads : in Standard_Speelpenning_Convolutions.Link_to_System; 
+                s : in Standard_Speelpenning_Convolutions.Link_to_System ) is
+
+    use Standard_Speelpenning_Convolutions;
+
+  begin
+    if rads /= null and s /= null
+     then Update_Radii_of_Constants(rads.crc,s.crc);
+    end if;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( rads : in DoblDobl_Speelpenning_Convolutions.Link_to_System; 
+                s : in DoblDobl_Speelpenning_Convolutions.Link_to_System ) is
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    if rads /= null and s /= null
+     then Update_Radii_of_Constants(rads.crc,s.crc);
+    end if;
+  end Update_Radii_of_Constants;
+
+  procedure Update_Radii_of_Constants
+              ( rads : in QuadDobl_Speelpenning_Convolutions.Link_to_System; 
+                s : in QuadDobl_Speelpenning_Convolutions.Link_to_System ) is
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if rads /= null and s /= null
+     then Update_Radii_of_Constants(rads.crc,s.crc);
+    end if;
+  end Update_Radii_of_Constants;
 
 end Residual_Convolution_Circuits;

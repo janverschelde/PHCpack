@@ -1,5 +1,7 @@
-Tue 31 Mar 2020 : added more copy procedures with degree specifications
-  to generic_speelpenning_convolutions.
+Tue 31 Mar 2020 : added more copy functions with degree specifications
+  to generic_speelpenning_convolutions.  Applied the copy functions in
+  the residual_convolutions_circuits, added update of the radii of constants
+  procedures to residual_convolutions_circuits.
 
 Mon 30 Mar 2020 : added copy procedures to generic_speelpenning_convolutions.
 
