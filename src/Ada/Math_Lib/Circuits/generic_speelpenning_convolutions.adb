@@ -128,6 +128,169 @@ package body Generic_Speelpenning_Convolutions is
     end if;
   end Copy;
 
+-- COPY WITH DEGREE SPECIFICATIONS :
+
+  function Copy ( v : Vectors.Vector; deg : integer32 )
+                return Vectors.Vector is
+
+    res : Vectors.Vector(0..deg);
+
+  begin
+    for i in v'range loop
+      exit when (i > res'last);
+      res(i) := v(i);
+    end loop;
+    if v'last < res'last then
+      for i in v'last+1..res'last loop
+        res(i) := Ring.zero;
+      end loop;
+    end if;
+    return res;
+  end Copy;
+
+  function Copy ( v : Vectors.Link_to_Vector; deg : integer32 )
+                return Vectors.Link_to_Vector is
+
+    use Vectors;
+    res : Link_to_Vector;
+
+  begin
+    if v /= null then
+      declare
+        vcp : constant Vectors.Vector(0..deg) := Copy(v.all,deg);
+      begin
+        res := new Vectors.Vector'(vcp);
+      end;
+    end if;
+    return res;
+  end Copy;
+
+  function Copy ( v : VecVecs.VecVec; deg : integer32 )
+                return VecVecs.VecVec is
+
+    res : VecVecs.VecVec(v'range);
+
+  begin
+    for k in v'range loop
+      res(k) := Copy(v(k),deg);
+    end loop;
+    return res;
+  end Copy;
+
+  function Copy ( v : Link_to_VecVecVec; deg : integer32 )
+                return Link_to_VecVecVec is
+
+    res : Link_to_VecVecVec;
+
+    use VecVecs;
+
+  begin
+    if v /= null then
+      declare
+        pwt : VecVecVec(v'range);
+      begin
+        for k in v'range loop
+          if v(k) /= null then
+            declare
+              vv : constant VecVecs.VecVec(v(k)'range) := Copy(v(k).all,deg);
+            begin
+              pwt(k) := new VecVecs.VecVec'(vv);
+            end;
+          end if;
+        end loop;
+        res := new VecVecVec'(pwt);
+      end;
+    end if;
+    return res;
+  end Copy;
+
+  function Copy ( c : Circuit; deg : integer32 ) return Circuit is
+
+    res : Circuit(c.nbr,c.dim,c.dim1,c.dim2);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.cff := Copy(c.cff,deg);
+    res.cst := Copy(c.cst,deg);
+    res.forward := Copy(c.forward,deg);
+    res.backward := Copy(c.backward,deg);
+    res.cross := Copy(c.cross,deg);
+    res.wrk := Copy(c.wrk,deg);
+    res.acc := Copy(c.acc,deg);
+    return res;
+  end Copy;
+
+  function Copy ( c : Link_to_Circuit; deg : integer32 )
+                return Link_to_Circuit is
+
+    res : Link_to_Circuit;
+
+  begin
+    if c /= null then
+      declare
+        crc : constant Circuit(c.nbr,c.dim,c.dim1,c.dim2) := Copy(c.all,deg);
+      begin  
+        res := new Circuit'(crc);
+      end;
+    end if;
+    return res;
+  end Copy;
+
+  function Copy ( c : Circuits; deg : integer32 ) return Circuits is
+
+    res : Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := Copy(c(k),deg);
+    end loop;
+    return res;
+  end Copy;
+
+  function Copy ( s : System; deg : integer32 ) return System is
+
+    res : System(s.neq,s.neq1,s.dim,s.dim1,deg);
+
+  begin
+    res.crc := Copy(s.crc,deg);
+    res.mxe := s.mxe;
+    res.pwt := Copy(s.pwt,deg);
+    res.yd := Copy(s.yd,deg);
+    res.vy := Linearized_Allocation(s.neq,deg);
+    for k in s.vy'range loop
+      exit when (k > deg);
+      res.vy(k) := new Vectors.Vector'(s.vy(k).all);
+    end loop;
+    res.yv := Copy(s.yv,deg);
+    res.vm := Allocate_Coefficients(s.neq,s.dim,deg);
+    for k in s.vm'range loop
+      exit when (k > deg);
+      res.vm(k) := new Matrices.Matrix'(s.vm(k).all);
+    end loop;    
+    return res;
+  end Copy;
+
+  function Copy ( s : Link_to_System; deg : integer32 )
+                return Link_to_System is
+
+    res : Link_to_System;
+
+  begin
+    if s /= null then
+      declare
+        scp : constant System(s.neq,s.neq1,s.dim,s.dim1,deg)
+            := Copy(s.all,deg);
+      begin
+        res := new System'(scp);
+      end;
+    end if;
+    return res;
+  end Copy;
+
+-- COPY WITHOUT DEGREE SPECIFICATIONS :
+
   procedure Copy ( c_from : in Circuit; c_to : out Circuit ) is
 
     use Vectors;

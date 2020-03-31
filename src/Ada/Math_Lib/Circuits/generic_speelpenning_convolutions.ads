@@ -108,6 +108,63 @@ package Generic_Speelpenning_Convolutions is
   --   Allocates space for the power table, given the exponent maxima
   --   for each variable in mxe and the degrees of the power series in deg.
 
+-- COPY WITH DEGREE SPECIFICATIONS :
+
+  function Copy ( v : Vectors.Vector; deg : integer32 ) return Vectors.Vector;
+  function Copy ( v : Vectors.Link_to_Vector; deg : integer32 )
+                return Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Given in v is the coefficient vector of a series.
+  --   On return is a copy of v, up to the index deg.
+  --   If deg < v'last, then the coefficients of index larger than deg
+  --   are omitted in the returned copy of v.
+  --   If deg > v'last, then the coefficient of index larger than v'last
+  --   are equal to zero in the returned copy of v.
+
+  function Copy ( v : VecVecs.VecVec; deg : integer32 ) return VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Given in v is a vector of series coefficients.
+  --   Returns a copy of the same range as v, but with series coefficients
+  --   copied up to the given degree index deg.
+
+  function Copy ( v : Link_to_VecVecVec; deg : integer32 )
+                return Link_to_VecVecVec;
+
+  -- DESCRIPTION :
+  --   Given in v is a vector of vectors of series coefficients.
+  --   Returns a copy of the same range as v, but with series coefficients
+  --   copied up to the given degree index deg.
+
+  function Copy ( c : Circuit; deg : integer32 ) return Circuit;
+  function Copy ( c : Link_to_Circuit; deg : integer32 )
+                return Link_to_Circuit;
+
+  -- DESCRIPTION :
+  --   Returns a copy of the circuit c, with coefficients of the series
+  --   specified by the degree index deg.  In case deg is less than the
+  --   degrees of the series coefficients in c, then the power series 
+  --   will be truncated to the given degree index deg.
+  --   Otherwise, in case deg is larger than the degree of the power
+  --   series coefficients in c, then the copy will contain extended
+  --   coefficient vectors, extended with zero coefficients.
+
+  function Copy ( c : Circuits; deg : integer32 ) return Circuits;
+
+  -- DESCRIPTION :
+  --   The returned circuits are copies of the circuits in c,
+  --   with coefficients of the power series specified to degree deg.
+
+  function Copy ( s : System; deg : integer32 ) return System;
+  function Copy ( s : Link_to_System; deg : integer32 ) return Link_to_System;
+
+  -- DESCRIPTION :
+  --   The return system is a copy of the system s,
+  --   with coefficients of the power series specified to degree deg.
+
+-- COPY WITHOUT DEGREE SPECIFICATIONS :
+
   procedure Copy ( v_from : in Link_to_VecVecVec;
                    v_to : out Link_to_VecVecVec );
 
