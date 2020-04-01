@@ -117,6 +117,8 @@ package QuadDobl_Predictor_Convolutions is
   type SVD_Hessians_Array is
     array ( integer32 range <> ) of Link_to_SVD_Hessians;
 
+-- CONSTRUCTORS :
+
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
                     neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor;
   function Create ( sol : QuadDobl_Complex_Vectors.Vector;
@@ -155,6 +157,14 @@ package QuadDobl_Predictor_Convolutions is
   -- DESCRIPTION :
   --   Given solution vector, dimensions, and the kind,
   --   returns the corresponding predictor.
+
+  function Create ( dim : integer32 ) return Link_to_SVD_Hessians;
+
+  -- DESCRIPTION :
+  --   Returns the allocated and initialized data structures for
+  --   the computation of the curvature step size.
+
+-- AUXILIARY PREDICTOR PROCEDURES FOR SETUP :
 
   procedure Set_Lead_Coefficients
               ( p : in Predictor;

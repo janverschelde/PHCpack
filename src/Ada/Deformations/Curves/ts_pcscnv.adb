@@ -8,7 +8,6 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
@@ -56,6 +55,7 @@ procedure ts_pcscnv is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -76,6 +76,7 @@ procedure ts_pcscnv is
   --   homlead  leading coefficients for the circuits in hom;
   --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
+  --   maxit    maximum number of steps in Newton's method on power series;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -102,17 +103,11 @@ procedure ts_pcscnv is
 
     use Standard_Predictor_Convolutions;
 
-    numdeg : constant integer32 := integer32(pars.numdeg);
-    dendeg : constant integer32 := integer32(pars.dendeg);
-    deg : constant integer32 := numdeg + dendeg + 2;
-    maxit : constant integer32 := 4;
     info,nbrit : integer32 := 0;
     mixres : double_float;
 
   begin
-    prd := Create(psv.sol,hom.neq,deg,numdeg,dendeg,SVD);
     Set_Lead_Coefficients(prd,psv.sol);
-    svh.vals := (svh.vals'range => Standard_Complex_Numbers.Create(0.0));
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
@@ -126,11 +121,14 @@ procedure ts_pcscnv is
     loop
       Step_Coefficient(hom,step);
       Update_Radii_of_Constants(abh,hom);
-      LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
-                      dx,ipvt,info,fail,verbose);
+      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
+                      pars.tolres,mixres,dx,ipvt,info,fail,verbose);
       exit when not fail;   
       step := step/2.0;
-      put(file,"Reduced step size to"); put(file,step,3); put_line(file,".");
+      if verbose then
+        put(file,"Reduced step size to"); put(file,step,3);
+        put_line(file,".");
+      end if;
       exit when (step < pars.minsize);
       Standard_Rational_Approximations.Evaluate
         (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
@@ -145,6 +143,7 @@ procedure ts_pcscnv is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -165,6 +164,7 @@ procedure ts_pcscnv is
   --   homlead  leading coefficients for the circuits in hom;
   --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
+  --   maxit    maximum number of steps in Newton's method on power series;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -191,19 +191,11 @@ procedure ts_pcscnv is
 
     use DoblDobl_Predictor_Convolutions;
 
-    numdeg : constant integer32 := integer32(pars.numdeg);
-    dendeg : constant integer32 := integer32(pars.dendeg);
-    deg : constant integer32 := numdeg + dendeg + 2;
-    maxit : constant integer32 := 4;
-    zero : constant DoblDobl_Complex_Numbers.Complex_Number
-         := DoblDobl_Complex_Numbers.Create(integer(0));
     info,nbrit : integer32 := 0;
     mixres : double_double;
 
   begin
-    prd := Create(psv.sol,hom.neq,deg,numdeg,dendeg,SVD);
     Set_Lead_Coefficients(prd,psv.sol);
-    svh.vals := (svh.vals'range => zero);
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
@@ -217,11 +209,14 @@ procedure ts_pcscnv is
     loop
       Step_Coefficient(hom,step);
       Update_Radii_of_Constants(abh,hom);
-      LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
-                      dx,ipvt,info,fail,verbose);
+      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
+                      pars.tolres,mixres,dx,ipvt,info,fail,verbose);
       exit when not fail;
       step := step/2.0;
-      put(file,"Reduced step size to "); put(file,step,3); put_line(file,".");
+      if verbose then
+        put(file,"Reduced step size to "); put(file,step,3);
+        put_line(file,".");
+      end if;
       exit when (step < pars.minsize);
       DoblDobl_Rational_Approximations.Evaluate
         (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
@@ -236,6 +231,7 @@ procedure ts_pcscnv is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -256,6 +252,7 @@ procedure ts_pcscnv is
   --   homlead  leading coefficients for the circuits in hom;
   --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
+  --   maxit    maximum number of steps in Newton's method on power series;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -282,19 +279,11 @@ procedure ts_pcscnv is
 
     use QuadDobl_Predictor_Convolutions;
 
-    numdeg : constant integer32 := integer32(pars.numdeg);
-    dendeg : constant integer32 := integer32(pars.dendeg);
-    deg : constant integer32 := numdeg + dendeg + 2;
-    maxit : constant integer32 := 4;
-    zero : constant QuadDobl_Complex_Numbers.Complex_Number
-         := QuadDobl_Complex_Numbers.Create(integer(0));
     info,nbrit : integer32 := 0;
     mixres : quad_double;
 
   begin
-    prd := Create(psv.sol,hom.neq,deg,numdeg,dendeg,SVD);
     Set_Lead_Coefficients(prd,psv.sol);
-    svh.vals := (svh.vals'range => zero);
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
@@ -308,11 +297,14 @@ procedure ts_pcscnv is
     loop
       Step_Coefficient(hom,step);
       Update_Radii_of_Constants(abh,hom);
-      LU_Newton_Steps(file,hom,abh,psv,maxit,nbrit,pars.tolres,mixres,
-                      dx,ipvt,info,fail,verbose);
+      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
+                      pars.tolres,mixres,dx,ipvt,info,fail,verbose);
       exit when not fail;
       step := step/2.0;
-      put(file,"Reduced step size to "); put(file,step,3); put_line(file,".");
+      if verbose then
+        put(file,"Reduced step size to "); put(file,step,3);
+        put_line(file,".");
+      end if;
       exit when (step < pars.minsize);
       QuadDobl_Rational_Approximations.Evaluate
         (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
@@ -338,12 +330,14 @@ procedure ts_pcscnv is
 
     use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
 
-    prd : Predictor;
+    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
     psv : Predictor_Vectors(hom.dim,hom.neq);
-    hss : SVD_Hessians(hom.dim,hom.dim+1);
-    svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
+    svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    ls : Link_to_Solution;
     nbpole,nbhess,nbmaxm : natural32 := 0;
     endt : constant double_float := 1.0;
     acct,step : double_float := 0.0;
@@ -367,7 +361,7 @@ procedure ts_pcscnv is
       ls := Head_Of(solsptr); psv.sol := ls.v;
       loop
         Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-          pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+          pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
           fail,true);
         if fail
          then put_line("Predictor-Corrector loop failed.");
@@ -410,12 +404,14 @@ procedure ts_pcscnv is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Predictor_Convolutions;
 
-    prd : Predictor;
+    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
     psv : Predictor_Vectors(hom.dim,hom.neq);
-    hss : SVD_Hessians(hom.dim,hom.dim+1);
-    svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
+    svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    ls : Link_to_Solution;
     nbpole,nbhess,nbmaxm : natural32 := 0;
     endt : constant double_float := 1.0;
     acct,step : double_double := create(0.0);
@@ -439,7 +435,7 @@ procedure ts_pcscnv is
       ls := Head_Of(solsptr); psv.sol := ls.v;
       loop
         Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-          pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+          pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
           fail,true);
         if fail
          then put_line("Predictor-Corrector loop failed.");
@@ -481,12 +477,14 @@ procedure ts_pcscnv is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Predictor_Convolutions;
 
-    prd : Predictor;
+    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
     psv : Predictor_Vectors(hom.dim,hom.neq);
-    hss : SVD_Hessians(hom.dim,hom.dim+1);
-    svh : Link_to_SVD_Hessians := new SVD_Hessians'(hss);
+    svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    ls : Link_to_Solution;
     nbpole,nbhess,nbmaxm : natural32 := 0;
     endt : constant double_float := 1.0;
     acct,step : quad_double := create(0.0);
@@ -510,7 +508,7 @@ procedure ts_pcscnv is
       ls := Head_Of(solsptr); psv.sol := ls.v;
       loop
         Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-          pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+          pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
           fail,true);
         if fail
          then put_line("Predictor-Corrector loop failed.");

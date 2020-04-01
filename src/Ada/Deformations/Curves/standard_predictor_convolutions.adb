@@ -19,6 +19,8 @@ with Three_Way_Minima;
 
 package body Standard_Predictor_Convolutions is
 
+-- CONSTRUCTORS :
+
   function Create ( sol : Standard_Complex_Vectors.Vector;
                     neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor is
 
@@ -129,6 +131,19 @@ package body Standard_Predictor_Convolutions is
         end;
     end case;
   end Create;
+
+  function Create ( dim : integer32 ) return Link_to_SVD_Hessians is
+
+    res : Link_to_SVD_Hessians;
+    hss : SVD_Hessians(dim,dim+1);
+
+  begin
+    hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
+    res := new SVD_Hessians'(hss);
+    return res;
+  end Create;
+
+-- AUXILIARY PREDICTOR PROCEDURES FOR SETUP :
 
   procedure Set_Lead_Coefficients
               ( p : in Predictor;
