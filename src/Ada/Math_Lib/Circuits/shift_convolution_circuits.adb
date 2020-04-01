@@ -12,6 +12,8 @@ package body Shift_Convolution_Circuits is
     sgn : integer32;
 
   begin
+    put("c'last : "); put(c'last,1);
+    put("  wrk'last : "); put(wrk'last,1); new_line;
     for i in c'range loop
       wrk(i) := Create(0.0);
       if i mod 2 = 0
@@ -236,84 +238,114 @@ package body Shift_Convolution_Circuits is
                     wrk : in Standard_Complex_Vectors.Link_to_Vector;
                     t : in double_float ) is
 
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    use Standard_Complex_Vectors;
+    lnk : Link_to_Vector;
 
   begin
     for k in c.cff'range loop
       lnk := c.cff(k);
       Shift(lnk,wrk,t);
     end loop;
-    Shift(c.cst,wrk,t);
+    if c.cst /= null then
+      if c.cst'last > 0
+       then Shift(c.cst,wrk,t);
+      end if;
+    end if;
   end Shift;
 
   procedure Shift ( c : in out Standard_Speelpenning_Convolutions.Circuit;
                     wrk : in Standard_Complex_Vectors.Link_to_Vector;
                     t : in Standard_Complex_Numbers.Complex_Number ) is
 
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    use Standard_Complex_Vectors;
+    lnk : Link_to_Vector;
 
   begin
     for k in c.cff'range loop
       lnk := c.cff(k);
       Shift(lnk,wrk,t);
     end loop;
-    Shift(c.cst,wrk,t);
+    if c.cst /= null then
+      if c.cst'last > 0
+       then Shift(c.cst,wrk,t);
+      end if;
+    end if;
   end Shift;
 
   procedure Shift ( c : in out DoblDobl_Speelpenning_Convolutions.Circuit;
                     wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                     t : in double_double ) is
 
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    use DoblDobl_Complex_Vectors;
+    lnk : Link_to_Vector;
 
   begin
     for k in c.cff'range loop
       lnk := c.cff(k);
       Shift(lnk,wrk,t);
     end loop;
-    Shift(c.cst,wrk,t);
+    if c.cst /= null then
+      if c.cst'last > 0
+       then Shift(c.cst,wrk,t);
+      end if;
+    end if;
   end Shift;
 
   procedure Shift ( c : in out DoblDobl_Speelpenning_Convolutions.Circuit;
                     wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                     t : in DoblDobl_Complex_Numbers.Complex_Number ) is
 
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    use DoblDobl_Complex_Vectors;
+    lnk : Link_to_Vector;
 
   begin
     for k in c.cff'range loop
       lnk := c.cff(k);
       Shift(lnk,wrk,t);
     end loop;
-    Shift(c.cst,wrk,t);
+    if c.cst /= null then
+      if c.cst'last > 0
+       then Shift(c.cst,wrk,t);
+      end if;
+    end if;
   end Shift;
 
   procedure Shift ( c : in out QuadDobl_Speelpenning_Convolutions.Circuit;
                     wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                     t : in quad_double ) is
 
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    use QuadDobl_Complex_Vectors;
+    lnk : Link_to_Vector;
 
   begin
     for k in c.cff'range loop
       lnk := c.cff(k);
       Shift(lnk,wrk,t);
     end loop;
-    Shift(c.cst,wrk,t);
+    if c.cst /= null then
+      if c.cst'last > 0
+       then Shift(c.cst,wrk,t);
+      end if;
+    end if;
   end Shift;
 
   procedure Shift ( c : in out QuadDobl_Speelpenning_Convolutions.Circuit;
                     wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                     t : in QuadDobl_Complex_Numbers.Complex_Number ) is
 
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    use QuadDobl_Complex_Vectors;
+    lnk : Link_to_Vector;
 
   begin
     for k in c.cff'range loop
       lnk := c.cff(k);
       Shift(lnk,wrk,t);
     end loop;
-    Shift(c.cst,wrk,t);
+    if c.cst /= null then
+      if c.cst'last > 0
+       then Shift(c.cst,wrk,t);
+      end if;
+    end if;
   end Shift;
 
   procedure Shift ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
