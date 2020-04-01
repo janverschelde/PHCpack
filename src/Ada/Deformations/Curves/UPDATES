@@ -1,6 +1,7 @@
 Wed 1 Apr 2020 : added a create procedure to wrap the allocation of a
   pointer to the data for the Hessians in *predictor_convolutions,
-  with updates and improvements in ts_pcscnv.
+  with updates and improvements in ts_pcscnv.  New package with code
+  from ts_pcscnv, predictor_corrector_loops to track a path.
 
 Tue 31 Mar 2020 : added end value for homotopy continuation parameter t
   to *predictor_convolutions, tested by ts_padepcnv and ts_pcscnv;

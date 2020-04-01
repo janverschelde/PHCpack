@@ -33,15 +33,13 @@ with QuadDobl_Homotopy;
 with QuadDobl_Homotopy_Convolutions_io;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
-with Standard_Rational_Approximations;
-with DoblDobl_Rational_Approximations;
-with QuadDobl_Rational_Approximations;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Shift_Convolution_Circuits;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
 with Corrector_Convolutions;             use Corrector_Convolutions;
+with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
 
 procedure ts_pcscnv is
 
@@ -49,9 +47,8 @@ procedure ts_pcscnv is
 --   Development of one predictor-corrector-shift step with
 --   a homotopy system of convolution circuits.
 
-  procedure Predictor_Corrector_Loop
-              ( file : in file_type;
-                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+  procedure Step_Track
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -61,16 +58,15 @@ procedure ts_pcscnv is
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                endt : in double_float; acct : in out double_float;
-                step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                nbpole,nbhess,nbmaxm : out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Does one predictor-corrector step in double precision.
+  --   Track one path step by step, interactively, prompting the user each
+  --   time before moving on to the next step, in double precision.
 
   -- ON ENTRY :
-  --   file     to write the extra output to;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   homlead  leading coefficients for the circuits in hom;
@@ -81,65 +77,42 @@ procedure ts_pcscnv is
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
-  --   endt     the end value for the homotopy continuation parameter t;
-  --   acct     accumulated sum of all successful steps, equals the
-  --            current value of the homotopy continuation parameter t;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the Hessian step was minimal;
-  --   nbmaxm   number of times the maximum step was minimal;
-  --   verbose  flag for extra output.
+  --   wrk      work space vector for power series coefficients
+  --            during the shifting of the coefficients.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;
-  --   dx       last update to the solution
+  --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
-  --   acct     updated value for the homotopy continuation parameter t;
-  --   step     the step size;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
   --   fail     true if the prescribed tolerance was not reached,
   --            false otherwise.
 
-    use Standard_Predictor_Convolutions;
-
-    info,nbrit : integer32 := 0;
-    mixres : double_float;
+    endt : constant double_float := 1.0;
+    acct,step : double_float := 0.0;
+    ans : character;
 
   begin
-    Set_Lead_Coefficients(prd,psv.sol);
-    SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
-      endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
-    if verbose then
-      if fail
-       then put(file,"Predictor failed to reach tolerance");
-       else put(file,"Predictor reached tolerance");
-      end if;
-      put(file,pars.alpha,3); put_line(file,".");
-    end if;
+    nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
-      Step_Coefficient(hom,step);
-      Update_Radii_of_Constants(abh,hom);
-      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
-                      pars.tolres,mixres,dx,ipvt,info,fail,verbose);
-      exit when not fail;   
-      step := step/2.0;
-      if verbose then
-        put(file,"Reduced step size to"); put(file,step,3);
-        put_line(file,".");
+      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+        fail,verbose);
+      if fail
+       then put_line("Predictor-Corrector loop failed.");
+       else put_line("Predictor-Corrector loop succeeded.");
       end if;
-      exit when (step < pars.minsize);
-      Standard_Rational_Approximations.Evaluate
-        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-      Restore_Leading_Coefficients(homlead,hom.crc);
-      Restore_Leading_Coefficients(abhlead,abh.crc);
+      Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+      put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("t :"); put(acct,3); put_line(" :");
     end loop;
-  end Predictor_Corrector_Loop;
+  end Step_Track;
 
-  procedure Predictor_Corrector_Loop
-              ( file : in file_type;
-                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+  procedure Step_Track
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -149,16 +122,15 @@ procedure ts_pcscnv is
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                endt : in double_float; acct : in out double_double;
-                step : out double_double;
-                nbpole,nbhess,nbmaxm : in out natural32;
+                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                nbpole,nbhess,nbmaxm : out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Does one predictor-corrector step in double double precision.
+  --   Track one path step by step, interactively, prompting the user each
+  --   time before moving on to the next step, in double double precision.
 
   -- ON ENTRY :
-  --   file     to write the extra output to;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   homlead  leading coefficients for the circuits in hom;
@@ -169,65 +141,42 @@ procedure ts_pcscnv is
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
-  --   endt     the end value for the homotopy continuation parameter t;
-  --   acct     accumulated sum of all successful steps, equals the
-  --            current value of the homotopy continuation parameter t;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the Hessian step was minimal;
-  --   nbmaxm   number of times the maximum step was minimal;
-  --   verbose  flag for extra output.
+  --   wrk      work space vector for power series coefficients
+  --            during the shifting of the coefficients.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;
   --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
-  --   step     the step size;
-  --   acct     updated value for the homotopy continuation parameter t;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
   --   fail     true if the prescribed tolerance was not reached,
   --            false otherwise.
 
-    use DoblDobl_Predictor_Convolutions;
-
-    info,nbrit : integer32 := 0;
-    mixres : double_double;
+    endt : constant double_float := 1.0;
+    acct,step : double_double := Create(0.0);
+    ans : character;
 
   begin
-    Set_Lead_Coefficients(prd,psv.sol);
-    SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
-      endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
-    if verbose then
-      if fail
-       then put(file,"Predictor failed to reach tolerance");
-       else put(file,"Predictor reached tolerance");
-      end if;
-      put(file,pars.alpha,3); put_line(file,".");
-    end if;
+    nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
-      Step_Coefficient(hom,step);
-      Update_Radii_of_Constants(abh,hom);
-      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
-                      pars.tolres,mixres,dx,ipvt,info,fail,verbose);
-      exit when not fail;
-      step := step/2.0;
-      if verbose then
-        put(file,"Reduced step size to "); put(file,step,3);
-        put_line(file,".");
+      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+        fail,verbose);
+      if fail
+       then put_line("Predictor-Corrector loop failed.");
+       else put_line("Predictor-Corrector loop succeeded.");
       end if;
-      exit when (step < pars.minsize);
-      DoblDobl_Rational_Approximations.Evaluate
-        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-      Restore_Leading_Coefficients(homlead,hom.crc);
-      Restore_Leading_Coefficients(abhlead,abh.crc);
+      Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+      put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("t :"); put(acct,3); put_line(" :");
     end loop;
-  end Predictor_Corrector_Loop;
+  end Step_Track;
 
-  procedure Predictor_Corrector_Loop
-              ( file : in file_type;
-                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+  procedure Step_Track
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -237,16 +186,15 @@ procedure ts_pcscnv is
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                endt : in double_float; acct : in out quad_double;
-                step : out quad_double;
-                nbpole,nbhess,nbmaxm : in out natural32;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                nbpole,nbhess,nbmaxm : out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Does one predictor-corrector step in quad double precision.
+  --   Track one path step by step, interactively, prompting the user each
+  --   time before moving on to the next step, in quad double precision.
 
   -- ON ENTRY :
-  --   file     to write the extra output to;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   homlead  leading coefficients for the circuits in hom;
@@ -257,61 +205,39 @@ procedure ts_pcscnv is
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
   --   svh      work space for Hessian convolutions;
-  --   endt     the end value for the homotopy continuation parameter t;
-  --   acct     accumulated sum of all successful steps, equals the
-  --            current value of the homotopy continuation parameter t;
-  --   nbpole   number of times the pole step was minimal;
-  --   nbhess   number of times the Hessian step was minimal;
-  --   nbmaxm   number of times the maximum step was minimal;
-  --   verbose  flag for extra output.
+  --   wrk      work space vector for power series coefficients
+  --            during the shifting of the coefficients.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;
   --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
-  --   acct     updated value for the homotopy continuation parameter t;
-  --   step     the step size;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
   --   fail     true if the prescribed tolerance was not reached,
   --            false otherwise.
 
-    use QuadDobl_Predictor_Convolutions;
-
-    info,nbrit : integer32 := 0;
-    mixres : quad_double;
+    endt : constant double_float := 1.0;
+    acct,step : quad_double := Create(0.0);
+    ans : character;
 
   begin
-    Set_Lead_Coefficients(prd,psv.sol);
-    SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
-      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
-      endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
-    if verbose then
-      if fail
-       then put(file,"Predictor failed to reach tolerance");
-       else put(file,"Predictor reached tolerance");
-      end if;
-      put(file,pars.alpha,3); put_line(file,".");
-    end if;
+    nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
-      Step_Coefficient(hom,step);
-      Update_Radii_of_Constants(abh,hom);
-      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
-                      pars.tolres,mixres,dx,ipvt,info,fail,verbose);
-      exit when not fail;
-      step := step/2.0;
-      if verbose then
-        put(file,"Reduced step size to "); put(file,step,3);
-        put_line(file,".");
+      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+        fail,verbose);
+      if fail
+       then put_line("Predictor-Corrector loop failed.");
+       else put_line("Predictor-Corrector loop succeeded.");
       end if;
-      exit when (step < pars.minsize);
-      QuadDobl_Rational_Approximations.Evaluate
-        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-      Restore_Leading_Coefficients(homlead,hom.crc);
-      Restore_Leading_Coefficients(abhlead,abh.crc);
+      Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+      put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("t :"); put(acct,3); put_line(" :");
     end loop;
-  end Predictor_Corrector_Loop;
+  end Step_Track;
 
   procedure Standard_Run
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -338,10 +264,8 @@ procedure ts_pcscnv is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm : natural32 := 0;
-    endt : constant double_float := 1.0;
-    acct,step : double_float := 0.0;
-    fail : boolean;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail,stepwise : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : Standard_Complex_Vectors.Vector(1..hom.dim);
@@ -357,21 +281,17 @@ procedure ts_pcscnv is
     Allocate_Leading_Coefficients(abh.crc,abhlead);
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
+    put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
+    stepwise := (ans = 'y');
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      loop
-        Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-          pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-          fail,true);
-        if fail
-         then put_line("Predictor-Corrector loop failed.");
-         else put_line("Predictor-Corrector loop succeeded.");
-        end if;
-        Shift_Convolution_Circuits.Shift(hom,wrk,-step);
-        put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-        put("t :"); put(acct,3); put_line(" :");
-      end loop;
+      if stepwise then
+        Step_Track(hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
+          dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
+      else   
+        Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
+          prd,psv,svh,dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+      end if;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -379,7 +299,6 @@ procedure ts_pcscnv is
       exit when (ans /= 'y');
       Restore_Leading_Coefficients(abhlead,abh.crc);
       Restore_Coefficients(homcff,hom.crc);
-      acct := 0.0;
     end loop;
     Clear(svh);
     Standard_Complex_VecVecs.Deep_Clear(homlead);
@@ -412,10 +331,8 @@ procedure ts_pcscnv is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm : natural32 := 0;
-    endt : constant double_float := 1.0;
-    acct,step : double_double := create(0.0);
-    fail : boolean;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail,stepwise : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : DoblDobl_Complex_Vectors.Vector(1..hom.dim);
@@ -431,21 +348,17 @@ procedure ts_pcscnv is
     Allocate_Leading_Coefficients(abh.crc,abhlead);
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
+    put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
+    stepwise := (ans = 'y');
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      loop
-        Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-          pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-          fail,true);
-        if fail
-         then put_line("Predictor-Corrector loop failed.");
-         else put_line("Predictor-Corrector loop succeeded.");
-        end if;
-        Shift_Convolution_Circuits.Shift(hom,wrk,-step);
-        put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-        put("t : "); put(acct,3); put_line(" :");
-      end loop;
+      if stepwise then
+        Step_Track(hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
+          dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
+      else   
+        Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
+          prd,psv,svh,dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+      end if;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -453,7 +366,6 @@ procedure ts_pcscnv is
       exit when (ans /= 'y');
       Restore_Leading_Coefficients(abhlead,abh.crc);
       Restore_Coefficients(homcff,hom.crc);
-      acct := create(0.0);
     end loop;
     Clear(svh);
     DoblDobl_Complex_VecVecs.Deep_Clear(homlead);
@@ -485,10 +397,8 @@ procedure ts_pcscnv is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm : natural32 := 0;
-    endt : constant double_float := 1.0;
-    acct,step : quad_double := create(0.0);
-    fail : boolean;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail,stepwise : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : QuadDobl_Complex_Vectors.Vector(1..hom.dim);
@@ -504,21 +414,17 @@ procedure ts_pcscnv is
     Allocate_Leading_Coefficients(abh.crc,abhlead);
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
+    put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
+    stepwise := (ans = 'y');
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      loop
-        Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-          pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-          fail,true);
-        if fail
-         then put_line("Predictor-Corrector loop failed.");
-         else put_line("Predictor-Corrector loop succeeded.");
-        end if;
-        Shift_Convolution_Circuits.Shift(hom,wrk,-step);
-        put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-        put("t : "); put(acct,3); put_line(" :");
-      end loop;
+      if stepwise then
+        Step_Track(hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
+          dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
+      else   
+        Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
+          prd,psv,svh,dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+      end if;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -526,7 +432,6 @@ procedure ts_pcscnv is
       exit when (ans /= 'y');
       Restore_Leading_Coefficients(abhlead,abh.crc);
       Restore_Coefficients(homcff,hom.crc);
-      acct := Create(0.0);
     end loop;
     Clear(svh);
     QuadDobl_Complex_VecVecs.Deep_Clear(homlead);
