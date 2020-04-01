@@ -2,7 +2,9 @@ Tue 31 Mar 2020 : added end value for homotopy continuation parameter t
   to *predictor_convolutions, tested by ts_padepcnv and ts_pcscnv;
   added Bounded_Update procedures to three_way_minima.
   Applied the new update of radii of constants for the computation
-  of the mixed residuals in ts_pcscnv.
+  of the mixed residuals in ts_pcscnv.  Extended corrector_convolutions
+  with procedures to allocate, store, and restore all coefficients of
+  convolution systems, tested by ts_pcscnv.
 
 Mon 30 Mar 2020 : added minimum step size to *predictor_convolutions with
   an explicit setting of the fail, tested by ts_padepcnv and ts_pcscnv.

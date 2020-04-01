@@ -29,6 +29,19 @@ package Corrector_Convolutions is
 
 -- MANAGEMENT OF LEADING COEFFICIENTS :
 
+  procedure Allocate_Leading_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+                lead : out Standard_Complex_VecVecs.Link_to_VecVec );
+  procedure Allocate_Leading_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+                lead : out DoblDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure Allocate_Leading_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+                lead : out QuadDobl_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Allocates space for the leading coefficients in c.
+
   procedure Store_Leading_Coefficients
               ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
                 lead : in Standard_Complex_Vectors.Link_to_Vector );
@@ -65,19 +78,6 @@ package Corrector_Convolutions is
   --   lead'range = 0..c.nbr, if c.cst is zero, then it will
   --   not be assigned, regardless of the value of lead(0) is zero.
 
-  procedure Allocate_Leading_Coefficients
-              ( c : in Standard_Speelpenning_Convolutions.Circuits;
-                lead : out Standard_Complex_VecVecs.Link_to_VecVec );
-  procedure Allocate_Leading_Coefficients
-              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
-                lead : out DoblDobl_Complex_VecVecs.Link_to_VecVec );
-  procedure Allocate_Leading_Coefficients
-              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
-                lead : out QuadDobl_Complex_VecVecs.Link_to_VecVec );
-
-  -- DESCRIPTION :
-  --   Allocates space for the leading coefficients in c.
-
   procedure Store_Leading_Coefficients
               ( c : in Standard_Speelpenning_Convolutions.Circuits;
                 lead : in Standard_Complex_VecVecs.Link_to_VecVec );
@@ -111,6 +111,102 @@ package Corrector_Convolutions is
 
   -- REQUIRED :
   --   Store_Leading_Coefficients(c,lead) was executed.
+
+-- MANAGEMENT OF ALL COEFFICIENTS :
+
+  procedure Allocate_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : out Standard_Complex_VecVecs.Link_to_VecVec );
+  procedure Allocate_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : out DoblDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure Allocate_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : out QuadDobl_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Allocates space for all coefficients in the circuit.
+  --   The constant coefficient is stored at index 0 in cff.
+
+  procedure Allocate_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+              cff : out Standard_Speelpenning_Convolutions.Link_to_VecVecVec );
+  procedure Allocate_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+              cff : out DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec );
+  procedure Allocate_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+              cff : out QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Allocates space for all coefficients in the circuits c.
+
+  procedure Store_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : in Standard_Complex_VecVecs.Link_to_VecVec );
+  procedure Store_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : in DoblDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure Store_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : in QuadDobl_Complex_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Stores the coefficients of c in the vector of vectors cff.
+
+  -- REQUIRED : Allocated_Coefficients(c,cff) was executed.
+
+  procedure Restore_Coefficients
+              ( cff : in Standard_Complex_VecVecs.Link_to_VecVec;
+                c : in Standard_Speelpenning_Convolutions.
+                       Link_to_Circuit );
+  procedure Restore_Coefficients
+              ( cff : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                c : in DoblDobl_Speelpenning_Convolutions.
+                       Link_to_Circuit );
+  procedure Restore_Coefficients
+              ( cff : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                c : in QuadDobl_Speelpenning_Convolutions.
+                       Link_to_Circuit );
+
+  -- DESCRIPTION :
+  --   Restores the coefficients of c using the coefficients in cff.
+
+  -- REQUIRED : Store_Coefficients(cff,c) was executed.
+
+  procedure Store_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+                cff : in Standard_Speelpenning_Convolutions.
+                         Link_to_VecVecVec );
+  procedure Store_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+                cff : in DoblDobl_Speelpenning_Convolutions.
+                         Link_to_VecVecVec );
+  procedure Store_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+                cff : in QuadDobl_Speelpenning_Convolutions.
+                         Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Stores the coefficients in the circuits c in the vector of
+  --   vectors of vectors cff.
+
+  -- REQUIRED : Allocated_Coefficients(c,cff)) was executed.
+
+  procedure Restore_Coefficients
+              ( cff : in Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
+                c : in Standard_Speelpenning_Convolutions.Circuits );
+  procedure Restore_Coefficients
+              ( cff : in DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                c : in DoblDobl_Speelpenning_Convolutions.Circuits );
+  procedure Restore_Coefficients
+              ( cff : in QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                c : in QuadDobl_Speelpenning_Convolutions.Circuits );
+
+  -- DESCRIPTION :
+  --   Restores the coefficients of c using the coefficients in cff.
+
+  -- REQUIRED : Store_Coefficients(cff,c) was executed.
 
 -- STEP COEFFICIENTS :
 --   The correct is applied to check whether a step size is good.

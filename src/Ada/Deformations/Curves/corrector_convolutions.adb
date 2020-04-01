@@ -16,6 +16,72 @@ package body Corrector_Convolutions is
 
 -- MANAGEMENT OF LEADING COEFFICIENTS :
 
+  procedure Allocate_Leading_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+                lead : out Standard_Complex_VecVecs.Link_to_VecVec ) is
+
+    cff : Standard_Complex_VecVecs.VecVec(c'range);
+
+    use Standard_Speelpenning_Convolutions;
+
+  begin
+    for k in c'range loop
+      if c(k) /= null then
+        declare
+          vck : Standard_Complex_Vectors.Vector(0..c(k).nbr);
+        begin
+          vck := (vck'range => Standard_Complex_Numbers.Create(0.0));
+          cff(k) := new Standard_Complex_Vectors.Vector'(vck);
+        end;
+      end if;
+    end loop;
+    lead := new Standard_Complex_VecVecs.VecVec'(cff);
+  end Allocate_Leading_Coefficients;
+
+  procedure Allocate_Leading_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+                lead : out DoblDobl_Complex_VecVecs.Link_to_VecVec ) is
+
+    cff : DoblDobl_Complex_VecVecs.VecVec(c'range);
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    for k in c'range loop
+      if c(k) /= null then
+        declare
+          vck : DoblDobl_Complex_Vectors.Vector(0..c(k).nbr);
+        begin
+          vck := (vck'range => DoblDobl_Complex_Numbers.Create(integer(0)));
+          cff(k) := new DoblDobl_Complex_Vectors.Vector'(vck);
+        end;
+      end if;
+    end loop;
+    lead := new DoblDobl_Complex_VecVecs.VecVec'(cff);
+  end Allocate_Leading_Coefficients;
+
+  procedure Allocate_Leading_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+                lead : out QuadDobl_Complex_VecVecs.Link_to_VecVec ) is
+
+    cff : QuadDobl_Complex_VecVecs.VecVec(c'range);
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    for k in c'range loop
+      if c(k) /= null then
+        declare
+          vck : QuadDobl_Complex_Vectors.Vector(0..c(k).nbr);
+        begin
+          vck := (vck'range => QuadDobl_Complex_Numbers.Create(integer(0)));
+          cff(k) := new QuadDobl_Complex_Vectors.Vector'(vck);
+        end;
+      end if;
+    end loop;
+    lead := new QuadDobl_Complex_VecVecs.VecVec'(cff);
+  end Allocate_Leading_Coefficients;
+
   procedure Store_Leading_Coefficients
               ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
                 lead : in Standard_Complex_Vectors.Link_to_Vector ) is
@@ -120,72 +186,6 @@ package body Corrector_Convolutions is
       lnk(0) := lead(k);
     end loop;
   end Restore_Leading_Coefficients;
-
-  procedure Allocate_Leading_Coefficients
-              ( c : in Standard_Speelpenning_Convolutions.Circuits;
-                lead : out Standard_Complex_VecVecs.Link_to_VecVec ) is
-
-    cff : Standard_Complex_VecVecs.VecVec(c'range);
-
-    use Standard_Speelpenning_Convolutions;
-
-  begin
-    for k in c'range loop
-      if c(k) /= null then
-        declare
-          vck : Standard_Complex_Vectors.Vector(0..c(k).nbr);
-        begin
-          vck := (vck'range => Standard_Complex_Numbers.Create(0.0));
-          cff(k) := new Standard_Complex_Vectors.Vector'(vck);
-        end;
-      end if;
-    end loop;
-    lead := new Standard_Complex_VecVecs.VecVec'(cff);
-  end Allocate_Leading_Coefficients;
-
-  procedure Allocate_Leading_Coefficients
-              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
-                lead : out DoblDobl_Complex_VecVecs.Link_to_VecVec ) is
-
-    cff : DoblDobl_Complex_VecVecs.VecVec(c'range);
-
-    use DoblDobl_Speelpenning_Convolutions;
-
-  begin
-    for k in c'range loop
-      if c(k) /= null then
-        declare
-          vck : DoblDobl_Complex_Vectors.Vector(0..c(k).nbr);
-        begin
-          vck := (vck'range => DoblDobl_Complex_Numbers.Create(integer(0)));
-          cff(k) := new DoblDobl_Complex_Vectors.Vector'(vck);
-        end;
-      end if;
-    end loop;
-    lead := new DoblDobl_Complex_VecVecs.VecVec'(cff);
-  end Allocate_Leading_Coefficients;
-
-  procedure Allocate_Leading_Coefficients
-              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
-                lead : out QuadDobl_Complex_VecVecs.Link_to_VecVec ) is
-
-    cff : QuadDobl_Complex_VecVecs.VecVec(c'range);
-
-    use QuadDobl_Speelpenning_Convolutions;
-
-  begin
-    for k in c'range loop
-      if c(k) /= null then
-        declare
-          vck : QuadDobl_Complex_Vectors.Vector(0..c(k).nbr);
-        begin
-          vck := (vck'range => QuadDobl_Complex_Numbers.Create(integer(0)));
-          cff(k) := new QuadDobl_Complex_Vectors.Vector'(vck);
-        end;
-      end if;
-    end loop;
-    lead := new QuadDobl_Complex_VecVecs.VecVec'(cff);
-  end Allocate_Leading_Coefficients;
 
   procedure Store_Leading_Coefficients
               ( c : in Standard_Speelpenning_Convolutions.Circuits;
@@ -312,6 +312,383 @@ package body Corrector_Convolutions is
       end loop;
     end if;
   end Restore_Leading_Coefficients;
+
+-- MANAGEMENT OF ALL COEFFICIENTS :
+
+  procedure Allocate_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : out Standard_Complex_VecVecs.Link_to_VecVec ) is
+
+    res : Standard_Complex_VecVecs.VecVec(0..c.nbr);
+
+    use Standard_Complex_Vectors;
+
+  begin
+    if c.cst /= null
+     then res(0) := new Standard_Complex_Vectors.Vector'(c.cst.all);
+    end if;
+    for k in c.cff'range loop
+      if c.cff(k) /= null then
+        declare
+          vck : Standard_Complex_Vectors.Vector(c.cff(k)'range);
+        begin
+          vck := (vck'range => Standard_Complex_Numbers.Create(0.0));
+          res(k) := new Standard_Complex_Vectors.Vector'(vck);
+        end;
+      end if;
+    end loop;
+    cff := new Standard_Complex_VecVecs.VecVec'(res);
+  end Allocate_Coefficients;
+
+  procedure Allocate_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : out DoblDobl_Complex_VecVecs.Link_to_VecVec ) is
+
+    res : DoblDobl_Complex_VecVecs.VecVec(0..c.nbr);
+
+    use DoblDobl_Complex_Vectors;
+
+  begin
+    if c.cst /= null
+     then res(0) := new DoblDobl_Complex_Vectors.Vector'(c.cst.all);
+    end if;
+    for k in c.cff'range loop
+      if c.cff(k) /= null then
+        declare
+          vck : DoblDobl_Complex_Vectors.Vector(c.cff(k)'range);
+        begin
+          vck := (vck'range => DoblDobl_Complex_Numbers.Create(integer(0)));
+          res(k) := new DoblDobl_Complex_Vectors.Vector'(vck);
+        end;
+      end if;
+    end loop;
+    cff := new DoblDobl_Complex_VecVecs.VecVec'(res);
+  end Allocate_Coefficients;
+
+  procedure Allocate_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : out QuadDobl_Complex_VecVecs.Link_to_VecVec ) is
+
+    res : QuadDobl_Complex_VecVecs.VecVec(0..c.nbr);
+
+    use QuadDobl_Complex_Vectors;
+
+  begin
+    if c.cst /= null
+     then res(0) := new QuadDobl_Complex_Vectors.Vector'(c.cst.all);
+    end if;
+    for k in c.cff'range loop
+      if c.cff(k) /= null then
+        declare
+          vck : QuadDobl_Complex_Vectors.Vector(c.cff(k)'range);
+        begin
+          vck := (vck'range => QuadDobl_Complex_Numbers.Create(integer(0)));
+          res(k) := new QuadDobl_Complex_Vectors.Vector'(vck);
+        end;
+      end if;
+    end loop;
+    cff := new QuadDobl_Complex_VecVecs.VecVec'(res);
+  end Allocate_Coefficients;
+
+  procedure Allocate_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+                cff : out Standard_Speelpenning_Convolutions.
+                          Link_to_VecVecVec ) is
+
+    use Standard_Speelpenning_Convolutions;
+
+    res : VecVecVec(c'range);
+
+  begin
+    for k in c'range loop
+      if c(k) /= null
+       then Allocate_Coefficients(c(k),res(k));
+      end if;
+    end loop;
+    cff := new Standard_Speelpenning_Convolutions.VecVecVec'(res);
+  end Allocate_Coefficients;
+
+  procedure Allocate_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+                cff : out DoblDobl_Speelpenning_Convolutions.
+                          Link_to_VecVecVec ) is
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    res : VecVecVec(c'range);
+
+  begin
+    for k in c'range loop
+      if c(k) /= null
+       then Allocate_Coefficients(c(k),res(k));
+      end if;
+    end loop;
+    cff := new DoblDobl_Speelpenning_Convolutions.VecVecVec'(res);
+  end Allocate_Coefficients;
+
+  procedure Allocate_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+                cff : out QuadDobl_Speelpenning_Convolutions.
+                          Link_to_VecVecVec ) is
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    res : VecVecVec(c'range);
+
+  begin
+    for k in c'range loop
+      if c(k) /= null
+       then Allocate_Coefficients(c(k),res(k));
+      end if;
+    end loop;
+    cff := new QuadDobl_Speelpenning_Convolutions.VecVecVec'(res);
+  end Allocate_Coefficients;
+
+  procedure Store_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : in Standard_Complex_VecVecs.Link_to_VecVec ) is
+
+    use Standard_Complex_Vectors;
+    lnk,cfflnk : Link_to_Vector;
+
+  begin
+    if c.cst /= null then
+      lnk := cff(0);
+      for i in c.cst'range loop
+        lnk(i) := c.cst(i);
+      end loop;
+    end if;
+    for k in c.cff'range loop
+      lnk := c.cff(k);
+      cfflnk := cff(k);
+      for i in lnk'range loop
+        cfflnk(i) := lnk(i);
+      end loop;
+    end loop;
+  end Store_Coefficients;
+
+  procedure Store_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : in DoblDobl_Complex_VecVecs.Link_to_VecVec ) is
+
+    use DoblDobl_Complex_Vectors;
+    lnk,cfflnk : Link_to_Vector;
+
+  begin
+    if c.cst /= null then
+      lnk := cff(0);
+      for i in c.cst'range loop
+        lnk(i) := c.cst(i);
+      end loop;
+    end if;
+    for k in c.cff'range loop
+      lnk := c.cff(k);
+      cfflnk := cff(k);
+      for i in lnk'range loop
+        cfflnk(i) := lnk(i);
+      end loop;
+    end loop;
+  end Store_Coefficients;
+
+  procedure Store_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                cff : in QuadDobl_Complex_VecVecs.Link_to_VecVec ) is
+
+    use QuadDobl_Complex_Vectors;
+    lnk,cfflnk : Link_to_Vector;
+
+  begin
+    if c.cst /= null then
+      lnk := cff(0);
+      for i in c.cst'range loop
+        lnk(i) := c.cst(i);
+      end loop;
+    end if;
+    for k in c.cff'range loop
+      lnk := c.cff(k);
+      cfflnk := cff(k);
+      for i in lnk'range loop
+        cfflnk(i) := lnk(i);
+      end loop;
+    end loop;
+  end Store_Coefficients;
+
+  procedure Restore_Coefficients
+              ( cff : in Standard_Complex_VecVecs.Link_to_VecVec;
+                c : in Standard_Speelpenning_Convolutions.
+                       Link_to_Circuit ) is
+
+    use Standard_Complex_Vectors;
+    lnk,cfflnk : Link_to_Vector;
+
+  begin
+    if cff(0) /= null then
+      if c.cst /= null then
+        lnk := cff(0);
+        for i in c.cst'range loop
+          c.cst(i) := lnk(i);
+        end loop;
+      end if;
+    end if;
+    for k in c.cff'range loop -- note : c.cff'first = 1, cff'first = 0
+      if cff(k) /= null then
+        lnk := c.cff(k);
+        cfflnk := cff(k);
+        for i in lnk'range loop
+          lnk(i) := cfflnk(i);
+        end loop;
+      end if;
+    end loop;
+  end Restore_Coefficients;
+
+  procedure Restore_Coefficients
+              ( cff : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                c : in DoblDobl_Speelpenning_Convolutions.
+                       Link_to_Circuit ) is
+
+    use DoblDobl_Complex_Vectors;
+    lnk,cfflnk : Link_to_Vector;
+
+  begin
+    if cff(0) /= null then
+      if c.cst /= null then
+        lnk := cff(0);
+        for i in c.cst'range loop
+          c.cst(i) := lnk(i);
+        end loop;
+      end if;
+    end if;
+    for k in c.cff'range loop -- note : c.cff'first = 1, cff'first = 0
+      if cff(k) /= null then
+        lnk := c.cff(k);
+        cfflnk := cff(k);
+        for i in lnk'range loop
+          lnk(i) := cfflnk(i);
+        end loop;
+      end if;
+    end loop;
+  end Restore_Coefficients;
+
+  procedure Restore_Coefficients
+              ( cff : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                c : in QuadDobl_Speelpenning_Convolutions.
+                       Link_to_Circuit ) is
+
+    use QuadDobl_Complex_Vectors;
+    lnk,cfflnk : Link_to_Vector;
+
+  begin
+    if cff(0) /= null then
+      if c.cst /= null then
+        lnk := cff(0);
+        for i in c.cst'range loop
+          c.cst(i) := lnk(i);
+        end loop;
+      end if;
+    end if;
+    for k in c.cff'range loop -- note : cff'first = 1, cff'first = 0
+      if cff(k) /= null then
+        lnk := c.cff(k);
+        cfflnk := cff(k);
+        for i in lnk'range loop
+          lnk(i) := cfflnk(i);
+        end loop;
+      end if;
+    end loop;
+  end Restore_Coefficients;
+
+  procedure Store_Coefficients
+              ( c : in Standard_Speelpenning_Convolutions.Circuits;
+                cff : in Standard_Speelpenning_Convolutions.
+                         Link_to_VecVecVec ) is
+
+    use Standard_Speelpenning_Convolutions;
+
+  begin
+    for k in c'range loop
+      if c(k) /= null
+       then Store_Coefficients(c(k),cff(k));
+      end if;
+    end loop;
+  end Store_Coefficients;
+
+  procedure Store_Coefficients
+              ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
+                cff : in DoblDobl_Speelpenning_Convolutions.
+                         Link_to_VecVecVec ) is
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    for k in c'range loop
+      if c(k) /= null
+       then Store_Coefficients(c(k),cff(k));
+      end if;
+    end loop;
+  end Store_Coefficients;
+
+  procedure Store_Coefficients
+              ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
+                cff : in QuadDobl_Speelpenning_Convolutions.
+                         Link_to_VecVecVec ) is
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    for k in c'range loop
+      if c(k) /= null
+       then Store_Coefficients(c(k),cff(k));
+      end if;
+    end loop;
+  end Store_Coefficients;
+
+  procedure Restore_Coefficients
+              ( cff : in Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
+                c : in Standard_Speelpenning_Convolutions.Circuits ) is
+
+    use Standard_Complex_VecVecs,Standard_Speelpenning_Convolutions;
+
+  begin
+    if cff /= null then
+      for k in cff'range loop
+        if cff(k) /= null and c(k) /= null
+         then Restore_Coefficients(cff(k),c(k));
+        end if;
+      end loop;
+    end if;
+  end Restore_Coefficients;
+
+  procedure Restore_Coefficients
+              ( cff : in DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                c : in DoblDobl_Speelpenning_Convolutions.Circuits ) is
+
+    use DoblDobl_Complex_VecVecs,DoblDobl_Speelpenning_Convolutions;
+
+  begin
+    if cff /= null then
+      for k in cff'range loop
+        if cff(k) /= null and c(k) /= null
+         then Restore_Coefficients(cff(k),c(k));
+        end if;
+      end loop;
+    end if;
+  end Restore_Coefficients;
+
+  procedure Restore_Coefficients
+              ( cff : in QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                c : in QuadDobl_Speelpenning_Convolutions.Circuits ) is
+
+    use QuadDobl_Complex_VecVecs,QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if cff /= null then
+      for k in cff'range loop
+        if cff(k) /= null and c(k) /= null
+         then Restore_Coefficients(cff(k),c(k));
+        end if;
+      end loop;
+    end if;
+  end Restore_Coefficients;
 
 -- EVALUATION OF STEP SIZE :
 

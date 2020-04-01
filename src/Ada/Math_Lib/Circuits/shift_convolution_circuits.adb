@@ -12,8 +12,6 @@ package body Shift_Convolution_Circuits is
     sgn : integer32;
 
   begin
-    put("c'last : "); put(c'last,1);
-    put("  wrk'last : "); put(wrk'last,1); new_line;
     for i in c'range loop
       wrk(i) := Create(0.0);
       if i mod 2 = 0

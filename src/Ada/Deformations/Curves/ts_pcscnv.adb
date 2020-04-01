@@ -38,6 +38,7 @@ with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
+with Shift_Convolution_Circuits;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
@@ -351,32 +352,45 @@ procedure ts_pcscnv is
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : Standard_Complex_Vectors.Vector(1..hom.dim);
     homlead,abhlead : Standard_Complex_VecVecs.Link_to_VecVec;
+    wrk : constant Standard_Complex_Vectors.Link_to_Vector
+        := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
+    homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
 
   begin
+    Allocate_Coefficients(hom.crc,homcff);
+    Store_Coefficients(hom.crc,homcff);
     Allocate_Leading_Coefficients(hom.crc,homlead);
     Allocate_Leading_Coefficients(abh.crc,abhlead);
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-        fail,true);
-      if fail
-       then put_line("Predictor-Corrector loop failed.");
-       else put_line("Predictor-Corrector loop succeeded.");
-      end if;
+      loop
+        Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+          pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+          fail,true);
+        if fail
+         then put_line("Predictor-Corrector loop failed.");
+         else put_line("Predictor-Corrector loop succeeded.");
+        end if;
+        Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+        put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+        put("t :"); put(acct,3); put_line(" :");
+      end loop;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      Restore_Leading_Coefficients(homlead,hom.crc);
       Restore_Leading_Coefficients(abhlead,abh.crc);
+      Restore_Coefficients(homcff,hom.crc);
+      acct := 0.0;
     end loop;
     Clear(svh);
     Standard_Complex_VecVecs.Deep_Clear(homlead);
     Standard_Complex_VecVecs.Deep_Clear(abhlead);
+    Standard_Speelpenning_Convolutions.Clear(homcff);
   end Standard_Run;
 
   procedure DoblDobl_Run
@@ -410,28 +424,40 @@ procedure ts_pcscnv is
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : DoblDobl_Complex_Vectors.Vector(1..hom.dim);
     homlead,abhlead : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+    wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
+        := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
+    homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
 
   begin
+    Allocate_Coefficients(hom.crc,homcff);
+    Store_Coefficients(hom.crc,homcff);
     Allocate_Leading_Coefficients(hom.crc,homlead);
     Allocate_Leading_Coefficients(abh.crc,abhlead);
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-        fail,true);
-      if fail
-       then put_line("Predictor-Corrector loop failed.");
-       else put_line("Predictor-Corrector loop succeeded.");
-      end if;
+      loop
+        Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+          pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+          fail,true);
+        if fail
+         then put_line("Predictor-Corrector loop failed.");
+         else put_line("Predictor-Corrector loop succeeded.");
+        end if;
+        Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+        put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+        put("t : "); put(acct,3); put_line(" :");
+      end loop;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      Restore_Leading_Coefficients(homlead,hom.crc);
       Restore_Leading_Coefficients(abhlead,abh.crc);
+      Restore_Coefficients(homcff,hom.crc);
+      acct := create(0.0);
     end loop;
     Clear(svh);
     DoblDobl_Complex_VecVecs.Deep_Clear(homlead);
@@ -469,28 +495,40 @@ procedure ts_pcscnv is
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : QuadDobl_Complex_Vectors.Vector(1..hom.dim);
     homlead,abhlead : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+    wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
+        := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
+    homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
 
   begin
+    Allocate_Coefficients(hom.crc,homcff);
+    Store_Coefficients(hom.crc,homcff);
     Allocate_Leading_Coefficients(hom.crc,homlead);
     Allocate_Leading_Coefficients(abh.crc,abhlead);
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v;
-      Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-        fail,true);
-      if fail
-       then put_line("Predictor-Corrector loop failed.");
-       else put_line("Predictor-Corrector loop succeeded.");
-      end if;
+      loop
+        Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
+          pars,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
+          fail,true);
+        if fail
+         then put_line("Predictor-Corrector loop failed.");
+         else put_line("Predictor-Corrector loop succeeded.");
+        end if;
+        Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+        put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+        put("t : "); put(acct,3); put_line(" :");
+      end loop;
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      Restore_Leading_Coefficients(homlead,hom.crc);
       Restore_Leading_Coefficients(abhlead,abh.crc);
+      Restore_Coefficients(homcff,hom.crc);
+      acct := Create(0.0);
     end loop;
     Clear(svh);
     QuadDobl_Complex_VecVecs.Deep_Clear(homlead);
