@@ -401,17 +401,29 @@ package body Generic_Speelpenning_Convolutions is
 
 -- DEALLOCATORS :
 
+  procedure Clear ( pwt : in out VecVecVec ) is
+  begin
+    for k in pwt'range loop
+      VecVecs.Deep_Clear(pwt(k));
+    end loop;
+  end Clear;
+
   procedure Clear ( pwt : in out Link_to_VecVecVec ) is
 
     procedure free is new unchecked_deallocation(VecVecVec,Link_to_VecVecVec);
 
   begin
     if pwt /= null then
-      for k in pwt'range loop
-        VecVecs.Deep_Clear(pwt(k));
-      end loop;
+      Clear(pwt.all);
       free(pwt);
     end if;
+  end Clear;
+
+  procedure Clear ( pwt : in out VecVecVec_Array ) is
+  begin
+    for k in pwt'range loop
+      Clear(pwt(k));
+    end loop;
   end Clear;
 
   procedure Clear ( c : in out Circuit ) is

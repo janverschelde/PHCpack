@@ -1,5 +1,6 @@
 Thu 2 Apr 2020 : added ts_mtpcscnv, skeleton procedure to develop and test
   the multitasked path tracking with homotopy convolution circuits.
+  Added allocations of work space arrays in ts_mtpcscnv.
 
 Tue 3 Mar 2020 : added work space vectors the solve_by_SVD procedures in
   multitasked_series_linearization, tested by ts_mtserlin.

@@ -1,4 +1,5 @@
 Thu 2 Apr 2020 : added system_array type to generic_speelpenning_convolutions.
+  Added vevecvec_array to generic_speelpenning_convolutions.
 
 Tue 31 Mar 2020 : added more copy functions with degree specifications
   to generic_speelpenning_convolutions.  Applied the copy functions in

@@ -31,6 +31,8 @@ package Generic_Speelpenning_Convolutions is
  
   type Link_to_VecVecVec is access VecVecVec; -- stores the power table
 
+  type VecVecVec_Array is array ( integer32 range <> ) of Link_to_VecVecVec;
+
 -- A convolution circuit is a data structure for the efficient evaluation
 -- and differentiation of polynomials in several variables at the
 -- coefficient vectors of power series using the reverse mode of
@@ -238,10 +240,12 @@ package Generic_Speelpenning_Convolutions is
 
 -- DEALLOCATORS :
 
+  procedure Clear ( pwt : in out VecVecVec );
   procedure Clear ( pwt : in out Link_to_VecVecVec );
+  procedure Clear ( pwt : in out VecVecVec_Array );
 
   -- DESCRIPTION :
-  --   Deallocates the space occupied by the power table pwt.
+  --   Deallocates the space occupied by the power table(s) pwt.
 
   procedure Clear ( c : in out Circuit );
   procedure Clear ( c : in out Link_to_Circuit );

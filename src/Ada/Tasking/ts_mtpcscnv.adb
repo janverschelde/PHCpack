@@ -7,6 +7,14 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;
+with Standard_Integer_Vectors;
+with Standard_Integer_VecVecs;
+with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -22,6 +30,7 @@ with QuadDobl_Homotopy_Convolutions_io;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
+with Corrector_Convolutions;             use Corrector_Convolutions;
 with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
 with Standard_Solutions_Queue;
 with DoblDobl_Solutions_Queue;
@@ -33,6 +42,54 @@ procedure ts_mtpcscnv is
 -- DESCRIPTION :
 --   Development of multitasked tracking with predictor-corrector-shift
 --   loops on homotopy systems of convolution circuits.
+
+  procedure Allocate ( v : in out Standard_Integer_VecVecs.VecVec;
+                       n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Allocates vectors of range 1..n in v.
+
+  begin
+    for k in v'range loop
+      v(k) := new Standard_Integer_Vectors.Vector(1..n);
+    end loop;
+  end Allocate;
+
+  procedure Allocate ( v : in out Standard_Complex_VecVecs.VecVec;
+                       n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Allocates vectors of range 1..n in v.
+
+  begin
+    for k in v'range loop
+      v(k) := new Standard_Complex_Vectors.Vector(1..n);
+    end loop;
+  end Allocate;
+
+  procedure Allocate ( v : in out DoblDobl_Complex_VecVecs.VecVec;
+                       n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Allocates vectors of range 1..n in v.
+
+  begin
+    for k in v'range loop
+      v(k) := new DoblDobl_Complex_Vectors.Vector(1..n);
+    end loop;
+  end Allocate;
+
+  procedure Allocate ( v : in out QuadDobl_Complex_VecVecs.VecVec;
+                       n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Allocates vectors of range 1..n in v.
+
+  begin
+    for k in v'range loop
+      v(k) := new QuadDobl_Complex_Vectors.Vector(1..n);
+    end loop;
+  end Allocate;
 
   procedure Standard_Multitasked_Tracker
               ( file : in file_type; nbtasks : in integer32;
@@ -58,6 +115,13 @@ procedure ts_mtpcscnv is
   --   sols     solutions at the end of the paths.
 
     use Standard_Complex_Solutions,Standard_Speelpenning_Convolutions;
+
+    homsa,abhsa : System_Array(1..nbtasks);
+    homlead,abhlead : VecVecVec(1..nbtasks);
+    homcff : VecVecVec_Array(1..nbtasks);
+    dx : Standard_Complex_VecVecs.VecVec(1..nbtasks);
+    wrk : Standard_Complex_VecVecs.VecVec(1..nbtasks);
+    ipvt : Standard_Integer_VecVecs.VecVec(1..nbtasks);
 
     procedure Silent_Track ( i,n : in integer32 ) is
 
@@ -88,9 +152,9 @@ procedure ts_mtpcscnv is
     begin
       loop
         myptr := Standard_Solutions_Queue.Next;
+        cnt := Standard_Solutions_Queue.Next_Counter;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        cnt := Standard_Solutions_Queue.Next_Counter;
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
@@ -101,11 +165,27 @@ procedure ts_mtpcscnv is
       new Multitasking.Reporting_Workers(Report_Track);
 
   begin
+    for k in 1..nbtasks loop
+      Copy(hom,homsa(k)); Copy(abh,abhsa(k));
+      Allocate_Leading_Coefficients(hom.crc,homlead(k));
+      Allocate_Leading_Coefficients(abh.crc,abhlead(k));
+      Store_Leading_Coefficients(hom.crc,homlead(k));
+      Store_Leading_Coefficients(abh.crc,abhlead(k));
+      Allocate_Coefficients(hom.crc,homcff(k));
+      Store_Coefficients(hom.crc,homcff(k));
+    end loop;
+    Allocate(ipvt,hom.dim); Allocate(dx,hom.dim);
+    wrk := Allocate_Coefficients(hom.dim,hom.deg);
     Standard_Solutions_Queue.Initialize(sols);
     if verbose
      then report_do_jobs(nbtasks);
      else silent_do_jobs(nbtasks);
     end if;
+    Clear(homsa); Clear(abhsa);
+    Clear(homlead); Clear(abhlead); Clear(homcff);
+    Standard_Complex_VecVecs.Clear(dx);
+    Standard_Complex_VecVecs.Clear(wrk);
+    Standard_Integer_VecVecs.Clear(ipvt);
   end Standard_Multitasked_Tracker;
 
   procedure DoblDobl_Multitasked_Tracker
@@ -133,6 +213,13 @@ procedure ts_mtpcscnv is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Speelpenning_Convolutions;
 
+    homsa,abhsa : System_Array(1..nbtasks);
+    homlead,abhlead : VecVecVec(1..nbtasks);
+    homcff : VecVecVec_Array(1..nbtasks);
+    dx : DoblDobl_Complex_VecVecs.VecVec(1..nbtasks);
+    wrk : DoblDobl_Complex_VecVecs.VecVec(1..nbtasks);
+    ipvt : Standard_Integer_VecVecs.VecVec(1..nbtasks);
+
     procedure Silent_Track ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
@@ -162,9 +249,9 @@ procedure ts_mtpcscnv is
     begin
       loop
         myptr := DoblDobl_Solutions_Queue.Next;
+        cnt := DoblDobl_Solutions_Queue.Next_Counter;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        cnt := DoblDobl_Solutions_Queue.Next_Counter;
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
@@ -175,11 +262,27 @@ procedure ts_mtpcscnv is
       new Multitasking.Reporting_Workers(Report_Track);
 
   begin
+    for k in homsa'range loop
+      Copy(hom,homsa(k)); Copy(hom,abhsa(k));
+      Allocate_Leading_Coefficients(hom.crc,homlead(k));
+      Allocate_Leading_Coefficients(abh.crc,abhlead(k));
+      Store_Leading_Coefficients(hom.crc,homlead(k));
+      Store_Leading_Coefficients(abh.crc,abhlead(k));
+      Allocate_Coefficients(hom.crc,homcff(k));
+      Store_Coefficients(hom.crc,homcff(k));
+    end loop;
+    Allocate(ipvt,hom.dim); Allocate(dx,hom.dim);
+    wrk := Allocate_Coefficients(hom.dim,hom.deg);
     DoblDobl_Solutions_Queue.Initialize(sols);
     if verbose
      then report_do_jobs(nbtasks);
      else silent_do_jobs(nbtasks);
     end if;
+    Clear(homsa); Clear(abhsa);
+    Clear(homlead); Clear(abhlead); Clear(homcff);
+    DoblDobl_Complex_VecVecs.Clear(dx);
+    DoblDobl_Complex_VecVecs.Clear(wrk);
+    Standard_Integer_VecVecs.Clear(ipvt);
   end DoblDobl_Multitasked_Tracker;
 
   procedure QuadDobl_Multitasked_Tracker
@@ -207,6 +310,13 @@ procedure ts_mtpcscnv is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Speelpenning_Convolutions;
 
+    homsa,abhsa : System_Array(1..nbtasks);
+    homlead,abhlead : VecVecVec(1..nbtasks);
+    homcff : VecVecVec_Array(1..nbtasks);
+    dx : QuadDobl_Complex_VecVecs.VecVec(1..nbtasks);
+    wrk : QuadDobl_Complex_VecVecs.VecVec(1..nbtasks);
+    ipvt : Standard_Integer_VecVecs.VecVec(1..nbtasks);
+
     procedure Silent_Track ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
@@ -236,9 +346,9 @@ procedure ts_mtpcscnv is
     begin
       loop
         myptr := QuadDobl_Solutions_Queue.Next;
+        cnt := QuadDobl_Solutions_Queue.Next_Counter;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        cnt := QuadDobl_Solutions_Queue.Next_Counter;
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
@@ -249,11 +359,27 @@ procedure ts_mtpcscnv is
       new Multitasking.Reporting_Workers(Report_Track);
 
   begin
+    for k in homsa'range loop
+      Copy(hom,homsa(k)); Copy(hom,abhsa(k));
+      Allocate_Leading_Coefficients(hom.crc,homlead(k));
+      Allocate_Leading_Coefficients(abh.crc,abhlead(k));
+      Store_Leading_Coefficients(hom.crc,homlead(k));
+      Store_Leading_Coefficients(abh.crc,abhlead(k));
+      Allocate_Coefficients(hom.crc,homcff(k));
+      Store_Coefficients(hom.crc,homcff(k));
+    end loop;
+    Allocate(ipvt,hom.dim); Allocate(dx,hom.dim);
+    wrk := Allocate_Coefficients(hom.dim,hom.deg);
     QuadDobl_Solutions_Queue.Initialize(sols);
     if verbose
      then report_do_jobs(nbtasks);
      else silent_do_jobs(nbtasks);
     end if;
+    Clear(homsa); Clear(abhsa);
+    Clear(homlead); Clear(abhlead); Clear(homcff);
+    QuadDobl_Complex_VecVecs.Clear(dx);
+    QuadDobl_Complex_VecVecs.Clear(wrk);
+    Standard_Integer_VecVecs.Clear(ipvt);
   end QuadDobl_Multitasked_Tracker;
 
   procedure Standard_Test is
