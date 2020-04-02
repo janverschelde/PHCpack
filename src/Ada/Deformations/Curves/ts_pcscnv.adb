@@ -63,7 +63,7 @@ procedure ts_pcscnv is
                 fail : out boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Track one path step by step, interactively, prompting the user each
+  --   Tracks one path step by step, interactively, prompting the user each
   --   time before moving on to the next step, in double precision.
 
   -- ON ENTRY :
@@ -127,7 +127,7 @@ procedure ts_pcscnv is
                 fail : out boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Track one path step by step, interactively, prompting the user each
+  --   Tracks one path step by step, interactively, prompting the user each
   --   time before moving on to the next step, in double double precision.
 
   -- ON ENTRY :
@@ -191,7 +191,7 @@ procedure ts_pcscnv is
                 fail : out boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Track one path step by step, interactively, prompting the user each
+  --   Tracks one path step by step, interactively, prompting the user each
   --   time before moving on to the next step, in quad double precision.
 
   -- ON ENTRY :
@@ -246,7 +246,7 @@ procedure ts_pcscnv is
                 pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
   -- DESCRIPTION :
-  --   Does one predictor-corrector-shift step in double precision.
+  --   Runs predictor-corrector-shift loops in double precision.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
@@ -313,7 +313,7 @@ procedure ts_pcscnv is
                 pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
   -- DESCRIPTION :
-  --   Does one predictor-corrector-shift step in double double precision.
+  --   Runs predictor-corrector-shift loops in double double precision.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
@@ -379,7 +379,7 @@ procedure ts_pcscnv is
                 pars : in Homotopy_Continuation_Parameters.Parameters ) is
 
   -- DESCRIPTION :
-  --   Does one predictor-corrector-shift step in quad double precision.
+  --  Runs predictor-corrector-shift loops in quad double precision.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
@@ -448,6 +448,7 @@ procedure ts_pcscnv is
     idxpar,deg : integer32;
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
+    ans : character;
 
   begin
     new_line;
@@ -456,7 +457,23 @@ procedure ts_pcscnv is
     Standard_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
     pars.gamma := Standard_Homotopy.Accessibility_Constant;
-    Standard_Run(cnvhom,abshom,sols,pars);
+    put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Standard_Run(cnvhom,abshom,sols,pars);
+    else
+      declare
+        file : file_type;
+        verbose : boolean;
+      begin
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+        new_line;
+        put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+        verbose := (ans = 'y');
+        Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
+      end;
+    end if;
   end Standard_Test;
 
   procedure DoblDobl_Test is
@@ -470,6 +487,7 @@ procedure ts_pcscnv is
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
     ddgamma : DoblDobl_Complex_Numbers.Complex_Number;
+    ans : character;
 
     use DoblDobl_Complex_Numbers_cv;
   
@@ -481,7 +499,23 @@ procedure ts_pcscnv is
     abshom := Residual_Convolution_System(cnvhom);
     ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
     pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
-    DoblDobl_Run(cnvhom,abshom,sols,pars);
+    put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      DoblDobl_Run(cnvhom,abshom,sols,pars);
+    else
+      declare
+        file : file_type;
+        verbose : boolean;
+      begin
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+        new_line;
+        put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+        verbose := (ans = 'y');
+        Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
+      end;
+    end if;
   end DoblDobl_Test;
 
   procedure QuadDobl_Test is
@@ -495,6 +529,7 @@ procedure ts_pcscnv is
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
     qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
+    ans : character;
 
     use QuadDobl_Complex_Numbers_cv;
 
@@ -506,7 +541,23 @@ procedure ts_pcscnv is
     abshom := Residual_Convolution_System(cnvhom);
     qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
     pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
-    QuadDobl_Run(cnvhom,abshom,sols,pars);
+    put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      QuadDobl_Run(cnvhom,abshom,sols,pars);
+    else
+      declare
+        file : file_type;
+        verbose : boolean;
+      begin
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+        new_line;
+        put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+        verbose := (ans = 'y');
+        Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
+      end;
+    end if;
   end QuadDobl_Test;
 
   procedure Main is

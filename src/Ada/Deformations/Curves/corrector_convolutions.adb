@@ -945,7 +945,7 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
-        put(file,"after step "); put(k,1);
+        put(file,"after step "); put(file,k,1);
         put(file,", mixres :"); put(file,mixres,3); new_line(file);
       end if;
       if mixres <= tol
@@ -978,7 +978,7 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
-        put(file,"after step "); put(k,1);
+        put(file,"after step "); put(file,k,1);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
       if mixres <= tol
@@ -1011,7 +1011,7 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
-        put(file,"after step "); put(k,1);
+        put(file,"after step "); put(file,k,1);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
       if mixres <= tol

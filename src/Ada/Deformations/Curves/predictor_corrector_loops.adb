@@ -298,4 +298,155 @@ package body Predictor_Corrector_Loops is
     end loop;
   end Track_One_Path;
 
+  procedure Track_All_Paths
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := true ) is
+
+    use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
+
+    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
+    psv : Predictor_Vectors(hom.dim,hom.neq);
+    svh : Link_to_SVD_Hessians := Create(hom.dim);
+    solsptr : Solution_List := sols;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail : boolean;
+    ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
+    dx : Standard_Complex_Vectors.Vector(1..hom.dim);
+    homlead,abhlead : Standard_Complex_VecVecs.Link_to_VecVec;
+    wrk : Standard_Complex_Vectors.Link_to_Vector
+        := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
+    homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
+
+  begin
+    Allocate_Coefficients(hom.crc,homcff);
+    Store_Coefficients(hom.crc,homcff);
+    Allocate_Leading_Coefficients(hom.crc,homlead);
+    Allocate_Leading_Coefficients(abh.crc,abhlead);
+    Store_Leading_Coefficients(hom.crc,homlead);
+    Store_Leading_Coefficients(abh.crc,abhlead);
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr); psv.sol := ls.v;
+      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,
+        prd,psv,svh,dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      ls.v := psv.sol;
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+      Restore_Coefficients(homcff,hom.crc);
+    end loop;
+    Clear(prd); Clear(svh);
+    Standard_Complex_Vectors.Clear(wrk);
+    Standard_Complex_VecVecs.Deep_Clear(homlead);
+    Standard_Complex_VecVecs.Deep_Clear(abhlead);
+    Standard_Speelpenning_Convolutions.Clear(homcff);
+  end Track_All_Paths;
+
+  procedure Track_All_Paths
+              ( file : in file_type;
+                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := true ) is
+
+    use DoblDobl_Complex_Solutions,DoblDobl_Predictor_Convolutions;
+
+    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
+    psv : Predictor_Vectors(hom.dim,hom.neq);
+    svh : Link_to_SVD_Hessians := Create(hom.dim);
+    solsptr : Solution_List := sols;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail : boolean;
+    ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
+    dx : DoblDobl_Complex_Vectors.Vector(1..hom.dim);
+    homlead,abhlead : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+    wrk : DoblDobl_Complex_Vectors.Link_to_Vector
+        := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
+    homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+
+  begin
+    Allocate_Coefficients(hom.crc,homcff);
+    Store_Coefficients(hom.crc,homcff);
+    Allocate_Leading_Coefficients(hom.crc,homlead);
+    Allocate_Leading_Coefficients(abh.crc,abhlead);
+    Store_Leading_Coefficients(hom.crc,homlead);
+    Store_Leading_Coefficients(abh.crc,abhlead);
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr); psv.sol := ls.v;
+      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
+                     dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+      Restore_Coefficients(homcff,hom.crc);
+    end loop;
+    Clear(prd); Clear(svh);
+    DoblDobl_Complex_Vectors.Clear(wrk);
+    DoblDobl_Complex_VecVecs.Deep_Clear(homlead);
+    DoblDobl_Complex_VecVecs.Deep_Clear(abhlead);
+    DoblDobl_Speelpenning_Convolutions.Clear(homcff);
+  end Track_All_Paths;
+
+  procedure Track_All_Paths
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := true ) is
+
+    use QuadDobl_Complex_Solutions,QuadDobl_Predictor_Convolutions;
+
+    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
+    psv : Predictor_Vectors(hom.dim,hom.neq);
+    svh : Link_to_SVD_Hessians := Create(hom.dim);
+    solsptr : Solution_List := sols;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail : boolean;
+    ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
+    dx : QuadDobl_Complex_Vectors.Vector(1..hom.dim);
+    homlead,abhlead : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+    wrk : QuadDobl_Complex_Vectors.Link_to_Vector
+        := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
+    homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+
+  begin
+    Allocate_Coefficients(hom.crc,homcff);
+    Store_Coefficients(hom.crc,homcff);
+    Allocate_Leading_Coefficients(hom.crc,homlead);
+    Allocate_Leading_Coefficients(abh.crc,abhlead);
+    Store_Leading_Coefficients(hom.crc,homlead);
+    Store_Leading_Coefficients(abh.crc,abhlead);
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr); psv.sol := ls.v;
+      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
+                     dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+      Restore_Coefficients(homcff,hom.crc);
+    end loop;
+    Clear(prd); Clear(svh);
+    QuadDobl_Complex_Vectors.Clear(wrk);
+    QuadDobl_Complex_VecVecs.Deep_Clear(homlead);
+    QuadDobl_Complex_VecVecs.Deep_Clear(abhlead);
+    QuadDobl_Speelpenning_Convolutions.Clear(homcff);
+  end Track_All_Paths;
+
 end Predictor_Corrector_Loops;

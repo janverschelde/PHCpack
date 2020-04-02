@@ -11,6 +11,9 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -186,5 +189,42 @@ package Predictor_Corrector_Loops is
   --   nbsteps  number of predictor-corrector steps done;
   --   fail     true if the prescribed tolerance was not reached,
   --            false otherwise.
+
+  procedure Track_All_Paths
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := true );
+  procedure Track_All_Paths
+              ( file : in file_type;
+                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := true );
+  procedure Track_All_Paths
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Tracks all paths starting at the solutions in sols,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     to write output information to;
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters;
+  --   verbose  indicates if extra output is requested.
+  
+  -- ON RETURN :
+  --   sols     solutions at the end of the paths.
 
 end Predictor_Corrector_Loops;
