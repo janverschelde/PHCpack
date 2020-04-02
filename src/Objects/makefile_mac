@@ -2480,6 +2480,10 @@ ts_mtshiftcnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtshiftcnv.adb \
               -o $(BIN)/ts_mtshiftcnv
 
+ts_mtpcscnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtpcscnv.adb \
+              -o $(BIN)/ts_mtpcscnv
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
