@@ -480,6 +480,13 @@ package body Generic_Speelpenning_Convolutions is
     end if;
   end Clear;
 
+  procedure Clear ( s : in out System_Array ) is
+  begin
+    for k in s'range loop
+      Clear(s(k));
+    end loop;
+  end Clear;
+
 -- ALLOCATORS :
 
   function Allocate_Coefficients

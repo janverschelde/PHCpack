@@ -69,6 +69,8 @@ package Generic_Speelpenning_Convolutions is
 
   type Link_to_System is access System;
 
+  type System_Array is array ( integer32 range<> ) of Link_to_System;
+
 -- CONSTRUCTORS :
 
   function Create ( c : Circuits; dim,deg : integer32 ) return System;
@@ -251,9 +253,10 @@ package Generic_Speelpenning_Convolutions is
 
   procedure Clear ( s : in out System );
   procedure Clear ( s : in out Link_to_System );
+  procedure Clear ( s : in out System_Array );
 
   -- DESCRIPTION :
-  --   Deallocates the space occupied by the system s.
+  --   Deallocates the space occupied by the system (array) s.
 
 -- ALLOCATORS :
 
