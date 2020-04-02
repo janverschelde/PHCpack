@@ -108,3 +108,5 @@ ts_mtratapp                       : test on multitasked rational approximations
 multitasked_shift_circuits        : multitasked shift of circuit coefficients
 ts_mtshiftcnv                     : test on multitasked shift of circuits
 -------------------------------------------------------------------------------
+ts_mtpcscnv                       : test mt predictor-corrector-shift loops
+-------------------------------------------------------------------------------
