@@ -1,6 +1,9 @@
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
@@ -9,6 +12,47 @@ with Shift_Convolution_Circuits;
 with Corrector_Convolutions;             use Corrector_Convolutions;
 
 package body Predictor_Corrector_Loops is
+
+  procedure Predictor_Corrector_Loop
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out double_float;
+                step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                fail : out boolean ) is
+
+    use Standard_Predictor_Convolutions;
+
+    info,nbrit : integer32 := 0;
+    mixres : double_float;
+
+  begin
+    Set_Lead_Coefficients(prd,psv.sol);
+    SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
+      endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+    loop
+      Step_Coefficient(hom,step);
+      Update_Radii_of_Constants(abh,hom);
+      LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
+                      pars.tolres,mixres,dx,ipvt,info,fail);
+      exit when not fail;   
+      step := step/2.0;
+      exit when (step < pars.minsize);
+      Standard_Rational_Approximations.Evaluate
+        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+    end loop;
+  end Predictor_Corrector_Loop;
 
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
@@ -58,6 +102,47 @@ package body Predictor_Corrector_Loops is
       end if;
       exit when (step < pars.minsize);
       Standard_Rational_Approximations.Evaluate
+        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+    end loop;
+  end Predictor_Corrector_Loop;
+
+  procedure Predictor_Corrector_Loop
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out DoblDobl_Predictor_Convolutions.Predictor;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out double_double;
+                step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                fail : out boolean ) is
+
+    use DoblDobl_Predictor_Convolutions;
+
+    info,nbrit : integer32 := 0;
+    mixres : double_double;
+
+  begin
+    Set_Lead_Coefficients(prd,psv.sol);
+    SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
+      endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+    loop
+      Step_Coefficient(hom,step);
+      Update_Radii_of_Constants(abh,hom);
+      LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
+                      pars.tolres,mixres,dx,ipvt,info,fail);
+      exit when not fail;
+      step := step/2.0;
+      exit when (step < pars.minsize);
+      DoblDobl_Rational_Approximations.Evaluate
         (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
       Restore_Leading_Coefficients(homlead,hom.crc);
       Restore_Leading_Coefficients(abhlead,abh.crc);
@@ -119,6 +204,47 @@ package body Predictor_Corrector_Loops is
   end Predictor_Corrector_Loop;
 
   procedure Predictor_Corrector_Loop
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out QuadDobl_Predictor_Convolutions.Predictor;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out quad_double;
+                step : out quad_double;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                fail : out boolean ) is
+
+    use QuadDobl_Predictor_Convolutions;
+
+    info,nbrit : integer32 := 0;
+    mixres : quad_double;
+
+  begin
+    Set_Lead_Coefficients(prd,psv.sol);
+    SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
+      pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
+      endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+    loop
+      Step_Coefficient(hom,step);
+      Update_Radii_of_Constants(abh,hom);
+      LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
+                      pars.tolres,mixres,dx,ipvt,info,fail);
+      exit when not fail;
+      step := step/2.0;
+      exit when (step < pars.minsize);
+      QuadDobl_Rational_Approximations.Evaluate
+        (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+      Restore_Leading_Coefficients(homlead,hom.crc);
+      Restore_Leading_Coefficients(abhlead,abh.crc);
+    end loop;
+  end Predictor_Corrector_Loop;
+
+  procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -173,6 +299,39 @@ package body Predictor_Corrector_Loops is
   end Predictor_Corrector_Loop;
 
   procedure Track_One_Path
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                acct : in out double_float;
+                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                fail : out boolean ) is
+
+    endt : constant double_float := 1.0;
+    step : double_float := 0.0;
+    togo : double_float; 
+
+  begin
+    nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
+    for k in 1..pars.maxsteps loop
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,
+        psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,fail);
+      togo := endt - acct;
+      if (abs(togo) < pars.epsilon)
+       then nbsteps := k; exit;
+      end if;
+      Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+    end loop;
+  end Track_One_Path;
+
+  procedure Track_One_Path
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -185,11 +344,12 @@ package body Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                acct : in out double_float;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
     endt : constant double_float := 1.0;
-    acct,step : double_float := 0.0;
+    step : double_float := 0.0;
     togo : double_float; 
 
   begin
@@ -215,6 +375,39 @@ package body Predictor_Corrector_Loops is
   end Track_One_Path;
 
   procedure Track_One_Path
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out DoblDobl_Predictor_Convolutions.Predictor;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                acct : in out double_double;
+                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                fail : out boolean ) is
+
+    endt : constant double_float := 1.0;
+    step : double_double := create(0.0);
+    togo : double_double; 
+
+  begin
+    nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
+    for k in 1..pars.maxsteps loop
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,
+        psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,fail);
+      togo := endt - acct;
+      if (abs(togo) < pars.epsilon)
+       then nbsteps := k; exit;
+      end if;
+      Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+    end loop;
+  end Track_One_Path;
+
+  procedure Track_One_Path
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -227,11 +420,12 @@ package body Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                acct : in out double_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
     endt : constant double_float := 1.0;
-    acct,step : double_double := create(0.0);
+    step : double_double := create(0.0);
     togo : double_double; 
 
   begin
@@ -257,6 +451,39 @@ package body Predictor_Corrector_Loops is
   end Track_One_Path;
 
   procedure Track_One_Path
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out QuadDobl_Predictor_Convolutions.Predictor;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                acct : in out quad_double;
+                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                fail : out boolean ) is
+
+    endt : constant double_float := 1.0;
+    step : quad_double := create(0.0);
+    togo : quad_double; 
+
+  begin
+    nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
+    for k in 1..pars.maxsteps loop
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,
+        psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,fail);
+      togo := endt - acct;
+      if (abs(togo) < pars.epsilon)
+       then nbsteps := k; exit;
+      end if;
+      Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+    end loop;
+  end Track_One_Path;
+
+  procedure Track_One_Path
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -269,11 +496,12 @@ package body Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                acct : in out quad_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
     endt : constant double_float := 1.0;
-    acct,step : quad_double := create(0.0);
+    step : quad_double := create(0.0);
     togo : quad_double; 
 
   begin
@@ -324,6 +552,7 @@ package body Predictor_Corrector_Loops is
     wrk : Standard_Complex_Vectors.Link_to_Vector
         := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
+    acct : double_float;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -333,10 +562,11 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     while not Is_Null(solsptr) loop
-      ls := Head_Of(solsptr); psv.sol := ls.v;
-      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,
-        prd,psv,svh,dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
+      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
+        dx,ipvt,wrk,acct,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
       ls.v := psv.sol;
+      ls.t := Standard_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);
@@ -375,6 +605,7 @@ package body Predictor_Corrector_Loops is
     wrk : DoblDobl_Complex_Vectors.Link_to_Vector
         := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+    acct : double_double;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -384,9 +615,11 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     while not Is_Null(solsptr) loop
-      ls := Head_Of(solsptr); psv.sol := ls.v;
+      ls := Head_Of(solsptr); psv.sol := ls.v; acct := create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
-                     dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+        dx,ipvt,wrk,acct,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      ls.v := psv.sol;
+      ls.t := DoblDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);
@@ -425,6 +658,7 @@ package body Predictor_Corrector_Loops is
     wrk : QuadDobl_Complex_Vectors.Link_to_Vector
         := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+    acct : quad_double;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -434,9 +668,11 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     while not Is_Null(solsptr) loop
-      ls := Head_Of(solsptr); psv.sol := ls.v;
+      ls := Head_Of(solsptr); psv.sol := ls.v; acct := Create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
-                     dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+        dx,ipvt,wrk,acct,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      ls.v := psv.sol;
+      ls.t := QuadDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);

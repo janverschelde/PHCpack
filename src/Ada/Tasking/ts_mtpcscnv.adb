@@ -3,6 +3,10 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
@@ -95,7 +99,7 @@ procedure ts_mtpcscnv is
   end Allocate;
 
   procedure Standard_Multitasked_Tracker
-              ( file : in file_type; nbtasks : in integer32;
+              ( nbtasks : in integer32;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
@@ -144,16 +148,19 @@ procedure ts_mtpcscnv is
 
       myptr : Solution_List;
       ls : Link_to_Solution;
+      t : double_float;
 
     begin
       loop
         myptr := Standard_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        psv(i).sol := ls.v;
-        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+        psv(i).sol := ls.v; t := 0.0;
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,false);
+                       wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
+        ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
+        Set_Head(myptr,ls);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -166,6 +173,7 @@ procedure ts_mtpcscnv is
       myptr : Solution_List;
       ls : Link_to_Solution;
       cnt : integer32;
+      t : double_float;
 
     begin
       loop
@@ -176,10 +184,12 @@ procedure ts_mtpcscnv is
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
-        psv(i).sol := ls.v;
-        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+        psv(i).sol := ls.v; t := 0.0;
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+                       wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
+        ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
+        Set_Head(myptr,ls);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -211,7 +221,7 @@ procedure ts_mtpcscnv is
   end Standard_Multitasked_Tracker;
 
   procedure DoblDobl_Multitasked_Tracker
-              ( file : in file_type; nbtasks : in integer32;
+              ( nbtasks : in integer32;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
@@ -222,7 +232,6 @@ procedure ts_mtpcscnv is
   --   Applies multitasking to track all paths in double double precision.
 
   -- ON ENTRY :
-  --   file     to write output information to;
   --   nbtasks  the number of tasks;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
@@ -260,16 +269,19 @@ procedure ts_mtpcscnv is
 
       myptr : Solution_List;
       ls : Link_to_Solution;
+      t : double_double;
 
     begin
       loop
         myptr := DoblDobl_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        psv(i).sol := ls.v;
-        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+        psv(i).sol := ls.v; t := Create(0.0);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,false);
+                       wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
+        ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
+        Set_Head(myptr,ls);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -282,6 +294,7 @@ procedure ts_mtpcscnv is
       myptr : Solution_List;
       ls : Link_to_Solution;
       cnt : integer32;
+      t : double_double;
 
     begin
       loop
@@ -292,10 +305,12 @@ procedure ts_mtpcscnv is
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
-        psv(i).sol := ls.v;
-        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+        psv(i).sol := ls.v; t := Create(0.0);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+                       wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
+        ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
+        Set_Head(myptr,ls);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -327,7 +342,7 @@ procedure ts_mtpcscnv is
   end DoblDobl_Multitasked_Tracker;
 
   procedure QuadDobl_Multitasked_Tracker
-              ( file : in file_type; nbtasks : in integer32;
+              ( nbtasks : in integer32;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -338,7 +353,6 @@ procedure ts_mtpcscnv is
   --   Applies multitasking to track all paths in quad double precision.
 
   -- ON ENTRY :
-  --   file     to write output information to;
   --   nbtasks  the number of tasks;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
@@ -376,16 +390,19 @@ procedure ts_mtpcscnv is
 
       myptr : Solution_List;
       ls : Link_to_Solution;
+      t : quad_double;
 
     begin
       loop
         myptr := QuadDobl_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        psv(i).sol := ls.v;
-        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+        psv(i).sol := ls.v; t := Create(0.0);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,false);
+                       wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
+        ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
+        Set_Head(myptr,ls);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -398,6 +415,7 @@ procedure ts_mtpcscnv is
       myptr : Solution_List;
       ls : Link_to_Solution;
       cnt : integer32;
+      t : quad_double;
 
     begin
       loop
@@ -408,10 +426,12 @@ procedure ts_mtpcscnv is
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
-        psv(i).sol := ls.v;
-        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+        psv(i).sol := ls.v; t := Create(0.0);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+                       wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
+        ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
+        Set_Head(myptr,ls);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -470,7 +490,7 @@ procedure ts_mtpcscnv is
     verbose := (ans = 'y');
     new_line;
     put("Give the number of tasks : "); get(nbt);
-    Standard_Multitasked_Tracker(file,nbt,cnvhom,abshom,sols,pars,verbose);
+    Standard_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
   end Standard_Test;
 
   procedure DoblDobl_Test is
@@ -505,7 +525,7 @@ procedure ts_mtpcscnv is
     verbose := (ans = 'y');
     new_line;
     put("Give the number of tasks : "); get(nbt);
-    DoblDobl_Multitasked_Tracker(file,nbt,cnvhom,abshom,sols,pars,verbose);
+    DoblDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test is
@@ -540,7 +560,7 @@ procedure ts_mtpcscnv is
     verbose := (ans = 'y');
     new_line;
     put("Give the number of tasks : "); get(nbt);
-    QuadDobl_Multitasked_Tracker(file,nbt,cnvhom,abshom,sols,pars,verbose);
+    QuadDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
   end QuadDobl_Test;
 
   procedure Main is

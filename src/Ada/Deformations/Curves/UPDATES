@@ -1,3 +1,7 @@
+Fri 3 Apr 2020 : added procedures without output to the packages
+  *predictor_convolutions, corrector_convolutions, predictor_corrector_loops,
+  and ts_pcscnv.
+
 Thu 2 Apr 2020 : added array types to the predictor convolutions packages
   {standard,dobldobl,quaddobl}_predictor_convolutions.
 

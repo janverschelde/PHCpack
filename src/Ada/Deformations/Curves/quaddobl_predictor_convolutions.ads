@@ -224,6 +224,12 @@ package QuadDobl_Predictor_Convolutions is
   --   output   if true, then numcff and dencff are written to screen.
 
   procedure Newton_Fabry
+              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out quad_double;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out quad_double );
+  procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Link_to_System; prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
@@ -237,12 +243,13 @@ package QuadDobl_Predictor_Convolutions is
   --   to predict the next solution, in quad double precision.
 
   -- ON ENTRY :
-  --   file     to write data to if output;
+  --   file     to write data to if output (optional);
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
-  --   output   flag to indicate data output during computations.
+  --   output   flag to indicate data output during computations,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -253,6 +260,12 @@ package QuadDobl_Predictor_Convolutions is
   --   rad      estimates radius of convergence of the series;
   --   err      error estimate on the location of z.
 
+  procedure Newton_Fabry
+              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out quad_double;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out quad_double );
   procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
@@ -267,12 +280,13 @@ package QuadDobl_Predictor_Convolutions is
   --   to predict the next solution, in quad double precision.
 
   -- ON ENTRY :
-  --   file     to write data to if output;
+  --   file     to write data to if output (optional);
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
-  --   output   flag to indicate data output during computations.
+  --   output   flag to indicate data output during computations,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -299,6 +313,13 @@ package QuadDobl_Predictor_Convolutions is
   --   based on the singular values in svh.
 
   procedure Hesse_Pade
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                res : out QuadDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out quad_double );
+  procedure Hesse_Pade
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in QuadDobl_Predictor_Convolutions.Link_to_LU_Predictor;
@@ -313,13 +334,14 @@ package QuadDobl_Predictor_Convolutions is
   --   distance to the closest path to determine the step size.
 
   -- ON ENTRY :
-  --   file     to write the output to if verbose;
+  --   file     to write the output to if verbose (optional);
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   sol      the leading coefficients of the solution series;
   --   beta2    multiplication factor for the curvature step;
-  --   verbose  flag for intermediate numerical output.
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   res      solution error estimated by Pade approximants in prd,
@@ -327,6 +349,13 @@ package QuadDobl_Predictor_Convolutions is
   --   nrm      2-norm of res;
   --   step     computed curvature step.
 
+  procedure Hesse_Pade
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                res : out QuadDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out quad_double );
   procedure Hesse_Pade
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -342,13 +371,14 @@ package QuadDobl_Predictor_Convolutions is
   --   distance to the closest path to determine the step size.
 
   -- ON ENTRY :
-  --   file     to write the output to if verbose;
+  --   file     to write the output to if verbose (optional);
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for SVD Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   sol      the leading coefficients of the solution series;
   --   beta2    multiplication factor for the curvature step;
-  --   verbose  flag for intermediate numerical output.
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   res      solution error estimated by Pade approximants in prd,
@@ -356,6 +386,13 @@ package QuadDobl_Predictor_Convolutions is
   --   nrm      2-norm of res;
   --   step     computed curvature step.
 
+  procedure Predictor_Feedback
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Predictor_Vectors;
+                numcff,dencff : in QuadDobl_Complex_VecVecs.VecVec;
+                step : in out quad_double; minstep,alpha : in double_float;
+                nrm,mixres : out quad_double; nbfail : out integer32 );
   procedure Predictor_Feedback
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -400,6 +437,15 @@ package QuadDobl_Predictor_Convolutions is
 -- MAIN PREDICTOR PROCEDURES :
 
   procedure LU_Prediction
+              ( hom,abh : in Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out quad_double;
+                fail : out boolean; step : out quad_double;
+                nbpole,nbhess,nbmaxm : in out natural32 );
+  procedure LU_Prediction
               ( file : in file_type; hom,abh : in Link_to_System;
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
@@ -421,6 +467,7 @@ package QuadDobl_Predictor_Convolutions is
   --   to predict the next solution, in double precision.
 
   -- ON ENTRY :
+  --   file     to write extra output to if output and/or verbose (optional);
   --   hom      homotopy convolution circuit system
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
@@ -439,8 +486,10 @@ package QuadDobl_Predictor_Convolutions is
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the curve step was minimal;
   --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate data output during computations;
-  --   verbose  flag for intermediate numerical output.
+  --   output   flag to indicate data output during computations,
+  --            if a file is given on input;
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -456,7 +505,16 @@ package QuadDobl_Predictor_Convolutions is
   --   nbmaxm   updated number of times the maximum step size was minimal.
 
   procedure SVD_Prediction
-              ( file : in file_type;  hom,abh : in Link_to_System;
+              ( hom,abh : in Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out quad_double;
+                fail : out boolean; step : out quad_double;
+                nbpole,nbhess,nbmaxm : in out natural32 );
+  procedure SVD_Prediction
+              ( file : in file_type; hom,abh : in Link_to_System;
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
@@ -472,6 +530,7 @@ package QuadDobl_Predictor_Convolutions is
   --   to predict the next solution.
 
   -- ON ENTRY :
+  --   file     to write extra output to if output and/or verbose (optional);
   --   hom      homotopy convolution circuit system
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
@@ -490,8 +549,10 @@ package QuadDobl_Predictor_Convolutions is
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the curve step was minimal;
   --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate extra output during computations;
-  --   verbose  flag for intermediate numerical output.
+  --   output   flag to indicate extra output during computations,
+  --            if a file is given on input;
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;

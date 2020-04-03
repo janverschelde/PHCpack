@@ -8,6 +8,7 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
@@ -273,6 +274,7 @@ procedure ts_pcscnv is
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
         := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
+    t : double_float;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -284,14 +286,16 @@ procedure ts_pcscnv is
     put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
     stepwise := (ans = 'y');
     loop
-      ls := Head_Of(solsptr); psv.sol := ls.v;
+      ls := Head_Of(solsptr); psv.sol := ls.v; t := 0.0;
       if stepwise then
         Step_Track(hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
       end if;
+      ls.v := psv.sol;
+      ls.t := Standard_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -340,6 +344,7 @@ procedure ts_pcscnv is
     wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
         := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+    t : double_double;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -351,14 +356,16 @@ procedure ts_pcscnv is
     put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
     stepwise := (ans = 'y');
     loop
-      ls := Head_Of(solsptr); psv.sol := ls.v;
+      ls := Head_Of(solsptr); psv.sol := ls.v; t := Create(0.0);
       if stepwise then
         Step_Track(hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
       end if;
+      ls.v := psv.sol;
+      ls.t := DoblDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -406,6 +413,7 @@ procedure ts_pcscnv is
     wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
         := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+    t : quad_double;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -417,14 +425,16 @@ procedure ts_pcscnv is
     put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
     stepwise := (ans = 'y');
     loop
-      ls := Head_Of(solsptr); psv.sol := ls.v;
+      ls := Head_Of(solsptr); psv.sol := ls.v; t := create(0.0);
       if stepwise then
         Step_Track(hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
       end if;
+      ls.v := psv.sol;
+      ls.t := QuadDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;

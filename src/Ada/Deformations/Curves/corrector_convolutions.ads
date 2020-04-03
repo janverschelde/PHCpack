@@ -260,8 +260,14 @@ package Corrector_Convolutions is
   --   the series coefficient evaluated at t,
   --   in double, double double, and quad double precision.
 
--- RUNNING NEWTON'S METHOD :
+-- RUNNING ONE STEP OF NEWTON'S METHOD :
 
+  procedure LU_Newton_Step
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sol : in out Standard_Complex_Vectors.Vector;
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
   procedure LU_Newton_Step
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -270,12 +276,24 @@ package Corrector_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; verbose : in boolean := true );
   procedure LU_Newton_Step
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
+  procedure LU_Newton_Step
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sol : in out DoblDobl_Complex_Vectors.Vector;
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; verbose : in boolean := true );
+  procedure LU_Newton_Step
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
   procedure LU_Newton_Step
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -289,10 +307,11 @@ package Corrector_Convolutions is
   --   in double, double double, or quad double precision.
 
   -- ON ENTRY :
-  --   file     to write extra output to if verbose;
+  --   file     to write extra output to if verbose (optional);
   --   hom      convolution system for a homotopy;
   --   sol      an initial value for a solution at t = 0;
-  --   verbose  flag to indicate if vectors need to be written.
+  --   verbose  flag to indicate if vectors need to be written,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   sol      the updated solution;
@@ -301,6 +320,17 @@ package Corrector_Convolutions is
   --   info     zero is all went well, if nonzero,
   --            then the matrix in hom.vm(0) may be singular.
 
+-- RUNNING MANY STEPs OF NEWTON'S METHOD :
+
+  procedure LU_Newton_Steps
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out double_float; 
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32; fail : out boolean );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -313,6 +343,15 @@ package Corrector_Convolutions is
                 info : out integer32; fail : out boolean;
                 verbose : in boolean := true );
   procedure LU_Newton_Steps
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out double_double; 
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32; fail : out boolean );
+  procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -323,6 +362,15 @@ package Corrector_Convolutions is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
                 verbose : in boolean := true );
+  procedure LU_Newton_Steps
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out quad_double; 
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32; fail : out boolean );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -340,13 +388,14 @@ package Corrector_Convolutions is
   --   in double, double double, or quad double precision.
 
   -- ON ENTRY :
-  --   file     to write extra output to if verbose;
+  --   file     to write extra output to if verbose (optional);
   --   hom      convolution system for a homotopy;
   --   abh      homotopy with radii for coefficients for mixed residual;
   --   psv      psv.sol contains an initial value for a solution at t = 0;
   --   maxit    maximum number of iterations;
   --   tol      tolerance on the updatex dx;
-  --   verbose  flag to indicate if vectors need to be written.
+  --   verbose  flag to indicate if vectors need to be written,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   psv.sol  the updated solution;

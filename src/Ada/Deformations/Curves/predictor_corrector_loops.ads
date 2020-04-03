@@ -30,6 +30,20 @@ package Predictor_Corrector_Loops is
 --   in case the predicted step size would be too large.
 
   procedure Predictor_Corrector_Loop
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out double_float;
+                step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
+  procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -46,6 +60,20 @@ package Predictor_Corrector_Loops is
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true );
   procedure Predictor_Corrector_Loop
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out DoblDobl_Predictor_Convolutions.Predictor;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out double_double;
+                step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
+  procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -61,6 +89,20 @@ package Predictor_Corrector_Loops is
                 step : out double_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true );
+  procedure Predictor_Corrector_Loop
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out QuadDobl_Predictor_Convolutions.Predictor;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                endt : in double_float; acct : in out quad_double;
+                step : out quad_double;
+                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -83,7 +125,7 @@ package Predictor_Corrector_Loops is
   --   in double, double double, or quad double precision.
 
   -- ON ENTRY :
-  --   file     to write the extra output to;
+  --   file     to write the extra output to (optional);
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   homlead  leading coefficients for the circuits in hom;
@@ -100,7 +142,7 @@ package Predictor_Corrector_Loops is
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
-  --   verbose  flag for extra output.
+  --   verbose  flag for extra output, if a file is given on input.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;
@@ -115,6 +157,21 @@ package Predictor_Corrector_Loops is
   --            false otherwise.
 
   procedure Track_One_Path
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                acct : in out double_float;
+                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                fail : out boolean );
+  procedure Track_One_Path
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -127,8 +184,24 @@ package Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                acct : in out double_float;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true );
+  procedure Track_One_Path
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out DoblDobl_Predictor_Convolutions.Predictor;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                acct : in out double_double;
+                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                fail : out boolean );
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -142,8 +215,24 @@ package Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                acct : in out double_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true );
+  procedure Track_One_Path
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32;
+                prd : in out QuadDobl_Predictor_Convolutions.Predictor;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
+                svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                acct : in out quad_double;
+                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                fail : out boolean );
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -157,6 +246,7 @@ package Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                acct : in out quad_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true );
 
@@ -164,7 +254,7 @@ package Predictor_Corrector_Loops is
   --   Tracks one path in double, double double, or quad double precision.
 
   -- ON ENTRY :
-  --   file     to write the extra output to, if verbose;
+  --   file     to write the extra output to, if verbose (optional);
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   homlead  leading coefficients for the circuits in hom;
@@ -177,12 +267,15 @@ package Predictor_Corrector_Loops is
   --   svh      work space for Hessian convolutions;
   --   wrk      work space vector for power series coefficients
   --            during the shifting of the coefficients;
-  --   verbose  indicates if extra output is requested.
+  --   acct     start value for the homotopy continuation parameter t;
+  --   verbose  indicates if extra output is requested,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;
   --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
+  --   acct     accumulated value of the homotopy continuation parameter t;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;

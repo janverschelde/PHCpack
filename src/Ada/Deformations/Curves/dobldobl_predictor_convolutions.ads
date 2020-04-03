@@ -224,6 +224,12 @@ package DoblDobl_Predictor_Convolutions is
   --   output   if true, then numcff and dencff are written to screen.
 
   procedure Newton_Fabry
+              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out double_double;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_double );
+  procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Link_to_System; prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
@@ -237,12 +243,13 @@ package DoblDobl_Predictor_Convolutions is
   --   to predict the next solution, in double double precision.
 
   -- ON ENTRY :
-  --   file     for writing data to if output;
+  --   file     for writing data to if output (optional);
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
-  --   output   flag to indicate data output during computations.
+  --   output   flag to indicate data output during computations,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -253,6 +260,12 @@ package DoblDobl_Predictor_Convolutions is
   --   rad      estimates radius of convergence of the series;
   --   err      error estimate on the location of z.
 
+  procedure Newton_Fabry
+              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out double_double;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_double );
   procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
@@ -267,12 +280,13 @@ package DoblDobl_Predictor_Convolutions is
   --   to predict the next solution, in double double precision.
 
   -- ON ENTRY :
-  --   file     for writing data to if output;
+  --   file     for writing data to if output (optional);
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
-  --   output   flag to indicate data output during computations.
+  --   output   flag to indicate data output during computations,
+  --            if a file is provided on input.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -299,6 +313,13 @@ package DoblDobl_Predictor_Convolutions is
   --   based on the singular values in svh.
 
   procedure Hesse_Pade
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                res : out DoblDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_double );
+  procedure Hesse_Pade
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
@@ -313,13 +334,14 @@ package DoblDobl_Predictor_Convolutions is
   --   distance to the closest path to determine the step size.
 
   -- ON ENTRY :
-  --   file     to write the output to if verbose;
+  --   file     to write the output to if verbose (optional);
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   sol      the leading coefficients of the solution series;
   --   beta2    multiplication factor for the curvature step;
-  --   verbose  flag for intermediate numerical output.
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   res      solution error estimated by Pade approximants in prd,
@@ -327,6 +349,13 @@ package DoblDobl_Predictor_Convolutions is
   --   nrm      2-norm of res;
   --   step     computed curvature step.
 
+  procedure Hesse_Pade
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                res : out DoblDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_double );
   procedure Hesse_Pade
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -342,13 +371,14 @@ package DoblDobl_Predictor_Convolutions is
   --   distance to the closest path to determine the step size.
 
   -- ON ENTRY :
-  --   file     to write the output to if verbose;
+  --   file     to write the output to if verbose (optional);
   --   hom      homotopy convolution circuit system
   --   prd      predictor data for SVD Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   sol      the leading coefficients of the solution series;
   --   beta2    multiplication factor for the curvature step;
-  --   verbose  flag for intermediate numerical output.
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   res      solution error estimated by Pade approximants in prd,
@@ -356,6 +386,13 @@ package DoblDobl_Predictor_Convolutions is
   --   nrm      2-norm of res;
   --   step     computed curvature step.
 
+  procedure Predictor_Feedback
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Predictor_Vectors;
+                numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
+                step : in out double_double; minstep,alpha : in double_float;
+                nrm,mixres : out double_double; nbfail : out integer32 );
   procedure Predictor_Feedback
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -373,7 +410,7 @@ package DoblDobl_Predictor_Convolutions is
   --   or the step becomes smaller than the minimum step size.
 
   -- ON ENTRY :
-  --   file     for writing output to if verbose;
+  --   file     for writing output to if verbose (optional);
   --   hom      homotopy convolution circuit system
   --   abh      circuits with radii as coeffiecients, for mixed residuals;
   --   psv      work space for solution vectors and residuals;
@@ -386,7 +423,8 @@ package DoblDobl_Predictor_Convolutions is
   --   radsol   work space for the radii of eva;
   --   res      work space of hom.crc'range for evaluation of eva;
   --   absres   work space of abh.crc'range for evaluation of radsol;
-  --   verbose  flag for extra output if true.
+  --   verbose  flag for extra output if true,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   step     shorter step size if nbfail > 0;
@@ -399,6 +437,15 @@ package DoblDobl_Predictor_Convolutions is
 
 -- MAIN PREDICTOR PROCEDURES :
 
+  procedure LU_Prediction
+              ( hom,abh : in Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_double;
+                fail : out boolean; step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32 );
   procedure LU_Prediction
               ( file : in file_type; hom,abh : in Link_to_System;
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
@@ -421,7 +468,7 @@ package DoblDobl_Predictor_Convolutions is
   --   to predict the next solution.
 
   -- ON ENTRY :
-  --   file     to write extra output to if output and/or verbose;
+  --   file     to write extra output to if output and/or verbose (optional);
   --   hom      homotopy convolution circuit system
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
@@ -440,8 +487,10 @@ package DoblDobl_Predictor_Convolutions is
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the curve step was minimal;
   --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate data output during computations;
-  --   verbose  flag for intermediate numerical output.
+  --   output   flag to indicate data output during computations,
+  --            if a file is given on input;
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -456,6 +505,15 @@ package DoblDobl_Predictor_Convolutions is
   --   nbhess   updated number of times the curve step was minimal;
   --   nbmaxm   updated number of times the maximum step size was minimal.
 
+  procedure SVD_Prediction
+              ( hom,abh : in Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_double;
+                fail : out boolean; step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32 );
   procedure SVD_Prediction
               ( file : in file_type; hom,abh : in Link_to_System;
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
@@ -473,6 +531,7 @@ package DoblDobl_Predictor_Convolutions is
   --   to predict the next solution.
 
   -- ON ENTRY :
+  --   file     to write extra output to if output and/or verbose (optional);
   --   hom      homotopy convolution circuit system
   --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
@@ -491,8 +550,10 @@ package DoblDobl_Predictor_Convolutions is
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the curve step was minimal;
   --   nbmaxm   number of times the maximum step size was minimal;
-  --   output   flag to indicate extra output during computations;
-  --   verbose  flag for intermediate numerical output.
+  --   output   flag to indicate extra output during computations,
+  --            if a file is given on input;
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;

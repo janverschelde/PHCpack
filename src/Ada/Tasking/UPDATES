@@ -1,3 +1,6 @@
+Fri 3 Apr 2020 : updated ts_mtpcscnv for the modified specifications of
+  the path tracking procedures.
+
 Thu 2 Apr 2020 : added ts_mtpcscnv, skeleton procedure to develop and test
   the multitasked path tracking with homotopy convolution circuits.
   Added allocations of work space arrays in ts_mtpcscnv.

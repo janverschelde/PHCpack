@@ -236,6 +236,28 @@ package body DoblDobl_Predictor_Convolutions is
   end Newton_Fabry_Report;
 
   procedure Newton_Fabry
+              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out double_double;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_double ) is
+
+    use DoblDobl_Rational_Approximations;
+    use Newton_Power_Convolutions;
+
+    info : integer32;
+
+  begin
+    nbrit := 0;
+    LU_Newton_Steps
+      (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
+       info,prd.newtpiv,prd.wrk,false,false);
+    Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
+    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
+                prd.mat,prd.rhs,prd.padepiv,info,false);
+  end Newton_Fabry;
+
+  procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Link_to_System; prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
@@ -261,6 +283,28 @@ package body DoblDobl_Predictor_Convolutions is
          info,prd.newtpiv,prd.wrk,false,false);
       Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     end if;
+    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
+                prd.mat,prd.rhs,prd.padepiv,info,false);
+  end Newton_Fabry;
+
+  procedure Newton_Fabry
+              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out double_double;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_double ) is
+
+    use DoblDobl_Rational_Approximations;
+    use Newton_Power_Convolutions;
+
+    info : integer32;
+
+  begin
+    nbrit := 0;
+    SVD_Newton_Steps
+      (hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,fail,
+       prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
+    Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
   end Newton_Fabry;
@@ -330,6 +374,31 @@ package body DoblDobl_Predictor_Convolutions is
   end Distance;
 
   procedure Hesse_Pade
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                res : out DoblDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_double ) is
+
+    info : integer32;
+    dd_beta2 : constant double_double := create(beta2);
+
+    use DoblDobl_Complex_Singular_Values;
+
+  begin -- with LU, the system is square so svh.H work space works
+    svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
+    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info);
+    svh.vals(0) := svh.svl(svh.dim);
+    Second(hom,svh,sol);
+    eta := Distance(svh);
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
+    step := Series_and_Predictors.Step_Distance(prd.deg,dd_beta2,eta,nrm);
+  end Hesse_Pade;
+
+  procedure Hesse_Pade
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_LU_Predictor;
@@ -365,6 +434,26 @@ package body DoblDobl_Predictor_Convolutions is
   end Hesse_Pade;
 
   procedure Hesse_Pade
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
+                svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                res : out DoblDobl_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_double ) is
+
+    dd_beta2 : constant double_double := create(beta2);
+
+  begin
+    svh.vals(0) := prd.svl(prd.dim);
+    Second(hom,svh,sol);
+    eta := Distance(svh);
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := DoblDobl_Complex_Vector_Norms.Norm2(res);
+    step := Series_and_Predictors.Step_Distance(prd.deg,dd_beta2,eta,nrm);
+  end Hesse_Pade;
+
+  procedure Hesse_Pade
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 prd : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Predictor;
@@ -393,6 +482,35 @@ package body DoblDobl_Predictor_Convolutions is
       put(file,"  curv_step : "); put(file,step,3); new_line(file);
     end if;
   end Hesse_Pade;
+
+  procedure Predictor_Feedback
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Predictor_Vectors;
+                numcff,dencff : in DoblDobl_Complex_VecVecs.VecVec;
+                step : in out double_double; minstep,alpha : in double_float;
+                nrm,mixres : out double_double; nbfail : out integer32 ) is
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    nbfail := 0;
+    loop
+      DoblDobl_Rational_Approximations.Evaluate(numcff,dencff,step,psv.sol);
+      z := DoblDobl_Complex_Numbers.Create(step);
+      psv.res := Eval(hom.crc,psv.sol,z);
+      nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(psv.res);
+      psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
+      psv.radres := Eval(abh.crc,psv.radsol,z);
+      mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
+      if mixres < alpha then
+        exit;
+      else
+        step := step/2.0; nbfail := nbfail + 1;
+        exit when (step < minstep);
+      end if;
+    end loop;
+  end Predictor_Feedback;
 
   procedure Predictor_Feedback
               ( file : in file_type;
@@ -442,6 +560,38 @@ package body DoblDobl_Predictor_Convolutions is
   end Predictor_Feedback;
 
 -- MAIN PREDICTOR PROCEDURES :
+
+  procedure LU_Prediction
+              ( hom,abh : in Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_double;
+                fail : out boolean; step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32 ) is
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+    r,err,absdx,pole_step,eta,nrm,curv_step,mixres : double_double;
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    nbrit,nbfail : integer32;
+    dd_maxstep : constant double_double := create(maxstep);
+
+    use Three_Way_Minima;
+
+  begin
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err);
+    pole_step := beta1*r;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
+    end loop;
+    Hesse_Pade(hom,prd,svh,psv.sol,psv.res,beta2,eta,nrm,curv_step);
+    Minimum(pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
+    Bounded_Update(acct,step,endt,minstep);
+    Predictor_Feedback(hom,abh,psv,prd.numcff,prd.dencff,
+      step,minstep,alpha,nrm,mixres,nbfail);
+    fail := (mixres > alpha);
+  end LU_Prediction;
 
   procedure LU_Prediction
               ( file : in file_type; hom,abh : in Link_to_System;
@@ -518,6 +668,38 @@ package body DoblDobl_Predictor_Convolutions is
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
       step,minstep,alpha,nrm,mixres,nbfail,verbose);
+    fail := (mixres > alpha);
+  end SVD_Prediction;
+
+  procedure SVD_Prediction
+              ( hom,abh : in Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_double;
+                fail : out boolean; step : out double_double;
+                nbpole,nbhess,nbmaxm : in out natural32 ) is
+
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,mixres : double_double;
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    nbrit,nbfail : integer32;
+    dd_maxstep : constant double_double := create(maxstep);
+
+    use Three_Way_Minima;
+
+  begin
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err);
+    pole_step := beta1*r;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
+    end loop;
+    Hesse_Pade(hom,prd,svh,psv.sol,psv.res,beta2,eta,nrm,curv_step);
+    Minimum(pole_step,curv_step,dd_maxstep,step,nbpole,nbhess,nbmaxm);
+    Bounded_Update(acct,step,endt,minstep);
+    Predictor_Feedback(hom,abh,psv,prd.numcff,prd.dencff,
+      step,minstep,alpha,nrm,mixres,nbfail);
     fail := (mixres > alpha);
   end SVD_Prediction;
 
