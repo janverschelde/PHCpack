@@ -83,6 +83,8 @@ package Standard_Predictor_Convolutions is
     end case;
   end record;
 
+  type Predictor_Array is array ( integer32 range <> ) of Predictor;
+
   type Predictor_Vectors ( dim,neq : integer32 ) is record
     sol : Standard_Complex_Vectors.Vector(1..dim);    -- solution work space
     radsol : Standard_Complex_Vectors.Vector(1..dim); -- radii of sol(k)
@@ -150,18 +152,39 @@ package Standard_Predictor_Convolutions is
   --   Returns an instance of the predictor of the corresponding kind.
 
   function Create ( sol : Standard_Complex_Vectors.Vector;
-	            neq,deg,numdeg,dendeg : integer32;
+                    neq,deg,numdeg,dendeg : integer32;
                     kind : Predictor_Type ) return Predictor;
 
   -- DESCRIPTION :
   --   Given solution vector, dimensions, and the kind,
   --   returns the corresponding predictor.
 
+  function Create ( nbr : integer32;
+                    sol : Standard_Complex_Vectors.Vector;
+                    neq,deg,numdeg,dendeg : integer32;
+                    kind : Predictor_Type ) return Predictor_Array;
+
+  -- DESCRIPTION :
+  --   Given solution vector, dimensions, and the kind,
+  --   returns the corresponding predictor array of range 1..nbr.
+
+  function Create ( nbr,dim,neq : integer32 ) return Predictor_Vectors_Array;
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 1..nbr with Predictor_Vectors allocated
+  --   for dimension dim and number of equations neq.
+
   function Create ( dim : integer32 ) return Link_to_SVD_Hessians;
 
   -- DESCRIPTION :
   --   Returns the allocated and initialized data structures for
   --   the computation of the curvature step size.
+
+  function Create ( nbr,dim : integer32 ) return SVD_Hessians_Array;
+
+  -- DESCRIPTION :
+  --   Returns an array of range 1..nbr of data structures of dimension dim
+  --   for the computation of the curvature step size.
 
 -- AUXILIARY PREDICTOR PROCEDURES FOR SETUP :
 
@@ -490,6 +513,7 @@ package Standard_Predictor_Convolutions is
   --   and the rational approximation.
 
   procedure Clear ( p : in out Predictor );
+  procedure Clear ( p : in out Predictor_Array );
 
   -- DESCRIPTION :
   --   Deallocates the memory allocated to p.

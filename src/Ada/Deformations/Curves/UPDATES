@@ -1,3 +1,6 @@
+Thu 2 Apr 2020 : added array types to the predictor convolutions packages
+  {standard,dobldobl,quaddobl}_predictor_convolutions.
+
 Wed 1 Apr 2020 : added a create procedure to wrap the allocation of a
   pointer to the data for the Hessians in *predictor_convolutions,
   with updates and improvements in ts_pcscnv.  New package with code

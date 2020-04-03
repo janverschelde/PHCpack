@@ -133,6 +133,32 @@ package body QuadDobl_Predictor_Convolutions is
     end case;
   end Create;
 
+  function Create ( nbr : integer32;
+                    sol : QuadDobl_Complex_Vectors.Vector;
+                    neq,deg,numdeg,dendeg : integer32;
+                    kind : Predictor_Type ) return Predictor_Array is
+
+    res : Predictor_Array(1..nbr);
+
+  begin
+    for k in 1..nbr loop
+      res(k) := Create(sol,neq,deg,numdeg,dendeg,kind);
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( nbr,dim,neq : integer32 )
+                  return Predictor_Vectors_Array is
+
+    res : Predictor_Vectors_Array(1..nbr);
+
+  begin
+    for k in 1..nbr loop
+      res(k) := new Predictor_Vectors(dim,neq);
+    end loop;
+    return res;
+  end Create;
+
   function Create ( dim : integer32 ) return Link_to_SVD_Hessians is
 
     res : Link_to_SVD_Hessians;
@@ -146,8 +172,18 @@ package body QuadDobl_Predictor_Convolutions is
     return res;
   end Create;
 
--- AUXILIARY PREDICTOR PROCEDURES FOR SETUP :
+  function Create ( nbr,dim : integer32 ) return SVD_Hessians_Array is
 
+    res : SVD_Hessians_Array(1..nbr);
+
+  begin
+    for k in 1..nbr loop
+      res(k) := Create(dim);
+    end loop;
+    return res;
+  end Create;
+
+-- AUXILIARY PREDICTOR PROCEDURES FOR SETUP :
 
   procedure Set_Lead_Coefficients
               ( p : in Predictor;
@@ -525,6 +561,16 @@ package body QuadDobl_Predictor_Convolutions is
       when LU  => Clear(p.ludata);
       when SVD => Clear(p.svdata);
     end case;
+  end Clear;
+
+  procedure Clear ( p : in out Predictor_Array ) is
+  begin
+    for i in p'range loop
+      case p(i).kind is
+        when LU => Clear(p(i).ludata);
+        when SVD => Clear(p(i).svdata);
+      end case;
+    end loop;
   end Clear;
 
   procedure Clear ( p : in out Link_to_Predictor_Vectors ) is

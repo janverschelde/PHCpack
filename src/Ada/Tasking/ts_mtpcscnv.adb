@@ -29,6 +29,9 @@ with QuadDobl_Homotopy;
 with QuadDobl_Homotopy_Convolutions_io;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
+with Standard_Predictor_Convolutions;
+with DoblDobl_Predictor_Convolutions;
+with QuadDobl_Predictor_Convolutions;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Corrector_Convolutions;             use Corrector_Convolutions;
 with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
@@ -115,13 +118,24 @@ procedure ts_mtpcscnv is
   --   sols     solutions at the end of the paths.
 
     use Standard_Complex_Solutions,Standard_Speelpenning_Convolutions;
+    use Standard_Predictor_Convolutions;
 
+    maxit : constant integer32 := 4;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail : boolean;
     homsa,abhsa : System_Array(1..nbtasks);
     homlead,abhlead : VecVecVec(1..nbtasks);
     homcff : VecVecVec_Array(1..nbtasks);
     dx : Standard_Complex_VecVecs.VecVec(1..nbtasks);
     wrk : Standard_Complex_VecVecs.VecVec(1..nbtasks);
     ipvt : Standard_Integer_VecVecs.VecVec(1..nbtasks);
+    first : constant Link_to_Solution := Head_Of(sols);
+    prd : Predictor_Array(1..nbtasks)
+        := Create(nbtasks,first.v,hom.neq,hom.deg,
+                  integer32(pars.numdeg),integer32(pars.dendeg),SVD);
+    psv : Predictor_Vectors_Array(1..nbtasks)
+        := Create(nbtasks,hom.dim,hom.neq);
+    svh : SVD_Hessians_Array(1..nbtasks) := Create(nbtasks,hom.dim);
 
     procedure Silent_Track ( i,n : in integer32 ) is
 
@@ -136,6 +150,10 @@ procedure ts_mtpcscnv is
         myptr := Standard_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
+        psv(i).sol := ls.v;
+        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+                       maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
+                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,false);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -158,7 +176,10 @@ procedure ts_mtpcscnv is
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
-        delay 0.1;
+        psv(i).sol := ls.v;
+        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+                       maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
+                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -175,7 +196,7 @@ procedure ts_mtpcscnv is
       Store_Coefficients(hom.crc,homcff(k));
     end loop;
     Allocate(ipvt,hom.dim); Allocate(dx,hom.dim);
-    wrk := Allocate_Coefficients(hom.dim,hom.deg);
+    wrk := Allocate_Coefficients(nbtasks,hom.deg);
     Standard_Solutions_Queue.Initialize(sols);
     if verbose
      then report_do_jobs(nbtasks);
@@ -186,6 +207,7 @@ procedure ts_mtpcscnv is
     Standard_Complex_VecVecs.Clear(dx);
     Standard_Complex_VecVecs.Clear(wrk);
     Standard_Integer_VecVecs.Clear(ipvt);
+    Clear(prd); Clear(psv); Clear(svh);
   end Standard_Multitasked_Tracker;
 
   procedure DoblDobl_Multitasked_Tracker
@@ -212,13 +234,24 @@ procedure ts_mtpcscnv is
   --   sols     solutions at the end of the paths.
 
     use DoblDobl_Complex_Solutions,DoblDobl_Speelpenning_Convolutions;
+    use DoblDobl_Predictor_Convolutions;
 
+    maxit : constant integer32 := 4;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail : boolean;
     homsa,abhsa : System_Array(1..nbtasks);
     homlead,abhlead : VecVecVec(1..nbtasks);
     homcff : VecVecVec_Array(1..nbtasks);
     dx : DoblDobl_Complex_VecVecs.VecVec(1..nbtasks);
     wrk : DoblDobl_Complex_VecVecs.VecVec(1..nbtasks);
     ipvt : Standard_Integer_VecVecs.VecVec(1..nbtasks);
+    first : constant Link_to_Solution := Head_Of(sols);
+    prd : Predictor_Array(1..nbtasks)
+        := Create(nbtasks,first.v,hom.neq,hom.deg,
+                  integer32(pars.numdeg),integer32(pars.dendeg),SVD);
+    psv : Predictor_Vectors_Array(1..nbtasks)
+        := Create(nbtasks,hom.dim,hom.neq);
+    svh : SVD_Hessians_Array(1..nbtasks) := Create(nbtasks,hom.dim);
 
     procedure Silent_Track ( i,n : in integer32 ) is
 
@@ -233,6 +266,10 @@ procedure ts_mtpcscnv is
         myptr := DoblDobl_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
+        psv(i).sol := ls.v;
+        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+                       maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
+                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,false);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -255,7 +292,10 @@ procedure ts_mtpcscnv is
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
-        delay 0.1;
+        psv(i).sol := ls.v;
+        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+                       maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
+                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -283,6 +323,7 @@ procedure ts_mtpcscnv is
     DoblDobl_Complex_VecVecs.Clear(dx);
     DoblDobl_Complex_VecVecs.Clear(wrk);
     Standard_Integer_VecVecs.Clear(ipvt);
+    Clear(prd); Clear(psv); Clear(svh);
   end DoblDobl_Multitasked_Tracker;
 
   procedure QuadDobl_Multitasked_Tracker
@@ -309,13 +350,24 @@ procedure ts_mtpcscnv is
   --   sols     solutions at the end of the paths.
 
     use QuadDobl_Complex_Solutions,QuadDobl_Speelpenning_Convolutions;
+    use QuadDobl_Predictor_Convolutions;
 
+    maxit : constant integer32 := 4;
+    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail : boolean;
     homsa,abhsa : System_Array(1..nbtasks);
     homlead,abhlead : VecVecVec(1..nbtasks);
     homcff : VecVecVec_Array(1..nbtasks);
     dx : QuadDobl_Complex_VecVecs.VecVec(1..nbtasks);
     wrk : QuadDobl_Complex_VecVecs.VecVec(1..nbtasks);
     ipvt : Standard_Integer_VecVecs.VecVec(1..nbtasks);
+    first : constant Link_to_Solution := Head_Of(sols);
+    prd : Predictor_Array(1..nbtasks)
+        := Create(nbtasks,first.v,hom.neq,hom.deg,
+                  integer32(pars.numdeg),integer32(pars.dendeg),SVD);
+    psv : Predictor_Vectors_Array(1..nbtasks)
+        := Create(nbtasks,hom.dim,hom.neq);
+    svh : SVD_Hessians_Array(1..nbtasks) := Create(nbtasks,hom.dim);
 
     procedure Silent_Track ( i,n : in integer32 ) is
 
@@ -330,6 +382,10 @@ procedure ts_mtpcscnv is
         myptr := QuadDobl_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
+        psv(i).sol := ls.v;
+        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+                       maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
+                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,false);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -352,7 +408,10 @@ procedure ts_mtpcscnv is
         put_line("Task " & Multitasking.to_string(i)
                          & " tracks  path "
                          & Multitasking.to_string(cnt));
-        delay 0.1;
+        psv(i).sol := ls.v;
+        Track_One_Path(file,homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
+                       maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
+                       wrk(i),nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -380,6 +439,7 @@ procedure ts_mtpcscnv is
     QuadDobl_Complex_VecVecs.Clear(dx);
     QuadDobl_Complex_VecVecs.Clear(wrk);
     Standard_Integer_VecVecs.Clear(ipvt);
+    Clear(prd); Clear(psv); Clear(svh);
   end QuadDobl_Multitasked_Tracker;
 
   procedure Standard_Test is
