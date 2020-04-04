@@ -21,8 +21,11 @@ with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;       use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;       use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;       use QuadDobl_Complex_Solutions_io;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -482,6 +485,10 @@ procedure ts_pcscnv is
         put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
         verbose := (ans = 'y');
         Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,Standard_Complex_Solutions.Length_Of(sols),
+                 natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
       end;
     end if;
   end Standard_Test;
@@ -524,6 +531,10 @@ procedure ts_pcscnv is
         put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
         verbose := (ans = 'y');
         Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+                 natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
       end;
     end if;
   end DoblDobl_Test;
@@ -566,6 +577,10 @@ procedure ts_pcscnv is
         put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
         verbose := (ans = 'y');
         Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+                 natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
       end;
     end if;
   end QuadDobl_Test;
