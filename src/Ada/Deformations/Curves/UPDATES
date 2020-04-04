@@ -1,5 +1,8 @@
 Sat 4 Apr 2020 : fixed bug in predictor_corrector_loops: must use the
   accumulated value for t instead of the step in Step_Coefficient.
+  Updated homotopy_continuation_parameters_io.adb to allow for a zero
+  value for the number of corrector steps.  In predictor_corrector_loops,
+  added a test on this zero value to toggle off the corrector.
 
 Fri 3 Apr 2020 : added procedures without output to the packages
   *predictor_convolutions, corrector_convolutions, predictor_corrector_loops,

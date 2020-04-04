@@ -53,6 +53,7 @@ package body Homotopy_Continuation_Parameters_io is
   procedure Prompt_for_Parameter
               ( pars : in out Parameters; nbr : in natural32 ) is
 
+    nat : natural32;
     pos : positive;
     regam,imgam : double_float;
 
@@ -95,8 +96,8 @@ package body Homotopy_Continuation_Parameters_io is
         Numbers_io.Read_Positive_Float(pars.epsilon);
       when 11 =>
         put("-> give a new maximum number of corrector steps : ");
-        Numbers_io.Read_Positive(pos);
-        pars.corsteps := natural32(pos);
+        Numbers_io.Read_Natural(nat);
+        pars.corsteps := nat;
       when 12 =>
         put("-> give a new maximum number of steps on a path : ");
         Numbers_io.Read_Positive(pos);

@@ -130,7 +130,8 @@ package Predictor_Corrector_Loops is
   --   abh      radii as coefficients for mixed residuals;
   --   homlead  leading coefficients for the circuits in hom;
   --   abhlead  leading coefficients for the circuits in abh;
-  --   pars     values for the tolerances and parameters;
+  --   pars     values for the tolerances and parameters,
+  --            if pars.corsteps = 0, then there is no corrector step;
   --   maxit    maximum number of steps in Newton's method on power series;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
