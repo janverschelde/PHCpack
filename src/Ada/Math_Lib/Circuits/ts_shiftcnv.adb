@@ -20,6 +20,9 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with Standard_Random_Vectors;
+with DoblDobl_Random_Vectors;
+with QuadDobl_Random_Vectors;
 with Standard_Complex_Series;
 with Standard_Complex_Series_io;         use Standard_Complex_Series_io;
 with Standard_Complex_Series_Functions;
@@ -207,17 +210,29 @@ procedure ts_shiftcnv is
         := new Standard_Complex_Vectors.Vector'(0..deg => zero);
     y,z : Complex_Number;
     scst : Series(deg);
+    xpt : constant Standard_Complex_Vectors.Vector(1..s.dim)
+        := Standard_Random_Vectors.Random_Vector(1,s.dim);
+    sy,sz : Standard_Complex_Vectors.Vector(1..s.neq);
+    ans : character;
 
   begin
     new_line;
     put("Give a real constant for the shift : "); get(rc);
-    scst.cff := s.crc(1).cst.all;
-    y := Eval(scst,-rc);
-    Shift(s,wrk,rc);
-    scst.cff := s.crc(1).cst.all;
-    z := Eval(scst,zero);
-    put("s(-shift constant) : "); put(y); new_line;
-    put(" shifted series(0) : "); put(z); new_line;
+    put("Test shifting of a series ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      scst.cff := s.crc(1).cst.all;
+      y := Eval(scst,-rc);
+      scst.cff := s.crc(1).cst.all;
+      z := Eval(scst,zero);
+      put("s(-shift constant) : "); put(y); new_line;
+      put(" shifted series(0) : "); put(z); new_line;
+    else -- testing shifting the entire system
+      sy := Eval(s.crc,xpt,Standard_Complex_Numbers.Create(-rc));
+      Shift(s,wrk,rc);
+      sz := Eval(s.crc,xpt,zero);
+      put_line("s(-shift constant) : "); put_line(sy); new_line;
+      put_line(" shifted system(0) : "); put_line(sz); new_line;
+    end if;
   end Standard_System_Test;
 
   procedure DoblDobl_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
@@ -245,18 +260,31 @@ procedure ts_shiftcnv is
     wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector'(0..deg => zero);
     y,z : Complex_Number;
+    xpt : constant DoblDobl_Complex_Vectors.Vector(1..s.dim)
+        := DoblDobl_Random_Vectors.Random_Vector(1,s.dim);
+    sy,sz : DoblDobl_Complex_Vectors.Vector(1..s.neq);
     scst : Series(deg);
+    ans : character;
 
   begin
     new_line;
     put("Give a real constant for the shift : "); get(rc);
-    scst.cff := s.crc(1).cst.all;
-    y := Eval(scst,-rc);
-    Shift(s,wrk,rc);
-    scst.cff := s.crc(1).cst.all;
-    z := Eval(scst,zero);
-    put("s(-shift constant) : "); put(y); new_line;
-    put(" shifted series(0) : "); put(z); new_line;
+    put("Test shifting of a series ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      scst.cff := s.crc(1).cst.all;
+      y := Eval(scst,-rc);
+      Shift(s,wrk,rc);
+      scst.cff := s.crc(1).cst.all;
+      z := Eval(scst,zero);
+      put("s(-shift constant) : "); put(y); new_line;
+      put(" shifted series(0) : "); put(z); new_line;
+    else -- testing shifting the entire system
+      sy := Eval(s.crc,xpt,DoblDobl_Complex_Numbers.Create(-rc));
+      Shift(s,wrk,rc);
+      sz := Eval(s.crc,xpt,zero);
+      put_line("s(-shift constant) : "); put_line(sy); new_line;
+      put_line(" shifted system(0) : "); put_line(sz); new_line;
+    end if;
   end DoblDobl_System_Test;
 
   procedure QuadDobl_System_Test ( dim,deg,nbr,pwr : in integer32 ) is
@@ -284,18 +312,31 @@ procedure ts_shiftcnv is
     wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
         := new QuadDobl_Complex_Vectors.Vector'(0..deg => zero);
     y,z : Complex_Number;
+    xpt : constant QuadDobl_Complex_Vectors.Vector(1..s.dim)
+        := QuadDobl_Random_Vectors.Random_Vector(1,s.dim);
+    sy,sz : QuadDobl_Complex_Vectors.Vector(1..s.neq);
     scst : Series(deg);
+    ans : character;
 
   begin
     new_line;
     put("Give a real constant for the shift : "); get(rc);
-    scst.cff := s.crc(1).cst.all;
-    y := Eval(scst,-rc);
-    Shift(s,wrk,rc);
-    scst.cff := s.crc(1).cst.all;
-    z := Eval(scst,zero);
-    put("s(-shift constant) : "); put(y); new_line;
-    put(" shifted series(0) : "); put(z); new_line;
+    put("Test shifting of a series ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      scst.cff := s.crc(1).cst.all;
+      y := Eval(scst,-rc);
+      Shift(s,wrk,rc);
+      scst.cff := s.crc(1).cst.all;
+      z := Eval(scst,zero);
+      put("s(-shift constant) : "); put(y); new_line;
+      put(" shifted series(0) : "); put(z); new_line;
+    else -- testing shifting the entire system
+      sy := Eval(s.crc,xpt,QuadDobl_Complex_Numbers.Create(-rc));
+      Shift(s,wrk,rc);
+      sz := Eval(s.crc,xpt,zero);
+      put_line("s(-shift constant) : "); put_line(sy); new_line;
+      put_line(" shifted system(0) : "); put_line(sz); new_line;
+    end if;
   end QuadDobl_System_Test;
 
   procedure Main is

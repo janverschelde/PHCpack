@@ -1,3 +1,5 @@
+Fri 3 Apr 2020 : extended test on system in ts_shiftcnv.
+
 Thu 2 Apr 2020 : added system_array type to generic_speelpenning_convolutions.
   Added vevecvec_array to generic_speelpenning_convolutions.
 
