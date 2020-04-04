@@ -40,7 +40,7 @@ package body Predictor_Corrector_Loops is
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     loop
-      Step_Coefficient(hom,step);
+      Step_Coefficient(hom,acct); -- step);
       Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
                       pars.tolres,mixres,dx,ipvt,info,fail);
@@ -90,7 +90,7 @@ package body Predictor_Corrector_Loops is
       put(file," at t :"); put(file,acct,3); put_line(file,".");
     end if;
     loop
-      Step_Coefficient(hom,step);
+      Step_Coefficient(hom,acct); -- step);
       Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
                       pars.tolres,mixres,dx,ipvt,info,fail,verbose);
@@ -135,7 +135,7 @@ package body Predictor_Corrector_Loops is
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     loop
-      Step_Coefficient(hom,step);
+      Step_Coefficient(hom,acct); -- step);
       Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
                       pars.tolres,mixres,dx,ipvt,info,fail);
@@ -185,7 +185,7 @@ package body Predictor_Corrector_Loops is
       put(file," at t : "); put(file,acct,3); put_line(file,".");
     end if;
     loop
-      Step_Coefficient(hom,step);
+      Step_Coefficient(hom,acct); -- step);
       Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
                       pars.tolres,mixres,dx,ipvt,info,fail,verbose);
@@ -230,7 +230,7 @@ package body Predictor_Corrector_Loops is
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     loop
-      Step_Coefficient(hom,step);
+      Step_Coefficient(hom,acct); -- step);
       Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
                       pars.tolres,mixres,dx,ipvt,info,fail);
@@ -280,7 +280,7 @@ package body Predictor_Corrector_Loops is
       put(file," at t : "); put(file,acct,3); put_line(file,".");
     end if;
     loop
-      Step_Coefficient(hom,step);
+      Step_Coefficient(hom,acct); -- step);
       Update_Radii_of_Constants(abh,hom);
       LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
                       pars.tolres,mixres,dx,ipvt,info,fail,verbose);
