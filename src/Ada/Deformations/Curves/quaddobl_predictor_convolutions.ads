@@ -112,6 +112,7 @@ package QuadDobl_Predictor_Convolutions is
     svl : QuadDobl_Complex_Vectors.Vector(1..dim1);      -- work values
     ewrk : QuadDobl_Complex_Vectors.Vector(1..dim);      -- work values
     vals : QuadDobl_Complex_Vectors.Vector(0..dim);      -- singular values
+    work : QuadDobl_Complex_Vectors.Vector(1..dim);      -- work space for SVD
   end record;
 
   type Link_to_SVD_Hessians is access SVD_Hessians;

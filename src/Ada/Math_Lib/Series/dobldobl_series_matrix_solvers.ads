@@ -470,7 +470,8 @@ package DoblDobl_Series_Matrix_Solvers is
                 S : out DoblDobl_Complex_Vectors.Vector;
                 U,V : out DoblDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_double;
-                wrk : in DoblDobl_Complex_Vectors.Link_to_Vector );
+                ewrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in DoblDobl_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Applies the SVD decomposition of the lead coefficient of A
@@ -484,7 +485,8 @@ package DoblDobl_Series_Matrix_Solvers is
   --   A        the coefficient matrices in the matrix series;
   --   b        the right hand side coefficients of a vector series;
   --   x0       space allocated for the leading coefficient of the solution;
-  --   wrk      allocated work space of range 1..p, p = A(0)'last(2).
+  --   ewrk     allocated work space of range 1..p, p = A(0)'last(2);
+  --   wrkv     allocated work space of range 1..n, n = A(0)'last(1).
 
   -- ON RETURN :
   --   A        A(0) used as work space to compute the SVD;

@@ -1,3 +1,6 @@
+Sun 5 Apr 2020 : updated {standard,dobldobl,quaddobl}_predictor_convolutions,
+  so the SVD procedures are called with work space vectors.
+
 Sat 4 Apr 2020 : fixed bug in predictor_corrector_loops: must use the
   accumulated value for t instead of the step in Step_Coefficient.
   Updated homotopy_continuation_parameters_io.adb to allow for a zero

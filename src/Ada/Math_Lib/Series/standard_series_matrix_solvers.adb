@@ -384,7 +384,8 @@ package body Standard_Series_Matrix_Solvers is
                 S : out Standard_Complex_Vectors.Vector;
                 U,V : out Standard_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out double_float;
-                wrk : in Standard_Complex_Vectors.Link_to_Vector ) is
+                ewrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrkv : in Standard_Complex_Vectors.Link_to_Vector ) is
 
     lead : constant Standard_Complex_Matrices.Link_to_Matrix := A(0);
     n : constant integer32 := lead'last(1);
@@ -392,7 +393,7 @@ package body Standard_Series_Matrix_Solvers is
     job : constant integer32 := 11;
 
   begin
-    SVD(lead.all,n,p,S,wrk.all,U,V,job,info);
+    SVD(lead.all,n,p,S,ewrk.all,U,V,job,info,wrkv.all);
     rcond := Inverse_Condition_Number(S);
     x0.all := Solve(U,V,S,b(0).all);
   end Solve_Lead_by_SVD;
@@ -538,7 +539,7 @@ package body Standard_Series_Matrix_Solvers is
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector ) is
   begin
-    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk,wrkv);
     if 1.0 + rcond /= 1.0 then
       for k in 1..b'last loop
         Solve_Next_by_SVD(A,b,x,S,U,V,k,wrkv);

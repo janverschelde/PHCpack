@@ -112,6 +112,7 @@ package DoblDobl_Predictor_Convolutions is
     svl : DoblDobl_Complex_Vectors.Vector(1..dim1);      -- work values
     ewrk : DoblDobl_Complex_Vectors.Vector(1..dim);      -- work values
     vals : DoblDobl_Complex_Vectors.Vector(0..dim);      -- singular values
+    work : DoblDobl_Complex_Vectors.Vector(1..dim);      -- work space for SVD
   end record;
 
   type Link_to_SVD_Hessians is access SVD_Hessians;

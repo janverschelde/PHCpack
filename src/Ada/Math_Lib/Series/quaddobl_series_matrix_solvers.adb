@@ -391,7 +391,8 @@ package body QuadDobl_Series_Matrix_Solvers is
                 S : out QuadDobl_Complex_Vectors.Vector;
                 U,V : out QuadDobl_Complex_Matrices.Matrix;
                 info : out integer32; rcond : out quad_double;
-                wrk : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
+                ewrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                wrkv : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
 
     lead : constant QuadDobl_Complex_Matrices.Link_to_Matrix := A(0);
     n : constant integer32 := lead'last(1);
@@ -399,7 +400,7 @@ package body QuadDobl_Series_Matrix_Solvers is
     job : constant integer32 := 11;
 
   begin
-    SVD(lead.all,n,p,S,wrk.all,U,V,job,info);
+    SVD(lead.all,n,p,S,ewrk.all,U,V,job,info,wrkv.all);
     rcond := Inverse_Condition_Number(S);
     x0.all := Solve(U,V,S,b(0).all);
   end Solve_Lead_by_SVD;
@@ -552,7 +553,7 @@ package body QuadDobl_Series_Matrix_Solvers is
     one : constant quad_double := create(1.0);
 
   begin
-    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk,wrkv);
     if one + rcond /= one then
       for k in 1..b'last loop
         Solve_Next_by_SVD(A,b,x,S,U,V,k,wrkv);
