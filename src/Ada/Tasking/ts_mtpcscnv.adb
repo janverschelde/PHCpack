@@ -20,8 +20,11 @@ with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
@@ -160,7 +163,7 @@ procedure ts_mtpcscnv is
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
-        Set_Head(myptr,ls);
+       -- Set_Head(myptr,ls);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -189,7 +192,7 @@ procedure ts_mtpcscnv is
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
-        Set_Head(myptr,ls);
+       -- Set_Head(myptr,ls);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -281,7 +284,7 @@ procedure ts_mtpcscnv is
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
-        Set_Head(myptr,ls);
+       -- Set_Head(myptr,ls);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -310,7 +313,7 @@ procedure ts_mtpcscnv is
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
-        Set_Head(myptr,ls);
+       -- Set_Head(myptr,ls);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -402,7 +405,7 @@ procedure ts_mtpcscnv is
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
-        Set_Head(myptr,ls);
+       -- Set_Head(myptr,ls);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -431,7 +434,7 @@ procedure ts_mtpcscnv is
                        maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
-        Set_Head(myptr,ls);
+       -- Set_Head(myptr,ls);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -491,6 +494,10 @@ procedure ts_mtpcscnv is
     new_line;
     put("Give the number of tasks : "); get(nbt);
     Standard_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+        natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
   end Standard_Test;
 
   procedure DoblDobl_Test is
@@ -526,6 +533,10 @@ procedure ts_mtpcscnv is
     new_line;
     put("Give the number of tasks : "); get(nbt);
     DoblDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+        natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test is
@@ -561,6 +572,10 @@ procedure ts_mtpcscnv is
     new_line;
     put("Give the number of tasks : "); get(nbt);
     QuadDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+        natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
   end QuadDobl_Test;
 
   procedure Main is
