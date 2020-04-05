@@ -540,13 +540,23 @@ package body Standard_Complex_Singular_Values is
 --    when others => put_line("exception caught by zswap"); raise;
   end zswap;
 
--- TARGET PROCEDURE :
+-- TARGET PROCEDURES :
 
   procedure SVD ( x : in out Matrix; n,p : in integer32;
                   s,e : out Vector; u : out Matrix; v : out Matrix; 
                   job : in integer32; info : out integer32 ) is
 
     work : Vector(1..n);
+
+  begin
+    SVD(x,n,p,s,e,u,v,job,info,work);
+  end SVD;
+
+  procedure SVD ( x : in out Matrix; n,p : in integer32;
+                  s,e : out Vector; u : out Matrix; v : out Matrix; 
+                  job : in integer32; info : out integer32;
+                  work : in out Vector ) is
+
     iter,jobu,kase,kk,ll,lm1,lp1,ls,lu,m,maxit : integer32;
     mm,mm1,mp1,nct,nctp1,ncu,nrt,nrtp1 : integer32;
     t,r : Complex_Number;

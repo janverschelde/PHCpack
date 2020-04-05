@@ -1,3 +1,6 @@
+Sun 5 Apr 2020 : to {standard,dobldobl,quaddobl}_complex_singular_values.a*,
+  added a SVD procedure with a work vector to make it thread safe.
+
 Mon 2 Mar 2020 : added another solve() to *_complex_singular_values.a* for
   a thread safe application in the multitasked solvers.
 

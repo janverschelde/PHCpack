@@ -25,6 +25,10 @@ package QuadDobl_Complex_Singular_Values is
   procedure SVD ( x : in out Matrix; n,p : in integer32;
                   s,e : out Vector; u : out Matrix; v : out Matrix;
                   job : in integer32; info : out integer32 );
+  procedure SVD ( x : in out Matrix; n,p : in integer32;
+                  s,e : out Vector; u : out Matrix; v : out Matrix;
+                  job : in integer32; info : out integer32;
+                  work : in out Vector );
 
   -- DESCRIPTION :
   --   Reduces a complex n-by-p matrix x by unitary transformations u
@@ -44,7 +48,10 @@ package QuadDobl_Complex_Singular_Values is
   --              a >=2 : returns the first min(n,p) left singular
   --                      vectors in u,
   --              b = 0 : do not compute the right singular vectors,
-  --              b = 1 : return the right singular vectors in v.
+  --              b = 1 : return the right singular vectors in v;
+  --  work      vector of range 1..n as work space;
+  --            this is an optional argument, but without it,
+  --            the procedure is not thread safe.
 
   -- ON RETURN :
   --   s        vector of range 1..mm, where mm = min(n+1,p),
@@ -68,7 +75,8 @@ package QuadDobl_Complex_Singular_Values is
   --            the bidiagonal matrix with the elements of s on its diagonal
   --            and the elements of e on its super diagonal (ctrans(u) is the
   --            conjugate-transpose of u), thus the singular values of x 
-  --            and b are the same.
+  --            and b are the same;
+  --   work     updated work space vector, if provided on input.
 
   function Rank ( s : Vector ) return integer32;
   function Rank ( s : Vector; tol : double_float ) return integer32;
