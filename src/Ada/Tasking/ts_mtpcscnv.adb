@@ -127,9 +127,7 @@ procedure ts_mtpcscnv is
     use Standard_Complex_Solutions,Standard_Speelpenning_Convolutions;
     use Standard_Predictor_Convolutions;
 
-    maxit : constant integer32 := 4;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
-    fail : boolean;
+    maxit : constant integer32 := integer32(pars.numdeg + pars.dendeg + 2)/2;
     homsa,abhsa : System_Array(1..nbtasks);
     homlead,abhlead : VecVecVec(1..nbtasks);
     homcff : VecVecVec_Array(1..nbtasks);
@@ -152,6 +150,8 @@ procedure ts_mtpcscnv is
       myptr : Solution_List;
       ls : Link_to_Solution;
       t : double_float;
+      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      fail : boolean;
 
     begin
       loop
@@ -177,6 +177,8 @@ procedure ts_mtpcscnv is
       ls : Link_to_Solution;
       cnt : integer32;
       t : double_float;
+      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      fail : boolean;
 
     begin
       loop
@@ -248,9 +250,7 @@ procedure ts_mtpcscnv is
     use DoblDobl_Complex_Solutions,DoblDobl_Speelpenning_Convolutions;
     use DoblDobl_Predictor_Convolutions;
 
-    maxit : constant integer32 := 4;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
-    fail : boolean;
+    maxit : constant integer32 := integer32(pars.numdeg + pars.dendeg + 2)/2;
     homsa,abhsa : System_Array(1..nbtasks);
     homlead,abhlead : VecVecVec(1..nbtasks);
     homcff : VecVecVec_Array(1..nbtasks);
@@ -273,6 +273,8 @@ procedure ts_mtpcscnv is
       myptr : Solution_List;
       ls : Link_to_Solution;
       t : double_double;
+      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      fail : boolean;
 
     begin
       loop
@@ -298,6 +300,8 @@ procedure ts_mtpcscnv is
       ls : Link_to_Solution;
       cnt : integer32;
       t : double_double;
+      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      fail : boolean;
 
     begin
       loop
@@ -369,9 +373,7 @@ procedure ts_mtpcscnv is
     use QuadDobl_Complex_Solutions,QuadDobl_Speelpenning_Convolutions;
     use QuadDobl_Predictor_Convolutions;
 
-    maxit : constant integer32 := 4;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
-    fail : boolean;
+    maxit : constant integer32 := integer32(pars.numdeg + pars.dendeg + 2)/2;
     homsa,abhsa : System_Array(1..nbtasks);
     homlead,abhlead : VecVecVec(1..nbtasks);
     homcff : VecVecVec_Array(1..nbtasks);
@@ -394,6 +396,8 @@ procedure ts_mtpcscnv is
       myptr : Solution_List;
       ls : Link_to_Solution;
       t : quad_double;
+      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      fail : boolean;
 
     begin
       loop
@@ -419,6 +423,8 @@ procedure ts_mtpcscnv is
       ls : Link_to_Solution;
       cnt : integer32;
       t : quad_double;
+      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      fail : boolean;
 
     begin
       loop
