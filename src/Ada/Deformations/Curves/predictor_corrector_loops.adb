@@ -548,9 +548,9 @@ package body Predictor_Corrector_Loops is
 
     use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
 
-    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
+    maxit : constant integer32 := (numdeg + dendeg + 2)/2;
     ls : Link_to_Solution := Head_Of(sols);
     prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
     psv : Predictor_Vectors(hom.dim,hom.neq);
@@ -601,9 +601,9 @@ package body Predictor_Corrector_Loops is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Predictor_Convolutions;
 
-    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
+    maxit : constant integer32 := (numdeg + dendeg + 2)/2;
     ls : Link_to_Solution := Head_Of(sols);
     prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
     psv : Predictor_Vectors(hom.dim,hom.neq);
@@ -654,9 +654,9 @@ package body Predictor_Corrector_Loops is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Predictor_Convolutions;
 
-    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
     numdeg : constant integer32 := integer32(pars.numdeg);
     dendeg : constant integer32 := integer32(pars.dendeg);
+    maxit : constant integer32 := (numdeg + dendeg + 2)/2;
     ls : Link_to_Solution := Head_Of(sols);
     prd : Predictor := Create(ls.v,hom.neq,hom.deg,numdeg,dendeg,SVD);
     psv : Predictor_Vectors(hom.dim,hom.neq);

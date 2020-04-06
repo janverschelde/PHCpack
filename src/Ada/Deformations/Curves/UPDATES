@@ -1,3 +1,6 @@
+Mon 6 Apr 2020 : updated predictor_corrector_loops.adb, setting the number
+  of the iterations relative to the degree of Pade approximants.
+
 Sun 5 Apr 2020 : updated {standard,dobldobl,quaddobl}_predictor_convolutions,
   so the SVD procedures are called with work space vectors.
 
