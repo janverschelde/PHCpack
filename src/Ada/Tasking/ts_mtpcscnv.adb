@@ -164,6 +164,8 @@ procedure ts_mtpcscnv is
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
+        Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -187,7 +189,7 @@ procedure ts_mtpcscnv is
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
         put_line("Task " & Multitasking.to_string(i)
-                         & " tracks  path "
+                         & " tracks path "
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := 0.0;
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
@@ -195,6 +197,8 @@ procedure ts_mtpcscnv is
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
+        Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -287,6 +291,8 @@ procedure ts_mtpcscnv is
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
+        Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -310,7 +316,7 @@ procedure ts_mtpcscnv is
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
         put_line("Task " & Multitasking.to_string(i)
-                         & " tracks  path "
+                         & " tracks path "
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := Create(0.0);
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
@@ -318,6 +324,8 @@ procedure ts_mtpcscnv is
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
+        Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -334,7 +342,7 @@ procedure ts_mtpcscnv is
       Store_Coefficients(hom.crc,homcff(k));
     end loop;
     Allocate(ipvt,hom.dim); Allocate(dx,hom.dim);
-    wrk := Allocate_Coefficients(hom.dim,hom.deg);
+    wrk := Allocate_Coefficients(nbtasks,hom.deg);
     DoblDobl_Solutions_Queue.Initialize(sols);
     if verbose
      then report_do_jobs(nbtasks);
@@ -410,6 +418,8 @@ procedure ts_mtpcscnv is
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
+        Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
       end loop;
     end Silent_Track;
     procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Track);
@@ -433,7 +443,7 @@ procedure ts_mtpcscnv is
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
         put_line("Task " & Multitasking.to_string(i)
-                         & " tracks  path "
+                         & " tracks path "
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := Create(0.0);
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
@@ -441,6 +451,8 @@ procedure ts_mtpcscnv is
                        wrk(i),t,nbpole,nbhess,nbmaxm,nbsteps,fail);
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
+        Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
       end loop;
     end Report_Track;
     procedure report_do_jobs is
@@ -457,7 +469,7 @@ procedure ts_mtpcscnv is
       Store_Coefficients(hom.crc,homcff(k));
     end loop;
     Allocate(ipvt,hom.dim); Allocate(dx,hom.dim);
-    wrk := Allocate_Coefficients(hom.dim,hom.deg);
+    wrk := Allocate_Coefficients(nbtasks,hom.deg);
     QuadDobl_Solutions_Queue.Initialize(sols);
     if verbose
      then report_do_jobs(nbtasks);

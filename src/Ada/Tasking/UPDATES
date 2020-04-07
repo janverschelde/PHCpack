@@ -1,3 +1,6 @@
+Tue 7 Apr 2020 : added the restoring of coefficients after each track
+  in ts_mtpcscnv.
+
 Mon 6 Apr 2020 : moved counters and fail output variable into the local
   variables of the multitasked procedures in ts_mtpcscnv.
   
