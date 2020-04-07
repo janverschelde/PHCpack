@@ -41,17 +41,19 @@ package body Predictor_Corrector_Loops is
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     if pars.corsteps > 0 then -- no corrector for zero pars.corsteps
       loop
-        Step_Coefficient(hom,acct); -- step);
+        Store_Leading_Coefficients(hom.crc,homlead);
+        Store_Leading_Coefficients(abh.crc,abhlead);
+        Step_Coefficient(hom,step);
         Update_Radii_of_Constants(abh,hom);
         LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
                         pars.tolres,mixres,dx,ipvt,info,fail);
+        Restore_Leading_Coefficients(homlead,hom.crc);
+        Restore_Leading_Coefficients(abhlead,abh.crc);
         exit when not fail;   
         step := step/2.0;
         exit when (step < pars.minsize);
         Standard_Rational_Approximations.Evaluate
           (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-        Restore_Leading_Coefficients(homlead,hom.crc);
-        Restore_Leading_Coefficients(abhlead,abh.crc);
       end loop;
     end if;
   end Predictor_Corrector_Loop;
@@ -93,10 +95,14 @@ package body Predictor_Corrector_Loops is
     end if;
     if pars.corsteps > 0 then -- no corrector for zero pars.corsteps
       loop
-        Step_Coefficient(hom,acct); -- step);
+        Store_Leading_Coefficients(hom.crc,homlead);
+        Store_Leading_Coefficients(abh.crc,abhlead);
+        Step_Coefficient(hom,step);
         Update_Radii_of_Constants(abh,hom);
         LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
                         pars.tolres,mixres,dx,ipvt,info,fail,verbose);
+        Restore_Leading_Coefficients(homlead,hom.crc);
+        Restore_Leading_Coefficients(abhlead,abh.crc);
         exit when not fail;   
         step := step/2.0;
         if verbose then
@@ -106,8 +112,6 @@ package body Predictor_Corrector_Loops is
         exit when (step < pars.minsize);
         Standard_Rational_Approximations.Evaluate
           (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-        Restore_Leading_Coefficients(homlead,hom.crc);
-        Restore_Leading_Coefficients(abhlead,abh.crc);
       end loop;
     end if;
   end Predictor_Corrector_Loop;
@@ -140,17 +144,19 @@ package body Predictor_Corrector_Loops is
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     if pars.corsteps > 0 then -- no corrector for zero pars.corsteps
       loop
-        Step_Coefficient(hom,acct); -- step);
+        Store_Leading_Coefficients(hom.crc,homlead);
+        Store_Leading_Coefficients(abh.crc,abhlead);
+        Step_Coefficient(hom,step);
         Update_Radii_of_Constants(abh,hom);
         LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
                         pars.tolres,mixres,dx,ipvt,info,fail);
+        Restore_Leading_Coefficients(homlead,hom.crc);
+        Restore_Leading_Coefficients(abhlead,abh.crc);
         exit when not fail;
         step := step/2.0;
         exit when (step < pars.minsize);
         DoblDobl_Rational_Approximations.Evaluate
           (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-        Restore_Leading_Coefficients(homlead,hom.crc);
-        Restore_Leading_Coefficients(abhlead,abh.crc);
       end loop;
     end if;
   end Predictor_Corrector_Loop;
@@ -192,10 +198,14 @@ package body Predictor_Corrector_Loops is
     end if;
     if pars.corsteps > 0 then -- no corrector for zero pars.corsteps
       loop
-        Step_Coefficient(hom,acct); -- step);
+        Store_Leading_Coefficients(hom.crc,homlead);
+        Store_Leading_Coefficients(abh.crc,abhlead);
+        Step_Coefficient(hom,step);
         Update_Radii_of_Constants(abh,hom);
         LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
                         pars.tolres,mixres,dx,ipvt,info,fail,verbose);
+        Restore_Leading_Coefficients(homlead,hom.crc);
+        Restore_Leading_Coefficients(abhlead,abh.crc);
         exit when not fail;
         step := step/2.0;
         if verbose then
@@ -205,8 +215,6 @@ package body Predictor_Corrector_Loops is
         exit when (step < pars.minsize);
         DoblDobl_Rational_Approximations.Evaluate
           (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-        Restore_Leading_Coefficients(homlead,hom.crc);
-        Restore_Leading_Coefficients(abhlead,abh.crc);
       end loop;
     end if;
   end Predictor_Corrector_Loop;
@@ -239,17 +247,19 @@ package body Predictor_Corrector_Loops is
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     if pars.corsteps > 0 then -- no corrector for zero pars.corsteps
       loop
-        Step_Coefficient(hom,acct); -- step);
+        Store_Leading_Coefficients(hom.crc,homlead);
+        Store_Leading_Coefficients(abh.crc,abhlead);
+        Step_Coefficient(hom,step);
         Update_Radii_of_Constants(abh,hom);
         LU_Newton_Steps(hom,abh,psv,integer32(pars.corsteps),nbrit,
                         pars.tolres,mixres,dx,ipvt,info,fail);
+        Restore_Leading_Coefficients(homlead,hom.crc);
+        Restore_Leading_Coefficients(abhlead,abh.crc);
         exit when not fail;
         step := step/2.0;
         exit when (step < pars.minsize);
         QuadDobl_Rational_Approximations.Evaluate
           (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-        Restore_Leading_Coefficients(homlead,hom.crc);
-        Restore_Leading_Coefficients(abhlead,abh.crc);
       end loop;
     end if;
   end Predictor_Corrector_Loop;
@@ -291,10 +301,14 @@ package body Predictor_Corrector_Loops is
     end if;
     if pars.corsteps > 0 then -- no corrector for zero pars.corsteps
       loop
-        Step_Coefficient(hom,acct); -- step);
+        Store_Leading_Coefficients(hom.crc,homlead);
+        Store_Leading_Coefficients(abh.crc,abhlead);
+        Step_Coefficient(hom,step);
         Update_Radii_of_Constants(abh,hom);
         LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
                         pars.tolres,mixres,dx,ipvt,info,fail,verbose);
+        Restore_Leading_Coefficients(homlead,hom.crc);
+        Restore_Leading_Coefficients(abhlead,abh.crc);
         exit when not fail;
         step := step/2.0;
         if verbose then
@@ -304,8 +318,6 @@ package body Predictor_Corrector_Loops is
         exit when (step < pars.minsize);
         QuadDobl_Rational_Approximations.Evaluate
           (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
-        Restore_Leading_Coefficients(homlead,hom.crc);
-        Restore_Leading_Coefficients(abhlead,abh.crc);
       end loop;
     end if;
   end Predictor_Corrector_Loop;

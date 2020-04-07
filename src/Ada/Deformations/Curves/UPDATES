@@ -1,3 +1,7 @@
+Tue 7 Apr 2020 : fixed the application of the corrector by storing the
+  leading coefficients before evaluation of the step size in the
+  procedures of predictor_corrector_loops.adb.
+
 Mon 6 Apr 2020 : updated predictor_corrector_loops.adb, setting the number
   of the iterations relative to the degree of Pade approximants.
 
