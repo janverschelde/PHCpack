@@ -1,5 +1,7 @@
 with text_io;                            use text_io;
+with Ada.Calendar;
 with Communications_with_User;           use Communications_with_User;
+with Time_Stamps;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -13,9 +15,12 @@ with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
-with Standard_Speelpenning_Convolutions;
-with DoblDobl_Speelpenning_Convolutions;
-with QuadDobl_Speelpenning_Convolutions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Homotopy;
 with Standard_Homotopy_Convolutions_io;
 with DoblDobl_Homotopy;
@@ -24,6 +29,9 @@ with QuadDobl_Homotopy;
 with QuadDobl_Homotopy_Convolutions_io;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
+with Standard_Speelpenning_Convolutions;
+with DoblDobl_Speelpenning_Convolutions;
+with QuadDobl_Speelpenning_Convolutions;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Multitasked_Path_Convolutions;      use Multitasked_Path_Convolutions;
 
@@ -46,7 +54,8 @@ procedure ts_mtpcscnv is
     ans : character;
     file : file_type;
     verbose : boolean;
-
+    startmoment,stopmoment : Ada.Calendar.Time;
+  
   begin
     new_line;
     Homotopy_Continuation_Parameters_io.Tune(pars);
@@ -56,16 +65,32 @@ procedure ts_mtpcscnv is
     pars.gamma := Standard_Homotopy.Accessibility_Constant;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
+    declare
+      p : constant Standard_Complex_Poly_Systems.Poly_Sys
+        := Standard_Homotopy.Target_System;
+    begin
+      put(file,p'last,1); new_line(file);
+      put(file,p);
+    end;
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
     new_line;
     put("Give the number of tasks : "); get(nbt);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
     Standard_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
+    stopmoment := Ada.Calendar.Clock;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Standard_Complex_Solutions.Length_Of(sols),
         natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
   end Standard_Test;
 
   procedure DoblDobl_Test is
@@ -82,6 +107,7 @@ procedure ts_mtpcscnv is
     ans : character;
     file : file_type;
     verbose : boolean;
+    startmoment,stopmoment : Ada.Calendar.Time;
 
     use DoblDobl_Complex_Numbers_cv;
   
@@ -95,16 +121,32 @@ procedure ts_mtpcscnv is
     pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
+    declare
+      p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+        := DoblDobl_Homotopy.Target_System;
+    begin
+      put(file,p'last,1); new_line(file);
+      put(file,p);
+    end;
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
     new_line;
     put("Give the number of tasks : "); get(nbt);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
     DoblDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
+    stopmoment := Ada.Calendar.Clock;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
         natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test is
@@ -121,6 +163,7 @@ procedure ts_mtpcscnv is
     ans : character;
     file : file_type;
     verbose : boolean;
+    startmoment,stopmoment : Ada.Calendar.Time;
 
     use QuadDobl_Complex_Numbers_cv;
 
@@ -134,16 +177,32 @@ procedure ts_mtpcscnv is
     pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
+    declare
+      p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+        := QuadDobl_Homotopy.Target_System;
+    begin
+      put(file,p'last,1); new_line(file);
+      put(file,p);
+    end;
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
     new_line;
     put("Give the number of tasks : "); get(nbt);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
     QuadDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,verbose);
+    stopmoment := Ada.Calendar.Clock;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
         natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
   end QuadDobl_Test;
 
   procedure Main is
