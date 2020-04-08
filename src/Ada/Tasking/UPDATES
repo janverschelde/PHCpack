@@ -1,5 +1,7 @@
 Wed 8 Apr 2020 : to ts_mtpcscnv, added computation of wall clock time
   and writing of target system to file for input to phc -v.
+  Updates multitasked_path_convolutions for the updated procedures of
+  the package predictor_corrector_loops.
 
 Tue 7 Apr 2020 : added the restoring of coefficients after each track
   in ts_mtpcscnv.  New package multitasked_path_convolutions, with code

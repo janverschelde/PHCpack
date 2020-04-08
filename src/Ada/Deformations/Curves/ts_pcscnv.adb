@@ -103,15 +103,15 @@ procedure ts_pcscnv is
   --            false otherwise.
 
     endt : constant double_float := 1.0;
-    acct,step : double_float := 0.0;
+    acct,step,mixres : double_float := 0.0;
     ans : character;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-        fail,verbose);
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,
+        nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
        else put_line("Predictor-Corrector loop succeeded.");
@@ -167,15 +167,15 @@ procedure ts_pcscnv is
   --            false otherwise.
 
     endt : constant double_float := 1.0;
-    acct,step : double_double := Create(0.0);
+    acct,step,mixres : double_double := Create(0.0);
     ans : character;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-        fail,verbose);
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,
+        nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
        else put_line("Predictor-Corrector loop succeeded.");
@@ -231,15 +231,15 @@ procedure ts_pcscnv is
   --            false otherwise.
 
     endt : constant double_float := 1.0;
-    acct,step : quad_double := Create(0.0);
+    acct,step,mixres : quad_double := Create(0.0);
     ans : character;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,nbpole,nbhess,nbmaxm,
-        fail,verbose);
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,
+        nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
        else put_line("Predictor-Corrector loop succeeded.");
@@ -285,7 +285,7 @@ procedure ts_pcscnv is
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
         := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
-    t : double_float;
+    t,mixres : double_float := 0.0;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -303,9 +303,10 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
+          fail,true);
       end if;
-      ls.v := psv.sol;
+      ls.v := psv.sol; ls.res := mixres;
       ls.t := Standard_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
@@ -355,7 +356,7 @@ procedure ts_pcscnv is
     wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
         := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
-    t : double_double;
+    t,mixres : double_double;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -373,9 +374,10 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
+          fail,true);
       end if;
-      ls.v := psv.sol;
+      ls.v := psv.sol; ls.res := mixres;
       ls.t := DoblDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
@@ -424,7 +426,7 @@ procedure ts_pcscnv is
     wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
         := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
-    t : quad_double;
+    t,mixres : quad_double;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -442,9 +444,10 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,nbpole,nbhess,nbmaxm,nbsteps,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
+          fail,true);
       end if;
-      ls.v := psv.sol;
+      ls.v := psv.sol; ls.res := mixres;
       ls.t := QuadDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);

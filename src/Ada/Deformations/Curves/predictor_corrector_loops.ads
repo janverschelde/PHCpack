@@ -41,7 +41,7 @@ package Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_float;
-                step : out double_float;
+                step,mixres : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
@@ -56,7 +56,7 @@ package Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_float;
-                step : out double_float;
+                step,mixres : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true );
   procedure Predictor_Corrector_Loop
@@ -71,7 +71,7 @@ package Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_double;
-                step : out double_double;
+                step,mixres : out double_double;
                 nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
@@ -86,7 +86,7 @@ package Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_double;
-                step : out double_double;
+                step,mixres : out double_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true );
   procedure Predictor_Corrector_Loop
@@ -101,7 +101,7 @@ package Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out quad_double;
-                step : out quad_double;
+                step,mixres : out quad_double;
                 nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
@@ -116,7 +116,7 @@ package Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out quad_double;
-                step : out quad_double;
+                step,mixres : out quad_double;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true );
 
@@ -151,6 +151,7 @@ package Predictor_Corrector_Loops is
   --   ipvt     pivoting information for the LU Newton steps;
   --   acct     updated value for the homotopy continuation parameter t;
   --   step     the step size;
+  --   mixres   mixed residual of corrector loop if pars.corsteps < 0;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
@@ -169,7 +170,7 @@ package Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-                acct : in out double_float;
+                acct,mixres : in out double_float;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean );
   procedure Track_One_Path
@@ -185,7 +186,7 @@ package Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
-                acct : in out double_float;
+                acct,mixres : in out double_float;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true );
   procedure Track_One_Path
@@ -200,7 +201,7 @@ package Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-                acct : in out double_double;
+                acct,mixres : in out double_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean );
   procedure Track_One_Path
@@ -216,7 +217,7 @@ package Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
-                acct : in out double_double;
+                acct,mixres : in out double_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true );
   procedure Track_One_Path
@@ -231,7 +232,7 @@ package Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-                acct : in out quad_double;
+                acct,mixres : in out quad_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean );
   procedure Track_One_Path
@@ -247,7 +248,7 @@ package Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
-                acct : in out quad_double;
+                acct,mixres : in out quad_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 fail : out boolean; verbose : in boolean := true );
 
@@ -277,6 +278,7 @@ package Predictor_Corrector_Loops is
   --   dx       last update to the solution;
   --   ipvt     pivoting information for the LU Newton steps;
   --   acct     accumulated value of the homotopy continuation parameter t;
+  --   mixres   mixed residual of corrector loop if pars.corsteps > 0;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
