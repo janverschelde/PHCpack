@@ -1,3 +1,6 @@
+Wed 8 Apr 2020 : added printing of target system and timers to ts_pcscnv,
+  with extra procedures towards future packaging of path trackers.
+
 Tue 7 Apr 2020 : fixed the application of the corrector by storing the
   leading coefficients before evaluation of the step size in the
   procedures of predictor_corrector_loops.adb.

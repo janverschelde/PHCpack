@@ -1,7 +1,9 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -20,6 +22,12 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;       use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
@@ -243,7 +251,7 @@ procedure ts_pcscnv is
     end loop;
   end Step_Track;
 
-  procedure Standard_Run
+  procedure Standard_Run_Loops
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in Standard_Complex_Solutions.Solution_List;
@@ -311,9 +319,9 @@ procedure ts_pcscnv is
     Standard_Complex_VecVecs.Deep_Clear(homlead);
     Standard_Complex_VecVecs.Deep_Clear(abhlead);
     Standard_Speelpenning_Convolutions.Clear(homcff);
-  end Standard_Run;
+  end Standard_Run_Loops;
 
-  procedure DoblDobl_Run
+  procedure DoblDobl_Run_Loops
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
@@ -380,9 +388,9 @@ procedure ts_pcscnv is
     Clear(svh);
     DoblDobl_Complex_VecVecs.Deep_Clear(homlead);
     DoblDobl_Complex_VecVecs.Deep_Clear(abhlead);
-  end DoblDobl_Run;
+  end DoblDobl_Run_Loops;
 
-  procedure QuadDobl_Run
+  procedure QuadDobl_Run_Loops
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
@@ -449,7 +457,163 @@ procedure ts_pcscnv is
     Clear(svh);
     QuadDobl_Complex_VecVecs.Deep_Clear(homlead);
     QuadDobl_Complex_VecVecs.Deep_Clear(abhlead);
-  end QuadDobl_Run;
+  end QuadDobl_Run_Loops;
+
+  procedure Standard_Track_All
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+
+  -- DESCRIPTION :
+  --   Tracks all paths defined by the homotopy in hom,
+  --   starting at solutions in sols, in double precision.
+
+  -- ON ENTRY :
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the paths.
+
+    file : file_type;
+    verbose : boolean;
+    timer : Timing_Widget;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    declare
+      p : constant Standard_Complex_Poly_Systems.Poly_Sys
+        := Standard_Homotopy.Target_System;
+    begin
+      put(file,p'last,1); new_line(file);
+      put(file,p);
+    end;
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    tstart(timer);
+    Track_All_Paths(file,hom,abh,sols,pars,verbose);
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    print_times(file,timer,"tracking all paths in double precision");
+  end Standard_Track_All;
+
+  procedure DoblDobl_Track_All
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+
+  -- DESCRIPTION :
+  --   Tracks all paths defined by the homotopy in hom,
+  --   starting at solutions in sols, in double double precision.
+
+  -- ON ENTRY :
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the path.
+
+    file : file_type;
+    verbose : boolean;
+    timer : Timing_Widget;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    declare
+      p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+        := DoblDobl_Homotopy.Target_System;
+    begin
+      put(file,p'last,1); new_line(file);
+      put(file,p);
+    end;
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    tstart(timer);
+    Track_All_Paths(file,hom,abh,sols,pars,verbose);
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    print_times(file,timer,"tracking all paths in double double precision");
+  end DoblDobl_Track_All;
+
+  procedure QuadDobl_Track_All
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+
+  -- DESCRIPTION :
+  --   Tracks all paths defined by the homotopy in hom,
+  --   starting at solutions in sols, in quad double precision.
+
+  -- ON ENTRY :
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the path.
+
+    file : file_type;
+    verbose : boolean;
+    timer : Timing_Widget;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    declare
+      p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+        := QuadDobl_Homotopy.Target_System;
+    begin
+      put(file,p'last,1); new_line(file);
+      put(file,p);
+    end;
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    tstart(timer);
+    Track_All_Paths(file,hom,abh,sols,pars,verbose);
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    print_times(file,timer,"tracking all paths in quad double precision");
+  end QuadDobl_Track_All;
 
   procedure Standard_Test is
 
@@ -471,25 +635,9 @@ procedure ts_pcscnv is
     abshom := Residual_Convolution_System(cnvhom);
     pars.gamma := Standard_Homotopy.Accessibility_Constant;
     put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      Standard_Run(cnvhom,abshom,sols,pars);
-    else
-      declare
-        file : file_type;
-        verbose : boolean;
-      begin
-        new_line;
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-        new_line;
-        put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
-        verbose := (ans = 'y');
-        Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
-        new_line(file);
-        put_line(file,"THE SOLUTIONS :");
-        put(file,Standard_Complex_Solutions.Length_Of(sols),
-                 natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
-      end;
+    if ans = 'y'
+     then Standard_Run_Loops(cnvhom,abshom,sols,pars);
+     else Standard_Track_All(cnvhom,abshom,sols,pars);
     end if;
   end Standard_Test;
 
@@ -517,25 +665,9 @@ procedure ts_pcscnv is
     ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
     pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
     put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      DoblDobl_Run(cnvhom,abshom,sols,pars);
-    else
-      declare
-        file : file_type;
-        verbose : boolean;
-      begin
-        new_line;
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-        new_line;
-        put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
-        verbose := (ans = 'y');
-        Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
-        new_line(file);
-        put_line(file,"THE SOLUTIONS :");
-        put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
-                 natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      end;
+    if ans = 'y'
+     then DoblDobl_Run_Loops(cnvhom,abshom,sols,pars);
+     else DoblDobl_Track_All(cnvhom,abshom,sols,pars);
     end if;
   end DoblDobl_Test;
 
@@ -563,25 +695,9 @@ procedure ts_pcscnv is
     qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
     pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
     put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      QuadDobl_Run(cnvhom,abshom,sols,pars);
-    else
-      declare
-        file : file_type;
-        verbose : boolean;
-      begin
-        new_line;
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-        new_line;
-        put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
-        verbose := (ans = 'y');
-        Track_All_Paths(file,cnvhom,abshom,sols,pars,verbose);
-        new_line(file);
-        put_line(file,"THE SOLUTIONS :");
-        put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
-                 natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      end;
+    if ans = 'y'
+     then QuadDobl_Run_Loops(cnvhom,abshom,sols,pars);
+     else QuadDobl_Track_All(cnvhom,abshom,sols,pars);
     end if;
   end QuadDobl_Test;
 
