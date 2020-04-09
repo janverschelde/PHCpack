@@ -581,6 +581,7 @@ package body Predictor_Corrector_Loops is
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
     nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    nbrit : integer32;
     fail : boolean;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : Standard_Complex_Vectors.Vector(1..hom.dim);
@@ -601,6 +602,11 @@ package body Predictor_Corrector_Loops is
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
         dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      Restore_Coefficients(homcff,hom.crc);
+      Update_Radii_of_Constants(abh,hom);
+      Step_Coefficient(hom,acct);
+      LU_Newton_Steps(file,hom,abh,psv,1,nbrit,pars.tolres,mixres,dx,
+                      ipvt,ls.rco,fail,verbose);
       ls.v := psv.sol; ls.res := mixres;
       ls.err := Standard_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := Standard_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
@@ -635,6 +641,7 @@ package body Predictor_Corrector_Loops is
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
     nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    nbrit : integer32 := 0;
     fail : boolean;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : DoblDobl_Complex_Vectors.Vector(1..hom.dim);
@@ -655,6 +662,11 @@ package body Predictor_Corrector_Loops is
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
         dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      Restore_Coefficients(homcff,hom.crc);
+      Update_Radii_of_Constants(abh,hom);
+      Step_Coefficient(hom,acct);
+      LU_Newton_Steps(file,hom,abh,psv,1,nbrit,pars.tolres,mixres,dx,
+                      ipvt,ls.rco,fail,verbose);
       ls.v := psv.sol; ls.res := mixres;
       ls.err := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := DoblDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
@@ -689,6 +701,7 @@ package body Predictor_Corrector_Loops is
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
     nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    nbrit : integer32 := 0;
     fail : boolean;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
     dx : QuadDobl_Complex_Vectors.Vector(1..hom.dim);
@@ -709,6 +722,11 @@ package body Predictor_Corrector_Loops is
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := Create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
         dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
+      Restore_Coefficients(homcff,hom.crc);
+      Update_Radii_of_Constants(abh,hom);
+      Step_Coefficient(hom,acct);
+      LU_Newton_Steps(file,hom,abh,psv,1,nbrit,pars.tolres,mixres,dx,
+                      ipvt,ls.rco,fail,verbose);
       ls.v := psv.sol; ls.res := mixres;
       ls.err := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := QuadDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);

@@ -1,3 +1,6 @@
+Thu 9 Apr 2020 : extended corrector_convolutions with LU Newton methods that
+  estimate inverse condition numbers, called in predictor_corrector_loops.adb.
+
 Wed 8 Apr 2020 : added printing of target system and timers to ts_pcscnv,
   with extra procedures towards future packaging of path trackers.
   Updated procedures in predictor_corrector_loops with the mixed residual

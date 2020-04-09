@@ -260,7 +260,7 @@ package Corrector_Convolutions is
   --   the series coefficient evaluated at t,
   --   in double, double double, and quad double precision.
 
--- RUNNING ONE STEP OF NEWTON'S METHOD :
+-- ONE STEP OF NEWTON'S METHOD WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -304,6 +304,7 @@ package Corrector_Convolutions is
 
   -- DESCRIPTION :
   --   Does one Newton step with LU factorization,
+  --   without an estimate for the inverse condition number,
   --   in double, double double, or quad double precision.
 
   -- ON ENTRY :
@@ -320,7 +321,68 @@ package Corrector_Convolutions is
   --   info     zero is all went well, if nonzero,
   --            then the matrix in hom.vm(0) may be singular.
 
--- RUNNING MANY STEPs OF NEWTON'S METHOD :
+-- ONE STEP OF NEWTON'S METHOD WITH LU WITH CONDITION NUMBER ESTIMATE :
+
+  procedure LU_Newton_Step
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sol : in out Standard_Complex_Vectors.Vector;
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sol : in out Standard_Complex_Vectors.Vector;
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float; verbose : in boolean := true );
+  procedure LU_Newton_Step
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_double );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_double; verbose : in boolean := true );
+  procedure LU_Newton_Step
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out quad_double );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out quad_double; verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Does one Newton step with LU factorization,
+  --   with an estimate for the inverse condition number,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     to write extra output to if verbose (optional);
+  --   hom      convolution system for a homotopy;
+  --   sol      an initial value for a solution at t = 0;
+  --   verbose  flag to indicate if vectors need to be written,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   sol      the updated solution;
+  --   dx       the update vector applied to the solution;
+  --   ipvt     pivoting information for the LU factorization;
+  --   rcond    estimate for the inverse of the condition number,
+  --            if 1.0 + rcond = 1.0, then the Jacobian matrix is singular.
+
+-- MANY STEPs OF NEWTON'S METHOD WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Steps
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -385,6 +447,7 @@ package Corrector_Convolutions is
 
   -- DESCRIPTION :
   --   Runs several Newton steps using LU factorization,
+  --   without an estimate for the inverse condition number,
   --   in double, double double, or quad double precision.
 
   -- ON ENTRY :
@@ -393,7 +456,7 @@ package Corrector_Convolutions is
   --   abh      homotopy with radii for coefficients for mixed residual;
   --   psv      psv.sol contains an initial value for a solution at t = 0;
   --   maxit    maximum number of iterations;
-  --   tol      tolerance on the updatex dx;
+  --   tol      tolerance on the update dx;
   --   verbose  flag to indicate if vectors need to be written,
   --            if a file is given on input.
 
@@ -404,6 +467,94 @@ package Corrector_Convolutions is
   --   ipvt     pivoting information for the LU factorization;
   --   info     zero is all went well, if nonzero,
   --            then the matrix in hom.vm(0) may be singular;
+  --   fail     true if tolres > tol after maxit iterations,
+  --            false otherwise.
+
+-- MANY STEPs OF NEWTON'S METHOD WITH CONDITION NUMBER ESTIMATE :
+
+  procedure LU_Newton_Steps
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out double_float; 
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float; fail : out boolean );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out double_float; 
+                dx : out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float; fail : out boolean;
+                verbose : in boolean := true );
+  procedure LU_Newton_Steps
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out double_double; 
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_double; fail : out boolean );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out double_double; 
+                dx : out DoblDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_double; fail : out boolean;
+                verbose : in boolean := true );
+  procedure LU_Newton_Steps
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out quad_double; 
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out quad_double; fail : out boolean );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; mixres : out quad_double; 
+                dx : out QuadDobl_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out quad_double; fail : out boolean;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Runs several Newton steps using LU factorization,
+  --   with an estimate for the inverse condition number,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     to write extra output to if verbose (optional);
+  --   hom      convolution system for a homotopy;
+  --   abh      homotopy with radii for coefficients for mixed residual;
+  --   psv      psv.sol contains an initial value for a solution at t = 0;
+  --   maxit    maximum number of iterations;
+  --   tol      tolerance on the update dx;
+  --   verbose  flag to indicate if vectors need to be written,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   psv.sol  the updated solution;
+  --   mixres   the mixed residual;
+  --   dx       the update vector applied to the solution;
+  --   ipvt     pivoting information for the LU factorization;
+  --   rcond    estimate for the inverse of the condition number,
+  --            if 1.0 + rcond = 1.0, then the Jacobian matrix is singular;
   --   fail     true if tolres > tol after maxit iterations,
   --            false otherwise.
 
