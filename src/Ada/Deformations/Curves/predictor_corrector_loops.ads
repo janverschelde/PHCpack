@@ -41,7 +41,7 @@ package Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_float;
-                step,mixres : out double_float;
+                step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
@@ -56,7 +56,7 @@ package Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_float;
-                step,mixres : out double_float;
+                step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true );
   procedure Predictor_Corrector_Loop
@@ -71,7 +71,7 @@ package Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_double;
-                step,mixres : out double_double;
+                step,mixres : out double_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
@@ -86,7 +86,7 @@ package Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_double;
-                step,mixres : out double_double;
+                step,mixres : out double_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true );
   procedure Predictor_Corrector_Loop
@@ -101,7 +101,7 @@ package Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out quad_double;
-                step,mixres : out quad_double;
+                step,mixres : out quad_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
@@ -116,7 +116,7 @@ package Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out quad_double;
-                step,mixres : out quad_double;
+                step,mixres : out quad_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true );
 
@@ -152,6 +152,7 @@ package Predictor_Corrector_Loops is
   --   acct     updated value for the homotopy continuation parameter t;
   --   step     the step size;
   --   mixres   mixed residual of corrector loop if pars.corsteps < 0;
+  --   nbrit    number of iterations in the corrector loop;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
@@ -171,7 +172,7 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float; fail : out boolean );
   procedure Track_One_Path
               ( file : in file_type;
@@ -187,7 +188,7 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true );
   procedure Track_One_Path
@@ -203,7 +204,7 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_double;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float; fail : out boolean );
   procedure Track_One_Path
               ( file : in file_type;
@@ -219,7 +220,7 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_double;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true );
   procedure Track_One_Path
@@ -235,7 +236,7 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out quad_double;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float; fail : out boolean );
   procedure Track_One_Path
               ( file : in file_type;
@@ -251,7 +252,7 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out quad_double;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true );
 
@@ -282,6 +283,7 @@ package Predictor_Corrector_Loops is
   --   ipvt     pivoting information for the LU Newton steps;
   --   acct     accumulated value of the homotopy continuation parameter t;
   --   mixres   mixed residual of corrector loop if pars.corsteps > 0;
+  --   tnbrit   total number of corrector iterations;
   --   nbpole   updated number of times the pole step was minimal;
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
@@ -330,7 +332,7 @@ package Predictor_Corrector_Loops is
 
   procedure Write_Path_Statistics
               ( file : in file_type;
-                nbpole,nbhess,nbmaxm,nbsteps : in natural32;
+                nbrit,nbpole,nbhess,nbmaxm,nbsteps : in natural32;
                 minstpz,maxstpz : in double_float );
 
   -- DESCRIPTION :
@@ -338,6 +340,7 @@ package Predictor_Corrector_Loops is
 
   -- ON ENTRY :
   --   file     must be opened for output;
+  --   nbrit    the number of corrector iterations on the path;
   --   nbpole   number of times pole step was minimal;
   --   nbhess   number of times curvature step was minimal;
   --   nbmaxm   number of times maximum step was minimal;
@@ -348,6 +351,7 @@ package Predictor_Corrector_Loops is
   procedure Write_Total_Path_Statistics
               ( file : in file_type;
                 minnbrsteps,maxnbrsteps : in natural32;
+                mincorsteps,maxcorsteps : in natural32;
                 ratpole,rathess,ratmaxm : in double_float;
                 minstpz,maxstpz : in double_float );
 
@@ -358,6 +362,8 @@ package Predictor_Corrector_Loops is
   --   file          must be opened for output;
   --   minnbrsteps   smallest number of steps on a path;
   --   maxnbrsteps   largest number of steps on a path;
+  --   mincorsteps   smallest number of corrector iterations on a path;
+  --   maxcorsteps   largest number of corrector iterations on a path;
   --   ratpole       ratio of times pole step was minimal;
   --   rathess       ratio of times curvature step was minimal;
   --   ratmaxm       ratio of times curvature step was minimal;

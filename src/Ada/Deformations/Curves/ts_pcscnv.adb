@@ -104,12 +104,13 @@ procedure ts_pcscnv is
     endt : constant double_float := 1.0;
     acct,step,mixres : double_float := 0.0;
     ans : character;
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
@@ -168,12 +169,13 @@ procedure ts_pcscnv is
     endt : constant double_float := 1.0;
     acct,step,mixres : double_double := Create(0.0);
     ans : character;
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
@@ -232,12 +234,13 @@ procedure ts_pcscnv is
     endt : constant double_float := 1.0;
     acct,step,mixres : quad_double := Create(0.0);
     ans : character;
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,
+        pars,maxit,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
@@ -275,7 +278,7 @@ procedure ts_pcscnv is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
     fail,stepwise : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -302,8 +305,8 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
-          minstpz,maxstpz,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
+          nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := Standard_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
@@ -346,7 +349,7 @@ procedure ts_pcscnv is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
     fail,stepwise : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -374,8 +377,8 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
-          minstpz,maxstpz,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
+          nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := DoblDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
@@ -417,7 +420,7 @@ procedure ts_pcscnv is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
     fail,stepwise : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -445,8 +448,8 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
-          minstpz,maxstpz,fail,true);
+          prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
+          nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := QuadDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);

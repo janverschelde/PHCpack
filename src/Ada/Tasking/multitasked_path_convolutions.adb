@@ -91,7 +91,7 @@ package body Multitasked_Path_Convolutions is
       myptr : Solution_List;
       ls : Link_to_Solution;
       t,mixres,minstpz,maxstpz : double_float := 0.0;
-      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       fail : boolean;
 
     begin
@@ -100,9 +100,9 @@ package body Multitasked_Path_Convolutions is
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
         psv(i).sol := ls.v; t := 0.0;
-        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
-          maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-          wrk(i),t,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
+          prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
+          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         ls.err := Standard_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
@@ -122,7 +122,7 @@ package body Multitasked_Path_Convolutions is
       ls : Link_to_Solution;
       cnt : integer32;
       t,mixres,minstpz,maxstpz : double_float := 0.0;
-      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       fail : boolean;
 
     begin
@@ -135,9 +135,9 @@ package body Multitasked_Path_Convolutions is
                          & " tracks path "
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := 0.0;
-        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
-          maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-          wrk(i),t,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
+          prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
+          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         ls.err := Standard_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
@@ -208,7 +208,7 @@ package body Multitasked_Path_Convolutions is
       myptr : Solution_List;
       ls : Link_to_Solution;
       t,mixres : double_double;
-      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       minstpz,maxstpz : double_float;
       fail : boolean;
 
@@ -218,9 +218,9 @@ package body Multitasked_Path_Convolutions is
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
         psv(i).sol := ls.v; t := Create(0.0);
-        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
-          maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-          wrk(i),t,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
+          prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
+          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         ls.err := DoblDobl_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
@@ -240,7 +240,7 @@ package body Multitasked_Path_Convolutions is
       ls : Link_to_Solution;
       cnt : integer32;
       t,mixres : double_double;
-      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       minstpz,maxstpz : double_float;
       fail : boolean;
 
@@ -254,9 +254,9 @@ package body Multitasked_Path_Convolutions is
                          & " tracks path "
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := Create(0.0);
-        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
-          maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-          wrk(i),t,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
+          prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
+          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         ls.err := DoblDobl_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
@@ -327,7 +327,7 @@ package body Multitasked_Path_Convolutions is
       myptr : Solution_List;
       ls : Link_to_Solution;
       t,mixres : quad_double;
-      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       minstpz,maxstpz : double_float;
       fail : boolean;
 
@@ -337,9 +337,9 @@ package body Multitasked_Path_Convolutions is
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
         psv(i).sol := ls.v; t := Create(0.0);
-        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
-          maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-          wrk(i),t,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
+          prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
+          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         ls.err := QuadDobl_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
@@ -359,7 +359,7 @@ package body Multitasked_Path_Convolutions is
       ls : Link_to_Solution;
       cnt : integer32;
       t,mixres : quad_double;
-      nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       minstpz,maxstpz : double_float;
       fail : boolean;
 
@@ -373,9 +373,9 @@ package body Multitasked_Path_Convolutions is
                          & " tracks path "
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := Create(0.0);
-        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,
-          maxit,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,
-          wrk(i),t,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
+          prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
+          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         ls.err := QuadDobl_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);

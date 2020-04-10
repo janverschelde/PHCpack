@@ -2,6 +2,9 @@ Fri 10 Apr 2020 : added computation of the average ratio of step sizes
   and timers to predictor_corrector_loops, updated ts_pcscnv.
   Added computation of smallest and largest step sizes and number of steps
   to predictor_corrector_loops, updated ts_pcscnv.
+  Fixed setting of the number of corrector iterations in the procedures
+  of corrector_convolutions.adb.  Added counters to predictor_corrector_loops
+  for the corrector iterations, updated ts_pcscnv.
 
 Thu 9 Apr 2020 : extended corrector_convolutions with LU Newton methods that
   estimate inverse condition numbers, called in predictor_corrector_loops.adb.

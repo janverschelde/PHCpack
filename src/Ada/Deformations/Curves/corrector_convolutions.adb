@@ -1200,7 +1200,7 @@ package body Corrector_Convolutions is
     use Standard_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,info);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1211,7 +1211,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1256,7 +1255,7 @@ package body Corrector_Convolutions is
     use Standard_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1271,7 +1270,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1289,7 +1287,7 @@ package body Corrector_Convolutions is
     use Standard_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,rcond,verbose);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1304,7 +1302,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1320,7 +1317,7 @@ package body Corrector_Convolutions is
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,info);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1331,7 +1328,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1347,7 +1343,7 @@ package body Corrector_Convolutions is
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,rcond);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1358,7 +1354,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1376,7 +1371,7 @@ package body Corrector_Convolutions is
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1391,7 +1386,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1409,7 +1403,7 @@ package body Corrector_Convolutions is
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,rcond,verbose);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1424,7 +1418,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1440,7 +1433,7 @@ package body Corrector_Convolutions is
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,info);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1451,7 +1444,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1467,7 +1459,7 @@ package body Corrector_Convolutions is
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,rcond);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1478,7 +1470,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1496,7 +1487,7 @@ package body Corrector_Convolutions is
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1511,7 +1502,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
   procedure LU_Newton_Steps
@@ -1529,7 +1519,7 @@ package body Corrector_Convolutions is
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
-    fail := true;
+    fail := true; nbrit := maxit;
     for k in 1..maxit loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,rcond,verbose);
       psv.res := Eval(hom.crc,psv.sol);
@@ -1544,7 +1534,6 @@ package body Corrector_Convolutions is
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
-    nbrit := maxit;
   end LU_Newton_Steps;
 
 end Corrector_Convolutions;

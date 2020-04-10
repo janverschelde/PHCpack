@@ -33,13 +33,13 @@ package body Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_float;
-                step,mixres : out double_float;
+                step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean ) is
 
     use Standard_Predictor_Convolutions;
 
-    info,nbrit : integer32 := 0;
+    info : integer32 := 0;
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
@@ -47,7 +47,7 @@ package body Predictor_Corrector_Loops is
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
-      mixres := 1.0;
+      mixres := 1.0; nbrit := 0;
     else
       loop
         Store_Leading_Coefficients(hom.crc,homlead);
@@ -80,13 +80,13 @@ package body Predictor_Corrector_Loops is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_float;
-                step,mixres : out double_float;
+                step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
     use Standard_Predictor_Convolutions;
 
-    info,nbrit : integer32 := 0;
+    info : integer32 := 0;
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
@@ -102,7 +102,7 @@ package body Predictor_Corrector_Loops is
       put(file," at t :"); put(file,acct,3); put_line(file,".");
     end if;
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
-      mixres := 1.0;
+      mixres := 1.0; nbrit := 0;
     else
       loop
         Store_Leading_Coefficients(hom.crc,homlead);
@@ -138,13 +138,13 @@ package body Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_double;
-                step,mixres : out double_double;
+                step,mixres : out double_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean ) is
 
     use DoblDobl_Predictor_Convolutions;
 
-    info,nbrit : integer32 := 0;
+    info : integer32 := 0;
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
@@ -152,7 +152,7 @@ package body Predictor_Corrector_Loops is
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
-      mixres := create(1.0);
+      mixres := create(1.0); nbrit := 0;
     else
       loop
         Store_Leading_Coefficients(hom.crc,homlead);
@@ -185,13 +185,13 @@ package body Predictor_Corrector_Loops is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_double;
-                step,mixres : out double_double;
+                step,mixres : out double_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
     use DoblDobl_Predictor_Convolutions;
 
-    info,nbrit : integer32 := 0;
+    info : integer32 := 0;
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
@@ -207,7 +207,7 @@ package body Predictor_Corrector_Loops is
       put(file," at t : "); put(file,acct,3); put_line(file,".");
     end if;
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
-      mixres := create(1.0);
+      mixres := create(1.0); nbrit := 0;
     else
       loop
         Store_Leading_Coefficients(hom.crc,homlead);
@@ -243,13 +243,13 @@ package body Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out quad_double;
-                step,mixres : out quad_double;
+                step,mixres : out quad_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean ) is
 
     use QuadDobl_Predictor_Convolutions;
 
-    info,nbrit : integer32 := 0;
+    info : integer32 := 0;
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
@@ -257,7 +257,7 @@ package body Predictor_Corrector_Loops is
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
-      mixres := create(1.0);
+      mixres := create(1.0); nbrit := 0;
     else
       loop
         Store_Leading_Coefficients(hom.crc,homlead);
@@ -290,13 +290,13 @@ package body Predictor_Corrector_Loops is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out quad_double;
-                step,mixres : out quad_double;
+                step,mixres : out quad_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
     use QuadDobl_Predictor_Convolutions;
 
-    info,nbrit : integer32 := 0;
+    info : integer32 := 0;
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
@@ -312,7 +312,7 @@ package body Predictor_Corrector_Loops is
       put(file," at t : "); put(file,acct,3); put_line(file,".");
     end if;
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
-      mixres := create(1.0);
+      mixres := create(1.0); nbrit := 0;
     else
       loop
         Store_Leading_Coefficients(hom.crc,homlead);
@@ -349,20 +349,22 @@ package body Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
                 fail : out boolean ) is
 
     endt : constant double_float := 1.0;
     step : double_float := 0.0;
     togo : double_float; 
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
-    minstpz := 1.0; maxstpz := 0.0;
+    minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,
-        psv,svh,dx,ipvt,endt,acct,step,mixres,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,psv,
+        svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
       togo := endt - acct;
       if (abs(togo) < pars.epsilon)
@@ -386,24 +388,26 @@ package body Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true ) is
 
     endt : constant double_float := 1.0;
     step : double_float := 0.0;
     togo : double_float; 
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
-    minstpz := 1.0; maxstpz := 0.0;
+    minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
       if verbose
        then put(file,"t :"); put(file,acct,3); put_line(file," :");
       end if;
       Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
-        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbpole,nbhess,nbmaxm,
+        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
+      tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
       if verbose then
         if fail
@@ -432,20 +436,22 @@ package body Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_double;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
                 fail : out boolean ) is
 
     endt : constant double_float := 1.0;
     step : double_double := create(0.0);
     togo : double_double; 
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
-    minstpz := 1.0; maxstpz := 0.0;
+    minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,
-        psv,svh,dx,ipvt,endt,acct,step,mixres,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,psv,
+        svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hi_part(step));
       togo := endt - acct;
       if (abs(togo) < pars.epsilon)
@@ -469,24 +475,26 @@ package body Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_double;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true ) is
 
     endt : constant double_float := 1.0;
     step : double_double := create(0.0);
     togo : double_double; 
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
-    minstpz := 1.0; maxstpz := 0.0;
+    minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
       if verbose
        then put(file,"t : "); put(file,acct,3); put_line(file," :");
       end if;
       Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
-        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbpole,nbhess,nbmaxm,
+        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
+      tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hi_part(step));
       if verbose then
         if fail
@@ -515,19 +523,21 @@ package body Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out quad_double;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float; fail : out boolean ) is
 
     endt : constant double_float := 1.0;
     step : quad_double := create(0.0);
     togo : quad_double; 
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
-    minstpz := 1.0; maxstpz := 0.0;
+    minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,
-        psv,svh,dx,ipvt,endt,acct,step,mixres,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,psv,
+        svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hihi_part(step));
       togo := endt - acct;
       if (abs(togo) < pars.epsilon)
@@ -551,24 +561,26 @@ package body Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out quad_double;
-                nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true ) is
 
     endt : constant double_float := 1.0;
     step : quad_double := create(0.0);
     togo : quad_double; 
+    nbrit : integer32;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
-    minstpz := 1.0; maxstpz := 0.0;
+    minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
       if verbose
        then put(file,"t : "); put(file,acct,3); put_line(file," :");
       end if;
       Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
-        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbpole,nbhess,nbmaxm,
+        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
+      tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hihi_part(step));
       if verbose then
         if fail
@@ -603,7 +615,7 @@ package body Predictor_Corrector_Loops is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
     nbrit : integer32;
     fail : boolean;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -617,7 +629,7 @@ package body Predictor_Corrector_Loops is
     ratpole,rathess,ratmaxm,minstpz,maxstpz : double_float := 0.0;
     lensols : constant natural32 := Length_Of(sols);
     minpastp,maxpastp : double_float;
-    minnbrsteps,maxnbrsteps : natural32;
+    mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps : natural32;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -628,14 +640,15 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(abh.crc,abhlead);
     minpastp := 1.0; maxpastp := 0.0;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    mincorsteps := (pars.maxsteps+1)*pars.corsteps+1; maxcorsteps := 0;
     tstart(timer);
     while not Is_Null(solsptr) loop
       pathno := pathno + 1;
       put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
-        dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,
-        fail,verbose);
+        dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
+        minstpz,maxstpz,fail,verbose);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);
@@ -645,11 +658,12 @@ package body Predictor_Corrector_Loops is
       ls.err := Standard_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := Standard_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       Write_Path_Statistics
-        (file,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
+        (file,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
       Series_and_Trackers.Update_Ratio_Sums
         (ratpole,rathess,ratmaxm,nbpole,nbhess,nbmaxm,nbsteps*lensols);
       Series_and_Trackers.Update_MinMax(minpastp,maxpastp,minstpz,maxstpz);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbsteps);
+      Series_and_Trackers.Update_Counters(mincorsteps,maxcorsteps,tnbrit);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);
@@ -657,7 +671,8 @@ package body Predictor_Corrector_Loops is
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,ratpole,rathess,ratmaxm,minpastp,maxpastp);
+      (file,minnbrsteps,maxnbrsteps,mincorsteps,maxcorsteps,
+       ratpole,rathess,ratmaxm,minpastp,maxpastp);
     new_line(file);
     print_times(file,timer,"tracking "
                 & Characters_and_Numbers.nConvert(lensols)
@@ -688,7 +703,7 @@ package body Predictor_Corrector_Loops is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
     nbrit : integer32 := 0;
     fail : boolean;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -702,7 +717,7 @@ package body Predictor_Corrector_Loops is
     ratpole,rathess,ratmaxm,minstpz,maxstpz : double_float := 0.0;
     lensols : constant natural32 := Length_Of(sols);
     minpastp,maxpastp : double_float;
-    minnbrsteps,maxnbrsteps : natural32;
+    mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps : natural32;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -713,14 +728,15 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(abh.crc,abhlead);
     minpastp := 1.0; maxpastp := 0.0;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    mincorsteps := (pars.maxsteps+1)*pars.corsteps+1; maxcorsteps := 0;
     tstart(timer);
     while not Is_Null(solsptr) loop
       pathno := pathno + 1;
       put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
-        dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,
-        fail,verbose);
+        dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
+        minstpz,maxstpz,fail,verbose);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);
@@ -730,11 +746,12 @@ package body Predictor_Corrector_Loops is
       ls.err := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := DoblDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       Write_Path_Statistics
-        (file,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
+        (file,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
       Series_and_Trackers.Update_Ratio_Sums
         (ratpole,rathess,ratmaxm,nbpole,nbhess,nbmaxm,nbsteps*lensols);
       Series_and_Trackers.Update_MinMax(minpastp,maxpastp,minstpz,maxstpz);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbsteps);
+      Series_and_Trackers.Update_Counters(mincorsteps,maxcorsteps,tnbrit);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);
@@ -742,7 +759,8 @@ package body Predictor_Corrector_Loops is
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,ratpole,rathess,ratmaxm,minpastp,maxpastp);
+      (file,minnbrsteps,maxnbrsteps,mincorsteps,maxcorsteps,
+       ratpole,rathess,ratmaxm,minpastp,maxpastp);
     new_line(file);
     print_times(file,timer,"tracking "
                 & Characters_and_Numbers.nConvert(lensols)
@@ -773,7 +791,7 @@ package body Predictor_Corrector_Loops is
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(hom.dim);
     solsptr : Solution_List := sols;
-    nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
     nbrit : integer32 := 0;
     fail : boolean;
     ipvt : Standard_Integer_Vectors.Vector(1..hom.dim);
@@ -787,7 +805,7 @@ package body Predictor_Corrector_Loops is
     ratpole,rathess,ratmaxm,minstpz,maxstpz : double_float := 0.0;
     lensols : constant natural32 := Length_Of(sols);
     minpastp,maxpastp : double_float;
-    minnbrsteps,maxnbrsteps : natural32;
+    mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps : natural32;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -798,14 +816,15 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(abh.crc,abhlead);
     minpastp := 1.0; maxpastp := 0.0;
     minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    mincorsteps := (pars.maxsteps+1)*pars.corsteps+1; maxcorsteps := 0;
     tstart(timer);
     while not Is_Null(solsptr) loop
       pathno := pathno + 1;
       put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := Create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
-        dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,
-        fail,verbose);
+        dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
+        minstpz,maxstpz,fail,verbose);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);
@@ -815,11 +834,12 @@ package body Predictor_Corrector_Loops is
       ls.err := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := QuadDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       Write_Path_Statistics
-        (file,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
+        (file,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
       Series_and_Trackers.Update_Ratio_Sums
         (ratpole,rathess,ratmaxm,nbpole,nbhess,nbmaxm,nbsteps*lensols);
       Series_and_Trackers.Update_MinMax(minpastp,maxpastp,minstpz,maxstpz);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbsteps);
+      Series_and_Trackers.Update_Counters(mincorsteps,maxcorsteps,tnbrit);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);
@@ -827,7 +847,8 @@ package body Predictor_Corrector_Loops is
     end loop;
     tstop(timer);
     Write_Total_Path_Statistics
-      (file,minnbrsteps,maxnbrsteps,ratpole,rathess,ratmaxm,minpastp,maxpastp);
+      (file,minnbrsteps,maxnbrsteps,mincorsteps,maxcorsteps,
+       ratpole,rathess,ratmaxm,minpastp,maxpastp);
     new_line(file);
     print_times(file,timer,"tracking "
                 & Characters_and_Numbers.nConvert(lensols)
@@ -841,7 +862,7 @@ package body Predictor_Corrector_Loops is
 
   procedure Write_Path_Statistics
               ( file : in file_type;
-                nbpole,nbhess,nbmaxm,nbsteps : in natural32;
+                nbrit,nbpole,nbhess,nbmaxm,nbsteps : in natural32;
                 minstpz,maxstpz : in double_float ) is
   begin
     put(file,"The smallest step size on the path :");
@@ -850,6 +871,8 @@ package body Predictor_Corrector_Loops is
     put(file,maxstpz,2); new_line(file);
     put(file,"The total number of steps on the path          : ");
     put(file,nbsteps,1); new_line(file);
+    put(file,"The number of corrector iterations on the path : ");
+    put(file,nbrit,1); new_line(file);
     put(file,"Number of times the pole step was minimal      : ");
     put(file,nbpole,1); new_line(file);
     put(file,"Number of times the curvature step was minimal : ");
@@ -861,6 +884,7 @@ package body Predictor_Corrector_Loops is
   procedure Write_Total_Path_Statistics
               ( file : in file_type;
                 minnbrsteps,maxnbrsteps : in natural32;
+                mincorsteps,maxcorsteps : in natural32;
                 ratpole,rathess,ratmaxm : in double_float;
                 minstpz,maxstpz : in double_float ) is
   begin
@@ -869,6 +893,10 @@ package body Predictor_Corrector_Loops is
     put(file,minnbrsteps,1); new_line(file);
     put(file,"The largest number of total steps  : ");
     put(file,maxnbrsteps,1); new_line(file);
+    put(file,"The smallest number of total corrector iterations : ");
+    put(file,mincorsteps,1); new_line(file);
+    put(file,"The largest number of total corrector iterations  : ");
+    put(file,maxcorsteps,1); new_line(file);
     put(file,"The smallest step size on the path :");
     put(file,minstpz,2); new_line(file);
     put(file,"The largest step size on the path  :");
