@@ -503,6 +503,7 @@ procedure ts_pcscnv is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    new_line(file);
     tstart(timer);
     Track_All_Paths(file,hom,abh,sols,pars,verbose);
     tstop(timer);
@@ -555,6 +556,7 @@ procedure ts_pcscnv is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    new_line(file);
     tstart(timer);
     Track_All_Paths(file,hom,abh,sols,pars,verbose);
     tstop(timer);
@@ -607,6 +609,7 @@ procedure ts_pcscnv is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    new_line(file);
     tstart(timer);
     Track_All_Paths(file,hom,abh,sols,pars,verbose);
     tstop(timer);

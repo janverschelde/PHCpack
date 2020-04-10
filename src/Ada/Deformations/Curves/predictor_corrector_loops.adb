@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
@@ -331,6 +332,20 @@ package body Predictor_Corrector_Loops is
     end if;
   end Predictor_Corrector_Loop;
 
+  procedure Write_Path_Statistics
+              ( file : in file_type;
+                nbpole,nbhess,nbmaxm,nbsteps : in natural32 ) is
+  begin
+    put(file,"The total number of steps on the path          : ");
+    put(file,nbsteps,1); new_line(file);
+    put(file,"Number of times the pole step was minimal      : ");
+    put(file,nbpole,1); new_line(file);
+    put(file,"Number of times the curvature step was minimal : ");
+    put(file,nbhess,1); new_line(file);
+    put(file,"Number of times the maximum step was minimal   : ");
+    put(file,nbmaxm,1); new_line(file);
+  end Write_Path_Statistics;
+
   procedure Track_One_Path
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -590,6 +605,7 @@ package body Predictor_Corrector_Loops is
         := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
     acct,mixres : double_float := 0.0;
+    pathno : natural32 := 0;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -599,6 +615,8 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     while not Is_Null(solsptr) loop
+      pathno := pathno + 1;
+      put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
         dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
@@ -610,6 +628,7 @@ package body Predictor_Corrector_Loops is
       ls.v := psv.sol; ls.res := mixres;
       ls.err := Standard_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := Standard_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
+      Write_Path_Statistics(file,nbpole,nbhess,nbmaxm,nbsteps);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);
@@ -650,6 +669,7 @@ package body Predictor_Corrector_Loops is
         := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
     acct,mixres : double_double;
+    pathno : natural32 := 0;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -659,6 +679,8 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     while not Is_Null(solsptr) loop
+      pathno := pathno + 1;
+      put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
         dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
@@ -670,6 +692,7 @@ package body Predictor_Corrector_Loops is
       ls.v := psv.sol; ls.res := mixres;
       ls.err := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := DoblDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
+      Write_Path_Statistics(file,nbpole,nbhess,nbmaxm,nbsteps);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);
@@ -710,6 +733,7 @@ package body Predictor_Corrector_Loops is
         := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
     acct,mixres : quad_double;
+    pathno : natural32 := 0;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -719,6 +743,8 @@ package body Predictor_Corrector_Loops is
     Store_Leading_Coefficients(hom.crc,homlead);
     Store_Leading_Coefficients(abh.crc,abhlead);
     while not Is_Null(solsptr) loop
+      pathno := pathno + 1;
+      put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := Create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
         dx,ipvt,wrk,acct,mixres,nbpole,nbhess,nbmaxm,nbsteps,fail,verbose);
@@ -730,6 +756,7 @@ package body Predictor_Corrector_Loops is
       ls.v := psv.sol; ls.res := mixres;
       ls.err := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := QuadDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
+      Write_Path_Statistics(file,nbpole,nbhess,nbmaxm,nbsteps);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       Restore_Leading_Coefficients(abhlead,abh.crc);
