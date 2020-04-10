@@ -172,7 +172,7 @@ package Predictor_Corrector_Loops is
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
-                fail : out boolean );
+                minstpz,maxstpz : out double_float; fail : out boolean );
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -188,6 +188,7 @@ package Predictor_Corrector_Loops is
                 wrk : in Standard_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true );
   procedure Track_One_Path
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -203,7 +204,7 @@ package Predictor_Corrector_Loops is
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
-                fail : out boolean );
+                minstpz,maxstpz : out double_float; fail : out boolean );
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -219,6 +220,7 @@ package Predictor_Corrector_Loops is
                 wrk : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out double_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true );
   procedure Track_One_Path
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -234,7 +236,7 @@ package Predictor_Corrector_Loops is
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out quad_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
-                fail : out boolean );
+                minstpz,maxstpz : out double_float; fail : out boolean );
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -250,6 +252,7 @@ package Predictor_Corrector_Loops is
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out quad_double;
                 nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                minstpz,maxstpz : out double_float;
                 fail : out boolean; verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -283,6 +286,8 @@ package Predictor_Corrector_Loops is
   --   nbhess   updated number of times the Hessian step was minimal;
   --   nbmaxm   updated number of times the maximum step was minimal;
   --   nbsteps  number of predictor-corrector steps done;
+  --   minstpz  minimum step size;
+  --   maxstpz  maximum step size;
   --   fail     true if the prescribed tolerance was not reached,
   --            false otherwise.
 
@@ -325,7 +330,8 @@ package Predictor_Corrector_Loops is
 
   procedure Write_Path_Statistics
               ( file : in file_type;
-                nbpole,nbhess,nbmaxm,nbsteps : in natural32 );
+                nbpole,nbhess,nbmaxm,nbsteps : in natural32;
+                minstpz,maxstpz : in double_float );
 
   -- DESCRIPTION :
   --   Writes some counts on the path tracker to file.
@@ -335,19 +341,27 @@ package Predictor_Corrector_Loops is
   --   nbpole   number of times pole step was minimal;
   --   nbhess   number of times curvature step was minimal;
   --   nbmaxm   number of times maximum step was minimal;
-  --   nbstep   total number of steps on the path.
+  --   nbstep   total number of steps on the path;
+  --   minstpz  minimum step size;
+  --   maxstpz  maximum step size.
 
   procedure Write_Total_Path_Statistics
               ( file : in file_type;
-                ratpole,rathess,ratmaxm : in double_float );
+                minnbrsteps,maxnbrsteps : in natural32;
+                ratpole,rathess,ratmaxm : in double_float;
+                minstpz,maxstpz : in double_float );
 
   -- DESCRIPTION :
   --   Writes some overall statistics to file.
 
   -- ON ENTRY :
-  --   file     must be opened for output;
-  --   ratpole  ratio of times pole step was minimal;
-  --   rathess  ratio of times curvature step was minimal;
-  --   ratmaxm  ratio of times curvature step was minimal.
+  --   file          must be opened for output;
+  --   minnbrsteps   smallest number of steps on a path;
+  --   maxnbrsteps   largest number of steps on a path;
+  --   ratpole       ratio of times pole step was minimal;
+  --   rathess       ratio of times curvature step was minimal;
+  --   ratmaxm       ratio of times curvature step was minimal;
+  --   minstpz       minimum step size;
+  --   maxstpz       maximum step size.
 
 end Predictor_Corrector_Loops;

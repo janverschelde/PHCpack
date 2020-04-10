@@ -284,7 +284,7 @@ procedure ts_pcscnv is
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
         := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
-    t,mixres : double_float := 0.0;
+    t,mixres,minstpz,maxstpz : double_float := 0.0;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -303,7 +303,7 @@ procedure ts_pcscnv is
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
           prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
-          fail,true);
+          minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := Standard_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
@@ -356,6 +356,7 @@ procedure ts_pcscnv is
         := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
     t,mixres : double_double;
+    minstpz,maxstpz : double_float;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -374,7 +375,7 @@ procedure ts_pcscnv is
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
           prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
-          fail,true);
+          minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := DoblDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
@@ -426,6 +427,7 @@ procedure ts_pcscnv is
         := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
     t,mixres : quad_double;
+    minstpz,maxstpz : double_float;
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -444,7 +446,7 @@ procedure ts_pcscnv is
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
           prd,psv,svh,dx,ipvt,wrk,t,mixres,nbpole,nbhess,nbmaxm,nbsteps,
-          fail,true);
+          minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := QuadDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);

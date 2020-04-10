@@ -1,3 +1,6 @@
+Fri 10 Apr 2020 : updated multitasked_path_convolutions.adb for the added
+  minimum and maximum step sizes along a path.
+
 Wed 8 Apr 2020 : to ts_mtpcscnv, added computation of wall clock time
   and writing of target system to file for input to phc -v.
   Updates multitasked_path_convolutions for the updated procedures of
