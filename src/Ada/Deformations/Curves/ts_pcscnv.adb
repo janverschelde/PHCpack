@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -483,7 +482,6 @@ procedure ts_pcscnv is
 
     file : file_type;
     verbose : boolean;
-    timer : Timing_Widget;
     ans : character;
 
   begin
@@ -504,15 +502,11 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    tstart(timer);
     Track_All_Paths(file,hom,abh,sols,pars,verbose);
-    tstop(timer);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Standard_Complex_Solutions.Length_Of(sols),
              natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
-    new_line(file);
-    print_times(file,timer,"tracking all paths in double precision");
   end Standard_Track_All;
 
   procedure DoblDobl_Track_All
@@ -536,7 +530,6 @@ procedure ts_pcscnv is
 
     file : file_type;
     verbose : boolean;
-    timer : Timing_Widget;
     ans : character;
 
   begin
@@ -557,15 +550,11 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    tstart(timer);
     Track_All_Paths(file,hom,abh,sols,pars,verbose);
-    tstop(timer);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
              natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
-    new_line(file);
-    print_times(file,timer,"tracking all paths in double double precision");
   end DoblDobl_Track_All;
 
   procedure QuadDobl_Track_All
@@ -589,7 +578,6 @@ procedure ts_pcscnv is
 
     file : file_type;
     verbose : boolean;
-    timer : Timing_Widget;
     ans : character;
 
   begin
@@ -610,15 +598,11 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    tstart(timer);
     Track_All_Paths(file,hom,abh,sols,pars,verbose);
-    tstop(timer);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
              natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
-    new_line(file);
-    print_times(file,timer,"tracking all paths in quad double precision");
   end QuadDobl_Track_All;
 
   procedure Standard_Test is

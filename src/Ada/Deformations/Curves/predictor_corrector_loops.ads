@@ -158,20 +158,6 @@ package Predictor_Corrector_Loops is
   --   fail     true if the prescribed tolerance was not reached,
   --            false otherwise.
 
-  procedure Write_Path_Statistics
-              ( file : in file_type;
-                nbpole,nbhess,nbmaxm,nbsteps : in natural32 );
-
-  -- DESCRIPTION :
-  --   Writes some counts on the path tracker to file.
-
-  -- ON ENTRY :
-  --   file     must be opened for output;
-  --   nbpole   number of times pole step was minimal;
-  --   nbhess   number of times curvature step was minimal;
-  --   nbmaxm   number of times maximum step was minimal;
-  --   nbstep   total number of steps on the path.
-
   procedure Track_One_Path
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -336,5 +322,32 @@ package Predictor_Corrector_Loops is
   
   -- ON RETURN :
   --   sols     solutions at the end of the paths.
+
+  procedure Write_Path_Statistics
+              ( file : in file_type;
+                nbpole,nbhess,nbmaxm,nbsteps : in natural32 );
+
+  -- DESCRIPTION :
+  --   Writes some counts on the path tracker to file.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbpole   number of times pole step was minimal;
+  --   nbhess   number of times curvature step was minimal;
+  --   nbmaxm   number of times maximum step was minimal;
+  --   nbstep   total number of steps on the path.
+
+  procedure Write_Total_Path_Statistics
+              ( file : in file_type;
+                ratpole,rathess,ratmaxm : in double_float );
+
+  -- DESCRIPTION :
+  --   Writes some overall statistics to file.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   ratpole  ratio of times pole step was minimal;
+  --   rathess  ratio of times curvature step was minimal;
+  --   ratmaxm  ratio of times curvature step was minimal.
 
 end Predictor_Corrector_Loops;
