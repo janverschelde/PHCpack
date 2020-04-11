@@ -10,6 +10,9 @@ with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Rational_Approximations;
 with DoblDobl_Rational_Approximations;
 with QuadDobl_Rational_Approximations;
@@ -657,6 +660,7 @@ package body Predictor_Corrector_Loops is
       ls.v := psv.sol; ls.res := mixres;
       ls.err := Standard_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := Standard_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
+      put(file,ls.all); new_line(file);
       Write_Path_Statistics
         (file,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
       Series_and_Trackers.Update_Ratio_Sums
@@ -745,6 +749,7 @@ package body Predictor_Corrector_Loops is
       ls.v := psv.sol; ls.res := mixres;
       ls.err := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := DoblDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
+      put(file,ls.all); new_line(file);
       Write_Path_Statistics
         (file,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
       Series_and_Trackers.Update_Ratio_Sums
@@ -833,6 +838,7 @@ package body Predictor_Corrector_Loops is
       ls.v := psv.sol; ls.res := mixres;
       ls.err := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       ls.t := QuadDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
+      put(file,ls.all); new_line(file);
       Write_Path_Statistics
         (file,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
       Series_and_Trackers.Update_Ratio_Sums

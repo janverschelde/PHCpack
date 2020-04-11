@@ -475,6 +475,7 @@ procedure ts_pcscnv is
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
   --   starting at solutions in sols, in double precision.
+  --   Assumes the homotopy is an artificial-parameter homotopy.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
@@ -496,9 +497,17 @@ procedure ts_pcscnv is
     declare
       p : constant Standard_Complex_Poly_Systems.Poly_Sys
         := Standard_Homotopy.Target_System;
+      q : constant Standard_Complex_Poly_Systems.Poly_Sys
+        := Standard_Homotopy.Start_System;
     begin
-      put(file,p'last,1); new_line(file);
-      put(file,p);
+      put(file,p'last,1); new_line(file); put(file,p);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,q'last,1); new_line(file); put(file,q);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,Standard_Complex_Solutions.Length_Of(sols),
+               natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
     end;
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
@@ -523,6 +532,7 @@ procedure ts_pcscnv is
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
   --   starting at solutions in sols, in double double precision.
+  --   Assumes the homotopy is an artificial-parameter homotopy.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
@@ -544,9 +554,17 @@ procedure ts_pcscnv is
     declare
       p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
         := DoblDobl_Homotopy.Target_System;
+      q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+        := DoblDobl_Homotopy.Start_System;
     begin
-      put(file,p'last,1); new_line(file);
-      put(file,p);
+      put(file,p'last,1); new_line(file); put(file,p);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,q'last,1); new_line(file); put(file,q);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+               natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
     end;
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
@@ -571,6 +589,7 @@ procedure ts_pcscnv is
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
   --   starting at solutions in sols, in quad double precision.
+  --   Assumes the homotopy is an artificial-parameter homotopy.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
@@ -592,9 +611,17 @@ procedure ts_pcscnv is
     declare
       p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
         := QuadDobl_Homotopy.Target_System;
+      q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+        := QuadDobl_Homotopy.Start_System;
     begin
-      put(file,p'last,1); new_line(file);
-      put(file,p);
+      put(file,p'last,1); new_line(file); put(file,p);
+      new_line(file);
+      put_line(file,"THE START SYSTEM :");
+      put(file,q'last,1); new_line(file); put(file,q);
+      new_line(file);
+      put_line(file,"THE START SOLUTIONS :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+               natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
     end;
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
