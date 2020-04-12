@@ -470,18 +470,22 @@ procedure ts_pcscnv is
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
   --   starting at solutions in sols, in double precision.
-  --   Assumes the homotopy is an artificial-parameter homotopy.
+
+  -- REQUIRED : the homotopy is square.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
-  --   pars     values for the tolerances and parameters.
+  --   pars     values for the tolerances and parameters;
+  --   arth     true if the homotopy is an artificial-parameter one,
+  --            false otherwise.
 
   -- ON RETURN :
   --   sols     solutions at the end of the paths.
@@ -494,21 +498,28 @@ procedure ts_pcscnv is
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
-    declare
-      p : constant Standard_Complex_Poly_Systems.Poly_Sys
-        := Standard_Homotopy.Target_System;
-      q : constant Standard_Complex_Poly_Systems.Poly_Sys
-        := Standard_Homotopy.Start_System;
-    begin
-      put(file,p'last,1); new_line(file); put(file,p);
-      new_line(file);
-      put_line(file,"THE START SYSTEM :");
-      put(file,q'last,1); new_line(file); put(file,q);
-      new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
-      put(file,Standard_Complex_Solutions.Length_Of(sols),
-               natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
-    end;
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               Standard_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Target_System;
+        q : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -527,18 +538,22 @@ procedure ts_pcscnv is
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
   --   starting at solutions in sols, in double double precision.
-  --   Assumes the homotopy is an artificial-parameter homotopy.
+
+  -- REQUIRED : the homotopy is square.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
-  --   pars     values for the tolerances and parameters.
+  --   pars     values for the tolerances and parameters;
+  --   arth     true if the homotopy is an artificial-parameter one,
+  --            false otherwise.
 
   -- ON RETURN :
   --   sols     solutions at the end of the path.
@@ -551,21 +566,28 @@ procedure ts_pcscnv is
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
-    declare
-      p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
-        := DoblDobl_Homotopy.Target_System;
-      q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
-        := DoblDobl_Homotopy.Start_System;
-    begin
-      put(file,p'last,1); new_line(file); put(file,p);
-      new_line(file);
-      put_line(file,"THE START SYSTEM :");
-      put(file,q'last,1); new_line(file); put(file,q);
-      new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
-      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
-               natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
-    end;
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               DoblDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Target_System;
+        q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -584,18 +606,22 @@ procedure ts_pcscnv is
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                pars : in Homotopy_Continuation_Parameters.Parameters ) is
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
   --   starting at solutions in sols, in quad double precision.
-  --   Assumes the homotopy is an artificial-parameter homotopy.
+
+  -- REQUIRED : the homotopy is square.
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
-  --   pars     values for the tolerances and parameters.
+  --   pars     values for the tolerances and parameters;
+  --   arth     true if the homotopy is an artificial-parameter one,
+  --            false otherwise.
 
   -- ON RETURN :
   --   sols     solutions at the end of the path.
@@ -608,21 +634,28 @@ procedure ts_pcscnv is
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
-    declare
-      p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
-        := QuadDobl_Homotopy.Target_System;
-      q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
-        := QuadDobl_Homotopy.Start_System;
-    begin
-      put(file,p'last,1); new_line(file); put(file,p);
-      new_line(file);
-      put_line(file,"THE START SYSTEM :");
-      put(file,q'last,1); new_line(file); put(file,q);
-      new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
-      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
-               natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
-    end;
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               QuadDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Target_System;
+        q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -648,6 +681,7 @@ procedure ts_pcscnv is
     pars : Homotopy_Continuation_Parameters.Parameters
          := Homotopy_Continuation_Parameters.Default_Values;
     ans : character;
+    artificial : boolean; -- flag for artificial-parameter homotopy
 
   begin
     new_line;
@@ -655,11 +689,15 @@ procedure ts_pcscnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     Standard_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
-    pars.gamma := Standard_Homotopy.Accessibility_Constant;
+    artificial := (Standard_Homotopy.Relaxation_Power /= 0);
+    if artificial
+     then pars.gamma := Standard_Homotopy.Accessibility_Constant;
+     else pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
     put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
      then Standard_Run_Loops(cnvhom,abshom,sols,pars);
-     else Standard_Track_All(cnvhom,abshom,sols,pars);
+     else Standard_Track_All(cnvhom,abshom,sols,pars,artificial);
     end if;
   end Standard_Test;
 
@@ -675,6 +713,7 @@ procedure ts_pcscnv is
          := Homotopy_Continuation_Parameters.Default_Values;
     ddgamma : DoblDobl_Complex_Numbers.Complex_Number;
     ans : character;
+    artificial : boolean; -- flag for artificial-parameter homotopy
 
     use DoblDobl_Complex_Numbers_cv;
   
@@ -685,11 +724,15 @@ procedure ts_pcscnv is
     DoblDobl_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
     ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
-    pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
+    artificial := (DoblDobl_Homotopy.Relaxation_Power /= 0);
+    if artificial
+     then pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
+     else pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
     put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
      then DoblDobl_Run_Loops(cnvhom,abshom,sols,pars);
-     else DoblDobl_Track_All(cnvhom,abshom,sols,pars);
+     else DoblDobl_Track_All(cnvhom,abshom,sols,pars,artificial);
     end if;
   end DoblDobl_Test;
 
@@ -705,6 +748,7 @@ procedure ts_pcscnv is
          := Homotopy_Continuation_Parameters.Default_Values;
     qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
     ans : character;
+    artificial : boolean; -- flag for artificial-parameter homotopy
 
     use QuadDobl_Complex_Numbers_cv;
 
@@ -715,11 +759,15 @@ procedure ts_pcscnv is
     QuadDobl_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
     qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
-    pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
+    artificial := (QuadDobl_Homotopy.Relaxation_Power /= 0);
+    if artificial
+     then pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
+     else pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
     put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
      then QuadDobl_Run_Loops(cnvhom,abshom,sols,pars);
-     else QuadDobl_Track_All(cnvhom,abshom,sols,pars);
+     else QuadDobl_Track_All(cnvhom,abshom,sols,pars,artificial);
     end if;
   end QuadDobl_Test;
 

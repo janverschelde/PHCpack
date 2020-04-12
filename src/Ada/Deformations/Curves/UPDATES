@@ -1,6 +1,7 @@
 Sat 11 Apr 2020 : modified ts_pcscnv so it also writes start system and
   start solution to the output file and predictor_corrector_loops.adb,
   so the end solution at each path is written before the path statistics.
+  Adjusted ts_pcscnv.adb for a square natural-parameter homotopy.
 
 Fri 10 Apr 2020 : added computation of the average ratio of step sizes
   and timers to predictor_corrector_loops, updated ts_pcscnv.
