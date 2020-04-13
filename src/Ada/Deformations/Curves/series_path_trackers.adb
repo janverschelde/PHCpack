@@ -4,7 +4,6 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
@@ -892,7 +891,7 @@ package body Series_Path_Trackers is
 
   procedure Standard_Define_Homotopy
               ( nbq,nvr : out integer32;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
                 mhom : out natural32; z : out Link_to_Partition;
                 idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out Standard_Complex_Solutions.Solution_List ) is
@@ -911,7 +910,7 @@ package body Series_Path_Trackers is
     nbq := target'last;
     mhom := Prompt_for_Homogenization(natural32(nvr));
     if mhom = 0 then
-      Standard_Homotopy.Create(target.all,start.all,2,pars.gamma);
+      Standard_Homotopy.Create(target.all,start.all,2,gamma);
     else
       if mhom = 1 then
         Standard_Projective_Transformation(target,start,sols);
@@ -923,21 +922,21 @@ package body Series_Path_Trackers is
         Add_Multihomogeneous_Symbols(mhom);
         nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
       end if;
-      Standard_Homotopy.Create(target.all,start.all,1,pars.gamma);
-      Standard_Coefficient_Homotopy.Create(start.all,target.all,1,pars.gamma);
+      Standard_Homotopy.Create(target.all,start.all,1,gamma);
+      Standard_Coefficient_Homotopy.Create(start.all,target.all,1,gamma);
     end if;
   end Standard_Define_Homotopy;
 
   procedure DoblDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
                 mhom : out natural32; z : out Link_to_Partition;
                 idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out DoblDobl_Complex_Solutions.Solution_List ) is
 
     target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
-             := Standard_to_DoblDobl_Complex(pars.gamma);
+             := Standard_to_DoblDobl_Complex(gamma);
 
     use Homotopy_Series_Readers;
 
@@ -970,14 +969,14 @@ package body Series_Path_Trackers is
 
   procedure QuadDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
-                pars : in Homotopy_Continuation_Parameters.Parameters;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
                 mhom : out natural32; z : out Link_to_Partition;
                 idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out QuadDobl_Complex_Solutions.Solution_List ) is
 
     target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     qd_gamma : constant QuadDobl_Complex_Numbers.Complex_Number
-             := Standard_to_QuadDobl_Complex(pars.gamma);
+             := Standard_to_QuadDobl_Complex(gamma);
 
     use Homotopy_Series_Readers;
 
@@ -1006,6 +1005,36 @@ package body Series_Path_Trackers is
       QuadDobl_Homotopy.Create(target.all,start.all,1,qd_gamma);
       QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,qd_gamma);
     end if;
+  end QuadDobl_Define_Homotopy;
+
+  procedure Standard_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+  begin
+    Standard_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
+  end Standard_Define_Homotopy;
+
+  procedure DoblDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+  begin
+    DoblDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
+  end DoblDobl_Define_Homotopy;
+
+  procedure QuadDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+  begin
+    QuadDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
   end QuadDobl_Define_Homotopy;
 
   procedure Standard_Main ( vrb : in integer32 := 0 ) is

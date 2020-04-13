@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -192,6 +193,41 @@ package Series_Path_Trackers is
   --   Adds m symbols to represents the extra m symbols.
   --   If m = 1, then Z0 is added, otherwise, the m symbols
   --   start with 'Z' and have indices added, starting at 1, up to m.
+
+  procedure Standard_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out Standard_Complex_Solutions.Solution_List );
+  procedure DoblDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure QuadDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Prompts the user for target and start system and defines
+  --   the artificial-parameter homotopy, eventually after applying
+  --   projective transformations.
+
+  -- ON ENTRY :
+  --   gamma    gamma constant in the artificial-parameter homotopy.
+
+  -- ON RETURN :
+  --   nbq      number of equations;
+  --   nvr      number of variables;
+  --   mhom     0 for affine, 1 for 1-homogenization, m for m-homogenization;
+  --   z        partition of the sets of unknowns, for mhom > 1;
+  --   idz      index representation of the partition z, for mhom > 1;
+  --   sols     start solutions.
 
   procedure Standard_Define_Homotopy
               ( nbq,nvr : out integer32;
