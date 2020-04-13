@@ -5,6 +5,7 @@ with Time_Stamps;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
@@ -53,7 +54,7 @@ procedure ts_mtpcscnv is
          := Homotopy_Continuation_Parameters.Default_Values;
     ans : character;
     file : file_type;
-    verbose : boolean;
+    artificial,verbose : boolean;
     startmoment,stopmoment : Ada.Calendar.Time;
   
   begin
@@ -62,16 +63,35 @@ procedure ts_mtpcscnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     Standard_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
-    pars.gamma := Standard_Homotopy.Accessibility_Constant;
+    artificial := (Standard_Homotopy.Relaxation_Power /= 0);
+    if artificial
+     then pars.gamma := Standard_Homotopy.Accessibility_Constant;
+     else pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
-    declare
-      p : constant Standard_Complex_Poly_Systems.Poly_Sys
-        := Standard_Homotopy.Target_System;
-    begin
-      put(file,p'last,1); new_line(file);
-      put(file,p);
-    end;
+    if not artificial then
+      put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
+               Standard_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Target_System;
+        q : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+        natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -106,7 +126,7 @@ procedure ts_mtpcscnv is
     ddgamma : DoblDobl_Complex_Numbers.Complex_Number;
     ans : character;
     file : file_type;
-    verbose : boolean;
+    artificial,verbose : boolean;
     startmoment,stopmoment : Ada.Calendar.Time;
 
     use DoblDobl_Complex_Numbers_cv;
@@ -118,16 +138,35 @@ procedure ts_mtpcscnv is
     DoblDobl_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
     ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
-    pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
+    artificial := (DoblDobl_Homotopy.Relaxation_Power /= 0);
+    if artificial
+     then pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
+     else pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
-    declare
-      p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
-        := DoblDobl_Homotopy.Target_System;
-    begin
-      put(file,p'last,1); new_line(file);
-      put(file,p);
-    end;
+    if not artificial then
+      put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
+               DoblDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Target_System;
+        q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
@@ -162,7 +201,7 @@ procedure ts_mtpcscnv is
     qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
     ans : character;
     file : file_type;
-    verbose : boolean;
+    artificial,verbose : boolean;
     startmoment,stopmoment : Ada.Calendar.Time;
 
     use QuadDobl_Complex_Numbers_cv;
@@ -174,16 +213,35 @@ procedure ts_mtpcscnv is
     QuadDobl_Homotopy_Convolutions_io.get(deg,cnvhom,sols,idxpar);
     abshom := Residual_Convolution_System(cnvhom);
     qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
-    pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
-    declare
-      p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
-        := QuadDobl_Homotopy.Target_System;
-    begin
-      put(file,p'last,1); new_line(file);
-      put(file,p);
-    end;
+    artificial := (QuadDobl_Homotopy.Relaxation_Power /= 0);
+    if artificial
+     then pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
+     else pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
+    if not artificial then
+      put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
+               QuadDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Target_System;
+        q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
     new_line;
     put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');

@@ -1,3 +1,7 @@
+Sun 12 Apr 2020 : updated ts_mtpcscnv with writing of start system,
+  (or the equations in the natural parameter homotopy, start solutions, and
+  the settings of the parameters to file.
+
 Fri 10 Apr 2020 : updated multitasked_path_convolutions.adb for the added
   minimum and maximum step sizes along a path.  Updated for the number of
   corrector iterations the procedures in multitasked_path_convolutions.adb.
