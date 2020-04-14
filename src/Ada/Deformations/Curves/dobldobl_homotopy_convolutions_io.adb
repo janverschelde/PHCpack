@@ -1,13 +1,14 @@
 with text_io;                            use text_io;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_CSeries_Poly_Systems;
 with Complex_Series_and_Polynomials;
 with DoblDobl_Homotopy;
 with Series_and_Homotopies;
 with Solution_Drops;
+with Homotopy_Series_Readers;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Test_Series_Predictors;
+with Series_Path_Trackers;               use Series_Path_Trackers;
 
 package body DoblDobl_Homotopy_Convolutions_io is
 
@@ -47,6 +48,32 @@ package body DoblDobl_Homotopy_Convolutions_io is
       end;
     end if;
     h := Make_Homotopy(nbeq,idxpar,deg);
+  end get;
+
+  procedure get ( deg : in integer32; artificial : in boolean;
+                  gamma : in Complex_Number; h : out Link_to_System;
+                  s : out Solution_List; idxpar : out integer32;
+                  mhom : out natural32; z : out Link_to_Partition;
+                  idz : out Standard_Natural_Vectors.Link_to_Vector ) is
+
+    nbq,nvr : integer32;
+    sols : Solution_List;
+
+  begin
+    if artificial then
+      DoblDobl_Define_Homotopy(nbq,nvr,gamma,mhom,z,idz,sols);
+      idxpar := nbq + 1;
+      s := sols;
+    else
+      Homotopy_Series_Readers.DoblDobl_Parameter_Reader(nbq,nvr,idxpar,sols);
+      declare
+        dropsols : constant DoblDobl_Complex_Solutions.Solution_List
+                 := Solution_Drops.Drop(sols,natural32(idxpar));
+      begin
+        s := dropsols;
+      end;
+    end if;
+    h := Make_Homotopy(nbq,idxpar,deg);
   end get;
 
 end DoblDobl_Homotopy_Convolutions_io;

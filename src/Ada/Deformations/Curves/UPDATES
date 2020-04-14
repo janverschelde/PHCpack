@@ -1,6 +1,8 @@
 Mon 13 Apr 2020 : extended series_path_trackers with procedures that take
   in the gamma constant directly (instead of via pars.gamma) and added on
   procedure to standard_homotopy_convolutions_io for the new ts_scalecnv.
+  Extended {dobldobl,quaddobl}_homotopy_convolutions_io and added tests
+  to ts_scalecnv.
 
 Sat 11 Apr 2020 : modified ts_pcscnv so it also writes start system and
   start solution to the output file and predictor_corrector_loops.adb,
