@@ -10,15 +10,22 @@ with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Natural_Vectors;
+with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
+with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Hyperplane_Solution_Scaling;
 with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
@@ -36,6 +43,78 @@ procedure ts_scalecnv is
 --   Development of homotopy convolution circuits with scaling of
 --   the solutions, after a projective coordinate transformation.
 
+  procedure Adjust ( cff : in Standard_Complex_VecVecs.VecVec;
+                     cst : in Standard_Complex_Vectors.Link_to_Vector;
+                     sol : in Standard_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Adjusts cst(0) so that the solution sol evaluated at the equation
+  --   with series coefficients in cff and constant in cst at t = 0
+  --   yields zero, in standard double precision.
+
+  -- REQUIRED : cst /= 0 and cff'range = sol'range.
+
+    use Standard_Complex_Numbers;
+
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    val : Complex_Number := cst(0);
+
+  begin
+    for k in sol'range loop
+      lnk := cff(k);
+      val := val + lnk(0)*sol(k);
+    end loop;
+    cst(0) := cst(0) - val;
+  end Adjust;
+
+  procedure Adjust ( cff : in DoblDobl_Complex_VecVecs.VecVec;
+                     cst : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                     sol : in DoblDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Adjusts cst(0) so that the solution sol evaluated at the equation
+  --   with series coefficients in cff and constant in cst at t = 0
+  --   yields zero, in double double precision.
+
+  -- REQUIRED : cst /= 0 and cff'range = sol'range.
+
+    use DoblDobl_Complex_Numbers;
+
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    val : Complex_Number := cst(0);
+
+  begin
+    for k in sol'range loop
+      lnk := cff(k);
+      val := val + lnk(0)*sol(k);
+    end loop;
+    cst(0) := cst(0) - val;
+  end Adjust;
+
+  procedure Adjust ( cff : in QuadDobl_Complex_VecVecs.VecVec;
+                     cst : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                     sol : in QuadDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Adjusts cst(0) so that the solution sol evaluated at the equation
+  --   with series coefficients in cff and constant in cst at t = 0
+  --   yields zero, in quad double precision.
+
+  -- REQUIRED : cst /= 0 and cff'range = sol'range.
+
+    use QuadDobl_Complex_Numbers;
+
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    val : Complex_Number := cst(0);
+
+  begin
+    for k in sol'range loop
+      lnk := cff(k);
+      val := val + lnk(0)*sol(k);
+    end loop;
+    cst(0) := cst(0) - val;
+  end Adjust;
+
   procedure Standard_Test
               ( chom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in Standard_Complex_Solutions.Solution_List ) is
@@ -52,6 +131,7 @@ procedure ts_scalecnv is
     ls : Link_to_Solution;
     val : Complex_Number;
     zero : constant Complex_Number := Create(0.0);
+    ans : character;
 
   begin
     new_line;
@@ -64,7 +144,17 @@ procedure ts_scalecnv is
       val := Eval(chom.crc(chom.crc'last),ls.v,zero);
       put_line("The vector evaluated at the last equation :");
       put(val); new_line;
+      Hyperplane_Solution_Scaling.Scale(ls.v);
+      put_line("Solution vector after scaling :"); put_line(ls.v);
+      Adjust(chom.crc(chom.crc'last).cff,chom.crc(chom.crc'last).cst,ls.v);
+      val := Eval(chom.crc(chom.crc'last),ls.v,zero);
+      put_line("The vector evaluated at the last equation :");
+      put(val); new_line;
       tmp := Tail_Of(tmp);
+      if not Is_Null(tmp) then
+        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end if;
     end loop;
   end Standard_Test;
 
@@ -84,6 +174,7 @@ procedure ts_scalecnv is
     ls : Link_to_Solution;
     val : Complex_Number;
     zero : constant Complex_Number := Create(integer(0));
+    ans : character;
 
   begin
     new_line;
@@ -96,6 +187,17 @@ procedure ts_scalecnv is
       val := Eval(chom.crc(chom.crc'last),ls.v,zero);
       put_line("The vector evaluated at the last equation :");
       put(val); new_line;
+      Hyperplane_Solution_Scaling.Scale(ls.v);
+      put_line("Solution vector after scaling :"); put_line(ls.v);
+      Adjust(chom.crc(chom.crc'last).cff,chom.crc(chom.crc'last).cst,ls.v);
+      val := Eval(chom.crc(chom.crc'last),ls.v,zero);
+      put_line("The vector evaluated at the last equation :");
+      put(val); new_line;
+      tmp := Tail_Of(tmp);
+      if not Is_Null(tmp) then
+        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end if;
       tmp := Tail_Of(tmp);
     end loop;
   end DoblDobl_Test;
@@ -116,6 +218,7 @@ procedure ts_scalecnv is
     ls : Link_to_Solution;
     val : Complex_Number;
     zero : constant Complex_Number := Create(integer(0));
+    ans : character;
 
   begin
     new_line;
@@ -129,6 +232,17 @@ procedure ts_scalecnv is
       put_line("The vector evaluated at the last equation :");
       put(val); new_line;
       tmp := Tail_Of(tmp);
+      Hyperplane_Solution_Scaling.Scale(ls.v);
+      put_line("Solution vector after scaling :"); put_line(ls.v);
+      Adjust(chom.crc(chom.crc'last).cff,chom.crc(chom.crc'last).cst,ls.v);
+      val := Eval(chom.crc(chom.crc'last),ls.v,zero);
+      put_line("The vector evaluated at the last equation :");
+      put(val); new_line;
+      tmp := Tail_Of(tmp);
+      if not Is_Null(tmp) then
+        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end if;
     end loop;
   end QuadDobl_Test;
 

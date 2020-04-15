@@ -1,3 +1,6 @@
+Tue 14 Apr 2020 : added scaling of the solutions and adjusting of the
+  coefficients of the last equation in the circuit to ts_scalecnv.
+
 Mon 13 Apr 2020 : extended series_path_trackers with procedures that take
   in the gamma constant directly (instead of via pars.gamma) and added on
   procedure to standard_homotopy_convolutions_io for the new ts_scalecnv.
