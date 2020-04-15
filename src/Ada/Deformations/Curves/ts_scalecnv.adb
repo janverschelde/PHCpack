@@ -10,17 +10,11 @@ with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Natural_Vectors;
-with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
-with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
-with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
-with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
-with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -36,84 +30,13 @@ with QuadDobl_Speelpenning_Convolutions;
 with Standard_Homotopy_Convolutions_io;
 with DoblDobl_Homotopy_Convolutions_io;
 with QuadDobl_Homotopy_Convolutions_io;
+with Hyperplane_Convolution_Scaling;
 
 procedure ts_scalecnv is
 
 -- DESCRIPTION :
 --   Development of homotopy convolution circuits with scaling of
 --   the solutions, after a projective coordinate transformation.
-
-  procedure Adjust ( cff : in Standard_Complex_VecVecs.VecVec;
-                     cst : in Standard_Complex_Vectors.Link_to_Vector;
-                     sol : in Standard_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Adjusts cst(0) so that the solution sol evaluated at the equation
-  --   with series coefficients in cff and constant in cst at t = 0
-  --   yields zero, in standard double precision.
-
-  -- REQUIRED : cst /= 0 and cff'range = sol'range.
-
-    use Standard_Complex_Numbers;
-
-    lnk : Standard_Complex_Vectors.Link_to_Vector;
-    val : Complex_Number := cst(0);
-
-  begin
-    for k in sol'range loop
-      lnk := cff(k);
-      val := val + lnk(0)*sol(k);
-    end loop;
-    cst(0) := cst(0) - val;
-  end Adjust;
-
-  procedure Adjust ( cff : in DoblDobl_Complex_VecVecs.VecVec;
-                     cst : in DoblDobl_Complex_Vectors.Link_to_Vector;
-                     sol : in DoblDobl_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Adjusts cst(0) so that the solution sol evaluated at the equation
-  --   with series coefficients in cff and constant in cst at t = 0
-  --   yields zero, in double double precision.
-
-  -- REQUIRED : cst /= 0 and cff'range = sol'range.
-
-    use DoblDobl_Complex_Numbers;
-
-    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
-    val : Complex_Number := cst(0);
-
-  begin
-    for k in sol'range loop
-      lnk := cff(k);
-      val := val + lnk(0)*sol(k);
-    end loop;
-    cst(0) := cst(0) - val;
-  end Adjust;
-
-  procedure Adjust ( cff : in QuadDobl_Complex_VecVecs.VecVec;
-                     cst : in QuadDobl_Complex_Vectors.Link_to_Vector;
-                     sol : in QuadDobl_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Adjusts cst(0) so that the solution sol evaluated at the equation
-  --   with series coefficients in cff and constant in cst at t = 0
-  --   yields zero, in quad double precision.
-
-  -- REQUIRED : cst /= 0 and cff'range = sol'range.
-
-    use QuadDobl_Complex_Numbers;
-
-    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
-    val : Complex_Number := cst(0);
-
-  begin
-    for k in sol'range loop
-      lnk := cff(k);
-      val := val + lnk(0)*sol(k);
-    end loop;
-    cst(0) := cst(0) - val;
-  end Adjust;
 
   procedure Standard_Test
               ( chom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -146,7 +69,7 @@ procedure ts_scalecnv is
       put(val); new_line;
       Hyperplane_Solution_Scaling.Scale(ls.v);
       put_line("Solution vector after scaling :"); put_line(ls.v);
-      Adjust(chom.crc(chom.crc'last).cff,chom.crc(chom.crc'last).cst,ls.v);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Constant(chom,ls.v);
       val := Eval(chom.crc(chom.crc'last),ls.v,zero);
       put_line("The vector evaluated at the last equation :");
       put(val); new_line;
@@ -189,7 +112,7 @@ procedure ts_scalecnv is
       put(val); new_line;
       Hyperplane_Solution_Scaling.Scale(ls.v);
       put_line("Solution vector after scaling :"); put_line(ls.v);
-      Adjust(chom.crc(chom.crc'last).cff,chom.crc(chom.crc'last).cst,ls.v);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Constant(chom,ls.v);
       val := Eval(chom.crc(chom.crc'last),ls.v,zero);
       put_line("The vector evaluated at the last equation :");
       put(val); new_line;
@@ -234,7 +157,7 @@ procedure ts_scalecnv is
       tmp := Tail_Of(tmp);
       Hyperplane_Solution_Scaling.Scale(ls.v);
       put_line("Solution vector after scaling :"); put_line(ls.v);
-      Adjust(chom.crc(chom.crc'last).cff,chom.crc(chom.crc'last).cst,ls.v);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Constant(chom,ls.v);
       val := Eval(chom.crc(chom.crc'last),ls.v,zero);
       put_line("The vector evaluated at the last equation :");
       put(val); new_line;

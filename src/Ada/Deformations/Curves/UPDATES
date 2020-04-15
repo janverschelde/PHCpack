@@ -1,3 +1,6 @@
+Wed 15 Apr 2020 : new package hyperplane_convolution_scaling with code
+  from ts_scalecnv.
+
 Tue 14 Apr 2020 : added scaling of the solutions and adjusting of the
   coefficients of the last equation in the circuit to ts_scalecnv.
 

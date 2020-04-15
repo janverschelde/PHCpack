@@ -94,6 +94,7 @@ ts_padepcnv                       : Pade predictors for convolution circuits
 ts_predstep                       : test setting of step size
 predictor_corrector_loops         : tracking paths with predictor-corrector
 ts_pcscnv                         : test predictor-corrector-shift step
+hyperplane_convolution_scaling    : scaling homogeneous convolution circuits
 ts_scalecnv                       : test scaling of solutions
 -------------------------------------------------------------------------------
 homotopy_continuation_parameters    : parameters and tolerances
