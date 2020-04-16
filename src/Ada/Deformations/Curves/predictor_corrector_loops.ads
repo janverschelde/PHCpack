@@ -168,7 +168,7 @@ package Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -184,7 +184,7 @@ package Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -200,7 +200,7 @@ package Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -216,7 +216,7 @@ package Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -232,7 +232,7 @@ package Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -248,7 +248,7 @@ package Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -271,6 +271,10 @@ package Predictor_Corrector_Loops is
   --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
   --   maxit    maximum number of steps in Newton's method on power series;
+  --   hcrd     true if the homotopy is 1-homogeneous with one linear
+  --            equation as its last equation which is then updated in
+  --            the scaling of the solution coordinates,
+  --            false if affine coordinates are used;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -303,21 +307,21 @@ package Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := true );
+                hcrd : in boolean; verbose : in boolean := true );
   procedure Track_All_Paths
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := true );
+                hcrd : in boolean; verbose : in boolean := true );
   procedure Track_All_Paths
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := true );
+                hcrd : in boolean; verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Tracks all paths starting at the solutions in sols,
@@ -329,6 +333,10 @@ package Predictor_Corrector_Loops is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
+  --   hcrd     true if the homotopy is 1-homogeneous with one linear
+  --            equation as its last equation which is then updated in
+  --            the scaling of the solution coordinates,
+  --            false if affine coordinates are used;
   --   verbose  indicates if extra output is requested.
   
   -- ON RETURN :

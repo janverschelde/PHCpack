@@ -369,7 +369,7 @@ package body Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -390,7 +390,7 @@ package body Predictor_Corrector_Loops is
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,false,prd,
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,
         psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
@@ -408,7 +408,7 @@ package body Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -432,7 +432,7 @@ package body Predictor_Corrector_Loops is
       if verbose
        then put(file,"t :"); put(file,acct,3); put_line(file," :");
       end if;
-      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,false,
+      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,hcrd,
         prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
       tnbrit := tnbrit + natural32(nbrit);
@@ -456,7 +456,7 @@ package body Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -477,7 +477,7 @@ package body Predictor_Corrector_Loops is
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,false,prd,
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,
         psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hi_part(step));
@@ -495,7 +495,7 @@ package body Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -519,7 +519,7 @@ package body Predictor_Corrector_Loops is
       if verbose
        then put(file,"t : "); put(file,acct,3); put_line(file," :");
       end if;
-      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,false,
+      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,hcrd,
         prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
       tnbrit := tnbrit + natural32(nbrit);
@@ -543,7 +543,7 @@ package body Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -563,7 +563,7 @@ package body Predictor_Corrector_Loops is
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,false,prd,
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,
         psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hihi_part(step));
@@ -581,7 +581,7 @@ package body Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -605,7 +605,7 @@ package body Predictor_Corrector_Loops is
       if verbose
        then put(file,"t : "); put(file,acct,3); put_line(file," :");
       end if;
-      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,false,
+      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,hcrd,
         prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
       tnbrit := tnbrit + natural32(nbrit);
@@ -630,7 +630,7 @@ package body Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := true ) is
+                hcrd : in boolean; verbose : in boolean := true ) is
 
     use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
 
@@ -674,8 +674,8 @@ package body Predictor_Corrector_Loops is
       pathno := pathno + 1;
       put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
-      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
-        dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
+      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,psv,
+        svh,dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
         minstpz,maxstpz,fail,verbose);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
@@ -719,7 +719,7 @@ package body Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := true ) is
+                hcrd : in boolean; verbose : in boolean := true ) is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Predictor_Convolutions;
 
@@ -763,8 +763,8 @@ package body Predictor_Corrector_Loops is
       pathno := pathno + 1;
       put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := create(0.0);
-      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
-        dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
+      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,psv,
+        svh,dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
         minstpz,maxstpz,fail,verbose);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
@@ -808,7 +808,7 @@ package body Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                verbose : in boolean := true ) is
+                hcrd : in boolean; verbose : in boolean := true ) is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Predictor_Convolutions;
 
@@ -852,8 +852,8 @@ package body Predictor_Corrector_Loops is
       pathno := pathno + 1;
       put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := Create(0.0);
-      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,prd,psv,svh,
-        dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
+      Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,psv,
+        svh,dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
         minstpz,maxstpz,fail,verbose);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);

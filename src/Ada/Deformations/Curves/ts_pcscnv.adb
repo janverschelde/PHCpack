@@ -325,7 +325,7 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
+          hcrd,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
           nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
@@ -402,7 +402,7 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
+          hcrd,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
           nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
@@ -478,7 +478,7 @@ procedure ts_pcscnv is
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
+          hcrd,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
           nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
@@ -501,7 +501,7 @@ procedure ts_pcscnv is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                arth : in boolean ) is
+                hcrd,arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
@@ -514,6 +514,10 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
+  --   hcrd     true if the homotopy is 1-homogeneous with one linear
+  --            equation as its last equation which is then updated in
+  --            the scaling of the solution coordinates,
+  --            false if affine coordinates are used;
   --   arth     true if the homotopy is an artificial-parameter one,
   --            false otherwise.
 
@@ -557,7 +561,7 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,hcrd,verbose);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Standard_Complex_Solutions.Length_Of(sols),
@@ -569,7 +573,7 @@ procedure ts_pcscnv is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                arth : in boolean ) is
+                hcrd,arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
@@ -582,6 +586,10 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
+  --   hcrd     true if the homotopy is 1-homogeneous with one linear
+  --            equation as its last equation which is then updated in
+  --            the scaling of the solution coordinates,
+  --            false if affine coordinates are used;
   --   arth     true if the homotopy is an artificial-parameter one,
   --            false otherwise.
 
@@ -625,7 +633,7 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,hcrd,verbose);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
@@ -637,7 +645,7 @@ procedure ts_pcscnv is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                arth : in boolean ) is
+                hcrd,arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
@@ -650,6 +658,10 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
+  --   hcrd     true if the homotopy is 1-homogeneous with one linear
+  --            equation as its last equation which is then updated in
+  --            the scaling of the solution coordinates,
+  --            false if affine coordinates are used;
   --   arth     true if the homotopy is an artificial-parameter one,
   --            false otherwise.
 
@@ -693,7 +705,7 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,hcrd,verbose);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
@@ -728,7 +740,7 @@ procedure ts_pcscnv is
     Standard_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
     if mhom > 1 then
-      put_line("m-homogenization is not supported.");
+      put_line("General m-homogenization is not (yet) supported.");
     else
       homogeneous := (mhom = 1);
       abshom := Residual_Convolution_System(cnvhom);
@@ -739,7 +751,7 @@ procedure ts_pcscnv is
       put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y'
        then Standard_Run_Loops(cnvhom,abshom,sols,pars,homogeneous);
-       else Standard_Track_All(cnvhom,abshom,sols,pars,artificial);
+       else Standard_Track_All(cnvhom,abshom,sols,pars,homogeneous,artificial);
       end if;
     end if;
   end Standard_Test;
@@ -775,7 +787,7 @@ procedure ts_pcscnv is
     DoblDobl_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
     if mhom > 1 then
-      put_line("m-homogenization is not supported.");
+      put_line("General m-homogenization is not (yet) supported.");
     else
       homogeneous := (mhom = 1);
       abshom := Residual_Convolution_System(cnvhom);
@@ -787,7 +799,7 @@ procedure ts_pcscnv is
       put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y'
        then DoblDobl_Run_Loops(cnvhom,abshom,sols,pars,homogeneous);
-       else DoblDobl_Track_All(cnvhom,abshom,sols,pars,artificial);
+       else DoblDobl_Track_All(cnvhom,abshom,sols,pars,homogeneous,artificial);
       end if;
     end if;
   end DoblDobl_Test;
@@ -823,7 +835,7 @@ procedure ts_pcscnv is
     QuadDobl_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
     if mhom > 1 then
-      put_line("m-homogenization is not supported.");
+      put_line("General m-homogenization is not (yet) supported.");
     else
       homogeneous := (mhom = 1);
       abshom := Residual_Convolution_System(cnvhom);
@@ -835,7 +847,7 @@ procedure ts_pcscnv is
       put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'y'
        then QuadDobl_Run_Loops(cnvhom,abshom,sols,pars,homogeneous);
-       else QuadDobl_Track_All(cnvhom,abshom,sols,pars,artificial);
+       else QuadDobl_Track_All(cnvhom,abshom,sols,pars,homogeneous,artificial);
       end if;
     end if;
   end QuadDobl_Test;
