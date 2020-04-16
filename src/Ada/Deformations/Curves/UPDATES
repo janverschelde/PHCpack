@@ -1,5 +1,7 @@
 Wed 15 Apr 2020 : new package hyperplane_convolution_scaling with code
-  from ts_scalecnv.
+  from ts_scalecnv.  Made additions to hyperplane_convolution_scaling,
+  applied scaling in predictor_corrector_loops and tested in the 
+  step-by-step trackers in ts_pcscnv.adb.
 
 Tue 14 Apr 2020 : added scaling of the solutions and adjusting of the
   coefficients of the last equation in the circuit to ts_scalecnv.

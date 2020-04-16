@@ -52,4 +52,33 @@ package Hyperplane_Convolution_Scaling is
   -- REQUIRED : hom is in 1-homogeneous coordinates and the last
   --   equation in hom is linear and sol'range is appropriate.
 
+  procedure Adjust_Last_Radius
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System );
+  procedure Adjust_Last_Radius
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System );
+  procedure Adjust_Last_Radius
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System );
+
+  -- DESCRIPTION :
+  --   Recomputes the last constant in the circuits of abh,
+  --   from the corresponding last constant in the circuits of hom.
+
+  procedure Scale_and_Adjust
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sol : in out Standard_Complex_Vectors.Vector );
+  procedure Scale_and_Adjust
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out DoblDobl_Complex_Vectors.Vector );
+  procedure Scale_and_Adjust
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Scales the coefficients in sol by dividing by the largest component
+  --   and the adjusts the constant in the last circuit of hom,
+  --   in double, double double, or quad double precision.
+
 end Hyperplane_Convolution_Scaling;

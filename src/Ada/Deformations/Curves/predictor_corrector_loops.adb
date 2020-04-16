@@ -21,6 +21,7 @@ with Shift_Convolution_Circuits;
 with Corrector_Convolutions;             use Corrector_Convolutions;
 with Standard_Pade_Trackers;
 with Series_and_Trackers;
+with Hyperplane_Convolution_Scaling;
 
 package body Predictor_Corrector_Loops is
 
@@ -29,7 +30,7 @@ package body Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -46,6 +47,10 @@ package body Predictor_Corrector_Loops is
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
+    if hcrd then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    end if;
     SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
@@ -76,7 +81,7 @@ package body Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -93,6 +98,10 @@ package body Predictor_Corrector_Loops is
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
+    if hcrd then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    end if;
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
@@ -134,7 +143,7 @@ package body Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -151,6 +160,10 @@ package body Predictor_Corrector_Loops is
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
+    if hcrd then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    end if;
     SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
@@ -181,7 +194,7 @@ package body Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -198,6 +211,10 @@ package body Predictor_Corrector_Loops is
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
+    if hcrd then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    end if;
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
@@ -239,7 +256,7 @@ package body Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -256,6 +273,10 @@ package body Predictor_Corrector_Loops is
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
+    if hcrd then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    end if;
     SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
@@ -286,7 +307,7 @@ package body Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32;
+                maxit : in integer32; hcrd : in boolean;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -303,6 +324,10 @@ package body Predictor_Corrector_Loops is
 
   begin
     Set_Lead_Coefficients(prd,psv.sol);
+    if hcrd then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    end if;
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
       endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
@@ -365,8 +390,8 @@ package body Predictor_Corrector_Loops is
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,psv,
-        svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,false,prd,
+        psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
       togo := endt - acct;
@@ -407,7 +432,7 @@ package body Predictor_Corrector_Loops is
       if verbose
        then put(file,"t :"); put(file,acct,3); put_line(file," :");
       end if;
-      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
+      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,false,
         prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
       tnbrit := tnbrit + natural32(nbrit);
@@ -452,8 +477,8 @@ package body Predictor_Corrector_Loops is
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,psv,
-        svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,false,prd,
+        psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hi_part(step));
       togo := endt - acct;
@@ -494,7 +519,7 @@ package body Predictor_Corrector_Loops is
       if verbose
        then put(file,"t : "); put(file,acct,3); put_line(file," :");
       end if;
-      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
+      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,false,
         prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
       tnbrit := tnbrit + natural32(nbrit);
@@ -538,8 +563,8 @@ package body Predictor_Corrector_Loops is
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,prd,psv,
-        svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,false,prd,
+        psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hihi_part(step));
       togo := endt - acct;
@@ -580,7 +605,7 @@ package body Predictor_Corrector_Loops is
       if verbose
        then put(file,"t : "); put(file,acct,3); put_line(file," :");
       end if;
-      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
+      Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,false,
         prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
         fail,verbose);
       tnbrit := tnbrit + natural32(nbrit);

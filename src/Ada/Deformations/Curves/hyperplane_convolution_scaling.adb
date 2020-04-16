@@ -1,6 +1,13 @@
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_Polar;
 with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_Polar;
 with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_Polar;
+with Hyperplane_Solution_Scaling;
 
 package body Hyperplane_Convolution_Scaling is
 
@@ -87,5 +94,92 @@ package body Hyperplane_Convolution_Scaling is
   begin
     Adjust(crc.cff,crc.cst,sol);
   end Adjust_Last_Constant;
+
+  procedure Adjust_Last_Radius
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System ) is
+
+    homcrc : constant Standard_Speelpenning_Convolutions.Link_to_Circuit
+           := hom.crc(hom.crc'last);
+    abhcrc : constant Standard_Speelpenning_Convolutions.Link_to_Circuit
+           := abh.crc(abh.crc'last);
+    homlnk : constant Standard_Complex_Vectors.Link_to_Vector := homcrc.cst;
+    abhlnk : constant Standard_Complex_Vectors.Link_to_Vector := abhcrc.cst;
+    rad : double_float;
+
+  begin
+    rad := Standard_Complex_Numbers_Polar.Radius(homlnk(0));
+    abhlnk(0) := Standard_Complex_Numbers.Create(rad);
+  end Adjust_Last_Radius;
+
+  procedure Adjust_Last_Radius
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System ) is
+
+    homcrc : constant DoblDobl_Speelpenning_Convolutions.Link_to_Circuit
+           := hom.crc(hom.crc'last);
+    abhcrc : constant DoblDobl_Speelpenning_Convolutions.Link_to_Circuit
+           := abh.crc(abh.crc'last);
+    homlnk : constant DoblDobl_Complex_Vectors.Link_to_Vector := homcrc.cst;
+    abhlnk : constant DoblDobl_Complex_Vectors.Link_to_Vector := abhcrc.cst;
+    rad : double_double;
+
+  begin
+    rad := DoblDobl_Complex_Numbers_Polar.Radius(homlnk(0));
+    abhlnk(0) := DoblDobl_Complex_Numbers.Create(rad);
+  end Adjust_Last_Radius;
+
+  procedure Adjust_Last_Radius
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System ) is
+
+    homcrc : constant QuadDobl_Speelpenning_Convolutions.Link_to_Circuit
+           := hom.crc(hom.crc'last);
+    abhcrc : constant QuadDobl_Speelpenning_Convolutions.Link_to_Circuit
+           := abh.crc(abh.crc'last);
+    homlnk : constant QuadDobl_Complex_Vectors.Link_to_Vector := homcrc.cst;
+    abhlnk : constant QuadDobl_Complex_Vectors.Link_to_Vector := abhcrc.cst;
+    rad : quad_double;
+
+  begin
+    rad := QuadDobl_Complex_Numbers_Polar.Radius(homlnk(0));
+    abhlnk(0) := QuadDobl_Complex_Numbers.Create(rad);
+  end Adjust_Last_Radius;
+
+  procedure Scale_and_Adjust
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sol : in out Standard_Complex_Vectors.Vector ) is
+
+    crc : constant Standard_Speelpenning_Convolutions.Link_to_Circuit
+        := hom.crc(hom.crc'last);
+
+  begin
+    Hyperplane_Solution_Scaling.Scale(sol);
+    Adjust(crc.cff,crc.cst,sol);
+  end Scale_and_Adjust;
+
+  procedure Scale_and_Adjust
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out DoblDobl_Complex_Vectors.Vector ) is
+
+    crc : constant DoblDobl_Speelpenning_Convolutions.Link_to_Circuit
+        := hom.crc(hom.crc'last);
+
+  begin
+    Hyperplane_Solution_Scaling.Scale(sol);
+    Adjust(crc.cff,crc.cst,sol);
+  end Scale_and_Adjust;
+
+  procedure Scale_and_Adjust
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out QuadDobl_Complex_Vectors.Vector ) is
+
+    crc : constant QuadDobl_Speelpenning_Convolutions.Link_to_Circuit
+        := hom.crc(hom.crc'last);
+
+  begin
+    Hyperplane_Solution_Scaling.Scale(sol);
+    Adjust(crc.cff,crc.cst,sol);
+  end Scale_and_Adjust;
 
 end Hyperplane_Convolution_Scaling;
