@@ -16,6 +16,7 @@ with QuadDobl_Complex_Vector_Norms;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
+with Residual_Convolution_Circuits;
 with Corrector_Convolutions;             use Corrector_Convolutions;
 with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
 with Standard_Solutions_Queue;
@@ -92,6 +93,7 @@ package body Multitasked_Path_Convolutions is
       ls : Link_to_Solution;
       t,mixres,minstpz,maxstpz : double_float := 0.0;
       tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      nbrit : integer32 := 0;
       fail : boolean;
 
     begin
@@ -103,6 +105,12 @@ package body Multitasked_Path_Convolutions is
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
           hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
           tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
+        Residual_Convolution_Circuits.Update_Radii_of_Constants
+          (abhsa(i),homsa(i));
+        Step_Coefficient(homsa(i),t);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
+                        mixres,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.err := Standard_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
@@ -123,6 +131,7 @@ package body Multitasked_Path_Convolutions is
       cnt : integer32;
       t,mixres,minstpz,maxstpz : double_float := 0.0;
       tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+      nbrit : integer32 := 0;
       fail : boolean;
 
     begin
@@ -138,6 +147,12 @@ package body Multitasked_Path_Convolutions is
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
           hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
           tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
+        Residual_Convolution_Circuits.Update_Radii_of_Constants
+          (abhsa(i),homsa(i));
+        Step_Coefficient(homsa(i),t);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
+                        mixres,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.err := Standard_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
@@ -210,6 +225,7 @@ package body Multitasked_Path_Convolutions is
       t,mixres : double_double;
       tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       minstpz,maxstpz : double_float;
+      nbrit : integer32 := 0;
       fail : boolean;
 
     begin
@@ -221,6 +237,12 @@ package body Multitasked_Path_Convolutions is
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
           hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
           tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+       -- Restore_Coefficients(homcff(i),homsa(i).crc);
+       -- Residual_Convolution_Circuits.Update_Radii_of_Constants
+       --   (abhsa(i),homsa(i));
+       -- Step_Coefficient(homsa(i),t);
+       -- LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
+       --                 mixres,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.err := DoblDobl_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
@@ -242,6 +264,7 @@ package body Multitasked_Path_Convolutions is
       t,mixres : double_double;
       tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       minstpz,maxstpz : double_float;
+      nbrit : integer32 := 0;
       fail : boolean;
 
     begin
@@ -257,6 +280,12 @@ package body Multitasked_Path_Convolutions is
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
           hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
           tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+       -- Restore_Coefficients(homcff(i),homsa(i).crc);
+       -- Residual_Convolution_Circuits.Update_Radii_of_Constants
+       --   (abhsa(i),homsa(i));
+       -- Step_Coefficient(homsa(i),t);
+       -- LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
+       --                 mixres,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.err := DoblDobl_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
@@ -329,6 +358,7 @@ package body Multitasked_Path_Convolutions is
       t,mixres : quad_double;
       tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       minstpz,maxstpz : double_float;
+      nbrit : integer32 := 0;
       fail : boolean;
 
     begin
@@ -340,6 +370,12 @@ package body Multitasked_Path_Convolutions is
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
           hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
           tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
+        Residual_Convolution_Circuits.Update_Radii_of_Constants
+          (abhsa(i),homsa(i));
+        Step_Coefficient(homsa(i),t);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
+                        mixres,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.err := QuadDobl_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
@@ -361,6 +397,7 @@ package body Multitasked_Path_Convolutions is
       t,mixres : quad_double;
       tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
       minstpz,maxstpz : double_float;
+      nbrit : integer32 := 0;
       fail : boolean;
 
     begin
@@ -376,6 +413,12 @@ package body Multitasked_Path_Convolutions is
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
           hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
           tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+        Restore_Coefficients(homcff(i),homsa(i).crc);
+        Residual_Convolution_Circuits.Update_Radii_of_Constants
+          (abhsa(i),homsa(i));
+        Step_Coefficient(homsa(i),t);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
+                        mixres,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.err := QuadDobl_Complex_Vector_Norms.Max_Norm(dx(i).all);
         ls.res := mixres;
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);

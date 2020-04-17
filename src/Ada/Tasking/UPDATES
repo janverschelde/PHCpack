@@ -1,3 +1,6 @@
+Fri 17 Apr 2020 : added to multitasked_path_convolutions one extra root
+  refiner step after the tracking of one path.
+
 Wed 15 Apr 2020 : added to multitasked_path_convolutions the option to run
   the path trackers in 1-homogeneous coordinates, tested by ts_mtpcscnv.
 
