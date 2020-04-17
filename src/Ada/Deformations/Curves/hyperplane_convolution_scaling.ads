@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
@@ -14,6 +15,8 @@ package Hyperplane_Convolution_Scaling is
 --   After a projective coordinate transformation, the scaling of
 --   the solution can be done with a simple adjustment of the last
 --   constant in the added linear equation to the circuits.
+
+-- 1-HOMOGENIZATION :
 
   procedure Adjust ( cff : in Standard_Complex_VecVecs.VecVec;
                      cst : in Standard_Complex_Vectors.Link_to_Vector;
@@ -80,5 +83,40 @@ package Hyperplane_Convolution_Scaling is
   --   Scales the coefficients in sol by dividing by the largest component
   --   and the adjusts the constant in the last circuit of hom,
   --   in double, double double, or quad double precision.
+
+-- MULTI-HOMOGENIZATION :
+
+  procedure Adjust ( cff : in Standard_Complex_VecVecs.VecVec;
+                     cst : in Standard_Complex_Vectors.Link_to_Vector;
+                     sol : in Standard_Complex_Vectors.Vector;
+                     m,i : in integer32 );
+  procedure Adjust ( cff : in DoblDobl_Complex_VecVecs.VecVec;
+                     cst : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                     sol : in DoblDobl_Complex_Vectors.Vector;
+                     m,i : in integer32 );
+  procedure Adjust ( cff : in QuadDobl_Complex_VecVecs.VecVec;
+                     cst : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                     sol : in QuadDobl_Complex_Vectors.Vector;
+                     m,i : in integer32 );
+
+  -- DESCRIPTION :
+  --   Adjusts cst(0) so that the solution sol evaluated at the equation
+  --   with series coefficients in cff and constant in cst at t = 0
+  --   yields zero, relative to the standard double precision,
+  --   the double double precision, or the quad double precision.
+
+  -- REQUIRED : cst /= 0 and cff'range = sol'range.
+
+  -- ON ENTRY :
+  --   cff      coefficient vector of the series coefficients
+  --            of a linear equation;
+  --   sol      a solution;
+  --   m        number of sets in the partition of the variables,
+  --            the variables added in the m-homogenization are always
+  --            at the last m positions, in increasing order;
+  --   i        index of the added homogeneous variable.
+
+  -- ON RETURN :
+  --   cst(0)   adjusted constant so the solution evaluates to zero.
 
 end Hyperplane_Convolution_Scaling;

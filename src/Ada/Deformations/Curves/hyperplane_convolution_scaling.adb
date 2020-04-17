@@ -9,7 +9,12 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_Polar;
 with Hyperplane_Solution_Scaling;
 
+with text_io; use text_io;
+with Standard_Integer_Numbers_io; use Standard_Integer_Numbers_io;
+
 package body Hyperplane_Convolution_Scaling is
+
+-- 1-HOMOGENIZATION :
 
   procedure Adjust ( cff : in Standard_Complex_VecVecs.VecVec;
                      cst : in Standard_Complex_Vectors.Link_to_Vector;
@@ -181,5 +186,71 @@ package body Hyperplane_Convolution_Scaling is
     Hyperplane_Solution_Scaling.Scale(sol);
     Adjust(crc.cff,crc.cst,sol);
   end Scale_and_Adjust;
+
+-- MULTI-HOMOGENIZATION :
+
+  procedure Adjust ( cff : in Standard_Complex_VecVecs.VecVec;
+                     cst : in Standard_Complex_Vectors.Link_to_Vector;
+                     sol : in Standard_Complex_Vectors.Vector;
+                     m,i : in integer32 ) is
+
+    use Standard_Complex_Numbers;
+
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    val : Complex_Number := cst(0);
+    dim : constant integer32 := sol'last - m; -- original dimension
+
+  begin
+    put("cff'last : "); put(cff'last,1); new_line;
+    for k in sol'first..dim loop
+      lnk := cff(k);
+      val := val + lnk(0)*sol(k);
+    end loop;
+    lnk := cff(dim+1);
+    val := val + lnk(0)*sol(dim+i);
+    cst(0) := cst(0) - val;
+  end Adjust;
+
+  procedure Adjust ( cff : in DoblDobl_Complex_VecVecs.VecVec;
+                     cst : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                     sol : in DoblDobl_Complex_Vectors.Vector;
+                     m,i : in integer32 ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    val : Complex_Number := cst(0);
+    dim : constant integer32 := sol'last - m; -- original dimension
+
+  begin
+    for k in sol'first..dim loop
+      lnk := cff(k);
+      val := val + lnk(0)*sol(k);
+    end loop;
+    lnk := cff(dim+1);
+    val := val + lnk(0)*sol(dim+i);
+    cst(0) := cst(0) - val;
+  end Adjust;
+
+  procedure Adjust ( cff : in QuadDobl_Complex_VecVecs.VecVec;
+                     cst : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                     sol : in QuadDobl_Complex_Vectors.Vector;
+                     m,i : in integer32 ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    val : Complex_Number := cst(0);
+    dim : constant integer32 := sol'last - m; -- original dimension
+
+  begin
+    for k in sol'first..dim loop
+      lnk := cff(k);
+      val := val + lnk(0)*sol(k);
+    end loop;
+    lnk := cff(dim+1);
+    val := val + lnk(0)*sol(dim+i);
+    cst(0) := cst(0) - val;
+  end Adjust;
 
 end Hyperplane_Convolution_Scaling;

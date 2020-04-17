@@ -16,9 +16,12 @@ with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Standard_Homotopy;
 with Hyperplane_Solution_Scaling;
 with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 with Homotopy_Continuation_Parameters;
@@ -40,7 +43,8 @@ procedure ts_scalecnv is
 
   procedure Standard_Test
               ( chom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                sols : in Standard_Complex_Solutions.Solution_List ) is
+                sols : in Standard_Complex_Solutions.Solution_List;
+                m : in integer32 ) is
 
   -- DESCRIPTION :
   --   Checks whether the solutions satisfy the last equation
@@ -58,8 +62,10 @@ procedure ts_scalecnv is
 
   begin
     new_line;
-    put_line("The coefficients of the last circuit : ");
+    put_line("The constant coefficient of the last circuit : ");
     put(chom.crc(chom.crc'last).cst);
+    new_line;
+    put_line("The coefficients of the last circuit : ");
     put(chom.crc(chom.crc'last).cff);
     for k in 1..Length_Of(sols) loop
       ls := Head_Of(tmp);
@@ -69,7 +75,15 @@ procedure ts_scalecnv is
       put(val); new_line;
       Hyperplane_Solution_Scaling.Scale(ls.v);
       put_line("Solution vector after scaling :"); put_line(ls.v);
-      Hyperplane_Convolution_Scaling.Adjust_Last_Constant(chom,ls.v);
+      if m = 1 then
+        Hyperplane_Convolution_Scaling.Adjust_Last_Constant(chom,ls.v);
+      else
+        for k in 1..m loop
+          Hyperplane_Convolution_Scaling.Adjust
+            (chom.crc(chom.crc'last-m+k).cff,
+             chom.crc(chom.crc'last-m+k).cst,ls.v,m,k);
+        end loop;
+      end if;
       val := Eval(chom.crc(chom.crc'last),ls.v,zero);
       put_line("The vector evaluated at the last equation :");
       put(val); new_line;
@@ -194,7 +208,18 @@ procedure ts_scalecnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     Standard_Homotopy_Convolutions_io.get
       (deg,art,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
-    Standard_Test(cnvhom,sols);
+    if art then
+      declare
+        p : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Target_System;
+        q : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Start_System;
+      begin
+        put_line("The target system : "); put(p);
+        put_line("The start system : "); put(q);
+      end;
+      Standard_Test(cnvhom,sols,integer32(mhom));
+    end if;
   end Standard_Main;
 
   procedure DoblDobl_Main is
