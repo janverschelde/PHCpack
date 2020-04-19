@@ -5,6 +5,9 @@ with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with Standard_Complex_Vector_Norms;
+with DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
@@ -1192,7 +1195,7 @@ package body Corrector_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_float; 
+                tol : in double_float; maxdx,mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -1207,8 +1210,9 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := Standard_Complex_Vector_Norms.Max_Norm(dx);
       mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1219,7 +1223,7 @@ package body Corrector_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_float; 
+                tol : in double_float; maxdx,mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_float; fail : out boolean;
@@ -1234,8 +1238,9 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := Standard_Complex_Vector_Norms.Max_Norm(dx);
       mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1248,7 +1253,7 @@ package body Corrector_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_float; 
+                tol : in double_float; maxdx,mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -1264,12 +1269,14 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := Standard_Complex_Vector_Norms.Max_Norm(dx);
       mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(file,k,1);
+        put(file,", maxdx :"); put(file,maxdx,3);
         put(file,", mixres :"); put(file,mixres,3); new_line(file);
       end if;
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1281,7 +1288,7 @@ package body Corrector_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_float; 
+                tol : in double_float; maxdx,mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_float; fail : out boolean;
@@ -1297,12 +1304,14 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := Standard_Complex_Vector_Norms.Max_Norm(dx);
       mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(file,k,1);
+        put(file,", maxdx :"); put(file,maxdx,3);
         put(file,", mixres :"); put(file,mixres,3); new_line(file);
       end if;
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1313,7 +1322,7 @@ package body Corrector_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_double; 
+                tol : in double_float; maxdx,mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -1328,8 +1337,9 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1340,7 +1350,7 @@ package body Corrector_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_double; 
+                tol : in double_float; maxdx,mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_double; fail : out boolean;
@@ -1355,8 +1365,9 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1368,7 +1379,7 @@ package body Corrector_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_double; 
+                tol : in double_float; maxdx,mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -1384,12 +1395,14 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(file,k,1);
+        put(file,", maxdx : "); put(file,maxdx,3);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1401,7 +1414,7 @@ package body Corrector_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_double; 
+                tol : in double_float; maxdx,mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_double; fail : out boolean;
@@ -1417,12 +1430,14 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(file,k,1);
+        put(file,", maxdx : "); put(file,maxdx,3);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1433,7 +1448,7 @@ package body Corrector_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out quad_double; 
+                tol : in double_float; maxdx,mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -1448,8 +1463,9 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1460,7 +1476,7 @@ package body Corrector_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out quad_double; 
+                tol : in double_float; maxdx,mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out quad_double; fail : out boolean;
@@ -1475,8 +1491,9 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1488,7 +1505,7 @@ package body Corrector_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out quad_double; 
+                tol : in double_float; maxdx,mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -1504,12 +1521,14 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(file,k,1);
+        put(file,", maxdx : "); put(file,maxdx,3);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;
@@ -1521,7 +1540,7 @@ package body Corrector_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out quad_double; 
+                tol : in double_float; maxdx,mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out quad_double; fail : out boolean;
@@ -1537,12 +1556,14 @@ package body Corrector_Convolutions is
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
       psv.radres := Eval(abh.crc,psv.radsol);
+      maxdx := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
       if verbose then
         put(file,"after step "); put(file,k,1);
+        put(file,", maxdx : "); put(file,maxdx,3);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if mixres <= tol
+      if maxdx <= tol and mixres <= tol
        then nbrit := k; fail := false; exit;
       end if;
     end loop;

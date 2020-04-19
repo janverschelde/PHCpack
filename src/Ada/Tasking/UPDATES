@@ -1,3 +1,6 @@
+Sun 19 Apr 2020 : updated multitasked_path_convolutions.adb for updated
+  max |dx| in the corrector convolutions.
+
 Fri 17 Apr 2020 : added to multitasked_path_convolutions one extra root
   refiner step after the tracking of one path.
 

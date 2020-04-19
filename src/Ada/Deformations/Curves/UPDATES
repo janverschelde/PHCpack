@@ -1,3 +1,6 @@
+Sun 19 Apr 2020 : in corrector_convolutions, added the max |dx| into the
+  stop criterion of the LU Newton steps, changed predictor_corrector_loop.adb.
+
 Sat 18 Apr 2020 : added a parameter to the correctors for some extra steps,
   updates in corrector_convolutions changed predictor_corrector_loops.adb.
 

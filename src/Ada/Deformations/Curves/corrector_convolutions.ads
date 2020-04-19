@@ -389,7 +389,7 @@ package Corrector_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_float; 
+                tol : in double_float; maxdx,mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -400,7 +400,7 @@ package Corrector_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_float; 
+                tol : in double_float; maxdx,mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -411,7 +411,7 @@ package Corrector_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_double; 
+                tol : in double_float; maxdx,mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -422,7 +422,7 @@ package Corrector_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_double; 
+                tol : in double_float; maxdx,mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -433,7 +433,7 @@ package Corrector_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out quad_double; 
+                tol : in double_float; maxdx,mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -444,7 +444,7 @@ package Corrector_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out quad_double; 
+                tol : in double_float; maxdx,mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
@@ -469,6 +469,7 @@ package Corrector_Convolutions is
 
   -- ON RETURN :
   --   psv.sol  the updated solution;
+  --   maxdx    magnitude of the largest number in ix;
   --   mixres   the mixed residual;
   --   dx       the update vector applied to the solution;
   --   ipvt     pivoting information for the LU factorization;
@@ -484,7 +485,7 @@ package Corrector_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_float; 
+                tol : in double_float; maxdx,mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_float; fail : out boolean;
@@ -495,7 +496,7 @@ package Corrector_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_float; 
+                tol : in double_float; maxdx,mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_float; fail : out boolean;
@@ -506,7 +507,7 @@ package Corrector_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_double; 
+                tol : in double_float; maxdx,mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_double; fail : out boolean;
@@ -517,7 +518,7 @@ package Corrector_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out double_double; 
+                tol : in double_float; maxdx,mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_double; fail : out boolean;
@@ -528,7 +529,7 @@ package Corrector_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out quad_double; 
+                tol : in double_float; maxdx,mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out quad_double; fail : out boolean;
@@ -539,7 +540,7 @@ package Corrector_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 maxit : in integer32; nbrit : out integer32;
-                tol : in double_float; mixres : out quad_double; 
+                tol : in double_float; maxdx,mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out quad_double; fail : out boolean;
@@ -564,6 +565,7 @@ package Corrector_Convolutions is
 
   -- ON RETURN :
   --   psv.sol  the updated solution;
+  --   maxdx    magnitude of the largest number in dx;
   --   mixres   the mixed residual;
   --   dx       the update vector applied to the solution;
   --   ipvt     pivoting information for the LU factorization;
