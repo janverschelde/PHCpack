@@ -392,7 +392,8 @@ package Corrector_Convolutions is
                 tol : in double_float; mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; fail : out boolean );
+                info : out integer32; fail : out boolean;
+                extra : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -403,6 +404,7 @@ package Corrector_Convolutions is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true );
   procedure LU_Newton_Steps
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -412,7 +414,8 @@ package Corrector_Convolutions is
                 tol : in double_float; mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; fail : out boolean );
+                info : out integer32; fail : out boolean;
+                extra : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -423,6 +426,7 @@ package Corrector_Convolutions is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true );
   procedure LU_Newton_Steps
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -432,7 +436,8 @@ package Corrector_Convolutions is
                 tol : in double_float; mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; fail : out boolean );
+                info : out integer32; fail : out boolean;
+                extra : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -443,6 +448,7 @@ package Corrector_Convolutions is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -457,6 +463,7 @@ package Corrector_Convolutions is
   --   psv      psv.sol contains an initial value for a solution at t = 0;
   --   maxit    maximum number of iterations;
   --   tol      tolerance on the update dx;
+  --   extra    number of some extra corrector iterations;
   --   verbose  flag to indicate if vectors need to be written,
   --            if a file is given on input.
 
@@ -480,7 +487,8 @@ package Corrector_Convolutions is
                 tol : in double_float; mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rcond : out double_float; fail : out boolean );
+                rcond : out double_float; fail : out boolean;
+                extra : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -491,6 +499,7 @@ package Corrector_Convolutions is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_float; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true );
   procedure LU_Newton_Steps
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -500,7 +509,8 @@ package Corrector_Convolutions is
                 tol : in double_float; mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rcond : out double_double; fail : out boolean );
+                rcond : out double_double; fail : out boolean;
+                extra : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -511,6 +521,7 @@ package Corrector_Convolutions is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_double; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true );
   procedure LU_Newton_Steps
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -520,7 +531,8 @@ package Corrector_Convolutions is
                 tol : in double_float; mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rcond : out quad_double; fail : out boolean );
+                rcond : out quad_double; fail : out boolean;
+                extra : in integer32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -531,6 +543,7 @@ package Corrector_Convolutions is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out quad_double; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -545,6 +558,7 @@ package Corrector_Convolutions is
   --   psv      psv.sol contains an initial value for a solution at t = 0;
   --   maxit    maximum number of iterations;
   --   tol      tolerance on the update dx;
+  --   extra    number of some extra corrector iterations;
   --   verbose  flag to indicate if vectors need to be written,
   --            if a file is given on input.
 

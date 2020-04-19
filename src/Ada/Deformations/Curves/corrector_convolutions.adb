@@ -1195,13 +1195,14 @@ package body Corrector_Convolutions is
                 tol : in double_float; mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; fail : out boolean ) is
+                info : out integer32; fail : out boolean;
+                extra : in integer32 := 0 ) is
 
     use Standard_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,info);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
@@ -1221,13 +1222,14 @@ package body Corrector_Convolutions is
                 tol : in double_float; mixres : out double_float; 
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rcond : out double_float; fail : out boolean ) is
+                rcond : out double_float; fail : out boolean;
+                extra : in integer32 := 0 ) is
 
     use Standard_Speelpenning_Convolutions;
 
   begin
     fail := true;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,rcond);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
@@ -1250,13 +1252,14 @@ package body Corrector_Convolutions is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true ) is
 
     use Standard_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
@@ -1282,13 +1285,14 @@ package body Corrector_Convolutions is
                 dx : out Standard_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_float; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true ) is
 
     use Standard_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,rcond,verbose);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
@@ -1312,13 +1316,14 @@ package body Corrector_Convolutions is
                 tol : in double_float; mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; fail : out boolean ) is
+                info : out integer32; fail : out boolean;
+                extra : in integer32 := 0 ) is
 
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,info);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
@@ -1338,13 +1343,14 @@ package body Corrector_Convolutions is
                 tol : in double_float; mixres : out double_double; 
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rcond : out double_double; fail : out boolean ) is
+                rcond : out double_double; fail : out boolean;
+                extra : in integer32 := 0 ) is
 
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,rcond);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
@@ -1366,13 +1372,14 @@ package body Corrector_Convolutions is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true ) is
 
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
@@ -1398,13 +1405,14 @@ package body Corrector_Convolutions is
                 dx : out DoblDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_double; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true ) is
 
     use DoblDobl_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,rcond,verbose);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := DoblDobl_Mixed_Residuals.AbsVal(psv.sol);
@@ -1428,13 +1436,14 @@ package body Corrector_Convolutions is
                 tol : in double_float; mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                info : out integer32; fail : out boolean ) is
+                info : out integer32; fail : out boolean;
+                extra : in integer32 := 0 ) is
 
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,info);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
@@ -1454,13 +1463,14 @@ package body Corrector_Convolutions is
                 tol : in double_float; mixres : out quad_double; 
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rcond : out quad_double; fail : out boolean ) is
+                rcond : out quad_double; fail : out boolean;
+                extra : in integer32 := 0 ) is
 
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(hom,psv.sol,dx,ipvt,rcond);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
@@ -1482,13 +1492,14 @@ package body Corrector_Convolutions is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true ) is
 
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,info,verbose);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
@@ -1514,13 +1525,14 @@ package body Corrector_Convolutions is
                 dx : out QuadDobl_Complex_Vectors.Vector;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out quad_double; fail : out boolean;
+                extra : in integer32 := 0;
                 verbose : in boolean := true ) is
 
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
     fail := true; nbrit := maxit;
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(file,hom,psv.sol,dx,ipvt,rcond,verbose);
       psv.res := Eval(hom.crc,psv.sol);
       psv.radsol := QuadDobl_Mixed_Residuals.AbsVal(psv.sol);
