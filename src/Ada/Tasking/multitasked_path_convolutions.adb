@@ -8,11 +8,8 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
-with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_Vector_Norms;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
@@ -291,7 +288,7 @@ package body Multitasked_Path_Convolutions is
 
   begin
     for k in homsa'range loop
-      Copy(hom,homsa(k)); Copy(hom,abhsa(k));
+      Copy(hom,homsa(k)); Copy(abh,abhsa(k));
       Allocate_Leading_Coefficients(hom.crc,homlead(k));
       Allocate_Leading_Coefficients(abh.crc,abhlead(k));
       Store_Leading_Coefficients(hom.crc,homlead(k));
@@ -420,7 +417,7 @@ package body Multitasked_Path_Convolutions is
 
   begin
     for k in homsa'range loop
-      Copy(hom,homsa(k)); Copy(hom,abhsa(k));
+      Copy(hom,homsa(k)); Copy(abh,abhsa(k));
       Allocate_Leading_Coefficients(hom.crc,homlead(k));
       Allocate_Leading_Coefficients(abh.crc,abhlead(k));
       Store_Leading_Coefficients(hom.crc,homlead(k));

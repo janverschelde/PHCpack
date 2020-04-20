@@ -1,3 +1,6 @@
+Mon 20 Apr 2020 : bug fix in multitasked_path_convolutions.adb for double
+  double and quad double precision, in the copy of the data in abh.
+
 Sun 19 Apr 2020 : updated multitasked_path_convolutions.adb for updated
   max |dx| in the corrector convolutions.
 
