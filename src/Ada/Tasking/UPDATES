@@ -1,5 +1,6 @@
 Tue 21 Apr 2020 : in multitasked_path_convolutions.adb, changed the 1 into
   pars.corsteps for the final corrector steps at the end of a path.
+  Added affine transformations on the solutions to ts_mtpcscnv.
 
 Mon 20 Apr 2020 : bug fix in multitasked_path_convolutions.adb for double
   double and quad double precision, in the copy of the data in abh.

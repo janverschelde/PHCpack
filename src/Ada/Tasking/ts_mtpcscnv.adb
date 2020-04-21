@@ -23,6 +23,7 @@ with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
+with Projective_Transformations;
 with Partitions_of_Sets_of_Unknowns;      use Partitions_of_Sets_of_Unknowns;
 with Standard_Homotopy;
 with Standard_Homotopy_Convolutions_io;
@@ -119,9 +120,19 @@ procedure ts_mtpcscnv is
       Standard_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,hcrd,verbose);
       stopmoment := Ada.Calendar.Clock;
       new_line(file);
-      put_line(file,"THE SOLUTIONS :");
+      if artificial and hcrd
+       then put_line(file,"THE PROJECTIVE SOLUTIONS :");
+       else put_line(file,"THE SOLUTIONS :");
+      end if;
       put(file,Standard_Complex_Solutions.Length_Of(sols),
           natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+      if artificial and hcrd then
+        Projective_Transformations.Affine_Transformation(sols);
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,Standard_Complex_Solutions.Length_Of(sols),
+                 natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+      end if;
       new_line(file);
       put(file,"Elapsed wall clock time with ");
       put(file,nbt,1); put_line(file," tasks :");
@@ -207,9 +218,19 @@ procedure ts_mtpcscnv is
       DoblDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,hcrd,verbose);
       stopmoment := Ada.Calendar.Clock;
       new_line(file);
-      put_line(file,"THE SOLUTIONS :");
+      if artificial and hcrd
+       then put_line(file,"THE PROJECTIVE SOLUTIONS :");
+       else put_line(file,"THE SOLUTIONS :");
+      end if;
       put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
                natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+      if artificial and hcrd then
+        Projective_Transformations.Affine_Transformation(sols);
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+                 natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+      end if;
       new_line(file);
       put(file,"Elapsed wall clock time with ");
       put(file,nbt,1); put_line(file," tasks :");
@@ -295,9 +316,19 @@ procedure ts_mtpcscnv is
       QuadDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,hcrd,verbose);
       stopmoment := Ada.Calendar.Clock;
       new_line(file);
-      put_line(file,"THE SOLUTIONS :");
+      if artificial and hcrd
+       then put_line(file,"THE PROJECTIVE SOLUTIONS :");
+       else put_line(file,"THE SOLUTIONS :");
+      end if;
       put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
                natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+      if artificial and hcrd then
+        Projective_Transformations.Affine_Transformation(sols);
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+                 natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+      end if;
       new_line(file);
       put(file,"Elapsed wall clock time with ");
       put(file,nbt,1); put_line(file," tasks :");
