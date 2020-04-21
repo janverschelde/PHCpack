@@ -106,8 +106,8 @@ package body Multitasked_Path_Convolutions is
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
         Step_Coefficient(homsa(i),t);
-        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
-                        ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,integer32(pars.corsteps),
+          nbrit,pars.tolres,ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
         Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
@@ -146,8 +146,8 @@ package body Multitasked_Path_Convolutions is
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
         Step_Coefficient(homsa(i),t);
-        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
-                        ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,integer32(pars.corsteps),
+          nbrit,pars.tolres,ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.v := psv(i).sol; ls.t := Standard_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
         Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
@@ -234,8 +234,8 @@ package body Multitasked_Path_Convolutions is
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
         Step_Coefficient(homsa(i),t);
-        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
-                        ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,integer32(pars.corsteps),
+          nbrit,pars.tolres,ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
         Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
@@ -275,8 +275,8 @@ package body Multitasked_Path_Convolutions is
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
         Step_Coefficient(homsa(i),t);
-        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
-                        ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,integer32(pars.corsteps),
+          nbrit,pars.tolres,ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.v := psv(i).sol; ls.t := DoblDobl_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
         Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
@@ -363,8 +363,8 @@ package body Multitasked_Path_Convolutions is
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
         Step_Coefficient(homsa(i),t);
-        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
-                        ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,integer32(pars.corsteps),
+          nbrit,pars.tolres,ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
         Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);
@@ -404,8 +404,8 @@ package body Multitasked_Path_Convolutions is
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
         Step_Coefficient(homsa(i),t);
-        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,1,nbrit,pars.tolres,
-                        ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
+        LU_Newton_Steps(homsa(i),abhsa(i),psv(i).all,integer32(pars.corsteps),
+          nbrit,pars.tolres,ls.err,ls.res,dx(i).all,ipvt(i).all,ls.rco,fail);
         ls.v := psv(i).sol; ls.t := QuadDobl_Complex_Numbers.Create(t);
        -- Set_Head(myptr,ls);
         Restore_Leading_Coefficients(abhlead(i),abhsa(i).crc);

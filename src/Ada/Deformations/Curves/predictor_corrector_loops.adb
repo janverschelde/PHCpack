@@ -686,8 +686,8 @@ package body Predictor_Corrector_Loops is
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);
-      LU_Newton_Steps(file,hom,abh,psv,1,nbrit,pars.tolres,ls.err,mixres,
-                      dx,ipvt,ls.rco,fail,verbose=>verbose);
+      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
+        pars.tolres,ls.err,mixres,dx,ipvt,ls.rco,fail,verbose=>verbose);
       ls.v := psv.sol; ls.res := mixres;
       ls.t := Standard_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       put(file,ls.all); new_line(file);
@@ -774,8 +774,8 @@ package body Predictor_Corrector_Loops is
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);
-      LU_Newton_Steps(file,hom,abh,psv,1,nbrit,pars.tolres,ls.err,mixres,
-                      dx,ipvt,ls.rco,fail,verbose=>verbose);
+      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
+        pars.tolres,ls.err,mixres,dx,ipvt,ls.rco,fail,verbose=>verbose);
       ls.v := psv.sol; ls.res := mixres;
       ls.t := DoblDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       put(file,ls.all); new_line(file);
@@ -862,8 +862,8 @@ package body Predictor_Corrector_Loops is
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);
-      LU_Newton_Steps(file,hom,abh,psv,1,nbrit,pars.tolres,ls.err,mixres,
-                      dx,ipvt,ls.rco,fail,verbose=>verbose);
+      LU_Newton_Steps(file,hom,abh,psv,integer32(pars.corsteps),nbrit,
+        pars.tolres,ls.err,mixres,dx,ipvt,ls.rco,fail,verbose=>verbose);
       ls.v := psv.sol; ls.res := mixres;
       ls.t := QuadDobl_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       put(file,ls.all); new_line(file);
