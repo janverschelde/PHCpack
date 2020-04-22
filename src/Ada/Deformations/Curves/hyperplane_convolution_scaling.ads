@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
@@ -89,21 +90,24 @@ package Hyperplane_Convolution_Scaling is
   procedure Adjust ( cff : in Standard_Complex_VecVecs.VecVec;
                      cst : in Standard_Complex_Vectors.Link_to_Vector;
                      sol : in Standard_Complex_Vectors.Vector;
+                     idz : in Standard_Natural_Vectors.Link_to_Vector;
                      m,i : in integer32 );
   procedure Adjust ( cff : in DoblDobl_Complex_VecVecs.VecVec;
                      cst : in DoblDobl_Complex_Vectors.Link_to_Vector;
                      sol : in DoblDobl_Complex_Vectors.Vector;
+                     idz : in Standard_Natural_Vectors.Link_to_Vector;
                      m,i : in integer32 );
   procedure Adjust ( cff : in QuadDobl_Complex_VecVecs.VecVec;
                      cst : in QuadDobl_Complex_Vectors.Link_to_Vector;
                      sol : in QuadDobl_Complex_Vectors.Vector;
+                     idz : in Standard_Natural_Vectors.Link_to_Vector;
                      m,i : in integer32 );
 
   -- DESCRIPTION :
-  --   Adjusts cst(0) so that the solution sol evaluated at the equation
-  --   with series coefficients in cff and constant in cst at t = 0
-  --   yields zero, relative to the standard double precision,
-  --   the double double precision, or the quad double precision.
+  --   Adjusts cst(0) so that the solution sol evaluated at the 
+  --   last i-th added linear equation with series coefficients in cff
+  --   and constant in cst at t = 0 yields zero,
+  --   relative to double, double doubl, or quad double precision.
 
   -- REQUIRED : cst /= 0 and cff'range = sol'range.
 
@@ -111,10 +115,15 @@ package Hyperplane_Convolution_Scaling is
   --   cff      coefficient vector of the series coefficients
   --            of a linear equation;
   --   sol      a solution;
+  --   idz      index representation of the partition of the variables:
+  --            idz(k) is the index of the set to which the k-th variable
+  --            belongs, for k in 1..m, idz'range = 1..dim,
+  --            where dim equals the number of variables.
   --   m        number of sets in the partition of the variables,
   --            the variables added in the m-homogenization are always
   --            at the last m positions, in increasing order;
-  --   i        index of the added homogeneous variable.
+  --   i        index of the added homogeneous variable,
+  --            i must be in the range 1..m.
 
   -- ON RETURN :
   --   cst(0)   adjusted constant so the solution evaluates to zero.

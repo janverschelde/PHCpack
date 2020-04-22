@@ -9,9 +9,6 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_Polar;
 with Hyperplane_Solution_Scaling;
 
-with text_io; use text_io;
-with Standard_Integer_Numbers_io; use Standard_Integer_Numbers_io;
-
 package body Hyperplane_Convolution_Scaling is
 
 -- 1-HOMOGENIZATION :
@@ -192,6 +189,7 @@ package body Hyperplane_Convolution_Scaling is
   procedure Adjust ( cff : in Standard_Complex_VecVecs.VecVec;
                      cst : in Standard_Complex_Vectors.Link_to_Vector;
                      sol : in Standard_Complex_Vectors.Vector;
+                     idz : in Standard_Natural_Vectors.Link_to_Vector;
                      m,i : in integer32 ) is
 
     use Standard_Complex_Numbers;
@@ -199,14 +197,17 @@ package body Hyperplane_Convolution_Scaling is
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     val : Complex_Number := cst(0);
     dim : constant integer32 := sol'last - m; -- original dimension
+    idxcff : integer32 := cff'first-1;
 
   begin
-    put("cff'last : "); put(cff'last,1); new_line;
     for k in sol'first..dim loop
-      lnk := cff(k);
-      val := val + lnk(0)*sol(k);
+      if integer32(idz(k)) = i then -- only use variables from the i-th set
+        idxcff := idxcff + 1;
+        lnk := cff(idxcff);
+        val := val + lnk(0)*sol(k);
+      end if;
     end loop;
-    lnk := cff(dim+1);
+    lnk := cff(idxcff+1);           -- the last coefficient is for z(i)
     val := val + lnk(0)*sol(dim+i);
     cst(0) := cst(0) - val;
   end Adjust;
@@ -214,6 +215,7 @@ package body Hyperplane_Convolution_Scaling is
   procedure Adjust ( cff : in DoblDobl_Complex_VecVecs.VecVec;
                      cst : in DoblDobl_Complex_Vectors.Link_to_Vector;
                      sol : in DoblDobl_Complex_Vectors.Vector;
+                     idz : in Standard_Natural_Vectors.Link_to_Vector;
                      m,i : in integer32 ) is
 
     use DoblDobl_Complex_Numbers;
@@ -221,13 +223,17 @@ package body Hyperplane_Convolution_Scaling is
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     val : Complex_Number := cst(0);
     dim : constant integer32 := sol'last - m; -- original dimension
+    idxcff : integer32 := cff'first-1;
 
   begin
     for k in sol'first..dim loop
-      lnk := cff(k);
-      val := val + lnk(0)*sol(k);
+      if integer32(idz(k)) = i then -- only use variables from the i-th set
+        idxcff := idxcff + 1;
+        lnk := cff(idxcff);
+        val := val + lnk(0)*sol(k);
+      end if;
     end loop;
-    lnk := cff(dim+1);
+    lnk := cff(idxcff+1);           -- the last coefficient is for z(i)
     val := val + lnk(0)*sol(dim+i);
     cst(0) := cst(0) - val;
   end Adjust;
@@ -235,6 +241,7 @@ package body Hyperplane_Convolution_Scaling is
   procedure Adjust ( cff : in QuadDobl_Complex_VecVecs.VecVec;
                      cst : in QuadDobl_Complex_Vectors.Link_to_Vector;
                      sol : in QuadDobl_Complex_Vectors.Vector;
+                     idz : in Standard_Natural_Vectors.Link_to_Vector;
                      m,i : in integer32 ) is
 
     use QuadDobl_Complex_Numbers;
@@ -242,13 +249,17 @@ package body Hyperplane_Convolution_Scaling is
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     val : Complex_Number := cst(0);
     dim : constant integer32 := sol'last - m; -- original dimension
+    idxcff : integer32 := cff'first-1;
 
   begin
     for k in sol'first..dim loop
-      lnk := cff(k);
-      val := val + lnk(0)*sol(k);
+      if integer32(idz(k)) = i then -- only use variables from the i-th set
+        idxcff := idxcff + 1;
+        lnk := cff(idxcff);
+        val := val + lnk(0)*sol(k);
+      end if;
     end loop;
-    lnk := cff(dim+1);
+    lnk := cff(idxcff+1);           -- the last coefficient is for z(i)
     val := val + lnk(0)*sol(dim+i);
     cst(0) := cst(0) - val;
   end Adjust;
