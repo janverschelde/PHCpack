@@ -944,7 +944,7 @@ procedure mainvali ( infilename,outfilename : in string;
         when '5' => Polyhedral_End_Game_Verification;
         when '6' => Newton_with_Deflation;
         when '7' => Multiplicity_Structure;
-        when '8' => DD_QD_Root_Refinement;
+        when '8' => DD_QD_Root_Refinement(infilename,outfilename);
         when '9' => Multprec_Weeding_Verification(true);
         when others => null;
       end case;

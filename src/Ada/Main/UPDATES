@@ -1,3 +1,6 @@
+Thu 23 Apr 2020 : passed the input and output file names to the refiners
+  in double double and quad double precision in mainvali.adb.
+
 Mon 6 Apr 2020 : added default values to mainvali.adb.
 
 Tue 28 Jan 2020 : updated greeting_banners for version 2.4.75.
