@@ -1,3 +1,5 @@
+Fri 24 Apr 2020 : added tests for ts_scalecnv for m-homogenization.
+
 Wed 22 Apr 2020 : fixed the adjustments of the coefficient vector for
   multi-homogeneous coordinates in hyperplane_convolution_scaling,
   tested by ts_scalecnv.

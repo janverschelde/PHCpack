@@ -105,19 +105,23 @@ procedure ts_scalecnv is
         put_line("The vector evaluated at the last equation :");
         put(val); new_line;
       else
+        put_line("Before the scaling : ");
         for i in 1..m loop
           val := Eval(chom.crc(chom.crc'last-m+i),ls.v,zero);
-          put("The vector evaluated at equation ");
+          put("-> the vector evaluated at equation ");
           put(chom.crc'last-m+i,1); put_line(" :"); put(val); new_line;
         end loop;
+        Hyperplane_Solution_Scaling.Scale(ls.v,idz,m);
+        put_line("Solution vector after scaling :"); put_line(ls.v);
         for i in 1..m loop
           Hyperplane_Convolution_Scaling.Adjust
             (chom.crc(chom.crc'last-m+i).cff,
              chom.crc(chom.crc'last-m+i).cst,ls.v,idz,m,i);
         end loop;
+        put_line("After the scaling and constant adjustments :");
         for i in 1..m loop
           val := Eval(chom.crc(chom.crc'last-m+i),ls.v,zero);
-          put("The vector evaluated at equation ");
+          put("-> the vector evaluated at equation ");
           put(chom.crc'last-m+i,1); put_line(" :"); put(val); new_line;
         end loop;
       end if;
@@ -177,11 +181,14 @@ procedure ts_scalecnv is
         put_line("The vector evaluated at the last equation :");
         put(val); new_line;
       else
+        put_line("Before the scaling : ");
         for i in 1..m loop
           val := Eval(chom.crc(chom.crc'last-m+i),ls.v,zero);
-          put("The vector evaluated at equation ");
+          put("-> the vector evaluated at equation ");
           put(chom.crc'last-m+i,1); put_line(" :"); put(val); new_line;
         end loop;
+        Hyperplane_Solution_Scaling.Scale(ls.v,idz,m);
+        put_line("Solution vector after scaling :"); put_line(ls.v);
         for i in 1..m loop
           Hyperplane_Convolution_Scaling.Adjust
             (chom.crc(chom.crc'last-m+i).cff,
@@ -189,7 +196,7 @@ procedure ts_scalecnv is
         end loop;
         for i in 1..m loop
           val := Eval(chom.crc(chom.crc'last-m+i),ls.v,zero);
-          put("The vector evaluated at equation ");
+          put("-> the vector evaluated at equation ");
           put(chom.crc'last-m+i,1); put_line(" :"); put(val); new_line;
         end loop;
       end if;
@@ -250,11 +257,14 @@ procedure ts_scalecnv is
         put_line("The vector evaluated at the last equation :");
         put(val); new_line;
       else
+        put_line("Before the scaling : ");
         for i in 1..m loop
           val := Eval(chom.crc(chom.crc'last-m+i),ls.v,zero);
-          put("The vector evaluated at equation ");
+          put("-> the vector evaluated at equation ");
           put(chom.crc'last-m+i,1); put_line(" :"); put(val); new_line;
         end loop;
+        Hyperplane_Solution_Scaling.Scale(ls.v,idz,m);
+        put_line("Solution vector after scaling :"); put_line(ls.v);
         for i in 1..m loop
           Hyperplane_Convolution_Scaling.Adjust
             (chom.crc(chom.crc'last-m+i).cff,
@@ -262,7 +272,7 @@ procedure ts_scalecnv is
         end loop;
         for i in 1..m loop
           val := Eval(chom.crc(chom.crc'last-m+i),ls.v,zero);
-          put("The vector evaluated at equation ");
+          put("-> the vector evaluated at equation ");
           put(chom.crc'last-m+i,1); put_line(" :"); put(val); new_line;
         end loop;
       end if;

@@ -1,3 +1,5 @@
+Fri 24 Apr 2020 : updated hyperplane_solution_scaling for m-homogenization.
+
 Thu 5 Mar 2020 : new package artificial_parameter_homotopy_io to prompt
   user for the data in an artificial parameter homotopy.
   New test procedure ts_homcnv to test convolution circuits for homotopies.

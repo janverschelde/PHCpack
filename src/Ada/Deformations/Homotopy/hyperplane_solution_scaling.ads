@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -89,5 +90,63 @@ package Hyperplane_Solution_Scaling is
   -- DESCRIPTION :
   --   Adjusts the last coefficients of c so that the c*v equals zero,
   --   where * is the regular inner product (not Hermitian).
+
+-- MULTI-HOMOGENEOUS SOLUTION SCALING :
+
+  procedure Scale ( v : in out Standard_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m,i : in integer32 );
+  procedure Scale ( v : in out DoblDobl_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m,i : in integer32 );
+  procedure Scale ( v : in out QuadDobl_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m,i : in integer32 );
+
+  -- DESCRIPTION :
+  --   Divides the variables in the i-th group by the largest number in 
+  --   the i-th group, in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   v        vector of homogenous coordinates of a solution;
+  --   idz      index representation of the partition of the variables:
+  --            idz(k) is the index of the set to which the k-th variable
+  --            belongs, for k in 1..m, idz'range = 1..dim,
+  --            where dim equals the number of variables;
+  --   m        number of sets in the m-homogeneous partition
+  --            of the set of variables;
+  --   i        index in the range 1..m.
+
+  -- ON RETURN :
+  --   v        every coordinate in v in the i-th set of the partition
+  --            was divided by the largest number in the i-th set.
+
+  procedure Scale ( v : in out Standard_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m : in integer32 );
+  procedure Scale ( v : in out DoblDobl_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m : in integer32 );
+  procedure Scale ( v : in out QuadDobl_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m : in integer32 );
+
+  -- DESCRIPTION :
+  --   Divides the coordinates in v by the largest value in each
+  --   of the m groups independently,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   v        vector of homogenous coordinates of a solution;
+  --   idz      index representation of the partition of the variables:
+  --            idz(k) is the index of the set to which the k-th variable
+  --            belongs, for k in 1..m, idz'range = 1..dim,
+  --            where dim equals the number of variables;
+  --   m        number of sets in the m-homogeneous partition
+  --            of the set of variables.
+
+  -- ON RETURN :
+  --   v        every coordinate in v for all sets of the partition
+  --            was divided by the largest number in their set.
 
 end Hyperplane_Solution_Scaling;

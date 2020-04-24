@@ -1,4 +1,6 @@
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Complex_Numbers_Polar;
+with DoblDobl_Complex_Numbers_Polar;
+with QuadDobl_Complex_Numbers_Polar;
 with Standard_Complex_Vector_Norms;
 with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;
@@ -273,5 +275,145 @@ package body Hyperplane_Solution_Scaling is
     end loop;
     c(c'last) := c(c'last) - val;
   end Adjust;
+
+-- MULTI-HOMOGENEOUS SOLUTION SCALING :
+
+  procedure Scale ( v : in out Standard_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m,i : in integer32 ) is
+
+    use Standard_Complex_Numbers;
+
+    dim : constant integer32 := v'last - m;
+    first : boolean := true;
+    maxrad,radval : double_float;
+    idx : constant integer32 := dim + i; -- index of i-th homogeneous variable
+
+  begin
+    for k in v'first..dim loop
+      if integer32(idz(k)) = i then -- select variable from the i-th set
+        if first then
+          maxrad := Standard_Complex_Numbers_Polar.Radius(v(k));
+          first := false;
+        else
+          radval := Standard_Complex_Numbers_Polar.Radius(v(k));
+          if radval > maxrad
+           then maxrad := radval;
+          end if;
+        end if;
+      end if;
+    end loop;
+    radval := Standard_Complex_Numbers_Polar.Radius(v(idx));
+    if radval > maxrad
+     then maxrad := radval;
+    end if;
+    for k in v'first..dim loop
+      if integer32(idz(k)) = i then -- select variable from the i-th set
+        v(k) := v(k)/maxrad;
+      end if;
+    end loop;
+    v(idx) := v(idx)/maxrad;
+  end Scale;
+
+  procedure Scale ( v : in out DoblDobl_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m,i : in integer32 ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    dim : constant integer32 := v'last - m;
+    first : boolean := true;
+    maxrad,radval : double_double;
+    idx : constant integer32 := dim + i; -- index of i-th homogeneous variable
+
+  begin
+    for k in v'first..dim loop
+      if integer32(idz(k)) = i then -- select variable from the i-th set
+        if first then
+          maxrad := DoblDobl_Complex_Numbers_Polar.Radius(v(k));
+          first := false;
+        else
+          radval := DoblDobl_Complex_Numbers_Polar.Radius(v(k));
+          if radval > maxrad
+           then maxrad := radval;
+          end if;
+        end if;
+      end if;
+    end loop;
+    radval := DoblDobl_Complex_Numbers_Polar.Radius(v(idx));
+    if radval > maxrad
+     then maxrad := radval;
+    end if;
+    for k in v'first..dim loop
+      if integer32(idz(k)) = i then -- select variable from the i-th set
+        v(k) := v(k)/maxrad;
+      end if;
+    end loop;
+    v(idx) := v(idx)/maxrad;
+  end Scale;
+
+  procedure Scale ( v : in out QuadDobl_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m,i : in integer32 ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    dim : constant integer32 := v'last - m;
+    first : boolean := true;
+    maxrad,radval : quad_double;
+    idx : constant integer32 := dim + i; -- index of i-th homogeneous variable
+
+  begin
+    for k in v'first..dim loop
+      if integer32(idz(k)) = i then -- select variable from the i-th set
+        if first then
+          maxrad := QuadDobl_Complex_Numbers_Polar.Radius(v(k));
+          first := false;
+        else
+          radval := QuadDobl_Complex_Numbers_Polar.Radius(v(k));
+          if radval > maxrad
+           then maxrad := radval;
+          end if;
+        end if;
+      end if;
+    end loop;
+    radval := QuadDobl_Complex_Numbers_Polar.Radius(v(idx));
+    if radval > maxrad
+     then maxrad := radval;
+    end if;
+    for k in v'first..dim loop
+      if integer32(idz(k)) = i then -- select variable from the i-th set
+        v(k) := v(k)/maxrad;
+      end if;
+    end loop;
+    v(idx) := v(idx)/maxrad;
+  end Scale;
+
+  procedure Scale ( v : in out Standard_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m : in integer32 ) is
+  begin
+    for i in 1..m loop
+      Scale(v,idz,m,i);
+    end loop;
+  end Scale;
+
+  procedure Scale ( v : in out DoblDobl_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m : in integer32 ) is
+  begin
+    for i in 1..m loop
+      Scale(v,idz,m,i);
+    end loop;
+  end Scale;
+
+  procedure Scale ( v : in out QuadDobl_Complex_Vectors.Vector;
+                    idz : in Standard_Natural_Vectors.Link_to_Vector;
+                    m : in integer32 ) is
+  begin
+    for i in 1..m loop
+      Scale(v,idz,m,i);
+    end loop;
+  end Scale;
 
 end Hyperplane_Solution_Scaling;
