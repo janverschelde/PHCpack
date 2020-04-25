@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
@@ -40,21 +41,27 @@ package Multitasked_Path_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,verbose : in boolean := true );
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true );
   procedure DoblDobl_Multitasked_Tracker
               ( nbtasks : in integer32;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,verbose : in boolean := true );
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true );
   procedure QuadDobl_Multitasked_Tracker
               ( nbtasks : in integer32;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,verbose : in boolean := true );
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Applies multitasking to track all paths
@@ -66,10 +73,12 @@ package Multitasked_Path_Convolutions is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   verbose  indicates if extra output is requested.
   
   -- ON RETURN :

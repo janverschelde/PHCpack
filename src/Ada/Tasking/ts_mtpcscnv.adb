@@ -117,7 +117,8 @@ procedure ts_mtpcscnv is
       put_line("See the output file for results ...");
       new_line;
       startmoment := Ada.Calendar.Clock;
-      Standard_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,hcrd,verbose);
+      Standard_Multitasked_Tracker
+        (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
       stopmoment := Ada.Calendar.Clock;
       new_line(file);
       if artificial and hcrd
@@ -215,7 +216,8 @@ procedure ts_mtpcscnv is
       put_line("See the output file for results ...");
       new_line;
       startmoment := Ada.Calendar.Clock;
-      DoblDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,hcrd,verbose);
+      DoblDobl_Multitasked_Tracker
+        (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
       stopmoment := Ada.Calendar.Clock;
       new_line(file);
       if artificial and hcrd
@@ -313,7 +315,8 @@ procedure ts_mtpcscnv is
       put_line("See the output file for results ...");
       new_line;
       startmoment := Ada.Calendar.Clock;
-      QuadDobl_Multitasked_Tracker(nbt,cnvhom,abshom,sols,pars,hcrd,verbose);
+      QuadDobl_Multitasked_Tracker
+        (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
       stopmoment := Ada.Calendar.Clock;
       new_line(file);
       if artificial and hcrd

@@ -61,7 +61,9 @@ package body Multitasked_Path_Convolutions is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,verbose : in boolean := true ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true ) is
 
     use Standard_Complex_Solutions,Standard_Speelpenning_Convolutions;
     use Standard_Predictor_Convolutions;
@@ -100,8 +102,8 @@ package body Multitasked_Path_Convolutions is
         ls := Head_Of(myptr);
         psv(i).sol := ls.v; t := 0.0;
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
-          hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
-          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+          mhom,idz,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),
+          t,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         Restore_Coefficients(homcff(i),homsa(i).crc);
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
@@ -140,8 +142,8 @@ package body Multitasked_Path_Convolutions is
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := 0.0;
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
-          hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
-          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+          mhom,idz,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),
+          t,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         Restore_Coefficients(homcff(i),homsa(i).crc);
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
@@ -188,7 +190,9 @@ package body Multitasked_Path_Convolutions is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,verbose : in boolean := true ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true ) is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Speelpenning_Convolutions;
     use DoblDobl_Predictor_Convolutions;
@@ -228,8 +232,8 @@ package body Multitasked_Path_Convolutions is
         ls := Head_Of(myptr);
         psv(i).sol := ls.v; t := Create(0.0);
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
-          hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
-          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+          mhom,idz,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),
+          t,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         Restore_Coefficients(homcff(i),homsa(i).crc);
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
@@ -269,8 +273,8 @@ package body Multitasked_Path_Convolutions is
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := Create(0.0);
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
-          hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
-          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+          mhom,idz,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),
+          t,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         Restore_Coefficients(homcff(i),homsa(i).crc);
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
@@ -317,7 +321,9 @@ package body Multitasked_Path_Convolutions is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,verbose : in boolean := true ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true ) is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Speelpenning_Convolutions;
     use QuadDobl_Predictor_Convolutions;
@@ -357,8 +363,8 @@ package body Multitasked_Path_Convolutions is
         ls := Head_Of(myptr);
         psv(i).sol := ls.v; t := Create(0.0);
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
-          hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
-          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+          mhom,idz,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),
+          t,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         Restore_Coefficients(homcff(i),homsa(i).crc);
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
@@ -398,8 +404,8 @@ package body Multitasked_Path_Convolutions is
                          & Multitasking.to_string(cnt));
         psv(i).sol := ls.v; t := Create(0.0);
         Track_One_Path(homsa(i),abhsa(i),homlead(i),abhlead(i),pars,maxit,
-          hcrd,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),t,mixres,
-          tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+          mhom,idz,prd(i),psv(i).all,svh(i),dx(i).all,ipvt(i).all,wrk(i),
+          t,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
         Restore_Coefficients(homcff(i),homsa(i).crc);
         Residual_Convolution_Circuits.Update_Radii_of_Constants
           (abhsa(i),homsa(i));
