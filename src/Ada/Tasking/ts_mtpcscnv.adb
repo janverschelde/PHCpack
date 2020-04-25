@@ -3,6 +3,7 @@ with Ada.Calendar;
 with Communications_with_User;            use Communications_with_User;
 with Time_Stamps;
 with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
@@ -24,6 +25,7 @@ with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
 with Projective_Transformations;
+with Multi_Projective_Transformations;
 with Partitions_of_Sets_of_Unknowns;      use Partitions_of_Sets_of_Unknowns;
 with Standard_Homotopy;
 with Standard_Homotopy_Convolutions_io;
@@ -75,70 +77,75 @@ procedure ts_mtpcscnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     Standard_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
-    if mhom > 1 then
-      put_line("General m-homogenization is not (yet) supported.");
+    hcrd := (mhom > 0);
+    abshom := Residual_Convolution_System(cnvhom);
+    if artificial
+     then pars.gamma := Standard_Homotopy.Accessibility_Constant;
+    end if;
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not artificial then
+      put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
+               Standard_Homotopy.Homotopy_System);
     else
-      hcrd := (mhom = 1);
-      abshom := Residual_Convolution_System(cnvhom);
-      if artificial
-       then pars.gamma := Standard_Homotopy.Accessibility_Constant;
-      end if;
-      new_line;
-      put_line("Reading the name of the output file ...");
-      Read_Name_and_Create_File(file);
-      if not artificial then
-        put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
-                 Standard_Homotopy.Homotopy_System);
+      declare
+        p : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Target_System;
+        q : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put("Give the number of tasks : "); get(nbt);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
+    Standard_Multitasked_Tracker
+      (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
+    stopmoment := Ada.Calendar.Clock;
+    new_line(file);
+    if artificial and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
       else
-        declare
-          p : constant Standard_Complex_Poly_Systems.Poly_Sys
-            := Standard_Homotopy.Target_System;
-          q : constant Standard_Complex_Poly_Systems.Poly_Sys
-            := Standard_Homotopy.Start_System;
-        begin
-          put(file,p'last,1); new_line(file); put(file,p);
-          new_line(file);
-          put_line(file,"THE START SYSTEM :");
-          put(file,q'last,1); new_line(file); put(file,q);
-        end;
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;  
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+        natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    if artificial and hcrd then
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine(sols,mhom,idz.all);
       end if;
       new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
+      put_line(file,"THE SOLUTIONS :");
       put(file,Standard_Complex_Solutions.Length_Of(sols),
                natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
-      new_line(file);
-      Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
-      new_line;
-      put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
-      verbose := (ans = 'y');
-      new_line;
-      put("Give the number of tasks : "); get(nbt);
-      new_line;
-      put_line("See the output file for results ...");
-      new_line;
-      startmoment := Ada.Calendar.Clock;
-      Standard_Multitasked_Tracker
-        (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
-      stopmoment := Ada.Calendar.Clock;
-      new_line(file);
-      if artificial and hcrd
-       then put_line(file,"THE PROJECTIVE SOLUTIONS :");
-       else put_line(file,"THE SOLUTIONS :");
-      end if;
-      put(file,Standard_Complex_Solutions.Length_Of(sols),
-          natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
-      if artificial and hcrd then
-        Projective_Transformations.Affine_Transformation(sols);
-        new_line(file);
-        put_line(file,"THE SOLUTIONS :");
-        put(file,Standard_Complex_Solutions.Length_Of(sols),
-                 natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
-      end if;
-      new_line(file);
-      put(file,"Elapsed wall clock time with ");
-      put(file,nbt,1); put_line(file," tasks :");
-      Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
     end if;
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
   end Standard_Test;
 
   procedure DoblDobl_Test is
@@ -173,71 +180,76 @@ procedure ts_mtpcscnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     DoblDobl_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
-    if mhom > 1 then
-      put_line("General m-homogenization is not (yet) supported.");
-    else
-      hcrd := (mhom = 1);
-      abshom := Residual_Convolution_System(cnvhom);
-      if artificial then
-        ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
-        pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
-      end if;
-      new_line;
-      put_line("Reading the name of the output file ...");
-      Read_Name_and_Create_File(file);
-      if not artificial then
-        put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
-                 DoblDobl_Homotopy.Homotopy_System);
-      else
-        declare
-          p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
-            := DoblDobl_Homotopy.Target_System;
-          q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
-            := DoblDobl_Homotopy.Start_System;
-        begin
-          put(file,p'last,1); new_line(file); put(file,p);
-          new_line(file);
-          put_line(file,"THE START SYSTEM :");
-          put(file,q'last,1); new_line(file); put(file,q);
-        end;
-      end if;
-      new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
-      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
-               natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      new_line(file);
-      Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
-      new_line;
-      put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
-      verbose := (ans = 'y');
-      new_line;
-      put("Give the number of tasks : "); get(nbt);
-      new_line;
-      put_line("See the output file for results ...");
-      new_line;
-      startmoment := Ada.Calendar.Clock;
-      DoblDobl_Multitasked_Tracker
-        (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
-      stopmoment := Ada.Calendar.Clock;
-      new_line(file);
-      if artificial and hcrd
-       then put_line(file,"THE PROJECTIVE SOLUTIONS :");
-       else put_line(file,"THE SOLUTIONS :");
-      end if;
-      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
-               natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      if artificial and hcrd then
-        Projective_Transformations.Affine_Transformation(sols);
-        new_line(file);
-        put_line(file,"THE SOLUTIONS :");
-        put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
-                 natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      end if;
-      new_line(file);
-      put(file,"Elapsed wall clock time with ");
-      put(file,nbt,1); put_line(file," tasks :");
-      Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
+    hcrd := (mhom > 0);
+    abshom := Residual_Convolution_System(cnvhom);
+    if artificial then
+      ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
+      pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
     end if;
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not artificial then
+      put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
+               DoblDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Target_System;
+        q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put("Give the number of tasks : "); get(nbt);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
+    DoblDobl_Multitasked_Tracker
+      (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
+    stopmoment := Ada.Calendar.Clock;
+    new_line(file);
+    if artificial and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    if artificial and hcrd then
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine(sols,mhom,idz.all);
+      end if;
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+               natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test is
@@ -272,71 +284,76 @@ procedure ts_mtpcscnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     QuadDobl_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
-    if mhom > 1 then
-      put_line("General m-homogenization is not (yet) supported.");
-    else
-      hcrd := (mhom = 1);
-      abshom := Residual_Convolution_System(cnvhom);
-      if artificial then
-        qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
-        pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
-      end if;
-      new_line;
-      put_line("Reading the name of the output file ...");
-      Read_Name_and_Create_File(file);
-      if not artificial then
-        put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
-                 QuadDobl_Homotopy.Homotopy_System);
-      else
-        declare
-          p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
-            := QuadDobl_Homotopy.Target_System;
-          q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
-            := QuadDobl_Homotopy.Start_System;
-        begin
-          put(file,p'last,1); new_line(file); put(file,p);
-          new_line(file);
-          put_line(file,"THE START SYSTEM :");
-          put(file,q'last,1); new_line(file); put(file,q);
-        end;
-      end if;
-      new_line(file);
-      put_line(file,"THE START SOLUTIONS :");
-      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
-               natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      new_line(file);
-      Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
-      new_line;
-      put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
-      verbose := (ans = 'y');
-      new_line;
-      put("Give the number of tasks : "); get(nbt);
-      new_line;
-      put_line("See the output file for results ...");
-      new_line;
-      startmoment := Ada.Calendar.Clock;
-      QuadDobl_Multitasked_Tracker
-        (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
-      stopmoment := Ada.Calendar.Clock;
-      new_line(file);
-      if artificial and hcrd
-       then put_line(file,"THE PROJECTIVE SOLUTIONS :");
-       else put_line(file,"THE SOLUTIONS :");
-      end if;
-      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
-               natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      if artificial and hcrd then
-        Projective_Transformations.Affine_Transformation(sols);
-        new_line(file);
-        put_line(file,"THE SOLUTIONS :");
-        put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
-                 natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
-      end if;
-      new_line(file);
-      put(file,"Elapsed wall clock time with ");
-      put(file,nbt,1); put_line(file," tasks :");
-      Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
+    hcrd := (mhom > 0);
+    abshom := Residual_Convolution_System(cnvhom);
+    if artificial then
+      qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
+      pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
     end if;
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not artificial then
+      put(file,natural32(cnvhom.neq),natural32(cnvhom.neq+1),
+               QuadDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Target_System;
+        q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put("Give the number of tasks : "); get(nbt);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
+    QuadDobl_Multitasked_Tracker
+      (nbt,cnvhom,abshom,sols,pars,integer32(mhom),idz,verbose);
+    stopmoment := Ada.Calendar.Clock;
+    new_line(file);
+    if artificial and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    if artificial and hcrd then
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine(sols,mhom,idz.all);
+      end if;
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+               natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
   end QuadDobl_Test;
 
   procedure Main is

@@ -35,6 +35,7 @@ with DoblDobl_Complex_Solutions_io;       use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;       use QuadDobl_Complex_Solutions_io;
 with Projective_Transformations;
+with Multi_Projective_Transformations;
 with Partitions_of_Sets_of_Unknowns;      use Partitions_of_Sets_of_Unknowns;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
@@ -587,14 +588,24 @@ procedure ts_pcscnv is
     new_line(file);
     Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
     new_line(file);
-    if arth and hcrd
-     then put_line(file,"THE PROJECTIVE SOLUTIONS :");
-     else put_line(file,"THE SOLUTIONS :");
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
     end if;
     put(file,Standard_Complex_Solutions.Length_Of(sols),
              natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
     if arth and hcrd then
-      Projective_Transformations.Affine_Transformation(sols);
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine
+              (sols,natural32(mhom),idz.all);
+      end if;
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,Standard_Complex_Solutions.Length_Of(sols),
@@ -674,14 +685,24 @@ procedure ts_pcscnv is
     new_line(file);
     Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
     new_line(file);
-    if arth and hcrd
-     then put_line(file,"THE PROJECTIVE SOLUTIONS :");
-     else put_line(file,"THE SOLUTIONS :");
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
     end if;
     put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
              natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
     if arth and hcrd then
-      Projective_Transformations.Affine_Transformation(sols);
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine
+              (sols,natural32(mhom),idz.all);
+      end if;
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
@@ -761,14 +782,24 @@ procedure ts_pcscnv is
     new_line(file);
     Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
     new_line(file);
-    if arth and hcrd
-     then put_line(file,"THE PROJECTIVE SOLUTIONS :");
-     else put_line(file,"THE SOLUTIONS :");
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
     end if;
     put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
              natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
     if arth and hcrd then
-      Projective_Transformations.Affine_Transformation(sols);
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine
+              (sols,natural32(mhom),idz.all);
+      end if;
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
