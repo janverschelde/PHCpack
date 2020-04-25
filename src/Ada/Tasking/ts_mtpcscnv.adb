@@ -6,11 +6,6 @@ with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;
-with DoblDobl_Complex_Numbers_cv;
-with QuadDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers_cv;
 with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;       use Standard_Complex_Solutions_io;
@@ -26,20 +21,15 @@ with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
 with Projective_Transformations;
 with Multi_Projective_Transformations;
-with Partitions_of_Sets_of_Unknowns;      use Partitions_of_Sets_of_Unknowns;
 with Standard_Homotopy;
-with Standard_Homotopy_Convolutions_io;
 with DoblDobl_Homotopy;
-with DoblDobl_Homotopy_Convolutions_io;
 with QuadDobl_Homotopy;
-with QuadDobl_Homotopy_Convolutions_io;
 with Homotopy_Continuation_Parameters;
 with Homotopy_Continuation_Parameters_io;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
-with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
-with Series_Path_Trackers;
+with Track_Path_Convolutions;
 with Multitasked_Path_Convolutions;      use Multitasked_Path_Convolutions;
 
 procedure ts_mtpcscnv is
@@ -55,33 +45,18 @@ procedure ts_mtpcscnv is
 
     sols : Standard_Complex_Solutions.Solution_List;
     cnvhom,abshom : Standard_Speelpenning_Convolutions.Link_to_System;
-    idxpar,deg,nbt : integer32 := 0;
-    pars : Homotopy_Continuation_Parameters.Parameters
-         := Homotopy_Continuation_Parameters.Default_Values;
+    nbt : integer32 := 0;
+    pars : Homotopy_Continuation_Parameters.Parameters;
     ans : character;
     file : file_type;
-    artificial : constant boolean  -- flag for artificial-parameter homotopy
-               := Series_Path_Trackers.Prompt_for_Artificial;
-    hcrd,verbose : boolean;
+    artificial,hcrd,verbose : boolean;
     mhom : natural32 := 0;
-    z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     startmoment,stopmoment : Ada.Calendar.Time;
   
   begin
-    if not artificial
-     then pars.gamma := Standard_Complex_Numbers.Create(1.0);
-    end if;
-    new_line;
-    Homotopy_Continuation_Parameters_io.Tune(pars);
-    deg := integer32(pars.numdeg + pars.dendeg + 2);
-    Standard_Homotopy_Convolutions_io.get
-      (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
+    Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     hcrd := (mhom > 0);
-    abshom := Residual_Convolution_System(cnvhom);
-    if artificial
-     then pars.gamma := Standard_Homotopy.Accessibility_Constant;
-    end if;
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
@@ -155,37 +130,18 @@ procedure ts_mtpcscnv is
 
     sols : DoblDobl_Complex_Solutions.Solution_List;
     cnvhom,abshom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
-    idxpar,deg,nbt : integer32 := 0;
-    pars : Homotopy_Continuation_Parameters.Parameters
-         := Homotopy_Continuation_Parameters.Default_Values;
-    ddgamma : DoblDobl_Complex_Numbers.Complex_Number;
+    nbt : integer32 := 0;
+    pars : Homotopy_Continuation_Parameters.Parameters;
     ans : character;
     file : file_type;
-    artificial : constant boolean  -- flag for artificial-parameter homotopy
-               := Series_Path_Trackers.Prompt_for_Artificial;
-    hcrd,verbose : boolean;
+    artificial,hcrd,verbose : boolean;
     mhom : natural32 := 0;
-    z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     startmoment,stopmoment : Ada.Calendar.Time;
 
-    use DoblDobl_Complex_Numbers_cv;
-  
   begin
-    if not artificial
-     then pars.gamma := Standard_Complex_Numbers.Create(1.0);
-    end if;
-    new_line;
-    Homotopy_Continuation_Parameters_io.Tune(pars);
-    deg := integer32(pars.numdeg + pars.dendeg + 2);
-    DoblDobl_Homotopy_Convolutions_io.get
-      (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
+    Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     hcrd := (mhom > 0);
-    abshom := Residual_Convolution_System(cnvhom);
-    if artificial then
-      ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
-      pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
-    end if;
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
@@ -259,37 +215,18 @@ procedure ts_mtpcscnv is
 
     sols : QuadDobl_Complex_Solutions.Solution_List;
     cnvhom,abshom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
-    idxpar,deg,nbt : integer32 := 0;
-    pars : Homotopy_Continuation_Parameters.Parameters
-         := Homotopy_Continuation_Parameters.Default_Values;
-    qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
+    nbt : integer32 := 0;
+    pars : Homotopy_Continuation_Parameters.Parameters;
     ans : character;
     file : file_type;
-    artificial : constant boolean  -- flag for artificial-parameter homotopy
-               := Series_Path_Trackers.Prompt_for_Artificial;
-    hcrd,verbose : boolean;
+    artificial,hcrd,verbose : boolean;
     mhom : natural32 := 0;
-    z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     startmoment,stopmoment : Ada.Calendar.Time;
 
-    use QuadDobl_Complex_Numbers_cv;
-
   begin
-    if not artificial
-     then pars.gamma := Standard_Complex_Numbers.Create(1.0);
-    end if;
-    new_line;
-    Homotopy_Continuation_Parameters_io.Tune(pars);
-    deg := integer32(pars.numdeg + pars.dendeg + 2);
-    QuadDobl_Homotopy_Convolutions_io.get
-      (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
+    Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     hcrd := (mhom > 0);
-    abshom := Residual_Convolution_System(cnvhom);
-    if artificial then
-      qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
-      pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
-    end if;
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);

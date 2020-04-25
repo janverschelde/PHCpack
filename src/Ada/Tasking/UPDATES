@@ -1,5 +1,7 @@
 Sat 25 Apr 2020 : in ts_mtpcsconv, transformed the solutions into affine
   coordinates after a run in multi-homogeneous coordinates.
+  In ts_mtpcscnv, the procedures of the new track_path_convolutions
+  package are called.
 
 Fri 24 Apr 2020 : passed the multi-homogenization parameters from the tests
   in ts_mtpcscnv to the procedures in multitasked_path_convolutions.

@@ -1,0 +1,351 @@
+with text_io;                             use text_io;
+with Communications_with_User;            use Communications_with_User;
+with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_cv;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_cv;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
+with Standard_Complex_Solutions_io;       use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;       use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;       use QuadDobl_Complex_Solutions_io;
+with Projective_Transformations;
+with Multi_Projective_Transformations;
+with Partitions_of_Sets_of_Unknowns;      use Partitions_of_Sets_of_Unknowns;
+with Standard_Homotopy;
+with Standard_Homotopy_Convolutions_io;
+with DoblDobl_Homotopy;
+with DoblDobl_Homotopy_Convolutions_io;
+with QuadDobl_Homotopy;
+with QuadDobl_Homotopy_Convolutions_io;
+with Homotopy_Continuation_Parameters_io;
+with Predictor_Corrector_Loops;           use Predictor_Corrector_Loops;
+with Residual_Convolution_Circuits;       use Residual_Convolution_Circuits;
+with Series_Path_Trackers;
+
+package body Track_Path_Convolutions is
+
+  procedure Track
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
+
+    file : file_type;
+    verbose : boolean;
+    ans : character;
+    hcrd : constant boolean := (mhom > 0);
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               Standard_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Target_System;
+        q : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    new_line(file);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
+    new_line(file);
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    if arth and hcrd then
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine
+              (sols,natural32(mhom),idz.all);
+      end if;
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Standard_Complex_Solutions.Length_Of(sols),
+               natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+  end Track;
+
+  procedure Track
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
+
+    file : file_type;
+    verbose : boolean;
+    ans : character;
+    hcrd : constant boolean := (mhom > 0);
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               DoblDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Target_System;
+        q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    new_line(file);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
+    new_line(file);
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    if arth and hcrd then
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine
+              (sols,natural32(mhom),idz.all);
+      end if;
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+               natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+  end Track;
+
+  procedure Track
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
+
+    file : file_type;
+    verbose : boolean;
+    ans : character;
+    hcrd : constant boolean := (mhom > 0);
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               QuadDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Target_System;
+        q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    new_line(file);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
+    new_line(file);
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    if arth and hcrd then
+      if mhom = 1
+       then Projective_Transformations.Affine_Transformation(sols);
+       else Multi_Projective_Transformations.Make_Affine
+              (sols,natural32(mhom),idz.all);
+      end if;
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+               natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+  end Track;
+
+  procedure Main
+              ( hom : out Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : out Standard_Speelpenning_Convolutions.Link_to_System;
+                arth : out boolean;
+                pars : out Homotopy_Continuation_Parameters.Parameters;
+                sols : out Standard_Complex_Solutions.Solution_List;
+                mhom : out natural32;
+                idz : out Standard_Natural_Vectors.Link_to_Vector ) is
+
+    idxpar,deg : integer32;
+    z : Link_to_Partition;
+
+  begin
+    arth := Series_Path_Trackers.Prompt_for_Artificial;
+    pars := Homotopy_Continuation_Parameters.Default_Values;
+    if not arth
+     then pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
+    new_line;
+    Homotopy_Continuation_Parameters_io.Tune(pars);
+    deg := integer32(pars.numdeg + pars.dendeg + 2);
+    Standard_Homotopy_Convolutions_io.get
+      (deg,arth,pars.gamma,hom,sols,idxpar,mhom,z,idz);
+    abh := Residual_Convolution_System(hom);
+    if arth
+     then pars.gamma := Standard_Homotopy.Accessibility_Constant;
+    end if;
+  end Main;
+
+  procedure Main
+              ( hom : out DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : out DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                arth : out boolean;
+                pars : out Homotopy_Continuation_Parameters.Parameters;
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                mhom : out natural32;
+                idz : out Standard_Natural_Vectors.Link_to_Vector ) is
+
+    idxpar,deg : integer32;
+    z : Link_to_Partition;
+    ddgamma : DoblDobl_Complex_Numbers.Complex_Number;
+
+    use DoblDobl_Complex_Numbers_cv;
+
+  begin
+    arth := Series_Path_Trackers.Prompt_for_Artificial;
+    pars := Homotopy_Continuation_Parameters.Default_Values;
+    if not arth
+     then pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
+    new_line;
+    Homotopy_Continuation_Parameters_io.Tune(pars);
+    deg := integer32(pars.numdeg + pars.dendeg + 2);
+    DoblDobl_Homotopy_Convolutions_io.get
+      (deg,arth,pars.gamma,hom,sols,idxpar,mhom,z,idz);
+    abh := Residual_Convolution_System(hom);
+    if arth then
+      ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
+      pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
+    end if;
+  end Main;
+
+  procedure Main
+              ( hom : out QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : out QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                arth : out boolean;
+                pars : out Homotopy_Continuation_Parameters.Parameters;
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                mhom : out natural32;
+                idz : out Standard_Natural_Vectors.Link_to_Vector ) is
+
+    idxpar,deg : integer32;
+    z : Link_to_Partition;
+    qdgamma : QuadDobl_Complex_Numbers.Complex_Number;
+
+    use QuadDobl_Complex_Numbers_cv;
+
+  begin
+    arth := Series_Path_Trackers.Prompt_for_Artificial;
+    pars := Homotopy_Continuation_Parameters.Default_Values;
+    if not arth
+     then pars.gamma := Standard_Complex_Numbers.Create(1.0);
+    end if;
+    new_line;
+    Homotopy_Continuation_Parameters_io.Tune(pars);
+    deg := integer32(pars.numdeg + pars.dendeg + 2);
+    QuadDobl_Homotopy_Convolutions_io.get
+      (deg,arth,pars.gamma,hom,sols,idxpar,mhom,z,idz);
+    abh := Residual_Convolution_System(hom);
+    if arth then
+      qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
+      pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
+    end if;
+  end Main;
+
+end Track_Path_Convolutions;
