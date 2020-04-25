@@ -105,4 +105,13 @@ package Track_Path_Convolutions is
   --            only if mhom > 1, then idz(k) is the index of the set
   --            the k-th variable belongs to.
 
+  procedure Standard_Main ( vrb : in integer32 := 0 );
+  procedure DoblDobl_Main ( vrb : in integer32 := 0 );
+  procedure QuadDobl_Main ( vrb : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Prompts the user for a homotopy, then launches the trackers
+  --   in standard double, double double, or quad double precision.
+  --   The verbose level is given in vrb.
+
 end Track_Path_Convolutions;

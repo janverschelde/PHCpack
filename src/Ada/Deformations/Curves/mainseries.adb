@@ -33,6 +33,7 @@ with Power_Series_Methods;              use Power_Series_Methods;
 with Regular_Newton_Puiseux;
 with Series_Path_Trackers;
 with Interactive_Pade_Trackers;
+with Track_Path_Convolutions;
 
 procedure mainseries ( precision : in character;
                        infilename,outfilename : in string;
@@ -623,9 +624,10 @@ procedure mainseries ( precision : in character;
     put_line("MENU for power series methods :");
     put_line("  1. apply polyhedral methods for tropisms;");
     put_line("  2. run Newton's method starting at a series or a point;");
-    put_line("  3. track paths with Pade approximants as predictor.");
-    put("Type 1, 2, or 3 to select the method : ");
-    Ask_Alternative(ans,"123");
+    put_line("  3. track paths with Pade approximants as predictor;");
+    put_line("  4. run a faster Newton-Fabry-Pade-Hesse path tracker.");
+    put("Type 1, 2, 3, or 4 to select the method : ");
+    Ask_Alternative(ans,"1234");
     case ans is
       when '1' =>
         put_line("Using as lifting the powers of the first variable,");
@@ -686,6 +688,13 @@ procedure mainseries ( precision : in character;
             when others => null;
           end case;
        end if;
+      when '4' =>
+        case valprc is
+          when '1' => Track_Path_Convolutions.Standard_Main(vrb-1);
+          when '2' => Track_Path_Convolutions.DoblDobl_Main(vrb-1);
+          when '4' => Track_Path_Convolutions.QuadDobl_Main(vrb-1);
+          when others => null;
+        end case;
       when others => null;
     end case;
   end Nonzero_Precision_Main;

@@ -348,4 +348,55 @@ package body Track_Path_Convolutions is
     end if;
   end Main;
 
+  procedure Standard_Main ( vrb : in integer32 := 0 ) is
+
+    sols : Standard_Complex_Solutions.Solution_List;
+    cnvhom,abshom : Standard_Speelpenning_Convolutions.Link_to_System;
+    pars : Homotopy_Continuation_Parameters.Parameters;
+    mhom : natural32 := 0;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
+    artificial : boolean;
+
+  begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Standard_Main ...");
+    end if;
+    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    Track(cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+  end Standard_Main;
+
+  procedure DoblDobl_Main ( vrb : in integer32 := 0 ) is
+
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+    cnvhom,abshom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+    pars : Homotopy_Continuation_Parameters.Parameters;
+    mhom : natural32 := 0;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
+    artificial : boolean;
+
+  begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.DoblDobl_Main ...");
+    end if;
+    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    Track(cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+  end DoblDobl_Main;
+
+  procedure QuadDobl_Main ( vrb : in integer32 := 0 ) is
+
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+    cnvhom,abshom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+    pars : Homotopy_Continuation_Parameters.Parameters;
+    mhom : natural32 := 0;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
+    artificial : boolean;
+
+  begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.QuadDobl_Main ...");
+    end if;
+    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    Track(cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+  end QuadDobl_Main;
+
 end Track_Path_Convolutions;

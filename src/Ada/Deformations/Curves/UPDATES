@@ -3,6 +3,8 @@ Sat 25 Apr 2020 : added procedures to hyperplane_convolution_scaling
   and tested in ts_pcscnv.  In ts_pcscnv, transformed the solutions into
   affine coordinates after a multi-homogeneous run.
   New package track_path_convolutions, with code from ts_pcscnv.
+  Updated mainseries.adb to call the main procedures in of track_path_
+  convolutions so phc -u has the faster Newton-Fabry-Pade-Hesse tracker.
 
 Fri 24 Apr 2020 : added tests for ts_scalecnv for m-homogenization.
   Added the multi-homogenization parameters from ts_pcscnv to the
