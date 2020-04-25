@@ -49,6 +49,9 @@ package body Predictor_Corrector_Loops is
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
       Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    elsif mhom > 1 then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol,idz,mhom);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radii(hom,abh,mhom);
     end if;
     SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
@@ -102,6 +105,9 @@ package body Predictor_Corrector_Loops is
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
       Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    elsif mhom > 1 then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol,idz,mhom);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radii(hom,abh,mhom);
     end if;
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
@@ -167,6 +173,9 @@ package body Predictor_Corrector_Loops is
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
       Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    elsif mhom > 1 then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol,idz,mhom);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radii(hom,abh,mhom);
     end if;
     SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
@@ -220,6 +229,9 @@ package body Predictor_Corrector_Loops is
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
       Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    elsif mhom > 1 then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol,idz,mhom);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radii(hom,abh,mhom);
     end if;
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
@@ -285,6 +297,9 @@ package body Predictor_Corrector_Loops is
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
       Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    elsif mhom > 1 then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol,idz,mhom);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radii(hom,abh,mhom);
     end if;
     SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
@@ -338,6 +353,9 @@ package body Predictor_Corrector_Loops is
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
       Hyperplane_Convolution_Scaling.Adjust_Last_Radius(hom,abh);
+    elsif mhom > 1 then
+      Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol,idz,mhom);
+      Hyperplane_Convolution_Scaling.Adjust_Last_Radii(hom,abh,mhom);
     end if;
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,

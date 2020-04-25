@@ -264,4 +264,106 @@ package body Hyperplane_Convolution_Scaling is
     cst(0) := cst(0) - val;
   end Adjust;
 
+  procedure Adjust_Last_Radii
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                m : in integer32 ) is
+
+    homcrc,abhcrc : Standard_Speelpenning_Convolutions.Link_to_Circuit;
+    homlnk,abhlnk : Standard_Complex_Vectors.Link_to_Vector;
+    rad : double_float;
+
+  begin
+    for i in 1..m loop
+      homcrc := hom.crc(hom.crc'last-m+i); homlnk := homcrc.cst;
+      abhcrc := abh.crc(hom.crc'last-m+i); abhlnk := abhcrc.cst;
+      rad := Standard_Complex_Numbers_Polar.Radius(homlnk(0));
+      abhlnk(0) := Standard_Complex_Numbers.Create(rad);
+    end loop;
+  end Adjust_Last_Radii;
+
+  procedure Adjust_Last_Radii
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                m : in integer32 ) is
+
+    homcrc,abhcrc : DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+    homlnk,abhlnk : DoblDobl_Complex_Vectors.Link_to_Vector;
+    rad : double_double;
+
+  begin
+    for i in 1..m loop
+      homcrc := hom.crc(hom.crc'last-m+i); homlnk := homcrc.cst;
+      abhcrc := abh.crc(hom.crc'last-m+i); abhlnk := abhcrc.cst;
+      rad := DoblDobl_Complex_Numbers_Polar.Radius(homlnk(0));
+      abhlnk(0) := DoblDobl_Complex_Numbers.Create(rad);
+    end loop;
+  end Adjust_Last_Radii;
+
+  procedure Adjust_Last_Radii
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                m : in integer32 ) is
+
+    homcrc,abhcrc : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+    homlnk,abhlnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    rad : quad_double;
+
+  begin
+    for i in 1..m loop
+      homcrc := hom.crc(hom.crc'last-m+i); homlnk := homcrc.cst;
+      abhcrc := abh.crc(hom.crc'last-m+i); abhlnk := abhcrc.cst;
+      rad := QuadDobl_Complex_Numbers_Polar.Radius(homlnk(0));
+      abhlnk(0) := QuadDobl_Complex_Numbers.Create(rad);
+    end loop;
+  end Adjust_Last_Radii;
+
+  procedure Scale_and_Adjust
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sol : in out Standard_Complex_Vectors.Vector;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                m : in integer32 ) is
+
+    crc : Standard_Speelpenning_Convolutions.Link_to_Circuit;
+
+  begin
+    Hyperplane_Solution_Scaling.Scale(sol,idz,m);
+    for i in 1..m loop
+      crc := hom.crc(hom.crc'last-m+i);
+      Adjust(crc.cff,crc.cst,sol,idz,m,i);
+    end loop;
+  end Scale_and_Adjust;
+
+  procedure Scale_and_Adjust
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                m : in integer32 ) is
+
+    crc : DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+  begin
+    Hyperplane_Solution_Scaling.Scale(sol,idz,m);
+    for i in 1..m loop
+      crc := hom.crc(hom.crc'last-m+i);
+      Adjust(crc.cff,crc.cst,sol,idz,m,i);
+    end loop;
+  end Scale_and_Adjust;
+
+  procedure Scale_and_Adjust
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                m : in integer32 ) is
+
+    crc : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+  begin
+    Hyperplane_Solution_Scaling.Scale(sol,idz,m);
+    for i in 1..m loop
+      crc := hom.crc(hom.crc'last-m+i);
+      Adjust(crc.cff,crc.cst,sol,idz,m,i);
+    end loop;
+  end Scale_and_Adjust;
+
 end Hyperplane_Convolution_Scaling;

@@ -116,7 +116,6 @@ procedure ts_pcscnv is
     acct,step,mixres : double_float := 0.0;
     ans : character;
     nbrit : integer32;
-    hcrd : constant boolean := (mhom > 0);
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
@@ -189,7 +188,6 @@ procedure ts_pcscnv is
     acct,step,mixres : double_double := Create(0.0);
     ans : character;
     nbrit : integer32;
-    hcrd : constant boolean := (mhom > 0);
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
@@ -262,7 +260,6 @@ procedure ts_pcscnv is
     acct,step,mixres : quad_double := Create(0.0);
     ans : character;
     nbrit : integer32;
-    hcrd : constant boolean := (mhom > 0);
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
@@ -324,7 +321,6 @@ procedure ts_pcscnv is
         := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
     t,mixres,minstpz,maxstpz : double_float := 0.0;
-    hcrd : constant boolean := (mhom > 0);
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -405,7 +401,6 @@ procedure ts_pcscnv is
     homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
     t,mixres : double_double;
     minstpz,maxstpz : double_float;
-    hcrd : constant boolean := (mhom > 0);
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -485,7 +480,6 @@ procedure ts_pcscnv is
     homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
     t,mixres : quad_double;
     minstpz,maxstpz : double_float;
-    hcrd : constant boolean := (mhom > 0);
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -808,21 +802,17 @@ procedure ts_pcscnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     Standard_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
-    if mhom > 1 then
-      put_line("General m-homogenization is not (yet) supported.");
+    abshom := Residual_Convolution_System(cnvhom);
+    if artificial
+     then pars.gamma := Standard_Homotopy.Accessibility_Constant;
+    end if;
+    new_line;
+    put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Standard_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
     else
-      abshom := Residual_Convolution_System(cnvhom);
-      if artificial
-       then pars.gamma := Standard_Homotopy.Accessibility_Constant;
-      end if;
-      new_line;
-      put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-      if ans = 'y' then
-        Standard_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
-      else
-        Standard_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
-                           artificial);
-      end if;
+      Standard_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
+                         artificial);
     end if;
   end Standard_Test;
 
@@ -855,22 +845,18 @@ procedure ts_pcscnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     DoblDobl_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
-    if mhom > 1 then
-      put_line("General m-homogenization is not (yet) supported.");
+    abshom := Residual_Convolution_System(cnvhom);
+    if artificial then
+      ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
+      pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
+    end if;
+    new_line;
+    put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      DoblDobl_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
     else
-      abshom := Residual_Convolution_System(cnvhom);
-      if artificial then
-        ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
-        pars.gamma := DoblDobl_Complex_to_Standard(ddgamma);
-      end if;
-      new_line;
-      put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-      if ans = 'y' then
-        DoblDobl_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
-      else
-        DoblDobl_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
-                           artificial);
-      end if;
+      DoblDobl_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
+                         artificial);
     end if;
   end DoblDobl_Test;
 
@@ -903,22 +889,18 @@ procedure ts_pcscnv is
     deg := integer32(pars.numdeg + pars.dendeg + 2);
     QuadDobl_Homotopy_Convolutions_io.get
       (deg,artificial,pars.gamma,cnvhom,sols,idxpar,mhom,z,idz);
-    if mhom > 1 then
-      put_line("General m-homogenization is not (yet) supported.");
+    abshom := Residual_Convolution_System(cnvhom);
+    if artificial then
+      qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
+      pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
+    end if;
+    new_line;
+    put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      QuadDobl_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
     else
-      abshom := Residual_Convolution_System(cnvhom);
-      if artificial then
-        qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
-        pars.gamma := QuadDobl_Complex_to_Standard(qdgamma);
-      end if;
-      new_line;
-      put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-      if ans = 'y' then
-        QuadDobl_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
-      else
-        QuadDobl_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
-                           artificial);
-      end if;
+      QuadDobl_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
+                         artificial);
     end if;
   end QuadDobl_Test;
 
