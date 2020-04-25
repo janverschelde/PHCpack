@@ -1,4 +1,6 @@
 Fri 24 Apr 2020 : added tests for ts_scalecnv for m-homogenization.
+  Added the multi-homogenization parameters from ts_pcscnv to the
+  procedures in predictor_corrector_loops.
 
 Wed 22 Apr 2020 : fixed the adjustments of the coefficient vector for
   multi-homogeneous coordinates in hyperplane_convolution_scaling,

@@ -4,6 +4,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -34,7 +35,8 @@ package Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -49,7 +51,8 @@ package Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -64,7 +67,8 @@ package Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -79,7 +83,8 @@ package Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -94,7 +99,8 @@ package Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -109,7 +115,8 @@ package Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -133,10 +140,12 @@ package Predictor_Corrector_Loops is
   --   pars     values for the tolerances and parameters,
   --            if pars.corsteps = 0, then there is no corrector step;
   --   maxit    maximum number of steps in Newton's method on power series;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -168,7 +177,8 @@ package Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -184,7 +194,8 @@ package Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -200,7 +211,8 @@ package Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -216,7 +228,8 @@ package Predictor_Corrector_Loops is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -232,7 +245,8 @@ package Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -248,7 +262,8 @@ package Predictor_Corrector_Loops is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -271,10 +286,12 @@ package Predictor_Corrector_Loops is
   --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
   --   maxit    maximum number of steps in Newton's method on power series;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -307,21 +324,27 @@ package Predictor_Corrector_Loops is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd : in boolean; verbose : in boolean := true );
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true );
   procedure Track_All_Paths
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd : in boolean; verbose : in boolean := true );
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true );
   procedure Track_All_Paths
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd : in boolean; verbose : in boolean := true );
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Tracks all paths starting at the solutions in sols,
@@ -333,10 +356,12 @@ package Predictor_Corrector_Loops is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   verbose  indicates if extra output is requested.
   
   -- ON RETURN :

@@ -67,7 +67,8 @@ procedure ts_pcscnv is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in Standard_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out Standard_Predictor_Convolutions.Predictor;
                 psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
                 svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -88,10 +89,12 @@ procedure ts_pcscnv is
   --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
   --   maxit    maximum number of steps in Newton's method on power series;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -113,12 +116,13 @@ procedure ts_pcscnv is
     acct,step,mixres : double_float := 0.0;
     ans : character;
     nbrit : integer32;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,hcrd,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
+        pars,maxit,mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
@@ -136,7 +140,8 @@ procedure ts_pcscnv is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out DoblDobl_Predictor_Convolutions.Predictor;
                 psv : in out DoblDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in DoblDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -157,10 +162,12 @@ procedure ts_pcscnv is
   --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
   --   maxit    maximum number of steps in Newton's method on power series;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -182,12 +189,13 @@ procedure ts_pcscnv is
     acct,step,mixres : double_double := Create(0.0);
     ans : character;
     nbrit : integer32;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,hcrd,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
+        pars,maxit,mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
@@ -205,7 +213,8 @@ procedure ts_pcscnv is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 homlead,abhlead : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                maxit : in integer32; hcrd : in boolean;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
                 prd : in out QuadDobl_Predictor_Convolutions.Predictor;
                 psv : in out QuadDobl_Predictor_Convolutions.Predictor_Vectors;
                 svh : in QuadDobl_Predictor_Convolutions.Link_to_SVD_Hessians;
@@ -226,10 +235,12 @@ procedure ts_pcscnv is
   --   abhlead  leading coefficients for the circuits in abh;
   --   pars     values for the tolerances and parameters;
   --   maxit    maximum number of steps in Newton's method on power series;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   prd      work space for the Newton-Fabry-Pade predictor;
   --   psv      work space vectors for the predictor,
   --            psv.sol contains a start solution;
@@ -251,12 +262,13 @@ procedure ts_pcscnv is
     acct,step,mixres : quad_double := Create(0.0);
     ans : character;
     nbrit : integer32;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
-        pars,maxit,hcrd,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
+        pars,maxit,mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
       if fail
        then put_line("Predictor-Corrector loop failed.");
@@ -274,7 +286,8 @@ procedure ts_pcscnv is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd : in boolean ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --   Runs predictor-corrector-shift loops in double precision.
@@ -284,10 +297,12 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used.
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to.
 
     use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
 
@@ -309,6 +324,7 @@ procedure ts_pcscnv is
         := Standard_Speelpenning_Convolutions.Allocate_Coefficients(hom.deg);
     homcff : Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
     t,mixres,minstpz,maxstpz : double_float := 0.0;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -322,12 +338,12 @@ procedure ts_pcscnv is
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v; t := 0.0;
       if stepwise then
-        Step_Track(hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,psv,svh,
+        Step_Track(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,prd,psv,svh,
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          hcrd,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
-          nbsteps,minstpz,maxstpz,fail,true);
+          mhom,idz,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,
+          nbmaxm,nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := Standard_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
@@ -350,7 +366,8 @@ procedure ts_pcscnv is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd : in boolean ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --   Runs predictor-corrector-shift loops in double double precision.
@@ -360,10 +377,12 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used.
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to.
 
     use DoblDobl_Complex_Solutions,DoblDobl_Predictor_Convolutions;
 
@@ -386,6 +405,7 @@ procedure ts_pcscnv is
     homcff : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
     t,mixres : double_double;
     minstpz,maxstpz : double_float;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -399,12 +419,12 @@ procedure ts_pcscnv is
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v; t := Create(0.0);
       if stepwise then
-        Step_Track(hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,psv,svh,
+        Step_Track(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,prd,psv,svh,
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          hcrd,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
-          nbsteps,minstpz,maxstpz,fail,true);
+          mhom,idz,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,
+          nbmaxm,nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := DoblDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
@@ -426,7 +446,8 @@ procedure ts_pcscnv is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd : in boolean ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --  Runs predictor-corrector-shift loops in quad double precision.
@@ -436,10 +457,12 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used.
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to.
 
     use QuadDobl_Complex_Solutions,QuadDobl_Predictor_Convolutions;
 
@@ -462,6 +485,7 @@ procedure ts_pcscnv is
     homcff : QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
     t,mixres : quad_double;
     minstpz,maxstpz : double_float;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     Allocate_Coefficients(hom.crc,homcff);
@@ -475,12 +499,12 @@ procedure ts_pcscnv is
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v; t := create(0.0);
       if stepwise then
-        Step_Track(hom,abh,homlead,abhlead,pars,maxit,hcrd,prd,psv,svh,
+        Step_Track(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,prd,psv,svh,
           dx,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-          hcrd,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,nbmaxm,
-          nbsteps,minstpz,maxstpz,fail,true);
+          mhom,idz,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,
+          nbmaxm,nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := QuadDobl_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
@@ -502,7 +526,9 @@ procedure ts_pcscnv is
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,arth : in boolean ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
@@ -515,10 +541,12 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   arth     true if the homotopy is an artificial-parameter one,
   --            false otherwise.
 
@@ -528,6 +556,7 @@ procedure ts_pcscnv is
     file : file_type;
     verbose : boolean;
     ans : character;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     new_line;
@@ -562,7 +591,7 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,hcrd,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
     new_line(file);
     if arth and hcrd
      then put_line(file,"THE PROJECTIVE SOLUTIONS :");
@@ -584,7 +613,9 @@ procedure ts_pcscnv is
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,arth : in boolean ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
@@ -597,10 +628,12 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   arth     true if the homotopy is an artificial-parameter one,
   --            false otherwise.
 
@@ -610,6 +643,7 @@ procedure ts_pcscnv is
     file : file_type;
     verbose : boolean;
     ans : character;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     new_line;
@@ -644,7 +678,7 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,hcrd,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
     new_line(file);
     if arth and hcrd
      then put_line(file,"THE PROJECTIVE SOLUTIONS :");
@@ -666,7 +700,9 @@ procedure ts_pcscnv is
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                hcrd,arth : in boolean ) is
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
@@ -679,10 +715,12 @@ procedure ts_pcscnv is
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;
   --   pars     values for the tolerances and parameters;
-  --   hcrd     true if the homotopy is 1-homogeneous with one linear
-  --            equation as its last equation which is then updated in
-  --            the scaling of the solution coordinates,
-  --            false if affine coordinates are used;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
   --   arth     true if the homotopy is an artificial-parameter one,
   --            false otherwise.
 
@@ -692,6 +730,7 @@ procedure ts_pcscnv is
     file : file_type;
     verbose : boolean;
     ans : character;
+    hcrd : constant boolean := (mhom > 0);
 
   begin
     new_line;
@@ -726,7 +765,7 @@ procedure ts_pcscnv is
     put_line("See the output file for results ...");
     new_line;
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,hcrd,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
     new_line(file);
     if arth and hcrd
      then put_line(file,"THE PROJECTIVE SOLUTIONS :");
@@ -756,7 +795,6 @@ procedure ts_pcscnv is
     ans : character;
     artificial : constant boolean  -- flag for artificial-parameter homotopy
                := Series_Path_Trackers.Prompt_for_Artificial;
-    homogeneous : boolean; -- flag for homogeneous coordinates
     mhom : natural32 := 0;
     z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
@@ -773,16 +811,17 @@ procedure ts_pcscnv is
     if mhom > 1 then
       put_line("General m-homogenization is not (yet) supported.");
     else
-      homogeneous := (mhom = 1);
       abshom := Residual_Convolution_System(cnvhom);
       if artificial
        then pars.gamma := Standard_Homotopy.Accessibility_Constant;
       end if;
       new_line;
       put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-      if ans = 'y'
-       then Standard_Run_Loops(cnvhom,abshom,sols,pars,homogeneous);
-       else Standard_Track_All(cnvhom,abshom,sols,pars,homogeneous,artificial);
+      if ans = 'y' then
+        Standard_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
+      else
+        Standard_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
+                           artificial);
       end if;
     end if;
   end Standard_Test;
@@ -801,7 +840,6 @@ procedure ts_pcscnv is
     ans : character;
     artificial : constant boolean  -- flag for artificial-parameter homotopy
                := Series_Path_Trackers.Prompt_for_Artificial;
-    homogeneous : boolean; -- flag for homogeneous coordinates
     mhom : natural32 := 0;
     z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
@@ -820,7 +858,6 @@ procedure ts_pcscnv is
     if mhom > 1 then
       put_line("General m-homogenization is not (yet) supported.");
     else
-      homogeneous := (mhom = 1);
       abshom := Residual_Convolution_System(cnvhom);
       if artificial then
         ddgamma := DoblDobl_Homotopy.Accessibility_Constant;
@@ -828,9 +865,11 @@ procedure ts_pcscnv is
       end if;
       new_line;
       put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-      if ans = 'y'
-       then DoblDobl_Run_Loops(cnvhom,abshom,sols,pars,homogeneous);
-       else DoblDobl_Track_All(cnvhom,abshom,sols,pars,homogeneous,artificial);
+      if ans = 'y' then
+        DoblDobl_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
+      else
+        DoblDobl_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
+                           artificial);
       end if;
     end if;
   end DoblDobl_Test;
@@ -849,7 +888,6 @@ procedure ts_pcscnv is
     ans : character;
     artificial : constant boolean  -- flag for artificial-parameter homotopy
                := Series_Path_Trackers.Prompt_for_Artificial;
-    homogeneous : boolean; -- flag for homogeneous coordinates
     mhom : natural32 := 0;
     z : Link_to_Partition;
     idz : Standard_Natural_Vectors.Link_to_Vector;
@@ -868,7 +906,6 @@ procedure ts_pcscnv is
     if mhom > 1 then
       put_line("General m-homogenization is not (yet) supported.");
     else
-      homogeneous := (mhom = 1);
       abshom := Residual_Convolution_System(cnvhom);
       if artificial then
         qdgamma := QuadDobl_Homotopy.Accessibility_Constant;
@@ -876,9 +913,11 @@ procedure ts_pcscnv is
       end if;
       new_line;
       put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-      if ans = 'y'
-       then QuadDobl_Run_Loops(cnvhom,abshom,sols,pars,homogeneous);
-       else QuadDobl_Track_All(cnvhom,abshom,sols,pars,homogeneous,artificial);
+      if ans = 'y' then
+        QuadDobl_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
+      else
+        QuadDobl_Track_All(cnvhom,abshom,sols,pars,integer32(mhom),idz,
+                           artificial);
       end if;
     end if;
   end QuadDobl_Test;
