@@ -1,3 +1,6 @@
+Sun 26 Apr 2020 : extended multitasked_path_convolutions with track and
+  main procedure, with code taken from ts_mtpcscnv.
+
 Sat 25 Apr 2020 : in ts_mtpcsconv, transformed the solutions into affine
   coordinates after a run in multi-homogeneous coordinates.
   In ts_mtpcscnv, the procedures of the new track_path_convolutions

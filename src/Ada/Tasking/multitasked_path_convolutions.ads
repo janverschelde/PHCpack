@@ -84,4 +84,64 @@ package Multitasked_Path_Convolutions is
   -- ON RETURN :
   --   sols     solutions at the end of the paths.
 
+  procedure Track
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbt,mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean );
+  procedure Track
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbt,mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean );
+  procedure Track
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbt,mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean );
+
+  -- DESCRIPTION :
+  --   Tracks all paths defined by the homotopy in hom,
+  --   starting at solutions in sols,
+  --   in double, double double, or quad double precision.
+
+  -- REQUIRED : the homotopy is square.
+
+  -- ON ENTRY :
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters;
+  --   nbt      the number of tasks;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
+  --   arth     true if the homotopy is an artificial-parameter one,
+  --            false otherwise.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the path.
+
+  procedure Standard_Main ( vrb : in integer32 := 0 );
+  procedure DoblDobl_Main ( vrb : in integer32 := 0 );
+  procedure QuadDobl_Main ( vrb : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Prompts the user for a homotopy, setting of the parameters,
+  --   tolerances, and the number of tasks.  Then launches the trackers
+  --   in standard double, double double, or quad double precision.
+  --   The verbose level is given in vrb.
+
 end Multitasked_Path_Convolutions;

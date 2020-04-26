@@ -1,5 +1,9 @@
 with text_io;                            use text_io;
+with Ada.Calendar;
+with Communications_with_User;            use Communications_with_User;
+with Time_Stamps;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -10,12 +14,28 @@ with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
+with Standard_Complex_Solutions_io;       use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;       use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;       use QuadDobl_Complex_Solutions_io;
+with Standard_Homotopy;
+with DoblDobl_Homotopy;
+with QuadDobl_Homotopy;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
+with Homotopy_Continuation_Parameters_io;
 with Residual_Convolution_Circuits;
 with Corrector_Convolutions;             use Corrector_Convolutions;
 with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
+with Projective_Transformations;
+with Multi_Projective_Transformations;
+with Track_Path_Convolutions;
 with Standard_Solutions_Queue;
 with DoblDobl_Solutions_Queue;
 with QuadDobl_Solutions_Queue;
@@ -445,5 +465,308 @@ package body Multitasked_Path_Convolutions is
     Standard_Integer_VecVecs.Clear(ipvt);
     Clear(prd); Clear(psv); Clear(svh);
   end QuadDobl_Multitasked_Tracker;
+
+  procedure Track
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbt,mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
+
+    ans : character;
+    file : file_type;
+    hcrd : constant boolean := (mhom > 0);
+    verbose : boolean;
+    startmoment,stopmoment : Ada.Calendar.Time;
+  
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               Standard_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Target_System;
+        q : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Standard_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
+    Standard_Multitasked_Tracker(nbt,hom,abh,sols,pars,mhom,idz,verbose);
+    stopmoment := Ada.Calendar.Clock;
+    new_line(file);
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;  
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+        natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    if arth and hcrd then
+      if mhom = 1 then
+        Projective_Transformations.Affine_Transformation(sols);
+      else
+        Multi_Projective_Transformations.Make_Affine
+          (sols,natural32(mhom),idz.all);
+      end if;
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Standard_Complex_Solutions.Length_Of(sols),
+               natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
+  end Track;
+
+  procedure Track
+              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbt,mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
+
+    ans : character;
+    file : file_type;
+    hcrd : constant boolean := (mhom > 0);
+    verbose : boolean;
+    startmoment,stopmoment : Ada.Calendar.Time;
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               DoblDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Target_System;
+        q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := DoblDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
+    DoblDobl_Multitasked_Tracker(nbt,hom,abh,sols,pars,mhom,idz,verbose);
+    stopmoment := Ada.Calendar.Clock;
+    new_line(file);
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    if arth and hcrd then
+      if mhom = 1 then
+        Projective_Transformations.Affine_Transformation(sols);
+      else
+        Multi_Projective_Transformations.Make_Affine
+          (sols,natural32(mhom),idz.all);
+      end if;
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+               natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
+  end Track;
+
+  procedure Track
+              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                nbt,mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
+
+    ans : character;
+    file : file_type;
+    hcrd : constant boolean := (mhom > 0);
+    verbose : boolean;
+    startmoment,stopmoment : Ada.Calendar.Time;
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    if not arth then
+      put(file,natural32(hom.neq),natural32(hom.neq+1),
+               QuadDobl_Homotopy.Homotopy_System);
+    else
+      declare
+        p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Target_System;
+        q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := QuadDobl_Homotopy.Start_System;
+      begin
+        put(file,p'last,1); new_line(file); put(file,p);
+        new_line(file);
+        put_line(file,"THE START SYSTEM :");
+        put(file,q'last,1); new_line(file); put(file,q);
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE START SOLUTIONS :");
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    new_line(file);
+    Homotopy_Continuation_Parameters_io.put(file,pars); flush(file);
+    new_line;
+    put("Verbose ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    startmoment := Ada.Calendar.Clock;
+    QuadDobl_Multitasked_Tracker(nbt,hom,abh,sols,pars,mhom,idz,verbose);
+    stopmoment := Ada.Calendar.Clock;
+    new_line(file);
+    if arth and hcrd then
+      if mhom = 1 then
+        put_line(file,"THE 1-HOMOGENEOUS SOLUTIONS :");
+      else
+        put(file,"THE "); put(file,mhom,1);
+        put_line(file,"-HOMOGENEOUS SOLUTIONS :");
+      end if;
+    else
+      put_line(file,"THE SOLUTIONS :");
+    end if;
+    put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    if arth and hcrd then
+      if mhom = 1 then
+        Projective_Transformations.Affine_Transformation(sols);
+      else
+        Multi_Projective_Transformations.Make_Affine
+          (sols,natural32(mhom),idz.all);
+      end if;
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+               natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+    new_line(file);
+    put(file,"Elapsed wall clock time with ");
+    put(file,nbt,1); put_line(file," tasks :");
+    Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
+  end Track;
+
+  procedure Standard_Main ( vrb : in integer32 := 0 ) is
+
+    sols : Standard_Complex_Solutions.Solution_List;
+    cnvhom,abshom : Standard_Speelpenning_Convolutions.Link_to_System;
+    pars : Homotopy_Continuation_Parameters.Parameters;
+    nbt : integer32 := 0;
+    mhom : natural32 := 0;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
+    artificial : boolean;
+
+  begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Standard_Main ...");
+    end if;
+    Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    new_line;
+    put("Give the number of tasks : "); get(nbt); skip_line;
+    Track(cnvhom,abshom,sols,pars,nbt,integer32(mhom),idz,artificial);
+  end Standard_Main;
+
+  procedure DoblDobl_Main ( vrb : in integer32 := 0 ) is
+
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+    cnvhom,abshom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+    pars : Homotopy_Continuation_Parameters.Parameters;
+    nbt : integer32 := 0;
+    mhom : natural32 := 0;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
+    artificial : boolean;
+
+  begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.DoblDobl_Main ...");
+    end if;
+    Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    new_line;
+    put("Give the number of tasks : "); get(nbt); skip_line;
+    Track(cnvhom,abshom,sols,pars,nbt,integer32(mhom),idz,artificial);
+  end DoblDobl_Main;
+
+  procedure QuadDobl_Main ( vrb : in integer32 := 0 ) is
+
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+    cnvhom,abshom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
+    pars : Homotopy_Continuation_Parameters.Parameters;
+    nbt : integer32 := 0;
+    mhom : natural32 := 0;
+    idz : Standard_Natural_Vectors.Link_to_Vector;
+    artificial : boolean;
+
+  begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.QuadDobl_Main ...");
+    end if;
+    Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    new_line;
+    put("Give the number of tasks : "); get(nbt); skip_line;
+    Track(cnvhom,abshom,sols,pars,nbt,integer32(mhom),idz,artificial);
+  end QuadDobl_Main;
 
 end Multitasked_Path_Convolutions;
