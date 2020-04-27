@@ -34,6 +34,7 @@ with Regular_Newton_Puiseux;
 with Series_Path_Trackers;
 with Interactive_Pade_Trackers;
 with Track_Path_Convolutions;
+with Multitasked_Path_Convolutions;
 
 procedure mainseries ( precision : in character;
                        infilename,outfilename : in string;
@@ -689,12 +690,24 @@ procedure mainseries ( precision : in character;
           end case;
        end if;
       when '4' =>
-        case valprc is
-          when '1' => Track_Path_Convolutions.Standard_Main(vrb-1);
-          when '2' => Track_Path_Convolutions.DoblDobl_Main(vrb-1);
-          when '4' => Track_Path_Convolutions.QuadDobl_Main(vrb-1);
-          when others => null;
-        end case;
+        new_line;
+        put("Apply multitasking ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          case valprc is
+            when '1' => Multitasked_Path_Convolutions.Standard_Main(vrb-1);
+            when '2' => Multitasked_Path_Convolutions.DoblDobl_Main(vrb-1);
+            when '4' => Multitasked_Path_Convolutions.QuadDobl_Main(vrb-1);
+            when others => null;
+          end case;
+        else
+          case valprc is
+            when '1' => Track_Path_Convolutions.Standard_Main(vrb-1);
+            when '2' => Track_Path_Convolutions.DoblDobl_Main(vrb-1);
+            when '4' => Track_Path_Convolutions.QuadDobl_Main(vrb-1);
+            when others => null;
+          end case;
+        end if;
       when others => null;
     end case;
   end Nonzero_Precision_Main;
