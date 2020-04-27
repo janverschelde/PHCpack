@@ -2,6 +2,8 @@ with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Laur_Systems;
 with Multprec_Complex_Laurentials_io;
@@ -17,14 +19,15 @@ with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;
--- with DoblDobl_Complex_Solutions_io;
--- with QuadDobl_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions;
 with Standard_System_and_Solutions_io;
 with Multprec_System_and_Solutions_io;
 with Root_Refining_Parameters;           use Root_Refining_Parameters;
 with DoblDobl_Root_Refiners;             use DoblDobl_Root_Refiners;
 with QuadDobl_Root_Refiners;             use QuadDobl_Root_Refiners;
+with Multitasked_DD_QD_Refiners;         use Multitasked_DD_QD_Refiners;
 
 package body Drivers_to_dd_qd_Root_Refiners is
 
@@ -104,6 +107,39 @@ package body Drivers_to_dd_qd_Root_Refiners is
     s := QuadDobl_Complex_Solutions.Create(sols);
   end Multprec_to_QuadDobl_Complex;
 
+  procedure Prompt_for_Tasks
+             ( genuine : in boolean; nbeq,nvar : in natural32;
+               nbtasks : out integer32; otp : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the number of tasks,
+  --   but only if not genuine and nbeq = nvar.
+
+  -- ON ENTRY :
+  --   genuine   true if the system is a genuine Laurent system;
+  --   nbeq      number of equations;
+  --   nvar      number of variables.
+
+  -- ON RETURN :
+  --   nbtasks   the number of tasks;
+  --   otp       flag to indicate if output is wanted.
+
+    ans : character;
+
+  begin
+    nbtasks := 0;
+    if (not genuine) and (nbeq = nvar) then
+      new_line;
+      put("Apply multitasking ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("-> give the number of tasks : "); get(nbtasks);
+        put("Monitor progress of tasks ? (y/n) "); 
+        Ask_Yes_or_No(ans); otp := (ans = 'y');
+      end if;
+    end if;
+  end Prompt_for_Tasks;
+
   procedure DD_Root_Refinement ( infilename,outfilename : in string ) is
 
   -- DESCRIPTION :
@@ -120,7 +156,8 @@ package body Drivers_to_dd_qd_Root_Refiners is
     nbeq,nvar : natural32;
     epsxa,epsfa,tolsing : double_float;
     numit,maxit : natural32 := 0;
-    deflate,wout : boolean;
+    deflate,wout,genuine,otp : boolean;
+    nbtasks : integer32 := 0;
 
   begin
     if infilename /= "" then
@@ -131,6 +168,7 @@ package body Drivers_to_dd_qd_Root_Refiners is
       Read_Name_and_Open_File(infile);
     end if;
     Multprec_to_DoblDobl_Complex(infile,dd_p,dd_s);
+    genuine := DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(dd_p.all);
     Create_Output_File(outfile,outfilename);
     nvar := Number_of_Unknowns(dd_p(dd_p'first));
     nbeq := natural32(dd_p'last);
@@ -142,11 +180,12 @@ package body Drivers_to_dd_qd_Root_Refiners is
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
     Standard_Menu_Root_Refining_Parameters
       (outfile,epsxa,epsfa,tolsing,maxit,deflate,wout);
+    Prompt_for_Tasks(genuine,nbeq,nvar,nbtasks,otp);
     new_line; put("Refining "); 
     put(DoblDobl_Complex_Solutions.Length_Of(dd_s),1);
     put(" solutions ...");
     put_line(" see the output file for results."); new_line;
-    if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(dd_p.all) then
+    if genuine then
       tstart(timer);
      -- DoblDobl_Root_Refiner(dd_p.all,dd_s);
       Reporting_Root_Refiner -- no deflate for Laurent systems yet
@@ -160,8 +199,15 @@ package body Drivers_to_dd_qd_Root_Refiners is
       begin
         tstart(timer);
        -- DoblDobl_Root_Refiner(q,dd_s);
-        Reporting_Root_Refiner
-          (outfile,q,dd_s,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        if nbtasks = 0 then
+          Reporting_Root_Refiner
+            (outfile,q,dd_s,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        else
+          Multitasking_Refinement(q,dd_s,nbtasks,otp,epsxa,epsfa,maxit);
+          new_line(outfile);
+          put_line(outfile,"THE SOLUTIONS :");
+          DoblDobl_Complex_Solutions_io.write(outfile,dd_s);
+        end if;
         tstop(timer);
         DoblDobl_Complex_Poly_Systems.Clear(q);
       end;
@@ -188,7 +234,8 @@ package body Drivers_to_dd_qd_Root_Refiners is
     nbeq,nvar : natural32;
     epsxa,epsfa,tolsing : double_float;
     numit,maxit : natural32 := 0;
-    deflate,wout : boolean;
+    deflate,wout,genuine,otp : boolean;
+    nbtasks : integer32 := 0;
 
   begin
     if infilename /= "" then
@@ -199,6 +246,7 @@ package body Drivers_to_dd_qd_Root_Refiners is
       Read_Name_and_Open_File(infile);
     end if;
     Multprec_to_QuadDobl_Complex(infile,qd_p,qd_s);
+    genuine := QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(qd_p.all);
     Create_Output_File(outfile,outfilename);
     nvar := Number_of_Unknowns(qd_p(qd_p'first));
     nbeq := natural32(qd_p'last);
@@ -210,11 +258,12 @@ package body Drivers_to_dd_qd_Root_Refiners is
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
     Standard_Menu_Root_Refining_Parameters
       (outfile,epsxa,epsfa,tolsing,maxit,deflate,wout);
+    Prompt_for_Tasks(genuine,nbeq,nvar,nbtasks,otp);
     new_line; put("Refining "); 
     put(QuadDobl_Complex_Solutions.Length_Of(qd_s),1);
     put(" solutions ...");
     put_line(" see the output file for results."); new_line;
-    if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(qd_p.all) then
+    if genuine then
       tstart(timer);
      -- QuadDobl_Root_Refiner(qd_p.all,qd_s);
       Reporting_Root_Refiner  -- no deflation for Laurent systems yet
@@ -228,8 +277,15 @@ package body Drivers_to_dd_qd_Root_Refiners is
       begin
         tstart(timer);
        -- QuadDobl_Root_Refiner(q,qd_s);
-        Reporting_Root_Refiner
-          (outfile,q,qd_s,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        if nbtasks = 0 then
+          Reporting_Root_Refiner
+            (outfile,q,qd_s,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
+        else
+          Multitasking_Refinement(q,qd_s,nbtasks,otp,epsxa,epsfa,maxit);
+          new_line(outfile);
+          put_line(outfile,"THE SOLUTIONS :");
+          QuadDobl_Complex_Solutions_io.write(outfile,qd_s);
+        end if;
         tstop(timer);
         QuadDobl_Complex_Poly_Systems.Clear(q);
       end;
