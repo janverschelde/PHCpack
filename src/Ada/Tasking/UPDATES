@@ -1,3 +1,6 @@
+Mon 27 Apr 2020 : new package multitasked_dd_qd_refiners, with code from
+  ts_mtddref and ts_mtqdref.
+
 Sun 26 Apr 2020 : extended multitasked_path_convolutions with track and
   main procedure, with code taken from ts_mtpcscnv.
 

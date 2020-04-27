@@ -54,6 +54,7 @@ ts_mtlinsol                       : test multitasked linear system solving
 -------------------------------------------------------------------------------
 ts_mtsols                         : multitasking on solutions
 ts_mtstref                        : multitasking solution refinement
+multitasked_dd_qd_refiners        : multitasked refiners in dd/qd precision
 ts_mtddref                        : multitasking refiner with dd cmplx numbers
 ts_mtqdref                        : multitasking refiner with qd cmplx numbers
 ts_mtsharp                        : multitasking multiprecision refinement
