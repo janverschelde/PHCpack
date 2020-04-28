@@ -199,7 +199,7 @@ def dobldobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     nvar = len(pols) + 1
     storesys(pols, nbvar=nvar)
     storesols(nvar, sols)
-    print 'done storing system and solutions ...'
+    # print 'done storing system and solutions ...'
     from phcpy.interface import load_dobldobl_solutions as loadsols
     from phcpy.phcpy2c2 \
     import py2c_sweep_define_parameters_symbolically as define
@@ -211,7 +211,7 @@ def dobldobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     pars = [par]
     parnames = ' '.join(pars)
     nbc = len(parnames)
-    print 'defining the parameters ...'
+    # print 'defining the parameters ...'
     define(nbq, nvar, nbp, nbc, parnames)
     set_start(nbp, str([start, 0.0, 0.0, 0.0]))  # double doubles !
     set_target(nbp, str([target, 0.0, 0.0, 0.0]))
@@ -245,7 +245,7 @@ def quaddobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     nvar = len(pols) + 1
     storesys(pols, nbvar=nvar)
     storesols(nvar, sols)
-    print 'done storing system and solutions ...'
+    # print 'done storing system and solutions ...'
     from phcpy.interface import load_quaddobl_solutions as loadsols
     from phcpy.phcpy2c2 \
     import py2c_sweep_define_parameters_symbolically as define
@@ -257,7 +257,7 @@ def quaddobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     pars = [par]
     parnames = ' '.join(pars)
     nbc = len(parnames)
-    print 'defining the parameters ...'
+    # print 'defining the parameters ...'
     define(nbq, nvar, nbp, nbc, parnames)
     set_start(nbp, str([start, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]))
     set_target(nbp, str([target, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]))
