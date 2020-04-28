@@ -67,6 +67,10 @@ with QuadDobl_Solutions_Container;
 --with Standard_Integer_Vectors_io; use Standard_Integer_Vectors_io;
 --with Standard_Complex_Solutions_io; use Standard_Complex_Solutions_io;
 
+with text_io; use text_io;
+with standard_floating_numbers_io;
+use standard_floating_numbers_io;
+
 function use_sweep ( job : integer32;
                      a : C_intarrs.Pointer;
                      b : C_intarrs.Pointer;
@@ -615,6 +619,7 @@ function use_sweep ( job : integer32;
            := Parameter_Homotopy_State.Get_Start;
     target : constant Standard_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Target;
+    tgt : double_float;
     dx : Standard_Complex_Vectors.Vector(1..nb_var);
     rx,rdx : Standard_Floating_Vectors.Vector(1..nb_var);
 
@@ -660,12 +665,13 @@ function use_sweep ( job : integer32;
         end if;
       end if;
       if realvals then
+        tgt := REAL_PART(target(target'first));
         for i in ls.v'range loop
           rx(i) := REAL_PART(ls.v(i));
           rdx(i) := 0.0;
         end loop;
         Silent_Real_Sweep
-          (true,natural32(nb_equ),natural32(nb_var),1.0,rpf,rjf,rx,rdx);
+          (true,natural32(nb_equ),natural32(nb_var),tgt,rpf,rjf,rx,rdx);
         for i in rx'range loop
           ls.v(i) := Create(rx(i));
         end loop;
@@ -736,6 +742,7 @@ function use_sweep ( job : integer32;
     rjf : Double_Double_Jaco_Matrices.Eval_Jaco_Mat(lp'range,1..nb_var);
     zero : constant double_double := create(0.0);
     one : constant double_double := create(1.0);
+    tgt : double_double;
 
   begin
     spf := DoblDobl_Complex_Poly_SysFun.Create(lp.all);
@@ -762,12 +769,13 @@ function use_sweep ( job : integer32;
         end if;
       end if;
       if realvals then
+        tgt := REAL_PART(target(target'first));
         for i in ls.v'range loop
           rx(i) := REAL_PART(ls.v(i));
           rdx(i) := create(0.0);
         end loop;
         Silent_Real_Sweep
-          (true,natural32(nb_equ),natural32(nb_var),one,rpf,rjf,rx,rdx);
+          (true,natural32(nb_equ),natural32(nb_var),tgt,rpf,rjf,rx,rdx);
         for i in rx'range loop
           ls.v(i) := Create(rx(i));
         end loop;
@@ -838,6 +846,7 @@ function use_sweep ( job : integer32;
     rjf : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat(lp'range,1..nb_var);
     zero : constant quad_double := create(0.0);
     one : constant quad_double := create(1.0);
+    tgt : quad_double;
 
   begin
     spf := QuadDobl_Complex_Poly_SysFun.Create(lp.all);
@@ -864,12 +873,13 @@ function use_sweep ( job : integer32;
         end if;
       end if;
       if realvals then
+        tgt := REAL_PART(target(target'first));
         for i in ls.v'range loop
           rx(i) := REAL_PART(ls.v(i));
           rdx(i) := create(0.0);
         end loop;
         Silent_Real_Sweep
-          (true,natural32(nb_equ),natural32(nb_var),one,rpf,rjf,rx,rdx);
+          (true,natural32(nb_equ),natural32(nb_var),tgt,rpf,rjf,rx,rdx);
         for i in rx'range loop
           ls.v(i) := Create(rx(i));
         end loop;
