@@ -1,5 +1,6 @@
 Tue 28 Apr 2020 : updated use_sweep.adb to pass the target values for a
-  real sweep correctly.
+  real sweep correctly.  Also passed the target value to the complex sweep
+  correctly, in use_sweep, in case the start solution is not fully real.
 
 Wed 1 Jan 2020 : for compiler warnings, modified use_reduction.adb,
   {standard,dobldobl,quaddobl}_polysys_container.adb, phcpack_operations.adb,

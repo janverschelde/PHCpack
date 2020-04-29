@@ -664,8 +664,8 @@ function use_sweep ( job : integer32;
           realvals := Standard_Solution_Diagnostics.Is_Real(ls.all,1.0E-14);
         end if;
       end if;
+      tgt := REAL_PART(target(target'first));
       if realvals then
-        tgt := REAL_PART(target(target'first));
         for i in ls.v'range loop
           rx(i) := REAL_PART(ls.v(i));
           rdx(i) := 0.0;
@@ -680,7 +680,7 @@ function use_sweep ( job : integer32;
           dx(i) := Create(0.0);
         end loop;
         Start_Complex_Sweep
-          (natural32(nb_equ),natural32(nb_var),1.0,spf,sjf,ls.v,dx);
+          (natural32(nb_equ),natural32(nb_var),tgt,spf,sjf,ls.v,dx);
       end if;
       tmp := Tail_Of(tmp);
     end loop;
@@ -768,8 +768,8 @@ function use_sweep ( job : integer32;
           realvals := DoblDobl_Solution_Diagnostics.Is_Real(ls.all,1.0E-14);
         end if;
       end if;
+      tgt := REAL_PART(target(target'first));
       if realvals then
-        tgt := REAL_PART(target(target'first));
         for i in ls.v'range loop
           rx(i) := REAL_PART(ls.v(i));
           rdx(i) := create(0.0);
@@ -784,7 +784,7 @@ function use_sweep ( job : integer32;
           dx(i) := Create(integer(0));
         end loop;
         Start_Complex_Sweep
-          (natural32(nb_equ),natural32(nb_var),one,spf,sjf,ls.v,dx);
+          (natural32(nb_equ),natural32(nb_var),tgt,spf,sjf,ls.v,dx);
       end if;
       tmp := Tail_Of(tmp);
     end loop;
@@ -872,8 +872,8 @@ function use_sweep ( job : integer32;
           realvals := QuadDobl_Solution_Diagnostics.Is_Real(ls.all,1.0E-14);
         end if;
       end if;
+      tgt := REAL_PART(target(target'first));
       if realvals then
-        tgt := REAL_PART(target(target'first));
         for i in ls.v'range loop
           rx(i) := REAL_PART(ls.v(i));
           rdx(i) := create(0.0);
@@ -888,7 +888,7 @@ function use_sweep ( job : integer32;
           dx(i) := Create(integer(0));
         end loop;
         Start_Complex_Sweep
-          (natural32(nb_equ),natural32(nb_var),one,spf,sjf,ls.v,dx);
+          (natural32(nb_equ),natural32(nb_var),tgt,spf,sjf,ls.v,dx);
       end if;
       tmp := Tail_Of(tmp);
     end loop;
