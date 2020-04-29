@@ -929,7 +929,7 @@ global optimization, and computational physics:
 
 #. Lailai Zhu and Howard A. Stone: **Harnessing elasticity to generate
    self-oscillation via an electrohydrodynamic instability.**
-   *J. Fluid Mech. 888, Article ID A31, 35 p., 2020.
+   *J. Fluid Mech.* 888, Article ID A31, 35 p., 2020.
 
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
