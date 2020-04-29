@@ -1,4 +1,6 @@
-Tue 29 Apr 2020 : commented out some print statements in the sweepers module
+Wed 29 Apr 2020 : updated files for version 1.0.3 of phcpy.
+
+Tue 28 Apr 2020 : commented out some print statements in the sweepers module
   of the python2 and python3 versions.
 
 Thu 21 Oct 2019 : updated the documentation of phcpy to include the new
