@@ -1,4 +1,4 @@
-Ada source code of Polynomial Homotopy Continuation version 2.4.75
+Ada source code of Polynomial Homotopy Continuation version 2.4.76
 
 The same hierarchical structure as in the original version is preserved,
 with the addition of numerical Schubert calculus in release 2,
@@ -29,6 +29,7 @@ The directory Series was added in version 2.4.21 to define the power
 series arithmetic for use in phc -u to compute power series solutions.
 DEMiCs for dynamic enumeration to compute all mixed cells was added
 in version 2.4.53.  The directory AD was added to Math_Lib in 2.4.63.
+Version 2.4.76 provided multitasked Newton-Fabry-Pade-Hesse trackers.
 
 The Ada sources are organized in a tree of directories:
 
