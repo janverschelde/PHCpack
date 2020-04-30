@@ -1203,6 +1203,8 @@ package body Corrector_Convolutions is
 
     use Standard_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1212,8 +1214,11 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       maxdx := Standard_Complex_Vector_Norms.Max_Norm(dx);
       mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (maxdx = 0.0) or (mixres = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1231,6 +1236,8 @@ package body Corrector_Convolutions is
 
     use Standard_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true;
     for k in 1..maxit+extra loop
@@ -1240,8 +1247,11 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       maxdx := Standard_Complex_Vector_Norms.Max_Norm(dx);
       mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (maxdx = 0.0) or (mixres = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
     nbrit := maxit;
@@ -1262,6 +1272,8 @@ package body Corrector_Convolutions is
 
     use Standard_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1276,8 +1288,11 @@ package body Corrector_Convolutions is
         put(file,", maxdx :"); put(file,maxdx,3);
         put(file,", mixres :"); put(file,mixres,3); new_line(file);
       end if;
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (maxdx = 0.0) or (mixres = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1297,6 +1312,8 @@ package body Corrector_Convolutions is
 
     use Standard_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1311,8 +1328,11 @@ package body Corrector_Convolutions is
         put(file,", maxdx :"); put(file,maxdx,3);
         put(file,", mixres :"); put(file,mixres,3); new_line(file);
       end if;
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (maxdx = 0.0) or (mixres = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1330,6 +1350,8 @@ package body Corrector_Convolutions is
 
     use DoblDobl_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1339,8 +1361,12 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       maxdx := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (hi_part(maxdx) = 0.0)
+                              or (hi_part(mixres) = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1358,6 +1384,8 @@ package body Corrector_Convolutions is
 
     use DoblDobl_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1367,8 +1395,12 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       maxdx := DoblDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := DoblDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (hi_part(maxdx) = 0.0)
+                              or (hi_part(mixres) = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1388,6 +1420,8 @@ package body Corrector_Convolutions is
 
     use DoblDobl_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1402,8 +1436,12 @@ package body Corrector_Convolutions is
         put(file,", maxdx : "); put(file,maxdx,3);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (hi_part(maxdx) = 0.0)
+                              or (hi_part(mixres) = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1423,6 +1461,8 @@ package body Corrector_Convolutions is
 
     use DoblDobl_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1437,8 +1477,12 @@ package body Corrector_Convolutions is
         put(file,", maxdx : "); put(file,maxdx,3);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (hi_part(maxdx) = 0.0)
+                              or (hi_part(mixres) = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1456,6 +1500,8 @@ package body Corrector_Convolutions is
 
     use QuadDobl_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1465,8 +1511,12 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       maxdx := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (hihi_part(maxdx) = 0.0)
+                              or (hihi_part(mixres) = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1484,6 +1534,8 @@ package body Corrector_Convolutions is
 
     use QuadDobl_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1493,8 +1545,12 @@ package body Corrector_Convolutions is
       psv.radres := Eval(abh.crc,psv.radsol);
       maxdx := QuadDobl_Complex_Vector_Norms.Max_Norm(dx);
       mixres := QuadDobl_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (hihi_part(maxdx) = 0.0)
+                              or (hihi_part(mixres) = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1513,6 +1569,8 @@ package body Corrector_Convolutions is
                 verbose : in boolean := true ) is
 
     use QuadDobl_Speelpenning_Convolutions;
+
+    cntextra : integer32 := 0;
 
   begin
     fail := true; nbrit := maxit;
@@ -1528,8 +1586,12 @@ package body Corrector_Convolutions is
         put(file,", maxdx : "); put(file,maxdx,3);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (hihi_part(maxdx) = 0.0)
+                              or (hihi_part(mixres) = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
@@ -1549,6 +1611,8 @@ package body Corrector_Convolutions is
 
     use QuadDobl_Speelpenning_Convolutions;
 
+    cntextra : integer32 := 0;
+
   begin
     fail := true; nbrit := maxit;
     for k in 1..maxit+extra loop
@@ -1563,8 +1627,12 @@ package body Corrector_Convolutions is
         put(file,", maxdx : "); put(file,maxdx,3);
         put(file,", mixres : "); put(file,mixres,3); new_line(file);
       end if;
-      if maxdx <= tol and mixres <= tol
-       then nbrit := k; fail := false; exit;
+      if maxdx <= tol and mixres <= tol then -- convergence
+        if (cntextra = extra) or (hihi_part(maxdx) = 0.0)
+                              or (hihi_part(mixres) = 0.0)
+         then nbrit := k; fail := false; exit;
+        end if;
+        cntextra := cntextra + 1; -- do an extra Newton step
       end if;
     end loop;
   end LU_Newton_Steps;
