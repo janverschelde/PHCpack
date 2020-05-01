@@ -1,5 +1,7 @@
-with text_io;                             use text_io;
+with Ada.Calendar;
 with Communications_with_User;            use Communications_with_User;
+with Write_Seed_Number;
+with Time_Stamps;                         use Time_Stamps;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
@@ -28,11 +30,13 @@ with Homotopy_Continuation_Parameters_io;
 with Predictor_Corrector_Loops;           use Predictor_Corrector_Loops;
 with Residual_Convolution_Circuits;       use Residual_Convolution_Circuits;
 with Series_Path_Trackers;
+with Greeting_Banners;
 
 package body Track_Path_Convolutions is
 
   procedure Track
-              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -40,15 +44,11 @@ package body Track_Path_Convolutions is
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
                 arth : in boolean ) is
 
-    file : file_type;
     verbose : boolean;
     ans : character;
     hcrd : constant boolean := (mhom > 0);
 
   begin
-    new_line;
-    put_line("Reading the name of the output file ...");
-    Read_Name_and_Create_File(file);
     if not arth then
       put(file,natural32(hom.neq),natural32(hom.neq+1),
                Standard_Homotopy.Homotopy_System);
@@ -106,7 +106,8 @@ package body Track_Path_Convolutions is
   end Track;
 
   procedure Track
-              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+              ( file : in file_type;
+                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -114,15 +115,11 @@ package body Track_Path_Convolutions is
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
                 arth : in boolean ) is
 
-    file : file_type;
     verbose : boolean;
     ans : character;
     hcrd : constant boolean := (mhom > 0);
 
   begin
-    new_line;
-    put_line("Reading the name of the output file ...");
-    Read_Name_and_Create_File(file);
     if not arth then
       put(file,natural32(hom.neq),natural32(hom.neq+1),
                DoblDobl_Homotopy.Homotopy_System);
@@ -180,7 +177,8 @@ package body Track_Path_Convolutions is
   end Track;
 
   procedure Track
-              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -188,15 +186,11 @@ package body Track_Path_Convolutions is
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
                 arth : in boolean ) is
 
-    file : file_type;
     verbose : boolean;
     ans : character;
     hcrd : constant boolean := (mhom > 0);
 
   begin
-    new_line;
-    put_line("Reading the name of the output file ...");
-    Read_Name_and_Create_File(file);
     if not arth then
       put(file,natural32(hom.neq),natural32(hom.neq+1),
                QuadDobl_Homotopy.Homotopy_System);
@@ -356,13 +350,27 @@ package body Track_Path_Convolutions is
     mhom : natural32 := 0;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     artificial : boolean;
+    file : file_type;
+    start_moment,ended_moment : Ada.Calendar.Time;
 
   begin
+    start_moment := Ada.Calendar.Clock;
     if vrb > 0
      then put_line("-> in track_path_convolutions.Standard_Main ...");
     end if;
     Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
-    Track(cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    put(file,"PHC ran from "); Write_Time_Stamp(file,start_moment);
+    put(file," till "); Write_Time_Stamp(file,ended_moment);
+    put_line(file,".");
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
   end Standard_Main;
 
   procedure DoblDobl_Main ( vrb : in integer32 := 0 ) is
@@ -373,13 +381,27 @@ package body Track_Path_Convolutions is
     mhom : natural32 := 0;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     artificial : boolean;
+    file : file_type;
+    start_moment,ended_moment : Ada.Calendar.Time;
 
   begin
+    start_moment := Ada.Calendar.Clock;
     if vrb > 0
      then put_line("-> in track_path_convolutions.DoblDobl_Main ...");
     end if;
     Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
-    Track(cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    put(file,"PHC ran from "); Write_Time_Stamp(file,start_moment);
+    put(file," till "); Write_Time_Stamp(file,ended_moment);
+    put_line(file,".");
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
   end DoblDobl_Main;
 
   procedure QuadDobl_Main ( vrb : in integer32 := 0 ) is
@@ -390,13 +412,27 @@ package body Track_Path_Convolutions is
     mhom : natural32 := 0;
     idz : Standard_Natural_Vectors.Link_to_Vector;
     artificial : boolean;
+    file : file_type;
+    start_moment,ended_moment : Ada.Calendar.Time;
 
   begin
+    start_moment := Ada.Calendar.Clock;
     if vrb > 0
      then put_line("-> in track_path_convolutions.QuadDobl_Main ...");
     end if;
     Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
-    Track(cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    ended_moment := Ada.Calendar.Clock;
+    new_line(file);
+    put(file,"PHC ran from "); Write_Time_Stamp(file,start_moment);
+    put(file," till "); Write_Time_Stamp(file,ended_moment);
+    put_line(file,".");
+    Write_Elapsed_Time(file,start_moment,ended_moment);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
   end QuadDobl_Main;
 
 end Track_Path_Convolutions;
