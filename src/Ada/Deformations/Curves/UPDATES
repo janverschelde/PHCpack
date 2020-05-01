@@ -1,5 +1,7 @@
 Thu 30 Apr 2020 : in corrector_convolutions.adb, applied extra Newton steps,
   added one extra corrector step value in the predictor_corrector_loops.adb.
+  At the end of each path trackers, in predictor_corrector_loops.adb, also
+  applied the extra corrector steps.
 
 Mon 27 Apr 2020 : updated mainseries.adb with the question for multitasking,
   so the multitasked Newton-Fabry-Pade-Hesse tracker can be called in phc -u.

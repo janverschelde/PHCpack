@@ -1,3 +1,6 @@
+Thu 30 Apr 2020 : applied extra corrector iteration at the end of the
+  path trackers in multitasked_path_convolutions.adb.
+
 Mon 27 Apr 2020 : new package multitasked_dd_qd_refiners, with code from
   ts_mtddref and ts_mtqdref.
 
