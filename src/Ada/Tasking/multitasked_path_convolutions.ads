@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_VecVecs;
@@ -85,7 +86,8 @@ package Multitasked_Path_Convolutions is
   --   sols     solutions at the end of the paths.
 
   procedure Track
-              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -93,7 +95,8 @@ package Multitasked_Path_Convolutions is
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
                 arth : in boolean );
   procedure Track
-              ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
+              ( file : in file_type;
+                hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -101,7 +104,8 @@ package Multitasked_Path_Convolutions is
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
                 arth : in boolean );
   procedure Track
-              ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
+              ( file : in file_type;
+                hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -117,6 +121,7 @@ package Multitasked_Path_Convolutions is
   -- REQUIRED : the homotopy is square.
 
   -- ON ENTRY :
+  --   file     file, opened for output;
   --   hom      system of homotopy convolution circuits;
   --   abh      radii as coefficients for mixed residuals;
   --   sols     start solutions;

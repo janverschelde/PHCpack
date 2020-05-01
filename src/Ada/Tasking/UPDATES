@@ -1,3 +1,6 @@
+Fri 1 May 2020 : updated multitasked_path_convolutions so the seed,
+  version number, time stamps, and number of tasks are written at end.
+
 Thu 30 Apr 2020 : applied extra corrector iteration at the end of the
   path trackers in multitasked_path_convolutions.adb.
 
