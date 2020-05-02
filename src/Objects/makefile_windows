@@ -59,13 +59,13 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Basic_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization :
-# GNATFLAGS=-gnatv -O3 -gnatp -gnatv
-# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatv
+GNATFLAGS=-gnatv -O3 -gnatp -gnatv
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatv
 # flags without optimization :
-GNATFLAGS=-gnatv -gnatwa -gnatVa
-GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+# GNATFLAGS=-gnatv -gnatwa -gnatVa
+# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
 # flag with gnat95 restriction for CtoPHC
-GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp
+# GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp
 
 # the main executable is phc :
 
@@ -555,6 +555,10 @@ ts_jacocnv:
 ts_shiftcnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_shiftcnv.adb \
               -o $(BIN)/ts_shiftcnv
+
+ts_perfconv: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfconv.adb \
+              -o $(BIN)/ts_perfconv -largs get_clock.o get_clocks_per_sec.o
 
 # Test programs for Math_Lib/Supports :
 

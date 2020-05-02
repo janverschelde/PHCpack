@@ -532,6 +532,10 @@ ts_shiftcnv:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_shiftcnv.adb \
               -o $(BIN)/ts_shiftcnv
 
+ts_perfconv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfconv.adb \
+              -o $(BIN)/ts_perfconv
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
