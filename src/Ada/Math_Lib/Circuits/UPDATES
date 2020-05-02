@@ -1,3 +1,6 @@
+Fri 1 May 2020 : new test procedure ts_perfconv.adb to compute the
+  convolutions faster.
+
 Fri 3 Apr 2020 : extended test on system in ts_shiftcnv.
 
 Thu 2 Apr 2020 : added system_array type to generic_speelpenning_convolutions.

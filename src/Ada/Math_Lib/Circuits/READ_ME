@@ -79,3 +79,5 @@ ts_jacocnv                         : test on plain Jacobian computation
 shift_convolution_circuits         : shifting coefficients in the circuits
 ts_shiftcnv                        : test on shifting coefficients
 -------------------------------------------------------------------------------
+ts_perfconv                        : test on performance and convolutions
+-------------------------------------------------------------------------------
