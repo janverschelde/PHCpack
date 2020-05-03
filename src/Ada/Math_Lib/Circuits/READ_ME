@@ -1,4 +1,4 @@
-Algorithmic differentiation and arithmetic circuits in PHCv2.4.76
+Algorithmic differentiation and arithmetic circuits in PHCv2.4.77
 
 This directory was created new in v2.3.98, with code that had been building
 up in the directory Functions.  In Functions, polynomials are evaluated by
@@ -79,5 +79,6 @@ ts_jacocnv                         : test on plain Jacobian computation
 shift_convolution_circuits         : shifting coefficients in the circuits
 ts_shiftcnv                        : test on shifting coefficients
 -------------------------------------------------------------------------------
+standard_coefficient_convolutions  : better performing convolution computations
 ts_perfconv                        : test on performance and convolutions
 -------------------------------------------------------------------------------
