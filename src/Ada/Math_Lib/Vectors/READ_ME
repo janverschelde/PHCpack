@@ -1,4 +1,4 @@
-Vectors and vectors of vectors in PHCv2.4.76
+Vectors and vectors of vectors in PHCv2.4.77
 
 Because the directory Matrices became too big, 
 this directory was created new for PHCv2.3.33.
@@ -134,6 +134,8 @@ ts_strvec                          : test parse/write vectors from/to strings
 ts_nesvec                          : test on nested vectors
 ts_ddvec                           : test on vectors of double doubles
 ts_qdvec                           : test on vectors of quad doubles
+------------------------------------------------------------------------------
+standard_vector_splitters          : split/merge complex vectors for doubles
 ------------------------------------------------------------------------------
 The generic_* packages are different from the abstract_* packages in the
 sense that they export types and operations, i.e.: they have a body.
