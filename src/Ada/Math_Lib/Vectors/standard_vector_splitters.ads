@@ -101,6 +101,9 @@ package Standard_Vector_Splitters is
               ( x : in Standard_Complex_Vectors.Link_to_Vector;
                 rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector );
   procedure Complex_Parts
+              ( x : in Standard_Complex_VecVecs.VecVec;
+                rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec );
+  procedure Complex_Parts
               ( x : in Standard_Complex_VecVecs.Link_to_VecVec;
                 rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec );
 
@@ -118,6 +121,9 @@ package Standard_Vector_Splitters is
   procedure Complex_Merge
              ( rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec;
                cvx : in Standard_Complex_VecVecs.Link_to_VecVec );
+  procedure Complex_Merge
+             ( rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec;
+               cvx : in Standard_Complex_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Merges the real and imaginary parts in rpx and ipx

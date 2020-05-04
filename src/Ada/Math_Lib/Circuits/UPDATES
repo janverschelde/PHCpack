@@ -3,6 +3,8 @@ Mon 4 May 2020 : modified ts_perfconv for compiler warnings.
   polynomial with constant one coefficients, fixed a bug for when one
   of the variables does not occur in evaluation_differentiation_errors.adb,
   improved tests on special cases in ts_speelcnv.
+  In standard_coefficient_convolutions, modified parameters of the Speel
+  procedures and tested special cases in ts_speelcnv.
 
 Sun 3 May 2020 : new package standard_coefficient_convolutions with code from
   ts_perfconv.  Extended standard_coefficient_convolutions with procedures

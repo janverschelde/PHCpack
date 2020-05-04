@@ -19,6 +19,8 @@ with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
 with Standard_Integer_VecVecs_io;
+with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
@@ -89,6 +91,8 @@ with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Complex_Series_and_Polynomials;     use Complex_Series_and_Polynomials;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
+with Standard_Vector_Splitters;
+with Standard_Coefficient_Convolutions;
 
 procedure ts_speelcnv is
 
@@ -223,6 +227,8 @@ procedure ts_speelcnv is
   --   cffone   true if all coefficients are equal to one.
 
     use Standard_Speelpenning_Convolutions;
+    use Standard_Vector_Splitters;
+    use Standard_Coefficient_Convolutions;
 
     xps : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Random_Exponents(dim,nbr,pwr);
@@ -245,21 +251,52 @@ procedure ts_speelcnv is
     grad : Standard_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
          := Standard_Series_Coefficients(x);
+    rx : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Allocate_Floating_Coefficients(dim,deg);
+    ix : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Allocate_Floating_Coefficients(dim,deg);
     pcff : Standard_Complex_VecVecs.VecVec(1..nbr);
+    rpcf : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(nbr,deg);
+    ipcf : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(nbr,deg);
     forward : constant Standard_Complex_VecVecs.VecVec(1..dim-1)
             := Allocate_Coefficients(dim-1,deg);
+    rfwd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-1,deg);
+    ifwd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-1,deg);
     backward : constant Standard_Complex_VecVecs.VecVec(1..dim-2)
              := Allocate_Coefficients(dim-2,deg);
+    rbck : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-2,deg);
+    ibck : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-2,deg);
     cross : constant Standard_Complex_VecVecs.VecVec(1..dim-2)
           := Allocate_Coefficients(dim-2,deg);
+    rcrs : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-2,deg);
+    icrs : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-2,deg);
     ygrad : constant Standard_Complex_VecVecs.VecVec(1..dim+1)
           := Allocate_Coefficients(dim+1,deg);
+    ygrad2 : constant Standard_Complex_VecVecs.VecVec(1..dim+1)
+           := Allocate_Coefficients(dim+1,deg);
+    ryd : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim+1,deg);
+    iyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim+1,deg);
     work : constant Standard_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    rwrk : constant Standard_Floating_Vectors.Link_to_Vector
+         := Allocate_Floating_Coefficients(deg);
+    iwrk : constant Standard_Floating_Vectors.Link_to_Vector
+         := Allocate_Floating_Coefficients(deg);
     acc : constant Standard_Complex_Vectors.Link_to_Vector
         := Allocate_Coefficients(deg);
-    err,sumerr : double_float := 0.0;
-    pwt : Link_to_VecVecVec := Create(xcff,mxe);
+    err,err2,sumerr,sumerr2 : double_float := 0.0;
+    pwt : Standard_Speelpenning_Convolutions.Link_to_VecVecVec
+        := Standard_Speelpenning_Convolutions.Create(xcff,mxe);
     crc : Circuit(nbr,dim,dim+1,dim+2);
 
     use Standard_Complex_Vectors;
@@ -278,8 +315,16 @@ procedure ts_speelcnv is
     y := Standard_CSeries_Poly_Functions.Eval(pol,x);
     if expone and cffone then
       Speel(idx,xcff,forward,backward,cross,ygrad); -- all coefficients one
+      Standard_Vector_Splitters.Complex_Parts(xcff,rx,ix);
+      Speel(idx,rx,ix,rfwd,ifwd,rbck,ibck,rcrs,icrs,ryd,iyd);
+      Standard_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
     elsif expone then
       Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+      Standard_Vector_Splitters.Complex_Parts(pcff,rpcf,ipcf);
+      Standard_Vector_Splitters.Complex_Parts(xcff,rx,ix);
+      Speel(idx,rpcf,ipcf,rx,ix,rfwd,ifwd,rbck,ibck,rcrs,icrs,
+            ryd,iyd,rwrk,iwrk);
+      Standard_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
     else
       Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
     end if;
@@ -304,21 +349,30 @@ procedure ts_speelcnv is
     end loop;
     put_line("The coefficient vector of the value of the polynomial :");
     put_line(ygrad(ygrad'last));
+    put_line("Recomputed coefficient vector of the value of the polynomial :");
+    put_line(ygrad2(ygrad2'last));
     grad := Standard_Gradient(pol,x);
     err := Difference(y,ygrad(ygrad'last));
     put("The error :"); put(err,3); new_line;
-    sumerr := err;
+    err2 := Difference(y,ygrad2(ygrad2'last));
+    put("Recomputed error :"); put(err2,3); new_line;
+    sumerr := err; sumerr2 := err2;
     for k in grad'range loop
       put("derivative "); put(k,1); put_line(" :"); put(grad(k)); new_line;
       if ygrad(k) /= null then
         put("The coefficient vector of derivative ");
         put(k,1); put_line(" :"); put_line(ygrad(k));
+        put("Recomputed coefficient vector of derivative ");
+        put(k,1); put_line(" :"); put_line(ygrad2(k));
         err := Difference(grad(k),ygrad(k));
         put("The error :"); put(err,3); new_line;
-        sumerr := sumerr + err;
+        err2 := Difference(grad(k),ygrad2(k));
+        put("Recomputed error :"); put(err2,3); new_line;
+        sumerr := sumerr + err; sumerr2 := sumerr2 + err2;
       end if;
     end loop;
     put("Sum of errors :"); put(sumerr,3); new_line;
+    put("Recomputed sum of errors :"); put(sumerr2,3); new_line;
     Clear(pwt);
   end Standard_Test;
 

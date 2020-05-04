@@ -190,6 +190,15 @@ package body Standard_Vector_Splitters is
   end Complex_Parts;
 
   procedure Complex_Parts
+              ( x : in Standard_Complex_VecVecs.VecVec;
+                rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in x'range loop
+      Split_Complex(x(k),rpx(k),ipx(k));
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
               ( x : in Standard_Complex_VecVecs.Link_to_VecVec;
                 rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
   begin
@@ -204,6 +213,15 @@ package body Standard_Vector_Splitters is
   begin
     for k in cvx'range loop
       cvx(k) := Standard_Complex_Numbers.Create(rpx(k),ipx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+             ( rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec;
+               cvx : in Standard_Complex_VecVecs.VecVec ) is
+  begin
+    for k in cvx'range loop
+      Complex_Merge(rpx(k),ipx(k),cvx(k));
     end loop;
   end Complex_Merge;
 
