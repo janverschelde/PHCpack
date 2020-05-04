@@ -12,6 +12,7 @@ with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Random_Vectors;
+with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
 with Standard_Coefficient_Convolutions;   use Standard_Coefficient_Convolutions;
 
 procedure ts_perfconv is
@@ -209,8 +210,6 @@ procedure ts_perfconv is
 
     deg : constant integer32 := xr'last;
     xrk,xik,yrk,yik,p1,p2,p3,p4 : double_float;
-
-    use Standard_Complex_Numbers;
 
   begin
    -- product := Create(0.0);
@@ -480,7 +479,7 @@ procedure ts_perfconv is
       := Standard_Random_Vectors.Random_Vector(0,deg);
     p : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(c);
-    x : Standard_Complex_Numbers.Complex_Number
+    x : constant Standard_Complex_Numbers.Complex_Number
       := Standard_Random_Numbers.Random1;
     y : Standard_Complex_Numbers.Complex_Number;
     rc : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(p);
@@ -592,7 +591,7 @@ procedure ts_perfconv is
       := Standard_Random_Vectors.Random_Vector(0,deg);
     p : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(c);
-    x : Standard_Complex_Numbers.Complex_Number
+    x : constant Standard_Complex_Numbers.Complex_Number
       := Standard_Random_Numbers.Random1;
     y : Standard_Complex_Numbers.Complex_Number;
     rc : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(p);

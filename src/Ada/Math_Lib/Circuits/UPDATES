@@ -1,3 +1,5 @@
+Mon 4 May 2020 : modified ts_perfconv for compiler warnings.
+
 Sun 3 May 2020 : new package standard_coefficient_convolutions with code from
   ts_perfconv.  Extended standard_coefficient_convolutions with procedures
   to compute the power table and to apply algorithmic differentiation.

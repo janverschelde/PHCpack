@@ -1,3 +1,6 @@
+Mon 4 May 2020 : revised standard_vector_splitters for compiler warnings
+  and cleaned up the package documentation.
+
 Sun 3 May 2020 : new package standard_vector_splitters with functions and
   procedures to split and merge the parts of complex vectors.
 
