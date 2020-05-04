@@ -1,5 +1,6 @@
 Sun 3 May 2020 : new package standard_coefficient_convolutions with code from
-  ts_perfconv.
+  ts_perfconv.  Extended standard_coefficient_convolutions with procedures
+  to compute the power table and to apply algorithmic differentiation.
 
 Sat 2 May 2020 : added inner product tests to ts_perfconv.adb.
   Added Horner and wrapped procedures to ts_perfconv.adb.
