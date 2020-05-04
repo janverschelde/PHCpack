@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Numbers;
@@ -11,18 +12,24 @@ package body Evaluation_Differentiation_Errors is
                         c : Standard_Complex_Vectors.Link_to_Vector )
                       return double_float is
 
+    use Standard_Integer_Numbers;
     use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Series;
 
     res : double_float := 0.0;
     avl : double_float;
     val : Complex_Number;
 
   begin
-    for i in c'range loop
-      val := s.cff(i) - c(i);
-      avl := AbsVal(val);
-      res := res + avl;
-    end loop;
+    if s /= null and c /= null then
+      for i in c'range loop
+        exit when (i > s.cff'last);
+        val := s.cff(i) - c(i);
+        avl := AbsVal(val);
+        res := res + avl;
+      end loop;
+    end if;
     return res;
   end Difference;
 
@@ -30,18 +37,24 @@ package body Evaluation_Differentiation_Errors is
                         c : DoblDobl_Complex_Vectors.Link_to_Vector )
                       return double_double is
 
+    use Standard_Integer_Numbers;
     use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Complex_Series;
 
     res : double_double := create(0.0);
     avl : double_double;
     val : Complex_Number;
 
   begin
-    for i in c'range loop
-      val := s.cff(i) - c(i);
-      avl := AbsVal(val);
-      res := res + avl;
-    end loop;
+    if s /= null and c /= null then
+      for i in c'range loop
+        exit when (i > s.cff'last);
+        val := s.cff(i) - c(i);
+        avl := AbsVal(val);
+        res := res + avl;
+      end loop;
+    end if;
     return res;
   end Difference;
 
@@ -49,18 +62,24 @@ package body Evaluation_Differentiation_Errors is
                         c : QuadDobl_Complex_Vectors.Link_to_Vector )
                       return quad_double is
 
+    use Standard_Integer_Numbers;
     use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Series;
 
     res : quad_double := create(0.0);
     avl : quad_double;
     val : Complex_Number;
 
   begin
-    for i in c'range loop
-      val := s.cff(i) - c(i);
-      avl := AbsVal(val);
-      res := res + avl;
-    end loop;
+    if s /= null and c /= null then
+      for i in c'range loop
+        exit when (i > s.cff'last);
+        val := s.cff(i) - c(i);
+        avl := AbsVal(val);
+        res := res + avl;
+      end loop;
+    end if;
     return res;
   end Difference;
 

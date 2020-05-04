@@ -144,7 +144,71 @@ procedure ts_speelcnv is
     return res;
   end Leading_Coefficients;
 
-  procedure Standard_Test ( dim,deg,nbr,pwr : in integer32 ) is
+  function One_Coefficients
+             ( nbr,deg : integer32 )
+             return Standard_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 1..nbr with vectors of range 0..deg
+  --   to represent the constant one as the coefficients.
+
+    res : Standard_Complex_VecVecs.VecVec(1..nbr);
+
+  begin
+    for k in 1..nbr loop
+      declare
+        cff : Standard_Complex_Vectors.Vector(0..deg)
+            := (0..deg => Standard_Complex_Numbers.Create(0.0));
+      begin
+        cff(0) := Standard_Complex_Numbers.Create(1.0);
+        res(k) := new Standard_Complex_Vectors.Vector'(cff);
+      end;
+    end loop;
+    return res;
+  end One_Coefficients;
+
+  function Standard_Make_Polynomial
+             ( dim,deg : integer32;
+               idx : Standard_Integer_VecVecs.VecVec;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : Standard_Complex_Series_Vectors.Vector;
+               expone,cffone : boolean )
+             return Standard_CSeries_Polynomials.Poly is
+
+  -- DESCRIPTION :
+  --   Wraps the construction of a polynomial with series coefficients,
+  --   with flags for special cases if expone and cffone.
+
+  -- ON ENTRY :
+  --   dim     dimension of the exponent vectors, number of variables;
+  --   deg     degree of the power series;
+  --   idx     exponent indices;
+  --   xps     exponent vectors;
+  --   cff     coefficients of the monomials;
+  --   expone  true if all exponents are equal to one;
+  --   cffone  true if all coefficients are equal to one.
+
+    res : Standard_CSeries_Polynomials.Poly;
+
+  begin
+    if expone then -- all exponents are equal to one
+      if cffone then -- all coefficients are equal to one
+        res := Standard_Polynomial(dim,deg,idx);
+      else
+        res := Standard_Polynomial(dim,idx,cff,true);
+      end if;
+    else  
+      if cffone then -- all coefficients are equal to one
+        res := Standard_Polynomial(dim,deg,xps,false);
+      else
+        res := Standard_Polynomial(dim,xps,cff,false);
+      end if;
+    end if;
+    return res;
+  end Standard_Make_Polynomial;
+
+  procedure Standard_Test ( dim,deg,nbr,pwr : in integer32;
+                            expone,cffone : in boolean ) is
 
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and tests the
@@ -155,6 +219,8 @@ procedure ts_speelcnv is
   --   deg      degree of the power series;
   --   nbr      number of products;
   --   pwr      largest power of the variables.
+  --   expone   true if all exponents are equal to one;
+  --   cffone   true if all coefficients are equal to one.
 
     use Standard_Speelpenning_Convolutions;
 
@@ -169,9 +235,7 @@ procedure ts_speelcnv is
     polcff : constant Standard_Complex_Series_Vectors.Vector(1..nbr)
            := Standard_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
     pol : constant Standard_CSeries_Polynomials.Poly
-       -- := Standard_Polynomial(dim,deg,idx); -- all coefficients are one
-       -- := Standard_Polynomial(dim,idx,polcff); -- all exponents are one
-        := Standard_Polynomial(dim,xps,polcff,false);
+        := Standard_Make_Polynomial(dim,deg,idx,xps,polcff,expone,cffone);
     x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
     xpt : constant Standard_Complex_Vectors.Vector(1..dim)
@@ -181,8 +245,7 @@ procedure ts_speelcnv is
     grad : Standard_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
          := Standard_Series_Coefficients(x);
-    pcff : constant Standard_Complex_VecVecs.VecVec(1..nbr)
-         := Standard_Series_Coefficients(polcff);
+    pcff : Standard_Complex_VecVecs.VecVec(1..nbr);
     forward : constant Standard_Complex_VecVecs.VecVec(1..dim-1)
             := Allocate_Coefficients(dim-1,deg);
     backward : constant Standard_Complex_VecVecs.VecVec(1..dim-2)
@@ -199,7 +262,13 @@ procedure ts_speelcnv is
     pwt : Link_to_VecVecVec := Create(xcff,mxe);
     crc : Circuit(nbr,dim,dim+1,dim+2);
 
+    use Standard_Complex_Vectors;
+
   begin
+    if cffone 
+     then pcff := One_Coefficients(nbr,deg);
+     else pcff := Standard_Series_Coefficients(polcff);
+    end if;
     crc.xps := xps; crc.idx := idx; crc.fac := fac; crc.cff := pcff;
     put_line("Some random exponents :"); Standard_Integer_VecVecs_io.put(xps);
     put_line("its exponent indices :"); Standard_Integer_VecVecs_io.put(idx);
@@ -207,9 +276,13 @@ procedure ts_speelcnv is
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := Standard_CSeries_Poly_Functions.Eval(pol,x);
-   -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+    if expone and cffone then
+      Speel(idx,xcff,forward,backward,cross,ygrad); -- all coefficients one
+    elsif expone then
+      Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+    else
+      Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+    end if;
     put_line("The value of the polynomial at the random series :");
     put(y); new_line;
     ypt := Eval(crc,xpt);
@@ -220,8 +293,11 @@ procedure ts_speelcnv is
     end loop;
     work(0) := Standard_Complex_Numbers.Create(0.0);
     acc(0) := Standard_Complex_Numbers.Create(0.0);
-   -- Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work); -- all powers 1
-    Speel(xps,idx,fac,pcff,xpt,forward,backward,cross,ygrad,work,acc,pwt);
+    if expone then
+      Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work); -- all powers 1
+    else
+      Speel(xps,idx,fac,pcff,xpt,forward,backward,cross,ygrad,work,acc,pwt);
+    end if;
     put_line("The leading coefficients computed in reverse mode :");
     for i in ygrad'range loop
       put(ygrad(i)(0)); new_line;
@@ -234,11 +310,13 @@ procedure ts_speelcnv is
     sumerr := err;
     for k in grad'range loop
       put("derivative "); put(k,1); put_line(" :"); put(grad(k)); new_line;
-      put("The coefficient vector of derivative ");
-      put(k,1); put_line(" :"); put_line(ygrad(k));
-      err := Difference(grad(k),ygrad(k));
-      put("The error :"); put(err,3); new_line;
-      sumerr := sumerr + err;
+      if ygrad(k) /= null then
+        put("The coefficient vector of derivative ");
+        put(k,1); put_line(" :"); put_line(ygrad(k));
+        err := Difference(grad(k),ygrad(k));
+        put("The error :"); put(err,3); new_line;
+        sumerr := sumerr + err;
+      end if;
     end loop;
     put("Sum of errors :"); put(sumerr,3); new_line;
     Clear(pwt);
@@ -809,6 +887,7 @@ procedure ts_speelcnv is
     dim,deg,nbr,pwr : integer32 := 0;
     precision : constant character := Prompt_for_Precision;
     random,answer : character;
+    expone,cffone : boolean;
 
   begin
     new_line;
@@ -829,6 +908,7 @@ procedure ts_speelcnv is
       put("Give the degree of the series : "); get(deg);
       put("Give the number of monomials : "); get(nbr);
       put("Give the highest power of each variable : "); get(pwr);
+      expone := (pwr = 1);
       new_line;
       put("Test system ? (y/n) "); Ask_Yes_or_No(answer);
       new_line;
@@ -840,8 +920,10 @@ procedure ts_speelcnv is
           when others => null;
         end case;
       else
+        put("All coefficients equal to one ? (y/n) ");
+        Ask_Yes_or_No(answer); cffone := (answer = 'y');
         case precision is
-          when '0' => Standard_Test(dim,deg,nbr,pwr);
+          when '0' => Standard_Test(dim,deg,nbr,pwr,expone,cffone);
           when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
           when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
           when others => null;

@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
+-- with Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Series;
 with Standard_CSeries_Poly_Functions;
@@ -225,23 +226,58 @@ package body Series_Polynomial_Gradients is
     return res;
   end QuadDobl_Product;
 
+  -- function Is_Zero ( s : Standard_Complex_Series.Link_to_Series )
+  --                  return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if the series is zero.
+
+  --  use Standard_Complex_Numbers;
+  --  use Standard_Complex_Series;
+
+  --  zero : constant Complex_Number := Create(0.0);
+
+  -- begin
+  --   if s = null then
+  --     return true;
+  --   else
+  --     for i in s.cff'range loop
+  --       if s.cff(i) /= zero
+  --        then return false;
+  --       end if;
+  --     end loop;
+  --     return true;
+  --   end if;
+  -- end Is_Zero;
+
   function Standard_Polynomial
              ( dim,deg : in integer32;
-               xps : Standard_Integer_VecVecs.VecVec )
+               xps : Standard_Integer_VecVecs.VecVec;
+               isidx : boolean := true )
              return Standard_CSeries_Polynomials.Poly is
 
     res : Standard_CSeries_Polynomials.Poly
         := Standard_CSeries_Polynomials.Null_Poly;
     trm : Standard_CSeries_Polynomials.Term;
+   -- cff : Standard_Complex_Series.Link_to_Series;
 
   begin
     for k in xps'range loop
       trm.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
-      for i in xps(k)'range loop
-        trm.dg(xps(k)(i)) := 1;
-      end loop;
+      if isidx then
+        for i in xps(k)'range loop
+          trm.dg(xps(k)(i)) := 1;
+        end loop;
+      else
+        for i in 1..dim loop
+          trm.dg(i) := natural32(xps(k)(i));
+        end loop;
+      end if;
+     -- cff := Standard_CSeries_Polynomials.Coeff(res,trm.dg);
+     -- if Is_Zero(cff) then
       trm.cf := Standard_Complex_Series.Create(1,deg);
       Standard_CSeries_Polynomials.Add(res,trm);
+     -- end if;
       Standard_CSeries_Polynomials.Clear(trm);
     end loop;
     return res;
