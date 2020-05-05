@@ -1,3 +1,6 @@
+Tue 5 May 2020 : the general case for algorithmic differentiation works in
+  standard_coefficient_convolutions, tested by ts_speelcnv.
+
 Mon 4 May 2020 : modified ts_perfconv for compiler warnings.
   Fixed bug in series_polynomial_gradients for the construction of a 
   polynomial with constant one coefficients, fixed a bug for when one

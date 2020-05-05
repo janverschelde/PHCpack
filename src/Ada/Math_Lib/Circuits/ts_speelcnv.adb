@@ -294,9 +294,17 @@ procedure ts_speelcnv is
          := Allocate_Floating_Coefficients(deg);
     acc : constant Standard_Complex_Vectors.Link_to_Vector
         := Allocate_Coefficients(deg);
+    racc : constant Standard_Floating_Vectors.Link_to_Vector
+         := Allocate_Floating_Coefficients(deg);
+    iacc : constant Standard_Floating_Vectors.Link_to_Vector
+         := Allocate_Floating_Coefficients(deg);
     err,err2,sumerr,sumerr2 : double_float := 0.0;
     pwt : Standard_Speelpenning_Convolutions.Link_to_VecVecVec
         := Standard_Speelpenning_Convolutions.Create(xcff,mxe);
+    rpwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec
+         := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+    ipwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec
+         := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
     crc : Circuit(nbr,dim,dim+1,dim+2);
 
     use Standard_Complex_Vectors;
@@ -327,6 +335,12 @@ procedure ts_speelcnv is
       Standard_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
     else
       Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+      Standard_Vector_Splitters.Complex_Parts(pcff,rpcf,ipcf);
+      Standard_Vector_Splitters.Complex_Parts(xcff,rx,ix);
+      Compute(rpwt,ipwt,mxe,rx,ix);
+      Speel(xps,idx,fac,rpcf,ipcf,rx,ix,rfwd,ifwd,rbck,ibck,rcrs,icrs,
+            ryd,iyd,rwrk,iwrk,racc,iacc,rpwt,ipwt);
+      Standard_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
     end if;
     put_line("The value of the polynomial at the random series :");
     put(y); new_line;
@@ -373,7 +387,9 @@ procedure ts_speelcnv is
     end loop;
     put("Sum of errors :"); put(sumerr,3); new_line;
     put("Recomputed sum of errors :"); put(sumerr2,3); new_line;
-    Clear(pwt);
+    Standard_Speelpenning_Convolutions.Clear(pwt);
+    Standard_Coefficient_Convolutions.Clear(rpwt);
+    Standard_Coefficient_Convolutions.Clear(ipwt);
   end Standard_Test;
 
   procedure DoblDobl_Test ( dim,deg,nbr,pwr : in integer32 ) is

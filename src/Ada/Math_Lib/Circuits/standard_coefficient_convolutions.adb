@@ -23,7 +23,7 @@ package body Standard_Coefficient_Convolutions is
     return res;
   end Allocate;
 
-  procedure Create ( rx,ix : in Standard_Floating_VecVecs.VecVec;
+  procedure Create ( rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
                      mxe : in Standard_Integer_Vectors.Vector;
                      deg : in integer32;
                      rpwt,ipwt : out Link_to_VecVecVec ) is
@@ -73,6 +73,26 @@ package body Standard_Coefficient_Convolutions is
       zr(k) := rpa; zi(k) := ipa;
     end loop;
   end Multiply;
+
+-- COMPUTING THE POWER TABLE :
+
+  procedure Compute ( rpwt,ipwt : in Link_to_VecVecVec;
+                      mxe : in Standard_Integer_Vectors.Vector;
+                      rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+
+    rxpw,ixpw : Standard_Floating_VecVecs.Link_to_VecVec;
+
+  begin
+    for i in rx'range loop
+      if mxe(i) > 2 then
+        rxpw := rpwt(i); ixpw := ipwt(i);
+        Multiply(rx(i),ix(i),rx(i),ix(i),rxpw(1),ixpw(1));
+        for k in 2..(mxe(i)-2) loop
+          Multiply(rxpw(k-1),ixpw(k-1),rx(i),ix(i),rxpw(k),ixpw(k));
+        end loop;
+      end if;
+    end loop;
+  end Compute;
 
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
@@ -250,25 +270,165 @@ package body Standard_Coefficient_Convolutions is
     end loop;
   end Speel;
 
--- COMPUTING THE POWER TABLE :
+  procedure Multiply_Factor
+                  ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rcff,icff : in Standard_Floating_Vectors.Link_to_Vector;
+                    rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
+                    racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt,ipwt : in Link_to_VecVecVec ) is
 
-  procedure Compute ( rpwt,ipwt : in Link_to_VecVecVec;
-                      mxe : in Standard_Integer_Vectors.Vector;
-                      rx,ix : in Standard_Floating_VecVecs.VecVec ) is
-
-    rxpw,ixpw : Standard_Floating_VecVecs.Link_to_VecVec;
+    rpwx,ipwx : Standard_Floating_VecVecs.Link_to_VecVec;
+    rlpw,ilpw : Standard_Floating_Vectors.Link_to_Vector;
+    powidx,fptr : integer32;
 
   begin
-    for i in rx'range loop
-      if mxe(i) > 2 then
-        rxpw := rpwt(i); ixpw := ipwt(i);
-        Multiply(rx(i),ix(i),rx(i),ix(i),rxpw(1),ixpw(1));
-        for k in 2..(mxe(i)-2) loop
-          Multiply(rxpw(k-1),ixpw(k-1),rx(i),ix(i),rxpw(k),ixpw(k));
-        end loop;
+    fptr := facidx(facidx'first);
+    rpwx := rpwt(fptr);
+    ipwx := ipwt(fptr);
+    powidx := xpk(fptr);   -- power in power table
+    if powidx = 2 then
+      Multiply(rcff,icff,rx(fptr),ix(fptr),racc,iacc);
+    else
+      rlpw := rpwx(powidx-2);  -- coefficients of higher powers
+      ilpw := ipwx(powidx-2);
+      Multiply(rcff,icff,rlpw,ilpw,racc,iacc);
+    end if;
+    for k in facidx'first+1..facidx'last loop
+      for i in rwrk'range loop
+        rwrk(i) := racc(i); iwrk(i) := iacc(i);
+      end loop;
+      fptr := facidx(k);
+      rpwx := rpwt(fptr);
+      ipwx := ipwt(fptr);
+      powidx := xpk(fptr);   -- power in power table
+      if powidx = 2 then
+        Multiply(rwrk,iwrk,rx(fptr),ix(fptr),racc,iacc);
+      else
+        rlpw := rpwx(powidx-2);  -- coefficients of higher powers
+        ilpw := ipwx(powidx-2);
+        Multiply(rwrk,iwrk,rlpw,ilpw,racc,iacc);
       end if;
     end loop;
-  end Compute;
+  end Multiply_Factor;
+
+  procedure Multiply_Power
+                  ( multiplier : in integer32;
+                    rcff : in Standard_Floating_Vectors.Link_to_Vector; 
+                    icff : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    factor : constant double_float := Create(multiplier);
+
+  begin
+    for i in rcff'range loop
+      rcff(i) := factor*rcff(i);
+      icff(i) := factor*icff(i);
+    end loop;
+  end Multiply_Power;
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    rcff,icff : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
+                    racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt,ipwt : in Link_to_VecVecVec ) is
+
+    use Standard_Integer_Vectors;
+
+    idk,xpk,fck : Standard_Integer_Vectors.Link_to_Vector;
+    ryptr : constant Standard_Floating_Vectors.Link_to_Vector := ryd(ryd'last);
+    iyptr : constant Standard_Floating_Vectors.Link_to_Vector := iyd(iyd'last);
+    rpcf,ipcf : Standard_Floating_Vectors.Link_to_Vector;
+    pidx,qidx : integer32;
+
+  begin
+    for k in idx'range loop
+      idk := idx(k);           -- the k-th exponent index 
+      if idk /= null then
+        xpk := xps(k);         -- the k-th exponent vector
+        fck := fac(k);         -- the k-th factor index
+        rpcf := rcff(k); ipcf := icff(k);
+        if idk'last = 1 then
+          pidx := idk(1);
+          if fck = null then
+            Multiply(rpcf,ipcf,rx(pidx),ix(pidx),rwrk,iwrk);
+            Update(ryptr,iyptr,rwrk,iwrk);
+            Update(ryd(pidx),iyd(pidx),rpcf,ipcf);
+          else
+            Multiply_Factor(xpk,fck,rx,ix,rpcf,ipcf,rwrk,iwrk,
+                            racc,iacc,rpwt,ipwt);
+            Multiply(racc,iacc,rx(pidx),ix(pidx),rwrk,iwrk);
+            Update(ryptr,iyptr,rwrk,iwrk);
+            Multiply_Power(xpk(pidx),racc,iacc);
+            Update(ryd(pidx),iyd(pidx),racc,iacc);
+          end if;
+        else
+          Speel(rx,ix,idk.all,rfwd,ifwd,rbck,ibck,rcrs,icrs);
+          pidx := idk'last-1;
+          if fck = null then
+            Multiply(rpcf,ipcf,rfwd(pidx),ifwd(pidx),rwrk,iwrk);
+          else
+            Multiply_Factor(xpk,fck,rx,ix,rpcf,ipcf,rwrk,iwrk,
+                            racc,iacc,rpwt,ipwt);
+            Multiply(racc,iacc,rfwd(pidx),ifwd(pidx),rwrk,iwrk);
+          end if;
+          Update(ryptr,iyptr,rwrk,iwrk);
+          if idk'last = 2 then
+            pidx := idk(1); qidx := idk(2);
+            if fck = null then
+              Multiply(rpcf,ipcf,rx(pidx),ix(pidx),rwrk,iwrk);
+              Update(ryd(qidx),iyd(qidx),rwrk,iwrk);
+              Multiply(rpcf,ipcf,rx(qidx),ix(qidx),rwrk,iwrk);
+              Update(ryd(pidx),iyd(pidx),rwrk,iwrk);
+            else -- use the common factor in acc
+              Multiply(racc,iacc,rx(pidx),ix(pidx),rwrk,iwrk);
+              if xpk(qidx) > 1
+               then Multiply_Power(xpk(qidx),rwrk,iwrk);
+              end if;
+              Update(ryd(qidx),iyd(qidx),rwrk,iwrk);
+              Multiply(racc,iacc,rx(qidx),ix(qidx),rwrk,iwrk);
+              if xpk(pidx) > 1
+               then Multiply_Power(xpk(pidx),rwrk,iwrk);
+              end if;
+              Update(ryd(pidx),iyd(pidx),rwrk,iwrk);
+            end if;
+          else -- idk'last > 2 
+            pidx := idk'last-2; qidx := idk(1);
+            if fck = null then
+              Multiply(rpcf,ipcf,rbck(pidx),ibck(pidx),rwrk,iwrk);
+              Update(ryd(qidx),iyd(qidx),rwrk,iwrk);
+              for j in idk'first+1..idk'last-1 loop
+                Multiply(rpcf,ipcf,rcrs(j-1),icrs(j-1),rwrk,iwrk);
+                qidx := idk(j);
+                Update(ryd(qidx),iyd(qidx),rwrk,iwrk);
+              end loop;
+              Multiply(rpcf,ipcf,rfwd(pidx),ifwd(pidx),rwrk,iwrk);
+              qidx := idk(idk'last);
+              Update(ryd(qidx),iyd(qidx),rwrk,iwrk);
+            else
+              Multiply(racc,iacc,rbck(pidx),ibck(pidx),rwrk,iwrk);
+              Multiply_Power(xpk(qidx),rwrk,iwrk);
+              Update(ryd(qidx),iyd(qidx),rwrk,iwrk);
+              for j in idk'first+1..idk'last-1 loop
+                Multiply(racc,iacc,rcrs(j-1),icrs(j-1),rwrk,iwrk);
+                qidx := idk(j);
+                Multiply_Power(xpk(qidx),rwrk,iwrk);
+                Update(ryd(qidx),iyd(qidx),rwrk,iwrk);
+              end loop;
+              Multiply(racc,iacc,rfwd(pidx),ifwd(pidx),rwrk,iwrk);
+              qidx := idk(idk'last);
+              Multiply_Power(xpk(qidx),rwrk,iwrk);
+              Update(ryd(qidx),iyd(qidx),rwrk,iwrk);
+            end if;
+          end if;
+        end if;
+      end if;
+    end loop;
+  end Speel;
 
 -- DEALLOCATORS :
 

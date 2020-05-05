@@ -29,7 +29,7 @@ package Standard_Coefficient_Convolutions is
   --   Allocates space for the power table, given the exponent maxima
   --   for each variable in mxe and the degrees of the power series in deg.
 
-  procedure Create ( rx,ix : in Standard_Floating_VecVecs.VecVec;
+  procedure Create ( rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
                      mxe : in Standard_Integer_Vectors.Vector;
                      deg : in integer32;
                      rpwt,ipwt : out Link_to_VecVecVec );
@@ -70,7 +70,7 @@ package Standard_Coefficient_Convolutions is
 
   procedure Compute ( rpwt,ipwt : in Link_to_VecVecVec;
                       mxe : in Standard_Integer_Vectors.Vector;
-                      rx,ix : in Standard_Floating_VecVecs.VecVec );
+                      rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
   --   Computes the powers in the allocated power table for the
@@ -204,6 +204,116 @@ package Standard_Coefficient_Convolutions is
   --                ryd(k) is the real part of the k-th partial derivative;
   --   iyd          iyd(ix'last+1) contains the real parts of coefficients
   --                of the value of the sum of products, evaluated at x,
+  --                iyd(k) is the real part of the k-th partial derivative.
+
+  procedure Multiply_Factor
+                  ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rcff,icff : in Standard_Floating_Vectors.Link_to_Vector;
+                    rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
+                    racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt,ipwt : in Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Multiplies the coefficient with the common factor.
+
+  -- REQUIRED : facidx /= null.
+
+  -- ON ENTRY :
+  --   xpk          k-th exponent vector;
+  --   facidx       factor index of k-th exponents in xpk;
+  --   rx           real parts of the values for the variables;
+  --   ix           imaginary parts of the values for the variables;
+  --   rcff         real parts of the coefficient of the monomial;
+  --   icff         imaginary parts coefficient of the monomial;
+  --   rwrk         allocated space for the real parts
+  --                of the coefficients of series of same degree;
+  --   iwrk         allocated space for the imaginary parts
+  --                of the coefficients of series of same degree;
+  --   racc         allocated space for the real parts 
+  --                of coefficients of series of same degree;
+  --   iacc         allocated space for the imaginary parts 
+  --                of coefficients of series of same degree;
+  --   rpwt         power table of the real parts for the values in x;
+  --   ipwt         power table of the real imaginary for the values in x.
+
+  -- ON RETURN :
+  --   racc         accumulates the product of the real parts
+  --                of the coefficients with the evaluated powers of x
+  --                as defined by xpk and the factor index in facidx.
+  --   iacc         accumulates the product of the imaginary parts
+  --                of the coefficients with the evaluated powers of x
+  --                as defined by xpk and the factor index in facidx.
+
+  procedure Multiply_Power
+                  ( multiplier : in integer32;
+                    rcff : in Standard_Floating_Vectors.Link_to_Vector; 
+                    icff : in Standard_Floating_Vectors.Link_to_Vector ); 
+
+  -- DESCRIPTION :
+  --   Multiplies the coefficients of the power series with multiplier.
+
+  -- ON ENTRY:
+  --   multiplier   is the multiplier exponent;
+  --   rcff         real parts of coefficients of a power series;
+  --   icff         imaginary parts of coefficients of a power series.
+
+  -- ON RETURN :
+  --   rcff         real parts of coefficients multiplied;
+  --   icff         imaginary parts of coefficients multiplied.
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    rcff,icff : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
+                    racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt,ipwt : in Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Evaluation and differentiation of a polynomial,
+  --   given in indexed format at a power series.
+
+  -- ON ENTRY :
+  --   xps          exponent vector of the monomials;
+  --   idx          indexed representation of the variables in exponents;
+  --   fac          factor index of the exponents;
+  --   rcff         real parts of coefficients of the products;
+  --   icff         imaginary parts of coefficients of the products;
+  --   rx           real parts of coefficients of series of same degree;
+  --   ix           imaginary parts of coefficients of series of same degree;
+  --   rfwd         work space allocated for rx'last-1 coefficient vectors
+  --                of the same fixed degree as the series in rx;
+  --   ifwd         work space allocated for ix'last-1 coefficient vectors
+  --                of the same fixed degree as the series in ix;
+  --   rbck         work space allocated for rx'last-2 coefficient vectors
+  --                of the same fixed degree as the series in rx;
+  --   ibck         work space allocated for ix'last-2 coefficient vectors
+  --                of the same fixed degree as the series in ix;
+  --   rcrs         work space allocated for rx'last-2 coefficient vectors
+  --                of the same fixed degree as the series in x;
+  --   icrs         work space allocated for ix'last-2 coefficient vectors
+  --                of the same fixed degree as the series in x;
+  --   ryd          vector of range 0..rx'last with space allocated for the
+  --                coefficients of power series of the same fixed degree;
+  --   iyd          vector of range 0..ix'last with space allocated for the
+  --                coefficients of power series of the same fixed degree;
+  --   rwrk         work space for the coefficients of the same fixed degree;
+  --   iwrk         work space for the coefficients of the same fixed degree;
+  --   racc         work space for the coefficients of the same fixed degree;
+  --   iacc         work space for the coefficients of the same fixed degree;
+  --   rpwt         power table of the real parts for the values in x;
+  --   ipwt         power table of the real imaginary for the values in x.
+
+  -- ON RETURN :
+  --   ryd          ryd(rx'last+1) contains the real parts of the coefficient
+  --                vector of the value of the sum of products evaluated at x,
+  --                ryd(k) is the real part of the k-th partial derivative;
+  --   iyd          ryd(ix'last+1) contains the real parts of the coefficient
+  --                vector of the value of the sum of products evaluated at x,
   --                iyd(k) is the real part of the k-th partial derivative.
 
 -- DEALLOCATORS :
