@@ -97,10 +97,10 @@ package body Standard_Coefficient_Convolutions is
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
   procedure Speel
-              ( rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
-                rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+              ( rx,ix : in Standard_Floating_VecVecs.VecVec;
+                rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                rcrs,icrs : in Standard_Floating_VecVecs.VecVec ) is
   begin
     Multiply(rx(1),ix(1),rx(2),ix(2),rfwd(1),ifwd(1));
     for k in 3..rx'last loop
@@ -129,11 +129,11 @@ package body Standard_Coefficient_Convolutions is
   end Speel;
 
   procedure Speel
-              ( rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+              ( rx,ix : in Standard_Floating_VecVecs.VecVec;
                 idx : in Standard_Integer_Vectors.Vector;
-                rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+                rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                rcrs,icrs : in Standard_Floating_VecVecs.VecVec ) is
 
     p,q,r : integer32;
 
@@ -168,11 +168,11 @@ package body Standard_Coefficient_Convolutions is
   end Speel;
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    ryd,iyd : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec ) is
 
     use Standard_Integer_Vectors;
 
@@ -214,12 +214,12 @@ package body Standard_Coefficient_Convolutions is
   end Speel;
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    rcff,icff : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    ryd,iyd : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rcff,icff : in Standard_Floating_VecVecs.VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                     rwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     iwrk : in Standard_Floating_Vectors.Link_to_Vector ) is
 
@@ -272,7 +272,7 @@ package body Standard_Coefficient_Convolutions is
 
   procedure Multiply_Factor
                   ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
-                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
                     rcff,icff : in Standard_Floating_Vectors.Link_to_Vector;
                     rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
@@ -327,12 +327,12 @@ package body Standard_Coefficient_Convolutions is
   end Multiply_Power;
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
-                    rcff,icff : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    ryd,iyd : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rcff,icff : in Standard_Floating_VecVecs.VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                     rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
                     rpwt,ipwt : in Link_to_VecVecVec ) is
@@ -430,6 +430,24 @@ package body Standard_Coefficient_Convolutions is
     end loop;
   end Speel;
 
+-- EVALUATION AND DIFFERENTIATION ON CIRCUITS :
+
+  procedure EvalDiff ( c : in Circuit;
+                       rx : in Standard_Floating_VecVecs.VecVec;
+                       ix : in Standard_Floating_VecVecs.VecVec;
+                       rpwt,ipwt : in Link_to_VecVecVec;
+                       ryd,iyd : in Standard_Floating_VecVecs.VecVec ) is
+
+    use Standard_Floating_Vectors;
+
+  begin
+    Speel(c.xps,c.idx,c.fac,c.rcf,c.icf,rx,ix,c.rfwd,c.ifwd,c.rbck,c.ibck,
+          c.rcrs,c.icrs,ryd,iyd,c.rwrk,c.iwrk,c.racc,c.iacc,rpwt,ipwt);
+    if c.rct /= null and c.ict /= null
+     then Update(ryd(ryd'last),iyd(iyd'last),c.rct,c.ict);
+    end if;
+  end EvalDiff;
+
 -- DEALLOCATORS :
 
   procedure Clear ( pwt : in out VecVecVec ) is
@@ -456,5 +474,58 @@ package body Standard_Coefficient_Convolutions is
       Clear(pwt(k));
     end loop;
   end Clear;
+
+  procedure Clear ( c : in out Circuit ) is
+  begin
+    Standard_Integer_VecVecs.Clear(c.xps);
+    Standard_Integer_VecVecs.Clear(c.idx);
+    Standard_Integer_VecVecs.Clear(c.fac);
+    Standard_Floating_VecVecs.Clear(c.rcf);
+    Standard_Floating_VecVecs.Clear(c.icf);
+    Standard_Floating_Vectors.Clear(c.rct);
+    Standard_Floating_Vectors.Clear(c.ict);
+    Standard_Floating_VecVecs.Clear(c.rfwd);
+    Standard_Floating_VecVecs.Clear(c.ifwd);
+    Standard_Floating_VecVecs.Clear(c.rbck);
+    Standard_Floating_VecVecs.Clear(c.ibck);
+    Standard_Floating_VecVecs.Clear(c.rcrs);
+    Standard_Floating_VecVecs.Clear(c.icrs);
+    Standard_Floating_Vectors.Clear(c.rwrk);
+    Standard_Floating_Vectors.Clear(c.iwrk);
+    Standard_Floating_Vectors.Clear(c.racc);
+    Standard_Floating_Vectors.Clear(c.iacc);
+  end Clear;
+
+  procedure Clear ( c : in out Link_to_Circuit ) is
+
+    procedure free is
+      new unchecked_deallocation(Circuit,Link_to_Circuit);
+
+  begin
+    if c /= null then
+      Clear(c.all);
+      free(c);
+    end if;
+  end Clear;
+
+  procedure Clear ( c : in out Circuits ) is
+  begin
+    for k in c'range loop
+      Clear(c(k));
+    end loop;
+  end Clear;
+
+  procedure Clear ( c : in out Link_to_Circuits ) is
+
+    procedure free is
+      new unchecked_deallocation(Circuits,Link_to_Circuits);
+
+  begin
+    if c /= null then
+      Clear(c.all);
+      free(c);
+    end if;
+  end Clear;
+
 
 end Standard_Coefficient_Convolutions;

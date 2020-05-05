@@ -21,6 +21,37 @@ package Standard_Coefficient_Convolutions is
 
   type VecVecVec_Array is array ( integer32 range <> ) of Link_to_VecVecVec;
 
+-- A convolution circuit is a data structure for the efficient evaluation
+-- and differentiation of polynomials in several variables at the
+-- coefficient vectors of power series using the reverse mode of
+-- algorithmic differentiation.
+
+  type Circuit ( nbr,dim,dim1,dim2 : integer32 ) is record
+    xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponent vectors
+    idx : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponent indices
+    fac : Standard_Integer_VecVecs.VecVec(1..nbr); -- factor indices
+   -- the complex coefficients of monomials are stored in parts
+    rcf : Standard_Floating_VecVecs.VecVec(1..nbr); -- real parts
+    icf : Standard_Floating_VecVecs.VecVec(1..nbr); -- imaginary parts
+   -- the complex constant coefficients is stored in parts
+    rct : Standard_Floating_Vectors.Link_to_Vector; -- real parts
+    ict : Standard_Floating_Vectors.Link_to_Vector; -- imaginary parts
+   -- workspace for products and coefficient vectors of series are
+   -- stored in real and imaginary parts
+    rfwd,ifwd : Standard_floating_VecVecs.VecVec(1..dim1); -- forward products
+    rbck,ibck : Standard_floating_VecVecs.VecVec(1..dim2); -- backward products
+    rcrs,icrs : Standard_floating_VecVecs.VecVec(1..dim2); -- cross products
+   -- real and imaginary parts of workspace and accumulator series
+    rwrk,iwrk : Standard_Floating_Vectors.Link_to_Vector;  -- workspace
+    racc,iacc : Standard_Floating_Vectors.Link_to_Vector;  -- accumulator
+  end record;
+
+  type Link_to_Circuit is access Circuit;
+
+  type Circuits is array ( integer32 range <> ) of Link_to_Circuit;
+
+  type Link_to_Circuits is access Circuits;
+
   function Allocate ( mxe : Standard_Integer_Vectors.Vector;
                       deg : integer32 )
                     return Link_to_VecVecVec;
@@ -96,15 +127,15 @@ package Standard_Coefficient_Convolutions is
 
 -- REVERSE MODE OF ALGORITHMIC DIFFERENTIATION :
 
-  procedure Speel ( rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec );
-  procedure Speel ( rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+  procedure Speel ( rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec );
+  procedure Speel ( rx,ix : in Standard_Floating_VecVecs.VecVec;
                     idx : in Standard_Integer_Vectors.Vector;
-                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec );
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Inline computation of the coefficients of the product
@@ -153,18 +184,18 @@ package Standard_Coefficient_Convolutions is
   --                of the partial derivative w.r.t. k+1.
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    ryd,iyd : in Standard_Floating_VecVecs.Link_to_VecVec );
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec );
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    rcff,icff : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    ryd,iyd : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rcff,icff : in Standard_Floating_VecVecs.VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                     rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
@@ -208,7 +239,7 @@ package Standard_Coefficient_Convolutions is
 
   procedure Multiply_Factor
                   ( xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
-                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
                     rcff,icff : in Standard_Floating_Vectors.Link_to_Vector;
                     rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
@@ -263,12 +294,12 @@ package Standard_Coefficient_Convolutions is
   --   icff         imaginary parts of coefficients multiplied.
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
-                    rcff,icff : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rfwd,ifwd : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rbck,ibck : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    rcrs,icrs : in Standard_Floating_VecVecs.Link_to_VecVec;
-                    ryd,iyd : in Standard_Floating_VecVecs.Link_to_VecVec;
+                    rcff,icff : in Standard_Floating_VecVecs.VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                     rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
                     rpwt,ipwt : in Link_to_VecVecVec );
@@ -316,6 +347,39 @@ package Standard_Coefficient_Convolutions is
   --                vector of the value of the sum of products evaluated at x,
   --                iyd(k) is the real part of the k-th partial derivative.
 
+-- EVALUATION AND DIFFERENTIATION ON CIRCUITS :
+
+  procedure EvalDiff ( c : in Circuit;
+                       rx : in Standard_Floating_VecVecs.VecVec;
+                       ix : in Standard_Floating_VecVecs.VecVec;
+                       rpwt,ipwt : in Link_to_VecVecVec;
+                       ryd,iyd : in Standard_Floating_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Wraps the Speel procedure for the convolution circuit c, to
+  --   evaluate at the series with real and imaginary parts in rx and ix,
+  --   with the aid of the power table, with real and imaginary parts
+  --   in rpwt and ipwt.  The result are placed in ryd and iyd.
+
+  -- ON ENTRY :
+  --   c            a circuit properly defined and allocated;
+  --   rx           real parts of coefficients of series of same degree;
+  --   ix           imaginary parts of coefficients of series of same degree;
+  --   ryd          vector of range 0..rx'last with space allocated for the
+  --                coefficients of power series of the same fixed degree;
+  --   iyd          vector of range 0..ix'last with space allocated for the
+  --                coefficients of power series of the same fixed degree;
+  --   rpwt         power table of the real parts for the values in x;
+  --   ipwt         power table of the real imaginary for the values in x.
+
+  -- ON RETURN :
+  --   ryd          ryd(rx'last+1) contains the real parts of the coefficient
+  --                vector of the value of the sum of products evaluated at x,
+  --                ryd(k) is the real part of the k-th partial derivative;
+  --   iyd          ryd(ix'last+1) contains the real parts of the coefficient
+  --                vector of the value of the sum of products evaluated at x,
+  --                iyd(k) is the real part of the k-th partial derivative.
+
 -- DEALLOCATORS :
 
   procedure Clear ( pwt : in out VecVecVec );
@@ -324,5 +388,13 @@ package Standard_Coefficient_Convolutions is
 
   -- DESCRIPTION :
   --   Deallocates the space occupied by the power table(s) pwt.
+
+  procedure Clear ( c : in out Circuit );
+  procedure Clear ( c : in out Link_to_Circuit );
+  procedure Clear ( c : in out Circuits );
+  procedure Clear ( c : in out Link_to_Circuits );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by the convolution circuits.
 
 end Standard_Coefficient_Convolutions;

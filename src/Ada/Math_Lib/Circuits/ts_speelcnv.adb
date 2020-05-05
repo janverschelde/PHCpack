@@ -305,7 +305,7 @@ procedure ts_speelcnv is
          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
     ipwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec
          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
-    crc : Circuit(nbr,dim,dim+1,dim+2);
+    crc : Standard_Speelpenning_Convolutions.Circuit(nbr,dim,dim+1,dim+2);
 
     use Standard_Complex_Vectors;
 
@@ -324,22 +324,25 @@ procedure ts_speelcnv is
     if expone and cffone then
       Speel(idx,xcff,forward,backward,cross,ygrad); -- all coefficients one
       Standard_Vector_Splitters.Complex_Parts(xcff,rx,ix);
-      Speel(idx,rx,ix,rfwd,ifwd,rbck,ibck,rcrs,icrs,ryd,iyd);
+      Speel(idx,rx.all,ix.all,rfwd.all,ifwd.all,rbck.all,ibck.all,
+            rcrs.all,icrs.all,ryd.all,iyd.all);
       Standard_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
     elsif expone then
       Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
       Standard_Vector_Splitters.Complex_Parts(pcff,rpcf,ipcf);
       Standard_Vector_Splitters.Complex_Parts(xcff,rx,ix);
-      Speel(idx,rpcf,ipcf,rx,ix,rfwd,ifwd,rbck,ibck,rcrs,icrs,
-            ryd,iyd,rwrk,iwrk);
+      Speel(idx,rpcf.all,ipcf.all,rx.all,ix.all,rfwd.all,ifwd.all,rbck.all,
+            ibck.all,rcrs.all,icrs.all,ryd.all,iyd.all,rwrk,iwrk);
       Standard_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
     else
       Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
       Standard_Vector_Splitters.Complex_Parts(pcff,rpcf,ipcf);
       Standard_Vector_Splitters.Complex_Parts(xcff,rx,ix);
       Compute(rpwt,ipwt,mxe,rx,ix);
-      Speel(xps,idx,fac,rpcf,ipcf,rx,ix,rfwd,ifwd,rbck,ibck,rcrs,icrs,
-            ryd,iyd,rwrk,iwrk,racc,iacc,rpwt,ipwt);
+      Speel(xps,idx,fac,
+            rpcf.all,ipcf.all,rx.all,ix.all,rfwd.all,ifwd.all,
+            rbck.all,ibck.all,rcrs.all,icrs.all,ryd.all,iyd.all,
+            rwrk,iwrk,racc,iacc,rpwt,ipwt);
       Standard_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
     end if;
     put_line("The value of the polynomial at the random series :");
