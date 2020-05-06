@@ -67,6 +67,8 @@ homotopy_convolution_circuits      : add continuation parameter to circuits
 residual_convolution_circuits      : circuits with radii for coefficients
 evaluation_differentiation_errors  : functions for differences of computations
 ts_speelser                        : test reverse mode on power series
+standard_coefficient_convolutions  : better performing convolution computations
+standard_convolution_splitters     : split complex coefficients of circuits
 ts_speelcnv                        : convolutions for series polynomials
 newton_convolutions                : Newton with convolution circuits
 convergence_radius_estimates       : applies ratio theorem of Fabry
@@ -79,6 +81,5 @@ ts_jacocnv                         : test on plain Jacobian computation
 shift_convolution_circuits         : shifting coefficients in the circuits
 ts_shiftcnv                        : test on shifting coefficients
 -------------------------------------------------------------------------------
-standard_coefficient_convolutions  : better performing convolution computations
 ts_perfconv                        : test on performance and convolutions
 -------------------------------------------------------------------------------

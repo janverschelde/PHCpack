@@ -93,6 +93,7 @@ with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Standard_Vector_Splitters;
 with Standard_Coefficient_Convolutions;
+with Standard_Convolution_Splitters;
 
 procedure ts_speelcnv is
 
@@ -609,11 +610,12 @@ procedure ts_speelcnv is
   --   nbr      number of products;
   --   pwr      largest power of the variables.
 
-    use Standard_Speelpenning_Convolutions;
-
-    c : constant Circuits
+    c : constant Standard_Speelpenning_Convolutions.Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
-    s : Link_to_System := Create(c,dim,deg);
+    s : Standard_Speelpenning_Convolutions.Link_to_System
+      := Standard_Speelpenning_Convolutions.Create(c,dim,deg);
+    cs : constant Standard_Coefficient_Convolutions.Link_to_System
+       := Standard_Convolution_Splitters.Split(s);
     p : Standard_CSeries_Poly_Systems.Poly_Sys(1..dim) := Standard_System(c);
     x : Standard_Complex_Series_Vectors.Vector(1..dim)
       := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -623,21 +625,33 @@ procedure ts_speelcnv is
        := Standard_CSeries_Poly_SysFun.Eval(p,x);
     xcff : Standard_Complex_VecVecs.VecVec(1..dim)
          := Standard_Series_Coefficients(x);
+    rx : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ix : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     jp : Standard_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
        := Standard_CSeries_Jaco_Matrices.Create(p);
     jm : Standard_Complex_Series_Matrices.Matrix(1..dim,1..dim)
        := Standard_CSeries_Jaco_Matrices.Eval(jp,x);
     err : double_float;
+    ans : character;
 
   begin
     put_line("the polynomial system :");
     Standard_CSeries_Poly_Systems_io.put(p);
-    Compute(s.pwt,s.mxe,xcff);
-    EvalDiff(s,xcff);
+    Standard_Speelpenning_Convolutions.Compute(s.pwt,s.mxe,xcff);
+    Standard_Speelpenning_Convolutions.EvalDiff(s,xcff);
     put_line("The evaluation values :"); put_line(px);
     put_line("The coefficient vectors of the evaluation :"); put_line(s.yv);
     err := Difference(px,s.yv);
     put("The error :"); put(err,3); new_line;
+    Standard_Vector_Splitters.Complex_Parts(xcff,rx,ix);
+    Standard_Coefficient_Convolutions.Compute(cs.rpwt,cs.ipwt,cs.mxe,rx,ix);
+    Standard_Coefficient_Convolutions.EvalDiff(cs,rx.all,ix.all);
+    err := Difference(px,cs.yv);
+    put("Recomputed error : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
     for i in s.vm'range loop
       put("The matrix "); put(i,1); put_line(" :"); put(s.vm(i).all);
     end loop;
@@ -649,8 +663,12 @@ procedure ts_speelcnv is
     end loop;
     err := Difference(jm,s.vm);
     put("The error :"); put(err,3); new_line;
-    Compute(s.pwt,s.mxe,xpt);
-    EvalDiff(s,xpt);
+    err := Difference(jm,cs.vm);
+    put("Recomputed error :"); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    Standard_Speelpenning_Convolutions.Compute(s.pwt,s.mxe,xpt);
+    Standard_Speelpenning_Convolutions.EvalDiff(s,xpt);
     put_line("The evaluation at a point : ");
     for k in s.yv'range loop
       put(s.yv(k)(0)); new_line;
@@ -664,7 +682,8 @@ procedure ts_speelcnv is
       end loop;
       new_line;
     end loop;
-    Clear(s); -- Clear(c) is not needed, the Clear(s) does Clear(s.crc)
+    Standard_Speelpenning_Convolutions.Clear(s);
+    -- Clear(c) is not needed, the Clear(s) does Clear(s.crc)
     Standard_CSeries_Poly_Systems.Clear(p);
     Standard_CSeries_Jaco_Matrices.Clear(jp);
     Standard_Complex_Series_Vectors.Clear(x);
