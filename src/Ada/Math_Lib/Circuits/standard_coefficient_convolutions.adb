@@ -1,8 +1,37 @@
 with unchecked_deallocation;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;
+with Standard_Complex_Vectors;
+with Standard_Complex_Matrices;
 with Standard_Vector_Splitters;
+with Exponent_Indices;
 
 package body Standard_Coefficient_Convolutions is
+
+-- ALLOCATORS AND CONSTRUCTORS :
+
+  function Exponent_Maxima
+             ( c : Circuits; dim : integer32 )
+             return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c(c'first).xps);
+
+  begin
+    for k in c'first+1..c'last loop
+      declare
+        mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+            := Exponent_Indices.Maxima(c(k).xps);
+      begin
+        for i in mxe'range loop
+          if mxe(i) > res(i)
+           then res(i) := mxe(i);
+          end if;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Exponent_Maxima;
 
   function Allocate ( mxe : Standard_Integer_Vectors.Vector;
                       deg : integer32 )
@@ -31,6 +60,77 @@ package body Standard_Coefficient_Convolutions is
     rpwt := Allocate(mxe,deg);
     ipwt := Allocate(mxe,deg);
     Compute(rpwt,ipwt,mxe,rx,ix);
+  end Create;
+
+  function Linearized_Allocation
+             ( dim,deg : integer32 )
+             return Standard_Complex_VecVecs.VecVec is
+
+    res : Standard_Complex_VecVecs.VecVec(0..deg);
+
+  begin
+    for k in 0..deg loop
+      declare
+        cff : constant Standard_Complex_Vectors.Vector(1..dim)
+            := (1..dim => Standard_Complex_Numbers.Create(0.0));
+      begin
+        res(k) := new Standard_Complex_Vectors.Vector'(cff);
+      end;
+    end loop;
+    return res;
+  end Linearized_Allocation;
+
+  function Allocate_Coefficients
+             ( nbq,nvr,deg : integer32 )
+             return Standard_Complex_VecMats.VecMat is
+
+    res : Standard_Complex_VecMats.VecMat(0..deg);
+
+  begin
+    for k in res'range loop
+      declare
+        mat : Standard_Complex_Matrices.Matrix(1..nbq,1..nvr);
+      begin
+        for i in 1..nbq loop
+          for j in 1..nvr loop
+            mat(i,j) := Standard_Complex_Numbers.Create(0.0);
+          end loop;
+        end loop;
+        res(k) := new Standard_Complex_Matrices.Matrix'(mat);
+      end;
+    end loop;
+    return res;
+  end Allocate_Coefficients;
+
+  function Create ( c : Circuits; dim,deg : integer32 ) return System is
+
+    neq : constant integer32 := c'last;
+    res : System(neq,neq+1,dim,dim+1,deg);
+
+    use Standard_Vector_Splitters;
+
+  begin
+    res.crc := c;
+    res.mxe := Exponent_Maxima(c,dim);
+    res.rpwt := Allocate(res.mxe,deg);
+    res.ipwt := Allocate(res.mxe,deg);
+    res.ryd := Allocate_Floating_Coefficients(dim+1,deg);
+    res.iyd := Allocate_Floating_Coefficients(dim+1,deg);
+    res.vy := Linearized_Allocation(neq,deg);
+    res.yv := Allocate_Complex_Coefficients(neq,deg);
+    res.vm := Allocate_Coefficients(neq,dim,deg);
+    return res;
+  end Create;
+
+  function Create ( c : Circuits;
+                    dim,deg : integer32 ) return Link_to_System is
+
+    res_rep : constant System(c'last,c'last+1,dim,dim+1,deg)
+            := Create(c,dim,deg);
+    res : constant Link_to_System := new System'(res_rep);
+
+  begin
+    return res;
   end Create;
 
 -- BASIC COMPUTATIONAL PROCEDURES :
@@ -448,6 +548,70 @@ package body Standard_Coefficient_Convolutions is
     end if;
   end EvalDiff;
 
+  procedure EvalDiff ( c : in Circuits;
+                       rx : in Standard_Floating_VecVecs.VecVec;
+                       ix : in Standard_Floating_VecVecs.VecVec;
+                       rpwt,ipwt : in Link_to_VecVecVec;
+                       ryd,iyd : in Standard_Floating_VecVecs.VecVec;
+                       vy : in Standard_Complex_VecVecs.VecVec;
+                       vm : in Standard_Complex_VecMats.VecMat ) is
+
+    vleft : Standard_Complex_Vectors.Link_to_Vector;
+    rvright,ivright : Standard_Floating_Vectors.Link_to_Vector;
+    mleft : Standard_Complex_Matrices.Link_to_Matrix;
+
+  begin
+    for i in c'range loop
+      EvalDiff(c(i).all,rx,ix,rpwt,ipwt,ryd,iyd);
+      rvright := ryd(rx'last+1); ivright := iyd(ix'last+1);
+      for j in rvright'range loop  -- the j-th coefficient of vright is
+        vleft := vy(j);  -- assigned to the j-th vector of vy at position i
+        vleft(i) := Standard_Complex_Numbers.Create(rvright(j),ivright(j));
+        rvright(j) := 0.0;         -- reset the value to zero
+        ivright(j) := 0.0;
+      end loop;
+      for j in 1..rx'last loop
+        rvright := ryd(j); ivright := iyd(j);
+        for k in vm'range loop     -- k-th coefficient in matrix vm(k)
+          mleft := vm(k);          -- the row i in vm(k) is the equation
+          mleft(i,j)               -- the column j in vm(k) is the variable
+            := Standard_Complex_Numbers.Create(rvright(k),ivright(k));
+          rvright(k) := 0.0;       -- reset the value to zero
+          ivright(k) := 0.0;
+        end loop;
+      end loop;
+    end loop;
+  end EvalDiff;
+
+  procedure Delinearize ( vy,yv : in Standard_Complex_VecVecs.VecVec ) is
+  begin
+    for k in vy'range loop
+      declare
+        vyk : constant Standard_Complex_Vectors.Link_to_Vector := vy(k);
+        left : Standard_Complex_Vectors.Link_to_Vector;
+      begin
+        for i in yv'range loop  -- vyk holds k-th coefficient of all series
+          left := yv(i);        -- so we assign to coefficients of series i
+          left(k) := vyk(i);    -- at position k the i-th value of vyk
+        end loop;
+      end;
+    end loop;
+  end Delinearize;
+
+  procedure EvalDiff ( s : in System;
+                       rx,ix : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    EvalDiff(s.crc,rx,ix,s.rpwt,s.ipwt,s.ryd,s.iyd,s.vy,s.vm);
+    Delinearize(s.vy,s.yv);
+  end EvalDiff;
+
+  procedure EvalDiff ( s : in Link_to_System;
+                       rx,ix : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    EvalDiff(s.crc,rx,ix,s.rpwt,s.ipwt,s.ryd,s.iyd,s.vy,s.vm);
+    Delinearize(s.vy,s.yv);
+  end EvalDiff;
+
 -- DEALLOCATORS :
 
   procedure Clear ( pwt : in out VecVecVec ) is
@@ -527,5 +691,34 @@ package body Standard_Coefficient_Convolutions is
     end if;
   end Clear;
 
+  procedure Clear ( s : in out System ) is
+  begin
+    Clear(s.crc);
+    Clear(s.rpwt);
+    Clear(s.ipwt);
+    Standard_Floating_VecVecs.Clear(s.ryd);
+    Standard_Floating_VecVecs.Clear(s.iyd);
+    Standard_Complex_VecVecs.Clear(s.vy);
+    Standard_Complex_VecVecs.Clear(s.yv);
+    Standard_Complex_VecMats.Clear(s.vm);
+  end Clear;
+
+  procedure Clear ( s : in out Link_to_System ) is
+
+    procedure free is new unchecked_deallocation(System,Link_to_System);
+
+  begin
+    if s /= null then
+      Clear(s.all);
+      free(s);
+    end if;
+  end Clear;
+
+  procedure Clear ( s : in out System_Array ) is
+  begin
+    for k in s'range loop
+      Clear(s(k));
+    end loop;
+  end Clear;
 
 end Standard_Coefficient_Convolutions;

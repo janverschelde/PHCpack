@@ -79,6 +79,9 @@ package Standard_Vector_Splitters is
 
   function Allocate_Floating_Coefficients
              ( dim,deg : integer32 )
+             return Standard_Floating_VecVecs.VecVec;
+  function Allocate_Floating_Coefficients
+             ( dim,deg : integer32 )
              return Standard_Floating_VecVecs.Link_to_VecVec;
 
   -- DESCRIPTION :
@@ -86,6 +89,9 @@ package Standard_Vector_Splitters is
   --   coefficients of a vector of series, all truncated to degree deg.
   --   The vector on return has range 1..dim.
 
+  function Allocate_Complex_Coefficients
+             ( dim,deg : integer32 )
+             return Standard_Complex_VecVecs.VecVec;
   function Allocate_Complex_Coefficients
              ( dim,deg : integer32 )
              return Standard_Complex_VecVecs.Link_to_VecVec;

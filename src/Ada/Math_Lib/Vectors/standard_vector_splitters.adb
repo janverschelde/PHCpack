@@ -149,30 +149,52 @@ package body Standard_Vector_Splitters is
 
   function Allocate_Floating_Coefficients
              ( dim,deg : integer32 )
+             return Standard_Floating_VecVecs.VecVec is
+
+    res : Standard_Floating_VecVecs.VecVec(1..dim);
+
+  begin
+    for k in res'range loop
+      res(k) := Allocate_Floating_Coefficients(deg);
+    end loop;
+    return res;
+  end Allocate_Floating_Coefficients;
+
+  function Allocate_Floating_Coefficients
+             ( dim,deg : integer32 )
              return Standard_Floating_VecVecs.Link_to_VecVec is
 
     res : Standard_Floating_VecVecs.Link_to_VecVec;
-    cff : Standard_Floating_VecVecs.VecVec(1..dim);
+    cff : constant Standard_Floating_VecVecs.VecVec(1..dim)
+        := Allocate_Floating_Coefficients(dim,deg);
 
   begin
-    for k in cff'range loop
-      cff(k) := Allocate_Floating_Coefficients(deg);
-    end loop;
     res := new Standard_Floating_VecVecs.VecVec'(cff);
     return res;
   end Allocate_Floating_Coefficients;
 
   function Allocate_Complex_Coefficients
              ( dim,deg : integer32 )
+             return Standard_Complex_VecVecs.VecVec is
+
+    res : Standard_Complex_VecVecs.VecVec(1..dim);
+
+  begin
+    for k in res'range loop
+      res(k) := Allocate_Complex_Coefficients(deg);
+    end loop;
+    return res;
+  end Allocate_Complex_Coefficients;
+
+  function Allocate_Complex_Coefficients
+             ( dim,deg : integer32 )
              return Standard_Complex_VecVecs.Link_to_VecVec is
 
     res : Standard_Complex_VecVecs.Link_to_VecVec;
-    cff : Standard_Complex_VecVecs.VecVec(1..dim);
+    cff : constant Standard_Complex_VecVecs.VecVec(1..dim)
+        := Allocate_Complex_Coefficients(dim,deg);
 
   begin
-    for k in cff'range loop
-      cff(k) := Allocate_Complex_Coefficients(deg);
-    end loop;
     res := new Standard_Complex_VecVecs.VecVec'(cff);
     return res;
   end Allocate_Complex_Coefficients;

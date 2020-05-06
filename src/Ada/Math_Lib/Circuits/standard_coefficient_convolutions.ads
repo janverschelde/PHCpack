@@ -3,6 +3,8 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Complex_VecVecs;
+with Standard_Complex_VecMats;
 
 package Standard_Coefficient_Convolutions is
 
@@ -52,6 +54,40 @@ package Standard_Coefficient_Convolutions is
 
   type Link_to_Circuits is access Circuits;
 
+-- A system stores the sequence of convolution circuits for each polynomial
+-- and the work space to hold auxiliary results and the final outcomes.
+
+  type System ( neq,neq1,dim,dim1,deg : integer32 ) is record
+    crc : Circuits(1..neq);    -- circuits for the equations
+    mxe : Standard_Integer_Vectors.Vector(1..dim); -- exponent maxima
+    rpwt : Link_to_VecVecVec;  -- real parts of the power table
+    ipwt : Link_to_VecVecVec;  -- imaginary parts of the power table
+   -- work space for EvalDiff on one circuit in ryd and iyd
+    ryd : Standard_Floating_VecVecs.VecVec(1..dim1); -- real parts
+    iyd : Standard_Floating_VecVecs.VecVec(1..dim1); -- imaginary parts
+   -- linearized evaluated power series in vy
+    vy : Standard_Complex_VecVecs.VecVec(0..deg);
+   -- delinearized evaluated power series in yv
+    yv : Standard_Complex_VecVecs.VecVec(1..neq);
+   -- differentiation result as matrix series in vm
+    vm : Standard_Complex_VecMats.VecMat(0..deg);
+  end record;
+
+  type Link_to_System is access System;
+
+  type System_Array is array ( integer32 range<> ) of Link_to_System;
+
+-- CONSTRUCTORS AND ALLOCATORS :
+
+  function Exponent_Maxima
+             ( c : Circuits; dim : integer32 )
+             return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the maximal exponents of the dim variables in the circuits.
+  --   The result of this function is the mxe for the Allocate and the 
+  --   Create of the power table.
+
   function Allocate ( mxe : Standard_Integer_Vectors.Vector;
                       deg : integer32 )
                     return Link_to_VecVecVec;
@@ -66,12 +102,41 @@ package Standard_Coefficient_Convolutions is
                      rpwt,ipwt : out Link_to_VecVecVec );
 
   -- DESCRIPTION :
-  --   Stores all powers x(i)^k for k ranging from 2 to d(i),
-  --   for i in d'range = x'range, in the power table.
+  --   Stores all powers x(i)^k for k ranging from 2 to mxe(i),
+  --   for i in mxe'range = rx'range, in the power table.
   --   The i-th entry in the power table contains the powers of x(i),
-  --   if d(i) > 1, starting with x(i)^2 at the first position.
-  --   This Create procedure combines the functions Allocate(mxe,deg) 
-  --   and the Compute(rpwt,ipwt,d,rx,ix) procedure below.
+  --   if mxe(i) > 1, starting with x(i)^2 at the first position.
+  --   This Create procedure combines the functions Allocate(mxe,deg) above
+  --   and the Compute(rpwt,ipwt,mxe,rx,ix) procedure below.
+
+  function Linearized_Allocation
+             ( dim,deg : integer32 )
+             return Standard_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns allocated space for the coefficients of the series
+  --   truncated to degree deg and initialized to zero, in linearized form.
+  --   The vector on return has range 0..deg and represents a series
+  --   truncated to degree deg and with vectors of range 1..dim as
+  --   its coefficients.
+
+  function Allocate_Coefficients
+             ( nbq,nvr,deg : integer32 )
+             return Standard_Complex_VecMats.VecMat;
+
+  -- DESCRIPTION :
+  --   Returns a vector of matrices, of range 0..deg,
+  --   of nbq-by-nvr matrices of coefficients,
+  --   where nbq equals the number of equations
+  --   and nvr is the number of variables.
+
+  function Create ( c : Circuits; dim,deg : integer32 ) return System;
+  function Create ( c : Circuits; dim,deg : integer32 ) return Link_to_System;
+
+  -- DESCRIPTION:
+  --   The system on return stores the convolution circuits in crc,
+  --   contains the values for the exponent maxima in mxe, and
+  --   has allocated space for rpwt, ipwt, ryd, iyd, vy, yv, and vm.
 
 -- BASIC COMPUTATIONAL PROCEDURES :
 
@@ -365,9 +430,9 @@ package Standard_Coefficient_Convolutions is
   --   c            a circuit properly defined and allocated;
   --   rx           real parts of coefficients of series of same degree;
   --   ix           imaginary parts of coefficients of series of same degree;
-  --   ryd          vector of range 0..rx'last with space allocated for the
+  --   ryd          vector of range 0..rx'last+1 with space allocated for the
   --                coefficients of power series of the same fixed degree;
-  --   iyd          vector of range 0..ix'last with space allocated for the
+  --   iyd          vector of range 0..ix'last+1 with space allocated for the
   --                coefficients of power series of the same fixed degree;
   --   rpwt         power table of the real parts for the values in x;
   --   ipwt         power table of the real imaginary for the values in x.
@@ -379,6 +444,65 @@ package Standard_Coefficient_Convolutions is
   --   iyd          ryd(ix'last+1) contains the real parts of the coefficient
   --                vector of the value of the sum of products evaluated at x,
   --                iyd(k) is the real part of the k-th partial derivative.
+
+  procedure EvalDiff ( c : in Circuits;
+                       rx : in Standard_Floating_VecVecs.VecVec;
+                       ix : in Standard_Floating_VecVecs.VecVec;
+                       rpwt,ipwt : in Link_to_VecVecVec;
+                       ryd,iyd : in Standard_Floating_VecVecs.VecVec;
+                       vy : in Standard_Complex_VecVecs.VecVec;
+                       vm : in Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiates the convolution circuits in c
+  --   at the series x.
+
+  -- ON ENTRY :
+  --   c            an array of convolution circuits;
+  --   rx           real parts of coefficients of series of same degree;
+  --   ix           imaginary parts of coefficients of series of same degree;
+  --   rpwt         power table of the real parts for the values in x;
+  --   ipwt         power table of the real imaginary for the values in x;
+  --   ryd          work space of range 1..rx'last+1 to contain the real
+  --                parts of the gradient and the value of the circuits in c;
+  --   iyd          work space of range 1..ix'last+1 to contain the imaginary
+  --                parts of the gradient and the value of the circuits in c;
+  --   vy           allocated space for the values of the circuits at x,
+  --                done by the above procedure Linearized_Allocation,
+  --   vm           space allocated for a series of some fixed degree
+  --                with matrix coefficients.
+
+  -- ON RETURN :
+  --   vy           values of the circuits at x, in linearized form;
+  --   vm           the evaluated circuits at x as a series 
+  --                of some fixe degree with matrix coefficients.
+
+  procedure Delinearize ( vy,yv : in Standard_Complex_VecVecs.VecVec );
+
+  --  DESCRIPTION :
+  --    Converts the linearized representation in vy into the vector yv
+  --    of coefficient vectors of the series.
+  --    This conversion is convenient for the difference computation
+  --    and needed in the application of Newton's method.
+
+  -- REQUIRED :
+  --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
+  --   then yv'range = 1..dimension and yv(k)'range = 0..degree.
+
+  procedure EvalDiff ( s : in System;
+                       rx,ix : in Standard_Floating_VecVecs.VecVec );
+  procedure EvalDiff ( s : in Link_to_System;
+                       rx,ix : in Standard_Floating_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Wraps the EvalDiff on the convolution circuits in s.crc,
+  --   at the power series with coefficients in x,
+  --   with real and imaginary parts in rx and ix.
+
+  -- REQUIRED :
+  --   All data in s are allocated properly with respect to dimension
+  --   and degree, the power table s.pwt is up to data with the given
+  --   real and imaginary parts in rx and ix.
 
 -- DEALLOCATORS :
 
@@ -396,5 +520,12 @@ package Standard_Coefficient_Convolutions is
 
   -- DESCRIPTION :
   --   Deallocates the space occupied by the convolution circuits.
+
+  procedure Clear ( s : in out System );
+  procedure Clear ( s : in out Link_to_System );
+  procedure Clear ( s : in out System_Array );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by the system (array) s.
 
 end Standard_Coefficient_Convolutions;
