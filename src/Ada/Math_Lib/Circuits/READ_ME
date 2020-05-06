@@ -82,4 +82,5 @@ shift_convolution_circuits         : shifting coefficients in the circuits
 ts_shiftcnv                        : test on shifting coefficients
 -------------------------------------------------------------------------------
 ts_perfconv                        : test on performance and convolutions
+ts_perfcirc                        : test performance of splitted circuits
 -------------------------------------------------------------------------------

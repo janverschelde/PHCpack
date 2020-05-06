@@ -1,5 +1,7 @@
 Wed 6 May 2020 : new package standard_convolution_splitters, to test the
   evaluation and differentiation of the new circuits in ts_speelcnv.
+  New procedure ts_perfcirc to test the performance of the convolution
+  circuits with splitted coefficient vectors.
 
 Tue 5 May 2020 : the general case for algorithmic differentiation works in
   standard_coefficient_convolutions, tested by ts_speelcnv.
