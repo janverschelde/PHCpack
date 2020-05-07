@@ -1,5 +1,6 @@
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
+with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
 with Standard_Vector_Splitters;
@@ -11,12 +12,16 @@ package body Standard_Convolution_Splitters is
 
     res : Standard_Coefficient_Convolutions.Circuit(c.nbr,c.dim,c.dim1,c.dim2);
 
+    use Standard_Complex_Vectors;
+
   begin
     Standard_Integer_VecVecs.Copy(c.xps,res.xps);
     Standard_Integer_VecVecs.Copy(c.idx,res.idx);
     Standard_Integer_VecVecs.Copy(c.fac,res.fac);
     Standard_Vector_Splitters.Split_Complex(c.cff,res.rcf,res.icf);
-    Standard_Vector_Splitters.Split_Complex(c.cst,res.rct,res.ict);
+    if c.cst /= null
+     then Standard_Vector_Splitters.Split_Complex(c.cst,res.rct,res.ict);
+    end if;
     Standard_Vector_Splitters.Split_Complex(c.forward,res.rfwd,res.ifwd);
     Standard_Vector_Splitters.Split_Complex(c.backward,res.rbck,res.ibck);
     Standard_Vector_Splitters.Split_Complex(c.cross,res.rcrs,res.icrs);

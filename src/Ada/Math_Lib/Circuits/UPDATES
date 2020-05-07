@@ -1,3 +1,6 @@
+Thu 7 May 2020 : added new procedures to newton_convolutions, added an if
+  test to standard_convolution_splitters.adb and a test in ts_fabry.
+
 Wed 6 May 2020 : new package standard_convolution_splitters, to test the
   evaluation and differentiation of the new circuits in ts_speelcnv.
   New procedure ts_perfcirc to test the performance of the convolution
