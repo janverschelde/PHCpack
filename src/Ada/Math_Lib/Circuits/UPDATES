@@ -1,3 +1,6 @@
+Fri 8 May 2020 : in standard_convolution_splitters.adb, fixed a bug with
+  splitting the power table in case there are no common factors.
+
 Thu 7 May 2020 : added new procedures to newton_convolutions, added an if
   test to standard_convolution_splitters.adb and a test in ts_fabry.
 

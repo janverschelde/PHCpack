@@ -63,6 +63,7 @@ package body Standard_Convolution_Splitters is
                          Link_to_VecVecVec ) is
 
     use Standard_Speelpenning_Convolutions;
+    use Standard_Complex_VecVecs;
 
   begin
     if p /= null then
@@ -70,7 +71,9 @@ package body Standard_Convolution_Splitters is
         rpwt,ipwt : Standard_Coefficient_Convolutions.VecVecVec(p'range);
       begin
         for k in p'range loop
-          Standard_Vector_Splitters.Split_Complex(p(k),rpwt(k),ipwt(k));
+          if p(k) /= null
+           then Standard_Vector_Splitters.Split_Complex(p(k),rpwt(k),ipwt(k));
+          end if;
         end loop;
         rp := new Standard_Coefficient_Convolutions.VecVecVec'(rpwt);
         ip := new Standard_Coefficient_Convolutions.VecVecVec'(ipwt);
