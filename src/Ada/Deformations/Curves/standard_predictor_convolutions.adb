@@ -53,6 +53,8 @@ package body Standard_Predictor_Convolutions is
     kden : constant Standard_Complex_Vectors.Vector(0..dendeg)
          := (0..dendeg => zero);
 
+    use Standard_Speelpenning_Convolutions;
+
   begin
     res.sol := Newton_Convolutions.Series_Coefficients(sol,deg);
     res.wrk := new Standard_Complex_Vectors.Vector'(1..neq => zero);
@@ -232,8 +234,125 @@ package body Standard_Predictor_Convolutions is
     end if;
   end Newton_Fabry_Report;
 
+-- NEWTON-FABRY ON COEFFICIENT CONVOLUTIONS :
+
   procedure Newton_Fabry
-              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float ) is
+
+    use Standard_Rational_Approximations;
+    use Newton_Power_Convolutions;
+
+    info : integer32;
+
+  begin
+    nbrit := 0;
+    LU_Newton_Steps
+      (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
+       info,prd.newtpiv,prd.wrk,false,false);
+    Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
+    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
+                prd.mat,prd.rhs,prd.padepiv,info,false);
+  end Newton_Fabry;
+
+  procedure Newton_Fabry
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float; output : in boolean ) is
+
+    use Standard_Rational_Approximations;
+    use Newton_Power_Convolutions;
+
+    info : integer32;
+
+  begin
+    nbrit := 0;
+    if output then
+      LU_Newton_Steps
+        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false);
+      Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
+    else
+      LU_Newton_Steps
+        (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
+         info,prd.newtpiv,prd.wrk,false,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
+    end if;
+    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
+                prd.mat,prd.rhs,prd.padepiv,info,false);
+  end Newton_Fabry;
+
+  procedure Newton_Fabry
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float ) is
+
+    use Standard_Rational_Approximations;
+    use Newton_Power_Convolutions;
+
+    info : integer32;
+
+  begin
+    nbrit := 0;
+    SVD_Newton_Steps
+      (hom,prd.sol,prd.dx,prd.xd,rx,ix,maxit,nbrit,tol,absdx,fail,
+       prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
+    Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
+    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
+                prd.mat,prd.rhs,prd.padepiv,info,false);
+  end Newton_Fabry;
+
+  procedure Newton_Fabry
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float; output : in boolean ) is
+
+    use Standard_Rational_Approximations;
+    use Newton_Power_Convolutions;
+
+    info : integer32;
+
+  begin
+    nbrit := 0;
+    if output then
+      SVD_Newton_Steps
+        (file,hom,prd.sol,prd.dx,prd.xd,rx,ix,maxit,nbrit,tol,absdx,
+         fail, prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
+      Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
+    else
+      SVD_Newton_Steps
+        (hom,prd.sol,prd.dx,prd.xd,rx,ix,maxit,nbrit,tol,absdx,fail,
+         prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
+      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
+    end if;
+    Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
+                prd.mat,prd.rhs,prd.padepiv,info,false);
+  end Newton_Fabry;
+
+-- NEWTON-FABRY ON COMPLEX CONVOLUTION CIRCUITS :
+
+  procedure Newton_Fabry
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
@@ -249,14 +368,15 @@ package body Standard_Predictor_Convolutions is
     LU_Newton_Steps
       (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
        info,prd.newtpiv,prd.wrk,false,false);
-      Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
+    Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
   end Newton_Fabry;
 
   procedure Newton_Fabry
               ( file : in file_type;
-                hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
@@ -285,7 +405,8 @@ package body Standard_Predictor_Convolutions is
   end Newton_Fabry;
 
   procedure Newton_Fabry
-              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
@@ -308,7 +429,8 @@ package body Standard_Predictor_Convolutions is
 
   procedure Newton_Fabry
               ( file : in file_type;
-                hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
@@ -337,7 +459,8 @@ package body Standard_Predictor_Convolutions is
   end Newton_Fabry;
 
   procedure Second
-              ( hom : in Link_to_System; svh : in Link_to_SVD_Hessians;
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector ) is
 
     n : constant integer32 := svh.dim;
@@ -482,6 +605,8 @@ package body Standard_Predictor_Convolutions is
 
     z : Standard_Complex_Numbers.Complex_Number;
 
+    use Standard_Speelpenning_Convolutions;
+
   begin
     nbfail := 0;
     loop
@@ -512,6 +637,8 @@ package body Standard_Predictor_Convolutions is
                 verbose : in boolean := true ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
+
+    use Standard_Speelpenning_Convolutions;
 
   begin
     nbfail := 0;
@@ -551,7 +678,8 @@ package body Standard_Predictor_Convolutions is
 -- MAIN PREDICTOR PROCEDURES :
 
   procedure LU_Prediction
-              ( hom,abh : in Link_to_System;
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
@@ -582,7 +710,9 @@ package body Standard_Predictor_Convolutions is
   end LU_Prediction;
 
   procedure LU_Prediction
-              ( file : in file_type; hom,abh : in Link_to_System;
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
@@ -620,7 +750,8 @@ package body Standard_Predictor_Convolutions is
   end LU_Prediction;
 
   procedure SVD_Prediction
-              ( hom,abh : in Link_to_System;
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
@@ -651,7 +782,9 @@ package body Standard_Predictor_Convolutions is
   end SVD_Prediction;
 
   procedure SVD_Prediction
-              ( file : in file_type; hom,abh : in Link_to_System;
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;

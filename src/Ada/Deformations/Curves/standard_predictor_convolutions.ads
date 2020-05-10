@@ -5,9 +5,11 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
-with Standard_Speelpenning_Convolutions; use Standard_Speelpenning_Convolutions;
+with Standard_Speelpenning_Convolutions; 
+with Standard_Coefficient_Convolutions; 
 
 package Standard_Predictor_Convolutions is
 
@@ -223,15 +225,109 @@ package Standard_Predictor_Convolutions is
   --   dencff   coefficients of the denominator of the Pade approximants;
   --   output   if true, then numcff and dencff are written to screen.
 
+-- NEWTON-FABRY ON COEFFICIENT CONVOLUTIONS :
+
   procedure Newton_Fabry
-              ( hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
                 rad,err : out double_float );
   procedure Newton_Fabry
               ( file : in file_type;
-                hom : in Link_to_System; prd : in Link_to_LU_Predictor;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float; output : in boolean );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the power series in prd with LU,
+  --   applies Fabry's theorem and constructs Pade approximants
+  --   to predict the next solution, in double precision,
+  --   on a system of coefficient convolution circuits.
+
+  -- ON ENTRY :
+  --   file     for writing data to if output (optional);
+  --   hom      homotopy convolution circuit system
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   rx       work space for the real parts of the coefficients;
+  --   ix       work space for the imaginary parts of the coefficients;
+  --   maxit    maximum number of iterations in Newton's method;
+  --   tol      tolerance on the correction term;
+  --   output   flag to indicate data output during computations,
+  --            if a file is provided.
+
+  -- ON RETURN :
+  --   prd      contains solution series and Pade approximants;
+  --   nbrit    number of iterations done;
+  --   absdx    absolute value of the last corrector step;
+  --   fail     indicates failure status;
+  --   z        closest singularity estimated by Fabry's theorem;
+  --   rad      estimates radius of convergence of the series;
+  --   err      error estimate on the location of z.
+
+  procedure Newton_Fabry
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float );
+  procedure Newton_Fabry
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx,rcond : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float; output : in boolean );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the power series in prd with SVD,
+  --   applies Fabry's theorem and constructs Pade approximants
+  --   to predict the next solution, in double precision.
+
+  -- ON ENTRY :
+  --   file     for writing data to if output (optional);
+  --   hom      homotopy convolution circuit system
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   rx       work space for the real parts of the coefficients;
+  --   ix       work space for the imaginary parts of the coefficients;
+  --   maxit    maximum number of iterations in Newton's method;
+  --   tol      tolerance on the correction term;
+  --   output   flag to indicate data output during computations,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   prd      contains solution series and Pade approximants;
+  --   nbrit    number of iterations done;
+  --   absdx    absolute value of the last corrector step;
+  --   rcond    estimate for the inverse of the condition number;
+  --   fail     indicates failure status;
+  --   z        closest singularity estimated by Fabry's theorem;
+  --   rad      estimates radius of convergence of the series;
+  --   err      error estimate on the location of z.
+
+-- NEWTON-FABRY ON COMPLEX CONVOLUTION CIRCUITS :
+
+  procedure Newton_Fabry
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                maxit : in integer32; tol : in double_float;
+                nbrit : out integer32; absdx : out double_float;
+                fail : out boolean; z : out Complex_Number;
+                rad,err : out double_float );
+  procedure Newton_Fabry
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                prd : in Link_to_LU_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
@@ -261,14 +357,16 @@ package Standard_Predictor_Convolutions is
   --   err      error estimate on the location of z.
 
   procedure Newton_Fabry
-              ( hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
                 rad,err : out double_float );
   procedure Newton_Fabry
               ( file : in file_type;
-                hom : in Link_to_System; prd : in Link_to_SVD_Predictor;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
@@ -299,7 +397,8 @@ package Standard_Predictor_Convolutions is
   --   err      error estimate on the location of z.
 
   procedure Second
-              ( hom : in Link_to_System; svh : in Link_to_SVD_Hessians;
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -438,7 +537,8 @@ package Standard_Predictor_Convolutions is
 -- MAIN PREDICTOR PROCEDURES :
 
   procedure LU_Prediction
-              ( hom,abh : in Link_to_System;
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
@@ -447,7 +547,9 @@ package Standard_Predictor_Convolutions is
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32 );
   procedure LU_Prediction
-              ( file : in file_type; hom,abh : in Link_to_System;
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
@@ -501,7 +603,8 @@ package Standard_Predictor_Convolutions is
   --   nbmaxm   updated number of times maximum step size was minimal.
 
   procedure SVD_Prediction
-              ( hom,abh : in Link_to_System;
+              ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;
@@ -510,7 +613,9 @@ package Standard_Predictor_Convolutions is
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32 );
   procedure SVD_Prediction
-              ( file : in file_type; hom,abh : in Link_to_System;
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
                 prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
                 psv : in out Predictor_Vectors;
                 maxit : in integer32; tol : in double_float;

@@ -1,3 +1,6 @@
+Sun 10 May 2020 : added Newton_Fabry procedures on coefficient convolutions,
+  to the package standard_predictor_convolutions.
+
 Sat 9 May 2020 : added procedures to newton_power_convolutions, to apply
   the faster coefficient convolution circuits when running Newton's method.
   Tested new Newton procedures in ts_sernewcnv.
