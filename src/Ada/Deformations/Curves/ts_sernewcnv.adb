@@ -11,6 +11,7 @@ with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
@@ -34,6 +35,9 @@ with QuadDobl_System_and_Solutions_io;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
+with Standard_Vector_Splitters;
+with Standard_Convolution_Splitters;
+with Standard_Coefficient_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Newton_Convolutions;
@@ -44,6 +48,99 @@ procedure ts_sernewcnv is
 -- DESCRIPTION :
 --   Procedure to develop the linearized Newton's method for power series,
 --   on convolution circuits.
+
+  procedure Standard_Coefficient_Run
+              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sol : in Standard_Complex_Solutions.Link_to_Solution;
+                deg,maxit : in integer32;
+                scale,usesvd,useqrls,lurcond : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in double precision,
+  --   using coefficient convolutions.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   sol      a solution;
+  --   deg      degree of the power series;
+  --   maxit    maximum number of iterations;
+  --   scale    if scaling is needed;
+  --   usesvd   for singular value decomposition;
+  --   useqrls  for least squares after QR decomposition;
+  --   lurcond  lu with condition number estimate.
+
+    c : constant Standard_Speelpenning_Convolutions.Circuits(p'range)
+      := Make_Convolution_Circuits(p.all,natural32(deg));
+    neq : constant integer32 := p'last;
+    dim : constant integer32 := sol.n;
+    s : constant Standard_Speelpenning_Convolutions.Link_to_System
+      := Standard_Speelpenning_Convolutions.Create(c,dim,deg);
+    cs : Standard_Coefficient_Convolutions.Link_to_System;
+    scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
+        := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+    rx : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ix : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    info,nbrit : integer32 := 0;
+    ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
+    ewrk : Standard_Complex_Vectors.Link_to_Vector
+        := new Standard_Complex_Vectors.Vector(1..dim);
+    wrk : Standard_Complex_Vectors.Link_to_Vector
+        := new Standard_Complex_Vectors.Vector(1..neq);
+    qraux,w1,w2,w3,w4,w5 : Standard_Complex_Vectors.Vector(1..neq);
+    dx : Standard_Complex_VecVecs.VecVec(1..dim);
+    xd : Standard_Complex_VecVecs.VecVec(0..deg);
+    svl : Standard_Complex_Vectors.Vector(1..dim+1);
+    U : Standard_Complex_Matrices.Matrix(1..neq,1..neq);
+    V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    absdx,rcond : double_float;
+    tol : constant double_float := 1.0E-14;
+    fail : boolean;
+
+  begin
+    Add_Parameter_to_Constant(s);
+    cs := Standard_Convolution_Splitters.Split(s);
+    put_line("The coefficients of the circuits : ");
+    for k in s.crc'range loop
+      Standard_Complex_VecVecs_io.put_line(s.crc(k).cff);
+      put("The constant of circuit "); put(k,1); put_line(" :");
+      Standard_Complex_Vectors_io.put_line(s.crc(k).cst);
+    end loop;
+    if useqrls or usesvd then
+      dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
+      xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
+      if usesvd then
+        SVD_Newton_Steps
+          (standard_output,cs,scf,dx,xd,rx,ix,maxit,nbrit,tol,absdx,fail,
+           svl,U,V,info,rcond,ewrk,wrk,scale);
+        put("rcond :"); put(rcond,3); new_line;
+      else
+        QR_Newton_Steps
+          (standard_output,cs,scf,dx,xd,rx,ix,maxit,nbrit,tol,absdx,fail,
+           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
+      end if;
+    elsif lurcond then
+      LU_Newton_Steps
+        (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
+         ipvt,wrk,scale);
+      put("rcond :"); put(rcond,3); new_line;
+    else
+      LU_Newton_Steps
+        (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,info,
+         ipvt,wrk,scale);
+    end if;
+    if fail then
+      put("Failed to reach"); put(tol,3);
+      put("  absdx : "); put(absdx,3); new_line;
+    else
+      put("Reached"); put(tol,3);
+      put("  absdx : "); put(absdx,3); new_line;
+    end if;
+    put("after "); put(nbrit,1); put_line(" iterations.");
+    Standard_Complex_Vectors.Clear(ewrk);
+    Standard_Complex_Vectors.Clear(wrk);
+  end Standard_Coefficient_Run;
 
   procedure Standard_Run
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -346,10 +443,19 @@ procedure ts_sernewcnv is
     maxit : integer32 := 0;
     scale,usesvd,useqrls,needrcond : boolean := false;
     overdet : constant boolean := (p'last > dim);
+    ans : character;
 
   begin
     Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond);
-    Standard_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
+    new_line;
+    put("Apply coefficient convolution circuits ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Standard_Coefficient_Run
+        (p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
+    else
+      Standard_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
+    end if;
   end Standard_Run;
 
   procedure DoblDobl_Run

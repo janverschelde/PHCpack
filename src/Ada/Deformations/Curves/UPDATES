@@ -1,5 +1,6 @@
 Sat 9 May 2020 : added procedures to newton_power_convolutions, to apply
   the faster coefficient convolution circuits when running Newton's method.
+  Tested new Newton procedures in ts_sernewcnv.
 
 Fri 1 May 2020 : updated track_path_convolutions so it writes the seed
   number at the end of a run for reproducibility.
