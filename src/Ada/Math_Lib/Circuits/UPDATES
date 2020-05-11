@@ -1,3 +1,6 @@
+Mon 11 May 2020 : new test procedure ts_perfade, to test the performance
+  of algorithmic differentiation and evaluation.
+
 Fri 8 May 2020 : in standard_convolution_splitters.adb, fixed a bug with
   splitting the power table in case there are no common factors.
 

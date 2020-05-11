@@ -83,4 +83,5 @@ ts_shiftcnv                        : test on shifting coefficients
 -------------------------------------------------------------------------------
 ts_perfconv                        : test on performance and convolutions
 ts_perfcirc                        : test performance of splitted circuits
+ts_perfade                         : test performance of algo diff eval
 -------------------------------------------------------------------------------
