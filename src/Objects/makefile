@@ -398,7 +398,7 @@ ts_evddpol:
 test_circuits: ts_cffsup ts_speel ts_cycfun ts_speelsys ts_gradcirc \
                ts_vmpeval ts_vmpdiff ts_speelser ts_speelcnv ts_fabry \
                ts_evalcnv ts_hesscnv ts_jacocnv ts_shiftcnv ts_perfconv \
-               ts_perfcirc
+               ts_perfcirc ts_perfade
 
 ts_cffsup:
 	make -f $(MAKEFILE) ts_cffsup
@@ -447,6 +447,9 @@ ts_perfconv:
 
 ts_perfcirc:
 	make -f $(MAKEFILE) ts_perfcirc
+
+ts_perfade:
+	make -f $(MAKEFILE) ts_perfade
 
 # Test programs for Math_Lib/Supports :
 

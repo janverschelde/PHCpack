@@ -538,7 +538,10 @@ ts_perfconv:
 
 ts_perfcirc:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfcirc.adb \
-              -o $(BIN)/ts_perfcirc
+
+ts_perfade:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfade.adb \
+              -o $(BIN)/ts_perfade
 
 # Test programs for Math_Lib/Supports :
 
