@@ -41,6 +41,9 @@ package Standard_Vector_Splitters is
   function Make_Complex
              ( rpx,ipx : Standard_Floating_VecVecs.Link_to_VecVec )
              return Standard_Complex_VecVecs.Link_to_VecVec;
+  function Make_Complex
+             ( rpx,ipx : Standard_Floating_VecVecs.VecVec )
+             return Standard_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns the vector (of vectors) of complex numbers,

@@ -5,9 +5,13 @@ with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
+with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecs_io;         use Standard_Complex_VecVecs_io;
 with Standard_Random_Vectors;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
 
@@ -157,6 +161,145 @@ procedure ts_perfade is
     end loop;
   end Forward_Backward;
 
+  function Allocate
+             ( mxe : Standard_Integer_Vectors.Vector )
+             return Standard_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range mxe'range with space for
+  --   complex vectors of range 1..mxe(k)-1, for k in mxe'range.
+
+    res : Standard_Complex_VecVecs.VecVec(mxe'range);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+
+  begin
+    for k in mxe'range loop
+      if mxe(k) > 1 then
+        res(k) := new Standard_Complex_Vectors.Vector'(1..mxe(k)-1 => zero);
+      end if;
+    end loop;
+    return res;
+  end Allocate;
+
+  function Allocate
+             ( mxe : Standard_Integer_Vectors.Vector )
+             return Standard_Floating_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range mxe'range with space for
+  --   floating-point vectors of range 1..mxe(k)-1, for k in mxe'range.
+
+    res : Standard_Floating_VecVecs.VecVec(mxe'range);
+
+  begin
+    for k in mxe'range loop
+      if mxe(k) > 1 then
+        res(k) := new Standard_Floating_Vectors.Vector'(1..mxe(k)-1 => 0.0);
+      end if;
+    end loop;
+    return res;
+  end Allocate;
+
+  procedure Power_Table
+              ( mxe : in Standard_Integer_Vectors.Vector;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Computes the power table for the values of the variables in x.
+
+  -- REQUIRED :
+  --   mxe'range = x'range, pwt is allocated according to mxe,
+  --   pwt'range = x'range and pwt(k)'range = 1..mxe(k)-1.
+
+  -- ON ENTRY :
+  --   mxe      highest exponents of the variables,
+  --            mxe(k) is the highest exponent of the k-th variable
+  --   x        values for all variables;
+  --   pwt      allocated memory for all powers of the values in x.
+
+  -- ON RETURN :
+  --   pwt      power table, pwt(k)(i) equals x(k)**(i+1),
+  --            for i in range 1..mxe(k)-1.
+
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+
+    use Standard_Complex_Numbers;
+
+  begin
+    for k in x'range loop
+      if mxe(k) > 1 then
+        lnk := pwt(k);
+        lnk(1) := x(k)*x(k);
+        for i in 2..mxe(k)-1 loop
+          lnk(i) := lnk(i-1)*x(k);
+        end loop;
+      end if;
+    end loop;
+  end Power_Table;
+
+  procedure Power_Table
+              ( mxe : in Standard_Integer_Vectors.Vector;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Computes the power table for the values of the variables,
+  --   with real parts in xr and imaginary parts in xi.
+
+  -- REQUIRED :
+  --   mxe'range = xr'range = xi'range,
+  --   rpwt and ipwt are allocated according to mxe,
+  --   rpwt'range = xr'range, rpwt(k)'range = 1..mxe(k)-1,
+  --   ipwt'range = xr'range, ipwt(k)'range = 1..mxe(k)-1.
+
+  -- ON ENTRY :
+  --   mxe      highest exponents of the variables,
+  --            mxe(k) is the highest exponent of the k-th variable
+  --   xr       real parts of the values for all variables;
+  --   xi       imaginary parts of the values for all variables;
+  --   rpwt     allocated memory for the real parts of all powers
+  --            of the values of the variables;
+  --   ipwt     allocated memory for the imaginary parts of all powers
+  --            of the values of the variables.
+
+  -- ON RETURN :
+  --   rpwt     real part of the power table,
+  --            rpwt(k)(i) equals the real part of x(k)**(i+1),
+  --            where x(k) is the complex value of the k-th variable,
+  --            for i in range 1..mxe(k)-1;
+  --   rpwt     imaginary part of the power table,
+  --            rpwt(k)(i) equals the imaginary part of x(k)**(i+1),
+  --            where x(k) is the complex value of the k-th variable,
+  --            for i in range 1..mxe(k)-1.
+
+    rlnk : Standard_Floating_Vectors.Link_to_Vector;
+    ilnk : Standard_Floating_Vectors.Link_to_Vector;
+    zr,zi,yr,yi,xrk,xik : double_float;
+
+  begin
+    for k in xr'range loop
+      if mxe(k) > 1 then
+        rlnk := rpwt(k); ilnk := ipwt(k);
+       -- lnk(1) := x(k)*x(k);
+        xrk := xr(k); xik := xi(k);
+        zr := xrk*xrk - xik*xik;
+        zi := 2.0*xrk*xik;
+        rlnk(1) := zr; ilnk(1) := zi;
+        for i in 2..mxe(k)-1 loop
+          -- lnk(i) := lnk(i-1)*x(k);
+          yr := zr; yi := zi;
+          zr := xrk*yr - xik*yi;
+          zi := xrk*yi + xik*yr;
+          rlnk(i) := zr; ilnk(i) := zi;
+        end loop;
+      end if;
+    end loop;
+  end Power_Table;
+
   procedure Test_Forward ( dim : in integer32 ) is
 
   -- DESCRIPTION :
@@ -225,6 +368,32 @@ procedure ts_perfade is
     put_line("the backward products : "); put_line(b);
     put_line("backward products recomputed : "); put_line(w);
   end Test_Forward_Backward;
+
+  procedure Test_Power_Table ( dim,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given the dimension dim and the highest power pwr,
+  --   tests the computation of the power table for random values.
+
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range) := Allocate(mxe);
+    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
+    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
+    v : Standard_Complex_VecVecs.VecVec(x'range);
+
+  begin
+    Power_Table(mxe,x,pwt);
+    put_line("The power table : "); put_line(pwt);
+    Power_Table(mxe,xr,xi,rpwt,ipwt);
+    v := Standard_Vector_Splitters.Make_Complex(rpwt,ipwt);
+    put_line("The recomputed power table : "); put_line(v);
+  end Test_Power_Table;
 
   procedure Timing_Test_Forward ( dim,frq : in integer32 ) is
 
@@ -310,13 +479,48 @@ procedure ts_perfade is
     print_times(standard_output,timer,"real forward & backward products");
   end Timing_Test_Forward_Backward;
 
+  procedure Timing_Test_Power_Table ( dim,pwr,frq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given the dimension dim, the highest power pwr,
+  --   and the frequency frq, times the computation of the power table.
+
+    timer : Timing_Widget;
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range) := Allocate(mxe);
+    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
+    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
+
+  begin
+    tstart(timer);
+    for k in 1..frq loop
+      Power_Table(mxe,x,pwt);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex power table");
+    tstart(timer);
+    for k in 1..frq loop
+      Power_Table(mxe,xr,xi,rpwt,ipwt);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex power table");
+  end Timing_Test_Power_Table;
+
   procedure Main is
 
   -- DESCRIPTION :
   --   Prompts the user for the dimension,
   --   the type of test, and then launches the test.
 
-    dim,frq : integer32 := 0;
+    dim,frq,pwr : integer32 := 0;
     ans,tst : character;
 
   begin
@@ -326,13 +530,19 @@ procedure ts_perfade is
     put_line("MENU for testing ADE :");
     put_line("  1. forward products");
     put_line("  2. forward and backward products");
-    put("Type 1 or 2 to select the test : "); Ask_Alternative(tst,"12");
+    put_line("  3. power table");
+    put("Type 1, 2, or 3 to select the test : "); Ask_Alternative(tst,"123");
+    if tst = '3' then
+      new_line;
+      put("Give the highest power : "); get(pwr);
+    end if;
     new_line;
     put("Interactive tests ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y' then
       case tst is
         when '1' => Test_Forward(dim);
         when '2' => Test_Forward_Backward(dim);
+        when '3' => Test_Power_Table(dim,pwr);
         when others => null;
       end case;
     else
@@ -341,6 +551,7 @@ procedure ts_perfade is
       case tst is
         when '1' => Timing_Test_Forward(dim,frq);
         when '2' => Timing_Test_Forward_Backward(dim,frq);
+        when '3' => Timing_Test_Power_Table(dim,pwr,frq);
         when others => null;
       end case;
     end if;

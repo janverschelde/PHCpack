@@ -90,6 +90,19 @@ package body Standard_Vector_Splitters is
     return res;
   end Make_Complex;
 
+  function Make_Complex
+             ( rpx,ipx : Standard_Floating_VecVecs.VecVec )
+             return Standard_Complex_VecVecs.VecVec is
+
+    res : Standard_Complex_VecVecs.VecVec(rpx'range);
+
+  begin
+    for k in res'range loop
+      res(k) := Make_Complex(rpx(k),ipx(k));
+    end loop;
+    return res;
+  end Make_Complex;
+
   procedure Split_Complex
               ( x : in Standard_Complex_Vectors.Link_to_Vector;
                 rpx,ipx : out Standard_Floating_Vectors.Link_to_Vector ) is
