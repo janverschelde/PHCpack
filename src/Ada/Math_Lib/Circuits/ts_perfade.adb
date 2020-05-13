@@ -101,6 +101,32 @@ procedure ts_perfade is
     end loop;
   end Forward_Backward;
 
+  procedure Forward_Backward2
+              ( x,f,b : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes all forward products of the values in x
+  --   and stores the products in f.
+  --   Computes all backward products of the values in x
+  --   and stores the products in b.
+  --   On single loop is applied.
+
+  -- REQUIRED :
+  --    f'first = x'first = 1 and f'last >= x'last-1.
+  --    b'first = b'first = 1 and b'last >= x'last-2.
+
+    use Standard_Complex_Numbers;
+
+  begin
+    f(f'first) := x(x'first)*x(x'first+1);
+    b(b'first) := x(x'last)*x(x'last-1);
+    for k in 2..x'last-2 loop
+      f(k) := f(k-1)*x(k+1);
+      b(k) := b(k-1)*x(x'last-k);
+    end loop;
+    f(f'last) := f(f'last-1)*x(x'last);
+  end Forward_Backward2;
+
   procedure Forward_Backward
               ( xr : in Standard_Floating_Vectors.Link_to_Vector;
                 xi : in Standard_Floating_Vectors.Link_to_Vector;
@@ -160,6 +186,72 @@ procedure ts_perfade is
       br(k) := zr; bi(k) := zi;
     end loop;
   end Forward_Backward;
+
+  procedure Forward_Backward2
+              ( xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                fr : in Standard_Floating_Vectors.Link_to_Vector;
+                fi : in Standard_Floating_Vectors.Link_to_Vector;
+                br : in Standard_Floating_Vectors.Link_to_Vector;
+                bi : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes all forward products of the values with real parts
+  --   in xr and imaginary parts in xi and stores the real parts of
+  --   the products in fr and the imaginary parts in fi.
+  --   Computes all backward products of the values with real parts
+  --   in xr and imaginary parts in xi and stores the real parts of
+  --   the products in br and the imaginary parts in bi.
+  --   Applies loop fusion.
+
+  -- REQUIRED :
+  --   xr'range = xi'range,
+  --   fr'first = xr'first = 1, fi'last >= xi'last-1,
+  --   br'first = br'first = 1, bi'last >= bi'last-2.
+
+    zr1,zi1,pr1,pi1,qr1,qi1 : double_float;
+    zr2,zi2,pr2,pi2,qr2,qi2 : double_float;
+    idx1,idx2 : integer32;
+    dim : constant integer32 := xr'last-1;
+
+  begin
+   -- f(f'first) := x(x'first)*x(x'first+1);
+    pr1 := xr(1); pi1 := xi(1);
+    idx1 := xr'first+1;
+    qr1 := xr(idx1);  qi1 := xi(idx1);
+    zr1 := pr1*qr1 - pi1*qi1;
+    zi1 := pr1*qi1 + pi1*qr1;
+    fr(1) := zr1; fi(1) := zi1;
+   -- b(b'first) := x(x'last)*x(x'last-1);
+    pr2 := xr(xr'last); pi2 := xi(xr'last);
+    idx2 := xi'last-1;
+    qr2 := xr(idx2); qi2 := xi(idx2);
+    zr2 := pr2*qr2 - pi2*qi2;
+    zi2 := pr2*qi2 + pi2*qr2;
+    br(1) := zr2; bi(1) := zi2;
+    for k in 2..dim-1 loop 
+     -- f(k) := f(k-1)*x(k+1);
+      pr1 := zr1; pi1 := zi1;
+      idx1 := k+1;
+      qr1 := xr(idx1); qi1 := xi(idx1);
+      zr1 := pr1*qr1 - pi1*qi1;
+      zi1 := pr1*qi1 + pi1*qr1;
+      fr(k) := zr1; fi(k) := zi1;
+     -- b(k) := b(k-1)*x(x'last-k);
+      pr2 := zr2; pi2 := zi2;
+      idx2 := xr'last-k;
+      qr2 := xr(idx2); qi2 := xi(idx2);
+      zr2 := pr2*qr2 - pi2*qi2;
+      zi2 := pr2*qi2 + pi2*qr2;
+      br(k) := zr2; bi(k) := zi2;
+    end loop;
+    pr1 := zr1; pi1 := zi1;
+    idx1 := dim+1;
+    qr1 := xr(idx1); qi1 := xi(idx1);
+    zr1 := pr1*qr1 - pi1*qi1;
+    zi1 := pr1*qi1 + pi1*qr1;
+    fr(dim) := zr1; fi(dim) := zi1;
+  end Forward_Backward2;
 
   function Allocate
              ( mxe : Standard_Integer_Vectors.Vector )
@@ -342,31 +434,49 @@ procedure ts_perfade is
          := Standard_Complex_Numbers.Create(0.0);
     cf : constant Standard_Complex_Vectors.Vector(1..dim-1)
        := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
+    cf2 : constant Standard_Complex_Vectors.Vector(1..dim-1)
+        := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
     cb : constant Standard_Complex_Vectors.Vector(1..dim-2)
-       := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cb2 : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
     x : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(cx);
     f : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(cf);
+    f2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cf2);
     b : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(cb);
+    b2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cb2);
     xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
     xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
     fr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f);
     fi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f);
     br : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b);
     bi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b);
-    v,w : Standard_Complex_Vectors.Link_to_Vector;
+    fr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f2);
+    fi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f2);
+    br2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b2);
+    bi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b2);
+    v,w,v2,w2 : Standard_Complex_Vectors.Link_to_Vector;
 
   begin
     Forward_Backward(x,f,b);
+    Forward_Backward2(x,f2,b2);
     Forward_Backward(xr,xi,fr,fi,br,bi);
-    v := Make_Complex(fr,fi);
-    w := Make_Complex(br,bi);
+    Forward_Backward2(xr,xi,fr2,fi2,br2,bi2);
+    v := Make_Complex(fr,fi); v2 := Make_Complex(fr2,fi2);
+    w := Make_Complex(br,bi); w2 := Make_Complex(br2,bi2);
     put_line("the forward products : "); put_line(f);
+    put_line("the forward products with loop fusion : "); put_line(f2);
     put_line("forward products recomputed : "); put_line(v);
+    put_line("forward products recomputed with loop fusion : "); put_line(v2);
     put_line("the backward products : "); put_line(b);
+    put_line("the backward products with loop fusion : "); put_line(b2);
     put_line("backward products recomputed : "); put_line(w);
+    put_line("backward products recomputed with loop fusion : "); put_line(w2);
   end Test_Forward_Backward;
 
   procedure Test_Power_Table ( dim,pwr : in integer32 ) is
@@ -446,20 +556,32 @@ procedure ts_perfade is
          := Standard_Complex_Numbers.Create(0.0);
     cf : constant Standard_Complex_Vectors.Vector(1..dim-1)
        := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
+    cf2 : constant Standard_Complex_Vectors.Vector(1..dim-1)
+        := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
     cb : constant Standard_Complex_Vectors.Vector(1..dim-2)
        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cb2 : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
     x : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(cx);
     f : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(cf);
+    f2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cf2);
     b : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(cb);
+    b2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cb2);
     xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
     xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
     fr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f);
     fi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f);
     br : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b);
     bi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b);
+    fr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f2);
+    fi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f2);
+    br2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b2);
+    bi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b2);
     timer : Timing_Widget;
 
   begin
@@ -472,11 +594,25 @@ procedure ts_perfade is
     print_times(standard_output,timer,"complex forward & backward products");
     tstart(timer);
     for k in 1..frq loop
+      Forward_Backward2(x,f2,b2);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex with loop fusion");
+    tstart(timer);
+    for k in 1..frq loop
       Forward_Backward(xr,xi,fr,fi,br,bi);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"real forward & backward products");
+    tstart(timer);
+    for k in 1..frq loop
+      Forward_Backward2(xr,xi,fr2,fi2,br2,bi2);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"real with loop fusion");
   end Timing_Test_Forward_Backward;
 
   procedure Timing_Test_Power_Table ( dim,pwr,frq : in integer32 ) is
