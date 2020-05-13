@@ -85,7 +85,7 @@ procedure ts_perfade is
   --   and stores the products in b.
 
   -- REQUIRED :
-  --    f'first = x'first = 1 and f'last >= x'last-1.
+  --    f'first = x'first = 1 and f'last >= x'last-1,
   --    b'first = b'first = 1 and b'last >= x'last-2.
 
     use Standard_Complex_Numbers;
@@ -101,7 +101,7 @@ procedure ts_perfade is
     end loop;
   end Forward_Backward;
 
-  procedure Forward_Backward2
+  procedure Fused_Forward_Backward
               ( x,f,b : in Standard_Complex_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
@@ -124,8 +124,10 @@ procedure ts_perfade is
       f(k) := f(k-1)*x(k+1);
       b(k) := b(k-1)*x(x'last-k);
     end loop;
-    f(f'last) := f(f'last-1)*x(x'last);
-  end Forward_Backward2;
+    if f'last > 1
+     then f(f'last) := f(f'last-1)*x(x'last);
+    end if;
+  end Fused_Forward_Backward;
 
   procedure Forward_Backward
               ( xr : in Standard_Floating_Vectors.Link_to_Vector;
@@ -187,7 +189,7 @@ procedure ts_perfade is
     end loop;
   end Forward_Backward;
 
-  procedure Forward_Backward2
+  procedure Fused_Forward_Backward
               ( xr : in Standard_Floating_Vectors.Link_to_Vector;
                 xi : in Standard_Floating_Vectors.Link_to_Vector;
                 fr : in Standard_Floating_Vectors.Link_to_Vector;
@@ -245,13 +247,178 @@ procedure ts_perfade is
       zi2 := pr2*qi2 + pi2*qr2;
       br(k) := zr2; bi(k) := zi2;
     end loop;
-    pr1 := zr1; pi1 := zi1;
-    idx1 := dim+1;
-    qr1 := xr(idx1); qi1 := xi(idx1);
-    zr1 := pr1*qr1 - pi1*qi1;
-    zi1 := pr1*qi1 + pi1*qr1;
-    fr(dim) := zr1; fi(dim) := zi1;
-  end Forward_Backward2;
+    if dim > 1 then
+      pr1 := zr1; pi1 := zi1;
+      idx1 := dim+1;
+      qr1 := xr(idx1); qi1 := xi(idx1);
+      zr1 := pr1*qr1 - pi1*qi1;
+      zi1 := pr1*qi1 + pi1*qr1;
+      fr(dim) := zr1; fi(dim) := zi1;
+    end if;
+  end Fused_Forward_Backward;
+
+  procedure Forward_Backward_Cross
+              ( x,f,b,c : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes all forward products of the values in x
+  --   and stores the products in f.
+  --   Computes all backward products of the values in x
+  --   and stores the products in b.
+  --   Computes all cross products of the values in x
+  --   and stores the products in b.
+
+  -- REQUIRED : x'last > 2, 
+  --   f'first = x'first = 1 and f'last >= x'last-1,
+  --   b'first = b'first = 1 and b'last >= x'last-2,
+  --   c'first = c'first = 1 and c'last >= x'last-2.
+
+  -- ON ENTRY :
+  --   x        values for the variables;
+  --   f        space allocated for forward products;
+  --   b        space allocated for backward products;
+  --   c        space allocated for cross products.
+
+  -- ON RETURN : let n be x'last-1,
+  --   f(n)     holds the product of all variables in x;
+  --   f(n-1)   is the partial derivative of the product
+  --            with respect to the last variable;
+  --   b(n-2)   is the partial derivative of the product
+  --            with respect to the first variable;
+  --   c(k)     is the partial derivative of the product
+  --            with respect to the (k+1)-th variable.
+
+    use Standard_Complex_Numbers;
+
+  begin
+    f(f'first) := x(x'first)*x(x'first+1);
+    for k in 2..x'last-1 loop
+      f(k) := f(k-1)*x(k+1);
+    end loop;
+    b(b'first) := x(x'last)*x(x'last-1);
+    for k in 2..x'last-2 loop
+      b(k) := b(k-1)*x(x'last-k);
+    end loop;
+    if x'last > 2 then
+      if x'last = 3 then
+        c(1) := x(1)*x(3);
+      else
+        c(1) := x(1)*b(x'last-3);
+        for k in 2..x'last-3 loop
+          c(k) := f(k-1)*b(x'last-2-k);
+        end loop;
+        c(x'last-2) := x(x'last)*f(x'last-3);
+      end if;
+    end if;
+  end Forward_Backward_Cross;
+
+  procedure Fused_Forward_Backward_Cross
+              ( x,f,b,c : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes all forward products of the values in x
+  --   and stores the products in f.
+  --   Computes all backward products of the values in x
+  --   and stores the products in b.
+  --   Computes all cross products of the values in x
+  --   and stores the products in b.
+  --   Applies loop fusion.
+
+  -- REQUIRED : x'last > 2, 
+  --   f'first = x'first = 1 and f'last >= x'last-1,
+  --   b'first = b'first = 1 and b'last >= x'last-2,
+  --   c'first = c'first = 1 and c'last >= x'last-2.
+
+  -- ON ENTRY :
+  --   x        values for the variables;
+  --   f        space allocated for forward products;
+  --   b        space allocated for backward products;
+  --   c        space allocated for cross products.
+
+  -- ON RETURN : let n be x'last-1,
+  --   f(n)     holds the product of all variables in x;
+  --   f(n-1)   is the partial derivative of the product
+  --            with respect to the last variable;
+  --   b(n-2)   is the partial derivative of the product
+  --            with respect to the first variable;
+  --   c(k)     is the partial derivative of the product
+  --            with respect to the (k+1)-th variable.
+
+    use Standard_Complex_Numbers;
+
+    firstend,lastend,plusidx,minidx : integer32;
+
+  begin
+    if x'last >= 8 then
+      if x'last mod 2 = 0 then
+        lastend := x'last-4;
+        firstend := lastend/2;
+        f(f'first) := x(x'first)*x(x'first+1);
+        b(b'first) := x(x'last)*x(x'last-1);
+        for k in 2..firstend loop
+          f(k) := f(k-1)*x(k+1);
+          b(k) := b(k-1)*x(x'last-k);
+        end loop;
+        minidx := firstend+1; plusidx := minidx+1;
+        for k in firstend+1..lastend loop
+          f(k) := f(k-1)*x(k+1);
+          b(k) := b(k-1)*x(x'last-k);
+          c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
+          plusidx := plusidx + 1;
+          c(minidx) := f(minidx-1)*b(x'last-2-minidx);
+          minidx := minidx - 1;
+        end loop;
+      else
+        lastend := x'last-3;
+        firstend := lastend/2;
+        f(f'first) := x(x'first)*x(x'first+1);
+        b(b'first) := x(x'last)*x(x'last-1);
+        for k in 2..firstend loop
+          f(k) := f(k-1)*x(k+1);
+          b(k) := b(k-1)*x(x'last-k);
+        end loop;
+        plusidx := firstend+1;
+        c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
+        minidx := plusidx;
+        for k in firstend+1..lastend loop
+          f(k) := f(k-1)*x(k+1);
+          b(k) := b(k-1)*x(x'last-k);
+          plusidx := plusidx + 1;
+          c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
+          minidx := minidx - 1;
+          c(minidx) := f(minidx-1)*b(x'last-2-minidx);
+        end loop;
+      end if;
+      plusidx := lastend+1;
+      f(plusidx) := f(plusidx-1)*x(plusidx+1);
+      b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+      plusidx := plusidx+1;
+      f(plusidx) := f(plusidx-1)*x(plusidx+1);
+      b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+      f(f'last) := f(f'last-1)*x(x'last);
+      c(1) := x(1)*b(x'last-3);
+      c(x'last-2) := x(x'last)*f(x'last-3);
+    else
+      f(f'first) := x(x'first)*x(x'first+1);
+      b(b'first) := x(x'last)*x(x'last-1);
+      for k in 2..x'last-2 loop
+        f(k) := f(k-1)*x(k+1);
+        b(k) := b(k-1)*x(x'last-k);
+      end loop;
+      if f'last > 1
+       then f(f'last) := f(f'last-1)*x(x'last);
+      end if;
+      if x'last > 3 then
+        c(1) := x(1)*b(x'last-3);
+        for k in 2..x'last-3 loop
+          c(k) := f(k-1)*b(x'last-2-k);
+        end loop;
+        c(x'last-2) := x(x'last)*f(x'last-3);
+      elsif x'last = 3 then
+        c(1) := x(1)*x(3);
+      end if;
+    end if;
+  end Fused_Forward_Backward_Cross;
 
   function Allocate
              ( mxe : Standard_Integer_Vectors.Vector )
@@ -464,9 +631,9 @@ procedure ts_perfade is
 
   begin
     Forward_Backward(x,f,b);
-    Forward_Backward2(x,f2,b2);
+    Fused_Forward_Backward(x,f2,b2);
     Forward_Backward(xr,xi,fr,fi,br,bi);
-    Forward_Backward2(xr,xi,fr2,fi2,br2,bi2);
+    Fused_Forward_Backward(xr,xi,fr2,fi2,br2,bi2);
     v := Make_Complex(fr,fi); v2 := Make_Complex(fr2,fi2);
     w := Make_Complex(br,bi); w2 := Make_Complex(br2,bi2);
     put_line("the forward products : "); put_line(f);
@@ -478,6 +645,73 @@ procedure ts_perfade is
     put_line("backward products recomputed : "); put_line(w);
     put_line("backward products recomputed with loop fusion : "); put_line(w2);
   end Test_Forward_Backward;
+
+  procedure Test_Forward_Backward_Cross ( dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random vector of dimension dim
+  --   and tests the computation of the forward/backward/cross products.
+
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+    cf : constant Standard_Complex_Vectors.Vector(1..dim-1)
+       := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
+    cf2 : constant Standard_Complex_Vectors.Vector(1..dim-1)
+        := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
+    cb : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cb2 : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cc : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cc2 : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    f : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cf);
+    f2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cf2);
+    b : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cb);
+    b2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cb2);
+    c : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cc);
+    c2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cc2);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    fr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f);
+    fi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f);
+    br : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b);
+    bi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b);
+    fr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f2);
+    fi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f2);
+    br2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b2);
+    bi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b2);
+    v,w,v2,w2 : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    Forward_Backward_Cross(x,f,b,c);
+    Fused_Forward_Backward_Cross(x,f2,b2,c2);
+   -- Forward_Backward(xr,xi,fr,fi,br,bi);
+   -- Fused_Forward_Backward(xr,xi,fr2,fi2,br2,bi2);
+    v := Make_Complex(fr,fi); v2 := Make_Complex(fr2,fi2);
+    w := Make_Complex(br,bi); w2 := Make_Complex(br2,bi2);
+    put_line("the forward products : "); put_line(f);
+    put_line("the forward products with loop fusion : "); put_line(f2);
+   -- put_line("forward products recomputed : "); put_line(v);
+   -- put_line("forward products recomputed with loop fusion : "); put_line(v2);
+    put_line("the backward products : "); put_line(b);
+    put_line("the backward products with loop fusion : "); put_line(b2);
+   -- put_line("backward products recomputed : "); put_line(w);
+   -- put_line("backward products recomputed with loop fusion : "); put_line(w2);
+    put_line("the cross products : "); put_line(c);
+    put_line("the cross products with loop fusion : "); put_line(c2);
+  end Test_Forward_Backward_Cross;
 
   procedure Test_Power_Table ( dim,pwr : in integer32 ) is
 
@@ -594,7 +828,7 @@ procedure ts_perfade is
     print_times(standard_output,timer,"complex forward & backward products");
     tstart(timer);
     for k in 1..frq loop
-      Forward_Backward2(x,f2,b2);
+      Fused_Forward_Backward(x,f2,b2);
     end loop;
     tstop(timer);
     new_line;
@@ -608,12 +842,91 @@ procedure ts_perfade is
     print_times(standard_output,timer,"real forward & backward products");
     tstart(timer);
     for k in 1..frq loop
-      Forward_Backward2(xr,xi,fr2,fi2,br2,bi2);
+      Fused_Forward_Backward(xr,xi,fr2,fi2,br2,bi2);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"real with loop fusion");
   end Timing_Test_Forward_Backward;
+
+  procedure Timing_Test_Forward_Backward_Cross ( dim,frq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does as many forward/backward/cross product computations as freq
+  --   on random vectors of dimension dim.
+
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+    cf : constant Standard_Complex_Vectors.Vector(1..dim-1)
+       := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
+    cf2 : constant Standard_Complex_Vectors.Vector(1..dim-1)
+        := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
+    cb : constant Standard_Complex_Vectors.Vector(1..dim-2)
+       := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cb2 : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cc : constant Standard_Complex_Vectors.Vector(1..dim-2)
+       := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cc2 : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    f : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cf);
+    f2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cf2);
+    b : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cb);
+    b2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cb2);
+    c : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cc);
+    c2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cc2);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    fr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f);
+    fi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f);
+    br : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b);
+    bi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b);
+    fr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f2);
+    fi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f2);
+    br2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b2);
+    bi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b2);
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    for k in 1..frq loop
+      Forward_Backward_Cross(x,f,b,c);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex forward, backward, cross ");
+    tstart(timer);
+    for k in 1..frq loop
+      Fused_Forward_Backward_Cross(x,f2,b2,c2);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"fused complex forward, backward, cross");
+    tstart(timer);
+    for k in 1..frq loop
+      Forward_Backward(xr,xi,fr,fi,br,bi);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"real forward & backward products");
+    tstart(timer);
+    for k in 1..frq loop
+      Fused_Forward_Backward(xr,xi,fr2,fi2,br2,bi2);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"real with loop fusion");
+  end Timing_Test_Forward_Backward_Cross;
 
   procedure Timing_Test_Power_Table ( dim,pwr,frq : in integer32 ) is
 
@@ -666,9 +979,11 @@ procedure ts_perfade is
     put_line("MENU for testing ADE :");
     put_line("  1. forward products");
     put_line("  2. forward and backward products");
-    put_line("  3. power table");
-    put("Type 1, 2, or 3 to select the test : "); Ask_Alternative(tst,"123");
-    if tst = '3' then
+    put_line("  3. forward, backward, and cross products");
+    put_line("  4. power table");
+    put("Type 1, 2, 3, or 4 to select the test : ");
+    Ask_Alternative(tst,"1234");
+    if tst = '4' then
       new_line;
       put("Give the highest power : "); get(pwr);
     end if;
@@ -678,7 +993,8 @@ procedure ts_perfade is
       case tst is
         when '1' => Test_Forward(dim);
         when '2' => Test_Forward_Backward(dim);
-        when '3' => Test_Power_Table(dim,pwr);
+        when '3' => Test_Forward_Backward_Cross(dim);
+        when '4' => Test_Power_Table(dim,pwr);
         when others => null;
       end case;
     else
@@ -687,7 +1003,8 @@ procedure ts_perfade is
       case tst is
         when '1' => Timing_Test_Forward(dim,frq);
         when '2' => Timing_Test_Forward_Backward(dim,frq);
-        when '3' => Timing_Test_Power_Table(dim,pwr,frq);
+        when '3' => Timing_Test_Forward_Backward_Cross(dim,frq);
+        when '4' => Timing_Test_Power_Table(dim,pwr,frq);
         when others => null;
       end case;
     end if;
