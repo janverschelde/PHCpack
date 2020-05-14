@@ -1,6 +1,7 @@
 Wed 13 May 2020 : added computation of power table to ts_perfade.
   Added loop fusion to forward/backward products in ts_perfade.
   Defined complex forward/backward/cross with loop fusion in ts_perfade.
+  Added to ts_perfade the real fused forward/backward/cross products.
 
 Tue 12 May 2020 : added computation of backward products to ts_perfade.
 
