@@ -1,5 +1,6 @@
 Fri 15 May 2020 : bug fix in grabbing imaginary part in fused versions
-  in standard_coefficient_circuits.adb.
+  in standard_coefficient_circuits.adb.  More bug fixes with indexing
+  in standard_coefficient_circuits.adb, added test in ts_perfade.adb.
 
 Thu 14 May 2020 : new package standard_coefficient_circuits with code
   taken from ts_perfade.  To standard_coefficient_circuits, added indexed

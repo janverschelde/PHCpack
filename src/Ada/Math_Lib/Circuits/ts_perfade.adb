@@ -260,6 +260,7 @@ procedure ts_perfade is
 
   begin
     put("The indices in the product : "); put(idx); new_line;
+    put("idx'last : "); put(idx'last,1); new_line;
     Forward_Backward_Cross(idx,x,f,b,c);
     Fused_Forward_Backward_Cross(idx,xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
     u2 := Make_Complex(cr2,ci2);
@@ -299,7 +300,7 @@ procedure ts_perfade is
     put_line("The recomputed power table : "); put_line(v);
   end Test_Power_Table;
 
-  procedure Timing_Test_Forward ( dim,frq : in integer32 ) is
+  procedure Timing_Forward ( dim,frq : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does as many forward product computations as freq
@@ -336,9 +337,9 @@ procedure ts_perfade is
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"real forward products");
-  end Timing_Test_Forward;
+  end Timing_Forward;
 
-  procedure Timing_Test_Forward_Backward ( dim,frq : in integer32 ) is
+  procedure Timing_Forward_Backward ( dim,frq : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does as many forward/backward product computations as freq
@@ -407,9 +408,9 @@ procedure ts_perfade is
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"real with loop fusion");
-  end Timing_Test_Forward_Backward;
+  end Timing_Forward_Backward;
 
-  procedure Timing_Test_Forward_Backward_Cross ( dim,frq : in integer32 ) is
+  procedure Timing_Forward_Backward_Cross ( dim,frq : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does as many forward/backward/cross product computations as freq
@@ -490,9 +491,74 @@ procedure ts_perfade is
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"fused real forward, backward, cross");
-  end Timing_Test_Forward_Backward_Cross;
+  end Timing_Forward_Backward_Cross;
 
-  procedure Timing_Test_Power_Table ( dim,pwr,frq : in integer32 ) is
+  procedure Timing_Indexed_Forward_Backward_Cross
+              ( dim,frq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does as many forward/backward/cross product computations as freq
+  --   on random vectors of dimension dim.
+
+    idx : constant Standard_Integer_Vectors.Vector := Random_Indices(dim);
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+    cf : constant Standard_Complex_Vectors.Vector(1..dim-1)
+       := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
+    cf2 : constant Standard_Complex_Vectors.Vector(1..dim-1)
+        := Standard_Complex_Vectors.Vector'(1..dim-1 => zero);
+    cb : constant Standard_Complex_Vectors.Vector(1..dim-2)
+       := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cb2 : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cc : constant Standard_Complex_Vectors.Vector(1..dim-2)
+       := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    cc2 : constant Standard_Complex_Vectors.Vector(1..dim-2)
+        := Standard_Complex_Vectors.Vector'(1..dim-2 => zero);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    f : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cf);
+    f2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cf2);
+    b : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cb);
+    b2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cb2);
+    c : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cc);
+    c2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cc2);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    fr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f2);
+    fi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f2);
+    br2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b2);
+    bi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b2);
+    cr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(c2);
+    ci2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(c2);
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    for k in 1..frq loop
+      Forward_Backward_Cross(idx,x,f,b,c);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex forward, backward, cross ");
+    tstart(timer);
+    for k in 1..frq loop
+      Fused_Forward_Backward_Cross(idx,xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"fused real forward, backward, cross");
+  end Timing_Indexed_Forward_Backward_Cross;
+
+  procedure Timing_Power_Table ( dim,pwr,frq : in integer32 ) is
 
   -- DESCRIPTION :
   --   Given the dimension dim, the highest power pwr,
@@ -525,7 +591,7 @@ procedure ts_perfade is
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex power table");
-  end Timing_Test_Power_Table;
+  end Timing_Power_Table;
 
   procedure Main is
 
@@ -567,10 +633,11 @@ procedure ts_perfade is
       new_line;
       put("Give the frequency of the tests : "); get(frq);
       case tst is
-        when '1' => Timing_Test_Forward(dim,frq);
-        when '2' => Timing_Test_Forward_Backward(dim,frq);
-        when '3' => Timing_Test_Forward_Backward_Cross(dim,frq);
-        when '5' => Timing_Test_Power_Table(dim,pwr,frq);
+        when '1' => Timing_Forward(dim,frq);
+        when '2' => Timing_Forward_Backward(dim,frq);
+        when '3' => Timing_Forward_Backward_Cross(dim,frq);
+        when '4' => Timing_Indexed_Forward_Backward_Cross(dim,frq);
+        when '5' => Timing_Power_Table(dim,pwr,frq);
         when others => null;
       end case;
     end if;

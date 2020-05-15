@@ -1,7 +1,3 @@
--- with text_io; use text_io;
--- with Standard_Integer_Numbers_io; use Standard_Integer_Numbers_io;
--- with Standard_Floating_Numbers_io; use Standard_Floating_Numbers_io;
-
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
@@ -265,8 +261,8 @@ package body Standard_Coefficient_Circuits is
           minidx := minidx - 1;
         end loop;
       else
-        lastend := x'last-3;
-        firstend := lastend/2;
+        lastend := x'last-4;
+        firstend := (x'last-3)/2;
         f(f'first) := x(x'first)*x(x'first+1);
         b(b'first) := x(x'last)*x(x'last-1);
         for k in 2..firstend loop
@@ -540,8 +536,8 @@ package body Standard_Coefficient_Circuits is
         idx := xr'last-2;
         cr(idx) := zr3; ci(idx) := zi3;
       else
-        lastend := xr'last-3;
-        firstend := lastend/2;
+        lastend := xr'last-4;
+        firstend := (xr'last-3)/2;
        -- f(f'first) := x(x'first)*x(x'first+1);
         pr1 := xr(1); pi1 := xi(1);
         idx := xr'first+1;
@@ -574,12 +570,15 @@ package body Standard_Coefficient_Circuits is
         end loop;
         plusidx := firstend+1;
        -- c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
-        idx := plusidx-1;
-        pr3 := fr(idx); pi3 := fi(idx);
+       -- idx := plusidx-1;
+       -- pr3 := fr(idx); pi3 := fi(idx);
+       -- f(plusidx-1) is still in zr1 and zi1
         idx := xr'last-2-plusidx;
         qr3 := br(idx); qi3 := bi(idx);
-        zr3 := pr3*qr3 - pi3*qi3;
-        zi3 := pr3*qi3 + pi3*qr3;
+       -- zr3 := pr3*qr3 - pi3*qi3;
+       -- zi3 := pr3*qi3 + pi3*qr3;
+        zr3 := zr1*qr3 - zi1*qi3;
+        zi3 := zr1*qi3 + zi1*qr3;
         cr(plusidx) := zr3; ci(plusidx) := zi3;
         minidx := plusidx;
         for k in firstend+1..lastend loop
@@ -598,6 +597,7 @@ package body Standard_Coefficient_Circuits is
           zi2 := pr2*qi2 + pi2*qr2;
           br(k) := zr2; bi(k) := zi2;
          -- c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
+          plusidx := plusidx + 1;
           idx := plusidx-1;
           pr3 := fr(idx); pi3 := fi(idx);
           idx := xr'last-2-plusidx;
@@ -605,8 +605,8 @@ package body Standard_Coefficient_Circuits is
           zr3 := pr3*qr3 - pi3*qi3;
           zi3 := pr3*qi3 + pi3*qr3;
           cr(plusidx) := zr3; ci(plusidx) := zi3;
-          plusidx := plusidx + 1;
          -- c(minidx) := f(minidx-1)*b(x'last-2-minidx);
+          minidx := minidx - 1;
           idx := minidx-1;
           pr3 := fr(idx); pi3 := fi(idx);
           idx := xr'last-2-minidx;
@@ -614,7 +614,6 @@ package body Standard_Coefficient_Circuits is
           zr3 := pr3*qr3 - pi3*qi3;
           zi3 := pr3*qi3 + pi3*qr3;
           cr(minidx) := zr3; ci(minidx) := zi3;
-          minidx := minidx - 1;
         end loop;
         plusidx := lastend+1;
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
@@ -640,12 +639,12 @@ package body Standard_Coefficient_Circuits is
         zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
        -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+        pr2 := zr2; pi2 := zi2;
         idx := xr'last-plusidx;
         qr2 := xr(idx); qi2 := xi(idx);
         zr2 := pr2*qr2 - pi2*qi2;
         zi2 := pr2*qi2 + pi2*qr2;
         br(plusidx) := zr2; bi(plusidx) := zi2;
-        plusidx := plusidx+1;
        -- f(f'last) := f(f'last-1)*x(x'last);
         pr1 := zr1; pi1 := zi1;
         idx := dim+1;
@@ -808,7 +807,7 @@ package body Standard_Coefficient_Circuits is
           ptr := idx'last-2-plusidx; qr3 := br(ptr); qi3 := bi(ptr);
           zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
           cr(plusidx) := zr3; ci(plusidx) := zi3;
-          plusidx := plusidx + 1;
+          plusidx := plusidx+1;
          -- c(minidx) := f(minidx-1)*b(x'last-2-minidx);
           ptr := minidx-1; pr3 := fr(ptr); pi3 := fi(ptr);
           ptr := idx'last-2-minidx; qr3 := br(ptr); qi3 := bi(ptr);
@@ -834,17 +833,17 @@ package body Standard_Coefficient_Circuits is
         zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
        -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+        pr2 := zr2; pi2 := zi2;
         ptr := idx(idx'last-plusidx); qr2 := xr(ptr); qi2 := xi(ptr);
         zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
         br(plusidx) := zr2; bi(plusidx) := zi2;
-        plusidx := plusidx+1;
        -- f(f'last) := f(f'last-1)*x(x'last);
         pr1 := zr1; pi1 := zi1;
         ptr := idx(dim+1); qr1 := xr(ptr); qi1 := xi(ptr);
         zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
         fr(dim) := zr1; fi(dim) := zi1;
        -- c(1) := x(1)*b(x'last-3);
-        pr3 := xr(1); pi3 := xi(1);
+        ptr := idx(1); pr3 := xr(ptr); pi3 := xi(ptr);
         ptr := idx'last-3; qr3 := br(ptr); qi3 := bi(ptr);
         zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
         cr(1) := zr3; ci(1) := zi3;
@@ -854,8 +853,8 @@ package body Standard_Coefficient_Circuits is
         zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
         ptr := idx'last-2; cr(ptr) := zr3; ci(ptr) := zi3;
       else
-        lastend := idx'last-3;
-        firstend := lastend/2;
+        lastend := idx'last-4;
+        firstend := (idx'last-3)/2;
        -- f(f'first) := x(x'first)*x(x'first+1);
         ptr := idx(1); pr1 := xr(ptr); pi1 := xi(ptr);
         ptr := idx(idx'first+1); qr1 := xr(ptr); qi1 := xi(ptr);
@@ -897,17 +896,17 @@ package body Standard_Coefficient_Circuits is
           zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
           br(k) := zr2; bi(k) := zi2;
          -- c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
+          plusidx := plusidx + 1;
           ptr := plusidx-1; pr3 := fr(ptr); pi3 := fi(ptr);
           ptr := idx'last-2-plusidx; qr3 := br(ptr); qi3 := bi(ptr);
           zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
           cr(plusidx) := zr3; ci(plusidx) := zi3;
-          plusidx := plusidx + 1;
          -- c(minidx) := f(minidx-1)*b(x'last-2-minidx);
+          minidx := minidx - 1;
           ptr := minidx-1; pr3 := fr(ptr); pi3 := fi(ptr);
           ptr := idx'last-2-minidx; qr3 := br(ptr); qi3 := bi(ptr);
           zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
           cr(minidx) := zr3; ci(minidx) := zi3;
-          minidx := minidx - 1;
         end loop;
         plusidx := lastend+1;
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
