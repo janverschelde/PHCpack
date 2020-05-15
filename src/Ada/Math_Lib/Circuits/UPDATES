@@ -1,5 +1,6 @@
 Thu 14 May 2020 : new package standard_coefficient_circuits with code
-  taken from ts_perfade.
+  taken from ts_perfade.  To standard_coefficient_circuits, added indexed
+  versions of the procedures, tested by ts_perfade.
 
 Wed 13 May 2020 : added computation of power table to ts_perfade.
   Added loop fusion to forward/backward products in ts_perfade.

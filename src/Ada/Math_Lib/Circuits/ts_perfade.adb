@@ -4,7 +4,9 @@ with Timing_Package;                      use Timing_Package;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
+with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
@@ -180,6 +182,96 @@ procedure ts_perfade is
     put_line("cross products recomputed : "); put_line(u);
     put_line("cross products recomputed wth loop fusion: "); put_line(u2);
   end Test_Forward_Backward_Cross;
+
+  function Random_Indices
+             ( dim : integer32 )
+             return Standard_Integer_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a vector of indices between 1 and dim
+  --   of variables participating in a product.
+
+    res : Standard_Integer_Vectors.Vector(1..dim);
+    cnt : integer32 := 0;
+    rnd : integer32;
+
+  begin
+    loop
+      for k in 1..dim loop
+        rnd := Standard_Random_Numbers.Random(0,1);
+        if rnd = 1 then
+          cnt := cnt + 1;
+          res(cnt) := k;
+        end if;
+      end loop;
+      exit when (cnt > 1); -- at least two indices
+      cnt := 0;            -- reset the counter
+    end loop;
+    return res(1..cnt);
+  end Random_Indices;
+
+  procedure Test_Indexed_Forward_Backward_Cross ( dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random vector of dimension dim
+  --   and tests the computation of the forward/backward/cross products.
+
+    idx : constant Standard_Integer_Vectors.Vector := Random_Indices(dim);
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+    size : constant integer32 := idx'last;
+    cf : constant Standard_Complex_Vectors.Vector(1..size-1)
+       := Standard_Complex_Vectors.Vector'(1..size-1 => zero);
+    cf2 : constant Standard_Complex_Vectors.Vector(1..size-1)
+        := Standard_Complex_Vectors.Vector'(1..size-1 => zero);
+    cb : constant Standard_Complex_Vectors.Vector(1..size-2)
+        := Standard_Complex_Vectors.Vector'(1..size-2 => zero);
+    cb2 : constant Standard_Complex_Vectors.Vector(1..size-2)
+        := Standard_Complex_Vectors.Vector'(1..size-2 => zero);
+    cc : constant Standard_Complex_Vectors.Vector(1..size-2)
+        := Standard_Complex_Vectors.Vector'(1..size-2 => zero);
+    cc2 : constant Standard_Complex_Vectors.Vector(1..size-2)
+        := Standard_Complex_Vectors.Vector'(1..size-2 => zero);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    f : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cf);
+    f2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cf2);
+    b : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cb);
+    b2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cb2);
+    c : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cc);
+    c2 : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(cc2);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    fr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f2);
+    fi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f2);
+    br2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b2);
+    bi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b2);
+    cr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(c2);
+    ci2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(c2);
+    u2,v2,w2 : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    put("The indices in the product : "); put(idx); new_line;
+    Forward_Backward_Cross(idx,x,f,b,c);
+    Fused_Forward_Backward_Cross(idx,xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
+    u2 := Make_Complex(cr2,ci2);
+    v2 := Make_Complex(fr2,fi2);
+    w2 := Make_Complex(br2,bi2);
+    put_line("the forward products : "); put_line(f);
+    put_line("forward products recomputed with loop fusion : "); put_line(v2);
+    put_line("the backward products : "); put_line(b);
+    put_line("backward products recomputed with loop fusion : "); put_line(w2);
+    put_line("the cross products : "); put_line(c);
+    put_line("cross products recomputed wth loop fusion: "); put_line(u2);
+  end Test_Indexed_Forward_Backward_Cross;
 
   procedure Test_Power_Table ( dim,pwr : in integer32 ) is
 
@@ -452,10 +544,11 @@ procedure ts_perfade is
     put_line("  1. forward products");
     put_line("  2. forward and backward products");
     put_line("  3. forward, backward, and cross products");
-    put_line("  4. power table");
-    put("Type 1, 2, 3, or 4 to select the test : ");
-    Ask_Alternative(tst,"1234");
-    if tst = '4' then
+    put_line("  4. indexed forward, backward, and cross products");
+    put_line("  5. power table");
+    put("Type 1, 2, 3, 4, or 5 to select the test : ");
+    Ask_Alternative(tst,"12345");
+    if tst = '5' then
       new_line;
       put("Give the highest power : "); get(pwr);
     end if;
@@ -466,7 +559,8 @@ procedure ts_perfade is
         when '1' => Test_Forward(dim);
         when '2' => Test_Forward_Backward(dim);
         when '3' => Test_Forward_Backward_Cross(dim);
-        when '4' => Test_Power_Table(dim,pwr);
+        when '4' => Test_Indexed_Forward_Backward_Cross(dim);
+        when '5' => Test_Power_Table(dim,pwr);
         when others => null;
       end case;
     else
@@ -476,7 +570,7 @@ procedure ts_perfade is
         when '1' => Timing_Test_Forward(dim,frq);
         when '2' => Timing_Test_Forward_Backward(dim,frq);
         when '3' => Timing_Test_Forward_Backward_Cross(dim,frq);
-        when '4' => Timing_Test_Power_Table(dim,pwr,frq);
+        when '5' => Timing_Test_Power_Table(dim,pwr,frq);
         when others => null;
       end case;
     end if;

@@ -106,6 +106,9 @@ package Standard_Coefficient_Circuits is
 
   procedure Forward_Backward_Cross
               ( x,f,b,c : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Forward_Backward_Cross
+              ( idx : in Standard_Integer_Vectors.Vector;
+                x,f,b,c : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Computes all forward products of the values in x
@@ -116,24 +119,26 @@ package Standard_Coefficient_Circuits is
   --   and stores the products in b.
 
   -- REQUIRED : x'last > 2, 
-  --   f'first = x'first = 1 and f'last >= x'last-1,
-  --   b'first = b'first = 1 and b'last >= x'last-2,
-  --   c'first = c'first = 1 and c'last >= x'last-2.
+  --   f'first = x'first = 1 and f'last >= x'last-1, or >= idx'last-1,
+  --   b'first = b'first = 1 and b'last >= x'last-2, or >= idx'last-2,
+  --   c'first = c'first = 1 and c'last >= x'last-2, or >= idx'last-2.
 
   -- ON ENTRY :
+  --   idx      if provided, then only those values of x
+  --            as indexed by the entries in idx will be used;
   --   x        values for the variables;
   --   f        space allocated for forward products;
   --   b        space allocated for backward products;
   --   c        space allocated for cross products.
 
-  -- ON RETURN : let n be x'last-1,
-  --   f(n)     holds the product of all variables in x;
+  -- ON RETURN : let n be x'last-1, or idx'last-1
+  --   f(n)     holds the product of all (or those in idx) variables in x;
   --   f(n-1)   is the partial derivative of the product
-  --            with respect to the last variable;
+  --            with respect to the last variable (in idx);
   --   b(n-2)   is the partial derivative of the product
-  --            with respect to the first variable;
+  --            with respect to the first variable (or idx(1));
   --   c(k)     is the partial derivative of the product
-  --            with respect to the (k+1)-th variable.
+  --            with respect to the (k+1)-th variable (or idx(k+1)).
 
   procedure Fused_Forward_Backward_Cross
               ( x,f,b,c : in Standard_Complex_Vectors.Link_to_Vector );
@@ -229,6 +234,16 @@ package Standard_Coefficient_Circuits is
                 bi : in Standard_Floating_Vectors.Link_to_Vector;
                 cr : in Standard_Floating_Vectors.Link_to_Vector;
                 ci : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Fused_Forward_Backward_Cross
+              ( idx : in Standard_Integer_Vectors.Vector;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                fr : in Standard_Floating_Vectors.Link_to_Vector;
+                fi : in Standard_Floating_Vectors.Link_to_Vector;
+                br : in Standard_Floating_Vectors.Link_to_Vector;
+                bi : in Standard_Floating_Vectors.Link_to_Vector;
+                cr : in Standard_Floating_Vectors.Link_to_Vector;
+                ci : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Computes all forward products of the values with real parts
@@ -244,11 +259,13 @@ package Standard_Coefficient_Circuits is
 
   -- REQUIRED :
   --   xr'range = xi'range,
-  --   fr'first = xr'first = 1, fi'last >= xi'last-1,
-  --   br'first = br'first = 1, bi'last >= bi'last-2.
-  --   cr'first = cr'first = 1, ci'last >= ci'last-2.
+  --   fr'first = xr'first = 1, fi'last >= xi'last-1, or >= idx'last-1,
+  --   br'first = br'first = 1, bi'last >= bi'last-2, or >= idx'last-2,
+  --   cr'first = cr'first = 1, ci'last >= ci'last-2, or >= idx'last-2.
 
   -- ON ENTRY :
+  --   idx      if provided, then only those values of x
+  --            as indexed by the entries in idx will be used;
   --   xr       real parts of the values for the variables;
   --   xi       imaginary parts of the values for the variables;
   --   fr       space allocated for real parts of forward products;
@@ -258,21 +275,23 @@ package Standard_Coefficient_Circuits is
   --   cr       space allocated for real parts of cross products;
   --   cr       space allocated for imaginary parts of cross products.
 
-  -- ON RETURN : let n be x'last-1,
-  --   fr(n)    the real part of the product of all variables in x;
-  --   fi(n)    the imaginary part of the product of all variables in x;
+  -- ON RETURN : let n be x'last-1, or idx'last-1,
+  --   fr(n)    the real part of the product of all variables in x,
+  --            or only those values indexed by idx;
+  --   fi(n)    the imaginary part of the product of all variables in x,
+  --            or only those values indexed by idx;
   --   fr(n-1)  is the real part of the partial derivative of the product
-  --            with respect to the last variable;
-  --   fi(n-1)  is the imaginary part of the partial derivative
-  --            of the product with respect to the last variable;
-  --   br(n-2)  is the real part of the partial derivative
-  --            of the product with respect to the first variable;
-  --   bi(n-2)  is the imaginary part of the partial derivative
-  --            of the product with respect to the first variable;
-  --   cr(k)    is the real part of the partial derivative 
-  --            of the product with respect to the (k+1)-th variable;
-  --   ci(k)    is the imaginary part of the partial derivative 
-  --            of the product with respect to the (k+1)-th variable.
+  --            with respect to the last variable (or as indexed by idx);
+  --   fi(n-1)  is the imaginary part of the partial derivative of the product
+  --            with respect to the last variable (or as indexed by idx);
+  --   br(n-2)  is the real part of the partial derivative of the product
+  --            with respect to the first variable (or idx(1));
+  --   bi(n-2)  is the imaginary part of the partial derivative of the product
+  --            with respect to the first variable (or idx(1));
+  --   cr(k)    is the real part of the partial derivative of the product
+  --            with respect to the (k+1)-th variable (or idx(k+1));
+  --   ci(k)    is the imaginary part of the partial derivative of the product
+  --            with respect to the (k+1)-th variable (or idx(k+1)).
 
   function Allocate
              ( mxe : Standard_Integer_Vectors.Vector )

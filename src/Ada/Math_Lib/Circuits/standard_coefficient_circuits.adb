@@ -1,3 +1,7 @@
+-- with text_io; use text_io;
+-- with Standard_Integer_Numbers_io; use Standard_Integer_Numbers_io;
+-- with Standard_Floating_Numbers_io; use Standard_Floating_Numbers_io;
+
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
@@ -188,11 +192,11 @@ package body Standard_Coefficient_Circuits is
     for k in 2..x'last-1 loop
       f(k) := f(k-1)*x(k+1);
     end loop;
-    b(b'first) := x(x'last)*x(x'last-1);
-    for k in 2..x'last-2 loop
-      b(k) := b(k-1)*x(x'last-k);
-    end loop;
     if x'last > 2 then
+      b(b'first) := x(x'last)*x(x'last-1);
+      for k in 2..x'last-2 loop
+        b(k) := b(k-1)*x(x'last-k);
+      end loop;
       if x'last = 3 then
         c(1) := x(1)*x(3);
       else
@@ -201,6 +205,34 @@ package body Standard_Coefficient_Circuits is
           c(k) := f(k-1)*b(x'last-2-k);
         end loop;
         c(x'last-2) := x(x'last)*f(x'last-3);
+      end if;
+    end if;
+  end Forward_Backward_Cross;
+
+  procedure Forward_Backward_Cross
+              ( idx : in Standard_Integer_Vectors.Vector;
+                x,f,b,c : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+    use Standard_Complex_Numbers;
+
+  begin
+    f(1) := x(idx(1))*x(idx(2));
+    for k in 2..idx'last-1 loop
+      f(k) := f(k-1)*x(idx(k+1));
+    end loop;
+    if idx'last > 2 then
+      b(b'first) := x(idx(idx'last))*x(idx(idx'last-1));
+      for k in 2..idx'last-2 loop
+        b(k) := b(k-1)*x(idx(idx'last-k));
+      end loop;
+      if idx'last = 3 then
+        c(1) := x(idx(1))*x(idx(3));
+      else
+        c(1) := x(idx(1))*b(idx'last-3);
+        for k in 2..idx'last-3 loop
+          c(k) := f(k-1)*b(idx'last-2-k);
+        end loop;
+        c(idx'last-2) := x(idx(idx'last))*f(idx'last-3);
       end if;
     end if;
   end Forward_Backward_Cross;
@@ -709,6 +741,268 @@ package body Standard_Coefficient_Circuits is
           zi3 := pr3*qi3 + pi3*qr3;
           idx := xr'last-2;
           cr(idx) := zr3; ci(idx) := zi3;
+        end if;
+      end if;
+    end if;
+  end Fused_Forward_Backward_Cross;
+
+  procedure Fused_Forward_Backward_Cross
+              ( idx : in Standard_Integer_Vectors.Vector;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                fr : in Standard_Floating_Vectors.Link_to_Vector;
+                fi : in Standard_Floating_Vectors.Link_to_Vector;
+                br : in Standard_Floating_Vectors.Link_to_Vector;
+                bi : in Standard_Floating_Vectors.Link_to_Vector;
+                cr : in Standard_Floating_Vectors.Link_to_Vector;
+                ci : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    zr1,zi1,pr1,pi1,qr1,qi1 : double_float;
+    zr2,zi2,pr2,pi2,qr2,qi2 : double_float;
+    zr3,zi3,pr3,pi3,qr3,qi3 : double_float;
+    ptr : integer32;
+    dim : constant integer32 := idx'last-1;
+    firstend,lastend,plusidx,minidx : integer32;
+
+  begin
+    if idx'last >= 8 then
+      if idx'last mod 2 = 0 then
+        lastend := idx'last-4;
+        firstend := lastend/2;
+       -- f(f'first) := x(x'first)*x(x'first+1);
+        ptr := idx(1); pr1 := xr(ptr); pi1 := xi(ptr);
+        ptr := idx(idx'first+1); qr1 := xr(ptr); qi1 := xi(ptr);
+        zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+        fr(1) := zr1; fi(1) := zi1;
+       -- b(b'first) := x(x'last)*x(x'last-1);
+        ptr := idx(idx'last); pr2 := xr(ptr); pi2 := xi(ptr);
+        ptr := idx(idx'last-1); qr2 := xr(ptr); qi2 := xi(ptr);
+        zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+        br(1) := zr2; bi(1) := zi2;
+        for k in 2..firstend loop 
+         -- f(k) := f(k-1)*x(k+1);
+          pr1 := zr1; pi1 := zi1;
+          ptr := idx(k+1); qr1 := xr(ptr); qi1 := xi(ptr);
+          zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+          fr(k) := zr1; fi(k) := zi1;
+         -- b(k) := b(k-1)*x(x'last-k);
+          pr2 := zr2; pi2 := zi2;
+          ptr := idx(idx'last-k); qr2 := xr(ptr); qi2 := xi(ptr);
+          zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+          br(k) := zr2; bi(k) := zi2;
+        end loop;
+        minidx := firstend+1; plusidx := minidx+1;
+        for k in firstend+1..lastend loop
+         -- f(k) := f(k-1)*x(k+1);
+          pr1 := zr1; pi1 := zi1;
+          ptr := idx(k+1); qr1 := xr(ptr); qi1 := xi(ptr);
+          zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+          fr(k) := zr1; fi(k) := zi1;
+         -- b(k) := b(k-1)*x(x'last-k);
+          pr2 := zr2; pi2 := zi2;
+          ptr := idx(idx'last-k); qr2 := xr(ptr); qi2 := xi(ptr);
+          zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+          br(k) := zr2; bi(k) := zi2;
+         -- c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
+          ptr := plusidx-1; pr3 := fr(ptr); pi3 := fi(ptr);
+          ptr := idx'last-2-plusidx; qr3 := br(ptr); qi3 := bi(ptr);
+          zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+          cr(plusidx) := zr3; ci(plusidx) := zi3;
+          plusidx := plusidx + 1;
+         -- c(minidx) := f(minidx-1)*b(x'last-2-minidx);
+          ptr := minidx-1; pr3 := fr(ptr); pi3 := fi(ptr);
+          ptr := idx'last-2-minidx; qr3 := br(ptr); qi3 := bi(ptr);
+          zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+          cr(minidx) := zr3; ci(minidx) := zi3;
+          minidx := minidx - 1;
+        end loop;
+        plusidx := lastend+1;
+       -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
+        pr1 := zr1; pi1 := zi1;
+        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xr(ptr);
+        zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+        fr(plusidx) := zr1; fi(plusidx) := zi1;
+       -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+        pr2 := zr2; pi2 := zi2;
+        ptr := idx(idx'last-plusidx); qr2 := xr(ptr); qi2 := xi(ptr);
+        zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+        br(plusidx) := zr2; bi(plusidx) := zi2;
+        plusidx := plusidx+1;
+       -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
+        pr1 := zr1; pi1 := zi1;
+        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xr(ptr);
+        zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+        fr(plusidx) := zr1; fi(plusidx) := zi1;
+       -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+        ptr := idx(idx'last-plusidx); qr2 := xr(ptr); qi2 := xi(ptr);
+        zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+        br(plusidx) := zr2; bi(plusidx) := zi2;
+        plusidx := plusidx+1;
+       -- f(f'last) := f(f'last-1)*x(x'last);
+        pr1 := zr1; pi1 := zi1;
+        ptr := idx(dim+1); qr1 := xr(ptr); qi1 := xi(ptr);
+        zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+        fr(dim) := zr1; fi(dim) := zi1;
+       -- c(1) := x(1)*b(x'last-3);
+        pr3 := xr(1); pi3 := xi(1);
+        ptr := idx'last-3; qr3 := br(ptr); qi3 := bi(ptr);
+        zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+        cr(1) := zr3; ci(1) := zi3;
+       -- c(x'last-2) := x(x'last)*f(x'last-3);
+        ptr := idx(idx'last); pr3 := xr(ptr); pi3 := xi(ptr);
+        ptr := idx'last-3; qr3 := fr(ptr); qi3 := fi(ptr);
+        zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+        ptr := idx'last-2; cr(ptr) := zr3; ci(ptr) := zi3;
+      else
+        lastend := idx'last-3;
+        firstend := lastend/2;
+       -- f(f'first) := x(x'first)*x(x'first+1);
+        ptr := idx(1); pr1 := xr(ptr); pi1 := xi(ptr);
+        ptr := idx(idx'first+1); qr1 := xr(ptr); qi1 := xi(ptr);
+        zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+        fr(1) := zr1; fi(1) := zi1;
+       -- b(b'first) := x(x'last)*x(x'last-1);
+        ptr := idx(idx'last); pr2 := xr(ptr); pi2 := xi(ptr);
+        ptr := idx(idx'last-1); qr2 := xr(ptr); qi2 := xi(ptr);
+        zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+        br(1) := zr2; bi(1) := zi2;
+        for k in 2..firstend loop 
+         -- f(k) := f(k-1)*x(k+1);
+          pr1 := zr1; pi1 := zi1;
+          ptr := idx(k+1); qr1 := xr(ptr); qi1 := xi(ptr);
+          zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+          fr(k) := zr1; fi(k) := zi1;
+         -- b(k) := b(k-1)*x(x'last-k);
+          pr2 := zr2; pi2 := zi2;
+          ptr := idx(idx'last-k); qr2 := xr(ptr); qi2 := xi(ptr);
+          zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+          br(k) := zr2; bi(k) := zi2;
+        end loop;
+        plusidx := firstend+1;
+       -- c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
+        ptr := plusidx-1; pr3 := fr(ptr); pi3 := fi(ptr);
+        ptr := idx'last-2-plusidx; qr3 := br(ptr); qi3 := bi(ptr);
+        zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+        cr(plusidx) := zr3; ci(plusidx) := zi3;
+        minidx := plusidx;
+        for k in firstend+1..lastend loop
+         -- f(k) := f(k-1)*x(k+1);
+          pr1 := zr1; pi1 := zi1;
+          ptr := idx(k+1); qr1 := xr(ptr); qi1 := xi(ptr);
+          zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+          fr(k) := zr1; fi(k) := zi1;
+         -- b(k) := b(k-1)*x(x'last-k);
+          pr2 := zr2; pi2 := zi2;
+          ptr := idx(idx'last-k); qr2 := xr(ptr); qi2 := xi(ptr);
+          zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+          br(k) := zr2; bi(k) := zi2;
+         -- c(plusidx) := f(plusidx-1)*b(x'last-2-plusidx);
+          ptr := plusidx-1; pr3 := fr(ptr); pi3 := fi(ptr);
+          ptr := idx'last-2-plusidx; qr3 := br(ptr); qi3 := bi(ptr);
+          zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+          cr(plusidx) := zr3; ci(plusidx) := zi3;
+          plusidx := plusidx + 1;
+         -- c(minidx) := f(minidx-1)*b(x'last-2-minidx);
+          ptr := minidx-1; pr3 := fr(ptr); pi3 := fi(ptr);
+          ptr := idx'last-2-minidx; qr3 := br(ptr); qi3 := bi(ptr);
+          zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+          cr(minidx) := zr3; ci(minidx) := zi3;
+          minidx := minidx - 1;
+        end loop;
+        plusidx := lastend+1;
+       -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
+        pr1 := zr1; pi1 := zi1;
+        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xr(ptr);
+        zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+        fr(plusidx) := zr1; fi(plusidx) := zi1;
+       -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+        pr2 := zr2; pi2 := zi2;
+        ptr := idx(idx'last-plusidx); qr2 := xr(ptr); qi2 := xi(ptr);
+        zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+        br(plusidx) := zr2; bi(plusidx) := zi2;
+        plusidx := plusidx+1;
+       -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
+        pr1 := zr1; pi1 := zi1;
+        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xr(ptr);
+        zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+        fr(plusidx) := zr1; fi(plusidx) := zi1;
+       -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+        ptr := idx(idx'last-plusidx); qr2 := xr(ptr); qi2 := xi(ptr);
+        zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+        br(plusidx) := zr2; bi(plusidx) := zi2;
+        plusidx := plusidx+1;
+       -- f(f'last) := f(f'last-1)*x(x'last);
+        pr1 := zr1; pi1 := zi1;
+        ptr := idx(dim+1); qr1 := xr(ptr); qi1 := xi(ptr);
+        zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+        fr(dim) := zr1; fi(dim) := zi1;
+       -- c(1) := x(1)*b(x'last-3);
+        ptr := idx(1); pr3 := xr(ptr); pi3 := xi(ptr);
+        ptr := idx'last-3; qr3 := br(ptr); qi3 := bi(ptr);
+        zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+        cr(1) := zr3; ci(1) := zi3;
+       -- c(x'last-2) := x(x'last)*f(x'last-3);
+        ptr := idx(idx'last); pr3 := xr(ptr); pi3 := xi(ptr);
+        ptr := idx'last-3; qr3 := fr(ptr); qi3 := fi(ptr);
+        zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+        ptr := idx'last-2;
+        cr(ptr) := zr3; ci(ptr) := zi3;
+      end if;
+    else
+     -- f(f'first) := x(x'first)*x(x'first+1);
+      ptr := idx(1); pr1 := xr(ptr); pi1 := xi(ptr);
+      ptr := idx(idx'first+1); qr1 := xr(ptr); qi1 := xi(ptr);
+      zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+      fr(1) := zr1; fi(1) := zi1;
+      if idx'last > 2 then
+       -- b(b'first) := x(x'last)*x(x'last-1);
+        ptr := idx(idx'last); pr2 := xr(ptr); pi2 := xi(ptr);
+        ptr := idx(idx'last-1); qr2 := xr(ptr); qi2 := xi(ptr);
+        zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+        br(1) := zr2; bi(1) := zi2;
+        for k in 2..idx'last-2 loop 
+         -- f(k) := f(k-1)*x(k+1);
+          pr1 := zr1; pi1 := zi1;
+          ptr := idx(k+1); qr1 := xr(ptr); qi1 := xi(ptr);
+          zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+          fr(k) := zr1; fi(k) := zi1;
+         -- b(k) := b(k-1)*x(x'last-k);
+          pr2 := zr2; pi2 := zi2;
+          ptr := idx(idx'last-k); qr2 := xr(ptr); qi2 := xi(ptr);
+          zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
+          br(k) := zr2; bi(k) := zi2;
+        end loop;
+        if dim > 1 then
+          pr1 := zr1; pi1 := zi1;
+          ptr := idx(dim+1); qr1 := xr(ptr); qi1 := xi(ptr);
+          zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
+          fr(dim) := zr1; fi(dim) := zi1;
+        end if;
+        if idx'last = 3 then
+         -- c(1) := x(1)*x(3)
+          ptr := idx(1); pr3 := xr(ptr); pi3 := xi(ptr);
+          ptr := idx(3); qr3 := xr(ptr); qi3 := xi(ptr);
+          zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+          cr(1) := zr3; ci(1) := zi3;
+        else
+         -- c(1) := x(1)*b(x'last-3);
+          ptr := idx(1); pr3 := xr(ptr); pi3 := xi(ptr);
+          ptr := idx'last-3; qr3 := br(ptr); qi3 := bi(ptr);
+          zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+         -- put("Assigning "); put(zr3); put_line(" to cr(1)");
+         -- put("Assigning "); put(zi3); put_line(" to ci(1)");
+          cr(1) := zr3; ci(1) := zi3;
+          for k in 2..idx'last-3 loop
+           -- c(k) := f(k-1)*b(x'last-2-k);
+            ptr := k-1; pr3 := fr(ptr); pi3 := fi(ptr);
+            ptr := idx'last-2-k; qr3 := br(ptr); qi3 := bi(ptr);
+            zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+            cr(k) := zr3; ci(k) := zi3;
+          end loop;
+          ptr := idx(idx'last); pr3 := xr(ptr); pi3 := xi(ptr);
+          ptr := idx'last-3; qr3 := fr(ptr); qi3 := fi(ptr);
+          zr3 := pr3*qr3 - pi3*qi3; zi3 := pr3*qi3 + pi3*qr3;
+          ptr := idx'last-2; cr(ptr) := zr3; ci(ptr) := zi3;
         end if;
       end if;
     end if;
