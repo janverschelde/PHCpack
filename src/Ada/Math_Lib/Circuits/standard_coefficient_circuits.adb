@@ -491,7 +491,7 @@ package body Standard_Coefficient_Circuits is
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
         pr1 := zr1; pi1 := zi1;
         idx := plusidx+1;
-        qr1 := xr(idx); qi1 := xr(idx);
+        qr1 := xr(idx); qi1 := xi(idx);
         zr1 := pr1*qr1 - pi1*qi1;
         zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
@@ -506,7 +506,7 @@ package body Standard_Coefficient_Circuits is
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
         pr1 := zr1; pi1 := zi1;
         idx := plusidx+1;
-        qr1 := xr(idx); qi1 := xr(idx);
+        qr1 := xr(idx); qi1 := xi(idx);
         zr1 := pr1*qr1 - pi1*qi1;
         zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
@@ -620,7 +620,7 @@ package body Standard_Coefficient_Circuits is
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
         pr1 := zr1; pi1 := zi1;
         idx := plusidx+1;
-        qr1 := xr(idx); qi1 := xr(idx);
+        qr1 := xr(idx); qi1 := xi(idx);
         zr1 := pr1*qr1 - pi1*qi1;
         zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
@@ -635,7 +635,7 @@ package body Standard_Coefficient_Circuits is
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
         pr1 := zr1; pi1 := zi1;
         idx := plusidx+1;
-        qr1 := xr(idx); qi1 := xr(idx);
+        qr1 := xr(idx); qi1 := xi(idx);
         zr1 := pr1*qr1 - pi1*qi1;
         zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
@@ -819,7 +819,7 @@ package body Standard_Coefficient_Circuits is
         plusidx := lastend+1;
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
         pr1 := zr1; pi1 := zi1;
-        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xr(ptr);
+        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xi(ptr);
         zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
        -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
@@ -830,7 +830,7 @@ package body Standard_Coefficient_Circuits is
         plusidx := plusidx+1;
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
         pr1 := zr1; pi1 := zi1;
-        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xr(ptr);
+        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xi(ptr);
         zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
        -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
@@ -912,7 +912,7 @@ package body Standard_Coefficient_Circuits is
         plusidx := lastend+1;
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
         pr1 := zr1; pi1 := zi1;
-        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xr(ptr);
+        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xi(ptr);
         zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
        -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
@@ -923,7 +923,7 @@ package body Standard_Coefficient_Circuits is
         plusidx := plusidx+1;
        -- f(plusidx) := f(plusidx-1)*x(plusidx+1);
         pr1 := zr1; pi1 := zi1;
-        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xr(ptr);
+        ptr := idx(plusidx+1); qr1 := xr(ptr); qi1 := xi(ptr);
         zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
        -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
