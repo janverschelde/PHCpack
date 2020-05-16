@@ -1,3 +1,6 @@
+Sat 16 May 2020 : new package standard_complex_circuits with development code
+  from standard_coefficient_circuits.
+
 Fri 15 May 2020 : bug fix in grabbing imaginary part in fused versions
   in standard_coefficient_circuits.adb.  More bug fixes with indexing
   in standard_coefficient_circuits.adb, added test in ts_perfade.adb.

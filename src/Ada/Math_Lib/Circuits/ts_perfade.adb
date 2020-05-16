@@ -17,7 +17,8 @@ with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;         use Standard_Complex_VecVecs_io;
 with Standard_Random_Vectors;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
-with Standard_Coefficient_Circuits;       use Standard_Coefficient_Circuits;
+with Standard_Complex_Circuits;
+with Standard_Coefficient_Circuits;
 with Evaluation_Differentiation_Errors;
 
 procedure ts_perfade is
@@ -49,9 +50,9 @@ procedure ts_perfade is
     err : double_float;
 
   begin
-    Forward(x,f);
+    Standard_Complex_Circuits.Forward(x,f);
     put_line("the result : "); put_line(f);
-    Forward(xr,xi,fr,fi);
+    Standard_Coefficient_Circuits.Forward(xr,xi,fr,fi);
     v := Make_Complex(fr,fi);
     put_line("recomputed : "); put_line(v);
     err := Evaluation_Differentiation_Errors.Difference(f,v);
@@ -100,10 +101,10 @@ procedure ts_perfade is
     err,sumerr : double_float;
 
   begin
-    Forward_Backward(x,f,b);
-    Fused_Forward_Backward(x,f2,b2);
-    Forward_Backward(xr,xi,fr,fi,br,bi);
-    Fused_Forward_Backward(xr,xi,fr2,fi2,br2,bi2);
+    Standard_Complex_Circuits.Forward_Backward(x,f,b);
+    Standard_Complex_Circuits.Fused_Forward_Backward(x,f2,b2);
+    Standard_Coefficient_Circuits.Forward_Backward(xr,xi,fr,fi,br,bi);
+    Standard_Coefficient_Circuits.Fused_Forward_Backward(xr,xi,fr2,fi2,br2,bi2);
     v := Make_Complex(fr,fi); v2 := Make_Complex(fr2,fi2);
     w := Make_Complex(br,bi); w2 := Make_Complex(br2,bi2);
     put_line("the forward products : "); put_line(f);
@@ -189,10 +190,12 @@ procedure ts_perfade is
     err,sumerr : double_float;
 
   begin
-    Forward_Backward_Cross(x,f,b,c);
-    Fused_Forward_Backward_Cross(x,f2,b2,c2);
-    Forward_Backward_Cross(xr,xi,fr,fi,br,bi,cr,ci);
-    Fused_Forward_Backward_Cross(xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
+    Standard_Complex_Circuits.Forward_Backward_Cross(x,f,b,c);
+    Standard_Complex_Circuits.Fused_Forward_Backward_Cross(x,f2,b2,c2);
+    Standard_Coefficient_Circuits.Forward_Backward_Cross
+      (xr,xi,fr,fi,br,bi,cr,ci);
+    Standard_Coefficient_Circuits.Fused_Forward_Backward_Cross
+      (xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
     u := Make_Complex(cr,ci); u2 := Make_Complex(cr2,ci2);
     v := Make_Complex(fr,fi); v2 := Make_Complex(fr2,fi2);
     w := Make_Complex(br,bi); w2 := Make_Complex(br2,bi2);
@@ -317,8 +320,9 @@ procedure ts_perfade is
   begin
     put("The indices in the product : "); put(idx); new_line;
     put("idx'last : "); put(idx'last,1); new_line;
-    Forward_Backward_Cross(idx,x,f,b,c);
-    Fused_Forward_Backward_Cross(idx,xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
+    Standard_Complex_Circuits.Forward_Backward_Cross(idx,x,f,b,c);
+    Standard_Coefficient_Circuits.Fused_Forward_Backward_Cross
+      (idx,xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
     u2 := Make_Complex(cr2,ci2);
     v2 := Make_Complex(fr2,fi2);
     w2 := Make_Complex(br2,bi2);
@@ -353,16 +357,19 @@ procedure ts_perfade is
     xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
     xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
-    pwt : constant Standard_Complex_VecVecs.VecVec(x'range) := Allocate(mxe);
-    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
-    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
+        := Standard_Complex_Circuits.Allocate(mxe);
+    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
     v : Standard_Complex_VecVecs.VecVec(x'range);
     err : double_float;
 
   begin
-    Power_Table(mxe,x,pwt);
+    Standard_Complex_Circuits.Power_Table(mxe,x,pwt);
     put_line("The power table : "); put_line(pwt);
-    Power_Table(mxe,xr,xi,rpwt,ipwt);
+    Standard_Coefficient_Circuits.Power_Table(mxe,xr,xi,rpwt,ipwt);
     v := Standard_Vector_Splitters.Make_Complex(rpwt,ipwt);
     put_line("The recomputed power table : "); put_line(v);
     err := Evaluation_Differentiation_Errors.Difference(pwt,v);
@@ -394,14 +401,14 @@ procedure ts_perfade is
   begin
     tstart(timer);
     for k in 1..frq loop
-      Forward(x,f);
+      Standard_Complex_Circuits.Forward(x,f);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex forward products");
     tstart(timer);
     for k in 1..frq loop
-      Forward(xr,xi,fr,fi);
+      Standard_Coefficient_Circuits.Forward(xr,xi,fr,fi);
     end loop;
     tstop(timer);
     new_line;
@@ -451,28 +458,29 @@ procedure ts_perfade is
   begin
     tstart(timer);
     for k in 1..frq loop
-      Forward_Backward(x,f,b);
+      Standard_Complex_Circuits.Forward_Backward(x,f,b);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex forward & backward products");
     tstart(timer);
     for k in 1..frq loop
-      Fused_Forward_Backward(x,f2,b2);
+      Standard_Complex_Circuits.Fused_Forward_Backward(x,f2,b2);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex with loop fusion");
     tstart(timer);
     for k in 1..frq loop
-      Forward_Backward(xr,xi,fr,fi,br,bi);
+      Standard_Coefficient_Circuits.Forward_Backward(xr,xi,fr,fi,br,bi);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"real forward & backward products");
     tstart(timer);
     for k in 1..frq loop
-      Fused_Forward_Backward(xr,xi,fr2,fi2,br2,bi2);
+      Standard_Coefficient_Circuits.Fused_Forward_Backward
+        (xr,xi,fr2,fi2,br2,bi2);
     end loop;
     tstop(timer);
     new_line;
@@ -534,28 +542,30 @@ procedure ts_perfade is
   begin
     tstart(timer);
     for k in 1..frq loop
-      Forward_Backward_Cross(x,f,b,c);
+      Standard_Complex_Circuits.Forward_Backward_Cross(x,f,b,c);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex forward, backward, cross ");
     tstart(timer);
     for k in 1..frq loop
-      Fused_Forward_Backward_Cross(x,f2,b2,c2);
+      Standard_Complex_Circuits.Fused_Forward_Backward_Cross(x,f2,b2,c2);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"fused complex forward, backward, cross");
     tstart(timer);
     for k in 1..frq loop
-      Forward_Backward_Cross(xr,xi,fr,fi,br,bi,cr,ci);
+      Standard_Coefficient_Circuits.Forward_Backward_Cross
+        (xr,xi,fr,fi,br,bi,cr,ci);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"real forward, backward, cross");
     tstart(timer);
     for k in 1..frq loop
-      Fused_Forward_Backward_Cross(xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
+      Standard_Coefficient_Circuits.Fused_Forward_Backward_Cross
+        (xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
     end loop;
     tstop(timer);
     new_line;
@@ -613,14 +623,15 @@ procedure ts_perfade is
   begin
     tstart(timer);
     for k in 1..frq loop
-      Forward_Backward_Cross(idx,x,f,b,c);
+      Standard_Complex_Circuits.Forward_Backward_Cross(idx,x,f,b,c);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex forward, backward, cross ");
     tstart(timer);
     for k in 1..frq loop
-      Fused_Forward_Backward_Cross(idx,xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
+      Standard_Coefficient_Circuits.Fused_Forward_Backward_Cross
+        (idx,xr,xi,fr2,fi2,br2,bi2,cr2,ci2);
     end loop;
     tstop(timer);
     new_line;
@@ -641,21 +652,24 @@ procedure ts_perfade is
     xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
     xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
-    pwt : constant Standard_Complex_VecVecs.VecVec(x'range) := Allocate(mxe);
-    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
-    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
+        := Standard_Complex_Circuits.Allocate(mxe);
+    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
 
   begin
     tstart(timer);
     for k in 1..frq loop
-      Power_Table(mxe,x,pwt);
+      Standard_Complex_Circuits.Power_Table(mxe,x,pwt);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex power table");
     tstart(timer);
     for k in 1..frq loop
-      Power_Table(mxe,xr,xi,rpwt,ipwt);
+      Standard_Coefficient_Circuits.Power_Table(mxe,xr,xi,rpwt,ipwt);
     end loop;
     tstop(timer);
     new_line;
