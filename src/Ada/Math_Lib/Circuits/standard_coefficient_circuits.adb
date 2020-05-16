@@ -926,6 +926,7 @@ package body Standard_Coefficient_Circuits is
         zr1 := pr1*qr1 - pi1*qi1; zi1 := pr1*qi1 + pi1*qr1;
         fr(plusidx) := zr1; fi(plusidx) := zi1;
        -- b(plusidx) := b(plusidx-1)*x(x'last-plusidx);
+        pr2 := zr2; pi2 := zi2;
         ptr := idx(idx'last-plusidx); qr2 := xr(ptr); qi2 := xi(ptr);
         zr2 := pr2*qr2 - pi2*qi2; zi2 := pr2*qi2 + pi2*qr2;
         br(plusidx) := zr2; bi(plusidx) := zi2;

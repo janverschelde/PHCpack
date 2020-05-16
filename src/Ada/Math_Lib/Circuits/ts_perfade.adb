@@ -3,6 +3,8 @@ with Communications_with_User;            use Communications_with_User;
 with Timing_Package;                      use Timing_Package;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
@@ -16,6 +18,7 @@ with Standard_Complex_VecVecs_io;         use Standard_Complex_VecVecs_io;
 with Standard_Random_Vectors;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
 with Standard_Coefficient_Circuits;       use Standard_Coefficient_Circuits;
+with Evaluation_Differentiation_Errors;
 
 procedure ts_perfade is
 
@@ -43,6 +46,7 @@ procedure ts_perfade is
     fr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(f);
     fi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(f);
     v : Standard_Complex_Vectors.Link_to_Vector;
+    err : double_float;
 
   begin
     Forward(x,f);
@@ -50,6 +54,8 @@ procedure ts_perfade is
     Forward(xr,xi,fr,fi);
     v := Make_Complex(fr,fi);
     put_line("recomputed : "); put_line(v);
+    err := Evaluation_Differentiation_Errors.Difference(f,v);
+    put("The error :"); put(err,3); new_line;
   end Test_Forward;
 
   procedure Test_Forward_Backward ( dim : in integer32 ) is
@@ -91,6 +97,7 @@ procedure ts_perfade is
     br2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(b2);
     bi2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(b2);
     v,w,v2,w2 : Standard_Complex_Vectors.Link_to_Vector;
+    err,sumerr : double_float;
 
   begin
     Forward_Backward(x,f,b);
@@ -101,12 +108,31 @@ procedure ts_perfade is
     w := Make_Complex(br,bi); w2 := Make_Complex(br2,bi2);
     put_line("the forward products : "); put_line(f);
     put_line("the forward products with loop fusion : "); put_line(f2);
+    err := Evaluation_Differentiation_Errors.Difference(f,f2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := err;
     put_line("forward products recomputed : "); put_line(v);
+    err := Evaluation_Differentiation_Errors.Difference(f,v);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("forward products recomputed with loop fusion : "); put_line(v2);
+    err := Evaluation_Differentiation_Errors.Difference(f,v2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("the backward products : "); put_line(b);
     put_line("the backward products with loop fusion : "); put_line(b2);
+    err := Evaluation_Differentiation_Errors.Difference(b,b2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("backward products recomputed : "); put_line(w);
+    err := Evaluation_Differentiation_Errors.Difference(b,w);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("backward products recomputed with loop fusion : "); put_line(w2);
+    err := Evaluation_Differentiation_Errors.Difference(b,w2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
+    put("The sum of all errors :"); put(sumerr,3); new_line;
   end Test_Forward_Backward;
 
   procedure Test_Forward_Backward_Cross ( dim : in integer32 ) is
@@ -160,6 +186,7 @@ procedure ts_perfade is
     cr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(c2);
     ci2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(c2);
     u,v,w,u2,v2,w2 : Standard_Complex_Vectors.Link_to_Vector;
+    err,sumerr : double_float;
 
   begin
     Forward_Backward_Cross(x,f,b,c);
@@ -171,16 +198,44 @@ procedure ts_perfade is
     w := Make_Complex(br,bi); w2 := Make_Complex(br2,bi2);
     put_line("the forward products : "); put_line(f);
     put_line("the forward products with loop fusion : "); put_line(f2);
+    err := Evaluation_Differentiation_Errors.Difference(f,f2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := err;
     put_line("forward products recomputed : "); put_line(v);
+    err := Evaluation_Differentiation_Errors.Difference(f,v);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("forward products recomputed with loop fusion : "); put_line(v2);
+    err := Evaluation_Differentiation_Errors.Difference(f,v2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("the backward products : "); put_line(b);
     put_line("the backward products with loop fusion : "); put_line(b2);
+    err := Evaluation_Differentiation_Errors.Difference(b,b2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("backward products recomputed : "); put_line(w);
+    err := Evaluation_Differentiation_Errors.Difference(b,w);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("backward products recomputed with loop fusion : "); put_line(w2);
+    err := Evaluation_Differentiation_Errors.Difference(b,w2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("the cross products : "); put_line(c);
     put_line("the cross products with loop fusion : "); put_line(c2);
+    err := Evaluation_Differentiation_Errors.Difference(c,c2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("cross products recomputed : "); put_line(u);
+    err := Evaluation_Differentiation_Errors.Difference(c,u);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("cross products recomputed wth loop fusion: "); put_line(u2);
+    err := Evaluation_Differentiation_Errors.Difference(c,u2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
+    put("The sum of all errors :"); put(sumerr,3); new_line;
   end Test_Forward_Backward_Cross;
 
   function Random_Indices
@@ -257,6 +312,7 @@ procedure ts_perfade is
     cr2 : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(c2);
     ci2 : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(c2);
     u2,v2,w2 : Standard_Complex_Vectors.Link_to_Vector;
+    err,sumerr : double_float;
 
   begin
     put("The indices in the product : "); put(idx); new_line;
@@ -268,10 +324,20 @@ procedure ts_perfade is
     w2 := Make_Complex(br2,bi2);
     put_line("the forward products : "); put_line(f);
     put_line("forward products recomputed with loop fusion : "); put_line(v2);
+    err := Evaluation_Differentiation_Errors.Difference(f,v2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := err;
     put_line("the backward products : "); put_line(b);
     put_line("backward products recomputed with loop fusion : "); put_line(w2);
+    err := Evaluation_Differentiation_Errors.Difference(b,w2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
     put_line("the cross products : "); put_line(c);
     put_line("cross products recomputed wth loop fusion: "); put_line(u2);
+    err := Evaluation_Differentiation_Errors.Difference(c,u2);
+    put("The error :"); put(err,3); new_line;
+    sumerr := sumerr + err;
+    put("The sum of all errors :"); put(sumerr,3); new_line;
   end Test_Indexed_Forward_Backward_Cross;
 
   procedure Test_Power_Table ( dim,pwr : in integer32 ) is
@@ -291,6 +357,7 @@ procedure ts_perfade is
     rpwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
     ipwt : constant Standard_Floating_VecVecs.VecVec(x'range) := Allocate(mxe);
     v : Standard_Complex_VecVecs.VecVec(x'range);
+    err : double_float;
 
   begin
     Power_Table(mxe,x,pwt);
@@ -298,6 +365,8 @@ procedure ts_perfade is
     Power_Table(mxe,xr,xi,rpwt,ipwt);
     v := Standard_Vector_Splitters.Make_Complex(rpwt,ipwt);
     put_line("The recomputed power table : "); put_line(v);
+    err := Evaluation_Differentiation_Errors.Difference(pwt,v);
+    put("The error :"); put(err,3); new_line;
   end Test_Power_Table;
 
   procedure Timing_Forward ( dim,frq : in integer32 ) is
