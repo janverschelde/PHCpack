@@ -1,4 +1,7 @@
+with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 
@@ -8,6 +11,31 @@ package Standard_Complex_Circuits is
 --   This package contains development code for standard_coefficient_circuits,
 --   to test the correctness of the better performing algorithms for
 --   algorithmic differentiation and evaluation.
+
+-- DATA STRUCTURES :
+--   A circuit stores the exponents and coefficients and hold work space to
+--   apply the reverse mode of algorithmic differentiation and evaluation.
+
+  type Circuit ( nbr : integer32 ) is record
+    xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponents
+    cff : Standard_Complex_Vectors.Vector(1..nbr); -- coefficients
+    cst : Standard_Complex_Numbers.Complex_Number; -- constant
+    fwd : Standard_Complex_Vectors.Link_to_Vector; -- forward products
+    bck : Standard_Complex_Vectors.Link_to_Vector; -- backward products
+    crs : Standard_Complex_Vectors.Link_to_Vector; -- cross products
+  end record;
+
+  type Link_to_Circuit is access Circuit;
+
+  type Circuits is array ( integer range <> ) of Link_to_Circuit;
+
+  function Allocate ( nbr,dim : integer32 ) return Circuit;
+
+  -- DESCRIPTION :
+  --   Returns a circuits for a polynomial with nbr monomials,
+  --   with dim variables, and with allocated work space vectors.
+
+-- PROCEDURES :
 
   procedure Forward ( x : in Standard_Complex_Vectors.Link_to_Vector;
                       f : in Standard_Complex_Vectors.Link_to_Vector );
@@ -145,5 +173,14 @@ package Standard_Complex_Circuits is
   -- ON RETURN :
   --   pwt      power table, pwt(k)(i) equals x(k)**(i+1),
   --            for i in range 1..mxe(k)-1.
+
+-- DESTRUCTORS :
+
+  procedure Clear ( c : in out Circuit );
+  procedure Clear ( c : in out Link_to_Circuit );
+  procedure Clear ( c : in out Circuits );
+
+  -- DESCRIPION :
+  --   Deallocates the space occupied by the circuit.
 
 end Standard_Complex_Circuits;

@@ -1,3 +1,6 @@
+with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Standard_Integer_VecVecs;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
@@ -7,6 +10,41 @@ package Standard_Coefficient_Circuits is
 -- DESCRIPTION :
 --   Separating real parts from imaginary parts, inlining the algorithms
 --   for complex multiplication, fusing loops, results in faster code.
+
+-- DATA STRUCTURES :
+--   A circuit stores the exponents and coefficients and hold work space to
+--   apply the reverse mode of algorithmic differentiation and evaluation.
+
+  type Circuit ( nbr : integer32 ) is record
+    xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponents
+   -- the coefficients are stored as vectors of real and imaginary parts
+    rcf : Standard_Floating_Vectors.Vector(1..nbr); -- real parts
+    icf : Standard_Floating_Vectors.Vector(1..nbr); -- imaginary parts
+   -- the constant is stored as its real and imaginary parts
+    rcst : double_float; -- real part of the constant 
+    icst : double_float; -- imaginary part of the constant 
+   -- the work space for the forward products
+    rfwd : Standard_Floating_Vectors.Link_to_Vector; -- real parts
+    ifwd : Standard_Floating_Vectors.Link_to_Vector; -- imaginary parts
+   -- the work space for the backward products
+    rbck : Standard_Floating_Vectors.Link_to_Vector; -- real parts
+    ibck : Standard_Floating_Vectors.Link_to_Vector; -- imaginary parts
+   -- the work space for the cross products
+    rcrs : Standard_Floating_Vectors.Link_to_Vector; -- real parts
+    icrs : Standard_Floating_Vectors.Link_to_Vector; -- imaginary parts
+  end record;
+
+  type Link_to_Circuit is access Circuit;
+
+  type Circuits is array ( integer range <> ) of Link_to_Circuit;
+
+  function Allocate ( nbr,dim : integer32 ) return Circuit;
+
+  -- DESCRIPTION :
+  --   Returns a circuits for a polynomial with nbr monomials,
+  --   with dim variables, and with allocated work space vectors.
+
+-- PROCEDURES :
 
   procedure Forward ( xr : in Standard_Floating_Vectors.Link_to_Vector;
                       xi : in Standard_Floating_Vectors.Link_to_Vector;
@@ -231,5 +269,14 @@ package Standard_Coefficient_Circuits is
   --            rpwt(k)(i) equals the imaginary part of x(k)**(i+1),
   --            where x(k) is the complex value of the k-th variable,
   --            for i in range 1..mxe(k)-1.
+
+-- DESTRUCTORS :
+
+  procedure Clear ( c : in out Circuit );
+  procedure Clear ( c : in out Link_to_Circuit );
+  procedure Clear ( c : in out Circuits );
+
+  -- DESCRIPION :
+  --   Deallocates the space occupied by the circuit.
 
 end Standard_Coefficient_Circuits;
