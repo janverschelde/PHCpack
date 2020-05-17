@@ -1,7 +1,34 @@
-with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with unchecked_deallocation;
 
 package body Standard_Coefficient_Circuits is
+
+  function Allocate ( nbr,dim : integer32 ) return Circuit is
+
+    res : Circuit(nbr);
+    rforward : constant Standard_Floating_Vectors.Vector(1..dim-1)
+             := (1..dim-1 => 0.0);
+    iforward : constant Standard_Floating_Vectors.Vector(1..dim-1)
+             := (1..dim-1 => 0.0);
+    rbackward : constant Standard_Floating_Vectors.Vector(1..dim-2)
+              := (1..dim-2 => 0.0);
+    ibackward : constant Standard_Floating_Vectors.Vector(1..dim-2)
+              := (1..dim-2 => 0.0);
+    rcross : constant Standard_Floating_Vectors.Vector(1..dim-2)
+           := (1..dim-2 => 0.0);
+    icross : constant Standard_Floating_Vectors.Vector(1..dim-2)
+           := (1..dim-2 => 0.0);
+
+  begin
+    res.rfwd := new Standard_Floating_Vectors.Vector'(rforward);
+    res.ifwd := new Standard_Floating_Vectors.Vector'(iforward);
+    res.rbck := new Standard_Floating_Vectors.Vector'(rbackward);
+    res.ibck := new Standard_Floating_Vectors.Vector'(ibackward);
+    res.rcrs := new Standard_Floating_Vectors.Vector'(rcross);
+    res.icrs := new Standard_Floating_Vectors.Vector'(icross);
+    return res;
+  end Allocate;
+
+-- PROCEDURES :
 
   procedure Forward ( xr : in Standard_Floating_Vectors.Link_to_Vector;
                       xi : in Standard_Floating_Vectors.Link_to_Vector;
@@ -873,5 +900,35 @@ package body Standard_Coefficient_Circuits is
       end if;
     end loop;
   end Power_Table;
+
+-- DESTRUCTORS :
+
+  procedure Clear ( c : in out Circuit ) is
+  begin
+    Standard_Floating_Vectors.Clear(c.rfwd);
+    Standard_Floating_Vectors.Clear(c.ifwd);
+    Standard_Floating_Vectors.Clear(c.rbck);
+    Standard_Floating_Vectors.Clear(c.ibck);
+    Standard_Floating_Vectors.Clear(c.rcrs);
+    Standard_Floating_Vectors.Clear(c.icrs);
+  end Clear;
+
+  procedure Clear ( c : in out Link_to_Circuit ) is
+
+    procedure free is new unchecked_deallocation(Circuit,Link_to_Circuit);
+
+  begin
+    if c /= null then
+      Clear(c.all);
+      free(c);
+    end if;
+  end Clear;
+
+  procedure Clear ( c : in out Circuits ) is
+  begin
+    for k in c'range loop
+      Clear(c(k));
+    end loop;
+  end Clear;
 
 end Standard_Coefficient_Circuits;
