@@ -17,6 +17,8 @@ package Standard_Vector_Splitters is
 --   and separating real and imaginary parts is better done in
 --   one single loop, instead of two separate loops.
 
+  function Real_Part ( x : Standard_Complex_Vectors.Vector )
+                     return Standard_Floating_Vectors.Vector;
   function Real_Part ( x : Standard_Complex_Vectors.Link_to_Vector )
                      return Standard_Floating_Vectors.Link_to_Vector;
   function Real_Part ( x : Standard_Complex_VecVecs.Link_to_VecVec )
@@ -26,6 +28,8 @@ package Standard_Vector_Splitters is
   --   Returns the vector (or vector of vectors) of the real parts
   --   of the complex vector x.  Memory is allocated.
 
+  function Imag_Part ( x : Standard_Complex_Vectors.Vector )
+                     return Standard_Floating_Vectors.Vector;
   function Imag_Part ( x : Standard_Complex_Vectors.Link_to_Vector )
                      return Standard_Floating_Vectors.Link_to_Vector;
   function Imag_Part ( x : Standard_Complex_VecVecs.Link_to_VecVec )
@@ -35,6 +39,9 @@ package Standard_Vector_Splitters is
   --   Returns the vector (or vector of vectors) of the imaginary parts
   --   of the complex vector x.  Memory is allocated.
 
+  function Make_Complex
+             ( rpx,ipx : Standard_Floating_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector;
   function Make_Complex
              ( rpx,ipx : Standard_Floating_Vectors.Link_to_Vector )
              return Standard_Complex_Vectors.Link_to_Vector;
@@ -50,6 +57,9 @@ package Standard_Vector_Splitters is
   --   with real and imaginary parts given in the vectors rpx and ipx.
   --   Memory is allocated for the resulting vectors.
 
+  procedure Split_Complex
+              ( x : in Standard_Complex_Vectors.Vector;
+                rpx,ipx : out Standard_Floating_Vectors.Vector );
   procedure Split_Complex
               ( x : in Standard_Complex_Vectors.Link_to_Vector;
                 rpx,ipx : out Standard_Floating_Vectors.Link_to_Vector );

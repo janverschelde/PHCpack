@@ -4,6 +4,18 @@ package body Standard_Vector_Splitters is
 
 -- FUNCTIONS WITH MEMORY ALLOCATIONS :
 
+  function Real_Part ( x : Standard_Complex_Vectors.Vector )
+                     return Standard_Floating_Vectors.Vector is
+
+    res : Standard_Floating_Vectors.Vector(x'range);
+
+  begin
+    for k in x'range loop
+      res(k) := Standard_Complex_Numbers.REAL_PART(x(k));
+    end loop;
+    return res;
+  end Real_Part;
+
   function Real_Part ( x : Standard_Complex_Vectors.Link_to_Vector )
                      return Standard_Floating_Vectors.Link_to_Vector is
 
@@ -32,6 +44,18 @@ package body Standard_Vector_Splitters is
     return res;
   end Real_Part;
 
+  function Imag_Part ( x : Standard_Complex_Vectors.Vector )
+                     return Standard_Floating_Vectors.Vector is
+
+    res : Standard_Floating_Vectors.Vector(x'range);
+
+  begin
+    for k in x'range loop
+      res(k) := Standard_Complex_Numbers.IMAG_PART(x(k));
+    end loop;
+    return res;
+  end Imag_Part;
+
   function Imag_Part ( x : Standard_Complex_Vectors.Link_to_Vector )
                      return Standard_Floating_Vectors.Link_to_Vector is
 
@@ -59,6 +83,19 @@ package body Standard_Vector_Splitters is
     res := new Standard_Floating_VecVecs.VecVec'(ipx);
     return res;
   end Imag_Part;
+
+  function Make_Complex
+             ( rpx,ipx : Standard_Floating_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector is
+
+    res : Standard_Complex_Vectors.Vector(rpx'range);
+
+  begin
+    for k in res'range loop
+      res(k) := Standard_Complex_Numbers.Create(rpx(k),ipx(k));
+    end loop;
+    return res;
+  end Make_Complex;
 
   function Make_Complex
              ( rpx,ipx : Standard_Floating_Vectors.Link_to_Vector )
@@ -102,6 +139,17 @@ package body Standard_Vector_Splitters is
     end loop;
     return res;
   end Make_Complex;
+
+  procedure Split_Complex
+              ( x : in Standard_Complex_Vectors.Vector;
+                rpx,ipx : out Standard_Floating_Vectors.Vector ) is
+
+  begin
+    for k in x'range loop
+      rpx(k) := Standard_Complex_Numbers.REAL_PART(x(k));
+      ipx(k) := Standard_Complex_Numbers.IMAG_PART(x(k));
+    end loop;
+  end Split_Complex;
 
   procedure Split_Complex
               ( x : in Standard_Complex_Vectors.Link_to_Vector;
