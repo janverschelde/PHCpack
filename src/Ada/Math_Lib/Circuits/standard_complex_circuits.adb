@@ -15,11 +15,67 @@ package body Standard_Complex_Circuits is
           := (1..dim-2 => zero);
 
   begin
+    res.dim := dim;
     res.fwd := new Standard_Complex_Vectors.Vector'(forward);
     res.bck := new Standard_Complex_Vectors.Vector'(backward);
     res.crs := new Standard_Complex_Vectors.Vector'(cross);
     return res;
   end Allocate;
+
+-- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
+
+  procedure Speel ( c : in Circuit;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Speel(c.xps,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs);
+  end Speel;
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    cff : in Standard_Complex_Vectors.Vector;
+                    cst : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+    idk : Standard_Integer_Vectors.Link_to_Vector;
+    idx1,idx2 : integer32;
+    kcff : Standard_Complex_Numbers.Complex_Number;
+
+    use Standard_Complex_Numbers,Standard_Integer_Vectors;
+
+  begin
+    yd(0) := cst;
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        if idk'last = 1 then
+          idx1 := idk(1); kcff := cff(k);
+          yd(0) := yd(0) + kcff*x(idx1);
+          yd(idx1) := yd(idx1) + kcff;
+        else
+          Forward_Backward_Cross(idk.all,x,fwd,bck,crs);
+          kcff := cff(k); yd(0) := yd(0) + kcff*fwd(idk'last-1); 
+          if idk'last = 2 then
+            idx1 := idk(1); idx2 := idk(2);
+            yd(idx2) := yd(idx2) + kcff*x(idx1);
+            yd(idx1) := yd(idx1) + kcff*x(idx2);
+          else -- idk'last > 2
+            idx1 := idk(1);
+            yd(idx1) := yd(idx1) + kcff*bck(idk'last-2);
+            for j in idk'first+1..idk'last-1 loop
+              idx1 := idk(j);
+              yd(idx1) := yd(idx1) + kcff*crs(j-1);
+            end loop;
+            idx1 := idk(idk'last);
+            yd(idx1) := yd(idx1) + kcff*fwd(idk'last-2);
+          end if;
+        end if;
+      end if;
+    end loop;
+  end Speel;
+
+-- AUXILIARY PROCEDURES :
 
   procedure Forward ( x : in Standard_Complex_Vectors.Link_to_Vector;
                       f : in Standard_Complex_Vectors.Link_to_Vector ) is

@@ -1,3 +1,10 @@
+Mon 18 May 2020 : indicated wrapper procedure for Speel in packages
+  standard_complex_circuits and standard_coefficient_circuits, with
+  the added error computation in ts_perfade.
+
+Sun 17 May 2020 : added a Speel procedure to standard_complex_circuits
+  and to standard_coefficient_circuits, tested by ts_perfade.
+
 Sat 16 May 2020 : new package standard_complex_circuits with development code
   from standard_coefficient_circuits.  Added data structures to the packages
   standard_complex_circuits and standard_coefficient_circuits.

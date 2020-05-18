@@ -16,7 +16,10 @@ package Standard_Coefficient_Circuits is
 --   apply the reverse mode of algorithmic differentiation and evaluation.
 
   type Circuit ( nbr : integer32 ) is record
+    dim : integer32; -- the number of variables in the circuit
     xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponents
+    idx : Standard_Integer_VecVecs.VecVec(1..nbr); -- indices of exponents
+    fac : Standard_Integer_VecVecs.VecVec(1..nbr); -- factor indices
    -- the coefficients are stored as vectors of real and imaginary parts
     rcf : Standard_Floating_Vectors.Vector(1..nbr); -- real parts
     icf : Standard_Floating_Vectors.Vector(1..nbr); -- imaginary parts
@@ -41,10 +44,98 @@ package Standard_Coefficient_Circuits is
   function Allocate ( nbr,dim : integer32 ) return Circuit;
 
   -- DESCRIPTION :
-  --   Returns a circuits for a polynomial with nbr monomials,
+  --   Returns a circuit for a polynomial with nbr monomials,
   --   with dim variables, and with allocated work space vectors.
 
--- PROCEDURES :
+-- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
+
+  procedure Speel ( c : in Circuit;
+                    xr : in Standard_Floating_Vectors.Link_to_Vector;
+                    xi : in Standard_Floating_Vectors.Link_to_Vector;
+                    ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                    iyd : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiates the circuit c at x
+  --   and stores the result in yd.
+  --   Wraps the next Speel procedure, using the c.xps as indices.
+  --   The results are correct if all monomials are products of variables,
+  --   with no exponent higher than one.
+
+  -- ON ENTRY :
+  --   c        circuit properly defined and with allocated workspace;
+  --   xr       vector of range 1..c.dim,
+  --            with values for the real parts of x;
+  --   xr       vector of range 1..c.dim,
+  --            with values for the imaginary parts of x;
+  --   ryd      vector of range 0..c.dim,
+  --            allocated for the real parts of the result;
+  --   iyd      vector of range 0..c.dim,
+  --            allocated for the imaginary parts of the result.
+
+  -- ON RETURN :
+  --   ryd(0)   real part of the value of the circuit at x;
+  --   iyd(0)   imaginary part of the value of the circuit at x;
+  --   ryd(k)   real part of the k-th derivative of the circuit at x;
+  --   iyd(k)   imaginary part of the k-th derivative of the circuit at x.
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    rcf : in Standard_Floating_Vectors.Vector;
+                    icf : in Standard_Floating_Vectors.Vector;
+                    rcst,icst : in double_float;
+                    xr : in Standard_Floating_Vectors.Link_to_Vector;
+                    xi : in Standard_Floating_Vectors.Link_to_Vector;
+                    ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                    iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rfwd : in Standard_Floating_Vectors.Link_to_Vector;
+                    ifwd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rbck : in Standard_Floating_Vectors.Link_to_Vector;
+                    ibck : in Standard_Floating_Vectors.Link_to_Vector;
+                    rcrs : in Standard_Floating_Vectors.Link_to_Vector;
+                    icrs : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Implements the Speel procedure on the circuit c.
+
+  -- REQUIRED :
+  --   idx'range = rcf'range = icf'range and all vectors in idx have 
+  --   values in range 1..dim, where dim is the number of variables,
+  --   xr'range = xi'range = 1..dim and ryd'range = iyd'range = 0..dim.
+
+  -- ON ENTRY :
+  --   idx      indices to participating variables in each monomial;
+  --   rcf      real parts of the coefficients of the monomials;
+  --   icf      imaginary parts of the coefficients of the monomials;
+  --   rcst     real part of the constant coefficient of the circuit;
+  --   icst     imaginary part of the constant coefficient of the circuit;
+  --   xr       vector of range 1..c.dim,
+  --            with values for the real parts of x;
+  --   xr       vector of range 1..c.dim,
+  --            with values for the imaginary parts of x;
+  --   ryd      vector of range 0..c.dim,
+  --            allocated for the real parts of the result;
+  --   iyd      vector of range 0..c.dim,
+  --            allocated for the imaginary parts of the result;
+  --   rfwd     work space vector of range 1..dim-1,
+  --            for the real parts of the forward products;
+  --   ifwd     work space vector of range 1..dim-1,
+  --            for the imaginary parts of the forward products;
+  --   rbck     work space vector of range 1..dim-2,
+  --            for the real parts of the backward products;
+  --   ibck     work space vector of range 1..dim-2,
+  --            for the imaginary parts of the backward products;
+  --   rcrs     work space vector of range 1..dim-2,
+  --            for the real parts of the cross products.
+  --   icrs     work space vector of range 1..dim-2,
+  --            for the imaginary parts of the cross products.
+
+  -- ON RETURN :
+  --   ryd(0)   real part of the value of the circuit at x;
+  --   iyd(0)   imaginary part of the value of the circuit at x;
+  --   ryd(k)   real part of the k-th derivative of the circuit at x;
+  --   iyd(k)   imaginary part of the k-th derivative of the circuit at x.
+
+-- AUXILIARY PROCEDURES :
 
   procedure Forward ( xr : in Standard_Floating_Vectors.Link_to_Vector;
                       xi : in Standard_Floating_Vectors.Link_to_Vector;

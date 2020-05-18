@@ -17,7 +17,10 @@ package Standard_Complex_Circuits is
 --   apply the reverse mode of algorithmic differentiation and evaluation.
 
   type Circuit ( nbr : integer32 ) is record
+    dim : integer32;                               -- dimension
     xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponents
+    idx : Standard_Integer_VecVecs.VecVec(1..nbr); -- indices of exponents
+    fac : Standard_Integer_VecVecs.VecVec(1..nbr); -- factor indices
     cff : Standard_Complex_Vectors.Vector(1..nbr); -- coefficients
     cst : Standard_Complex_Numbers.Complex_Number; -- constant
     fwd : Standard_Complex_Vectors.Link_to_Vector; -- forward products
@@ -32,10 +35,64 @@ package Standard_Complex_Circuits is
   function Allocate ( nbr,dim : integer32 ) return Circuit;
 
   -- DESCRIPTION :
-  --   Returns a circuits for a polynomial with nbr monomials,
+  --   Returns a circuit for a polynomial with nbr monomials,
   --   with dim variables, and with allocated work space vectors.
 
--- PROCEDURES :
+-- ALGORITMIC DIFFERENTIATION AND EVALUATION OF ONE CIRCUIT :
+
+  procedure Speel ( c : in Circuit;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiates the circuit c at x
+  --   and stores the result in yd.
+  --   Wraps the next Speel procedure, using the c.xps as indices.
+  --   The results are correct if all monomials are products of variables,
+  --   with no exponent higher than one.
+
+  -- ON ENTRY :
+  --   c        circuit properly defined and with allocated workspace;
+  --   x        vector of range 1..c.dim, with values for x;
+  --   yd       vector of range 0..c.dim, allocated for the result.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x.
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    cff : in Standard_Complex_Vectors.Vector;
+                    cst : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Implements the Speel on the circuit c.
+
+  -- REQUIRED :
+  --   idx'range = cff'range and all vectors in idx have values
+  --   in range 1..dim, where dim is the number of variables,
+  --   x'range = 1..dim and yd'range = 0..dim.
+
+  -- ON ENTRY :
+  --   idx      indices to participating variables in each monomial;
+  --   cff      coefficients of the monomials;
+  --   cst      constant coefficient of the circuit;
+  --   x        vector of range 1..dim, with values for x;
+  --   yd       vector of range 0..c.dim, allocated for the result.
+  --   fwd      work space vector of range 1..dim-1,
+  --            for the forward products;
+  --   bck      work space vector of range 1..dim-2,
+  --            for the backward products;
+  --   crs      work space vector of range 1..dim-2,
+  --            for the cross products.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x.
+
+-- AUXILIARY PROCEDURES :
 
   procedure Forward ( x : in Standard_Complex_Vectors.Link_to_Vector;
                       f : in Standard_Complex_Vectors.Link_to_Vector );

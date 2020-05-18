@@ -6,6 +6,7 @@ with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
@@ -268,6 +269,46 @@ procedure ts_perfade is
     return res(1..cnt);
   end Random_Indices;
 
+  function Random_Complex_Circuit
+             ( nbr,dim : integer32 )
+             return Standard_Complex_Circuits.Circuit is
+
+  -- DESCRIPTION :
+  --   Returns a random complex circuit with products of dimension dim
+  --   and as many nonconstant coefficients as the number nbr.
+
+    res : Standard_Complex_Circuits.Circuit(nbr)
+        := Standard_Complex_Circuits.Allocate(nbr,dim);
+
+  begin
+    for k in 1..nbr loop
+      res.xps(k) := new Standard_Integer_Vectors.Vector'(Random_Indices(dim));
+    end loop;
+    res.cff := Standard_Random_Vectors.Random_Vector(1,nbr);
+    res.cst := Standard_Random_Numbers.Random1;
+    return res;
+  end Random_Complex_Circuit;
+
+  function Split ( c : Standard_Complex_Circuits.Circuit )
+                 return Standard_Coefficient_Circuits.Circuit is
+
+  -- DESCRIPTION :
+  --   Returns the circuit c with complex coefficients split into
+  --   real and imaginary parts.
+
+    res : Standard_Coefficient_Circuits.Circuit(c.nbr)
+        := Standard_Coefficient_Circuits.Allocate(c.nbr,c.dim);
+
+  begin
+    for k in 1..c.nbr loop
+      res.xps(k) := new Standard_Integer_Vectors.Vector'(c.xps(k).all);
+    end loop;
+    Split_Complex(c.cff,res.rcf,res.icf);
+    res.rcst := Standard_Complex_Numbers.REAL_PART(c.cst);
+    res.icst := Standard_Complex_Numbers.IMAG_PART(c.cst);
+    return res;
+  end Split;
+
   procedure Test_Indexed_Forward_Backward_Cross ( dim : in integer32 ) is
 
   -- DESCRIPTION :
@@ -375,6 +416,46 @@ procedure ts_perfade is
     err := Evaluation_Differentiation_Errors.Difference(pwt,v);
     put("The error :"); put(err,3); new_line;
   end Test_Power_Table;
+
+  procedure Test_Circuit ( nbr,dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with nbr terms and dimension dim
+  --   and tests the differentiation and evaluation.
+
+    c1 : constant Standard_Complex_Circuits.Circuit
+       := Random_Complex_Circuit(nbr,dim);
+    c2 : constant Standard_Coefficient_Circuits.Circuit := Split(c1);
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+    y : constant Standard_Complex_Vectors.Vector(0..dim)
+      := Standard_Complex_Vectors.Vector'(0..dim => zero);
+    yd : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(y);
+    ryd : constant Standard_Floating_Vectors.Link_to_Vector
+        := Real_Part(yd);
+    iyd : constant Standard_Floating_Vectors.Link_to_Vector
+        := Imag_Part(yd);
+    yd2 : Standard_Complex_Vectors.Link_to_Vector;
+    err : double_float;
+
+  begin
+    Standard_Complex_Circuits.Speel(c1,x,yd);
+    put_line("The value at a random point :"); put(yd(0)); new_line;
+    put_line("The gradient :"); put_line(yd(1..yd'last));
+    Standard_Coefficient_Circuits.Speel(c2,xr,xi,ryd,iyd);
+    yd2 := Make_Complex(ryd,iyd);
+    put_line("The recomputed value :"); put(yd2(0)); new_line;
+    put_line("The recomputed gradient :"); put_line(yd2(1..yd2'last));
+    err := Evaluation_Differentiation_Errors.Difference(yd,yd2);
+    put("The error :"); put(err,3); new_line;
+  end Test_Circuit;
 
   procedure Timing_Forward ( dim,frq : in integer32 ) is
 
@@ -673,8 +754,53 @@ procedure ts_perfade is
     end loop;
     tstop(timer);
     new_line;
-    print_times(standard_output,timer,"complex power table");
+    print_times(standard_output,timer,"real power table");
   end Timing_Power_Table;
+
+  procedure Timing_Circuit ( nbr,dim,frq: in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with nbr terms and dimension dim
+  --   and runs the differentiation and evaluation procedures
+  --   as many times as the frequency frq.
+
+    timer : Timing_Widget;
+    c1 : constant Standard_Complex_Circuits.Circuit
+       := Random_Complex_Circuit(nbr,dim);
+    c2 : constant Standard_Coefficient_Circuits.Circuit := Split(c1);
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+    y : constant Standard_Complex_Vectors.Vector(0..dim)
+      := Standard_Complex_Vectors.Vector'(0..dim => zero);
+    yd : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(y);
+    ryd : constant Standard_Floating_Vectors.Link_to_Vector
+        := Real_Part(yd);
+    iyd : constant Standard_Floating_Vectors.Link_to_Vector
+        := Imag_Part(yd);
+
+  begin
+    tstart(timer);
+    for k in 1..frq loop
+      Standard_Complex_Circuits.Speel(c1,x,yd);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex Speel");
+    tstart(timer);
+    for k in 1..frq loop
+      Standard_Coefficient_Circuits.Speel(c2,xr,xi,ryd,iyd);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"real Speel");
+  end Timing_Circuit;
 
   procedure Main is
 
@@ -682,7 +808,7 @@ procedure ts_perfade is
   --   Prompts the user for the dimension,
   --   the type of test, and then launches the test.
 
-    dim,frq,pwr : integer32 := 0;
+    dim,frq,pwr,nbr : integer32 := 0;
     ans,tst : character;
 
   begin
@@ -695,11 +821,15 @@ procedure ts_perfade is
     put_line("  3. forward, backward, and cross products");
     put_line("  4. indexed forward, backward, and cross products");
     put_line("  5. power table");
-    put("Type 1, 2, 3, 4, or 5 to select the test : ");
-    Ask_Alternative(tst,"12345");
+    put_line("  6. circuit differentiation and evaluation");
+    put("Type 1, 2, 3, 4, 5, or 6 to select the test : ");
+    Ask_Alternative(tst,"123456");
     if tst = '5' then
       new_line;
       put("Give the highest power : "); get(pwr);
+    elsif tst = '6' then
+      new_line;
+      put("Give the number of terms in the circuit : "); get(nbr);
     end if;
     new_line;
     put("Interactive tests ? (y/n) "); Ask_Yes_or_No(ans);
@@ -710,6 +840,7 @@ procedure ts_perfade is
         when '3' => Test_Forward_Backward_Cross(dim);
         when '4' => Test_Indexed_Forward_Backward_Cross(dim);
         when '5' => Test_Power_Table(dim,pwr);
+        when '6' => Test_Circuit(nbr,dim);
         when others => null;
       end case;
     else
@@ -721,6 +852,7 @@ procedure ts_perfade is
         when '3' => Timing_Forward_Backward_Cross(dim,frq);
         when '4' => Timing_Indexed_Forward_Backward_Cross(dim,frq);
         when '5' => Timing_Power_Table(dim,pwr,frq);
+        when '6' => Timing_Circuit(nbr,dim,frq);
         when others => null;
       end case;
     end if;
