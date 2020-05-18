@@ -18,6 +18,7 @@ with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;         use Standard_Complex_VecVecs_io;
 with Standard_Random_Vectors;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
+with Exponent_Indices;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
 with Evaluation_Differentiation_Errors;
@@ -457,6 +458,52 @@ procedure ts_perfade is
     put("The error :"); put(err,3); new_line;
   end Test_Circuit;
 
+  procedure Test_Multiply_Factor ( dim,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given the dimension dim and the highest power pwr,
+  --   tests the multiplication of the common factor,
+  --   using the power table for random values.
+
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
+        := Standard_Complex_Circuits.Allocate(mxe);
+    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    xps : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Standard_Random_Vectors.Random_Vector(1,dim,0,pwr);
+    xp : constant Standard_Integer_Vectors.Link_to_Vector
+       := new Standard_Integer_Vectors.Vector'(xps);
+    fac : constant Standard_Integer_Vectors.Link_to_Vector
+        := Exponent_Indices.Factor_Index(xp);
+    cst : constant Standard_Complex_Numbers.Complex_Number
+        := Standard_Random_Numbers.Random1;
+    rcf : constant double_float := Standard_Complex_Numbers.REAL_PART(cst);
+    icf : constant double_float := Standard_Complex_Numbers.IMAG_PART(cst);
+    res,res2 : Standard_Complex_Numbers.Complex_Number;
+    rpf,ipf : double_float;
+
+  begin
+    put("The random exponents : "); put(xps); new_line;
+    put("The factor indices : "); put(fac); new_line;
+    Standard_Complex_Circuits.Power_Table(mxe,x,pwt);
+    Standard_Coefficient_Circuits.Power_Table(mxe,xr,xi,rpwt,ipwt);
+    Standard_Complex_Circuits.Multiply_Factor(xp,fac,x,cst,pwt,res);
+    put_line("The multiplied factor :"); put(res); new_line;
+    Standard_Coefficient_Circuits.Multiply_Factor
+      (xp,fac,xr,xi,rcf,icf,rpwt,ipwt,rpf,ipf);
+    res2 := Standard_Complex_Numbers.Create(rpf,ipf);
+    put_line("The recomputed multiplied factor :"); put(res2); new_line;
+  end Test_Multiply_Factor;
+
   procedure Timing_Forward ( dim,frq : in integer32 ) is
 
   -- DESCRIPTION :
@@ -802,6 +849,64 @@ procedure ts_perfade is
     print_times(standard_output,timer,"real Speel");
   end Timing_Circuit;
 
+  procedure Timing_Multiply_Factor ( dim,pwr,frq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given the dimension dim and the highest power pwr,
+  --   times the multiplication of the common factor,
+  --   using the power table for random values.
+
+    timer : Timing_Widget;
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
+        := Standard_Complex_Circuits.Allocate(mxe);
+    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    xps : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Standard_Random_Vectors.Random_Vector(1,dim,0,pwr);
+    xp : constant Standard_Integer_Vectors.Link_to_Vector
+       := new Standard_Integer_Vectors.Vector'(xps);
+    fac : constant Standard_Integer_Vectors.Link_to_Vector
+        := Exponent_Indices.Factor_Index(xp);
+    cst : Standard_Complex_Numbers.Complex_Number;
+    res,res2 : Standard_Complex_Numbers.Complex_Number;
+    rcf,icf,rpf,ipf : double_float;
+
+  begin
+    put("The random exponents : "); put(xps); new_line;
+    put("The factor indices : "); put(fac); new_line;
+    Standard_Complex_Circuits.Power_Table(mxe,x,pwt);
+    Standard_Coefficient_Circuits.Power_Table(mxe,xr,xi,rpwt,ipwt);
+    tstart(timer);
+    for k in 1..frq loop
+      cst := Standard_Random_Numbers.Random1;
+      Standard_Complex_Circuits.Multiply_Factor(xp,fac,x,cst,pwt,res);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex multiply factor");
+    tstart(timer);
+    for k in 1..frq loop
+      cst := Standard_Random_Numbers.Random1;
+      rpf := Standard_Complex_Numbers.REAL_PART(cst);
+      ipf := Standard_Complex_Numbers.IMAG_PART(cst);
+      Standard_Coefficient_Circuits.Multiply_Factor
+        (xp,fac,xr,xi,rcf,icf,rpwt,ipwt,rpf,ipf);
+      res2 := Standard_Complex_Numbers.Create(rpf,ipf);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"real multiply factor");
+  end Timing_Multiply_Factor;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -822,9 +927,10 @@ procedure ts_perfade is
     put_line("  4. indexed forward, backward, and cross products");
     put_line("  5. power table");
     put_line("  6. circuit differentiation and evaluation");
-    put("Type 1, 2, 3, 4, 5, or 6 to select the test : ");
-    Ask_Alternative(tst,"123456");
-    if tst = '5' then
+    put_line("  7. multiplication with common factor");
+    put("Type 1, 2, 3, 4, 5, 6, or 7 to select the test : ");
+    Ask_Alternative(tst,"1234567");
+    if tst = '5' or tst = '7' then
       new_line;
       put("Give the highest power : "); get(pwr);
     elsif tst = '6' then
@@ -841,6 +947,7 @@ procedure ts_perfade is
         when '4' => Test_Indexed_Forward_Backward_Cross(dim);
         when '5' => Test_Power_Table(dim,pwr);
         when '6' => Test_Circuit(nbr,dim);
+        when '7' => Test_Multiply_Factor(dim,pwr);
         when others => null;
       end case;
     else
@@ -853,6 +960,7 @@ procedure ts_perfade is
         when '4' => Timing_Indexed_Forward_Backward_Cross(dim,frq);
         when '5' => Timing_Power_Table(dim,pwr,frq);
         when '6' => Timing_Circuit(nbr,dim,frq);
+        when '7' => Timing_Multiply_Factor(dim,pwr,frq);
         when others => null;
       end case;
     end if;

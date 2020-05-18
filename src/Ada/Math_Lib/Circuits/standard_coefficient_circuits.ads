@@ -361,6 +361,34 @@ package Standard_Coefficient_Circuits is
   --            where x(k) is the complex value of the k-th variable,
   --            for i in range 1..mxe(k)-1.
 
+  procedure Multiply_Factor
+              ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                rcf,icf : in double_float;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                rpf,ipf : out double_float );
+
+  -- DESCRIPTION :
+  --   Computes the common factor, for higher powers of variables.
+
+  -- ON ENTRY :
+  --   xps      values of the exponents for the powers of x;
+  --   fac      factor indices;
+  --   xr       real parts for the variables used for low powers;
+  --   xi       imaginary parts for the variables used for low powers;
+  --   rcf      real part of the coefficient of the monomial;
+  --   icf      imaginary part of the coefficient of the monomial;
+  --   rpwt     real parts of the power table for the higher powers of x,
+  --            pwt(k)(i) stores x(k)**(i+1);
+  --   rpwt     imaginary parts of the power table for the higher powers of x,
+  --            pwt(k)(i) stores x(k)**(i+1).
+
+  -- ON RETURN :
+  --   rpf      real part of the common factor;
+  --   ipf      imaginary part of the common factor.
+
 -- DESTRUCTORS :
 
   procedure Clear ( c : in out Circuit );

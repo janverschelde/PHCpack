@@ -231,6 +231,30 @@ package Standard_Complex_Circuits is
   --   pwt      power table, pwt(k)(i) equals x(k)**(i+1),
   --            for i in range 1..mxe(k)-1.
 
+  procedure Multiply_Factor
+              ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                cff : in Standard_Complex_Numbers.Complex_Number;
+                pwt : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Numbers.Complex_Number );
+
+  -- DESCRIPTION :
+  --   Given exponents in xps and the factor indices in fac,
+  --   computes the value of the common factor at x,
+  --   multiplied with the coefficient cff,
+  --   and with the aid of the power table pwt.
+
+  -- ON ENTRY :
+  --   xps      values of the exponents for the powers of x;
+  --   fac      factor indices;
+  --   x        values for the variables used for low powers;
+  --   cff      coefficient of the monomial;
+  --   pwt      power table for the higher powers of x,
+  --            pwt(k)(i) stores x(k)**(i+1).
+
+  -- ON RETURN :
+  --   res      the coefficient multiplied with the common factor.
+
 -- DESTRUCTORS :
 
   procedure Clear ( c : in out Circuit );

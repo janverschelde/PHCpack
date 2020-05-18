@@ -991,6 +991,55 @@ package body Standard_Coefficient_Circuits is
     end loop;
   end Power_Table;
 
+  procedure Multiply_Factor
+              ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                rcf,icf : in double_float;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                rpf,ipf : out double_float ) is
+
+    rpwx : Standard_Floating_Vectors.Link_to_Vector;
+    ipwx : Standard_Floating_Vectors.Link_to_Vector;
+    idx,powidx : integer32;
+    zr,zi,xrk,xik : double_float;
+
+  begin
+    idx := fac(fac'first); powidx := xps(idx);
+    if powidx = 2 then
+     -- res := cff*x(idx);
+      xrk := xr(idx); xik := xi(idx);
+      zr := xrk*rcf - xik*icf;
+      zi := xrk*icf + xik*rcf;
+      rpf := zr; ipf := zi;
+    else
+      rpwx := rpwt(idx); ipwx := ipwt(idx);
+     -- res := cff*pwx(powidx-2);
+      xrk := rpwx(powidx-2); xik := ipwx(powidx-2);
+      zr := xrk*rcf - xik*icf;
+      zi := xrk*icf + xik*rcf;
+      rpf := zr; ipf := zi;
+    end if;
+    for k in fac'first+1..fac'last loop
+      idx := fac(k); powidx := xps(idx);
+      if powidx = 2 then
+       -- res := res*x(idx);
+        xrk := xr(idx); xik := xi(idx);
+        zr := xrk*rpf - xik*ipf;
+        zi := xrk*ipf + xik*rpf;
+        rpf := zr; ipf := zi;
+      else
+        rpwx := rpwt(idx); ipwx := ipwt(idx);
+       -- res := res*pwx(powidx-2);
+        xrk := rpwx(powidx-2); xik := ipwx(powidx-2);
+        zr := xrk*rpf - xik*ipf;
+        zi := xrk*ipf + xik*rpf;
+        rpf := zr; ipf := zi;
+      end if;
+    end loop;
+  end Multiply_Factor;
+
 -- DESTRUCTORS :
 
   procedure Clear ( c : in out Circuit ) is

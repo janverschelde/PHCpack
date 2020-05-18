@@ -294,6 +294,37 @@ package body Standard_Complex_Circuits is
     end loop;
   end Power_Table;
 
+  procedure Multiply_Factor
+              ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                cff : in Standard_Complex_Numbers.Complex_Number;
+                pwt : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Numbers.Complex_Number ) is
+
+    pwx : Standard_Complex_Vectors.Link_to_Vector;
+    idx,powidx : integer32;
+
+    use Standard_Complex_Numbers;
+
+  begin
+    idx := fac(fac'first); powidx := xps(idx);
+    if powidx = 2 then
+      res := cff*x(idx);
+    else
+      pwx := pwt(idx);
+      res := cff*pwx(powidx-2);
+    end if;
+    for k in fac'first+1..fac'last loop
+      idx := fac(k); powidx := xps(idx);
+      if powidx = 2 then
+        res := res*x(idx);
+      else
+        pwx := pwt(idx);
+        res := res*pwx(powidx-2);
+      end if;
+    end loop;
+  end Multiply_Factor;
+
 -- DESTRUCTORS :
 
   procedure Clear ( c : in out Circuit ) is
