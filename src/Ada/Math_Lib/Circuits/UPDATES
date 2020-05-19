@@ -5,7 +5,8 @@ Mon 18 May 2020 : indicated wrapper procedure for Speel in packages
   standard_complex_circuits, and standard_coefficient_circuits.
   In standard_complex_circuits and standard_coefficient_circuits,
   defined procedures to evaluate and differentiate with a power table,
-  tested in ts_perfade.
+  tested in ts_perfade.  In standard_complex_circuits, defined a system 
+  and updated ts_perfade.
 
 Sun 17 May 2020 : added a Speel procedure to standard_complex_circuits
   and to standard_coefficient_circuits, tested by ts_perfade.

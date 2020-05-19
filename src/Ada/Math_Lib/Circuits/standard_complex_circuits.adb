@@ -23,6 +23,32 @@ package body Standard_Complex_Circuits is
     return res;
   end Allocate;
 
+-- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
+
+  procedure EvalDiff
+              ( s : in out System;
+                x : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Power_Table(s.mxe,x,s.pwt);
+    EvalDiff(s.crc,x,s.yd,s.pwt,s.fx,s.jm);
+  end EvalDiff;
+
+  procedure EvalDiff
+              ( c : in Circuits;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec;
+                fx : out Standard_Complex_Vectors.Vector;
+                jm : out Standard_Complex_Matrices.Matrix ) is
+  begin
+    for i in c'range loop
+      Speel(c(i).all,x,yd,pwt);
+      fx(i) := yd(0);
+      for j in jm'range(2) loop
+        jm(i,j) := yd(j);
+      end loop;
+    end loop;
+  end EvalDiff;
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
 
   procedure Speel ( c : in Circuit;

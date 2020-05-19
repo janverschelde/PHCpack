@@ -22,6 +22,8 @@ with Standard_Random_Vectors;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
 with Exponent_Indices;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
@@ -1118,6 +1120,124 @@ procedure ts_perfade is
     print_times(standard_output,timer,"real Speel");
   end Timing_Power_Circuit;
 
+  function Constant_Coefficient
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the constant coefficient of the polynomial p.
+
+    use Standard_Complex_Polynomials;
+
+    dim : constant integer32 := integer32(Number_of_Unknowns(p));
+    deg : Degrees := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+    res : Standard_Complex_Numbers.Complex_Number := Coeff(p,deg);
+
+  begin
+    Clear(deg);
+    return res;
+  end Constant_Coefficient;
+
+  function Is_NonZero ( c : Standard_Complex_Numbers.Complex_Number )
+                   return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns 1 if the coefficient is nonzero,
+  --   returns 0 otherwise.
+
+  begin
+    if Standard_Complex_Numbers.REAL_PART(c) /= 0.0 then
+      return 1;
+    elsif Standard_Complex_Numbers.IMAG_PART(c) /= 0.0 then
+      return 1;
+    else
+      return 0;
+    end if;
+  end Is_NonZero;
+
+  function Make_Complex_Circuit
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Complex_Circuits.Circuit is
+
+  -- DESCRIPTION :
+  --   Returns the circuit representation of the polynomial p.
+    
+    use Standard_Complex_Polynomials;
+
+    nbr : constant integer32 := integer32(Number_of_Terms(p));
+    dim : constant integer32 := integer32(Number_of_Unknowns(p));
+    cst : constant Standard_Complex_Numbers.Complex_Number
+        := Constant_Coefficient(p);
+    isz : constant integer32 := Is_NonZero(cst);
+    res : Standard_Complex_Circuits.Circuit(nbr-isz);
+    cnt : integer32 := 0;
+
+    function Is_Zero ( d : in Degrees ) return boolean is
+    
+    -- DESCRIPTION :
+    --   Returns true if all entries of d are zero.
+
+    begin
+      for k in d'range loop
+        if d(k) /= 0
+         then return false;
+        end if;
+      end loop;
+      return true;
+    end Is_Zero;
+
+    procedure Visit_Term ( t : in Term; c : out boolean ) is
+
+      xp : Standard_Integer_Vectors.Vector(t.dg'range);
+
+    begin
+      if not Is_Zero(t.dg) then
+        cnt := cnt + 1;
+        res.cff(cnt) := t.cf;
+        for i in xp'range loop
+          xp(i) := integer32(t.dg(i));
+        end loop;
+        res.xps(cnt) := new Standard_Integer_Vectors.Vector'(xp);
+        res.idx(cnt) := Exponent_Indices.Exponent_Index(res.xps(cnt));
+        res.fac(cnt) := Exponent_Indices.Factor_Index(res.xps(cnt));
+      end if;
+      c := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    res.dim := dim;
+    res.cst := cst;
+    Visit_Terms(p);
+    return res;
+  end Make_Complex_Circuit;
+
+  procedure Test_System is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system
+  --   and then evaluates the system at a random point.
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+    use Standard_Complex_Circuits;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(lp);
+    declare
+      c : Circuits(lp'range);
+    begin
+      for k in c'range loop
+        c(k) := new Circuit'(Make_Complex_Circuit(lp(k)));
+        for i in 1..c(k).nbr loop
+          put(c(k).cff(i)); put(c(k).xps(i)); new_line;
+        end loop;
+        put(c(k).cst); new_line;
+      end loop;
+    end;
+  end Test_System;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -1140,8 +1260,9 @@ procedure ts_perfade is
     put_line("  6. circuit differentiation and evaluation");
     put_line("  7. multiplication with common factor");
     put_line("  8. evaluation and differentiaton of random circuit");
-    put("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select the test : ");
-    Ask_Alternative(tst,"12345678");
+    put_line("  9. for given system, run the evaluation and differentiation");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select the test : ");
+    Ask_Alternative(tst,"123456789");
     if tst = '5' or tst = '7' or tst = '8' then
       new_line;
       put("Give the highest power : "); get(pwr);
@@ -1162,6 +1283,7 @@ procedure ts_perfade is
         when '6' => Test_Circuit(nbr,dim);
         when '7' => Test_Multiply_Factor(dim,pwr);
         when '8' => Test_Power_Circuit(nbr,dim,pwr);
+        when '9' => Test_System;
         when others => null;
       end case;
     else

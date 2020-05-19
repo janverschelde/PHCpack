@@ -4,6 +4,7 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
 
 package Standard_Complex_Circuits is
 
@@ -30,13 +31,67 @@ package Standard_Complex_Circuits is
 
   type Link_to_Circuit is access Circuit;
 
-  type Circuits is array ( integer range <> ) of Link_to_Circuit;
+  type Circuits is array ( integer32 range <> ) of Link_to_Circuit;
+
+-- A system stores the sequence of circuits for each polynomial,
+-- along with work space and the final outcomes.
+
+  type System ( neq,dim : integer32 ) is record
+    crc : Circuits(1..neq);                        -- polynomials
+    mxe : Standard_Integer_Vectors.Vector(1..dim); -- exponent maxima
+    pwt : Standard_Complex_VecVecs.VecVec(1..dim); -- power table
+    yd : Standard_Complex_Vectors.Link_to_Vector;  -- work space for a gradient
+    fx : Standard_Complex_Vectors.Vector(1..neq);  -- function value
+    jm : Standard_Complex_Matrices.Matrix(1..neq,1..dim); -- Jacobian matrix
+  end record;
 
   function Allocate ( nbr,dim : integer32 ) return Circuit;
 
   -- DESCRIPTION :
   --   Returns a circuit for a polynomial with nbr monomials,
   --   with dim variables, and with allocated work space vectors.
+
+-- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
+
+  procedure EvalDiff
+              ( s : in out System;
+                x : in Standard_Complex_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiations the circuits in s at x.
+
+  -- REQUIRED :
+  --   All space for the power table and yd has been allocated.
+
+  -- ON ENTRY :
+  --   s        properly defined and allocated system of circuits;
+  --   x        values for the variables in the system.
+
+  -- ON RETURN :
+  --   s.pwt    power table updated for the values in x;
+  --   s.fx     function value of the circuits at x;
+  --   s.jm     the Jacobian matrix evaluated at x.
+
+  procedure EvalDiff
+              ( c : in Circuits;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec;
+                fx : out Standard_Complex_Vectors.Vector;
+                jm : out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiations the circuits in c at x.
+
+  -- ON ENTRY :
+  --   c        a sequence of circuits, properly defined and allocated;
+  --   x        a vector of values for the variables;
+  --   yd       work space for the function value and gradient,
+  --            of range 0..dim, where dim = x'last;
+  --   pwt      power table defined and computed for x.
+
+  -- ON RETURN :
+  --   fx       vector of function values of the circuits at x;
+  --   jm       matrix of partial derivatives.
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF ONE CIRCUIT :
 
