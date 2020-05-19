@@ -45,16 +45,39 @@ package Standard_Complex_Circuits is
     jm : Standard_Complex_Matrices.Matrix(1..neq,1..dim); -- Jacobian matrix
   end record;
 
+  type Link_to_System is access System;
+
+  type System_Array is array ( integer32 range<> ) of Link_to_System;
+
+-- CONSTRUCTORS :
+
   function Allocate ( nbr,dim : integer32 ) return Circuit;
 
   -- DESCRIPTION :
   --   Returns a circuit for a polynomial with nbr monomials,
   --   with dim variables, and with allocated work space vectors.
 
+  function Exponent_Maxima
+             ( c : Circuits; dim : integer32 )
+             return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the maximal exponents of the dim variables in the circuits,
+  --   to allocate the power table in a system of circuits.
+
+  function Create ( c : Circuits; dim : integer32 ) return System;
+
+  -- DESCRIPTION :
+  --   Given well defined circuits for dimension dim,
+  --   computes mxe and allocates space for a system.
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
               ( s : in out System;
+                x : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure EvalDiff
+              ( s : in Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
@@ -374,7 +397,14 @@ package Standard_Complex_Circuits is
   procedure Clear ( c : in out Link_to_Circuit );
   procedure Clear ( c : in out Circuits );
 
-  -- DESCRIPION :
+  -- DESCRIPTION :
   --   Deallocates the space occupied by the circuit.
+
+  procedure Clear ( s : in out System );
+  procedure Clear ( s : in out Link_to_System );
+  procedure Clear ( s : in out System_Array );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by s.
 
 end Standard_Complex_Circuits;

@@ -1,3 +1,6 @@
+Tue 19 May 2020 : completed system definition in standard_complex_circuits
+  and standard_coefficient_circuits, with tests in ts_perfade.
+
 Mon 18 May 2020 : indicated wrapper procedure for Speel in packages
   standard_complex_circuits and standard_coefficient_circuits, with
   the added error computation in ts_perfade.

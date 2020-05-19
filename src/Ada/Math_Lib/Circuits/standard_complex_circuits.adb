@@ -1,7 +1,10 @@
 with unchecked_deallocation;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Exponent_Indices;
 
 package body Standard_Complex_Circuits is
+
+-- CONSTRUCTORS :
 
   function Allocate ( nbr,dim : integer32 ) return Circuit is
 
@@ -23,10 +26,55 @@ package body Standard_Complex_Circuits is
     return res;
   end Allocate;
 
+  function Exponent_Maxima
+             ( c : Circuits; dim : integer32 )
+             return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c(c'first).xps);
+
+  begin
+    for k in c'first+1..c'last loop
+      declare
+        mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+            := Exponent_Indices.Maxima(c(k).xps);
+      begin
+        for i in mxe'range loop
+          if mxe(i) > res(i)
+           then res(i) := mxe(i);
+          end if;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Exponent_Maxima;
+
+  function Create ( c : Circuits; dim : integer32 ) return System is
+
+    res : System(c'last,dim);
+    zero : constant Standard_Complex_Numbers.Complex_Number 
+         := Standard_Complex_Numbers.Create(0.0);
+
+  begin
+    res.crc := c;
+    res.mxe := Exponent_Maxima(c,dim);
+    res.pwt := Allocate(res.mxe);
+    res.yd := new Standard_Complex_Vectors.Vector'(0..dim => zero);
+    return res;
+  end Create;
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
               ( s : in out System;
+                x : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Power_Table(s.mxe,x,s.pwt);
+    EvalDiff(s.crc,x,s.yd,s.pwt,s.fx,s.jm);
+  end EvalDiff;
+
+  procedure EvalDiff
+              ( s : in Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector ) is
   begin
     Power_Table(s.mxe,x,s.pwt);
@@ -45,6 +93,7 @@ package body Standard_Complex_Circuits is
       fx(i) := yd(0);
       for j in jm'range(2) loop
         jm(i,j) := yd(j);
+        yd(j) := Standard_Complex_Numbers.Create(0.0);
       end loop;
     end loop;
   end EvalDiff;
@@ -464,6 +513,31 @@ package body Standard_Complex_Circuits is
   begin
     for k in c'range loop
       Clear(c(k));
+    end loop;
+  end Clear;
+
+  procedure Clear ( s : in out System ) is
+  begin
+    Clear(s.crc);
+    Standard_Complex_Vectors.Clear(s.yd);
+    Standard_Complex_VecVecs.Clear(s.pwt);
+  end Clear;
+
+  procedure Clear ( s : in out Link_to_System ) is
+
+    procedure free is new unchecked_deallocation(System,Link_to_System);
+
+  begin
+    if s /= null then
+      Clear(s.all);
+      free(s);
+    end if;
+  end Clear;
+
+  procedure Clear ( s : in out System_Array ) is
+  begin
+    for k in s'range loop
+      Clear(s(k));
     end loop;
   end Clear;
 

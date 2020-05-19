@@ -18,12 +18,15 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;         use Standard_Complex_VecVecs_io;
+with Standard_Complex_Matrices;
 with Standard_Random_Vectors;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;
 with Exponent_Indices;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
@@ -340,6 +343,44 @@ procedure ts_perfade is
     Split_Complex(c.cff,res.rcf,res.icf);
     res.rcst := Standard_Complex_Numbers.REAL_PART(c.cst);
     res.icst := Standard_Complex_Numbers.IMAG_PART(c.cst);
+    return res;
+  end Split;
+
+  function Split ( c : Standard_Complex_Circuits.Circuits )
+                 return Standard_Coefficient_Circuits.Circuits is
+
+    res : Standard_Coefficient_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      declare
+        ck : constant Standard_Complex_Circuits.Circuit := c(k).all;
+      begin
+        res(k) := new Standard_Coefficient_Circuits.Circuit'(Split(ck));
+      end;
+    end loop;
+    return res;
+  end Split;
+
+  function Split ( s : Standard_Complex_Circuits.System )
+                 return Standard_Coefficient_Circuits.System is
+
+    crc : constant Standard_Coefficient_Circuits.Circuits(1..s.neq)
+        := Split(s.crc);
+    res : constant Standard_Coefficient_Circuits.System(s.neq,s.dim)
+        := Standard_Coefficient_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end Split;
+
+  function Split ( s : Standard_Complex_Circuits.Link_to_System )
+                 return Standard_Coefficient_Circuits.Link_to_System is
+
+    res : constant Standard_Coefficient_Circuits.Link_to_System
+        := new Standard_Coefficient_Circuits.System'(Split(s.all));
+
+  begin
     return res;
   end Split;
 
@@ -1131,7 +1172,7 @@ procedure ts_perfade is
 
     dim : constant integer32 := integer32(Number_of_Unknowns(p));
     deg : Degrees := new Standard_Natural_Vectors.Vector'(1..dim => 0);
-    res : Standard_Complex_Numbers.Complex_Number := Coeff(p,deg);
+    res : constant Standard_Complex_Numbers.Complex_Number := Coeff(p,deg);
 
   begin
     Clear(deg);
@@ -1169,7 +1210,8 @@ procedure ts_perfade is
     cst : constant Standard_Complex_Numbers.Complex_Number
         := Constant_Coefficient(p);
     isz : constant integer32 := Is_NonZero(cst);
-    res : Standard_Complex_Circuits.Circuit(nbr-isz);
+    res : Standard_Complex_Circuits.Circuit(nbr-isz)
+        := Standard_Complex_Circuits.Allocate(nbr-isz,dim);
     cnt : integer32 := 0;
 
     function Is_Zero ( d : in Degrees ) return boolean is
@@ -1212,30 +1254,215 @@ procedure ts_perfade is
     return res;
   end Make_Complex_Circuit;
 
-  procedure Test_System is
+  function Make_Complex_System
+             ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+               verbose : in boolean := true )
+             return Standard_Complex_Circuits.Link_to_System is
+
+  -- DESCRIPTION :
+  --   Returns the system of circuits defined by p.
+  --   If verbose, then the tableau format of the system is written.
+
+    use Standard_Complex_Circuits;
+
+    res : Link_to_System;
+    c : Circuits(p'range);
+    d : integer32;
+
+  begin
+    for k in c'range loop
+      c(k) := new Circuit'(Make_Complex_Circuit(p(k)));
+      if verbose then
+        for i in 1..c(k).nbr loop
+          put(c(k).cff(i)); put(c(k).xps(i)); new_line;
+        end loop;
+        put(c(k).cst); new_line;
+      end if;
+    end loop;
+    d := c(c'first).dim;
+    res := new System'(Create(c,d));
+    return res;
+  end Make_Complex_System;
+
+  procedure Write_Matrix ( A : in Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes the matrix A component-wise, with explicit indexing.
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        put("A["); put(i,1); put(","); put(j,1); put("] : ");
+        put(A(i,j)); new_line;
+      end loop;
+    end loop;
+  end Write_Matrix;
+
+  function Sum_of_Errors
+             ( x,y : in Standard_Complex_Vectors.Vector )
+             return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the sum of the component-wise differences between
+  --   the vectors x and y.
+
+  -- REQUIRED : x'range = y'range.
+
+    use Standard_Complex_numbers;
+
+    res : double_float := 0.0;
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      res := res + AbsVal(val);
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( A,B : in Standard_Complex_Matrices.Matrix )
+             return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the sum of the component-wise differences between
+  --   the matrices A and B.
+
+  -- REQUIRED : A'range(1) = B'range(1) and A'range(2) = B'range(2).
+
+    use Standard_Complex_numbers;
+
+    res : double_float := 0.0;
+    val : Complex_Number;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        val := A(i,j) - B(i,j);
+        res := res + AbsVal(val);
+      end loop;
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  procedure Test_Evaluation_and_Differentiation
+              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                cs : in Standard_Complex_Circuits.Link_to_System;
+                cffsys : in Standard_Coefficient_Circuits.Link_to_System ) is
+
+  -- DESCRIPTION :
+  --   Tests the evaluation and differentiation at a random point,
+  --   for the polynomial system p and systems of circuits cs and cffsys.
+
+    cx : constant Standard_Complex_Vectors.Vector(1..cs.dim)
+       := Standard_Random_Vectors.Random_Vector(1,cs.dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    y : constant Standard_Complex_Vectors.Vector
+      := Standard_Complex_Poly_SysFun.Eval(p.all,cx);
+    jm : Standard_Complex_Jaco_Matrices.Jaco_Mat(p'range,cx'range)
+       := Standard_Complex_Jaco_Matrices.Create(p.all);
+    jmx : constant Standard_Complex_Matrices.Matrix(p'range,cx'range)
+        := Standard_Complex_Jaco_Matrices.Eval(jm,cx);
+    err : double_float;
+
+  begin
+    Standard_Complex_Circuits.EvalDiff(cs,x);
+    Standard_Coefficient_Circuits.EvalDiff(cffsys,xr,xi);
+    put_line("The value at a random point :"); put_line(cs.fx);
+    put_line("The value recomputed for testing :"); put_line(y);
+    err := Sum_of_Errors(cs.fx,y);
+    put("Sum of errors :"); put(err,3); new_line;
+    put_line("The recomputed value :"); put_line(cffsys.fx);
+    err := Sum_of_Errors(cffsys.fx,y);
+    put("Sum of errors :"); put(err,3); new_line;
+    put_line("The evaluated Jacobian matrix :"); Write_Matrix(cs.jm);
+    put_line("The matrix recomputed for testing :"); Write_Matrix(jmx);
+    err := Sum_of_Errors(cs.jm,jmx);
+    put("Sum of errors :"); put(err,3); new_line;
+    put_line("The recomputed matrix :"); Write_Matrix(cffsys.jm);
+    err := Sum_of_Errors(cffsys.jm,jmx);
+    put("Sum of errors :"); put(err,3); new_line;
+    Standard_Complex_Jaco_Matrices.Clear(jm);
+  end Test_Evaluation_and_Differentiation;
+
+  procedure Timing_Evaluation_and_Differentiation
+              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                cs : in Standard_Complex_Circuits.Link_to_System;
+                cffsys : in Standard_Coefficient_Circuits.Link_to_System;
+                frq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Times the evaluation and differentiation at a random point,
+  --   for the polynomial system p and systems of circuits cs and cffsys,
+  --   with frequency frq.
+
+    timer : Timing_Widget;
+    cx : constant Standard_Complex_Vectors.Vector(1..cs.dim)
+       := Standard_Random_Vectors.Random_Vector(1,cs.dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    y : Standard_Complex_Vectors.Vector(p'range);
+    ep : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(p'range)
+       := Standard_Complex_Poly_SysFun.Create(p.all);
+    jm : Standard_Complex_Jaco_Matrices.Jaco_Mat(p'range,cx'range)
+       := Standard_Complex_Jaco_Matrices.Create(p.all);
+    ejm : Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat(p'range,cx'range)
+        := Standard_Complex_Jaco_Matrices.Create(jm);
+    jmx : Standard_Complex_Matrices.Matrix(p'range,cx'range);
+
+  begin
+    tstart(timer);
+    for k in 1..frq loop
+      y := Standard_Complex_Poly_SysFun.Eval(ep,cx);
+      jmx := Standard_Complex_Jaco_Matrices.Eval(ejm,cx);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"nested Horner");
+    tstart(timer);
+    for k in 1..frq loop
+      Standard_Complex_Circuits.EvalDiff(cs,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex circuit ade");
+    tstart(timer);
+    for k in 1..frq loop
+      Standard_Coefficient_Circuits.EvalDiff(cffsys,xr,xi);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"real circuit ade");
+    Standard_Complex_Poly_SysFun.Clear(ep);
+    Standard_Complex_Jaco_Matrices.Clear(ejm);
+    Standard_Complex_Jaco_Matrices.Clear(jm);
+  end Timing_Evaluation_and_Differentiation;
+
+  procedure Test_System ( frq : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for a polynomial system
   --   and then evaluates the system at a random point.
 
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-
-    use Standard_Complex_Circuits;
+    cmpsys : Standard_Complex_Circuits.Link_to_System;
+    cffsys : Standard_Coefficient_Circuits.Link_to_System;
 
   begin
     new_line;
     put_line("Reading a polynomial system ..."); get(lp);
-    declare
-      c : Circuits(lp'range);
-    begin
-      for k in c'range loop
-        c(k) := new Circuit'(Make_Complex_Circuit(lp(k)));
-        for i in 1..c(k).nbr loop
-          put(c(k).cff(i)); put(c(k).xps(i)); new_line;
-        end loop;
-        put(c(k).cst); new_line;
-      end loop;
-    end;
+    cmpsys := Make_Complex_System(lp);
+    cffsys := Split(cmpsys);
+    if frq = 0
+     then Test_Evaluation_and_Differentiation(lp,cmpsys,cffsys);
+     else Timing_Evaluation_and_Differentiation(lp,cmpsys,cffsys,frq);
+    end if;
   end Test_System;
 
   procedure Main is
@@ -1249,20 +1476,26 @@ procedure ts_perfade is
 
   begin
     new_line;
-    put("Give the dimension of the vectors : "); get(dim);
-    new_line;
-    put_line("MENU for testing ADE :");
-    put_line("  1. forward products");
-    put_line("  2. forward and backward products");
-    put_line("  3. forward, backward, and cross products");
-    put_line("  4. indexed forward, backward, and cross products");
-    put_line("  5. power table");
-    put_line("  6. circuit differentiation and evaluation");
-    put_line("  7. multiplication with common factor");
-    put_line("  8. evaluation and differentiaton of random circuit");
-    put_line("  9. for given system, run the evaluation and differentiation");
-    put("Type 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select the test : ");
-    Ask_Alternative(tst,"123456789");
+    put("Test system ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      tst := '9';
+    else
+      new_line;
+      put("Give the dimension of the vectors : "); get(dim);
+      new_line;
+      put_line("MENU for testing ADE :");
+      put_line("  1. forward products");
+      put_line("  2. forward and backward products");
+      put_line("  3. forward, backward, and cross products");
+      put_line("  4. indexed forward, backward, and cross products");
+      put_line("  5. power table");
+      put_line("  6. circuit differentiation and evaluation");
+      put_line("  7. multiplication with common factor");
+      put_line("  8. evaluation and differentiaton of random circuit");
+      put_line("  9. for given system, test evaluation and differentiation");
+      put("Type 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select the test : ");
+      Ask_Alternative(tst,"123456789");
+    end if;
     if tst = '5' or tst = '7' or tst = '8' then
       new_line;
       put("Give the highest power : "); get(pwr);
@@ -1298,6 +1531,7 @@ procedure ts_perfade is
         when '6' => Timing_Circuit(nbr,dim,frq);
         when '7' => Timing_Multiply_Factor(dim,pwr,frq);
         when '8' => Timing_Power_Circuit(nbr,dim,pwr,frq);
+        when '9' => Test_System(frq);
         when others => null;
       end case;
     end if;

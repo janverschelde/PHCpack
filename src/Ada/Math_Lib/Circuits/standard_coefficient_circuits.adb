@@ -1,6 +1,10 @@
 with unchecked_deallocation;
+with Standard_Complex_Numbers;
+with Exponent_Indices;
 
 package body Standard_Coefficient_Circuits is
+
+-- CONSTRUCTORS :
 
   function Allocate ( nbr,dim : integer32 ) return Circuit is
 
@@ -28,6 +32,84 @@ package body Standard_Coefficient_Circuits is
     res.icrs := new Standard_Floating_Vectors.Vector'(icross);
     return res;
   end Allocate;
+
+  function Exponent_Maxima
+             ( c : Circuits; dim : integer32 )
+             return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c(c'first).xps);
+
+  begin
+    for k in c'first+1..c'last loop
+      declare
+        mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+            := Exponent_Indices.Maxima(c(k).xps);
+      begin
+        for i in mxe'range loop
+          if mxe(i) > res(i)
+           then res(i) := mxe(i);
+          end if;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Exponent_Maxima;
+
+  function Create ( c : Circuits; dim : integer32 ) return System is
+
+    res : System(c'last,dim);
+
+  begin
+    res.crc := c;
+    res.mxe := Exponent_Maxima(c,dim);
+    res.rpwt := Allocate(res.mxe);
+    res.ipwt := Allocate(res.mxe);
+    res.ryd := new Standard_Floating_Vectors.Vector'(0..dim => 0.0);
+    res.iyd := new Standard_Floating_Vectors.Vector'(0..dim => 0.0);
+    return res;
+  end Create;
+
+-- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
+
+  procedure EvalDiff
+              ( s : in out System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
+    EvalDiff(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.fx,s.jm);
+  end EvalDiff;
+
+  procedure EvalDiff
+              ( s : in Link_to_System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
+    EvalDiff(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.fx,s.jm);
+  end EvalDiff;
+
+  procedure EvalDiff
+              ( c : in Circuits;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                fx : out Standard_Complex_Vectors.Vector;
+                jm : out Standard_Complex_Matrices.Matrix ) is
+  begin
+    for i in c'range loop
+      Speel(c(i).all,xr,xi,ryd,iyd,rpwt,ipwt);
+      fx(i) := Standard_Complex_Numbers.Create(ryd(0),iyd(0));
+      for j in jm'range(2) loop
+        jm(i,j) := Standard_Complex_Numbers.Create(ryd(j),iyd(j));
+        ryd(j) := 0.0; iyd(j) := 0.0;
+      end loop;
+    end loop;
+  end EvalDiff;
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
 
@@ -83,11 +165,11 @@ package body Standard_Coefficient_Circuits is
         if idk'last = 1 then
           idx1 := idk(1); rkcff := rcf(k); ikcff := icf(k);
          -- yd(0) := yd(0) + cff*x(idx1);
-          pr := xr(idx1); pi := xr(idx1);
+          pr := xr(idx1); pi := xi(idx1);
           zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
           ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
          -- yd(idx1) := yd(idx1) + cff;
-          ryd(idx1) := ryd(idx1) + rkcff; iyd(idx1) := iyd(idx1) + rkcff;
+          ryd(idx1) := ryd(idx1) + rkcff; iyd(idx1) := iyd(idx1) + ikcff;
         else
           Fused_Forward_Backward_Cross
             (idk.all,xr,xi,rfwd,ifwd,rbck,ibck,rcrs,icrs);
@@ -164,11 +246,11 @@ package body Standard_Coefficient_Circuits is
         if fck = null then
           if idk'last = 1 then
            -- yd(0) := yd(0) + cff*x(idx1);
-            pr := xr(idx1); pi := xr(idx1);
+            pr := xr(idx1); pi := xi(idx1);
             zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
             ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
            -- yd(idx1) := yd(idx1) + cff;
-            ryd(idx1) := ryd(idx1) + rkcff; iyd(idx1) := iyd(idx1) + rkcff;
+            ryd(idx1) := ryd(idx1) + rkcff; iyd(idx1) := iyd(idx1) + ikcff;
           else
             Fused_Forward_Backward_Cross
               (idk.all,xr,xi,rfwd,ifwd,rbck,ibck,rcrs,icrs);
@@ -212,7 +294,7 @@ package body Standard_Coefficient_Circuits is
           if idk'last = 1 then
             Multiply_Factor(xpk,fck,xr,xi,rkcff,ikcff,rpwt,ipwt,racc,iacc);
            -- yd(0) := yd(0) + acc*x(idx1);
-            pr := xr(idx1); pi := xr(idx1);
+            pr := xr(idx1); pi := xi(idx1);
             zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
             ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
            -- yd(idx1) := yd(idx1) + factor*acc;
@@ -1223,6 +1305,33 @@ package body Standard_Coefficient_Circuits is
   begin
     for k in c'range loop
       Clear(c(k));
+    end loop;
+  end Clear;
+
+  procedure Clear ( s : in out System ) is
+  begin
+    Clear(s.crc);
+    Standard_Floating_Vectors.Clear(s.ryd);
+    Standard_Floating_Vectors.Clear(s.iyd);
+    Standard_Floating_VecVecs.Clear(s.rpwt);
+    Standard_Floating_VecVecs.Clear(s.ipwt);
+  end Clear;
+
+  procedure Clear ( s : in out Link_to_System ) is
+
+    procedure free is new unchecked_deallocation(System,Link_to_System);
+
+  begin
+    if s /= null then
+      Clear(s.all);
+      free(s);
+    end if;
+  end Clear;
+
+  procedure Clear ( s : in out System_Array ) is
+  begin
+    for k in s'range loop
+      Clear(s(k));
     end loop;
   end Clear;
 
