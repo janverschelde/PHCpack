@@ -67,7 +67,8 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
+# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 # GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
@@ -550,6 +551,10 @@ ts_perfcirc:
 ts_perfade:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfade.adb \
               -o $(BIN)/ts_perfade
+
+ts_perfhess:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfhess.adb \
+              -o $(BIN)/ts_perfhess
 
 # Test programs for Math_Lib/Supports :
 

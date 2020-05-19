@@ -543,6 +543,10 @@ ts_perfade:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfade.adb \
               -o $(BIN)/ts_perfade
 
+ts_perfhess:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfhess.adb \
+              -o $(BIN)/ts_perfhess
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
