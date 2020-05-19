@@ -1,6 +1,5 @@
 with Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
-with Standard_Complex_Matrices;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Numbers;
@@ -394,5 +393,41 @@ package body Evaluation_Differentiation_Errors is
     end loop;
     return res;
   end Difference;
+
+  function Sum_of_Errors
+             ( x,y : in Standard_Complex_Vectors.Vector )
+             return double_float is
+
+    use Standard_Complex_numbers;
+
+    res : double_float := 0.0;
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      res := res + AbsVal(val);
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( A,B : in Standard_Complex_Matrices.Matrix )
+             return double_float is
+
+    use Standard_Complex_numbers;
+
+    res : double_float := 0.0;
+    val : Complex_Number;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        val := A(i,j) - B(i,j);
+        res := res + AbsVal(val);
+      end loop;
+    end loop;
+    return res;
+  end Sum_of_Errors;
 
 end Evaluation_Differentiation_Errors;

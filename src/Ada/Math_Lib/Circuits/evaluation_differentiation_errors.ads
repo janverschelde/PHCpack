@@ -3,6 +3,7 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
@@ -129,5 +130,25 @@ package Evaluation_Differentiation_Errors is
 
   -- REQUIRED : vm1'range = vm2'range and for k in vm1'range:
   --   vm1(k)'range(1) = vm2'range(1) and vm1(k)'range(2) = vm2(k)'range(2).
+
+  function Sum_of_Errors
+             ( x,y : in Standard_Complex_Vectors.Vector )
+             return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the sum of the component-wise differences between
+  --   the vectors x and y.
+
+  -- REQUIRED : x'range = y'range.
+
+  function Sum_of_Errors
+             ( A,B : in Standard_Complex_Matrices.Matrix )
+             return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the sum of the component-wise differences between
+  --   the matrices A and B.
+
+  -- REQUIRED : A'range(1) = B'range(1) and A'range(2) = B'range(2).
 
 end Evaluation_Differentiation_Errors;

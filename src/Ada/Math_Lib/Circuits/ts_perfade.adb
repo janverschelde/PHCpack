@@ -1298,54 +1298,6 @@ procedure ts_perfade is
     end loop;
   end Write_Matrix;
 
-  function Sum_of_Errors
-             ( x,y : in Standard_Complex_Vectors.Vector )
-             return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the component-wise differences between
-  --   the vectors x and y.
-
-  -- REQUIRED : x'range = y'range.
-
-    use Standard_Complex_numbers;
-
-    res : double_float := 0.0;
-    val : Complex_Number;
-
-  begin
-    for i in x'range loop
-      val := x(i) - y(i);
-      res := res + AbsVal(val);
-    end loop;
-    return res;
-  end Sum_of_Errors;
-
-  function Sum_of_Errors
-             ( A,B : in Standard_Complex_Matrices.Matrix )
-             return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the sum of the component-wise differences between
-  --   the matrices A and B.
-
-  -- REQUIRED : A'range(1) = B'range(1) and A'range(2) = B'range(2).
-
-    use Standard_Complex_numbers;
-
-    res : double_float := 0.0;
-    val : Complex_Number;
-
-  begin
-    for i in A'range(1) loop
-      for j in A'range(2) loop
-        val := A(i,j) - B(i,j);
-        res := res + AbsVal(val);
-      end loop;
-    end loop;
-    return res;
-  end Sum_of_Errors;
-
   procedure Test_Evaluation_and_Differentiation
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 cs : in Standard_Complex_Circuits.Link_to_System;
@@ -1374,17 +1326,17 @@ procedure ts_perfade is
     Standard_Coefficient_Circuits.EvalDiff(cffsys,xr,xi);
     put_line("The value at a random point :"); put_line(cs.fx);
     put_line("The value recomputed for testing :"); put_line(y);
-    err := Sum_of_Errors(cs.fx,y);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(cs.fx,y);
     put("Sum of errors :"); put(err,3); new_line;
     put_line("The recomputed value :"); put_line(cffsys.fx);
-    err := Sum_of_Errors(cffsys.fx,y);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(cffsys.fx,y);
     put("Sum of errors :"); put(err,3); new_line;
     put_line("The evaluated Jacobian matrix :"); Write_Matrix(cs.jm);
     put_line("The matrix recomputed for testing :"); Write_Matrix(jmx);
-    err := Sum_of_Errors(cs.jm,jmx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(cs.jm,jmx);
     put("Sum of errors :"); put(err,3); new_line;
     put_line("The recomputed matrix :"); Write_Matrix(cffsys.jm);
-    err := Sum_of_Errors(cffsys.jm,jmx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(cffsys.jm,jmx);
     put("Sum of errors :"); put(err,3); new_line;
     Standard_Complex_Jaco_Matrices.Clear(jm);
   end Test_Evaluation_and_Differentiation;
