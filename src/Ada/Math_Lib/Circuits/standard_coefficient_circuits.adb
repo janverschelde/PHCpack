@@ -41,6 +41,18 @@ package body Standard_Coefficient_Circuits is
           c.rfwd,c.ifwd,c.rbck,c.ibck,c.rcrs,c.icrs);
   end Speel;
 
+  procedure Speel ( c : in Circuit;
+                    xr : in Standard_Floating_Vectors.Link_to_Vector;
+                    xi : in Standard_Floating_Vectors.Link_to_Vector;
+                    ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                    iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_VecVecs.VecVec;
+                    ipwt : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    Speel(c.xps,c.idx,c.fac,c.rcf,c.icf,c.rcst,c.icst,xr,xi,ryd,iyd,
+          c.rfwd,c.ifwd,c.rbck,c.ibck,c.rcrs,c.icrs,rpwt,ipwt);
+  end Speel;
+
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     rcf : in Standard_Floating_Vectors.Vector;
                     icf : in Standard_Floating_Vectors.Vector;
@@ -112,6 +124,150 @@ package body Standard_Coefficient_Circuits is
             idx2 := idk'last-2; pr := rfwd(idx2); pi := ifwd(idx2);
             zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
             ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+          end if;
+        end if;
+      end if;
+    end loop;
+  end Speel;
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    rcf : in Standard_Floating_Vectors.Vector;
+                    icf : in Standard_Floating_Vectors.Vector;
+                    rcst,icst : in double_float;
+                    xr : in Standard_Floating_Vectors.Link_to_Vector;
+                    xi : in Standard_Floating_Vectors.Link_to_Vector;
+                    ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                    iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rfwd : in Standard_Floating_Vectors.Link_to_Vector;
+                    ifwd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rbck : in Standard_Floating_Vectors.Link_to_Vector;
+                    ibck : in Standard_Floating_Vectors.Link_to_Vector;
+                    rcrs : in Standard_Floating_Vectors.Link_to_Vector;
+                    icrs : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_VecVecs.VecVec;
+                    ipwt : in Standard_Floating_VecVecs.VecVec ) is
+
+    idk,fck,xpk : Standard_Integer_Vectors.Link_to_Vector;
+    idx1,idx2 : integer32;
+    rkcff,ikcff,racc,iacc,factor : double_float;
+    zr,zi,pr,pi : double_float;
+
+    use Standard_Integer_Vectors;
+
+  begin
+    ryd(0) := rcst; iyd(0) := icst;
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        idx1 := idk(1); rkcff := rcf(k); ikcff := icf(k);
+        fck := fac(k);
+        if fck = null then
+          if idk'last = 1 then
+           -- yd(0) := yd(0) + cff*x(idx1);
+            pr := xr(idx1); pi := xr(idx1);
+            zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+            ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+           -- yd(idx1) := yd(idx1) + cff;
+            ryd(idx1) := ryd(idx1) + rkcff; iyd(idx1) := iyd(idx1) + rkcff;
+          else
+            Fused_Forward_Backward_Cross
+              (idk.all,xr,xi,rfwd,ifwd,rbck,ibck,rcrs,icrs);
+           -- cff := c.cff(k); yd(0) := yd(0) + cff*c.fwd(idk'last-1); 
+            rkcff := rcf(k); ikcff := icf(k);
+            idx1 := idk'last-1; pr := rfwd(idx1); pi := ifwd(idx1);
+            zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+            ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+            if idk'last = 2 then
+              idx1 := idk(1); idx2 := idk(2);
+             -- yd(idx2) := yd(idx2) + cff*x(idx1);
+              pr := xr(idx1); pi := xi(idx1);
+              zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+              ryd(idx2) := ryd(idx2) + zr; iyd(idx2) := iyd(idx2) + zi;
+             -- yd(idx1) := yd(idx1) + cff*x(idx2);
+              pr := xr(idx2); pi := xi(idx2);
+              zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+              ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+            else -- idk'last > 2
+              idx1 := idk(1); 
+             -- yd(idx1) := yd(idx1) + cff*c.bck(idk'last-2);
+              idx2 := idk'last-2; pr := rbck(idx2); pi := ibck(idx2);
+              zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+              ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+              for j in idk'first+1..idk'last-1 loop
+                idx1 := idk(j);
+               -- yd(idx1) := yd(idx1) + cff*c.crs(j-1);
+                idx2 := j-1; pr := rcrs(idx2); pi := icrs(idx2);
+                zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+                ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+              end loop;
+              idx1 := idk(idk'last);
+             -- yd(idx1) := yd(idx1) + cff*c.fwd(idk'last-2);
+              idx2 := idk'last-2; pr := rfwd(idx2); pi := ifwd(idx2);
+              zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+              ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+            end if;
+          end if;
+        else
+          xpk := xps(k);
+          if idk'last = 1 then
+            Multiply_Factor(xpk,fck,xr,xi,rkcff,ikcff,rpwt,ipwt,racc,iacc);
+           -- yd(0) := yd(0) + acc*x(idx1);
+            pr := xr(idx1); pi := xr(idx1);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+           -- yd(idx1) := yd(idx1) + factor*acc;
+            factor := Create(xpk(idx1));
+            ryd(idx1) := ryd(idx1) + factor*racc;
+            iyd(idx1) := iyd(idx1) + factor*iacc;
+          else
+            Fused_Forward_Backward_Cross
+              (idk.all,xr,xi,rfwd,ifwd,rbck,ibck,rcrs,icrs);
+            Multiply_Factor(xpk,fck,xr,xi,rkcff,ikcff,rpwt,ipwt,racc,iacc);
+            pr := rfwd(idk'last-1); pi := ifwd(idk'last-1);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+            if idk'last = 2 then
+              idx2 := idk(2);
+             -- wrk := acc*x(idx1); factor := Create(xpk(idx2));
+             -- wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+              pr := xr(idx1); pi := xi(idx1);
+              zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+              factor := Create(xpk(idx2));
+              ryd(idx2) := ryd(idx2) + factor*zr;
+              iyd(idx2) := iyd(idx2) + factor*zi;
+             -- wrk := acc*x(idx2); factor := Create(xpk(idx1));
+             -- wrk := factor*wrk; yd(idx1) := yd(idx1) + wrk;
+              pr := xr(idx2); pi := xi(idx2);
+              zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+              factor := Create(xpk(idx1));
+              ryd(idx1) := ryd(idx1) + factor*zr;
+              iyd(idx1) := iyd(idx1) + factor*zi;
+            else -- idk'last > 2
+             -- wrk := acc*bck(idk'last-2);
+              pr := rbck(idk'last-2); pi := ibck(idk'last-2);
+              zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+              factor := Create(xpk(idx1));
+             -- wrk := factor*wrk; yd(idx1) := yd(idx1) + wrk;
+              ryd(idx1) := ryd(idx1) + factor*zr;
+              iyd(idx1) := iyd(idx1) + factor*zi;
+              for j in idk'first+1..idk'last-1 loop
+               -- wrk := acc*crs(j-1);
+                pr := rcrs(j-1); pi := icrs(j-1);
+                zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+                idx2 := idk(j); factor := Create(xpk(idx2));
+               -- wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+                ryd(idx2) := ryd(idx2) + factor*zr;
+                iyd(idx2) := iyd(idx2) + factor*zi;
+              end loop;
+             -- wrk := acc*fwd(idk'last-2);
+              idx2 := idk(idk'last);
+              pr := rfwd(idk'last-2); pi := ifwd(idk'last-2);
+              zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+              factor := Create(xpk(idx2));
+             -- wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+              ryd(idx2) := ryd(idx2) + factor*zr;
+              iyd(idx2) := iyd(idx2) + factor*zi;
+            end if;
           end if;
         end if;
       end if;

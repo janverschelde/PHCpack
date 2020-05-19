@@ -1,4 +1,5 @@
 with unchecked_deallocation;
+with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 
 package body Standard_Complex_Circuits is
 
@@ -28,6 +29,13 @@ package body Standard_Complex_Circuits is
                     x,yd : in Standard_Complex_Vectors.Link_to_Vector ) is
   begin
     Speel(c.xps,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs);
+  end Speel;
+
+  procedure Speel ( c : in Circuit;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec ) is
+  begin
+    Speel(c.xps,c.idx,c.fac,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs,pwt);
   end Speel;
 
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
@@ -69,6 +77,87 @@ package body Standard_Complex_Circuits is
             end loop;
             idx1 := idk(idk'last);
             yd(idx1) := yd(idx1) + kcff*fwd(idk'last-2);
+          end if;
+        end if;
+      end if;
+    end loop;
+  end Speel;
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    cff : in Standard_Complex_Vectors.Vector;
+                    cst : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec ) is
+
+    idk,fck,xpk : Standard_Integer_Vectors.Link_to_Vector;
+    idx1,idx2 : integer32;
+    kcff,acc,wrk : Standard_Complex_Numbers.Complex_Number;
+    factor : double_float;
+
+    use Standard_Complex_Numbers,Standard_Integer_Vectors;
+
+  begin
+    yd(0) := cst;
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        kcff := cff(k);
+        fck := fac(k);
+        idx1 := idk(1);
+        if fck = null then
+          if idk'last = 1 then
+            yd(0) := yd(0) + kcff*x(idx1);
+            yd(idx1) := yd(idx1) + kcff;
+          else
+            Forward_Backward_Cross(idk.all,x,fwd,bck,crs);
+            yd(0) := yd(0) + kcff*fwd(idk'last-1); 
+            if idk'last = 2 then
+              idx2 := idk(2);
+              yd(idx2) := yd(idx2) + kcff*x(idx1);
+              yd(idx1) := yd(idx1) + kcff*x(idx2);
+            else -- idk'last > 2
+              yd(idx1) := yd(idx1) + kcff*bck(idk'last-2);
+              for j in idk'first+1..idk'last-1 loop
+                idx2 := idk(j);
+                yd(idx2) := yd(idx2) + kcff*crs(j-1);
+              end loop;
+              idx2 := idk(idk'last);
+              yd(idx2) := yd(idx2) + kcff*fwd(idk'last-2);
+            end if;
+          end if;
+        else
+          xpk := xps(k);
+          if idk'last = 1 then
+            Multiply_Factor(xpk,fck,x,kcff,pwt,acc);
+            yd(0) := yd(0) + acc*x(idx1);
+            factor := Create(xpk(idx1));
+            yd(idx1) := yd(idx1) + factor*acc;
+          else
+            Forward_Backward_Cross(idk.all,x,fwd,bck,crs);
+            Multiply_Factor(xpk,fck,x,kcff,pwt,acc);
+            yd(0) := yd(0) + acc*fwd(idk'last-1); 
+            if idk'last = 2 then
+              idx2 := idk(2);
+              wrk := acc*x(idx1); factor := Create(xpk(idx2));
+              wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+              wrk := acc*x(idx2); factor := Create(xpk(idx1));
+              wrk := factor*wrk; yd(idx1) := yd(idx1) + wrk;
+            else -- idk'last > 2
+              wrk := acc*bck(idk'last-2);
+              factor := Create(xpk(idx1)); wrk := factor*wrk;
+              yd(idx1) := yd(idx1) + wrk;
+              for j in idk'first+1..idk'last-1 loop
+                wrk := acc*crs(j-1); idx2 := idk(j);
+                factor := Create(xpk(idx2)); wrk := factor*wrk;
+                yd(idx2) := yd(idx2) + wrk;
+              end loop;
+              wrk := acc*fwd(idk'last-2); idx2 := idk(idk'last);
+              factor := Create(xpk(idx2)); wrk := factor*wrk;
+              yd(idx2) := yd(idx2) + wrk;
+            end if;
           end if;
         end if;
       end if;

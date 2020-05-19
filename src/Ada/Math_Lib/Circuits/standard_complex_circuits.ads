@@ -68,7 +68,8 @@ package Standard_Complex_Circuits is
                     crs : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
-  --   Implements the Speel on the circuit c.
+  --   Runs the reverse mode of algorithmic differentiation on an
+  --   indexed sequence of products.
 
   -- REQUIRED :
   --   idx'range = cff'range and all vectors in idx have values
@@ -87,6 +88,63 @@ package Standard_Complex_Circuits is
   --            for the backward products;
   --   crs      work space vector of range 1..dim-2,
   --            for the cross products.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x.
+
+  procedure Speel ( c : in Circuit;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiates the circuit c at x
+  --   and stores the result in yd.
+  --   Wraps the next Speel procedure, using the data in c.
+
+  -- ON ENTRY :
+  --   c        circuit properly defined and with allocated workspace;
+  --   x        vector of range 1..c.dim, with values for x;
+  --   yd       vector of range 0..c.dim, allocated for the result;
+  --   pwt      power table to compute the common factors.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x.
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    cff : in Standard_Complex_Vectors.Vector;
+                    cst : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Runs the reverse mode of algorithmic differentiation on an
+  --   indexed sequence of products, with higher powers factored out.
+
+  -- REQUIRED :
+  --   idx'range = cff'range and all vectors in idx have values
+  --   in range 1..dim, where dim is the number of variables,
+  --   x'range = 1..dim and yd'range = 0..dim.
+
+  -- ON ENTRY :
+  --   xps      exponent vectors of the monomials in the circuit;
+  --   idx      indices to participating variables in each monomial;
+  --   fac      factor indices of the exponents;
+  --   cff      coefficients of the monomials;
+  --   cst      constant coefficient of the circuit;
+  --   x        vector of range 1..dim, with values for x;
+  --   yd       vector of range 0..c.dim, allocated for the result.
+  --   fwd      work space vector of range 1..dim-1,
+  --            for the forward products;
+  --   bck      work space vector of range 1..dim-2,
+  --            for the backward products;
+  --   crs      work space vector of range 1..dim-2,
+  --            for the cross products;
+  --   pwt      power table to compute the common factors.
 
   -- ON RETURN :
   --   yd(0)    the value of the circuit at x;
@@ -145,7 +203,7 @@ package Standard_Complex_Circuits is
   --   Computes all cross products of the values in x
   --   and stores the products in b.
 
-  -- REQUIRED : x'last > 2, 
+  -- REQUIRED : x'last > 2,
   --   f'first = x'first = 1 and f'last >= x'last-1, or >= idx'last-1,
   --   b'first = b'first = 1 and b'last >= x'last-2, or >= idx'last-2,
   --   c'first = c'first = 1 and c'last >= x'last-2, or >= idx'last-2.

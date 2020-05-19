@@ -1,6 +1,7 @@
 with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
 with Timing_Package;                      use Timing_Package;
+with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
@@ -8,6 +9,7 @@ with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
@@ -18,6 +20,8 @@ with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;         use Standard_Complex_VecVecs_io;
 with Standard_Random_Vectors;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Functions;
 with Exponent_Indices;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
@@ -290,6 +294,31 @@ procedure ts_perfade is
     return res;
   end Random_Complex_Circuit;
 
+  function Random_Complex_Circuit
+             ( nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.Circuit is
+
+  -- DESCRIPTION :
+  --   Returns a random complex circuit with products of dimension dim,
+  --   as many nonconstant coefficients as the number nbr,
+  --   and pwr as the value for the higest power.
+
+    res : Standard_Complex_Circuits.Circuit(nbr)
+        := Standard_Complex_Circuits.Allocate(nbr,dim);
+    xpk : Standard_Integer_Vectors.Vector(1..dim);
+
+  begin
+    for k in 1..nbr loop
+      xpk := Standard_Random_Vectors.Random_Vector(1,dim,0,pwr);
+      res.xps(k) := new Standard_Integer_Vectors.Vector'(xpk);
+      res.idx(k) := Exponent_Indices.Exponent_Index(res.xps(k));
+      res.fac(k) := Exponent_Indices.Factor_Index(res.xps(k));
+    end loop;
+    res.cff := Standard_Random_Vectors.Random_Vector(1,nbr);
+    res.cst := Standard_Random_Numbers.Random1;
+    return res;
+  end Random_Complex_Circuit;
+
   function Split ( c : Standard_Complex_Circuits.Circuit )
                  return Standard_Coefficient_Circuits.Circuit is
 
@@ -303,6 +332,8 @@ procedure ts_perfade is
   begin
     for k in 1..c.nbr loop
       res.xps(k) := new Standard_Integer_Vectors.Vector'(c.xps(k).all);
+      res.idx(k) := Exponent_Indices.Exponent_Index(res.xps(k));
+      res.fac(k) := Exponent_Indices.Factor_Index(res.xps(k));
     end loop;
     Split_Complex(c.cff,res.rcf,res.icf);
     res.rcst := Standard_Complex_Numbers.REAL_PART(c.cst);
@@ -418,6 +449,64 @@ procedure ts_perfade is
     put("The error :"); put(err,3); new_line;
   end Test_Power_Table;
 
+  function Make_Polynomial
+             ( c : Standard_Complex_Circuits.Circuit;
+               index : boolean := false )
+             return Standard_Complex_Polynomials.Poly is
+
+  -- DESCRIPTION :
+  --   Returns the polynomial equivalent to the circuit c.
+  --   If index, then c.xps should be considered as an index.
+
+    use Standard_Complex_Polynomials;
+
+    res : Poly;
+    t : Term;
+    lnk : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+    t.cf := c.cst;
+    res := Create(t);
+    for k in 1..c.nbr loop
+      t.cf := c.cff(k);
+      lnk := c.xps(k);
+      if index then
+        t.dg.all := (1..c.dim => 0);
+        for i in lnk'range loop
+          t.dg(lnk(i)) := 1;
+        end loop;
+      else
+        for i in 1..c.dim loop
+          t.dg(i) := natural32(lnk(i));
+        end loop;
+      end if;
+      Add(res,t);
+    end loop;
+    Clear(t);
+    return res;
+  end Make_Polynomial;
+
+  function Gradient ( p : Standard_Complex_Polynomials.Poly;
+                      x : Standard_Complex_Vectors.Vector )
+                    return Standard_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Straighforward computation of the gradient of p at x,
+  --   for testing purposes.
+
+    res : Standard_Complex_Vectors.Vector(x'range);
+    dp : Standard_Complex_Polynomials.Poly;
+
+  begin
+    for k in x'range loop
+      dp := Standard_Complex_Polynomials.Diff(p,k);
+      res(k) := Standard_Complex_Poly_Functions.Eval(dp,x);
+      Standard_Complex_Polynomials.Clear(dp);
+    end loop;
+    return res;
+  end Gradient;
+
   procedure Test_Circuit ( nbr,dim : in integer32 ) is
 
   -- DESCRIPTION :
@@ -426,6 +515,7 @@ procedure ts_perfade is
 
     c1 : constant Standard_Complex_Circuits.Circuit
        := Random_Complex_Circuit(nbr,dim);
+    p : constant Standard_Complex_Polynomials.Poly := Make_Polynomial(c1,true);
     c2 : constant Standard_Coefficient_Circuits.Circuit := Split(c1);
     cx : constant Standard_Complex_Vectors.Vector(1..dim)
        := Standard_Random_Vectors.Random_Vector(1,dim);
@@ -444,12 +534,21 @@ procedure ts_perfade is
     iyd : constant Standard_Floating_Vectors.Link_to_Vector
         := Imag_Part(yd);
     yd2 : Standard_Complex_Vectors.Link_to_Vector;
+    z : Standard_Complex_Numbers.Complex_Number;
+    zd : Standard_Complex_Vectors.Vector(1..dim);
     err : double_float;
 
   begin
     Standard_Complex_Circuits.Speel(c1,x,yd);
     put_line("The value at a random point :"); put(yd(0)); new_line;
+    z := Standard_Complex_Poly_Functions.Eval(p,cx);
+    put_line("The value recomputed for testing :"); put(z); new_line;
     put_line("The gradient :"); put_line(yd(1..yd'last));
+    zd := Gradient(p,cx);
+    put_line("The gradient recomputed for testing :");
+    put_line(zd);
+   -- err := Evaluation_Differentiation_Errors.Difference(yd(1..yd'last),zd);
+   -- put("The error :"); put(err,3); new_line;
     Standard_Coefficient_Circuits.Speel(c2,xr,xi,ryd,iyd);
     yd2 := Make_Complex(ryd,iyd);
     put_line("The recomputed value :"); put(yd2(0)); new_line;
@@ -503,6 +602,63 @@ procedure ts_perfade is
     res2 := Standard_Complex_Numbers.Create(rpf,ipf);
     put_line("The recomputed multiplied factor :"); put(res2); new_line;
   end Test_Multiply_Factor;
+
+  procedure Test_Power_Circuit ( nbr,dim,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with nbr terms, dimension dim,
+  --   highest power pwr, and tests the differentiation and evaluation.
+
+    c1 : constant Standard_Complex_Circuits.Circuit
+       := Random_Complex_Circuit(nbr,dim,pwr);
+    p : constant Standard_Complex_Polynomials.Poly := Make_Polynomial(c1);
+    c2 : constant Standard_Coefficient_Circuits.Circuit := Split(c1);
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+    y : constant Standard_Complex_Vectors.Vector(0..dim)
+      := Standard_Complex_Vectors.Vector'(0..dim => zero);
+    yd : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(y);
+    ryd : constant Standard_Floating_Vectors.Link_to_Vector
+        := Real_Part(yd);
+    iyd : constant Standard_Floating_Vectors.Link_to_Vector
+        := Imag_Part(yd);
+    yd2 : Standard_Complex_Vectors.Link_to_Vector;
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c1.xps);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
+        := Standard_Complex_Circuits.Allocate(mxe);
+    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    err : double_float;
+    z : Standard_Complex_Numbers.Complex_Number;
+    zd : Standard_Complex_Vectors.Vector(cx'range);
+
+  begin
+    Standard_Complex_Circuits.Power_Table(mxe,x,pwt);
+    Standard_Coefficient_Circuits.Power_Table(mxe,xr,xi,rpwt,ipwt);
+    Standard_Complex_Circuits.Speel(c1,x,yd,pwt);
+    put_line("The value at a random point :"); put(yd(0)); new_line;
+    z := Standard_Complex_Poly_Functions.Eval(p,cx);
+    put_line("The value recomputed for testing :"); put(z); new_line;
+    put_line("The gradient :"); put_line(yd(1..yd'last));
+    zd := Gradient(p,cx);
+    put_line("The gradient recomputed for testing :"); put_line(zd);
+    Standard_Coefficient_Circuits.Speel(c2,xr,xi,ryd,iyd,rpwt,ipwt);
+    yd2 := Make_Complex(ryd,iyd);
+    put_line("The recomputed value :"); put(yd2(0)); new_line;
+    put_line("The recomputed gradient :"); put_line(yd2(1..yd2'last));
+    err := Evaluation_Differentiation_Errors.Difference(yd,yd2);
+    put("The error :"); put(err,3); new_line;
+  end Test_Power_Circuit;
 
   procedure Timing_Forward ( dim,frq : in integer32 ) is
 
@@ -907,6 +1063,61 @@ procedure ts_perfade is
     print_times(standard_output,timer,"real multiply factor");
   end Timing_Multiply_Factor;
 
+  procedure Timing_Power_Circuit ( nbr,dim,pwr,frq: in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with nbr terms, dimension dim, highest
+  --   power pwr, and runs the differentiation and evaluation procedures
+  --   as many times as the frequency frq.
+
+    timer : Timing_Widget;
+    c1 : constant Standard_Complex_Circuits.Circuit
+       := Random_Complex_Circuit(nbr,dim,pwr);
+    c2 : constant Standard_Coefficient_Circuits.Circuit := Split(c1);
+    cx : constant Standard_Complex_Vectors.Vector(1..dim)
+       := Standard_Random_Vectors.Random_Vector(1,dim);
+    x : constant Standard_Complex_Vectors.Link_to_Vector
+      := new Standard_Complex_Vectors.Vector'(cx);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector := Real_Part(x);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector := Imag_Part(x);
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+    y : constant Standard_Complex_Vectors.Vector(0..dim)
+      := Standard_Complex_Vectors.Vector'(0..dim => zero);
+    yd : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(y);
+    ryd : constant Standard_Floating_Vectors.Link_to_Vector
+        := Real_Part(yd);
+    iyd : constant Standard_Floating_Vectors.Link_to_Vector
+        := Imag_Part(yd);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Exponent_Indices.Maxima(c1.xps);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
+        := Standard_Complex_Circuits.Allocate(mxe);
+    rpwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+    ipwt : constant Standard_Floating_VecVecs.VecVec(x'range)
+         := Standard_Coefficient_Circuits.Allocate(mxe);
+
+  begin
+    Standard_Complex_Circuits.Power_Table(mxe,x,pwt);
+    Standard_Coefficient_Circuits.Power_Table(mxe,xr,xi,rpwt,ipwt);
+    tstart(timer);
+    for k in 1..frq loop
+      Standard_Complex_Circuits.Speel(c1,x,yd,pwt);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex Speel");
+    tstart(timer);
+    for k in 1..frq loop
+      Standard_Coefficient_Circuits.Speel(c2,xr,xi,ryd,iyd,rpwt,ipwt);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"real Speel");
+  end Timing_Power_Circuit;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -928,12 +1139,14 @@ procedure ts_perfade is
     put_line("  5. power table");
     put_line("  6. circuit differentiation and evaluation");
     put_line("  7. multiplication with common factor");
-    put("Type 1, 2, 3, 4, 5, 6, or 7 to select the test : ");
-    Ask_Alternative(tst,"1234567");
-    if tst = '5' or tst = '7' then
+    put_line("  8. evaluation and differentiaton of random circuit");
+    put("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select the test : ");
+    Ask_Alternative(tst,"12345678");
+    if tst = '5' or tst = '7' or tst = '8' then
       new_line;
       put("Give the highest power : "); get(pwr);
-    elsif tst = '6' then
+    end if;
+    if tst = '6' or tst = '8' then
       new_line;
       put("Give the number of terms in the circuit : "); get(nbr);
     end if;
@@ -948,6 +1161,7 @@ procedure ts_perfade is
         when '5' => Test_Power_Table(dim,pwr);
         when '6' => Test_Circuit(nbr,dim);
         when '7' => Test_Multiply_Factor(dim,pwr);
+        when '8' => Test_Power_Circuit(nbr,dim,pwr);
         when others => null;
       end case;
     else
@@ -961,6 +1175,7 @@ procedure ts_perfade is
         when '5' => Timing_Power_Table(dim,pwr,frq);
         when '6' => Timing_Circuit(nbr,dim,frq);
         when '7' => Timing_Multiply_Factor(dim,pwr,frq);
+        when '8' => Timing_Power_Circuit(nbr,dim,pwr,frq);
         when others => null;
       end case;
     end if;
