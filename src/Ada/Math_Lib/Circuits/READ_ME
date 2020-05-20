@@ -9,6 +9,10 @@ With the reverse mode of algorithmic differentiation the value of a product
 of variables -- the so-called Speelpenning example -- can be computed along
 with its gradient at a cost that is linear in the number of variables.
 
+Starting from version 2.4.75, the reverse mode was applied to series
+and code was developed for better performing circuits, along with the
+evaluation of Hessians, as needed for a robust path tracker.
+
 Since the different ways to evaluate polynomials use different orders of
 computation, the results may differ when mixed-precision arithmetic is used.
 
@@ -54,7 +58,7 @@ dobldobl_jacobian_circuits         : Jacobian circuits for double doubles
 quaddobl_jacobian_circuits         : Jacobian circuits for quad doubles
 multprec_jacobian_circuits         : Jacobian circuits for multprec numbers
 ts_gradcirc                        : test on eval & diff circuits
--------------------------------------------------------------------------------
+===============================================================================
 generic_speelpenning_convolutions  : gradient evaluation of product
 exponent_indices                   : extracting indices of exponent vectors
 standard_speelpenning_convolutions : Speelpenning with doubles
@@ -85,6 +89,7 @@ ts_perfconv                        : test on performance and convolutions
 ts_perfcirc                        : test performance of splitted circuits
 standard_complex_circuits          : development code for correctness tests
 standard_coefficient_circuits      : better performing algo diff eval
+standard_circuit_makers            : utilities for testing
 ts_perfade                         : test performance of algo diff eval
 ts_perfhess                        : test on better Hessian computation
 -------------------------------------------------------------------------------

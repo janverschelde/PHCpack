@@ -5,7 +5,6 @@ with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
-with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
@@ -16,6 +15,7 @@ with Standard_Complex_Matrices;
 with Standard_Complex_Polynomials;        use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;     use Standard_Complex_Poly_Functions;
 with Evaluation_Differentiation_Errors;
+with Standard_Circuit_Makers;
 
 procedure ts_perfhess is
 
@@ -297,62 +297,7 @@ procedure ts_perfhess is
     return res;
   end Algorithmic;
 
-  procedure Write_Matrix ( A : in Standard_Complex_Matrices.Matrix ) is
-
-  -- DESCRIPTION :
-  --   Writes the matrix A component-wise, with explicit indexing.
-
-  begin
-    for i in A'range(1) loop
-      for j in A'range(2) loop
-        put("A["); put(i,1); put(","); put(j,1); put("] : ");
-        put(A(i,j)); new_line;
-      end loop;
-    end loop;
-  end Write_Matrix;
-
-  function Random_Indices
-             ( dim,size : integer32 )
-             return Standard_Integer_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns a vector of indices of size,
-  --   with numbers in 1..dim.
-
-    res : Standard_Integer_Vectors.Vector(1..size) := (1..size => 0);
-    rnd,minval,minidx : integer32;
-    redo : boolean; -- check for duplicate indices
-
-  begin
-    for k in 1..size loop
-      redo := true;
-      while redo loop
-        rnd := Standard_Random_Numbers.Random(1,dim);
-        redo := false;
-        for i in 1..k-1 loop
-          if res(i) = rnd
-           then redo := true; exit;
-          end if;
-        end loop;
-      end loop;
-      res(k) := rnd;
-    end loop;
-   -- sort the indices
-    for k in 1..size-1 loop
-      minval := res(k); minidx := k;
-      for i in k+1..size loop
-        if minval > res(i)
-         then minidx := i; minval := res(i);
-        end if;
-      end loop;
-      if minidx /= k
-       then res(minidx) := res(k); res(k) := minval;
-      end if;
-    end loop;
-    return res;
-  end Random_Indices;
- 
-  procedure Test ( dim : in integer32; size : in integer32 := 0 ) is
+  procedure Test_Product ( dim : in integer32; size : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Tests the computation of the Hessian of a product of dim variables,
@@ -375,19 +320,20 @@ procedure ts_perfhess is
     else
       declare
         idx : constant Standard_Integer_Vectors.Vector(1..size)
-            := Random_Indices(dim,size);
+            := Standard_Circuit_Makers.Random_Indices(dim,size);
       begin
         put("The indices : "); put(idx); new_line;
         h0 := Symbolic(c,idx,x);
         h1 := Algorithmic(c,idx,x);
       end;
     end if;
-    put_line("The Hessian computed symbolically :"); Write_Matrix(h0);
+    put_line("The Hessian computed symbolically :");
+    Standard_Circuit_Makers.Write_Matrix(h0);
     put_line("The Hessian computed with algorithmic differentiation :");
-    Write_Matrix(h1);
+    Standard_Circuit_Makers.Write_Matrix(h1);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h1);
     put("Sum of errors :"); put(err,3); new_line;
-  end Test;
+  end Test_Product;
 
   procedure Main is
 
@@ -404,11 +350,11 @@ procedure ts_perfhess is
     if ans /= 'y' then
       new_line;
       put("Give the dimension : "); get(dim);
-      Test(dim);
+      Test_Product(dim);
     else
       put("Give the size of the product : "); get(size);
       put("Give the dimension (> "); put(size,1); put(") : "); get(dim);
-      Test(dim,size);
+      Test_Product(dim,size);
     end if;
   end Main;
 
