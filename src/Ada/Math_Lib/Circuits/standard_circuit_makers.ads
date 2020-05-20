@@ -93,6 +93,13 @@ package Standard_Circuit_Makers is
   --   Straighforward computation of the gradient of p at x,
   --   for testing purposes.
 
+  function Hessian ( p : Standard_Complex_Polynomials.Poly;
+                     x : Standard_Complex_Vectors.Vector )
+                   return Standard_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the Hessian matrix of p at x, for testing purposes.
+
   function Constant_Coefficient
              ( p : Standard_Complex_Polynomials.Poly )
              return Standard_Complex_Numbers.Complex_Number;

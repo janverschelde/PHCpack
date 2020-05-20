@@ -1,5 +1,7 @@
 Wed 20 May 2020 : new package standard_circuit_makers with code from
-  ts_perfade and ts_perfess.
+  ts_perfade and ts_perfess.  Extended ts_perfhess with a procedure to
+  work on random circuits with 0/1 exponents, moved the symbolic Hessian
+  computation to standard_circuit_makers.
 
 Tue 19 May 2020 : completed system definition in standard_complex_circuits
   and standard_coefficient_circuits, with tests in ts_perfade.

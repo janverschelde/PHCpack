@@ -215,6 +215,30 @@ package body Standard_Circuit_Makers is
     return res;
   end Gradient;
 
+  function Hessian ( p : Standard_Complex_Polynomials.Poly;
+                     x : Standard_Complex_Vectors.Vector )
+                   return Standard_Complex_Matrices.Matrix is
+
+    res : Standard_Complex_Matrices.Matrix(x'range,x'range);
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Functions;
+
+    dp,dp2 : Poly;
+
+  begin
+    for i in res'range(1) loop
+      dp := Diff(p,i);
+      for j in res'range(2) loop
+        dp2 := Diff(dp,j);
+        res(i,j) := Eval(dp2,x);
+        Clear(dp2);
+      end loop;
+      Clear(dp);
+    end loop;
+    return res;
+  end Hessian;
+
   function Constant_Coefficient
              ( p : Standard_Complex_Polynomials.Poly )
              return Standard_Complex_Numbers.Complex_Number is
