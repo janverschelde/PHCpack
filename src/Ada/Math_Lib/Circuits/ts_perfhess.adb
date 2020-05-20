@@ -468,10 +468,17 @@ procedure ts_perfhess is
       := Standard_Circuit_Makers.Make_Polynomial(c,true);
     x : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
+    xv : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(x);
+    y : constant Standard_Complex_Vectors.Vector(0..dim)
+      := (0..dim => Standard_Complex_Numbers.Create(0.0));
+    yd : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(y);
     h0 : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
        := Standard_Circuit_Makers.Hessian(p,x);
     h1 : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
        := Algorithmic(c,x);
+    h2 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     err : double_float;
 
   begin
@@ -482,6 +489,11 @@ procedure ts_perfhess is
     put_line("The Hessian computed algorithmically :");
     Standard_Circuit_Makers.Write_Matrix(h1);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h1);
+    put("Sum of errors :"); put(err,3); new_line;
+    Standard_Complex_Circuits.Speel(c,xv,yd,h2);
+    put_line("The Hessian recomputed on a circuit :");
+    Standard_Circuit_Makers.Write_Matrix(h2);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
     put("Sum of errors :"); put(err,3); new_line;
   end Test_Circuit;
 

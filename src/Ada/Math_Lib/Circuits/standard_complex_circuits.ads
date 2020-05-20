@@ -119,13 +119,108 @@ package Standard_Complex_Circuits is
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF ONE CIRCUIT :
 
   procedure Speel ( c : in Circuit;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    h : out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentatiates the circuit c at x,
+  --   stores the function value at yd(0), the gradient at yd(x'range),
+  --   and the Hessian at the matrix h.
+  --   Wraps the next Speel procedure, using the c.xps as indices.
+  --   This procedure is for monomials that are products of variables,
+  --   with no exponent higher than one.
+
+  -- ON ENTRY :
+  --   c        circuit properly defined and with allocated workspace;
+  --   x        vector of range 1..c.dim, with values for x;
+  --   yd       vector of range 0..c.dim, allocated for the result.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x;
+  --   h        the Hessian matrix at x.
+
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_Vectors.Vector;
+                cff : in Standard_Complex_Numbers.Complex_Number;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                bck : in Standard_Complex_Vectors.Link_to_Vector;
+                crs : in Standard_Complex_Vectors.Link_to_Vector;
+                h : in out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Evaluates an indexed product, multiplied with a coefficient,
+  --   computes its gradient and updates the Hessian matrix.
+
+  -- REQUIRED : idx'last >= 2.
+  --   x'range = 1..dim and yd'range = 0..dim,
+  --   fwd'range = 1..dim-1, bck'range = 1..dim-2 = crs'range,
+  --   h'range(1) = h'range(2) = 1..dim.
+
+  -- ON ENTRY :
+  --   idx      indices to participating variables in the monomial;
+  --   cff      coefficient of the monomial;
+  --   x        vector of range 1..dim, with values for x;
+  --   yd       vector of range 0..dim, allocated for the result.
+  --   fwd      work space vector of range 1..dim-1,
+  --            for the forward products;
+  --   bck      work space vector of range 1..dim-2,
+  --            for the backward products;
+  --   crs      work space vector of range 1..dim-2,
+  --            for the cross products;
+  --   h        current values for the Hessian matrix,
+  --            or initialized to zero.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x;
+  --   h        the updated upper triangular Hessian matrix at x.
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    cff : in Standard_Complex_Vectors.Vector;
+                    cst : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector;
+                    h : out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Runs the reverse mode of algorithmic differentiation on an
+  --   sequence of indexed products of variables.
+
+  -- REQUIRED :
+  --   idx'range = cff'range and all vectors in idx have values
+  --   in range 1..dim, where dim is the number of variables,
+  --   x'range = 1..dim and yd'range = 0..dim.
+
+  -- ON ENTRY :
+  --   idx      indices to participating variables in each monomial;
+  --   cff      coefficients of the monomials;
+  --   cst      constant coefficient of the circuit;
+  --   x        vector of range 1..dim, with values for x;
+  --   yd       vector of range 0..dim, allocated for the result.
+  --   fwd      work space vector of range 1..dim-1,
+  --            for the forward products;
+  --   bck      work space vector of range 1..dim-2,
+  --            for the backward products;
+  --   crs      work space vector of range 1..dim-2,
+  --            for the cross products.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x;
+  --   h        the Hessian matrix at x.
+
+  procedure Speel ( c : in Circuit;
                     x,yd : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Evaluates and differentiates the circuit c at x
   --   and stores the result in yd.
   --   Wraps the next Speel procedure, using the c.xps as indices.
-  --   The results are correct if all monomials are products of variables,
+  --   This procedure is for monomials that are products of variables,
   --   with no exponent higher than one.
 
   -- ON ENTRY :

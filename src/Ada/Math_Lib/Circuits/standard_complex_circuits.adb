@@ -101,6 +101,13 @@ package body Standard_Complex_Circuits is
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
 
   procedure Speel ( c : in Circuit;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    h : out Standard_Complex_Matrices.Matrix ) is
+  begin
+    Speel(c.xps,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs,h);
+  end Speel;
+
+  procedure Speel ( c : in Circuit;
                     x,yd : in Standard_Complex_Vectors.Link_to_Vector ) is
   begin
     Speel(c.xps,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs);
@@ -155,6 +162,148 @@ package body Standard_Complex_Circuits is
           end if;
         end if;
       end if;
+    end loop;
+  end Speel;
+
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_Vectors.Vector;
+                cff : in Standard_Complex_Numbers.Complex_Number;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                bck : in Standard_Complex_Vectors.Link_to_Vector;
+                crs : in Standard_Complex_Vectors.Link_to_Vector;
+                h : in out Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Numbers;
+
+    sz : constant integer32 := idx'last;
+    idx1,idx2,idx3,idx4,idx5,idx6 : integer32;
+    acc : Complex_Number;
+
+  begin
+    Forward_Backward_Cross(idx,x,fwd,bck,crs);
+    yd(0) := yd(0) + cff*fwd(sz-1); 
+    if sz = 2 then
+      idx1 := idx(1); idx2 := idx(2);
+      yd(idx2) := yd(idx2) + cff*x(idx1);
+      yd(idx1) := yd(idx1) + cff*x(idx2);
+      h(idx1,idx2) := h(idx1,idx2) + cff;
+    else -- sz > 2
+      idx1 := idx(1);
+      yd(idx1) := yd(idx1) + cff*bck(sz-2);
+      for j in idx'first+1..sz-1 loop
+        idx1 := idx(j); yd(idx1) := yd(idx1) + cff*crs(j-1);
+      end loop;
+      idx1 := idx(sz); yd(idx1) := yd(idx1) + cff*fwd(sz-2);
+      if sz = 3 then
+        idx1 := idx(1); idx2 := idx(2); idx3 := idx(3);
+        h(idx1,idx2) := h(idx1,idx2) + cff*x(idx3);
+        h(idx1,idx3) := h(idx1,idx3) + cff*x(idx2);
+        h(idx2,idx3) := h(idx2,idx3) + cff*x(idx1);
+      else -- sz > 3
+        idx5 := idx(sz-1); idx6 := idx(sz); idx3 := sz-3;
+       -- last element is copy of fwd(sz-3), multiplied with cff
+        h(idx5,idx6) := h(idx5,idx6) + cff*fwd(idx3);
+       -- first element is copy of bck(sz-3), multiplied with cff
+        idx1 := idx(1); idx2 := idx(2);
+        h(idx1,idx2) := h(idx1,idx2) + cff*bck(idx3);
+        if sz = 4 then -- special case for all rows
+          idx3 := idx(3); idx4 := idx(4);
+          acc := cff*x(idx2);
+          h(idx1,idx3) := h(idx1,idx3) + acc*x(idx6);
+          h(idx1,idx4) := h(idx1,idx4) + acc*x(idx5);
+          acc := cff*x(idx1);
+          h(idx2,idx3) := h(idx2,idx3) + acc*x(idx6);
+          h(idx2,idx4) := h(idx2,idx4) + acc*x(idx5);
+        else -- sz > 4
+         -- first row is special, starts with x(idx(2)) after diagonal
+          idx3 := idx(3); idx4 := sz-4;
+          acc := cff*x(idx2);
+          h(idx1,idx3) := h(idx1,idx3) + acc*bck(idx4);
+          for k in 4..sz-2 loop
+            idx4 := idx(k-1); idx5 := idx(k); idx6 := sz-k-1;
+            acc := acc*x(idx4);
+            h(idx1,idx5) := h(idx1,idx5) + acc*bck(idx6);
+          end loop;
+          idx4 := idx(sz-2); idx5 := idx(sz-1); idx6 := idx(sz);
+          acc := acc*x(idx4);
+          h(idx1,idx5) := h(idx1,idx5) + acc*x(idx6);
+          h(idx1,idx6) := h(idx1,idx6) + acc*x(idx5);
+         -- second row is special, starts with x(idx(1)) after diagonal
+          acc := cff*x(idx1); idx4 := sz-4;
+          h(idx2,idx3) := h(idx2,idx3) + acc*bck(idx4);
+          for k in 4..sz-2 loop
+            idx4 := idx(k-1); idx5 := idx(k); idx6 := sz-k-1;
+            acc := acc*x(idx4);
+            h(idx2,idx5) := h(idx2,idx5) + acc*bck(idx6);
+          end loop;
+          idx4 := idx(sz-2); idx5 := idx(sz-1); idx6 := idx(sz);
+          acc := acc*x(idx4);
+          h(idx2,idx5) := h(idx2,idx5) + acc*x(idx6);
+          h(idx2,idx6) := h(idx2,idx6) + acc*x(idx5);
+         -- the row with index sz-2 has a general formula
+          idx3 := sz-4; acc := cff*fwd(idx3);
+          h(idx4,idx5) := h(idx4,idx5) + acc*x(idx6);
+          h(idx4,idx6) := h(idx4,idx6) + acc*x(idx5);
+          for rw in 3..sz-3 loop  -- row rw starts with fwd(rw-2)
+            idx1 := idx(rw); idx2 := idx(rw+1);
+            acc := cff*fwd(rw-2);
+            h(idx1,idx2) := h(idx1,idx2) + acc*bck(sz-rw-2);
+            for k in rw+2..sz-2 loop
+              idx2 := idx(k-1); idx3 := idx(k); idx4 := sz-k-1;
+              acc := acc*x(idx2);
+              h(idx1,idx3) := h(idx1,idx3) + acc*bck(idx4);
+            end loop;
+            idx4 := idx(sz-2); idx5 := idx(sz-1); idx6 := idx(sz);
+            acc := acc*x(idx4);
+            h(idx1,idx5) := h(idx1,idx5) + acc*x(idx6);
+            h(idx1,idx6) := h(idx1,idx6) + acc*x(idx5);
+          end loop;
+        end if;
+      end if;
+    end if;
+  end Indexed_Speel;
+
+  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    cff : in Standard_Complex_Vectors.Vector;
+                    cst : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector;
+                    h : out Standard_Complex_Matrices.Matrix ) is
+
+    dim : constant integer32 := x'last;
+    idk : Standard_Integer_Vectors.Link_to_Vector;
+    idx1 : integer32;
+    kcff : Standard_Complex_Numbers.Complex_Number;
+
+    use Standard_Complex_Numbers,Standard_Integer_Vectors;
+
+  begin
+    for i in 1..dim loop
+      for j in 1..dim loop
+        h(i,j) := Create(0.0);
+      end loop;
+    end loop;
+    yd(0) := cst;
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        kcff := cff(k);
+        if idk'last = 1 then
+          idx1 := idk(1);
+          yd(0) := yd(0) + kcff*x(idx1);
+          yd(idx1) := yd(idx1) + kcff;
+        else
+          Indexed_Speel(idk.all,kcff,x,yd,fwd,bck,crs,h);
+        end if;
+      end if;
+    end loop;
+    for i in 2..dim loop
+      for j in 1..(i-1) loop
+        h(i,j) := h(j,i);
+      end loop;
     end loop;
   end Speel;
 
