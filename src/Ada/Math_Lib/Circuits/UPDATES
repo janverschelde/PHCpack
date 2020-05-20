@@ -4,6 +4,7 @@ Tue 19 May 2020 : completed system definition in standard_complex_circuits
   the sum of differences between two vectors and two matrices,
   with code taken from ts_perfade.  The new test procedure ts_perfhess 
   implements a general formula for the Hessian of the product of a variables.
+  To ts_perfhess, added an indexed version to the differentiation procedures.
 
 Mon 18 May 2020 : indicated wrapper procedure for Speel in packages
   standard_complex_circuits and standard_coefficient_circuits, with
