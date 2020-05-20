@@ -3,7 +3,8 @@ Wed 20 May 2020 : new package standard_circuit_makers with code from
   work on random circuits with 0/1 exponents, moved the symbolic Hessian
   computation to standard_circuit_makers.  Extended standard_complex_circuits
   with procedures to compute the Hessian for 0/1 exponent circuits,
-  tested by ts_perfhess.
+  tested by ts_perfhess.  Bug fix for extra constant coefficients in
+  standard_complex_circuits.adb and standard_coefficient_circuits.adb.
 
 Tue 19 May 2020 : completed system definition in standard_complex_circuits
   and standard_coefficient_circuits, with tests in ts_perfade.

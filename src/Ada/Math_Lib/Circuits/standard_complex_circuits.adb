@@ -327,60 +327,65 @@ package body Standard_Complex_Circuits is
     yd(0) := cst;
     for k in idx'range loop
       idk := idx(k);
-      if idk /= null then
-        kcff := cff(k);
-        fck := fac(k);
-        idx1 := idk(1);
-        if fck = null then
-          if idk'last = 1 then
-            yd(0) := yd(0) + kcff*x(idx1);
-            yd(idx1) := yd(idx1) + kcff;
-          else
-            Forward_Backward_Cross(idk.all,x,fwd,bck,crs);
-            yd(0) := yd(0) + kcff*fwd(idk'last-1); 
-            if idk'last = 2 then
-              idx2 := idk(2);
-              yd(idx2) := yd(idx2) + kcff*x(idx1);
-              yd(idx1) := yd(idx1) + kcff*x(idx2);
-            else -- idk'last > 2
-              yd(idx1) := yd(idx1) + kcff*bck(idk'last-2);
-              for j in idk'first+1..idk'last-1 loop
-                idx2 := idk(j);
-                yd(idx2) := yd(idx2) + kcff*crs(j-1);
-              end loop;
-              idx2 := idk(idk'last);
-              yd(idx2) := yd(idx2) + kcff*fwd(idk'last-2);
-            end if;
-          end if;
+      kcff := cff(k);
+      if idk = null then -- we have an extra constant coefficient
+        yd(0) := yd(0) + kcff;
+      else
+        if idk'last < idk'first then -- deal with stray 0 exponent
+          yd(0) := yd(0) + kcff;
         else
-          xpk := xps(k);
-          if idk'last = 1 then
-            Multiply_Factor(xpk,fck,x,kcff,pwt,acc);
-            yd(0) := yd(0) + acc*x(idx1);
-            factor := Create(xpk(idx1));
-            yd(idx1) := yd(idx1) + factor*acc;
+          idx1 := idk(1); fck := fac(k);
+          if fck = null then
+            if idk'last = 1 then
+              yd(0) := yd(0) + kcff*x(idx1);
+              yd(idx1) := yd(idx1) + kcff;
+            else
+              Forward_Backward_Cross(idk.all,x,fwd,bck,crs);
+              yd(0) := yd(0) + kcff*fwd(idk'last-1); 
+              if idk'last = 2 then
+                idx2 := idk(2);
+                yd(idx2) := yd(idx2) + kcff*x(idx1);
+                yd(idx1) := yd(idx1) + kcff*x(idx2);
+              else -- idk'last > 2
+                yd(idx1) := yd(idx1) + kcff*bck(idk'last-2);
+                for j in idk'first+1..idk'last-1 loop
+                  idx2 := idk(j);
+                  yd(idx2) := yd(idx2) + kcff*crs(j-1);
+                end loop;
+                idx2 := idk(idk'last);
+                yd(idx2) := yd(idx2) + kcff*fwd(idk'last-2);
+              end if;
+            end if;
           else
-            Forward_Backward_Cross(idk.all,x,fwd,bck,crs);
-            Multiply_Factor(xpk,fck,x,kcff,pwt,acc);
-            yd(0) := yd(0) + acc*fwd(idk'last-1); 
-            if idk'last = 2 then
-              idx2 := idk(2);
-              wrk := acc*x(idx1); factor := Create(xpk(idx2));
-              wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
-              wrk := acc*x(idx2); factor := Create(xpk(idx1));
-              wrk := factor*wrk; yd(idx1) := yd(idx1) + wrk;
-            else -- idk'last > 2
-              wrk := acc*bck(idk'last-2);
-              factor := Create(xpk(idx1)); wrk := factor*wrk;
-              yd(idx1) := yd(idx1) + wrk;
-              for j in idk'first+1..idk'last-1 loop
-                wrk := acc*crs(j-1); idx2 := idk(j);
+            xpk := xps(k);
+            if idk'last = 1 then
+              Multiply_Factor(xpk,fck,x,kcff,pwt,acc);
+              yd(0) := yd(0) + acc*x(idx1);
+              factor := Create(xpk(idx1));
+              yd(idx1) := yd(idx1) + factor*acc;
+            else
+              Forward_Backward_Cross(idk.all,x,fwd,bck,crs);
+              Multiply_Factor(xpk,fck,x,kcff,pwt,acc);
+              yd(0) := yd(0) + acc*fwd(idk'last-1); 
+              if idk'last = 2 then
+                idx2 := idk(2);
+                wrk := acc*x(idx1); factor := Create(xpk(idx2));
+                wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+                wrk := acc*x(idx2); factor := Create(xpk(idx1));
+                wrk := factor*wrk; yd(idx1) := yd(idx1) + wrk;
+              else -- idk'last > 2
+                wrk := acc*bck(idk'last-2);
+                factor := Create(xpk(idx1)); wrk := factor*wrk;
+                yd(idx1) := yd(idx1) + wrk;
+                for j in idk'first+1..idk'last-1 loop
+                  wrk := acc*crs(j-1); idx2 := idk(j);
+                  factor := Create(xpk(idx2)); wrk := factor*wrk;
+                  yd(idx2) := yd(idx2) + wrk;
+                end loop;
+                wrk := acc*fwd(idk'last-2); idx2 := idk(idk'last);
                 factor := Create(xpk(idx2)); wrk := factor*wrk;
                 yd(idx2) := yd(idx2) + wrk;
-              end loop;
-              wrk := acc*fwd(idk'last-2); idx2 := idk(idk'last);
-              factor := Create(xpk(idx2)); wrk := factor*wrk;
-              yd(idx2) := yd(idx2) + wrk;
+              end if;
             end if;
           end if;
         end if;
