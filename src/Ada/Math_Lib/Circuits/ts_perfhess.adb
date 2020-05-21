@@ -10,11 +10,11 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Random_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_Polynomials;        use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;     use Standard_Complex_Polynomials_io;
--- with Exponent_Indices;
 with Evaluation_Differentiation_Errors;
 with Standard_Complex_Circuits;
 with Standard_Circuit_Makers;
@@ -73,6 +73,8 @@ procedure ts_perfhess is
     return res;
   end Symbolic;
 
+-- code for the Hessian of one product :
+
   function Algorithmic
              ( c : Complex_Number; x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Matrices.Matrix is
@@ -84,7 +86,7 @@ procedure ts_perfhess is
   --   The reverse mode computes forward and backward products.
   --   These products then can be used to compute the Hessian.
 
-  -- REQUIRED : dim >= 2.
+  -- REQUIRED : dim >= 2, otherwise zero Hessian.
 
     dim : constant integer32 := x'last;
     res : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -166,6 +168,8 @@ procedure ts_perfhess is
     return res;
   end Algorithmic;
 
+-- code for the Hession of one indexed product
+
   function Algorithmic
              ( c : Complex_Number;
                idx : Standard_Integer_Vectors.Vector;
@@ -180,7 +184,7 @@ procedure ts_perfhess is
   --   The reverse mode computes forward and backward products.
   --   These products then can be used to compute the Hessian.
 
-  -- REQUIRED : dim >= 2.
+  -- REQUIRED : dim >= 2, otherwise zero Hessian.
 
     dim : constant integer32 := x'last;
     size : constant integer32 := idx'last;
@@ -286,6 +290,8 @@ procedure ts_perfhess is
     return res;
   end Algorithmic;
 
+-- updating the Hessian for an indexed product
+
   procedure Algorithmic
              ( H : in out Standard_Complex_Matrices.Matrix;
                c : in Complex_Number;
@@ -310,7 +316,7 @@ procedure ts_perfhess is
   -- ON RETURN :
   --   H       updated Hessian matrix, only for upper triangular part.
 
-  -- REQUIRED : idx'last >= 2.
+  -- REQUIRED : idx'last >= 2, otherwise zero Hessian.
 
     sz : constant integer32 := idx'last;
     fwd : Standard_Complex_Vectors.Vector(1..sz-1);
@@ -384,6 +390,175 @@ procedure ts_perfhess is
     end if;
   end Algorithmic;
 
+-- updating the Hessian for any monomial
+
+  procedure Algorithmic
+             ( H : in out Standard_Complex_Matrices.Matrix;
+               c : in Complex_Number;
+               xps : in Standard_Integer_Vectors.Vector;
+               idx : in Standard_Integer_Vectors.Vector;
+               fac : in Standard_Integer_Vectors.Vector;
+               x : in Standard_Complex_Vectors.Vector;
+               pwt : in Standard_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Applies algorithmic differentiation to compute the Hessian
+  --   of the product of the values in x, with coefficient in c,
+  --   and with idx the indices of participating variables,
+  --   based on the reverse mode to compute the gradient.
+  --   The reverse mode computes forward and backward products.
+  --   These products then can be used to compute the Hessian.
+
+  -- ON ENTRY :
+  --   H       the current Hessian matrix,
+  --           initialized with zero if called for the first time.
+  --   c       coefficient of the term in the circuit;
+  --   xps     exponents of all variables in the monomial;
+  --   idx     index of the participating variables;
+  --   fac     indices to the variables in the common factor;
+  --   x       values for all variables;
+  --   pwt     values of higher powers of x to evaluate the common factor.
+
+  -- ON RETURN :
+  --   H       updated Hessian matrix, only for upper triangular part.
+
+  -- REQUIRED : idx'last >= 2.
+
+    sz : constant integer32 := idx'last;
+    m,m1,m2 : integer32;
+    factor : double_float;
+    acc : Complex_Number;
+
+  begin
+    if sz = 1 then
+      m := xps(fac(1)); -- monomial is c*x**m, m >= 2.
+      factor := double_float(m*(m-1));
+      if m = 2 then
+        H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*factor;
+      elsif m = 3 then
+        H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*factor*x(fac(1));
+      else -- m > 3, if m = 4, then x**2 at pwt(fac(1))(1)
+        H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*factor*(pwt(fac(1))(m-3));
+      end if;
+    elsif sz = 2 then -- fac'last >= 1
+      m := xps(fac(1)); factor := double_float(m*(m-1));
+      if fac'last = 1 then -- the other variable has no higher power
+        if fac(1) = idx(1)
+         then acc := c*factor*x(idx(2));
+         else acc := c*factor*x(idx(1));
+        end if;
+      else
+        m2 := xps(fac(2));
+        acc := c*factor*pwt(fac(2))(m2-1);
+      end if;
+      if m = 2 then
+        H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc;
+      elsif m = 3 then
+        H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*x(fac(1));
+      else
+        H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*(pwt(fac(1))(m-3));
+      end if;
+      if fac'last = 1 then
+        factor := double_float(m);
+        if m = 2 then
+          H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*factor*x(fac(1));
+        else
+          H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*factor*(pwt(fac(1))(m-2));
+        end if;
+      else
+        m := xps(fac(2)); factor := double_float(m*(m-1));
+        m1 := xps(fac(1));
+        acc := c*factor*(pwt(fac(1))(m1-1));
+        if m = 2 then
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc;
+        elsif m = 3 then
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*x(fac(2));
+        else
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*(pwt(fac(2))(m-3));
+        end if;
+        factor := double_float(m*m1);
+        acc := c*factor;
+        if m1 = 2
+         then acc := acc*x(fac(1));
+         else acc := acc*(pwt(fac(1))(m1-2));
+        end if;
+        if m = 2
+         then acc := acc*x(fac(2));
+         else acc := acc*(pwt(fac(2))(m-2));
+        end if;
+        H(idx(1),idx(2)) := H(idx(1),idx(2)) + acc;
+      end if;
+    elsif sz = 3 then
+      H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*x(idx(3));
+      H(idx(1),idx(3)) := H(idx(1),idx(3)) + c*x(idx(2));
+      H(idx(2),idx(3)) := H(idx(2),idx(3)) + c*x(idx(1));
+    else -- sz > 3
+      declare
+        fwd : Standard_Complex_Vectors.Vector(1..sz-1);
+        bck : Standard_Complex_Vectors.Vector(1..sz-2);
+      begin
+        fwd(1) := x(idx(1))*x(idx(2));
+        for k in 2..sz-1 loop
+          fwd(k) := fwd(k-1)*x(idx(k+1));
+        end loop;
+        bck(1) := x(idx(sz))*x(idx(sz-1));
+        for k in 2..sz-2 loop
+          bck(k) := bck(k-1)*x(idx(sz-k));
+        end loop;
+       -- last element is copy of fwd(sz-3), multiplied with c
+        H(idx(sz-1),idx(sz)) := H(idx(sz-1),idx(sz)) + c*fwd(sz-3);
+       -- first element is copy of bck(sz-3), multiplied with c
+        H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*bck(sz-3);
+        if sz = 4 then -- special case for all rows
+          acc := c*x(idx(2));
+          H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*x(idx(sz));
+          H(idx(1),idx(4)) := H(idx(1),idx(4)) + acc*x(idx(sz-1));
+          acc := c*x(idx(1));
+          H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*x(idx(sz));
+          H(idx(2),idx(4)) := H(idx(2),idx(4)) + acc*x(idx(sz-1));
+        else -- sz > 4
+         -- first row is special, starts with x(idx(2)) after diagonal
+          acc := c*x(idx(2));
+          H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*bck(sz-4);
+          for k in 4..sz-2 loop
+            acc := acc*x(idx(k-1));
+            H(idx(1),idx(k)) := H(idx(1),idx(k)) + acc*bck(sz-k-1);
+          end loop;
+          acc := acc*x(idx(sz-2));
+          H(idx(1),idx(sz-1)) := H(idx(1),idx(sz-1)) + acc*x(idx(sz));
+          H(idx(1),idx(sz)) := H(idx(1),idx(sz)) + acc*x(idx(sz-1));
+         -- second row is special, starts with x(idx(1)) after diagonal
+          acc := c*x(idx(1));
+          H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*bck(sz-4);
+          for k in 4..sz-2 loop
+            acc := acc*x(idx(k-1));
+            H(idx(2),idx(k)) := H(idx(2),idx(k)) + acc*bck(sz-k-1);
+          end loop;
+          acc := acc*x(idx(sz-2));
+          H(idx(2),idx(sz-1)) := H(idx(2),idx(sz-1)) + acc*x(idx(sz));
+          H(idx(2),idx(sz)) := H(idx(2),idx(sz)) + acc*x(idx(sz-1));
+         -- the row with index sz-2 has a general formula
+          acc := c*fwd(sz-4);
+          H(idx(sz-2),idx(sz-1)) := H(idx(sz-2),idx(sz-1)) + acc*x(idx(sz));
+          H(idx(sz-2),idx(sz)) := H(idx(sz-2),idx(sz)) + acc*x(idx(sz-1));
+          for rw in 3..sz-3 loop  -- row rw starts with fwd(rw-2)
+            acc := c*fwd(rw-2);
+            H(idx(rw),idx(rw+1)) := H(idx(rw),idx(rw+1)) + acc*bck(sz-rw-2);
+            for k in rw+2..sz-2 loop
+              acc := acc*x(idx(k-1));
+              H(idx(rw),idx(k)) := H(idx(rw),idx(k)) + acc*bck(sz-k-1);
+            end loop;
+            acc := acc*x(idx(sz-2));
+            H(idx(rw),idx(sz-1)) := H(idx(rw),idx(sz-1)) + acc*x(idx(sz));
+            H(idx(rw),idx(sz)) := H(idx(rw),idx(sz)) + acc*x(idx(sz-1));
+          end loop;
+        end if;
+      end;
+    end if;
+  end Algorithmic;
+
+-- wrapper functions :
+
   function Algorithmic
              ( c : Standard_Complex_Circuits.Circuit;
                x : Standard_Complex_Vectors.Vector )
@@ -404,10 +579,58 @@ procedure ts_perfhess is
     for k in 1..c.nbr loop
       declare
         idx : constant Standard_Integer_Vectors.Vector := c.xps(k).all;
-           -- := Exponent_Indices.Exponent_Index(c.xps(k).all);
       begin
         put("update for "); put(idx); put_line(" ...");
         Algorithmic(res,c.cff(k),idx,x);
+      end;
+    end loop;
+    for i in 2..dim loop
+      for j in 1..(i-1) loop
+        res(i,j) := res(j,i);
+      end loop;
+    end loop;
+    return res;
+  end Algorithmic;
+
+  function Algorithmic
+             ( c : Standard_Complex_Circuits.Circuit;
+               x : Standard_Complex_Vectors.Vector;
+               pwt : Standard_Complex_VecVecs.VecVec )
+             return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the Hessian matrix of the circuit c at x,
+  --   with values of higher powers of x in the power table pwt.
+
+    dim : constant integer32 := x'last;
+    res : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+
+    use Standard_Integer_Vectors;
+
+  begin
+    for i in 1..dim loop
+      for j in 1..dim loop
+        res(i,j) := Create(0.0);
+      end loop;
+    end loop;
+    for k in 1..c.nbr loop
+      declare
+        xpk : constant Standard_Integer_Vectors.Vector := c.xps(k).all;
+        idx : constant Standard_Integer_Vectors.Vector := c.idx(k).all;
+        fck : constant Standard_Integer_Vectors.Link_to_Vector := c.fac(k);
+      begin
+        put("exponents : "); put(xpk);
+        put("  indices : "); put(idx); 
+        if fck = null then
+          put_line(", no factors ...");
+          if idx'last < 2
+           then put_line("No contribution to Hessian for single variable.");
+           else Algorithmic(res,c.cff(k),idx,x);
+          end if;
+        else
+          put("  factors : "); put(fck); put_line(" ...");
+          Algorithmic(res,c.cff(k),xpk,idx,fck.all,x,pwt);
+        end if;
       end;
     end loop;
     for i in 2..dim loop
@@ -497,13 +720,58 @@ procedure ts_perfhess is
     put("Sum of errors :"); put(err,3); new_line;
   end Test_Circuit;
 
+  procedure Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with dim variables, nbr of terms,
+  --   and highest power pwr, to test the computation of the Hessian.
+
+    c : constant Standard_Complex_Circuits.Circuit
+      := Standard_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
+    p : constant Standard_Complex_Polynomials.Poly
+      := Standard_Circuit_Makers.Make_Polynomial(c,false);
+    x : constant Standard_Complex_Vectors.Vector(1..dim)
+      := Standard_Random_Vectors.Random_Vector(1,dim);
+    xv : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(x);
+    h0 : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
+       := Standard_Circuit_Makers.Hessian(p,x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
+        := Standard_Complex_Circuits.Allocate(mxe);
+    h1 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+   -- y : constant Standard_Complex_Vectors.Vector(0..dim)
+   --   := (0..dim => Standard_Complex_Numbers.Create(0.0));
+   -- yd : constant Standard_Complex_Vectors.Link_to_Vector
+   --    := new Standard_Complex_Vectors.Vector'(y);
+   -- h2 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    err : double_float;
+
+  begin
+    new_line;
+    put_line("The polynomial : "); put(p); new_line;
+    put_line("The Hessian computed symbolically :");
+    Standard_Circuit_Makers.Write_Matrix(h0);
+    put_line("The Hessian computed algorithmically :");
+    Standard_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    h1 := Algorithmic(c,x,pwt);
+    Standard_Circuit_Makers.Write_Matrix(h1);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h1);
+    put("Sum of errors :"); put(err,3); new_line;
+   -- Standard_Complex_Circuits.Speel(c,xv,yd,h2);
+   -- put_line("The Hessian recomputed on a circuit :");
+   -- Standard_Circuit_Makers.Write_Matrix(h2);
+   -- err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+   -- put("Sum of errors :"); put(err,3); new_line;
+  end Test_Power_Circuit;
+
   procedure Main is
 
   -- DESCRIPTION :
   --   Prompts the user for a dimension and then generates
   --   as many complex random numbers as the dimension.
 
-    dim,size,nbr : integer32 := 0;
+    dim,size,nbr,pwr : integer32 := 0;
     ans : character;
 
   begin
@@ -511,7 +779,8 @@ procedure ts_perfhess is
     put_line("MENU to test the algorithmic Hessian computations :");
     put_line("  0. on a product of variables");
     put_line("  1. on a random circuit");
-    put("Type 0 or 1 to select the test : "); Ask_Alternative(ans,"01");
+    put_line("  2. on a random general circuit, with higher powers");
+    put("Type 0, 1, or 2 to select the test : "); Ask_Alternative(ans,"012");
     case ans is
       when '0' =>
         new_line;
@@ -525,11 +794,16 @@ procedure ts_perfhess is
           put("Give the dimension (> "); put(size,1); put(") : "); get(dim);
           Test_Product(dim,size);
         end if;
-      when '1' =>
+      when '1' | '2' =>
         new_line;
         put("Give the dimension : "); get(dim);
         put("Give the number of terms : "); get(nbr);
-        Test_Circuit(dim,nbr);
+        if ans = '1' then
+          Test_Circuit(dim,nbr);
+        else
+          put("Give the highest power : "); get(pwr);
+          Test_Power_Circuit(dim,nbr,pwr);
+        end if;
       when others => null;
     end case;
   end Main;
