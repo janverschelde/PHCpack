@@ -393,30 +393,30 @@ procedure ts_perfhess is
 -- updating the Hessian for any monomials of small sizes
 
   procedure Algorithmic1
-             ( H : in out Standard_Complex_Matrices.Matrix;
-               c : in Complex_Number;
-               xps : in Standard_Integer_Vectors.Vector;
-               idx : in Standard_Integer_Vectors.Vector;
-               fac : in Standard_Integer_Vectors.Vector;
-               x : in Standard_Complex_Vectors.Vector;
-               pwt : in Standard_Complex_VecVecs.VecVec ) is
+              ( H : in out Standard_Complex_Matrices.Matrix;
+                c : in Complex_Number;
+                xps : in Standard_Integer_Vectors.Vector;
+                idx : in Standard_Integer_Vectors.Vector;
+                fac : in Standard_Integer_Vectors.Vector;
+                x : in Standard_Complex_Vectors.Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Deals with the special case of one variable raised to
   --   some power higher than 1.
 
   -- ON ENTRY :
-  --   H       the current Hessian matrix,
-  --           initialized with zero if called for the first time.
-  --   c       coefficient of the term in the circuit;
-  --   xps     exponents of all variables in the monomial;
-  --   idx     index of the participating variables;
-  --   fac     indices to the variables in the common factor;
-  --   x       values for all variables;
-  --   pwt     values of higher powers of x to evaluate the common factor.
+  --   H        the current Hessian matrix,
+  --            initialized with zero if called for the first time.
+  --   c        coefficient of the term in the circuit;
+  --   xps      exponents of all variables in the monomial;
+  --   idx      index of the participating variables;
+  --   fac      indices to the variables in the common factor;
+  --   x        values for all variables;
+  --   pwt      values of higher powers of x to evaluate the common factor.
 
   -- ON RETURN :
-  --   H       updated Hessian matrix, only for upper triangular part.
+  --   H        updated Hessian matrix, only for upper triangular part.
 
   -- REQUIRED : idx'last = fac'last = 1.
 
@@ -436,30 +436,30 @@ procedure ts_perfhess is
   end Algorithmic1;
 
   procedure Algorithmic2
-             ( H : in out Standard_Complex_Matrices.Matrix;
-               c : in Complex_Number;
-               xps : in Standard_Integer_Vectors.Vector;
-               idx : in Standard_Integer_Vectors.Vector;
-               fac : in Standard_Integer_Vectors.Vector;
-               x : in Standard_Complex_Vectors.Vector;
-               pwt : in Standard_Complex_VecVecs.VecVec ) is
+              ( H : in out Standard_Complex_Matrices.Matrix;
+                c : in Complex_Number;
+                xps : in Standard_Integer_Vectors.Vector;
+                idx : in Standard_Integer_Vectors.Vector;
+                fac : in Standard_Integer_Vectors.Vector;
+                x : in Standard_Complex_Vectors.Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Deals with the special case of two variables,
   --   where at least one variable is raised to a power higher than 1.
 
   -- ON ENTRY :
-  --   H       the current Hessian matrix,
-  --           initialized with zero if called for the first time.
-  --   c       coefficient of the term in the circuit;
-  --   xps     exponents of all variables in the monomial;
-  --   idx     index of the participating variables;
-  --   fac     indices to the variables in the common factor;
-  --   x       values for all variables;
-  --   pwt     values of higher powers of x to evaluate the common factor.
+  --   H        the current Hessian matrix,
+  --            initialized with zero if called for the first time.
+  --   c        coefficient of the term in the circuit;
+  --   xps      exponents of all variables in the monomial;
+  --   idx      index of the participating variables;
+  --   fac      indices to the variables in the common factor;
+  --   x        values for all variables;
+  --   pwt      values of higher powers of x to evaluate the common factor.
 
   -- ON RETURN :
-  --   H       updated Hessian matrix, only for upper triangular part.
+  --   H        updated Hessian matrix, only for upper triangular part.
 
   -- REQUIRED : idx'last = 2 >= fac'last >= 1.
 
@@ -517,30 +517,30 @@ procedure ts_perfhess is
   end Algorithmic2;
 
   procedure Algorithmic3
-             ( H : in out Standard_Complex_Matrices.Matrix;
-               c : in Complex_Number;
-               xps : in Standard_Integer_Vectors.Vector;
-               idx : in Standard_Integer_Vectors.Vector;
-               fac : in Standard_Integer_Vectors.Vector;
-               x : in Standard_Complex_Vectors.Vector;
-               pwt : in Standard_Complex_VecVecs.VecVec ) is
+              ( H : in out Standard_Complex_Matrices.Matrix;
+                c : in Complex_Number;
+                xps : in Standard_Integer_Vectors.Vector;
+                idx : in Standard_Integer_Vectors.Vector;
+                fac : in Standard_Integer_Vectors.Vector;
+                x : in Standard_Complex_Vectors.Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Deals with the special case of three variables,
   --   where at least one variable is raised to a power higher than 1.
 
   -- ON ENTRY :
-  --   H       the current Hessian matrix,
-  --           initialized with zero if called for the first time.
-  --   c       coefficient of the term in the circuit;
-  --   xps     exponents of all variables in the monomial;
-  --   idx     index of the participating variables;
-  --   fac     indices to the variables in the common factor;
-  --   x       values for all variables;
-  --   pwt     values of higher powers of x to evaluate the common factor.
+  --   H        the current Hessian matrix,
+  --            initialized with zero if called for the first time.
+  --   c        coefficient of the term in the circuit;
+  --   xps      exponents of all variables in the monomial;
+  --   idx      index of the participating variables;
+  --   fac      indices to the variables in the common factor;
+  --   x        values for all variables;
+  --   pwt      values of higher powers of x to evaluate the common factor.
 
   -- ON RETURN :
-  --   H       updated Hessian matrix, only for upper triangular part.
+  --   H        updated Hessian matrix, only for upper triangular part.
 
   -- REQUIRED : idx'last = 3 >= fac'last >= 1.
 
@@ -641,14 +641,101 @@ procedure ts_perfhess is
     end if;
   end Algorithmic3;
 
+  procedure Algorithmic4
+              ( H : in out Standard_Complex_Matrices.Matrix;
+                c : in Complex_Number;
+                xps : in Standard_Integer_Vectors.Vector;
+                idx : in Standard_Integer_Vectors.Vector;
+                fac : in Standard_Integer_Vectors.Vector;
+                x : in Standard_Complex_Vectors.Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Deals with the special case of four variables,
+  --   where at least one variable is raised to a power higher than 1.
+
+  -- ON ENTRY :
+  --   H        the current Hessian matrix,
+  --            initialized with zero if called for the first time.
+  --   c        coefficient of the term in the circuit;
+  --   xps      exponents of all variables in the monomial;
+  --   idx      index of the participating variables;
+  --   fac      indices to the variables in the common factor;
+  --   x        values for all variables;
+  --   pwt      values of higher powers of x to evaluate the common factor.
+
+  -- ON RETURN :
+  --   H        updated Hessian matrix, only for upper triangular part.
+
+  -- REQUIRED : idx'last = 4 >= fac'last >= 1.
+
+    m1 : integer32;
+    powfac : double_float; -- multiplier factor of two powers
+    acc : Complex_Number;
+    offdiagfac : Complex_Number; -- common off diagonal factor
+    ondiagfac : Complex_Number;  -- common on diagonal factor
+    fwd : Standard_Complex_Vectors.Vector(1..3);
+    bck : Standard_Complex_Vectors.Vector(1..2);
+
+  begin
+    offdiagfac := c; ondiagfac := c;  -- off/on diagonal factors
+    for i in fac'range loop
+      m1 := xps(fac(i));
+      if m1 = 2 then
+        offdiagfac := offdiagfac*x(fac(i));
+      elsif m1 = 3 then
+        offdiagfac := offdiagfac*(pwt(fac(i))(1));
+        ondiagfac := ondiagfac*x(fac(i));
+      else
+        offdiagfac := offdiagfac*(pwt(fac(i))(m1-2));
+        ondiagfac := ondiagfac*(pwt(fac(i))(m1-3));
+      end if;
+    end loop;
+   -- the off diagonal elements use forward and backward products
+    fwd(1) := x(idx(1))*x(idx(2));
+    fwd(2) := fwd(1)*x(idx(3)); fwd(3) := fwd(2)*x(idx(4));
+    bck(1) := x(idx(4))*x(idx(3)); bck(2) := bck(1)*x(idx(2));
+   -- the last element is a copy of fwd(1), with a multiplier factor
+    powfac := double_float(xps(idx(3))*xps(idx(4)));
+    H(idx(3),idx(4)) := H(idx(3),idx(4)) + offdiagfac*powfac*fwd(1);
+   -- the first element is a copy of bck(1), with a multiplier factor
+    powfac := double_float(xps(idx(1))*xps(idx(2)));
+    H(idx(1),idx(2)) := H(idx(1),idx(2)) + offdiagfac*powfac*bck(1);
+   -- the other off diagonal elements
+    acc := offdiagfac*x(idx(2));
+    powfac := double_float(xps(idx(1))*xps(idx(3)));
+    H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*powfac*x(idx(4));
+    powfac := double_float(xps(idx(1))*xps(idx(4)));
+    H(idx(1),idx(4)) := H(idx(1),idx(4)) + acc*powfac*x(idx(3));
+    acc := offdiagfac*x(idx(1));
+    powfac := double_float(xps(idx(2))*xps(idx(3)));
+    H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*powfac*x(idx(4));
+    powfac := double_float(xps(idx(2))*xps(idx(4)));
+    H(idx(2),idx(4)) := H(idx(2),idx(4)) + acc*powfac*x(idx(3));
+   -- compute the diagonal elements
+    for k in fac'range loop
+      m1 := xps(fac(k)); powfac := double_float(m1*(m1-1));
+      acc := powfac*ondiagfac; -- acc is the cofactor
+      for i in idx'range loop
+        if idx(i) /= fac(k) then -- skip the current factor
+          if xps(idx(i)) = 1 
+           then acc := acc*x(idx(i));
+           else acc := acc*(pwt(idx(i))(1));
+          end if;
+        end if;
+      end loop;
+      H(fac(k),fac(k)) := H(fac(k),fac(k)) + acc;
+    end loop;
+  end Algorithmic4;
+
   procedure Algorithmic
-             ( H : in out Standard_Complex_Matrices.Matrix;
-               c : in Complex_Number;
-               xps : in Standard_Integer_Vectors.Vector;
-               idx : in Standard_Integer_Vectors.Vector;
-               fac : in Standard_Integer_Vectors.Vector;
-               x : in Standard_Complex_Vectors.Vector;
-               pwt : in Standard_Complex_VecVecs.VecVec ) is
+              ( H : in out Standard_Complex_Matrices.Matrix;
+                c : in Complex_Number;
+                xps : in Standard_Integer_Vectors.Vector;
+                idx : in Standard_Integer_Vectors.Vector;
+                fac : in Standard_Integer_Vectors.Vector;
+                x : in Standard_Complex_Vectors.Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Applies algorithmic differentiation to compute the Hessian
@@ -683,7 +770,9 @@ procedure ts_perfhess is
       Algorithmic2(H,c,xps,idx,fac,x,pwt); -- two variable special case
     elsif sz = 3 then
       Algorithmic3(H,c,xps,idx,fac,x,pwt); -- three variable special case
-    else -- sz > 3
+    elsif sz = 4 then
+      Algorithmic4(H,c,xps,idx,fac,x,pwt); -- four variable special case
+    else -- sz > 4
       declare
         fwd : Standard_Complex_Vectors.Vector(1..sz-1);
         bck : Standard_Complex_Vectors.Vector(1..sz-2);
@@ -700,50 +789,41 @@ procedure ts_perfhess is
         H(idx(sz-1),idx(sz)) := H(idx(sz-1),idx(sz)) + c*fwd(sz-3);
        -- first element is copy of bck(sz-3), multiplied with c
         H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*bck(sz-3);
-        if sz = 4 then -- special case for all rows
-          acc := c*x(idx(2));
-          H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*x(idx(sz));
-          H(idx(1),idx(4)) := H(idx(1),idx(4)) + acc*x(idx(sz-1));
-          acc := c*x(idx(1));
-          H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*x(idx(sz));
-          H(idx(2),idx(4)) := H(idx(2),idx(4)) + acc*x(idx(sz-1));
-        else -- sz > 4
-         -- first row is special, starts with x(idx(2)) after diagonal
-          acc := c*x(idx(2));
-          H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*bck(sz-4);
-          for k in 4..sz-2 loop
+       -- first row is special, starts with x(idx(2)) after diagonal
+        acc := c*x(idx(2));
+        H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*bck(sz-4);
+        for k in 4..sz-2 loop
+          acc := acc*x(idx(k-1));
+          H(idx(1),idx(k)) := H(idx(1),idx(k)) + acc*bck(sz-k-1);
+        end loop;
+        acc := acc*x(idx(sz-2));
+        H(idx(1),idx(sz-1)) := H(idx(1),idx(sz-1)) + acc*x(idx(sz));
+        H(idx(1),idx(sz)) := H(idx(1),idx(sz)) + acc*x(idx(sz-1));
+       -- second row is special, starts with x(idx(1)) after diagonal
+        acc := c*x(idx(1));
+        H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*bck(sz-4);
+        for k in 4..sz-2 loop
+          acc := acc*x(idx(k-1));
+          H(idx(2),idx(k)) := H(idx(2),idx(k)) + acc*bck(sz-k-1);
+        end loop;
+        acc := acc*x(idx(sz-2));
+        H(idx(2),idx(sz-1)) := H(idx(2),idx(sz-1)) + acc*x(idx(sz));
+        H(idx(2),idx(sz)) := H(idx(2),idx(sz)) + acc*x(idx(sz-1));
+       -- the row with index sz-2 has a general formula
+        acc := c*fwd(sz-4);
+        H(idx(sz-2),idx(sz-1)) := H(idx(sz-2),idx(sz-1)) + acc*x(idx(sz));
+        H(idx(sz-2),idx(sz)) := H(idx(sz-2),idx(sz)) + acc*x(idx(sz-1));
+        for rw in 3..sz-3 loop  -- row rw starts with fwd(rw-2)
+          acc := c*fwd(rw-2);
+          H(idx(rw),idx(rw+1)) := H(idx(rw),idx(rw+1)) + acc*bck(sz-rw-2);
+          for k in rw+2..sz-2 loop
             acc := acc*x(idx(k-1));
-            H(idx(1),idx(k)) := H(idx(1),idx(k)) + acc*bck(sz-k-1);
+            H(idx(rw),idx(k)) := H(idx(rw),idx(k)) + acc*bck(sz-k-1);
           end loop;
           acc := acc*x(idx(sz-2));
-          H(idx(1),idx(sz-1)) := H(idx(1),idx(sz-1)) + acc*x(idx(sz));
-          H(idx(1),idx(sz)) := H(idx(1),idx(sz)) + acc*x(idx(sz-1));
-         -- second row is special, starts with x(idx(1)) after diagonal
-          acc := c*x(idx(1));
-          H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*bck(sz-4);
-          for k in 4..sz-2 loop
-            acc := acc*x(idx(k-1));
-            H(idx(2),idx(k)) := H(idx(2),idx(k)) + acc*bck(sz-k-1);
-          end loop;
-          acc := acc*x(idx(sz-2));
-          H(idx(2),idx(sz-1)) := H(idx(2),idx(sz-1)) + acc*x(idx(sz));
-          H(idx(2),idx(sz)) := H(idx(2),idx(sz)) + acc*x(idx(sz-1));
-         -- the row with index sz-2 has a general formula
-          acc := c*fwd(sz-4);
-          H(idx(sz-2),idx(sz-1)) := H(idx(sz-2),idx(sz-1)) + acc*x(idx(sz));
-          H(idx(sz-2),idx(sz)) := H(idx(sz-2),idx(sz)) + acc*x(idx(sz-1));
-          for rw in 3..sz-3 loop  -- row rw starts with fwd(rw-2)
-            acc := c*fwd(rw-2);
-            H(idx(rw),idx(rw+1)) := H(idx(rw),idx(rw+1)) + acc*bck(sz-rw-2);
-            for k in rw+2..sz-2 loop
-              acc := acc*x(idx(k-1));
-              H(idx(rw),idx(k)) := H(idx(rw),idx(k)) + acc*bck(sz-k-1);
-            end loop;
-            acc := acc*x(idx(sz-2));
-            H(idx(rw),idx(sz-1)) := H(idx(rw),idx(sz-1)) + acc*x(idx(sz));
-            H(idx(rw),idx(sz)) := H(idx(rw),idx(sz)) + acc*x(idx(sz-1));
-          end loop;
-        end if;
+          H(idx(rw),idx(sz-1)) := H(idx(rw),idx(sz-1)) + acc*x(idx(sz));
+          H(idx(rw),idx(sz)) := H(idx(rw),idx(sz)) + acc*x(idx(sz-1));
+        end loop;
       end;
     end if;
   end Algorithmic;
