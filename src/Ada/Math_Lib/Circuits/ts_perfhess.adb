@@ -390,7 +390,256 @@ procedure ts_perfhess is
     end if;
   end Algorithmic;
 
--- updating the Hessian for any monomial
+-- updating the Hessian for any monomials of small sizes
+
+  procedure Algorithmic1
+             ( H : in out Standard_Complex_Matrices.Matrix;
+               c : in Complex_Number;
+               xps : in Standard_Integer_Vectors.Vector;
+               idx : in Standard_Integer_Vectors.Vector;
+               fac : in Standard_Integer_Vectors.Vector;
+               x : in Standard_Complex_Vectors.Vector;
+               pwt : in Standard_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Deals with the special case of one variable raised to
+  --   some power higher than 1.
+
+  -- ON ENTRY :
+  --   H       the current Hessian matrix,
+  --           initialized with zero if called for the first time.
+  --   c       coefficient of the term in the circuit;
+  --   xps     exponents of all variables in the monomial;
+  --   idx     index of the participating variables;
+  --   fac     indices to the variables in the common factor;
+  --   x       values for all variables;
+  --   pwt     values of higher powers of x to evaluate the common factor.
+
+  -- ON RETURN :
+  --   H       updated Hessian matrix, only for upper triangular part.
+
+  -- REQUIRED : idx'last = fac'last = 1.
+
+    m1 : integer32;
+    powfac : double_float; -- multiplier factor of two powers
+
+  begin
+    m1 := xps(fac(1)); -- the monomial is c*x**m1, m1 >= 2.
+    powfac := double_float(m1*(m1-1));
+    if m1 = 2 then
+      H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*powfac;
+    elsif m1 = 3 then
+      H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*powfac*x(fac(1));
+    else -- m > 3, if m = 4, then x**2 at pwt(fac(1))(1)
+      H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*powfac*(pwt(fac(1))(m1-3));
+    end if;
+  end Algorithmic1;
+
+  procedure Algorithmic2
+             ( H : in out Standard_Complex_Matrices.Matrix;
+               c : in Complex_Number;
+               xps : in Standard_Integer_Vectors.Vector;
+               idx : in Standard_Integer_Vectors.Vector;
+               fac : in Standard_Integer_Vectors.Vector;
+               x : in Standard_Complex_Vectors.Vector;
+               pwt : in Standard_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Deals with the special case of two variables,
+  --   where at least one variable is raised to a power higher than 1.
+
+  -- ON ENTRY :
+  --   H       the current Hessian matrix,
+  --           initialized with zero if called for the first time.
+  --   c       coefficient of the term in the circuit;
+  --   xps     exponents of all variables in the monomial;
+  --   idx     index of the participating variables;
+  --   fac     indices to the variables in the common factor;
+  --   x       values for all variables;
+  --   pwt     values of higher powers of x to evaluate the common factor.
+
+  -- ON RETURN :
+  --   H       updated Hessian matrix, only for upper triangular part.
+
+  -- REQUIRED : idx'last = 2 >= fac'last >= 1.
+
+    m1,m2 : integer32;
+    powfac : double_float; -- multiplier factor of two powers
+    acc : Complex_Number;
+
+  begin
+    m1 := xps(fac(1)); powfac := double_float(m1*(m1-1));
+    if fac'last = 1 then -- the other variable has no higher power
+      if fac(1) = idx(1) -- do not forget to multiply with the other var
+       then acc := c*powfac*x(idx(2));
+       else acc := c*powfac*x(idx(1));
+      end if;
+    else -- the other variable appears with a higher power
+      m2 := xps(fac(2));
+      acc := c*powfac*pwt(fac(2))(m2-1);
+    end if;
+    if m1 = 2 then
+      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc;
+    elsif m1 = 3 then
+      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*x(fac(1));
+    else
+      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*(pwt(fac(1))(m1-3));
+    end if;
+    if fac'last = 1 then
+      powfac := double_float(m1);
+      if m1 = 2 then
+        H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*powfac*x(fac(1));
+      else
+        H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*powfac*(pwt(fac(1))(m1-2));
+      end if;
+    else
+      powfac := double_float(m2*(m2-1));
+      acc := c*powfac*(pwt(fac(1))(m1-1));
+      if m2 = 2 then
+        H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc;
+      elsif m2 = 3 then
+        H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*x(fac(2));
+      else
+        H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*(pwt(fac(2))(m2-3));
+      end if;
+      powfac := double_float(m1*m2);
+      acc := c*powfac;
+      if m1 = 2
+       then acc := acc*x(fac(1));
+       else acc := acc*(pwt(fac(1))(m1-2));
+      end if;
+      if m2 = 2
+       then acc := acc*x(fac(2));
+       else acc := acc*(pwt(fac(2))(m2-2));
+      end if;
+      H(idx(1),idx(2)) := H(idx(1),idx(2)) + acc;
+    end if;
+  end Algorithmic2;
+
+  procedure Algorithmic3
+             ( H : in out Standard_Complex_Matrices.Matrix;
+               c : in Complex_Number;
+               xps : in Standard_Integer_Vectors.Vector;
+               idx : in Standard_Integer_Vectors.Vector;
+               fac : in Standard_Integer_Vectors.Vector;
+               x : in Standard_Complex_Vectors.Vector;
+               pwt : in Standard_Complex_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Deals with the special case of three variables,
+  --   where at least one variable is raised to a power higher than 1.
+
+  -- ON ENTRY :
+  --   H       the current Hessian matrix,
+  --           initialized with zero if called for the first time.
+  --   c       coefficient of the term in the circuit;
+  --   xps     exponents of all variables in the monomial;
+  --   idx     index of the participating variables;
+  --   fac     indices to the variables in the common factor;
+  --   x       values for all variables;
+  --   pwt     values of higher powers of x to evaluate the common factor.
+
+  -- ON RETURN :
+  --   H       updated Hessian matrix, only for upper triangular part.
+
+  -- REQUIRED : idx'last = 3 >= fac'last >= 1.
+
+    m1,m2 : integer32;
+    powfac : double_float; -- multiplier factor of two powers
+    acc : Complex_Number;
+    offdiagfac : Complex_Number; -- common off diagonal factor
+    ondiagfac : Complex_Number;  -- common on diagonal factor
+
+  begin
+    offdiagfac := c; ondiagfac := c;  -- off/on diagonal factors
+    for i in fac'range loop
+      m1 := xps(fac(i));
+      if m1 = 2 then
+        offdiagfac := offdiagfac*x(fac(i));
+      elsif m1 = 3 then
+        offdiagfac := offdiagfac*(pwt(fac(i))(1));
+        ondiagfac := ondiagfac*x(fac(i));
+      else
+        offdiagfac := offdiagfac*(pwt(fac(i))(m1-2));
+        ondiagfac := ondiagfac*(pwt(fac(i))(m1-3));
+      end if;
+    end loop;
+   -- compute the off diagonal elements of the Hessian
+    powfac := double_float(xps(idx(1))*xps(idx(2)));
+    H(idx(1),idx(2)) := H(idx(1),idx(2)) + offdiagfac*powfac*x(idx(3));
+    powfac := double_float(xps(idx(1))*xps(idx(3)));
+    H(idx(1),idx(3)) := H(idx(1),idx(3)) + offdiagfac*powfac*x(idx(2));
+    powfac := double_float(xps(idx(2))*xps(idx(3)));
+    H(idx(2),idx(3)) := H(idx(2),idx(3)) + offdiagfac*powfac*x(idx(1));
+   -- ten cases for the on diagonal element of the Hessian
+    if fac'last = 3 then -- all variables raised to higher power
+      m1 := xps(fac(1)); powfac := double_float(m1*(m1-1));
+      acc := ondiagfac*(pwt(fac(2))(1))*(pwt(fac(3))(1));
+      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
+      m1 := xps(fac(2)); powfac := double_float(m1*(m1-1));
+      acc := ondiagfac*(pwt(fac(1))(1))*(pwt(fac(3))(1));
+      H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
+      m1 := xps(fac(3)); powfac := double_float(m1*(m1-1));
+      acc := ondiagfac*(pwt(fac(1))(1))*(pwt(fac(2))(1));
+      H(fac(3),fac(3)) := H(fac(3),fac(3)) + acc*powfac;
+    elsif fac'last = 1 then -- one variable raised to higher power
+      m1 := xps(fac(1)); powfac := double_float(m1*(m1-1));
+      if fac(1) = idx(1) then
+        acc := ondiagfac*x(idx(2))*x(idx(3));
+      elsif fac(1) = idx(2) then
+        acc := ondiagfac*x(idx(1))*x(idx(3));
+      else -- fac(1) = idx(3)
+        acc := ondiagfac*x(idx(1))*x(idx(2));
+      end if;
+      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
+    else -- fac'last = 2, two variables raised to higher power
+      m1 := xps(fac(1)); powfac := double_float(m1*(m1-1));
+      m2 := xps(fac(2));
+      if fac(1) = idx(1) then
+        if fac(2) = idx(2) then -- idx(3) has power 1
+          acc := ondiagfac*(pwt(fac(2))(1))*x(idx(3));
+          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
+          powfac := double_float(m2*(m2-1));
+          acc := ondiagfac*(pwt(fac(1))(1))*x(idx(3));
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
+        else -- idx(2) has power 1
+          acc := ondiagfac*x(idx(2))*(pwt(fac(2))(1));
+          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
+          powfac := double_float(m2*(m2-1));
+          acc := ondiagfac*x(idx(2))*(pwt(fac(1))(1));
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
+        end if;
+      elsif fac(1) = idx(2) then
+        if fac(2) = idx(1) then -- idx(3) has power 1
+          acc := ondiagfac*(pwt(fac(2))(1))*x(idx(3));
+          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
+          powfac := double_float(m2*(m2-1));
+          acc := ondiagfac*(pwt(fac(1))(1))*x(idx(3));
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
+        else -- idx(1) has power 1
+          acc := ondiagfac*x(idx(1))*(pwt(fac(2))(1));
+          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
+          powfac := double_float(m2*(m2-1));
+          acc := ondiagfac*x(idx(1))*(pwt(fac(1))(1));
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
+        end if;
+      else --  fac(1) = idx(3)
+        if fac(2) = idx(1) then -- idx(2) has power 1
+          acc := ondiagfac*(pwt(fac(2))(1))*x(idx(2));
+          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
+          powfac := double_float(m2*(m2-1));
+          acc := ondiagfac*(pwt(fac(1))(1))*x(idx(2));
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
+        else -- idx(1) has power 1
+          acc := ondiagfac*x(idx(1))*(pwt(fac(2))(1));
+          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
+          powfac := double_float(m2*(m2-1));
+          acc := ondiagfac*x(idx(1))*(pwt(fac(1))(1));
+          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
+        end if;
+      end if;
+    end if;
+  end Algorithmic3;
 
   procedure Algorithmic
              ( H : in out Standard_Complex_Matrices.Matrix;
@@ -422,76 +671,18 @@ procedure ts_perfhess is
   -- ON RETURN :
   --   H       updated Hessian matrix, only for upper triangular part.
 
-  -- REQUIRED : idx'last >= 2.
+  -- REQUIRED : idx'last >= fac'last >= 1.
 
     sz : constant integer32 := idx'last;
-    m,m1,m2 : integer32;
-    factor : double_float;
     acc : Complex_Number;
 
   begin
     if sz = 1 then
-      m := xps(fac(1)); -- monomial is c*x**m, m >= 2.
-      factor := double_float(m*(m-1));
-      if m = 2 then
-        H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*factor;
-      elsif m = 3 then
-        H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*factor*x(fac(1));
-      else -- m > 3, if m = 4, then x**2 at pwt(fac(1))(1)
-        H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*factor*(pwt(fac(1))(m-3));
-      end if;
-    elsif sz = 2 then -- fac'last >= 1
-      m := xps(fac(1)); factor := double_float(m*(m-1));
-      if fac'last = 1 then -- the other variable has no higher power
-        if fac(1) = idx(1)
-         then acc := c*factor*x(idx(2));
-         else acc := c*factor*x(idx(1));
-        end if;
-      else
-        m2 := xps(fac(2));
-        acc := c*factor*pwt(fac(2))(m2-1);
-      end if;
-      if m = 2 then
-        H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc;
-      elsif m = 3 then
-        H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*x(fac(1));
-      else
-        H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*(pwt(fac(1))(m-3));
-      end if;
-      if fac'last = 1 then
-        factor := double_float(m);
-        if m = 2 then
-          H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*factor*x(fac(1));
-        else
-          H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*factor*(pwt(fac(1))(m-2));
-        end if;
-      else
-        m := xps(fac(2)); factor := double_float(m*(m-1));
-        m1 := xps(fac(1));
-        acc := c*factor*(pwt(fac(1))(m1-1));
-        if m = 2 then
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc;
-        elsif m = 3 then
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*x(fac(2));
-        else
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*(pwt(fac(2))(m-3));
-        end if;
-        factor := double_float(m*m1);
-        acc := c*factor;
-        if m1 = 2
-         then acc := acc*x(fac(1));
-         else acc := acc*(pwt(fac(1))(m1-2));
-        end if;
-        if m = 2
-         then acc := acc*x(fac(2));
-         else acc := acc*(pwt(fac(2))(m-2));
-        end if;
-        H(idx(1),idx(2)) := H(idx(1),idx(2)) + acc;
-      end if;
+      Algorithmic1(H,c,xps,idx,fac,x,pwt); -- one variable special case
+    elsif sz = 2 then
+      Algorithmic2(H,c,xps,idx,fac,x,pwt); -- two variable special case
     elsif sz = 3 then
-      H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*x(idx(3));
-      H(idx(1),idx(3)) := H(idx(1),idx(3)) + c*x(idx(2));
-      H(idx(2),idx(3)) := H(idx(2),idx(3)) + c*x(idx(1));
+      Algorithmic3(H,c,xps,idx,fac,x,pwt); -- three variable special case
     else -- sz > 3
       declare
         fwd : Standard_Complex_Vectors.Vector(1..sz-1);

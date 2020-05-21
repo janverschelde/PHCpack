@@ -1,3 +1,6 @@
+Thu 21 May 2020 : defined procedures for the special cases of the Hessian
+  of a general circuit with higher powers.
+
 Wed 20 May 2020 : new package standard_circuit_makers with code from
   ts_perfade and ts_perfess.  Extended ts_perfhess with a procedure to
   work on random circuits with 0/1 exponents, moved the symbolic Hessian
