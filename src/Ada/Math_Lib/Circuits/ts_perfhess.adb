@@ -761,7 +761,6 @@ procedure ts_perfhess is
   -- REQUIRED : idx'last >= fac'last >= 1.
 
     sz : constant integer32 := idx'last;
-    acc : Complex_Number;
 
   begin
     if sz = 1 then
@@ -774,6 +773,11 @@ procedure ts_perfhess is
       Algorithmic4(H,c,xps,idx,fac,x,pwt); -- four variable special case
     else -- sz > 4
       declare
+        m1 : integer32;
+        powfac : double_float; -- multiplier factor of two powers
+        acc : Complex_Number;
+        offdiagfac : Complex_Number; -- common off diagonal factor
+        ondiagfac : Complex_Number;  -- common on diagonal factor
         fwd : Standard_Complex_Vectors.Vector(1..sz-1);
         bck : Standard_Complex_Vectors.Vector(1..sz-2);
       begin
@@ -785,45 +789,95 @@ procedure ts_perfhess is
         for k in 2..sz-2 loop
           bck(k) := bck(k-1)*x(idx(sz-k));
         end loop;
+        offdiagfac := c; ondiagfac := c;  -- off/on diagonal factors
+        for i in fac'range loop
+          m1 := xps(fac(i));
+          if m1 = 2 then
+            offdiagfac := offdiagfac*x(fac(i));
+          elsif m1 = 3 then
+            offdiagfac := offdiagfac*(pwt(fac(i))(1));
+            ondiagfac := ondiagfac*x(fac(i));
+          else
+            offdiagfac := offdiagfac*(pwt(fac(i))(m1-2));
+            ondiagfac := ondiagfac*(pwt(fac(i))(m1-3));
+          end if;
+        end loop;
+       -- the off diagonal elements use forward and backward products
        -- last element is copy of fwd(sz-3), multiplied with c
-        H(idx(sz-1),idx(sz)) := H(idx(sz-1),idx(sz)) + c*fwd(sz-3);
+        powfac := double_float(xps(idx(sz-1))*xps(idx(sz)));
+        H(idx(sz-1),idx(sz))
+          := H(idx(sz-1),idx(sz)) + offdiagfac*powfac*fwd(sz-3);
        -- first element is copy of bck(sz-3), multiplied with c
-        H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*bck(sz-3);
+        powfac := double_float(xps(idx(1))*xps(idx(2)));
+        H(idx(1),idx(2)) := H(idx(1),idx(2)) + offdiagfac*powfac*bck(sz-3);
        -- first row is special, starts with x(idx(2)) after diagonal
-        acc := c*x(idx(2));
-        H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*bck(sz-4);
+        acc := offdiagfac*x(idx(2));
+        powfac := double_float(xps(idx(1))*xps(idx(3)));
+        H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*powfac*bck(sz-4);
         for k in 4..sz-2 loop
           acc := acc*x(idx(k-1));
-          H(idx(1),idx(k)) := H(idx(1),idx(k)) + acc*bck(sz-k-1);
+          powfac := double_float(xps(idx(1))*xps(idx(k)));
+          H(idx(1),idx(k)) := H(idx(1),idx(k)) + acc*powfac*bck(sz-k-1);
         end loop;
         acc := acc*x(idx(sz-2));
-        H(idx(1),idx(sz-1)) := H(idx(1),idx(sz-1)) + acc*x(idx(sz));
-        H(idx(1),idx(sz)) := H(idx(1),idx(sz)) + acc*x(idx(sz-1));
+        powfac := double_float(xps(idx(1))*xps(idx(sz-1)));
+        H(idx(1),idx(sz-1)) := H(idx(1),idx(sz-1)) + acc*powfac*x(idx(sz));
+        powfac := double_float(xps(idx(1))*xps(idx(sz)));
+        H(idx(1),idx(sz)) := H(idx(1),idx(sz)) + acc*powfac*x(idx(sz-1));
        -- second row is special, starts with x(idx(1)) after diagonal
-        acc := c*x(idx(1));
-        H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*bck(sz-4);
+        acc := offdiagfac*x(idx(1));
+        powfac := double_float(xps(idx(2))*xps(idx(3)));
+        H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*powfac*bck(sz-4);
         for k in 4..sz-2 loop
           acc := acc*x(idx(k-1));
-          H(idx(2),idx(k)) := H(idx(2),idx(k)) + acc*bck(sz-k-1);
+          powfac := double_float(xps(idx(2))*xps(idx(k)));
+          H(idx(2),idx(k)) := H(idx(2),idx(k)) + acc*powfac*bck(sz-k-1);
         end loop;
         acc := acc*x(idx(sz-2));
-        H(idx(2),idx(sz-1)) := H(idx(2),idx(sz-1)) + acc*x(idx(sz));
-        H(idx(2),idx(sz)) := H(idx(2),idx(sz)) + acc*x(idx(sz-1));
+        powfac := double_float(xps(idx(2))*xps(idx(sz-1)));
+        H(idx(2),idx(sz-1)) := H(idx(2),idx(sz-1)) + acc*powfac*x(idx(sz));
+        powfac := double_float(xps(idx(2))*xps(idx(sz)));
+        H(idx(2),idx(sz)) := H(idx(2),idx(sz)) + acc*powfac*x(idx(sz-1));
        -- the row with index sz-2 has a general formula
-        acc := c*fwd(sz-4);
-        H(idx(sz-2),idx(sz-1)) := H(idx(sz-2),idx(sz-1)) + acc*x(idx(sz));
-        H(idx(sz-2),idx(sz)) := H(idx(sz-2),idx(sz)) + acc*x(idx(sz-1));
+        acc := offdiagfac*fwd(sz-4);
+        powfac := double_float(xps(idx(sz-2))*xps(idx(sz-1)));
+        H(idx(sz-2),idx(sz-1))
+          := H(idx(sz-2),idx(sz-1)) + acc*powfac*x(idx(sz));
+        powfac := double_float(xps(idx(sz-2))*xps(idx(sz)));
+        H(idx(sz-2),idx(sz)) := H(idx(sz-2),idx(sz)) + acc*powfac*x(idx(sz-1));
         for rw in 3..sz-3 loop  -- row rw starts with fwd(rw-2)
-          acc := c*fwd(rw-2);
-          H(idx(rw),idx(rw+1)) := H(idx(rw),idx(rw+1)) + acc*bck(sz-rw-2);
+          acc := offdiagfac*fwd(rw-2);
+          powfac := double_float(xps(idx(rw))*xps(idx(rw+1)));
+          H(idx(rw),idx(rw+1))
+            := H(idx(rw),idx(rw+1)) + acc*powfac*bck(sz-rw-2);
           for k in rw+2..sz-2 loop
             acc := acc*x(idx(k-1));
-            H(idx(rw),idx(k)) := H(idx(rw),idx(k)) + acc*bck(sz-k-1);
+            powfac := double_float(xps(idx(rw))*xps(idx(k)));
+            H(idx(rw),idx(k)) := H(idx(rw),idx(k)) + acc*powfac*bck(sz-k-1);
           end loop;
           acc := acc*x(idx(sz-2));
-          H(idx(rw),idx(sz-1)) := H(idx(rw),idx(sz-1)) + acc*x(idx(sz));
-          H(idx(rw),idx(sz)) := H(idx(rw),idx(sz)) + acc*x(idx(sz-1));
+          powfac := double_float(xps(idx(rw))*xps(idx(sz-1)));
+          H(idx(rw),idx(sz-1)) := H(idx(rw),idx(sz-1)) + acc*powfac*x(idx(sz));
+          powfac := double_float(xps(idx(rw))*xps(idx(sz)));
+          H(idx(rw),idx(sz)) := H(idx(rw),idx(sz)) + acc*powfac*x(idx(sz-1));
         end loop;
+       -- compute the diagonal elements
+        for k in fac'range loop
+          m1 := xps(fac(k)); powfac := double_float(m1*(m1-1));
+          acc := powfac*ondiagfac; -- acc is the cofactor
+          for i in idx'range loop
+            if idx(i) /= fac(k) then -- skip the current factor
+              if xps(idx(i)) = 1 
+               then acc := acc*x(idx(i));
+               else acc := acc*(pwt(idx(i))(1));
+              end if;
+            end if;
+          end loop;
+          H(fac(k),fac(k)) := H(fac(k),fac(k)) + acc;
+        end loop;
+       -- the above loop for the diagonal elements applies a loop
+       -- for the cofactor, a similar triple loop with forward, backward,
+       -- and cross porducts is possible for all fac'last cofactors
       end;
     end if;
   end Algorithmic;
