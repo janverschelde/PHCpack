@@ -164,6 +164,42 @@ package body Standard_Complex_Circuits is
 -- SINGULAR VALUE DECOMPOSITIONS :
 
   procedure Singular_Values
+              ( s : in out System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                svls : in Standard_Complex_VecVecs.VecVec ) is
+
+    info : integer32;
+
+  begin
+    Power_Table(s.mxe,x,s.pwt);
+    EvalDiff2(s.crc,x,s.yd,s.pwt,s.fx,s.jm,vh);
+    Standard_Complex_Singular_Values.SVD
+      (s.jm,s.dim,s.dim,svls(0).all,e,U,V,11,info);
+    for k in vh'range loop
+      Standard_Complex_Singular_Values.SVD
+        (vh(k).all,s.dim,s.dim,svls(k).all,e,U,V,11,info);
+    end loop;
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( s : in Link_to_System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                svls : in Standard_Complex_VecVecs.VecVec ) is
+  begin
+    if s /= null
+     then Singular_Values(s.all,x,vh,U,V,e,svls);
+    end if;
+  end Singular_Values;
+
+  procedure Singular_Values
               ( c : in Circuit;
                 x,yd : in Standard_Complex_Vectors.Link_to_Vector;
                 pwt : in Standard_Complex_VecVecs.VecVec;

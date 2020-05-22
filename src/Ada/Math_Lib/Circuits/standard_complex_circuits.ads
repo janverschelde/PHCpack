@@ -80,7 +80,7 @@ package Standard_Complex_Circuits is
   --   Returns a vector of square matrices of dimension dim,
   --   the returned vector has range 1..neq.
 
--- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
+-- ALGORITHMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
               ( s : in out System;
@@ -114,7 +114,8 @@ package Standard_Complex_Circuits is
                 vh : in Standard_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
-  --   Evaluates and differentiations the circuits in s at x.
+  --   Evaluates and differentiations the circuits in s at x,
+  --   and computes the values of all Hessian matrices at x.
 
   -- REQUIRED :
   --   All space for the power table and yd has been allocated.
@@ -179,6 +180,52 @@ package Standard_Complex_Circuits is
   --   vh       vector of evaluated Hessian matrices.
 
 -- SINGULAR VALUE DECOMPOSITIONS :
+
+  procedure Singular_Values
+              ( s : in out System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                svls : in Standard_Complex_VecVecs.VecVec );
+  procedure Singular_Values
+              ( s : in Link_to_System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                svls : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiations the circuits in s at x,
+  --   computes the values of all Hessian matrices at x,
+  --   computes all singular values of the Jacobian matrix
+  --   and of all Hessian matrices.
+
+  -- REQUIRED :
+  --   All space for the power table and yd has been allocated.
+
+  -- ON ENTRY :
+  --   s        properly defined and allocated system of circuits;
+  --   x        values for the variables in the system;
+  --   vh       space allocated for s.neq matrices,
+  --            all matrices have 1..dim for range(1) and range(2);
+  --   svls     vector of range 0..s.neq, with allocated space
+  --            for all vectors of singular values,
+  --            the range of s(k) is 1..s.dim+1.
+
+  -- ON RETURN :
+  --   s.pwt    power table updated for the values in x;
+  --   s.fx     function value of the circuits at x;
+  --   s.jm     the Jacobian matrix evaluated at x,
+  --            but destroyed by the SVD computation;
+  --   vh       vector of evaluated Hessian matrices,
+  --            by destroyed by the SVD computation;
+  --   svls     svls(0) contains the singular values of s.jm, and
+  --            svls(k) contains the singular values of vh(k),
+  --            for k in vh'range.
 
   procedure Singular_Values
               ( c : in Circuit;
