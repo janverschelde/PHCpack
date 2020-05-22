@@ -7,9 +7,11 @@ with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats;
 with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
@@ -134,6 +136,12 @@ package Evaluation_Differentiation_Errors is
   function Sum_of_Errors
              ( x,y : in Standard_Complex_Vectors.Vector )
              return double_float;
+  function Sum_of_Errors
+             ( x,y : in DoblDobl_Complex_Vectors.Vector )
+             return double_double;
+  function Sum_of_Errors
+             ( x,y : in QuadDobl_Complex_Vectors.Vector )
+             return quad_double;
 
   -- DESCRIPTION :
   --   Returns the sum of the component-wise differences between
@@ -144,6 +152,12 @@ package Evaluation_Differentiation_Errors is
   function Sum_of_Errors
              ( A,B : in Standard_Complex_Matrices.Matrix )
              return double_float;
+  function Sum_of_Errors
+             ( A,B : in DoblDobl_Complex_Matrices.Matrix )
+             return double_double;
+  function Sum_of_Errors
+             ( A,B : in QuadDobl_Complex_Matrices.Matrix )
+             return quad_double;
 
   -- DESCRIPTION :
   --   Returns the sum of the component-wise differences between

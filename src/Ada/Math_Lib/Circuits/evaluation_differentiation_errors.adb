@@ -412,12 +412,84 @@ package body Evaluation_Differentiation_Errors is
   end Sum_of_Errors;
 
   function Sum_of_Errors
+             ( x,y : in DoblDobl_Complex_Vectors.Vector )
+             return double_double is
+
+    use DoblDobl_Complex_numbers;
+
+    res : double_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      res := res + AbsVal(val);
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( x,y : in QuadDobl_Complex_Vectors.Vector )
+             return quad_double is
+
+    use QuadDobl_Complex_numbers;
+
+    res : quad_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in x'range loop
+      val := x(i) - y(i);
+      res := res + AbsVal(val);
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
              ( A,B : in Standard_Complex_Matrices.Matrix )
              return double_float is
 
     use Standard_Complex_numbers;
 
     res : double_float := 0.0;
+    val : Complex_Number;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        val := A(i,j) - B(i,j);
+        res := res + AbsVal(val);
+      end loop;
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( A,B : in DoblDobl_Complex_Matrices.Matrix )
+             return double_double is
+
+    use DoblDobl_Complex_numbers;
+
+    res : double_double := create(0.0);
+    val : Complex_Number;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        val := A(i,j) - B(i,j);
+        res := res + AbsVal(val);
+      end loop;
+    end loop;
+    return res;
+  end Sum_of_Errors;
+
+  function Sum_of_Errors
+             ( A,B : in QuadDobl_Complex_Matrices.Matrix )
+             return quad_double is
+
+    use QuadDobl_Complex_numbers;
+
+    res : quad_double := create(0.0);
     val : Complex_Number;
 
   begin

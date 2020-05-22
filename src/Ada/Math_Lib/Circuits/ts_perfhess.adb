@@ -4,8 +4,16 @@ with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
+with Double_Double_Numbers;               use Double_Double_Numbers;
+with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                 use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_io;         use DoblDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;         use QuadDobl_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
@@ -13,14 +21,34 @@ with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_VecVecs;
 with Standard_Random_Vectors;
+with DoblDobl_Random_Vectors;
+with QuadDobl_Random_Vectors;
 with Standard_Complex_Matrices;
-with Standard_Complex_Polynomials;        use Standard_Complex_Polynomials;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;     use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Functions;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials_io;     use DoblDobl_Complex_Polynomials_io;
+with DoblDobl_Complex_Poly_Functions;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials_io;     use QuadDobl_Complex_Polynomials_io;
+with QuadDobl_Complex_Poly_Functions;
 with Evaluation_Differentiation_Errors;
 with Standard_Complex_Circuits;
+with DoblDobl_Complex_Circuits;
+with QuadDobl_Complex_Circuits;
 with Standard_Circuit_Makers;
+with DoblDobl_Circuit_Makers;
+with QuadDobl_Circuit_Makers;
 with Standard_Hessian_Updaters;
 
 procedure ts_perfhess is
@@ -29,12 +57,15 @@ procedure ts_perfhess is
 --   Development of better algorithms to compute Hessians.
 
   function Symbolic
-             ( c : Complex_Number; x : Standard_Complex_Vectors.Vector )
+             ( c : Standard_Complex_Numbers.Complex_Number;
+               x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
   --   Computes the Hessian matrix of the product of the variables in x,
   --   multiplied with the coefficient c, symbolically, for testing purposes.
+
+    use Standard_Complex_Polynomials;
 
     res : Standard_Complex_Matrices.Matrix(x'range,x'range);
     p : Poly;
@@ -51,7 +82,7 @@ procedure ts_perfhess is
   end Symbolic;
 
   function Symbolic
-             ( c : Complex_Number;
+             ( c : Standard_Complex_Numbers.Complex_Number;
                idx : Standard_Integer_Vectors.Vector;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Matrices.Matrix is
@@ -60,6 +91,8 @@ procedure ts_perfhess is
   --   Computes the Hessian matrix of the product of the variables in x,
   --   with indices of the participating variables in the product in idx,
   --   multiplied with the coefficient c, symbolically, for testing purposes.
+
+    use Standard_Complex_Polynomials;
 
     res : Standard_Complex_Matrices.Matrix(x'range,x'range);
     p : Poly;
@@ -81,7 +114,8 @@ procedure ts_perfhess is
 -- code for the Hessian of one product :
 
   function Algorithmic
-             ( c : Complex_Number; x : Standard_Complex_Vectors.Vector )
+             ( c : Standard_Complex_Numbers.Complex_Number;
+               x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
@@ -92,6 +126,8 @@ procedure ts_perfhess is
   --   These products then can be used to compute the Hessian.
 
   -- REQUIRED : dim >= 2, otherwise zero Hessian.
+
+    use Standard_Complex_Numbers;
 
     dim : constant integer32 := x'last;
     res : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -176,7 +212,7 @@ procedure ts_perfhess is
 -- code for the Hession of one indexed product
 
   function Algorithmic
-             ( c : Complex_Number;
+             ( c : Standard_Complex_Numbers.Complex_Number;
                idx : Standard_Integer_Vectors.Vector;
                x : Standard_Complex_Vectors.Vector )
              return Standard_Complex_Matrices.Matrix is
@@ -190,6 +226,8 @@ procedure ts_perfhess is
   --   These products then can be used to compute the Hessian.
 
   -- REQUIRED : dim >= 2, otherwise zero Hessian.
+
+    use Standard_Complex_Numbers;
 
     dim : constant integer32 := x'last;
     size : constant integer32 := idx'last;
@@ -299,7 +337,7 @@ procedure ts_perfhess is
 
   procedure Algorithmic
              ( H : in out Standard_Complex_Matrices.Matrix;
-               c : in Complex_Number;
+               c : in Standard_Complex_Numbers.Complex_Number;
                idx : in Standard_Integer_Vectors.Vector;
                x : in Standard_Complex_Vectors.Vector ) is
 
@@ -322,6 +360,8 @@ procedure ts_perfhess is
   --   H       updated Hessian matrix, only for upper triangular part.
 
   -- REQUIRED : idx'last >= 2, otherwise zero Hessian.
+
+    use Standard_Complex_Numbers;
 
     sz : constant integer32 := idx'last;
     fwd : Standard_Complex_Vectors.Vector(1..sz-1);
@@ -399,7 +439,7 @@ procedure ts_perfhess is
 
   procedure Algorithmic
               ( H : in out Standard_Complex_Matrices.Matrix;
-                c : in Complex_Number;
+                c : in Standard_Complex_Numbers.Complex_Number;
                 xps : in Standard_Integer_Vectors.Vector;
                 idx : in Standard_Integer_Vectors.Vector;
                 fac : in Standard_Integer_Vectors.Vector;
@@ -428,6 +468,8 @@ procedure ts_perfhess is
   --   H       updated Hessian matrix, only for upper triangular part.
 
   -- REQUIRED : idx'last >= fac'last >= 1.
+
+    use Standard_Complex_Numbers;
 
     sz : constant integer32 := idx'last;
 
@@ -567,7 +609,7 @@ procedure ts_perfhess is
   begin
     for i in 1..dim loop
       for j in 1..dim loop
-        res(i,j) := Create(0.0);
+        res(i,j) := Standard_Complex_Numbers.Create(0.0);
       end loop;
     end loop;
     for k in 1..c.nbr loop
@@ -604,7 +646,7 @@ procedure ts_perfhess is
   begin
     for i in 1..dim loop
       for j in 1..dim loop
-        res(i,j) := Create(0.0);
+        res(i,j) := Standard_Complex_Numbers.Create(0.0);
       end loop;
     end loop;
     for k in 1..c.nbr loop
@@ -644,6 +686,8 @@ procedure ts_perfhess is
   --   These products then can be used to compute the Hessian.
 
   -- REQUIRED : dim > 2.
+
+    use Standard_Complex_Numbers;
 
     c : constant Complex_Number := Standard_Random_Numbers.Random1;
     x : constant Standard_Complex_Vectors.Vector(1..dim)
@@ -714,11 +758,12 @@ procedure ts_perfhess is
     put("Sum of errors :"); put(err,3); new_line;
   end Test_Circuit;
 
-  procedure Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
+  procedure Standard_Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random circuit with dim variables, nbr of terms,
-  --   and highest power pwr, to test the computation of the Hessian.
+  --   and highest power pwr, to test the computation of the Hessian,
+  --   in standard double precision.
 
     c : constant Standard_Complex_Circuits.Circuit
       := Standard_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
@@ -775,7 +820,123 @@ procedure ts_perfhess is
       put_line("The algorithmically computed function value :");
       put(yd(0)); new_line;
     end if;
-  end Test_Power_Circuit;
+  end Standard_Test_Power_Circuit;
+
+  procedure DoblDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with dim variables, nbr of terms,
+  --   and highest power pwr, to test the computation of the Hessian,
+  --   in double double precision.
+
+    c : constant DoblDobl_Complex_Circuits.Circuit
+      := DoblDobl_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
+    p : constant DoblDobl_Complex_Polynomials.Poly
+      := DoblDobl_Circuit_Makers.Make_Polynomial(c,false);
+    x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,dim);
+    xv : constant DoblDobl_Complex_Vectors.Link_to_Vector
+       := new DoblDobl_Complex_Vectors.Vector'(x);
+    h0 : constant DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+       := DoblDobl_Circuit_Makers.Hessian(p,x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant DoblDobl_Complex_VecVecs.VecVec(x'range)
+        := DoblDobl_Complex_Circuits.Allocate(mxe);
+    g : DoblDobl_Complex_Vectors.Vector(1..dim);
+    z : DoblDobl_Complex_Numbers.Complex_Number;
+    y : constant DoblDobl_Complex_Vectors.Vector(0..dim)
+      := (0..dim => DoblDobl_Complex_Numbers.Create(integer(0)));
+    yd : constant DoblDobl_Complex_Vectors.Link_to_Vector
+       := new DoblDobl_Complex_Vectors.Vector'(y);
+    h2 : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    err : double_double;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("The polynomial : "); put(p); new_line;
+    put_line("The Hessian computed symbolically :");
+    DoblDobl_Circuit_Makers.Write_Matrix(h0);
+    put_line("The Hessian computed algorithmically :");
+    DoblDobl_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    DoblDobl_Complex_Circuits.Speel(c,xv,yd,pwt,h2);
+    DoblDobl_Circuit_Makers.Write_Matrix(h2);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+    put("Sum of errors : "); put(err,3); new_line;
+    new_line;
+    put("Compare gradients ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("The algorithmically computed gradient :");
+      put_line(yd(1..yd'last));
+      g := DoblDobl_Circuit_Makers.Gradient(p,x);
+      put_line("The symbolically computed gradient :"); put_line(g);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,yd(1..dim));
+      put("Sum of errors : "); put(err,3); new_line;
+      z := DoblDobl_Complex_Poly_Functions.Eval(p,x);
+      put_line("The symbolically computed function value :");
+      put(z); new_line;
+      put_line("The algorithmically computed function value :");
+      put(yd(0)); new_line;
+    end if;
+  end DoblDobl_Test_Power_Circuit;
+
+  procedure QuadDobl_Test_Power_Circuit ( dim,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random circuit with dim variables, nbr of terms,
+  --   and highest power pwr, to test the computation of the Hessian,
+  --   in double double precision.
+
+    c : constant QuadDobl_Complex_Circuits.Circuit
+      := QuadDobl_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
+    p : constant QuadDobl_Complex_Polynomials.Poly
+      := QuadDobl_Circuit_Makers.Make_Polynomial(c,false);
+    x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
+      := QuadDobl_Random_Vectors.Random_Vector(1,dim);
+    xv : constant QuadDobl_Complex_Vectors.Link_to_Vector
+       := new QuadDobl_Complex_Vectors.Vector'(x);
+    h0 : constant QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+       := QuadDobl_Circuit_Makers.Hessian(p,x);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant QuadDobl_Complex_VecVecs.VecVec(x'range)
+        := QuadDobl_Complex_Circuits.Allocate(mxe);
+    g : QuadDobl_Complex_Vectors.Vector(1..dim);
+    z : QuadDobl_Complex_Numbers.Complex_Number;
+    y : constant QuadDobl_Complex_Vectors.Vector(0..dim)
+      := (0..dim => QuadDobl_Complex_Numbers.Create(integer(0)));
+    yd : constant QuadDobl_Complex_Vectors.Link_to_Vector
+       := new QuadDobl_Complex_Vectors.Vector'(y);
+    h2 : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    err : quad_double;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("The polynomial : "); put(p); new_line;
+    put_line("The Hessian computed symbolically :");
+    QuadDobl_Circuit_Makers.Write_Matrix(h0);
+    put_line("The Hessian computed algorithmically :");
+    QuadDobl_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    QuadDobl_Complex_Circuits.Speel(c,xv,yd,pwt,h2);
+    QuadDobl_Circuit_Makers.Write_Matrix(h2);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+    put("Sum of errors : "); put(err,3); new_line;
+    new_line;
+    put("Compare gradients ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("The algorithmically computed gradient :");
+      put_line(yd(1..yd'last));
+      g := QuadDobl_Circuit_Makers.Gradient(p,x);
+      put_line("The symbolically computed gradient :"); put_line(g);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,yd(1..dim));
+      put("Sum of errors : "); put(err,3); new_line;
+      z := QuadDobl_Complex_Poly_Functions.Eval(p,x);
+      put_line("The symbolically computed function value :");
+      put(z); new_line;
+      put_line("The algorithmically computed function value :");
+      put(yd(0)); new_line;
+    end if;
+  end QuadDobl_Test_Power_Circuit;
 
   procedure Main is
 
@@ -791,8 +952,11 @@ procedure ts_perfhess is
     put_line("MENU to test the algorithmic Hessian computations :");
     put_line("  0. on a product of variables");
     put_line("  1. on a random circuit");
-    put_line("  2. on a random general circuit, with higher powers");
-    put("Type 0, 1, or 2 to select the test : "); Ask_Alternative(ans,"012");
+    put_line("  2. hardware precision random general circuit");
+    put_line("  3. double double precision random general circuit");
+    put_line("  4. quad double precision random general circuit");
+    put("Type 0, 1, 2, 3, or 4 to select the test : ");
+    Ask_Alternative(ans,"01234");
     case ans is
       when '0' =>
         new_line;
@@ -806,7 +970,7 @@ procedure ts_perfhess is
           put("Give the dimension (> "); put(size,1); put(") : "); get(dim);
           Test_Product(dim,size);
         end if;
-      when '1' | '2' =>
+      when '1' | '2' | '3' | '4' =>
         new_line;
         put("Give the dimension : "); get(dim);
         put("Give the number of terms : "); get(nbr);
@@ -814,7 +978,12 @@ procedure ts_perfhess is
           Test_Circuit(dim,nbr);
         else
           put("Give the highest power : "); get(pwr);
-          Test_Power_Circuit(dim,nbr,pwr);
+          case ans is
+            when '2' => Standard_Test_Power_Circuit(dim,nbr,pwr);
+            when '3' => DoblDobl_Test_Power_Circuit(dim,nbr,pwr);
+            when '4' => QuadDobl_Test_Power_Circuit(dim,nbr,pwr);
+            when others => null;
+          end case;
         end if;
       when others => null;
     end case;

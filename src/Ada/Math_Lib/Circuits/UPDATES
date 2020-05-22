@@ -4,6 +4,10 @@ Thu 21 May 2020 : defined procedures for the special cases of the Hessian
   Added the general case of the Hessian computation to ts_perfhess.
   New package standard_hessian_updaters, with code from ts_perfhess,
   used to update standard_complex_circuits, modified ts_perfade.
+  Versions for double double and quad double precision lead to new packages:
+  {dobldobl,quaddobl}_{circuit_makers,complex_circuits,hessian_updaters},
+  with added functions in evaluation_differentiation_errors, and added
+  test procedures in ts_perfhess.
 
 Wed 20 May 2020 : new package standard_circuit_makers with code from
   ts_perfade and ts_perfess.  Extended ts_perfhess with a procedure to

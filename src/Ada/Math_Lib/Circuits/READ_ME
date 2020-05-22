@@ -88,9 +88,15 @@ ts_shiftcnv                        : test on shifting coefficients
 ts_perfconv                        : test on performance and convolutions
 ts_perfcirc                        : test performance of splitted circuits
 standard_hessian_updaters          : update procedures for Hessian matrices
+dobldobl_hessian_updaters          : dobldobl updates for Hessian matrices
+quaddobl_hessian_updaters          : quaddobl updates for Hessian matrices
 standard_complex_circuits          : development code for correctness tests
+dobldobl_complex_circuits          : double double complex circuits
+quaddobl_complex_circuits          : quad double complex circuits
 standard_coefficient_circuits      : better performing algo diff eval
-standard_circuit_makers            : utilities for testing
+standard_circuit_makers            : standard precision testing utilities
+dobldobl_circuit_makers            : double double precision testing utilities
+quaddobl_circuit_makers            : quad double precision testing utilities
 ts_perfade                         : test performance of algo diff eval
 ts_perfhess                        : test on better Hessian computation
 -------------------------------------------------------------------------------
