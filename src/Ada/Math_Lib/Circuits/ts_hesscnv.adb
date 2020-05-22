@@ -14,10 +14,17 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
+with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_VecVecs;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
 with Standard_Random_Vectors;
@@ -42,6 +49,9 @@ with QuadDobl_Speelpenning_Convolutions;
 with Series_Polynomial_Gradients;        use Series_Polynomial_Gradients;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Hessian_Convolution_Circuits;
+with Standard_Complex_Circuits;
+with DoblDobl_Complex_Circuits;
+with QuadDobl_Complex_Circuits;
 
 procedure ts_hesscnv is
 
@@ -91,6 +101,201 @@ procedure ts_hesscnv is
     put_line("The value computed via symbolic differentiation :");
     put(eva.cff(0)); new_line;
   end Standard_Test;
+
+  function Make ( c : Standard_Speelpenning_Convolutions.Circuit )
+                return Standard_Complex_Circuits.Circuit is
+
+  -- DESCRIPTION :
+  --   Returns the equivalent circuit, using the leading coefficients
+  --   in c as the coefficients in the returned circuit.
+
+    res : Standard_Complex_Circuits.Circuit(c.nbr)
+        := Standard_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use Standard_Complex_Vectors;
+
+  begin
+    res.dim := c.dim;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    for k in c.cff'range loop
+      res.cff(k) := c.cff(k)(0);
+    end loop;
+    if c.cst = null
+     then res.cst := Standard_Complex_Numbers.Create(0.0);
+     else res.cst := c.cst(0);
+    end if;
+    return res;
+  end Make;
+
+  function Make ( c : DoblDobl_Speelpenning_Convolutions.Circuit )
+                return DoblDobl_Complex_Circuits.Circuit is
+
+  -- DESCRIPTION :
+  --   Returns the equivalent circuit, using the leading coefficients
+  --   in c as the coefficients in the returned circuit.
+
+    res : DoblDobl_Complex_Circuits.Circuit(c.nbr)
+        := DoblDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use DoblDobl_Complex_Vectors;
+
+  begin
+    res.dim := c.dim;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    for k in c.cff'range loop
+      res.cff(k) := c.cff(k)(0);
+    end loop;
+    if c.cst = null
+     then res.cst := DoblDobl_Complex_Numbers.Create(integer(0));
+     else res.cst := c.cst(0);
+    end if;
+    return res;
+  end Make;
+
+  function Make ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+                return QuadDobl_Complex_Circuits.Circuit is
+
+  -- DESCRIPTION :
+  --   Returns the equivalent circuit, using the leading coefficients
+  --   in c as the coefficients in the returned circuit.
+
+    res : QuadDobl_Complex_Circuits.Circuit(c.nbr)
+        := QuadDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use QuadDobl_Complex_Vectors;
+
+  begin
+    res.dim := c.dim;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    for k in c.cff'range loop
+      res.cff(k) := c.cff(k)(0);
+    end loop;
+    if c.cst = null
+     then res.cst := QuadDobl_Complex_Numbers.Create(integer(0));
+     else res.cst := c.cst(0);
+    end if;
+    return res;
+  end Make;
+
+  procedure Standard_SVD_Test ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Uses the dimension, degree, number of terms, and largest power
+  --   to generate a random circuit for testing in double precision.
+  --   This test checks whether the singular values computed by the
+  --   new Complex_Circuits match the singular values computed by
+  --   the procedures in the Hession_Convolution_Circuits.
+
+    use Standard_Speelpenning_Convolutions;
+
+    c : constant Standard_Speelpenning_Convolutions.Circuit
+                   (nbr,dim,dim-1,dim-2)
+      := Standard_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+    c2 : constant Standard_Complex_Circuits.Circuit := Make(c);
+    x : constant Standard_Complex_Vectors.Vector(1..dim)
+      := Standard_Random_Vectors.Random_Vector(1,dim);
+    xv : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(x);
+    y : constant Standard_Complex_Vectors.Vector(0..dim)
+      := (0..dim => Standard_Complex_Numbers.Create(0.0));
+    yd : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(y);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant Standard_Complex_VecVecs.VecVec(1..dim)
+        := Standard_Complex_Circuits.Allocate(mxe);
+    A,U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    e : Standard_Complex_Vectors.Vector(1..dim);
+    s,s2 : Standard_Complex_Vectors.Vector(1..dim+1);
+
+  begin
+    Hessian_Convolution_Circuits.Singular_Values(c,x,A,U,V,e,s);
+    put_line("The singular values :"); put_line(s(1..dim));
+    Standard_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    Standard_Complex_Circuits.Singular_Values(c2,xv,yd,pwt,A,U,V,e,s2);
+    put_line("Recomputed singular values :"); put_line(s2(1..dim));
+  end Standard_SVD_Test;
+
+  procedure DoblDobl_SVD_Test ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Uses the dimension, degree, number of terms, and largest power to
+  --   generate a random circuit for testing in double double precision.
+  --   This test checks whether the singular values computed by the
+  --   new Complex_Circuits match the singular values computed by
+  --   the procedures in the Hession_Convolution_Circuits.
+
+    use DoblDobl_Speelpenning_Convolutions;
+
+    c : constant DoblDobl_Speelpenning_Convolutions.Circuit
+                   (nbr,dim,dim-1,dim-2)
+      := DoblDobl_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+    c2 : constant DoblDobl_Complex_Circuits.Circuit := Make(c);
+    x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,dim);
+    xv : constant DoblDobl_Complex_Vectors.Link_to_Vector
+       := new DoblDobl_Complex_Vectors.Vector'(x);
+    y : constant DoblDobl_Complex_Vectors.Vector(0..dim)
+      := (0..dim => DoblDobl_Complex_Numbers.Create(integer(0)));
+    yd : constant DoblDobl_Complex_Vectors.Link_to_Vector
+       := new DoblDobl_Complex_Vectors.Vector'(y);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
+        := DoblDobl_Complex_Circuits.Allocate(mxe);
+    A,U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    e : DoblDobl_Complex_Vectors.Vector(1..dim);
+    s,s2 : DoblDobl_Complex_Vectors.Vector(1..dim+1);
+
+  begin
+    Hessian_Convolution_Circuits.Singular_Values(c,x,A,U,V,e,s);
+    put_line("The singular values :"); put_line(s(1..dim));
+    DoblDobl_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    DoblDobl_Complex_Circuits.Singular_Values(c2,xv,yd,pwt,A,U,V,e,s2);
+    put_line("Recomputed singular values :"); put_line(s2(1..dim));
+  end DoblDobl_SVD_Test;
+
+  procedure QuadDobl_SVD_Test ( dim,deg,nbr,pwr : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Uses the dimension, degree, number of terms, and largest power to
+  --   generate a random circuit for testing in double double precision.
+  --   This test checks whether the singular values computed by the
+  --   new Complex_Circuits match the singular values computed by
+  --   the procedures in the Hession_Convolution_Circuits.
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    c : constant QuadDobl_Speelpenning_Convolutions.Circuit
+                   (nbr,dim,dim-1,dim-2)
+      := QuadDobl_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+    c2 : constant QuadDobl_Complex_Circuits.Circuit := Make(c);
+    x : constant QuadDobl_Complex_Vectors.Vector(1..dim)
+      := QuadDobl_Random_Vectors.Random_Vector(1,dim);
+    xv : constant QuadDobl_Complex_Vectors.Link_to_Vector
+       := new QuadDobl_Complex_Vectors.Vector'(x);
+    y : constant QuadDobl_Complex_Vectors.Vector(0..dim)
+      := (0..dim => QuadDobl_Complex_Numbers.Create(integer(0)));
+    yd : constant QuadDobl_Complex_Vectors.Link_to_Vector
+       := new QuadDobl_Complex_Vectors.Vector'(y);
+    mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
+    pwt : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
+        := QuadDobl_Complex_Circuits.Allocate(mxe);
+    A,U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+    e : QuadDobl_Complex_Vectors.Vector(1..dim);
+    s,s2 : QuadDobl_Complex_Vectors.Vector(1..dim+1);
+
+  begin
+    Hessian_Convolution_Circuits.Singular_Values(c,x,A,U,V,e,s);
+    put_line("The singular values :"); put_line(s(1..dim));
+    QuadDobl_Complex_Circuits.Power_Table(mxe,xv,pwt);
+    QuadDobl_Complex_Circuits.Singular_Values(c2,xv,yd,pwt,A,U,V,e,s2);
+    put_line("Recomputed singular values :"); put_line(s2(1..dim));
+  end QuadDobl_SVD_Test;
 
   procedure DoblDobl_Test ( dim,deg,nbr,pwr : in integer32 ) is
 
@@ -359,12 +564,24 @@ procedure ts_hesscnv is
         when others => null;
       end case;
     else
-      case precision is
-        when '0' => Standard_Test(dim,deg,nbr,pwr);
-        when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
-        when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
-        when others => null;
-      end case;
+      new_line;
+      put("Test Singular Value Decomposition ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        case precision is
+          when '0' => Standard_SVD_Test(dim,deg,nbr,pwr);
+          when '1' => DoblDobl_SVD_Test(dim,deg,nbr,pwr);
+          when '2' => QuadDobl_SVD_Test(dim,deg,nbr,pwr);
+          when others => null;
+        end case;
+      else
+        case precision is
+          when '0' => Standard_Test(dim,deg,nbr,pwr);
+          when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
+          when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
+          when others => null;
+        end case;
+      end if;
     end if;
   end Main;
 

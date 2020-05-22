@@ -80,7 +80,55 @@ package QuadDobl_Complex_Circuits is
   --   Returns a vector of square matrices of dimension dim,
   --   the returned vector has range 1..neq.
 
--- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
+-- SINGULAR VALUE DECOMPOSITIONS :
+
+  procedure Singular_Values
+              ( c : in Circuit;
+                x,yd : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                pwt : in QuadDobl_Complex_VecVecs.VecVec;
+                A : out QuadDobl_Complex_Matrices.Matrix;
+                U : out QuadDobl_Complex_Matrices.Matrix;
+                V : out QuadDobl_Complex_Matrices.Matrix;
+                e : out QuadDobl_Complex_Vectors.Vector;
+                s : out QuadDobl_Complex_Vectors.Vector );
+  procedure Singular_Values
+              ( c : in Link_to_Circuit;
+                x,yd : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                pwt : in QuadDobl_Complex_VecVecs.VecVec;
+                A : out QuadDobl_Complex_Matrices.Matrix;
+                U : out QuadDobl_Complex_Matrices.Matrix;
+                V : out QuadDobl_Complex_Matrices.Matrix;
+                e : out QuadDobl_Complex_Vectors.Vector;
+                s : out QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates the circuit c at x, computes the Hessian matrix A,
+  --   and computes the singular value decomposition of A.
+
+  -- REQUIRED :
+  --   x'range = 1..c.dim, yd'range = 0..c.dim,
+  --   pwt'range = x'range, pwt(k)'range extends to the maximal exponent
+  --   of the k-th variable in the circuit,
+  --   A'range(1) = A'range(2) = x'range,
+  --   U'range(1) = U'range(2) = x'range, V'range(1) = V'range(2) = x'range,
+  --   e'range = 1..c.dim, s'range = 1..c.dim+1.
+
+  -- ON ENTRY :
+  --   c        a circuit, properly defined and allocated;
+  --   x        a vector of values for the variables;
+  --   yd       work space for the function value and gradient,
+  --            of range 0..dim, where dim = x'last;
+  --   pwt      power table defined and computed for x.
+
+  -- ON RETURN :
+  --   A        the Hessian matrix of c at x, 
+  --            however, its values are destroyed by the SVD;
+  --   U        the U matrix in the SVD of A;
+  --   V        the V matrix in the SVD of A;
+  --   e        contains error information on the SVD computation;
+  --   s        the first c.dim entries are the singular values of A.
+
+-- ALGORITHMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
               ( s : in out System;

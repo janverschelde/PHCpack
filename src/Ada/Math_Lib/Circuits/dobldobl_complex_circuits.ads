@@ -178,7 +178,55 @@ package DoblDobl_Complex_Circuits is
   --   jm       matrix of partial derivatives;
   --   vh       vector of evaluated Hessian matrices.
 
--- ALGORITMIC DIFFERENTIATION AND EVALUATION OF ONE CIRCUIT :
+-- SINGULAR VALUE DECOMPOSITIONS :
+
+  procedure Singular_Values
+              ( c : in Circuit;
+                x,yd : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                pwt : in DoblDobl_Complex_VecVecs.VecVec;
+                A : out DoblDobl_Complex_Matrices.Matrix;
+                U : out DoblDobl_Complex_Matrices.Matrix;
+                V : out DoblDobl_Complex_Matrices.Matrix;
+                e : out DoblDobl_Complex_Vectors.Vector;
+                s : out DoblDobl_Complex_Vectors.Vector );
+  procedure Singular_Values
+              ( c : in Link_to_Circuit;
+                x,yd : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                pwt : in DoblDobl_Complex_VecVecs.VecVec;
+                A : out DoblDobl_Complex_Matrices.Matrix;
+                U : out DoblDobl_Complex_Matrices.Matrix;
+                V : out DoblDobl_Complex_Matrices.Matrix;
+                e : out DoblDobl_Complex_Vectors.Vector;
+                s : out DoblDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates the circuit c at x, computes the Hessian matrix A,
+  --   and computes the singular value decomposition of A.
+
+  -- REQUIRED :
+  --   x'range = 1..c.dim, yd'range = 0..c.dim,
+  --   pwt'range = x'range, pwt(k)'range extends to the maximal exponent
+  --   of the k-th variable in the circuit,
+  --   A'range(1) = A'range(2) = x'range,
+  --   U'range(1) = U'range(2) = x'range, V'range(1) = V'range(2) = x'range,
+  --   e'range = 1..c.dim, s'range = 1..c.dim+1.
+
+  -- ON ENTRY :
+  --   c        a circuit, properly defined and allocated;
+  --   x        a vector of values for the variables;
+  --   yd       work space for the function value and gradient,
+  --            of range 0..dim, where dim = x'last;
+  --   pwt      power table defined and computed for x.
+
+  -- ON RETURN :
+  --   A        the Hessian matrix of c at x, 
+  --            however, its values are destroyed by the SVD;
+  --   U        the U matrix in the SVD of A;
+  --   V        the V matrix in the SVD of A;
+  --   e        contains error information on the SVD computation;
+  --   s        the first c.dim entries are the singular values of A.
+
+-- ALGORITHMIC DIFFERENTIATION AND EVALUATION OF ONE CIRCUIT :
 --   The Indexed_Speel procedures are for circuits where the exponents
 --   are either zero or one.  There are an important subclass to deal
 --   with monomials that have no higher powers.

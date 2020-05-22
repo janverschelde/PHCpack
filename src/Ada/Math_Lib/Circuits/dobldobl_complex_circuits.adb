@@ -1,5 +1,6 @@
 with unchecked_deallocation;
 with Double_Double_Numbers;               use Double_Double_Numbers;
+with DoblDobl_Complex_Singular_Values;
 with Exponent_Indices;
 with DoblDobl_Hessian_Updaters;
 
@@ -85,7 +86,41 @@ package body DoblDobl_Complex_Circuits is
     return res;
   end Allocate;
 
--- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
+-- SINGULAR VALUE DECOMPOSITIONS :
+
+  procedure Singular_Values
+              ( c : in Circuit;
+                x,yd : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                pwt : in DoblDobl_Complex_VecVecs.VecVec;
+                A : out DoblDobl_Complex_Matrices.Matrix;
+                U : out DoblDobl_Complex_Matrices.Matrix;
+                V : out DoblDobl_Complex_Matrices.Matrix;
+                e : out DoblDobl_Complex_Vectors.Vector;
+                s : out DoblDobl_Complex_Vectors.Vector ) is
+
+    info : integer32;
+
+  begin
+    Speel(c,x,yd,pwt,A);
+    DoblDobl_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,11,info);
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( c : in Link_to_Circuit;
+                x,yd : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                pwt : in DoblDobl_Complex_VecVecs.VecVec;
+                A : out DoblDobl_Complex_Matrices.Matrix;
+                U : out DoblDobl_Complex_Matrices.Matrix;
+                V : out DoblDobl_Complex_Matrices.Matrix;
+                e : out DoblDobl_Complex_Vectors.Vector;
+                s : out DoblDobl_Complex_Vectors.Vector ) is
+  begin
+    if c /= null
+     then Singular_Values(c.all,x,yd,pwt,A,U,V,e,s);
+    end if;
+  end Singular_Values;
+
+-- ALGORITHMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
               ( s : in out System;

@@ -1,5 +1,6 @@
 with unchecked_deallocation;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Standard_Complex_Singular_Values;
 with Exponent_Indices;
 with Standard_Hessian_Updaters;
 
@@ -160,7 +161,41 @@ package body Standard_Complex_Circuits is
     end loop;
   end EvalDiff2;
 
--- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
+-- SINGULAR VALUE DECOMPOSITIONS :
+
+  procedure Singular_Values
+              ( c : in Circuit;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec;
+                A : out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Vectors.Vector ) is
+
+    info : integer32;
+
+  begin
+    Speel(c,x,yd,pwt,A);
+    Standard_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,11,info);
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( c : in Link_to_Circuit;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec;
+                A : out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Vectors.Vector ) is
+  begin
+    if c /= null
+     then Singular_Values(c.all,x,yd,pwt,A,U,V,e,s);
+    end if;
+  end Singular_Values;
+
+-- ALGORITHMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
 
   procedure Indexed_Speel
               ( c : in Circuit;
