@@ -8,6 +8,8 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Random_Vectors;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
+with QuadDobl_Complex_Numbers_cv;
+with QuadDobl_Complex_Vectors_cv;
 with Standard_Complex_Poly_Functions;
 with Exponent_Indices;
 
@@ -108,6 +110,137 @@ package body Standard_Circuit_Makers is
     res.cst := Standard_Random_Numbers.Random1;
     return res;
   end Random_Complex_Circuit;
+
+  function Random_Complex_Circuit
+             ( nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.Link_to_Circuit is
+
+    crc : constant Standard_Complex_Circuits.Circuit(nbr)
+        := Random_Complex_Circuit(nbr,dim,pwr);
+    res : constant Standard_Complex_Circuits.Link_to_Circuit
+        := new Standard_Complex_Circuits.Circuit'(crc);
+
+  begin
+    return res;
+  end Random_Complex_Circuit;
+
+  function Random_Complex_Circuits
+             ( neq,nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.Circuits is
+
+    res : Standard_Complex_Circuits.Circuits(1..neq);
+
+  begin
+    for k in 1..neq loop
+      res(k) := Random_Complex_Circuit(nbr,dim,pwr);
+    end loop;
+    return res;
+  end Random_Complex_Circuits;
+
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.System is
+
+    crc : constant Standard_Complex_Circuits.Circuits(1..neq)
+        := Random_Complex_Circuits(neq,nbr,dim,pwr);
+    res : constant Standard_Complex_Circuits.System(neq,dim)
+        := Standard_Complex_Circuits.Create(crc,dim);
+
+  begin
+    return res;
+  end Random_Complex_System;
+
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.Link_to_System is
+
+    sys : constant Standard_Complex_Circuits.System(neq,dim)
+        := Random_Complex_System(neq,nbr,dim,pwr);
+    res : constant Standard_Complex_Circuits.Link_to_System
+        := new Standard_Complex_Circuits.System'(sys);
+
+  begin
+    return res;
+  end Random_Complex_System;
+
+  function to_double
+             ( c : QuadDobl_Complex_Circuits.Circuit )
+             return Standard_Complex_Circuits.Circuit is
+
+    res : Standard_Complex_Circuits.Circuit(c.nbr)
+        := Standard_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use QuadDobl_Complex_Numbers_cv;
+    use QuadDobl_Complex_Vectors_cv;
+
+  begin
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    res.cff := QuadDobl_Complex_to_Standard(c.cff);
+    res.cst := QuadDobl_Complex_to_Standard(c.cst);
+    return res;
+  end to_double;
+
+  function to_double
+             ( c : QuadDobl_Complex_Circuits.Link_to_Circuit )
+             return Standard_Complex_Circuits.Link_to_Circuit is
+
+    res : Standard_Complex_Circuits.Link_to_Circuit;
+    crc : Standard_Complex_Circuits.Circuit(c.nbr);
+
+    use QuadDobl_Complex_Circuits;
+
+  begin
+    if c /= null then
+      crc := to_double(c.all);
+      res := new Standard_Complex_Circuits.Circuit'(crc);
+    end if;
+    return res;
+  end to_double;
+
+  function to_double
+             ( c : QuadDobl_Complex_Circuits.Circuits )
+             return Standard_Complex_Circuits.Circuits is
+
+    res : Standard_Complex_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double(c(k));
+    end loop;
+    return res;
+  end to_double;
+
+  function to_double
+             ( s : QuadDobl_Complex_Circuits.System )
+             return Standard_Complex_Circuits.System is
+
+    crc : constant Standard_Complex_Circuits.Circuits(1..s.neq)
+        := to_double(s.crc);
+    res : constant Standard_Complex_Circuits.System(s.neq,s.dim)
+        := Standard_Complex_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end to_double;
+
+  function to_double
+             ( s : QuadDobl_Complex_Circuits.Link_to_System )
+             return Standard_Complex_Circuits.Link_to_System is
+
+    sys : Standard_Complex_Circuits.System(s.neq,s.dim);
+    res : Standard_Complex_Circuits.Link_to_System;
+
+    use QuadDobl_Complex_Circuits;
+
+  begin
+    if s /= null then
+      sys := to_double(s.all);
+      res := new Standard_Complex_Circuits.System'(sys);
+    end if;
+    return res;
+  end to_double;
 
   function Split ( c : Standard_Complex_Circuits.Circuit )
                  return Standard_Coefficient_Circuits.Circuit is

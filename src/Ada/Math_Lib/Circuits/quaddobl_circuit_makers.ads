@@ -49,11 +49,33 @@ package QuadDobl_Circuit_Makers is
   function Random_Complex_Circuit
              ( nbr,dim,pwr : integer32 )
              return QuadDobl_Complex_Circuits.Circuit;
+  function Random_Complex_Circuit
+             ( nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.Link_to_Circuit;
 
   -- DESCRIPTION :
   --   Returns a random complex circuit with products of dimension dim,
   --   as many nonconstant coefficients as the number nbr,
   --   and pwr as the value for the higest power.
+
+  function Random_Complex_Circuits
+             ( neq,nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns a sequence of neq circuits, with nbr terms,
+  --   of dimension dim and with highest power equal to pwr.
+
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.System;
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns a system of neq circuits, with nbr terms,
+  --   of dimension dim and with highest power equal to pwr.
 
   function Make_Polynomial
              ( c : QuadDobl_Complex_Circuits.Circuit;

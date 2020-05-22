@@ -1,6 +1,8 @@
 Fri 22 May 2020 : tested the EvalDiff2 on complex circuits in ts_perfhess,
   updated {standard,dobldobl,quaddobl}_complex_circuits with an allocator.
   Added SVD to *_complex_circuits and tests to ts_hesscnv.
+  To {standard,dobldobl,quaddobl}_circuit_makers added more functions to
+  make random systems and to convert data types.
 
 Thu 21 May 2020 : defined procedures for the special cases of the Hessian
   of a general circuit with higher powers.  Indices of size four are the

@@ -9,6 +9,8 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
+with QuadDobl_Complex_Numbers_cv;
+with QuadDobl_Complex_Vectors_cv;
 with DoblDobl_Complex_Poly_Functions;
 with Exponent_Indices;
 
@@ -109,6 +111,137 @@ package body DoblDobl_Circuit_Makers is
     res.cst := DoblDobl_Random_Numbers.Random1;
     return res;
   end Random_Complex_Circuit;
+
+  function Random_Complex_Circuit
+             ( nbr,dim,pwr : integer32 )
+             return DoblDobl_Complex_Circuits.Link_to_Circuit is
+
+    crc : constant DoblDobl_Complex_Circuits.Circuit(nbr)
+        := Random_Complex_Circuit(nbr,dim,pwr);
+    res : constant DoblDobl_Complex_Circuits.Link_to_Circuit
+        := new DoblDobl_Complex_Circuits.Circuit'(crc);
+
+  begin
+    return res;
+  end Random_Complex_Circuit;
+
+  function Random_Complex_Circuits
+             ( neq,nbr,dim,pwr : integer32 )
+             return DoblDobl_Complex_Circuits.Circuits is
+
+    res : DoblDobl_Complex_Circuits.Circuits(1..neq);
+
+  begin
+    for k in 1..neq loop
+      res(k) := Random_Complex_Circuit(nbr,dim,pwr);
+    end loop;
+    return res;
+  end Random_Complex_Circuits;
+
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return DoblDobl_Complex_Circuits.System is
+
+    crc : constant DoblDobl_Complex_Circuits.Circuits(1..neq)
+        := Random_Complex_Circuits(neq,nbr,dim,pwr);
+    res : constant DoblDobl_Complex_Circuits.System(neq,dim)
+        := DoblDobl_Complex_Circuits.Create(crc,dim);
+
+  begin
+    return res;
+  end Random_Complex_System;
+
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return DoblDobl_Complex_Circuits.Link_to_System is
+
+    sys : constant DoblDobl_Complex_Circuits.System(neq,dim)
+        := Random_Complex_System(neq,nbr,dim,pwr);
+    res : constant DoblDobl_Complex_Circuits.Link_to_System
+        := new DoblDobl_Complex_Circuits.System'(sys);
+
+  begin
+    return res;
+  end Random_Complex_System;
+
+  function to_double_double
+             ( c : QuadDobl_Complex_Circuits.Circuit )
+             return DoblDobl_Complex_Circuits.Circuit is
+
+    res : DoblDobl_Complex_Circuits.Circuit(c.nbr)
+        := DoblDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+
+    use QuadDobl_Complex_Numbers_cv;
+    use QuadDobl_Complex_Vectors_cv;
+
+  begin
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    res.cff := QuadDobl_Complex_to_DoblDobl(c.cff);
+    res.cst := QuadDobl_Complex_to_DoblDobl(c.cst);
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( c : QuadDobl_Complex_Circuits.Link_to_Circuit )
+             return DoblDobl_Complex_Circuits.Link_to_Circuit is
+
+    res : DoblDobl_Complex_Circuits.Link_to_Circuit;
+    crc : DoblDobl_Complex_Circuits.Circuit(c.nbr);
+
+    use QuadDobl_Complex_Circuits;
+
+  begin
+    if c /= null then
+      crc := to_double_double(c.all);
+      res := new DoblDobl_Complex_Circuits.Circuit'(crc);
+    end if;
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( c : QuadDobl_Complex_Circuits.Circuits )
+             return DoblDobl_Complex_Circuits.Circuits is
+
+    res : DoblDobl_Complex_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := to_double_double(c(k));
+    end loop;
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( s : QuadDobl_Complex_Circuits.System )
+             return DoblDobl_Complex_Circuits.System is
+
+    crc : constant DoblDobl_Complex_Circuits.Circuits(1..s.neq)
+        := to_double_double(s.crc);
+    res : constant DoblDobl_Complex_Circuits.System(s.neq,s.dim)
+        := DoblDobl_Complex_Circuits.Create(crc,s.dim);
+
+  begin
+    return res;
+  end to_double_double;
+
+  function to_double_double
+             ( s : QuadDobl_Complex_Circuits.Link_to_System )
+             return DoblDobl_Complex_Circuits.Link_to_System is
+
+    sys : DoblDobl_Complex_Circuits.System(s.neq,s.dim);
+    res : DoblDobl_Complex_Circuits.Link_to_System;
+
+    use QuadDobl_Complex_Circuits;
+
+  begin
+    if s /= null then
+      sys := to_double_double(s.all);
+      res := new DoblDobl_Complex_Circuits.System'(sys);
+    end if;
+    return res;
+  end to_double_double;
 
   function Make_Polynomial
              ( c : DoblDobl_Complex_Circuits.Circuit;

@@ -92,6 +92,32 @@ package body QuadDobl_Circuit_Makers is
 
   function Random_Complex_Circuit
              ( nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.Link_to_Circuit is
+
+    crc : constant QuadDobl_Complex_Circuits.Circuit(nbr)
+        := Random_Complex_Circuit(nbr,dim,pwr);
+    res : constant QuadDobl_Complex_Circuits.Link_to_Circuit
+        := new QuadDobl_Complex_Circuits.Circuit'(crc);
+
+  begin
+    return res;
+  end Random_Complex_Circuit;
+
+  function Random_Complex_Circuits
+             ( neq,nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.Circuits is
+
+    res : QuadDobl_Complex_Circuits.Circuits(1..neq);
+
+  begin
+    for k in 1..neq loop
+      res(k) := Random_Complex_Circuit(nbr,dim,pwr);
+    end loop;
+    return res;
+  end Random_Complex_Circuits;
+
+  function Random_Complex_Circuit
+             ( nbr,dim,pwr : integer32 )
              return QuadDobl_Complex_Circuits.Circuit is
 
     res : QuadDobl_Complex_Circuits.Circuit(nbr)
@@ -109,6 +135,32 @@ package body QuadDobl_Circuit_Makers is
     res.cst := QuadDobl_Random_Numbers.Random1;
     return res;
   end Random_Complex_Circuit;
+
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.System is
+
+    crc : constant QuadDobl_Complex_Circuits.Circuits(1..neq)
+        := Random_Complex_Circuits(neq,nbr,dim,pwr);
+    res : constant QuadDobl_Complex_Circuits.System(neq,dim)
+        := QuadDobl_Complex_Circuits.Create(crc,dim);
+
+  begin
+    return res;
+  end Random_Complex_System;
+
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.Link_to_System is
+
+    sys : constant QuadDobl_Complex_Circuits.System(neq,dim)
+        := Random_Complex_System(neq,nbr,dim,pwr);
+    res : constant QuadDobl_Complex_Circuits.Link_to_System
+        := new QuadDobl_Complex_Circuits.System'(sys);
+
+  begin
+    return res;
+  end Random_Complex_System;
 
   function Make_Polynomial
              ( c : QuadDobl_Complex_Circuits.Circuit;

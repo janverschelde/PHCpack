@@ -7,6 +7,7 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
+with QuadDobl_Complex_Circuits;
 
 package Standard_Circuit_Makers is
 
@@ -50,11 +51,56 @@ package Standard_Circuit_Makers is
   function Random_Complex_Circuit
              ( nbr,dim,pwr : integer32 )
              return Standard_Complex_Circuits.Circuit;
+  function Random_Complex_Circuit
+             ( nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.Link_to_Circuit;
 
   -- DESCRIPTION :
   --   Returns a random complex circuit with products of dimension dim,
   --   as many nonconstant coefficients as the number nbr,
   --   and pwr as the value for the higest power.
+
+  function Random_Complex_Circuits
+             ( neq,nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns a sequence of neq circuits, with nbr terms,
+  --   of dimension dim and with highest power equal to pwr.
+
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.System;
+  function Random_Complex_System
+             ( neq,nbr,dim,pwr : integer32 )
+             return Standard_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns a system of neq circuits, with nbr terms,
+  --   of dimension dim and with highest power equal to pwr.
+
+  function to_double
+             ( c : QuadDobl_Complex_Circuits.Circuit )
+             return Standard_Complex_Circuits.Circuit;
+  function to_double
+             ( c : QuadDobl_Complex_Circuits.Link_to_Circuit )
+             return Standard_Complex_Circuits.Link_to_Circuit;
+  function to_double
+             ( c : QuadDobl_Complex_Circuits.Circuits )
+             return Standard_Complex_Circuits.Circuits;
+
+  -- DESCRIPTION :
+  --   Returns the circuit(s) equivalent to c, in double double precision.
+
+  function to_double
+             ( s : QuadDobl_Complex_Circuits.System )
+             return Standard_Complex_Circuits.System;
+  function to_double
+             ( s : QuadDobl_Complex_Circuits.Link_to_System )
+             return Standard_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns the system equivalent to s, in double double precision.
 
   function Split ( c : Standard_Complex_Circuits.Circuit )
                  return Standard_Coefficient_Circuits.Circuit;
