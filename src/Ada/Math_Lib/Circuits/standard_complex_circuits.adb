@@ -64,6 +64,27 @@ package body Standard_Complex_Circuits is
     return res;
   end Create;
 
+  function Allocate ( neq,dim : integer32 )
+                    return Standard_Complex_VecMats.VecMat is
+
+    res : Standard_Complex_VecMats.VecMat(1..neq);
+
+  begin
+    for k in 1..neq loop
+      declare
+        mat : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+      begin
+        for i in 1..dim loop
+          for j in 1..dim loop
+            mat(i,j) := Standard_Complex_Numbers.Create(0.0);
+          end loop;
+        end loop;
+        res(k) := new Standard_Complex_Matrices.Matrix'(mat);
+      end;
+    end loop;
+    return res;
+  end Allocate;
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff

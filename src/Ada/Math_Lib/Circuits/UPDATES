@@ -1,3 +1,6 @@
+Fri 22 May 2020 : tested the EvalDiff2 on complex circuits in ts_perfhess,
+  updated {standard,dobldobl,quaddobl}_complex_circuits with an allocator.
+
 Thu 21 May 2020 : defined procedures for the special cases of the Hessian
   of a general circuit with higher powers.  Indices of size four are the
   last special case for the Hessian for circuits of higher powers.

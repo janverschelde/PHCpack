@@ -64,6 +64,27 @@ package body QuadDobl_Complex_Circuits is
     return res;
   end Create;
 
+  function Allocate ( neq,dim : integer32 )
+                    return QuadDobl_Complex_VecMats.VecMat is
+
+    res : QuadDobl_Complex_VecMats.VecMat(1..neq);
+
+  begin
+    for k in 1..neq loop
+      declare
+        mat : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
+      begin
+        for i in 1..dim loop
+          for j in 1..dim loop
+            mat(i,j) := QuadDobl_Complex_Numbers.Create(integer(0));
+          end loop;
+        end loop;
+        res(k) := new QuadDobl_Complex_Matrices.Matrix'(mat);
+      end;
+    end loop;
+    return res;
+  end Allocate;
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff

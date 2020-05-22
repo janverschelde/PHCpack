@@ -21,27 +21,42 @@ with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
+with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_VecMats;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
-with Standard_Complex_Matrices;
-with DoblDobl_Complex_Matrices;
-with QuadDobl_Complex_Matrices;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;     use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Functions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials_io;     use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Functions;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;    use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials_io;     use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Functions;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Jaco_Matrices;
 with Evaluation_Differentiation_Errors;
 with Standard_Complex_Circuits;
 with DoblDobl_Complex_Circuits;
@@ -938,6 +953,262 @@ procedure ts_perfhess is
     end if;
   end QuadDobl_Test_Power_Circuit;
 
+  procedure Standard_Run_EvalDiff2
+              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in Standard_Complex_Circuits.Link_to_System ) is
+
+  -- DESCRIPTION :
+  --   Generates a random point to evaluate the system s of circuits,
+  --   to compute its Jacobian and vector of Hessians.
+  --   The values computed algorithmically are compared with
+  --   the symbolic computations on the system p.
+
+    x : constant Standard_Complex_Vectors.Vector(1..s.dim)
+      := Standard_Random_Vectors.Random_Vector(1,s.dim);
+    xv : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(x);
+    vh : constant Standard_Complex_VecMats.VecMat(1..s.neq)
+       := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
+    y : constant Standard_Complex_Vectors.Vector(p'range)
+      := Standard_Complex_Poly_SysFun.Eval(p.all,x);
+    jm : constant Standard_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := Standard_Complex_Jaco_Matrices.Create(p.all);
+    jmx : constant Standard_Complex_Matrices.Matrix(p'range,x'range)
+        := Standard_Complex_Jaco_Matrices.Eval(jm,x);
+    mat : Standard_Complex_Matrices.Matrix(x'range,x'range);
+    err,sumerr : double_float := 0.0; 
+    ans : character;
+
+  begin
+    Standard_Complex_Circuits.EvalDiff2(s,xv,vh);
+    put_line("The function value computed symbolically :"); put_line(y);
+    put_line("The function value computed algorithmically :"); put_line(s.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,s.fx);
+    sumerr := sumerr + err;
+    put("The sum of errors :"); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    put_line("The Jacobian matrix computed symbolically :");
+    Standard_Circuit_Makers.Write_Matrix(jmx);
+    put_line("The Jacobian matrix computed algorithmically :");
+    Standard_Circuit_Makers.Write_Matrix(s.jm);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(jmx,s.jm);
+    sumerr := sumerr + err;
+    put("The sum of errors :"); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    for k in p'range loop
+      mat := Standard_Circuit_Makers.Hessian(p(k),x);
+      put("Hessian "); put(k,1); put_line(" computed symbolically :");
+      Standard_Circuit_Makers.Write_Matrix(mat);
+      put("Hessian "); put(k,1); put_line(" computed algorithmically :");
+      Standard_Circuit_Makers.Write_Matrix(vh(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh(k).all);
+      sumerr := sumerr + err;
+      put("The sum of errors :"); put(err,3); new_line;
+      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      if(ans /= 'y')
+       then return;
+      end if;
+    end loop;
+    put("Sum of all errors :"); put(sumerr,3); new_line;
+  end Standard_Run_EvalDiff2;
+
+  procedure DoblDobl_Run_EvalDiff2
+              ( p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in DoblDobl_Complex_Circuits.Link_to_System ) is
+
+  -- DESCRIPTION :
+  --   Generates a random point to evaluate the system s of circuits,
+  --   to compute its Jacobian and vector of Hessians.
+  --   The values computed algorithmically are compared with
+  --   the symbolic computations on the system p.
+
+    x : constant DoblDobl_Complex_Vectors.Vector(1..s.dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,s.dim);
+    xv : constant DoblDobl_Complex_Vectors.Link_to_Vector
+       := new DoblDobl_Complex_Vectors.Vector'(x);
+    vh : constant DoblDobl_Complex_VecMats.VecMat(1..s.neq)
+       := DoblDobl_Complex_Circuits.Allocate(s.neq,s.dim);
+    y : constant DoblDobl_Complex_Vectors.Vector(p'range)
+      := DoblDobl_Complex_Poly_SysFun.Eval(p.all,x);
+    jm : constant DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Complex_Jaco_Matrices.Create(p.all);
+    jmx : constant DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
+        := DoblDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    mat : DoblDobl_Complex_Matrices.Matrix(x'range,x'range);
+    err,sumerr : double_double := create(0.0); 
+    ans : character;
+
+  begin
+    DoblDobl_Complex_Circuits.EvalDiff2(s,xv,vh);
+    put_line("The function value computed symbolically :"); put_line(y);
+    put_line("The function value computed algorithmically :"); put_line(s.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,s.fx);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    put_line("The Jacobian matrix computed symbolically :");
+    DoblDobl_Circuit_Makers.Write_Matrix(jmx);
+    put_line("The Jacobian matrix computed algorithmically :");
+    DoblDobl_Circuit_Makers.Write_Matrix(s.jm);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(jmx,s.jm);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    for k in p'range loop
+      mat := DoblDobl_Circuit_Makers.Hessian(p(k),x);
+      put("Hessian "); put(k,1); put_line(" computed symbolically :");
+      DoblDobl_Circuit_Makers.Write_Matrix(mat);
+      put("Hessian "); put(k,1); put_line(" computed algorithmically :");
+      DoblDobl_Circuit_Makers.Write_Matrix(vh(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh(k).all);
+      sumerr := sumerr + err;
+      put("The sum of errors : "); put(err,3); new_line;
+      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      if(ans /= 'y')
+       then return;
+      end if;
+    end loop;
+    put("Sum of all errors : "); put(sumerr,3); new_line;
+  end DoblDobl_Run_EvalDiff2;
+
+
+  procedure QuadDobl_Run_EvalDiff2
+              ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                s : in QuadDobl_Complex_Circuits.Link_to_System ) is
+
+  -- DESCRIPTION :
+  --   Generates a random point to evaluate the system s of circuits,
+  --   to compute its Jacobian and vector of Hessians.
+  --   The values computed algorithmically are compared with
+  --   the symbolic computations on the system p.
+
+    x : constant QuadDobl_Complex_Vectors.Vector(1..s.dim)
+      := QuadDobl_Random_Vectors.Random_Vector(1,s.dim);
+    xv : constant QuadDobl_Complex_Vectors.Link_to_Vector
+       := new QuadDobl_Complex_Vectors.Vector'(x);
+    vh : constant QuadDobl_Complex_VecMats.VecMat(1..s.neq)
+       := QuadDobl_Complex_Circuits.Allocate(s.neq,s.dim);
+    y : constant QuadDobl_Complex_Vectors.Vector(p'range)
+      := QuadDobl_Complex_Poly_SysFun.Eval(p.all,x);
+    jm : constant QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := QuadDobl_Complex_Jaco_Matrices.Create(p.all);
+    jmx : constant QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
+        := QuadDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    mat : QuadDobl_Complex_Matrices.Matrix(x'range,x'range);
+    err,sumerr : quad_double := create(0.0); 
+    ans : character;
+
+  begin
+    QuadDobl_Complex_Circuits.EvalDiff2(s,xv,vh);
+    put_line("The function value computed symbolically :"); put_line(y);
+    put_line("The function value computed algorithmically :"); put_line(s.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,s.fx);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    put_line("The Jacobian matrix computed symbolically :");
+    QuadDobl_Circuit_Makers.Write_Matrix(jmx);
+    put_line("The Jacobian matrix computed algorithmically :");
+    QuadDobl_Circuit_Makers.Write_Matrix(s.jm);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(jmx,s.jm);
+    sumerr := sumerr + err;
+    put("The sum of errors : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    for k in p'range loop
+      mat := QuadDobl_Circuit_Makers.Hessian(p(k),x);
+      put("Hessian "); put(k,1); put_line(" computed symbolically :");
+      QuadDobl_Circuit_Makers.Write_Matrix(mat);
+      put("Hessian "); put(k,1); put_line(" computed algorithmically :");
+      QuadDobl_Circuit_Makers.Write_Matrix(vh(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh(k).all);
+      sumerr := sumerr + err;
+      put("The sum of errors : "); put(err,3); new_line;
+      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      if(ans /= 'y')
+       then return;
+      end if;
+    end loop;
+    put("Sum of all errors : "); put(sumerr,3); new_line;
+  end QuadDobl_Run_EvalDiff2;
+
+  procedure Standard_Test_EvalDiff2 is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system and tests the correctness
+  --   of the computation of the Jacobian and the Hessians,
+  --   in standard double precision.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Circuits;
+
+    p : Link_to_Poly_Sys;
+    s : Link_to_System;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    s := Standard_Circuit_Makers.Make_Complex_System(p);
+    Standard_Run_EvalDiff2(p,s);
+  end Standard_Test_EvalDiff2;
+
+  procedure DoblDobl_Test_EvalDiff2 is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system and tests the correctness
+  --   of the computation of the Jacobian and the Hessians,
+  --   in double double precision.
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Circuits;
+
+    p : Link_to_Poly_Sys;
+    s : Link_to_System;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    s := DoblDobl_Circuit_Makers.Make_Complex_System(p);
+    DoblDobl_Run_EvalDiff2(p,s);
+  end DoblDobl_Test_EvalDiff2;
+
+  procedure QuadDobl_Test_EvalDiff2 is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system and tests the correctness
+  --   of the computation of the Jacobian and the Hessians,
+  --   in quad double precision.
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Circuits;
+
+    p : Link_to_Poly_Sys;
+    s : Link_to_System;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    s := QuadDobl_Circuit_Makers.Make_Complex_System(p);
+    QuadDobl_Run_EvalDiff2(p,s);
+  end QuadDobl_Test_EvalDiff2;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -955,8 +1226,11 @@ procedure ts_perfhess is
     put_line("  2. hardware precision random general circuit");
     put_line("  3. double double precision random general circuit");
     put_line("  4. quad double precision random general circuit");
-    put("Type 0, 1, 2, 3, or 4 to select the test : ");
-    Ask_Alternative(ans,"01234");
+    put_line("  5. hardware precision user given polynomial system");
+    put_line("  6. double double precision user given polynomial system");
+    put_line("  7. quad double precision user given polynomial system");
+    put("Type 0, 1, 2, 3, 4, 5, 6, or 7 to select the test : ");
+    Ask_Alternative(ans,"01234567");
     case ans is
       when '0' =>
         new_line;
@@ -985,6 +1259,9 @@ procedure ts_perfhess is
             when others => null;
           end case;
         end if;
+      when '5' => Standard_Test_EvalDiff2;
+      when '6' => DoblDobl_Test_EvalDiff2;
+      when '7' => QuadDobl_Test_EvalDiff2;
       when others => null;
     end case;
   end Main;

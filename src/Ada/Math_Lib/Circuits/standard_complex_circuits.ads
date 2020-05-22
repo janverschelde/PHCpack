@@ -13,6 +13,7 @@ package Standard_Complex_Circuits is
 --   This package contains development code for standard_coefficient_circuits,
 --   to test the correctness of the better performing algorithms for
 --   algorithmic differentiation and evaluation.
+--   Computations happen in hardware double precision.
 
 -- DATA STRUCTURES :
 --   A circuit stores the exponents and coefficients and hold work space to
@@ -72,6 +73,13 @@ package Standard_Complex_Circuits is
   --   Given well defined circuits for dimension dim,
   --   computes mxe and allocates space for a system.
 
+  function Allocate ( neq,dim : integer32 )
+                    return Standard_Complex_VecMats.VecMat;
+
+  -- DESCRIPTION :
+  --   Returns a vector of square matrices of dimension dim,
+  --   the returned vector has range 1..neq.
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
@@ -114,7 +122,7 @@ package Standard_Complex_Circuits is
   -- ON ENTRY :
   --   s        properly defined and allocated system of circuits;
   --   x        values for the variables in the system;
-  --   vh       space allocated for dim matrices,
+  --   vh       space allocated for s.neq matrices,
   --            all matrices have 1..dim for range(1) and range(2).
 
   -- ON RETURN :

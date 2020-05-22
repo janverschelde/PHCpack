@@ -73,6 +73,13 @@ package QuadDobl_Complex_Circuits is
   --   Given well defined circuits for dimension dim,
   --   computes mxe and allocates space for a system.
 
+  function Allocate ( neq,dim : integer32 )
+                    return QuadDobl_Complex_VecMats.VecMat;
+
+  -- DESCRIPTION :
+  --   Returns a vector of square matrices of dimension dim,
+  --   the returned vector has range 1..neq.
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
