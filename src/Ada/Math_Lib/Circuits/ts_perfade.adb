@@ -394,7 +394,7 @@ procedure ts_perfade is
     err : double_float;
 
   begin
-    Standard_Complex_Circuits.Speel(c1,x,yd);
+    Standard_Complex_Circuits.Indexed_Speel(c1,x,yd);
     put_line("The value at a random point :"); put(yd(0)); new_line;
     z := Standard_Complex_Poly_Functions.Eval(p,cx);
     put_line("The value recomputed for testing :"); put(z); new_line;
@@ -850,7 +850,7 @@ procedure ts_perfade is
   begin
     tstart(timer);
     for k in 1..frq loop
-      Standard_Complex_Circuits.Speel(c1,x,yd);
+      Standard_Complex_Circuits.Indexed_Speel(c1,x,yd);
     end loop;
     tstop(timer);
     new_line;

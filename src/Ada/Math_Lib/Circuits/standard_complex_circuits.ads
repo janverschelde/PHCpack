@@ -5,6 +5,7 @@ with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
+with Standard_Complex_VecMats;
 
 package Standard_Complex_Circuits is
 
@@ -95,6 +96,33 @@ package Standard_Complex_Circuits is
   --   s.fx     function value of the circuits at x;
   --   s.jm     the Jacobian matrix evaluated at x.
 
+  procedure EvalDiff2
+              ( s : in out System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat );
+  procedure EvalDiff2
+              ( s : in Link_to_System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiations the circuits in s at x.
+
+  -- REQUIRED :
+  --   All space for the power table and yd has been allocated.
+
+  -- ON ENTRY :
+  --   s        properly defined and allocated system of circuits;
+  --   x        values for the variables in the system;
+  --   vh       space allocated for dim matrices,
+  --            all matrices have 1..dim for range(1) and range(2).
+
+  -- ON RETURN :
+  --   s.pwt    power table updated for the values in x;
+  --   s.fx     function value of the circuits at x;
+  --   s.jm     the Jacobian matrix evaluated at x;
+  --   vh       vector of evaluated Hessian matrices.
+
   procedure EvalDiff
               ( c : in Circuits;
                 x,yd : in Standard_Complex_Vectors.Link_to_Vector;
@@ -116,17 +144,51 @@ package Standard_Complex_Circuits is
   --   fx       vector of function values of the circuits at x;
   --   jm       matrix of partial derivatives.
 
--- ALGORITMIC DIFFERENTIATION AND EVALUATION OF ONE CIRCUIT :
+  procedure EvalDiff2
+              ( c : in Circuits;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec;
+                fx : out Standard_Complex_Vectors.Vector;
+                jm : out Standard_Complex_Matrices.Matrix;
+                vh : in Standard_Complex_VecMats.VecMat );
 
-  procedure Speel ( c : in Circuit;
-                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
-                    h : out Standard_Complex_Matrices.Matrix );
+  -- DESCRIPTION :
+  --   Evaluates and differentiations the circuits in c at x,
+  --   returns the evaluated Jacobian and vector of Hessians.
+
+  -- ON ENTRY :
+  --   c        a sequence of circuits, properly defined and allocated;
+  --   x        a vector of values for the variables;
+  --   yd       work space for the function value and gradient,
+  --            of range 0..dim, where dim = x'last;
+  --   pwt      power table defined and computed for x;
+  --   vh       space allocated for dim matrices,
+  --            all matrices have 1..dim for range(1) and range(2).
+
+  -- ON RETURN :
+  --   fx       vector of function values of the circuits at x;
+  --   jm       matrix of partial derivatives;
+  --   vh       vector of evaluated Hessian matrices.
+
+-- ALGORITMIC DIFFERENTIATION AND EVALUATION OF ONE CIRCUIT :
+--   The Indexed_Speel procedures are for circuits where the exponents
+--   are either zero or one.  There are an important subclass to deal
+--   with monomials that have no higher powers.
+--   The general case is handled by the Speel procedures,
+--   with wrappers working on circuits.
+--   Both indexed and general speel procedure compute the gradient
+--   and optionally, the evaluated Hessian matrix.
+
+  procedure Indexed_Speel
+               ( c : in Circuit;
+                 x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                 h : out Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Evaluates and differentatiates the circuit c at x,
   --   stores the function value at yd(0), the gradient at yd(x'range),
   --   and the Hessian at the matrix h.
-  --   Wraps the next Speel procedure, using the c.xps as indices.
+  --   Wraps an Indexed_Speel procedure, using the c.xps as indices.
   --   This procedure is for monomials that are products of variables,
   --   with no exponent higher than one.
 
@@ -152,6 +214,7 @@ package Standard_Complex_Circuits is
   -- DESCRIPTION :
   --   Evaluates an indexed product, multiplied with a coefficient,
   --   computes its gradient and updates the Hessian matrix.
+  --   Is called frequently by the next Indexed_Speel procedure.
 
   -- REQUIRED : idx'last >= 2.
   --   x'range = 1..dim and yd'range = 0..dim,
@@ -177,14 +240,15 @@ package Standard_Complex_Circuits is
   --   yd(k)    the k-th derivative of the circuit at x;
   --   h        the updated upper triangular Hessian matrix at x.
 
-  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    cff : in Standard_Complex_Vectors.Vector;
-                    cst : in Standard_Complex_Numbers.Complex_Number;
-                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
-                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
-                    bck : in Standard_Complex_Vectors.Link_to_Vector;
-                    crs : in Standard_Complex_Vectors.Link_to_Vector;
-                    h : out Standard_Complex_Matrices.Matrix );
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_Vectors.Vector;
+                cst : in Standard_Complex_Numbers.Complex_Number;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                bck : in Standard_Complex_Vectors.Link_to_Vector;
+                crs : in Standard_Complex_Vectors.Link_to_Vector;
+                h : out Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Runs the reverse mode of algorithmic differentiation on an
@@ -213,13 +277,14 @@ package Standard_Complex_Circuits is
   --   yd(k)    the k-th derivative of the circuit at x;
   --   h        the Hessian matrix at x.
 
-  procedure Speel ( c : in Circuit;
-                    x,yd : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Indexed_Speel
+              ( c : in Circuit;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Evaluates and differentiates the circuit c at x
   --   and stores the result in yd.
-  --   Wraps the next Speel procedure, using the c.xps as indices.
+  --   Wraps the next Indexed_Speel procedure, using the c.xps as indices.
   --   This procedure is for monomials that are products of variables,
   --   with no exponent higher than one.
 
@@ -232,13 +297,14 @@ package Standard_Complex_Circuits is
   --   yd(0)    the value of the circuit at x;
   --   yd(k)    the k-th derivative of the circuit at x.
 
-  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    cff : in Standard_Complex_Vectors.Vector;
-                    cst : in Standard_Complex_Numbers.Complex_Number;
-                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
-                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
-                    bck : in Standard_Complex_Vectors.Link_to_Vector;
-                    crs : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_Vectors.Vector;
+                cst : in Standard_Complex_Numbers.Complex_Number;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                bck : in Standard_Complex_Vectors.Link_to_Vector;
+                crs : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Runs the reverse mode of algorithmic differentiation on an
@@ -322,6 +388,83 @@ package Standard_Complex_Circuits is
   -- ON RETURN :
   --   yd(0)    the value of the circuit at x;
   --   yd(k)    the k-th derivative of the circuit at x.
+
+  procedure Speel ( c : in Circuit;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec;
+                    h : out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiates the circuit c at x,
+  --   stores the result in yd, and computes the gradient.
+  --   Wraps one of the next Speel procedures, using the data in c.
+
+  -- ON ENTRY :
+  --   c        circuit properly defined and with allocated workspace;
+  --   x        vector of range 1..c.dim, with values for x;
+  --   yd       vector of range 0..c.dim, allocated for the result;
+  --   pwt      power table to compute the common factors.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x;
+  --   h        the Hessian matrix evaluated at x.
+
+  procedure Speel ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                    idx : in Standard_Integer_Vectors.Vector;
+                    cff : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Updates the function value and gradient in yd,
+  --   for a general term in the circuit.
+  --   This is a helper procedure in the next Speel procedure.
+
+  -- REQUIRED : fac /= null.
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    cff : in Standard_Complex_Vectors.Vector;
+                    cst : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec;
+                    h : out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Runs the reverse mode of algorithmic differentiation on an
+  --   indexed sequence of products, with higher powers factored out.
+
+  -- REQUIRED :
+  --   idx'range = cff'range and all vectors in idx have values
+  --   in range 1..dim, where dim is the number of variables,
+  --   x'range = 1..dim and yd'range = 0..dim.
+
+  -- ON ENTRY :
+  --   xps      exponent vectors of the monomials in the circuit;
+  --   idx      indices to participating variables in each monomial;
+  --   fac      factor indices of the exponents;
+  --   cff      coefficients of the monomials;
+  --   cst      constant coefficient of the circuit;
+  --   x        vector of range 1..dim, with values for x;
+  --   yd       vector of range 0..c.dim, allocated for the result.
+  --   fwd      work space vector of range 1..dim-1,
+  --            for the forward products;
+  --   bck      work space vector of range 1..dim-2,
+  --            for the backward products;
+  --   crs      work space vector of range 1..dim-2,
+  --            for the cross products;
+  --   pwt      power table to compute the common factors.
+
+  -- ON RETURN :
+  --   yd(0)    the value of the circuit at x;
+  --   yd(k)    the k-th derivative of the circuit at x;
+  --   h        the Hessian matrix evaluated at x.
 
 -- AUXILIARY PROCEDURES :
 

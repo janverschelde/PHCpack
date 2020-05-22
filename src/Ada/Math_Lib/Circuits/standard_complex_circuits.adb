@@ -1,6 +1,7 @@
 with unchecked_deallocation;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Exponent_Indices;
+with Standard_Hessian_Updaters;
 
 package body Standard_Complex_Circuits is
 
@@ -81,6 +82,24 @@ package body Standard_Complex_Circuits is
     EvalDiff(s.crc,x,s.yd,s.pwt,s.fx,s.jm);
   end EvalDiff;
 
+  procedure EvalDiff2
+              ( s : in out System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat ) is
+  begin
+    Power_Table(s.mxe,x,s.pwt);
+    EvalDiff2(s.crc,x,s.yd,s.pwt,s.fx,s.jm,vh);
+  end EvalDiff2;
+
+  procedure EvalDiff2
+              ( s : in Link_to_System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat ) is
+  begin
+    Power_Table(s.mxe,x,s.pwt);
+    EvalDiff2(s.crc,x,s.yd,s.pwt,s.fx,s.jm,vh);
+  end EvalDiff2;
+
   procedure EvalDiff
               ( c : in Circuits;
                 x,yd : in Standard_Complex_Vectors.Link_to_Vector;
@@ -98,20 +117,44 @@ package body Standard_Complex_Circuits is
     end loop;
   end EvalDiff;
 
+  procedure EvalDiff2
+              ( c : in Circuits;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                pwt : in Standard_Complex_VecVecs.VecVec;
+                fx : out Standard_Complex_Vectors.Vector;
+                jm : out Standard_Complex_Matrices.Matrix;
+                vh : in Standard_Complex_VecMats.VecMat ) is
+
+    mat : Standard_Complex_Matrices.Link_to_Matrix;
+
+  begin
+    for i in c'range loop
+      mat := vh(i);
+      Speel(c(i).all,x,yd,pwt,mat.all);
+      fx(i) := yd(0);
+      for j in jm'range(2) loop
+        jm(i,j) := yd(j);
+        yd(j) := Standard_Complex_Numbers.Create(0.0);
+      end loop;
+    end loop;
+  end EvalDiff2;
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
 
-  procedure Speel ( c : in Circuit;
-                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
-                    h : out Standard_Complex_Matrices.Matrix ) is
+  procedure Indexed_Speel
+              ( c : in Circuit;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                h : out Standard_Complex_Matrices.Matrix ) is
   begin
-    Speel(c.xps,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs,h);
-  end Speel;
+    Indexed_Speel(c.xps,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs,h);
+  end Indexed_Speel;
 
-  procedure Speel ( c : in Circuit;
-                    x,yd : in Standard_Complex_Vectors.Link_to_Vector ) is
+  procedure Indexed_Speel
+              ( c : in Circuit;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector ) is
   begin
-    Speel(c.xps,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs);
-  end Speel;
+    Indexed_Speel(c.xps,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs);
+  end Indexed_Speel;
 
   procedure Speel ( c : in Circuit;
                     x,yd : in Standard_Complex_Vectors.Link_to_Vector;
@@ -120,13 +163,22 @@ package body Standard_Complex_Circuits is
     Speel(c.xps,c.idx,c.fac,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs,pwt);
   end Speel;
 
-  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    cff : in Standard_Complex_Vectors.Vector;
-                    cst : in Standard_Complex_Numbers.Complex_Number;
+  procedure Speel ( c : in Circuit;
                     x,yd : in Standard_Complex_Vectors.Link_to_Vector;
-                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
-                    bck : in Standard_Complex_Vectors.Link_to_Vector;
-                    crs : in Standard_Complex_Vectors.Link_to_Vector ) is
+                    pwt : in Standard_Complex_VecVecs.VecVec;
+                    h : out Standard_Complex_Matrices.Matrix ) is
+  begin
+    Speel(c.xps,c.idx,c.fac,c.cff,c.cst,x,yd,c.fwd,c.bck,c.crs,pwt,h);
+  end Speel;
+
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_Vectors.Vector;
+                cst : in Standard_Complex_Numbers.Complex_Number;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                bck : in Standard_Complex_Vectors.Link_to_Vector;
+                crs : in Standard_Complex_Vectors.Link_to_Vector ) is
 
     idk : Standard_Integer_Vectors.Link_to_Vector;
     idx1,idx2 : integer32;
@@ -163,7 +215,7 @@ package body Standard_Complex_Circuits is
         end if;
       end if;
     end loop;
-  end Speel;
+  end Indexed_Speel;
 
   procedure Indexed_Speel
               ( idx : in Standard_Integer_Vectors.Vector;
@@ -264,14 +316,15 @@ package body Standard_Complex_Circuits is
     end if;
   end Indexed_Speel;
 
-  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    cff : in Standard_Complex_Vectors.Vector;
-                    cst : in Standard_Complex_Numbers.Complex_Number;
-                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
-                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
-                    bck : in Standard_Complex_Vectors.Link_to_Vector;
-                    crs : in Standard_Complex_Vectors.Link_to_Vector;
-                    h : out Standard_Complex_Matrices.Matrix ) is
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_Vectors.Vector;
+                cst : in Standard_Complex_Numbers.Complex_Number;
+                x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                bck : in Standard_Complex_Vectors.Link_to_Vector;
+                crs : in Standard_Complex_Vectors.Link_to_Vector;
+                h : out Standard_Complex_Matrices.Matrix ) is
 
     dim : constant integer32 := x'last;
     idk : Standard_Integer_Vectors.Link_to_Vector;
@@ -305,7 +358,7 @@ package body Standard_Complex_Circuits is
         h(i,j) := h(j,i);
       end loop;
     end loop;
-  end Speel;
+  end Indexed_Speel;
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     cff : in Standard_Complex_Vectors.Vector;
@@ -390,6 +443,116 @@ package body Standard_Complex_Circuits is
           end if;
         end if;
       end if;
+    end loop;
+  end Speel;
+
+  procedure Speel ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                    idx : in Standard_Integer_Vectors.Vector;
+                    cff : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec ) is
+
+    use Standard_Complex_Numbers,Standard_Integer_Vectors;
+
+    idx1,idx2 : integer32;
+    acc,wrk : Complex_Number;
+    factor : double_float;
+
+  begin
+    idx1 := idx(1);
+    if idx'last = 1 then
+      Multiply_Factor(xps,fac,x,cff,pwt,acc);
+      yd(0) := yd(0) + acc*x(idx1);
+      factor := Create(xps(idx1));
+      yd(idx1) := yd(idx1) + factor*acc;
+    else
+      Forward_Backward_Cross(idx,x,fwd,bck,crs);
+      Multiply_Factor(xps,fac,x,cff,pwt,acc);
+      yd(0) := yd(0) + acc*fwd(idx'last-1); 
+      if idx'last = 2 then
+        idx2 := idx(2);
+        wrk := acc*x(idx1); factor := Create(xps(idx2));
+        wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+        wrk := acc*x(idx2); factor := Create(xps(idx1));
+        wrk := factor*wrk; yd(idx1) := yd(idx1) + wrk;
+      else -- idk'last > 2
+        wrk := acc*bck(idx'last-2);
+        factor := Create(xps(idx1)); wrk := factor*wrk;
+        yd(idx1) := yd(idx1) + wrk;
+        for j in idx'first+1..idx'last-1 loop
+          wrk := acc*crs(j-1); idx2 := idx(j);
+          factor := Create(xps(idx2)); wrk := factor*wrk;
+          yd(idx2) := yd(idx2) + wrk;
+        end loop;
+        wrk := acc*fwd(idx'last-2); idx2 := idx(idx'last);
+        factor := Create(xps(idx2)); wrk := factor*wrk;
+        yd(idx2) := yd(idx2) + wrk;
+      end if;
+    end if;
+  end Speel;
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    cff : in Standard_Complex_Vectors.Vector;
+                    cst : in Standard_Complex_Numbers.Complex_Number;
+                    x,yd : in Standard_Complex_Vectors.Link_to_Vector;
+                    fwd : in Standard_Complex_Vectors.Link_to_Vector;
+                    bck : in Standard_Complex_Vectors.Link_to_Vector;
+                    crs : in Standard_Complex_Vectors.Link_to_Vector;
+                    pwt : in Standard_Complex_VecVecs.VecVec;
+                    h : out Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Numbers,Standard_Integer_Vectors;
+
+    dim : constant integer32 := x'last;
+    idx1 : integer32;
+    kcff : Complex_Number;
+
+  begin
+    for i in 1..dim loop
+      for j in 1..dim loop
+        h(i,j) := Create(0.0);
+      end loop;
+    end loop;
+    yd(0) := cst;
+    for k in xps'range loop
+      declare
+        xpk : constant Standard_Integer_Vectors.Vector := xps(k).all;
+        idk : constant Standard_Integer_Vectors.Vector := idx(k).all;
+        fck : constant Standard_Integer_Vectors.Link_to_Vector := fac(k);
+      begin
+        kcff := cff(k);
+        if fck = null then
+          if idk'last = 1 then
+            idx1 := idk(1);
+            yd(0) := yd(0) + kcff*x(idx1);
+            yd(idx1) := yd(idx1) + kcff;
+          else
+            Indexed_Speel(idk,kcff,x,yd,fwd,bck,crs,h);
+          end if;
+        else
+          Speel(xps(k),fck,idk,kcff,x,yd,fwd,bck,crs,pwt);
+          if idk'last = 1 then -- one variable special case
+            Standard_Hessian_Updaters.Speel1(h,kcff,xpk,idk,fck.all,x.all,pwt);
+          elsif idk'last = 2 then -- two variable special case
+            Standard_Hessian_Updaters.Speel2(h,kcff,xpk,idk,fck.all,x.all,pwt);
+          elsif idk'last = 3 then -- three variable special case
+            Standard_Hessian_Updaters.Speel3(h,kcff,xpk,idk,fck.all,x.all,pwt);
+          elsif idk'last = 4 then -- four variable special case
+            Standard_Hessian_Updaters.Speel4(h,kcff,xpk,idk,fck.all,x.all,pwt);
+          else
+            Standard_Hessian_Updaters.SpeelN
+              (h,kcff,xpk,idk,fck.all,x.all,fwd,bck,pwt);
+          end if;
+        end if;
+      end;
+    end loop;
+    for i in 2..dim loop
+      for j in 1..(i-1) loop
+        h(i,j) := h(j,i);
+      end loop;
     end loop;
   end Speel;
 

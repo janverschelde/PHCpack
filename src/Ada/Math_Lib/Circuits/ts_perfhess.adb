@@ -5,19 +5,23 @@ with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Random_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_Polynomials;        use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;     use Standard_Complex_Polynomials_io;
+with Standard_Complex_Poly_Functions;
 with Evaluation_Differentiation_Errors;
 with Standard_Complex_Circuits;
 with Standard_Circuit_Makers;
+with Standard_Hessian_Updaters;
 
 procedure ts_perfhess is
 
@@ -31,6 +35,7 @@ procedure ts_perfhess is
   -- DESCRIPTION :
   --   Computes the Hessian matrix of the product of the variables in x,
   --   multiplied with the coefficient c, symbolically, for testing purposes.
+
     res : Standard_Complex_Matrices.Matrix(x'range,x'range);
     p : Poly;
     t : Term;
@@ -390,343 +395,7 @@ procedure ts_perfhess is
     end if;
   end Algorithmic;
 
--- updating the Hessian for any monomials of small sizes
-
-  procedure Algorithmic1
-              ( H : in out Standard_Complex_Matrices.Matrix;
-                c : in Complex_Number;
-                xps : in Standard_Integer_Vectors.Vector;
-                idx : in Standard_Integer_Vectors.Vector;
-                fac : in Standard_Integer_Vectors.Vector;
-                x : in Standard_Complex_Vectors.Vector;
-                pwt : in Standard_Complex_VecVecs.VecVec ) is
-
-  -- DESCRIPTION :
-  --   Deals with the special case of one variable raised to
-  --   some power higher than 1.
-
-  -- ON ENTRY :
-  --   H        the current Hessian matrix,
-  --            initialized with zero if called for the first time.
-  --   c        coefficient of the term in the circuit;
-  --   xps      exponents of all variables in the monomial;
-  --   idx      index of the participating variables;
-  --   fac      indices to the variables in the common factor;
-  --   x        values for all variables;
-  --   pwt      values of higher powers of x to evaluate the common factor.
-
-  -- ON RETURN :
-  --   H        updated Hessian matrix, only for upper triangular part.
-
-  -- REQUIRED : idx'last = fac'last = 1.
-
-    m1 : integer32;
-    powfac : double_float; -- multiplier factor of two powers
-
-  begin
-    m1 := xps(fac(1)); -- the monomial is c*x**m1, m1 >= 2.
-    powfac := double_float(m1*(m1-1));
-    if m1 = 2 then
-      H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*powfac;
-    elsif m1 = 3 then
-      H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*powfac*x(fac(1));
-    else -- m > 3, if m = 4, then x**2 at pwt(fac(1))(1)
-      H(idx(1),idx(1)) := H(idx(1),idx(1)) + c*powfac*(pwt(fac(1))(m1-3));
-    end if;
-  end Algorithmic1;
-
-  procedure Algorithmic2
-              ( H : in out Standard_Complex_Matrices.Matrix;
-                c : in Complex_Number;
-                xps : in Standard_Integer_Vectors.Vector;
-                idx : in Standard_Integer_Vectors.Vector;
-                fac : in Standard_Integer_Vectors.Vector;
-                x : in Standard_Complex_Vectors.Vector;
-                pwt : in Standard_Complex_VecVecs.VecVec ) is
-
-  -- DESCRIPTION :
-  --   Deals with the special case of two variables,
-  --   where at least one variable is raised to a power higher than 1.
-
-  -- ON ENTRY :
-  --   H        the current Hessian matrix,
-  --            initialized with zero if called for the first time.
-  --   c        coefficient of the term in the circuit;
-  --   xps      exponents of all variables in the monomial;
-  --   idx      index of the participating variables;
-  --   fac      indices to the variables in the common factor;
-  --   x        values for all variables;
-  --   pwt      values of higher powers of x to evaluate the common factor.
-
-  -- ON RETURN :
-  --   H        updated Hessian matrix, only for upper triangular part.
-
-  -- REQUIRED : idx'last = 2 >= fac'last >= 1.
-
-    m1,m2 : integer32;
-    powfac : double_float; -- multiplier factor of two powers
-    acc : Complex_Number;
-
-  begin
-    m1 := xps(fac(1)); powfac := double_float(m1*(m1-1));
-    if fac'last = 1 then -- the other variable has no higher power
-      if fac(1) = idx(1) -- do not forget to multiply with the other var
-       then acc := c*powfac*x(idx(2));
-       else acc := c*powfac*x(idx(1));
-      end if;
-    else -- the other variable appears with a higher power
-      m2 := xps(fac(2));
-      acc := c*powfac*pwt(fac(2))(m2-1);
-    end if;
-    if m1 = 2 then
-      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc;
-    elsif m1 = 3 then
-      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*x(fac(1));
-    else
-      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*(pwt(fac(1))(m1-3));
-    end if;
-    if fac'last = 1 then
-      powfac := double_float(m1);
-      if m1 = 2 then
-        H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*powfac*x(fac(1));
-      else
-        H(idx(1),idx(2)) := H(idx(1),idx(2)) + c*powfac*(pwt(fac(1))(m1-2));
-      end if;
-    else
-      powfac := double_float(m2*(m2-1));
-      acc := c*powfac*(pwt(fac(1))(m1-1));
-      if m2 = 2 then
-        H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc;
-      elsif m2 = 3 then
-        H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*x(fac(2));
-      else
-        H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*(pwt(fac(2))(m2-3));
-      end if;
-      powfac := double_float(m1*m2);
-      acc := c*powfac;
-      if m1 = 2
-       then acc := acc*x(fac(1));
-       else acc := acc*(pwt(fac(1))(m1-2));
-      end if;
-      if m2 = 2
-       then acc := acc*x(fac(2));
-       else acc := acc*(pwt(fac(2))(m2-2));
-      end if;
-      H(idx(1),idx(2)) := H(idx(1),idx(2)) + acc;
-    end if;
-  end Algorithmic2;
-
-  procedure Algorithmic3
-              ( H : in out Standard_Complex_Matrices.Matrix;
-                c : in Complex_Number;
-                xps : in Standard_Integer_Vectors.Vector;
-                idx : in Standard_Integer_Vectors.Vector;
-                fac : in Standard_Integer_Vectors.Vector;
-                x : in Standard_Complex_Vectors.Vector;
-                pwt : in Standard_Complex_VecVecs.VecVec ) is
-
-  -- DESCRIPTION :
-  --   Deals with the special case of three variables,
-  --   where at least one variable is raised to a power higher than 1.
-
-  -- ON ENTRY :
-  --   H        the current Hessian matrix,
-  --            initialized with zero if called for the first time.
-  --   c        coefficient of the term in the circuit;
-  --   xps      exponents of all variables in the monomial;
-  --   idx      index of the participating variables;
-  --   fac      indices to the variables in the common factor;
-  --   x        values for all variables;
-  --   pwt      values of higher powers of x to evaluate the common factor.
-
-  -- ON RETURN :
-  --   H        updated Hessian matrix, only for upper triangular part.
-
-  -- REQUIRED : idx'last = 3 >= fac'last >= 1.
-
-    m1,m2 : integer32;
-    powfac : double_float; -- multiplier factor of two powers
-    acc : Complex_Number;
-    offdiagfac : Complex_Number; -- common off diagonal factor
-    ondiagfac : Complex_Number;  -- common on diagonal factor
-
-  begin
-    offdiagfac := c; ondiagfac := c;  -- off/on diagonal factors
-    for i in fac'range loop
-      m1 := xps(fac(i));
-      if m1 = 2 then
-        offdiagfac := offdiagfac*x(fac(i));
-      elsif m1 = 3 then
-        offdiagfac := offdiagfac*(pwt(fac(i))(1));
-        ondiagfac := ondiagfac*x(fac(i));
-      else
-        offdiagfac := offdiagfac*(pwt(fac(i))(m1-2));
-        ondiagfac := ondiagfac*(pwt(fac(i))(m1-3));
-      end if;
-    end loop;
-   -- compute the off diagonal elements of the Hessian
-    powfac := double_float(xps(idx(1))*xps(idx(2)));
-    H(idx(1),idx(2)) := H(idx(1),idx(2)) + offdiagfac*powfac*x(idx(3));
-    powfac := double_float(xps(idx(1))*xps(idx(3)));
-    H(idx(1),idx(3)) := H(idx(1),idx(3)) + offdiagfac*powfac*x(idx(2));
-    powfac := double_float(xps(idx(2))*xps(idx(3)));
-    H(idx(2),idx(3)) := H(idx(2),idx(3)) + offdiagfac*powfac*x(idx(1));
-   -- ten cases for the on diagonal element of the Hessian
-    if fac'last = 3 then -- all variables raised to higher power
-      m1 := xps(fac(1)); powfac := double_float(m1*(m1-1));
-      acc := ondiagfac*(pwt(fac(2))(1))*(pwt(fac(3))(1));
-      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
-      m1 := xps(fac(2)); powfac := double_float(m1*(m1-1));
-      acc := ondiagfac*(pwt(fac(1))(1))*(pwt(fac(3))(1));
-      H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
-      m1 := xps(fac(3)); powfac := double_float(m1*(m1-1));
-      acc := ondiagfac*(pwt(fac(1))(1))*(pwt(fac(2))(1));
-      H(fac(3),fac(3)) := H(fac(3),fac(3)) + acc*powfac;
-    elsif fac'last = 1 then -- one variable raised to higher power
-      m1 := xps(fac(1)); powfac := double_float(m1*(m1-1));
-      if fac(1) = idx(1) then
-        acc := ondiagfac*x(idx(2))*x(idx(3));
-      elsif fac(1) = idx(2) then
-        acc := ondiagfac*x(idx(1))*x(idx(3));
-      else -- fac(1) = idx(3)
-        acc := ondiagfac*x(idx(1))*x(idx(2));
-      end if;
-      H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
-    else -- fac'last = 2, two variables raised to higher power
-      m1 := xps(fac(1)); powfac := double_float(m1*(m1-1));
-      m2 := xps(fac(2));
-      if fac(1) = idx(1) then
-        if fac(2) = idx(2) then -- idx(3) has power 1
-          acc := ondiagfac*(pwt(fac(2))(1))*x(idx(3));
-          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
-          powfac := double_float(m2*(m2-1));
-          acc := ondiagfac*(pwt(fac(1))(1))*x(idx(3));
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
-        else -- idx(2) has power 1
-          acc := ondiagfac*x(idx(2))*(pwt(fac(2))(1));
-          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
-          powfac := double_float(m2*(m2-1));
-          acc := ondiagfac*x(idx(2))*(pwt(fac(1))(1));
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
-        end if;
-      elsif fac(1) = idx(2) then
-        if fac(2) = idx(1) then -- idx(3) has power 1
-          acc := ondiagfac*(pwt(fac(2))(1))*x(idx(3));
-          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
-          powfac := double_float(m2*(m2-1));
-          acc := ondiagfac*(pwt(fac(1))(1))*x(idx(3));
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
-        else -- idx(1) has power 1
-          acc := ondiagfac*x(idx(1))*(pwt(fac(2))(1));
-          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
-          powfac := double_float(m2*(m2-1));
-          acc := ondiagfac*x(idx(1))*(pwt(fac(1))(1));
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
-        end if;
-      else --  fac(1) = idx(3)
-        if fac(2) = idx(1) then -- idx(2) has power 1
-          acc := ondiagfac*(pwt(fac(2))(1))*x(idx(2));
-          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
-          powfac := double_float(m2*(m2-1));
-          acc := ondiagfac*(pwt(fac(1))(1))*x(idx(2));
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
-        else -- idx(1) has power 1
-          acc := ondiagfac*x(idx(1))*(pwt(fac(2))(1));
-          H(fac(1),fac(1)) := H(fac(1),fac(1)) + acc*powfac;
-          powfac := double_float(m2*(m2-1));
-          acc := ondiagfac*x(idx(1))*(pwt(fac(1))(1));
-          H(fac(2),fac(2)) := H(fac(2),fac(2)) + acc*powfac;
-        end if;
-      end if;
-    end if;
-  end Algorithmic3;
-
-  procedure Algorithmic4
-              ( H : in out Standard_Complex_Matrices.Matrix;
-                c : in Complex_Number;
-                xps : in Standard_Integer_Vectors.Vector;
-                idx : in Standard_Integer_Vectors.Vector;
-                fac : in Standard_Integer_Vectors.Vector;
-                x : in Standard_Complex_Vectors.Vector;
-                pwt : in Standard_Complex_VecVecs.VecVec ) is
-
-  -- DESCRIPTION :
-  --   Deals with the special case of four variables,
-  --   where at least one variable is raised to a power higher than 1.
-
-  -- ON ENTRY :
-  --   H        the current Hessian matrix,
-  --            initialized with zero if called for the first time.
-  --   c        coefficient of the term in the circuit;
-  --   xps      exponents of all variables in the monomial;
-  --   idx      index of the participating variables;
-  --   fac      indices to the variables in the common factor;
-  --   x        values for all variables;
-  --   pwt      values of higher powers of x to evaluate the common factor.
-
-  -- ON RETURN :
-  --   H        updated Hessian matrix, only for upper triangular part.
-
-  -- REQUIRED : idx'last = 4 >= fac'last >= 1.
-
-    m1 : integer32;
-    powfac : double_float; -- multiplier factor of two powers
-    acc : Complex_Number;
-    offdiagfac : Complex_Number; -- common off diagonal factor
-    ondiagfac : Complex_Number;  -- common on diagonal factor
-    fwd : Standard_Complex_Vectors.Vector(1..3);
-    bck : Standard_Complex_Vectors.Vector(1..2);
-
-  begin
-    offdiagfac := c; ondiagfac := c;  -- off/on diagonal factors
-    for i in fac'range loop
-      m1 := xps(fac(i));
-      if m1 = 2 then
-        offdiagfac := offdiagfac*x(fac(i));
-      elsif m1 = 3 then
-        offdiagfac := offdiagfac*(pwt(fac(i))(1));
-        ondiagfac := ondiagfac*x(fac(i));
-      else
-        offdiagfac := offdiagfac*(pwt(fac(i))(m1-2));
-        ondiagfac := ondiagfac*(pwt(fac(i))(m1-3));
-      end if;
-    end loop;
-   -- the off diagonal elements use forward and backward products
-    fwd(1) := x(idx(1))*x(idx(2));
-    fwd(2) := fwd(1)*x(idx(3)); fwd(3) := fwd(2)*x(idx(4));
-    bck(1) := x(idx(4))*x(idx(3)); bck(2) := bck(1)*x(idx(2));
-   -- the last element is a copy of fwd(1), with a multiplier factor
-    powfac := double_float(xps(idx(3))*xps(idx(4)));
-    H(idx(3),idx(4)) := H(idx(3),idx(4)) + offdiagfac*powfac*fwd(1);
-   -- the first element is a copy of bck(1), with a multiplier factor
-    powfac := double_float(xps(idx(1))*xps(idx(2)));
-    H(idx(1),idx(2)) := H(idx(1),idx(2)) + offdiagfac*powfac*bck(1);
-   -- the other off diagonal elements
-    acc := offdiagfac*x(idx(2));
-    powfac := double_float(xps(idx(1))*xps(idx(3)));
-    H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*powfac*x(idx(4));
-    powfac := double_float(xps(idx(1))*xps(idx(4)));
-    H(idx(1),idx(4)) := H(idx(1),idx(4)) + acc*powfac*x(idx(3));
-    acc := offdiagfac*x(idx(1));
-    powfac := double_float(xps(idx(2))*xps(idx(3)));
-    H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*powfac*x(idx(4));
-    powfac := double_float(xps(idx(2))*xps(idx(4)));
-    H(idx(2),idx(4)) := H(idx(2),idx(4)) + acc*powfac*x(idx(3));
-   -- compute the diagonal elements
-    for k in fac'range loop
-      m1 := xps(fac(k)); powfac := double_float(m1*(m1-1));
-      acc := powfac*ondiagfac; -- acc is the cofactor
-      for i in idx'range loop
-        if idx(i) /= fac(k) then -- skip the current factor
-          if xps(idx(i)) = 1 
-           then acc := acc*x(idx(i));
-           else acc := acc*(pwt(idx(i))(1));
-          end if;
-        end if;
-      end loop;
-      H(fac(k),fac(k)) := H(fac(k),fac(k)) + acc;
-    end loop;
-  end Algorithmic4;
+-- updates of the Hessian for any monomial
 
   procedure Algorithmic
               ( H : in out Standard_Complex_Matrices.Matrix;
@@ -763,14 +432,14 @@ procedure ts_perfhess is
     sz : constant integer32 := idx'last;
 
   begin
-    if sz = 1 then
-      Algorithmic1(H,c,xps,idx,fac,x,pwt); -- one variable special case
-    elsif sz = 2 then
-      Algorithmic2(H,c,xps,idx,fac,x,pwt); -- two variable special case
-    elsif sz = 3 then
-      Algorithmic3(H,c,xps,idx,fac,x,pwt); -- three variable special case
-    elsif sz = 4 then
-      Algorithmic4(H,c,xps,idx,fac,x,pwt); -- four variable special case
+    if sz = 1 then -- one variable special case
+      Standard_Hessian_Updaters.Speel1(H,c,xps,idx,fac,x,pwt);
+    elsif sz = 2 then -- two variable special case
+      Standard_Hessian_Updaters.Speel2(H,c,xps,idx,fac,x,pwt);
+    elsif sz = 3 then -- three variable special case
+      Standard_Hessian_Updaters.Speel3(H,c,xps,idx,fac,x,pwt);
+    elsif sz = 4 then -- four variable special case
+      Standard_Hessian_Updaters.Speel4(H,c,xps,idx,fac,x,pwt);
     else -- sz > 4
       declare
         m1 : integer32;
@@ -1038,7 +707,7 @@ procedure ts_perfhess is
     Standard_Circuit_Makers.Write_Matrix(h1);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h1);
     put("Sum of errors :"); put(err,3); new_line;
-    Standard_Complex_Circuits.Speel(c,xv,yd,h2);
+    Standard_Complex_Circuits.Indexed_Speel(c,xv,yd,h2);
     put_line("The Hessian recomputed on a circuit :");
     Standard_Circuit_Makers.Write_Matrix(h2);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
@@ -1065,12 +734,15 @@ procedure ts_perfhess is
     pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
         := Standard_Complex_Circuits.Allocate(mxe);
     h1 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
-   -- y : constant Standard_Complex_Vectors.Vector(0..dim)
-   --   := (0..dim => Standard_Complex_Numbers.Create(0.0));
-   -- yd : constant Standard_Complex_Vectors.Link_to_Vector
-   --    := new Standard_Complex_Vectors.Vector'(y);
-   -- h2 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    g : Standard_Complex_Vectors.Vector(1..dim);
+    z : Standard_Complex_Numbers.Complex_Number;
+    y : constant Standard_Complex_Vectors.Vector(0..dim)
+      := (0..dim => Standard_Complex_Numbers.Create(0.0));
+    yd : constant Standard_Complex_Vectors.Link_to_Vector
+       := new Standard_Complex_Vectors.Vector'(y);
+    h2 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     err : double_float;
+    ans : character;
 
   begin
     new_line;
@@ -1083,11 +755,26 @@ procedure ts_perfhess is
     Standard_Circuit_Makers.Write_Matrix(h1);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h1);
     put("Sum of errors :"); put(err,3); new_line;
-   -- Standard_Complex_Circuits.Speel(c,xv,yd,h2);
-   -- put_line("The Hessian recomputed on a circuit :");
-   -- Standard_Circuit_Makers.Write_Matrix(h2);
-   -- err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
-   -- put("Sum of errors :"); put(err,3); new_line;
+    Standard_Complex_Circuits.Speel(c,xv,yd,pwt,h2);
+    put_line("The Hessian recomputed on a circuit :");
+    Standard_Circuit_Makers.Write_Matrix(h2);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+    put("Sum of errors :"); put(err,3); new_line;
+    new_line;
+    put("Compare gradients ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put_line("The algorithmically computed gradient :");
+      put_line(yd(1..yd'last));
+      g := Standard_Circuit_Makers.Gradient(p,x);
+      put_line("The symbolically computed gradient :"); put_line(g);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,yd(1..dim));
+      put("Sum of errors :"); put(err,3); new_line;
+      z := Standard_Complex_Poly_Functions.Eval(p,x);
+      put_line("The symbolically computed function value :");
+      put(z); new_line;
+      put_line("The algorithmically computed function value :");
+      put(yd(0)); new_line;
+    end if;
   end Test_Power_Circuit;
 
   procedure Main is
