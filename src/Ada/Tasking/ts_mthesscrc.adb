@@ -531,7 +531,8 @@ procedure ts_mthesscrc is
     for k in 1..nbruns loop
       values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
       multstart := Ada.Calendar.Clock;
-     -- Multitasked_Singular_Values(nbt,s,x,jm2vls,values,false);
+      Multitasked_Hessian_Circuits.Multitasked_Singular_Values
+        (nbt,s,x,values,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then
@@ -605,7 +606,8 @@ procedure ts_mthesscrc is
     for k in 1..nbruns loop
       values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
       multstart := Ada.Calendar.Clock;
-     -- Multitasked_Singular_Values(nbt,s,x,jm2vls,values,false);
+      Multitasked_Hessian_Circuits.Multitasked_Singular_Values
+        (nbt,s,x,values,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then
@@ -679,7 +681,8 @@ procedure ts_mthesscrc is
     for k in 1..nbruns loop
       values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
       multstart := Ada.Calendar.Clock;
-     -- Multitasked_Singular_Values(nbt,s,x,jm2vls,values,false);
+      Multitasked_Hessian_Circuits.Multitasked_Singular_Values
+        (nbt,s,x,values,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then
