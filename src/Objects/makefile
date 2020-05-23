@@ -1727,7 +1727,7 @@ test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont \
               ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp ts_mtperm \
               ts_mtpermctl ts_mtmbthom ts_mtcelidx ts_corecount ts_mtadcnv \
               ts_mtserlin ts_mtnewton ts_mthessian ts_mtratapp ts_mtshiftcnv \
-              ts_mtpcscnv
+              ts_mtpcscnv ts_mthesscrc
 #             ts_mtmatvec ts_mtpolval ts_mtlinsol
 
 ts_corecount:
@@ -1816,6 +1816,9 @@ ts_mtnewton:
 
 ts_mthessian:
 	make -f $(MAKEFILE) ts_mthessian
+
+ts_mthesscrc:
+	make -f $(MAKEFILE) ts_mthesscrc
 
 ts_mtratapp:
 	make -f $(MAKEFILE) ts_mtratapp

@@ -59,14 +59,14 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Basic_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization, but no fast math:
-GNATFLAGS=-gnatv -O3 -gnatp -gnatv
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatv
+# GNATFLAGS=-gnatv -O3 -gnatp -gnatv
+# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatv
 # flags with full optimization and fast math:
 # GNATFLAGS=-gnatv -O3 -gnatp -gnatv -ffast-math
 # GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatv -ffast-math
 # flags without optimization :
-# GNATFLAGS=-gnatv -gnatwa -gnatVa
-# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+GNATFLAGS=-gnatv -gnatwa -gnatVa
+GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
 # flag with gnat95 restriction for CtoPHC
 # GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp
 
@@ -2098,6 +2098,10 @@ ts_mtnewton:
 ts_mthessian:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mthessian.adb \
               -o $(BIN)/ts_mthessian
+
+ts_mthesscrc:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mthesscrc.adb \
+              -o $(BIN)/ts_mthesscrc
 
 ts_mtratapp:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtratapp.adb \

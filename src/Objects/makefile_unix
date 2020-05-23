@@ -2952,6 +2952,10 @@ ts_mthessian:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mthessian.adb \
               -o $(BIN)/ts_mthessian
 
+ts_mthesscrc:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mthesscrc.adb \
+              -o $(BIN)/ts_mthesscrc
+
 ts_mtratapp:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtratapp.adb \
               -o $(BIN)/ts_mtratapp
