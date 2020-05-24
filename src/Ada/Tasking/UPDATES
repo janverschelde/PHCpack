@@ -1,4 +1,6 @@
 Sat 23 May 2020 : completed multitasked_hessian_circuits.adb and ts_mthesscrc.
+  Updated multitasked_hessian_circuits.adb with a check for cases
+  (such as the cyclic n-roots problems) where no power table is needed
 
 Fri 22 May 2020 : first (incomplete) multitasked_hessian_circuits,
   tested by ts_mthesscrc, to compute Hessians with multitasking better.

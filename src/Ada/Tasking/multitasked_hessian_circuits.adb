@@ -79,6 +79,7 @@ package body Multitasked_Hessian_Circuits is
     A,U,V : Standard_Complex_VecMats.VecMat(1..nbt);
     e : Standard_Complex_VecVecs.VecVec(1..nbt);
     yd : Standard_Complex_VecVecs.VecVec(1..s.neq);
+    pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
@@ -99,25 +100,27 @@ package body Multitasked_Hessian_Circuits is
       pe,vls,pyd,xpw : Standard_Complex_Vectors.Link_to_Vector;
 
     begin
-      while idx <= s.neq loop
-        put_line("task " & Multitasking.to_string(i)
-                         & " computes power table row "
-                         & Multitasking.to_string(idx));
-        if s.mxe(idx) > 1 then
-          xpw := s.pwt(idx);
-          xpw(1) := x(idx)*x(idx);
-          for k in 2..(s.mxe(idx)-1) loop
-            xpw(k) := xpw(k-1)*x(idx);
-          end loop;
-        end if;
-        idx := idx + n;
-      end loop;
-      pwtdone(i) := true;
-     -- make sure all tasks are done with the power table
-      while not Multitasking.all_true(nbt,pwtdone) loop
-        delay 0.001;
-      end loop;
-      idx := i; -- reset the index for Hessian and SVD computation
+      if pwtneeded then
+        while idx <= s.neq loop
+          put_line("task " & Multitasking.to_string(i)
+                           & " computes power table row "
+                           & Multitasking.to_string(idx));
+          if s.mxe(idx) > 1 then
+            xpw := s.pwt(idx);
+            xpw(1) := x(idx)*x(idx);
+            for k in 2..(s.mxe(idx)-1) loop
+              xpw(k) := xpw(k-1)*x(idx);
+            end loop;
+          end if;
+          idx := idx + n;
+        end loop;
+        pwtdone(i) := true;
+       -- make sure all tasks are done with the power table
+        while not Multitasking.all_true(nbt,pwtdone) loop
+          delay 0.001;
+        end loop;
+        idx := i; -- reset the index for Hessian and SVD computation
+      end if;
       while idx <= s.neq loop
         put_line("task " & Multitasking.to_string(i)
                          & " computes gradient & Hessian "
@@ -156,22 +159,24 @@ package body Multitasked_Hessian_Circuits is
       pe,vls,pyd,xpw : Standard_Complex_Vectors.Link_to_Vector;
 
     begin
-      while idx <= s.neq loop
-        if s.mxe(idx) > 1 then
-          xpw := s.pwt(idx);
-          xpw(1) := x(idx)*x(idx);
-          for k in 2..(s.mxe(idx)-1) loop
-            xpw(k) := xpw(k-1)*x(idx);
-          end loop;
-        end if;
-        idx := idx + n;
-      end loop;
-      pwtdone(i) := true;
-     -- make sure all tasks are done with the power table
-      while not Multitasking.all_true(nbt,pwtdone) loop
-        delay 0.001;
-      end loop;
-      idx := i; -- reset the index for Hessian and SVD computation
+      if pwtneeded then
+        while idx <= s.neq loop
+          if s.mxe(idx) > 1 then
+            xpw := s.pwt(idx);
+            xpw(1) := x(idx)*x(idx);
+            for k in 2..(s.mxe(idx)-1) loop
+              xpw(k) := xpw(k-1)*x(idx);
+            end loop;
+          end if;
+          idx := idx + n;
+        end loop;
+        pwtdone(i) := true;
+       -- make sure all tasks are done with the power table
+        while not Multitasking.all_true(nbt,pwtdone) loop
+          delay 0.001;
+        end loop;
+        idx := i; -- reset the index for Hessian and SVD computation
+      end if;
       while idx <= s.neq loop
         pA := A(i); pU := U(i); pV := V(i); pe := e(i);
         vls := values(idx); pyd := yd(idx);
@@ -200,6 +205,11 @@ package body Multitasked_Hessian_Circuits is
     V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     e := Allocate(nbt,s.dim,1,1);
     yd := Allocate(s.neq,s.dim,1,0); -- space for all gradients
+    for k in s.mxe'range loop -- determine if power table is needed
+      if s.mxe(k) > 1
+       then pwtneeded := true; exit;
+      end if;
+    end loop;
     if verbose
      then report_jobs(nbt);
      else silent_jobs(nbt);
@@ -220,6 +230,7 @@ package body Multitasked_Hessian_Circuits is
     A,U,V : DoblDobl_Complex_VecMats.VecMat(1..nbt);
     e : DoblDobl_Complex_VecVecs.VecVec(1..nbt);
     yd : DoblDobl_Complex_VecVecs.VecVec(1..s.neq);
+    pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
@@ -238,25 +249,27 @@ package body Multitasked_Hessian_Circuits is
       pe,vls,pyd,xpw : DoblDobl_Complex_Vectors.Link_to_Vector;
 
     begin
-      while idx <= s.neq loop
-        put_line("task " & Multitasking.to_string(i)
-                         & " computes power table row "
-                         & Multitasking.to_string(idx));
-        if s.mxe(idx) > 1 then
-          xpw := s.pwt(idx);
-          xpw(1) := x(idx)*x(idx);
-          for k in 2..(s.mxe(idx)-1) loop
-            xpw(k) := xpw(k-1)*x(idx);
-          end loop;
-        end if;
-        idx := idx + n;
-      end loop;
-      pwtdone(i) := true;
-     -- make sure all tasks are done with the power table
-      while not Multitasking.all_true(nbt,pwtdone) loop
-        delay 0.001;
-      end loop;
-      idx := i; -- reset the index for Hessian and SVD computation
+      if pwtneeded then
+        while idx <= s.neq loop
+          put_line("task " & Multitasking.to_string(i)
+                           & " computes power table row "
+                           & Multitasking.to_string(idx));
+          if s.mxe(idx) > 1 then
+            xpw := s.pwt(idx);
+            xpw(1) := x(idx)*x(idx);
+            for k in 2..(s.mxe(idx)-1) loop
+              xpw(k) := xpw(k-1)*x(idx);
+            end loop;
+          end if;
+          idx := idx + n;
+        end loop;
+        pwtdone(i) := true;
+       -- make sure all tasks are done with the power table
+        while not Multitasking.all_true(nbt,pwtdone) loop
+          delay 0.001;
+        end loop;
+        idx := i; -- reset the index for Hessian and SVD computation
+      end if;
       while idx <= s.dim loop
         put_line("task " & Multitasking.to_string(i)
                          & " computes gradient & Hessian "
@@ -296,22 +309,24 @@ package body Multitasked_Hessian_Circuits is
       pe,vls,pyd,xpw : DoblDobl_Complex_Vectors.Link_to_Vector;
 
     begin
-      while idx <= s.dim loop
-        if s.mxe(idx) > 1 then
-          xpw := s.pwt(idx);
-          xpw(1) := x(idx)*x(idx);
-          for k in 2..(s.mxe(idx)-1) loop
-            xpw(k) := xpw(k-1)*x(idx);
-          end loop;
-        end if;
-        idx := idx + n;
-      end loop;
-      pwtdone(i) := true;
-     -- make sure all tasks are done with the power table
-      while not Multitasking.all_true(nbt,pwtdone) loop
-        delay 0.001;
-      end loop;
-      idx := i; -- reset the index for Hessian and SVD computation
+      if pwtneeded then
+        while idx <= s.dim loop
+          if s.mxe(idx) > 1 then
+            xpw := s.pwt(idx);
+            xpw(1) := x(idx)*x(idx);
+            for k in 2..(s.mxe(idx)-1) loop
+              xpw(k) := xpw(k-1)*x(idx);
+            end loop;
+          end if;
+          idx := idx + n;
+        end loop;
+        pwtdone(i) := true;
+       -- make sure all tasks are done with the power table
+        while not Multitasking.all_true(nbt,pwtdone) loop
+          delay 0.001;
+        end loop;
+        idx := i; -- reset the index for Hessian and SVD computation
+      end if;
       while idx <= s.dim loop
         pA := A(i); pU := U(i); pV := V(i); pe := e(i);
         vls := values(idx); pyd := yd(idx);
@@ -340,6 +355,11 @@ package body Multitasked_Hessian_Circuits is
     V := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
     e := Allocate(nbt,s.dim,1,1);
     yd := Allocate(s.neq,s.dim,1,0); -- space for gradients
+    for k in s.mxe'range loop -- determine if power table is needed
+      if s.mxe(k) > 1
+       then pwtneeded := true; exit;
+      end if;
+    end loop;
     if verbose
      then report_jobs(nbt);
      else silent_jobs(nbt);
@@ -360,6 +380,7 @@ package body Multitasked_Hessian_Circuits is
     A,U,V : QuadDobl_Complex_VecMats.VecMat(1..nbt);
     e : QuadDobl_Complex_VecVecs.VecVec(1..nbt);
     yd : QuadDobl_Complex_VecVecs.VecVec(1..s.neq);
+    pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
@@ -378,25 +399,27 @@ package body Multitasked_Hessian_Circuits is
       pe,vls,pyd,xpw : QuadDobl_Complex_Vectors.Link_to_Vector;
 
     begin
-      while idx <= s.dim loop
-        put_line("task " & Multitasking.to_string(i)
-                         & " computes power table row "
-                         & Multitasking.to_string(idx));
-        if s.mxe(idx) > 1 then
-          xpw := s.pwt(idx);
-          xpw(1) := x(idx)*x(idx);
-          for k in 2..(s.mxe(idx)-1) loop
-            xpw(k) := xpw(k-1)*x(idx);
-          end loop;
-        end if;
-        idx := idx + n;
-      end loop;
-      pwtdone(i) := true;
-     -- make sure all tasks are done with the power table
-      while not Multitasking.all_true(nbt,pwtdone) loop
-        delay 0.001;
-      end loop;
-      idx := i; -- reset the index for Hessian and SVD computation
+      if pwtneeded then
+        while idx <= s.dim loop
+          put_line("task " & Multitasking.to_string(i)
+                           & " computes power table row "
+                           & Multitasking.to_string(idx));
+          if s.mxe(idx) > 1 then
+            xpw := s.pwt(idx);
+            xpw(1) := x(idx)*x(idx);
+            for k in 2..(s.mxe(idx)-1) loop
+              xpw(k) := xpw(k-1)*x(idx);
+            end loop;
+          end if;
+          idx := idx + n;
+        end loop;
+        pwtdone(i) := true;
+       -- make sure all tasks are done with the power table
+        while not Multitasking.all_true(nbt,pwtdone) loop
+          delay 0.001;
+        end loop;
+        idx := i; -- reset the index for Hessian and SVD computation
+      end if;
       while idx <= s.dim loop
         put_line("task " & Multitasking.to_string(i)
                          & " computes gradient & Hessian "
@@ -435,22 +458,24 @@ package body Multitasked_Hessian_Circuits is
       pe,vls,pyd,xpw : QuadDobl_Complex_Vectors.Link_to_Vector;
 
     begin
-      while idx <= s.dim loop
-        if s.mxe(idx) > 1 then
-          xpw := s.pwt(idx);
-          xpw(1) := x(idx)*x(idx);
-          for k in 2..(s.mxe(idx)-1) loop
-            xpw(k) := xpw(k-1)*x(idx);
-          end loop;
-        end if;
-        idx := idx + n;
-      end loop;
-      pwtdone(i) := true;
-     -- make sure all tasks are done with the power table
-      while not Multitasking.all_true(nbt,pwtdone) loop
-        delay 0.001;
-      end loop;
-      idx := i; -- reset the index for Hessian and SVD computation
+      if pwtneeded then
+        while idx <= s.dim loop
+          if s.mxe(idx) > 1 then
+            xpw := s.pwt(idx);
+            xpw(1) := x(idx)*x(idx);
+            for k in 2..(s.mxe(idx)-1) loop
+              xpw(k) := xpw(k-1)*x(idx);
+            end loop;
+          end if;
+          idx := idx + n;
+        end loop;
+        pwtdone(i) := true;
+       -- make sure all tasks are done with the power table
+        while not Multitasking.all_true(nbt,pwtdone) loop
+          delay 0.001;
+        end loop;
+        idx := i; -- reset the index for Hessian and SVD computation
+      end if;
       while idx <= s.dim loop
         pA := A(i); pU := U(i); pV := V(i); pe := e(i);
         vls := values(idx); pyd := yd(idx);
@@ -479,6 +504,11 @@ package body Multitasked_Hessian_Circuits is
     V := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
     e := Allocate(nbt,s.dim,1,1);
     yd := Allocate(s.neq,s.dim,1,0); -- space for gradients
+    for k in s.mxe'range loop -- determine if power table is needed
+      if s.mxe(k) > 1
+       then pwtneeded := true; exit;
+      end if;
+    end loop;
     if verbose
      then report_jobs(nbt);
      else silent_jobs(nbt);
