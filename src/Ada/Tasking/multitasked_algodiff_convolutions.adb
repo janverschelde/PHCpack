@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Complex_Numbers;
+with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Numbers;
@@ -8,9 +9,31 @@ with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Matrices;
+with Standard_Vector_Splitters;
 with Multitasking;
 
 package body Multitasked_AlgoDiff_Convolutions is
+
+  function Allocate_Work_Space
+             ( nbt,dim,deg : integer32 )
+             return Standard_Coefficient_Convolutions.VecVecVec is
+
+    use Standard_Coefficient_Convolutions;
+    use Standard_Vector_Splitters;
+
+    res : VecVecVec(1..nbt);
+
+  begin
+    for i in res'range loop
+      declare
+        cff : constant Standard_Floating_VecVecs.VecVec(1..dim+1)
+            := Allocate_Floating_Coefficients(dim+1,deg);
+      begin
+        res(i) := new Standard_Floating_VecVecs.VecVec'(cff);
+      end;
+    end loop;
+    return res;
+  end Allocate_Work_Space;
 
   function Allocate_Work_Space
              ( nbt,dim,deg : integer32 )
@@ -71,6 +94,20 @@ package body Multitasked_AlgoDiff_Convolutions is
     end loop;
     return res;
   end Allocate_Work_Space;
+
+  procedure Standard_Multitasked_EvalDiff
+              ( nbt : in integer32;
+                c : in Standard_Coefficient_Convolutions.Circuits;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                vy : in Standard_Complex_VecVecs.VecVec;
+                vm : in Standard_Complex_VecMats.VecMat;
+                output : in boolean := false ) is
+  begin
+    null;
+  end Standard_Multitasked_EvalDiff;
 
   procedure Standard_Multitasked_EvalDiff
               ( nbt : in integer32;

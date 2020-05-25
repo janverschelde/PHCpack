@@ -13,6 +13,7 @@ with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_VecVecs;
@@ -39,6 +40,9 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
+with Standard_Vector_Splitters;
+with Standard_Convolution_Splitters;
+with Standard_Coefficient_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
@@ -125,6 +129,83 @@ procedure ts_mtadcnv is
       put("Give the number of tasks : "); get(nbt);
     end loop;
   end Standard_Test;
+
+  procedure Standard_Coefficient_Test
+              ( c : in Standard_Coefficient_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Applies multitasking to evaluate and differentiate c,
+  --   in double precision.  Compares with the one task run.
+
+  -- ON ENTRY :
+  --   c        a sequence of coefficient convolution circuits;
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbt      the number of tasks;
+  --   output   flag for output during multitasking.
+
+    use Standard_Coefficient_Convolutions;
+
+    s : constant Standard_Coefficient_Convolutions.Link_to_System
+      := Standard_Coefficient_Convolutions.Create(c,dim,deg);
+    x : constant Standard_Complex_Series_Vectors.Vector(1..dim)
+      := Standard_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xcff : constant Standard_Complex_VecVecs.VecVec(1..dim)
+         := Standard_Series_Coefficients(x);
+    rx : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ix : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    rpwt : constant Link_to_VecVecVec := Allocate(s.mxe,deg);
+    ipwt : constant Link_to_VecVecVec := Allocate(s.mxe,deg);
+    vy2 : constant Standard_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm2 : constant Standard_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup : Duration;
+    err : double_float;
+    ans : character;
+
+    use Ada.Calendar; -- for the difference operator on Duration
+
+  begin
+    Standard_Vector_Splitters.Complex_Parts(xcff,rx,ix);
+    put_line("Running on one task ...");
+    seristart := Ada.Calendar.Clock;
+    Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
+    EvalDiff(c,rx.all,ix.all,s.rpwt,s.ipwt,s.ryd,s.iyd,s.vy,s.vm);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put_line("-> Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      Standard_Multitasked_EvalDiff
+        (nbt,s.crc,rx,ix,s.mxe,rpwt,ipwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(s.vy,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(s.vm,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
+  end Standard_Coefficient_Test;
 
   procedure DoblDobl_Test
               ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
@@ -323,13 +404,19 @@ procedure ts_mtadcnv is
   --   nbt      the number of tasks;
   --   output   flag for output during multitasking.
 
-    use Standard_Speelpenning_Convolutions;
-
-    c : constant Circuits
+    c : constant Standard_Speelpenning_Convolutions.Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    cc : constant Standard_Coefficient_Convolutions.Circuits
+       := Standard_Convolution_Splitters.Split(c);
+    ans : character;
 
   begin
-    Standard_Test(c,dim,deg,nbt,output);
+    put("Run on circuits with splitted coefficient vectors ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Standard_Coefficient_Test(cc,dim,deg,nbt,output);
+     else Standard_Test(c,dim,deg,nbt,output);
+    end if;
   end Standard_Random_Test;
 
   procedure DoblDobl_Random_Test
@@ -684,7 +771,7 @@ procedure ts_mtadcnv is
   --   Prompts the user for a polynomial system
   --   and launches the test in double precision.
 
-    use Standard_Speelpenning_Convolutions;
+   -- use Standard_Speelpenning_Convolutions;
 
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     deg,nbt : integer32 := 0;
@@ -701,7 +788,7 @@ procedure ts_mtadcnv is
     put("Give the number of tasks : "); get(nbt);
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
     declare
-      c : constant Circuits(lp'range)
+      c : constant Standard_Speelpenning_Convolutions.Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(deg));
     begin
       Standard_Test(c,integer32(dim),deg,nbt,answer = 'y');
