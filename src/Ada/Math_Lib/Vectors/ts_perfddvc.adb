@@ -127,18 +127,18 @@ procedure ts_perfddvc is
     end loop;
   end Merge;
 
-  procedure Add ( zrehi : out Standard_Floating_Vectors.Vector;
-                  zimhi : out Standard_Floating_Vectors.Vector;
-                  zrelo : out Standard_Floating_Vectors.Vector;
-                  zimlo : out Standard_Floating_Vectors.Vector;
-                  xrehi : in Standard_Floating_Vectors.Vector;
-                  ximhi : in Standard_Floating_Vectors.Vector;
-                  xrelo : in Standard_Floating_Vectors.Vector;
-                  ximlo : in Standard_Floating_Vectors.Vector;
-                  yrehi : in Standard_Floating_Vectors.Vector;
-                  yimhi : in Standard_Floating_Vectors.Vector;
-                  yrelo : in Standard_Floating_Vectors.Vector;
-                  yimlo : in Standard_Floating_Vectors.Vector) is
+  procedure Add ( zrehi : in Standard_Floating_Vectors.Link_to_Vector;
+                  zimhi : in Standard_Floating_Vectors.Link_to_Vector;
+                  zrelo : in Standard_Floating_Vectors.Link_to_Vector;
+                  zimlo : in Standard_Floating_Vectors.Link_to_Vector;
+                  xrehi : in Standard_Floating_Vectors.Link_to_Vector;
+                  ximhi : in Standard_Floating_Vectors.Link_to_Vector;
+                  xrelo : in Standard_Floating_Vectors.Link_to_Vector;
+                  ximlo : in Standard_Floating_Vectors.Link_to_Vector;
+                  yrehi : in Standard_Floating_Vectors.Link_to_Vector;
+                  yimhi : in Standard_Floating_Vectors.Link_to_Vector;
+                  yrelo : in Standard_Floating_Vectors.Link_to_Vector;
+                  yimlo : in Standard_Floating_Vectors.Link_to_Vector) is
 
   -- DESCRIPTION :
   --   Adds two double double complex vectors x and y to form
@@ -162,10 +162,11 @@ procedure ts_perfddvc is
   --   zrelo      low parts of the real parts for the numbers in z;
   --   zimlo      low parts of the imaginary parts for the numbers in z.
 
+    dim : constant integer32 := zrehi'last;
     a,b,bb,s,s1,s2,t1,t2 : double_float;
 
   begin
-    for k in zrehi'range loop
+    for k in 1..dim loop
      -- first sum the real parts
      -- Double_Double_Basics.two_sum(xrehi(k),yrehi(k),s1,s2);
       a := xrehi(k); b := yrehi(k);
@@ -216,14 +217,14 @@ procedure ts_perfddvc is
 
   procedure Inner_Product
                 ( zrehi,zimhi,zrelo,zimlo : out double_float;
-                  xrehi : in Standard_Floating_Vectors.Vector;
-                  ximhi : in Standard_Floating_Vectors.Vector;
-                  xrelo : in Standard_Floating_Vectors.Vector;
-                  ximlo : in Standard_Floating_Vectors.Vector;
-                  yrehi : in Standard_Floating_Vectors.Vector;
-                  yimhi : in Standard_Floating_Vectors.Vector;
-                  yrelo : in Standard_Floating_Vectors.Vector;
-                  yimlo : in Standard_Floating_Vectors.Vector) is
+                  xrehi : in Standard_Floating_Vectors.Link_to_Vector;
+                  ximhi : in Standard_Floating_Vectors.Link_to_Vector;
+                  xrelo : in Standard_Floating_Vectors.Link_to_Vector;
+                  ximlo : in Standard_Floating_Vectors.Link_to_Vector;
+                  yrehi : in Standard_Floating_Vectors.Link_to_Vector;
+                  yimhi : in Standard_Floating_Vectors.Link_to_Vector;
+                  yrelo : in Standard_Floating_Vectors.Link_to_Vector;
+                  yimlo : in Standard_Floating_Vectors.Link_to_Vector) is
 
   -- DESCRIPTION :
   --   Computes the inner product of two double double complex vectors
@@ -250,7 +251,8 @@ procedure ts_perfddvc is
     QD_SPLITTER : constant double_float := 134217729.0; -- 2^27 + 1
     QD_SPLIT_THRESH : constant double_float := 6.69692879491417e+299; -- 2^996
 
-    a,b,bb,s1,s2,t1,t2,p1,p2,temp,aa : double_float;
+    dim : constant integer32 := xrehi'last;
+    a,b,bb,s1,s2,t1,t2,p1,p2,atemp,btemp,aa : double_float;
     a_hiprod,a_loprod,b_hiprod,b_loprod : double_float;
     c_hiprod,c_loprod,d_hiprod,d_loprod : double_float;
     xrehik,xrelok,ximhik,ximlok : double_float;
@@ -260,7 +262,7 @@ procedure ts_perfddvc is
 
   begin
     zrehi := 0.0; zimhi := 0.0; zrelo := 0.0; zimlo := 0.0;
-    for k in xrehi'range loop
+    for k in 1..dim loop
      -- prod := x(k)*y(k), as complex product
      -- reprod := xre(k)*yre(k) - xim(k)*yim(k), real part of product
      -- improd := xre(k)*yim(k) + xim(k)*yre(k), imaginary part of product
@@ -271,66 +273,66 @@ procedure ts_perfddvc is
       yimhik := yimhi(k); yimlok := yimlo(k);
      -- xre(k)*yre(k) is stored in a_hiprod and a_loprod
      -- Double_Double_Basics.two_prod(xrehik,yrehik,p1,p2);
-      p1 := xrehik*yrehik;
      -- Double_Double_Basics.split(xrehik,a_hi,a_lo);
       if ( xrehik > QD_SPLIT_THRESH or xrehik < -QD_SPLIT_THRESH ) then
         aa := xrehik*3.7252902984619140625E-09;  -- 2^-28
-        temp := QD_SPLITTER * aa;
-        a1_hi := temp - (temp - aa);
+        atemp := QD_SPLITTER * aa;
+        a1_hi := atemp - (atemp - aa);
         a1_lo := xrehik - a1_hi;
         a1_hi := a1_hi*268435456.0;  -- 2^28
         a1_lo := 268435456.0;     -- 2^28
       else
-        temp := QD_SPLITTER * xrehik;
-        a1_hi := temp - (temp - xrehik);
+        atemp := QD_SPLITTER * xrehik;
+        a1_hi := atemp - (atemp - xrehik);
         a1_lo := xrehik - a1_hi;
       end if;
      -- Double_Double_Basics.split(yrehik,b1_hi,b1_lo);
       if ( yrehik > QD_SPLIT_THRESH or yrehik < -QD_SPLIT_THRESH ) then
-        aa := yrehik*3.7252902984619140625E-09;  -- 2^-28
-        temp := QD_SPLITTER * aa;
-        b1_hi := temp - (temp - aa);
+        bb := yrehik*3.7252902984619140625E-09;  -- 2^-28
+        btemp := QD_SPLITTER * bb;
+        b1_hi := btemp - (btemp - bb);
         b1_lo := yrehik - b1_hi;
         b1_hi := b1_hi*268435456.0;  -- 2^28
         b1_lo := 268435456.0;     -- 2^28
       else
-        temp := QD_SPLITTER * yrehik;
-        b1_hi := temp - (temp - yrehik);
+        btemp := QD_SPLITTER * yrehik;
+        b1_hi := btemp - (btemp - yrehik);
         b1_lo := yrehik - b1_hi;
       end if;
-      p2 := ((a1_hi*b1_hi - p1) + a1_hi*b1_lo + a1_lo*b1_hi) + a1_lo*b1_lo;
-      p2 := p2 + (xrehik * yrelok + xrelok * yrehik);
-     -- Double_Double_Basics.quick_two_sum(p1,p2,a_hiprod,a_loprod);
-      a_hiprod := p1 + p2; a_loprod := p2 - (a_hiprod - p1);
      -- xim(k)*yim(k) is stored in b_hiprod and b_loprod
      -- Double_Double_Basics.two_prod(ximhik,yimhik,p1,p2);
-      p1 := ximhik*yimhik;
      -- Double_Double_Basics.split(ximhik,a_hi,a_lo);
       if ( ximhik > QD_SPLIT_THRESH or ximhik < -QD_SPLIT_THRESH ) then
         aa := ximhik*3.7252902984619140625E-09;  -- 2^-28
-        temp := QD_SPLITTER * aa;
-        a2_hi := temp - (temp - aa);
+        atemp := QD_SPLITTER * aa;
+        a2_hi := atemp - (atemp - aa);
         a2_lo := ximhik - a2_hi;
         a2_hi := a2_hi*268435456.0;  -- 2^28
         a2_lo := 268435456.0;     -- 2^28
       else
-        temp := QD_SPLITTER * ximhik;
-        a2_hi := temp - (temp - ximhik);
+        atemp := QD_SPLITTER * ximhik;
+        a2_hi := atemp - (atemp - ximhik);
         a2_lo := ximhik - a2_hi;
       end if;
      -- Double_Double_Basics.split(yimhik,b_hi,b_lo);
       if ( yimhik > QD_SPLIT_THRESH or yimhik < -QD_SPLIT_THRESH ) then
-        aa := yimhik*3.7252902984619140625E-09;  -- 2^-28
-        temp := QD_SPLITTER * aa;
-        b2_hi := temp - (temp - aa);
+        bb := yimhik*3.7252902984619140625E-09;  -- 2^-28
+        btemp := QD_SPLITTER * bb;
+        b2_hi := btemp - (btemp - bb);
         b2_lo := yimhik - b2_hi;
         b2_hi := b2_hi*268435456.0;  -- 2^28
         b2_lo := 268435456.0;     -- 2^28
       else
-        temp := QD_SPLITTER * yimhik;
-        b2_hi := temp - (temp - yimhik);
+        btemp := QD_SPLITTER * yimhik;
+        b2_hi := btemp - (btemp - yimhik);
         b2_lo := yimhik - b2_hi;
       end if;
+      p1 := xrehik*yrehik;
+      p2 := ((a1_hi*b1_hi - p1) + a1_hi*b1_lo + a1_lo*b1_hi) + a1_lo*b1_lo;
+      p2 := p2 + (xrehik * yrelok + xrelok * yrehik);
+     -- Double_Double_Basics.quick_two_sum(p1,p2,a_hiprod,a_loprod);
+      a_hiprod := p1 + p2; a_loprod := p2 - (a_hiprod - p1);
+      p1 := ximhik*yimhik;
       p2 := ((a2_hi*b2_hi - p1) + a2_hi*b2_lo + a2_lo*b2_hi) + a2_lo*b2_lo;
       p2 := p2 + (ximhik * yimlok + ximlok * yimhik);
      -- Double_Double_Basics.quick_two_sum(p1,p2,b_hiprod,b_loprod);
@@ -418,20 +420,64 @@ procedure ts_perfddvc is
     y : constant DoblDobl_Complex_Vectors.Vector(1..dim)
       := DoblDobl_Random_Vectors.Random_Vector(1,dim);
     z1,z2 : DoblDobl_Complex_Vectors.Vector(1..dim);
-    xrehi,ximhi,xrelo,ximlo : Standard_Floating_Vectors.Vector(1..dim);
-    yrehi,yimhi,yrelo,yimlo : Standard_Floating_Vectors.Vector(1..dim);
-    zrehi,zimhi,zrelo,zimlo : Standard_Floating_Vectors.Vector(1..dim);
+    xrehi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    ximhi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    xrelo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    ximlo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    yrehi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    yimhi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    yrelo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    yimlo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    zrehi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    zimhi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    zrelo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    zimlo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    xrh : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(xrehi);
+    xih : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(ximhi);
+    xrl : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(xrelo);
+    xil : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(ximlo);
+    yrh : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yrehi);
+    yih : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yimhi);
+    yrl : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yrelo);
+    yil : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yimlo);
+    zrh : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yrehi);
+    zih : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yimhi);
+    zrl : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yrelo);
+    zil : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yimlo);
 
     use DoblDobl_Complex_Vectors;
 
   begin
     z1 := x + y;
     put_line("The sum of two random vectors :"); put_line(z1);
-    Split(x,xrehi,ximhi,xrelo,ximlo);
-    Split(y,yrehi,yimhi,yrelo,yimlo);
-    Add(zrehi,zimhi,zrelo,zimlo,
-        xrehi,ximhi,xrelo,ximlo,yrehi,yimhi,yrelo,yimlo);
-    Merge(z2,zrehi,zimhi,zrelo,zimlo);
+    Split(x,xrh.all,xih.all,xrl.all,xil.all);
+    Split(y,yrh.all,yih.all,yrl.all,yil.all);
+    Add(zrh,zih,zrl,zil,xrh,xih,xrl,xil,yrh,yih,yrl,yil);
+    Merge(z2,zrh.all,zih.all,zrl.all,zil.all);
     put_line("The recomputed sum :"); put_line(z2);
   end Test_Add;
 
@@ -447,6 +493,8 @@ procedure ts_perfddvc is
     z1,z2 : Complex_Number;
     xrehi,ximhi,xrelo,ximlo : Standard_Floating_Vectors.Vector(1..dim);
     yrehi,yimhi,yrelo,yimlo : Standard_Floating_Vectors.Vector(1..dim);
+    xrh,xih,xrl,xil : Standard_Floating_Vectors.Link_to_Vector;
+    yrh,yih,yrl,yil : Standard_Floating_Vectors.Link_to_Vector;
     zrehi,zimhi,zrelo,zimlo : double_float;
 
   begin
@@ -455,8 +503,15 @@ procedure ts_perfddvc is
     put(z1); new_line;
     Split(x,xrehi,ximhi,xrelo,ximlo);
     Split(y,yrehi,yimhi,yrelo,yimlo);
-    Inner_Product(zrehi,zimhi,zrelo,zimlo,
-                  xrehi,ximhi,xrelo,ximlo,yrehi,yimhi,yrelo,yimlo);
+    xrh := new Standard_Floating_Vectors.Vector'(xrehi);
+    xih := new Standard_Floating_Vectors.Vector'(ximhi);
+    xrl := new Standard_Floating_Vectors.Vector'(xrelo);
+    xil := new Standard_Floating_Vectors.Vector'(ximlo);
+    yrh := new Standard_Floating_Vectors.Vector'(yrehi);
+    yih := new Standard_Floating_Vectors.Vector'(yimhi);
+    yrl := new Standard_Floating_Vectors.Vector'(yrelo);
+    yil := new Standard_Floating_Vectors.Vector'(yimlo);
+    Inner_Product(zrehi,zimhi,zrelo,zimlo,xrh,xih,xrl,xil,yrh,yih,yrl,yil);
     Merge(z2,zrehi,zimhi,zrelo,zimlo);
     put_line("The recomputed inner product :"); put(z2); new_line;
   end Test_Inner_Product;
@@ -473,9 +528,54 @@ procedure ts_perfddvc is
     y : constant DoblDobl_Complex_Vectors.Vector(1..dim)
       := DoblDobl_Random_Vectors.Random_Vector(1,dim);
     z1,z2 : DoblDobl_Complex_Vectors.Vector(1..dim);
-    xrehi,ximhi,xrelo,ximlo : Standard_Floating_Vectors.Vector(1..dim);
-    yrehi,yimhi,yrelo,yimlo : Standard_Floating_Vectors.Vector(1..dim);
-    zrehi,zimhi,zrelo,zimlo : Standard_Floating_Vectors.Vector(1..dim);
+    xrehi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    ximhi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    xrelo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    ximlo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    yrehi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    yimhi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    yrelo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    yimlo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    zrehi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    zimhi : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    zrelo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    zimlo : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+    xrh : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(xrehi);
+    xih : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(ximhi);
+    xrl : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(xrelo);
+    xil : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(ximlo);
+    yrh : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yrehi);
+    yih : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yimhi);
+    yrl : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yrelo);
+    yil : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yimlo);
+    zrh : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yrehi);
+    zih : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yimhi);
+    zrl : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yrelo);
+    zil : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(yimlo);
 
     use DoblDobl_Complex_Vectors;
 
@@ -487,23 +587,21 @@ procedure ts_perfddvc is
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex addition");
-    Split(x,xrehi,ximhi,xrelo,ximlo);
-    Split(y,yrehi,yimhi,yrelo,yimlo);
+    Split(x,xrh.all,xih.all,xrl.all,xil.all);
+    Split(y,yrh.all,yih.all,yrl.all,yil.all);
     tstart(timer);
     for k in 1..frq loop
-      Add(zrehi,zimhi,zrelo,zimlo,
-          xrehi,ximhi,xrelo,ximlo,yrehi,yimhi,yrelo,yimlo);
+      Add(zrh,zih,zrl,zil,xrh,xih,xrl,xil,yrh,yih,yrl,yil);
     end loop;
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"adding splitted vectors");
     tstart(timer);
     for k in 1..frq loop
-      Split(x,xrehi,ximhi,xrelo,ximlo);
-      Split(y,yrehi,yimhi,yrelo,yimlo);
-      Add(zrehi,zimhi,zrelo,zimlo,
-          xrehi,ximhi,xrelo,ximlo,yrehi,yimhi,yrelo,yimlo);
-      Merge(z2,zrehi,zimhi,zrelo,zimlo);
+      Split(x,xrh.all,xih.all,xrl.all,xil.all);
+      Split(y,yrh.all,yih.all,yrl.all,yil.all);
+      Add(zrh,zih,zrl,zil,xrh,xih,xrl,xil,yrh,yih,yrl,yil);
+      Merge(z2,zrh.all,zih.all,zrl.all,zil.all);
     end loop;
     tstop(timer);
     new_line;
@@ -524,6 +622,8 @@ procedure ts_perfddvc is
     z1,z2 : Complex_Number;
     xrehi,ximhi,xrelo,ximlo : Standard_Floating_Vectors.Vector(1..dim);
     yrehi,yimhi,yrelo,yimlo : Standard_Floating_Vectors.Vector(1..dim);
+    xrh,xih,xrl,xil : Standard_Floating_Vectors.Link_to_Vector;
+    yrh,yih,yrl,yil : Standard_Floating_Vectors.Link_to_Vector;
     zrehi,zimhi,zrelo,zimlo : double_float;
 
     use DoblDobl_Complex_Vectors;
@@ -538,10 +638,17 @@ procedure ts_perfddvc is
     print_times(standard_output,timer,"complex inner product");
     Split(x,xrehi,ximhi,xrelo,ximlo);
     Split(y,yrehi,yimhi,yrelo,yimlo);
+    xrh := new Standard_Floating_Vectors.Vector'(xrehi);
+    xih := new Standard_Floating_Vectors.Vector'(ximhi);
+    xrl := new Standard_Floating_Vectors.Vector'(xrelo);
+    xil := new Standard_Floating_Vectors.Vector'(ximlo);
+    yrh := new Standard_Floating_Vectors.Vector'(yrehi);
+    yih := new Standard_Floating_Vectors.Vector'(yimhi);
+    yrl := new Standard_Floating_Vectors.Vector'(yrelo);
+    yil := new Standard_Floating_Vectors.Vector'(yimlo);
     tstart(timer);
     for k in 1..frq loop
-      Inner_Product(zrehi,zimhi,zrelo,zimlo,
-                    xrehi,ximhi,xrelo,ximlo,yrehi,yimhi,yrelo,yimlo);
+      Inner_Product(zrehi,zimhi,zrelo,zimlo,xrh,xih,xrl,xil,yrh,yih,yrl,yil);
     end loop;
     tstop(timer);
     new_line;
@@ -550,8 +657,7 @@ procedure ts_perfddvc is
     for k in 1..frq loop
       Split(x,xrehi,ximhi,xrelo,ximlo);
       Split(y,yrehi,yimhi,yrelo,yimlo);
-      Inner_Product(zrehi,zimhi,zrelo,zimlo,
-                    xrehi,ximhi,xrelo,ximlo,yrehi,yimhi,yrelo,yimlo);
+      Inner_Product(zrehi,zimhi,zrelo,zimlo,xrh,xih,xrl,xil,yrh,yih,yrl,yil);
       Merge(z2,zrehi,zimhi,zrelo,zimlo);
     end loop;
     tstop(timer);
