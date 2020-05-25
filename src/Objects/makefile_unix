@@ -311,6 +311,10 @@ ts_qdvec:
 ts_strvec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_strvec.adb -o $(BIN)/ts_strvec
 
+ts_perfddvc:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfddvc.adb \
+             -o $(BIN)/ts_perfddvc
+
 # Test programs for Math_Lib/Matrices :
 
 ts_natmat:
