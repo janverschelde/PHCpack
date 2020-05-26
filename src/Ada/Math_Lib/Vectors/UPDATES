@@ -1,3 +1,6 @@
+Tue 26 May 2020 : defined convolutions for double double complex vectors
+  in ts_perfddvc.
+
 Sun 24 May 2020 : new test procedure ts_perfddvc to develop better performing
   double double complex vector operations.
   Experimented with links to vectors in ts_perfddvc...
