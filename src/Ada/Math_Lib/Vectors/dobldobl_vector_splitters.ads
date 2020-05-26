@@ -1,7 +1,10 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
 
 package DoblDobl_Vector_Splitters is
 
@@ -12,6 +15,26 @@ package DoblDobl_Vector_Splitters is
 --   parts of the complex numbers in the double double complex vector.
 --   Several computations run faster on a 4-vector representation than
 --   on a vector of double double complex numbers.
+
+  function Allocate_Complex_Coefficients
+             ( deg : integer32 )
+             return DoblDobl_Complex_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns allocated space for the complex coefficients
+  --   of a series truncated to degree deg.
+
+  function Allocate_Complex_Coefficients
+             ( dim,deg : integer32 )
+             return DoblDobl_Complex_VecVecs.VecVec;
+  function Allocate_Complex_Coefficients
+             ( dim,deg : integer32 )
+             return DoblDobl_Complex_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Returns allocated space for the coefficients of a vector 
+  --   of series, all truncated to degree deg.
+  --   The vector on return has range 1..dim.
 
   procedure Split ( x : in Complex_Number;
                     rehi,imhi,relo,imlo : out double_float );
@@ -93,6 +116,73 @@ package DoblDobl_Vector_Splitters is
   --            high part of imaginary parts in imhi,
   --            low part of real parts in relo, and
   --            low part of imaginary parts in imlo,
+
+-- PROCEDURES TO PART AND MERGE VECTORS OF VECTORS :
+
+  procedure Complex_Parts
+              ( x : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                rhpx,ihpx : in Standard_Floating_Vectors.Link_to_Vector;
+                rlpx,ilpx : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Complex_Parts
+              ( x : in DoblDobl_Complex_VecVecs.VecVec;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec );
+  procedure Complex_Parts
+              ( x : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Parts the complex vector (of vectors) x into two four vectors,
+  --   with its real and imaginary parts of the complex numbers in x,
+  --   separated into real high, imaginary high, real low,
+  --   and imaginary low.
+
+  -- REQUIRED :
+  --   The vectors rpx and ipx are completely allocated
+  --   and have the same ranges as x.
+
+  -- ON ENTRY :
+  --   x        a complex vector of double double precision.
+
+  -- ON RETURN :
+  --   rhpx     high parts of the real numbers in x;
+  --   ihpx     high parts of the imaginary numbers in x;
+  --   rlpx     low parts of the real numbers in x;
+  --   ilpx     low parts of the imaginary numbers in x.
+
+  procedure Complex_Merge
+              ( rhpx,ihpx : in Standard_Floating_Vectors.Link_to_Vector;
+                rlpx,ilpx : in Standard_Floating_Vectors.Link_to_Vector;
+                cvx : in DoblDobl_Complex_Vectors.Link_to_Vector );
+  procedure Complex_Merge
+              ( rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in DoblDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure Complex_Merge
+              ( rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in DoblDobl_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Merges the real and imaginary parts, high and low,
+  --   into the vector (of vectors) of complex numbers.
+
+  -- REQUIRED :
+  --   The vector cvx is completely allocated
+  --   and has the same ranges as rhpx, ihpx, rlpx, and ilpx.
+
+  -- ON ENTRY :
+  --   rhpx    high parts of real numbers of a complex vector;
+  --   ihpx    high parts of imaginary numbers of a complex vector;
+  --   rlpx    low parts of real numbers of a complex vector;
+  --   ilpx    low parts of imaginary numbers of a complex vector;
+  --   cvx     allocated with vectors of the same ranges.
+
+  -- ON RETURN :
+  --   cvx     a complex vector of double double precision, 
+  --           with real high from rhpx, imaginary high from ihpx,
+  --           real low from rlpx, and imaginary low from ilpx.
 
   procedure Add ( zrehi : in Standard_Floating_Vectors.Link_to_Vector;
                   zimhi : in Standard_Floating_Vectors.Link_to_Vector;
