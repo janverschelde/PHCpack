@@ -105,8 +105,145 @@ package body Multitasked_AlgoDiff_Convolutions is
                 vy : in Standard_Complex_VecVecs.VecVec;
                 vm : in Standard_Complex_VecMats.VecMat;
                 output : in boolean := false ) is
+
+    use Standard_Coefficient_Convolutions;
+
+    dim : constant integer32 := c'last; -- assuming square circuits
+    deg : constant integer32 := vm'last;
+    ryd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
+    iyd : constant VecVecVec(1..nbt) := Allocate_Work_Space(nbt,dim,deg);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+
+    procedure Silent_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate the circuit
+    --   without intermediate output.
+
+      idx : integer32 := i;
+      rydi,iydi : Standard_Floating_VecVecs.Link_to_VecVec;
+      vleft : Standard_Complex_Vectors.Link_to_Vector;
+      rvright,ivright : Standard_Floating_Vectors.Link_to_Vector;
+      mleft : Standard_Complex_Matrices.Link_to_Matrix;
+      rxpw,ixpw : Standard_Floating_VecVecs.Link_to_VecVec;
+ 
+    begin
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          rxpw := rpwt(idx); ixpw := ipwt(idx);
+          Multiply(rx(idx),ix(idx),rx(idx),ix(idx),rxpw(1),ixpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(rxpw(k-1),ixpw(k-1),rx(idx),ix(idx),rxpw(k),ixpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
+      while idx <= c'last loop
+        EvalDiff(c(idx).all,rx.all,ix.all,rpwt,ipwt,ryd(i).all,iyd(i).all);
+        rydi := ryd(i); iydi := iyd(i);
+        rvright := rydi(rx'last+1); ivright := iydi(ix'last+1);
+        for j in rvright'range loop
+          vleft := vy(j);
+          vleft(idx) := Standard_Complex_Numbers.Create(rvright(j),ivright(j));
+          rvright(j) := 0.0; ivright(j) := 0.0;
+        end loop;
+        for j in 1..rx'last loop
+          rvright := rydi(j); ivright := iydi(j);
+          for k in vm'range loop       -- k-th coefficient in matrix vm(k)
+            mleft := vm(k);            -- row idx in vm(k) is the equation
+            mleft(idx,j)               -- column j in vm(k) is the variable
+              := Standard_Complex_Numbers.Create(rvright(k),ivright(k));
+            rvright(k) := 0.0; ivright(k) := 0.0;
+          end loop;
+        end loop;
+        idx := idx + n;
+      end loop;
+      alldone(i) := true;
+    end Silent_Job;
+    procedure silent_do_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+    procedure Report_Job ( i,n : integer32 ) is
+
+    -- DESCRIPTION :
+    --   Task i out of n will evaluate and differentiate the circuit
+    --   with intermediate output.
+
+      idx : integer32 := i;
+      rydi,iydi : Standard_Floating_VecVecs.Link_to_VecVec;
+      vleft : Standard_Complex_Vectors.Link_to_Vector;
+      rvright,ivright : Standard_Floating_Vectors.Link_to_Vector;
+      mleft : Standard_Complex_Matrices.Link_to_Matrix;
+      rxpw,ixpw : Standard_Floating_VecVecs.Link_to_VecVec;
+ 
+    begin
+      put_line("number of circuits : " & Multitasking.to_string(c'last));
+      put_line("number of tasks : " & Multitasking.to_string(n));
+      while idx <= c'last loop  -- start with power table computation
+        if mxe(idx) > 2 then
+          rxpw := rpwt(idx); ixpw := ipwt(idx);
+          Multiply(rx(idx),ix(idx),rx(idx),ix(idx),rxpw(1),ixpw(1));
+          for k in 2..(mxe(idx)-2) loop
+            Multiply(rxpw(k-1),ixpw(k-1),rx(idx),ix(idx),rxpw(k),ixpw(k));
+          end loop;
+        end if;
+        idx := idx + n;
+      end loop;
+      pwtdone(i) := true;
+     -- make sure all tasks are done with the power table
+      while not Multitasking.all_true(nbt,pwtdone) loop
+        delay 0.001;
+      end loop;
+      idx := i; -- reset the index for evaluation and differentiation
+      while idx <= c'last loop
+        put_line("considering circuit " & Multitasking.to_string(idx));
+        put_line("task " & Multitasking.to_string(i)
+                         & " computes circuit "
+                         & Multitasking.to_string(idx));
+        EvalDiff(c(idx).all,rx.all,ix.all,rpwt,ipwt,ryd(i).all,iyd(i).all);
+        put_line("task " & Multitasking.to_string(i)
+                         & " done computing circuit "
+                         & Multitasking.to_string(idx));
+        rydi := ryd(i); iydi := iyd(i);
+        rvright := rydi(rx'last+1); ivright := iydi(ix'last+1);
+        for j in rvright'range loop
+          vleft := vy(j);
+          vleft(idx) := Standard_Complex_Numbers.Create(rvright(j),ivright(j));
+          rvright(j) := 0.0; ivright(j) := 0.0;
+        end loop;
+        for j in 1..rx'last loop
+          rvright := rydi(j); ivright := iydi(j);
+          for k in vm'range loop       -- k-th coefficient in matrix vm(k)
+            mleft := vm(k);            -- row idx in vm(k) is the equation
+            mleft(idx,j)               -- column j in vm(k) is the variable
+              := Standard_Complex_Numbers.Create(rvright(k),ivright(k));
+            rvright(k) := 0.0; ivright(k) := 0.0;
+          end loop;
+        end loop;
+        put_line("idx before increment : " & Multitasking.to_string(idx));
+        idx := idx + n;
+        put_line("idx after increment : " & Multitasking.to_string(idx));
+      end loop;
+      put_line("task " & Multitasking.to_string(i) & " is done.");
+      alldone(i) := true;
+    end Report_Job;
+    procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
   begin
-    null;
+    if output
+     then report_do_jobs(nbt);
+     else silent_do_jobs(nbt);
+    end if;
+   -- make sure main task does not terminate before all worker tasks
+    while not Multitasking.all_true(nbt,alldone) loop
+      delay 0.001;
+    end loop;
   end Standard_Multitasked_EvalDiff;
 
   procedure Standard_Multitasked_EvalDiff
