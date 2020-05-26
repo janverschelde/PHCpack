@@ -98,7 +98,8 @@ package Series_Polynomial_Gradients is
              return Standard_CSeries_Polynomials.Poly;
   function DoblDobl_Polynomial
              ( dim,deg : integer32;
-               xps : Standard_Integer_VecVecs.VecVec )
+               xps : Standard_Integer_VecVecs.VecVec;
+               isidx : boolean := true )
              return DoblDobl_CSeries_Polynomials.Poly;
   function DoblDobl_Polynomial
              ( dim : integer32;

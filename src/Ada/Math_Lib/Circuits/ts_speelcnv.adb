@@ -92,7 +92,9 @@ with Complex_Series_and_Polynomials;     use Complex_Series_and_Polynomials;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Standard_Vector_Splitters;
+with DoblDobl_Vector_Splitters;
 with Standard_Coefficient_Convolutions;
+with DoblDobl_Coefficient_Convolutions;
 with Standard_Convolution_Splitters;
 
 procedure ts_speelcnv is
@@ -172,6 +174,29 @@ procedure ts_speelcnv is
     return res;
   end One_Coefficients;
 
+  function One_Coefficients
+             ( nbr,deg : integer32 )
+             return DoblDobl_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 1..nbr with vectors of range 0..deg
+  --   to represent the constant one as the coefficients.
+
+    res : DoblDobl_Complex_VecVecs.VecVec(1..nbr);
+
+  begin
+    for k in 1..nbr loop
+      declare
+        cff : DoblDobl_Complex_Vectors.Vector(0..deg)
+            := (0..deg => DoblDobl_Complex_Numbers.Create(integer(0)));
+      begin
+        cff(0) := DoblDobl_Complex_Numbers.Create(integer(1.0));
+        res(k) := new DoblDobl_Complex_Vectors.Vector'(cff);
+      end;
+    end loop;
+    return res;
+  end One_Coefficients;
+
   function Standard_Make_Polynomial
              ( dim,deg : integer32;
                idx : Standard_Integer_VecVecs.VecVec;
@@ -211,6 +236,46 @@ procedure ts_speelcnv is
     end if;
     return res;
   end Standard_Make_Polynomial;
+
+  function DoblDobl_Make_Polynomial
+             ( dim,deg : integer32;
+               idx : Standard_Integer_VecVecs.VecVec;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : DoblDobl_Complex_Series_Vectors.Vector;
+               expone,cffone : boolean )
+             return DoblDobl_CSeries_Polynomials.Poly is
+
+  -- DESCRIPTION :
+  --   Wraps the construction of a polynomial with series coefficients,
+  --   with flags for special cases if expone and cffone.
+
+  -- ON ENTRY :
+  --   dim     dimension of the exponent vectors, number of variables;
+  --   deg     degree of the power series;
+  --   idx     exponent indices;
+  --   xps     exponent vectors;
+  --   cff     coefficients of the monomials;
+  --   expone  true if all exponents are equal to one;
+  --   cffone  true if all coefficients are equal to one.
+
+    res : DoblDobl_CSeries_Polynomials.Poly;
+
+  begin
+    if expone then -- all exponents are equal to one
+      if cffone then -- all coefficients are equal to one
+        res := DoblDobl_Polynomial(dim,deg,idx);
+      else
+        res := DoblDobl_Polynomial(dim,idx,cff,true);
+      end if;
+    else  
+      if cffone then -- all coefficients are equal to one
+        res := DoblDobl_Polynomial(dim,deg,xps,false);
+      else
+        res := DoblDobl_Polynomial(dim,xps,cff,false);
+      end if;
+    end if;
+    return res;
+  end DoblDobl_Make_Polynomial;
 
   procedure Standard_Test ( dim,deg,nbr,pwr : in integer32;
                             expone,cffone : in boolean ) is
@@ -396,8 +461,8 @@ procedure ts_speelcnv is
     Standard_Coefficient_Convolutions.Clear(ipwt);
   end Standard_Test;
 
-  procedure DoblDobl_Test ( dim,deg,nbr,pwr : in integer32 ) is
-
+  procedure DoblDobl_Test ( dim,deg,nbr,pwr : in integer32;
+                            expone,cffone : in boolean ) is
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and tests the
   --   evaluation and differentiation in double double precision.
@@ -406,9 +471,13 @@ procedure ts_speelcnv is
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
   --   nbr      number of products;
-  --   pwr      largest power of the variables.
+  --   pwr      largest power of the variables;
+  --   expone   true if all exponents are equal to one;
+  --   cffone   true if all coefficients are equal to one.
 
+    use Standard_Vector_Splitters;
     use DoblDobl_Speelpenning_Convolutions;
+    use DoblDobl_Coefficient_Convolutions;
 
     xps : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Random_Exponents(dim,nbr,pwr);
@@ -421,9 +490,7 @@ procedure ts_speelcnv is
     polcff : constant DoblDobl_Complex_Series_Vectors.Vector(1..nbr)
            := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
     pol : constant DoblDobl_CSeries_Polynomials.Poly
-       -- := DoblDobl_Polynomial(dim,deg,idx); -- all coefficients are one
-       -- := DoblDobl_Polynomial(dim,idx,polcff); -- all exponents are one
-        := DoblDobl_Polynomial(dim,xps,polcff,false);
+        := DoblDobl_Make_Polynomial(dim,deg,idx,xps,polcff,expone,cffone);
     x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
     xpt : constant DoblDobl_Complex_Vectors.Vector(1..dim)
@@ -433,25 +500,105 @@ procedure ts_speelcnv is
     grad : DoblDobl_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
          := DoblDobl_Series_Coefficients(x);
-    pcff : constant DoblDobl_Complex_VecVecs.VecVec(1..nbr)
-         := DoblDobl_Series_Coefficients(polcff);
+    rhx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim,deg);
+    ihx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim,deg);
+    rlx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim,deg);
+    ilx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim,deg);
+    pcff : DoblDobl_Complex_VecVecs.VecVec(1..nbr);
+    rhpcf : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(nbr,deg);
+    ihpcf : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(nbr,deg);
+    rlpcf : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(nbr,deg);
+    ilpcf : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(nbr,deg);
     forward : constant DoblDobl_Complex_VecVecs.VecVec(1..dim-1)
             := Allocate_Coefficients(dim-1,deg);
+    rhfwd : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-1,deg);
+    ihfwd : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-1,deg);
+    rlfwd : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-1,deg);
+    ilfwd : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-1,deg);
     backward : constant DoblDobl_Complex_VecVecs.VecVec(1..dim-2)
              := Allocate_Coefficients(dim-2,deg);
+    rhbck : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-2,deg);
+    ihbck : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-2,deg);
+    rlbck : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-2,deg);
+    ilbck : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-2,deg);
     cross : constant DoblDobl_Complex_VecVecs.VecVec(1..dim-2)
           := Allocate_Coefficients(dim-2,deg);
+    rhcrs : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-2,deg);
+    ihcrs : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-2,deg);
+    rlcrs : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-2,deg);
+    ilcrs : constant Standard_Floating_VecVecs.Link_to_VecVec
+          := Allocate_Floating_Coefficients(dim-2,deg);
     ygrad : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
           := Allocate_Coefficients(dim+1,deg);
+    ygrad2 : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
+           := Allocate_Coefficients(dim+1,deg);
+    rhyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim+1,deg);
+    ihyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim+1,deg);
+    rlyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim+1,deg);
+    ilyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim+1,deg);
     work : constant DoblDobl_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    rhwrk : constant Standard_Floating_Vectors.Link_to_Vector
+          := Allocate_Floating_Coefficients(deg);
+    ihwrk : constant Standard_Floating_Vectors.Link_to_Vector
+          := Allocate_Floating_Coefficients(deg);
+    rlwrk : constant Standard_Floating_Vectors.Link_to_Vector
+          := Allocate_Floating_Coefficients(deg);
+    ilwrk : constant Standard_Floating_Vectors.Link_to_Vector
+          := Allocate_Floating_Coefficients(deg);
     acc : constant DoblDobl_Complex_Vectors.Link_to_Vector
         := Allocate_Coefficients(deg);
-    err,sumerr : double_double;
-    pwt : Link_to_VecVecVec := Create(xcff,mxe);
-    crc : Circuit(nbr,dim,dim+1,dim+2);
+    rhacc : constant Standard_Floating_Vectors.Link_to_Vector
+          := Allocate_Floating_Coefficients(deg);
+    ihacc : constant Standard_Floating_Vectors.Link_to_Vector
+          := Allocate_Floating_Coefficients(deg);
+    rlacc : constant Standard_Floating_Vectors.Link_to_Vector
+          := Allocate_Floating_Coefficients(deg);
+    ilacc : constant Standard_Floating_Vectors.Link_to_Vector
+          := Allocate_Floating_Coefficients(deg);
+    err,err2,sumerr,sumerr2 : double_double;
+    pwt : DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec
+        := DoblDobl_Speelpenning_Convolutions.Create(xcff,mxe);
+    rhpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+    ihpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+    rlpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+    ilpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+    crc : DoblDobl_Speelpenning_Convolutions.Circuit(nbr,dim,dim+1,dim+2);
+
+    use DoblDobl_Complex_Vectors;
 
   begin
+    if cffone 
+     then pcff := One_Coefficients(nbr,deg);
+     else pcff := DoblDobl_Series_Coefficients(polcff);
+    end if;
     crc.xps := xps; crc.idx := idx; crc.fac := fac; crc.cff := pcff;
     put_line("Some random exponents :"); Standard_Integer_VecVecs_io.put(xps);
     put_line("its exponent indices :"); Standard_Integer_VecVecs_io.put(idx);
@@ -459,9 +606,40 @@ procedure ts_speelcnv is
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := DoblDobl_CSeries_Poly_Functions.Eval(pol,x);
-   -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+    if expone and cffone then
+      Speel(idx,xcff,forward,backward,cross,ygrad); -- all coefficients one
+      DoblDobl_Vector_Splitters.Complex_Parts(xcff,rhx,ihx,rlx,ilx);
+      Speel(idx,rhx.all,ihx.all,rlx.all,ilx.all,rhfwd.all,ihfwd.all,
+            rlfwd.all,ilfwd.all,rhbck.all,ihbck.all,rlbck.all,ilbck.all,
+            rhcrs.all,ihcrs.all,rlcrs.all,ilcrs.all,
+            rhyd.all,ihyd.all,rlyd.all,ilyd.all);
+      DoblDobl_Vector_Splitters.Complex_Merge(rhyd,ihyd,rlyd,ilyd,ygrad2);
+    elsif expone then
+      Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+      DoblDobl_Vector_Splitters.Complex_Parts(pcff,rhpcf,ihpcf,rlpcf,ilpcf);
+      DoblDobl_Vector_Splitters.Complex_Parts(xcff,rhx,ihx,rlx,ilx);
+      Speel(idx,rhpcf.all,ihpcf.all,rlpcf.all,ilpcf.all,
+                rhx.all,ihx.all,rlx.all,ilx.all,
+            rhfwd.all,ihfwd.all,rlfwd.all,ilfwd.all,
+            rhbck.all,ihbck.all,rlbck.all,ilbck.all,
+            rhcrs.all,ihcrs.all,rlcrs.all,ilcrs.all,
+            rhyd.all,ihyd.all,rlyd.all,ilyd.all,rhwrk,ihwrk,rlwrk,ilwrk);
+      DoblDobl_Vector_Splitters.Complex_Merge(rhyd,ihyd,rlyd,ilyd,ygrad2);
+    else
+      Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+      DoblDobl_Vector_Splitters.Complex_Parts(pcff,rhpcf,ihpcf,rlpcf,ilpcf);
+      DoblDobl_Vector_Splitters.Complex_Parts(xcff,rhx,ihx,rlx,ilx);
+      Compute(rhpwt,ihpwt,rlpwt,ilpwt,mxe,rhx,ihx,rlx,ilx);
+      Speel(xps,idx,fac,rhpcf.all,ihpcf.all,rlpcf.all,ilpcf.all,
+            rhx.all,ihx.all,rlx.all,ilx.all,
+            rhfwd.all,ihfwd.all,rlfwd.all,ilfwd.all,
+            rhbck.all,ihbck.all,rlbck.all,ilbck.all,
+            rhcrs.all,ihcrs.all,rlcrs.all,ilcrs.all,
+            rhyd.all,ihyd.all,rlyd.all,ilyd.all,
+            rhwrk,ihwrk,rlwrk,ilwrk,rhacc,ihacc,rlacc,ilacc,
+            rhpwt,ihpwt,rlpwt,ilpwt);
+      DoblDobl_Vector_Splitters.Complex_Merge(rhyd,ihyd,rlyd,ilyd,ygrad2);
+    end if;
     put_line("The value of the polynomial at the random series :");
     put(y); new_line;
     ypt := Eval(crc,xpt);
@@ -472,28 +650,42 @@ procedure ts_speelcnv is
     end loop;
     work(0) := DoblDobl_Complex_Numbers.Create(integer(0));
     acc(0) := DoblDobl_Complex_Numbers.Create(integer(0));
-   -- Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work); -- all powers 1
-    Speel(xps,idx,fac,pcff,xpt,forward,backward,cross,ygrad,work,acc,pwt);
+    if expone then
+      Speel(idx,pcff,xpt,forward,backward,cross,ygrad,work); -- all powers 1
+    else
+      Speel(xps,idx,fac,pcff,xpt,forward,backward,cross,ygrad,work,acc,pwt);
+    end if;
     put_line("The leading coefficients computed in reverse mode :");
     for i in ygrad'range loop
       put(ygrad(i)(0)); new_line;
     end loop;
     put_line("The coefficient vector of the value of the polynomial :");
     put_line(ygrad(ygrad'last));
+    put_line("Recomputed coefficient vector of the value of the polynomial :");
+    put_line(ygrad2(ygrad2'last));
     grad := DoblDobl_Gradient(pol,x);
     err := Difference(y,ygrad(ygrad'last));
     put("The error : "); put(err,3); new_line;
-    sumerr := err;
+    err2 := Difference(y,ygrad2(ygrad2'last));
+    put("Recomputed error : "); put(err2,3); new_line;
+    sumerr := err; sumerr2 := err2;
     for k in grad'range loop
       put("derivative "); put(k,1); put_line(" :");
       put(grad(k)); new_line;
-      put("The coefficient vector of derivative ");
-      put(k,1); put_line(" :"); put_line(ygrad(k));
-      err := Difference(grad(k),ygrad(k));
-      put("The error : "); put(err,3); new_line;
-      sumerr := sumerr + err;
+      if ygrad(k) /= null then
+        put("The coefficient vector of derivative ");
+        put(k,1); put_line(" :"); put_line(ygrad(k));
+        put("Recomputed coefficient vector of derivative ");
+        put(k,1); put_line(" :"); put_line(ygrad2(k));
+        err := Difference(grad(k),ygrad(k));
+        put("The error : "); put(err,3); new_line;
+        err2 := Difference(grad(k),ygrad2(k));
+        put("Recomputed error : "); put(err2,3); new_line;
+        sumerr := sumerr + err; sumerr2 := sumerr2 + err2;
+      end if;
     end loop;
     put("Sum of errors : "); put(sumerr,3); new_line;
+    put("Recomputed sum of errors : "); put(sumerr2,3); new_line;
     Clear(pwt);
   end DoblDobl_Test;
 
@@ -1016,7 +1208,7 @@ procedure ts_speelcnv is
         Ask_Yes_or_No(answer); cffone := (answer = 'y');
         case precision is
           when '0' => Standard_Test(dim,deg,nbr,pwr,expone,cffone);
-          when '1' => DoblDobl_Test(dim,deg,nbr,pwr);
+          when '1' => DoblDobl_Test(dim,deg,nbr,pwr,expone,cffone);
           when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
           when others => null;
         end case;
