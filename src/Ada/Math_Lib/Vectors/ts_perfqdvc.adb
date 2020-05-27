@@ -204,6 +204,8 @@ procedure ts_perfqdvc is
     i,j,k : integer32;
     s,t : double_float;
     u,v : double_float; -- double-length accumulator
+    c0,c1,c2,c3,s0,s1,s2,s3 : double_float; -- for the renorm4
+    za,zb : boolean;
 
   begin
     z(0) := 0.0; z(1) := 0.0; z(2) := 0.0; z(3) := 0.0;
@@ -216,7 +218,8 @@ procedure ts_perfqdvc is
      then v := x(i); i := i+1;  
      else v := y(j); j := j+1;
     end if;
-    Double_Double_Basics.quick_two_sum(u,v,u,v);
+   -- Double_Double_Basics.quick_two_sum(u,v,u,v);
+    s := u + v; t := v - (s - u); u := s; v := t; 
     while k < 4 loop
       if (i >= 4 and j >= 4) then
         z(k) := u;
@@ -235,7 +238,22 @@ procedure ts_perfqdvc is
         t := y(j); j := j+1;
       end if;
       s := 0.0;
-      Quad_Double_Renormalizations.quick_three_accum(u,v,s,t);
+     -- Quad_Double_Renormalizations.quick_three_accum(u,v,s,t);
+     -- Double_Double_Basics.two_sum(v,t,s,v);
+      s := v + t; c0 := s - v; v := (v - (s - c0)) + (t - c0);
+     -- Double_Double_Basics.two_sum(u,s,s,u);
+      c0 := s; s := u + s; c1 := s - u; u := (u - (s - c1)) + (c0 - c1);
+      za := (u /= 0.0);
+      zb := (v /= 0.0);
+      if za and zb then
+        null;
+      else
+        if not zb
+         then v := u; u := s;
+         else u := s;
+        end if;
+        s := 0.0;
+      end if;
       if s /= 0.0
        then z(k) := s; k := k+1;
       end if;
@@ -246,7 +264,38 @@ procedure ts_perfqdvc is
     for k in j..3 loop
       z(3) := z(3) + y(k);
     end loop;
-    Quad_Double_Renormalizations.renorm4(z(0),z(1),z(2),z(3));
+   -- Quad_Double_Renormalizations.renorm4(z(0),z(1),z(2),z(3));
+    c0 := z(0); c1 := z(1); c2 := z(2); c3 := z(3);
+   -- Double_Double_Basics.quick_two_sum(c2,c3,s0,c3);
+    s0 := c2 + c3; c3 := c3 - (s0 - c2);
+   -- Double_Double_Basics.quick_two_sum(c1,s0,s0,c2);
+    s := c1 + s0; c2 := s0 - (s - c1); s0 := s;
+   -- Double_Double_Basics.quick_two_sum(c0,s0,c0,c1);
+    s := c0 + s0; c1 := s0 - (s - c0); c0 := s;
+    s0 := c0; s1 := c1;
+    if s1 /= 0.0 then
+     -- Double_Double_Basics.quick_two_sum(s1,c2,s1,s2);
+      s := s1 + c2; s2 := c2 - (s - s1); s1 := s;
+      if s2 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s2,c3,s2,s3);
+        s := s2 + c3; s3 := c3 - (s - s2); s2 := s;
+      else
+       -- Double_Double_Basics.quick_two_sum(s1,c3,s1,s2);
+        s := s1 + c3; s2 := c3 - (s - s1); s1 := s;
+      end if;
+    else
+     -- Double_Double_Basics.quick_two_sum(s0,c2,s0,s1);
+      s := s0 + c2; s1 := c2 - (s - s0); s0 := s;
+      if s1 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s1,c3,s1,s2);
+        s := s1 + c3; s2 := c3 - (s - s1); s1 := s;
+      else
+       -- Double_Double_Basics.quick_two_sum(s0,c3,s0,s1);
+        s := s0 + c3; s1 := c3 - (s - s0); s0 := s;
+      end if;
+    end if;
+   -- c0 := s0; c1 := s1; c2 := s2; c3 := s3;
+    z(0) := s0; z(1) := s1; z(2) := s2; z(3) := s3;
   end Add;
 
   procedure Add ( zrhh : in Standard_Floating_Vectors.Link_to_Vector;
