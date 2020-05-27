@@ -138,6 +138,7 @@ ts_qdvec                           : test on vectors of quad doubles
 standard_vector_splitters          : split/merge complex vectors for doubles
 dobldobl_vector_splitters          : 4-vector representation of dobldobl vecs
 ts_perfddvc                        : better performing dd vector operations
+ts_perfqdvc                        : better performing qd vector operations
 ------------------------------------------------------------------------------
 The generic_* packages are different from the abstract_* packages in the
 sense that they export types and operations, i.e.: they have a body.
