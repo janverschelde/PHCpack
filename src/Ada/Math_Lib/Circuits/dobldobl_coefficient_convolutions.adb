@@ -706,6 +706,39 @@ package body DoblDobl_Coefficient_Convolutions is
     end loop;
   end EvalDiff;
 
+  procedure Delinearize ( vy,yv : in DoblDobl_Complex_VecVecs.VecVec ) is
+  begin
+    for k in vy'range loop
+      declare
+        vyk : constant DoblDobl_Complex_Vectors.Link_to_Vector := vy(k);
+        left : DoblDobl_Complex_Vectors.Link_to_Vector;
+      begin
+        for i in yv'range loop  -- vyk holds k-th coefficient of all series
+          left := yv(i);        -- so we assign to coefficients of series i
+          left(k) := vyk(i);    -- at position k the i-th value of vyk
+        end loop;
+      end;
+    end loop;
+  end Delinearize;
+
+  procedure EvalDiff ( s : in System;
+                       rhx,ihx : in Standard_Floating_VecVecs.VecVec;
+                       rlx,ilx : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    EvalDiff(s.crc,rhx,ihx,rlx,ilx,s.rhpwt,s.ihpwt,s.rlpwt,s.ilpwt,
+             s.rhyd,s.ihyd,s.rlyd,s.ilyd,s.vy,s.vm);
+    Delinearize(s.vy,s.yv);
+  end EvalDiff;
+
+  procedure EvalDiff ( s : in Link_to_System;
+                       rhx,ihx : in Standard_Floating_VecVecs.VecVec;
+                       rlx,ilx : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    EvalDiff(s.crc,rhx,ihx,rlx,ilx,s.rhpwt,s.ihpwt,s.rlpwt,s.ilpwt,
+             s.rhyd,s.ihyd,s.rlyd,s.ilyd,s.vy,s.vm);
+    Delinearize(s.vy,s.yv);
+  end EvalDiff;
+
 -- DEALLOCATORS :
 
   procedure Clear ( c : in out Circuit ) is

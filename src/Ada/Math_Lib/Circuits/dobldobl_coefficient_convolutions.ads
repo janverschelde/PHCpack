@@ -488,6 +488,43 @@ package DoblDobl_Coefficient_Convolutions is
                 rhyd,ihyd : in Standard_Floating_VecVecs.VecVec;
                 rlyd,ilyd : in Standard_Floating_VecVecs.VecVec );
 
+
+  -- DESCRIPTION :
+  --   Wraps the Speel procedure for the convolution circuit c, to
+  --   evaluate at the series with 4-vector representations,
+  --   with the aid of the power table.
+
+  -- ON ENTRY :
+  --   c        a circuit properly defined and allocated;
+  --   rhx      real high parts of coefficients of series of same degree;
+  --   ihx      imaginary high parts of coefficients of series;
+  --   rlx      real low parts of coefficients of series of same degree;
+  --   ilx      imaginary low parts of coefficients of series;
+  --   ryd      vector of range 0..rx'last+1 with space allocated for the
+  --            coefficients of power series of the same fixed degree;
+  --   iyd      vector of range 0..ix'last+1 with space allocated for the
+  --            coefficients of power series of the same fixed degree;
+  --   rhpwt    power table of the real high parts for the values in x;
+  --   ihpwt    power table of the imaginary high for the values in x;
+  --   rlpwt    power table of the real low parts for the values in x;
+  --   ilpwt    power table of the imaginary low for the values in x.
+
+  -- ON RETURN :
+  --   rhyd     rhyd(rhx'last+1) contains the real high parts of the
+  --            coefficient vector of the value of the sum of products at x,
+  --            rhyd(k) is the real high part of the k-th partial derivative;
+  --   ihyd     rhyd(ihx'last+1) contains the imaginary high parts of the
+  --            coefficient vector of the value of the sum of products at x,
+  --            ihyd(k) is the imaginary high part of the k-th partial
+  --            derivative;
+  --   rlyd     rlyd(rlx'last+1) contains the real high parts of the coefficient
+  --            coefficient vector of the value of the sum of products at x,
+  --            rlyd(k) is the real high part of the k-th partial derivative;
+  --   ilyd     rlyd(ilx'last+1) contains the imaginary high parts of the
+  --            coefficient vector of the value of the sum of products at x,
+  --            ihyd(k) is the imaginary high part of the k-th partial
+  --            derivative.
+
   procedure EvalDiff
               ( c : in Circuits;
                 rhx,ihx : in Standard_Floating_VecVecs.VecVec;
@@ -501,6 +538,70 @@ package DoblDobl_Coefficient_Convolutions is
                 vy : in DoblDobl_Complex_VecVecs.VecVec;
                 vm : in DoblDobl_Complex_VecMats.VecMat );
 
+  -- DESCRIPTION :
+  --   Evaluates and differentiates the convolution circuits in c
+  --   at the series x.
+
+  -- ON ENTRY :
+  --   c        an array of convolution circuits;
+  --   rhx      real high parts of coefficients of series of same degree;
+  --   ihx      imaginary high parts of coefficients of series;
+  --   rlx      real low parts of coefficients of series of same degree;
+  --   ilx      imaginary low parts of coefficients of series;
+  --   ryd      vector of range 0..rx'last+1 with space allocated for the
+  --            coefficients of power series of the same fixed degree;
+  --   iyd      vector of range 0..ix'last+1 with space allocated for the
+  --            coefficients of power series of the same fixed degree;
+  --   rhpwt    power table of the real high parts for the values in x;
+  --   ihpwt    power table of the imaginary high for the values in x;
+  --   rlpwt    power table of the real low parts for the values in x;
+  --   ilpwt    power table of the imaginary low for the values in x.
+  --   rhyd     work space of range 1..rx'last+1 to contain the real high
+  --            parts of the gradient and the value of the circuits in c;
+  --   ihyd     work space of range 1..ix'last+1 to contain the imaginary
+  --            high parts of the gradient and the value at x;
+  --   rlyd     work space of range 1..rx'last+1 to contain the real low
+  --            parts of the gradient and the value of the circuits in c;
+  --   ilyd     work space of range 1..ix'last+1 to contain the imaginary
+  --            low parts of the gradient and the value at x;
+  --   vy       allocated space for the values of the circuits at x,
+  --            done by the above procedure Linearized_Allocation,
+  --   vm       space allocated for a series of some fixed degree
+  --            with matrix coefficients.
+
+  -- ON RETURN :
+  --   vy       values of the circuits at x, in linearized form;
+  --   vm       the evaluated circuits at x as a series 
+  --            of some fixe degree with matrix coefficients.
+
+  procedure Delinearize ( vy,yv : in DoblDobl_Complex_VecVecs.VecVec );
+
+  --  DESCRIPTION :
+  --    Converts the linearized representation in vy into the vector yv
+  --    of coefficient vectors of the series.
+  --    This conversion is convenient for the difference computation
+  --    and needed in the application of Newton's method.
+
+  -- REQUIRED :
+  --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
+  --   then yv'range = 1..dimension and yv(k)'range = 0..degree.
+
+  procedure EvalDiff ( s : in System;
+                       rhx,ihx : in Standard_Floating_VecVecs.VecVec;
+                       rlx,ilx : in Standard_Floating_VecVecs.VecVec );
+  procedure EvalDiff ( s : in Link_to_System;
+                       rhx,ihx : in Standard_Floating_VecVecs.VecVec;
+                       rlx,ilx : in Standard_Floating_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Wraps the EvalDiff on the convolution circuits in s.crc,
+  --   at the power series with coefficients in x,
+  --   represented by the vectors rhx, ihx, rlx, and ilx.
+
+  -- REQUIRED :
+  --   All data in s are allocated properly with respect to dimension
+  --   and degree, the power table is up to data with the given parts
+  --   in the four vectors.
 
 -- DEALLOCATORS :
 

@@ -96,6 +96,7 @@ with DoblDobl_Vector_Splitters;
 with Standard_Coefficient_Convolutions;
 with DoblDobl_Coefficient_Convolutions;
 with Standard_Convolution_Splitters;
+with DoblDobl_Convolution_Splitters;
 
 procedure ts_speelcnv is
 
@@ -901,6 +902,8 @@ procedure ts_speelcnv is
     c : constant Circuits
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     s : Link_to_System := Create(c,dim,deg);
+    cs : constant DoblDobl_Coefficient_Convolutions.Link_to_System
+       := DoblDobl_Convolution_Splitters.Split(s);
     p : DoblDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := DoblDobl_System(c);
     x : DoblDobl_Complex_Series_Vectors.Vector(1..dim)
       := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -910,11 +913,20 @@ procedure ts_speelcnv is
        := DoblDobl_CSeries_Poly_SysFun.Eval(p,x);
     xcff : DoblDobl_Complex_VecVecs.VecVec(1..dim)
          := DoblDobl_Series_Coefficients(x);
+    rhx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ihx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    rlx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ilx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     jp : DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
        := DoblDobl_CSeries_Jaco_Matrices.Create(p);
     jm : DoblDobl_Complex_Series_Matrices.Matrix(1..dim,1..dim)
        := DoblDobl_CSeries_Jaco_Matrices.Eval(jp,x);
     err : double_double;
+    ans : character;
 
   begin
     put_line("the polynomial system :");
@@ -925,6 +937,15 @@ procedure ts_speelcnv is
     put_line("The coefficient vectors of the evaluation :"); put_line(s.yv);
     err := Difference(px,s.yv);
     put("The error : "); put(err,3); new_line;
+    DoblDobl_Vector_Splitters.Complex_Parts(xcff,rhx,ihx,rlx,ilx);
+    DoblDobl_Coefficient_Convolutions.Compute
+      (cs.rhpwt,cs.ihpwt,cs.rlpwt,cs.ilpwt,cs.mxe,rhx,ihx,rlx,ilx);
+    DoblDobl_Coefficient_Convolutions.EvalDiff
+      (cs,rhx.all,ihx.all,rlx.all,ilx.all);
+    err := Difference(px,cs.yv);
+    put("Recomputed error : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
     for i in s.vm'range loop
       put("The matrix "); put(i,1); put_line(" :"); put(s.vm(i).all);
     end loop;
@@ -936,8 +957,12 @@ procedure ts_speelcnv is
     end loop;
     err := Difference(jm,s.vm);
     put("The error : "); put(err,3); new_line;
-    Compute(s.pwt,s.mxe,xpt);
-    EvalDiff(s,xpt);
+    err := Difference(jm,cs.vm);
+    put("Recomputed error :"); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    DoblDobl_Speelpenning_Convolutions.Compute(s.pwt,s.mxe,xpt);
+    DoblDobl_Speelpenning_Convolutions.EvalDiff(s,xpt);
     put_line("The evaluation at a point : ");
     for k in s.yv'range loop
       put(s.yv(k)(0)); new_line;
