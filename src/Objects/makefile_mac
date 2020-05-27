@@ -308,6 +308,10 @@ ts_perfddvc:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfddvc.adb \
               -o $(BIN)/ts_perfddvc
 
+ts_perfqdvc:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfqdvc.adb \
+              -o $(BIN)/ts_perfqdvc
+
 ts_nesvec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_nesvec.adb -o $(BIN)/ts_nesvec
 

@@ -315,6 +315,10 @@ ts_perfddvc:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfddvc.adb \
              -o $(BIN)/ts_perfddvc
 
+ts_perfqdvc:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfqdvc.adb \
+             -o $(BIN)/ts_perfqdvc
+
 # Test programs for Math_Lib/Matrices :
 
 ts_natmat:

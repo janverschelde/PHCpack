@@ -304,6 +304,10 @@ ts_perfddvc: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfddvc.adb \
               -o $(BIN)/ts_perfddvc -largs get_clock.o get_clocks_per_sec.o
 
+ts_perfqdvc: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfqdvc.adb \
+              -o $(BIN)/ts_perfqdvc -largs get_clock.o get_clocks_per_sec.o
+
 ts_nesvec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_nesvec.adb \
               -o $(BIN)/ts_nesvec
