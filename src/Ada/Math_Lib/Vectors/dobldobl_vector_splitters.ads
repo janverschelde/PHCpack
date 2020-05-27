@@ -16,26 +16,6 @@ package DoblDobl_Vector_Splitters is
 --   Several computations run faster on a 4-vector representation than
 --   on a vector of double double complex numbers.
 
-  function Allocate_Complex_Coefficients
-             ( deg : integer32 )
-             return DoblDobl_Complex_Vectors.Link_to_Vector;
-
-  -- DESCRIPTION :
-  --   Returns allocated space for the complex coefficients
-  --   of a series truncated to degree deg.
-
-  function Allocate_Complex_Coefficients
-             ( dim,deg : integer32 )
-             return DoblDobl_Complex_VecVecs.VecVec;
-  function Allocate_Complex_Coefficients
-             ( dim,deg : integer32 )
-             return DoblDobl_Complex_VecVecs.Link_to_VecVec;
-
-  -- DESCRIPTION :
-  --   Returns allocated space for the coefficients of a vector 
-  --   of series, all truncated to degree deg.
-  --   The vector on return has range 1..dim.
-
   procedure Split ( x : in Complex_Number;
                     rehi,imhi,relo,imlo : out double_float );
 
@@ -72,6 +52,44 @@ package DoblDobl_Vector_Splitters is
   --   imhi     high parts of the imaginary parts of the numbers in v;
   --   relo     low parts of the real parts of the numbers in v;
   --   imlo     low parts of the imaginary parts of the numbers in v.
+
+  procedure Split_Complex
+              ( x : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                rhpx,ihpx : out Standard_Floating_Vectors.Link_to_Vector;
+                rlpx,ilpx : out Standard_Floating_Vectors.Link_to_Vector );
+  procedure Split_Complex
+              ( x : in DoblDobl_Complex_VecVecs.VecVec;
+                rhpx,ihpx : out Standard_Floating_VecVecs.VecVec;
+                rlpx,ilpx : out Standard_Floating_VecVecs.VecVec );
+  procedure Split_Complex
+              ( x : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                rhpx,ihpx : out Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : out Standard_Floating_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Splits the complex vector (of vectors) x into two real vectors,
+  --   with its real and imaginary parts of the complex numbers in x.
+  --   Memory is allocated for the resulting vectors.
+
+  function Allocate_Complex_Coefficients
+             ( deg : integer32 )
+             return DoblDobl_Complex_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns allocated space for the complex coefficients
+  --   of a series truncated to degree deg.
+
+  function Allocate_Complex_Coefficients
+             ( dim,deg : integer32 )
+             return DoblDobl_Complex_VecVecs.VecVec;
+  function Allocate_Complex_Coefficients
+             ( dim,deg : integer32 )
+             return DoblDobl_Complex_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Returns allocated space for the coefficients of a vector 
+  --   of series, all truncated to degree deg.
+  --   The vector on return has range 1..dim.
 
   procedure Merge ( x : out Complex_Number;
                     rehi,imhi,relo,imlo : in double_float );

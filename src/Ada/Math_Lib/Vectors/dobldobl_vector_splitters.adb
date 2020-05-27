@@ -2,6 +2,71 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 
 package body DoblDobl_Vector_Splitters is
 
+  procedure Split ( x : in Complex_Number;
+                    rehi,imhi,relo,imlo : out double_float ) is
+
+   nbr : double_double;
+
+  begin
+    nbr := REAL_PART(x); rehi := hi_part(nbr); relo := lo_part(nbr);
+    nbr := IMAG_PART(x); imhi := hi_part(nbr); imlo := lo_part(nbr);
+  end Split;
+
+  procedure Split ( v : in DoblDobl_Complex_Vectors.Vector;
+                    rehi : out Standard_Floating_Vectors.Vector;
+                    imhi : out Standard_Floating_Vectors.Vector;
+                    relo : out Standard_Floating_Vectors.Vector;
+                    imlo : out Standard_Floating_Vectors.Vector ) is
+  begin
+    for k in v'range loop
+      Split(v(k),rehi(k),imhi(k),relo(k),imlo(k));
+    end loop;
+  end Split;
+
+  procedure Split_Complex
+              ( x : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                rhpx,ihpx : out Standard_Floating_Vectors.Link_to_Vector;
+                rlpx,ilpx : out Standard_Floating_Vectors.Link_to_Vector ) is
+
+    rhx,ihx,rlx,ilx : Standard_Floating_Vectors.Vector(x'range);
+
+  begin
+    for k in x'range loop
+      Split(x(k),rhx(k),ihx(k),rlx(k),ilx(k));
+    end loop;
+    rhpx := new Standard_Floating_Vectors.Vector'(rhx);
+    ihpx := new Standard_Floating_Vectors.Vector'(ihx);
+    rlpx := new Standard_Floating_Vectors.Vector'(rlx);
+    ilpx := new Standard_Floating_Vectors.Vector'(ilx);
+  end Split_Complex;
+
+  procedure Split_Complex
+              ( x : in DoblDobl_Complex_VecVecs.VecVec;
+                rhpx,ihpx : out Standard_Floating_VecVecs.VecVec;
+                rlpx,ilpx : out Standard_Floating_VecVecs.VecVec ) is
+  begin
+    for k in x'range loop
+      Split_Complex(x(k),rhpx(k),ihpx(k),rlpx(k),ilpx(k));
+    end loop;
+  end Split_Complex;
+
+  procedure Split_Complex
+              ( x : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                rhpx,ihpx : out Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : out Standard_Floating_VecVecs.Link_to_VecVec ) is
+
+    rhx,ihx,rlx,ilx : Standard_Floating_VecVecs.VecVec(x'range);
+
+  begin
+    for k in x'range loop
+      Split_Complex(x(k),rhx(k),ihx(k),rlx(k),ilx(k));
+    end loop;
+    rhpx := new Standard_Floating_VecVecs.VecVec'(rhx);
+    ihpx := new Standard_Floating_VecVecs.VecVec'(ihx);
+    rlpx := new Standard_Floating_VecVecs.VecVec'(rlx);
+    ilpx := new Standard_Floating_VecVecs.VecVec'(ilx);
+  end Split_Complex;
+
   function Allocate_Complex_Coefficients
              ( deg : integer32 )
              return DoblDobl_Complex_Vectors.Link_to_Vector is
@@ -41,27 +106,6 @@ package body DoblDobl_Vector_Splitters is
     res := new DoblDobl_Complex_VecVecs.VecVec'(cff);
     return res;
   end Allocate_Complex_Coefficients;
-
-  procedure Split ( x : in Complex_Number;
-                    rehi,imhi,relo,imlo : out double_float ) is
-
-   nbr : double_double;
-
-  begin
-    nbr := REAL_PART(x); rehi := hi_part(nbr); relo := lo_part(nbr);
-    nbr := IMAG_PART(x); imhi := hi_part(nbr); imlo := lo_part(nbr);
-  end Split;
-
-  procedure Split ( v : in DoblDobl_Complex_Vectors.Vector;
-                    rehi : out Standard_Floating_Vectors.Vector;
-                    imhi : out Standard_Floating_Vectors.Vector;
-                    relo : out Standard_Floating_Vectors.Vector;
-                    imlo : out Standard_Floating_Vectors.Vector ) is
-  begin
-    for k in v'range loop
-      Split(v(k),rehi(k),imhi(k),relo(k),imlo(k));
-    end loop;
-  end Split;
 
   procedure Merge ( x : out Complex_Number;
                     rehi,imhi,relo,imlo : in double_float ) is
