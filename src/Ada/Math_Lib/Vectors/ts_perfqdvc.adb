@@ -6,7 +6,7 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Basics;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
-with Quad_Double_Renormalizations;
+-- with Quad_Double_Renormalizations;
 with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Floating_Vectors;
@@ -691,8 +691,8 @@ procedure ts_perfqdvc is
   --   zill     updated lowest double in the imaginary part of the product.
 
    -- zhihi,zlohi,zhilo,zlolo : double_float;
-    p0,p1,p2,p3,p4,p5,q0,q1,q2,q3,q4,q5 : double_float;
-    p6,p7,p8,p9,q6,q7,q8,q9,r0,r1,t0,t1,s0,s1,s2 : double_float;
+    p0,p1,p2,p3,p4,p5,q0,q1,q2,q3,q4,q5,bb,s : double_float;
+    p6,p7,p8,p9,q6,q7,q8,q9,r0,r1,t0,t1,s0,s1,s2,s3 : double_float;
 
   begin
    -- zre = xre*yre - xim*yim
@@ -703,33 +703,120 @@ procedure ts_perfqdvc is
     Double_Double_Basics.two_prod(xrhh,yrhl,p3,q3);
     Double_Double_Basics.two_prod(xrlh,yrlh,p4,q4);
     Double_Double_Basics.two_prod(xrhl,yrhh,p5,q5);
-    Quad_Double_Renormalizations.three_sum(p1,p2,q0);
-    Quad_Double_Renormalizations.three_sum(p2,q1,q2);
-    Quad_Double_Renormalizations.three_sum(p3,p4,p5);
-    Double_Double_Basics.two_sum(p2,p3,s0,t0);
-    Double_Double_Basics.two_sum(q1,p4,s1,t1);
+   -- Quad_Double_Renormalizations.three_sum(p1,p2,q0);
+   -- Double_Double_Basics.two_sum(p1,p2,s0,s1);
+    s0 := p1 + p2; bb := s0 - p1; s1 := (p1 - (s0 - bb)) + (p2 - bb);
+   -- Double_Double_Basics.two_sum(q0,s0,p1,s2);
+    p1 := q0 + s0; bb := p1 - q0; s2 := (q0 - (p1 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,p2,q0);
+    p2 := s1 + s2; bb := p2 - s1; q0 := (s1 - (p2 - bb)) + (s2 - bb);
+   -- Quad_Double_Renormalizations.three_sum(p2,q1,q2);
+   -- Double_Double_Basics.two_sum(p2,q1,s0,s1);
+    s0 := p2 + q1; bb := s0 - p2; s1 := (p2 - (s0 - bb)) + (q1 - bb);
+   -- Double_Double_Basics.two_sum(q2,s0,p2,s2);
+    p2 := q2 + s0; bb := p2 - q2; s2 := (q2 - (p2 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,q1,q2);
+    q1 := s1 + s2; bb := q1 - s1; q2 := (s1 - (q1 - bb)) + (s2 - bb);
+   -- Quad_Double_Renormalizations.three_sum(p3,p4,p5);
+   -- Double_Double_Basics.two_sum(p3,p4,s0,s1);
+    s0 := p3 + p4; bb := s0 - p3; s1 := (p3 - (s0 - bb)) + (p4 - bb);
+   -- Double_Double_Basics.two_sum(p5,s0,p3,s2);
+    p3 := p5 + s0; bb := p3 - p5; s2 := (p5 - (p3 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,p4,p5);
+    p4 := s1 + s2; bb := p4 - s1; p5 := (s1 - (p4 - bb)) + (s2 - bb);
+   -- Double_Double_Basics.two_sum(p2,p3,s0,t0);
+    s0 := p2 + p3; bb := s0 - p2; t0 := (p2 - (s0 - bb)) + (p3 - bb);
+   -- Double_Double_Basics.two_sum(q1,p4,s1,t1);
+    s1 := q1 + p4; bb := s1 - q1; t1 := (q1 - (s1 - bb)) + (p4 - bb);
     s2 := q2 + p5;
-    Double_Double_Basics.two_sum(s1,t0,s1,t0);
+   -- Double_Double_Basics.two_sum(s1,t0,s1,t0);
+    s := s1 + t0; bb := s - s1; t0 := (s1 - (s - bb)) + (t0 - bb); s1 := s;
     s2 := s2 + (t0 + t1);
     Double_Double_Basics.two_prod(xrhh,yrll,p6,q6);
     Double_Double_Basics.two_prod(xrlh,yrhl,p7,q7);
     Double_Double_Basics.two_prod(xrhl,yrlh,p8,q8);
     Double_Double_Basics.two_prod(xrll,yrhh,p9,q9);
-    Double_Double_Basics.two_sum(q0,q3,q0,q3); 
-    Double_Double_Basics.two_sum(q4,q5,q4,q5);
-    Double_Double_Basics.two_sum(p6,p7,p6,p7);
-    Double_Double_Basics.two_sum(p8,p9,p8,p9);
-    Double_Double_Basics.two_sum(q0,q4,t0,t1);
+   -- Double_Double_Basics.two_sum(q0,q3,q0,q3); 
+    s := q0 + q3; bb := s - q0; q3 := (q0 - (s - bb)) + (q3 - bb); q0 := s;
+   -- Double_Double_Basics.two_sum(q4,q5,q4,q5);
+    s := q4 + q5; bb := s - q4; q5 := (q4 - (s - bb)) + (q5 - bb); q4 := s;
+   -- Double_Double_Basics.two_sum(p6,p7,p6,p7);
+    s := p6 + p7; bb := s - p6; p7 := (p6 - (s - bb)) + (p7 - bb); p6 := s;
+   -- Double_Double_Basics.two_sum(p8,p9,p8,p9);
+    s := p8 + p9; bb := s - p8; p9 := (p8 - (s - bb)) + (p9 - bb); p8 := s;
+   -- Double_Double_Basics.two_sum(q0,q4,t0,t1);
+    t0 := q0 + q4; bb := t0 - q0; t1 := (q0 - (t0 - bb)) + (q4 - bb);
     t1 := t1 + (q3 + q5);
-    Double_Double_Basics.two_sum(p6,p8,r0,r1); 
+   -- Double_Double_Basics.two_sum(p6,p8,r0,r1); 
+    r0 := p6 + p8; bb := r0 - p6; r1 := (p6 - (r0 - bb)) + (p8 - bb);
     r1 := r1 + (p7 + p9); 
-    Double_Double_Basics.two_sum(t0,r0,q3,q4);
+   -- Double_Double_Basics.two_sum(t0,r0,q3,q4);
+    q3 := t0 + r0; bb := q3 - t0; q4 := (t0 - (q3 - bb)) + (r0 - bb);
     q4 := q4 + (t1 + r1); 
-    Double_Double_Basics.two_sum(q3,s1,t0,t1);
+   -- Double_Double_Basics.two_sum(q3,s1,t0,t1);
+    t0 := q3 + s1; bb := t0 - q3; t1 := (q3 - (t0 - bb)) + (s1 - bb);
     t1 := t1 + q4;
     t1 := t1 + xrlh * yrll + xrhl * yrhl + xrll * yrlh
         + q6 + q7 + q8 + q9 + s2;
-    Quad_Double_Renormalizations.renorm5(p0,p1,s0,t0,t1);
+   -- Quad_Double_Renormalizations.renorm5(p0,p1,s0,t0,t1);
+   -- s0 = bb, c0 = p0, c1 = p1, c2 = s0, c3 = t0, c4 = t1
+   -- Double_Double_Basics.quick_two_sum(t0,t1,bb,t1);
+    bb := t0 + t1; t1 := t1 - (bb - t0);
+   -- Double_Double_Basics.quick_two_sum(s0,bb,bb,t0);
+    s := s0 + bb; t0 := bb - (s - s0); bb := s;
+   -- Double_Double_Basics.quick_two_sum(p1,bb,bb,s0);
+    s := p1 + bb; s0 := bb - (s - p1); bb := s;
+   -- Double_Double_Basics.quick_two_sum(p0,bb,p0,p1);
+    s := p0 + bb; p1 := bb - (s - p0); p0 := s; -- bb := p0; s1 := p1;
+   -- Double_Double_Basics.quick_two_sum(p0,p1,bb,s1);
+    bb := p0 + p1; s1 := p1 - (bb - p0);
+    if s1 /= 0.0 then
+     -- Double_Double_Basics.quick_two_sum(s1,s0,s1,s2);
+      s := s1 + s0; s2 := s0 - (s - s1); s1 := s;
+      if s2 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s2,t0,s2,s3);
+        s := s2 + t0; s3 := t0 - (s - s2); s2 := s;
+        if s3 /= 0.0
+         then s3 := s3 + t1;
+         else s2 := s2 + t1;
+        end if;
+      else
+       -- Double_Double_Basics.quick_two_sum(s1,t0,s1,s2);
+        s := s1 + t0; s2 := t0 - (s - s1); s1 := s;
+        if s2 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s2,t1,s2,s3);
+          s := s2 + t1; s3 := t1 - (s - s2); s2 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        end if;
+      end if;
+    else
+     -- Double_Double_Basics.quick_two_sum(bb,s0,bb,s1);
+      s := bb + s0; s1 := s0 - (s - bb); bb := s;
+      if s1 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s1,t0,s1,s2);
+        s := s1 + t0; s2 := t0 - (s - s1); s1 := s;
+        if s2 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s2,t1,s2,s3);
+          s := s2 + t1; s3 := t1 - (s - s2); s2 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        end if;
+      else
+       -- Double_Double_Basics.quick_two_sum(bb,t0,bb,s1);
+        s := bb + t0; s1 := t0 - (s - bb); bb := s;
+        if s1 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(bb,t1,bb,s1);
+          s := bb + t1; s1 := t1 - (s - bb); bb := s;
+        end if;
+      end if;
+    end if;
+    p0 := bb; p1 := s1; s0 := s2; t0 := s3;
    -- zhihi := p0; zlohi := p1; zhilo := s0; zlolo := t0;
    -- (2) update relevant part of zr variables
     x(0) := zrhh; x(1) := zrlh; x(2) := zrhl; x(3) := zrll;
@@ -743,33 +830,120 @@ procedure ts_perfqdvc is
     Double_Double_Basics.two_prod(xihh,yihl,p3,q3);
     Double_Double_Basics.two_prod(xilh,yilh,p4,q4);
     Double_Double_Basics.two_prod(xihl,yihh,p5,q5);
-    Quad_Double_Renormalizations.three_sum(p1,p2,q0);
-    Quad_Double_Renormalizations.three_sum(p2,q1,q2);
-    Quad_Double_Renormalizations.three_sum(p3,p4,p5);
-    Double_Double_Basics.two_sum(p2,p3,s0,t0);
-    Double_Double_Basics.two_sum(q1,p4,s1,t1);
+   -- Quad_Double_Renormalizations.three_sum(p1,p2,q0);
+   -- Double_Double_Basics.two_sum(p1,p2,s0,s1);
+    s0 := p1 + p2; bb := s0 - p1; s1 := (p1 - (s0 - bb)) + (p2 - bb);
+   -- Double_Double_Basics.two_sum(q0,s0,p1,s2);
+    p1 := q0 + s0; bb := p1 - q0; s2 := (q0 - (p1 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,p2,q0);
+    p2 := s1 + s2; bb := p2 - s1; q0 := (s1 - (p2 - bb)) + (s2 - bb);
+   -- Quad_Double_Renormalizations.three_sum(p2,q1,q2);
+   -- Double_Double_Basics.two_sum(p2,q1,s0,s1);
+    s0 := p2 + q1; bb := s0 - p2; s1 := (p2 - (s0 - bb)) + (q1 - bb);
+   -- Double_Double_Basics.two_sum(q2,s0,p2,s2);
+    p2 := q2 + s0; bb := p2 - q2; s2 := (q2 - (p2 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,q1,q2);
+    q1 := s1 + s2; bb := q1 - s1; q2 := (s1 - (q1 - bb)) + (s2 - bb);
+   -- Quad_Double_Renormalizations.three_sum(p3,p4,p5);
+   -- Double_Double_Basics.two_sum(p3,p4,s0,s1);
+    s0 := p3 + p4; bb := s0 - p3; s1 := (p3 - (s0 - bb)) + (p4 - bb);
+   -- Double_Double_Basics.two_sum(p5,s0,p3,s2);
+    p3 := p5 + s0; bb := p3 - p5; s2 := (p5 - (p3 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,p4,p5);
+    p4 := s1 + s2; bb := p4 - s1; p5 := (s1 - (p4 - bb)) + (s2 - bb);
+   -- Double_Double_Basics.two_sum(p2,p3,s0,t0);
+    s0 := p2 + p3; bb := s0 - p2; t0 := (p2 - (s0 - bb)) + (p3 - bb);
+   -- Double_Double_Basics.two_sum(q1,p4,s1,t1);
+    s1 := q1 + p4; bb := s1 - q1; t1 := (q1 - (s1 - bb)) + (p4 - bb);
     s2 := q2 + p5;
-    Double_Double_Basics.two_sum(s1,t0,s1,t0);
+   -- Double_Double_Basics.two_sum(s1,t0,s1,t0);
+    s := s1 + t0; bb := s - s1; t0 := (s1 - (s - bb)) + (t0 - bb); s1 := s;
     s2 := s2 + (t0 + t1);
     Double_Double_Basics.two_prod(xihh,yill,p6,q6);
     Double_Double_Basics.two_prod(xilh,yihl,p7,q7);
     Double_Double_Basics.two_prod(xihl,yilh,p8,q8);
     Double_Double_Basics.two_prod(xill,yihh,p9,q9);
-    Double_Double_Basics.two_sum(q0,q3,q0,q3); 
-    Double_Double_Basics.two_sum(q4,q5,q4,q5);
-    Double_Double_Basics.two_sum(p6,p7,p6,p7);
-    Double_Double_Basics.two_sum(p8,p9,p8,p9);
-    Double_Double_Basics.two_sum(q0,q4,t0,t1);
+   -- Double_Double_Basics.two_sum(q0,q3,q0,q3); 
+    s := q0 + q3; bb := s - q0; q3 := (q0 - (s - bb)) + (q3 - bb); q0 := s;
+   -- Double_Double_Basics.two_sum(q4,q5,q4,q5);
+    s := q4 + q5; bb := s - q4; q5 := (q4 - (s - bb)) + (q5 - bb); q4 := s;
+   -- Double_Double_Basics.two_sum(p6,p7,p6,p7);
+    s := p6 + p7; bb := s - p6; p7 := (p6 - (s - bb)) + (p7 - bb); p6 := s;
+   -- Double_Double_Basics.two_sum(p8,p9,p8,p9);
+    s := p8 + p9; bb := s - p8; p9 := (p8 - (s - bb)) + (p9 - bb); p8 := s;
+   -- Double_Double_Basics.two_sum(q0,q4,t0,t1);
+    t0 := q0 + q4; bb := t0 - q0; t1 := (q0 - (t0 - bb)) + (q4 - bb);
     t1 := t1 + (q3 + q5);
-    Double_Double_Basics.two_sum(p6,p8,r0,r1); 
+   -- Double_Double_Basics.two_sum(p6,p8,r0,r1); 
+    r0 := p6 + p8; bb := r0 - p6; r1 := (p6 - (r0 - bb)) + (p8 - bb);
     r1 := r1 + (p7 + p9); 
-    Double_Double_Basics.two_sum(t0,r0,q3,q4);
+   -- Double_Double_Basics.two_sum(t0,r0,q3,q4);
+    q3 := t0 + r0; bb := q3 - t0; q4 := (t0 - (q3 - bb)) + (r0 - bb);
     q4 := q4 + (t1 + r1); 
-    Double_Double_Basics.two_sum(q3,s1,t0,t1);
+   -- Double_Double_Basics.two_sum(q3,s1,t0,t1);
+    t0 := q3 + s1; bb := t0 - q3; t1 := (q3 - (t0 - bb)) + (s1 - bb);
     t1 := t1 + q4;
     t1 := t1 + xilh * yill + xihl * yihl + xill * yilh
         + q6 + q7 + q8 + q9 + s2;
-    Quad_Double_Renormalizations.renorm5(p0,p1,s0,t0,t1);
+   -- Quad_Double_Renormalizations.renorm5(p0,p1,s0,t0,t1);
+   -- s0 = bb, c0 = p0, c1 = p1, c2 = s0, c3 = t0, c4 = t1
+   -- Double_Double_Basics.quick_two_sum(t0,t1,bb,t1);
+    bb := t0 + t1; t1 := t1 - (bb - t0);
+   -- Double_Double_Basics.quick_two_sum(s0,bb,bb,t0);
+    s := s0 + bb; t0 := bb - (s - s0); bb := s;
+   -- Double_Double_Basics.quick_two_sum(p1,bb,bb,s0);
+    s := p1 + bb; s0 := bb - (s - p1); bb := s;
+   -- Double_Double_Basics.quick_two_sum(p0,bb,p0,p1);
+    s := p0 + bb; p1 := bb - (s - p0); p0 := s; -- bb := p0; s1 := p1;
+   -- Double_Double_Basics.quick_two_sum(p0,p1,bb,s1);
+    bb := p0 + p1; s1 := p1 - (bb - p0);
+    if s1 /= 0.0 then
+     -- Double_Double_Basics.quick_two_sum(s1,s0,s1,s2);
+      s := s1 + s0; s2 := s0 - (s - s1); s1 := s;
+      if s2 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s2,t0,s2,s3);
+        s := s2 + t0; s3 := t0 - (s - s2); s2 := s;
+        if s3 /= 0.0
+         then s3 := s3 + t1;
+         else s2 := s2 + t1;
+        end if;
+      else
+       -- Double_Double_Basics.quick_two_sum(s1,t0,s1,s2);
+        s := s1 + t0; s2 := t0 - (s - s1); s1 := s;
+        if s2 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s2,t1,s2,s3);
+          s := s2 + t1; s3 := t1 - (s - s2); s2 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        end if;
+      end if;
+    else
+     -- Double_Double_Basics.quick_two_sum(bb,s0,bb,s1);
+      s := bb + s0; s1 := s0 - (s - bb); bb := s;
+      if s1 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s1,t0,s1,s2);
+        s := s1 + t0; s2 := t0 - (s - s1); s1 := s;
+        if s2 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s2,t1,s2,s3);
+          s := s2 + t1; s3 := t1 - (s - s2); s2 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        end if;
+      else
+       -- Double_Double_Basics.quick_two_sum(bb,t0,bb,s1);
+        s := bb + t0; s1 := t0 - (s - bb); bb := s;
+        if s1 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(bb,t1,bb,s1);
+          s := bb + t1; s1 := t1 - (s - bb); bb := s;
+        end if;
+      end if;
+    end if;
+    p0 := bb; p1 := s1; s0 := s2; t0 := s3;
    -- zhihi := p0; zlohi := p1; zhilo := s0; zlolo := t0;
    -- (4) update relevant part of zr variables
     x(0) := zrhh; x(1) := zrlh; x(2) := zrhl; x(3) := zrll;
@@ -784,33 +958,120 @@ procedure ts_perfqdvc is
     Double_Double_Basics.two_prod(xrhh,yihl,p3,q3);
     Double_Double_Basics.two_prod(xrlh,yilh,p4,q4);
     Double_Double_Basics.two_prod(xrhl,yihh,p5,q5);
-    Quad_Double_Renormalizations.three_sum(p1,p2,q0);
-    Quad_Double_Renormalizations.three_sum(p2,q1,q2);
-    Quad_Double_Renormalizations.three_sum(p3,p4,p5);
-    Double_Double_Basics.two_sum(p2,p3,s0,t0);
-    Double_Double_Basics.two_sum(q1,p4,s1,t1);
+   -- Quad_Double_Renormalizations.three_sum(p1,p2,q0);
+   -- Double_Double_Basics.two_sum(p1,p2,s0,s1);
+    s0 := p1 + p2; bb := s0 - p1; s1 := (p1 - (s0 - bb)) + (p2 - bb);
+   -- Double_Double_Basics.two_sum(q0,s0,p1,s2);
+    p1 := q0 + s0; bb := p1 - q0; s2 := (q0 - (p1 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,p2,q0);
+    p2 := s1 + s2; bb := p2 - s1; q0 := (s1 - (p2 - bb)) + (s2 - bb);
+   -- Quad_Double_Renormalizations.three_sum(p2,q1,q2);
+   -- Double_Double_Basics.two_sum(p2,q1,s0,s1);
+    s0 := p2 + q1; bb := s0 - p2; s1 := (p2 - (s0 - bb)) + (q1 - bb);
+   -- Double_Double_Basics.two_sum(q2,s0,p2,s2);
+    p2 := q2 + s0; bb := p2 - q2; s2 := (q2 - (p2 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,q1,q2);
+    q1 := s1 + s2; bb := q1 - s1; q2 := (s1 - (q1 - bb)) + (s2 - bb);
+   -- Quad_Double_Renormalizations.three_sum(p3,p4,p5);
+   -- Double_Double_Basics.two_sum(p3,p4,s0,s1);
+    s0 := p3 + p4; bb := s0 - p3; s1 := (p3 - (s0 - bb)) + (p4 - bb);
+   -- Double_Double_Basics.two_sum(p5,s0,p3,s2);
+    p3 := p5 + s0; bb := p3 - p5; s2 := (p5 - (p3 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,p4,p5);
+    p4 := s1 + s2; bb := p4 - s1; p5 := (s1 - (p4 - bb)) + (s2 - bb);
+   -- Double_Double_Basics.two_sum(p2,p3,s0,t0);
+    s0 := p2 + p3; bb := s0 - p2; t0 := (p2 - (s0 - bb)) + (p3 - bb);
+   -- Double_Double_Basics.two_sum(q1,p4,s1,t1);
+    s1 := q1 + p4; bb := s1 - q1; t1 := (q1 - (s1 - bb)) + (p4 - bb);
     s2 := q2 + p5;
-    Double_Double_Basics.two_sum(s1,t0,s1,t0);
+   -- Double_Double_Basics.two_sum(s1,t0,s1,t0);
+    s := s1 + t0; bb := s - s1; t0 := (s1 - (s - bb)) + (t0 - bb); s1 := s;
     s2 := s2 + (t0 + t1);
     Double_Double_Basics.two_prod(xrhh,yill,p6,q6);
     Double_Double_Basics.two_prod(xrlh,yihl,p7,q7);
     Double_Double_Basics.two_prod(xrhl,yilh,p8,q8);
     Double_Double_Basics.two_prod(xrll,yihh,p9,q9);
-    Double_Double_Basics.two_sum(q0,q3,q0,q3); 
-    Double_Double_Basics.two_sum(q4,q5,q4,q5);
-    Double_Double_Basics.two_sum(p6,p7,p6,p7);
-    Double_Double_Basics.two_sum(p8,p9,p8,p9);
-    Double_Double_Basics.two_sum(q0,q4,t0,t1);
+   -- Double_Double_Basics.two_sum(q0,q3,q0,q3); 
+    s := q0 + q3; bb := s - q0; q3 := (q0 - (s - bb)) + (q3 - bb); q0 := s;
+   -- Double_Double_Basics.two_sum(q4,q5,q4,q5);
+    s := q4 + q5; bb := s - q4; q5 := (q4 - (s - bb)) + (q5 - bb); q4 := s;
+   -- Double_Double_Basics.two_sum(p6,p7,p6,p7);
+    s := p6 + p7; bb := s - p6; p7 := (p6 - (s - bb)) + (p7 - bb); p6 := s;
+   -- Double_Double_Basics.two_sum(p8,p9,p8,p9);
+    s := p8 + p9; bb := s - p8; p9 := (p8 - (s - bb)) + (p9 - bb); p8 := s;
+   -- Double_Double_Basics.two_sum(q0,q4,t0,t1);
+    t0 := q0 + q4; bb := t0 - q0; t1 := (q0 - (t0 - bb)) + (q4 - bb);
     t1 := t1 + (q3 + q5);
-    Double_Double_Basics.two_sum(p6,p8,r0,r1); 
+   -- Double_Double_Basics.two_sum(p6,p8,r0,r1); 
+    r0 := p6 + p8; bb := r0 - p6; r1 := (p6 - (r0 - bb)) + (p8 - bb);
     r1 := r1 + (p7 + p9); 
-    Double_Double_Basics.two_sum(t0,r0,q3,q4);
+   -- Double_Double_Basics.two_sum(t0,r0,q3,q4);
+    q3 := t0 + r0; bb := q3 - t0; q4 := (t0 - (q3 - bb)) + (r0 - bb);
     q4 := q4 + (t1 + r1); 
-    Double_Double_Basics.two_sum(q3,s1,t0,t1);
+   -- Double_Double_Basics.two_sum(q3,s1,t0,t1);
+    t0 := q3 + s1; bb := t0 - q3; t1 := (q3 - (t0 - bb)) + (s1 - bb);
     t1 := t1 + q4;
     t1 := t1 + xrlh * yill + xrhl * yihl + xrll * yilh
         + q6 + q7 + q8 + q9 + s2;
-    Quad_Double_Renormalizations.renorm5(p0,p1,s0,t0,t1);
+   -- Quad_Double_Renormalizations.renorm5(p0,p1,s0,t0,t1);
+   -- s0 = bb, c0 = p0, c1 = p1, c2 = s0, c3 = t0, c4 = t1
+   -- Double_Double_Basics.quick_two_sum(t0,t1,bb,t1);
+    bb := t0 + t1; t1 := t1 - (bb - t0);
+   -- Double_Double_Basics.quick_two_sum(s0,bb,bb,t0);
+    s := s0 + bb; t0 := bb - (s - s0); bb := s;
+   -- Double_Double_Basics.quick_two_sum(p1,bb,bb,s0);
+    s := p1 + bb; s0 := bb - (s - p1); bb := s;
+   -- Double_Double_Basics.quick_two_sum(p0,bb,p0,p1);
+    s := p0 + bb; p1 := bb - (s - p0); p0 := s; -- bb := p0; s1 := p1;
+   -- Double_Double_Basics.quick_two_sum(p0,p1,bb,s1);
+    bb := p0 + p1; s1 := p1 - (bb - p0);
+    if s1 /= 0.0 then
+     -- Double_Double_Basics.quick_two_sum(s1,s0,s1,s2);
+      s := s1 + s0; s2 := s0 - (s - s1); s1 := s;
+      if s2 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s2,t0,s2,s3);
+        s := s2 + t0; s3 := t0 - (s - s2); s2 := s;
+        if s3 /= 0.0
+         then s3 := s3 + t1;
+         else s2 := s2 + t1;
+        end if;
+      else
+       -- Double_Double_Basics.quick_two_sum(s1,t0,s1,s2);
+        s := s1 + t0; s2 := t0 - (s - s1); s1 := s;
+        if s2 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s2,t1,s2,s3);
+          s := s2 + t1; s3 := t1 - (s - s2); s2 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        end if;
+      end if;
+    else
+     -- Double_Double_Basics.quick_two_sum(bb,s0,bb,s1);
+      s := bb + s0; s1 := s0 - (s - bb); bb := s;
+      if s1 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s1,t0,s1,s2);
+        s := s1 + t0; s2 := t0 - (s - s1); s1 := s;
+        if s2 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s2,t1,s2,s3);
+          s := s2 + t1; s3 := t1 - (s - s2); s2 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        end if;
+      else
+       -- Double_Double_Basics.quick_two_sum(bb,t0,bb,s1);
+        s := bb + t0; s1 := t0 - (s - bb); bb := s;
+        if s1 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(bb,t1,bb,s1);
+          s := bb + t1; s1 := t1 - (s - bb); bb := s;
+        end if;
+      end if;
+    end if;
+    p0 := bb; p1 := s1; s0 := s2; t0 := s3;
    -- zhihi := p0; zlohi := p1; zhilo := s0; zlolo := t0;
    -- (6) update relevant part of zi variables
     x(0) := zihh; x(1) := zilh; x(2) := zihl; x(3) := zill;
@@ -824,33 +1085,120 @@ procedure ts_perfqdvc is
     Double_Double_Basics.two_prod(xihh,yrhl,p3,q3);
     Double_Double_Basics.two_prod(xilh,yrlh,p4,q4);
     Double_Double_Basics.two_prod(xihl,yrhh,p5,q5);
-    Quad_Double_Renormalizations.three_sum(p1,p2,q0);
-    Quad_Double_Renormalizations.three_sum(p2,q1,q2);
-    Quad_Double_Renormalizations.three_sum(p3,p4,p5);
-    Double_Double_Basics.two_sum(p2,p3,s0,t0);
-    Double_Double_Basics.two_sum(q1,p4,s1,t1);
+   -- Quad_Double_Renormalizations.three_sum(p1,p2,q0);
+   -- Double_Double_Basics.two_sum(p1,p2,s0,s1);
+    s0 := p1 + p2; bb := s0 - p1; s1 := (p1 - (s0 - bb)) + (p2 - bb);
+   -- Double_Double_Basics.two_sum(q0,s0,p1,s2);
+    p1 := q0 + s0; bb := p1 - q0; s2 := (q0 - (p1 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,p2,q0);
+    p2 := s1 + s2; bb := p2 - s1; q0 := (s1 - (p2 - bb)) + (s2 - bb);
+   -- Quad_Double_Renormalizations.three_sum(p2,q1,q2);
+   -- Double_Double_Basics.two_sum(p2,q1,s0,s1);
+    s0 := p2 + q1; bb := s0 - p2; s1 := (p2 - (s0 - bb)) + (q1 - bb);
+   -- Double_Double_Basics.two_sum(q2,s0,p2,s2);
+    p2 := q2 + s0; bb := p2 - q2; s2 := (q2 - (p2 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,q1,q2);
+    q1 := s1 + s2; bb := q1 - s1; q2 := (s1 - (q1 - bb)) + (s2 - bb);
+   -- Quad_Double_Renormalizations.three_sum(p3,p4,p5);
+   -- Double_Double_Basics.two_sum(p3,p4,s0,s1);
+    s0 := p3 + p4; bb := s0 - p3; s1 := (p3 - (s0 - bb)) + (p4 - bb);
+   -- Double_Double_Basics.two_sum(p5,s0,p3,s2);
+    p3 := p5 + s0; bb := p3 - p5; s2 := (p5 - (p3 - bb)) + (s0 - bb);
+   -- Double_Double_Basics.two_sum(s1,s2,p4,p5);
+    p4 := s1 + s2; bb := p4 - s1; p5 := (s1 - (p4 - bb)) + (s2 - bb);
+   -- Double_Double_Basics.two_sum(p2,p3,s0,t0);
+    s0 := p2 + p3; bb := s0 - p2; t0 := (p2 - (s0 - bb)) + (p3 - bb);
+   -- Double_Double_Basics.two_sum(q1,p4,s1,t1);
+    s1 := q1 + p4; bb := s1 - q1; t1 := (q1 - (s1 - bb)) + (p4 - bb);
     s2 := q2 + p5;
-    Double_Double_Basics.two_sum(s1,t0,s1,t0);
+   -- Double_Double_Basics.two_sum(s1,t0,s1,t0);
+    s := s1 + t0; bb := s - s1; t0 := (s1 - (s - bb)) + (t0 - bb); s1 := s;
     s2 := s2 + (t0 + t1);
     Double_Double_Basics.two_prod(xihh,yrll,p6,q6);
     Double_Double_Basics.two_prod(xilh,yrhl,p7,q7);
     Double_Double_Basics.two_prod(xihl,yrlh,p8,q8);
     Double_Double_Basics.two_prod(xill,yrhh,p9,q9);
-    Double_Double_Basics.two_sum(q0,q3,q0,q3); 
-    Double_Double_Basics.two_sum(q4,q5,q4,q5);
-    Double_Double_Basics.two_sum(p6,p7,p6,p7);
-    Double_Double_Basics.two_sum(p8,p9,p8,p9);
-    Double_Double_Basics.two_sum(q0,q4,t0,t1);
+   -- Double_Double_Basics.two_sum(q0,q3,q0,q3); 
+    s := q0 + q3; bb := s - q0; q3 := (q0 - (s - bb)) + (q3 - bb); q0 := s;
+   -- Double_Double_Basics.two_sum(q4,q5,q4,q5);
+    s := q4 + q5; bb := s - q4; q5 := (q4 - (s - bb)) + (q5 - bb); q4 := s;
+   -- Double_Double_Basics.two_sum(p6,p7,p6,p7);
+    s := p6 + p7; bb := s - p6; p7 := (p6 - (s - bb)) + (p7 - bb); p6 := s;
+   -- Double_Double_Basics.two_sum(p8,p9,p8,p9);
+    s := p8 + p9; bb := s - p8; p9 := (p8 - (s - bb)) + (p9 - bb); p8 := s;
+   -- Double_Double_Basics.two_sum(q0,q4,t0,t1);
+    t0 := q0 + q4; bb := t0 - q0; t1 := (q0 - (t0 - bb)) + (q4 - bb);
     t1 := t1 + (q3 + q5);
-    Double_Double_Basics.two_sum(p6,p8,r0,r1); 
+   -- Double_Double_Basics.two_sum(p6,p8,r0,r1); 
+    r0 := p6 + p8; bb := r0 - p6; r1 := (p6 - (r0 - bb)) + (p8 - bb);
     r1 := r1 + (p7 + p9); 
-    Double_Double_Basics.two_sum(t0,r0,q3,q4);
+   -- Double_Double_Basics.two_sum(t0,r0,q3,q4);
+    q3 := t0 + r0; bb := q3 - t0; q4 := (t0 - (q3 - bb)) + (r0 - bb);
     q4 := q4 + (t1 + r1); 
-    Double_Double_Basics.two_sum(q3,s1,t0,t1);
+   -- Double_Double_Basics.two_sum(q3,s1,t0,t1);
+    t0 := q3 + s1; bb := t0 - q3; t1 := (q3 - (t0 - bb)) + (s1 - bb);
     t1 := t1 + q4;
     t1 := t1 + xilh * yrll + xihl * yrhl + xill * yrlh
         + q6 + q7 + q8 + q9 + s2;
-    Quad_Double_Renormalizations.renorm5(p0,p1,s0,t0,t1);
+   -- Quad_Double_Renormalizations.renorm5(p0,p1,s0,t0,t1);
+   -- s0 = bb, c0 = p0, c1 = p1, c2 = s0, c3 = t0, c4 = t1
+   -- Double_Double_Basics.quick_two_sum(t0,t1,bb,t1);
+    bb := t0 + t1; t1 := t1 - (bb - t0);
+   -- Double_Double_Basics.quick_two_sum(s0,bb,bb,t0);
+    s := s0 + bb; t0 := bb - (s - s0); bb := s;
+   -- Double_Double_Basics.quick_two_sum(p1,bb,bb,s0);
+    s := p1 + bb; s0 := bb - (s - p1); bb := s;
+   -- Double_Double_Basics.quick_two_sum(p0,bb,p0,p1);
+    s := p0 + bb; p1 := bb - (s - p0); p0 := s; -- bb := p0; s1 := p1;
+   -- Double_Double_Basics.quick_two_sum(p0,p1,bb,s1);
+    bb := p0 + p1; s1 := p1 - (bb - p0);
+    if s1 /= 0.0 then
+     -- Double_Double_Basics.quick_two_sum(s1,s0,s1,s2);
+      s := s1 + s0; s2 := s0 - (s - s1); s1 := s;
+      if s2 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s2,t0,s2,s3);
+        s := s2 + t0; s3 := t0 - (s - s2); s2 := s;
+        if s3 /= 0.0
+         then s3 := s3 + t1;
+         else s2 := s2 + t1;
+        end if;
+      else
+       -- Double_Double_Basics.quick_two_sum(s1,t0,s1,s2);
+        s := s1 + t0; s2 := t0 - (s - s1); s1 := s;
+        if s2 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s2,t1,s2,s3);
+          s := s2 + t1; s3 := t1 - (s - s2); s2 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        end if;
+      end if;
+    else
+     -- Double_Double_Basics.quick_two_sum(bb,s0,bb,s1);
+      s := bb + s0; s1 := s0 - (s - bb); bb := s;
+      if s1 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s1,t0,s1,s2);
+        s := s1 + t0; s2 := t0 - (s - s1); s1 := s;
+        if s2 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s2,t1,s2,s3);
+          s := s2 + t1; s3 := t1 - (s - s2); s2 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        end if;
+      else
+       -- Double_Double_Basics.quick_two_sum(bb,t0,bb,s1);
+        s := bb + t0; s1 := t0 - (s - bb); bb := s;
+        if s1 /= 0.0 then
+         -- Double_Double_Basics.quick_two_sum(s1,t1,s1,s2);
+          s := s1 + t1; s2 := t1 - (s - s1); s1 := s;
+        else
+         -- Double_Double_Basics.quick_two_sum(bb,t1,bb,s1);
+          s := bb + t1; s1 := t1 - (s - bb); bb := s;
+        end if;
+      end if;
+    end if;
+    p0 := bb; p1 := s1; s0 := s2; t0 := s3;
    -- zhihi := p0; zlohi := p1; zhilo := s0; zlolo := t0;
    -- (6) update relevant part of zi variables
     x(0) := zihh; x(1) := zilh; x(2) := zihl; x(3) := zill;
