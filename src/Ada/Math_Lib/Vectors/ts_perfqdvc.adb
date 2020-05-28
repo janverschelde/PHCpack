@@ -4,7 +4,7 @@ with Timing_Package;                     use Timing_Package;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Double_Double_Basics;
+-- with Double_Double_Basics;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 -- with Quad_Double_Renormalizations;
 with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
@@ -690,7 +690,9 @@ procedure ts_perfqdvc is
   --   zrll     updated lowest double in the real part of the inner product;
   --   zill     updated lowest double in the imaginary part of the product.
 
-   -- zhihi,zlohi,zhilo,zlolo : double_float;
+    QD_SPLITTER : constant double_float := 134217729.0; -- 2^27 + 1
+    QD_SPLIT_THRESH : constant double_float := 6.69692879491417e+299; -- 2^996
+
     p0,p1,p2,p3,p4,p5,q0,q1,q2,q3,q4,q5,bb,s : double_float;
     p6,p7,p8,p9,q6,q7,q8,q9,r0,r1,t0,t1,s0,s1,s2,s3 : double_float;
     xrhh_hi,xrhh_lo,xihh_hi,xihh_lo : double_float;
@@ -707,26 +709,86 @@ procedure ts_perfqdvc is
    -- (1) compute xre*yre
    -- Double_Double_Basics.two_prod(xrhh,yrhh,p0,q0);
     p0 := xrhh*yrhh;
-    Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo);
-    Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo);
+   -- Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo);
+    if ( xrhh > QD_SPLIT_THRESH or xrhh < -QD_SPLIT_THRESH ) then
+      bb := xrhh*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      xrhh_hi := s - (s - bb);
+      xrhh_lo := xrhh - xrhh_hi;
+      xrhh_hi := xrhh_hi*268435456.0;  -- 2^28
+      xrhh_lo := 268435456.0;          -- 2^28
+    else
+      s := QD_SPLITTER * xrhh;
+      xrhh_hi := s - (s - xrhh);
+      xrhh_lo := xrhh - xrhh_hi;
+    end if;
+   -- Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo);
+    if ( yrhh > QD_SPLIT_THRESH or yrhh < -QD_SPLIT_THRESH ) then
+      bb := yrhh*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      yrhh_hi := s - (s - bb);
+      yrhh_lo := yrhh - yrhh_hi;
+      yrhh_hi := yrhh_hi*268435456.0;  -- 2^28
+      yrhh_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * yrhh;
+      yrhh_hi := s - (s - yrhh);
+      yrhh_lo := yrhh - yrhh_hi;
+    end if;
     q0 := ((xrhh_hi*yrhh_hi - p0) + xrhh_hi*yrhh_lo + xrhh_lo*yrhh_hi)
           + xrhh_lo*yrhh_lo;
    -- Double_Double_Basics.two_prod(xrhh,yrlh,p1,q1);
     p1 := xrhh*yrlh;
    -- Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo); --> done
-    Double_Double_Basics.split(yrlh,yrlh_hi,yrlh_lo);
+   -- Double_Double_Basics.split(yrlh,yrlh_hi,yrlh_lo);
+    if ( yrlh > QD_SPLIT_THRESH or yrlh < -QD_SPLIT_THRESH ) then
+      bb := yrlh*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      yrlh_hi := s - (s - bb);
+      yrlh_lo := yrlh - yrlh_hi;
+      yrlh_hi := yrlh_hi*268435456.0;  -- 2^28
+      yrlh_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * yrlh;
+      yrlh_hi := s - (s - yrlh);
+      yrlh_lo := yrlh - yrlh_hi;
+    end if;
     q1 := ((xrhh_hi*yrlh_hi - p1) + xrhh_hi*yrlh_lo + xrhh_lo*yrlh_hi)
           + xrhh_lo*yrlh_lo;
    -- Double_Double_Basics.two_prod(xrlh,yrhh,p2,q2);
     p2 := xrlh*yrhh;
-    Double_Double_Basics.split(xrlh,xrlh_hi,xrlh_lo);
+   -- Double_Double_Basics.split(xrlh,xrlh_hi,xrlh_lo);
+    if ( xrlh > QD_SPLIT_THRESH or xrlh < -QD_SPLIT_THRESH ) then
+      bb := xrlh*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      xrlh_hi := s - (s - bb);
+      xrlh_lo := xrlh - xrlh_hi;
+      xrlh_hi := xrlh_hi*268435456.0;  -- 2^28
+      xrlh_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * xrlh;
+      xrlh_hi := s - (s - xrlh);
+      xrlh_lo := xrlh - xrlh_hi;
+    end if;
    -- Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo); --> done
     q2 := ((xrlh_hi*yrhh_hi - p2) + xrlh_hi*yrhh_lo + xrlh_lo*yrhh_hi)
           + xrlh_lo*yrhh_lo;
    -- Double_Double_Basics.two_prod(xrhh,yrhl,p3,q3);
     p3 := xrhh*yrhl;
    -- Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo); --> done
-    Double_Double_Basics.split(yrhl,yrhl_hi,yrhl_lo);
+   -- Double_Double_Basics.split(yrhl,yrhl_hi,yrhl_lo);
+    if ( yrhl > QD_SPLIT_THRESH or yrhl < -QD_SPLIT_THRESH ) then
+      bb := yrhl*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      yrhl_hi := s - (s - bb);
+      yrhl_lo := yrhl - yrhl_hi;
+      yrhl_hi := yrhl_hi*268435456.0;  -- 2^28
+      yrhl_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * yrhl;
+      yrhl_hi := s - (s - yrhl);
+      yrhl_lo := yrhl - yrhl_hi;
+    end if;
     q3 := ((xrhh_hi*yrhl_hi - p3) + xrhh_hi*yrhl_lo + xrhh_lo*yrhl_hi)
           + xrhh_lo*yrhl_lo;
    -- Double_Double_Basics.two_prod(xrlh,yrlh,p4,q4);
@@ -737,7 +799,19 @@ procedure ts_perfqdvc is
           + xrlh_lo*yrlh_lo;
    -- Double_Double_Basics.two_prod(xrhl,yrhh,p5,q5);
     p5 := xrhl*yrhh;
-    Double_Double_Basics.split(xrhl,xrhl_hi,xrhl_lo);
+   -- Double_Double_Basics.split(xrhl,xrhl_hi,xrhl_lo);
+    if ( xrhl > QD_SPLIT_THRESH or xrhl < -QD_SPLIT_THRESH ) then
+      bb := xrhl*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      xrhl_hi := s - (s - bb);
+      xrhl_lo := xrhl - xrhl_hi;
+      xrhl_hi := xrhl_hi*268435456.0;  -- 2^28
+      xrhl_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * xrhl;
+      xrhl_hi := s - (s - xrhl);
+      xrhl_lo := xrhl - xrhl_hi;
+    end if;
    -- Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo); --> done
     q5 := ((xrhl_hi*yrhh_hi - p5) + xrhl_hi*yrhh_lo + xrhl_lo*yrhh_hi)
           + xrhl_lo*yrhh_lo;
@@ -773,7 +847,19 @@ procedure ts_perfqdvc is
    -- Double_Double_Basics.two_prod(xrhh,yrll,p6,q6);
     p6 := xrhh*yrll;
    -- Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo); --> done
-    Double_Double_Basics.split(yrll,yrll_hi,yrll_lo);
+   -- Double_Double_Basics.split(yrll,yrll_hi,yrll_lo);
+    if ( yrll > QD_SPLIT_THRESH or yrll < -QD_SPLIT_THRESH ) then
+      bb := yrll*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      yrll_hi := s - (s - bb);
+      yrll_lo := yrll - yrll_hi;
+      yrll_hi := yrll_hi*268435456.0;  -- 2^28
+      yrll_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * yrll;
+      yrll_hi := s - (s - yrll);
+      yrll_lo := yrll - yrll_hi;
+    end if;
     q6 := ((xrhh_hi*yrll_hi - p6) + xrhh_hi*yrll_lo + xrhh_lo*yrll_hi)
           + xrhh_lo*yrll_lo;
    -- Double_Double_Basics.two_prod(xrlh,yrhl,p7,q7);
@@ -790,7 +876,19 @@ procedure ts_perfqdvc is
           + xrhl_lo*yrlh_lo;
    -- Double_Double_Basics.two_prod(xrll,yrhh,p9,q9);
     p9 := xrll*yrhh;
-    Double_Double_Basics.split(xrll,xrll_hi,xrll_lo);
+   -- Double_Double_Basics.split(xrll,xrll_hi,xrll_lo);
+    if ( xrll > QD_SPLIT_THRESH or xrll < -QD_SPLIT_THRESH ) then
+      bb := xrll*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      xrll_hi := s - (s - bb);
+      xrll_lo := xrll - xrll_hi;
+      xrll_hi := xrll_hi*268435456.0;  -- 2^28
+      xrll_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * xrll;
+      xrll_hi := s - (s - xrll);
+      xrll_lo := xrll - xrll_hi;
+    end if;
    -- Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo); --> done
     q9 := ((xrll_hi*yrhh_hi - p9) + xrll_hi*yrhh_lo + xrll_lo*yrhh_hi)
           + xrll_lo*yrhh_lo;
@@ -884,26 +982,86 @@ procedure ts_perfqdvc is
    -- (3) compute xim*yim
    -- Double_Double_Basics.two_prod(xihh,yihh,p0,q0);
     p0 := xihh*yihh;
-    Double_Double_Basics.split(xihh,xihh_hi,xihh_lo);
-    Double_Double_Basics.split(yihh,yihh_hi,yihh_lo);
+   -- Double_Double_Basics.split(xihh,xihh_hi,xihh_lo);
+    if ( xihh > QD_SPLIT_THRESH or xihh < -QD_SPLIT_THRESH ) then
+      bb := xihh*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      xihh_hi := s - (s - bb);
+      xihh_lo := xihh - xihh_hi;
+      xihh_hi := xihh_hi*268435456.0;  -- 2^28
+      xihh_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * xihh;
+      xihh_hi := s - (s - xihh);
+      xihh_lo := xihh - xihh_hi;
+    end if;
+   -- Double_Double_Basics.split(yihh,yihh_hi,yihh_lo);
+    if ( yihh > QD_SPLIT_THRESH or yihh < -QD_SPLIT_THRESH ) then
+      bb := yihh*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      yihh_hi := s - (s - bb);
+      yihh_lo := yihh - yihh_hi;
+      yihh_hi := yihh_hi*268435456.0;  -- 2^28
+      yihh_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * yihh;
+      yihh_hi := s - (s - yihh);
+      yihh_lo := yihh - yihh_hi;
+    end if;
     q0 := ((xihh_hi*yihh_hi - p0) + xihh_hi*yihh_lo + xihh_lo*yihh_hi)
           + xihh_lo*yihh_lo;
    -- Double_Double_Basics.two_prod(xihh,yilh,p1,q1);
     p1 := xihh*yilh;
    -- Double_Double_Basics.split(xihh,xihh_hi,xihh_lo); --> done
-    Double_Double_Basics.split(yilh,yilh_hi,yilh_lo);
+   -- Double_Double_Basics.split(yilh,yilh_hi,yilh_lo);
+    if ( yilh > QD_SPLIT_THRESH or yilh < -QD_SPLIT_THRESH ) then
+      bb := yilh*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      yilh_hi := s - (s - bb);
+      yilh_lo := yilh - yilh_hi;
+      yilh_hi := yilh_hi*268435456.0;  -- 2^28
+      yilh_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * yilh;
+      yilh_hi := s - (s - yilh);
+      yilh_lo := yilh - yilh_hi;
+    end if;
     q1 := ((xihh_hi*yilh_hi - p1) + xihh_hi*yilh_lo + xihh_lo*yilh_hi)
           + xihh_lo*yilh_lo;
    -- Double_Double_Basics.two_prod(xilh,yihh,p2,q2);
     p2 := xilh*yihh;
-    Double_Double_Basics.split(xilh,xilh_hi,xilh_lo);
+   -- Double_Double_Basics.split(xilh,xilh_hi,xilh_lo);
+    if ( xilh > QD_SPLIT_THRESH or xilh < -QD_SPLIT_THRESH ) then
+      bb := xilh*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      xilh_hi := s - (s - bb);
+      xilh_lo := xilh - xilh_hi;
+      xilh_hi := xilh_hi*268435456.0;  -- 2^28
+      xilh_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * xilh;
+      xilh_hi := s - (s - xilh);
+      xilh_lo := xilh - xilh_hi;
+    end if;
    -- Double_Double_Basics.split(yihh,yihh_hi,yihh_lo); --> done
     q2 := ((xilh_hi*yihh_hi - p2) + xilh_hi*yihh_lo + xilh_lo*yihh_hi)
           + xilh_lo*yihh_lo;
    -- Double_Double_Basics.two_prod(xihh,yihl,p3,q3);
     p3 := xihh*yihl;
    -- Double_Double_Basics.split(xihh,xihh_hi,xihh_lo); --> done
-    Double_Double_Basics.split(yihl,yihl_hi,yihl_lo);
+   -- Double_Double_Basics.split(yihl,yihl_hi,yihl_lo);
+    if ( yihl > QD_SPLIT_THRESH or yihl < -QD_SPLIT_THRESH ) then
+      bb := yihl*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      yihl_hi := s - (s - bb);
+      yihl_lo := yilh - yihl_hi;
+      yihl_hi := yihl_hi*268435456.0;  -- 2^28
+      yihl_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * yihl;
+      yihl_hi := s - (s - yihl);
+      yihl_lo := yihl - yihl_hi;
+    end if;
     q3 := ((xihh_hi*yihl_hi - p3) + xihh_hi*yihl_lo + xihh_lo*yihl_hi)
           + xihh_lo*yihl_lo;
    -- Double_Double_Basics.two_prod(xilh,yilh,p4,q4);
@@ -914,7 +1072,19 @@ procedure ts_perfqdvc is
           + xilh_lo*yilh_lo;
    -- Double_Double_Basics.two_prod(xihl,yihh,p5,q5);
     p5 := xihl*yihh;
-    Double_Double_Basics.split(xihl,xihl_hi,xihl_lo);
+   -- Double_Double_Basics.split(xihl,xihl_hi,xihl_lo);
+    if ( xihl > QD_SPLIT_THRESH or xihl < -QD_SPLIT_THRESH ) then
+      bb := xihl*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      xihl_hi := s - (s - bb);
+      xihl_lo := xihl - xihl_hi;
+      xihl_hi := xihl_hi*268435456.0;  -- 2^28
+      xihl_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * xihl;
+      xihl_hi := s - (s - xihl);
+      xihl_lo := xihl - xihl_hi;
+    end if;
    -- Double_Double_Basics.split(yihh,yihh_hi,yihh_lo); --> done
     q5 := ((xihl_hi*yihh_hi - p5) + xihl_hi*yihh_lo + xihl_lo*yihh_hi)
           + xihl_lo*yihh_lo;
@@ -950,7 +1120,19 @@ procedure ts_perfqdvc is
    -- Double_Double_Basics.two_prod(xihh,yill,p6,q6);
     p6 := xihh*yill;
    -- Double_Double_Basics.split(xihh,xihh_hi,xihh_lo); --> done
-    Double_Double_Basics.split(yill,yill_hi,yill_lo);
+   -- Double_Double_Basics.split(yill,yill_hi,yill_lo);
+    if ( yill > QD_SPLIT_THRESH or yill < -QD_SPLIT_THRESH ) then
+      bb := yill*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      yill_hi := s - (s - bb);
+      yill_lo := yill - yill_hi;
+      yill_hi := yill_hi*268435456.0;  -- 2^28
+      yill_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * yill;
+      yill_hi := s - (s - yill);
+      yill_lo := yill - yill_hi;
+    end if;
     q6 := ((xihh_hi*yill_hi - p6) + xihh_hi*yill_lo + xihh_lo*yill_hi)
           + xihh_lo*yill_lo;
    -- Double_Double_Basics.two_prod(xilh,yihl,p7,q7);
@@ -967,7 +1149,19 @@ procedure ts_perfqdvc is
           + xihl_lo*yilh_lo;
    -- Double_Double_Basics.two_prod(xill,yihh,p9,q9);
     p9 := xill*yihh;
-    Double_Double_Basics.split(xill,xill_hi,xill_lo);
+   -- Double_Double_Basics.split(xill,xill_hi,xill_lo);
+    if ( xill > QD_SPLIT_THRESH or xill < -QD_SPLIT_THRESH ) then
+      bb := xill*3.7252902984619140625E-09;  -- 2^-28
+      s := QD_SPLITTER * bb;
+      xill_hi := s - (s - bb);
+      xill_lo := xill - xill_hi;
+      xill_hi := xill_hi*268435456.0;  -- 2^28
+      xill_lo := 268435456.0;     -- 2^28
+    else
+      s := QD_SPLITTER * xill;
+      xill_hi := s - (s - xill);
+      xill_lo := xill - xill_hi;
+    end if;
    -- Double_Double_Basics.split(yihh,yihh_hi,yihh_lo); --> done
     q9 := ((xill_hi*yihh_hi - p9) + xill_hi*yihh_lo + xill_lo*yihh_hi)
           + xill_lo*yihh_lo;
