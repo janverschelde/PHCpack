@@ -693,16 +693,54 @@ procedure ts_perfqdvc is
    -- zhihi,zlohi,zhilo,zlolo : double_float;
     p0,p1,p2,p3,p4,p5,q0,q1,q2,q3,q4,q5,bb,s : double_float;
     p6,p7,p8,p9,q6,q7,q8,q9,r0,r1,t0,t1,s0,s1,s2,s3 : double_float;
+    xrhh_hi,xrhh_lo,xihh_hi,xihh_lo : double_float;
+    xrhl_hi,xrhl_lo,xihl_hi,xihl_lo : double_float;
+    xrlh_hi,xrlh_lo,xilh_hi,xilh_lo : double_float;
+    xrll_hi,xrll_lo,xill_hi,xill_lo : double_float;
+    yrhh_hi,yrhh_lo,yihh_hi,yihh_lo : double_float;
+    yrhl_hi,yrhl_lo,yihl_hi,yihl_lo : double_float;
+    yrlh_hi,yrlh_lo,yilh_hi,yilh_lo : double_float;
+    yrll_hi,yrll_lo,yill_hi,yill_lo : double_float;
 
   begin
    -- zre = xre*yre - xim*yim
    -- (1) compute xre*yre
-    Double_Double_Basics.two_prod(xrhh,yrhh,p0,q0);
-    Double_Double_Basics.two_prod(xrhh,yrlh,p1,q1);
-    Double_Double_Basics.two_prod(xrlh,yrhh,p2,q2);
-    Double_Double_Basics.two_prod(xrhh,yrhl,p3,q3);
-    Double_Double_Basics.two_prod(xrlh,yrlh,p4,q4);
-    Double_Double_Basics.two_prod(xrhl,yrhh,p5,q5);
+   -- Double_Double_Basics.two_prod(xrhh,yrhh,p0,q0);
+    p0 := xrhh*yrhh;
+    Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo);
+    Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo);
+    q0 := ((xrhh_hi*yrhh_hi - p0) + xrhh_hi*yrhh_lo + xrhh_lo*yrhh_hi)
+          + xrhh_lo*yrhh_lo;
+   -- Double_Double_Basics.two_prod(xrhh,yrlh,p1,q1);
+    p1 := xrhh*yrlh;
+   -- Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo); --> done
+    Double_Double_Basics.split(yrlh,yrlh_hi,yrlh_lo);
+    q1 := ((xrhh_hi*yrlh_hi - p1) + xrhh_hi*yrlh_lo + xrhh_lo*yrlh_hi)
+          + xrhh_lo*yrlh_lo;
+   -- Double_Double_Basics.two_prod(xrlh,yrhh,p2,q2);
+    p2 := xrlh*yrhh;
+    Double_Double_Basics.split(xrlh,xrlh_hi,xrlh_lo);
+   -- Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo); --> done
+    q2 := ((xrlh_hi*yrhh_hi - p2) + xrlh_hi*yrhh_lo + xrlh_lo*yrhh_hi)
+          + xrlh_lo*yrhh_lo;
+   -- Double_Double_Basics.two_prod(xrhh,yrhl,p3,q3);
+    p3 := xrhh*yrhl;
+   -- Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo); --> done
+    Double_Double_Basics.split(yrhl,yrhl_hi,yrhl_lo);
+    q3 := ((xrhh_hi*yrhl_hi - p3) + xrhh_hi*yrhl_lo + xrhh_lo*yrhl_hi)
+          + xrhh_lo*yrhl_lo;
+   -- Double_Double_Basics.two_prod(xrlh,yrlh,p4,q4);
+    p4 := xrlh*yrlh;
+   -- Double_Double_Basics.split(xrlh,xrlh_hi,xrlh_lo); --> done
+   -- Double_Double_Basics.split(yrlh,yrlh_hi,yrlh_lo); --> done
+    q4 := ((xrlh_hi*yrlh_hi - p4) + xrlh_hi*yrlh_lo + xrlh_lo*yrlh_hi)
+          + xrlh_lo*yrlh_lo;
+   -- Double_Double_Basics.two_prod(xrhl,yrhh,p5,q5);
+    p5 := xrhl*yrhh;
+    Double_Double_Basics.split(xrhl,xrhl_hi,xrhl_lo);
+   -- Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo); --> done
+    q5 := ((xrhl_hi*yrhh_hi - p5) + xrhl_hi*yrhh_lo + xrhl_lo*yrhh_hi)
+          + xrhl_lo*yrhh_lo;
    -- Quad_Double_Renormalizations.three_sum(p1,p2,q0);
    -- Double_Double_Basics.two_sum(p1,p2,s0,s1);
     s0 := p1 + p2; bb := s0 - p1; s1 := (p1 - (s0 - bb)) + (p2 - bb);
@@ -732,10 +770,30 @@ procedure ts_perfqdvc is
    -- Double_Double_Basics.two_sum(s1,t0,s1,t0);
     s := s1 + t0; bb := s - s1; t0 := (s1 - (s - bb)) + (t0 - bb); s1 := s;
     s2 := s2 + (t0 + t1);
-    Double_Double_Basics.two_prod(xrhh,yrll,p6,q6);
-    Double_Double_Basics.two_prod(xrlh,yrhl,p7,q7);
-    Double_Double_Basics.two_prod(xrhl,yrlh,p8,q8);
-    Double_Double_Basics.two_prod(xrll,yrhh,p9,q9);
+   -- Double_Double_Basics.two_prod(xrhh,yrll,p6,q6);
+    p6 := xrhh*yrll;
+   -- Double_Double_Basics.split(xrhh,xrhh_hi,xrhh_lo); --> done
+    Double_Double_Basics.split(yrll,yrll_hi,yrll_lo);
+    q6 := ((xrhh_hi*yrll_hi - p6) + xrhh_hi*yrll_lo + xrhh_lo*yrll_hi)
+          + xrhh_lo*yrll_lo;
+   -- Double_Double_Basics.two_prod(xrlh,yrhl,p7,q7);
+    p7 := xrlh*yrhl;
+   -- Double_Double_Basics.split(xrlh,xrlh_hi,xrlh_lo); --> done
+   -- Double_Double_Basics.split(yrhl,yrhl_hi,yrhl_lo); --> done
+    q7 := ((xrlh_hi*yrhl_hi - p7) + xrlh_hi*yrhl_lo + xrlh_lo*yrhl_hi)
+          + xrlh_lo*yrhl_lo;
+   -- Double_Double_Basics.two_prod(xrhl,yrlh,p8,q8);
+    p8 := xrhl*yrlh;
+   -- Double_Double_Basics.split(xrhl,xrhl_hi,xrhl_lo); --> done
+   -- Double_Double_Basics.split(yrlh,yrlh_hi,yrlh_lo); --> done
+    q8 := ((xrhl_hi*yrlh_hi - p8) + xrhl_hi*yrlh_lo + xrhl_lo*yrlh_hi)
+          + xrhl_lo*yrlh_lo;
+   -- Double_Double_Basics.two_prod(xrll,yrhh,p9,q9);
+    p9 := xrll*yrhh;
+    Double_Double_Basics.split(xrll,xrll_hi,xrll_lo);
+   -- Double_Double_Basics.split(yrhh,yrhh_hi,yrhh_lo); --> done
+    q9 := ((xrll_hi*yrhh_hi - p9) + xrll_hi*yrhh_lo + xrll_lo*yrhh_hi)
+          + xrll_lo*yrhh_lo;
    -- Double_Double_Basics.two_sum(q0,q3,q0,q3); 
     s := q0 + q3; bb := s - q0; q3 := (q0 - (s - bb)) + (q3 - bb); q0 := s;
    -- Double_Double_Basics.two_sum(q4,q5,q4,q5);
@@ -824,12 +882,42 @@ procedure ts_perfqdvc is
     Add(x,y,z);
     zrhh := z(0); zrlh := z(1); zrhl := z(2); zrll := z(3);
    -- (3) compute xim*yim
-    Double_Double_Basics.two_prod(xihh,yihh,p0,q0);
-    Double_Double_Basics.two_prod(xihh,yilh,p1,q1);
-    Double_Double_Basics.two_prod(xilh,yihh,p2,q2);
-    Double_Double_Basics.two_prod(xihh,yihl,p3,q3);
-    Double_Double_Basics.two_prod(xilh,yilh,p4,q4);
-    Double_Double_Basics.two_prod(xihl,yihh,p5,q5);
+   -- Double_Double_Basics.two_prod(xihh,yihh,p0,q0);
+    p0 := xihh*yihh;
+    Double_Double_Basics.split(xihh,xihh_hi,xihh_lo);
+    Double_Double_Basics.split(yihh,yihh_hi,yihh_lo);
+    q0 := ((xihh_hi*yihh_hi - p0) + xihh_hi*yihh_lo + xihh_lo*yihh_hi)
+          + xihh_lo*yihh_lo;
+   -- Double_Double_Basics.two_prod(xihh,yilh,p1,q1);
+    p1 := xihh*yilh;
+   -- Double_Double_Basics.split(xihh,xihh_hi,xihh_lo); --> done
+    Double_Double_Basics.split(yilh,yilh_hi,yilh_lo);
+    q1 := ((xihh_hi*yilh_hi - p1) + xihh_hi*yilh_lo + xihh_lo*yilh_hi)
+          + xihh_lo*yilh_lo;
+   -- Double_Double_Basics.two_prod(xilh,yihh,p2,q2);
+    p2 := xilh*yihh;
+    Double_Double_Basics.split(xilh,xilh_hi,xilh_lo);
+   -- Double_Double_Basics.split(yihh,yihh_hi,yihh_lo); --> done
+    q2 := ((xilh_hi*yihh_hi - p2) + xilh_hi*yihh_lo + xilh_lo*yihh_hi)
+          + xilh_lo*yihh_lo;
+   -- Double_Double_Basics.two_prod(xihh,yihl,p3,q3);
+    p3 := xihh*yihl;
+   -- Double_Double_Basics.split(xihh,xihh_hi,xihh_lo); --> done
+    Double_Double_Basics.split(yihl,yihl_hi,yihl_lo);
+    q3 := ((xihh_hi*yihl_hi - p3) + xihh_hi*yihl_lo + xihh_lo*yihl_hi)
+          + xihh_lo*yihl_lo;
+   -- Double_Double_Basics.two_prod(xilh,yilh,p4,q4);
+    p4 := xilh*yilh;
+   -- Double_Double_Basics.split(xilh,xilh_hi,xilh_lo); --> done
+   -- Double_Double_Basics.split(yilh,yilh_hi,yilh_lo); --> done
+    q4 := ((xilh_hi*yilh_hi - p4) + xilh_hi*yilh_lo + xilh_lo*yilh_hi)
+          + xilh_lo*yilh_lo;
+   -- Double_Double_Basics.two_prod(xihl,yihh,p5,q5);
+    p5 := xihl*yihh;
+    Double_Double_Basics.split(xihl,xihl_hi,xihl_lo);
+   -- Double_Double_Basics.split(yihh,yihh_hi,yihh_lo); --> done
+    q5 := ((xihl_hi*yihh_hi - p5) + xihl_hi*yihh_lo + xihl_lo*yihh_hi)
+          + xihl_lo*yihh_lo;
    -- Quad_Double_Renormalizations.three_sum(p1,p2,q0);
    -- Double_Double_Basics.two_sum(p1,p2,s0,s1);
     s0 := p1 + p2; bb := s0 - p1; s1 := (p1 - (s0 - bb)) + (p2 - bb);
@@ -859,10 +947,30 @@ procedure ts_perfqdvc is
    -- Double_Double_Basics.two_sum(s1,t0,s1,t0);
     s := s1 + t0; bb := s - s1; t0 := (s1 - (s - bb)) + (t0 - bb); s1 := s;
     s2 := s2 + (t0 + t1);
-    Double_Double_Basics.two_prod(xihh,yill,p6,q6);
-    Double_Double_Basics.two_prod(xilh,yihl,p7,q7);
-    Double_Double_Basics.two_prod(xihl,yilh,p8,q8);
-    Double_Double_Basics.two_prod(xill,yihh,p9,q9);
+   -- Double_Double_Basics.two_prod(xihh,yill,p6,q6);
+    p6 := xihh*yill;
+   -- Double_Double_Basics.split(xihh,xihh_hi,xihh_lo); --> done
+    Double_Double_Basics.split(yill,yill_hi,yill_lo);
+    q6 := ((xihh_hi*yill_hi - p6) + xihh_hi*yill_lo + xihh_lo*yill_hi)
+          + xihh_lo*yill_lo;
+   -- Double_Double_Basics.two_prod(xilh,yihl,p7,q7);
+    p7 := xilh*yihl;
+   -- Double_Double_Basics.split(xilh,xilh_hi,xilh_lo); --> done
+   -- Double_Double_Basics.split(yihl,yihl_hi,yihl_lo); --> done
+    q7 := ((xilh_hi*yihl_hi - p7) + xilh_hi*yihl_lo + xilh_lo*yihl_hi)
+          + xilh_lo*yihl_lo;
+   -- Double_Double_Basics.two_prod(xihl,yilh,p8,q8);
+    p8 := xihl*yilh;
+   -- Double_Double_Basics.split(xihl,xihl_hi,xihl_lo); --> done
+   -- Double_Double_Basics.split(yilh,yilh_hi,yilh_lo); --> done
+    q8 := ((xihl_hi*yilh_hi - p8) + xihl_hi*yilh_lo + xihl_lo*yilh_hi)
+          + xihl_lo*yilh_lo;
+   -- Double_Double_Basics.two_prod(xill,yihh,p9,q9);
+    p9 := xill*yihh;
+    Double_Double_Basics.split(xill,xill_hi,xill_lo);
+   -- Double_Double_Basics.split(yihh,yihh_hi,yihh_lo); --> done
+    q9 := ((xill_hi*yihh_hi - p9) + xill_hi*yihh_lo + xill_lo*yihh_hi)
+          + xill_lo*yihh_lo;
    -- Double_Double_Basics.two_sum(q0,q3,q0,q3); 
     s := q0 + q3; bb := s - q0; q3 := (q0 - (s - bb)) + (q3 - bb); q0 := s;
    -- Double_Double_Basics.two_sum(q4,q5,q4,q5);
@@ -952,12 +1060,30 @@ procedure ts_perfqdvc is
     zrhh := z(0); zrlh := z(1); zrhl := z(2); zrll := z(3);
    -- zim = xre*yim + xim * yre
    -- (5) compute xre*yim
-    Double_Double_Basics.two_prod(xrhh,yihh,p0,q0);
-    Double_Double_Basics.two_prod(xrhh,yilh,p1,q1);
-    Double_Double_Basics.two_prod(xrlh,yihh,p2,q2);
-    Double_Double_Basics.two_prod(xrhh,yihl,p3,q3);
-    Double_Double_Basics.two_prod(xrlh,yilh,p4,q4);
-    Double_Double_Basics.two_prod(xrhl,yihh,p5,q5);
+   -- Double_Double_Basics.two_prod(xrhh,yihh,p0,q0);
+    p0 := xrhh*yihh;
+    q0 := ((xrhh_hi*yihh_hi - p0) + xrhh_hi*yihh_lo + xrhh_lo*yihh_hi)
+          + xrhh_lo*yihh_lo;
+   -- Double_Double_Basics.two_prod(xrhh,yilh,p1,q1);
+    p1 := xrhh*yilh;
+    q1 := ((xrhh_hi*yilh_hi - p1) + xrhh_hi*yilh_lo + xrhh_lo*yilh_hi)
+          + xrhh_lo*yilh_lo;
+   -- Double_Double_Basics.two_prod(xrlh,yihh,p2,q2);
+    p2 := xrlh*yihh;
+    q2 := ((xrlh_hi*yihh_hi - p2) + xrlh_hi*yihh_lo + xrlh_lo*yihh_hi)
+          + xrlh_lo*yihh_lo;
+   -- Double_Double_Basics.two_prod(xrhh,yihl,p3,q3);
+    p3 := xrhh*yihl;
+    q3 := ((xrhh_hi*yihl_hi - p3) + xrhh_hi*yihl_lo + xrhh_lo*yihl_hi)
+          + xrhh_lo*yihl_lo;
+   -- Double_Double_Basics.two_prod(xrlh,yilh,p4,q4);
+    p4 := xrlh*yilh;
+    q4 := ((xrlh_hi*yilh_hi - p4) + xrlh_hi*yilh_lo + xrlh_lo*yilh_hi)
+          + xrlh_lo*yilh_lo;
+   -- Double_Double_Basics.two_prod(xrhl,yihh,p5,q5);
+    p5 := xrhl*yihh;
+    q5 := ((xrhl_hi*yihh_hi - p5) + xrhl_hi*yihh_lo + xrhl_lo*yihh_hi)
+          + xrhl_lo*yihh_lo;
    -- Quad_Double_Renormalizations.three_sum(p1,p2,q0);
    -- Double_Double_Basics.two_sum(p1,p2,s0,s1);
     s0 := p1 + p2; bb := s0 - p1; s1 := (p1 - (s0 - bb)) + (p2 - bb);
@@ -987,10 +1113,22 @@ procedure ts_perfqdvc is
    -- Double_Double_Basics.two_sum(s1,t0,s1,t0);
     s := s1 + t0; bb := s - s1; t0 := (s1 - (s - bb)) + (t0 - bb); s1 := s;
     s2 := s2 + (t0 + t1);
-    Double_Double_Basics.two_prod(xrhh,yill,p6,q6);
-    Double_Double_Basics.two_prod(xrlh,yihl,p7,q7);
-    Double_Double_Basics.two_prod(xrhl,yilh,p8,q8);
-    Double_Double_Basics.two_prod(xrll,yihh,p9,q9);
+   -- Double_Double_Basics.two_prod(xrhh,yill,p6,q6);
+    p6 := xrhh*yill;
+    q6 := ((xrhh_hi*yill_hi - p6) + xrhh_hi*yill_lo + xrhh_lo*yill_hi)
+          + xrhh_lo*yill_lo;
+   -- Double_Double_Basics.two_prod(xrlh,yihl,p7,q7);
+    p7 := xrlh*yihl;
+    q7 := ((xrlh_hi*yihl_hi - p7) + xrlh_hi*yihl_lo + xrlh_lo*yihl_hi)
+          + xrlh_lo*yihl_lo;
+   -- Double_Double_Basics.two_prod(xrhl,yilh,p8,q8);
+    p8 := xrhl*yilh;
+    q8 := ((xrhl_hi*yilh_hi - p8) + xrhl_hi*yilh_lo + xrhl_lo*yilh_hi)
+          + xrhl_lo*yilh_lo;
+   -- Double_Double_Basics.two_prod(xrll,yihh,p9,q9);
+    p9 := xrll*yihh;
+    q9 := ((xrll_hi*yihh_hi - p9) + xrll_hi*yihh_lo + xrll_lo*yihh_hi)
+          + xrll_lo*yihh_lo;
    -- Double_Double_Basics.two_sum(q0,q3,q0,q3); 
     s := q0 + q3; bb := s - q0; q3 := (q0 - (s - bb)) + (q3 - bb); q0 := s;
    -- Double_Double_Basics.two_sum(q4,q5,q4,q5);
@@ -1079,12 +1217,30 @@ procedure ts_perfqdvc is
     Add(x,y,z);
     zihh := z(0); zilh := z(1); zihl := z(2); zill := z(3);
    -- (7) compute xim*yre
-    Double_Double_Basics.two_prod(xihh,yrhh,p0,q0);
-    Double_Double_Basics.two_prod(xihh,yrlh,p1,q1);
-    Double_Double_Basics.two_prod(xilh,yrhh,p2,q2);
-    Double_Double_Basics.two_prod(xihh,yrhl,p3,q3);
-    Double_Double_Basics.two_prod(xilh,yrlh,p4,q4);
-    Double_Double_Basics.two_prod(xihl,yrhh,p5,q5);
+   -- Double_Double_Basics.two_prod(xihh,yrhh,p0,q0);
+    p0 := xihh*yrhh;
+    q0 := ((xihh_hi*yrhh_hi - p0) + xihh_hi*yrhh_lo + xihh_lo*yrhh_hi)
+          + xihh_lo*yrhh_lo;
+   -- Double_Double_Basics.two_prod(xihh,yrlh,p1,q1);
+    p1 := xihh*yrlh;
+    q1 := ((xihh_hi*yrlh_hi - p1) + xihh_hi*yrlh_lo + xihh_lo*yrlh_hi)
+          + xihh_lo*yrlh_lo;
+   -- Double_Double_Basics.two_prod(xilh,yrhh,p2,q2);
+    p2 := xilh*yrhh;
+    q2 := ((xilh_hi*yrhh_hi - p2) + xilh_hi*yrhh_lo + xilh_lo*yrhh_hi)
+          + xilh_lo*yrhh_lo;
+   -- Double_Double_Basics.two_prod(xihh,yrhl,p3,q3);
+    p3 := xihh*yrhl;
+    q3 := ((xihh_hi*yrhl_hi - p3) + xihh_hi*yrhl_lo + xihh_lo*yrhl_hi)
+          + xihh_lo*yrhl_lo;
+   -- Double_Double_Basics.two_prod(xilh,yrlh,p4,q4);
+    p4 := xilh*yrlh;
+    q4 := ((xilh_hi*yrlh_hi - p4) + xilh_hi*yrlh_lo + xilh_lo*yrlh_hi)
+          + xilh_lo*yrlh_lo;
+   -- Double_Double_Basics.two_prod(xihl,yrhh,p5,q5);
+    p5 := xihl*yrhh;
+    q5 := ((xihl_hi*yrhh_hi - p5) + xihl_hi*yrhh_lo + xihl_lo*yrhh_hi)
+          + xihl_lo*yrhh_lo;
    -- Quad_Double_Renormalizations.three_sum(p1,p2,q0);
    -- Double_Double_Basics.two_sum(p1,p2,s0,s1);
     s0 := p1 + p2; bb := s0 - p1; s1 := (p1 - (s0 - bb)) + (p2 - bb);
@@ -1114,10 +1270,22 @@ procedure ts_perfqdvc is
    -- Double_Double_Basics.two_sum(s1,t0,s1,t0);
     s := s1 + t0; bb := s - s1; t0 := (s1 - (s - bb)) + (t0 - bb); s1 := s;
     s2 := s2 + (t0 + t1);
-    Double_Double_Basics.two_prod(xihh,yrll,p6,q6);
-    Double_Double_Basics.two_prod(xilh,yrhl,p7,q7);
-    Double_Double_Basics.two_prod(xihl,yrlh,p8,q8);
-    Double_Double_Basics.two_prod(xill,yrhh,p9,q9);
+   -- Double_Double_Basics.two_prod(xihh,yrll,p6,q6);
+    p6 := xihh*yrll;
+    q6 := ((xihh_hi*yrll_hi - p6) + xihh_hi*yrll_lo + xihh_lo*yrll_hi)
+          + xihh_lo*yrll_lo;
+   -- Double_Double_Basics.two_prod(xilh,yrhl,p7,q7);
+    p7 := xilh*yrhl;
+    q7 := ((xilh_hi*yrhl_hi - p7) + xilh_hi*yrhl_lo + xilh_lo*yrhl_hi)
+          + xilh_lo*yrhl_lo;
+   -- Double_Double_Basics.two_prod(xihl,yrlh,p8,q8);
+    p8 := xihl*yrlh;
+    q8 := ((xihl_hi*yrlh_hi - p8) + xihl_hi*yrlh_lo + xihl_lo*yrlh_hi)
+          + xihl_lo*yrlh_lo;
+   -- Double_Double_Basics.two_prod(xill,yrhh,p9,q9);
+    p9 := xill*yrhh;
+    q9 := ((xill_hi*yrhh_hi - p9) + xill_hi*yrhh_lo + xill_lo*yrhh_hi)
+          + xill_lo*yrhh_lo;
    -- Double_Double_Basics.two_sum(q0,q3,q0,q3); 
     s := q0 + q3; bb := s - q0; q3 := (q0 - (s - bb)) + (q3 - bb); q0 := s;
    -- Double_Double_Basics.two_sum(q4,q5,q4,q5);

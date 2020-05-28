@@ -1,5 +1,6 @@
 Thu 28 May 2020 : eliminated many procedure calls in ts_perfqdvc,
-  only the two_prod left in the update_product procedure.
+  only the two_prod left in the update_product procedure.  Reduced
+  the number of splits from 80 to 16 in update_product of ts_perfqdvc.
 
 Wed 27 May 2020 : new test procedure ts_perfqdvc, to improve the performance
   of working with quad double complex vectors.  Eliminated procedure calls
