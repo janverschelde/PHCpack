@@ -1,5 +1,6 @@
 Fri 29 May 2020 : new package quaddobl_vector_splitters with code from
   ts_perfqdvc and with added split/merge and update procedures.
+  Bug fixed in quaddobl_vector_splitters.adb.
 
 Thu 28 May 2020 : eliminated many procedure calls in ts_perfqdvc,
   only the two_prod left in the update_product procedure.  Reduced

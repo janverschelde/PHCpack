@@ -135,7 +135,7 @@ package body QuadDobl_Vector_Splitters is
 
   begin
     for k in x'range loop
-      Split_Complex(x(k),xr(k),xi(k));
+      Split_Complex(x(k),vr(k),vi(k));
     end loop;
     xr := new Standard_Floating_VecVecs.VecVec'(vr);
     xi := new Standard_Floating_VecVecs.VecVec'(vi);
