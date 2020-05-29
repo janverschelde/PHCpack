@@ -1,6 +1,7 @@
 Fri 29 May 2020 : new packages quaddobl_coefficient_convolutions and
   quaddobl_convolution_splitters, with updates to series_polynomial_gradients
   and dobldobl_coefficient_convolutions, tested by ts_speelcnv.
+  Bug fixed in one EvalDiff of quaddobl_coefficient_convolutions.adb.
 
 Tue 26 May 2020 : new package dobldobl_coefficient_convolutions, extended
   series_polynomial_gradients, for tests in ts_speelcnv.  New package

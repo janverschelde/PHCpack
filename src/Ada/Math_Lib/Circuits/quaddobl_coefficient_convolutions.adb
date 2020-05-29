@@ -538,8 +538,6 @@ package body QuadDobl_Coefficient_Convolutions is
     mleft : QuadDobl_Complex_Matrices.Link_to_Matrix;
     rqd,iqd : quad_double;
     idx : integer32;
-    dim : constant integer32 := xr'last;
-    deg : constant integer32 := (dim+1)/4-1;
 
   begin
     for i in c'range loop
@@ -559,7 +557,7 @@ package body QuadDobl_Coefficient_Convolutions is
         rvright(idx+3) := 0.0; ivright(idx+3) := 0.0;
         idx := idx + 4;
       end loop;
-      for j in 1..deg loop
+      for j in 1..xr'last loop
         rvright := ryd(j); ivright := iyd(j);
         idx := rvright'first;
         for k in vm'range loop     -- k-th coefficient in matrix vm(k)
