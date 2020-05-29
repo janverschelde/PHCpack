@@ -137,6 +137,7 @@ ts_qdvec                           : test on vectors of quad doubles
 ------------------------------------------------------------------------------
 standard_vector_splitters          : split/merge complex vectors for doubles
 dobldobl_vector_splitters          : 4-vector representation of dobldobl vecs
+quaddobl_vector_splitters          : 2-vector representation of quaddobl vecs
 ts_perfddvc                        : better performing dd vector operations
 ts_perfqdvc                        : better performing qd vector operations
 ------------------------------------------------------------------------------
