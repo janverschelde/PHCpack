@@ -111,7 +111,6 @@ package body DoblDobl_Coefficient_Convolutions is
     return res;
   end Create;
 
-
 -- COMPUTING THE POWER TABLE :
 
   procedure Compute
@@ -805,6 +804,40 @@ package body DoblDobl_Coefficient_Convolutions is
       Clear(c.all);
       free(c);
     end if;
+  end Clear;
+
+  procedure Clear ( s : in out System ) is
+  begin
+    Clear(s.crc);
+    Standard_Coefficient_Convolutions.Clear(s.rhpwt);
+    Standard_Coefficient_Convolutions.Clear(s.ihpwt);
+    Standard_Coefficient_Convolutions.Clear(s.rlpwt);
+    Standard_Coefficient_Convolutions.Clear(s.ilpwt);
+    Standard_Floating_VecVecs.Clear(s.rhyd);
+    Standard_Floating_VecVecs.Clear(s.ihyd);
+    Standard_Floating_VecVecs.Clear(s.rlyd);
+    Standard_Floating_VecVecs.Clear(s.ilyd);
+    DoblDobl_Complex_VecVecs.Clear(s.vy);
+    DoblDobl_Complex_VecVecs.Clear(s.yv);
+    DoblDobl_Complex_VecMats.Clear(s.vm);
+  end Clear;
+
+  procedure Clear ( s : in out Link_to_System ) is
+
+    procedure free is new unchecked_deallocation(System,Link_to_System);
+
+  begin
+    if s /= null then
+      Clear(s.all);
+      free(s);
+    end if;
+  end Clear;
+
+  procedure Clear ( s : in out System_Array ) is
+  begin
+    for k in s'range loop
+      Clear(s(k));
+    end loop;
   end Clear;
 
 end DoblDobl_Coefficient_Convolutions;

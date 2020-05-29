@@ -430,28 +430,6 @@ package DoblDobl_Coefficient_Convolutions is
   --                of the coefficients with the evaluated powers of x
   --                as defined by xpk and the factor index in facidx.
 
-  procedure Speel
-              ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
-                rhcff,ihcff : in Standard_Floating_VecVecs.VecVec;
-                rlcff,ilcff : in Standard_Floating_VecVecs.VecVec;
-                rhx,ihx,rlx,ilx : in Standard_Floating_VecVecs.VecVec;
-                rhfwd,ihfwd : in Standard_Floating_VecVecs.VecVec;
-                rlfwd,ilfwd : in Standard_Floating_VecVecs.VecVec;
-                rhbck,ihbck : in Standard_Floating_VecVecs.VecVec;
-                rlbck,ilbck : in Standard_Floating_VecVecs.VecVec;
-                rhcrs,ihcrs : in Standard_Floating_VecVecs.VecVec;
-                rlcrs,ilcrs : in Standard_Floating_VecVecs.VecVec;
-                rhyd,ihyd,rlyd,ilyd : in Standard_Floating_VecVecs.VecVec;
-                rhwrk,ihwrk : in Standard_Floating_Vectors.Link_to_Vector;
-                rlwrk,ilwrk : in Standard_Floating_Vectors.Link_to_Vector;
-                rhacc,ihacc : in Standard_Floating_Vectors.Link_to_Vector;
-                rlacc,ilacc : in Standard_Floating_Vectors.Link_to_Vector;
-                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec
-              );
-
   procedure Multiply_Power
               ( multiplier : in integer32;
                 rhcff : in Standard_Floating_Vectors.Link_to_Vector; 
@@ -474,6 +452,81 @@ package DoblDobl_Coefficient_Convolutions is
   --   ihcff        imaginary high parts of coefficients multiplied;
   --   rhcff        real low parts of coefficients multiplied;
   --   ihcff        imaginary low parts of coefficients multiplied.
+
+  procedure Speel
+              ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                rhcff,ihcff : in Standard_Floating_VecVecs.VecVec;
+                rlcff,ilcff : in Standard_Floating_VecVecs.VecVec;
+                rhx,ihx,rlx,ilx : in Standard_Floating_VecVecs.VecVec;
+                rhfwd,ihfwd : in Standard_Floating_VecVecs.VecVec;
+                rlfwd,ilfwd : in Standard_Floating_VecVecs.VecVec;
+                rhbck,ihbck : in Standard_Floating_VecVecs.VecVec;
+                rlbck,ilbck : in Standard_Floating_VecVecs.VecVec;
+                rhcrs,ihcrs : in Standard_Floating_VecVecs.VecVec;
+                rlcrs,ilcrs : in Standard_Floating_VecVecs.VecVec;
+                rhyd,ihyd,rlyd,ilyd : in Standard_Floating_VecVecs.VecVec;
+                rhwrk,ihwrk : in Standard_Floating_Vectors.Link_to_Vector;
+                rlwrk,ilwrk : in Standard_Floating_Vectors.Link_to_Vector;
+                rhacc,ihacc : in Standard_Floating_Vectors.Link_to_Vector;
+                rlacc,ilacc : in Standard_Floating_Vectors.Link_to_Vector;
+                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec
+              );
+
+  -- DESCRIPTION :
+  --   Evaluation and differentiation of a polynomial,
+  --   given in indexed format at a power series.
+
+  -- ON ENTRY :
+  --   xps          exponent vector of the monomials;
+  --   idx          indexed representation of the variables in exponents;
+  --   fac          factor index of the exponents;
+  --   rhcff        real high parts of coefficients of the products;
+  --   ihcff        imaginary high parts of coefficients of the products;
+  --   rlcff        real low parts of coefficients of the products;
+  --   ilcff        imaginary low parts of coefficients of the products;
+  --   rhx          real high parts of coefficients of series of same degree;
+  --   ihx          imaginary high parts of coefficients of series;
+  --   rlx          real low parts of coefficients of series of same degree;
+  --   ilx          imaginary low parts of coefficients of series;
+  --   rhfwd,ihfwd  work space allocated for xr'last-1 coefficient vectors
+  --                of the same fixed degree as the series in xr;
+  --   rlfwd,ilfwd  work space allocated for xi'last-1 coefficient vectors
+  --                of the same fixed degree as the series in xi;
+  --   rhbck,ihbck  work space allocated for xr'last-2 coefficient vectors
+  --                of the same fixed degree as the series in xr;
+  --   rlbck,ilbck  work space allocated for xi'last-2 coefficient vectors
+  --                of the same fixed degree as the series in xi;
+  --   rhcrs,ihcrs  work space allocated for xr'last-2 coefficient vectors
+  --                of the same fixed degree as the series in xr;
+  --   ilcrs,ilcrs  work space allocated for xi'last-2 coefficient vectors
+  --                of the same fixed degree as the series in xr;
+  --   rhyd,ihyd    vector of range 0..xr'last with space allocated for the
+  --                coefficients of power series of the same fixed degree;
+  --   rlyd,ilyd    vector of range 0..xi'last with space allocated for the
+  --                coefficients of power series of the same fixed degree;
+  --   rhwrk,rlwrk  work space for the coefficients of the same fixed degree;
+  --   ilwrk,ilwrk  work space for the coefficients of the same fixed degree;
+  --   rhacc,rlacc  work space for the coefficients of the same fixed degree;
+  --   ihacc,ilacc  work space for the coefficients of the same fixed degree;
+  --   rhpwt,ihpwt  power table of the real parts for the values in x;
+  --   rlpwt,ilpwt  power table of the real imaginary for the values in x.
+
+  -- ON RETURN :
+  --   rhyd         rhyd(rhx'last+1) contains the real high parts of
+  --                the coefficients of the sum of products evaluated at x,
+  --                rhyd(k) is the real part of the k-th partial derivative;
+  --   ihyd         ihyd(ihx'last+1) contains the imaginary high parts of
+  --                the coefficients of the sum of products evaluated at x,
+  --                ihyd(k) is the imag part of the k-th partial derivative;
+  --   rlyd         rlyd(rlx'last+1) contains the real low parts of
+  --                the coefficients of the sum of products evaluated at x,
+  --                rlyd(k) is the real part of the k-th partial derivative;
+  --   ilyd         ilyd(ilx'last+1) contains the imaginary high parts of
+  --                the coefficients of the sum of products evaluated at x,
+  --                ilyd(k) is the imag part of the k-th partial derivative.
 
 -- EVALUATION AND DIFFERENTIATION ON CIRCUITS :
 
@@ -612,5 +665,12 @@ package DoblDobl_Coefficient_Convolutions is
 
   -- DESCRIPTION :
   --   Deallocates the space occupied by the convolution circuits.
+
+  procedure Clear ( s : in out System );
+  procedure Clear ( s : in out Link_to_System );
+  procedure Clear ( s : in out System_Array );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by the system (array) s.
 
 end DoblDobl_Coefficient_Convolutions;

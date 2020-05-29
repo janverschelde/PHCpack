@@ -374,7 +374,8 @@ package body Series_Polynomial_Gradients is
 
   function QuadDobl_Polynomial
              ( dim,deg : in integer32;
-               xps : Standard_Integer_VecVecs.VecVec )
+               xps : Standard_Integer_VecVecs.VecVec;
+               isidx : boolean := true )
              return QuadDobl_CSeries_Polynomials.Poly is
 
     res : QuadDobl_CSeries_Polynomials.Poly
@@ -384,9 +385,15 @@ package body Series_Polynomial_Gradients is
   begin
     for k in xps'range loop
       trm.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
-      for i in xps(k)'range loop
-        trm.dg(xps(k)(i)) := 1;
-      end loop;
+      if isidx then
+        for i in xps(k)'range loop
+          trm.dg(xps(k)(i)) := 1;
+        end loop;
+      else
+        for i in 1..dim loop
+          trm.dg(i) := natural32(xps(k)(i));
+        end loop;
+      end if;
       trm.cf := QuadDobl_Complex_Series.Create(1,deg);
       QuadDobl_CSeries_Polynomials.Add(res,trm);
       QuadDobl_CSeries_Polynomials.Clear(trm);

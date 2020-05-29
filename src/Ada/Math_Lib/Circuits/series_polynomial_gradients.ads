@@ -109,7 +109,8 @@ package Series_Polynomial_Gradients is
              return DoblDobl_CSeries_Polynomials.Poly;
   function QuadDobl_Polynomial
              ( dim,deg : integer32;
-               xps : Standard_Integer_VecVecs.VecVec )
+               xps : Standard_Integer_VecVecs.VecVec;
+               isidx : boolean := true )
              return QuadDobl_CSeries_Polynomials.Poly;
   function QuadDobl_Polynomial
              ( dim : integer32;

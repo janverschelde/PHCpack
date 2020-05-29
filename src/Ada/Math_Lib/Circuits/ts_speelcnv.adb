@@ -93,10 +93,13 @@ with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Standard_Vector_Splitters;
 with DoblDobl_Vector_Splitters;
+with QuadDobl_Vector_Splitters;
 with Standard_Coefficient_Convolutions;
 with DoblDobl_Coefficient_Convolutions;
+with QuadDobl_Coefficient_Convolutions;
 with Standard_Convolution_Splitters;
 with DoblDobl_Convolution_Splitters;
+with QuadDobl_Convolution_Splitters;
 
 procedure ts_speelcnv is
 
@@ -198,6 +201,29 @@ procedure ts_speelcnv is
     return res;
   end One_Coefficients;
 
+  function One_Coefficients
+             ( nbr,deg : integer32 )
+             return QuadDobl_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 1..nbr with vectors of range 0..deg
+  --   to represent the constant one as the coefficients.
+
+    res : QuadDobl_Complex_VecVecs.VecVec(1..nbr);
+
+  begin
+    for k in 1..nbr loop
+      declare
+        cff : QuadDobl_Complex_Vectors.Vector(0..deg)
+            := (0..deg => QuadDobl_Complex_Numbers.Create(integer(0)));
+      begin
+        cff(0) := QuadDobl_Complex_Numbers.Create(integer(1.0));
+        res(k) := new QuadDobl_Complex_Vectors.Vector'(cff);
+      end;
+    end loop;
+    return res;
+  end One_Coefficients;
+
   function Standard_Make_Polynomial
              ( dim,deg : integer32;
                idx : Standard_Integer_VecVecs.VecVec;
@@ -277,6 +303,46 @@ procedure ts_speelcnv is
     end if;
     return res;
   end DoblDobl_Make_Polynomial;
+
+  function QuadDobl_Make_Polynomial
+             ( dim,deg : integer32;
+               idx : Standard_Integer_VecVecs.VecVec;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : QuadDobl_Complex_Series_Vectors.Vector;
+               expone,cffone : boolean )
+             return QuadDobl_CSeries_Polynomials.Poly is
+
+  -- DESCRIPTION :
+  --   Wraps the construction of a polynomial with series coefficients,
+  --   with flags for special cases if expone and cffone.
+
+  -- ON ENTRY :
+  --   dim     dimension of the exponent vectors, number of variables;
+  --   deg     degree of the power series;
+  --   idx     exponent indices;
+  --   xps     exponent vectors;
+  --   cff     coefficients of the monomials;
+  --   expone  true if all exponents are equal to one;
+  --   cffone  true if all coefficients are equal to one.
+
+    res : QuadDobl_CSeries_Polynomials.Poly;
+
+  begin
+    if expone then -- all exponents are equal to one
+      if cffone then -- all coefficients are equal to one
+        res := QuadDobl_Polynomial(dim,deg,idx);
+      else
+        res := QuadDobl_Polynomial(dim,idx,cff,true);
+      end if;
+    else  
+      if cffone then -- all coefficients are equal to one
+        res := QuadDobl_Polynomial(dim,deg,xps,false);
+      else
+        res := QuadDobl_Polynomial(dim,xps,cff,false);
+      end if;
+    end if;
+    return res;
+  end QuadDobl_Make_Polynomial;
 
   procedure Standard_Test ( dim,deg,nbr,pwr : in integer32;
                             expone,cffone : in boolean ) is
@@ -464,6 +530,7 @@ procedure ts_speelcnv is
 
   procedure DoblDobl_Test ( dim,deg,nbr,pwr : in integer32;
                             expone,cffone : in boolean ) is
+
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and tests the
   --   evaluation and differentiation in double double precision.
@@ -690,7 +757,8 @@ procedure ts_speelcnv is
     Clear(pwt);
   end DoblDobl_Test;
 
-  procedure QuadDobl_Test ( dim,deg,nbr,pwr : in integer32 ) is
+  procedure QuadDobl_Test ( dim,deg,nbr,pwr : in integer32;
+                            expone,cffone : in boolean ) is
 
   -- DESCRIPTION :
   --   Generates a sequence of random exponents and tests the
@@ -701,8 +769,12 @@ procedure ts_speelcnv is
   --   deg      degree of the power series;
   --   nbr      number of products;
   --   pwr      largest power of the variables.
+  --   expone   true if all exponents are equal to one;
+  --   cffone   true if all coefficients are equal to one.
 
+    use Standard_Vector_Splitters;
     use QuadDobl_Speelpenning_Convolutions;
+    use QuadDobl_Coefficient_Convolutions;
 
     xps : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Random_Exponents(dim,nbr,pwr);
@@ -715,9 +787,7 @@ procedure ts_speelcnv is
     polcff : constant QuadDobl_Complex_Series_Vectors.Vector(1..nbr)
            := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
     pol : constant QuadDobl_CSeries_Polynomials.Poly
-       -- := QuadDobl_Polynomial(dim,deg,idx); -- all coefficients are one
-       -- := QuadDobl_Polynomial(dim,idx,polcff); -- all exponents are one
-        := QuadDobl_Polynomial(dim,xps,polcff,false);
+        := QuadDobl_Make_Polynomial(dim,deg,idx,xps,polcff,expone,cffone);
     x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
     xpt : constant QuadDobl_Complex_Vectors.Vector(1..dim)
@@ -727,25 +797,68 @@ procedure ts_speelcnv is
     grad : QuadDobl_Complex_Series_Vectors.Vector(1..dim);
     xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
          := QuadDobl_Series_Coefficients(x);
-    pcff : constant QuadDobl_Complex_VecVecs.VecVec(1..nbr)
-         := QuadDobl_Series_Coefficients(polcff);
+    degdim : constant integer32 := 4*(deg+1)-1;
+    xr : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Allocate_Floating_Coefficients(dim,degdim);
+    xi : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Allocate_Floating_Coefficients(dim,degdim);
+    pcff : QuadDobl_Complex_VecVecs.VecVec(1..nbr);
+    rpcf : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(nbr,degdim);
+    ipcf : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(nbr,degdim);
     forward : constant QuadDobl_Complex_VecVecs.VecVec(1..dim-1)
             := Allocate_Coefficients(dim-1,deg);
+    rfwd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-1,degdim);
+    ifwd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-1,degdim);
     backward : constant QuadDobl_Complex_VecVecs.VecVec(1..dim-2)
              := Allocate_Coefficients(dim-2,deg);
+    rbck : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-2,degdim);
+    ibck : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-2,degdim);
     cross : constant QuadDobl_Complex_VecVecs.VecVec(1..dim-2)
           := Allocate_Coefficients(dim-2,deg);
+    rcrs : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-2,degdim);
+    icrs : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim-2,degdim);
     ygrad : constant QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
           := Allocate_Coefficients(dim+1,deg);
+    ygrad2 : constant QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
+           := Allocate_Coefficients(dim+1,deg);
+    ryd : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim+1,degdim);
+    iyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim+1,degdim);
     work : constant QuadDobl_Complex_Vectors.Link_to_Vector
          := Allocate_Coefficients(deg);
+    rwrk : constant Standard_Floating_Vectors.Link_to_Vector
+         := Allocate_Floating_Coefficients(degdim);
+    iwrk : constant Standard_Floating_Vectors.Link_to_Vector
+         := Allocate_Floating_Coefficients(degdim);
     acc : constant QuadDobl_Complex_Vectors.Link_to_Vector
         := Allocate_Coefficients(deg);
+    racc : constant Standard_Floating_Vectors.Link_to_Vector
+         := Allocate_Floating_Coefficients(degdim);
+    iacc : constant Standard_Floating_Vectors.Link_to_Vector
+         := Allocate_Floating_Coefficients(degdim);
     err,sumerr : quad_double;
     pwt : Link_to_VecVecVec := Create(xcff,mxe);
-    crc : Circuit(nbr,dim,dim+1,dim+2);
+    rpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+         := Standard_Coefficient_Convolutions.Allocate(mxe,degdim);
+    ipwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+         := Standard_Coefficient_Convolutions.Allocate(mxe,degdim);
+    crc : QuadDobl_Speelpenning_Convolutions.Circuit(nbr,dim,dim+1,dim+2);
+    u,v,w : Standard_Floating_Vectors.Vector(0..3);
 
   begin
+    if cffone 
+     then pcff := One_Coefficients(nbr,deg);
+     else pcff := QuadDobl_Series_Coefficients(polcff);
+    end if;
     crc.xps := xps; crc.idx := idx; crc.fac := fac; crc.cff := pcff;
     put_line("Some random exponents :"); Standard_Integer_VecVecs_io.put(xps);
     put_line("its exponent indices :"); Standard_Integer_VecVecs_io.put(idx);
@@ -753,9 +866,29 @@ procedure ts_speelcnv is
     put("its maxima :"); Standard_Integer_Vectors_io.put(mxe); new_line;
     put_line("the polynomial :"); put(pol); new_line;
     y := QuadDobl_CSeries_Poly_Functions.Eval(pol,x);
-   -- Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
-   -- Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
-    Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+    if expone and cffone then
+      Speel(idx,xcff,forward,backward,cross,ygrad); -- if all coefficients one
+      QuadDobl_Vector_Splitters.Complex_Parts(xcff,xr,xi);
+      Speel(idx,xr.all,xi.all,rfwd.all,ifwd.all,rbck.all,ibck.all,
+            rcrs.all,icrs.all,ryd.all,iyd.all,u,v,w);
+      QuadDobl_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
+    elsif expone then
+      Speel(idx,pcff,xcff,forward,backward,cross,ygrad,work); -- all powers 1
+      QuadDobl_Vector_Splitters.Complex_Parts(pcff,rpcf,ipcf);
+      QuadDobl_Vector_Splitters.Complex_Parts(xcff,xr,xi);
+      Speel(idx,rpcf.all,ipcf.all,xr.all,xi.all,rfwd.all,ifwd.all,rbck.all,
+            ibck.all,rcrs.all,icrs.all,ryd.all,iyd.all,rwrk,iwrk,u,v,w);
+      QuadDobl_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
+    else
+      Speel(xps,idx,fac,pcff,xcff,forward,backward,cross,ygrad,work,acc,pwt);
+      QuadDobl_Vector_Splitters.Complex_Parts(pcff,rpcf,ipcf);
+      QuadDobl_Vector_Splitters.Complex_Parts(xcff,xr,xi);
+      Compute(rpwt,ipwt,mxe,xr,xi,u,v,w);
+      Speel(xps,idx,fac,rpcf.all,ipcf.all,xr.all,xi.all,rfwd.all,ifwd.all,
+            rbck.all,ibck.all,rcrs.all,icrs.all,ryd.all,iyd.all,
+            rwrk,iwrk,racc,iacc,rpwt,ipwt,u,v,w);
+      QuadDobl_Vector_Splitters.Complex_Merge(ryd,iyd,ygrad2);
+    end if;
     put_line("The value of the product at the random series :");
     put(y); new_line;
     ypt := Eval(crc,xpt);
@@ -1002,6 +1135,8 @@ procedure ts_speelcnv is
     c : constant Circuits
       := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     s : Link_to_System := Create(c,dim,deg);
+    cs : constant QuadDobl_Coefficient_Convolutions.Link_to_System
+       := QuadDobl_Convolution_Splitters.Split(s);
     p : QuadDobl_CSeries_Poly_Systems.Poly_Sys(1..dim) := QuadDobl_System(c);
     x : QuadDobl_Complex_Series_Vectors.Vector(1..dim)
       := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
@@ -1011,11 +1146,18 @@ procedure ts_speelcnv is
        := QuadDobl_CSeries_Poly_SysFun.Eval(p,x);
     xcff : QuadDobl_Complex_VecVecs.VecVec(1..dim)
          := QuadDobl_Series_Coefficients(x);
+    degdim : constant integer32 := 4*(deg+1)-1;
+    xr : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
+    xi : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
     jp : QuadDobl_CSeries_Jaco_Matrices.Jaco_Mat(1..dim,1..dim)
        := QuadDobl_CSeries_Jaco_Matrices.Create(p);
     jm : QuadDobl_Complex_Series_Matrices.Matrix(1..dim,1..dim)
        := QuadDobl_CSeries_Jaco_Matrices.Eval(jp,x);
     err : quad_double;
+    ans : character;
+    u,v,w : Standard_Floating_Vectors.Vector(0..3);
 
   begin
     put_line("the polynomial system :");
@@ -1026,6 +1168,13 @@ procedure ts_speelcnv is
     put_line("The coefficient vectors of the evaluation :"); put_line(s.yv);
     err := Difference(px,s.yv);
     put("The error : "); put(err,3); new_line;
+    QuadDobl_Vector_Splitters.Complex_Parts(xcff,xr,xi);
+    QuadDobl_Coefficient_Convolutions.Compute
+      (cs.rpwt,cs.ipwt,cs.mxe,xr,xi,u,v,w);
+    QuadDobl_Coefficient_Convolutions.EvalDiff(cs,xr.all,xi.all,u,v,w);
+    err := Difference(px,cs.yv);
+    put("Recomputed error : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
     for i in s.vm'range loop
       put("The matrix "); put(i,1); put_line(" :"); put(s.vm(i).all);
     end loop;
@@ -1037,6 +1186,9 @@ procedure ts_speelcnv is
     end loop;
     err := Difference(jm,s.vm);
     put("The error : "); put(err,3); new_line;
+    err := Difference(jm,cs.vm);
+    put("Recomputed error : "); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
     Compute(s.pwt,s.mxe,xpt);
     EvalDiff(s,xpt);
     put_line("The evaluation at a point : ");
@@ -1234,7 +1386,7 @@ procedure ts_speelcnv is
         case precision is
           when '0' => Standard_Test(dim,deg,nbr,pwr,expone,cffone);
           when '1' => DoblDobl_Test(dim,deg,nbr,pwr,expone,cffone);
-          when '2' => QuadDobl_Test(dim,deg,nbr,pwr);
+          when '2' => QuadDobl_Test(dim,deg,nbr,pwr,expone,cffone);
           when others => null;
         end case;
       end if;
