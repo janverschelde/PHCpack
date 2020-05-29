@@ -247,7 +247,7 @@ procedure ts_perfqdvc is
   --   x        a vector of quad double complex numbers,
   --            with real parts taken xr and imaginary parts from xi.
 
-    idx : integer32 := xr'last;
+    idx : integer32 := xr'first;
 
   begin
     for k in x'range loop
@@ -1615,6 +1615,94 @@ procedure ts_perfqdvc is
     end loop;
   end Inner_Product;
 
+  procedure Multiply
+              ( first,second : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                product : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION :
+  --   Multiplies the coefficients of first with second
+  --   and stores the results in the product.
+
+  -- REQUIRED :
+  --   All vectors have the same range.
+
+    deg : constant integer32 := first'last;
+
+  begin
+    product(0) := first(0)*second(0);
+    for k in 1..deg loop
+      product(k) := first(0)*second(k);
+      for i in 1..k loop
+        product(k) := product(k) + first(i)*second(k-i);
+      end loop;
+    end loop;
+  end Multiply;
+
+  procedure Multiply
+              ( xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                yr : in Standard_Floating_Vectors.Link_to_Vector;
+                yi : in Standard_Floating_Vectors.Link_to_Vector;
+                zr : in Standard_Floating_Vectors.Link_to_Vector;
+                zi : in Standard_Floating_Vectors.Link_to_Vector;
+                x,y,z : in out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Multiplies the coefficients (xr, xi) of the first series
+  --   with the coefficients (yr, yi) of the second series
+  --   and stores the results in (zr, zi).
+
+  -- REQUIRED : xr'first = 0 and
+  --   xr'range = xi'range = yr'range = yi'range = zr'range = zi'range,
+  --   and x'range = y'range = z'range = 0..3.
+
+  -- ON ENTRY :
+  --   xr       real parts of the first vector in the convolution;
+  --   xi       imaginary parts of the first vector in the convolution;
+  --   yr       real parts of the second vector in the convolution;
+  --   yi       imaginary parts of the second vector in the convolution;
+  --   x,y,z    work space vectors for quad double addition.
+
+  -- ON RETURN :
+  --   zr       real parts of the result of the convolution;
+  --   zi       imaginary parts of the results of the convolution;
+
+    deg : constant integer32 := (xr'last+1)/4 - 1;
+    zk,xk,yk : integer32;
+
+  begin
+   -- product(0) := first(0)*second(0);
+    zr(0) := 0.0; zr(1) := 0.0; zr(2) := 0.0; zr(3) := 0.0;
+    zi(0) := 0.0; zi(1) := 0.0; zi(2) := 0.0; zi(3) := 0.0;
+    Update_Product(zr(0),zi(0),zr(1),zi(1),zr(2),zi(2),zr(3),zi(3),
+                   xr(0),xi(0),xr(1),xi(1),xr(2),xi(2),xr(3),xi(3),
+                   yr(0),yi(0),yr(1),yi(1),yr(2),yi(2),yr(3),yi(3),x,y,z);
+    zk := 4;
+    for k in 1..deg loop
+     -- product(k) := first(0)*second(k);
+      zr(zk) := 0.0; zr(zk+1) := 0.0; zr(zk+2) := 0.0; zr(zk+3) := 0.0;
+      zi(zk) := 0.0; zi(zk+1) := 0.0; zi(zk+2) := 0.0; zi(zk+3) := 0.0;
+      Update_Product(zr(zk),zi(zk),zr(zk+1),zi(zk+1),
+                     zr(zk+2),zi(zk+2),zr(zk+3),zi(zk+3),
+                     xr(0),xi(0),xr(1),xi(1),xr(2),xi(2),xr(3),xi(3),
+                     yr(zk),yi(zk),yr(zk+1),yi(zk+1),
+                     yr(zk+2),yi(zk+2),yr(zk+3),yi(zk+3),x,y,z);
+      xk := 4; yk := zk-4;
+      for i in 1..k loop
+       -- product(k) := product(k) + first(i)*second(k-i);
+        Update_Product(zr(zk),zi(zk),zr(zk+1),zi(zk+1),
+                       zr(zk+2),zi(zk+2),zr(zk+3),zi(zk+3),
+                       xr(xk),xi(xk),xr(xk+1),xi(xk+1),
+                       xr(xk+2),xi(xk+2),xr(xk+3),xi(xk+3),
+                       yr(yk),yi(yk),yr(yk+1),yi(yk+1),
+                       yr(yk+2),yi(yk+2),yr(yk+3),yi(yk+3),x,y,z);
+        xk := xk + 4;
+        yk := yk - 4;
+      end loop;
+      zk := zk + 4;
+    end loop;
+  end Multiply;
+
   procedure Test_Add ( dim : in integer32 ) is
 
   -- DESCRIPTION :
@@ -1747,6 +1835,48 @@ procedure ts_perfqdvc is
     put_line("The recomputed inner product :");
     put(z2); new_line;
   end Test_Inner_Product;
+
+  procedure Test_Multiply ( deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates two random vectors and tests their convolution.
+
+    cx : constant QuadDobl_Complex_Vectors.Vector(0..deg)
+       := QuadDobl_Random_Vectors.Random_Vector(0,deg);
+    cy : constant QuadDobl_Complex_Vectors.Vector(0..deg)
+       := QuadDobl_Random_Vectors.Random_Vector(0,deg);
+    x : constant QuadDobl_Complex_Vectors.Link_to_Vector
+      := new QuadDobl_Complex_Vectors.Vector'(cx);
+    y : constant QuadDobl_Complex_Vectors.Link_to_Vector
+      := new QuadDobl_Complex_Vectors.Vector'(cy);
+    zero : constant Complex_Number := Create(integer(0));
+    z1 : constant QuadDobl_Complex_Vectors.Link_to_Vector
+       := new QuadDobl_Complex_Vectors.Vector'(0..deg => zero);
+    z2 : QuadDobl_Complex_Vectors.Vector(0..deg);
+    dim : constant integer32 := 4*(deg+1)-1;
+    xr,xi : Standard_Floating_Vectors.Vector(0..dim);
+    yr,yi : Standard_Floating_Vectors.Vector(0..dim);
+    zr,zi : Standard_Floating_Vectors.Vector(0..dim) := (0..dim => 0.0);
+    ur,ui : Standard_Floating_Vectors.Link_to_Vector;
+    vr,vi : Standard_Floating_Vectors.Link_to_Vector;
+    wr,wi : Standard_Floating_Vectors.Link_to_Vector;
+    xw,yw,zw : Standard_Floating_Vectors.Vector(0..3);
+
+  begin
+    Multiply(x,y,z1);
+    put_line("The convolution of two random vectors :"); put_line(z1);
+    Two_Split(cx,xr,xi);
+    Two_Split(cy,yr,yi);
+    ur := new Standard_Floating_Vectors.Vector'(xr);
+    ui := new Standard_Floating_Vectors.Vector'(xi);
+    vr := new Standard_Floating_Vectors.Vector'(yr);
+    vi := new Standard_Floating_Vectors.Vector'(yi);
+    wr := new Standard_Floating_Vectors.Vector'(zr);
+    wi := new Standard_Floating_Vectors.Vector'(zi);
+    Multiply(ur,ui,vr,vi,wr,wi,xw,yw,zw);
+    Two_Merge(z2,wr.all,wi.all);
+    put_line("The recomputed convolution :"); put_line(z2);
+  end Test_Multiply;
 
   procedure Timing_Add ( dim,frq : in integer32 ) is
 
@@ -1943,6 +2073,67 @@ procedure ts_perfqdvc is
     print_times(standard_output,timer,"split, inner product, merge");
   end Timing_Inner_Product;
 
+  procedure Timing_Multiply ( deg,frq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates two random vectors and times the convolution
+  --   in the 2-vector representation.
+
+    timer : Timing_Widget;
+    cx : constant QuadDobl_Complex_Vectors.Vector(0..deg)
+       := QuadDobl_Random_Vectors.Random_Vector(0,deg);
+    cy : constant QuadDobl_Complex_Vectors.Vector(0..deg)
+       := QuadDobl_Random_Vectors.Random_Vector(0,deg);
+    x : constant QuadDobl_Complex_Vectors.Link_to_Vector
+      := new QuadDobl_Complex_Vectors.Vector'(cx);
+    y : constant QuadDobl_Complex_Vectors.Link_to_Vector
+      := new QuadDobl_Complex_Vectors.Vector'(cy);
+    zero : constant Complex_Number := Create(integer(0));
+    z1 : constant QuadDobl_Complex_Vectors.Link_to_Vector
+       := new QuadDobl_Complex_Vectors.Vector'(0..deg => zero);
+    z2 : QuadDobl_Complex_Vectors.Vector(0..deg);
+    dim : constant integer32 := 4*(deg+1)-1;
+    xr,xi : Standard_Floating_Vectors.Vector(0..dim);
+    yr,yi : Standard_Floating_Vectors.Vector(0..dim);
+    zr,zi : Standard_Floating_Vectors.Vector(0..dim) := (0..dim => 0.0);
+    ur,ui : Standard_Floating_Vectors.Link_to_Vector;
+    vr,vi : Standard_Floating_Vectors.Link_to_Vector;
+    wr,wi : Standard_Floating_Vectors.Link_to_Vector;
+    xw,yw,zw : Standard_Floating_Vectors.Vector(0..3);
+
+  begin
+    tstart(timer);
+    for k in 1..frq loop
+      Multiply(x,y,z1);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex convolution");
+    Two_Split(x.all,xr,xi); Two_Split(y.all,yr,yi);
+    ur := new Standard_Floating_Vectors.Vector'(xr);
+    ui := new Standard_Floating_Vectors.Vector'(xi);
+    vr := new Standard_Floating_Vectors.Vector'(yr);
+    vi := new Standard_Floating_Vectors.Vector'(yi);
+    wr := new Standard_Floating_Vectors.Vector'(zr);
+    wi := new Standard_Floating_Vectors.Vector'(zi);
+    tstart(timer);
+    for k in 1..frq loop
+      Multiply(ur,ui,vr,vi,wr,wi,xw,yw,zw);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"2-vector convolution");
+    tstart(timer);
+    for k in 1..frq loop
+      Two_Split(x.all,xr,xi); Two_Split(y.all,yr,yi);
+      Multiply(ur,ui,vr,vi,wr,wi,xw,yw,zw);
+      Two_Merge(z2,wr.all,wi.all);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"split, convolute, merge");
+  end Timing_Multiply;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -1957,8 +2148,9 @@ procedure ts_perfqdvc is
     put_line("  1. test addition on 8-vector representation");
     put_line("  2. test addition on 2-vector representation");
     put_line("  3. test inner product");
-    put("Type 1, 2, or 3 to select a test : ");
-    Ask_Alternative(tst,"123");
+    put_line("  4. test convolution");
+    put("Type 1, 2, 3, or 4 to select a test : ");
+    Ask_Alternative(tst,"1234");
     new_line;
     put("Give the dimension : "); get(dim);
     new_line;
@@ -1972,6 +2164,7 @@ procedure ts_perfqdvc is
         when '1' => Test_Add(dim);
         when '2' => Test_Two_Add(dim);
         when '3' => Test_Inner_Product(dim);
+        when '4' => Test_Multiply(dim);
         when others => null;
       end case;
     else
@@ -1979,6 +2172,7 @@ procedure ts_perfqdvc is
         when '1' => Timing_Add(dim,frq);
         when '2' => Timing_Two_Add(dim,frq);
         when '3' => Timing_Inner_Product(dim,frq);
+        when '4' => Timing_Multiply(dim,frq);
         when others => null;
       end case;
     end if;
