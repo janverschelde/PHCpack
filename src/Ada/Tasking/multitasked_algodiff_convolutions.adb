@@ -494,7 +494,7 @@ package body Multitasked_AlgoDiff_Convolutions is
       while idx <= c'last loop  -- start with power table computation
         if mxe(idx) > 2 then
           rxpw := rpwt(idx); ixpw := ipwt(idx);
-          Multiply(xr(idx),xr(idx),xr(idx),xi(idx),rxpw(1),ixpw(1),
+          Multiply(xr(idx),xi(idx),xr(idx),xi(idx),rxpw(1),ixpw(1),
                    u(i).all,v(i).all,w(i).all);
           for k in 2..(mxe(idx)-2) loop
             Multiply(rxpw(k-1),ixpw(k-1),xr(idx),xi(idx),rxpw(k),ixpw(k),
@@ -569,7 +569,7 @@ package body Multitasked_AlgoDiff_Convolutions is
       while idx <= c'last loop  -- start with power table computation
         if mxe(idx) > 2 then
           rxpw := rpwt(idx); ixpw := ipwt(idx);
-          Multiply(xr(idx),xr(idx),xr(idx),xi(idx),rxpw(1),ixpw(1),
+          Multiply(xr(idx),xi(idx),xr(idx),xi(idx),rxpw(1),ixpw(1),
                    u(i).all,v(i).all,w(i).all);
           for k in 2..(mxe(idx)-2) loop
             Multiply(rxpw(k-1),ixpw(k-1),xr(idx),xi(idx),rxpw(k),ixpw(k),

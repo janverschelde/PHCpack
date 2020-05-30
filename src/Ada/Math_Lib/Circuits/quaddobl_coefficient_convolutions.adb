@@ -88,7 +88,7 @@ package body QuadDobl_Coefficient_Convolutions is
     res.crc := c;
     res.mxe := Exponent_Maxima(c,dim);
     res.rpwt := Standard_Coefficient_Convolutions.Allocate(res.mxe,degdim);
-    res.rpwt := Standard_Coefficient_Convolutions.Allocate(res.mxe,degdim);
+    res.ipwt := Standard_Coefficient_Convolutions.Allocate(res.mxe,degdim);
     res.ryd := Allocate_Floating_Coefficients(dim+1,degdim);
     res.iyd := Allocate_Floating_Coefficients(dim+1,degdim);
     res.vy := Linearized_Allocation(neq,deg);
