@@ -519,25 +519,27 @@ package body Multitasked_AlgoDiff_Convolutions is
           vleft := vy(j);
           rqd := Create(rvright(m),rvright(m+1),rvright(m+2),rvright(m+3));
           iqd := Create(ivright(m),ivright(m+1),ivright(m+2),ivright(m+3));
-          vleft(m) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
+          vleft(idx) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
           rvright(m) := 0.0;   ivright(m) := 0.0;
           rvright(m+1) := 0.0; ivright(m+1) := 0.0;
           rvright(m+2) := 0.0; ivright(m+2) := 0.0;
           rvright(m+3) := 0.0; ivright(m+3) := 0.0;
+          m := m + 4;
         end loop;
         for j in 1..xr'last loop
           rvright := rydi(j); ivright := iydi(j);
-          idx := rvright'first;
+          m := rvright'first;
           for k in vm'range loop       -- k-th coefficient in matrix vm(k)
             mleft := vm(k);            -- row idx in vm(k) is the equation
                                        -- column j in vm(k) is the variable
             rqd := Create(rvright(m),rvright(m+1),rvright(m+2),rvright(m+3));
             iqd := Create(ivright(m),ivright(m+1),ivright(m+3),ivright(m+3));
-            mleft(i,j) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
+            mleft(idx,j) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
             rvright(m) := 0.0;   ivright(m) := 0.0;
             rvright(m+1) := 0.0; ivright(m+1) := 0.0;
             rvright(m+2) := 0.0; ivright(m+2) := 0.0;
             rvright(m+3) := 0.0; ivright(m+3) := 0.0;
+            m := m + 4;
           end loop;
         end loop;
         idx := idx + n;
@@ -599,25 +601,27 @@ package body Multitasked_AlgoDiff_Convolutions is
           vleft := vy(j);
           rqd := Create(rvright(m),rvright(m+1),rvright(m+2),rvright(m+3));
           iqd := Create(ivright(m),ivright(m+1),ivright(m+2),ivright(m+3));
-          vleft(m) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
+          vleft(idx) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
           rvright(m) := 0.0;   ivright(m) := 0.0;
           rvright(m+1) := 0.0; ivright(m+1) := 0.0;
           rvright(m+2) := 0.0; ivright(m+2) := 0.0;
           rvright(m+3) := 0.0; ivright(m+3) := 0.0;
+          m := m + 4;
         end loop;
         for j in 1..xr'last loop
           rvright := rydi(j); ivright := iydi(j);
-          idx := rvright'first;
+          m := rvright'first;
           for k in vm'range loop       -- k-th coefficient in matrix vm(k)
             mleft := vm(k);            -- row idx in vm(k) is the equation
                                        -- column j in vm(k) is the variable
             rqd := Create(rvright(m),rvright(m+1),rvright(m+2),rvright(m+3));
             iqd := Create(ivright(m),ivright(m+1),ivright(m+3),ivright(m+3));
-            mleft(i,j) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
+            mleft(idx,j) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
             rvright(m) := 0.0;   ivright(m) := 0.0;
             rvright(m+1) := 0.0; ivright(m+1) := 0.0;
             rvright(m+2) := 0.0; ivright(m+2) := 0.0;
             rvright(m+3) := 0.0; ivright(m+3) := 0.0;
+            m := m + 4;
           end loop;
         end loop;
         put_line("idx before increment : " & Multitasking.to_string(idx));
@@ -628,6 +632,7 @@ package body Multitasked_AlgoDiff_Convolutions is
       alldone(i) := true;
     end Report_Job;
     procedure report_do_jobs is new Multitasking.Silent_Workers(Report_Job);
+
   begin
     if output
      then report_do_jobs(nbt);
