@@ -2,6 +2,7 @@ Sat 30 May 2020 : in multitasked_algodiff_convolutions.adb fixed indexing
   errors in assignments of gradients into the Jacobian matrices.
   Fixed bug in multitasked_algodiff_convolutions.adb in the computation
   of the power table in quad double precision.
+  Fixed last (?) bug in multitasked_algodiff_convolutions.adb.
 
 Fri 29 May 2020 : added tests for coefficients convolutions in double
   double and quad double precision to ts_mtadcnv, to test the new

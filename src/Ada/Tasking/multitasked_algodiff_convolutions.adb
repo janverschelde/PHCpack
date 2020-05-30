@@ -533,7 +533,7 @@ package body Multitasked_AlgoDiff_Convolutions is
             mleft := vm(k);            -- row idx in vm(k) is the equation
                                        -- column j in vm(k) is the variable
             rqd := Create(rvright(m),rvright(m+1),rvright(m+2),rvright(m+3));
-            iqd := Create(ivright(m),ivright(m+1),ivright(m+3),ivright(m+3));
+            iqd := Create(ivright(m),ivright(m+1),ivright(m+2),ivright(m+3));
             mleft(idx,j) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
             rvright(m) := 0.0;   ivright(m) := 0.0;
             rvright(m+1) := 0.0; ivright(m+1) := 0.0;
@@ -615,7 +615,7 @@ package body Multitasked_AlgoDiff_Convolutions is
             mleft := vm(k);            -- row idx in vm(k) is the equation
                                        -- column j in vm(k) is the variable
             rqd := Create(rvright(m),rvright(m+1),rvright(m+2),rvright(m+3));
-            iqd := Create(ivright(m),ivright(m+1),ivright(m+3),ivright(m+3));
+            iqd := Create(ivright(m),ivright(m+1),ivright(m+2),ivright(m+3));
             mleft(idx,j) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
             rvright(m) := 0.0;   ivright(m) := 0.0;
             rvright(m+1) := 0.0; ivright(m+1) := 0.0;
