@@ -1,3 +1,7 @@
+Fri 29 May 2020 : added tests for coefficients convolutions in double
+  double and quad double precision to ts_mtadcnv, to test the new
+  procedures in multitasked_algodiff_convolutions.
+
 Mon 25 May 2020 : added test for coefficient convolutions in ts_mtadcnv,
   with stubs in multitasked_algodiff_convolutions.  Defined the multitasking
   for coefficient convolutions in multitasked_algodiff_convolutions.adb.

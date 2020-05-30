@@ -13,6 +13,7 @@ with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
@@ -41,8 +42,14 @@ with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Standard_Vector_Splitters;
+with DoblDobl_Vector_Splitters;
+with QuadDobl_Vector_Splitters;
 with Standard_Convolution_Splitters;
+with DoblDobl_Convolution_Splitters;
+with QuadDobl_Convolution_Splitters;
 with Standard_Coefficient_Convolutions;
+with DoblDobl_Coefficient_Convolutions;
+with QuadDobl_Coefficient_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
@@ -284,6 +291,95 @@ procedure ts_mtadcnv is
     end loop;
   end DoblDobl_Test;
 
+  procedure DoblDobl_Coefficient_Test
+              ( c : in DoblDobl_Coefficient_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Applies multitasking to evaluate and differentiate c,
+  --   in double double precision.  Compares with the one task run.
+
+  -- ON ENTRY :
+  --   c        a sequence of coefficient convolution circuits;
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbt      the number of tasks;
+  --   output   flag for output during multitasking.
+
+    use DoblDobl_Coefficient_Convolutions;
+
+    s : constant DoblDobl_Coefficient_Convolutions.Link_to_System
+      := DoblDobl_Coefficient_Convolutions.Create(c,dim,deg);
+    x : constant DoblDobl_Complex_Series_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xcff : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
+         := DoblDobl_Series_Coefficients(x);
+    rhx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ihx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    rlx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ilx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    rhpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(s.mxe,deg);
+    rlpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(s.mxe,deg);
+    ihpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(s.mxe,deg);
+    ilpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(s.mxe,deg);
+    vy2 : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm2 : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup : Duration;
+    err : double_double;
+    ans : character;
+
+    use Ada.Calendar; -- for the difference operator on Duration
+
+  begin
+    DoblDobl_Vector_Splitters.Complex_Parts(xcff,rhx,ihx,rlx,ilx);
+    put_line("Running on one task ...");
+    seristart := Ada.Calendar.Clock;
+    Compute(s.rhpwt,s.ihpwt,s.rlpwt,s.ilpwt,s.mxe,rhx,ihx,rlx,ilx);
+    EvalDiff(c,rhx.all,ihx.all,rlx.all,ilx.all,s.rhpwt,s.ihpwt,
+             s.rlpwt,s.ilpwt,s.rhyd,s.ihyd,s.rlyd,s.ilyd,s.vy,s.vm);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put_line("-> Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      DoblDobl_Multitasked_EvalDiff
+        (nbt,s.crc,rhx,ihx,rlx,ilx,s.mxe,rhpwt,ihpwt,rlpwt,ilpwt,
+         vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(s.vy,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(s.vm,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
+  end DoblDobl_Coefficient_Test;
+
   procedure QuadDobl_Test
               ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 dim,deg : in integer32; nbt : in out integer32;
@@ -361,31 +457,86 @@ procedure ts_mtadcnv is
     end loop;
   end QuadDobl_Test;
 
-  procedure QuadDobl_Random_Test
-              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+  procedure QuadDobl_Coefficient_Test
+              ( c : in QuadDobl_Coefficient_Convolutions.Circuits;
+                dim,deg : in integer32; nbt : in out integer32;
                 output : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Generates a random convolution circuit and applies multitasking
-  --   to evaluate and differentiate with multitasking,
-  --   in double double precision.  Compares with the one task run.
+  --   Applies multitasking to evaluate and differentiate c,
+  --   in quad double precision.  Compares with the one task run.
 
   -- ON ENTRY :
+  --   c        a sequence of coefficient convolution circuits;
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
-  --   nbr      number of products;
-  --   pwr      largest power of the variables;
   --   nbt      the number of tasks;
   --   output   flag for output during multitasking.
 
-    use QuadDobl_Speelpenning_Convolutions;
+    use QuadDobl_Coefficient_Convolutions;
 
-    c : constant Circuits
-      := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    s : constant QuadDobl_Coefficient_Convolutions.Link_to_System
+      := QuadDobl_Coefficient_Convolutions.Create(c,dim,deg);
+    x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
+      := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
+    xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
+         := QuadDobl_Series_Coefficients(x);
+    degdim : constant integer32 := 4*(deg+1)-1;
+    xr : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
+    xi : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
+    rpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+         := Standard_Coefficient_Convolutions.Allocate(s.mxe,degdim);
+    ipwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+         := Standard_Coefficient_Convolutions.Allocate(s.mxe,degdim);
+    vy2 : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm2 : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup : Duration;
+    err : quad_double;
+    ans : character;
+    u,v,w : Standard_Floating_Vectors.Vector(0..3);
+
+    use Ada.Calendar; -- for the difference operator on Duration
 
   begin
-    QuadDobl_Test(c,dim,deg,nbt,output);
-  end QuadDobl_Random_Test;
+    QuadDobl_Vector_Splitters.Complex_Parts(xcff,xr,xi);
+    put_line("Running on one task ...");
+    seristart := Ada.Calendar.Clock;
+    Compute(s.rpwt,s.ipwt,s.mxe,xr,xi,u,v,w);
+    EvalDiff(c,xr.all,xi.all,s.rpwt,s.ipwt,s.ryd,s.iyd,s.vy,s.vm,u,v,w);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put_line("-> Elapsed time without multitasking : ");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    loop
+      new_line;
+      put("Running with "); put(nbt,1); put_line(" tasks ...");
+      multstart := Ada.Calendar.Clock;
+      QuadDobl_Multitasked_EvalDiff
+        (nbt,s.crc,xr,xi,s.mxe,rpwt,ipwt,vy2,vm2,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      err := Difference(s.vy,vy2);
+      put("  the error of evaluation : "); put(err,3); new_line;
+      err := Difference(s.vm,vm2);
+      put("  the error of differentiation : "); put(err,3); new_line;
+      put_line("-> Elapsed time on multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        put("The speedup : ");
+        duration_io.put(speedup,1,3); new_line;
+      end if;
+      put("Continue with different number of tasks ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give the number of tasks : "); get(nbt);
+    end loop;
+  end QuadDobl_Coefficient_Test;
 
   procedure Standard_Random_Test
               ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
@@ -436,14 +587,52 @@ procedure ts_mtadcnv is
   --   nbt      the number of tasks;
   --   output   flag for output during multitasking.
 
-    use DoblDobl_Speelpenning_Convolutions;
-
-    c : constant Circuits
+    c : constant DoblDobl_Speelpenning_Convolutions.Circuits
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    cc : constant DoblDobl_Coefficient_Convolutions.Circuits
+       := DoblDobl_Convolution_Splitters.Split(c);
+    ans : character;
 
   begin
-    DoblDobl_Test(c,dim,deg,nbt,output);
+    put("Run on circuits with splitted coefficient vectors ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then DoblDobl_Coefficient_Test(cc,dim,deg,nbt,output);
+     else DoblDobl_Test(c,dim,deg,nbt,output);
+    end if;
   end DoblDobl_Random_Test;
+
+  procedure QuadDobl_Random_Test
+              ( dim,deg,nbr,pwr : in integer32; nbt : in out integer32;
+                output : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Generates a random convolution circuit and applies multitasking
+  --   to evaluate and differentiate with multitasking,
+  --   in double double precision.  Compares with the one task run.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables;
+  --   nbt      the number of tasks;
+  --   output   flag for output during multitasking.
+
+    c : constant QuadDobl_Speelpenning_Convolutions.Circuits
+      := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    cc : constant QuadDobl_Coefficient_Convolutions.Circuits
+       := QuadDobl_Convolution_Splitters.Split(c);
+    ans : character;
+
+  begin
+    put("Run on circuits with splitted coefficient vectors ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then QuadDobl_Coefficient_Test(cc,dim,deg,nbt,output);
+     else QuadDobl_Test(c,dim,deg,nbt,output);
+    end if;
+  end QuadDobl_Random_Test;
 
   procedure Standard_Benchmark
               ( file : in file_type; deg,nbruns,inc : in integer32;
