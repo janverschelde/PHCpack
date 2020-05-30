@@ -6,10 +6,6 @@ with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecMats;
 with QuadDobl_Vector_Splitters;
 
-with text_io; use text_io;
-with Standard_Integer_Numbers_io;
-use Standard_Integer_Numbers_io;
-
 package body QuadDobl_Convolution_Splitters is
 
   function Split ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
@@ -23,22 +19,15 @@ package body QuadDobl_Convolution_Splitters is
     Standard_Integer_VecVecs.Copy(c.xps,res.xps);
     Standard_Integer_VecVecs.Copy(c.idx,res.idx);
     Standard_Integer_VecVecs.Copy(c.fac,res.fac);
-    put_line("splitting the coefficients ...");
     QuadDobl_Vector_Splitters.Split_Complex(c.cff,res.rcff,res.icff);
     if c.cst /= null then
       QuadDobl_Vector_Splitters.Split_Complex(c.cst,res.rcst,res.icst);
     end if;
-    put_line("splitting forward ...");
     QuadDobl_Vector_Splitters.Split_Complex(c.forward,res.rfwd,res.ifwd);
-    put_line("splitting backward ...");
     QuadDobl_Vector_Splitters.Split_Complex(c.backward,res.rbck,res.ibck);
-    put_line("splitting cross ...");
     QuadDobl_Vector_Splitters.Split_Complex(c.cross,res.rcrs,res.icrs);
-    put_line("splitting wrk ...");
     QuadDobl_Vector_Splitters.Split_Complex(c.wrk,res.rwrk,res.iwrk);
-    put_line("splitting acc ...");
     QuadDobl_Vector_Splitters.Split_Complex(c.acc,res.racc,res.iacc);
-    put_line("done splitting circuit");
     return res;
   end Split;
 
@@ -78,14 +67,12 @@ package body QuadDobl_Convolution_Splitters is
     use QuadDobl_Speelpenning_Convolutions;
 
   begin
-    put_line("splitting the power table");
     if p /= null then
       declare
         rpwt : Standard_Coefficient_Convolutions.VecVecVec(p'range);
         ipwt : Standard_Coefficient_Convolutions.VecVecVec(p'range);
       begin
         for k in p'range loop
-          put("splitting power table at "); put(k,1); put_line(" ...");
           if p(k) /= null then
             QuadDobl_Vector_Splitters.Split_Complex(p(k),rpwt(k),ipwt(k));
           end if;
@@ -94,7 +81,6 @@ package body QuadDobl_Convolution_Splitters is
         ip := new Standard_Coefficient_Convolutions.VecVecVec'(ipwt);
       end;
     end if;
-    put_line("done splitting the power table");
   end Split;
 
   function Split ( s : QuadDobl_Speelpenning_Convolutions.System )
