@@ -852,7 +852,14 @@ procedure ts_speelcnv is
     ipwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
          := Standard_Coefficient_Convolutions.Allocate(mxe,degdim);
     crc : QuadDobl_Speelpenning_Convolutions.Circuit(nbr,dim,dim+1,dim+2);
-    u,v,w : Standard_Floating_Vectors.Vector(0..3);
+    ur,vr,wr : constant Standard_Floating_Vectors.Vector(0..3) 
+             := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(ur);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(vr);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(wr);
 
   begin
     if cffone 
@@ -1157,7 +1164,14 @@ procedure ts_speelcnv is
        := QuadDobl_CSeries_Jaco_Matrices.Eval(jp,x);
     err : quad_double;
     ans : character;
-    u,v,w : Standard_Floating_Vectors.Vector(0..3);
+    ur,vr,wr : constant Standard_Floating_Vectors.Vector(0..3)
+             := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(ur);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(vr);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(wr);
 
   begin
     put_line("the polynomial system :");

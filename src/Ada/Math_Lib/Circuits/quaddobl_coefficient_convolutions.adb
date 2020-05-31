@@ -115,7 +115,7 @@ package body QuadDobl_Coefficient_Convolutions is
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
                 xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
-                u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     rxpw,ixpw : Standard_Floating_VecVecs.Link_to_VecVec;
 
@@ -139,7 +139,7 @@ package body QuadDobl_Coefficient_Convolutions is
                     rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
                     rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
-                    u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                    u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     use QuadDobl_Vector_Splitters;
 
@@ -175,7 +175,7 @@ package body QuadDobl_Coefficient_Convolutions is
                     rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
                     rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
-                    u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                    u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     p,q,r : integer32;
 
@@ -217,7 +217,7 @@ package body QuadDobl_Coefficient_Convolutions is
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
                     rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
                     ryd,iyd : in Standard_Floating_VecVecs.VecVec;
-                    u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                    u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     use Standard_Integer_Vectors,QuadDobl_Vector_Splitters;
 
@@ -237,7 +237,11 @@ package body QuadDobl_Coefficient_Convolutions is
         if idk'last = 1 then
           q := idk(1);
           Update(ryptr,iyptr,xr(q),xi(q),u);
-          p := ryd(q); p(0) := p(0) + hihi_part(one);
+          p := ryd(q);
+          p(0) := p(0) + hihi_part(one);
+         -- p(1) := p(1) + lohi_part(one);
+         -- p(2) := p(2) + hilo_part(one);
+         -- p(3) := p(3) + lolo_part(one);
         else
           Speel(xr,xi,idk.all,rfwd,ifwd,rbck,ibck,rcrs,icrs,u,v,w);
           q := idk'last-1;
@@ -270,7 +274,7 @@ package body QuadDobl_Coefficient_Convolutions is
                     ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                     rwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     iwrk : in Standard_Floating_Vectors.Link_to_Vector;
-                    u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                    u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     use Standard_Integer_Vectors,QuadDobl_Vector_Splitters;
 
@@ -329,7 +333,7 @@ package body QuadDobl_Coefficient_Convolutions is
                 racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
                 rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     rpwx,ipwx : Standard_Floating_VecVecs.Link_to_VecVec;
     rlpw,ilpw : Standard_Floating_Vectors.Link_to_Vector;
@@ -406,7 +410,7 @@ package body QuadDobl_Coefficient_Convolutions is
                 racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
                 rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     use Standard_Integer_Vectors,QuadDobl_Vector_Splitters;
 
@@ -511,7 +515,7 @@ package body QuadDobl_Coefficient_Convolutions is
                 rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
-                u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     use Standard_Floating_Vectors,QuadDobl_Vector_Splitters;
 
@@ -531,7 +535,7 @@ package body QuadDobl_Coefficient_Convolutions is
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
-                u,v,w : in out Standard_Floating_Vectors.Vector ) is
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     vleft : QuadDobl_Complex_Vectors.Link_to_Vector;
     rvright,ivright : Standard_Floating_Vectors.Link_to_Vector;
@@ -593,17 +597,19 @@ package body QuadDobl_Coefficient_Convolutions is
     end loop;
   end Delinearize;
 
-  procedure EvalDiff ( s : in System;
-                       xr,xi : in Standard_Floating_VecVecs.VecVec;
-                       u,v,w : in out Standard_Floating_Vectors.Vector ) is
+  procedure EvalDiff
+              ( s : in System;
+                xr,xi : in Standard_Floating_VecVecs.VecVec;
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
     EvalDiff(s.crc,xr,xi,s.rpwt,s.ipwt,s.ryd,s.iyd,s.vy,s.vm,u,v,w);
     Delinearize(s.vy,s.yv);
   end EvalDiff;
 
-  procedure EvalDiff ( s : in Link_to_System;
-                       xr,xi : in Standard_Floating_VecVecs.VecVec;
-                       u,v,w : in out Standard_Floating_Vectors.Vector ) is
+  procedure EvalDiff
+               ( s : in Link_to_System;
+                 xr,xi : in Standard_Floating_VecVecs.VecVec;
+                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
     EvalDiff(s.crc,xr,xi,s.rpwt,s.ipwt,s.ryd,s.iyd,s.vy,s.vm,u,v,w);
     Delinearize(s.vy,s.yv);

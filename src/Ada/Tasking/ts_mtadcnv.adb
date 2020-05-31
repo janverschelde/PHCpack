@@ -511,7 +511,14 @@ procedure ts_mtadcnv is
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     err : quad_double;
     ans : character;
-    u,v,w : Standard_Floating_Vectors.Vector(0..3);
+    ur,vr,wr : constant Standard_Floating_Vectors.Vector(0..3)
+             := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(ur);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(vr);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(wr);
 
     use Ada.Calendar; -- for the difference operator on Duration
 
@@ -1206,7 +1213,14 @@ procedure ts_mtadcnv is
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
-    u,v,w : Standard_Floating_Vectors.Vector(0..3);
+    ur,vr,wr : constant Standard_Floating_Vectors.Vector(0..3)
+             := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(ur);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(vr);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(wr);
 
     use Ada.Calendar;
 

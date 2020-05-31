@@ -84,7 +84,14 @@ procedure ts_perfqdvc is
     vrhl,vihl,vrll,vill : Standard_Floating_Vectors.Link_to_Vector;
     wrhh,wihh,wrlh,wilh : Standard_Floating_Vectors.Link_to_Vector;
     wrhl,wihl,wrll,will : Standard_Floating_Vectors.Link_to_Vector;
-    xwrk,ywrk,zwrk : Standard_Floating_Vectors.Vector(0..3);
+    xwrk,ywrk,zwrk : constant Standard_Floating_Vectors.Vector(0..3)
+                   := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(xwrk);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(ywrk);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(zwrk);
 
     use QuadDobl_Complex_Vectors; -- for the + operator
 
@@ -119,7 +126,7 @@ procedure ts_perfqdvc is
     will := new Standard_Floating_Vectors.Vector'(zill);
     Add(wrhh,wihh,wrlh,wilh,wrhl,wihl,wrll,will,
         urhh,uihh,urlh,uilh,urhl,uihl,urll,uill,
-        vrhh,vihh,vrlh,vilh,vrhl,vihl,vrll,vill,xwrk,ywrk,zwrk);
+        vrhh,vihh,vrlh,vilh,vrhl,vihl,vrll,vill,u,v,w);
     Merge(z2,wrhh.all,wihh.all,wrlh.all,wilh.all,
              wrhl.all,wihl.all,wrll.all,will.all);
     put_line("The recomputed sum :"); put_line(z2);
@@ -174,7 +181,9 @@ procedure ts_perfqdvc is
     zr,zi : Standard_Floating_Vectors.Vector(1..4*dim);
     ur,ui : Standard_Floating_Vectors.Link_to_Vector;
     wr,wi : Standard_Floating_Vectors.Link_to_Vector;
-    wrk : Standard_Floating_Vectors.Vector(0..3);
+    wrk : constant Standard_Floating_Vectors.Vector(0..3) := (0..3 => 0.0);
+    lwrk : constant Standard_Floating_Vectors.Link_to_Vector
+         := new Standard_Floating_Vectors.Vector'(wrk);
 
     use QuadDobl_Complex_Vectors; -- for the + operator
 
@@ -186,7 +195,7 @@ procedure ts_perfqdvc is
     ui := new Standard_Floating_Vectors.Vector'(xi);
     wr := new Standard_Floating_Vectors.Vector'(zr);
     wi := new Standard_Floating_Vectors.Vector'(zi);
-    Update(wr,wi,ur,ui,wrk);
+    Update(wr,wi,ur,ui,lwrk);
     Two_Merge(z2,wr.all,wi.all);
     put_line("The recomputed update :"); put_line(z2);
   end Test_Update;
@@ -206,7 +215,14 @@ procedure ts_perfqdvc is
     zrhh,zihh,zrlh,zilh,zrhl,zihl,zrll,zill : double_float; 
     ur,ui : Standard_Floating_Vectors.Link_to_Vector;
     vr,vi : Standard_Floating_Vectors.Link_to_Vector;
-    xw,yw,zw : Standard_Floating_Vectors.Vector(0..3);
+    xw,yw,zw : constant Standard_Floating_Vectors.Vector(0..3)
+             := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(xw);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(yw);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(zw);
 
   begin
     z1 := Inner_Product(x,y);
@@ -218,7 +234,7 @@ procedure ts_perfqdvc is
     vr := new Standard_Floating_Vectors.Vector'(yr);
     vi := new Standard_Floating_Vectors.Vector'(yi);
     Inner_Product(zrhh,zihh,zrlh,zilh,zrhl,zihl,zrll,zill,
-                  ur,ui,vr,vi,xw,yw,zw);
+                  ur,ui,vr,vi,u,v,w);
     Merge(z2,zrhh,zihh,zrlh,zilh,zrhl,zihl,zrll,zill);
     put_line("The recomputed inner product :");
     put(z2); new_line;
@@ -249,7 +265,14 @@ procedure ts_perfqdvc is
     ur,ui : Standard_Floating_Vectors.Link_to_Vector;
     vr,vi : Standard_Floating_Vectors.Link_to_Vector;
     wr,wi : Standard_Floating_Vectors.Link_to_Vector;
-    xw,yw,zw : Standard_Floating_Vectors.Vector(0..3);
+    xw,yw,zw : constant Standard_Floating_Vectors.Vector(0..3)
+             := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(xw);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(yw);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(zw);
 
   begin
     Multiply(x,y,z1);
@@ -262,7 +285,7 @@ procedure ts_perfqdvc is
     vi := new Standard_Floating_Vectors.Vector'(yi);
     wr := new Standard_Floating_Vectors.Vector'(zr);
     wi := new Standard_Floating_Vectors.Vector'(zi);
-    Multiply(ur,ui,vr,vi,wr,wi,xw,yw,zw);
+    Multiply(ur,ui,vr,vi,wr,wi,u,v,w);
     Two_Merge(z2,wr.all,wi.all);
     put_line("The recomputed convolution :"); put_line(z2);
   end Test_Multiply;
@@ -293,7 +316,14 @@ procedure ts_perfqdvc is
     vrhl,vihl,vrll,vill : Standard_Floating_Vectors.Link_to_Vector;
     wrhh,wihh,wrlh,wilh : Standard_Floating_Vectors.Link_to_Vector;
     wrhl,wihl,wrll,will : Standard_Floating_Vectors.Link_to_Vector;
-    xwrk,ywrk,zwrk : Standard_Floating_Vectors.Vector(0..3);
+    xwrk,ywrk,zwrk : constant Standard_Floating_Vectors.Vector(0..3)
+                   := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(xwrk);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(ywrk);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(zwrk);
 
     use QuadDobl_Complex_Vectors; -- for the + operator
 
@@ -335,7 +365,7 @@ procedure ts_perfqdvc is
     for k in 1..frq loop
       Add(wrhh,wihh,wrlh,wilh,wrhl,wihl,wrll,will,
           urhh,uihh,urlh,uilh,urhl,uihl,urll,uill,
-          vrhh,vihh,vrlh,vilh,vrhl,vihl,vrll,vill,xwrk,ywrk,zwrk);
+          vrhh,vihh,vrlh,vilh,vrhl,vihl,vrll,vill,u,v,w);
     end loop;
     tstop(timer);
     new_line;
@@ -346,7 +376,7 @@ procedure ts_perfqdvc is
       Split(y,yrhh,yihh,yrlh,yilh,yrhl,yihl,yrll,yill);
       Add(wrhh,wihh,wrlh,wilh,wrhl,wihl,wrll,will,
           urhh,uihh,urlh,uilh,urhl,uihl,urll,uill,
-          vrhh,vihh,vrlh,vilh,vrhl,vihl,vrll,vill,xwrk,ywrk,zwrk);
+          vrhh,vihh,vrlh,vilh,vrhl,vihl,vrll,vill,u,v,w);
       Merge(z2,wrhh.all,wihh.all,wrlh.all,wilh.all,
                wrhl.all,wihl.all,wrll.all,will.all);
     end loop;
@@ -426,7 +456,9 @@ procedure ts_perfqdvc is
     zr,zi : Standard_Floating_Vectors.Vector(1..4*dim);
     ur,ui : Standard_Floating_Vectors.Link_to_Vector;
     wr,wi : Standard_Floating_Vectors.Link_to_Vector;
-    wrk : Standard_Floating_Vectors.Vector(0..3);
+    wrk : constant Standard_Floating_Vectors.Vector(0..3) := (0..3 => 0.0);
+    lwrk : constant Standard_Floating_Vectors.Link_to_Vector
+         := new Standard_Floating_Vectors.Vector'(wrk);
 
     use QuadDobl_Complex_Vectors; -- for the + operator
 
@@ -438,6 +470,7 @@ procedure ts_perfqdvc is
     tstop(timer);
     new_line;
     print_times(standard_output,timer,"complex update");
+    Two_Split(z,zr,zi); Two_Split(x,xr,xi);
     ur := new Standard_Floating_Vectors.Vector'(xr);
     ui := new Standard_Floating_Vectors.Vector'(xi);
     wr := new Standard_Floating_Vectors.Vector'(zr);
@@ -445,7 +478,7 @@ procedure ts_perfqdvc is
     Two_Split(z,zr,zi); Two_Split(x,xr,xi);
     tstart(timer);
     for k in 1..frq loop
-      Update(wr,wi,ur,ui,wrk);
+      Update(wr,wi,ur,ui,lwrk);
     end loop;
     tstop(timer);
     new_line;
@@ -453,7 +486,7 @@ procedure ts_perfqdvc is
     tstart(timer);
     for k in 1..frq loop
       Two_Split(z,zr,zi); Two_Split(x,xr,xi);
-      Update(wr,wi,ur,ui,wrk);
+      Update(wr,wi,ur,ui,lwrk);
       Two_Merge(z2,wr.all,wi.all);
     end loop;
     tstop(timer);
@@ -478,7 +511,14 @@ procedure ts_perfqdvc is
     zrhh,zihh,zrlh,zilh,zrhl,zihl,zrll,zill : double_float; 
     ur,ui : Standard_Floating_Vectors.Link_to_Vector;
     vr,vi : Standard_Floating_Vectors.Link_to_Vector;
-    xw,yw,zw : Standard_Floating_Vectors.Vector(0..3);
+    xw,yw,zw : constant Standard_Floating_Vectors.Vector(0..3) 
+             := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(xw);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(yw);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(zw);
 
   begin
     tstart(timer);
@@ -496,7 +536,7 @@ procedure ts_perfqdvc is
     tstart(timer);
     for k in 1..frq loop
       Inner_Product(zrhh,zihh,zrlh,zilh,zrhl,zihl,zrll,zill,
-                    ur,ui,vr,vi,xw,yw,zw);
+                    ur,ui,vr,vi,u,v,w);
     end loop;
     tstop(timer);
     new_line;
@@ -505,7 +545,7 @@ procedure ts_perfqdvc is
     for k in 1..frq loop
       Two_Split(x,xr,xi); Two_Split(y,yr,yi);
       Inner_Product(zrhh,zihh,zrlh,zilh,zrhl,zihl,zrll,zill,
-                    ur,ui,vr,vi,xw,yw,zw);
+                    ur,ui,vr,vi,u,v,w);
       Merge(z2,zrhh,zihh,zrlh,zilh,zrhl,zihl,zrll,zill);
     end loop;
     tstop(timer);
@@ -540,7 +580,14 @@ procedure ts_perfqdvc is
     ur,ui : Standard_Floating_Vectors.Link_to_Vector;
     vr,vi : Standard_Floating_Vectors.Link_to_Vector;
     wr,wi : Standard_Floating_Vectors.Link_to_Vector;
-    xw,yw,zw : Standard_Floating_Vectors.Vector(0..3);
+    xw,yw,zw : constant Standard_Floating_Vectors.Vector(0..3)
+             := (0..3 => 0.0);
+    u : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(xw);
+    v : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(yw);
+    w : constant Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector'(zw);
 
   begin
     tstart(timer);
@@ -559,7 +606,7 @@ procedure ts_perfqdvc is
     wi := new Standard_Floating_Vectors.Vector'(zi);
     tstart(timer);
     for k in 1..frq loop
-      Multiply(ur,ui,vr,vi,wr,wi,xw,yw,zw);
+      Multiply(ur,ui,vr,vi,wr,wi,u,v,w);
     end loop;
     tstop(timer);
     new_line;
@@ -567,7 +614,7 @@ procedure ts_perfqdvc is
     tstart(timer);
     for k in 1..frq loop
       Two_Split(x.all,xr,xi); Two_Split(y.all,yr,yi);
-      Multiply(ur,ui,vr,vi,wr,wi,xw,yw,zw);
+      Multiply(ur,ui,vr,vi,wr,wi,u,v,w);
       Two_Merge(z2,wr.all,wi.all);
     end loop;
     tstop(timer);

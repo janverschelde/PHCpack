@@ -1,3 +1,6 @@
+Sun 31 May 2020 : modified quaddobl_vector_splitters to pass the auxiliary
+  vectors as pointers instead of as values.  Updated ts_perfqdvc.
+
 Fri 29 May 2020 : new package quaddobl_vector_splitters with code from
   ts_perfqdvc and with added split/merge and update procedures.
   Bug fixed in quaddobl_vector_splitters.adb.

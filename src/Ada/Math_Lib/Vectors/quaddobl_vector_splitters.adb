@@ -459,6 +459,104 @@ package body QuadDobl_Vector_Splitters is
     z(offset+2) := s2; z(offset+3) := s3;
   end Add;
 
+  procedure Add ( x,y,z : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    i,j,k : integer32;
+    s,t : double_float;
+    u,v : double_float; -- double-length accumulator
+    c0,c1,c2,c3,s0,s1,s2,s3 : double_float; -- for the renorm4
+    za,zb : boolean;
+
+  begin
+    z(0) := 0.0; z(1) := 0.0; z(2) := 0.0; z(3) := 0.0;
+    i := 0; j := 0; k := 0;
+    if abs(x(i)) > abs(y(j))
+     then u := x(i); i := i+1;
+     else u := y(j); j := j+1;
+    end if;
+    if abs(x(i)) > abs(y(j))
+     then v := x(i); i := i+1;  
+     else v := y(j); j := j+1;
+    end if;
+   -- Double_Double_Basics.quick_two_sum(u,v,u,v);
+    s := u + v; t := v - (s - u); u := s; v := t; 
+    while k < 4 loop
+      if (i >= 4 and j >= 4) then
+        z(k) := u;
+        if k < 3
+         then k := k+1; z(k) := v;
+        end if;
+        exit;
+      end if;
+      if i >= 4 then
+        t := y(j); j := j+1;
+      elsif j >= 4  then
+        t := x(i); i := i+1;
+      elsif abs(x(i)) > abs(y(j)) then
+        t := x(i); i := i+1;
+      else 
+        t := y(j); j := j+1;
+      end if;
+     -- Quad_Double_Renormalizations.quick_three_accum(u,v,s,t);
+     -- Double_Double_Basics.two_sum(v,t,s,v);
+      s := v + t; c0 := s - v; v := (v - (s - c0)) + (t - c0);
+     -- Double_Double_Basics.two_sum(u,s,s,u);
+      c0 := s; s := u + s; c1 := s - u; u := (u - (s - c1)) + (c0 - c1);
+      za := (u /= 0.0);
+      zb := (v /= 0.0);
+      if za and zb then
+        null;
+      else
+        if not zb
+         then v := u; u := s;
+         else u := s;
+        end if;
+        s := 0.0;
+      end if;
+      if s /= 0.0
+       then z(k) := s; k := k+1;
+      end if;
+    end loop;
+    for k in i..3 loop                    -- add the rest
+      z(3) := z(3) + x(k);
+    end loop;
+    for k in j..3 loop
+      z(3) := z(3) + y(k);
+    end loop;
+   -- Quad_Double_Renormalizations.renorm4(z(0),z(1),z(2),z(3));
+    c0 := z(0); c1 := z(1); c2 := z(2); c3 := z(3);
+   -- Double_Double_Basics.quick_two_sum(c2,c3,s0,c3);
+    s0 := c2 + c3; c3 := c3 - (s0 - c2);
+   -- Double_Double_Basics.quick_two_sum(c1,s0,s0,c2);
+    s := c1 + s0; c2 := s0 - (s - c1); s0 := s;
+   -- Double_Double_Basics.quick_two_sum(c0,s0,c0,c1);
+    s := c0 + s0; c1 := s0 - (s - c0); c0 := s;
+    s0 := c0; s1 := c1;
+    if s1 /= 0.0 then
+     -- Double_Double_Basics.quick_two_sum(s1,c2,s1,s2);
+      s := s1 + c2; s2 := c2 - (s - s1); s1 := s;
+      if s2 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s2,c3,s2,s3);
+        s := s2 + c3; s3 := c3 - (s - s2); s2 := s;
+      else
+       -- Double_Double_Basics.quick_two_sum(s1,c3,s1,s2);
+        s := s1 + c3; s2 := c3 - (s - s1); s1 := s;
+      end if;
+    else
+     -- Double_Double_Basics.quick_two_sum(s0,c2,s0,s1);
+      s := s0 + c2; s1 := c2 - (s - s0); s0 := s;
+      if s1 /= 0.0 then
+       -- Double_Double_Basics.quick_two_sum(s1,c3,s1,s2);
+        s := s1 + c3; s2 := c3 - (s - s1); s1 := s;
+      else
+       -- Double_Double_Basics.quick_two_sum(s0,c3,s0,s1);
+        s := s0 + c3; s1 := c3 - (s - s0); s0 := s;
+      end if;
+    end if;
+   -- c0 := s0; c1 := s1; c2 := s2; c3 := s3;
+    z(0) := s0; z(1) := s1; z(2) := s2; z(3) := s3;
+  end Add;
+
   procedure Add ( zrhh : in Standard_Floating_Vectors.Link_to_Vector;
                   zihh : in Standard_Floating_Vectors.Link_to_Vector;
                   zrlh : in Standard_Floating_Vectors.Link_to_Vector;
@@ -483,7 +581,7 @@ package body QuadDobl_Vector_Splitters is
                   yihl : in Standard_Floating_Vectors.Link_to_Vector;
                   yrll : in Standard_Floating_Vectors.Link_to_Vector;
                   yill : in Standard_Floating_Vectors.Link_to_Vector;
-                  x,y,z : in out Standard_Floating_Vectors.Vector ) is
+                  x,y,z : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
     for k in zrhh'range loop
       x(0) := xrhh(k); x(1) := xrlh(k); x(2) := xrhl(k); x(3) := xrll(k);
@@ -517,8 +615,7 @@ package body QuadDobl_Vector_Splitters is
   end Two_Add;
 
   procedure Update ( offset : in integer32;
-                     z,y : in Standard_Floating_Vectors.Link_to_Vector;
-                     x : in out Standard_Floating_Vectors.Vector ) is
+                     z,y,x : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     i,j,k : integer32;
     s,t : double_float;
@@ -624,7 +721,7 @@ package body QuadDobl_Vector_Splitters is
                 zi : in Standard_Floating_Vectors.Link_to_Vector;
                 xr : in Standard_Floating_Vectors.Link_to_Vector;
                 xi : in Standard_Floating_Vectors.Link_to_Vector;
-                wrk : in out Standard_Floating_Vectors.Vector ) is
+                wrk : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     dim : constant integer32 := zr'last/4;
     idx : integer32 := zr'first; -- allow for zero start index
@@ -644,7 +741,7 @@ package body QuadDobl_Vector_Splitters is
                 xrhl,xihl,xrll,xill : in double_float;
                 yrhh,yihh,yrlh,yilh : in double_float;
                 yrhl,yihl,yrll,yill : in double_float;
-                x,y,z : in out Standard_Floating_Vectors.Vector ) is
+                x,y,z : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     QD_SPLITTER : constant double_float := 134217729.0; -- 2^27 + 1
     QD_SPLIT_THRESH : constant double_float := 6.69692879491417e+299; -- 2^996
@@ -1530,7 +1627,7 @@ package body QuadDobl_Vector_Splitters is
                 zrhl,zihl,zrll,zill : out double_float;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 yr,yi : in Standard_Floating_Vectors.Link_to_Vector;
-                x,y,z : in out Standard_Floating_Vectors.Vector ) is
+                x,y,z : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     dim : constant integer32 := xr'last/4;
     idx : integer32 := xr'first;
@@ -1555,7 +1652,7 @@ package body QuadDobl_Vector_Splitters is
                 yi : in Standard_Floating_Vectors.Link_to_Vector;
                 zr : in Standard_Floating_Vectors.Link_to_Vector;
                 zi : in Standard_Floating_Vectors.Link_to_Vector;
-                x,y,z : in out Standard_Floating_Vectors.Vector ) is
+                x,y,z : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     deg : constant integer32 := (xr'last+1)/4 - 1;
     zk,xk,yk : integer32;

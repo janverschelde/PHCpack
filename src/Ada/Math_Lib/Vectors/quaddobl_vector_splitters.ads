@@ -325,6 +325,7 @@ package QuadDobl_Vector_Splitters is
   --            z(2) the second lowest double of x + y,
   --            z(3) the lowest double of x + y.
 
+  procedure Add ( x,y,z : in Standard_Floating_Vectors.Link_to_Vector );
   procedure Add ( offset : in integer32;
                   x,y,z : in Standard_Floating_Vectors.Link_to_Vector );
 
@@ -378,7 +379,7 @@ package QuadDobl_Vector_Splitters is
                   yihl : in Standard_Floating_Vectors.Link_to_Vector;
                   yrll : in Standard_Floating_Vectors.Link_to_Vector;
                   yill : in Standard_Floating_Vectors.Link_to_Vector;
-                  x,y,z : in out Standard_Floating_Vectors.Vector );
+                  x,y,z : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Adds two vectors of quad double complex numbers,
@@ -443,8 +444,7 @@ package QuadDobl_Vector_Splitters is
 
   procedure Update
               ( offset : in integer32;
-                z,y : in Standard_Floating_Vectors.Link_to_Vector;
-                x : in out Standard_Floating_Vectors.Vector );
+                z,y,x : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Updates the quad double starting at z(offset)
@@ -456,7 +456,7 @@ package QuadDobl_Vector_Splitters is
                 zi : in Standard_Floating_Vectors.Link_to_Vector;
                 xr : in Standard_Floating_Vectors.Link_to_Vector;
                 xi : in Standard_Floating_Vectors.Link_to_Vector;
-                wrk : in out Standard_Floating_Vectors.Vector );
+                wrk : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Updates z with x, in 2-vector representation.
@@ -481,7 +481,7 @@ package QuadDobl_Vector_Splitters is
                 xrhl,xihl,xrll,xill : in double_float;
                 yrhh,yihh,yrlh,yilh : in double_float;
                 yrhl,yihl,yrll,yill : in double_float;
-                x,y,z : in out Standard_Floating_Vectors.Vector );
+                x,y,z : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Adds the product of two quad double complex numbers to z,
@@ -529,7 +529,7 @@ package QuadDobl_Vector_Splitters is
                 zrhl,zihl,zrll,zill : out double_float;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 yr,yi : in Standard_Floating_Vectors.Link_to_Vector;
-                x,y,z : in out Standard_Floating_Vectors.Vector );
+                x,y,z : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Computes the inner product of two quad double complex vectors,
@@ -561,7 +561,7 @@ package QuadDobl_Vector_Splitters is
                 yi : in Standard_Floating_Vectors.Link_to_Vector;
                 zr : in Standard_Floating_Vectors.Link_to_Vector;
                 zi : in Standard_Floating_Vectors.Link_to_Vector;
-                x,y,z : in out Standard_Floating_Vectors.Vector );
+                x,y,z : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Multiplies the coefficients (xr, xi) of the first series

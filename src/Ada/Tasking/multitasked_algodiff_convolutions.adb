@@ -993,10 +993,10 @@ package body Multitasked_AlgoDiff_Convolutions is
         if mxe(idx) > 2 then
           rxpw := rpwt(idx); ixpw := ipwt(idx);
           Multiply(xr(idx),xi(idx),xr(idx),xi(idx),rxpw(1),ixpw(1),
-                   u(i).all,v(i).all,w(i).all);
+                   u(i),v(i),w(i));
           for k in 2..(mxe(idx)-2) loop
             Multiply(rxpw(k-1),ixpw(k-1),xr(idx),xi(idx),rxpw(k),ixpw(k),
-                     u(i).all,v(i).all,w(i).all);
+                     u(i),v(i),w(i));
           end loop;
         end if;
         idx := idx + n;
@@ -1009,7 +1009,7 @@ package body Multitasked_AlgoDiff_Convolutions is
       idx := i; -- reset the index for evaluation and differentiation
       while idx <= c'last loop
         EvalDiff(c(idx).all,xr.all,xi.all,rpwt,ipwt,ryd(i).all,iyd(i).all,
-                 u(i).all,v(i).all,w(i).all);
+                 u(i),v(i),w(i));
         rydi := ryd(i); iydi := iyd(i);
         rvright := rydi(xr'last+1); ivright := iydi(xi'last+1);
         m := rvright'first;
@@ -1068,10 +1068,10 @@ package body Multitasked_AlgoDiff_Convolutions is
         if mxe(idx) > 2 then
           rxpw := rpwt(idx); ixpw := ipwt(idx);
           Multiply(xr(idx),xi(idx),xr(idx),xi(idx),rxpw(1),ixpw(1),
-                   u(i).all,v(i).all,w(i).all);
+                   u(i),v(i),w(i));
           for k in 2..(mxe(idx)-2) loop
             Multiply(rxpw(k-1),ixpw(k-1),xr(idx),xi(idx),rxpw(k),ixpw(k),
-                     u(i).all,v(i).all,w(i).all);
+                     u(i),v(i),w(i));
           end loop;
         end if;
         idx := idx + n;
@@ -1088,7 +1088,7 @@ package body Multitasked_AlgoDiff_Convolutions is
                          & " computes circuit "
                          & Multitasking.to_string(idx));
         EvalDiff(c(idx).all,xr.all,xi.all,rpwt,ipwt,ryd(i).all,iyd(i).all,
-                 u(i).all,v(i).all,w(i).all);
+                 u(i),v(i),w(i));
         put_line("task " & Multitasking.to_string(i)
                          & " done computing circuit "
                          & Multitasking.to_string(idx));
@@ -1200,10 +1200,10 @@ package body Multitasked_AlgoDiff_Convolutions is
         if mxe(mdx) > 2 then
           rxpw := rpwt(mdx); ixpw := ipwt(mdx);
           Multiply(xr(mdx),xi(mdx),xr(mdx),xi(mdx),rxpw(1),ixpw(1),
-                   u(i).all,v(i).all,w(i).all);
+                   u(i),v(i),w(i));
           for k in 2..(mxe(mdx)-2) loop
             Multiply(rxpw(k-1),ixpw(k-1),xr(mdx),xi(mdx),rxpw(k),ixpw(k),
-                     u(i).all,v(i).all,w(i).all);
+                     u(i),v(i),w(i));
           end loop;
         end if;
       end loop;
@@ -1220,7 +1220,7 @@ package body Multitasked_AlgoDiff_Convolutions is
         Semaphore.Release(lck2);
         exit when (mdx > c'last);
         EvalDiff(c(mdx).all,xr.all,xi.all,rpwt,ipwt,ryd(i).all,iyd(i).all,
-                 u(i).all,v(i).all,w(i).all);
+                 u(i),v(i),w(i));
         rydi := ryd(i); iydi := iyd(i);
         rvright := rydi(xr'last+1); ivright := iydi(xi'last+1);
         m := rvright'first;
@@ -1297,10 +1297,10 @@ package body Multitasked_AlgoDiff_Convolutions is
         if mxe(mdx) > 2 then
           rxpw := rpwt(mdx); ixpw := ipwt(mdx);
           Multiply(xr(mdx),xi(mdx),xr(mdx),xi(mdx),rxpw(1),ixpw(1),
-                   u(i).all,v(i).all,w(i).all);
+                   u(i),v(i),w(i));
           for k in 2..(mxe(mdx)-2) loop
             Multiply(rxpw(k-1),ixpw(k-1),xr(mdx),xi(mdx),rxpw(k),ixpw(k),
-                     u(i).all,v(i).all,w(i).all);
+                     u(i),v(i),w(i));
           end loop;
         end if;
       end loop;
@@ -1336,7 +1336,7 @@ package body Multitasked_AlgoDiff_Convolutions is
                          & " computes circuit "
                          & Multitasking.to_string(mdx));
         EvalDiff(c(mdx).all,xr.all,xi.all,rpwt,ipwt,ryd(i).all,iyd(i).all,
-                 u(i).all,v(i).all,w(i).all);
+                 u(i),v(i),w(i));
         put_line("task " & Multitasking.to_string(i)
                          & " done computing circuit "
                          & Multitasking.to_string(mdx));

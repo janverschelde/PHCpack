@@ -126,7 +126,7 @@ package QuadDobl_Coefficient_Convolutions is
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
                 xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
-                u,v,w : in out Standard_Floating_Vectors.Vector );
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Computes the powers in the allocated power table for the
@@ -158,13 +158,13 @@ package QuadDobl_Coefficient_Convolutions is
                     rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
                     rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
-                    u,v,w : in out Standard_Floating_Vectors.Vector );
+                    u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
   procedure Speel ( xr,xi : in Standard_Floating_VecVecs.VecVec;
                     idx : in Standard_Integer_Vectors.Vector;
                     rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
                     rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
-                    u,v,w : in out Standard_Floating_Vectors.Vector );
+                    u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Inline computation of the coefficients of the product of the
@@ -219,7 +219,7 @@ package QuadDobl_Coefficient_Convolutions is
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
                     rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
                     ryd,iyd : in Standard_Floating_VecVecs.VecVec;
-                    u,v,w : in out Standard_Floating_Vectors.Vector );
+                    u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
                     rcff,icff : in Standard_Floating_VecVecs.VecVec;
                     xr,xi : in Standard_Floating_VecVecs.VecVec;
@@ -229,7 +229,7 @@ package QuadDobl_Coefficient_Convolutions is
                     ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                     rwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     iwrk : in Standard_Floating_Vectors.Link_to_Vector;
-                    u,v,w : in out Standard_Floating_Vectors.Vector );
+                    u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Evaluation and differentiation of the sum of products,
@@ -281,7 +281,7 @@ package QuadDobl_Coefficient_Convolutions is
                 racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
                 rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                u,v,w : in out Standard_Floating_Vectors.Vector );
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Multiplies the coefficient with the common factor.
@@ -344,7 +344,7 @@ package QuadDobl_Coefficient_Convolutions is
                 racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
                 rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                u,v,w : in out Standard_Floating_Vectors.Vector );
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Evaluation and differentiation of a polynomial,
@@ -398,7 +398,7 @@ package QuadDobl_Coefficient_Convolutions is
                 rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
-                u,v,w : in out Standard_Floating_Vectors.Vector );
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Wraps the Speel procedure for the convolution circuit c, to
@@ -434,7 +434,7 @@ package QuadDobl_Coefficient_Convolutions is
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
-                u,v,w : in out Standard_Floating_Vectors.Vector );
+                u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Evaluates and differentiates the convolution circuits in c
@@ -475,10 +475,10 @@ package QuadDobl_Coefficient_Convolutions is
 
   procedure EvalDiff ( s : in System;
                        xr,xi : in Standard_Floating_VecVecs.VecVec;
-                       u,v,w : in out Standard_Floating_Vectors.Vector );
+                       u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
   procedure EvalDiff ( s : in Link_to_System;
                        xr,xi : in Standard_Floating_VecVecs.VecVec;
-                       u,v,w : in out Standard_Floating_Vectors.Vector );
+                       u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Wraps the EvalDiff on the convolution circuits in s.crc,
