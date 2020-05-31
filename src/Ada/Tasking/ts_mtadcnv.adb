@@ -98,7 +98,7 @@ procedure ts_mtadcnv is
         := Allocate_Coefficients(dim,dim,deg);
     err : double_float;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     ans : character;
 
     use Ada.Calendar; -- for the difference operator on Duration
@@ -127,8 +127,10 @@ procedure ts_mtadcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -172,7 +174,7 @@ procedure ts_mtadcnv is
     vm2 : constant Standard_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     err : double_float;
     ans : character;
 
@@ -204,8 +206,10 @@ procedure ts_mtadcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -251,7 +255,7 @@ procedure ts_mtadcnv is
         := Allocate_Coefficients(dim,dim,deg);
     err : double_double;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     ans : character;
 
     use Ada.Calendar; -- for the difference operator on Duration
@@ -281,8 +285,10 @@ procedure ts_mtadcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -336,7 +342,7 @@ procedure ts_mtadcnv is
     vm2 : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     err : double_double;
     ans : character;
 
@@ -370,8 +376,10 @@ procedure ts_mtadcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -417,7 +425,7 @@ procedure ts_mtadcnv is
         := Allocate_Coefficients(dim,dim,deg);
     err : quad_double;
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     ans : character;
 
     use Ada.Calendar; -- for the difference operator on Duration
@@ -447,8 +455,10 @@ procedure ts_mtadcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -495,7 +505,7 @@ procedure ts_mtadcnv is
     vm2 : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     err : quad_double;
     ans : character;
     u,v,w : Standard_Floating_Vectors.Vector(0..3);
@@ -528,8 +538,10 @@ procedure ts_mtadcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -1219,10 +1231,8 @@ procedure ts_mtadcnv is
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-          put("The efficiency : ");
-          duration_io.put(speedup,2,2); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+          put("The efficiency : "); duration_io.put(speedup,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
