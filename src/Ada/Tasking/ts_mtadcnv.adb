@@ -670,13 +670,13 @@ procedure ts_mtadcnv is
     vm2 : constant Standard_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
 
   begin
-    put_line(file,"double double precision");
+    put_line(file,"double precision");
     if verbose
      then put_line("Running on one task ...");
     end if;
@@ -707,17 +707,124 @@ procedure ts_mtadcnv is
       end if;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
         if verbose then
           put("The speedup : ");
           duration_io.put(speedup,1,3); new_line;
+          put("The efficiency : ");
+          duration_io.put(efficiency,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,1,3); new_line(file);
       nbt := nbt + inc;
     end loop;
   end Standard_Benchmark;
+
+  procedure Standard_Coefficient_Benchmark
+              ( file : in file_type; deg,nbruns,inc : in integer32;
+                c : in Standard_Coefficient_Convolutions.Circuits;
+                x : in Standard_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark in double precision
+  --   on coefficient convolution circuits.
+
+  -- ON ENTRY :
+  --   file     opened for output, to write timings and speedups;
+  --   deg      degree of the power series;
+  --   nbruns   number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   c        some circuits;
+  --   x        where to evaluate c;
+  --   mxe      maximum exponent indices;
+  --   verbose  if true, then timings are written to screen,
+  --            otherwise, no output is written to screen.
+
+    use Standard_Vector_Splitters;
+    use Standard_Coefficient_Convolutions;
+
+    dim : constant integer32 := x'last;
+    rx : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Allocate_Floating_Coefficients(dim,deg);
+    ix : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Allocate_Floating_Coefficients(dim,deg);
+    rpwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    ipwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    ryd : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim+1,deg);
+    iyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim+1,deg);
+    vy1 : constant Standard_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant Standard_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant Standard_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant Standard_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    Standard_Vector_Splitters.Complex_Parts(x,rx,ix);
+    put_line(file,"double precision");
+    if verbose
+     then put_line("Running on one task ...");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Compute(rpwt,ipwt,mxe,rx,ix);
+    EvalDiff(c,rx.all,ix.all,rpwt,ipwt,ryd.all,iyd.all,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;   
+    for k in 1..nbruns loop
+      if verbose then
+        new_line;
+        put("Running with "); put(nbt,1); put_line(" tasks ...");
+      end if;
+      multstart := Ada.Calendar.Clock;
+      Standard_Multitasked_EvalDiff
+        (nbt,c,rx,ix,mxe,rpwt,ipwt,vy2,vm2,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        new_line;
+        put_line("-> Elapsed time on multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : ");
+          duration_io.put(speedup,1,3); new_line;
+          put("The efficiency : ");
+          duration_io.put(efficiency,2,2); new_line;
+        end if;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file);
+      nbt := nbt + inc;
+    end loop;
+  end Standard_Coefficient_Benchmark;
 
   procedure DoblDobl_Benchmark
               ( file : in file_type; deg,nbruns,inc : in integer32;
@@ -755,7 +862,7 @@ procedure ts_mtadcnv is
     vm2 : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
@@ -792,17 +899,140 @@ procedure ts_mtadcnv is
       end if;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
         if verbose then
           put("The speedup : ");
           duration_io.put(speedup,1,3); new_line;
+          put("The efficiency : ");
+          duration_io.put(speedup,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2); new_line(file);
       nbt := nbt + inc;
     end loop;
   end DoblDobl_Benchmark;
+
+  procedure DoblDobl_Coefficient_Benchmark
+              ( file : in file_type; deg,nbruns,inc : in integer32;
+                c : in DoblDobl_Coefficient_Convolutions.Circuits;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark in double double precision
+  --   on coefficient convolution circuits.
+
+  -- ON ENTRY :
+  --   file     opened for output, to write timings and speedups;
+  --   deg      degree of the power series;
+  --   nbruns   number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   c        some circuits;
+  --   x        where to evaluate c;
+  --   mxe      maximum exponent indices;
+  --   verbose  if true, then timings are written to screen,
+  --            otherwise, no output is written to screen.
+
+    use Standard_Vector_Splitters;
+    use DoblDobl_Coefficient_Convolutions;
+
+    dim : constant integer32 := x'last;
+    rhx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ihx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    rlx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ilx : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    rhpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+    rlpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+    ihpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+    ilpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+          := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
+   -- yd : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
+   --    := Allocate_Coefficients(dim+1,deg);
+    rhyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim+1,deg);
+    ihyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim+1,deg);
+    rlyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim+1,deg);
+    ilyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+         := Allocate_Floating_Coefficients(dim+1,deg);
+    vy1 : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant DoblDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    DoblDobl_Vector_Splitters.Complex_Parts(x,rhx,ihx,rlx,ilx);
+    put_line(file,"double double precision");
+    if verbose
+     then put_line("Running on one task ...");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Compute(rhpwt,ihpwt,rlpwt,ilpwt,mxe,rhx,ihx,rlx,ilx);
+    EvalDiff(c,rhx.all,ihx.all,rlx.all,ilx.all,rhpwt,ihpwt,rlpwt,ilpwt,
+             rhyd.all,ihyd.all,rlyd.all,ilyd.all,vy1,vm1);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;   
+    for k in 1..nbruns loop
+      if verbose then
+        new_line;
+        put("Running with "); put(nbt,1); put_line(" tasks ...");
+      end if;
+      multstart := Ada.Calendar.Clock;
+      DoblDobl_Multitasked_EvalDiff
+        (nbt,c,rhx,ihx,rlx,ilx,mxe,rhpwt,ihpwt,rlpwt,ilpwt,vy2,vm2,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        new_line;
+        put_line("-> Elapsed time on multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : ");
+          duration_io.put(speedup,1,3); new_line;
+          put("The efficiency : ");
+          duration_io.put(speedup,2,2); new_line;
+        end if;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2); new_line(file);
+      nbt := nbt + inc;
+    end loop;
+  end DoblDobl_Coefficient_Benchmark;
 
   procedure QuadDobl_Benchmark
               ( file : in file_type; deg,nbruns,inc : in integer32;
@@ -840,7 +1070,7 @@ procedure ts_mtadcnv is
     vm2 : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
         := Allocate_Coefficients(dim,dim,deg);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
@@ -877,17 +1107,132 @@ procedure ts_mtadcnv is
       end if;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
         if verbose then
           put("The speedup : ");
           duration_io.put(speedup,1,3); new_line;
+          put("The efficiency : ");
+          duration_io.put(speedup,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file);
       nbt := nbt + inc;
     end loop;
   end QuadDobl_Benchmark;
+
+  procedure QuadDobl_Coefficient_Benchmark
+              ( file : in file_type; deg,nbruns,inc : in integer32;
+                c : in QuadDobl_Coefficient_Convolutions.Circuits;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark in quad double precision
+  --   on coefficient convolution circuits.
+
+  -- ON ENTRY :
+  --   file     opened for output, to write timings and speedups;
+  --   deg      degree of the power series;
+  --   nbruns   number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   c        some circuits;
+  --   x        where to evaluate c;
+  --   mxe      maximum exponent indices;
+  --   verbose  if true, then timings are written to screen,
+  --            otherwise, no output is written to screen.
+
+    use Standard_Vector_Splitters;
+    use QuadDobl_Coefficient_Convolutions;
+
+    dim : constant integer32 := x'last;
+   -- pwt : constant Link_to_VecVecVec := Allocate(mxe,deg);
+    degdim : constant integer32 := 4*(deg+1)-1;
+    xr : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
+    xi : constant Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
+    rpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+         := Standard_Coefficient_Convolutions.Allocate(mxe,degdim);
+    ipwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+         := Standard_Coefficient_Convolutions.Allocate(mxe,degdim);
+    ryd : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim+1,degdim);
+    iyd : constant Standard_Floating_VecVecs.Link_to_VecVec
+        := Allocate_Floating_Coefficients(dim+1,degdim);
+   -- yd : constant QuadDobl_Complex_VecVecs.VecVec(1..dim+1)
+   --    := Allocate_Coefficients(dim+1,deg);
+    vy1 : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vy2 : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
+        := Linearized_Allocation(dim,deg);
+    vm1 : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    vm2 : constant QuadDobl_Complex_VecMats.VecMat(0..deg)
+        := Allocate_Coefficients(dim,dim,deg);
+    multstart,multstop,seristart,seristop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    nbt : integer32 := 2;
+    u,v,w : Standard_Floating_Vectors.Vector(0..3);
+
+    use Ada.Calendar;
+
+  begin
+    QuadDobl_Vector_Splitters.Complex_Parts(x,xr,xi);
+    put_line(file,"quad double precision");
+    if verbose
+     then put_line("Running on one task ...");
+    end if;
+    seristart := Ada.Calendar.Clock;
+    Compute(rpwt,ipwt,mxe,xr,xi,u,v,w);
+    EvalDiff(c,xr.all,xi.all,rpwt,ipwt,ryd.all,iyd.all,vy1,vm1,u,v,w);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put(file,"  1 : ");
+    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    if verbose then
+      put_line("-> Elapsed time without multitasking : ");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    end if;   
+    for k in 1..nbruns loop
+      if verbose then
+        new_line;
+        put("Running with "); put(nbt,1); put_line(" tasks ...");
+      end if;
+      multstart := Ada.Calendar.Clock;
+      QuadDobl_Multitasked_EvalDiff
+        (nbt,c,xr,xi,mxe,rpwt,ipwt,vy2,vm2,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        new_line;
+        put_line("-> Elapsed time on multitasking : ");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : ");
+          duration_io.put(speedup,1,3); new_line;
+          put("The efficiency : ");
+          duration_io.put(speedup,2,2); new_line;
+        end if;
+      end if;
+      put(file,nbt,3);
+      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file);
+      nbt := nbt + inc;
+    end loop;
+  end QuadDobl_Coefficient_Benchmark;
 
   procedure Benchmark ( dim,deg,nbr,pwr : in integer32 ) is
 
@@ -903,10 +1248,16 @@ procedure ts_mtadcnv is
 
     qd_c : constant QuadDobl_Speelpenning_Convolutions.Circuits
          := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+    qd_cc : constant QuadDobl_Coefficient_Convolutions.Circuits
+          := QuadDobl_Convolution_Splitters.Split(qd_c);
     dd_c : constant DoblDobl_Speelpenning_Convolutions.Circuits
          := to_double_double(qd_c);
+    dd_cc : constant DoblDobl_Coefficient_Convolutions.Circuits
+          := DoblDobl_Convolution_Splitters.Split(dd_c);
     d_c : constant Standard_Speelpenning_Convolutions.Circuits
         := to_double(qd_c);
+    d_cc : constant Standard_Coefficient_Convolutions.Circuits
+         := Standard_Convolution_Splitters.Split(d_c);
     qd_x : constant QuadDobl_Complex_Series_Vectors.Vector(1..dim)
          := QuadDobl_Random_Series_Vectors.Random_Series_Vector(1,dim,deg);
     qd_xcff : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
@@ -919,8 +1270,17 @@ procedure ts_mtadcnv is
         := QuadDobl_Speelpenning_Convolutions.Exponent_Maxima(qd_c,dim);
     nbruns,inc : integer32 := 0;
     file : file_type;
+    rtp : character;
 
   begin
+    new_line;
+    put_line("MENU for benchmarked runs :");
+    put_line("  1. complex convolutions only");
+    put_line("  2. coefficient convolutions only");
+    put_line("  3. both complex and coefficient convolutions");
+    put("Type 1, 2, or 3 to select the type of runs : ");
+    Ask_Alternative(rtp,"123");
+    new_line;
     put("Give the number of multitasked runs : "); get(nbruns);
     put("Give the increment on the tasks : "); get(inc);
     skip_line;
@@ -930,9 +1290,34 @@ procedure ts_mtadcnv is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    Standard_Benchmark(file,deg,nbruns,inc,d_c,d_xcff,mxe,false);
-    DoblDobl_Benchmark(file,deg,nbruns,inc,dd_c,dd_xcff,mxe,false);
-    QuadDobl_Benchmark(file,deg,nbruns,inc,qd_c,qd_xcff,mxe,false);
+    case rtp is
+      when '1' =>
+        Standard_Benchmark(file,deg,nbruns,inc,d_c,d_xcff,mxe,false);
+        DoblDobl_Benchmark(file,deg,nbruns,inc,dd_c,dd_xcff,mxe,false);
+        QuadDobl_Benchmark(file,deg,nbruns,inc,qd_c,qd_xcff,mxe,false);
+      when '2' =>
+        put_line(file,"runs on coefficient convolution circuits ...");
+        Standard_Coefficient_Benchmark
+          (file,deg,nbruns,inc,d_cc,d_xcff,mxe,false);
+        DoblDobl_Coefficient_Benchmark
+          (file,deg,nbruns,inc,dd_cc,dd_xcff,mxe,false);
+        QuadDobl_Coefficient_Benchmark
+          (file,deg,nbruns,inc,qd_cc,qd_xcff,mxe,false);
+      when '3' =>
+        Standard_Benchmark(file,deg,nbruns,inc,d_c,d_xcff,mxe,false);
+        put_line(file,"runs on coefficient convolution circuits ...");
+        Standard_Coefficient_Benchmark
+          (file,deg,nbruns,inc,d_cc,d_xcff,mxe,false);
+        DoblDobl_Benchmark(file,deg,nbruns,inc,dd_c,dd_xcff,mxe,false);
+        put_line(file,"runs on coefficient convolution circuits ...");
+        DoblDobl_Coefficient_Benchmark
+          (file,deg,nbruns,inc,dd_cc,dd_xcff,mxe,false);
+        QuadDobl_Benchmark(file,deg,nbruns,inc,qd_c,qd_xcff,mxe,false);
+        put_line(file,"runs on coefficient convolution circuits ...");
+        QuadDobl_Coefficient_Benchmark
+          (file,deg,nbruns,inc,qd_cc,qd_xcff,mxe,false);
+      when others => null;
+    end case;
   end Benchmark;
 
   function Prompt_for_Precision return character is
