@@ -142,7 +142,7 @@ procedure ts_mtadcnv is
   procedure Standard_Coefficient_Test
               ( c : in Standard_Coefficient_Convolutions.Circuits;
                 dim,deg : in integer32; nbt : in out integer32;
-                output : in boolean := true ) is
+                static : in boolean; output : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Applies multitasking to evaluate and differentiate c,
@@ -153,6 +153,7 @@ procedure ts_mtadcnv is
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
   --   nbt      the number of tasks;
+  --   static   flag to apply static load balancing;
   --   output   flag for output during multitasking.
 
     use Standard_Coefficient_Convolutions;
@@ -195,7 +196,7 @@ procedure ts_mtadcnv is
       put("Running with "); put(nbt,1); put_line(" tasks ...");
       multstart := Ada.Calendar.Clock;
       Standard_Multitasked_EvalDiff
-        (nbt,s.crc,rx,ix,s.mxe,rpwt,ipwt,vy2,vm2,output);
+        (nbt,s.crc,rx,ix,s.mxe,rpwt,ipwt,vy2,vm2,static,output);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       err := Difference(s.vy,vy2);
@@ -300,7 +301,7 @@ procedure ts_mtadcnv is
   procedure DoblDobl_Coefficient_Test
               ( c : in DoblDobl_Coefficient_Convolutions.Circuits;
                 dim,deg : in integer32; nbt : in out integer32;
-                output : in boolean := true ) is
+                static : in boolean; output : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Applies multitasking to evaluate and differentiate c,
@@ -311,6 +312,7 @@ procedure ts_mtadcnv is
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
   --   nbt      the number of tasks;
+  --   static   flag to apply static load balancing;
   --   output   flag for output during multitasking.
 
     use DoblDobl_Coefficient_Convolutions;
@@ -365,7 +367,7 @@ procedure ts_mtadcnv is
       multstart := Ada.Calendar.Clock;
       DoblDobl_Multitasked_EvalDiff
         (nbt,s.crc,rhx,ihx,rlx,ilx,s.mxe,rhpwt,ihpwt,rlpwt,ilpwt,
-         vy2,vm2,output);
+         vy2,vm2,static,output);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       err := Difference(s.vy,vy2);
@@ -470,7 +472,7 @@ procedure ts_mtadcnv is
   procedure QuadDobl_Coefficient_Test
               ( c : in QuadDobl_Coefficient_Convolutions.Circuits;
                 dim,deg : in integer32; nbt : in out integer32;
-                output : in boolean := true ) is
+                static : in boolean; output : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Applies multitasking to evaluate and differentiate c,
@@ -481,6 +483,7 @@ procedure ts_mtadcnv is
   --   dim      dimension of the exponent vectors;
   --   deg      degree of the power series;
   --   nbt      the number of tasks;
+  --   static   flag to apply static load balancing;
   --   output   flag for output during multitasking.
 
     use QuadDobl_Coefficient_Convolutions;
@@ -527,7 +530,7 @@ procedure ts_mtadcnv is
       put("Running with "); put(nbt,1); put_line(" tasks ...");
       multstart := Ada.Calendar.Clock;
       QuadDobl_Multitasked_EvalDiff
-        (nbt,s.crc,xr,xi,s.mxe,rpwt,ipwt,vy2,vm2,output);
+        (nbt,s.crc,xr,xi,s.mxe,rpwt,ipwt,vy2,vm2,static,output);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       err := Difference(s.vy,vy2);
@@ -572,13 +575,17 @@ procedure ts_mtadcnv is
     cc : constant Standard_Coefficient_Convolutions.Circuits
        := Standard_Convolution_Splitters.Split(c);
     ans : character;
+    static : boolean;
 
   begin
     put("Run on circuits with splitted coefficient vectors ? (y/n) ");
     Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then Standard_Coefficient_Test(cc,dim,deg,nbt,output);
-     else Standard_Test(c,dim,deg,nbt,output);
+    if ans = 'y' then
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+      static := (ans = 'y');
+      Standard_Coefficient_Test(cc,dim,deg,nbt,static,output);
+    else
+      Standard_Test(c,dim,deg,nbt,output);
     end if;
   end Standard_Random_Test;
 
@@ -604,13 +611,17 @@ procedure ts_mtadcnv is
     cc : constant DoblDobl_Coefficient_Convolutions.Circuits
        := DoblDobl_Convolution_Splitters.Split(c);
     ans : character;
+    static : boolean;
 
   begin
     put("Run on circuits with splitted coefficient vectors ? (y/n) ");
     Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then DoblDobl_Coefficient_Test(cc,dim,deg,nbt,output);
-     else DoblDobl_Test(c,dim,deg,nbt,output);
+    if ans = 'y' then
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+      static := (ans = 'y');
+      DoblDobl_Coefficient_Test(cc,dim,deg,nbt,static,output);
+    else
+      DoblDobl_Test(c,dim,deg,nbt,output);
     end if;
   end DoblDobl_Random_Test;
 
@@ -636,13 +647,17 @@ procedure ts_mtadcnv is
     cc : constant QuadDobl_Coefficient_Convolutions.Circuits
        := QuadDobl_Convolution_Splitters.Split(c);
     ans : character;
+    static : boolean;
 
   begin
     put("Run on circuits with splitted coefficient vectors ? (y/n) ");
     Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then QuadDobl_Coefficient_Test(cc,dim,deg,nbt,output);
-     else QuadDobl_Test(c,dim,deg,nbt,output);
+    if ans = 'y' then
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+      static := (ans = 'y');
+      QuadDobl_Coefficient_Test(cc,dim,deg,nbt,static,output);
+    else
+      QuadDobl_Test(c,dim,deg,nbt,output);
     end if;
   end QuadDobl_Random_Test;
 
@@ -810,7 +825,7 @@ procedure ts_mtadcnv is
       end if;
       multstart := Ada.Calendar.Clock;
       Standard_Multitasked_EvalDiff
-        (nbt,c,rx,ix,mxe,rpwt,ipwt,vy2,vm2,false);
+        (nbt,c,rx,ix,mxe,rpwt,ipwt,vy2,vm2,false,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then
@@ -1019,7 +1034,8 @@ procedure ts_mtadcnv is
       end if;
       multstart := Ada.Calendar.Clock;
       DoblDobl_Multitasked_EvalDiff
-        (nbt,c,rhx,ihx,rlx,ilx,mxe,rhpwt,ihpwt,rlpwt,ilpwt,vy2,vm2,false);
+        (nbt,c,rhx,ihx,rlx,ilx,mxe,rhpwt,ihpwt,rlpwt,ilpwt,vy2,vm2,
+         false,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then
@@ -1218,7 +1234,7 @@ procedure ts_mtadcnv is
       end if;
       multstart := Ada.Calendar.Clock;
       QuadDobl_Multitasked_EvalDiff
-        (nbt,c,xr,xi,mxe,rpwt,ipwt,vy2,vm2,false);
+        (nbt,c,xr,xi,mxe,rpwt,ipwt,vy2,vm2,false,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then

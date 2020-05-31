@@ -1,3 +1,6 @@
+Sun 31 May 2020 : in multitasked_algodiff_convolutions, defined dynamic
+  load balancing, tested by ts_mtadcnv.
+
 Sat 30 May 2020 : in multitasked_algodiff_convolutions.adb fixed indexing
   errors in assignments of gradients into the Jacobian matrices.
   Fixed bug in multitasked_algodiff_convolutions.adb in the computation

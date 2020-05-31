@@ -52,6 +52,7 @@ package Multitasked_AlgoDiff_Convolutions is
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 vy : in Standard_Complex_VecVecs.VecVec;
                 vm : in Standard_Complex_VecMats.VecMat;
+                static : in boolean := false;
                 output : in boolean := false );
 
   -- DESCRIPTION :
@@ -72,6 +73,9 @@ package Multitasked_AlgoDiff_Convolutions is
   --   ipwt     imaginary parts of the power table;
   --   vy       allocated space for evaluated c at x;
   --   vm       allocated space for differentiated c at x;
+  --   static   flag to apply static load balancing,
+  --            which by default is turned off because less efficient,
+  --            by default, dynamic load balancing is applied;
   --   output   true for the writing of intermediate output.
 
   procedure DoblDobl_Multitasked_EvalDiff
@@ -86,6 +90,7 @@ package Multitasked_AlgoDiff_Convolutions is
                 ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 vy : in DoblDobl_Complex_VecVecs.VecVec;
                 vm : in DoblDobl_Complex_VecMats.VecMat;
+                static : in boolean := false;
                 output : in boolean := false );
 
   -- DESCRIPTION :
@@ -108,6 +113,9 @@ package Multitasked_AlgoDiff_Convolutions is
   --   ihpwt    imaginary low parts of the power table;
   --   vy       allocated space for evaluated c at x;
   --   vm       allocated space for differentiated c at x;
+  --   static   flag to apply static load balancing,
+  --            which by default is turned off because less efficient,
+  --            by default, dynamic load balancing is applied;
   --   output   true for the writing of intermediate output.
 
   procedure QuadDobl_Multitasked_EvalDiff
@@ -119,6 +127,7 @@ package Multitasked_AlgoDiff_Convolutions is
                 ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
+                static : in boolean := false;
                 output : in boolean := false );
 
   -- DESCRIPTION :
@@ -141,6 +150,9 @@ package Multitasked_AlgoDiff_Convolutions is
   --   ipwt     imaginary parts of the power table;
   --   vy       allocated space for evaluated c at x;
   --   vm       allocated space for differentiated c at x;
+  --   static   flag to apply static load balancing,
+  --            which by default is turned off because less efficient,
+  --            by default, dynamic load balancing is applied;
   --   output   true for the writing of intermediate output.
 
   procedure Standard_Multitasked_EvalDiff
