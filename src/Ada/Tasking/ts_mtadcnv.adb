@@ -13,6 +13,7 @@ with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
@@ -129,8 +130,8 @@ procedure ts_mtadcnv is
         speedup := seri_elapsed/mult_elapsed;
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
-        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
-        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -209,8 +210,8 @@ procedure ts_mtadcnv is
         speedup := seri_elapsed/mult_elapsed;
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
-        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
-        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -288,8 +289,8 @@ procedure ts_mtadcnv is
         speedup := seri_elapsed/mult_elapsed;
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
-        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
-        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -380,8 +381,8 @@ procedure ts_mtadcnv is
         speedup := seri_elapsed/mult_elapsed;
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
-        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
-        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -459,8 +460,8 @@ procedure ts_mtadcnv is
         speedup := seri_elapsed/mult_elapsed;
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
-        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
-        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -524,6 +525,7 @@ procedure ts_mtadcnv is
 
   begin
     QuadDobl_Vector_Splitters.Complex_Parts(xcff,xr,xi);
+    put("mxe : "); put(s.mxe); new_line;
     put_line("Running on one task ...");
     seristart := Ada.Calendar.Clock;
     Compute(s.rpwt,s.ipwt,s.mxe,xr,xi,u,v,w);
@@ -550,8 +552,8 @@ procedure ts_mtadcnv is
         speedup := seri_elapsed/mult_elapsed;
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
-        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
-        put("The efficiency : "); duration_io.put(efficiency,2,2); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       put("Continue with different number of tasks ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -744,10 +746,8 @@ procedure ts_mtadcnv is
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-          put("The efficiency : ");
-          duration_io.put(efficiency,2,2); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
@@ -845,10 +845,8 @@ procedure ts_mtadcnv is
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-          put("The efficiency : ");
-          duration_io.put(efficiency,2,2); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("   efficiency : "); duration_io.put(efficiency,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
@@ -936,10 +934,8 @@ procedure ts_mtadcnv is
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-          put("The efficiency : ");
-          duration_io.put(speedup,2,2); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
@@ -1055,10 +1051,8 @@ procedure ts_mtadcnv is
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-          put("The efficiency : ");
-          duration_io.put(speedup,2,2); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
@@ -1145,10 +1139,8 @@ procedure ts_mtadcnv is
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
-          put("The efficiency : ");
-          duration_io.put(speedup,2,2); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
@@ -1261,8 +1253,8 @@ procedure ts_mtadcnv is
         efficiency := speedup/duration(nbt);
         efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : "); duration_io.put(speedup,1,3); new_line;
-          put("The efficiency : "); duration_io.put(speedup,2,2); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
@@ -1385,11 +1377,10 @@ procedure ts_mtadcnv is
   --   Prompts the user for a polynomial system
   --   and launches the test in double precision.
 
-   -- use Standard_Speelpenning_Convolutions;
-
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     deg,nbt : integer32 := 0;
     answer : character;
+    cffcrc,static,output : boolean;
     dim : natural32;
 
   begin
@@ -1401,11 +1392,24 @@ procedure ts_mtadcnv is
     put("Give the degree of the series : "); get(deg);
     put("Give the number of tasks : "); get(nbt);
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    output := (answer = 'y');
+    put("Run on circuits with splitted coefficient vectors ? (y/n) ");
+    Ask_Yes_or_No(answer); cffcrc := (answer = 'y');
+    if answer = 'y' then
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(answer);
+      static := (answer = 'y');
+    end if;
     declare
       c : constant Standard_Speelpenning_Convolutions.Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(deg));
+      cc : constant Standard_Coefficient_Convolutions.Circuits
+         := Standard_Convolution_Splitters.Split(c);
     begin
-      Standard_Test(c,integer32(dim),deg,nbt,answer = 'y');
+      if cffcrc then
+        Standard_Coefficient_Test(cc,integer32(dim),deg,nbt,static,output);
+      else
+        Standard_Test(c,integer32(dim),deg,nbt,output);
+      end if;
     end;
   end Standard_Test_Problem;
 
@@ -1421,6 +1425,7 @@ procedure ts_mtadcnv is
     deg,nbt : integer32 := 0;
     dim : natural32;
     answer : character;
+    output,cffcrc,static : boolean;
 
   begin
     new_line;
@@ -1431,11 +1436,24 @@ procedure ts_mtadcnv is
     put("Give the degree of the series : "); get(deg);
     put("Give the number of tasks : "); get(nbt);
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    output := (answer = 'y');
+    put("Run on circuits with splitted coefficient vectors ? (y/n) ");
+    Ask_Yes_or_No(answer); cffcrc := (answer = 'y');
+    if answer = 'y' then
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(answer);
+      static := (answer = 'y');
+    end if;
     declare
-      c : constant Circuits(lp'range)
+      c : constant DoblDobl_Speelpenning_Convolutions.Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(deg));
+      cc : constant DoblDobl_Coefficient_Convolutions.Circuits
+         := DoblDobl_Convolution_Splitters.Split(c);
     begin
-      DoblDobl_Test(c,integer32(dim),deg,nbt,answer = 'y');
+      if cffcrc then
+        DoblDobl_Coefficient_Test(cc,integer32(dim),deg,nbt,static,output);
+      else
+        DoblDobl_Test(c,integer32(dim),deg,nbt,output);
+      end if;
     end;
   end DoblDobl_Test_Problem;
 
@@ -1445,12 +1463,11 @@ procedure ts_mtadcnv is
   --   Prompts the user for a polynomial system
   --   and launches the test in quad double precision.
 
-    use QuadDobl_Speelpenning_Convolutions;
-
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     deg,nbt : integer32 := 0;
     dim : natural32;
     answer : character;
+    output,cffcrc,static : boolean;
 
   begin
     new_line;
@@ -1461,11 +1478,24 @@ procedure ts_mtadcnv is
     put("Give the degree of the series : "); get(deg);
     put("Give the number of tasks : "); get(nbt);
     put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(answer);
+    output := (answer = 'y');
+    put("Run on circuits with splitted coefficient vectors ? (y/n) ");
+    Ask_Yes_or_No(answer); cffcrc := (answer = 'y');
+    if answer = 'y' then
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(answer);
+      static := (answer = 'y');
+    end if;
     declare
-      c : constant Circuits(lp'range)
+      c : constant QuadDobl_Speelpenning_Convolutions.Circuits(lp'range)
         := Make_Convolution_Circuits(lp.all,natural32(deg));
+      cc : constant QuadDobl_Coefficient_Convolutions.Circuits
+         := QuadDobl_Convolution_Splitters.Split(c);
     begin
-      QuadDobl_Test(c,integer32(dim),deg,nbt,answer = 'y');
+      if cffcrc then
+        QuadDobl_Coefficient_Test(cc,integer32(dim),deg,nbt,static,output);
+      else
+        QuadDobl_Test(c,integer32(dim),deg,nbt,output);
+      end if;
     end;
   end QuadDobl_Test_Problem;
 
