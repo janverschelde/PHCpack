@@ -117,14 +117,18 @@ procedure ts_mthesscrc is
 
   procedure Standard_Test
               ( s : in Standard_Complex_Circuits.Link_to_System;
-                x : in Standard_Complex_Vectors.Link_to_Vector ) is
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                static,output : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs the test in double precision.
 
   -- ON ENTRY :
   --   s        a system of convolution circuits;
-  --   x        coefficients of a start solution.
+  --   x        coefficients of a start solution;
+  --   static   to apply static load balancing;
+  --   output   to see all singular values and
+  --            for output during the multitasked runs.
 
     dim : constant integer32 := s.dim;
     U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -135,19 +139,14 @@ procedure ts_mthesscrc is
        := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
     values : Standard_Complex_VecVecs.VecVec(0..s.neq)
            := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
-    ans : character;
-    otp : boolean;
     nbt : integer32 := 0;
     err,eta : double_float;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
 
     use Ada.Calendar;
 
   begin
-    new_line;
-    put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
-    otp := (ans = 'y');
     put_line("Computing first without multitasking ...");
     seristart := Ada.Calendar.Clock;
     Standard_Complex_Circuits.Singular_Values(s,x,vh,U,V,e,svl);
@@ -155,7 +154,7 @@ procedure ts_mthesscrc is
     seri_elapsed := seristop - seristart;
     put_line("-> Elapsed time without multitasking :");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-    if otp
+    if output
      then put_line("All singular values :"); Write_Singular_Values(svl);
     end if;
     loop
@@ -164,12 +163,12 @@ procedure ts_mthesscrc is
       exit when (nbt <= 0);
       multstart := Ada.Calendar.Clock;
       Multitasked_Hessian_Circuits.Multitasked_Singular_Values
-        (nbt,s,x,values,otp);
+        (nbt,s,x,values,static,output);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-      if otp then
+      if output then
         put_line("All singular values computed by multitasking :");
         Write_Singular_Values(values);
       end if;
@@ -179,22 +178,28 @@ procedure ts_mthesscrc is
       put("Estimate for the distance : "); put(eta,3); new_line;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
     end loop;
   end Standard_Test;
 
   procedure DoblDobl_Test
               ( s : in DoblDobl_Complex_Circuits.Link_to_System;
-                x : in DoblDobl_Complex_Vectors.Link_to_Vector ) is
+                x : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                static,output : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs the test in double double precision.
 
   -- ON ENTRY :
   --   s        a system of convolution circuits;
-  --   x        coefficients of a start solution.
+  --   x        coefficients of a start solution;
+  --   static   to apply static load balancing;
+  --   output   to see all singular values and
+  --            for output during the multitasked runs.
 
     dim : constant integer32 := s.dim;
     U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -205,19 +210,14 @@ procedure ts_mthesscrc is
        := DoblDobl_Complex_Circuits.Allocate(s.neq,s.dim);
     values : DoblDobl_Complex_VecVecs.VecVec(0..s.neq)
            := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
-    ans : character;
-    otp : boolean;
     nbt : integer32 := 0;
     err,eta : double_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
 
     use Ada.Calendar;
 
   begin
-    new_line;
-    put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
-    otp := (ans = 'y');
     put_line("Computing first without multitasking ...");
     seristart := Ada.Calendar.Clock;
     DoblDobl_Complex_Circuits.Singular_Values(s,x,vh,U,V,e,svl);
@@ -225,7 +225,7 @@ procedure ts_mthesscrc is
     seri_elapsed := seristop - seristart;
     put_line("-> Elapsed time without multitasking :");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-    if otp
+    if output
      then put_line("All singular values :"); Write_Singular_Values(svl);
     end if;
     loop
@@ -234,12 +234,12 @@ procedure ts_mthesscrc is
       exit when (nbt <= 0);
       multstart := Ada.Calendar.Clock;
       Multitasked_Hessian_Circuits.Multitasked_Singular_Values
-        (nbt,s,x,values,otp);
+        (nbt,s,x,values,static,output);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-      if otp then
+      if output then
         put_line("All singular values computed by multitasking :");
         Write_Singular_Values(values);
       end if;
@@ -249,22 +249,28 @@ procedure ts_mthesscrc is
       put("Estimate for the distance : "); put(eta,3); new_line;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
     end loop;
   end DoblDobl_Test;
 
   procedure QuadDobl_Test
               ( s : in QuadDobl_Complex_Circuits.Link_to_System;
-                x : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
+                x : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                static,output : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs the test in quad double precision.
 
   -- ON ENTRY :
   --   s        a system of convolution circuits;
-  --   x        coefficients of a start solution.
+  --   x        coefficients of a start solution;
+  --   static   to apply static load balancing;
+  --   output   to see all singular values and
+  --            for output during the multitasked runs.
 
     dim : constant integer32 := s.dim;
     U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -275,19 +281,14 @@ procedure ts_mthesscrc is
        := QuadDobl_Complex_Circuits.Allocate(s.neq,s.dim);
     values : QuadDobl_Complex_VecVecs.VecVec(0..s.neq)
            := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
-    ans : character;
-    otp : boolean;
     nbt : integer32 := 0;
     err,eta : quad_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
 
     use Ada.Calendar;
 
   begin
-    new_line;
-    put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
-    otp := (ans = 'y');
     put_line("Computing first without multitasking ...");
     seristart := Ada.Calendar.Clock;
     QuadDobl_Complex_Circuits.Singular_Values(s,x,vh,U,V,e,svl);
@@ -295,7 +296,7 @@ procedure ts_mthesscrc is
     seri_elapsed := seristop - seristart;
     put_line("-> Elapsed time without multitasking :");
     Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
-    if otp
+    if output
      then put_line("All singular values :"); Write_Singular_Values(svl);
     end if;
     loop
@@ -304,12 +305,12 @@ procedure ts_mthesscrc is
       exit when (nbt <= 0);
       multstart := Ada.Calendar.Clock;
       Multitasked_Hessian_Circuits.Multitasked_Singular_Values
-        (nbt,s,x,values,otp);
+        (nbt,s,x,values,static,output);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-      if otp then
+      if output then
         put_line("All singular values computed by multitasking :");
         Write_Singular_Values(values);
       end if;
@@ -319,8 +320,10 @@ procedure ts_mthesscrc is
       put("Estimate for the distance : "); put(eta,3); new_line;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
     end loop;
   end QuadDobl_Test;
@@ -342,12 +345,19 @@ procedure ts_mthesscrc is
       := Standard_Random_Vectors.Random_Vector(1,dim);
     x : constant Standard_Complex_Vectors.Link_to_Vector
       := new Standard_Complex_Vectors.Vector'(v);
+    ans : character;
+    static,output : boolean;
 
   begin
     new_line;
     put_line("Generating a random complex circuit system ...");
     s := Standard_Circuit_Makers.Random_Complex_System(dim,nbr,dim,pwr);
-    Standard_Test(s,x);
+    new_line;
+    put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+    static := (ans = 'y');
+    Standard_Test(s,x,static,output);
   end Standard_Random_Test;
 
   procedure DoblDobl_Random_Test
@@ -367,12 +377,19 @@ procedure ts_mthesscrc is
       := DoblDobl_Random_Vectors.Random_Vector(1,dim);
     x : constant DoblDobl_Complex_Vectors.Link_to_Vector
       := new DoblDobl_Complex_Vectors.Vector'(v);
+    ans : character;
+    static,output : boolean;
 
   begin
     new_line;
     put_line("Generating a random complex circuit system ...");
     s := DoblDobl_Circuit_Makers.Random_Complex_System(dim,nbr,dim,pwr);
-    DoblDobl_Test(s,x);
+    new_line;
+    put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+    static := (ans = 'y');
+    DoblDobl_Test(s,x,static,output);
   end DoblDobl_Random_Test;
 
   procedure QuadDobl_Random_Test
@@ -391,12 +408,19 @@ procedure ts_mthesscrc is
       := QuadDobl_Random_Vectors.Random_Vector(1,dim);
     x : constant QuadDobl_Complex_Vectors.Link_to_Vector
       := new QuadDobl_Complex_Vectors.Vector'(v);
+    ans : character;
+    static,output : boolean;
 
   begin
     new_line;
     put_line("Generating a random complex circuit system ...");
     s := QuadDobl_Circuit_Makers.Random_Complex_System(dim,nbr,dim,pwr);
-    QuadDobl_Test(s,x);
+    new_line;
+    put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+    static := (ans = 'y');
+    QuadDobl_Test(s,x,static,output);
   end QuadDobl_Random_Test;
 
   procedure Standard_User_Test is
@@ -410,6 +434,8 @@ procedure ts_mthesscrc is
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
     ls : Standard_Complex_Solutions.Link_to_Solution;
+    ans : character;
+    static,output : boolean;
 
   begin
     new_line;
@@ -422,7 +448,12 @@ procedure ts_mthesscrc is
       x : constant Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector'(ls.v);
     begin
-      Standard_Test(s,x);
+      new_line;
+      put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
+      output := (ans = 'y');
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+      static := (ans = 'y');
+      Standard_Test(s,x,static,output);
     end;
   end Standard_User_Test;
 
@@ -437,6 +468,8 @@ procedure ts_mthesscrc is
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+    ans : character;
+    static,output : boolean;
 
   begin
     new_line;
@@ -449,7 +482,12 @@ procedure ts_mthesscrc is
       x : constant DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector'(ls.v);
     begin
-      DoblDobl_Test(s,x);
+      new_line;
+      put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
+      output := (ans = 'y');
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+      static := (ans = 'y');
+      DoblDobl_Test(s,x,static,output);
     end;
   end DoblDobl_User_Test;
 
@@ -464,6 +502,8 @@ procedure ts_mthesscrc is
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    ans : character;
+    static,output : boolean;
 
   begin
     new_line;
@@ -476,7 +516,12 @@ procedure ts_mthesscrc is
       x : constant QuadDobl_Complex_Vectors.Link_to_Vector
         := new QuadDobl_Complex_Vectors.Vector'(ls.v);
     begin
-      QuadDobl_Test(s,x);
+      new_line;
+      put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
+      output := (ans = 'y');
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+      static := (ans = 'y');
+      QuadDobl_Test(s,x,static,output);
     end;
   end QuadDobl_User_Test;
 
@@ -506,49 +551,50 @@ procedure ts_mthesscrc is
        := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
     values : Standard_Complex_VecVecs.VecVec(0..s.neq);
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup :  Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
 
   begin
     if verbose
-     then put_line(file,"Computing first without multitasking ...");
-     else put_line(file,"double precision");
+     then put_line("Computing first without multitasking ...");
     end if;
+    put_line(file,"double precision"); flush(file);
     seristart := Ada.Calendar.Clock;
     Standard_Complex_Circuits.Singular_Values(s,x,vh,U,V,e,svl);
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     if verbose then
-      put_line(file,"-> Elapsed time without multitasking :");
-      Time_Stamps.Write_Elapsed_Time(file,seristart,seristop);
-      put_line(file,"running in double precision ...");
-    else
-      put(file,"  1 : ");
-      duration_io.put(file,seri_elapsed,1,3); put_line(file," : 1.000");
+      put_line("-> Elapsed time without multitasking :");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      put_line("running in double precision ...");
     end if;
+    put(file,"  1 : "); duration_io.put(file,seri_elapsed,1,3);
+    put_line(file," : 1.000"); flush(file);
     for k in 1..nbruns loop
       values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
       multstart := Ada.Calendar.Clock;
       Multitasked_Hessian_Circuits.Multitasked_Singular_Values
-        (nbt,s,x,values,false);
+        (nbt,s,x,values,false,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then
-        put(file,"-> Elapsed time with "); put(file,nbt,1);
-        put_line(file," tasks :");
-        Time_Stamps.Write_Elapsed_Time(file,multstart,multstop);
-      else
-        put(file,nbt,3); put(file," : ");
-        duration_io.put(file,mult_elapsed,1,3); put(file," : ");
+        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       end if;
+      put(file,nbt,3); put(file," : ");
+      duration_io.put(file,mult_elapsed,1,3); put(file," : ");
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        if verbose
-         then put(file,"The speedup : ");
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,1,3); new_line;
         end if;
-        duration_io.put(file,speedup,1,3); new_line(file);
+        duration_io.put(file,speedup,1,3); put(file," : ");
+        duration_io.put(file,efficiency,2,2); new_line(file); flush(file);
       end if;
       nbt := nbt + inc;
       Standard_Complex_VecVecs.Clear(values);
@@ -581,49 +627,50 @@ procedure ts_mthesscrc is
        := DoblDobl_Complex_Circuits.Allocate(s.neq,s.dim);
     values : DoblDobl_Complex_VecVecs.VecVec(0..s.neq);
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup :  Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
 
   begin
     if verbose
-     then put_line(file,"Computing first without multitasking ...");
-     else put_line(file,"double double precision");
+     then put_line("Computing first without multitasking ...");
     end if;
+    put_line(file,"double double precision"); flush(file);
     seristart := Ada.Calendar.Clock;
     DoblDobl_Complex_Circuits.Singular_Values(s,x,vh,U,V,e,svl);
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     if verbose then
-      put_line(file,"-> Elapsed time without multitasking :");
-      Time_Stamps.Write_Elapsed_Time(file,seristart,seristop);
-      put_line(file,"running in double double precision ...");
-    else
-      put(file,"  1 : ");
-      duration_io.put(file,seri_elapsed,1,3); put_line(file," : 1.000");
+      put_line("-> Elapsed time without multitasking :");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      put_line("running in double double precision ...");
     end if;
+    put(file,"  1 : "); duration_io.put(file,seri_elapsed,1,3);
+    put_line(file," : 1.000"); flush(file);
     for k in 1..nbruns loop
       values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
       multstart := Ada.Calendar.Clock;
       Multitasked_Hessian_Circuits.Multitasked_Singular_Values
-        (nbt,s,x,values,false);
+        (nbt,s,x,values,false,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then
-        put(file,"-> Elapsed time with "); put(file,nbt,1);
-        put_line(file," tasks :");
-        Time_Stamps.Write_Elapsed_Time(file,multstart,multstop);
-      else
-        put(file,nbt,3); put(file," : ");
-        duration_io.put(file,mult_elapsed,1,3); put(file," : ");
+        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       end if;
+      put(file,nbt,3); put(file," : ");
+      duration_io.put(file,mult_elapsed,1,3); put(file," : ");
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        if verbose
-         then put(file,"The speedup : ");
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3); 
+          put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
         end if;
-        duration_io.put(file,speedup,1,3); new_line(file);
+        duration_io.put(file,speedup,1,3); put(file," : ");
+        duration_io.put(file,efficiency,2,2); new_line(file); flush(file);
       end if;
       nbt := nbt + inc;
       DoblDobl_Complex_VecVecs.Clear(values);
@@ -645,7 +692,7 @@ procedure ts_mthesscrc is
   --   inc      increment to the number of tasks;
   --   s        system in one parameter;
   --   x        some point to evaluate at;
-  --   verbose  if extra output needs to be written.
+  --   verbose  if extra output needs to be written to screen.
 
     dim : constant integer32 := s.dim;
     U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
@@ -656,49 +703,50 @@ procedure ts_mthesscrc is
        := QuadDobl_Complex_Circuits.Allocate(s.neq,s.dim);
     values : QuadDobl_Complex_VecVecs.VecVec(0..s.neq);
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup :  Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
 
   begin
     if verbose
-     then put_line(file,"Computing first without multitasking ...");
-     else put_line(file,"quad double precision");
+     then put_line("Computing first without multitasking ...");
     end if;
+    put_line(file,"quad double precision"); flush(file);
     seristart := Ada.Calendar.Clock;
     QuadDobl_Complex_Circuits.Singular_Values(s,x,vh,U,V,e,svl);
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     if verbose then
-      put_line(file,"-> Elapsed time without multitasking :");
-      Time_Stamps.Write_Elapsed_Time(file,seristart,seristop);
-      put_line(file,"running in quad double precision ...");
-    else
-      put(file,"  1 : ");
-      duration_io.put(file,seri_elapsed,1,3); put_line(file," : 1.000");
+      put_line("-> Elapsed time without multitasking :");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      put_line("running in quad double precision ...");
     end if;
+    put(file,"  1 : "); duration_io.put(file,seri_elapsed,1,3);
+    put_line(file," : 1.000"); flush(file);
     for k in 1..nbruns loop
       values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
       multstart := Ada.Calendar.Clock;
       Multitasked_Hessian_Circuits.Multitasked_Singular_Values
-        (nbt,s,x,values,false);
+        (nbt,s,x,values,false,false);
       multstop := Ada.Calendar.Clock;
       mult_elapsed := multstop - multstart;
       if verbose then
-        put(file,"-> Elapsed time with "); put(file,nbt,1);
-        put_line(file," tasks :");
-        Time_Stamps.Write_Elapsed_Time(file,multstart,multstop);
-      else
-        put(file,nbt,3); put(file," : ");
-        duration_io.put(file,mult_elapsed,1,3); put(file," : ");
+        put("-> Elapsed time with "); put(file,nbt,1); put_line(" tasks :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       end if;
+      put(file,nbt,3); put(file," : ");
+      duration_io.put(file,mult_elapsed,1,3); put(file," : ");
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        if verbose
-         then put(file,"The speedup : ");
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
         end if;
-        duration_io.put(file,speedup,1,3); new_line(file);
+        duration_io.put(file,speedup,1,3); put(file," : ");
+        duration_io.put(file,efficiency,2,2); new_line(file); flush(file);
       end if;
       nbt := nbt + inc;
       QuadDobl_Complex_VecVecs.Clear(values);

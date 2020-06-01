@@ -36,19 +36,22 @@ package Multitasked_Hessian_Circuits is
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
+                static : in boolean := false;
+                verbose : in boolean := false );
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
+                static : in boolean := false;
+                verbose : in boolean := false );
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
-                verbose : in boolean := true );
+                static : in boolean := false;
+                verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Evaluates all Hessians of the circuits in s at x
@@ -60,6 +63,8 @@ package Multitasked_Hessian_Circuits is
   --   x        coordinates of the point to evaluate the Hessians;
   --   values   space allocated for all singular values,
   --            as a vector of range 1..s.dim;
+  --   static   flag to to apply static load balancing,
+  --            by default dynamic load balancing is applied;
   --   verbose  if verbose, then one line is written for each job,
   --            otherwise, the jobs are preformed without output.
 
