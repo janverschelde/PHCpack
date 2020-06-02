@@ -1,6 +1,8 @@
 Mon 1 Jun 2020 : extended newton_convolutions with procedures to run one
   Newton step with coefficient convolutions in double double precision,
-  tested by ts_fabry.
+  tested by ts_fabry.  Started development of Hessian computation on
+  coefficient circuits in standard_coefficient_circuits, tested by
+  ts_perfhess.adb.  Small change in standard_complex_circuits.ads.
 
 Sun 31 May 2020 : modified quaddobl_vector_splitters to pass the auxiliary
   vectors u, v, and w  as pointers.  Updated ts_speelcnv.

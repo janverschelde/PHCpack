@@ -111,17 +111,31 @@ package body Standard_Coefficient_Circuits is
     end loop;
   end EvalDiff;
 
--- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
+-- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
-  procedure Speel ( c : in Circuit;
-                    xr : in Standard_Floating_Vectors.Link_to_Vector;
-                    xi : in Standard_Floating_Vectors.Link_to_Vector;
-                    ryd : in Standard_Floating_Vectors.Link_to_Vector;
-                    iyd : in Standard_Floating_Vectors.Link_to_Vector ) is
+  procedure Indexed_Speel 
+              ( c : in Circuit;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec ) is
   begin
-    Speel(c.xps,c.rcf,c.icf,c.rcst,c.icst,xr,xi,ryd,iyd,
-          c.rfwd,c.ifwd,c.rbck,c.ibck,c.rcrs,c.icrs);
-  end Speel;
+    Indexed_Speel(c.xps,c.rcf,c.icf,c.rcst,c.icst,xr,xi,ryd,iyd,
+                  c.rfwd,c.ifwd,c.rbck,c.ibck,c.rcrs,c.icrs,hrp,hip);
+  end Indexed_Speel;
+
+  procedure Indexed_Speel
+              ( c : in Circuit;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    Indexed_Speel(c.xps,c.rcf,c.icf,c.rcst,c.icst,xr,xi,ryd,iyd,
+                  c.rfwd,c.ifwd,c.rbck,c.ibck,c.rcrs,c.icrs);
+  end Indexed_Speel;
 
   procedure Speel ( c : in Circuit;
                     xr : in Standard_Floating_Vectors.Link_to_Vector;
@@ -135,20 +149,361 @@ package body Standard_Coefficient_Circuits is
           c.rfwd,c.ifwd,c.rbck,c.ibck,c.rcrs,c.icrs,rpwt,ipwt);
   end Speel;
 
-  procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
-                    rcf : in Standard_Floating_Vectors.Vector;
-                    icf : in Standard_Floating_Vectors.Vector;
-                    rcst,icst : in double_float;
+  procedure Speel ( c : in Circuit;
                     xr : in Standard_Floating_Vectors.Link_to_Vector;
                     xi : in Standard_Floating_Vectors.Link_to_Vector;
                     ryd : in Standard_Floating_Vectors.Link_to_Vector;
                     iyd : in Standard_Floating_Vectors.Link_to_Vector;
-                    rfwd : in Standard_Floating_Vectors.Link_to_Vector;
-                    ifwd : in Standard_Floating_Vectors.Link_to_Vector;
-                    rbck : in Standard_Floating_Vectors.Link_to_Vector;
-                    ibck : in Standard_Floating_Vectors.Link_to_Vector;
-                    rcrs : in Standard_Floating_Vectors.Link_to_Vector;
-                    icrs : in Standard_Floating_Vectors.Link_to_Vector ) is
+                    rpwt : in Standard_Floating_VecVecs.VecVec;
+                    ipwt : in Standard_Floating_VecVecs.VecVec; 
+                    hrp : in Standard_Floating_VecVecs.VecVec;
+                    hip : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    Speel(c.xps,c.idx,c.fac,c.rcf,c.icf,c.rcst,c.icst,xr,xi,ryd,iyd,
+          c.rfwd,c.ifwd,c.rbck,c.ibck,c.rcrs,c.icrs,rpwt,ipwt,hrp,hip);
+    null;
+  end Speel;
+
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_Vectors.Vector;
+                rcff,icff : in double_float;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rfwd : in Standard_Floating_Vectors.Link_to_Vector;
+                ifwd : in Standard_Floating_Vectors.Link_to_Vector;
+                rbck : in Standard_Floating_Vectors.Link_to_Vector;
+                ibck : in Standard_Floating_Vectors.Link_to_Vector;
+                rcrs : in Standard_Floating_Vectors.Link_to_Vector;
+                icrs : in Standard_Floating_Vectors.Link_to_Vector;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec ) is
+
+    sz : constant integer32 := idx'last;
+    idx1,idx2,idx3,idx4,idx5,idx6 : integer32;
+    zr,zi,pr,pi,racc,iacc : double_float;
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    Fused_Forward_Backward_Cross
+      (idx,xr,xi,rfwd,ifwd,rbck,ibck,rcrs,icrs);
+   -- cff := c.cff(k); yd(0) := yd(0) + cff*c.fwd(sz-1); 
+    idx1 := sz-1; pr := rfwd(idx1); pi := ifwd(idx1);
+    zr := pr*rcff - pi*icff; zi := pr*icff + pi*rcff;
+    ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+    if sz = 2 then
+      idx1 := idx(1); idx2 := idx(2);
+     -- yd(idx2) := yd(idx2) + cff*x(idx1);
+      pr := xr(idx1); pi := xi(idx1);
+      zr := pr*rcff - pi*icff; zi := pr*icff + pi*rcff;
+      ryd(idx2) := ryd(idx2) + zr; iyd(idx2) := iyd(idx2) + zi;
+     -- yd(idx1) := yd(idx1) + cff*x(idx2);
+      pr := xr(idx2); pi := xi(idx2);
+      zr := pr*rcff - pi*icff; zi := pr*icff + pi*rcff;
+      ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+     -- h(idx1,idx2) := h(idx1,idx2) + cff;
+      hrprow := hrp(idx1); hiprow := hip(idx1);
+      hrprow(idx2) := hrprow(idx2) + rcff;
+      hiprow(idx2) := hiprow(idx2) + icff;
+    else -- sz'last > 2
+      idx1 := idx(1); 
+     -- yd(idx1) := yd(idx1) + cff*c.bck(sz-2);
+      idx2 := sz-2; pr := rbck(idx2); pi := ibck(idx2);
+      zr := pr*rcff - pi*icff; zi := pr*icff + pi*rcff;
+      ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+      for j in idx'first+1..sz-1 loop
+        idx1 := idx(j);
+       -- yd(idx1) := yd(idx1) + cff*c.crs(j-1);
+        idx2 := j-1; pr := rcrs(idx2); pi := icrs(idx2);
+        zr := pr*rcff - pi*icff; zi := pr*icff + pi*rcff;
+        ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+      end loop;
+      idx1 := idx(sz);
+     -- yd(idx1) := yd(idx1) + cff*c.fwd(sz-2);
+      idx2 := sz-2; pr := rfwd(idx2); pi := ifwd(idx2);
+      zr := pr*rcff - pi*icff; zi := pr*icff + pi*rcff;
+      ryd(idx1) := ryd(idx1) + zr; iyd(idx1) := iyd(idx1) + zi;
+      if sz = 3 then
+        idx1 := idx(1); idx2 := idx(2); idx3 := idx(3);
+       -- h(idx1,idx2) := h(idx1,idx2) + cff*x(idx3);
+        hrprow := hrp(idx1); hiprow := hip(idx1);
+        pr := xr(idx3); pi := xi(idx3);
+        zr := rcff*pr - icff*pi; zi := rcff*pi + icff*pr;
+        hrprow(idx2) := hrprow(idx2) + zr;
+        hiprow(idx2) := hiprow(idx2) + zi;
+       -- h(idx1,idx3) := h(idx1,idx3) + cff*x(idx2);
+        pr := xr(idx2); pi := xi(idx2);
+        zr := rcff*pr - icff*pi; zi := rcff*pi + icff*pr;
+        hrprow(idx3) := hrprow(idx3) + zr;
+        hiprow(idx3) := hiprow(idx3) + zi;
+       -- h(idx2,idx3) := h(idx2,idx3) + cff*x(idx1);
+        hrprow := hrp(idx2); hiprow := hip(idx2);
+        pr := xr(idx1); pi := xi(idx1);
+        zr := rcff*pr - icff*pi; zi := rcff*pi + icff*pr;
+        hrprow(idx3) := hrprow(idx3) + zr;
+        hiprow(idx3) := hiprow(idx3) + zi;
+      else -- sz > 3
+        idx5 := idx(sz-1); idx6 := idx(sz); idx3 := sz-3;
+       -- last element is copy of fwd(sz-3), multiplied with cff
+       -- h(idx5,idx6) := h(idx5,idx6) + cff*fwd(idx3);
+        hrprow := hrp(idx5); hiprow := hip(idx5);
+        pr := rfwd(idx3); pi := ifwd(idx3);
+        zr := rcff*pr - icff*pi; zi := rcff*pi + icff*pr;
+        hrprow(idx6) := hrprow(idx6) + zr;
+        hiprow(idx6) := hiprow(idx6) + zi;
+       -- first element is copy of bck(sz-3), multiplied with cff
+        idx1 := idx(1); idx2 := idx(2);
+       -- h(idx1,idx2) := h(idx1,idx2) + cff*bck(idx3);
+        hrprow := hrp(idx1); hiprow := hip(idx1);
+        pr := rbck(idx3); pi := ibck(idx3);
+        zr := rcff*pr - icff*pi; zi := rcff*pi + icff*pr;
+        hrprow(idx2) := hrprow(idx2) + zr;
+        hiprow(idx2) := hiprow(idx2) + zi;
+        if sz = 4 then -- special case for all rows
+          idx3 := idx(3); idx4 := idx(4);
+         -- acc := cff*x(idx2);
+          pr := xr(idx2); pi := xi(idx2);
+          racc := rcff*pr - icff*pi; iacc := rcff*pi + icff*pr;
+         -- h(idx1,idx3) := h(idx1,idx3) + acc*x(idx6);
+          hrprow := hrp(idx1); hiprow := hip(idx1);
+          pr := xr(idx6); pi := xi(idx6);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx3) := hrprow(idx3) + zr;
+          hiprow(idx3) := hiprow(idx3) + zi;
+         -- h(idx1,idx4) := h(idx1,idx4) + acc*x(idx5);
+          pr := xr(idx5); pi := xi(idx5);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx4) := hrprow(idx4) + zr;
+          hiprow(idx4) := hiprow(idx4) + zi;
+         -- acc := cff*x(idx1);
+          pr := xr(idx1); pi := xi(idx1);
+          racc := rcff*pr - icff*pi; iacc := rcff*pi + icff*pr;
+         -- h(idx2,idx3) := h(idx2,idx3) + acc*x(idx6);
+          hrprow := hrp(idx2); hiprow := hip(idx2);
+          pr := xr(idx6); pi := xi(idx6);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx3) := hrprow(idx3) + zr;
+          hiprow(idx3) := hiprow(idx3) + zi;
+         -- h(idx2,idx4) := h(idx2,idx4) + acc*x(idx5);
+          pr := xr(idx5); pi := xi(idx5);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx4) := hrprow(idx4) + zr;
+          hiprow(idx4) := hiprow(idx4) + zi;
+        else -- sz > 4
+         -- first row is special, starts with x(idx(2)) after diagonal
+          idx3 := idx(3); idx4 := sz-4;
+         -- acc := cff*x(idx2);
+          pr := xr(idx2); pi := xi(idx2);
+          racc := rcff*pr - icff*pi; iacc := rcff*pi + icff*pr;
+         -- h(idx1,idx3) := h(idx1,idx3) + acc*bck(idx4);
+          hrprow := hrp(idx1); hiprow := hip(idx1);
+          pr := rbck(idx4); pi := ibck(idx4);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx3) := hrprow(idx3) + zr;
+          hiprow(idx3) := hiprow(idx3) + zi;
+          for k in 4..sz-2 loop
+            idx4 := idx(k-1); idx5 := idx(k); idx6 := sz-k-1;
+           -- acc := acc*x(idx4);
+            pr := xr(idx4); pi := xi(idx4);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            racc := zr; iacc := zi;
+           -- h(idx1,idx5) := h(idx1,idx5) + acc*bck(idx6);
+            pr := rbck(idx6); pi := ibck(idx6);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            hrprow(idx5) := hrprow(idx5) + zr;
+            hiprow(idx5) := hiprow(idx5) + zi;
+          end loop;
+          idx4 := idx(sz-2); idx5 := idx(sz-1); idx6 := idx(sz);
+         -- acc := acc*x(idx4);
+          pr := xr(idx4); pi := xi(idx4);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          racc := zr; iacc := zi;
+         -- h(idx1,idx5) := h(idx1,idx5) + acc*x(idx6);
+          pr := xr(idx6); pi := xi(idx6);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx5) := hrprow(idx5) + zr;
+          hiprow(idx5) := hiprow(idx5) + zi;
+         -- h(idx1,idx6) := h(idx1,idx6) + acc*x(idx5);
+          pr := xr(idx5); pi := xi(idx5);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx6) := hrprow(idx6) + zr;
+          hiprow(idx6) := hiprow(idx6) + zi;
+         -- second row is special, starts with x(idx(1)) after diagonal
+         -- acc := cff*x(idx1);
+          pr := xr(idx1); pi := xi(idx1);
+          racc := rcff*pr - icff*pi; iacc := rcff*pi + icff*pr;
+          idx4 := sz-4;
+         -- h(idx2,idx3) := h(idx2,idx3) + acc*bck(idx4);
+          pr := rbck(idx4); pi := ibck(idx4);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow := hrp(idx2); hiprow := hip(idx2);
+          hrprow(idx3) := hrprow(idx3) + zr;
+          hiprow(idx3) := hiprow(idx3) + zi;
+          for k in 4..sz-2 loop
+            idx4 := idx(k-1); idx5 := idx(k); idx6 := sz-k-1;
+           -- acc := acc*x(idx4);
+            pr := xr(idx4); pi := xi(idx4);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            racc := zr; iacc := zi;
+           -- h(idx2,idx5) := h(idx2,idx5) + acc*bck(idx6);
+            pr := rbck(idx6); pi := ibck(idx6);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            hrprow(idx5) := hrprow(idx5) + zr;
+            hiprow(idx5) := hiprow(idx5) + zi;
+          end loop;
+          idx4 := idx(sz-2); idx5 := idx(sz-1); idx6 := idx(sz);
+         -- acc := acc*x(idx4);
+          pr := xr(idx4); pi := xi(idx4);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          racc := zr; iacc := zi;
+         -- h(idx2,idx5) := h(idx2,idx5) + acc*x(idx6);
+          pr := xr(idx6); pi := xi(idx6);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx5) := hrprow(idx5) + zr;
+          hiprow(idx5) := hiprow(idx5) + zi;
+         -- h(idx2,idx6) := h(idx2,idx6) + acc*x(idx5);
+          pr := xr(idx5); pi := xi(idx5);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx6) := hrprow(idx6) + zr;
+          hiprow(idx6) := hiprow(idx6) + zi;
+         -- the row with index sz-2 has a general formula
+          idx3 := sz-4;
+         -- acc := cff*fwd(idx3);
+          pr := rfwd(idx3); pi := ifwd(idx3);
+          racc := rcff*pr - icff*pi; iacc := rcff*pi + icff*pr;
+         -- h(idx4,idx5) := h(idx4,idx5) + acc*x(idx6);
+          pr := xr(idx6); pi := xi(idx6);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow := hrp(idx4); hiprow := hip(idx4);
+          hrprow(idx5) := hrprow(idx5) + zr;
+          hiprow(idx5) := hiprow(idx5) + zi;
+         -- h(idx4,idx6) := h(idx4,idx6) + acc*x(idx5);
+          pr := xr(idx5); pi := xi(idx5);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          hrprow(idx6) := hrprow(idx6) + zr;
+          hiprow(idx6) := hiprow(idx6) + zi;
+          for rw in 3..sz-3 loop  -- row rw starts with fwd(rw-2)
+            idx1 := idx(rw); idx2 := idx(rw+1);
+           -- acc := cff*fwd(rw-2);
+            pr := rfwd(rw-2); pi := ifwd(rw-2);
+            racc := rcff*pr - icff*pi; iacc := rcff*pi + icff*pr;
+           -- h(idx1,idx2) := h(idx1,idx2) + acc*bck(sz-rw-2);
+            hrprow := hrp(idx1); hiprow := hip(idx1);
+            pr := rbck(sz-rw-2); pi := ibck(sz-rw-2);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            hrprow(idx2) := hrprow(idx2) + zr;
+            hiprow(idx2) := hiprow(idx2) + zi;
+            for k in rw+2..sz-2 loop
+              idx2 := idx(k-1); idx3 := idx(k); idx4 := sz-k-1;
+             -- acc := acc*x(idx2);
+              pr := xr(idx2); pi := xi(idx2);
+              zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+              racc := zr; iacc := zi;
+             -- h(idx1,idx3) := h(idx1,idx3) + acc*bck(idx4);
+              pr := rbck(idx4); pi := ibck(idx4);
+              zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+              hrprow(idx3) := hrprow(idx3) + zr;
+              hiprow(idx3) := hiprow(idx3) + zi;
+            end loop;
+            idx4 := idx(sz-2); idx5 := idx(sz-1); idx6 := idx(sz);
+           -- acc := acc*x(idx4);
+            pr := xr(idx4); pi := xi(idx4);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            racc := zr; iacc := zi;
+           -- h(idx1,idx5) := h(idx1,idx5) + acc*x(idx6);
+            hrprow := hrp(idx1); hiprow := hip(idx1);
+            pr := xr(idx6); pi := xi(idx6);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            hrprow(idx5) := hrprow(idx5) + zr;
+            hiprow(idx5) := hiprow(idx5) + zi;
+           -- h(idx1,idx6) := h(idx1,idx6) + acc*x(idx5);
+            pr := xr(idx5); pi := xi(idx5);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+            hrprow(idx6) := hrprow(idx6) + zr;
+            hiprow(idx6) := hiprow(idx6) + zi;
+          end loop;
+        end if;
+      end if;
+    end if;
+  end Indexed_Speel;
+
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_VecVecs.VecVec;
+                rcf : in Standard_Floating_Vectors.Vector;
+                icf : in Standard_Floating_Vectors.Vector;
+                rcst,icst : in double_float;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rfwd : in Standard_Floating_Vectors.Link_to_Vector;
+                ifwd : in Standard_Floating_Vectors.Link_to_Vector;
+                rbck : in Standard_Floating_Vectors.Link_to_Vector;
+                ibck : in Standard_Floating_Vectors.Link_to_Vector;
+                rcrs : in Standard_Floating_Vectors.Link_to_Vector;
+                icrs : in Standard_Floating_Vectors.Link_to_Vector;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec ) is
+
+    dim : constant integer32 := xr'last;
+    idk : Standard_Integer_Vectors.Link_to_Vector;
+    idx1 : integer32;
+    rkcff,ikcff : double_float;
+    zr,zi,pr,pi : double_float;
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+
+    use Standard_Integer_Vectors;
+
+  begin
+    for i in 1..dim loop
+      hrprow := hrp(i); hiprow := hip(i);
+      for j in 1..dim loop
+        hrprow(j) := 0.0; hiprow(j) := 0.0;
+      end loop;
+    end loop;
+    ryd(0) := rcst; iyd(0) := icst;
+    for k in idx'range loop
+      idk := idx(k);
+      if idk /= null then
+        rkcff := rcf(k); ikcff := icf(k);
+        if idk'last = 1 then
+          idx1 := idk(1);
+         -- yd(0) := yd(0) + cff*x(idx1);
+          pr := xr(idx1); pi := xi(idx1);
+          zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+          ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+         -- yd(idx1) := yd(idx1) + cff;
+          ryd(idx1) := ryd(idx1) + rkcff; iyd(idx1) := iyd(idx1) + ikcff;
+        else
+          Indexed_Speel(idk.all,rkcff,ikcff,xr,xi,ryd,iyd,
+                        rfwd,ifwd,rbck,ibck,rcrs,icrs,hrp,hip);
+        end if;
+      end if;
+    end loop;
+    for i in 2..dim loop
+      hrprow := hrp(i); hiprow := hip(i);
+      for j in 1..(i-1) loop
+        hrprow(j) := hrp(j)(i); hiprow(j) := hip(j)(i);
+      end loop;
+    end loop;
+  end Indexed_Speel;
+
+  procedure Indexed_Speel
+              ( idx : in Standard_Integer_VecVecs.VecVec;
+                rcf : in Standard_Floating_Vectors.Vector;
+                icf : in Standard_Floating_Vectors.Vector;
+                rcst,icst : in double_float;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rfwd : in Standard_Floating_Vectors.Link_to_Vector;
+                ifwd : in Standard_Floating_Vectors.Link_to_Vector;
+                rbck : in Standard_Floating_Vectors.Link_to_Vector;
+                ibck : in Standard_Floating_Vectors.Link_to_Vector;
+                rcrs : in Standard_Floating_Vectors.Link_to_Vector;
+                icrs : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     idk : Standard_Integer_Vectors.Link_to_Vector;
     idx1,idx2 : integer32;
@@ -210,7 +565,7 @@ package body Standard_Coefficient_Circuits is
         end if;
       end if;
     end loop;
-  end Speel;
+  end Indexed_Speel;
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
                     rcf : in Standard_Floating_Vectors.Vector;
@@ -362,6 +717,94 @@ package body Standard_Coefficient_Circuits is
           end if; -- if fac(k) is null
         end if; -- if idx(k)'last < idx(k)'first
       end if; -- if idx(k) is null
+    end loop;
+  end Speel;
+
+  procedure Speel ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                    idx : in Standard_Integer_Vectors.Vector;
+                    rcff,icff : in double_float;
+                    xr : in Standard_Floating_Vectors.Link_to_Vector;
+                    xi : in Standard_Floating_Vectors.Link_to_Vector;
+                    ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                    iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rfwd : in Standard_Floating_Vectors.Link_to_Vector;
+                    ifwd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rbck : in Standard_Floating_Vectors.Link_to_Vector;
+                    ibck : in Standard_Floating_Vectors.Link_to_Vector;
+                    rcrs : in Standard_Floating_Vectors.Link_to_Vector;
+                    icrs : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_VecVecs.VecVec;
+                    ipwt : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    null;
+  end Speel;
+
+  procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    rcf : in Standard_Floating_Vectors.Vector;
+                    icf : in Standard_Floating_Vectors.Vector;
+                    rcst,icst : in double_float;
+                    xr : in Standard_Floating_Vectors.Link_to_Vector;
+                    xi : in Standard_Floating_Vectors.Link_to_Vector;
+                    ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                    iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rfwd : in Standard_Floating_Vectors.Link_to_Vector;
+                    ifwd : in Standard_Floating_Vectors.Link_to_Vector;
+                    rbck : in Standard_Floating_Vectors.Link_to_Vector;
+                    ibck : in Standard_Floating_Vectors.Link_to_Vector;
+                    rcrs : in Standard_Floating_Vectors.Link_to_Vector;
+                    icrs : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_VecVecs.VecVec;
+                    ipwt : in Standard_Floating_VecVecs.VecVec;
+                    hrp : in Standard_Floating_VecVecs.VecVec;
+                    hip : in Standard_Floating_VecVecs.VecVec ) is
+
+    dim : constant integer32 := xr'last;
+    idx1 : integer32;
+    rkcff,ikcff : double_float;
+    zr,zi,pr,pi : double_float;
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+
+    use Standard_Integer_Vectors;
+
+  begin
+    for i in 1..dim loop
+      hrprow := hrp(i); hiprow := hip(i);
+      for j in 1..dim loop
+        hrprow(j) := 0.0; hiprow(j) := 0.0;
+      end loop;
+    end loop;
+    ryd(0) := rcst; iyd(0) := icst;
+    for k in xps'range loop
+      declare
+        xpk : constant Standard_Integer_Vectors.Vector := xps(k).all;
+        idk : constant Standard_Integer_Vectors.Vector := idx(k).all;
+        fck : constant Standard_Integer_Vectors.Link_to_Vector := fac(k);
+      begin
+        rkcff := rcf(k); ikcff := icf(k);
+        if fck = null then
+          if idk'last = 1 then
+            idx1 := idk(1);
+           -- yd(0) := yd(0) + kcff*x(idx1);
+            pr := xr(idx1); pi := xi(idx1);
+            zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+            ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+           -- yd(idx1) := yd(idx1) + kcff;
+            ryd(idx1) := ryd(idx1) + rkcff; iyd(idx1) := iyd(idx1) + ikcff;
+          else
+            Indexed_Speel(idk,rkcff,ikcff,xr,xi,ryd,iyd,rfwd,ifwd,
+                          rbck,ibck,rcrs,icrs,hrp,hip);
+          end if;
+        else
+          Speel(xps(k),fck,idk,rkcff,ikcff,xr,xi,ryd,iyd,
+                rfwd,ifwd,rbck,ibck,rcrs,icrs,rpwt,ipwt);
+        end if;
+      end;
+    end loop;
+    for i in 2..dim loop
+      hrprow := hrp(i); hiprow := hip(i);
+      for j in 1..(i-1) loop
+        hrprow(j) := hrp(j)(i); hiprow(j) := hip(j)(i);
+      end loop;
     end loop;
   end Speel;
 

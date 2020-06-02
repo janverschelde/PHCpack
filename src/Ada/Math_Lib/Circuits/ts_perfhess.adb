@@ -18,6 +18,8 @@ with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
+with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
@@ -58,7 +60,9 @@ with QuadDobl_Complex_Poly_Systems_io;    use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
 with Evaluation_Differentiation_Errors;
+with Standard_Vector_Splitters;
 with Standard_Complex_Circuits;
+with Standard_Coefficient_Circuits;
 with DoblDobl_Complex_Circuits;
 with QuadDobl_Complex_Circuits;
 with Standard_Circuit_Makers;
@@ -732,6 +736,55 @@ procedure ts_perfhess is
     put("Sum of errors :"); put(err,3); new_line;
   end Test_Product;
 
+  function Split ( c : Standard_Complex_Circuits.Circuit )
+                 return Standard_Coefficient_Circuits.Circuit is
+
+  -- DESCRIPTION :
+  --   Splits the data in the circuit c 
+  --   and returns the corresponding coefficient circuit.
+
+    res : Standard_Coefficient_Circuits.Circuit(c.nbr);
+    fwd : constant Standard_Floating_Vectors.Vector(1..c.dim-1)
+        := (1..c.dim-1 => 0.0);
+    bck : constant Standard_Floating_Vectors.Vector(1..c.dim-2)
+        := (1..c.dim-2 => 0.0);
+    crs : constant Standard_Floating_Vectors.Vector(1..c.dim-2)
+        := (1..c.dim-2 => 0.0);
+ 
+  begin
+    res.dim := c.dim;
+    res.xps := c.xps;
+    res.idx := c.idx;
+    res.fac := c.fac;
+    Standard_Vector_Splitters.Split_Complex(c.cff,res.rcf,res.icf);
+    res.rcst := Standard_Complex_Numbers.REAL_PART(c.cst);
+    res.icst := Standard_Complex_Numbers.IMAG_PART(c.cst);
+    res.rfwd := new Standard_Floating_Vectors.Vector'(fwd);
+    res.ifwd := new Standard_Floating_Vectors.Vector'(fwd);
+    res.rbck := new Standard_Floating_Vectors.Vector'(bck);
+    res.ibck := new Standard_Floating_Vectors.Vector'(bck);
+    res.rcrs := new Standard_Floating_Vectors.Vector'(crs);
+    res.icrs := new Standard_Floating_Vectors.Vector'(crs);
+    return res;
+  end Split;
+
+  function Merge ( hrp,hip : Standard_Floating_VecVecs.VecVec )
+                 return Standard_Complex_Matrices.Matrix is
+
+    dim : constant integer32 := hrp'last;
+    res : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for i in 1..dim loop
+      hrprow := hrp(i); hiprow := hip(i);
+      for j in 1..dim loop
+        res(i,j) := Standard_Complex_Numbers.Create(hrprow(j),hiprow(j));
+      end loop;
+    end loop;
+    return res;
+  end Merge;
+
   procedure Test_Circuit ( dim,nbr : in integer32 ) is
 
   -- DESCRIPTION :
@@ -740,21 +793,36 @@ procedure ts_perfhess is
 
     c : constant Standard_Complex_Circuits.Circuit
       := Standard_Circuit_Makers.Random_Complex_Circuit(nbr,dim);
+    cc : constant Standard_Coefficient_Circuits.Circuit := Split(c);
     p : constant Standard_Complex_Polynomials.Poly
       := Standard_Circuit_Makers.Make_Polynomial(c,true);
     x : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
+    xrv : constant Standard_Floating_Vectors.Vector(1..dim)
+        := Standard_Vector_Splitters.Real_Part(x);
+    xiv : constant Standard_Floating_Vectors.Vector(1..dim)
+        := Standard_Vector_Splitters.Imag_Part(x);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(xrv);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(xiv);
     xv : constant Standard_Complex_Vectors.Link_to_Vector
        := new Standard_Complex_Vectors.Vector'(x);
     y : constant Standard_Complex_Vectors.Vector(0..dim)
       := (0..dim => Standard_Complex_Numbers.Create(0.0));
     yd : constant Standard_Complex_Vectors.Link_to_Vector
        := new Standard_Complex_Vectors.Vector'(y);
+    z : constant Standard_Floating_Vectors.Vector(0..dim) := (0..dim => 0.0);
+    ryd : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(z);
+    iyd : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(z);
     h0 : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
        := Standard_Circuit_Makers.Hessian(p,x);
     h1 : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
        := Algorithmic(c,x);
-    h2 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    h2,h3 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    hrp,hip : Standard_Floating_VecVecs.VecVec(1..dim);
     err : double_float;
 
   begin
@@ -767,9 +835,24 @@ procedure ts_perfhess is
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h1);
     put("Sum of errors :"); put(err,3); new_line;
     Standard_Complex_Circuits.Indexed_Speel(c,xv,yd,h2);
+    for k in 1..dim loop
+      declare
+        v : constant Standard_Floating_Vectors.Vector(1..dim)
+          := (1..dim => 0.0);
+      begin
+        hrp(k) := new Standard_Floating_Vectors.Vector'(v);
+        hip(k) := new Standard_Floating_Vectors.Vector'(v);
+      end;
+    end loop;
     put_line("The Hessian recomputed on a circuit :");
     Standard_Circuit_Makers.Write_Matrix(h2);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
+    put("Sum of errors :"); put(err,3); new_line;
+    Standard_Coefficient_Circuits.Indexed_Speel(cc,xr,xi,ryd,iyd,hrp,hip);
+    put_line("The Hessian recomputed on a coefficient circuit :");
+    h3 := Merge(hrp,hip);
+    Standard_Circuit_Makers.Write_Matrix(h3);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h3);
     put("Sum of errors :"); put(err,3); new_line;
   end Test_Circuit;
 
@@ -1082,7 +1165,6 @@ procedure ts_perfhess is
     end loop;
     put("Sum of all errors : "); put(sumerr,3); new_line;
   end DoblDobl_Run_EvalDiff2;
-
 
   procedure QuadDobl_Run_EvalDiff2
               ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
