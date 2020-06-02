@@ -841,8 +841,73 @@ package body Standard_Coefficient_Circuits is
                     icrs : in Standard_Floating_Vectors.Link_to_Vector;
                     rpwt : in Standard_Floating_VecVecs.VecVec;
                     ipwt : in Standard_Floating_VecVecs.VecVec ) is
+
+    idx1,idx2 : integer32;
+    racc,iacc,factor : double_float;
+    zr,zi,pr,pi : double_float;
+
   begin
-    null;
+    idx1 := idx(1);
+    if idx'last = 1 then
+      Multiply_Factor(xps,fac,xr,xi,rcff,icff,rpwt,ipwt,racc,iacc);
+     -- yd(0) := yd(0) + acc*x(idx1);
+      pr := xr(idx1); pi := xi(idx1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+     -- yd(idx1) := yd(idx1) + factor*acc;
+      factor := Create(xps(idx1));
+      ryd(idx1) := ryd(idx1) + factor*racc;
+      iyd(idx1) := iyd(idx1) + factor*iacc;
+    else
+      Fused_Forward_Backward_Cross
+        (idx,xr,xi,rfwd,ifwd,rbck,ibck,rcrs,icrs);
+      Multiply_Factor(xps,fac,xr,xi,rcff,icff,rpwt,ipwt,racc,iacc);
+      pr := rfwd(idx'last-1); pi := ifwd(idx'last-1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      ryd(0) := ryd(0) + zr; iyd(0) := iyd(0) + zi;
+      if idx'last = 2 then
+        idx2 := idx(2);
+       -- wrk := acc*x(idx1); factor := Create(xps(idx2));
+       -- wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+        pr := xr(idx1); pi := xi(idx1);
+        zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+        factor := Create(xps(idx2));
+        ryd(idx2) := ryd(idx2) + factor*zr;
+        iyd(idx2) := iyd(idx2) + factor*zi;
+       -- wrk := acc*x(idx2); factor := Create(xps(idx1));
+       -- wrk := factor*wrk; yd(idx1) := yd(idx1) + wrk;
+        pr := xr(idx2); pi := xi(idx2);
+        zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+        factor := Create(xps(idx1));
+        ryd(idx1) := ryd(idx1) + factor*zr;
+        iyd(idx1) := iyd(idx1) + factor*zi;
+      else -- idx'last > 2
+       -- wrk := acc*bck(idx'last-2);
+        pr := rbck(idx'last-2); pi := ibck(idx'last-2);
+        zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+        factor := Create(xps(idx1));
+       -- wrk := factor*wrk; yd(idx1) := yd(idx1) + wrk;
+        ryd(idx1) := ryd(idx1) + factor*zr;
+        iyd(idx1) := iyd(idx1) + factor*zi;
+        for j in idx'first+1..idx'last-1 loop
+         -- wrk := acc*crs(j-1);
+          pr := rcrs(j-1); pi := icrs(j-1);
+          zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          idx2 := idx(j); factor := Create(xps(idx2));
+         -- wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+          ryd(idx2) := ryd(idx2) + factor*zr;
+          iyd(idx2) := iyd(idx2) + factor*zi;
+        end loop;
+       -- wrk := acc*fwd(idx'last-2);
+        idx2 := idx(idx'last);
+        pr := rfwd(idx'last-2); pi := ifwd(idx'last-2);
+        zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+        factor := Create(xps(idx2));
+       -- wrk := factor*wrk; yd(idx2) := yd(idx2) + wrk;
+        ryd(idx2) := ryd(idx2) + factor*zr;
+        iyd(idx2) := iyd(idx2) + factor*zi;
+      end if; -- if idx(k)'last is 2
+    end if; -- if idx(k)'last is 1
   end Speel;
 
   procedure Speel ( xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
@@ -913,6 +978,13 @@ package body Standard_Coefficient_Circuits is
           elsif size = 3 then -- three variable special case
             Standard_Hessian_Updaters.Speel3
               (hrp,hip,rkcff,ikcff,xpk,idk,fck.all,xr.all,xi.all,rpwt,ipwt);
+          elsif size = 4 then -- four variable special case
+            Standard_Hessian_Updaters.Speel4
+              (hrp,hip,rkcff,ikcff,xpk,idk,fck.all,xr.all,xi.all,rpwt,ipwt);
+          else
+            Standard_Hessian_Updaters.SpeelN
+              (hrp,hip,rkcff,ikcff,xpk,idk,fck.all,xr.all,xi.all,
+               rfwd,ifwd,rbck,ibck,rpwt,ipwt);
           end if;
         end if;
       end;

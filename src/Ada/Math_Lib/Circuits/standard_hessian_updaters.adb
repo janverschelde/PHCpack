@@ -377,7 +377,7 @@ package body Standard_Hessian_Updaters is
     powfac : double_float; -- multiplier factor of two powers
     pr,pi,zr,zi,racc,iacc : double_float;
     roffdiagfac,ioffdiagfac : double_float; -- common off diagonal factor
-    rondiagfac,iondiagfac : double_float;    -- common on diagonal factor
+    rondiagfac,iondiagfac : double_float;   -- common on diagonal factor
     idx1 : constant integer32 := idx(1);
     idx2 : constant integer32 := idx(2);
     idx3 : constant integer32 := idx(3);
@@ -720,6 +720,148 @@ package body Standard_Hessian_Updaters is
     end loop;
   end Speel4;
 
+  procedure Speel4 ( hrp : in Standard_Floating_VecVecs.VecVec;
+                     hip : in Standard_Floating_VecVecs.VecVec;
+                     rcff,icff : in double_float;
+                     xps : in Standard_Integer_Vectors.Vector;
+                     idx : in Standard_Integer_Vectors.Vector;
+                     fac : in Standard_Integer_Vectors.Vector;
+                     xr : in Standard_Floating_Vectors.Vector;
+                     xi : in Standard_Floating_Vectors.Vector;
+                     rpwt : in Standard_Floating_VecVecs.VecVec;
+                     ipwt : in Standard_Floating_VecVecs.VecVec ) is
+
+    m1,fidx1 : integer32;
+    powfac : double_float; -- multiplier factor of two powers
+    pr,pi,zr,zi,racc,iacc : double_float;
+    roffdiagfac,ioffdiagfac : double_float; -- common off diagonal factor
+    rondiagfac,iondiagfac : double_float;   -- common on diagonal factor
+    rfwd1,ifwd1,rbck1,ibck1 : double_float; -- forward & backward products
+    idx1 : constant integer32 := idx(1);
+    idx2 : constant integer32 := idx(2);
+    idx3 : constant integer32 := idx(3);
+    idx4 : constant integer32 := idx(4);
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+   -- offdiagfac := c; ondiagfac := c;  -- off/on diagonal factors
+    roffdiagfac := rcff; ioffdiagfac := icff;
+    rondiagfac := rcff;  iondiagfac := icff;
+    for i in fac'range loop
+      fidx1 := fac(i); m1 := xps(fidx1);
+      if m1 = 2 then
+       -- offdiagfac := offdiagfac*x(fac(i));
+        pr := xr(fidx1); pi := xi(fidx1);
+        zr := roffdiagfac*pr - ioffdiagfac*pi;
+        zi := roffdiagfac*pi + ioffdiagfac*pr;
+        roffdiagfac := zr; ioffdiagfac := zi;
+      elsif m1 = 3 then
+       -- offdiagfac := offdiagfac*(pwt(fac(i))(1));
+        pr := rpwt(fidx1)(1); pi := ipwt(fidx1)(1);
+        zr := roffdiagfac*pr - ioffdiagfac*pi;
+        zi := roffdiagfac*pi + ioffdiagfac*pr;
+        roffdiagfac := zr; ioffdiagfac := zi;
+       -- ondiagfac := ondiagfac*x(fac(i));
+        pr := xr(fidx1); pi := xi(fidx1);
+        zr := rondiagfac*pr - iondiagfac*pi;
+        zi := rondiagfac*pi + iondiagfac*pr;
+        rondiagfac := zr; iondiagfac := zi;
+      else
+       -- offdiagfac := offdiagfac*(pwt(fac(i))(m1-2));
+        pr := rpwt(fidx1)(m1-2); pi := ipwt(fidx1)(m1-2);
+        zr := roffdiagfac*pr - ioffdiagfac*pi;
+        zi := roffdiagfac*pi + ioffdiagfac*pr;
+        roffdiagfac := zr; ioffdiagfac := zi;
+       -- ondiagfac := ondiagfac*(pwt(fac(i))(m1-3));
+        pr := rpwt(fidx1)(m1-3); pi := ipwt(fidx1)(m1-3);
+        zr := rondiagfac*pr - iondiagfac*pi;
+        zi := rondiagfac*pi + iondiagfac*pr;
+        rondiagfac := zr; iondiagfac := zi;
+      end if;
+    end loop;
+   -- the off diagonal elements use forward and backward products
+   -- fwd1 := x(idx(1))*x(idx(2));
+    pr := xr(idx1); pi := xi(idx1); zr := xr(idx2); zi := xi(idx2);
+    rfwd1 := pr*zr - pi*zi; ifwd1 := pr*zi + pi*zr;
+   -- bck1 := x(idx(4))*x(idx(3));
+    pr := xr(idx4); pi := xi(idx4); zr := xr(idx3); zi := xi(idx3);
+    rbck1 := pr*zr - pi*zi; ibck1 := pr*zi + pi*zr;
+   -- the last element is a copy of fwd1, with a multiplier factor
+    powfac := double_float(xps(idx3)*xps(idx4));
+   -- H(idx(3),idx(4)) := H(idx(3),idx(4)) + offdiagfac*powfac*fwd1;
+    hrprow := hrp(idx3); hiprow := hip(idx3);
+    zr := roffdiagfac*rfwd1 - ioffdiagfac*ifwd1;
+    zi := roffdiagfac*ifwd1 + ioffdiagfac*rfwd1;
+    hrprow(idx4) := hrprow(idx4) + powfac*zr;
+    hiprow(idx4) := hiprow(idx4) + powfac*zi;
+   -- the first element is a copy of bck(1), with a multiplier factor
+    powfac := double_float(xps(idx1)*xps(idx2));
+   -- H(idx(1),idx(2)) := H(idx(1),idx(2)) + offdiagfac*powfac*bck1;
+    hrprow := hrp(idx1); hiprow := hip(idx1);
+    zr := roffdiagfac*rbck1 - ioffdiagfac*ibck1;
+    zi := roffdiagfac*ibck1 + ioffdiagfac*rbck1;
+    hrprow(idx2) := hrprow(idx2) + powfac*zr;
+    hiprow(idx2) := hiprow(idx2) + powfac*zi;
+   -- the other off diagonal elements
+   -- acc := offdiagfac*x(idx(2));
+    pr := xr(idx2); pi := xi(idx2);
+    racc := roffdiagfac*pr - ioffdiagfac*pi;
+    iacc := roffdiagfac*pi + ioffdiagfac*pr;
+    powfac := double_float(xps(idx1)*xps(idx3));
+   -- H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*powfac*x(idx(4));
+    pr := xr(idx4); pi := xi(idx4);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    hrprow(idx3) := hrprow(idx3) + powfac*zr;
+    hiprow(idx3) := hiprow(idx3) + powfac*zi;
+    powfac := double_float(xps(idx1)*xps(idx4));
+   -- H(idx(1),idx(4)) := H(idx(1),idx(4)) + acc*powfac*x(idx(3));
+    pr := xr(idx3); pi := xi(idx3);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    hrprow(idx4) := hrprow(idx4) + powfac*zr;
+    hiprow(idx4) := hiprow(idx4) + powfac*zi;
+   -- acc := offdiagfac*x(idx(1));
+    pr := xr(idx1); pi := xi(idx1);
+    racc := roffdiagfac*pr - ioffdiagfac*pi;
+    iacc := roffdiagfac*pi + ioffdiagfac*pr;
+    powfac := double_float(xps(idx2)*xps(idx3));
+   -- H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*powfac*x(idx(4));
+    pr := xr(idx4); pi := xi(idx4);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    hrprow := hrp(idx2); hiprow := hip(idx2);
+    hrprow(idx3) := hrprow(idx3) + powfac*zr;
+    hiprow(idx3) := hiprow(idx3) + powfac*zi;
+    powfac := double_float(xps(idx2)*xps(idx4));
+   -- H(idx(2),idx(4)) := H(idx(2),idx(4)) + acc*powfac*x(idx(3));
+    pr := xr(idx3); pi := xi(idx3);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    hrprow(idx4) := hrprow(idx4) + powfac*zr;
+    hiprow(idx4) := hiprow(idx4) + powfac*zi;
+   -- compute the diagonal elements
+    for k in fac'range loop
+      fidx1 := fac(k); m1 := xps(fidx1); powfac := double_float(m1*(m1-1));
+     -- acc := powfac*ondiagfac; -- acc is the cofactor
+      racc := powfac*rondiagfac; iacc := powfac*iondiagfac;
+      for i in idx'range loop
+        if idx(i) /= fidx1 then -- skip the current factor
+          if xps(idx(i)) = 1  then
+           -- acc := acc*x(idx(i));
+            pr := xr(idx(i)); pi := xi(idx(i));
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          else
+           -- acc := acc*(pwt(idx(i))(1));
+            pr := rpwt(idx(i))(1); pi := ipwt(idx(i))(1);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          end if;
+          racc := zr; iacc := zi;
+        end if;
+      end loop;
+     -- H(fac(k),fac(k)) := H(fac(k),fac(k)) + acc;
+      hrprow := hrp(fidx1); hiprow := hip(fidx1);
+      hrprow(fidx1) := hrprow(fidx1) + racc;
+      hiprow(fidx1) := hiprow(fidx1) + iacc;
+    end loop;
+  end Speel4;
+
   procedure SpeelN ( H : in out Standard_Complex_Matrices.Matrix;
                      c : in Complex_Number;
                      xps : in Standard_Integer_Vectors.Vector;
@@ -824,6 +966,266 @@ package body Standard_Hessian_Updaters is
    -- the above loop for the diagonal elements applies a loop
    -- for the cofactor, a similar triple loop with forward, backward,
    -- and cross porducts is possible for all fac'last cofactors
+  end SpeelN;
+
+  procedure SpeelN ( hrp : in Standard_Floating_VecVecs.VecVec;
+                     hip : in Standard_Floating_VecVecs.VecVec;
+                     rcff,icff : in double_float;
+                     xps : in Standard_Integer_Vectors.Vector;
+                     idx : in Standard_Integer_Vectors.Vector;
+                     fac : in Standard_Integer_Vectors.Vector;
+                     xr : in Standard_Floating_Vectors.Vector;
+                     xi : in Standard_Floating_Vectors.Vector;
+                     rfwd : in Standard_Floating_Vectors.Link_to_Vector;
+                     ifwd : in Standard_Floating_Vectors.Link_to_Vector;
+                     rbck : in Standard_Floating_Vectors.Link_to_Vector;
+                     ibck : in Standard_Floating_Vectors.Link_to_Vector;
+                     rpwt : in Standard_Floating_VecVecs.VecVec;
+                     ipwt : in Standard_Floating_VecVecs.VecVec ) is
+
+    sz : constant integer32 := idx'last;
+    m1,idx1,fidx1 : integer32;
+    powfac : double_float; -- multiplier factor of two powers
+    pr,pi,zr,zi,racc,iacc : double_float;
+    roffdiagfac,ioffdiagfac : double_float; -- common off diagonal factor
+    rondiagfac,iondiagfac : double_float;   -- common on diagonal factor
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+   -- offdiagfac := c; ondiagfac := c;  -- off/on diagonal factors
+    roffdiagfac := rcff; ioffdiagfac := icff;
+    rondiagfac := rcff;  iondiagfac := icff;
+    for i in fac'range loop
+      fidx1 := fac(i); m1 := xps(fidx1);
+      if m1 = 2 then
+       -- offdiagfac := offdiagfac*x(fac(i));
+        pr := xr(fidx1); pi := xi(fidx1);
+        zr := roffdiagfac*pr - ioffdiagfac*pi;
+        zi := roffdiagfac*pi + ioffdiagfac*pr;
+        roffdiagfac := zr; ioffdiagfac := zi;
+      elsif m1 = 3 then
+       -- offdiagfac := offdiagfac*(pwt(fac(i))(1));
+        pr := rpwt(fidx1)(1); pi := ipwt(fidx1)(1);
+        zr := roffdiagfac*pr - ioffdiagfac*pi;
+        zi := roffdiagfac*pi + ioffdiagfac*pr;
+        roffdiagfac := zr; ioffdiagfac := zi;
+       -- ondiagfac := ondiagfac*x(fac(i));
+        pr := xr(fidx1); pi := xi(fidx1);
+        zr := rondiagfac*pr - iondiagfac*pi;
+        zi := rondiagfac*pi + iondiagfac*pr;
+        rondiagfac := zr; iondiagfac := zi;
+      else
+       -- offdiagfac := offdiagfac*(pwt(fac(i))(m1-2));
+        pr := rpwt(fidx1)(m1-2); pi := ipwt(fidx1)(m1-2);
+        zr := roffdiagfac*pr - ioffdiagfac*pi;
+        zi := roffdiagfac*pi + ioffdiagfac*pr;
+        roffdiagfac := zr; ioffdiagfac := zi;
+       -- ondiagfac := ondiagfac*(pwt(fac(i))(m1-3));
+        pr := rpwt(fidx1)(m1-3); pi := ipwt(fidx1)(m1-3);
+        zr := rondiagfac*pr - iondiagfac*pi;
+        zi := rondiagfac*pi + iondiagfac*pr;
+        rondiagfac := zr; iondiagfac := zi;
+      end if;
+    end loop;
+   -- the off diagonal elements use forward and backward products
+   -- last element is copy of fwd(sz-3), multiplied with c
+    powfac := double_float(xps(idx(sz-1))*xps(idx(sz)));
+   -- H(idx(sz-1),idx(sz))
+   --   := H(idx(sz-1),idx(sz)) + offdiagfac*powfac*fwd(sz-3);
+    pr := rfwd(sz-3); pi := ifwd(sz-3);
+    zr := roffdiagfac*pr - ioffdiagfac*pi;
+    zi := roffdiagfac*pi + ioffdiagfac*pr;
+    idx1 := idx(sz-1); hrprow := hrp(idx1); hiprow := hip(idx1);
+    idx1 := idx(sz);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+   -- first element is copy of bck(sz-3), multiplied with c
+    powfac := double_float(xps(idx(1))*xps(idx(2)));
+   -- H(idx(1),idx(2)) := H(idx(1),idx(2)) + offdiagfac*powfac*bck(sz-3);
+    pr := rbck(sz-3); pi := ibck(sz-3);
+    zr := roffdiagfac*pr - ioffdiagfac*pi;
+    zi := roffdiagfac*pi + ioffdiagfac*pr;
+    idx1 := idx(1); hrprow := hrp(idx1); hiprow := hip(idx1);
+    idx1 := idx(2);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+   -- first row is special, starts with x(idx(2)) after diagonal
+   -- acc := offdiagfac*x(idx(2));
+    idx1 := idx(2); pr := xr(idx1); pi := xi(idx1);
+    racc := roffdiagfac*pr - ioffdiagfac*pi;
+    iacc := roffdiagfac*pi + ioffdiagfac*pr;
+    powfac := double_float(xps(idx(1))*xps(idx(3)));
+   -- H(idx(1),idx(3)) := H(idx(1),idx(3)) + acc*powfac*bck(sz-4);
+    pr := rbck(sz-4); pi := ibck(sz-4);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+   -- idx1 := idx(1); hrprow := hrp(idx1); hiprow := hip(idx1);
+    idx1 := idx(3);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    for k in 4..sz-2 loop
+     -- acc := acc*x(idx(k-1));
+      idx1 := idx(k-1); pr := xr(idx1); pi := xi(idx1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      racc := zr; iacc := zi;
+      powfac := double_float(xps(idx(1))*xps(idx(k)));
+     -- H(idx(1),idx(k)) := H(idx(1),idx(k)) + acc*powfac*bck(sz-k-1);
+      pr := rbck(sz-k-1); pi := ibck(sz-k-1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      idx1 := idx(k);
+      hrprow(idx1) := hrprow(idx1) + powfac*zr;
+      hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    end loop;
+   -- acc := acc*x(idx(sz-2));
+    idx1 := idx(sz-2); pr := xr(idx1); pi := xi(idx1);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    racc := zr; iacc := zi;
+    powfac := double_float(xps(idx(1))*xps(idx(sz-1)));
+   -- H(idx(1),idx(sz-1)) := H(idx(1),idx(sz-1)) + acc*powfac*x(idx(sz));
+    idx1 := idx(sz); pr := xr(idx1); pi := xi(idx1);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    idx1 := idx(sz-1);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    powfac := double_float(xps(idx(1))*xps(idx(sz)));
+   -- H(idx(1),idx(sz)) := H(idx(1),idx(sz)) + acc*powfac*x(idx(sz-1));
+    idx1 := idx(sz-1); pr := xr(idx1); pi := xi(idx1);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    idx1 := idx(sz);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+   -- second row is special, starts with x(idx(1)) after diagonal
+   -- acc := offdiagfac*x(idx(1));
+    idx1 := idx(1); pr := xr(idx1); pi := xi(idx1);
+    racc := roffdiagfac*pr - ioffdiagfac*pi;
+    iacc := roffdiagfac*pi + ioffdiagfac*pr;
+    powfac := double_float(xps(idx(2))*xps(idx(3)));
+   -- H(idx(2),idx(3)) := H(idx(2),idx(3)) + acc*powfac*bck(sz-4);
+    pr := rbck(sz-4); pi := ibck(sz-4);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    idx1 := idx(2); hrprow := hrp(idx1); hiprow := hip(idx1);
+    idx1 := idx(3);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    for k in 4..sz-2 loop
+     -- acc := acc*x(idx(k-1));
+      idx1 := idx(k-1); pr := xr(idx1); pi := xi(idx1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      racc := zr; iacc := zi;
+      powfac := double_float(xps(idx(2))*xps(idx(k)));
+     -- H(idx(2),idx(k)) := H(idx(2),idx(k)) + acc*powfac*bck(sz-k-1);
+      pr := rbck(sz-k-1); pi := ibck(sz-k-1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      idx1 := idx(k);
+      hrprow(idx1) := hrprow(idx1) + powfac*zr;
+      hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    end loop;
+   -- acc := acc*x(idx(sz-2));
+    idx1 := idx(sz-2); pr := xr(idx1); pi := xi(idx1);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    racc := zr; iacc := zi;
+    powfac := double_float(xps(idx(2))*xps(idx(sz-1)));
+   -- H(idx(2),idx(sz-1)) := H(idx(2),idx(sz-1)) + acc*powfac*x(idx(sz));
+    idx1 := idx(sz); pr := xr(idx1); pi := xi(idx1);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    idx1 := idx(sz-1);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    powfac := double_float(xps(idx(2))*xps(idx(sz)));
+   -- H(idx(2),idx(sz)) := H(idx(2),idx(sz)) + acc*powfac*x(idx(sz-1));
+    idx1 := idx(sz-1); pr := xr(idx1); pi := xi(idx1);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    idx1 := idx(sz);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+   -- the row with index sz-2 has a general formula
+   -- acc := offdiagfac*fwd(sz-4);
+    pr := rfwd(sz-4); pi := ifwd(sz-4);
+    racc := roffdiagfac*pr - ioffdiagfac*pi;
+    iacc := roffdiagfac*pi + ioffdiagfac*pr;
+    powfac := double_float(xps(idx(sz-2))*xps(idx(sz-1)));
+   -- H(idx(sz-2),idx(sz-1)) := H(idx(sz-2),idx(sz-1)) + acc*powfac*x(idx(sz));
+    idx1 := idx(sz); pr := xr(idx1); pi := xi(idx1);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    idx1 := idx(sz-2); hrprow := hrp(idx1); hiprow := hip(idx1);
+    idx1 := idx(sz-1);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    powfac := double_float(xps(idx(sz-2))*xps(idx(sz)));
+   -- H(idx(sz-2),idx(sz)) := H(idx(sz-2),idx(sz)) + acc*powfac*x(idx(sz-1));
+    idx1 := idx(sz-1); pr := xr(idx1); pi := xi(idx1);
+    zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+    idx1 := idx(sz);
+    hrprow(idx1) := hrprow(idx1) + powfac*zr;
+    hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    for rw in 3..sz-3 loop  -- row rw starts with fwd(rw-2)
+     -- acc := offdiagfac*fwd(rw-2);
+      pr := rfwd(rw-2); pi := ifwd(rw-2);
+      racc := roffdiagfac*pr - ioffdiagfac*pi;
+      iacc := roffdiagfac*pi + ioffdiagfac*pr;
+      powfac := double_float(xps(idx(rw))*xps(idx(rw+1)));
+     -- H(idx(rw),idx(rw+1)) := H(idx(rw),idx(rw+1)) + acc*powfac*bck(sz-rw-2);
+      pr := rbck(sz-rw-2); pi := ibck(sz-rw-2);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      idx1 := idx(rw); hrprow := hrp(idx1); hiprow := hip(idx1);
+      idx1 := idx(rw+1);
+      hrprow(idx1) := hrprow(idx1) + powfac*zr;
+      hiprow(idx1) := hiprow(idx1) + powfac*zi;
+      for k in rw+2..sz-2 loop
+       -- acc := acc*x(idx(k-1));
+        idx1 := idx(k-1); pr := xr(idx1); pi := xi(idx1);
+        zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+        racc := zr; iacc := zi;
+        powfac := double_float(xps(idx(rw))*xps(idx(k)));
+       -- H(idx(rw),idx(k)) := H(idx(rw),idx(k)) + acc*powfac*bck(sz-k-1);
+        pr := rbck(sz-k-1); pi := ibck(sz-k-1);
+        zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+        idx1 := idx(k);
+        hrprow(idx1) := hrprow(idx1) + powfac*zr;
+        hiprow(idx1) := hiprow(idx1) + powfac*zi;
+      end loop;
+     -- acc := acc*x(idx(sz-2));
+      idx1 := idx(sz-2); pr := xr(idx1); pi := xi(idx1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      racc := zr; iacc := zi;
+      powfac := double_float(xps(idx(rw))*xps(idx(sz-1)));
+     -- H(idx(rw),idx(sz-1)) := H(idx(rw),idx(sz-1)) + acc*powfac*x(idx(sz));
+      idx1 := idx(sz); pr := xr(idx1); pi := xi(idx1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      idx1 := idx(sz-1);
+      hrprow(idx1) := hrprow(idx1) + powfac*zr;
+      hiprow(idx1) := hiprow(idx1) + powfac*zi;
+      powfac := double_float(xps(idx(rw))*xps(idx(sz)));
+     -- H(idx(rw),idx(sz)) := H(idx(rw),idx(sz)) + acc*powfac*x(idx(sz-1));
+      idx1 := idx(sz-1); pr := xr(idx1); pi := xi(idx1);
+      zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+      idx1 := idx(sz);
+      hrprow(idx1) := hrprow(idx1) + powfac*zr;
+      hiprow(idx1) := hiprow(idx1) + powfac*zi;
+    end loop;
+   -- compute the diagonal elements
+    for k in fac'range loop
+      fidx1 := fac(k); m1 := xps(fidx1); powfac := double_float(m1*(m1-1));
+     -- acc := powfac*ondiagfac; -- acc is the cofactor
+      racc := powfac*rondiagfac; iacc := powfac*iondiagfac;
+      for i in idx'range loop
+        if idx(i) /= fidx1 then -- skip the current factor
+          if xps(idx(i)) = 1  then
+           -- acc := acc*x(idx(i));
+            pr := xr(idx(i)); pi := xi(idx(i));
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          else
+           -- acc := acc*(pwt(idx(i))(1));
+            pr := rpwt(idx(i))(1); pi := ipwt(idx(i))(1);
+            zr := racc*pr - iacc*pi; zi := racc*pi + iacc*pr;
+          end if;
+          racc := zr; iacc := zi;
+        end if;
+      end loop;
+     -- H(fac(k),fac(k)) := H(fac(k),fac(k)) + acc;
+      hrprow := hrp(fidx1); hiprow := hip(fidx1);
+      hrprow(fidx1) := hrprow(fidx1) + racc;
+      hiprow(fidx1) := hiprow(fidx1) + iacc;
+    end loop;
   end SpeelN;
 
 end Standard_Hessian_Updaters;

@@ -891,6 +891,7 @@ procedure ts_perfhess is
         := new Standard_Floating_Vectors.Vector'(zyd);
     iyd : constant Standard_Floating_Vectors.Link_to_Vector
         := new Standard_Floating_Vectors.Vector'(zyd);
+    gyd : Standard_Complex_Vectors.Vector(1..dim);
     h2,h3 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     hrp,hip : Standard_Floating_VecVecs.VecVec(1..dim);
     err : double_float;
@@ -930,6 +931,13 @@ procedure ts_perfhess is
       g := Standard_Circuit_Makers.Gradient(p,x);
       put_line("The symbolically computed gradient :"); put_line(g);
       err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,yd(1..dim));
+      put("Sum of errors :"); put(err,3); new_line;
+      for k in 1..dim loop
+        gyd(k) := Standard_Complex_Numbers.Create(ryd(k),iyd(k));
+      end loop;
+      put_line("The recomputed gradient on a coefficient circuit :");
+      put_line(gyd);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(g,gyd);
       put("Sum of errors :"); put(err,3); new_line;
       z := Standard_Complex_Poly_Functions.Eval(p,x);
       put_line("The symbolically computed function value :");
