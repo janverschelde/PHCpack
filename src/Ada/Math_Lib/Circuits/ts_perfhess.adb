@@ -835,19 +835,11 @@ procedure ts_perfhess is
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h1);
     put("Sum of errors :"); put(err,3); new_line;
     Standard_Complex_Circuits.Indexed_Speel(c,xv,yd,h2);
-    for k in 1..dim loop
-      declare
-        v : constant Standard_Floating_Vectors.Vector(1..dim)
-          := (1..dim => 0.0);
-      begin
-        hrp(k) := new Standard_Floating_Vectors.Vector'(v);
-        hip(k) := new Standard_Floating_Vectors.Vector'(v);
-      end;
-    end loop;
     put_line("The Hessian recomputed on a circuit :");
     Standard_Circuit_Makers.Write_Matrix(h2);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
     put("Sum of errors :"); put(err,3); new_line;
+    Standard_Coefficient_Circuits.Allocate_Hessian_Space(dim,hrp,hip);
     Standard_Coefficient_Circuits.Indexed_Speel(cc,xr,xi,ryd,iyd,hrp,hip);
     put_line("The Hessian recomputed on a coefficient circuit :");
     h3 := Merge(hrp,hip);
@@ -865,25 +857,42 @@ procedure ts_perfhess is
 
     c : constant Standard_Complex_Circuits.Circuit
       := Standard_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
+    cc : constant Standard_Coefficient_Circuits.Circuit := Split(c);
     p : constant Standard_Complex_Polynomials.Poly
       := Standard_Circuit_Makers.Make_Polynomial(c,false);
     x : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
     xv : constant Standard_Complex_Vectors.Link_to_Vector
        := new Standard_Complex_Vectors.Vector'(x);
+    xrv : constant Standard_Floating_Vectors.Vector(1..dim)
+        := Standard_Vector_Splitters.Real_Part(x);
+    xiv : constant Standard_Floating_Vectors.Vector(1..dim)
+        := Standard_Vector_Splitters.Imag_Part(x);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(xrv);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(xiv);
     h0 : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
        := Standard_Circuit_Makers.Hessian(p,x);
     mxe : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => pwr);
     pwt : constant Standard_Complex_VecVecs.VecVec(x'range)
         := Standard_Complex_Circuits.Allocate(mxe);
+    rpwt,ipwt : Standard_Floating_VecVecs.VecVec(x'range);
     h1 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     g : Standard_Complex_Vectors.Vector(1..dim);
-    z : Standard_Complex_Numbers.Complex_Number;
+    z,z3 : Standard_Complex_Numbers.Complex_Number;
     y : constant Standard_Complex_Vectors.Vector(0..dim)
       := (0..dim => Standard_Complex_Numbers.Create(0.0));
     yd : constant Standard_Complex_Vectors.Link_to_Vector
        := new Standard_Complex_Vectors.Vector'(y);
-    h2 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    zyd : constant Standard_Floating_Vectors.Vector(0..dim)
+        := (0..dim => 0.0);
+    ryd : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(zyd);
+    iyd : constant Standard_Floating_Vectors.Link_to_Vector
+        := new Standard_Floating_Vectors.Vector'(zyd);
+    h2,h3 : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    hrp,hip : Standard_Floating_VecVecs.VecVec(1..dim);
     err : double_float;
     ans : character;
 
@@ -903,6 +912,16 @@ procedure ts_perfhess is
     Standard_Circuit_Makers.Write_Matrix(h2);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h2);
     put("Sum of errors :"); put(err,3); new_line;
+    Standard_Coefficient_Circuits.Allocate_Hessian_Space(dim,hrp,hip);
+    rpwt := Standard_Coefficient_Circuits.Allocate(mxe);
+    ipwt := Standard_Coefficient_Circuits.Allocate(mxe);
+    Standard_Coefficient_Circuits.Power_Table(mxe,xr,xi,rpwt,ipwt);
+    Standard_Coefficient_Circuits.Speel(cc,xr,xi,ryd,iyd,rpwt,ipwt,hrp,hip);
+    put_line("The Hessian recomputed on a coefficient circuit :");
+    h3 := Merge(hrp,hip);
+    Standard_Circuit_Makers.Write_Matrix(h3);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h3);
+    put("Sum of errors :"); put(err,3); new_line;
     new_line;
     put("Compare gradients ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y' then
@@ -917,6 +936,9 @@ procedure ts_perfhess is
       put(z); new_line;
       put_line("The algorithmically computed function value :");
       put(yd(0)); new_line;
+      z3 := Standard_Complex_Numbers.Create(ryd(0),iyd(0));
+      put_line("The algorithmically recomputed function value :");
+      put(z3); new_line;
     end if;
   end Standard_Test_Power_Circuit;
 

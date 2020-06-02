@@ -1,6 +1,7 @@
 with unchecked_deallocation;
 with Standard_Complex_Numbers;
 with Exponent_Indices;
+with Standard_Hessian_Updaters;
 
 package body Standard_Coefficient_Circuits is
 
@@ -70,23 +71,45 @@ package body Standard_Coefficient_Circuits is
     return res;
   end Create;
 
-  procedure Allocate_Hessian_Space ( s : in out System ) is
+  procedure Allocate_Hessian_Space
+              ( dim : in integer32;
+                hrp,hip : out Standard_Floating_VecVecs.VecVec ) is
+  begin
+    for k in 1..dim loop
+      declare
+        row : constant Standard_Floating_Vectors.Vector(1..dim)
+            := (1..dim => 0.0);
+      begin
+        hrp(k) := new Standard_Floating_Vectors.Vector'(row);
+        hip(k) := new Standard_Floating_Vectors.Vector'(row);
+      end;
+    end loop;
+  end Allocate_Hessian_Space;
 
-    hrprows : Standard_Floating_VecVecs.VecVec(1..s.neq);
-    hiprows : Standard_Floating_VecVecs.VecVec(1..s.neq);
+  procedure Allocate_Hessian_Space
+              ( dim : in integer32;
+                hrp,hip : out Standard_Floating_VecVecs.Link_to_VecVec ) is
+
+    hrprows : Standard_Floating_VecVecs.VecVec(1..dim);
+    hiprows : Standard_Floating_VecVecs.VecVec(1..dim);
 
   begin
-    for k in 1..s.neq loop
+    for k in 1..dim loop
       declare
-        row : constant Standard_Floating_Vectors.Vector(1..s.dim)
-            := (1..s.dim => 0.0);
+        row : constant Standard_Floating_Vectors.Vector(1..dim)
+            := (1..dim => 0.0);
       begin
         hrprows(k) := new Standard_Floating_Vectors.Vector'(row);
         hiprows(k) := new Standard_Floating_Vectors.Vector'(row);
       end;
     end loop;
-    s.hrp := new Standard_Floating_VecVecs.VecVec'(hrprows);
-    s.hip := new Standard_Floating_VecVecs.VecVec'(hiprows);
+    hrp := new Standard_Floating_VecVecs.VecVec'(hrprows);
+    hip := new Standard_Floating_VecVecs.VecVec'(hiprows);
+  end Allocate_Hessian_Space;
+ 
+  procedure Allocate_Hessian_Space ( s : in out System ) is
+  begin
+    Allocate_Hessian_Space(s.dim,s.hrp,s.hip);
   end Allocate_Hessian_Space;
 
   procedure Allocate_Hessian_Space ( s : in Link_to_System ) is
@@ -842,7 +865,7 @@ package body Standard_Coefficient_Circuits is
                     hip : in Standard_Floating_VecVecs.VecVec ) is
 
     dim : constant integer32 := xr'last;
-    idx1 : integer32;
+    idx1,size : integer32;
     rkcff,ikcff : double_float;
     zr,zi,pr,pi : double_float;
     hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
@@ -880,6 +903,17 @@ package body Standard_Coefficient_Circuits is
         else
           Speel(xps(k),fck,idk,rkcff,ikcff,xr,xi,ryd,iyd,
                 rfwd,ifwd,rbck,ibck,rcrs,icrs,rpwt,ipwt);
+          size := idk'last;   -- number of participating variables
+          if size = 1 then    -- one variable special case
+            Standard_Hessian_Updaters.Speel1
+              (hrp,hip,rkcff,ikcff,xpk,idk,fck.all,xr.all,xi.all,rpwt,ipwt);
+          elsif size = 2 then -- two variable special case
+            Standard_Hessian_Updaters.Speel2
+              (hrp,hip,rkcff,ikcff,xpk,idk,fck.all,xr.all,xi.all,rpwt,ipwt);
+          elsif size = 3 then -- three variable special case
+            Standard_Hessian_Updaters.Speel3
+              (hrp,hip,rkcff,ikcff,xpk,idk,fck.all,xr.all,xi.all,rpwt,ipwt);
+          end if;
         end if;
       end;
     end loop;

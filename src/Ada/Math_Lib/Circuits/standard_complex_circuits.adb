@@ -625,6 +625,7 @@ package body Standard_Complex_Circuits is
             Indexed_Speel(idk,kcff,x,yd,fwd,bck,crs,h);
           end if;
         else
+         -- if idk'last = 1 then -- special case ?
           Speel(xps(k),fck,idk,kcff,x,yd,fwd,bck,crs,pwt);
           if idk'last = 1 then -- one variable special case
             Standard_Hessian_Updaters.Speel1(h,kcff,xpk,idk,fck.all,x.all,pwt);

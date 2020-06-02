@@ -88,6 +88,24 @@ package Standard_Coefficient_Circuits is
   --   The hrp and hip work spaces are not allocated,
   --   as Hessians are optional, only used in EvalDiff2.
 
+  procedure Allocate_Hessian_Space
+              ( dim : in integer32;
+                hrp,hip : out Standard_Floating_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Allocates in hrp and hip space for vectors of range 1..dim
+  --   and initializes all entries to zero.
+
+  -- REQUIRED : hrp'range = hip'range = 1..dim.
+
+  procedure Allocate_Hessian_Space
+              ( dim : in integer32;
+                hrp,hip : out Standard_Floating_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Returns in hrp and hip two vectors of vectors of range 1..dim.
+  --   Each vector in hrp and hip has range 1..dim and is initialized to zero.
+
   procedure Allocate_Hessian_Space ( s : in out System );
   procedure Allocate_Hessian_Space ( s : in Link_to_System );
 
