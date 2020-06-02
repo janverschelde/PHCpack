@@ -70,6 +70,32 @@ package body Standard_Coefficient_Circuits is
     return res;
   end Create;
 
+  procedure Allocate_Hessian_Space ( s : in out System ) is
+
+    hrprows : Standard_Floating_VecVecs.VecVec(1..s.neq);
+    hiprows : Standard_Floating_VecVecs.VecVec(1..s.neq);
+
+  begin
+    for k in 1..s.neq loop
+      declare
+        row : constant Standard_Floating_Vectors.Vector(1..s.dim)
+            := (1..s.dim => 0.0);
+      begin
+        hrprows(k) := new Standard_Floating_Vectors.Vector'(row);
+        hiprows(k) := new Standard_Floating_Vectors.Vector'(row);
+      end;
+    end loop;
+    s.hrp := new Standard_Floating_VecVecs.VecVec'(hrprows);
+    s.hip := new Standard_Floating_VecVecs.VecVec'(hiprows);
+  end Allocate_Hessian_Space;
+
+  procedure Allocate_Hessian_Space ( s : in Link_to_System ) is
+  begin
+    if s /= null
+     then Allocate_Hessian_Space(s.all);
+    end if;
+  end Allocate_Hessian_Space;
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
@@ -89,6 +115,28 @@ package body Standard_Coefficient_Circuits is
     Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
     EvalDiff(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.fx,s.jm);
   end EvalDiff;
+
+  procedure EvalDiff2
+              ( s : in out System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat ) is
+  begin
+    Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
+    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
+              s.fx,s.jm,vh);
+  end EvalDiff2;
+
+  procedure EvalDiff2
+              ( s : in Link_to_System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat ) is
+  begin
+    Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
+    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
+              s.fx,s.jm,vh);
+  end EvalDiff2;
 
   procedure EvalDiff
               ( c : in Circuits;
@@ -110,6 +158,41 @@ package body Standard_Coefficient_Circuits is
       end loop;
     end loop;
   end EvalDiff;
+
+  procedure EvalDiff2
+              ( c : in Circuits;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec;
+                fx : out Standard_Complex_Vectors.Vector;
+                jm : out Standard_Complex_Matrices.Matrix;
+                vh : in Standard_Complex_VecMats.VecMat ) is
+
+    mat : Standard_Complex_Matrices.Link_to_Matrix;
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for i in c'range loop
+      mat := vh(i);
+      Speel(c(i).all,xr,xi,ryd,iyd,rpwt,ipwt,hrp,hip);
+      fx(i) := Standard_Complex_Numbers.Create(ryd(0),iyd(0));
+      for j in jm'range(2) loop
+        jm(i,j) := Standard_Complex_Numbers.Create(ryd(j),iyd(j));
+        ryd(j) := 0.0; iyd(j) := 0.0;
+      end loop;
+      for j in hrp'range loop
+        hrprow := hrp(j); hiprow := hip(j);
+        for k in hrprow'range loop
+          mat(j,k) := Standard_Complex_Numbers.Create(hrprow(k),hiprow(k));
+        end loop;
+      end loop;
+    end loop;
+  end EvalDiff2;
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
@@ -1761,12 +1844,21 @@ package body Standard_Coefficient_Circuits is
   end Clear;
 
   procedure Clear ( s : in out System ) is
+
+    use Standard_Floating_VecVecs;
+
   begin
     Clear(s.crc);
     Standard_Floating_Vectors.Clear(s.ryd);
     Standard_Floating_Vectors.Clear(s.iyd);
     Standard_Floating_VecVecs.Clear(s.rpwt);
     Standard_Floating_VecVecs.Clear(s.ipwt);
+    if s.hrp /= null
+     then Standard_Floating_VecVecs.Deep_Clear(s.hrp);
+    end if;
+    if s.hip /= null
+     then Standard_Floating_VecVecs.Deep_Clear(s.hip);
+    end if;
   end Clear;
 
   procedure Clear ( s : in out Link_to_System ) is

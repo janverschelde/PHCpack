@@ -6,6 +6,7 @@ with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
+with Standard_Complex_VecMats;
 
 package Standard_Coefficient_Circuits is
 
@@ -55,6 +56,8 @@ package Standard_Coefficient_Circuits is
     iyd : Standard_Floating_Vectors.Link_to_Vector;  -- imag part of gradient
     fx : Standard_Complex_Vectors.Vector(1..neq);    -- function value
     jm : Standard_Complex_Matrices.Matrix(1..neq,1..dim); -- Jacobian matrix
+    hrp,hip : Standard_Floating_VecVecs.Link_to_VecVec;
+   -- work space for the rows of Hessians, real and imaginary parts
   end record;
 
   type Link_to_System is access System;
@@ -82,6 +85,15 @@ package Standard_Coefficient_Circuits is
   -- DESCRIPTION :
   --   Given well defined circuits for dimension dim,
   --   computes mxe and allocates space for a system.
+  --   The hrp and hip work spaces are not allocated,
+  --   as Hessians are optional, only used in EvalDiff2.
+
+  procedure Allocate_Hessian_Space ( s : in out System );
+  procedure Allocate_Hessian_Space ( s : in Link_to_System );
+
+  -- DESCRIPTION :
+  --   Allocates the space for all rows of the real and imaginary parts
+  --   of the Hessian matrices, in s.hrp and s.hip.
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
@@ -109,6 +121,38 @@ package Standard_Coefficient_Circuits is
   --   s.pwt    power table updated for the values in x;
   --   s.fx     function value of the circuits at x;
   --   s.jm     the Jacobian matrix evaluated at x.
+
+  procedure EvalDiff2
+              ( s : in out System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat );
+  procedure EvalDiff2
+              ( s : in Link_to_System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiations the circuits in s at x,
+  --   and computes the values of all Hessian matrices at x.
+
+  -- REQUIRED :
+  --   All space for the power table and yd has been allocated.
+  --   Also s.hrp and s.hip are allocated.
+
+  -- ON ENTRY :
+  --   s        properly defined and allocated system of circuits;
+  --   xr       real parts of values for the variables in the system;
+  --   xi       imaginary parts of values for the variables in the system.
+  --   vh       space allocated for s.neq matrices,
+  --            all matrices have 1..dim for range(1) and range(2).
+
+  -- ON RETURN :
+  --   s.pwt    power table updated for the values in x;
+  --   s.fx     function value of the circuits at x;
+  --   s.jm     the Jacobian matrix evaluated at x;
+  --   vh       vector of evaluated Hessian matrices.
 
   procedure EvalDiff
               ( c : in Circuits;
@@ -138,6 +182,44 @@ package Standard_Coefficient_Circuits is
   -- ON RETURN :
   --   fx       vector of function values of the circuits at x;
   --   jm       matrix of partial derivatives.
+
+  procedure EvalDiff2
+              ( c : in Circuits;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec;
+                fx : out Standard_Complex_Vectors.Vector;
+                jm : out Standard_Complex_Matrices.Matrix;
+                vh : in Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiations the circuits in c at x,
+  --   returns the evaluated Jacobian and vector of Hessians.
+
+  -- ON ENTRY :
+  --   c        a sequence of circuits, properly defined and allocated;
+  --   xr       real parts of the values for the variables;
+  --   xi       imaginary parts of the values for the variables;
+  --   ryd      work space for the real part of function value and gradient,
+  --            of range 0..dim, where dim = x'last;
+  --   ryd      work space for the imag part of function value and gradient,
+  --            of range 0..dim, where dim = x'last;
+  --   rpwt     real part of power table defined and computed for x;
+  --   ipwt     imag part of power table defined and computed for x.
+  --   hrp      works space for the real parts of Hessian matrices;
+  --   hip      works space for the imaginary parts of Hessian matrices;
+  --   vh       space allocated for dim matrices,
+  --            all matrices have 1..dim for range(1) and range(2).
+
+  -- ON RETURN :
+  --   fx       vector of function values of the circuits at x;
+  --   jm       matrix of partial derivatives;
+  --   vh       vector of evaluated Hessian matrices.
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
 --   The Indexed_Speel procedures are for circuits where the exponents

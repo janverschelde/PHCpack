@@ -1,3 +1,6 @@
+Tue 2 Jun 2020 : added wrapper procedures for the Hessians to
+  standard_coefficient_circuits.
+
 Mon 1 Jun 2020 : extended newton_convolutions with procedures to run one
   Newton step with coefficient convolutions in double double precision,
   tested by ts_fabry.  Started development of Hessian computation on
