@@ -14,6 +14,7 @@ with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
@@ -41,6 +42,9 @@ with QuadDobl_Complex_Solutions;
 with QuadDobl_System_and_Solutions_io;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Standard_Complex_Circuits;
+with Standard_Vector_Splitters;
+with Standard_Coefficient_Circuits;
+with Standard_Circuit_Splitters;
 with Standard_Circuit_Makers;
 with DoblDobl_Complex_Circuits;
 with DoblDobl_Circuit_Makers;
@@ -185,6 +189,78 @@ procedure ts_mthesscrc is
       end if;
     end loop;
   end Standard_Test;
+
+  procedure Standard_Coefficient_Test
+              ( s : in Standard_Coefficient_Circuits.Link_to_System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Runs the test in double precision.
+
+  -- ON ENTRY :
+  --   s        a system of convolution circuits;
+  --   x        coefficients of a start solution;
+  --   output   to see all singular values and
+  --            for output during the multitasked runs.
+
+    dim : constant integer32 := s.dim;
+    xr,xi : Standard_Floating_Vectors.Link_to_Vector;
+    U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    e : Standard_Complex_Vectors.Vector(1..dim);
+    svl : constant Standard_Complex_VecVecs.VecVec(0..s.neq)
+        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+    vh : constant Standard_Complex_VecMats.VecMat(1..s.neq)
+       := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
+    values : Standard_Complex_VecVecs.VecVec(0..s.neq)
+           := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+    nbt : integer32 := 0;
+    err,eta : double_float;
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+
+    use Ada.Calendar;
+
+  begin
+    Standard_Vector_Splitters.Split_Complex(x,xr,xi);
+    put_line("Computing first without multitasking ...");
+    seristart := Ada.Calendar.Clock;
+    Standard_Coefficient_Circuits.Singular_Values(s,xr,xi,vh,U,V,e,svl);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    put_line("-> Elapsed time without multitasking :");
+    Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+    if output
+     then put_line("All singular values :"); Write_Singular_Values(svl);
+    end if;
+    loop
+      new_line;
+      put("Give the number of tasks (0 to exit) : "); get(nbt);
+      exit when (nbt <= 0);
+      multstart := Ada.Calendar.Clock;
+      Multitasked_Hessian_Circuits.Multitasked_Singular_Values
+        (nbt,s,xr,xi,values,output);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+      Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      if output then
+        put_line("All singular values computed by multitasking :");
+        Write_Singular_Values(values);
+      end if;
+      err := Difference(svl,values);
+      eta := Multitasked_Hessian_Circuits.Standard_Distance(svl);
+      put("The difference error : "); put(err,3); new_line;
+      put("Estimate for the distance : "); put(eta,3); new_line;
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
+      end if;
+    end loop;
+  end Standard_Coefficient_Test;
 
   procedure DoblDobl_Test
               ( s : in DoblDobl_Complex_Circuits.Link_to_System;
@@ -341,6 +417,7 @@ procedure ts_mthesscrc is
   --   pwr      largest power of the variables.
 
     s : Standard_Complex_Circuits.Link_to_System;
+    cs : Standard_Coefficient_Circuits.Link_to_System;
     v : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
     x : constant Standard_Complex_Vectors.Link_to_Vector
@@ -355,9 +432,17 @@ procedure ts_mthesscrc is
     new_line;
     put("Extra output wanted ? (y/n) "); Ask_Yes_or_No(ans);
     output := (ans = 'y');
-    put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
-    static := (ans = 'y');
-    Standard_Test(s,x,static,output);
+    new_line;
+    put("Test coefficient circuits ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      cs := Standard_Circuit_Splitters.Split(s);
+      Standard_Coefficient_Test(cs,x,output);
+    else
+      new_line;
+      put("Static load balancing ? (y/n) "); Ask_Yes_or_No(ans);
+      static := (ans = 'y');
+      Standard_Test(s,x,static,output);
+    end if;
   end Standard_Random_Test;
 
   procedure DoblDobl_Random_Test

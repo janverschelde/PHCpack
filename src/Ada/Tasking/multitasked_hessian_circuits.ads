@@ -2,6 +2,8 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -9,6 +11,7 @@ with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Circuits;
+with Standard_Coefficient_Circuits;
 with DoblDobl_Complex_Circuits;
 with QuadDobl_Complex_Circuits;
 
@@ -18,6 +21,13 @@ package Multitasked_Hessian_Circuits is
 --   Provides a multitasked implementation of the Hessian criterion,
 --   for systems given as sequences of complex circuits,
 --   in double, double double, and quad double precision.
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return Standard_Floating_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns an array of range neqstart..neq,
+  --   with allocated vectors of range dimstart..dim.
 
   function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
                     return Standard_Complex_VecVecs.VecVec;
@@ -30,6 +40,36 @@ package Multitasked_Hessian_Circuits is
   --   Returns an array of range neqstart..neq,
   --   with allocated vectors of range dimstart..dim,
   --   in double, double double, or quad double precision.
+
+  procedure Multitasked_Singular_Values
+              ( nbt : in integer32;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                values : in out Standard_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Evaluates all Hessians of the circuits in s at x
+  --   and computes the singular values with nbt tasks.
+  --   This version uses coefficient circuits with complex
+  --   coefficients splitted in real and imaginary parts.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   s        a system of complex circuits;
+  --   xr       real parts of the coordinates of the point 
+  --            to evaluate the Hessians;
+  --   xi       imaginary parts of the coordinates of the point 
+  --            to evaluate the Hessians;
+  --   values   space allocated for all singular values,
+  --            as a vector of range 1..s.dim;
+  --   verbose  if verbose, then one line is written for each job,
+  --            otherwise, the jobs are preformed without output.
+
+  -- ON RETURN :
+  --   values   values(0) contains the singular values of the Jacobian;
+  --            values(k) contains the singular values of the k-th Hessian.
 
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;

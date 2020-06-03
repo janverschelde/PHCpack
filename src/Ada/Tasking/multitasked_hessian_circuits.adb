@@ -36,6 +36,23 @@ package body Multitasked_Hessian_Circuits is
   end Allocate;
 
   function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return Standard_Floating_VecVecs.VecVec is
+
+    res : Standard_Floating_VecVecs.VecVec(neqstart..neq);
+
+  begin
+    for i in res'range loop
+      declare
+        v : constant Standard_Floating_Vectors.Vector(dimstart..dim)
+          := (dimstart..dim => 0.0);
+      begin
+        res(i) := new Standard_Floating_Vectors.Vector'(v);
+      end;
+    end loop;
+    return res;
+  end Allocate;
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
                     return DoblDobl_Complex_VecVecs.VecVec is
 
     res : DoblDobl_Complex_VecVecs.VecVec(neqstart..neq);
@@ -68,6 +85,200 @@ package body Multitasked_Hessian_Circuits is
     end loop;
     return res;
   end Allocate;
+
+  procedure Multitasked_Singular_Values
+              ( nbt : in integer32;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                values : in out Standard_Complex_VecVecs.VecVec;
+                verbose : in boolean := false ) is
+
+    A,U,V : Standard_Complex_VecMats.VecMat(1..nbt);
+    e : Standard_Complex_VecVecs.VecVec(1..nbt);
+    ryd,iyd : Standard_Floating_VecVecs.VecVec(1..s.neq);
+    pwtneeded : boolean := false;
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    info : integer32;
+    idx1,idx2 : integer32 := 0; -- global indices
+    lck1,lck2 : Semaphore.Lock;
+
+    procedure Reporting_Job ( i,n : integer32 ) is 
+
+    -- DESCRIPTION :
+    --   Task i out of n will start with the computation of the
+    --   power table and then compute the SVD of the Hessian.
+    --   Writes one line for each job to screen.
+
+      mdx : integer32; -- local index
+      pA,pU,pV : Standard_Complex_Matrices.Link_to_Matrix;
+      pe,vls : Standard_Complex_Vectors.Link_to_Vector;
+      rlnk,ilnk,rpyd,ipyd : Standard_Floating_Vectors.Link_to_Vector;
+      zr,zi,yr,yi,xrk,xik : double_float;
+
+    begin
+      if pwtneeded then
+        while idx1 <= s.neq loop
+          Semaphore.Request(lck1);
+          if idx1 <= s.neq
+           then idx1 := idx1 + 1; mdx := idx1;
+          end if;
+          Semaphore.Release(lck1);
+          exit when (mdx > s.neq);
+          put_line("task " & Multitasking.to_string(i)
+                           & " computes power table row "
+                           & Multitasking.to_string(mdx));
+          if s.mxe(mdx) > 1 then
+            rlnk := s.rpwt(mdx); ilnk := s.ipwt(mdx);
+           -- lnk(1) := x(k)*x(k);
+            xrk := xr(mdx); xik := xi(mdx);
+            zr := xrk*xrk - xik*xik;
+            zi := 2.0*xrk*xik;
+            rlnk(1) := zr; ilnk(1) := zi;
+            for i in 2..s.mxe(mdx)-1 loop
+             -- lnk(i) := lnk(i-1)*x(k);
+              yr := zr; yi := zi;
+              zr := xrk*yr - xik*yi;
+              zi := xrk*yi + xik*yr;
+              rlnk(i) := zr; ilnk(i) := zi;
+            end loop;
+          end if;
+        end loop;
+        pwtdone(i) := true;
+       -- make sure all tasks are done with the power table
+        while not Multitasking.all_true(n,pwtdone) loop
+          delay 0.001;
+        end loop;
+      end if;
+      while idx2 <= s.neq loop
+        Semaphore.Request(lck2);
+        if idx2 <= s.neq
+         then idx2 := idx2 + 1; mdx := idx2;
+        end if;
+        Semaphore.Release(lck2);
+        exit when (mdx > s.neq);
+        put_line("task " & Multitasking.to_string(i)
+                         & " computes gradient & Hessian "
+                         & Multitasking.to_string(mdx));
+        pA := A(i); pU := U(i); pV := V(i); pe := e(i);
+        vls := values(mdx); rpyd := ryd(mdx); ipyd := iyd(mdx);
+        Standard_Coefficient_Circuits.Singular_Values
+          (s.crc(mdx),xr,xi,rpyd,ipyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
+           pA.all,pU.all,pV.all,pe.all,vls.all);
+        for j in s.jm'range(2) loop
+          s.jm(mdx,j) := Standard_Complex_Numbers.Create(rpyd(j),ipyd(j));
+          rpyd(j) := 0.0; ipyd(j) := 0.0;
+        end loop;
+      end loop;
+      gradone(i) := true;
+      if i = n then
+        while not Multitasking.all_true(nbt,gradone) loop
+          delay 0.001;
+        end loop;
+        put_line("task " & Multitasking.to_string(i)
+                         & " computes SVD of Jacobian");
+        Standard_Complex_Singular_Values.SVD
+          (s.jm,s.dim,s.dim,values(0).all,pe.all,pU.all,pV.all,11,info);
+      end if;
+    end Reporting_Job;
+    procedure report_jobs is new Multitasking.Silent_Workers(Reporting_Job);
+
+    procedure Silent_Job ( i,n : integer32 ) is 
+
+    -- DESCRIPTION :
+    --   Task i out of n will start with the computation of the
+    --   power table and then compute the SVD of the Hessian.
+    --   Writes no output.
+
+      mdx : integer32; -- local index
+      pA,pU,pV : Standard_Complex_Matrices.Link_to_Matrix;
+      pe,vls : Standard_Complex_Vectors.Link_to_Vector;
+      rlnk,ilnk,rpyd,ipyd : Standard_Floating_Vectors.Link_to_Vector;
+      zr,zi,yr,yi,xrk,xik : double_float;
+
+    begin
+      if pwtneeded then
+        while idx1 <= s.neq loop
+          Semaphore.Request(lck1);
+          if idx1 <= s.neq
+           then idx1 := idx1 + 1; mdx := idx1;
+          end if;
+          Semaphore.Release(lck1);
+          exit when (mdx > s.neq);
+          if s.mxe(mdx) > 1 then
+            rlnk := s.rpwt(mdx); ilnk := s.ipwt(mdx);
+           -- lnk(1) := x(k)*x(k);
+            xrk := xr(mdx); xik := xi(mdx);
+            zr := xrk*xrk - xik*xik;
+            zi := 2.0*xrk*xik;
+            rlnk(1) := zr; ilnk(1) := zi;
+            for i in 2..s.mxe(mdx)-1 loop
+             -- lnk(i) := lnk(i-1)*x(k);
+              yr := zr; yi := zi;
+              zr := xrk*yr - xik*yi;
+              zi := xrk*yi + xik*yr;
+              rlnk(i) := zr; ilnk(i) := zi;
+            end loop;
+          end if;
+        end loop;
+        pwtdone(i) := true;
+       -- make sure all tasks are done with the power table
+        while not Multitasking.all_true(n,pwtdone) loop
+          delay 0.001;
+        end loop;
+      end if;
+      while idx2 <= s.neq loop
+        Semaphore.Request(lck2);
+        if idx2 <= s.neq
+         then idx2 := idx2 + 1; mdx := idx2;
+        end if;
+        Semaphore.Release(lck2);
+        exit when (mdx > s.neq);
+        pA := A(i); pU := U(i); pV := V(i); pe := e(i);
+        vls := values(mdx); rpyd := ryd(mdx); ipyd := iyd(mdx);
+        Standard_Coefficient_Circuits.Singular_Values
+          (s.crc(mdx),xr,xi,rpyd,ipyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
+           pA.all,pU.all,pV.all,pe.all,vls.all);
+        for j in s.jm'range(2) loop
+          s.jm(mdx,j) := Standard_Complex_Numbers.Create(rpyd(j),ipyd(j));
+          rpyd(j) := 0.0; ipyd(j) := 0.0;
+        end loop;
+      end loop;
+      gradone(i) := true;
+      if i = n then
+        while not Multitasking.all_true(nbt,gradone) loop
+          delay 0.001;
+        end loop;
+        Standard_Complex_Singular_Values.SVD
+          (s.jm,s.dim,s.dim,values(0).all,pe.all,pU.all,pV.all,11,info);
+      end if;
+    end Silent_Job;
+    procedure silent_jobs is new Multitasking.Silent_Workers(Silent_Job);
+
+  begin
+    A := Standard_Complex_Circuits.Allocate(nbt,s.dim);
+    U := Standard_Complex_Circuits.Allocate(nbt,s.dim);
+    V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
+    e := Allocate(nbt,s.dim,1,1);
+    ryd := Allocate(s.neq,s.dim,1,0); -- space for all gradients
+    iyd := Allocate(s.neq,s.dim,1,0);
+    for k in s.mxe'range loop -- determine if power table is needed
+      if s.mxe(k) > 1
+       then pwtneeded := true; exit;
+      end if;
+    end loop;
+    if verbose
+     then report_jobs(nbt);
+     else silent_jobs(nbt);
+    end if;
+    Standard_Complex_VecMats.Clear(A);
+    Standard_Complex_VecMats.Clear(U);
+    Standard_Complex_VecMats.Clear(V);
+    Standard_Complex_VecVecs.Clear(e);
+    Standard_Floating_VecVecs.Clear(ryd);
+    Standard_Floating_VecVecs.Clear(iyd);
+  end Multitasked_Singular_Values;
 
   procedure Static_Singular_Values
               ( nbt : in integer32;
@@ -223,6 +434,7 @@ package body Multitasked_Hessian_Circuits is
     Standard_Complex_VecMats.Clear(U);
     Standard_Complex_VecMats.Clear(V);
     Standard_Complex_VecVecs.Clear(e);
+    Standard_Complex_VecVecs.Clear(yd);
   end Static_Singular_Values;
 
   procedure Dynamic_Singular_Values
@@ -397,6 +609,7 @@ package body Multitasked_Hessian_Circuits is
     Standard_Complex_VecMats.Clear(U);
     Standard_Complex_VecMats.Clear(V);
     Standard_Complex_VecVecs.Clear(e);
+    Standard_Complex_VecVecs.Clear(yd);
   end Dynamic_Singular_Values;
 
   procedure Multitasked_Singular_Values
@@ -566,6 +779,7 @@ package body Multitasked_Hessian_Circuits is
     DoblDobl_Complex_VecMats.Clear(U);
     DoblDobl_Complex_VecMats.Clear(V);
     DoblDobl_Complex_VecVecs.Clear(e);
+    DoblDobl_Complex_VecVecs.Clear(yd);
   end Static_Singular_Values;
 
   procedure Dynamic_Singular_Values
@@ -741,6 +955,7 @@ package body Multitasked_Hessian_Circuits is
     DoblDobl_Complex_VecMats.Clear(U);
     DoblDobl_Complex_VecMats.Clear(V);
     DoblDobl_Complex_VecVecs.Clear(e);
+    DoblDobl_Complex_VecVecs.Clear(yd);
   end Dynamic_Singular_Values;
 
   procedure Multitasked_Singular_Values
@@ -909,6 +1124,7 @@ package body Multitasked_Hessian_Circuits is
     QuadDobl_Complex_VecMats.Clear(U);
     QuadDobl_Complex_VecMats.Clear(V);
     QuadDobl_Complex_VecVecs.Clear(e);
+    QuadDobl_Complex_VecVecs.Clear(yd);
   end Static_Singular_Values;
 
   procedure Dynamic_Singular_Values
@@ -1083,6 +1299,7 @@ package body Multitasked_Hessian_Circuits is
     QuadDobl_Complex_VecMats.Clear(U);
     QuadDobl_Complex_VecMats.Clear(V);
     QuadDobl_Complex_VecVecs.Clear(e);
+    QuadDobl_Complex_VecVecs.Clear(yd);
   end Dynamic_Singular_Values;
 
   procedure Multitasked_Singular_Values

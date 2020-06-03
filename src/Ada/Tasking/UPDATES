@@ -1,3 +1,10 @@
+Tue 2 Jun 2020 : extended multitasked_hessian_circuits with the
+  computation on coefficient circuits in double precision, with an added
+  test procedure in ts_mthesscrc.
+
+Mon 1 Jun 2020 : in multitasked_hessian_circuits, defined dynamic load
+  balancing, with tests added in ts_mthesscrc.
+
 Sun 31 May 2020 : in multitasked_algodiff_convolutions, defined dynamic
   load balancing, tested by ts_mtadcnv.  Updated ts_mtadcnv and procedures
   in multitasked_algodiff_convolutions for the passing of the auxiliary
