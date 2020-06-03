@@ -1,3 +1,7 @@
+Wed 3 Jun 2020 : in *_complex_circuits.adb, hessian_convolution_circuits.adb,
+  and standard_coefficient_circuits.adb, replaced the job = 11 in the SVD
+  by job = 0, because only singular values are needed.
+
 Tue 2 Jun 2020 : added wrapper procedures for the Hessians to
   standard_coefficient_circuits.  Added coefficient versions for 1, 2, and
   3 dimensional special cases to standard_hessian_updaters, updated

@@ -178,10 +178,10 @@ package body Standard_Complex_Circuits is
     Power_Table(s.mxe,x,s.pwt);
     EvalDiff2(s.crc,x,s.yd,s.pwt,s.fx,s.jm,vh);
     Standard_Complex_Singular_Values.SVD
-      (s.jm,s.dim,s.dim,svls(0).all,e,U,V,11,info);
+      (s.jm,s.dim,s.dim,svls(0).all,e,U,V,0,info);
     for k in vh'range loop
       Standard_Complex_Singular_Values.SVD
-        (vh(k).all,s.dim,s.dim,svls(k).all,e,U,V,11,info);
+        (vh(k).all,s.dim,s.dim,svls(k).all,e,U,V,0,info);
     end loop;
   end Singular_Values;
 
@@ -213,7 +213,7 @@ package body Standard_Complex_Circuits is
 
   begin
     Speel(c,x,yd,pwt,A);
-    Standard_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,11,info);
+    Standard_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,0,info);
   end Singular_Values;
 
   procedure Singular_Values

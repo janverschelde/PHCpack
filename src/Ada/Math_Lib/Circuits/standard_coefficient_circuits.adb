@@ -254,10 +254,10 @@ package body Standard_Coefficient_Circuits is
     EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
               s.fx,s.jm,vh);
     Standard_Complex_Singular_Values.SVD
-      (s.jm,s.dim,s.dim,svls(0).all,e,U,V,11,info);
+      (s.jm,s.dim,s.dim,svls(0).all,e,U,V,0,info);
     for k in vh'range loop
       Standard_Complex_Singular_Values.SVD
-        (vh(k).all,s.dim,s.dim,svls(k).all,e,U,V,11,info);
+        (vh(k).all,s.dim,s.dim,svls(k).all,e,U,V,0,info);
     end loop;
   end Singular_Values;
 
@@ -297,7 +297,7 @@ package body Standard_Coefficient_Circuits is
   begin
     Speel(c,xr,xi,ryd,iyd,rpwt,ipwt,hrp,hip);
     A := Merge(hrp,hip);
-    Standard_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,11,info);
+    Standard_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,0,info);
   end Singular_Values;
 
   procedure Singular_Values
