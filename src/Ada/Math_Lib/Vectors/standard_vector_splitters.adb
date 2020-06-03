@@ -169,9 +169,14 @@ package body Standard_Vector_Splitters is
   procedure Split_Complex
               ( x : in Standard_Complex_VecVecs.VecVec;
                 rpx,ipx : out Standard_Floating_VecVecs.VecVec ) is
+
+    use Standard_Complex_Vectors;
+
   begin
     for k in x'range loop
-      Split_Complex(x(k),rpx(k),ipx(k));
+      if x(k) /= null
+       then Split_Complex(x(k),rpx(k),ipx(k));
+      end if;
     end loop;
   end Split_Complex;
 
@@ -179,15 +184,18 @@ package body Standard_Vector_Splitters is
               ( x : in Standard_Complex_VecVecs.Link_to_VecVec;
                 rpx,ipx : out Standard_Floating_VecVecs.Link_to_VecVec ) is
 
-    rx,ix : Standard_Floating_VecVecs.VecVec(x'range);
 
     use Standard_Complex_VecVecs;
 
   begin
     if x /= null then
-      Split_Complex(x.all,rx,ix);
-      rpx := new Standard_Floating_VecVecs.VecVec'(rx);
-      ipx := new Standard_Floating_VecVecs.VecVec'(ix);
+      declare
+        rx,ix : Standard_Floating_VecVecs.VecVec(x'range);
+      begin
+        Split_Complex(x.all,rx,ix);
+        rpx := new Standard_Floating_VecVecs.VecVec'(rx);
+        ipx := new Standard_Floating_VecVecs.VecVec'(ix);
+      end;
     end if;
   end Split_Complex;
 

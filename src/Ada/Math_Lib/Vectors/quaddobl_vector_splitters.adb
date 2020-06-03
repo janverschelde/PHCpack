@@ -95,35 +95,45 @@ package body QuadDobl_Vector_Splitters is
   procedure Split_Complex
               ( x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 xr,xi : out Standard_Floating_Vectors.Link_to_Vector ) is
+
+    use QuadDobl_Complex_Vectors;
+
   begin
-    if x'first = 1 then
-      declare
-        dim : constant integer32 := x'last;
-        vr,vi : Standard_Floating_Vectors.Vector(1..4*dim);
-      begin
-        Two_Split(x.all,vr,vi);
-        xr := new Standard_Floating_Vectors.Vector'(vr);
-        xi := new Standard_Floating_Vectors.Vector'(vi);
-      end;
-    else -- x'first = 0
-      declare
-        deg : constant integer32 := x'last;
-        dim : constant integer32 := 4*(deg+1)-1;
-        vr,vi : Standard_Floating_Vectors.Vector(0..dim);
-      begin
-        Two_Split(x.all,vr,vi);
-        xr := new Standard_Floating_Vectors.Vector'(vr);
-        xi := new Standard_Floating_Vectors.Vector'(vi);
-      end;
+    if x /= null then
+      if x'first = 1 then
+        declare
+          dim : constant integer32 := x'last;
+          vr,vi : Standard_Floating_Vectors.Vector(1..4*dim);
+        begin
+          Two_Split(x.all,vr,vi);
+          xr := new Standard_Floating_Vectors.Vector'(vr);
+          xi := new Standard_Floating_Vectors.Vector'(vi);
+        end;
+      else -- x'first = 0
+        declare
+          deg : constant integer32 := x'last;
+          dim : constant integer32 := 4*(deg+1)-1;
+          vr,vi : Standard_Floating_Vectors.Vector(0..dim);
+        begin
+          Two_Split(x.all,vr,vi);
+          xr := new Standard_Floating_Vectors.Vector'(vr);
+          xi := new Standard_Floating_Vectors.Vector'(vi);
+        end;
+      end if;
     end if;
   end Split_Complex;
 
   procedure Split_Complex
               ( x : in QuadDobl_Complex_VecVecs.VecVec;
                 xr,xi : out Standard_Floating_VecVecs.VecVec ) is
+
+    use QuadDobl_Complex_Vectors;
+
   begin
     for k in x'range loop
-      Split_Complex(x(k),xr(k),xi(k));
+      if x(k) /= null
+       then Split_Complex(x(k),xr(k),xi(k));
+      end if;
     end loop;
   end Split_Complex;
 
@@ -131,14 +141,22 @@ package body QuadDobl_Vector_Splitters is
               ( x : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 xr,xi : out Standard_Floating_VecVecs.Link_to_VecVec ) is
 
-    vr,vi : Standard_Floating_VecVecs.VecVec(x'range);
+    use QuadDobl_Complex_Vectors,QuadDobl_Complex_VecVecs;
 
   begin
-    for k in x'range loop
-      Split_Complex(x(k),vr(k),vi(k));
-    end loop;
-    xr := new Standard_Floating_VecVecs.VecVec'(vr);
-    xi := new Standard_Floating_VecVecs.VecVec'(vi);
+    if x /= null then
+      declare
+        vr,vi : Standard_Floating_VecVecs.VecVec(x'range);
+      begin
+        for k in x'range loop
+          if x(k) /= null
+           then Split_Complex(x(k),vr(k),vi(k));
+          end if;
+        end loop;
+        xr := new Standard_Floating_VecVecs.VecVec'(vr);
+        xi := new Standard_Floating_VecVecs.VecVec'(vi);
+      end;
+    end if;
   end Split_Complex;
 
   function Allocate_Complex_Coefficients

@@ -44,9 +44,14 @@ package body DoblDobl_Vector_Splitters is
               ( x : in DoblDobl_Complex_VecVecs.VecVec;
                 rhpx,ihpx : out Standard_Floating_VecVecs.VecVec;
                 rlpx,ilpx : out Standard_Floating_VecVecs.VecVec ) is
+
+    use DoblDobl_Complex_Vectors;
+ 
   begin
     for k in x'range loop
-      Split_Complex(x(k),rhpx(k),ihpx(k),rlpx(k),ilpx(k));
+      if x(k) /= null
+       then Split_Complex(x(k),rhpx(k),ihpx(k),rlpx(k),ilpx(k));
+      end if;
     end loop;
   end Split_Complex;
 
@@ -55,16 +60,24 @@ package body DoblDobl_Vector_Splitters is
                 rhpx,ihpx : out Standard_Floating_VecVecs.Link_to_VecVec;
                 rlpx,ilpx : out Standard_Floating_VecVecs.Link_to_VecVec ) is
 
-    rhx,ihx,rlx,ilx : Standard_Floating_VecVecs.VecVec(x'range);
+    use DoblDobl_Complex_VecVecs,DoblDobl_Complex_Vectors;
 
   begin
-    for k in x'range loop
-      Split_Complex(x(k),rhx(k),ihx(k),rlx(k),ilx(k));
-    end loop;
-    rhpx := new Standard_Floating_VecVecs.VecVec'(rhx);
-    ihpx := new Standard_Floating_VecVecs.VecVec'(ihx);
-    rlpx := new Standard_Floating_VecVecs.VecVec'(rlx);
-    ilpx := new Standard_Floating_VecVecs.VecVec'(ilx);
+    if x /= null then
+      declare
+        rhx,ihx,rlx,ilx : Standard_Floating_VecVecs.VecVec(x'range);
+      begin
+        for k in x'range loop
+          if x(k) /= null
+           then Split_Complex(x(k),rhx(k),ihx(k),rlx(k),ilx(k));
+          end if;
+        end loop;
+        rhpx := new Standard_Floating_VecVecs.VecVec'(rhx);
+        ihpx := new Standard_Floating_VecVecs.VecVec'(ihx);
+        rlpx := new Standard_Floating_VecVecs.VecVec'(rlx);
+        ilpx := new Standard_Floating_VecVecs.VecVec'(ilx);
+      end;
+    end if;
   end Split_Complex;
 
   function Allocate_Complex_Coefficients
