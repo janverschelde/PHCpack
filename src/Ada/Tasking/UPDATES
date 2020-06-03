@@ -1,5 +1,6 @@
 Wed 3 Jun 2020 : fixed multitasked_hessian_circuits to use separate work
   spaces for the Hessians for each task, for coefficient circuits.
+  To ts_mthesscrc, added procedure to benchmark coefficient circuits.
 
 Tue 2 Jun 2020 : extended multitasked_hessian_circuits with the
   computation on coefficient circuits in double precision, with an added

@@ -686,6 +686,85 @@ procedure ts_mthesscrc is
     end loop;
   end Standard_Benchmark;
 
+  procedure Standard_Coefficient_Benchmark
+              ( file : in file_type; nbruns,inc : in integer32;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                verbose : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Runs a benchmark test in double precision,
+  --   on coefficient circuits.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   nbruns   the number of multitasked runs;
+  --   inc      increment on the number of tasks;
+  --   s        system in one parameter;
+  --   x        some point to evaluate at;
+  --   verbose  if extra output is needed.
+
+    dim : constant integer32 := s.dim;
+    xr,xi : Standard_Floating_Vectors.Link_to_Vector;
+    U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    e : Standard_Complex_Vectors.Vector(1..dim);
+    svl : constant Standard_Complex_VecVecs.VecVec(0..s.neq)
+        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+    vh : constant Standard_Complex_VecMats.VecMat(1..s.neq)
+       := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
+    values : Standard_Complex_VecVecs.VecVec(0..s.neq);
+    seristart,seristop,multstart,multstop : Ada.Calendar.Time;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
+    nbt : integer32 := 2;
+
+    use Ada.Calendar;
+
+  begin
+    if verbose
+     then put_line("Computing first without multitasking ...");
+    end if;
+    put_line(file,"double precision"); flush(file);
+    Standard_Vector_Splitters.Split_Complex(x,xr,xi);
+    seristart := Ada.Calendar.Clock;
+    Standard_Coefficient_Circuits.Singular_Values(s,xr,xi,vh,U,V,e,svl);
+    seristop := Ada.Calendar.Clock;
+    seri_elapsed := seristop - seristart;
+    if verbose then
+      put_line("-> Elapsed time without multitasking :");
+      Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
+      put_line("running in double precision ...");
+    end if;
+    put(file,"  1 : "); duration_io.put(file,seri_elapsed,1,3);
+    put_line(file," : 1.000"); flush(file);
+    for k in 1..nbruns loop
+      values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+      multstart := Ada.Calendar.Clock;
+      Multitasked_Hessian_Circuits.Multitasked_Singular_Values
+        (nbt,s,xr,xi,values,false);
+      multstop := Ada.Calendar.Clock;
+      mult_elapsed := multstop - multstart;
+      if verbose then
+        put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
+        Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
+      end if;
+      put(file,nbt,3); put(file," : ");
+      duration_io.put(file,mult_elapsed,1,3); put(file," : ");
+      if seri_elapsed + 1.0 /= 1.0 then
+        speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        if verbose then
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,1,3); new_line;
+        end if;
+        duration_io.put(file,speedup,1,3); put(file," : ");
+        duration_io.put(file,efficiency,2,2); new_line(file); flush(file);
+      end if;
+      nbt := nbt + inc;
+      Standard_Complex_VecVecs.Clear(values);
+    end loop;
+  end Standard_Coefficient_Benchmark;
+
   procedure DoblDobl_Benchmark
               ( file : in file_type; nbruns,inc : in integer32;
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
@@ -852,6 +931,7 @@ procedure ts_mthesscrc is
     qds : QuadDobl_Complex_Circuits.Link_to_System;
     dds : DoblDobl_Complex_Circuits.Link_to_System;
     d_s : Standard_Complex_Circuits.Link_to_System;
+    dcs : Standard_Coefficient_Circuits.Link_to_System;
     qdx : constant QuadDobl_Complex_Vectors.Vector(1..dim)
         := QuadDobl_Random_Vectors.Random_Vector(1,dim);
     vqdx : constant QuadDobl_Complex_Vectors.Link_to_Vector
@@ -880,7 +960,9 @@ procedure ts_mthesscrc is
     qds := QuadDobl_Circuit_Makers.Random_Complex_System(dim,nbr,dim,pwr);
     dds := DoblDobl_Circuit_Makers.to_double_double(qds);
     d_s := Standard_Circuit_Makers.to_double(qds);
-    Standard_Benchmark(file,nbruns,inc,d_s,vdx);
+    dcs := Standard_Circuit_Splitters.Split(d_s);
+   -- Standard_Benchmark(file,nbruns,inc,d_s,vdx);
+    Standard_Coefficient_Benchmark(file,nbruns,inc,dcs,vdx);
     DoblDobl_Benchmark(file,nbruns,inc,dds,vddx);
     QuadDobl_Benchmark(file,nbruns,inc,qds,vqdx);
   end Benchmark;
