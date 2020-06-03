@@ -1,5 +1,6 @@
 with unchecked_deallocation;
 with Standard_Complex_Numbers;
+with Standard_Complex_Singular_Values;
 with Exponent_Indices;
 with Standard_Hessian_Updaters;
 
@@ -119,6 +120,23 @@ package body Standard_Coefficient_Circuits is
     end if;
   end Allocate_Hessian_Space;
 
+  function Merge ( hrp,hip : Standard_Floating_VecVecs.VecVec )
+                 return Standard_Complex_Matrices.Matrix is
+
+    dim : constant integer32 := hrp'last;
+    res : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for i in 1..dim loop
+      hrprow := hrp(i); hiprow := hip(i);
+      for j in 1..dim loop
+        res(i,j) := Standard_Complex_Numbers.Create(hrprow(j),hiprow(j));
+      end loop;
+    end loop;
+    return res;
+  end Merge;
+
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
   procedure EvalDiff
@@ -216,6 +234,92 @@ package body Standard_Coefficient_Circuits is
       end loop;
     end loop;
   end EvalDiff2;
+
+-- SINGULAR VALUE DECOMPOSITIONS :
+
+  procedure Singular_Values
+              ( s : in out System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                svls : in Standard_Complex_VecVecs.VecVec ) is
+
+    info : integer32;
+
+  begin
+    Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
+    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
+              s.fx,s.jm,vh);
+    Standard_Complex_Singular_Values.SVD
+      (s.jm,s.dim,s.dim,svls(0).all,e,U,V,11,info);
+    for k in vh'range loop
+      Standard_Complex_Singular_Values.SVD
+        (vh(k).all,s.dim,s.dim,svls(k).all,e,U,V,11,info);
+    end loop;
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( s : in Link_to_System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                svls : in Standard_Complex_VecVecs.VecVec ) is
+  begin
+    if s /= null
+     then Singular_Values(s.all,xr,xi,vh,U,V,e,svls);
+    end if;
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( c : in Circuit;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec;
+                A : out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Vectors.Vector ) is
+
+    info : integer32;
+
+  begin
+    Speel(c,xr,xi,ryd,iyd,rpwt,ipwt,hrp,hip);
+    A := Merge(hrp,hip);
+    Standard_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,11,info);
+  end Singular_Values;
+
+  procedure Singular_Values
+              ( c : in Link_to_Circuit;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec;
+                A : out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Vectors.Vector ) is
+  begin
+    if c /= null then
+      Singular_Values(c.all,xr,xi,ryd,iyd,rpwt,ipwt,hrp,hip,A,U,V,e,s);
+    end if;
+  end Singular_Values;
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 

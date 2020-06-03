@@ -4,7 +4,9 @@ Tue 2 Jun 2020 : added wrapper procedures for the Hessians to
   standard_coefficient_circuits, standard_complex_circuits.adb, and
   added tests to ts_perfhess.adb.  Defined the general case in
   standard_hessian_updaters, updated standard_coefficient_circuits.adb,
-  and added tests to ts_perfhess.
+  and added tests to ts_perfhess.  Added wrappers for the singular
+  values to standard_coefficient_circuits, and added more tests to
+  ts_perfhess, to test user given systems.
 
 Mon 1 Jun 2020 : extended newton_convolutions with procedures to run one
   Newton step with coefficient convolutions in double double precision,

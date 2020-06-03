@@ -768,22 +768,86 @@ procedure ts_perfhess is
     return res;
   end Split;
 
-  function Merge ( hrp,hip : Standard_Floating_VecVecs.VecVec )
-                 return Standard_Complex_Matrices.Matrix is
+  function Split ( c : Standard_Complex_Circuits.Link_to_Circuit )
+                 return Standard_Coefficient_Circuits.Link_to_Circuit is
 
-    dim : constant integer32 := hrp'last;
-    res : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
-    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
+  -- DESCRIPTION :
+  --   Splits the data in the circuit c
+  --   and returns the corresponding coefficient circuit.
+
+    res : Standard_Coefficient_Circuits.Link_to_Circuit;
+
+    use Standard_Complex_Circuits;
 
   begin
-    for i in 1..dim loop
-      hrprow := hrp(i); hiprow := hip(i);
-      for j in 1..dim loop
-        res(i,j) := Standard_Complex_Numbers.Create(hrprow(j),hiprow(j));
-      end loop;
+    if c /= null then
+      declare
+        cs : Standard_Coefficient_Circuits.Circuit(c.nbr);
+      begin
+        cs := Split(c.all);
+        res := new Standard_Coefficient_Circuits.Circuit'(cs);
+      end;
+    end if;
+    return res;
+  end Split;
+
+  function Split ( c : Standard_Complex_Circuits.Circuits )
+                 return Standard_Coefficient_Circuits.Circuits is
+
+  -- DESCRIPTION :
+  --   Splits the data in the circuit c
+  --   and returns the corresponding coefficient circuit.
+
+    res : Standard_Coefficient_Circuits.Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := Split(c(k));
     end loop;
     return res;
-  end Merge;
+  end Split;
+
+  function Split ( s : Standard_Complex_Circuits.System )
+                 return Standard_Coefficient_Circuits.System is
+
+  -- DESCRIPTION :
+  --   Splits the system into an equivalent coefficient system,
+  --   allocates data for all work space.
+
+    res : Standard_Coefficient_Circuits.System(s.neq,s.dim);
+
+  begin
+    res.crc := Split(s.crc);
+    res.mxe := s.mxe;
+    Standard_Vector_Splitters.Split_Complex(s.pwt,res.rpwt,res.ipwt);
+    Standard_Vector_Splitters.Split_Complex(s.yd,res.ryd,res.iyd);
+    Standard_Coefficient_Circuits.Allocate_Hessian_Space
+      (s.dim,res.hrp,res.hip);
+    return res;
+  end Split;
+
+  function Split ( s : Standard_Complex_Circuits.Link_to_System )
+                 return Standard_Coefficient_Circuits.Link_to_System is
+
+  -- DESCRIPTION :
+  --   Splits the system into an equivalent coefficient system,
+  --   allocates data for all work space.
+
+    res : Standard_Coefficient_Circuits.Link_to_System;
+
+    use Standard_Complex_Circuits;
+
+  begin
+    if s /= null then
+      declare
+        cs : Standard_Coefficient_Circuits.System(s.neq,s.dim);
+      begin
+        cs := Split(s.all);
+        res := new Standard_Coefficient_Circuits.System'(cs);
+      end;
+    end if;
+    return res;
+  end Split;
 
   procedure Test_Circuit ( dim,nbr : in integer32 ) is
 
@@ -842,7 +906,7 @@ procedure ts_perfhess is
     Standard_Coefficient_Circuits.Allocate_Hessian_Space(dim,hrp,hip);
     Standard_Coefficient_Circuits.Indexed_Speel(cc,xr,xi,ryd,iyd,hrp,hip);
     put_line("The Hessian recomputed on a coefficient circuit :");
-    h3 := Merge(hrp,hip);
+    h3 := Standard_Coefficient_Circuits.Merge(hrp,hip);
     Standard_Circuit_Makers.Write_Matrix(h3);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h3);
     put("Sum of errors :"); put(err,3); new_line;
@@ -919,7 +983,7 @@ procedure ts_perfhess is
     Standard_Coefficient_Circuits.Power_Table(mxe,xr,xi,rpwt,ipwt);
     Standard_Coefficient_Circuits.Speel(cc,xr,xi,ryd,iyd,rpwt,ipwt,hrp,hip);
     put_line("The Hessian recomputed on a coefficient circuit :");
-    h3 := Merge(hrp,hip);
+    h3 := Standard_Coefficient_Circuits.Merge(hrp,hip);
     Standard_Circuit_Makers.Write_Matrix(h3);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(h0,h3);
     put("Sum of errors :"); put(err,3); new_line;
@@ -1068,20 +1132,31 @@ procedure ts_perfhess is
 
   procedure Standard_Run_EvalDiff2
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                s : in Standard_Complex_Circuits.Link_to_System ) is
+                s : in Standard_Complex_Circuits.Link_to_System;
+                cs : in Standard_Coefficient_Circuits.Link_to_System ) is
 
   -- DESCRIPTION :
   --   Generates a random point to evaluate the system s of circuits,
-  --   to compute its Jacobian and vector of Hessians.
-  --   The values computed algorithmically are compared with
+  --   and the coefficient system cs, to compute its Jacobian and vector
+  --   of Hessians.  The values computed algorithmically are compared with
   --   the symbolic computations on the system p.
 
     x : constant Standard_Complex_Vectors.Vector(1..s.dim)
       := Standard_Random_Vectors.Random_Vector(1,s.dim);
     xv : constant Standard_Complex_Vectors.Link_to_Vector
        := new Standard_Complex_Vectors.Vector'(x);
-    vh : constant Standard_Complex_VecMats.VecMat(1..s.neq)
-       := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
+    xrv : constant Standard_Floating_Vectors.Vector(1..s.dim)
+        := Standard_Vector_Splitters.Real_Part(x);
+    xiv : constant Standard_Floating_Vectors.Vector(1..s.dim)
+        := Standard_Vector_Splitters.Imag_Part(x);
+    xr : constant Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(xrv);
+    xi : constant Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(xiv);
+    vh1 : constant Standard_Complex_VecMats.VecMat(1..s.neq)
+        := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
+    vh2 : constant Standard_Complex_VecMats.VecMat(1..s.neq)
+        := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
     y : constant Standard_Complex_Vectors.Vector(p'range)
       := Standard_Complex_Poly_SysFun.Eval(p.all,x);
     jm : constant Standard_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
@@ -1093,10 +1168,20 @@ procedure ts_perfhess is
     ans : character;
 
   begin
-    Standard_Complex_Circuits.EvalDiff2(s,xv,vh);
+    Standard_Complex_Circuits.EvalDiff2(s,xv,vh1);
     put_line("The function value computed symbolically :"); put_line(y);
     put_line("The function value computed algorithmically :"); put_line(s.fx);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,s.fx);
+    sumerr := sumerr + err;
+    put("The sum of errors :"); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
+    Standard_Coefficient_Circuits.EvalDiff2(cs,xr,xi,vh2);
+    put_line("The recomputed function value with coefficients circuits :");
+    put_line(cs.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(y,cs.fx);
     sumerr := sumerr + err;
     put("The sum of errors :"); put(err,3); new_line;
     put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -1114,13 +1199,31 @@ procedure ts_perfhess is
     if(ans /= 'y')
      then return;
     end if;
+    put_line("The recomputed Jacobian on coefficient circuits :");
+    Standard_Circuit_Makers.Write_Matrix(s.jm);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(jmx,cs.jm);
+    sumerr := sumerr + err;
+    put("The sum of errors :"); put(err,3); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if(ans /= 'y')
+     then return;
+    end if;
     for k in p'range loop
       mat := Standard_Circuit_Makers.Hessian(p(k),x);
       put("Hessian "); put(k,1); put_line(" computed symbolically :");
       Standard_Circuit_Makers.Write_Matrix(mat);
       put("Hessian "); put(k,1); put_line(" computed algorithmically :");
-      Standard_Circuit_Makers.Write_Matrix(vh(k).all);
-      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh(k).all);
+      Standard_Circuit_Makers.Write_Matrix(vh1(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh1(k).all);
+      sumerr := sumerr + err;
+      put("The sum of errors :"); put(err,3); new_line;
+      put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+      if(ans /= 'y')
+       then return;
+      end if;
+      put("Hessian "); put(k,1); put_line(" recomputed :");
+      Standard_Circuit_Makers.Write_Matrix(vh2(k).all);
+      err := Evaluation_Differentiation_Errors.Sum_of_Errors(mat,vh2(k).all);
       sumerr := sumerr + err;
       put("The sum of errors :"); put(err,3); new_line;
       put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
@@ -1269,16 +1372,17 @@ procedure ts_perfhess is
   --   in standard double precision.
 
     use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Circuits;
 
     p : Link_to_Poly_Sys;
-    s : Link_to_System;
+    s : Standard_Complex_Circuits.Link_to_System;
+    cs : Standard_Coefficient_Circuits.Link_to_System;
 
   begin
     new_line;
     put_line("Reading a polynomial system ..."); get(p);
     s := Standard_Circuit_Makers.Make_Complex_System(p);
-    Standard_Run_EvalDiff2(p,s);
+    cs := Split(s);
+    Standard_Run_EvalDiff2(p,s,cs);
   end Standard_Test_EvalDiff2;
 
   procedure DoblDobl_Test_EvalDiff2 is

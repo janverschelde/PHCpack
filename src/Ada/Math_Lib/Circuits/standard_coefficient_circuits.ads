@@ -5,6 +5,7 @@ with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 
@@ -112,6 +113,16 @@ package Standard_Coefficient_Circuits is
   -- DESCRIPTION :
   --   Allocates the space for all rows of the real and imaginary parts
   --   of the Hessian matrices, in s.hrp and s.hip.
+
+  function Merge ( hrp,hip : Standard_Floating_VecVecs.VecVec )
+                 return Standard_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Merges the real and imaginary parts of the rows in hrp and hip
+  --   into one complex matrix.
+
+  -- REQUIRED : hrp'range = hip'range,
+  --   and for all k in hrp'range: hrp(k)'range = hip(k)'range.
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 
@@ -238,6 +249,121 @@ package Standard_Coefficient_Circuits is
   --   fx       vector of function values of the circuits at x;
   --   jm       matrix of partial derivatives;
   --   vh       vector of evaluated Hessian matrices.
+
+-- SINGULAR VALUE DECOMPOSITIONS :
+
+  procedure Singular_Values
+              ( s : in out System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                svls : in Standard_Complex_VecVecs.VecVec );
+  procedure Singular_Values
+              ( s : in Link_to_System;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                svls : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Evaluates and differentiations the circuits in s at x,
+  --   computes the values of all Hessian matrices at x,
+  --   computes all singular values of the Jacobian matrix
+  --   and of all Hessian matrices.
+
+  -- REQUIRED :
+  --   All space for the power table and yd has been allocated.
+
+  -- ON ENTRY :
+  --   s        properly defined and allocated system of circuits;
+  --   xr       real parts of the values for the variables in the system;
+  --   xi       imaginary parts of the values for the variables in the system;
+  --   vh       space allocated for s.neq matrices,
+  --            all matrices have 1..dim for range(1) and range(2);
+  --   svls     vector of range 0..s.neq, with allocated space
+  --            for all vectors of singular values,
+  --            the range of s(k) is 1..s.dim+1.
+
+  -- ON RETURN :
+  --   s.pwt    power table updated for the values in x;
+  --   s.fx     function value of the circuits at x;
+  --   s.jm     the Jacobian matrix evaluated at x,
+  --            but destroyed by the SVD computation;
+  --   vh       vector of evaluated Hessian matrices,
+  --            by destroyed by the SVD computation;
+  --   svls     svls(0) contains the singular values of s.jm, and
+  --            svls(k) contains the singular values of vh(k),
+  --            for k in vh'range.
+
+  procedure Singular_Values
+              ( c : in Circuit;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec;
+                A : out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Vectors.Vector );
+  procedure Singular_Values
+              ( c : in Link_to_Circuit;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ryd : in Standard_Floating_Vectors.Link_to_Vector;
+                iyd : in Standard_Floating_Vectors.Link_to_Vector;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                ipwt : in Standard_Floating_VecVecs.VecVec;
+                hrp : in Standard_Floating_VecVecs.VecVec;
+                hip : in Standard_Floating_VecVecs.VecVec;
+                A : out Standard_Complex_Matrices.Matrix;
+                U : out Standard_Complex_Matrices.Matrix;
+                V : out Standard_Complex_Matrices.Matrix;
+                e : out Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Evaluates the circuit c at x, computes the Hessian matrix A,
+  --   and computes the singular value decomposition of A.
+
+  -- REQUIRED :
+  --   x'range = 1..c.dim, yd'range = 0..c.dim,
+  --   pwt'range = x'range, pwt(k)'range extends to the maximal exponent
+  --   of the k-th variable in the circuit,
+  --   A'range(1) = A'range(2) = x'range,
+  --   U'range(1) = U'range(2) = x'range, V'range(1) = V'range(2) = x'range,
+  --   e'range = 1..c.dim, s'range = 1..c.dim+1.
+
+  -- ON ENTRY :
+  --   c        a circuit, properly defined and allocated;
+  --   xr       real parts of the values for the variables;
+  --   xi       imaginary parts of the values for the variables;
+  --   ryd      work space for the real parts of the function value
+  --            and gradient, of range 0..dim, where dim = xr'last;
+  --   iyd      work space for the imaginary parts of the function value
+  --            and gradient, of range 0..dim, where dim = xi'last;
+  --   rpwt     real parts of the power table, for xr and xi;
+  --   ipwt     imaginary parts of the power table, for xr and xi;
+  --   hrp      works space for the real parts of Hessian matrices;
+  --   hip      works space for the imaginary parts of Hessian matrices.
+
+  -- ON RETURN :
+  --   A        the Hessian matrix of c at x, 
+  --            however, its values are destroyed by the SVD;
+  --   U        the U matrix in the SVD of A;
+  --   V        the V matrix in the SVD of A;
+  --   e        contains error information on the SVD computation;
+  --   s        the first c.dim entries are the singular values of A.
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUIT :
 --   The Indexed_Speel procedures are for circuits where the exponents
