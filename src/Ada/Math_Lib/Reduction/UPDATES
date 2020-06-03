@@ -1,3 +1,6 @@
+Wed 3 Jun 2020 : added a test on job = 0 in ts_svd to compute only the
+  singular values.
+
 Sun 5 Apr 2020 : to {standard,dobldobl,quaddobl}_complex_singular_values.a*,
   added a SVD procedure with a work vector to make it thread safe.
 

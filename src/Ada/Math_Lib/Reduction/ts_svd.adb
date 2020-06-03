@@ -328,6 +328,9 @@ procedure ts_svd is
     info : integer32;
 
   begin
+    SVD(x,n,p,s,e,u,v,0,info);
+    put_line("The singular values with job 0 :"); put_line(s);
+    x := y;
     SVD(x,n,p,s,e,u,v,job,info);
     Test_SVD_Output(y,u,v,s,e,info);
   end Test_SVD_on_Random_Matrix;
