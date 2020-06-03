@@ -86,6 +86,15 @@ package body Multitasked_Hessian_Circuits is
     return res;
   end Allocate;
 
+  procedure Allocate_Hessian_Spaces
+              ( dim : in integer32;
+                hrp,hip : out Standard_Coefficient_Convolutions.VecVecVec ) is
+  begin
+    for k in hrp'range loop
+      Standard_Coefficient_Circuits.Allocate_Hessian_Space(dim,hrp(k),hip(k));
+    end loop;
+  end Allocate_Hessian_Spaces;
+
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
@@ -103,6 +112,7 @@ package body Multitasked_Hessian_Circuits is
     info : integer32;
     idx1,idx2 : integer32 := 0; -- global indices
     lck1,lck2 : Semaphore.Lock;
+    hrps,hips : Standard_Coefficient_Convolutions.VecVecVec(1..nbt);
 
     procedure Reporting_Job ( i,n : integer32 ) is 
 
@@ -164,7 +174,7 @@ package body Multitasked_Hessian_Circuits is
         pA := A(i); pU := U(i); pV := V(i); pe := e(i);
         vls := values(mdx); rpyd := ryd(mdx); ipyd := iyd(mdx);
         Standard_Coefficient_Circuits.Singular_Values
-          (s.crc(mdx),xr,xi,rpyd,ipyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
+          (s.crc(mdx),xr,xi,rpyd,ipyd,s.rpwt,s.ipwt,hrps(i).all,hips(i).all,
            pA.all,pU.all,pV.all,pe.all,vls.all);
         for j in s.jm'range(2) loop
           s.jm(mdx,j) := Standard_Complex_Numbers.Create(rpyd(j),ipyd(j));
@@ -238,7 +248,7 @@ package body Multitasked_Hessian_Circuits is
         pA := A(i); pU := U(i); pV := V(i); pe := e(i);
         vls := values(mdx); rpyd := ryd(mdx); ipyd := iyd(mdx);
         Standard_Coefficient_Circuits.Singular_Values
-          (s.crc(mdx),xr,xi,rpyd,ipyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
+          (s.crc(mdx),xr,xi,rpyd,ipyd,s.rpwt,s.ipwt,hrps(i).all,hips(i).all,
            pA.all,pU.all,pV.all,pe.all,vls.all);
         for j in s.jm'range(2) loop
           s.jm(mdx,j) := Standard_Complex_Numbers.Create(rpyd(j),ipyd(j));
@@ -263,6 +273,7 @@ package body Multitasked_Hessian_Circuits is
     e := Allocate(nbt,s.dim,1,1);
     ryd := Allocate(s.neq,s.dim,1,0); -- space for all gradients
     iyd := Allocate(s.neq,s.dim,1,0);
+    Allocate_Hessian_Spaces(s.dim,hrps,hips);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -278,6 +289,8 @@ package body Multitasked_Hessian_Circuits is
     Standard_Complex_VecVecs.Clear(e);
     Standard_Floating_VecVecs.Clear(ryd);
     Standard_Floating_VecVecs.Clear(iyd);
+    Standard_Coefficient_Convolutions.Clear(hrps);
+    Standard_Coefficient_Convolutions.Clear(hips);
   end Multitasked_Singular_Values;
 
   procedure Static_Singular_Values

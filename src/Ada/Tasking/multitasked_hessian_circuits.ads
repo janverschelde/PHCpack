@@ -12,6 +12,7 @@ with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
+with Standard_Coefficient_Convolutions;
 with DoblDobl_Complex_Circuits;
 with QuadDobl_Complex_Circuits;
 
@@ -28,6 +29,18 @@ package Multitasked_Hessian_Circuits is
   -- DESCRIPTION :
   --   Returns an array of range neqstart..neq,
   --   with allocated vectors of range dimstart..dim.
+
+  procedure Allocate_Hessian_Spaces
+              ( dim : in integer32;
+                hrp,hip : out Standard_Coefficient_Convolutions.VecVecVec );
+
+  -- DESCRIPTION :
+  --   Allocates space for the real and imaginary parts of Hessian
+  --   matrices of dimension dim.
+  --   The ranges of hrp and hip are typically 1..nbt,
+  --   where nbt equals the number of tasks.
+
+  -- REQUIRED : hrp'range = hip'range.
 
   function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
                     return Standard_Complex_VecVecs.VecVec;
