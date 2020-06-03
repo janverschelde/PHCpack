@@ -63,6 +63,7 @@ with Evaluation_Differentiation_Errors;
 with Standard_Vector_Splitters;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
+with Standard_Circuit_Splitters;
 with DoblDobl_Complex_Circuits;
 with QuadDobl_Complex_Circuits;
 with Standard_Circuit_Makers;
@@ -736,119 +737,6 @@ procedure ts_perfhess is
     put("Sum of errors :"); put(err,3); new_line;
   end Test_Product;
 
-  function Split ( c : Standard_Complex_Circuits.Circuit )
-                 return Standard_Coefficient_Circuits.Circuit is
-
-  -- DESCRIPTION :
-  --   Splits the data in the circuit c 
-  --   and returns the corresponding coefficient circuit.
-
-    res : Standard_Coefficient_Circuits.Circuit(c.nbr);
-    fwd : constant Standard_Floating_Vectors.Vector(1..c.dim-1)
-        := (1..c.dim-1 => 0.0);
-    bck : constant Standard_Floating_Vectors.Vector(1..c.dim-2)
-        := (1..c.dim-2 => 0.0);
-    crs : constant Standard_Floating_Vectors.Vector(1..c.dim-2)
-        := (1..c.dim-2 => 0.0);
- 
-  begin
-    res.dim := c.dim;
-    res.xps := c.xps;
-    res.idx := c.idx;
-    res.fac := c.fac;
-    Standard_Vector_Splitters.Split_Complex(c.cff,res.rcf,res.icf);
-    res.rcst := Standard_Complex_Numbers.REAL_PART(c.cst);
-    res.icst := Standard_Complex_Numbers.IMAG_PART(c.cst);
-    res.rfwd := new Standard_Floating_Vectors.Vector'(fwd);
-    res.ifwd := new Standard_Floating_Vectors.Vector'(fwd);
-    res.rbck := new Standard_Floating_Vectors.Vector'(bck);
-    res.ibck := new Standard_Floating_Vectors.Vector'(bck);
-    res.rcrs := new Standard_Floating_Vectors.Vector'(crs);
-    res.icrs := new Standard_Floating_Vectors.Vector'(crs);
-    return res;
-  end Split;
-
-  function Split ( c : Standard_Complex_Circuits.Link_to_Circuit )
-                 return Standard_Coefficient_Circuits.Link_to_Circuit is
-
-  -- DESCRIPTION :
-  --   Splits the data in the circuit c
-  --   and returns the corresponding coefficient circuit.
-
-    res : Standard_Coefficient_Circuits.Link_to_Circuit;
-
-    use Standard_Complex_Circuits;
-
-  begin
-    if c /= null then
-      declare
-        cs : Standard_Coefficient_Circuits.Circuit(c.nbr);
-      begin
-        cs := Split(c.all);
-        res := new Standard_Coefficient_Circuits.Circuit'(cs);
-      end;
-    end if;
-    return res;
-  end Split;
-
-  function Split ( c : Standard_Complex_Circuits.Circuits )
-                 return Standard_Coefficient_Circuits.Circuits is
-
-  -- DESCRIPTION :
-  --   Splits the data in the circuit c
-  --   and returns the corresponding coefficient circuit.
-
-    res : Standard_Coefficient_Circuits.Circuits(c'range);
-
-  begin
-    for k in c'range loop
-      res(k) := Split(c(k));
-    end loop;
-    return res;
-  end Split;
-
-  function Split ( s : Standard_Complex_Circuits.System )
-                 return Standard_Coefficient_Circuits.System is
-
-  -- DESCRIPTION :
-  --   Splits the system into an equivalent coefficient system,
-  --   allocates data for all work space.
-
-    res : Standard_Coefficient_Circuits.System(s.neq,s.dim);
-
-  begin
-    res.crc := Split(s.crc);
-    res.mxe := s.mxe;
-    Standard_Vector_Splitters.Split_Complex(s.pwt,res.rpwt,res.ipwt);
-    Standard_Vector_Splitters.Split_Complex(s.yd,res.ryd,res.iyd);
-    Standard_Coefficient_Circuits.Allocate_Hessian_Space
-      (s.dim,res.hrp,res.hip);
-    return res;
-  end Split;
-
-  function Split ( s : Standard_Complex_Circuits.Link_to_System )
-                 return Standard_Coefficient_Circuits.Link_to_System is
-
-  -- DESCRIPTION :
-  --   Splits the system into an equivalent coefficient system,
-  --   allocates data for all work space.
-
-    res : Standard_Coefficient_Circuits.Link_to_System;
-
-    use Standard_Complex_Circuits;
-
-  begin
-    if s /= null then
-      declare
-        cs : Standard_Coefficient_Circuits.System(s.neq,s.dim);
-      begin
-        cs := Split(s.all);
-        res := new Standard_Coefficient_Circuits.System'(cs);
-      end;
-    end if;
-    return res;
-  end Split;
-
   procedure Test_Circuit ( dim,nbr : in integer32 ) is
 
   -- DESCRIPTION :
@@ -857,7 +745,8 @@ procedure ts_perfhess is
 
     c : constant Standard_Complex_Circuits.Circuit
       := Standard_Circuit_Makers.Random_Complex_Circuit(nbr,dim);
-    cc : constant Standard_Coefficient_Circuits.Circuit := Split(c);
+    cc : constant Standard_Coefficient_Circuits.Circuit
+       := Standard_Circuit_Splitters.Split(c);
     p : constant Standard_Complex_Polynomials.Poly
       := Standard_Circuit_Makers.Make_Polynomial(c,true);
     x : constant Standard_Complex_Vectors.Vector(1..dim)
@@ -921,7 +810,8 @@ procedure ts_perfhess is
 
     c : constant Standard_Complex_Circuits.Circuit
       := Standard_Circuit_Makers.Random_Complex_Circuit(nbr,dim,pwr);
-    cc : constant Standard_Coefficient_Circuits.Circuit := Split(c);
+    cc : constant Standard_Coefficient_Circuits.Circuit
+       := Standard_Circuit_Splitters.Split(c);
     p : constant Standard_Complex_Polynomials.Poly
       := Standard_Circuit_Makers.Make_Polynomial(c,false);
     x : constant Standard_Complex_Vectors.Vector(1..dim)
@@ -1381,7 +1271,7 @@ procedure ts_perfhess is
     new_line;
     put_line("Reading a polynomial system ..."); get(p);
     s := Standard_Circuit_Makers.Make_Complex_System(p);
-    cs := Split(s);
+    cs := Standard_Circuit_Splitters.Split(s);
     Standard_Run_EvalDiff2(p,s,cs);
   end Standard_Test_EvalDiff2;
 

@@ -98,6 +98,7 @@ standard_complex_circuits          : development code for correctness tests
 dobldobl_complex_circuits          : double double complex circuits
 quaddobl_complex_circuits          : quad double complex circuits
 standard_coefficient_circuits      : better performing algo diff eval
+standard_circuit_splitters         : split coefficients of circuits
 standard_circuit_makers            : standard precision testing utilities
 dobldobl_circuit_makers            : double double precision testing utilities
 quaddobl_circuit_makers            : quad double precision testing utilities
