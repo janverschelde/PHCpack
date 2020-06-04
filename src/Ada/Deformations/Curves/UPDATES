@@ -1,3 +1,6 @@
+Wed 3 Jun 2020 : in *_predictor_convolutions.adb, replaced the 11 by 0
+  in the calls to SVD.
+
 Sun 10 May 2020 : added Newton_Fabry procedures on coefficient convolutions,
   to the package standard_predictor_convolutions.
 

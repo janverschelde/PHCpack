@@ -345,7 +345,6 @@ package body DoblDobl_Predictor_Convolutions is
 
     n : constant integer32 := svh.dim;
     p : constant integer32 := svh.dim;
-    job : constant integer32 := 11;
     info : integer32;
 
     use DoblDobl_Complex_Singular_Values;
@@ -353,7 +352,7 @@ package body DoblDobl_Predictor_Convolutions is
   begin
     for k in hom.crc'range loop
       svh.H := Hessian_Convolution_Circuits.Hessian(hom.crc(k),sol);
-      SVD(svh.H,n,p,svh.svl,svh.ewrk,svh.U,svh.V,job,info,svh.work);
+      SVD(svh.H,n,p,svh.svl,svh.ewrk,svh.U,svh.V,0,info,svh.work);
       svh.vals(k) := svh.svl(1);
     end loop;
   end Second;
@@ -388,7 +387,7 @@ package body DoblDobl_Predictor_Convolutions is
 
   begin -- with LU, the system is square so svh.H work space works
     svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
-    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info,svh.work);
+    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,0,info,svh.work);
     svh.vals(0) := svh.svl(svh.dim);
     Second(hom,svh,sol);
     eta := Distance(svh);
@@ -415,7 +414,7 @@ package body DoblDobl_Predictor_Convolutions is
 
   begin -- with LU, the system is square so svh.H work space works
     svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
-    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,11,info,svh.work);
+    SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,0,info,svh.work);
     svh.vals(0) := svh.svl(svh.dim);
     Second(hom,svh,sol);
     if verbose
