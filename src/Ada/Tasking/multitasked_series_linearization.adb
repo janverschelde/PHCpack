@@ -1425,7 +1425,7 @@ package body Multitasked_Series_Linearization is
     use Standard_Series_Matrix_Solvers;
 
   begin
-    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk,wrkv(1));
     if 1.0 + rcond /= 1.0 then
       Ut := Standard_Complex_Singular_Values.Conjugate_Transpose(U);
       Multitasked_Solve_Loop_by_SVD(nbt,A,b,x,S,Ut,V,wrkv,utb,sub,output);
@@ -1449,7 +1449,7 @@ package body Multitasked_Series_Linearization is
     one : constant double_double := create(integer(1));
 
   begin
-    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk,wrkv(1));
     if one + rcond /= one then
       Ut := DoblDobl_Complex_Singular_Values.Conjugate_Transpose(U);
       Multitasked_Solve_Loop_by_SVD(nbt,A,b,x,S,Ut,V,wrkv,utb,sub,output);
@@ -1473,7 +1473,7 @@ package body Multitasked_Series_Linearization is
     one : constant quad_double := create(integer(1));
 
   begin
-    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk);
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk,wrkv(1));
     if one + rcond /= one then
       Ut := QuadDobl_Complex_Singular_Values.Conjugate_Transpose(U);
       Multitasked_Solve_Loop_by_SVD(nbt,A,b,x,S,Ut,V,wrkv,utb,sub,output);

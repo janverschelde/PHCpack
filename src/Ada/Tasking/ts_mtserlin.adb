@@ -202,19 +202,23 @@ procedure ts_mtserlin is
     return speedup;
   end Compute_Speedup;
 
-  procedure Show_Speedup ( serial,multi : in duration ) is
+  procedure Show_Speedup
+              ( nbt : in integer32; serial,multi : in duration ) is
 
   -- DESCRIPTION :
-  --   On input are the elapsed serial and multitasked times.
-  --   If serial /= 0.0, then the speedup is shown.
+  --   On input are the elapsed serial and multitasked times,
+  --   for a number of tasks equal to nbt.
+  --   If serial /= 0.0, then the speedup and efficiency are shown.
 
-    speedup : Duration;
+    speedup,efficiency : Duration;
  
   begin
     if serial + 1.0 /= 1.0 then
       speedup := serial/multi;
-      put("The speedup : ");
-      duration_io.put(speedup,1,3); new_line;
+      put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+      efficiency := speedup/duration(nbt);
+      efficiency := duration(100)*efficiency;
+      put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
     end if;
   end Show_Speedup;
 
@@ -301,7 +305,7 @@ procedure ts_mtserlin is
       mltelp := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-      Show_Speedup(serelp,mltelp);
+      Show_Speedup(nbt,serelp,mltelp);
     elsif nbt = 1 then
       put("Run multitasked code ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -322,7 +326,7 @@ procedure ts_mtserlin is
         mltelp := multstop - multstart;
         put_line("-> Elapsed time with one task :");
         Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        Show_Speedup(serelp,mltelp);
+        Show_Speedup(nbt,serelp,mltelp);
       else
         seristart := Ada.Calendar.Clock;
         if neq > nvr then
@@ -426,7 +430,7 @@ procedure ts_mtserlin is
       mltelp := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-      Show_Speedup(serelp,mltelp);
+      Show_Speedup(nbt,serelp,mltelp);
     elsif nbt = 1 then
       put("Run multitasked code ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -447,7 +451,7 @@ procedure ts_mtserlin is
         mltelp := multstop - multstart;
         put_line("-> Elapsed time with one task :");
         Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        Show_Speedup(serelp,mltelp);
+        Show_Speedup(nbt,serelp,mltelp);
       else
         seristart := Ada.Calendar.Clock;
         if neq > nvr then
@@ -551,7 +555,7 @@ procedure ts_mtserlin is
       mltelp := multstop - multstart;
       put("-> Elapsed time with "); put(nbt,1); put_line(" tasks :");
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-      Show_Speedup(serelp,mltelp);
+      Show_Speedup(nbt,serelp,mltelp);
     elsif nbt = 1 then
       put("Run multitasked code ? (y/n) ");
       Ask_Yes_or_No(ans);
@@ -572,7 +576,7 @@ procedure ts_mtserlin is
         mltelp := multstop - multstart;
         put_line("-> Elapsed time with one task :");
         Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
-        Show_Speedup(serelp,mltelp);
+        Show_Speedup(nbt,serelp,mltelp);
       else
         seristart := Ada.Calendar.Clock;
         if neq > nvr then
@@ -905,7 +909,7 @@ procedure ts_mtserlin is
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..n);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
     nbt : integer32 := 2;
     vm : Standard_Complex_VecMats.VecMat(A'range);
     bw : Standard_Complex_VecVecs.VecVec(b'range);
@@ -921,6 +925,7 @@ procedure ts_mtserlin is
     seristop := Ada.Calendar.Clock;
     serelp := seristop - seristart;
     put(file,"  1 : "); duration_io.put(file,serelp,1,3); new_line(file);
+    flush(file);
     if verbose then
       put_line("-> Elapsed time without multitasking : ");
       Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
@@ -943,7 +948,11 @@ procedure ts_mtserlin is
 	speedup := Compute_Speedup(serelp,mltelp,verbose);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mltelp,1,3);
-        put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
         Standard_Complex_VecVecs.Clear(wks);
         nbt := nbt + inc;
       end;
@@ -973,7 +982,7 @@ procedure ts_mtserlin is
     wrk : constant DoblDobl_Complex_Vectors.Link_to_Vector
         := new DoblDobl_Complex_Vectors.Vector(1..n);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
     vm : DoblDobl_Complex_VecMats.VecMat(A'range);
     bw : DoblDobl_Complex_VecVecs.VecVec(b'range);
     nbt : integer32 := 2;
@@ -989,6 +998,7 @@ procedure ts_mtserlin is
     seristop := Ada.Calendar.Clock;
     serelp := seristop - seristart;
     put(file,"  1 : "); duration_io.put(file,serelp,1,3); new_line(file);
+    flush(file);
     if verbose then
       put_line("-> Elapsed time without multitasking : ");
       Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
@@ -1011,7 +1021,11 @@ procedure ts_mtserlin is
 	speedup := Compute_Speedup(serelp,mltelp,verbose);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mltelp,1,3);
-        put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
         DoblDobl_Complex_VecVecs.Clear(wks);
         nbt := nbt + inc;
       end;
@@ -1041,7 +1055,7 @@ procedure ts_mtserlin is
     wrk : constant QuadDobl_Complex_Vectors.Link_to_Vector
         := new QuadDobl_Complex_Vectors.Vector(1..n);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
     vm : QuadDobl_Complex_VecMats.VecMat(A'range);
     bw : QuadDobl_Complex_VecVecs.VecVec(b'range);
     nbt : integer32 := 2;
@@ -1079,7 +1093,11 @@ procedure ts_mtserlin is
 	speedup := Compute_Speedup(serelp,mltelp,verbose);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mltelp,1,3);
-        put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
         QuadDobl_Complex_VecVecs.Clear(wks);
         nbt := nbt + inc;
       end;
@@ -1129,6 +1147,8 @@ procedure ts_mtserlin is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    put(file,"dimension : "); put(file,n,1);
+    put(file,"  degree : "); put(file,d,1); new_line(file);
     Standard_Benchmark(file,n,nbruns,inc,d_vm,d_bscff);
     DoblDobl_Benchmark(file,n,nbruns,inc,dd_vm,dd_bscff);
     QuadDobl_Benchmark(file,n,nbruns,inc,qd_vm,qd_bscff);
