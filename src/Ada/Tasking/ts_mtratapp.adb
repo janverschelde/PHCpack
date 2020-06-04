@@ -205,7 +205,7 @@ procedure ts_mtratapp is
     eva1,eva2 : Standard_Complex_Vectors.Vector(1..nbr);
     otp : boolean;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
 
     use Ada.Calendar;
     use Standard_Complex_Numbers;
@@ -234,7 +234,10 @@ procedure ts_mtratapp is
     Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
     if serelp + 1.0 /= 1.0 then
       speedup := serelp/mltelp;
-      put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+      put("The speedup : "); duration_io.put(speedup,1,3);
+      efficiency := speedup/duration(nbtasks);
+      efficiency := duration(100)*efficiency;
+      put("  the efficiency : "); duration_io.put(efficiency,2,2); new_line;
     end if;
     err := Difference(numcff1,numcff2);
     put("  the error in numerator coefficients : "); put(err,3); new_line;
@@ -273,7 +276,7 @@ procedure ts_mtratapp is
     eva1,eva2 : DoblDobl_Complex_Vectors.Vector(1..nbr);
     otp : boolean;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
 
     use Ada.Calendar;
     use DoblDobl_Complex_Numbers;
@@ -302,7 +305,10 @@ procedure ts_mtratapp is
     Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
     if serelp + 1.0 /= 1.0 then
       speedup := serelp/mltelp;
-      put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+      put("The speedup : "); duration_io.put(speedup,1,3);
+      efficiency := speedup/duration(nbtasks);
+      efficiency := duration(100)*efficiency;
+      put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
     end if;
     err := Difference(numcff1,numcff2);
     put("  the error in numerator coefficients : "); put(err,3); new_line;
@@ -341,7 +347,7 @@ procedure ts_mtratapp is
     eva1,eva2 : QuadDobl_Complex_Vectors.Vector(1..nbr);
     otp : boolean;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
 
     use Ada.Calendar;
     use QuadDobl_Complex_Numbers;
@@ -370,7 +376,10 @@ procedure ts_mtratapp is
     Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
     if serelp + 1.0 /= 1.0 then
       speedup := serelp/mltelp;
-      put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+      put("The speedup : "); duration_io.put(speedup,1,3);
+      efficiency := speedup/duration(nbtasks);
+      efficiency := duration(100)*efficiency;
+      put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
     end if;
     err := Difference(numcff1,numcff2);
     put("  the error in numerator coefficients : "); put(err,3); new_line;
@@ -408,7 +417,7 @@ procedure ts_mtratapp is
     t : constant double_float := 0.1;
     eva1,eva2 : Standard_Complex_Vectors.Vector(1..nbr);
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
@@ -423,19 +432,24 @@ procedure ts_mtratapp is
     seristop := Ada.Calendar.Clock;
     serelp := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,serelp,1,3); new_line(file);
+    duration_io.put(file,serelp,1,3); new_line(file); flush(file);
     for k in 1..nbruns loop
       multstart := Ada.Calendar.Clock;
       Standard_Multitasking(nbt,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,false);
       multstop := Ada.Calendar.Clock;
       mltelp := multstop - multstart;
-      if serelp + 1.0 /= 1.0
-       then speedup := serelp/mltelp;
-       else speedup := 0.0;
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+      else
+         speedup := 0.0; efficiency := 0.0;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mltelp,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end Standard_Benchmark;
@@ -465,7 +479,7 @@ procedure ts_mtratapp is
     t : constant double_double := create(0.1);
     eva1,eva2 : DoblDobl_Complex_Vectors.Vector(1..nbr);
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
@@ -480,19 +494,24 @@ procedure ts_mtratapp is
     seristop := Ada.Calendar.Clock;
     serelp := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,serelp,1,3); new_line(file);
+    duration_io.put(file,serelp,1,3); new_line(file); flush(file);
     for k in 1..nbruns loop
       multstart := Ada.Calendar.Clock;
       DoblDobl_Multitasking(nbt,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,false);
       multstop := Ada.Calendar.Clock;
       mltelp := multstop - multstart;
-      if serelp + 1.0 /= 1.0
-       then speedup := serelp/mltelp;
-       else speedup := 0.0;
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+      else
+        speedup := 0.0; efficiency := 0.0;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mltelp,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end DoblDobl_Benchmark;
@@ -522,7 +541,7 @@ procedure ts_mtratapp is
     t : constant quad_double := create(0.1);
     eva1,eva2 : QuadDobl_Complex_Vectors.Vector(1..nbr);
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
-    serelp,mltelp,speedup : duration;
+    serelp,mltelp,speedup,efficiency : duration;
     nbt : integer32 := 2;
 
     use Ada.Calendar;
@@ -537,19 +556,24 @@ procedure ts_mtratapp is
     seristop := Ada.Calendar.Clock;
     serelp := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,serelp,1,3); new_line(file);
+    duration_io.put(file,serelp,1,3); new_line(file); flush(file);
     for k in 1..nbruns loop
       multstart := Ada.Calendar.Clock;
       QuadDobl_Multitasking(nbt,numdeg,dendeg,cff,numcff2,dencff2,t,eva2,false);
       multstop := Ada.Calendar.Clock;
       mltelp := multstop - multstart;
-      if serelp + 1.0 /= 1.0
-       then speedup := serelp/mltelp;
-       else speedup := 0.0;
+      if serelp + 1.0 /= 1.0 then
+        speedup := serelp/mltelp;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+      else
+        speedup := 0.0; efficiency := 0.0;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mltelp,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end QuadDobl_Benchmark;
@@ -579,6 +603,9 @@ procedure ts_mtratapp is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    put(file,"numerator degree : "); put(file,numdeg,1);
+    put(file,"  denominator degree : "); put(file,dendeg,1);
+    new_line(file);
     Standard_Benchmark(file,nbr,numdeg,dendeg,nbruns,inc);
     DoblDobl_Benchmark(file,nbr,numdeg,dendeg,nbruns,inc);
     QuadDobl_Benchmark(file,nbr,numdeg,dendeg,nbruns,inc);

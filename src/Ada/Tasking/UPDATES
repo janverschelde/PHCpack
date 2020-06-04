@@ -1,7 +1,8 @@
 Thu 4 Jun 2020 : added flush(file) to ts_mtadcnv and fixed the allocation
   of the u, v, w workspace vectors in multitasked_algodiff_convolutions.adb.
   Fixed an error in multitasked_series_linearization and added the
-  efficiency computations to ts_mtserlin.
+  efficiency computations to ts_mtserlin.  Added efficiency computations
+  to the procedures ts_mtratapp and ts_mtshiftcnv.
 
 Wed 3 Jun 2020 : fixed multitasked_hessian_circuits to use separate work
   spaces for the Hessians for each task, for coefficient circuits.

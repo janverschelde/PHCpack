@@ -53,7 +53,7 @@ procedure ts_mtshiftcnv is
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     cwork : Circuits(c'range);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     ans : character;
     dt : constant double_float := 0.1;
     zero : constant Complex_Number := Create(0.0);
@@ -87,8 +87,10 @@ procedure ts_mtshiftcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       Standard_Complex_Vectors.Copy(cwork(1).cff(1).all,cff2);
       if output then
@@ -125,7 +127,7 @@ procedure ts_mtshiftcnv is
       := DoblDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     cwork : Circuits(c'range);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     ans : character;
     dt : constant double_double := create(0.1);
     zero : constant Complex_Number := Create(integer(0));
@@ -159,8 +161,10 @@ procedure ts_mtshiftcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3);
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       DoblDobl_Complex_Vectors.Copy(cwork(1).cff(1).all,cff2);
       if output then
@@ -197,7 +201,7 @@ procedure ts_mtshiftcnv is
       := QuadDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
     cwork : Circuits(c'range);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     ans : character;
     dt : constant quad_double := create(0.1);
     zero : constant Complex_Number := Create(integer(0));
@@ -231,8 +235,10 @@ procedure ts_mtshiftcnv is
       Time_Stamps.Write_Elapsed_Time(standard_output,multstart,multstop);
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
-        put("The speedup : ");
-        duration_io.put(speedup,1,3); new_line;
+        put("The speedup : "); duration_io.put(speedup,1,3); new_line;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
+        put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
       end if;
       QuadDobl_Complex_Vectors.Copy(cwork(1).cff(1).all,cff2);
       if output then
@@ -267,7 +273,7 @@ procedure ts_mtshiftcnv is
 
     cwork : Circuits(c'range);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
     t : constant double_float := 0.1;
     zero : constant Complex_Number := Create(0.0);
@@ -309,14 +315,18 @@ procedure ts_mtshiftcnv is
       end if;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(speedup,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end Standard_Benchmark;
@@ -342,7 +352,7 @@ procedure ts_mtshiftcnv is
 
     cwork : Circuits(c'range);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
     t : constant double_double := create(0.1);
     zero : constant Complex_Number := Create(integer(0));
@@ -384,14 +394,18 @@ procedure ts_mtshiftcnv is
       end if;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end DoblDobl_Benchmark;
@@ -417,7 +431,7 @@ procedure ts_mtshiftcnv is
 
     cwork : Circuits(c'range);
     multstart,multstop,seristart,seristop : Ada.Calendar.Time;
-    seri_elapsed,mult_elapsed,speedup : Duration;
+    seri_elapsed,mult_elapsed,speedup,efficiency : Duration;
     nbt : integer32 := 2;
     t : constant quad_double := create(0.1);
     zero : constant Complex_Number := Create(integer(0));
@@ -459,14 +473,18 @@ procedure ts_mtshiftcnv is
       end if;
       if seri_elapsed + 1.0 /= 1.0 then
         speedup := seri_elapsed/mult_elapsed;
+        efficiency := speedup/duration(nbt);
+        efficiency := duration(100)*efficiency;
         if verbose then
-          put("The speedup : ");
-          duration_io.put(speedup,1,3); new_line;
+          put("The speedup : "); duration_io.put(speedup,1,3);
+          put("  efficiency : "); duration_io.put(efficiency,2,2); new_line;
         end if;
       end if;
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,speedup,1,3);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end QuadDobl_Benchmark;
@@ -502,6 +520,8 @@ procedure ts_mtshiftcnv is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    put(file,"dimension : "); put(file,dim,1);
+    put(file,"  degree : "); put(file,deg,1); new_line(file);
     Standard_Benchmark(file,deg,nbruns,inc,d_c,false);
     DoblDobl_Benchmark(file,deg,nbruns,inc,dd_c,false);
     QuadDobl_Benchmark(file,deg,nbruns,inc,qd_c,false);
