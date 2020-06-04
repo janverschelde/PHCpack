@@ -712,7 +712,7 @@ procedure ts_mtadcnv is
     use Ada.Calendar;
 
   begin
-    put_line(file,"double precision");
+    put_line(file,"double precision"); flush(file);
     if verbose
      then put_line("Running on one task ...");
     end if;
@@ -722,7 +722,7 @@ procedure ts_mtadcnv is
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
     if verbose then
       put_line("-> Elapsed time without multitasking : ");
       Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
@@ -753,7 +753,8 @@ procedure ts_mtadcnv is
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
       put(file," : "); duration_io.put(file,speedup,1,3);
-      put(file," : "); duration_io.put(file,efficiency,1,3); new_line(file);
+      put(file," : "); duration_io.put(file,efficiency,1,3);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end Standard_Benchmark;
@@ -810,7 +811,7 @@ procedure ts_mtadcnv is
 
   begin
     Standard_Vector_Splitters.Complex_Parts(x,rx,ix);
-    put_line(file,"double precision");
+    put_line(file,"double precision"); flush(file);
     if verbose
      then put_line("Running on one task ...");
     end if;
@@ -820,7 +821,7 @@ procedure ts_mtadcnv is
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
     if verbose then
       put_line("-> Elapsed time without multitasking : ");
       Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
@@ -853,7 +854,7 @@ procedure ts_mtadcnv is
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
       put(file," : "); duration_io.put(file,speedup,1,3);
       put(file," : "); duration_io.put(file,efficiency,2,2);
-      new_line(file);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end Standard_Coefficient_Benchmark;
@@ -900,7 +901,7 @@ procedure ts_mtadcnv is
     use Ada.Calendar;
 
   begin
-    put_line(file,"double double precision");
+    put_line(file,"double double precision"); flush(file);
     if verbose
      then put_line("Running on one task ...");
     end if;
@@ -910,7 +911,7 @@ procedure ts_mtadcnv is
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
     if verbose then
       put_line("-> Elapsed time without multitasking : ");
       Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
@@ -941,7 +942,8 @@ procedure ts_mtadcnv is
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
       put(file," : "); duration_io.put(file,speedup,1,3);
-      put(file," : "); duration_io.put(file,efficiency,2,2); new_line(file);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end DoblDobl_Benchmark;
@@ -1014,7 +1016,7 @@ procedure ts_mtadcnv is
 
   begin
     DoblDobl_Vector_Splitters.Complex_Parts(x,rhx,ihx,rlx,ilx);
-    put_line(file,"double double precision");
+    put_line(file,"double double precision"); flush(file);
     if verbose
      then put_line("Running on one task ...");
     end if;
@@ -1025,7 +1027,7 @@ procedure ts_mtadcnv is
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
     if verbose then
       put_line("-> Elapsed time without multitasking : ");
       Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
@@ -1058,7 +1060,8 @@ procedure ts_mtadcnv is
       put(file,nbt,3);
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
       put(file," : "); duration_io.put(file,speedup,1,3);
-      put(file," : "); duration_io.put(file,efficiency,2,2); new_line(file);
+      put(file," : "); duration_io.put(file,efficiency,2,2);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end DoblDobl_Coefficient_Benchmark;
@@ -1105,7 +1108,7 @@ procedure ts_mtadcnv is
     use Ada.Calendar;
 
   begin
-    put_line(file,"quad double precision");
+    put_line(file,"quad double precision"); flush(file);
     if verbose
      then put_line("Running on one task ...");
     end if;
@@ -1115,7 +1118,7 @@ procedure ts_mtadcnv is
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
     if verbose then
       put_line("-> Elapsed time without multitasking : ");
       Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
@@ -1147,7 +1150,7 @@ procedure ts_mtadcnv is
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
       put(file," : "); duration_io.put(file,speedup,1,3);
       put(file," : "); duration_io.put(file,efficiency,2,2);
-      new_line(file);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end QuadDobl_Benchmark;
@@ -1218,7 +1221,7 @@ procedure ts_mtadcnv is
 
   begin
     QuadDobl_Vector_Splitters.Complex_Parts(x,xr,xi);
-    put_line(file,"quad double precision");
+    put_line(file,"quad double precision"); flush(file);
     if verbose
      then put_line("Running on one task ...");
     end if;
@@ -1228,7 +1231,7 @@ procedure ts_mtadcnv is
     seristop := Ada.Calendar.Clock;
     seri_elapsed := seristop - seristart;
     put(file,"  1 : ");
-    duration_io.put(file,seri_elapsed,1,3); new_line(file);
+    duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
     if verbose then
       put_line("-> Elapsed time without multitasking : ");
       Time_Stamps.Write_Elapsed_Time(standard_output,seristart,seristop);
@@ -1261,7 +1264,7 @@ procedure ts_mtadcnv is
       put(file," : "); duration_io.put(file,mult_elapsed,1,3);
       put(file," : "); duration_io.put(file,speedup,1,3);
       put(file," : "); duration_io.put(file,efficiency,2,2);
-      new_line(file);
+      new_line(file); flush(file);
       nbt := nbt + inc;
     end loop;
   end QuadDobl_Coefficient_Benchmark;

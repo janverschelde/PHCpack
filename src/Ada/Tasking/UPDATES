@@ -1,3 +1,6 @@
+Thu 4 Jun 2020 : added flush(file) to ts_mtadcnv and fixed the allocation
+  of the u, v, w workspace vectors in multitasked_algodiff_convolutions.adb.
+
 Wed 3 Jun 2020 : fixed multitasked_hessian_circuits to use separate work
   spaces for the Hessians for each task, for coefficient circuits.
   To ts_mthesscrc, added procedure to benchmark coefficient circuits.

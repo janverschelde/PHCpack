@@ -970,8 +970,12 @@ package body Multitasked_AlgoDiff_Convolutions is
         := Allocate_Work_Space(nbt,dim,degdim);
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
-    u,v,w : constant Standard_Floating_VecVecs.VecVec(1..nbt)
-          := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
+    u : constant Standard_Floating_VecVecs.VecVec(1..nbt)
+      := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
+    v : constant Standard_Floating_VecVecs.VecVec(1..nbt)
+      := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
+    w : constant Standard_Floating_VecVecs.VecVec(1..nbt)
+      := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
 
     procedure Silent_Job ( i,n : integer32 ) is
 
@@ -1168,10 +1172,16 @@ package body Multitasked_AlgoDiff_Convolutions is
         := Allocate_Work_Space(nbt,dim,degdim);
     iyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
         := Allocate_Work_Space(nbt,dim,degdim);
-    u,v,w : constant Standard_Floating_VecVecs.VecVec(1..nbt)
-          := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
+    u : constant Standard_Floating_VecVecs.VecVec(1..nbt)
+      := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
+    v : constant Standard_Floating_VecVecs.VecVec(1..nbt)
+      := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
+    w : constant Standard_Floating_VecVecs.VecVec(1..nbt)
+      := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     idx1,idx2 : integer32 := 0; -- global indices
+   -- idx1 : integer32 := 0; -- global indices
+   -- idx2 : integer32 := c'last+1; -- only power table
     lck1,lck2 : Semaphore.Lock;
 
     procedure Silent_Job ( i,n : integer32 ) is
