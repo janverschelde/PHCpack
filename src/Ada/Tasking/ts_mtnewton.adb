@@ -879,6 +879,62 @@ procedure ts_mtnewton is
     QuadDobl_Benchmark(file,nbruns,inc,maxit,qds,qdx);
   end Benchmark;
 
+  procedure Benchmark
+              ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim,deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   For the given polynomial system p and some solutions in sols,
+  --   prompts the user for the parameters of the benchmark runs
+  --   in all three levels of precision.
+  
+    file : file_type;
+    nbruns,inc,maxit : integer32 := 0;
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+    c : constant QuadDobl_Speelpenning_Convolutions.Circuits(p'range)
+      := Make_Convolution_Circuits(p.all,natural32(deg));
+    qds : constant QuadDobl_Speelpenning_Convolutions.Link_to_System
+        := Create(c,dim,deg);
+    dds : DoblDobl_Speelpenning_Convolutions.Link_to_System;
+    d_s : Standard_Speelpenning_Convolutions.Link_to_System;
+    scf : QuadDobl_Complex_VecVecs.VecVec(1..dim);
+    ls : constant QuadDobl_Complex_Solutions.Link_to_Solution
+       := QuadDobl_Complex_Solutions.Head_Of(sols);
+    qdx : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+    ddx : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+    d_x : Standard_Complex_VecVecs.Link_to_VecVec;
+
+  begin
+    Add_Parameter_to_Constant(qds); -- make Newton homotopy
+    dds := System_Convolution_Circuits.to_double_double(qds);
+    d_s := System_Convolution_Circuits.to_double(qds);
+    scf := Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    qdx := new QuadDobl_Complex_VecVecs.VecVec'(scf);
+    ddx := QuadDobl_Complex_Vectors_cv.to_double_double(qdx);
+    d_x := QuadDobl_Complex_Vectors_cv.to_double(qdx);
+    new_line;
+    put("Give the number of multitasked runs : "); get(nbruns);
+    put("Give the increment on the tasks : "); get(inc); skip_line;
+    put("Give the maximum number of iterations : "); get(maxit);
+    skip_line;
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    put(file,"dimension : "); put(file,dim,1);
+    put(file,"  degree : "); put(file,deg,1); new_line(file);
+    put(file,"maximum number of iterations : ");
+    put(file,maxit,1); new_line(file);
+    Standard_Benchmark(file,nbruns,inc,maxit,d_s,d_x);
+    DoblDobl_Benchmark(file,nbruns,inc,maxit,dds,ddx);
+    QuadDobl_Benchmark(file,nbruns,inc,maxit,qds,qdx);
+  end Benchmark;
+
   procedure Prompt_for_Dimensions
               ( dim,deg,nbr,pwr : in out integer32 ) is
 
@@ -900,6 +956,9 @@ procedure ts_mtnewton is
 
     prc,ans : character;
     dim,deg,nbr,pwr : integer32 := 0;
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
 
   begin
     new_line;
@@ -908,8 +967,25 @@ procedure ts_mtnewton is
     put("Benchmark for all precisions ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
-      Prompt_for_Dimensions(dim,deg,nbr,pwr);
-      Benchmark(dim,deg,nbr,pwr);
+      new_line;
+      put("Generate a random problem ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Prompt_for_Dimensions(dim,deg,nbr,pwr);
+        Benchmark(dim,deg,nbr,pwr);
+      else
+        new_line;
+        put_line("Reading a polynomial system with solutions ...");
+        QuadDobl_System_and_Solutions_io.get(lp,sols);
+        nbr := integer32(QuadDobl_Complex_Solutions.Length_Of(sols));
+        ls := QuadDobl_Complex_Solutions.Head_Of(sols);
+        dim := ls.n;
+        new_line;
+        put("Read "); put(nbr,1); put(" solutions in dimension ");
+        put(dim,1); put_line(".");
+        new_line;
+        put("Give the degree of the power series : "); get(deg);
+        Benchmark(lp,sols,dim,deg);
+      end if;
     else
       new_line;
       put_line("MENU for the working precision :");
