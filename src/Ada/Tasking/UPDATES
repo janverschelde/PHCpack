@@ -1,5 +1,7 @@
 Fri 5 Jun 2020 : updated ts_mtnewton and added efficiency computations.
   Added benchmark procedure to ts_mtnewton for user given systems.
+  To ts_mtnewton, added function to prompt for sequence of number of tasks,
+  for faster and targeted benchmarking.
 
 Thu 4 Jun 2020 : added flush(file) to ts_mtadcnv and fixed the allocation
   of the u, v, w workspace vectors in multitasked_algodiff_convolutions.adb.

@@ -17,6 +17,7 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
@@ -701,6 +702,7 @@ procedure ts_mtnewton is
 
   procedure Standard_Benchmark
               ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 x : in Standard_Complex_VecVecs.Link_to_VecVec;
                 verbose : in boolean := false ) is
@@ -710,9 +712,11 @@ procedure ts_mtnewton is
 
   -- ON ENTRY :
   --   file     must be opened for output;
-  --   nbruns   the number of multitasked runs;
-  --   inc      increment on the number of tasks;
+  --   nbruns   the number of multitasked runs,
+  --            if zero, then nbtseq will be uses;
+  --   inc      increment on the number of tasks, if nbruns /= 0;
   --   maxit    the maximum number of iterations;
+  --   nbtseq   sequence of number of tasks for multitasked runs;
   --   s        system in one parameter;
   --   x        some point to evaluate at;
   --   verbose  if extra output is needed.
@@ -729,22 +733,38 @@ procedure ts_mtnewton is
     Standard_Complex_VecVecs.Clear(scf);
     put(file,"  1 : ");
     duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
-    for k in 1..nbruns loop
-      Standard_Complex_VecVecs.Copy(x.all,scf);
-      Standard_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,false,verbose);
-      Standard_Complex_VecVecs.Clear(scf);
-      put(file,nbt,3);
-      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3);
-      put(file," : "); duration_io.put(file,efficiency,2,2);
-      new_line(file); flush(file);
-      nbt := nbt + inc;
-    end loop;
+    if nbruns /= 0 then
+      for k in 1..nbruns loop
+        Standard_Complex_VecVecs.Copy(x.all,scf);
+        Standard_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,verbose);
+        Standard_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        nbt := nbt + inc;
+      end loop;
+   else
+      for k in nbtseq'range loop
+        nbt := nbtseq(k);
+        Standard_Complex_VecVecs.Copy(x.all,scf);
+        Standard_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,verbose);
+        Standard_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+     end loop;
+    end if;
   end Standard_Benchmark;
 
   procedure DoblDobl_Benchmark
               ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
                 verbose : in boolean := false ) is
@@ -754,9 +774,11 @@ procedure ts_mtnewton is
 
   -- ON ENTRY :
   --   file     must be opened for output;
-  --   nbruns   the number of multitasked runs;
-  --   inc      increment on the number of tasks;
+  --   nbruns   the number of multitasked runs,
+  --            if zero, then nbtseq will be used;
+  --   inc      increment on the number of tasks, if nbruns /= 0;
   --   maxit    the maximum number of iterations;
+  --   nbtseq   sequence of number of tasks for multitasked runs;
   --   s        system in one parameter;
   --   x        some point to evaluate at;
   --   verbose  if extra output is needed.
@@ -773,22 +795,38 @@ procedure ts_mtnewton is
     DoblDobl_Complex_VecVecs.Clear(scf);
     put(file,"  1 : ");
     duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
-    for k in 1..nbruns loop
-      DoblDobl_Complex_VecVecs.Copy(x.all,scf);
-      DoblDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,false,verbose);
-      DoblDobl_Complex_VecVecs.Clear(scf);
-      put(file,nbt,3);
-      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3);
-      put(file," : "); duration_io.put(file,efficiency,2,2);
-      new_line(file); flush(file);
-      nbt := nbt + inc;
-    end loop;
+    if nbruns /= 0 then
+      for k in 1..nbruns loop
+        DoblDobl_Complex_VecVecs.Copy(x.all,scf);
+        DoblDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,verbose);
+        DoblDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        nbt := nbt + inc;
+      end loop;
+    else
+      for k in nbtseq'range loop
+        nbt := nbtseq(k);
+        DoblDobl_Complex_VecVecs.Copy(x.all,scf);
+        DoblDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,verbose);
+        DoblDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+      end loop;
+    end if;
   end DoblDobl_Benchmark;
 
   procedure QuadDobl_Benchmark
               ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
                 verbose : in boolean := false ) is
@@ -798,9 +836,11 @@ procedure ts_mtnewton is
 
   -- ON ENTRY :
   --   file     must be opened for output;
-  --   nbruns   the number of multitasked runs;
-  --   inc      increment on the number of tasks;
+  --   nbruns   the number of multitasked runs,
+  --            if zero, then nbtseq will be used;
+  --   inc      increment on the number of tasks, if nbruns /= 0;
   --   maxit    the maximum number of iterations;
+  --   nbtseq   sequence of number of tasks for multitasked runs;
   --   s        system in one parameter;
   --   x        some point to evaluate at;
   --   verbose  if extra output is needed.
@@ -817,19 +857,67 @@ procedure ts_mtnewton is
     QuadDobl_Complex_VecVecs.Clear(scf);
     put(file,"  1 : ");
     duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
-    for k in 1..nbruns loop
-      QuadDobl_Complex_VecVecs.Copy(x.all,scf);
-      QuadDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,false,verbose);
-      QuadDobl_Complex_VecVecs.Clear(scf);
-      put(file,nbt,3);
-      put(file," : "); duration_io.put(file,mult_elapsed,1,3);
-      put(file," : "); duration_io.put(file,speedup,1,3);
-      put(file," : "); duration_io.put(file,efficiency,2,2);
-      new_line(file); flush(file);
-      nbt := nbt + inc;
-    end loop;
+    if nbruns /= 0 then
+      for k in 1..nbruns loop
+        QuadDobl_Complex_VecVecs.Copy(x.all,scf);
+        QuadDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,verbose);
+        QuadDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+        nbt := nbt + inc;
+      end loop;
+    else
+      for k in nbtseq'range loop
+        nbt := nbtseq(k);
+        QuadDobl_Complex_VecVecs.Copy(x.all,scf);
+        QuadDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
+                     speedup,efficiency,false,verbose);
+        QuadDobl_Complex_VecVecs.Clear(scf);
+        put(file,nbt,3);
+        put(file," : "); duration_io.put(file,mult_elapsed,1,3);
+        put(file," : "); duration_io.put(file,speedup,1,3);
+        put(file," : "); duration_io.put(file,efficiency,2,2);
+        new_line(file); flush(file);
+      end loop;
+    end if;
   end QuadDobl_Benchmark;
+
+  function Prompt_for_Sequence
+             ( max : in integer32 )
+             return Standard_Integer_Vectors.Link_to_Vector is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a sequence of numbers
+  --   and the sequence is returned in a vector.
+  --   The length of the sequence may not exceed max.
+
+    res : Standard_Integer_Vectors.Link_to_Vector;
+    seq : Standard_Integer_Vectors.Vector(1..max);
+    cnt,nbr : integer32 := 0;
+    ans : character;
+
+  begin
+    loop
+      put_line("Reading a sequence of numbers ...");
+      for k in 1..max loop
+        put("-> give a number (0 to exit) : "); get(nbr);
+        exit when (nbr = 0);
+        cnt := cnt + 1;
+        seq(cnt) := nbr;
+      end loop;
+      put("The sequence : "); put(seq(1..cnt)); new_line;
+      put("Okay to exit ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans = 'y');
+      put_line("Entering the sequence again ...");
+      cnt := 0;
+    end loop;
+    res := new Standard_Integer_Vectors.Vector'(seq(1..cnt));
+    return res;
+  end Prompt_For_Sequence;
 
   procedure Benchmark ( dim,deg,nbr,pwr : in integer32 ) is
 
@@ -851,11 +939,17 @@ procedure ts_mtnewton is
     d_x : Standard_Complex_VecVecs.Link_to_VecVec;
     file : file_type;
     nbruns,inc,maxit : integer32 := 0;
+    nbtseq : Standard_Integer_Vectors.Link_to_Vector;
  
   begin
     new_line;
-    put("Give the number of multitasked runs : "); get(nbruns);
-    put("Give the increment on the tasks : "); get(inc); skip_line;
+    put("Give the number of multitasked runs (0 for sequence) : ");
+    get(nbruns);
+    if nbruns /= 0
+     then put("Give the increment on the tasks : "); get(inc);
+     else nbtseq := Prompt_for_Sequence(44);
+    end if;
+    new_line;
     put("Give the maximum number of iterations : "); get(maxit);
     skip_line;
     new_line;
@@ -874,9 +968,9 @@ procedure ts_mtnewton is
     put(file,"  largest power : "); put(file,pwr,1); new_line(file);
     put(file,"maximum number of iterations : ");
     put(file,maxit,1); new_line(file);
-    Standard_Benchmark(file,nbruns,inc,maxit,d_s,d_x);
-    DoblDobl_Benchmark(file,nbruns,inc,maxit,dds,ddx);
-    QuadDobl_Benchmark(file,nbruns,inc,maxit,qds,qdx);
+    Standard_Benchmark(file,nbruns,inc,maxit,nbtseq,d_s,d_x);
+    DoblDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,dds,ddx);
+    QuadDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,qds,qdx);
   end Benchmark;
 
   procedure Benchmark
@@ -906,6 +1000,7 @@ procedure ts_mtnewton is
     qdx : QuadDobl_Complex_VecVecs.Link_to_VecVec;
     ddx : DoblDobl_Complex_VecVecs.Link_to_VecVec;
     d_x : Standard_Complex_VecVecs.Link_to_VecVec;
+    nbtseq : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
     Add_Parameter_to_Constant(qds); -- make Newton homotopy
@@ -916,8 +1011,13 @@ procedure ts_mtnewton is
     ddx := QuadDobl_Complex_Vectors_cv.to_double_double(qdx);
     d_x := QuadDobl_Complex_Vectors_cv.to_double(qdx);
     new_line;
-    put("Give the number of multitasked runs : "); get(nbruns);
-    put("Give the increment on the tasks : "); get(inc); skip_line;
+    put("Give the number of multitasked runs (0 for sequence) : ");
+    get(nbruns);
+    if nbruns /= 0
+     then put("Give the increment on the tasks : "); get(inc);
+     else nbtseq := Prompt_for_Sequence(44);
+    end if;
+    new_line;
     put("Give the maximum number of iterations : "); get(maxit);
     skip_line;
     new_line;
@@ -930,9 +1030,9 @@ procedure ts_mtnewton is
     put(file,"  degree : "); put(file,deg,1); new_line(file);
     put(file,"maximum number of iterations : ");
     put(file,maxit,1); new_line(file);
-    Standard_Benchmark(file,nbruns,inc,maxit,d_s,d_x);
-    DoblDobl_Benchmark(file,nbruns,inc,maxit,dds,ddx);
-    QuadDobl_Benchmark(file,nbruns,inc,maxit,qds,qdx);
+    Standard_Benchmark(file,nbruns,inc,maxit,nbtseq,d_s,d_x);
+    DoblDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,dds,ddx);
+    QuadDobl_Benchmark(file,nbruns,inc,maxit,nbtseq,qds,qdx);
   end Benchmark;
 
   procedure Prompt_for_Dimensions
