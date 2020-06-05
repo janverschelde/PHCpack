@@ -1,3 +1,5 @@
+Fri 5 Jun 2020 : updated ts_mtnewton and added efficiency computations.
+
 Thu 4 Jun 2020 : added flush(file) to ts_mtadcnv and fixed the allocation
   of the u, v, w workspace vectors in multitasked_algodiff_convolutions.adb.
   Fixed an error in multitasked_series_linearization and added the
