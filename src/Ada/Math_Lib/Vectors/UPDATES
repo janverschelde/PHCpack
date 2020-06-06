@@ -1,3 +1,6 @@
+Sat 6 Jun 2020 : improved generic_vectors.adb for the sum of null vectors
+  or vectors with empty ranges.
+
 Tue 2 Jun 2020 : in *vector_splitters.adb improved the Split_Complex
   procedures to skip null entries.
 

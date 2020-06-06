@@ -144,11 +144,15 @@ package body Generic_Vectors is
     res : number;
 
   begin
-    Copy(v(v'first),res);
-    for i in v'first+1..v'last loop
-      Add(res,v(i));
-    end loop;
-    return res;
+    if v'first < v'last then
+      return Ring.zero;
+    else
+      Copy(v(v'first),res);
+      for i in v'first+1..v'last loop
+        Add(res,v(i));
+      end loop;
+      return res;
+    end if;
   end Sum;
 
 -- ARITHMETIC AS PROCEDURES :
@@ -303,7 +307,10 @@ package body Generic_Vectors is
 
   function Sum ( v : Link_to_Vector ) return number is
   begin
-    return Sum(v.all);
+    if v = null
+     then return Ring.zero;
+     else return Sum(v.all);
+    end if;
   end Sum;
 
 -- ARITHMETIC AS PROCEDURES :
