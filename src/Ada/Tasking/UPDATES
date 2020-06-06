@@ -1,3 +1,6 @@
+Sat 6 Jun 2020 : updated the benchmarking procedures in ts_mthesscrc
+  with a function to prompt for sequences of numbers of tasks.
+
 Fri 5 Jun 2020 : updated ts_mtnewton and added efficiency computations.
   Added benchmark procedure to ts_mtnewton for user given systems.
   To ts_mtnewton, added function to prompt for sequence of number of tasks,
