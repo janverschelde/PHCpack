@@ -118,11 +118,13 @@ package QuadDobl_Circuit_Makers is
   --   returns 0 otherwise.
 
   function Make_Complex_Circuit
-             ( p : QuadDobl_Complex_Polynomials.Poly )
+             ( p : QuadDobl_Complex_Polynomials.Poly;
+               verbose : in boolean := true )
              return QuadDobl_Complex_Circuits.Circuit;
 
   -- DESCRIPTION :
   --   Returns the circuit representation of the polynomial p.
+  --   If verbose, then extra information is written to screen.
     
   function Make_Complex_System
              ( p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;

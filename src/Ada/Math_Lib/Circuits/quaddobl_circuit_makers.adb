@@ -6,6 +6,7 @@ with QuadDobl_Complex_Numbers_io;         use QuadDobl_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Natural_Vectors_io;         use Standard_Natural_Vectors_io;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Random_Vectors;
 with QuadDobl_Random_Vectors;
@@ -242,11 +243,16 @@ package body QuadDobl_Circuit_Makers is
 
     use QuadDobl_Complex_Polynomials;
 
+    res : QuadDobl_Complex_Numbers.Complex_Number;
     dim : constant integer32 := integer32(Number_of_Unknowns(p));
-    deg : Degrees := new Standard_Natural_Vectors.Vector'(1..dim => 0);
-    res : constant QuadDobl_Complex_Numbers.Complex_Number := Coeff(p,deg);
+    zdg : constant Standard_Natural_Vectors.Vector(1..dim) := (1..dim => 0);
+    deg : Degrees;
 
   begin
+   -- put_line("inside constant coefficient ...");
+    deg := new Standard_Natural_Vectors.Vector'(zdg);
+   -- put("deg : "); put(deg.all); new_line;
+    res := Coeff(p,deg);
     Clear(deg);
     return res;
   end Constant_Coefficient;
@@ -267,7 +273,8 @@ package body QuadDobl_Circuit_Makers is
   end Is_NonZero;
 
   function Make_Complex_Circuit
-             ( p : QuadDobl_Complex_Polynomials.Poly )
+             ( p : QuadDobl_Complex_Polynomials.Poly;
+               verbose : boolean := true )
              return QuadDobl_Complex_Circuits.Circuit is
 
     use QuadDobl_Complex_Polynomials;
@@ -302,6 +309,10 @@ package body QuadDobl_Circuit_Makers is
     begin
       if not Is_Zero(t.dg) then
         cnt := cnt + 1;
+        if verbose then
+          put("visiting term "); put(cnt,1);
+          put(" with exponents : "); put(t.dg.all); new_line;
+        end if;
         res.cff(cnt) := t.cf;
         for i in xp'range loop
           xp(i) := integer32(t.dg(i));
@@ -334,6 +345,10 @@ package body QuadDobl_Circuit_Makers is
 
   begin
     for k in c'range loop
+      if verbose then
+        put("The circuit for polynomial "); put(k,1);
+        put_line(" :");
+      end if;
       c(k) := new Circuit'(Make_Complex_Circuit(p(k)));
       if verbose then
         for i in 1..c(k).nbr loop
