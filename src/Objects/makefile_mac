@@ -902,6 +902,10 @@ ts_vmpnewt:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpnewt.adb \
               -o $(BIN)/ts_vmpnewt
 
+ts_newcirc:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_newcirc.adb \
+              -o $(BIN)/ts_newcirc
+
 # Test programs for the Deformations/Curves library :
 
 ts_durker:
