@@ -2,6 +2,7 @@ with text_io;                             use text_io;
 with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
@@ -454,6 +455,63 @@ package body Standard_Circuit_Makers is
     return res;
   end Make_Complex_Circuit;
 
+  function Make_Coefficient_Circuit
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Coefficient_Circuits.Circuit is
+
+    use Standard_Complex_Polynomials;
+
+    nbr : constant integer32 := integer32(Number_of_Terms(p));
+    dim : constant integer32 := integer32(Number_of_Unknowns(p));
+    cst : constant Standard_Complex_Numbers.Complex_Number
+        := Constant_Coefficient(p);
+    isz : constant integer32 := Is_NonZero(cst);
+    res : Standard_Coefficient_Circuits.Circuit(nbr-isz)
+        := Standard_Coefficient_Circuits.Allocate(nbr-isz,dim);
+    cnt : integer32 := 0;
+
+    function Is_Zero ( d : in Degrees ) return boolean is
+    
+    -- DESCRIPTION :
+    --   Returns true if all entries of d are zero.
+
+    begin
+      for k in d'range loop
+        if d(k) /= 0
+         then return false;
+        end if;
+      end loop;
+      return true;
+    end Is_Zero;
+
+    procedure Visit_Term ( t : in Term; c : out boolean ) is
+
+      xp : Standard_Integer_Vectors.Vector(t.dg'range);
+
+    begin
+      if not Is_Zero(t.dg) then
+        cnt := cnt + 1;
+        res.rcf(cnt) := Standard_Complex_Numbers.REAL_PART(t.cf);
+        res.icf(cnt) := Standard_Complex_Numbers.IMAG_PART(t.cf);
+        for i in xp'range loop
+          xp(i) := integer32(t.dg(i));
+        end loop;
+        res.xps(cnt) := new Standard_Integer_Vectors.Vector'(xp);
+        res.idx(cnt) := Exponent_Indices.Exponent_Index(res.xps(cnt));
+        res.fac(cnt) := Exponent_Indices.Factor_Index(res.xps(cnt));
+      end if;
+      c := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    res.dim := dim;
+    res.rcst := Standard_Complex_Numbers.REAL_PART(cst);
+    res.icst := Standard_Complex_Numbers.IMAG_PART(cst);
+    Visit_Terms(p);
+    return res;
+  end Make_Coefficient_Circuit;
+
   function Make_Complex_System
              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                verbose : in boolean := true )
@@ -473,6 +531,33 @@ package body Standard_Circuit_Makers is
           put(c(k).cff(i)); put(c(k).xps(i)); new_line;
         end loop;
         put(c(k).cst); new_line;
+      end if;
+    end loop;
+    d := c(c'first).dim;
+    res := new System'(Create(c,d));
+    return res;
+  end Make_Complex_System;
+
+  function Make_Complex_System
+             ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+               verbose : in boolean := true )
+             return Standard_Coefficient_Circuits.Link_to_System is
+
+    use Standard_Coefficient_Circuits;
+
+    res : Link_to_System;
+    c : Circuits(p'range);
+    d : integer32;
+
+  begin
+    for k in c'range loop
+      c(k) := new Circuit'(Make_Coefficient_Circuit(p(k)));
+      if verbose then
+        for i in 1..c(k).nbr loop
+          put(c(k).rcf(i)); put("  "); put(c(k).icf(i));
+          put(c(k).xps(i)); new_line;
+        end loop;
+        put(c(k).rcst); put("  "); put(c(k).icst); new_line;
       end if;
     end loop;
     d := c(c'first).dim;

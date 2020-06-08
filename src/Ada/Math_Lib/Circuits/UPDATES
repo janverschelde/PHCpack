@@ -1,3 +1,7 @@
+Sun 7 Jun 2020 : added two functions to standard_circuit_makers to make
+  a coefficient circuit directly from a polynomial system.
+  Fix compilation error in ts_perfade.
+
 Sat 6 Jun 2020 : added verbose flag to a function in quaddobl_circuit_makers.
 
 Wed 3 Jun 2020 : in *_complex_circuits.adb, hessian_convolution_circuits.adb,

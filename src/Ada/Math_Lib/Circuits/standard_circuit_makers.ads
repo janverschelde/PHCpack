@@ -166,6 +166,13 @@ package Standard_Circuit_Makers is
 
   -- DESCRIPTION :
   --   Returns the circuit representation of the polynomial p.
+
+  function Make_Coefficient_Circuit
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Coefficient_Circuits.Circuit;
+
+  -- DESCRIPTION :
+  --   Returns the coefficient circuit from the data in p.
     
   function Make_Complex_System
              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -174,6 +181,15 @@ package Standard_Circuit_Makers is
 
   -- DESCRIPTION :
   --   Returns the system of circuits defined by p.
+  --   If verbose, then the tableau format of the system is written.
+
+  function Make_Complex_System
+             ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+               verbose : in boolean := true )
+             return Standard_Coefficient_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns the system of coefficient circuits defined by p.
   --   If verbose, then the tableau format of the system is written.
 
   procedure Write_Matrix ( A : in Standard_Complex_Matrices.Matrix );

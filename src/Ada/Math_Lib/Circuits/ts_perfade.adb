@@ -404,7 +404,7 @@ procedure ts_perfade is
     put_line(zd);
    -- err := Evaluation_Differentiation_Errors.Difference(yd(1..yd'last),zd);
    -- put("The error :"); put(err,3); new_line;
-    Standard_Coefficient_Circuits.Speel(c2,xr,xi,ryd,iyd);
+    Standard_Coefficient_Circuits.Indexed_Speel(c2,xr,xi,ryd,iyd);
     yd2 := Make_Complex(ryd,iyd);
     put_line("The recomputed value :"); put(yd2(0)); new_line;
     put_line("The recomputed gradient :"); put_line(yd2(1..yd2'last));
@@ -857,7 +857,7 @@ procedure ts_perfade is
     print_times(standard_output,timer,"complex Speel");
     tstart(timer);
     for k in 1..frq loop
-      Standard_Coefficient_Circuits.Speel(c2,xr,xi,ryd,iyd);
+      Standard_Coefficient_Circuits.Indexed_Speel(c2,xr,xi,ryd,iyd);
     end loop;
     tstop(timer);
     new_line;
