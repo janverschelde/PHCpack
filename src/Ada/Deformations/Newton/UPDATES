@@ -1,3 +1,6 @@
+Mon 8 Jun 2020 : new ts_newcirc to develop Newton's method on coefficient
+  circuits for better performing root refiners.
+
 Mon 27 Apr 2020 : extended drivers_to_dd_qd_root_refiners.adb with
   multitasking for square systems that are not Laurent.
 

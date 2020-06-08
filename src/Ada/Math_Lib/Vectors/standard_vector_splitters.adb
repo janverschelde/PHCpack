@@ -307,6 +307,16 @@ package body Standard_Vector_Splitters is
   end Complex_Parts;
 
   procedure Complex_Parts
+              ( x : in Standard_Complex_Vectors.Vector;
+                rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    for k in x'range loop
+      rpx(k) := Standard_Complex_Numbers.REAL_PART(x(k));
+      ipx(k) := Standard_Complex_Numbers.IMAG_PART(x(k));
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
               ( x : in Standard_Complex_VecVecs.VecVec;
                 rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
   begin

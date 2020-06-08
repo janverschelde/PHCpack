@@ -1,4 +1,4 @@
-Root refining and a modified Newton's method in PHCv2.4.76
+Root refining and a modified Newton's method in PHCv2.4.77
 
 This directory is entirely new in release 2.3.  It contains the
 older root refiners, which were extended in the second release with
@@ -119,4 +119,6 @@ varbprec_complex_newton_steps    : variable precision Newton steps
 random_conditioned_root_problems : generate and test random root problems
 verification_of_solutions        : run sequences of varbprec Newton steps
 ts_vmpnewt                       : test on variable precision Newton
+------------------------------------------------------------------------------
+ts_newcirc                       : test Newton on coefficient circuits
 ------------------------------------------------------------------------------

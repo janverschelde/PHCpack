@@ -126,6 +126,9 @@ package Standard_Vector_Splitters is
               ( x : in Standard_Complex_Vectors.Link_to_Vector;
                 rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector );
   procedure Complex_Parts
+              ( x : in Standard_Complex_Vectors.Vector;
+                rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Complex_Parts
               ( x : in Standard_Complex_VecVecs.VecVec;
                 rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec );
   procedure Complex_Parts
