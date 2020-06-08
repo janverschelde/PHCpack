@@ -1,3 +1,5 @@
+Mon 8 Jun 2020 : to standard_vector_splitters, added 2 Split/Merge procedures.
+
 Sat 6 Jun 2020 : improved generic_vectors.adb for the sum of null vectors
   or vectors with empty ranges.
 

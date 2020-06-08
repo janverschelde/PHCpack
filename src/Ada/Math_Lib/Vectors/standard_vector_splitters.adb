@@ -152,6 +152,21 @@ package body Standard_Vector_Splitters is
   end Split_Complex;
 
   procedure Split_Complex
+              ( x : in Standard_Complex_Vectors.Vector;
+                rpx,ipx : out Standard_Floating_Vectors.Link_to_Vector ) is
+
+    rx,ix : Standard_Floating_Vectors.Vector(x'range);
+
+  begin
+    for k in x'range loop
+      rx(k) := Standard_Complex_Numbers.REAL_PART(x(k));
+      ix(k) := Standard_Complex_Numbers.IMAG_PART(x(k));
+    end loop;
+    rpx := new Standard_Floating_Vectors.Vector'(rx);
+    ipx := new Standard_Floating_Vectors.Vector'(ix);
+  end Split_Complex;
+
+  procedure Split_Complex
               ( x : in Standard_Complex_Vectors.Link_to_Vector;
                 rpx,ipx : out Standard_Floating_Vectors.Link_to_Vector ) is
 
@@ -312,6 +327,15 @@ package body Standard_Vector_Splitters is
   procedure Complex_Merge
              ( rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector;
                cvx : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    for k in cvx'range loop
+      cvx(k) := Standard_Complex_Numbers.Create(rpx(k),ipx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+             ( rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector;
+               cvx : out Standard_Complex_Vectors.Vector ) is
   begin
     for k in cvx'range loop
       cvx(k) := Standard_Complex_Numbers.Create(rpx(k),ipx(k));
