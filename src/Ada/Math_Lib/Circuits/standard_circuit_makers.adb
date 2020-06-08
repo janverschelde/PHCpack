@@ -538,7 +538,7 @@ package body Standard_Circuit_Makers is
     return res;
   end Make_Complex_System;
 
-  function Make_Complex_System
+  function Make_Coefficient_System
              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                verbose : in boolean := true )
              return Standard_Coefficient_Circuits.Link_to_System is
@@ -563,7 +563,7 @@ package body Standard_Circuit_Makers is
     d := c(c'first).dim;
     res := new System'(Create(c,d));
     return res;
-  end Make_Complex_System;
+  end Make_Coefficient_System;
 
   procedure Write_Matrix ( A : in Standard_Complex_Matrices.Matrix ) is
   begin

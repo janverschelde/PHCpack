@@ -183,7 +183,7 @@ package Standard_Circuit_Makers is
   --   Returns the system of circuits defined by p.
   --   If verbose, then the tableau format of the system is written.
 
-  function Make_Complex_System
+  function Make_Coefficient_System
              ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                verbose : in boolean := true )
              return Standard_Coefficient_Circuits.Link_to_System;

@@ -1,3 +1,6 @@
+Mon 8 Jun 2020 : turned make_complex_system into make_coefficient_system
+  in standard_circuit_makers.
+
 Sun 7 Jun 2020 : added two functions to standard_circuit_makers to make
   a coefficient circuit directly from a polynomial system.
   Fix compilation error in ts_perfade.
