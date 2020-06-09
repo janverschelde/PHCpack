@@ -120,5 +120,6 @@ random_conditioned_root_problems : generate and test random root problems
 verification_of_solutions        : run sequences of varbprec Newton steps
 ts_vmpnewt                       : test on variable precision Newton
 ------------------------------------------------------------------------------
+standard_newton_circuits         : run Newton on coefficient circuits
 ts_newcirc                       : test Newton on coefficient circuits
 ------------------------------------------------------------------------------

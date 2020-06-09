@@ -3,87 +3,21 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Complex_Vector_Norms;
-with Standard_Vector_Splitters;
-with Standard_Complex_Linear_Solvers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_System_and_Solutions_io;
 with Standard_Coefficient_Circuits;      use Standard_Coefficient_Circuits;
 with Standard_Circuit_Makers;            use Standard_Circuit_Makers;
+with Standard_Newton_Circuits;           use Standard_Newton_Circuits;
 
 procedure ts_newcirc is
 
 -- DESCRIPTION :
 --   Test the development of Newton's method on coefficient circuits.
-
-  procedure LU_Newton_Step
-              ( s : in Link_to_System;
-                v : in out Standard_Complex_Vectors.Vector;
-                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
-                ipvt : in out Standard_Integer_Vectors.Vector;
-                info : out integer32; res,err : out double_float;
-                verbose : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Does one step with Newton's method on s, starting at v,
-  --   using LU factorization to solve the linear system.
-
-  -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range.
-
-  -- ON ENTRY :
-  --   s        coefficient system of circuits;
-  --   v        vector with approximate values for a solution to s;
-  --   xr       work space allocated for the real parts of v;
-  --   xi       work space allocated for the imaginary parts of v;
-  --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output.
-
-  -- ON RETURN :
-  --   s        s.fx contains the update value to v, if info = 0,
-  --            otherwise s.fx contains the function value of s at v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the given v;
-  --   xr       real parts of the complex numbers in v;
-  --   xi       imaginary parts of the complex numbers in v;
-  --   ipvt     pivoting information of the LU factorization;
-  --   info     if nonzero, then the Jacobian may be singular;
-  --   res      residual, max norm of the function value at v;
-  --   err      max norm of the update vector to v.
-
-  begin
-    Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
-    Standard_Coefficient_Circuits.EvalDiff(s,xr,xi);
-    res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
-    if verbose then
-      put_line("The function value : "); put_line(s.fx);
-      put("The residual :"); put(res,3); new_line;
-    end if;
-    Standard_Complex_Linear_Solvers.lufac(s.jm,s.dim,ipvt,info);
-    if info /= 0 then
-      if verbose
-       then put("info : "); put(info,1); put_line(" singular Jacobian?");
-      end if;
-    else
-      Standard_Complex_Vectors.Min(s.fx);
-      Standard_Complex_Linear_Solvers.lusolve(s.jm,s.dim,ipvt,s.fx);
-      err := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
-      if verbose then
-        put_line("The update : "); put_line(s.fx);
-        put("Forward error :"); put(err,3); new_line;
-      end if;
-      for k in v'range loop
-        v(k) := v(k) + s.fx(k);
-      end loop;
-    end if;
-  end LU_Newton_Step;
 
   procedure LU_Newton_Steps
               ( s : in Link_to_System;
@@ -104,13 +38,19 @@ procedure ts_newcirc is
        := new Standard_Floating_Vectors.Vector'(vxr);
     xi : Standard_Floating_Vectors.Link_to_Vector
        := new Standard_Floating_Vectors.Vector'(vxi);
-    res,err : double_float;
+    res,rco,err : double_float;
     ans : character;
+    condition : boolean;
 
   begin
+    put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+    condition := (ans = 'y');
     put_line("The vector v :"); put_line(v);
     loop
-      LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err,true);
+      if condition
+       then LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err,true);
+       else LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err,true);
+      end if;
       put_line("The vector v :"); put_line(v);
       put("Another step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
