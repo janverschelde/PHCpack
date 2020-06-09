@@ -20,6 +20,9 @@ package Drivers_to_dd_qd_Root_Refiners is
   --   On return is the given system converted to double double numbers.
 
   procedure Multprec_to_DoblDobl_Complex
+              ( p : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                s : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Multprec_to_DoblDobl_Complex
               ( file : in file_type;
                 p : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 s : out DoblDobl_Complex_Solutions.Solution_List );
@@ -38,6 +41,9 @@ package Drivers_to_dd_qd_Root_Refiners is
   --   with standard complex coefficients.
   --   On return is the given system converted to quad double numbers.
 
+  procedure Multprec_to_QuadDobl_Complex
+              ( p : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                s : out QuadDobl_Complex_Solutions.Solution_List );
   procedure Multprec_to_QuadDobl_Complex
               ( file : in file_type;
                 p : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;

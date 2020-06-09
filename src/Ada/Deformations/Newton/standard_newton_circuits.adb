@@ -84,4 +84,44 @@ package body Standard_Newton_Circuits is
     end if;
   end LU_Newton_Step;
 
+-- MANY NEWTON STEPS :
+
+  procedure LU_Newton_Steps
+              ( s : in Standard_Coefficient_Circuits.Link_to_System;
+                v : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                maxit : in natural32; tolres,tolerr : in double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32; res,err : out double_float;
+                numit : out natural32; fail : out boolean;
+                verbose : in boolean := true ) is
+  begin
+    for k in 1..maxit loop
+      LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err,verbose);
+      if res <= tolres and err <= tolerr
+       then numit := k; fail := false; return;
+      end if;
+    end loop;
+    fail := true; numit := maxit;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( s : in Standard_Coefficient_Circuits.Link_to_System;
+                v : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                maxit : in natural32; tolres,tolerr : in double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                res,rco,err : out double_float;
+                numit : out natural32; fail : out boolean;
+                verbose : in boolean := true ) is
+  begin
+    for k in 1..maxit loop
+      LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err,verbose);
+      if res <= tolres and err <= tolerr
+       then numit := k; fail := false; return;
+      end if;
+    end loop;
+    fail := true; numit := maxit;
+  end LU_Newton_Steps;
+
 end Standard_Newton_Circuits;

@@ -50,6 +50,25 @@ package body Drivers_to_dd_qd_Root_Refiners is
   end Standard_to_DoblDobl_Complex;
 
   procedure Multprec_to_DoblDobl_Complex
+              ( p : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                s : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    q : Multprec_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : Multprec_Complex_Solutions.Solution_List;
+
+  begin
+    Multprec_Complex_Laurentials_io.Set_Working_Precision(5);
+    Multprec_System_and_Solutions_io.get(q,sols);
+    declare
+      sq : constant DoblDobl_Complex_Laur_Systems.Laur_Sys
+         := Multprec_Laur_Sys_to_DoblDobl_Complex(q.all);
+    begin
+      p := new DoblDobl_Complex_Laur_Systems.Laur_Sys'(sq);
+    end;
+    s := DoblDobl_Complex_Solutions.Create(sols);
+  end Multprec_to_DoblDobl_Complex;
+
+  procedure Multprec_to_DoblDobl_Complex
               ( file : in file_type;
                 p : out DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
                 s : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -86,6 +105,25 @@ package body Drivers_to_dd_qd_Root_Refiners is
     end;
     s := QuadDobl_Complex_Solutions.Create(sols);
   end Standard_to_QuadDobl_Complex;
+
+  procedure Multprec_to_QuadDobl_Complex
+              ( p : out QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                s : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    q : Multprec_Complex_Laur_Systems.Link_to_Laur_Sys;
+    sols : Multprec_Complex_Solutions.Solution_List;
+
+  begin
+    Multprec_Complex_Laurentials_io.Set_Working_Precision(10);
+    Multprec_System_and_Solutions_io.get(q,sols);
+    declare
+      sq : constant QuadDobl_Complex_Laur_Systems.Laur_Sys
+         := Multprec_Laur_Sys_to_QuadDobl_Complex(q.all);
+    begin
+      p := new QuadDobl_Complex_Laur_Systems.Laur_Sys'(sq);
+    end;
+    s := QuadDobl_Complex_Solutions.Create(sols);
+  end Multprec_to_QuadDobl_Complex;
 
   procedure Multprec_to_QuadDobl_Complex
               ( file : in file_type;
