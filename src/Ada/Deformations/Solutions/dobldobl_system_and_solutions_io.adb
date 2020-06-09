@@ -8,26 +8,28 @@ with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 
 package body DoblDobl_System_and_Solutions_io is
 
--- AUXILIARY ROUTINE :
+-- AUXILIARY ROUTINES :
 
   procedure Scan_for_Solutions
-              ( file : in file_type; sols : out Solution_List ) is
+              ( file : in file_type; sols : out Solution_List;
+                banner : in string := "SOLUTIONS" ) is
 
     found : boolean;
 
   begin
-    Scan_and_Skip(file,"SOLUTIONS",found);
+    Scan_and_Skip(file,banner,found);
     if found
      then get(file,sols);
     end if;
   end Scan_for_Solutions;
 
   procedure Write_Solutions
-              ( file : in file_type; sols : in Solution_List ) is
+              ( file : in file_type; sols : in Solution_List;
+                banner : in string := "THE SOLUTIONS :" ) is
   begin
     if not Is_Null(sols) then
       new_line(file);
-      put_line(file,"THE SOLUTIONS : ");
+      put_line(file,banner);
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     end if;
   end Write_Solutions;
@@ -35,14 +37,16 @@ package body DoblDobl_System_and_Solutions_io is
 -- TARGET ROUTINES :
 
   procedure get ( file : in file_type;
-                  p : out Link_to_Poly_Sys; sols : out Solution_List ) is
+                  p : out Link_to_Poly_Sys; sols : out Solution_List;
+                  banner : in string := "SOLUTIONS" ) is
 
   begin
     get(file,p);
-    Scan_for_Solutions(file,sols);
+    Scan_for_Solutions(file,sols,banner);
   end get;
 
-  procedure get ( p : out Link_to_Poly_Sys; sols : out Solution_List ) is
+  procedure get ( p : out Link_to_Poly_Sys; sols : out Solution_List;
+                  banner : in string := "SOLUTIONS" ) is
 
     file : file_type;
 
@@ -50,19 +54,21 @@ package body DoblDobl_System_and_Solutions_io is
     new_line;
     put_line("Reading the name of the input file...");
     Read_Name_and_Open_File(file);
-    get(file,p,sols);
+    get(file,p,sols,banner);
     close(file);
   end get;
 
   procedure get ( file : in file_type;
-                  p : out Link_to_Laur_Sys; sols : out Solution_List ) is
+                  p : out Link_to_Laur_Sys; sols : out Solution_List;
+                  banner : in string := "SOLUTIONS" ) is
 
   begin
     get(file,p);
-    Scan_for_Solutions(file,sols);
+    Scan_for_Solutions(file,sols,banner);
   end get;
 
-  procedure get ( p : out Link_to_Laur_Sys; sols : out Solution_List ) is
+  procedure get ( p : out Link_to_Laur_Sys; sols : out Solution_List;
+                  banner : in string := "SOLUTIONS" ) is
 
     file : file_type;
 
@@ -70,38 +76,42 @@ package body DoblDobl_System_and_Solutions_io is
     new_line;
     put_line("Reading the name of the input file...");
     Read_Name_and_Open_File(file);
-    get(file,p,sols);
+    get(file,p,sols,banner);
     close(file);
   end get;
 
   procedure put ( file : in file_type;
-                  p : in Poly_Sys; sols : in Solution_List ) is
+                  p : in Poly_Sys; sols : in Solution_List;
+                  banner : in string := "THE SOLUTIONS :" ) is
   begin
     put(file,natural32(p'last),1); new_line(file);
     put(file,p);
-    Write_Solutions(file,sols);
+    Write_Solutions(file,sols,banner);
   end put;
 
   procedure put ( file : in file_type;
-                  p : in Laur_Sys; sols : in Solution_List ) is
+                  p : in Laur_Sys; sols : in Solution_List;
+                  banner : in string := "THE SOLUTIONS :" ) is
   begin
     put(file,natural32(p'last),1); new_line(file);
     put(file,p);
-    Write_Solutions(file,sols);
+    Write_Solutions(file,sols,banner);
   end put;
 
   procedure put_line ( file : in file_type;
-                       p : in Poly_Sys; sols : in Solution_List ) is
+                       p : in Poly_Sys; sols : in Solution_List;
+                       banner : in string := "THE SOLUTIONS :" ) is
   begin
     put_line(file,p);
-    Write_Solutions(file,sols);
+    Write_Solutions(file,sols,banner);
   end put_line;
 
   procedure put_line ( file : in file_type;
-                       p : in Laur_Sys; sols : in Solution_List ) is
+                       p : in Laur_Sys; sols : in Solution_List;
+                       banner : in string := "THE SOLUTIONS :" ) is
   begin
     put_line(file,p);
-    Write_Solutions(file,sols);
+    Write_Solutions(file,sols,banner);
   end put_line;
 
 end DoblDobl_System_and_Solutions_io;

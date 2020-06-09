@@ -1,3 +1,6 @@
+Tue 9 Jun 2020 : generalized the get/put procedures in all
+  *_system_and_solutions_io packages with a banner string option.
+
 Mon 16 Mar 2020 : to {standard,dobldobl,quaddobl}_mixed_residuals, added
   functions to compute the mixed residuals directly from vectors.
 
