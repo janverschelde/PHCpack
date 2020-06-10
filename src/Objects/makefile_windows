@@ -949,9 +949,10 @@ ts_vmpnewt:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpnewt.adb \
               -o $(BIN)/ts_vmpnewt
 
-ts_newcirc:
+ts_newcirc: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_newcirc.adb \
-              -o $(BIN)/ts_newcirc
+              -o $(BIN)/ts_newcirc \
+              -largs get_clock.o get_clocks_per_sec.o
 
 # Test programs for the Deformations/Curves library :
 
