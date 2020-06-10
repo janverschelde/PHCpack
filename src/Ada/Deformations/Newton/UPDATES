@@ -1,6 +1,8 @@
 Tue 9 Jun 2020 : extra procedures in drivers_to_dd_qd_root_refiners for
   compilation errors with ts_ddnewt and ts_qdnewt.  Extended the package
   standard_newton_circuits, with extra test procedures in ts_newcirc.
+  Updated procedures standard_newton_circuits to report the first residual
+  and added condition tables to ts_newcirc.
 
 Mon 8 Jun 2020 : new ts_newcirc to develop Newton's method on coefficient
   circuits for better performing root refiners.  Move procedure from

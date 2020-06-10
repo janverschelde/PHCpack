@@ -92,12 +92,15 @@ package body Standard_Newton_Circuits is
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
-                info : out integer32; res,err : out double_float;
+                info : out integer32; initres,res,err : out double_float;
                 numit : out natural32; fail : out boolean;
                 verbose : in boolean := true ) is
   begin
     for k in 1..maxit loop
       LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err,verbose);
+      if k = 1
+       then initres := res;
+      end if;
       if res <= tolres and err <= tolerr
        then numit := k; fail := false; return;
       end if;
@@ -111,12 +114,15 @@ package body Standard_Newton_Circuits is
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
-                res,rco,err : out double_float;
+                initres,res,rco,err : out double_float;
                 numit : out natural32; fail : out boolean;
                 verbose : in boolean := true ) is
   begin
     for k in 1..maxit loop
       LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err,verbose);
+      if k = 1
+       then initres := res;
+      end if;
       if res <= tolres and err <= tolerr
        then numit := k; fail := false; return;
       end if;

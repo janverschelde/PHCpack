@@ -96,7 +96,7 @@ package Standard_Newton_Circuits is
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
-                info : out integer32; res,err : out double_float;
+                info : out integer32; initres,res,err : out double_float;
                 numit : out natural32; fail : out boolean;
                 verbose : in boolean := true );
 
@@ -130,6 +130,7 @@ package Standard_Newton_Circuits is
   --   xi       imaginary parts of the complex numbers in v;
   --   ipvt     pivoting information of the LU factorization;
   --   info     if nonzero, then the Jacobian may be singular;
+  --   initres  initial residual before application of Newton's step;
   --   res      residual, max norm of the function value at v;
   --   err      max norm of the update vector to v;
   --   numit    number of iterations done;
@@ -142,7 +143,7 @@ package Standard_Newton_Circuits is
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
-                res,rco,err : out double_float;
+                initres,res,rco,err : out double_float;
                 numit : out natural32; fail : out boolean;
                 verbose : in boolean := true );
 
@@ -176,9 +177,10 @@ package Standard_Newton_Circuits is
   --   xr       real parts of the complex numbers in v;
   --   xi       imaginary parts of the complex numbers in v;
   --   ipvt     pivoting information of the LU factorization;
+  --   initres  initial residual before application of Newton's step;
+  --   res      residual, max norm of the function value at v;
   --   rco      estimate for the inverse of the condition number,
   --            if zero, then the Jacobian matrix may be singular;
-  --   res      residual, max norm of the function value at v;
   --   err      max norm of the update vector to v;
   --   numit    number of iterations done;
   --   fail     true if numit = max and (res > tolres or err > tolerr),
