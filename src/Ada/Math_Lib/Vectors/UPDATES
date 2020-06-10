@@ -1,3 +1,6 @@
+Tue 9 Jun 2020 : in generic_vectors.adb, fixed the definition of Sum,
+  fixing the test v'first < v'last to v'first > v'last.
+
 Mon 8 Jun 2020 : to standard_vector_splitters, added Split/Merge procedures;
   added Complex_Parts procedure to standard_vector_splitters.
 

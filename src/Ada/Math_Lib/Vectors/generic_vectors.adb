@@ -144,7 +144,7 @@ package body Generic_Vectors is
     res : number;
 
   begin
-    if v'first < v'last then
+    if v'first > v'last then
       return Ring.zero;
     else
       Copy(v(v'first),res);
