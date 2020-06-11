@@ -1,4 +1,6 @@
 Wed 10 Jun 2020 : developed better cluster report in ts_newcirc.
+  Moved buckets and heap data structures from ts_newcirc into a new
+  package standard_solutions_heap in the folder ../Solutions.
 
 Tue 9 Jun 2020 : extra procedures in drivers_to_dd_qd_root_refiners for
   compilation errors with ts_ddnewt and ts_qdnewt.  Extended the package

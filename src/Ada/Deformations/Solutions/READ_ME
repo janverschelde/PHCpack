@@ -109,6 +109,8 @@ dobldobl_mixed_residuals           : residuals in double double precision
 quaddobl_mixed_residuals           : residuals in quad double precision
 ts_mixres                          : test on computing residuals
 ------------------------------------------------------------------------------
+standard_solutions_heap            : make cluster report efficiently
+------------------------------------------------------------------------------
 
 The standard and multiprecision solutions lists are two separate packages,
 not implemented by means of generics, because of the difficulties with
