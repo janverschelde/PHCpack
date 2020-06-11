@@ -936,7 +936,8 @@ procedure mainvali ( infilename,outfilename : in string;
       case ans is
         when 'i' => new_line;
                     Display_Verification_Info;
-        when '0' => Main_Driver_to_Scan_Solution_Lists(infilename,outfilename);
+        when '0' => Main_Driver_to_Scan_Solution_Lists
+                      (infilename,outfilename,verbose-1);
         when '1' => Standard_Weeding_Verification;
         when '2' => Multprec_Residual_Evaluator;
         when '3' => Multprec_Weeding_Verification(false);

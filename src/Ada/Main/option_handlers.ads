@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with String_Splitters;                   use String_Splitters;
 
 package Option_Handlers is
@@ -376,10 +377,11 @@ package Option_Handlers is
   --   infile   name of the input file;
   --   outfile  name of the output file.
 
--- THE MAIN HANDLER :
+-- THE MAIN HANDLERS :
 
   procedure Handle ( args : in Array_of_Strings; 
-                     opts,a1,a2,a3 : in string );
+                     opts,a1,a2,a3 : in string;
+                     verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Handles the options in opts of the command line arguments in args,
@@ -391,7 +393,8 @@ package Option_Handlers is
   --            each option is represented by one character;
   --   a1       first argument that is not an option;
   --   a2       second argument that is not an option;
-  --   a3       third argument that is not an option.
+  --   a3       third argument that is not an option;
+  --   verbose  the verbose level, for tracking procedure calls.
 
   -- REQUIRED :
   --   The options in opts are sorted, actions precede options.

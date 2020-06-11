@@ -1,6 +1,8 @@
+with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with File_Scanning;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;
@@ -319,13 +321,19 @@ package body Drivers_for_Condition_Tables is
   end QuadDobl_Scan_Solution_Lists;
 
   procedure Main_Driver_to_Scan_Solution_Lists
-              ( infilename,outfilename : in string ) is
+              ( infilename,outfilename : in string;
+                verbose : in integer32 := 0 ) is
 
     prc,ans : character;
 
     use Drivers_for_Failed_Paths;
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1); put_line(",");
+      put_line("in drivers_for_condition_tables."
+             & "Main_Driver_to_Scan_Solution_Lists ...");
+    end if;
     new_line;
     put_line("Scanning solution lists and computing condition tables.");
     new_line;

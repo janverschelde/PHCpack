@@ -1,6 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Random_Numbers;
 with Write_Seed_Number;
@@ -76,6 +76,7 @@ package body Option_Handlers is
       when 't' => Greeting_Banners.help4tasking;
       when 'u' => Greeting_Banners.help4series;
       when 'v' => Greeting_Banners.help4verification;
+      when 'V' => Greeting_Banners.help4verbose;
       when 'w' => Greeting_Banners.help4witsetinsect;
       when 'x' => Greeting_Banners.help4pythondict;
       when 'y' => Greeting_Banners.help4sampler;
@@ -733,13 +734,18 @@ package body Option_Handlers is
 -- THE MAIN HANDLERS :
 
   procedure Handle_Options ( args : in Array_of_Strings; 
-                             opts,a1,a2,a3 : in string ) is
+                             opts,a1,a2,a3 : in string;
+                             verbose : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   The handler after checking the case where the first two
   --   file names in a1 and a2 would be the same nonempty string.
 
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in option_handlers.Handle_Options ...");
+    end if;
     Find_and_Set_Seed(args,opts);
     if opts'length = 0 then
       Handle_no_Options(a1,a2);
@@ -781,15 +787,20 @@ package body Option_Handlers is
   end Handle_Options;
 
   procedure Handle ( args : in Array_of_Strings; 
-                     opts,a1,a2,a3 : in string ) is
+                     opts,a1,a2,a3 : in string;
+                     verbose : in integer32 := 0 ) is
   begin
+    if verbose > 0 then
+      put("At verbose level "); put(verbose,1);
+      put_line(", in option_handlers.Handle ...");
+    end if;
     if a1 /= "" and then (a1 = a2) then
       new_line;
       put_line("The first two file names are identical.");
       put_line("Will ignore the second file name.");
-      Handle_Options(args,opts,a1,"",a3);
+      Handle_Options(args,opts,a1,"",a3,verbose-1);
     else
-      Handle_Options(args,opts,a1,a2,a3);
+      Handle_Options(args,opts,a1,a2,a3,verbose-1);
     end if;
   end Handle;
 

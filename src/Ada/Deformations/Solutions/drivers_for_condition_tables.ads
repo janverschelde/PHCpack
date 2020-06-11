@@ -1,5 +1,4 @@
-with text_io;                            use text_io;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 
 package Drivers_for_Condition_Tables is
 
@@ -28,7 +27,8 @@ package Drivers_for_Condition_Tables is
   --   list is not stored entirely at once into main internal memory.
 
   procedure Main_Driver_to_Scan_Solution_Lists
-              ( infilename,outfilename : in string );
+              ( infilename,outfilename : in string;
+                verbose : in integer32 := 0 );
  
   -- DESCRIPTION :
   --   This is the driver as called by the main validation module in phc.
@@ -36,6 +36,7 @@ package Drivers_for_Condition_Tables is
   --   and output files.  If the string for the output file is empty,
   --   then output will be written to screen.  If the string for the 
   --   input file is empty, then the user will be prompted to provide
-  --   a name for the input file.
+  --   a name for the input file.  The last parameter is the verbose level
+  --   and if > 0, then one line is written to screen.
 
 end Drivers_for_Condition_Tables;

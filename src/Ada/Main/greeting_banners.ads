@@ -187,6 +187,11 @@ package Greeting_Banners is
   -- DESCRIPTION :
   --   Writes help on the verification of lists of solutions.
 
+  procedure help4verbose;
+
+  -- DESCRIPTION :
+  --   Writes help on the verbose option.
+
   procedure help4witsetinsect;
 
   -- DESCRIPTION :

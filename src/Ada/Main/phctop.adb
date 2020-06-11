@@ -62,7 +62,7 @@ procedure phctop is
       put("Argument 2 : ");  put_line(arg2);
       put("Argument 3 : ");  put_line(arg3);
     end if;
-    Option_Handlers.Handle(args,sortopts,arg1,arg2,arg3);
+    Option_Handlers.Handle(args,sortopts,arg1,arg2,arg3,vrb-1);
   end Handle_Options;
 
   procedure Main is

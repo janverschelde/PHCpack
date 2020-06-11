@@ -645,6 +645,20 @@ package body Greeting_Banners is
     put_line("use phc -f.");
   end help4verification;
 
+  procedure help4verbose is
+  begin
+    put_line("phc -V# provides verbose information for debugging code.");
+    new_line;
+    put_line("The number # following the -V should be a positive integer,");
+    put_line("otherwise the verbose option has no effect.");
+    new_line;
+    put_line("For example, phc -b -V9 input output, will display extra");
+    put_line("internal data, listing the procedures called during the");
+    put_line("running of the blackbox solver.");
+    new_line;
+    put_line("More information is shown for larger verbose levels.");
+  end help4verbose;
+
   procedure help4witsetinsect is
   begin
     put_line("phc -w for witness set intersection with diagonal homotopies.");

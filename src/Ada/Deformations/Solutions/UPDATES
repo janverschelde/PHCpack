@@ -1,3 +1,9 @@
+Thu 11 Jun 2020 : updated drivers_for_condition_tables for the extra
+  verbose level parameter.
+
+Wed 10 Jun 2020 : new package standard_solutions_heap with code from the
+  test procedure ts_newcirc.
+
 Tue 9 Jun 2020 : generalized the get/put procedures in all
   *_system_and_solutions_io packages with a banner string option.
 
