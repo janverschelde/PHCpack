@@ -121,5 +121,6 @@ verification_of_solutions        : run sequences of varbprec Newton steps
 ts_vmpnewt                       : test on variable precision Newton
 ------------------------------------------------------------------------------
 standard_newton_circuits         : run Newton on coefficient circuits
+standard_refiner_circuits        : condition tables and cluster report
 ts_newcirc                       : test Newton on coefficient circuits
 ------------------------------------------------------------------------------

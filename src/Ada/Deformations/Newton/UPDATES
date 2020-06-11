@@ -1,3 +1,6 @@
+Thu 11 Jun 2020 : new package standard_refiner_circuits with code taken
+  from ts_newcirc.
+
 Wed 10 Jun 2020 : developed better cluster report in ts_newcirc.
   Moved buckets and heap data structures from ts_newcirc into a new
   package standard_solutions_heap in the folder ../Solutions.
