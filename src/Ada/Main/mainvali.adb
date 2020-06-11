@@ -49,6 +49,7 @@ with DoblDobl_Multiplicity_Structure;
 with QuadDobl_Multiplicity_Structure;
 with Drivers_to_DD_QD_Root_Refiners;     use Drivers_to_DD_QD_Root_Refiners;
 with Root_Refining_Parameters;           use Root_Refining_Parameters;
+with Standard_Refiner_Circuits;
 with valipoco;
 with Bye_Bye_Message;
 with Verification_of_Solutions;          use Verification_of_Solutions;
@@ -511,7 +512,7 @@ procedure mainvali ( infilename,outfilename : in string;
   end Call_Multprec_Root_Refiner;
 
   procedure Call_Varbprec_Root_Refiner
-               ( file : in file_type; n,m : in natural32;
+               ( file : in file_type;
                  ls : in Link_to_Array_of_Strings;
                  sols : in out Multprec_Complex_Solutions.Solution_List ) is
 
@@ -580,7 +581,7 @@ procedure mainvali ( infilename,outfilename : in string;
       put(outfile,Multprec_Complex_Solutions.Length_Of(sols),
           natural32(Multprec_Complex_Solutions.Head_Of(sols).n),sols);
       if varbprec
-       then Call_Varbprec_Root_Refiner(outfile,n,m,ls,sols);
+       then Call_Varbprec_Root_Refiner(outfile,ls,sols);
        else Call_Multprec_Root_Refiner(outfile,n,m,ls,sols);
       end if;
     end if;
@@ -899,6 +900,22 @@ procedure mainvali ( infilename,outfilename : in string;
     end case;
   end Multiplicity_Structure;
 
+  procedure Solution_Scanner is
+
+  -- DESCRIPTION :
+  --   Handles option #0, to deal with huge solution lists.
+
+    ans : character;
+
+  begin
+    new_line;
+    put("Run Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Standard_Refiner_Circuits.Main(infilename,outfilename,verbose-1);
+     else Main_Driver_to_Scan_Solution_Lists(infilename,outfilename,verbose-1);
+    end if;
+  end Solution_Scanner;
+
   procedure Display_and_Dispatch_Menu is
 
     ans : character;
@@ -936,8 +953,7 @@ procedure mainvali ( infilename,outfilename : in string;
       case ans is
         when 'i' => new_line;
                     Display_Verification_Info;
-        when '0' => Main_Driver_to_Scan_Solution_Lists
-                      (infilename,outfilename,verbose-1);
+        when '0' => Solution_Scanner;
         when '1' => Standard_Weeding_Verification;
         when '2' => Multprec_Residual_Evaluator;
         when '3' => Multprec_Weeding_Verification(false);

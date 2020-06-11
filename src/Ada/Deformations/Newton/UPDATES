@@ -1,5 +1,5 @@
 Thu 11 Jun 2020 : new package standard_refiner_circuits with code taken
-  from ts_newcirc.
+  from ts_newcirc.  Added Main procedures to standard_refiner_circuits.
 
 Wed 10 Jun 2020 : developed better cluster report in ts_newcirc.
   Moved buckets and heap data structures from ts_newcirc into a new

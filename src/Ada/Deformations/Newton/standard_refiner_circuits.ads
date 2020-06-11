@@ -57,20 +57,41 @@ package Standard_Refiner_Circuits is
   --   wgt      weight of the coordinates;
   --   tolsing  tolerance to decide whether a solution is singular.
 
-  procedure Run ( s : in Link_to_System; sols : in Solution_List );
+  procedure Run ( s : in Link_to_System; sols : in Solution_List;
+                  vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs several steps of Newton's method on the system s,
   --   starting at the solutions in sols.
   --   For each solution writes one line to screen.
   --   This version does not write to file.
+  --   The verbose level is given in vrb.
 
   procedure Run ( file : in file_type;
-                  s : in Link_to_System; sols : in Solution_List );
+                  s : in Link_to_System; sols : in Solution_List;
+                  vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs several steps of Newton's method on the system s,
   --   starting at the solutions in sols.
   --   Writes the output to file.
+  --   The verbose level is given in vrb.
+
+  procedure Main ( vrb : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Prompts a user for a polynomial system with solutions
+  --   and then runs the refiners.
+  --   The verbose level is in vrb.
+
+  procedure Main ( infilename,outfilename : in string;
+                   vrb : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   The strings infilename and outfilename contain the names
+  --   of the input and output files.  If empty, then the user
+  --   will be prompted for those file names,
+  --   otherwise, the names will be used for input and output.
+  --   The verbose level is in vrb.
 
 end Standard_Refiner_Circuits;

@@ -7,9 +7,12 @@ with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
+with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_System_and_Solutions_io;
 with Standard_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;
 with Standard_Condition_Tables;
+with Standard_Circuit_Makers;
 with Standard_Newton_Circuits;           use Standard_Newton_Circuits;
 with Standard_Solutions_Heap;
 
@@ -72,7 +75,8 @@ package body Standard_Refiner_Circuits is
     end if;
   end Monitor_Report;
 
-  procedure Run ( s : in Link_to_System; sols : in Solution_List ) is
+  procedure Run ( s : in Link_to_System; sols : in Solution_List;
+                  vrb : in integer32 := 0 ) is
 
     ptr : Solution_List := sols;
     ls : Link_to_Solution;
@@ -103,6 +107,9 @@ package body Standard_Refiner_Circuits is
     verbose : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in standard_refiner_circuits.Run 1");
+    end if;
     weights.bottom := -1;
     new_line;
     Set_Parameters(maxit,tolres,tolerr,tolsing);
@@ -184,7 +191,8 @@ package body Standard_Refiner_Circuits is
   end Run;
 
   procedure Run ( file : in file_type;
-                  s : in Link_to_System; sols : in Solution_List ) is
+                  s : in Link_to_System; sols : in Solution_List;
+                  vrb : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     ptr : Solution_List := sols;
@@ -216,6 +224,9 @@ package body Standard_Refiner_Circuits is
     verbose : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in standard_refiner_circuits.Run 2");
+    end if;
     weights.bottom := -1; -- make sure heap is declared as empty
     new_line;
     Set_Parameters(maxit,tolres,tolerr,tolsing);
@@ -298,5 +309,99 @@ package body Standard_Refiner_Circuits is
     print_times(file,timer,"Newton with condition table report");
     Standard_Solutions_Heap.Clear(weights);
   end Run;
+
+  procedure Main ( vrb : in integer32 := 0 ) is
+
+    p : Link_to_Poly_Sys;
+    sols : Solution_List;
+    nbq,len,dim : integer32 := 0;
+    s : Link_to_System;
+    ans : character;
+    file : file_type;
+
+  begin
+    if vrb > 0
+     then put_line("-> in standard_refiner_circuits.Main 1");
+    end if;
+    new_line;
+    put_line("Reading a polynomial system with solutions ...");
+    Standard_System_and_Solutions_io.get(p,sols,"THE SOLUTIONS");
+    nbq := p'last;
+    len := integer32(Length_Of(sols));
+    if len = 0 then
+      put_line("No solutions found on file.");
+    else
+      dim := Head_Of(sols).n;
+      new_line;
+      put("Read system of "); put(nbq,1); put(" polynomials and ");
+      put(len,1); put(" solutions in dimension "); put(dim,1); put_line(".");
+      s := Standard_Circuit_Makers.Make_Coefficient_System(p);
+      new_line;
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans = 'n' then
+        Run(s,sols,vrb-1);
+      else
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+        Run(file,s,sols,vrb-1);
+        Close(file);
+      end if;
+    end if;
+    Clear(p); Clear(sols); Clear(s);
+  end Main;
+
+  procedure Main ( infilename,outfilename : in string;
+                   vrb : in integer32 := 0 ) is
+
+    infile,outfile : file_type;
+    p : Link_to_Poly_Sys;
+    s : Link_to_System;
+    sols : Solution_List;
+    nbq,len,dim : integer32;
+    ans : character;
+
+  begin
+    if vrb > 0
+     then put_line("-> in standard_refiner_circuits.Main 2");
+    end if;
+    if infilename = "" then
+      Main(vrb);
+    else
+      new_line;
+      put_line("Opening the file " & infilename & " ...");
+      Open_Input_File(infile,infilename);
+      Standard_System_and_Solutions_io.get(infile,p,sols,"THE SOLUTIONS");
+      nbq := p'last;
+      len := integer32(Length_Of(sols));
+      if len = 0 then
+        put_line("No solutions found on file.");
+      else
+        dim := Head_Of(sols).n;
+        new_line;
+        put("Read system of "); put(nbq,1); put(" polynomials and ");
+        put(len,1); put(" solutions in dimension "); put(dim,1); put_line(".");
+        s := Standard_Circuit_Makers.Make_Coefficient_System(p);
+        if outfilename = "" then
+          new_line;
+          put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+          if ans = 'n' then
+            Run(s,sols,vrb-1);
+          else
+            new_line;
+            put_line("Reading the name of the output file ...");
+            Read_Name_and_Create_File(outfile);
+            Run(outfile,s,sols,vrb-1); Close(outfile);
+          end if;
+        else
+          new_line;
+          put_line("Creating file " & outfilename & "...");
+          Create_Output_File(outfile,outfilename);
+          Run(outfile,s,sols,vrb-1); Close(outfile);
+        end if;
+        Clear(p); Clear(sols); Clear(s);
+      end if;
+    end if;
+  end Main;
 
 end Standard_Refiner_Circuits;
