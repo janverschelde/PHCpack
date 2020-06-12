@@ -27,7 +27,9 @@ SAGEPYTHONLIB=/home/microway/Downloads/sage-7.3/local/lib
 # GNAT Community 2018 :
 # ADALIB=/home/microway/opt/GNAT/2018/lib/gcc/x86_64-pc-linux-gnu/7.3.1/adalib
 # GNAT Community 2019 :
-ADALIB=/home/jan/opt/GNAT/2019/lib/gcc/x86_64-pc-linux-gnu/8.3.1/adalib
+# ADALIB=/home/jan/opt/GNAT/2019/lib/gcc/x86_64-pc-linux-gnu/8.3.1/adalib
+# GNAT Community 2020 :
+ADALIB=/home/jan/opt/GNAT/2020/lib/gcc/x86_64-pc-linux-gnu/9.3.1/adalib
 
 # The location of the g++ compiler
 
