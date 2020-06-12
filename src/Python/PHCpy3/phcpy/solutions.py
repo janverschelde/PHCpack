@@ -24,6 +24,50 @@ def diagnostics(sol):
     # print 'err =', val_err, 'rco =', val_rco, 'res =', val_res
     return (val_err, val_rco, val_res)
 
+def map_double(freqtab, nbr):
+    """
+    On input in freqtab is a list of integer numbers and nbr is a double.
+    The list freqtab represents a frequency table of magnitudes.
+    The magnitude of the double nbr is mapped into the frequency table.
+    The counter in freqtab that will be updated is at position
+    floor(-log10(nbr)) 
+    """
+    if nbr > 1.0:
+       freqtab[0] = freqtab[0] + 1
+    else:
+       from math import log10, floor
+       tol = 10.0**(-len(freqtab)+1)
+       if nbr < tol:
+          freqtab[len(freqtab)-1] = freqtab[len(freqtab)-1] + 1
+       else:
+          idx = floor(-log10(nbr))
+          if idx < 0:
+             freqtab[0] = freqtab[0] + 1
+          elif idx >= len(freqtab):
+             freqtab[len(freqtab)-1] = freqtab[len(freqtab)-1] + 1
+          else:
+             freqtab[idx] = freqtab[idx] + 1
+
+def condition_tables(sols):
+    """
+    The input in sols is a list of PHCpack string solutions.
+    A condition table is triplet of three frequency tables,
+    computed from the diagnostics (err, rco, res) of each solution.
+    The i-th entry in each frequency table counts the number of
+    doubles x which floor(-log10(x)) mapped to the index i.
+    Small numbers are mapped to the right of the table,
+    large numbers are mapped to the left of the table.
+    """
+    errtab = [0 for _ in range(16)]
+    rcotab = [0 for _ in range(16)]
+    restab = [0 for _ in range(16)]
+    for sol in sols:
+        (err, rco, res) = diagnostics(sol)
+        map_double(errtab, err)
+        map_double(rcotab, rco)
+        map_double(restab, res)
+    return (errtab, rcotab, restab);
+
 def str2complex(scn):
     r"""
     The string *scn* contains a complex number,
@@ -41,7 +85,7 @@ def string_complex(scn):
     r"""
     The string *scn* contains a complex number,
     the real and imaginary part separated by spaces.
-    On return is the string representionat of a complex number,
+    On return is the string representation of a complex number,
     in Python format.  The use of this function is for when
     the coordinates are calculated in higher precision.
     """
@@ -532,6 +576,11 @@ def test_class():
     mysol = Solution({'x': complex(1,2), 'y': complex(-7,0)})
     print('my solution :')
     print(mysol)
+    (errtab, rcotab, restab) = condition_tables(sols)
+    print('The frequency tables for err, rco, and res:')
+    print(errtab)
+    print(rcotab)
+    print(restab)
 
 if __name__ == "__main__":
     # test_functions()

@@ -1,3 +1,6 @@
+Fri 12 Jun 2020 : added the computation of condition tables to the
+  solution modules of the python2 and python3 versions.
+
 Wed 29 Apr 2020 : updated files for version 1.0.3 of phcpy.
 
 Tue 28 Apr 2020 : commented out some print statements in the sweepers module
