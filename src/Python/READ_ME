@@ -1,4 +1,4 @@
-phcpy 1.0.3 offers a simple Python interface to PHCv2.4.76
+phcpy 1.0.4 offers a simple Python interface to PHCv2.4.77
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -73,6 +73,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+1.0.4 : 2020-06-12 : condition tables in the solutions module
 1.0.3 : 2020-04-29 : bug fix in sweepers module
 1.0.2 : 2019-10-21 : improved documentation
 1.0.1 : 2019-10-03 : class definitions for polynomials and solutions
