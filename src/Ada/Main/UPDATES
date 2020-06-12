@@ -1,3 +1,5 @@
+Fri 12 Jun 2020 : updated greeting_banners for version 2.4.77.
+
 Thu 11 Jun 2020 : added verbose level to mainvali.adb, and to the
   phctop.adb, option_handlers; to greeting_banners, added help information
   for the -V option.  To mainvali.adb added standard_root_refiners.Main(),

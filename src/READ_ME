@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.76 contains
+The public distribution for PHCpack version 2.4.77 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -29,6 +29,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.77 on 2020-06-12 : phc -v option #0 provides better verifier
 release 2.4.76 on 2020-04-29 : multitasked Newton-Fabry-Pade-Hesse trackers
 release 2.4.75 on 2020-01-28 : preliminary multitasked Newton on power series
 release 2.4.74 on 2019-10-21 : phc -c writes again the _sw files
