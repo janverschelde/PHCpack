@@ -1336,6 +1336,9 @@ For double double precision, use as ``phc -b2 -v`` or ``phc -b -v2``.
 For quad double precision, use as ``phc -b4 -v`` or ``phc -b -v4``.
 The order of ``-b`` and ``-v`` at the command line does not matter.
 
+The option 0 (the first option in the ``phc -v`` menu) runs solution scanners,
+to run through huge lists of solutions, in the range of one million or more.
+
 phc -V : run in verbose mode
 ============================
 
