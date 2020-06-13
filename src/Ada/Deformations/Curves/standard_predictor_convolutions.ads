@@ -4,11 +4,14 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
+with Standard_Complex_VecMats;
 with Standard_Speelpenning_Convolutions; 
+with Standard_Coefficient_Circuits;
 with Standard_Coefficient_Convolutions; 
 
 package Standard_Predictor_Convolutions is
@@ -396,6 +399,110 @@ package Standard_Predictor_Convolutions is
   --   rad      estimates radius of convergence of the series;
   --   err      error estimate on the location of z.
 
+  function Distance ( svh : in Link_to_SVD_Hessians ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the estimate to the distance to the nearest solution,
+  --   based on the singular values in svh.
+
+-- HESSE-PADE ON COEFFICIENT CIRCUITS :
+
+  procedure Hesse_Pade
+              ( cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_float );
+  procedure Hesse_Pade
+              ( file : in file_type;
+                cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Computes the singular values of the Hessians and estimates the
+  --   distance to the closest path to determine the step size.
+
+  -- ON ENTRY :
+  --   file     to write the output to if verbose (optional);
+  --   cfs      coefficient circuit system
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
+  --   xr       real parts of the solution vector;
+  --   xi       imaginary parts of the solution vector;
+  --   vh       space allocated for dim matrices, dim = dimension,
+  --            all matrices have 1..dim for range(1) and range(2);
+  --   svls     svls(0) contains the singular values of s.jm, and
+  --            svls(k) contains the singular values of vh(k),
+  --            for k in vh'range.
+  --   beta2    multiplication factor for the curvature step;
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   res      solution error estimated by Pade approximants in prd,
+  --            the range of res is cfs.crc'range;
+  --   nrm      2-norm of res;
+  --   step     computed curvature step.
+
+  procedure Hesse_Pade
+              ( cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_float );
+  procedure Hesse_Pade
+              ( file : in file_type;
+                cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Computes the singular values of the Hessians and estimates the
+  --   distance to the closest path to determine the step size.
+
+  -- ON ENTRY :
+  --   file     to write the output to if verbose (optional);
+  --   cfs      coefficient circuit system
+  --   prd      predictor data for SVD Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
+  --   xr       real parts of the solution vector;
+  --   xi       imaginary parts of the solution vector;
+  --   vh       space allocated for dim matrices, dim = dimension,
+  --            all matrices have 1..dim for range(1) and range(2);
+  --   svls     svls(0) contains the singular values of s.jm, and
+  --            svls(k) contains the singular values of vh(k),
+  --            for k in vh'range.
+  --   beta2    multiplication factor for the curvature step;
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   res      solution error estimated by Pade approximants in prd,
+  --            the range of res is cfs.crc'range;
+  --   nrm      2-norm of res;
+  --   step     computed curvature step.
+
+-- HESSE-PADE ON COMPLEX CONVOLUTION CIRCUITS :
+
   procedure Second
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 svh : in Link_to_SVD_Hessians;
@@ -404,12 +511,6 @@ package Standard_Predictor_Convolutions is
   -- DESCRIPTION :
   --   Computes the Hessians for the convolution circuits in hom
   --   at the solution sol and stores the results in svh.
-
-  function Distance ( svh : in Link_to_SVD_Hessians ) return double_float;
-
-  -- DESCRIPTION :
-  --   Returns the estimate to the distance to the nearest solution,
-  --   based on the singular values in svh.
 
   procedure Hesse_Pade
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;

@@ -458,6 +458,145 @@ package body Standard_Predictor_Convolutions is
                 prd.mat,prd.rhs,prd.padepiv,info,false);
   end Newton_Fabry;
 
+  function Distance ( svh : in Link_to_SVD_Hessians ) return double_float is
+
+    sigma1 : constant double_float
+           := Standard_Complex_Numbers.REAL_PART(svh.vals(0));
+    accsum,acc,nrm : double_float := 0.0;
+
+  begin
+    for k in 1..svh.dim loop
+      acc := Standard_Complex_Numbers.REAL_PART(svh.vals(k));
+      accsum := accsum + acc*acc; 
+    end loop;
+    nrm := Standard_Mathematical_Functions.SQRT(accsum);
+    return (2.0*sigma1)/nrm;
+  end Distance;
+
+-- HESSE-PADE ON COEFFICIENT CIRCUITS :
+
+  procedure Hesse_Pade
+              ( cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_float ) is
+
+    use Standard_Coefficient_Circuits;
+
+  begin
+    Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+    svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
+    for k in svls'range loop
+      svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
+    end loop;
+    eta := Distance(svh);
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := Standard_Complex_Vector_Norms.Norm2(res);
+    step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
+  end Hesse_Pade;
+
+  procedure Hesse_Pade
+              ( file : in file_type;
+                cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_LU_Predictor;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                verbose : in boolean := true ) is
+
+    use Standard_Coefficient_Circuits;
+
+  begin
+    Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+    svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
+    for k in svls'range loop
+      svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
+    end loop;
+    if verbose
+     then put_line(file,"All singular values : "); put_line(file,svh.vals);
+    end if;
+    eta := Distance(svh);
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := Standard_Complex_Vector_Norms.Norm2(res);
+    step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
+    if verbose then
+      put(file,"eta :"); put(file,eta,3);
+      put(file,"  nrm :"); put(file,nrm,3);
+      put(file,"  curv_step :"); put(file,step,3); new_line(file);
+    end if;
+  end Hesse_Pade;
+
+  procedure Hesse_Pade
+              ( cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_float ) is
+
+    use Standard_Coefficient_Circuits;
+
+  begin
+    Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+    svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
+    for k in svls'range loop
+      svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
+    end loop;
+    eta := Distance(svh);
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := Standard_Complex_Vector_Norms.Norm2(res);
+    step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
+  end Hesse_Pade;
+
+  procedure Hesse_Pade
+              ( file : in file_type;
+                cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_SVD_Predictor;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                res : out Standard_Complex_Vectors.Vector;
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                verbose : in boolean := true ) is
+
+    use Standard_Coefficient_Circuits;
+
+  begin
+    Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+    svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
+    for k in svls'range loop
+      svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
+    end loop;
+    if verbose
+     then put_line(file,"All singular values : "); put_line(file,svh.vals);
+    end if;
+    eta := Distance(svh);
+    Homotopy_Pade_Approximants.Solution_Error
+      (prd.sol,prd.numcff,prd.dencff,res);
+    nrm := Standard_Complex_Vector_Norms.Norm2(res);
+    step := Series_and_Predictors.Step_Distance(prd.deg,beta2,eta,nrm);
+    if verbose then
+      put(file,"eta :"); put(file,eta,3);
+      put(file,"  nrm :"); put(file,nrm,3);
+      put(file,"  curv_step :"); put(file,step,3); new_line(file);
+    end if;
+  end Hesse_Pade;
+
+-- HESSE-PADE ON COMPLEX CONVOLUTION CIRCUITS :
+
   procedure Second
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 svh : in Link_to_SVD_Hessians;
@@ -476,21 +615,6 @@ package body Standard_Predictor_Convolutions is
       svh.vals(k) := svh.svl(1);
     end loop;
   end Second;
-
-  function Distance ( svh : in Link_to_SVD_Hessians ) return double_float is
-
-    sigma1 : constant double_float
-           := Standard_Complex_Numbers.REAL_PART(svh.vals(0));
-    accsum,acc,nrm : double_float := 0.0;
-
-  begin
-    for k in 1..svh.dim loop
-      acc := Standard_Complex_Numbers.REAL_PART(svh.vals(k));
-      accsum := accsum + acc*acc; 
-    end loop;
-    nrm := Standard_Mathematical_Functions.SQRT(accsum);
-    return (2.0*sigma1)/nrm;
-  end Distance;
 
   procedure Hesse_Pade
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;

@@ -1,3 +1,6 @@
+Sat 13 Jun 2020 : in standard_predictor_convolutions, added the computation
+  of the Hesse-Pade step on coefficient circuits.
+
 Wed 3 Jun 2020 : in *_predictor_convolutions.adb, replaced the 11 by 0
   in the calls to SVD.
 
