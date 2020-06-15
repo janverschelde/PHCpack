@@ -1,3 +1,7 @@
+Sun 14 Jun 2020 : extended standard_coefficient_circuits with a function
+  and a procedure to simply evaluate without computing any derivatives,
+  tested by ts_perfade.
+
 Mon 8 Jun 2020 : turned make_complex_system into make_coefficient_system
   in standard_circuit_makers.
 

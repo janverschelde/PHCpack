@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Integer_VecVecs;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
@@ -123,6 +124,32 @@ package Standard_Coefficient_Circuits is
 
   -- REQUIRED : hrp'range = hip'range,
   --   and for all k in hrp'range: hrp(k)'range = hip(k)'range.
+
+-- EVALUATION OF CIRCUITS :
+
+  function Eval ( c : in Circuit;
+                  xr : in Standard_Floating_Vectors.Link_to_Vector;
+                  xi : in Standard_Floating_Vectors.Link_to_Vector;
+                  rpwt : in Standard_Floating_VecVecs.VecVec;
+                  ipwt : in Standard_Floating_VecVecs.VecVec ) 
+                return Standard_Complex_Numbers.Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the circuit c at the vector with
+  --   real parts in xr and imaginary parts in xi,
+  --   with the aid of the power table, with real parts in rpwt
+  --   and imaginary parts in ipwt.
+
+  procedure Eval ( s : in out System;
+                   xr : in Standard_Floating_Vectors.Link_to_Vector;
+                   xi : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Eval ( s : in Link_to_System;
+                   xr : in Standard_Floating_Vectors.Link_to_Vector;
+                   xi : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Updates the power table with the values of xr and xi
+  --   and returns the value of the system in s.fx.
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 

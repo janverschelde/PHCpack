@@ -1,5 +1,4 @@
 with unchecked_deallocation;
-with Standard_Complex_Numbers;
 with Standard_Complex_Singular_Values;
 with Exponent_Indices;
 with Standard_Hessian_Updaters;
@@ -136,6 +135,81 @@ package body Standard_Coefficient_Circuits is
     end loop;
     return res;
   end Merge;
+
+-- EVALUATION OF CIRCUITS :
+
+  function Eval ( c : in Circuit;
+                  xr : in Standard_Floating_Vectors.Link_to_Vector;
+                  xi : in Standard_Floating_Vectors.Link_to_Vector;
+                  rpwt : in Standard_Floating_VecVecs.VecVec;
+                  ipwt : in Standard_Floating_VecVecs.VecVec ) 
+                return Standard_Complex_Numbers.Complex_Number is
+
+    res : Standard_Complex_Numbers.Complex_Number;
+    rpres : double_float := c.rcst; -- real part of result
+    ipres : double_float := c.icst; -- imaginary part of result
+    rkcff,ikcff,zr,zi,pr,pi,qr,qi : double_float;
+    idx : integer32;
+
+    use Standard_Integer_Vectors;
+ 
+  begin
+    for k in c.xps'range loop
+      declare
+        xpk : constant Standard_Integer_Vectors.Link_to_Vector := c.xps(k);
+        idk : constant Standard_Integer_Vectors.Vector := c.idx(k).all;
+        fck : constant Standard_Integer_Vectors.Link_to_Vector := c.fac(k);
+      begin
+        rkcff := c.rcf(k); ikcff := c.icf(k);
+        if fck = null then        -- no common factor
+          if idk'last = 1 then    -- y := y + kcff*x(idx1);
+            idx := idk(1);
+            pr := xr(idx); pi := xi(idx);
+            zr := pr*rkcff - pi*ikcff; zi := pr*ikcff + pi*rkcff;
+            rpres := rpres + zr; ipres := ipres + zi;
+          else -- multiply coefficient with forward product
+            zr := rkcff; zi := ikcff;
+            for i in idk'range loop
+              pr := zr; pi := zi;
+              idx := idk(i); qr := xr(idx); qi := xi(idx);
+              zr := pr*qr - pi*qi; zi := pr*qi + pi*qr;
+            end loop;
+            rpres := rpres + zr; ipres := ipres + zi;
+          end if;
+        else -- compute the common factor first
+          Multiply_Factor(xpk,fck,xr,xi,rkcff,ikcff,rpwt,ipwt,zr,zi);
+          for i in idk'range loop -- multiply with forward product
+            pr := zr; pi := zi;
+            idx := idk(i); qr := xr(idx); qi := xi(idx);
+            zr := pr*qr - pi*qi; zi := pr*qi + pi*qr;
+          end loop;
+          rpres := rpres + zr; ipres := ipres + zi;
+        end if;
+      end;
+    end loop;
+    res := Standard_Complex_Numbers.Create(rpres,ipres);
+    return res;
+  end Eval;
+
+  procedure Eval ( s : in out System;
+                   xr : in Standard_Floating_Vectors.Link_to_Vector;
+                   xi : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
+    for i in s.crc'range loop
+      s.fx(i) := Eval(s.crc(i).all,xr,xi,s.rpwt,s.ipwt);
+    end loop;
+  end Eval;
+
+  procedure Eval ( s : in Link_to_System;
+                   xr : in Standard_Floating_Vectors.Link_to_Vector;
+                   xi : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
+    for i in s.crc'range loop
+      s.fx(i) := Eval(s.crc(i).all,xr,xi,s.rpwt,s.ipwt);
+    end loop;
+  end Eval;
 
 -- ALGORITMIC DIFFERENTIATION AND EVALUATION OF CIRCUITS :
 

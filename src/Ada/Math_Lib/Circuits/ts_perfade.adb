@@ -1011,6 +1011,11 @@ procedure ts_perfade is
     put_line("The recomputed value :"); put_line(cffsys.fx);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(cffsys.fx,y);
     put("Sum of errors :"); put(err,3); new_line;
+    Standard_Coefficient_Circuits.Eval(cffsys,xr,xi);
+    put_line("The value computed without derivatives :");
+    put_line(cffsys.fx);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(cffsys.fx,y);
+    put("Sum of errors :"); put(err,3); new_line;
     put_line("The evaluated Jacobian matrix :");
     Standard_Circuit_Makers.Write_Matrix(cs.jm);
     put_line("The matrix recomputed for testing :"); 
