@@ -911,7 +911,166 @@ package body Standard_Predictor_Convolutions is
     end loop;
   end Predictor_Feedback;
 
--- MAIN PREDICTOR PROCEDURES :
+-- MAIN PREDICTOR PROCEDURES ON COEFFICIENT CONVOLUTION CIRCUITS :
+
+  procedure LU_Prediction
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32 ) is
+
+    z : Standard_Complex_Numbers.Complex_Number;
+    r,err,absdx,pole_step,eta,nrm,curv_step,mixres : double_float;
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    nbrit,nbfail : integer32;
+
+    use Three_Way_Minima;
+
+  begin
+    Newton_Fabry(hom,prd,rx,ix,maxit,tol,nbrit,absdx,fail,z,r,err);
+    pole_step := beta1*r;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
+    end loop;
+    Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
+    Hesse_Pade(cfh,prd,svh,xr,xi,vh,svls,psv.res,beta2,eta,nrm,curv_step);
+    Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
+    Bounded_Update(acct,step,endt,minstep);
+    Predictor_Feedback(hom,cfh,xr,xi,psv,prd.numcff,prd.dencff,
+                       step,minstep,alpha,nrm,mixres,nbfail);
+    fail := (mixres > alpha);
+  end LU_Prediction;
+
+  procedure LU_Prediction
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
+                verbose : in boolean := false ) is
+
+    z : Standard_Complex_Numbers.Complex_Number;
+    r,err,absdx,pole_step,eta,nrm,curv_step,mixres : double_float;
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    nbrit,nbfail : integer32;
+
+    use Three_Way_Minima;
+
+  begin
+    Newton_Fabry(file,hom,prd,rx,ix,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    pole_step := beta1*r;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
+    end loop;
+    Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
+    Hesse_Pade(file,cfh,prd,svh,xr,xi,vh,svls,psv.res,beta2,
+               eta,nrm,curv_step,verbose);
+    Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
+    Bounded_Update(acct,step,endt,minstep);
+    Predictor_Feedback(file,hom,cfh,xr,xi,psv,prd.numcff,prd.dencff,
+                       step,minstep,alpha,nrm,mixres,nbfail,verbose);
+    fail := (mixres > alpha);
+  end LU_Prediction;
+
+  procedure SVD_Prediction
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32 ) is
+
+    z : Standard_Complex_Numbers.Complex_Number;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,mixres : double_float;
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    nbrit,nbfail : integer32;
+
+    use Three_Way_Minima;
+
+  begin
+    Newton_Fabry(hom,prd,rx,ix,maxit,tol,nbrit,absdx,rcond,fail,z,r,err);
+    pole_step := beta1*r;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
+    end loop;
+    Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
+    Hesse_Pade(cfh,prd,svh,xr,xi,vh,svls,psv.res,beta2,eta,nrm,curv_step);
+    Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
+    Bounded_Update(acct,step,endt,minstep);
+    Predictor_Feedback(hom,cfh,xr,xi,psv,prd.numcff,prd.dencff,
+                       step,minstep,alpha,nrm,mixres,nbfail);
+    fail := (mixres > alpha);
+  end SVD_Prediction;
+
+  procedure SVD_Prediction
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false;
+                verbose : in boolean := false ) is
+
+    z : Standard_Complex_Numbers.Complex_Number;
+    r,err,absdx,rcond,pole_step,eta,nrm,curv_step,mixres : double_float;
+    lnk : Standard_Complex_Vectors.Link_to_Vector;
+    nbrit,nbfail : integer32;
+
+    use Three_Way_Minima;
+
+  begin
+    Newton_Fabry(file,hom,prd,rx,ix,maxit,tol,nbrit,absdx,rcond,
+                 fail,z,r,err,output);
+    pole_step := beta1*r;
+    for k in prd.sol'range loop
+      lnk := prd.sol(k); psv.sol(k) := lnk(0);
+    end loop;
+    Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
+    Hesse_Pade(file,cfh,prd,svh,xr,xi,vh,svls,psv.res,beta2,
+               eta,nrm,curv_step,verbose);
+    Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
+    Bounded_Update(acct,step,endt,minstep);
+    Predictor_Feedback(file,hom,cfh,xr,xi,psv,prd.numcff,prd.dencff,
+                       step,minstep,alpha,nrm,mixres,nbfail,verbose);
+    fail := (mixres > alpha);
+  end SVD_Prediction;
+
+-- MAIN PREDICTOR PROCEDURES ON COMPLEX CONVOLUTION CIRCUITS :
 
   procedure LU_Prediction
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -941,7 +1100,7 @@ package body Standard_Predictor_Convolutions is
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(hom,abh,psv,prd.numcff,prd.dencff,
-      step,minstep,alpha,nrm,mixres,nbfail);
+                       step,minstep,alpha,nrm,mixres,nbfail);
     fail := (mixres > alpha);
   end LU_Prediction;
 
@@ -981,7 +1140,7 @@ package body Standard_Predictor_Convolutions is
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
-      step,minstep,alpha,nrm,mixres,nbfail,verbose);
+                       step,minstep,alpha,nrm,mixres,nbfail,verbose);
     fail := (mixres > alpha);
   end LU_Prediction;
 

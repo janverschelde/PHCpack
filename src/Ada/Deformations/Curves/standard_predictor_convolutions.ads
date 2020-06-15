@@ -588,6 +588,20 @@ package Standard_Predictor_Convolutions is
 
 -- PREDICTOR FEEDBACK LOOPS ON COEFFICIENT SYSTEMS :
 
+  procedure EvalCoeff
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                t : in double_float );
+
+  -- DESCRIPIONT :
+  --   Evaluates the power series coefficient at the circuits in hom
+  --   at t and stores the evaluated coefficients in cfh.
+
+  procedure AbsVal ( cfh : in Standard_Coefficient_Circuits.Link_to_System );
+
+  -- DESCRIPTION :
+  --   Replaces all coefficients in the circuits of cfh by their radii.
+
   procedure Predictor_Feedback
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
                 cfh : in Standard_Coefficient_Circuits.Link_to_System;
@@ -641,20 +655,6 @@ package Standard_Predictor_Convolutions is
 
 -- PREDICTOR FEEDBACK LOOPS ON CONVOLUTION SYSTEMS :
 
-  procedure EvalCoeff
-              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
-                cfh : in Standard_Coefficient_Circuits.Link_to_System;
-                t : in double_float );
-
-  -- DESCRIPIONT :
-  --   Evaluates the power series coefficient at the circuits in hom
-  --   at t and stores the evaluated coefficients in cfh.
-
-  procedure AbsVal ( cfh : in Standard_Coefficient_Circuits.Link_to_System );
-
-  -- DESCRIPTION :
-  --   Replaces all coefficients in the circuits of cfh by their radii.
-
   procedure Predictor_Feedback
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -700,7 +700,175 @@ package Standard_Predictor_Convolutions is
   --   nrm      max norm of the components in res;
   --   mixres   mixed residual.
 
--- MAIN PREDICTOR PROCEDURES :
+-- MAIN PREDICTOR PROCEDURES ON COEFFICIENT CONVOLUTION CIRCUITS :
+
+  procedure LU_Prediction
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32 );
+  procedure LU_Prediction
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_LU_Predictor; svh : in Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the power series in prd with LU,
+  --   applies Fabry's theorem and constructs Pade approximants
+  --   to predict the next solution.
+
+  -- ON ENTRY :
+  --   file     to write extra output to if output and/or verbose (optional);
+  --   hom      homotopy convolution circuit system;
+  --   cfh      coefficient circuits for the homotopy; 
+  --   prd      predictor data for LU Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
+  --   rx       work space for the real parts of the series coefficients;
+  --   ix       work space for the imaginary parts of the series coefficients;
+  --   xr       work space allocated for the real parts of solution vectors;
+  --   xi       work space allocated for the imag parts of solution vectors;
+  --   vh       space allocated for dim matrices, dim = dimension,
+  --            all matrices have 1..dim for range(1) and range(2);
+  --   svls     svls(0) contains the singular values of s.jm, and
+  --            svls(k) contains the singular values of vh(k),
+  --            for k in vh'range.
+  --   psv      work space for solution vectors and residuals;
+  --   maxit    maximum number of iterations in Newton's method;
+  --   tol      tolerance on the correction term;
+  --   alpha    tolerance on the predictor residual;
+  --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size;
+  --   minstep  the minimum step size;
+  --   endt     the end value for the homotopy continuation parameter t;
+  --   acct     accumulated sum of all successful steps, equals the
+  --            current value of the homotopy continuation parameter t;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
+  --   output   flag to indicate data output during computations,
+  --            if a file is given on input;
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
+  --   fail     indicates failure status;
+  --   step     the step size;
+  --   nbpole   updated number of times pole step was minimal;
+  --   nbhess   updated number of times curve step was minimal;
+  --   nbmaxm   updated number of times maximum step size was minimal.
+
+  procedure SVD_Prediction
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32 );
+  procedure SVD_Prediction
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                prd : in Link_to_SVD_Predictor; svh : in Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                psv : in out Predictor_Vectors;
+                maxit : in integer32; tol : in double_float;
+                alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
+                acct : in out double_float;
+                fail : out boolean; step : out double_float;
+                nbpole,nbhess,nbmaxm : in out natural32;
+                output : in boolean := false; verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on the power series in prd with SVD,
+  --   applies Fabry's theorem and constructs Pade approximants
+  --   to predict the next solution.
+
+  -- ON ENTRY :
+  --   file     to write extra output to if output and/or verbose (optional);
+  --   hom      homotopy convolution circuit system;
+  --   cfh      coefficient circuits for the homotopy; 
+  --   prd      predictor data for SVD Newton and Pade approximants;
+  --   svh      data for the curvature estimation;
+  --   rx       work space for the real parts of the series coefficients;
+  --   ix       work space for the imaginary parts of the series coefficients;
+  --   xr       work space allocated for the real parts of solution vectors;
+  --   xi       work space allocated for the imag parts of solution vectors;
+  --   vh       space allocated for dim matrices, dim = dimension,
+  --            all matrices have 1..dim for range(1) and range(2);
+  --   svls     svls(0) contains the singular values of s.jm, and
+  --            svls(k) contains the singular values of vh(k),
+  --            for k in vh'range.
+  --   psv      work space for solution vectors and residuals;
+  --   maxit    maximum number of iterations in Newton's method;
+  --   tol      tolerance on the correction term;
+  --   alpha    tolerance on the predictor residual;
+  --   beta1    multiplication factor for the pole radius;
+  --   beta2    multiplication factor for the curvature step;
+  --   maxstep  the maximum step size;
+  --   minstep  the minimum step size;
+  --   endt     the end value for the homotopy continuation parameter t;
+  --   acct     accumulated sum of all successful steps, equals the
+  --            current value of the homotopy continuation parameter t;
+  --   nbpole   number of times the pole step was minimal;
+  --   nbhess   number of times the curve step was minimal;
+  --   nbmaxm   number of times the maximum step size was minimal;
+  --   output   flag to indicate data output during computations,
+  --            if a file is given on input;
+  --   verbose  flag for intermediate numerical output,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   prd      contains solution series and Pade approximants;
+  --   svh      contains largest singular values of all Hessians;
+  --   psv      psv.sol contains the predicted solution,
+  --            psv.radsol has the radii of the psv.sol components,
+  --            psv.res is the residual of psv.sol, and
+  --            psv.radres contains the evaluation at psv.radsol;
+  --   fail     indicates failure status;
+  --   step     the step size;
+  --   nbpole   updated number of times pole step was minimal;
+  --   nbhess   updated number of times curve step was minimal;
+  --   nbmaxm   updated number of times maximum step size was minimal.
+
+-- MAIN PREDICTOR PROCEDURES ON COMPLEX CONVOLUTIONS :
 
   procedure LU_Prediction
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -733,7 +901,7 @@ package Standard_Predictor_Convolutions is
   -- ON ENTRY :
   --   file     to write extra output to if output and/or verbose (optional);
   --   hom      homotopy convolution circuit system
-  --   abh      circuits with radii as coeffiecients, for mixed residuals;
+  --   abh      circuits with radii as coefficients, for mixed residuals;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   psv      work space for solution vectors and residuals;

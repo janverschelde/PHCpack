@@ -1,5 +1,7 @@
 Mon 15 Jun 2020 : defined Predictor_Feedback procedures on coefficient
   convolution circuits in standard_predictor_convolutions.
+  Added the main predictor procedures on coefficient convolution circuits
+  to standard_predictor_convolutions.
 
 Sat 13 Jun 2020 : in standard_predictor_convolutions, added the computation
   of the Hesse-Pade step on coefficient circuits.
