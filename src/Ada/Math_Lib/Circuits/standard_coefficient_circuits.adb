@@ -1,4 +1,5 @@
 with unchecked_deallocation;
+with Standard_Mathematical_Functions;
 with Standard_Complex_Singular_Values;
 with Exponent_Indices;
 with Standard_Hessian_Updaters;
@@ -136,7 +137,66 @@ package body Standard_Coefficient_Circuits is
     return res;
   end Merge;
 
+-- RADIUS COEFFICIENTS :
+
+  procedure AbsVal ( c : in out Circuit ) is
+
+    use Standard_Mathematical_Functions;
+
+  begin
+    c.rcst := SQRT(c.rcst**2 + c.icst**2);
+    c.icst := 0.0;
+    for k in 1..c.nbr loop
+      c.rcf(k) := SQRT(c.rcf(k)**2 + c.icf(k)**2);
+      c.icf(k) := 0.0;
+    end loop;
+  end AbsVal;
+
 -- EVALUATION OF CIRCUITS :
+
+  function Eval ( c : in Circuit;
+                  xr : in Standard_Floating_Vectors.Link_to_Vector;
+                  rpwt : in Standard_Floating_VecVecs.VecVec )
+                return double_float is
+
+    res : double_float := c.rcst;
+    rkcff,prd : double_float;
+    idx : integer32;
+
+    use Standard_Integer_Vectors;
+ 
+  begin
+    for k in c.xps'range loop
+      declare
+        xpk : constant Standard_Integer_Vectors.Link_to_Vector := c.xps(k);
+        idk : constant Standard_Integer_Vectors.Vector := c.idx(k).all;
+        fck : constant Standard_Integer_Vectors.Link_to_Vector := c.fac(k);
+      begin
+        rkcff := c.rcf(k);
+        if fck = null then        -- no common factor
+          if idk'last = 1 then    -- y := y + kcff*x(idx1);
+            idx := idk(1);
+            res := res + rkcff*xr(idx);
+          else -- multiply coefficient with forward product
+            prd := rkcff;
+            for i in idk'range loop
+              idx := idk(i);
+              prd := prd*xr(idx);
+            end loop;
+            res := res + prd;
+          end if;
+        else -- compute the common factor first
+          Multiply_Factor(xpk,fck,xr,rkcff,rpwt,prd);
+          for i in idk'range loop -- multiply with forward product
+            idx := idk(i);
+            prd := prd*xr(idx);
+          end loop;
+          res := res + prd;
+        end if;
+      end;
+    end loop;
+    return res;
+  end Eval;
 
   function Eval ( c : in Circuit;
                   xr : in Standard_Floating_Vectors.Link_to_Vector;
@@ -2047,6 +2107,35 @@ package body Standard_Coefficient_Circuits is
       end if;
     end loop;
   end Power_Table;
+
+  procedure Multiply_Factor
+              ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                rcf : in double_float;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                rpf : out double_float ) is
+
+    rpwx : Standard_Floating_Vectors.Link_to_Vector;
+    idx,powidx : integer32;
+
+  begin
+    idx := fac(fac'first); powidx := xps(idx);
+    if powidx = 2 then -- res := cff*x(idx);
+      rpf := rcf*xr(idx);
+    else
+      rpwx := rpwt(idx); -- res := cff*pwx(powidx-2);
+      rpf := rcf*rpwx(powidx-2);
+    end if;
+    for k in fac'first+1..fac'last loop
+      idx := fac(k); powidx := xps(idx);
+      if powidx = 2 then -- res := res*x(idx);
+        rpf := rpf*xr(idx);
+      else
+        rpwx := rpwt(idx); -- res := res*pwx(powidx-2);
+        rpf := rpf*rpwx(powidx-2);
+      end if;
+    end loop;
+  end Multiply_Factor;
 
   procedure Multiply_Factor
               ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;

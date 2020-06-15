@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
@@ -411,6 +412,29 @@ package Standard_Coefficient_Convolutions is
   --   iyd          ryd(ix'last+1) contains the real parts of the coefficient
   --                vector of the value of the sum of products evaluated at x,
   --                iyd(k) is the real part of the k-th partial derivative.
+
+-- EVALUATION OF POWER SERIES COEFFICIENTS :
+
+  procedure EvalCoeff ( c : in Circuit; t : in double_float;
+                        rct,ict : out double_float;
+                        rcf : in Standard_Floating_Vectors.Link_to_Vector;
+                        icf : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   The coefficients of the power series in the circuit c 
+  --   are evaluated at t.
+
+  -- ON ENTRY :
+  --   c        a coefficient circuit;
+  --   t        value for the continuation parameter;
+  --   rcf      space allocated for 1..c.nbr real parts of the coefficients;
+  --   icf      space allocated for 1..c.nbr imag parts of the coefficients.
+
+  -- ON RETURN :
+  --   rct      real part of the constant coefficient of c, at t;
+  --   ict      imaginary part of the constant coefficient of c, at t;
+  --   rcf      real parts of the coefficients of c, evaluated at t;
+  --   icf      imaginary parts of the coefficients of c, evaluated at t.
 
 -- EVALUATION AND DIFFERENTIATION ON CIRCUITS :
 

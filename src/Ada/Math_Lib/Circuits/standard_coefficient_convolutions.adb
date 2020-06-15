@@ -1,5 +1,4 @@
 with unchecked_deallocation;
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
@@ -529,6 +528,43 @@ package body Standard_Coefficient_Convolutions is
       end if;
     end loop;
   end Speel;
+
+-- EVALUATION OF POWER SERIES COEFFICIENTS :
+
+  procedure EvalCoeff ( c : in Circuit; t : in double_float;
+                        rct,ict : out double_float;
+                        rcf : in Standard_Floating_Vectors.Link_to_Vector;
+                        icf : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    use Standard_Floating_Vectors;
+
+    deg : integer32;
+    rlc,ilc : Link_to_Vector;
+    zr,zi : double_float;
+
+  begin
+    if c.rct = null then     -- also c.ict = null
+      rct := 0.0; ict := 0.0;
+    else
+      deg := c.rct'last;     -- equals c.ict'last
+      rct := c.rct(deg);
+      ict := c.ict(deg);
+      for k in reverse 0..deg-1 loop
+        rct := rct*t + c.rct(k);
+        ict := ict*t + c.ict(k);
+      end loop;
+    end if;
+    for i in 1..c.nbr loop
+      rlc := c.rcf(i); ilc := c.icf(i);
+      deg := rlc'last;
+      zr := rlc(deg); zi := ilc(deg);
+      for k in reverse 0..deg-1 loop
+        zr := zr*t + rlc(k);
+        zi := zi*t + ilc(k);
+      end loop;
+      rcf(i) := zr; icf(i) := zi;
+    end loop;
+  end EvalCoeff;
 
 -- EVALUATION AND DIFFERENTIATION ON CIRCUITS :
 

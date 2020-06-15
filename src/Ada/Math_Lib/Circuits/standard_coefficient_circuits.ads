@@ -125,7 +125,23 @@ package Standard_Coefficient_Circuits is
   -- REQUIRED : hrp'range = hip'range,
   --   and for all k in hrp'range: hrp(k)'range = hip(k)'range.
 
+-- RADIUS COEFFICIENTS :
+
+  procedure AbsVal ( c : in out Circuit );
+
+  -- DESCRIPTION :
+  --   Replaces all coefficients in c by their radius.
+
 -- EVALUATION OF CIRCUITS :
+
+  function Eval ( c : in Circuit;
+                  xr : in Standard_Floating_Vectors.Link_to_Vector;
+                  rpwt : in Standard_Floating_VecVecs.VecVec )
+                return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the value of the circuit at a vector with zero
+  --   imaginary parts, with the aid of a power table.
 
   function Eval ( c : in Circuit;
                   xr : in Standard_Floating_Vectors.Link_to_Vector;
@@ -1118,6 +1134,28 @@ package Standard_Coefficient_Circuits is
   --            rpwt(k)(i) equals the imaginary part of x(k)**(i+1),
   --            where x(k) is the complex value of the k-th variable,
   --            for i in range 1..mxe(k)-1.
+
+  procedure Multiply_Factor
+              ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
+                xr : in Standard_Floating_Vectors.Link_to_Vector;
+                rcf : in double_float;
+                rpwt : in Standard_Floating_VecVecs.VecVec;
+                rpf : out double_float );
+
+  -- DESCRIPTION :
+  --   Computes the common factor, for higher powers of variables,
+  --   in case all imaginary parts are zero.
+
+  -- ON ENTRY :
+  --   xps      values of the exponents for the powers of x;
+  --   fac      factor indices;
+  --   xr       real parts for the variables used for low powers;
+  --   rcf      real part of the coefficient of the monomial;
+  --   rpwt     real parts of the power table for the higher powers of x,
+  --            pwt(k)(i) stores x(k)**(i+1).
+
+  -- ON RETURN :
+  --   rpf      the evaluated common factor.
 
   procedure Multiply_Factor
               ( xps,fac : in Standard_Integer_Vectors.Link_to_Vector;
