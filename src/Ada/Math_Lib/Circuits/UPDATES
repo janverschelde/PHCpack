@@ -2,6 +2,7 @@ Mon 15 Jun 2020 : to standard_coefficient_circuits, added procedures to
   evaluate circuits at vectors with zero imaginary parts and to
   standard_coefficient_convolutions, added procedures to evaluate the
   power series coefficients at a value for the continuation parameter t.
+  Changed prototype of EvalCoeff in standard_coefficient_convolutions.
 
 Sun 14 Jun 2020 : extended standard_coefficient_circuits with a function
   and a procedure to simply evaluate without computing any derivatives,

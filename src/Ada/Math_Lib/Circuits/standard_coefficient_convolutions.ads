@@ -417,18 +417,18 @@ package Standard_Coefficient_Convolutions is
 
   procedure EvalCoeff ( c : in Circuit; t : in double_float;
                         rct,ict : out double_float;
-                        rcf : in Standard_Floating_Vectors.Link_to_Vector;
-                        icf : in Standard_Floating_Vectors.Link_to_Vector );
+                        rcf : out Standard_Floating_Vectors.Vector;
+                        icf : out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
   --   The coefficients of the power series in the circuit c 
   --   are evaluated at t.
 
+  -- REQUIRED : rcf'range = icf'range = 1..c.nbr.
+
   -- ON ENTRY :
   --   c        a coefficient circuit;
-  --   t        value for the continuation parameter;
-  --   rcf      space allocated for 1..c.nbr real parts of the coefficients;
-  --   icf      space allocated for 1..c.nbr imag parts of the coefficients.
+  --   t        value for the continuation parameter.
 
   -- ON RETURN :
   --   rct      real part of the constant coefficient of c, at t;

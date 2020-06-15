@@ -586,6 +586,75 @@ package Standard_Predictor_Convolutions is
   --   nrm      2-norm of res;
   --   step     computed curvature step.
 
+-- PREDICTOR FEEDBACK LOOPS ON COEFFICIENT SYSTEMS :
+
+  procedure Predictor_Feedback
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                psv : in out Predictor_Vectors;
+                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+                step : in out double_float; minstep,alpha : in double_float;
+                nrm,mixres : out double_float; nbfail : out integer32 );
+  procedure Predictor_Feedback
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                psv : in out Predictor_Vectors;
+                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+                step : in out double_float; minstep,alpha : in double_float;
+                nrm,mixres : out double_float; nbfail : out integer32;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Given a step size, runs a predictor feedback loop,
+  --   cutting the step size each time in half,
+  --   until the mixed residual is less than the tolerance,
+  --   or when the step becomes smaller than minstep.
+
+  -- REQUIRED : xr'range = xi'range = psv.sol'range.
+
+  -- ON ENTRY :
+  --   file     to write extra output to if verbose (optional);
+  --   hom      homotopy convolution circuit system
+  --   cfh      coefficient circuits for the homotopy;
+  --   xr       work space allocated for the real parts of solution vectors;
+  --   xi       work space allocated for the imag parts of solution vectors;
+  --   psv      work space for solution vectors and residuals;
+  --   numcff   coefficients of the numerator of the Pade approximants;
+  --   dencff   coefficients of the denominator of the Pade approximants;
+  --   step     current step size;
+  --   minstep  the minimum step size;
+  --   alpha    tolerance on the mixed predictor residual;
+  --   verbose  flag for extra output if true,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   step     shorter step size if nbfail > 0;
+  --   psv      psv.sol prediction by evaluation of Pade approximants,
+  --            psv.radsol contains radii of the predicted solution,
+  --            psv.res is the evaluation of the predicted solution, and
+  --            psv.radres is the evaluation of psv.radsol;
+  --   nrm      max norm of the components in res;
+  --   mixres   mixed residual.
+
+-- PREDICTOR FEEDBACK LOOPS ON CONVOLUTION SYSTEMS :
+
+  procedure EvalCoeff
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                t : in double_float );
+
+  -- DESCRIPIONT :
+  --   Evaluates the power series coefficient at the circuits in hom
+  --   at t and stores the evaluated coefficients in cfh.
+
+  procedure AbsVal ( cfh : in Standard_Coefficient_Circuits.Link_to_System );
+
+  -- DESCRIPTION :
+  --   Replaces all coefficients in the circuits of cfh by their radii.
+
   procedure Predictor_Feedback
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
                 abh : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -612,17 +681,13 @@ package Standard_Predictor_Convolutions is
   -- ON ENTRY :
   --   file     to write extra output to if verbose (optional);
   --   hom      homotopy convolution circuit system
-  --   abh      circuits with radii as coeffiecients, for mixed residuals;
+  --   abh      circuits with radii as coefficients, for mixed residuals;
   --   psv      work space for solution vectors and residuals;
   --   numcff   coefficients of the numerator of the Pade approximants;
   --   dencff   coefficients of the denominator of the Pade approximants;
   --   step     current step size;
   --   minstep  the minimum step size;
   --   alpha    tolerance on the mixed predictor residual;
-  --   eva      work space of range 1..hom.dim for Pade evaluation;
-  --   radsol   work space for the radii of eva;
-  --   res      work space of hom.crc'range for evaluation of eva;
-  --   absres   work space of abh.crc'range for evaluation of radsol;
   --   verbose  flag for extra output if true,
   --            if a file is given on input.
 

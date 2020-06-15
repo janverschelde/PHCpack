@@ -533,8 +533,8 @@ package body Standard_Coefficient_Convolutions is
 
   procedure EvalCoeff ( c : in Circuit; t : in double_float;
                         rct,ict : out double_float;
-                        rcf : in Standard_Floating_Vectors.Link_to_Vector;
-                        icf : in Standard_Floating_Vectors.Link_to_Vector ) is
+                        rcf : out Standard_Floating_Vectors.Vector;
+                        icf : out Standard_Floating_Vectors.Vector ) is
 
     use Standard_Floating_Vectors;
 

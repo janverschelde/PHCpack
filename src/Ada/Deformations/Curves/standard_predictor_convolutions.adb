@@ -5,6 +5,7 @@ with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Mathematical_Functions;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
+with Standard_Vector_Splitters;
 with Standard_Complex_Singular_Values;
 with Standard_Mixed_Residuals;
 with Standard_Rational_Approximations;
@@ -717,6 +718,118 @@ package body Standard_Predictor_Convolutions is
       put(file,"  curv_step :"); put(file,step,3); new_line(file);
     end if;
   end Hesse_Pade;
+
+-- PREDICTOR FEEDBACK LOOPS ON COEFFICIENT SYSTEMS :
+
+  procedure EvalCoeff
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                t : in double_float ) is
+
+    c : Standard_Coefficient_Circuits.Link_to_Circuit;
+
+  begin
+    for k in hom.crc'range loop
+      c := cfh.crc(k);
+      Standard_Coefficient_Convolutions.EvalCoeff
+        (hom.crc(k).all,t,c.rcst,c.icst,c.rcf,c.icf);
+    end loop;
+  end EvalCoeff;
+
+  procedure AbsVal ( cfh : in Standard_Coefficient_Circuits.Link_to_System ) is
+
+    c : Standard_Coefficient_Circuits.Link_to_Circuit;
+
+  begin
+    for k in cfh.crc'range loop
+      c := cfh.crc(k);
+      Standard_Coefficient_Circuits.AbsVal(c.all);
+    end loop;
+  end AbsVal;
+
+  procedure Predictor_Feedback
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                psv : in out Predictor_Vectors;
+                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+                step : in out double_float; minstep,alpha : in double_float;
+                nrm,mixres : out double_float; nbfail : out integer32 ) is
+  begin
+    nbfail := 0;
+    loop
+      Standard_Rational_Approximations.Evaluate(numcff,dencff,step,psv.sol);
+      EvalCoeff(hom,cfh,step);
+      Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
+      Standard_Coefficient_Circuits.Eval(cfh,xr,xi);
+      psv.res := cfh.fx;
+      nrm := Standard_Complex_Vector_Norms.Max_Norm(psv.res);
+      psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
+      AbsVal(cfh);
+      Standard_Vector_Splitters.Complex_Parts(psv.radsol,xr,xi);
+      Standard_Coefficient_Circuits.Eval(cfh,xr,xi);
+      psv.radres := cfh.fx;
+      mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
+      if mixres < alpha then
+        exit;
+      else
+        step := step/2.0; nbfail := nbfail + 1;
+        exit when (step < minstep);
+      end if;
+    end loop;
+  end Predictor_Feedback;
+
+  procedure Predictor_Feedback
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh : in Standard_Coefficient_Circuits.Link_to_System;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                psv : in out Predictor_Vectors;
+                numcff,dencff : in Standard_Complex_VecVecs.VecVec;
+                step : in out double_float; minstep,alpha : in double_float;
+                nrm,mixres : out double_float; nbfail : out integer32;
+                verbose : in boolean := true ) is
+  begin
+    nbfail := 0;
+    loop
+      if verbose then
+        put(file,"step in the predictor feedback loop :");
+        put(file,step,3); new_line(file);
+      end if;
+      Standard_Rational_Approximations.Evaluate(numcff,dencff,step,psv.sol);
+      EvalCoeff(hom,cfh,step);
+      Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
+      Standard_Coefficient_Circuits.Eval(cfh,xr,xi);
+      psv.res := cfh.fx;
+      nrm := Standard_Complex_Vector_Norms.Max_Norm(psv.res);
+      psv.radsol := Standard_Mixed_Residuals.AbsVal(psv.sol);
+      AbsVal(cfh);
+      Standard_Vector_Splitters.Complex_Parts(psv.radsol,xr,xi);
+      Standard_Coefficient_Circuits.Eval(cfh,xr,xi);
+      psv.radres := cfh.fx;
+      mixres := Standard_Mixed_Residuals.Mixed_Residual(psv.res,psv.radres);
+      if verbose then
+        put_line(file,"Evaluation of the predicted solution : ");
+        put_line(file,psv.res);
+        put(file,"The predictor residual :"); put(file,nrm,3);
+        put(file,"  mixres :"); put(file,mixres,3);
+      end if;
+      if mixres < alpha then
+        if verbose
+         then put_line(file,"  okay");
+        end if;
+        exit;
+      else
+        if verbose
+         then put(file," >"); put(file,alpha,3); new_line(file);
+        end if;
+        step := step/2.0; nbfail := nbfail + 1;
+        exit when (step < minstep);
+      end if;
+    end loop;
+  end Predictor_Feedback;
+
+-- PREDICTOR FEEDBACK LOOPS ON CONVOLUTION SYSTEMS :
 
   procedure Predictor_Feedback
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;
