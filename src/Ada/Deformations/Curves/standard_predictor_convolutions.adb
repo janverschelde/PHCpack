@@ -491,7 +491,7 @@ package body Standard_Predictor_Convolutions is
   begin
     Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
-    for k in svls'range loop
+    for k in 1..svls'last loop
       svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
     end loop;
     eta := Distance(svh);
@@ -518,7 +518,7 @@ package body Standard_Predictor_Convolutions is
   begin
     Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
-    for k in svls'range loop
+    for k in 1..svls'last loop
       svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
     end loop;
     if verbose
@@ -551,7 +551,7 @@ package body Standard_Predictor_Convolutions is
   begin
     Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
-    for k in svls'range loop
+    for k in 1..svls'last loop
       svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
     end loop;
     eta := Distance(svh);
@@ -578,7 +578,7 @@ package body Standard_Predictor_Convolutions is
   begin
     Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
-    for k in svls'range loop
+    for k in 1..svls'last loop
       svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
     end loop;
     if verbose

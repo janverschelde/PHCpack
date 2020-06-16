@@ -1,3 +1,6 @@
+Tue 16 Jun 2020 : fixed bug in standard_predictor_convolutions, in the eta
+  computation on coefficient circuits, added test to ts_padepcnv.
+
 Mon 15 Jun 2020 : defined Predictor_Feedback procedures on coefficient
   convolution circuits in standard_predictor_convolutions.
   Added the main predictor procedures on coefficient convolution circuits
