@@ -6,6 +6,7 @@ with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
 with Standard_Vector_Splitters;
 with Standard_Complex_Linear_Solvers;
+with Standard_Mixed_Residuals;
 
 package body Standard_Newton_Circuits is
 
@@ -84,6 +85,52 @@ package body Standard_Newton_Circuits is
     end if;
   end LU_Newton_Step;
 
+-- ONE NEWTON STEP WITH MIXED RESIDUAL CALCULATION :
+
+  procedure LU_Newton_Step
+              ( s : in Standard_Coefficient_Circuits.Link_to_System;
+                abscfs : in Standard_Coefficient_Circuits.Link_to_System;
+                v,radv : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32; res,err,mixres : out double_float;
+                verbose : in boolean := true ) is
+  begin
+    LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err,verbose);
+    Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
+    Standard_Coefficient_Circuits.Eval(s,xr,xi);
+    res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
+    radv := Standard_Mixed_Residuals.AbsVal(v);
+    Standard_Vector_Splitters.Complex_Parts(radv,xr,xi);
+    Standard_Coefficient_Circuits.Eval(abscfs,xr,xi);
+    mixres := Standard_Mixed_Residuals.Mixed_Residual(s.fx,abscfs.fx);
+    if verbose
+     then put("The mixed residual :"); put(mixres,3); new_line;
+    end if;
+  end LU_Newton_Step;
+
+  procedure LU_Newton_Step
+              ( s : in Standard_Coefficient_Circuits.Link_to_System;
+                abscfs : in Standard_Coefficient_Circuits.Link_to_System;
+                v,radv : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                res,rco,err,mixres : out double_float;
+                verbose : in boolean := true ) is
+  begin
+    LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err,verbose);
+    Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
+    Standard_Coefficient_Circuits.Eval(s,xr,xi);
+    res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
+    radv := Standard_Mixed_Residuals.AbsVal(v);
+    Standard_Vector_Splitters.Complex_Parts(radv,xr,xi);
+    Standard_Coefficient_Circuits.Eval(abscfs,xr,xi);
+    mixres := Standard_Mixed_Residuals.Mixed_Residual(s.fx,abscfs.fx);
+    if verbose
+     then put("The mixed residual :"); put(mixres,3); new_line;
+    end if;
+  end LU_Newton_Step;
+
 -- MANY NEWTON STEPS :
 
   procedure LU_Newton_Steps
@@ -124,6 +171,55 @@ package body Standard_Newton_Circuits is
        then initres := res;
       end if;
       if res <= tolres and err <= tolerr
+       then numit := k; fail := false; return;
+      end if;
+    end loop;
+    fail := true; numit := maxit;
+  end LU_Newton_Steps;
+
+-- MANY NEWTON STEPS WITH MIXED RESIDUAL CALCULATION :
+
+  procedure LU_Newton_Steps
+              ( s : in Standard_Coefficient_Circuits.Link_to_System;
+                abscfs : in Standard_Coefficient_Circuits.Link_to_System;
+                v,radv : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                maxit : in natural32; tolres,tolerr : in double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                initres,res,err,mixres : out double_float;
+                numit : out natural32; fail : out boolean;
+                verbose : in boolean := true ) is
+  begin
+    for k in 1..maxit loop
+      LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,info,res,err,mixres,verbose);
+      if k = 1
+       then initres := res;
+      end if;
+      if mixres <= tolres and err <= tolerr
+       then numit := k; fail := false; return;
+      end if;
+    end loop;
+    fail := true; numit := maxit;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( s : in Standard_Coefficient_Circuits.Link_to_System;
+                abscfs : in Standard_Coefficient_Circuits.Link_to_System;
+                v,radv : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                maxit : in natural32; tolres,tolerr : in double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                initres,res,rco,err,mixres : out double_float;
+                numit : out natural32; fail : out boolean;
+                verbose : in boolean := true ) is
+  begin
+    for k in 1..maxit loop
+      LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,res,rco,err,mixres,verbose);
+      if k = 1
+       then initres := res;
+      end if;
+      if mixres <= tolres and err <= tolerr
        then numit := k; fail := false; return;
       end if;
     end loop;

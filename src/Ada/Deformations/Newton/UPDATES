@@ -1,3 +1,6 @@
+Tue 16 Jun 2020 : extended standard_newton_circuits with mixed residuals,
+  tested by ts_newcirc.
+
 Thu 11 Jun 2020 : new package standard_refiner_circuits with code taken
   from ts_newcirc.  Added Main procedures to standard_refiner_circuits.
 

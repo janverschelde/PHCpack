@@ -39,18 +39,35 @@ procedure ts_newcirc is
        := new Standard_Floating_Vectors.Vector'(vxr);
     xi : Standard_Floating_Vectors.Link_to_Vector
        := new Standard_Floating_Vectors.Vector'(vxi);
-    res,rco,err : double_float;
+    res,rco,err,mixres : double_float;
     ans : character;
-    condition : boolean;
+    condition,nomixres : boolean;
+    abscfs : Link_to_System;
+    radv : Standard_Complex_Vectors.Vector(v'range);
 
   begin
     put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
     condition := (ans = 'y');
     put_line("The vector v :"); put_line(v);
+    new_line;
+    put("Compute mixed residuals ? (y/n) "); Ask_Yes_or_No(ans);
+    nomixres := (ans = 'n');
+    if ans = 'y' then
+      abscfs := Copy(s);
+      AbsVal(abscfs);
+    end if;
     loop
-      if condition
-       then LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err,true);
-       else LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err,true);
+      if nomixres then
+        if condition
+         then LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err,true);
+         else LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err,true);
+        end if;
+      else
+        if condition then
+          LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,res,rco,err,mixres,true);
+        else
+          LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,info,res,err,mixres,true);
+        end if;
       end if;
       put_line("The vector v :"); put_line(v);
       put("Another step ? (y/n) "); Ask_Yes_or_No(ans);
