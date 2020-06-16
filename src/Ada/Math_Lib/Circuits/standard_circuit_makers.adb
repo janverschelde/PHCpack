@@ -7,7 +7,9 @@ with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
+with Standard_Floating_Vectors;
 with Standard_Random_Vectors;
+with Standard_Integer_VecVecs;
 with Standard_Vector_Splitters;           use Standard_Vector_Splitters;
 with QuadDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Vectors_cv;
@@ -574,5 +576,92 @@ package body Standard_Circuit_Makers is
       end loop;
     end loop;
   end Write_Matrix;
+
+-- FROM CONVOLUTION COEFFICIENT CIRCUIT TO COEFFICIENT CIRCUIT :
+
+  function Make_Coefficient_Circuit
+             ( c : Standard_Coefficient_Convolutions.Circuit )
+             return Standard_Coefficient_Circuits.Circuit is
+
+    res : Standard_Coefficient_Circuits.Circuit(c.nbr)
+        := Standard_Coefficient_Circuits.Allocate(c.nbr,c.dim);
+    lnk : Standard_Floating_Vectors.Link_to_Vector;
+
+    use Standard_Floating_Vectors;
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    if c.rct = null
+     then res.rcst := 0.0;
+     else res.rcst := c.rct(0);
+    end if;
+    if c.ict = null
+     then res.icst := 0.0;
+     else res.icst := c.ict(0);
+    end if;
+    for k in 1..c.nbr loop
+      lnk := c.rcf(k); res.rcf(k) := lnk(0);
+      lnk := c.icf(k); res.icf(k) := lnk(0);
+    end loop;
+    return res;
+  end Make_Coefficient_Circuit;
+
+  function Make_Coefficient_Circuit
+             ( c : Standard_Coefficient_Convolutions.Link_to_Circuit )
+             return Standard_Coefficient_Circuits.Link_to_Circuit is
+
+    res : Standard_Coefficient_Circuits.Link_to_Circuit;
+
+    use Standard_Coefficient_Convolutions;
+
+  begin
+    if c /= null then
+      declare
+        crc : constant Standard_Coefficient_Circuits.Circuit(c.nbr)
+            := Make_Coefficient_Circuit(c.all);
+      begin
+        res := new Standard_Coefficient_Circuits.Circuit'(crc);
+      end;
+    end if;
+    return res;
+  end Make_Coefficient_Circuit;
+
+  function Make_Coefficient_System
+             ( s : Standard_Coefficient_Convolutions.System )
+             return Standard_Coefficient_Circuits.System is
+
+    res : Standard_Coefficient_Circuits.System(s.neq,s.dim);
+    crc : Standard_Coefficient_Circuits.Circuits(s.crc'range);
+
+  begin
+    for k in crc'range loop
+      crc(k) := Make_Coefficient_Circuit(s.crc(k));
+    end loop;
+    res := Standard_Coefficient_Circuits.Create(crc,s.dim);
+    Standard_Coefficient_Circuits.Allocate_Hessian_Space(res);
+    return res;
+  end Make_Coefficient_System;
+
+  function Make_Coefficient_System
+             ( s : Standard_Coefficient_Convolutions.Link_to_System )
+             return Standard_Coefficient_Circuits.Link_to_System is
+
+    res : Standard_Coefficient_Circuits.Link_to_System;
+
+    use Standard_Coefficient_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        cfs : constant Standard_Coefficient_Circuits.System(s.neq,s.dim)
+            := Make_Coefficient_System(s.all);
+      begin
+        res := new Standard_Coefficient_Circuits.System'(cfs);
+      end;
+    end if;
+    return res;
+  end Make_Coefficient_System;
 
 end Standard_Circuit_Makers;
