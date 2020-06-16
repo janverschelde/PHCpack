@@ -80,6 +80,8 @@ package body DoblDobl_Vector_Splitters is
     end if;
   end Split_Complex;
 
+-- MEMORY ALLOCATORS :
+
   function Allocate_Complex_Coefficients
              ( deg : integer32 )
              return DoblDobl_Complex_Vectors.Link_to_Vector is
@@ -119,6 +121,25 @@ package body DoblDobl_Vector_Splitters is
     res := new DoblDobl_Complex_VecVecs.VecVec'(cff);
     return res;
   end Allocate_Complex_Coefficients;
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return DoblDobl_Complex_VecVecs.VecVec is
+
+    res : DoblDobl_Complex_VecVecs.VecVec(neqstart..neq);
+
+  begin
+    for i in res'range loop
+      declare
+        v : constant DoblDobl_Complex_Vectors.Vector(dimstart..dim)
+          := (dimstart..dim => DoblDobl_Complex_Numbers.Create(integer(0)));
+      begin
+        res(i) := new DoblDobl_Complex_Vectors.Vector'(v);
+      end;
+    end loop;
+    return res;
+  end Allocate;
+
+-- MERGE PROCEDURES :
 
   procedure Merge ( x : out Complex_Number;
                     rehi,imhi,relo,imlo : in double_float ) is

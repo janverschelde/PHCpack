@@ -71,6 +71,8 @@ package DoblDobl_Vector_Splitters is
   --   with its real and imaginary parts of the complex numbers in x.
   --   Memory is allocated for the resulting vectors.
 
+-- MEMORY ALLOCATORS :
+
   function Allocate_Complex_Coefficients
              ( deg : integer32 )
              return DoblDobl_Complex_Vectors.Link_to_Vector;
@@ -90,6 +92,15 @@ package DoblDobl_Vector_Splitters is
   --   Returns allocated space for the coefficients of a vector 
   --   of series, all truncated to degree deg.
   --   The vector on return has range 1..dim.
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return DoblDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns an array of range neqstart..neq,
+  --   with allocated vectors of range dimstart..dim.
+
+-- MERGE PROCEDURES :
 
   procedure Merge ( x : out Complex_Number;
                     rehi,imhi,relo,imlo : in double_float );

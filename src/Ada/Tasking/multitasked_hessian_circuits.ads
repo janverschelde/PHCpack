@@ -3,7 +3,6 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Floating_Vectors;
-with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -23,13 +22,6 @@ package Multitasked_Hessian_Circuits is
 --   for systems given as sequences of complex circuits,
 --   in double, double double, and quad double precision.
 
-  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
-                    return Standard_Floating_VecVecs.VecVec;
-
-  -- DESCRIPTION :
-  --   Returns an array of range neqstart..neq,
-  --   with allocated vectors of range dimstart..dim.
-
   procedure Allocate_Hessian_Spaces
               ( dim : in integer32;
                 hrp,hip : out Standard_Coefficient_Convolutions.VecVecVec );
@@ -41,18 +33,6 @@ package Multitasked_Hessian_Circuits is
   --   where nbt equals the number of tasks.
 
   -- REQUIRED : hrp'range = hip'range.
-
-  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
-                    return Standard_Complex_VecVecs.VecVec;
-  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
-                    return DoblDobl_Complex_VecVecs.VecVec;
-  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
-                    return QuadDobl_Complex_VecVecs.VecVec;
-
-  -- DESCRIPTION :
-  --   Returns an array of range neqstart..neq,
-  --   with allocated vectors of range dimstart..dim,
-  --   in double, double double, or quad double precision.
 
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;

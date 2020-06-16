@@ -33,6 +33,9 @@ with QuadDobl_Complex_Vectors_cv;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
+with Standard_Vector_Splitters;
+with DoblDobl_Vector_Splitters;
+with QuadDobl_Vector_Splitters;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -44,7 +47,6 @@ with QuadDobl_Complex_Solutions;
 with QuadDobl_System_and_Solutions_io;
 with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Standard_Complex_Circuits;
-with Standard_Vector_Splitters;
 with Standard_Coefficient_Circuits;
 with Standard_Circuit_Splitters;
 with Standard_Circuit_Makers;
@@ -140,11 +142,11 @@ procedure ts_mthesscrc is
     U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     e : Standard_Complex_Vectors.Vector(1..dim);
     svl : constant Standard_Complex_VecVecs.VecVec(0..s.neq)
-        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     vh : constant Standard_Complex_VecMats.VecMat(1..s.neq)
        := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
     values : Standard_Complex_VecVecs.VecVec(0..s.neq)
-           := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+           := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     nbt : integer32 := 0;
     err,eta : double_float;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
@@ -211,11 +213,11 @@ procedure ts_mthesscrc is
     U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     e : Standard_Complex_Vectors.Vector(1..dim);
     svl : constant Standard_Complex_VecVecs.VecVec(0..s.neq)
-        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     vh : constant Standard_Complex_VecMats.VecMat(1..s.neq)
        := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
     values : Standard_Complex_VecVecs.VecVec(0..s.neq)
-           := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+           := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     nbt : integer32 := 0;
     err,eta : double_float;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
@@ -283,11 +285,11 @@ procedure ts_mthesscrc is
     U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     e : DoblDobl_Complex_Vectors.Vector(1..dim);
     svl : constant DoblDobl_Complex_VecVecs.VecVec(0..s.neq)
-        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        := DoblDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     vh : constant DoblDobl_Complex_VecMats.VecMat(1..s.neq)
        := DoblDobl_Complex_Circuits.Allocate(s.neq,s.dim);
     values : DoblDobl_Complex_VecVecs.VecVec(0..s.neq)
-           := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+           := DoblDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     nbt : integer32 := 0;
     err,eta : double_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
@@ -354,11 +356,11 @@ procedure ts_mthesscrc is
     U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     e : QuadDobl_Complex_Vectors.Vector(1..dim);
     svl : constant QuadDobl_Complex_VecVecs.VecVec(0..s.neq)
-        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        := QuadDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     vh : constant QuadDobl_Complex_VecMats.VecMat(1..s.neq)
        := QuadDobl_Complex_Circuits.Allocate(s.neq,s.dim);
     values : QuadDobl_Complex_VecVecs.VecVec(0..s.neq)
-           := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+           := QuadDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     nbt : integer32 := 0;
     err,eta : quad_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
@@ -638,7 +640,7 @@ procedure ts_mthesscrc is
     U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     e : Standard_Complex_Vectors.Vector(1..dim);
     svl : constant Standard_Complex_VecVecs.VecVec(0..s.neq)
-        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     vh : constant Standard_Complex_VecMats.VecMat(1..s.neq)
        := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
     values : Standard_Complex_VecVecs.VecVec(0..s.neq);
@@ -666,7 +668,7 @@ procedure ts_mthesscrc is
     put_line(file," : 1.000"); flush(file);
     if nbruns /= 0 then
       for k in 1..nbruns loop
-        values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        values := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
         multstart := Ada.Calendar.Clock;
         Multitasked_Hessian_Circuits.Multitasked_Singular_Values
           (nbt,s,x,values,false,false);
@@ -695,7 +697,7 @@ procedure ts_mthesscrc is
     else
       for k in nbtseq'range loop
         nbt := nbtseq(k);
-        values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        values := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
         multstart := Ada.Calendar.Clock;
         Multitasked_Hessian_Circuits.Multitasked_Singular_Values
           (nbt,s,x,values,false,false);
@@ -751,7 +753,7 @@ procedure ts_mthesscrc is
     U,V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     e : Standard_Complex_Vectors.Vector(1..dim);
     svl : constant Standard_Complex_VecVecs.VecVec(0..s.neq)
-        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     vh : constant Standard_Complex_VecMats.VecMat(1..s.neq)
        := Standard_Complex_Circuits.Allocate(s.neq,s.dim);
     values : Standard_Complex_VecVecs.VecVec(0..s.neq);
@@ -780,7 +782,7 @@ procedure ts_mthesscrc is
     put_line(file," : 1.000"); flush(file);
     if nbruns /= 0 then
       for k in 1..nbruns loop
-        values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        values := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
         multstart := Ada.Calendar.Clock;
         Multitasked_Hessian_Circuits.Multitasked_Singular_Values
           (nbt,s,xr,xi,values,false);
@@ -809,7 +811,7 @@ procedure ts_mthesscrc is
     else
       for k in nbtseq'range loop
         nbt := nbtseq(k);
-        values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        values := Standard_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
         multstart := Ada.Calendar.Clock;
         Multitasked_Hessian_Circuits.Multitasked_Singular_Values
           (nbt,s,xr,xi,values,false);
@@ -863,7 +865,7 @@ procedure ts_mthesscrc is
     U,V : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     e : DoblDobl_Complex_Vectors.Vector(1..dim);
     svl : constant DoblDobl_Complex_VecVecs.VecVec(0..s.neq)
-        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        := DoblDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     vh : constant DoblDobl_Complex_VecMats.VecMat(1..s.neq)
        := DoblDobl_Complex_Circuits.Allocate(s.neq,s.dim);
     values : DoblDobl_Complex_VecVecs.VecVec(0..s.neq);
@@ -891,7 +893,7 @@ procedure ts_mthesscrc is
     put_line(file," : 1.000"); flush(file);
     if nbruns /= 0 then
       for k in 1..nbruns loop
-        values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        values := DoblDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
         multstart := Ada.Calendar.Clock;
         Multitasked_Hessian_Circuits.Multitasked_Singular_Values
           (nbt,s,x,values,false,false);
@@ -920,7 +922,7 @@ procedure ts_mthesscrc is
     else
       for k in nbtseq'range loop
         nbt := nbtseq(k);
-        values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        values := DoblDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
         multstart := Ada.Calendar.Clock;
         Multitasked_Hessian_Circuits.Multitasked_Singular_Values
           (nbt,s,x,values,false,false);
@@ -974,7 +976,7 @@ procedure ts_mthesscrc is
     U,V : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     e : QuadDobl_Complex_Vectors.Vector(1..dim);
     svl : constant QuadDobl_Complex_VecVecs.VecVec(0..s.neq)
-        := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        := QuadDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
     vh : constant QuadDobl_Complex_VecMats.VecMat(1..s.neq)
        := QuadDobl_Complex_Circuits.Allocate(s.neq,s.dim);
     values : QuadDobl_Complex_VecVecs.VecVec(0..s.neq);
@@ -1002,7 +1004,7 @@ procedure ts_mthesscrc is
     put_line(file," : 1.000"); flush(file);
     if nbruns /= 0 then
       for k in 1..nbruns loop
-        values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        values := QuadDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
         multstart := Ada.Calendar.Clock;
         Multitasked_Hessian_Circuits.Multitasked_Singular_Values
           (nbt,s,x,values,false,false);
@@ -1031,7 +1033,7 @@ procedure ts_mthesscrc is
     else
       for k in nbtseq'range loop
         nbt := nbtseq(k);
-        values := Multitasked_Hessian_Circuits.Allocate(s.neq,dim+1,0,1);
+        values := QuadDobl_Vector_Splitters.Allocate(s.neq,dim+1,0,1);
         multstart := Ada.Calendar.Clock;
         Multitasked_Hessian_Circuits.Multitasked_Singular_Values
           (nbt,s,x,values,false,false);

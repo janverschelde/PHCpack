@@ -201,7 +201,7 @@ package QuadDobl_Vector_Splitters is
   --   x        a vector of quad double complex numbers,
   --            with real parts taken xr and imaginary parts from xi.
 
--- SPLITTERS AND MERGERS WITH AND WITHOUT MEMORY ALLOCATIONS :
+-- SPLITTERS AND MERGERS WITH MEMORY ALLOCATIONS :
 
   procedure Split_Complex
               ( x : in QuadDobl_Complex_Vectors.Link_to_Vector;
@@ -217,6 +217,8 @@ package QuadDobl_Vector_Splitters is
   --   Splits the complex vector (of vectors) x into two real vectors,
   --   with its real and imaginary parts of the complex numbers in x.
   --   Memory is allocated for the resulting vectors.
+
+-- MEMORY ALLOCATORS :
 
   function Allocate_Complex_Coefficients
              ( deg : integer32 )
@@ -237,6 +239,15 @@ package QuadDobl_Vector_Splitters is
   --   Returns allocated space for the coefficients of a vector 
   --   of series, all truncated to degree deg.
   --   The vector on return has range 1..dim.
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return QuadDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns an array of range neqstart..neq,
+  --   with allocated vectors of range dimstart..dim.
+
+-- SPLITTERS AND MERGERS ON ALLOCATED VECTORS :
 
   procedure Complex_Parts
               ( x : in QuadDobl_Complex_Vectors.Link_to_Vector;

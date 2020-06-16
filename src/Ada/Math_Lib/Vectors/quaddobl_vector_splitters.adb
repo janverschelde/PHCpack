@@ -159,6 +159,8 @@ package body QuadDobl_Vector_Splitters is
     end if;
   end Split_Complex;
 
+-- MEMORY ALLOCATORS :
+
   function Allocate_Complex_Coefficients
              ( deg : integer32 )
              return QuadDobl_Complex_Vectors.Link_to_Vector is
@@ -198,6 +200,25 @@ package body QuadDobl_Vector_Splitters is
     res := new QuadDobl_Complex_VecVecs.VecVec'(cff);
     return res;
   end Allocate_Complex_Coefficients;
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return QuadDobl_Complex_VecVecs.VecVec is
+
+    res : QuadDobl_Complex_VecVecs.VecVec(neqstart..neq);
+
+  begin
+    for i in res'range loop
+      declare
+        v : constant QuadDobl_Complex_Vectors.Vector(dimstart..dim)
+          := (dimstart..dim => QuadDobl_Complex_Numbers.Create(integer(0)));
+      begin
+        res(i) := new QuadDobl_Complex_Vectors.Vector'(v);
+      end;
+    end loop;
+    return res;
+  end Allocate;
+
+-- SPLITTERS AND MERGERS ON ALLOCATED VECTORS :
 
   procedure Complex_Parts
               ( x : in QuadDobl_Complex_Vectors.Link_to_Vector;

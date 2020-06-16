@@ -1,3 +1,6 @@
+Tue 16 Jun 2020 : moved allocators from multitasked_hessian_circuits
+  into the *vector_splitters*, updated ts_mthesscrc.
+
 Sat 6 Jun 2020 : updated the benchmarking procedures in ts_mthesscrc
   with a function to prompt for sequences of numbers of tasks.
 

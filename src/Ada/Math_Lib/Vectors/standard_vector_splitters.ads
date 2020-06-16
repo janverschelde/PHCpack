@@ -120,6 +120,20 @@ package Standard_Vector_Splitters is
   --   of series, all truncated to degree deg.
   --   The vector on return has range 1..dim.
 
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return Standard_Floating_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns an array of range neqstart..neq,
+  --   with allocated vectors of range dimstart..dim.
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return Standard_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns an array of range neqstart..neq,
+  --   with allocated vectors of range dimstart..dim.
+
 -- PROCEDURES TO PART AND MERGE :
 
   procedure Complex_Parts

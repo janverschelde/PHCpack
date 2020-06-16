@@ -5,86 +5,22 @@ with QuadDobl_Mathematical_Functions;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_VecMats;
+with Standard_Vector_Splitters;
+with DoblDobl_Vector_Splitters;
+with QuadDobl_Vector_Splitters;
 with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;
 with QuadDobl_Complex_Singular_Values;
 with Semaphore,Multitasking;
 
 package body Multitasked_Hessian_Circuits is
-
-  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
-                    return Standard_Complex_VecVecs.VecVec is
-
-    res : Standard_Complex_VecVecs.VecVec(neqstart..neq);
-
-  begin
-    for i in res'range loop
-      declare
-        v : constant Standard_Complex_Vectors.Vector(dimstart..dim)
-          := (dimstart..dim => Standard_Complex_Numbers.Create(integer(0)));
-      begin
-        res(i) := new Standard_Complex_Vectors.Vector'(v);
-      end;
-    end loop;
-    return res;
-  end Allocate;
-
-  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
-                    return Standard_Floating_VecVecs.VecVec is
-
-    res : Standard_Floating_VecVecs.VecVec(neqstart..neq);
-
-  begin
-    for i in res'range loop
-      declare
-        v : constant Standard_Floating_Vectors.Vector(dimstart..dim)
-          := (dimstart..dim => 0.0);
-      begin
-        res(i) := new Standard_Floating_Vectors.Vector'(v);
-      end;
-    end loop;
-    return res;
-  end Allocate;
-
-  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
-                    return DoblDobl_Complex_VecVecs.VecVec is
-
-    res : DoblDobl_Complex_VecVecs.VecVec(neqstart..neq);
-
-  begin
-    for i in res'range loop
-      declare
-        v : constant DoblDobl_Complex_Vectors.Vector(dimstart..dim)
-          := (dimstart..dim => DoblDobl_Complex_Numbers.Create(integer(0)));
-      begin
-        res(i) := new DoblDobl_Complex_Vectors.Vector'(v);
-      end;
-    end loop;
-    return res;
-  end Allocate;
-
-  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
-                    return QuadDobl_Complex_VecVecs.VecVec is
-
-    res : QuadDobl_Complex_VecVecs.VecVec(neqstart..neq);
-
-  begin
-    for i in res'range loop
-      declare
-        v : constant QuadDobl_Complex_Vectors.Vector(dimstart..dim)
-          := (dimstart..dim => QuadDobl_Complex_Numbers.Create(integer(0)));
-      begin
-        res(i) := new QuadDobl_Complex_Vectors.Vector'(v);
-      end;
-    end loop;
-    return res;
-  end Allocate;
 
   procedure Allocate_Hessian_Spaces
               ( dim : in integer32;
@@ -270,9 +206,10 @@ package body Multitasked_Hessian_Circuits is
     A := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     U := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Allocate(nbt,s.dim,1,1);
-    ryd := Allocate(s.neq,s.dim,1,0); -- space for all gradients
-    iyd := Allocate(s.neq,s.dim,1,0);
+    e := Standard_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for all gradients
+    ryd := Standard_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
+    iyd := Standard_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     Allocate_Hessian_Spaces(s.dim,hrps,hips);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
@@ -432,8 +369,9 @@ package body Multitasked_Hessian_Circuits is
     A := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     U := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Allocate(nbt,s.dim,1,1);
-    yd := Allocate(s.neq,s.dim,1,0); -- space for all gradients
+    e := Standard_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for all gradients
+    yd := Standard_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -607,8 +545,9 @@ package body Multitasked_Hessian_Circuits is
     A := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     U := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Allocate(nbt,s.dim,1,1);
-    yd := Allocate(s.neq,s.dim,1,0); -- space for all gradients
+    e := Standard_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for all gradients
+    yd := Standard_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -777,8 +716,9 @@ package body Multitasked_Hessian_Circuits is
     A := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
     U := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
     V := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Allocate(nbt,s.dim,1,1);
-    yd := Allocate(s.neq,s.dim,1,0); -- space for gradients
+    e := DoblDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for gradients
+    yd := DoblDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -953,8 +893,9 @@ package body Multitasked_Hessian_Circuits is
     A := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
     U := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
     V := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Allocate(nbt,s.dim,1,1);
-    yd := Allocate(s.neq,s.dim,1,0); -- space for gradients
+    e := DoblDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for gradients
+    yd := DoblDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -1122,8 +1063,9 @@ package body Multitasked_Hessian_Circuits is
     A := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
     U := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
     V := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Allocate(nbt,s.dim,1,1);
-    yd := Allocate(s.neq,s.dim,1,0); -- space for gradients
+    e := QuadDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for gradients
+    yd := QuadDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -1297,8 +1239,9 @@ package body Multitasked_Hessian_Circuits is
     A := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
     U := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
     V := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Allocate(nbt,s.dim,1,1);
-    yd := Allocate(s.neq,s.dim,1,0); -- space for gradients
+    e := QuadDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for gradients
+    yd := QuadDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;

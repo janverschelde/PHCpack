@@ -1,3 +1,6 @@
+Tue 16 Jun 2020 : extended {standard,dobldobl,quaddobl}_vector_splitters
+  with allocators from multitasked_hessian_circuits.
+
 Tue 9 Jun 2020 : in generic_vectors.adb, fixed the definition of Sum,
   fixing the test v'first < v'last to v'first > v'last.
 
