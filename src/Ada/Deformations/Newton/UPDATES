@@ -1,3 +1,7 @@
+Wed 17 Jun 2020 : to standard_newton_circuits added procedures to write
+  to file when in verbose mode, tested by ts_newcirc, and with updates to
+  the procedure calls in standard_refiner_circuits.adb.
+
 Tue 16 Jun 2020 : extended standard_newton_circuits with mixed residuals,
   tested by ts_newcirc.
 

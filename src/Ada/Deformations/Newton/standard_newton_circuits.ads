@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -21,6 +22,13 @@ package Standard_Newton_Circuits is
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32; res,err : out double_float );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                v : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; res,err : out double_float;
                 verbose : in boolean := true );
 
@@ -33,12 +41,13 @@ package Standard_Newton_Circuits is
   --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
+  --   file     if verbose, then output will be written to file;
   --   s        coefficient system of circuits;
   --   v        vector with approximate values for a solution to s;
   --   xr       work space allocated for the real parts of v;
   --   xi       work space allocated for the imaginary parts of v;
   --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output to screen.
+  --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
   --   s        s.fx contains the update value to v, if info = 0,
@@ -58,6 +67,13 @@ package Standard_Newton_Circuits is
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
+                res,rco,err : out double_float );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                v : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
                 res,rco,err : out double_float;
                 verbose : in boolean := true );
 
@@ -71,12 +87,13 @@ package Standard_Newton_Circuits is
   --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
+  --   file     if verbose, then output will be written to file;
   --   s        coefficient system of circuits;
   --   v        vector with approximate values for a solution to s;
   --   xr       work space allocated for the real parts of v;
   --   xi       work space allocated for the imaginary parts of v;
   --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output to screen.
+  --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
   --   s        s.fx contains the update value to v, if info = 0,
@@ -100,6 +117,14 @@ package Standard_Newton_Circuits is
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32; res,err,mixres : out double_float );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                abscfs : in Standard_Coefficient_Circuits.Link_to_System;
+                v,radv : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; res,err,mixres : out double_float;
                 verbose : in boolean := true );
 
@@ -113,6 +138,7 @@ package Standard_Newton_Circuits is
   --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
+  --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
   --   abscfs   same system s, but with radii for coefficients;
   --   v        vector with approximate values for a solution to s;
@@ -120,7 +146,7 @@ package Standard_Newton_Circuits is
   --   xr       work space allocated for the real parts of v;
   --   xi       work space allocated for the imaginary parts of v;
   --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output to screen.
+  --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
   --   s        s.fx contains the function value of s at the updated v,
@@ -144,6 +170,14 @@ package Standard_Newton_Circuits is
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
+                res,rco,err,mixres : out double_float );
+  procedure LU_Newton_Step
+              ( file : in file_type;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                abscfs : in Standard_Coefficient_Circuits.Link_to_System;
+                v,radv : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                ipvt : in out Standard_Integer_Vectors.Vector;
                 res,rco,err,mixres : out double_float;
                 verbose : in boolean := true );
 
@@ -158,6 +192,7 @@ package Standard_Newton_Circuits is
   --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
+  --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
   --   abscfs   same system s, but with radii for coefficients;
   --   v        vector with approximate values for a solution to s;
@@ -165,7 +200,7 @@ package Standard_Newton_Circuits is
   --   xr       work space allocated for the real parts of v;
   --   xi       work space allocated for the imaginary parts of v;
   --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output to screen.
+  --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
   --   s        s.fx contains the function value of s at the updated v,
@@ -193,6 +228,15 @@ package Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; initres,res,err : out double_float;
+                numit : out natural32; fail : out boolean );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                v : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                maxit : in natural32; tolres,tolerr : in double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32; initres,res,err : out double_float;
                 numit : out natural32; fail : out boolean;
                 verbose : in boolean := true );
 
@@ -207,6 +251,7 @@ package Standard_Newton_Circuits is
   --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
+  --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
   --   v        vector with approximate values for a solution to s;
   --   xr       work space allocated for the real parts of v;
@@ -215,7 +260,7 @@ package Standard_Newton_Circuits is
   --   tolres   tolerance on the residual;
   --   tolerr   tolerance on the forward error;
   --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output to screen.
+  --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
   --   s        s.fx contains the update value to v, if info = 0,
@@ -240,6 +285,15 @@ package Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err : out double_float;
+                numit : out natural32; fail : out boolean );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                v : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                maxit : in natural32; tolres,tolerr : in double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                initres,res,rco,err : out double_float;
                 numit : out natural32; fail : out boolean;
                 verbose : in boolean := true );
 
@@ -255,6 +309,7 @@ package Standard_Newton_Circuits is
   --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
+  --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
   --   v        vector with approximate values for a solution to s;
   --   xr       work space allocated for the real parts of v;
@@ -263,7 +318,7 @@ package Standard_Newton_Circuits is
   --   tolres   tolerance on the residual;
   --   tolerr   tolerance on the forward error;
   --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output to screen.
+  --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
   --   s        s.fx contains the update value to v, if info = 0,
@@ -293,6 +348,17 @@ package Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 initres,res,err,mixres : out double_float;
+                numit : out natural32; fail : out boolean );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                abscfs : in Standard_Coefficient_Circuits.Link_to_System;
+                v,radv : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                maxit : in natural32; tolres,tolerr : in double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                initres,res,err,mixres : out double_float;
                 numit : out natural32; fail : out boolean;
                 verbose : in boolean := true );
 
@@ -309,6 +375,7 @@ package Standard_Newton_Circuits is
   --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
+  --   file     to write optional output to, if verbose;
   --   s        coefficient system of circuits;
   --   abscfs   same system s, but with radii for coefficients;
   --   v        vector with approximate values for a solution to s;
@@ -319,7 +386,7 @@ package Standard_Newton_Circuits is
   --   tolres   tolerance on the residual;
   --   tolerr   tolerance on the forward error;
   --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output to screen.
+  --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
   --   s        s.fx contains the function value of s at v,
@@ -347,6 +414,16 @@ package Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err,mixres : out double_float;
+                numit : out natural32; fail : out boolean );
+  procedure LU_Newton_Steps
+              ( file : in file_type;
+                s : in Standard_Coefficient_Circuits.Link_to_System;
+                abscfs : in Standard_Coefficient_Circuits.Link_to_System;
+                v,radv : in out Standard_Complex_Vectors.Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                maxit : in natural32; tolres,tolerr : in double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                initres,res,rco,err,mixres : out double_float;
                 numit : out natural32; fail : out boolean;
                 verbose : in boolean := true );
 
@@ -363,6 +440,7 @@ package Standard_Newton_Circuits is
   --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
+  --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
   --   abscfs   same system s, but with radii for coefficients;
   --   v        vector with approximate values for a solution to s;
@@ -373,7 +451,7 @@ package Standard_Newton_Circuits is
   --   tolres   tolerance on the residual;
   --   tolerr   tolerance on the forward error;
   --   ipvt     pivoting vector for the LU factorization;
-  --   verbose  flag for extra output to screen.
+  --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
   --   s        s.fx contains the function value of s at v,

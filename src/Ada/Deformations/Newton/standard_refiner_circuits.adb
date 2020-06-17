@@ -123,7 +123,7 @@ package body Standard_Refiner_Circuits is
         put("Solution "); put(cnt,1); put(" :    start residual :");
       end if;
       LU_Newton_Steps(s,ls.v,xr,xi,maxit,tolres,tolerr,ipvt,
-                      startres,res,rco,err,numit,fail,false);
+                      startres,res,rco,err,numit,fail);
       if verbose then
         put(startres,3);
         put("  #iterations : "); put(numit,1);
@@ -246,7 +246,7 @@ package body Standard_Refiner_Circuits is
       put(file,"Solution "); put(file,cnt,1);
       put(file," :    start residual :");
       LU_Newton_Steps(s,ls.v,xr,xi,maxit,tolres,tolerr,ipvt,
-                      startres,res,rco,err,numit,fail,false);
+                      startres,res,rco,err,numit,fail);
       put(file,startres,3);
       put(file,"  #iterations : "); put(file,numit,1);
       if fail

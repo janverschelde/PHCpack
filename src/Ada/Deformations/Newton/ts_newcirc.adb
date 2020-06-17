@@ -59,14 +59,16 @@ procedure ts_newcirc is
     loop
       if nomixres then
         if condition
-         then LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err,true);
-         else LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err,true);
+         then LU_Newton_Step(standard_output,s,v,xr,xi,ipvt,res,rco,err,true);
+         else LU_Newton_Step(standard_output,s,v,xr,xi,ipvt,info,res,err,true);
         end if;
       else
         if condition then
-          LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,res,rco,err,mixres,true);
+          LU_Newton_Step(standard_output,s,abscfs,v,radv,xr,xi,ipvt,
+                         res,rco,err,mixres,true);
         else
-          LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,info,res,err,mixres,true);
+          LU_Newton_Step(standard_output,s,abscfs,v,radv,xr,xi,ipvt,info,
+                         res,err,mixres,true);
         end if;
       end if;
       put_line("The vector v :"); put_line(v);
