@@ -5,7 +5,6 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Random_Numbers;
 with Multprec_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
@@ -31,9 +30,6 @@ with Multprec_Complex_Jaco_Matrices;
 with Multprec_Complex_Laur_Systems;
 with Multprec_Complex_Laur_SysFun;
 with Multprec_Complex_Laur_JacoMats;
-with Standard_Laur_Poly_Convertors;
-with DoblDobl_Laur_Poly_Convertors;
-with QuadDobl_Laur_Poly_Convertors;
 with Parse_Dimensions;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -54,10 +50,8 @@ with QuadDobl_Deflation_Methods;
 with Verification_of_Solutions;
 with Floating_Mixed_Subdivisions;
 with Black_Mixed_Volume_Computations;
-with Black_Box_Solvers;
 with Witness_Sets_io;
 with Square_and_Embed_Systems;
-with Greeting_Banners;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 -- with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
@@ -94,64 +88,12 @@ with use_series;
 with use_padcon;
 with use_multip;  -- multiplicity structure
 with use_witsols;
+with Job_Handlers;
 
 function use_c2phc4c ( job : integer32;
                        a : C_intarrs.Pointer;
-		       b : C_intarrs.Pointer;
+                       b : C_intarrs.Pointer;
                        c : C_dblarrs.Pointer ) return integer32 is
-
-  function Version_String return integer32 is
-
-  -- DESCRIPTION :
-  --   Returns the PHCpack version string in b,
-  --   with in a the number of characters in the string.
-
-    s : constant string := Greeting_Banners.Version;
-    n : constant integer32 := integer32(s'last);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-
-  begin
-    Assign(n,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 999;
-  end Version_String;
-
-  function Get_Seed return integer32 is -- job 997 to get the seed
-
-  -- DESCRIPTION :
-  --   Gets the seed used in the random number generators
-  --   and returns its value in the parameter a on return.
-  --   Having the seed could be useful for reproducible runs.
-
-    seed : constant integer32 := Standard_Random_Numbers.Get_Seed;
-
-  begin
-    Assign(seed,a);
-    return 0;
-  exception
-    when others => return 997;
-  end Get_Seed;
-
-  function Set_Seed return integer32 is
-
-  -- DESCRIPTION :
-  --   Takes the number stored in a
-  --   and uses its value to initialize the seed
-  --   for the random number generator.
- 
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    fixed_seed : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-    Standard_Random_Numbers.Set_Seed(fixed_seed);
-    return 0;
-  exception
-    when others => return 998;
-  end Set_Seed;
 
   procedure Write_Menu is
   begin
@@ -1838,455 +1780,6 @@ function use_c2phc4c ( job : integer32;
     return 0;
   end Job194;
 
-  function Job75 return integer32 is -- solve Laurent system in container
-
-    use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
-    use Standard_Complex_Laur_Systems;
-    use Interfaces.C;
-
-    v_b : constant C_Integer_Array(0..1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    silval : constant natural32 := natural32(v_b(v_b'first));
-    silent : constant boolean := (silval = 1);
-    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
-    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
-    nv : constant natural32 := Size_of_Support(lp.all);
-    nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
-    rcnr : Standard_Integer_Vectors.Vector(1..2);
-    lsroco : Link_to_String;
-    sols : Solution_List;
-
-  begin
-   -- put("nv = "); put(integer32(nv),1);
-   -- put("  nq = "); put(integer32(nq),1); new_line;
-    if nv < nq then
-      put_line("The system is overdetermined, add slack variables.");
-      return 75;
-    elsif nv > nq then
-      put_line("The system is underdetermined, add linear equations.");
-      return 75;
-    end if;
-    if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-     -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-      if silent then
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-        end if;
-      else
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-        end if;
-        if lsroco = null then
-          nr := 0;
-        else
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
-        end if;
-      end if;
-    else
-      declare
-        use Standard_Laur_Poly_Convertors;
-        p : Poly_Sys(lp'range) := Positive_Laurent_Polynomial_System(lp.all);
-      begin
-       -- Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
-        if silent then
-          if ntasks = 0 -- patch for deflation with multitasking
-           then Black_Box_Solvers.Solve(p,silent,true,rc,sols);
-           else Black_Box_Solvers.Solve(ntasks,p,silent,true,rc,sols);
-          end if;
-        else
-          if ntasks = 0 -- patch for deflation with multitasking
-           then Black_Box_Solvers.Solve(p,true,rc,lsroco,sols);
-           else Black_Box_Solvers.Solve(ntasks,p,true,rc,lsroco,sols);
-          end if;
-          if lsroco = null then
-            nr := 0;
-          else
-            nr := natural32(lsroco'last);
-            declare
-              sv : constant Standard_Integer_Vectors.Vector
-                 := String_to_Integer_Vector(lsroco.all);
-            begin
-              Assign(sv,b);
-            end;
-            Clear(lsroco);
-          end if;
-        end if;
-        Standard_Complex_Poly_Systems.Clear(p);
-      end;
-    end if;
-   -- Assign(integer32(rc),a);
-    rcnr(1) := integer32(rc);
-    rcnr(2) := integer32(nr);
-    Assign(rcnr,a);
-    Standard_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job75;
-
-  function Job77 return integer32 is -- calls the blackbox solver
-
-    use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
-    use Interfaces.C;
-
-   -- n : constant natural := Standard_PolySys_Container.Dimension;
-    v_b : constant C_Integer_Array(0..1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    silval : constant natural32 := natural32(v_b(v_b'first));
-    silent : constant boolean := (silval = 1);
-    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    nv : constant natural32 := Size_of_Support(lp.all);
-    nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
-    rcnr : Standard_Integer_Vectors.Vector(1..2);
-    sols : Solution_List;
-    lsroco : Link_to_String;
-
-  begin
-   -- put("Dimension of the system in the container : "); put(n,1); new_line;
-    if nv < nq then
-      put_line("The system is overdetermined, add slack variables.");
-      return 77;
-    elsif nv > nq then
-      put_line("The system is underdetermined, add linear equations.");
-      return 77;
-    end if;
-   -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-    if silent then
-      if ntasks = 0
-       then Black_Box_Solvers.Solve(lp.all,silent,true,rc,sols);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,true,rc,sols);
-      end if;
-    else
-      if ntasks = 0
-       then Black_Box_Solvers.Solve(lp.all,true,rc,lsroco,sols);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,true,rc,lsroco,sols);
-      end if;
-      if lsroco = null then
-        nr := 0;
-      else
-        nr := natural32(lsroco'last);
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
-      end if;
-    end if;
-   -- Assign(integer32(rc),a);
-   -- put("nr = "); put(integer32(nr),1); new_line;
-    rcnr(1) := integer32(rc);
-    rcnr(2) := integer32(nr);
-    Assign(rcnr,a);
-    Standard_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job77;
-
-  function Job700 return integer32 is -- dobldobl polynomial blackbox solver
-
-    use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
-    use Interfaces.C;
-
-    v_b : constant C_Integer_Array(0..1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    silval : constant natural32 := natural32(v_b(v_b'first));
-    silent : constant boolean := (silval = 1);
-    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
-    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
-    nv : constant natural32 := Size_of_Support(lp.all);
-    nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
-    rcnr : Standard_Integer_Vectors.Vector(1..2);
-    lsroco : Link_to_String;
-    sols : Solution_List;
-
-  begin
-   -- put("Dimension of the system in the container : "); put(n,1); new_line;
-    if nv < nq then
-      put_line("The system is overdetermined, add slack variables.");
-      return 700;
-    elsif nv > nq then
-      put_line("The system is underdetermined, add linear equations.");
-      return 700;
-    end if;
-    if silent then
-      if ntasks = 0 -- patch for multitasking and deflation
-       then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-      end if;
-    else
-      if ntasks = 0 -- patch for multitasking and deflation
-       then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-      end if;
-      if lsroco = null then
-        nr := 0;
-      else
-        nr := natural32(lsroco'last); 
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
-      end if;
-    end if;
-    rcnr(1) := integer32(rc);
-    rcnr(2) := integer32(nr);
-    Assign(rcnr,a);
-    DoblDobl_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job700;
-
-  function Job701 return integer32 is -- dobldobl Laurent blackbox solver
-
-    use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
-    use DoblDobl_Complex_Laur_Systems;
-    use Interfaces.C;
-
-    v_b : constant C_Integer_Array(0..1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    silval : constant natural32 := natural32(v_b(v_b'first));
-    silent : constant boolean := (silval = 1);
-    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
-    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
-    nv : constant natural32 := Size_of_Support(lp.all);
-    nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
-    rcnr : Standard_Integer_Vectors.Vector(1..2);
-    lsroco : Link_to_String;
-    sols : Solution_List;
-
-  begin
-   -- put("nv = "); put(integer32(nv),1);
-   -- put("  nq = "); put(integer32(nq),1); new_line;
-    if nv < nq then
-      put_line("The system is overdetermined, add slack variables.");
-      return 701;
-    elsif nv > nq then
-      put_line("The system is underdetermined, add linear equations.");
-      return 701;
-    end if;
-    if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      if silent then
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-        end if;
-      else
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-        end if;
-        if lsroco = null then
-          nr := 0;
-        else
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
-        end if;
-      end if;
-    else
-      declare
-        use DoblDobl_Laur_Poly_Convertors;
-        p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
-      begin
-        if silent then
-          if ntasks = 0 -- patch for multitasking and deflation
-           then Black_Box_Solvers.Solve(p,silent,rc,sols);
-           else Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
-          end if;
-        else
-          if ntasks = 0 -- patch for multitasking and deflation
-           then Black_Box_Solvers.Solve(p,rc,lsroco,sols);
-           else Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
-          end if;
-          if lsroco = null then
-            nr := 0;
-          else
-            nr := natural32(lsroco'last);
-            declare
-              sv : constant Standard_Integer_Vectors.Vector
-                 := String_to_Integer_Vector(lsroco.all);
-            begin
-              Assign(sv,b);
-            end;
-            Clear(lsroco);
-          end if;
-        end if;
-      end;
-    end if;
-    rcnr(1) := integer32(rc);
-    rcnr(2) := integer32(nr);
-    Assign(rcnr,a);
-    DoblDobl_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job701;
-
-  function Job702 return integer32 is -- quaddobl polynomial blackbox solver
-
-    use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
-    use Interfaces.C;
-
-    v_b : constant C_Integer_Array(0..1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    silval : constant natural32 := natural32(v_b(v_b'first));
-    silent : constant boolean := (silval = 1);
-    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
-    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
-    nv : constant natural32 := Size_of_Support(lp.all);
-    nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
-    rcnr : Standard_Integer_Vectors.Vector(1..2);
-    lsroco : Link_to_String;
-    sols : Solution_List;
-
-  begin
-   -- put("Dimension of the system in the container : "); put(n,1); new_line;
-    if nv < nq then
-      put_line("The system is overdetermined, add slack variables.");
-      return 702;
-    elsif nv > nq then
-      put_line("The system is underdetermined, add linear equations.");
-      return 702;
-    end if;
-    if silent then
-      if ntasks = 0 -- patch for multitasking and deflation
-       then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-      end if;
-    else
-      if ntasks = 0 -- patch for multitasking and deflation
-       then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-      end if;
-      if lsroco = null then
-        nr := 0;
-      else
-        nr := natural32(lsroco'last);
-        declare
-          sv : constant Standard_Integer_Vectors.Vector
-             := String_to_Integer_Vector(lsroco.all);
-        begin
-          Assign(sv,b);
-        end;
-        Clear(lsroco);
-      end if;
-    end if;
-    rcnr(1) := integer32(rc);
-    rcnr(2) := integer32(nr);
-    Assign(rcnr,a);
-    QuadDobl_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job702;
-
-  function Job703 return integer32 is -- quaddobl Laurent blackbox solver
-
-    use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
-    use QuadDobl_Complex_Laur_Systems;
-    use Interfaces.C;
-
-    v_b : constant C_Integer_Array(0..1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    silval : constant natural32 := natural32(v_b(v_b'first));
-    silent : constant boolean := (silval = 1);
-    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
-    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
-    nv : constant natural32 := Size_of_Support(lp.all);
-    nq : constant natural32 := natural32(lp'last);
-    rc,nr : natural32;
-    rcnr : Standard_Integer_Vectors.Vector(1..2);
-    lsroco : Link_to_String;
-    sols : Solution_List;
-
-  begin
-   -- put("nv = "); put(integer32(nv),1);
-   -- put("  nq = "); put(integer32(nq),1); new_line;
-    if nv < nq then
-      put_line("The system is overdetermined, add slack variables.");
-      return 703;
-    elsif nv > nq then
-      put_line("The system is underdetermined, add linear equations.");
-      return 703;
-    end if;
-    if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      if silent then
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
-        end if;
-      else
-        if ntasks = 0 -- patch for multitasking and deflation
-         then Black_Box_Solvers.Solve(lp.all,rc,lsroco,sols);
-         else Black_Box_Solvers.Solve(ntasks,lp.all,rc,lsroco,sols);
-        end if;
-        if lsroco = null then
-          nr := 0;
-        else
-          nr := natural32(lsroco'last);
-          declare
-            sv : constant Standard_Integer_Vectors.Vector
-               := String_to_Integer_Vector(lsroco.all);
-          begin
-            Assign(sv,b);
-          end;
-          Clear(lsroco);
-        end if;
-      end if;
-    else
-      declare
-        use QuadDobl_Laur_Poly_Convertors;
-        p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
-      begin
-        if silent then
-          if ntasks = 0 -- patch for multitasking and deflation
-           then Black_Box_Solvers.Solve(p,silent,rc,sols);
-           else Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
-          end if;
-        else
-          if ntasks = 0 -- patch for multitasking and deflation
-           then Black_Box_Solvers.Solve(p,rc,lsroco,sols);
-           else Black_Box_Solvers.Solve(ntasks,p,rc,lsroco,sols);
-          end if;
-          if lsroco = null then
-            nr := 0;
-          else
-            nr := natural32(lsroco'last);
-            declare
-              sv : constant Standard_Integer_Vectors.Vector
-                 := String_to_Integer_Vector(lsroco.all);
-            begin
-              Assign(sv,b);
-            end;
-            Clear(lsroco);
-          end if;
-        end if;
-      end;
-    end if;
-    rcnr(1) := integer32(rc);
-    rcnr(2) := integer32(nr);
-    Assign(rcnr,a);
-    QuadDobl_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job703;
-
   function Job78 return integer32 is -- computes mixed volume
 
     use Standard_Complex_Poly_Systems;
@@ -2927,9 +2420,9 @@ function use_c2phc4c ( job : integer32;
       when 72 => return Job72; -- retrieve values of continuation parameters
       when 73 => return Job73; -- set values of continuation parameters
       when 74 => return use_syscon(74,a,b,c); -- store Laurential as string
-      when 75 => return Job75; -- calls blackbox solver on Laurent system
+      when 75 => return Job_Handlers.Standard_Laurent_Solver(a,b);
       when 76 => return use_syscon(76,a,b,c); -- store polynomial as string
-      when 77 => return Job77; -- calls blackbox solver on polynomial system
+      when 77 => return Job_Handlers.Standard_Polynomial_Solver(a,b);
       when 78 => return Job78; -- computes mixed volume
       when 79 => return Job79; -- for mixed volume and stable mixed volume
       when 80..105 => return use_celcon(job-80,a,b,c);
@@ -3177,10 +2670,10 @@ function use_c2phc4c ( job : integer32;
       when 698 => return use_syspool(14,a,b,c); -- clear dobldobl system pool
       when 699 => return use_syspool(15,a,b,c); -- clear quaddobl system pool
      -- blackbox solvers in double double and quad double precision
-      when 700 => return Job700; -- dobldobl poly system blackbox solver
-      when 701 => return Job701; -- dobldobl Laurent poly blackbox solver
-      when 702 => return Job702; -- dobldobl poly system blackbox solver
-      when 703 => return Job703; -- dobldobl Laurent poly blackbox solver
+      when 700 => return Job_Handlers.DoblDobl_Polynomial_Solver(a,b);
+      when 701 => return Job_Handlers.DoblDobl_Laurent_Solver(a,b);
+      when 702 => return Job_Handlers.QuadDobl_Polynomial_Solver(a,b);
+      when 703 => return Job_Handlers.QuadDobl_Laurent_Solver(a,b);
      -- Pade approximants
       when 704 => return use_series(7,a,b,c); -- Pade in double precision
       when 705 => return use_series(8,a,b,c); -- Pade with double doubles
@@ -3350,9 +2843,9 @@ function use_c2phc4c ( job : integer32;
      -- reading solutions from file with given name
       when 916..918 => return use_solcon(job,a,b,c);
      -- getting, setting the seed and the version string
-      when 997 => return Get_Seed;
-      when 998 => return Set_Seed;
-      when 999 => return Version_String;
+      when 997 => return Job_Handlers.Get_Seed(a);
+      when 998 => return Job_Handlers.Set_Seed(a);
+      when 999 => return Job_Handlers.Version_String(a,b);
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception
