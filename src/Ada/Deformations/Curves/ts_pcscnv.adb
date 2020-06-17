@@ -13,8 +13,12 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_VecMats;
+with Standard_Vector_Splitters;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
@@ -23,6 +27,11 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;
+with Standard_Complex_Circuits;
+with Standard_Coefficient_Circuits;
+with Standard_Coefficient_Convolutions;
+with Standard_Circuit_Makers;
+with Standard_Convolution_Splitters;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Homotopy_Continuation_Parameters;
@@ -111,6 +120,88 @@ procedure ts_pcscnv is
       exit when (ans /= 'y');
       put("t :"); put(acct,3); put_line(" :");
     end loop;
+  end Step_Track;
+
+  procedure Step_Track
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfs,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                nbpole,nbhess,nbmaxm : out natural32;
+                fail : out boolean; verbose : in boolean := true ) is
+
+  -- DESCRIPTION :
+  --   Tracks one path step by step, interactively, prompting the user each
+  --   time before moving on to the next step, in double precision.
+
+  -- ON ENTRY :
+  --   hom      system of homotopy convolution circuits;
+  --   cfs      coefficient circuits for the corrector loop;
+  --   abh      radii as coefficients of cfs for mixed residuals;
+  --   pars     values for the tolerances and parameters;
+  --   maxit    maximum number of steps in Newton's method on power series;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
+  --   prd      work space for the Newton-Fabry-Pade predictor;
+  --   psv      work space vectors for the predictor,
+  --            psv.sol contains a start solution;
+  --   svh      work space for Hessian convolutions;
+  --   rx       work space for the real parts of the series coefficients;
+  --   ix       work space for the imaginary parts of the series coefficients;
+  --   xr       work space allocated for the real parts of solution vectors;
+  --   xi       work space allocated for the imag parts of solution vectors;
+  --   vh       space allocated for dim matrices, dim = dimension,
+  --            all matrices have 1..dim for range(1) and range(2);
+  --   svls     svls(0) contains the singular values of s.jm, and
+  --            svls(k) contains the singular values of vh(k),
+  --            for k in vh'range.
+  --   wrk      work space vector for power series coefficients
+  --            during the shifting of the coefficients.
+
+  -- ON RETURN :
+  --   psv.sol  the corrected solution;
+  --   dx       last update to the solution;
+  --   ipvt     pivoting information for the LU Newton steps;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the Hessian step was minimal;
+  --   nbmaxm   updated number of times the maximum step was minimal;
+  --   fail     true if the prescribed tolerance was not reached,
+  --            false otherwise.
+
+    endt : constant double_float := 1.0;
+    acct,step,mixres : double_float := 0.0;
+    ans : character;
+    nbrit : integer32;
+
+  begin
+    nbpole := 0; nbhess := 0; nbmaxm := 0;
+   -- loop
+      Predictor_Corrector_Loop(standard_output,hom,cfs,abh,
+        pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,
+        endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail,verbose);
+      if fail
+       then put_line("Predictor-Corrector loop failed.");
+       else put_line("Predictor-Corrector loop succeeded.");
+      end if;
+   --   Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+   --   put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
+   --   exit when (ans /= 'y');
+   --   put("t :"); put(acct,3); put_line(" :");
+   -- end loop;
   end Step_Track;
 
   procedure Step_Track
@@ -336,6 +427,95 @@ procedure ts_pcscnv is
     Standard_Speelpenning_Convolutions.Clear(homcff);
   end Standard_Run_Loops;
 
+  procedure Standard_Run_Loops
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfs,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION :
+  --   Runs predictor-corrector-shift loops in double precision.
+
+  -- ON ENTRY :
+  --   hom      system of homotopy convolution circuits;
+  --   cfs      coefficient circuits for the corrector;
+  --   abh      radii as coefficients of cfs, for mixed residuals;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to.
+
+    use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
+
+    maxit : constant integer32 := 4; -- max #steps in Newton on Power Series
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    dim : constant integer32 := hom.dim;
+    deg : constant integer32 := hom.deg;
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
+    psv : Predictor_Vectors(dim,hom.neq);
+    svh : Link_to_SVD_Hessians := Create(dim);
+    solsptr : Solution_List := sols;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps : natural32 := 0;
+    fail,stepwise : boolean;
+    ans : character;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+   -- dx : Standard_Complex_Vectors.Vector(1..hom.dim);
+    wrk : constant Standard_Complex_Vectors.Link_to_Vector
+        := Standard_Speelpenning_Convolutions.Allocate_Coefficients(deg);
+    t,mixres,minstpz,maxstpz : double_float := 0.0;
+    rx : Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ix : Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    vxr : constant Standard_Floating_Vectors.Vector(ls.v'range)
+        := (ls.v'range => 0.0);
+    vxi : constant Standard_Floating_Vectors.Vector(ls.v'range)
+        := (ls.v'range => 0.0);
+    xr : Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(vxr);
+    xi : Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(vxi);
+    vh : Standard_Complex_VecMats.VecMat(1..hom.neq)
+       := Standard_Complex_Circuits.Allocate(hom.neq,dim);
+    svls : Standard_Complex_VecVecs.VecVec(0..dim)
+         := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
+
+  begin
+   -- put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
+   -- stepwise := (ans = 'y');
+    loop
+      ls := Head_Of(solsptr); psv.sol := ls.v; t := 0.0;
+     -- if stepwise then
+        Step_Track(hom,cfs,abh,pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,
+                   vh,svls,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
+     -- else   
+     --   Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
+     --     mhom,idz,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,
+     --     nbmaxm,nbsteps,minstpz,maxstpz,fail,true);
+     -- end if;
+      ls.v := psv.sol; ls.res := mixres;
+      ls.t := Standard_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
+      new_line;
+      put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+    Clear(svh);
+    Standard_Floating_VecVecs.Deep_Clear(rx);
+    Standard_Floating_VecVecs.Deep_Clear(ix);
+    Standard_Floating_Vectors.Clear(xr);
+    Standard_Floating_Vectors.Clear(xi);
+  end Standard_Run_Loops;
+
   procedure DoblDobl_Run_Loops
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -514,7 +694,22 @@ procedure ts_pcscnv is
     new_line;
     put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y' then
-      Standard_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
+      new_line;
+      put("Run on coefficient circuits ? (y/n) "); Ask_Yes_or_No(ans);
+      if ans = 'n' then
+        Standard_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
+      else
+        declare
+          cffhom : Standard_Coefficient_Convolutions.Link_to_System;
+          cfs,abh : Standard_Coefficient_Circuits.Link_to_System;
+        begin
+          cffhom := Standard_Convolution_Splitters.Split(cnvhom);
+          cfs := Standard_Circuit_Makers.Make_Coefficient_System(cffhom);
+          abh := Standard_Coefficient_Circuits.Copy(cfs);
+          Standard_Coefficient_Circuits.AbsVal(abh);
+          Standard_Run_Loops(cffhom,cfs,abh,sols,pars,integer32(mhom),idz);
+        end;
+      end if;
     else
       new_line;
       put_line("Reading the name of the output file ...");

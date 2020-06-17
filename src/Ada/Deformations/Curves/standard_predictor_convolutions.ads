@@ -602,6 +602,18 @@ package Standard_Predictor_Convolutions is
   -- DESCRIPTION :
   --   Replaces all coefficients in the circuits of cfh by their radii.
 
+  procedure EvalCffRad
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                t : in double_float );
+
+  -- DESCRIPIONT :
+  --   Evaluates the power series coefficient at the circuits in hom
+  --   at t and stores the evaluated coefficients in cfh.
+  --   Updates the radii of the coefficients of the circuits in abh
+  --   with the new coefficients of cfh.
+  --   This procedure combines the above EvalCoeff and AbsVal procedures.
+
   procedure Predictor_Feedback
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
                 cfh : in Standard_Coefficient_Circuits.Link_to_System;

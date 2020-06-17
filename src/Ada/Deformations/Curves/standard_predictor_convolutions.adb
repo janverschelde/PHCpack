@@ -747,6 +747,29 @@ package body Standard_Predictor_Convolutions is
     end loop;
   end AbsVal;
 
+  procedure EvalCffRad
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                t : in double_float ) is
+
+    c,a : Standard_Coefficient_Circuits.Link_to_Circuit;
+
+    use Standard_Mathematical_Functions;
+
+  begin
+    EvalCoeff(hom,cfh,t);
+    for k in abh.crc'range loop 
+      c := cfh.crc(k); -- take coefficients of cfh on input
+      a := abh.crc(k); -- assign to the coefficients of abh
+      a.rcst := SQRT(c.rcst**2 + c.icst**2);
+      a.icst := 0.0;
+      for j in 1..c.nbr loop
+        a.rcf(j) := SQRT(c.rcf(j)**2 + c.icf(j)**2);
+        a.icf(j) := 0.0;
+      end loop;
+    end loop;
+  end EvalCffRad;
+
   procedure Predictor_Feedback
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
                 cfh : in Standard_Coefficient_Circuits.Link_to_System;
