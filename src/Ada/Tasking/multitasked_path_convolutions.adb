@@ -32,7 +32,7 @@ with QuadDobl_Predictor_Convolutions;
 with Homotopy_Continuation_Parameters_io;
 with Residual_Convolution_Circuits;
 with Corrector_Convolutions;             use Corrector_Convolutions;
-with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
+with Predictor_Corrector_Trackers;       use Predictor_Corrector_Trackers;
 with Projective_Transformations;
 with Multi_Projective_Transformations;
 with Track_Path_Convolutions;

@@ -51,7 +51,7 @@ procedure ts_corcnv is
     ans : character;
     maxit : constant integer32 := 4;
     tol : constant double_float := 1.0E-12;
-    mixres : double_float;
+    maxdx,mixres : double_float;
     fail : boolean;
     psv : Standard_Predictor_Convolutions.Predictor_Vectors(hom.dim,hom.neq);
 
@@ -59,8 +59,8 @@ procedure ts_corcnv is
     while not Is_Null(tmp) loop
       ls := Head_of(tmp);
       psv.sol := ls.v;
-      LU_Newton_Steps
-        (standard_output,hom,abh,psv,maxit,nbrit,tol,mixres,dx,ipvt,info,fail);
+      LU_Newton_Steps(standard_output,hom,abh,psv,maxit,nbrit,tol,
+                      maxdx,mixres,dx,ipvt,info,fail);
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Tail_Of(tmp);
@@ -87,7 +87,7 @@ procedure ts_corcnv is
     ans : character;
     maxit : constant integer32 := 4;
     tol : constant double_float := 1.0E-24;
-    mixres : double_double;
+    maxdx,mixres : double_double;
     fail : boolean;
     psv : DoblDobl_Predictor_Convolutions.Predictor_Vectors(hom.dim,hom.neq);
 
@@ -95,8 +95,8 @@ procedure ts_corcnv is
     while not Is_Null(tmp) loop
       ls := Head_of(tmp);
       psv.sol := ls.v;
-      LU_Newton_Steps
-        (standard_output,hom,abh,psv,maxit,nbrit,tol,mixres,dx,ipvt,info,fail);
+      LU_Newton_Steps(standard_output,hom,abh,psv,maxit,nbrit,tol,
+                      maxdx,mixres,dx,ipvt,info,fail);
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Tail_Of(tmp);
@@ -123,7 +123,7 @@ procedure ts_corcnv is
     ans : character;
     maxit : constant integer32 := 4;
     tol : constant double_float := 1.0E-48;
-    mixres : quad_double;
+    maxdx,mixres : quad_double;
     fail : boolean;
     psv : QuadDobl_Predictor_Convolutions.Predictor_Vectors(hom.dim,hom.neq);
 
@@ -131,8 +131,8 @@ procedure ts_corcnv is
     while not Is_Null(tmp) loop
       ls := Head_of(tmp);
       psv.sol := ls.v;
-      LU_Newton_Steps
-        (standard_output,hom,abh,psv,maxit,nbrit,tol,mixres,dx,ipvt,info,fail);
+      LU_Newton_Steps(standard_output,hom,abh,psv,maxit,nbrit,tol,
+                      maxdx,mixres,dx,ipvt,info,fail);
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       tmp := Tail_Of(tmp);

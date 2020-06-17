@@ -32,6 +32,7 @@ with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
 with Corrector_Convolutions;             use Corrector_Convolutions;
 with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
+with Predictor_Corrector_Trackers;       use Predictor_Corrector_Trackers;
 with Track_Path_Convolutions;
 
 procedure ts_pcscnv is
@@ -506,6 +507,7 @@ procedure ts_pcscnv is
     idz : Standard_Natural_Vectors.Link_to_Vector;
     artificial : boolean;
     ans : character;
+    file : file_type;
 
   begin
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
@@ -514,8 +516,11 @@ procedure ts_pcscnv is
     if ans = 'y' then
       Standard_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
     else
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file);
       Track_Path_Convolutions.Track
-        (cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+        (file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
     end if;
   end Standard_Test;
 
@@ -532,6 +537,7 @@ procedure ts_pcscnv is
     idz : Standard_Natural_Vectors.Link_to_Vector;
     artificial : boolean;
     ans : character;
+    file : file_type;
 
   begin
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
@@ -540,8 +546,11 @@ procedure ts_pcscnv is
     if ans = 'y' then
       DoblDobl_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
     else
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file);
       Track_Path_Convolutions.Track
-        (cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+        (file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
     end if;
   end DoblDobl_Test;
 
@@ -558,6 +567,7 @@ procedure ts_pcscnv is
     idz : Standard_Natural_Vectors.Link_to_Vector;
     artificial : boolean;
     ans : character;
+    file : file_type;
 
   begin
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
@@ -566,8 +576,11 @@ procedure ts_pcscnv is
     if ans = 'y' then
       QuadDobl_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
     else
+      new_line;
+      put_line("Reading the name of the output file ...");
+      Read_Name_and_Create_File(file);
       Track_Path_Convolutions.Track
-        (cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+        (file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
     end if;
   end QuadDobl_Test;
 

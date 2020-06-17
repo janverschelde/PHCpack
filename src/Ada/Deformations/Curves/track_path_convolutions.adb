@@ -27,7 +27,7 @@ with DoblDobl_Homotopy_Convolutions_io;
 with QuadDobl_Homotopy;
 with QuadDobl_Homotopy_Convolutions_io;
 with Homotopy_Continuation_Parameters_io;
-with Predictor_Corrector_Loops;           use Predictor_Corrector_Loops;
+with Predictor_Corrector_Trackers;        use Predictor_Corrector_Trackers;
 with Residual_Convolution_Circuits;       use Residual_Convolution_Circuits;
 with Series_Path_Trackers;
 with Greeting_Banners;
