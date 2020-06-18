@@ -88,6 +88,7 @@ with use_series;
 with use_padcon;
 with use_multip;  -- multiplicity structure
 with use_witsols;
+with Job_Containers;
 with Job_Handlers;
 
 function use_c2phc4c ( job : integer32;
@@ -428,613 +429,6 @@ function use_c2phc4c ( job : integer32;
     put_line("510. deallocate and reset double double path tracker;");
     put_line("511. deallocate and reset quad double path tracker.");
   end Write_Menu;
-
-  function Job1 return integer32 is -- copy target system to container
-
-    use Standard_Complex_Poly_Systems;
-    lp : Link_to_Poly_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_System(lp);
-    if lp = null then
-      return 1;
-    else
-      Standard_PolySys_Container.Initialize(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 1 at copy of target system to container.");
-      return 1;
-  end Job1;
-
-  function Job251 return integer32 is -- copy target system to container
-
-    use DoblDobl_Complex_Poly_Systems;
-    lp : Link_to_Poly_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_System(lp);
-    if lp = null then
-      return 251;
-    else
-      DoblDobl_PolySys_Container.Initialize(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 251 at copy of target system to container.");
-      return 251;
-  end Job251;
-
-  function Job261 return integer32 is -- copy target system to container
-
-    use QuadDobl_Complex_Poly_Systems;
-    lp : Link_to_Poly_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_System(lp);
-    if lp = null then
-      return 261;
-    else
-      QuadDobl_PolySys_Container.Initialize(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 261 at copy of target system to container.");
-      return 261;
-  end Job261;
-
-  function Job281 return integer32 is -- copy target system to container
-
-    use Multprec_Complex_Poly_Systems;
-    lp : Link_to_Poly_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_System(lp);
-    if lp = null then
-      return 281;
-    else
-      Multprec_PolySys_Container.Initialize(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 281 at copy of target system to container.");
-      return 281;
-  end Job281;
-
-  function Job2 return integer32 is -- copy target system from container
-
-    use Standard_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-
-  begin
-    if lp = null then
-      return 2;
-    else
-      PHCpack_Operations.Store_Target_System(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 2 at copy of target system from container.");
-      return 2;
-  end Job2;
-
-  function Job252 return integer32 is -- copy target system from container
-
-    use DoblDobl_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
-
-  begin
-    if lp = null then
-      return 252;
-    else
-      PHCpack_Operations.Store_Target_System(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 252 at copy of target system from container.");
-      return 252;
-  end Job252;
-
-  function Job262 return integer32 is -- copy target system from container
-
-    use QuadDobl_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
-
-  begin
-    if lp = null then
-      return 262;
-    else
-      PHCpack_Operations.Store_Target_System(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 262 at copy of target system from container.");
-      return 262;
-  end Job262;
-
-  function Job282 return integer32 is -- copy target system from container
-
-    use Multprec_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := Multprec_PolySys_Container.Retrieve;
-
-  begin
-    if lp = null then
-      return 282;
-    else
-      PHCpack_Operations.Store_Target_System(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 282 at copy of target system from container.");
-      return 282;
-  end Job282;
-
-  function Job3 return integer32 is -- copy start system to container
-
-    use Standard_Complex_Poly_Systems;
-    lp : Link_to_Poly_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_System(lp);
-    if lp = null then
-      return 3;
-    else
-      Standard_PolySys_Container.Initialize(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 3 at copy of start system to container.");
-      return 3;
-  end Job3;
-
-  function Job253 return integer32 is -- copy start system to container
-
-    use DoblDobl_Complex_Poly_Systems;
-    lp : Link_to_Poly_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_System(lp);
-    if lp = null then
-      return 253;
-    else
-      DoblDobl_PolySys_Container.Initialize(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 253 at copy of start system to container.");
-      return 253;
-  end Job253;
-
-  function Job263 return integer32 is -- copy start system to container
-
-    use QuadDobl_Complex_Poly_Systems;
-    lp : Link_to_Poly_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_System(lp);
-    if lp = null then
-      return 263;
-    else
-      QuadDobl_PolySys_Container.Initialize(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 263 at copy of start system to container.");
-      return 263;
-  end Job263;
-
-  function Job283 return integer32 is -- copy start system to container
-
-    use Multprec_Complex_Poly_Systems;
-    lp : Link_to_Poly_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_System(lp);
-    if lp = null then
-      return 283;
-    else
-      Multprec_PolySys_Container.Initialize(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 283 at copy of start system to container.");
-      return 283;
-  end Job283;
-
-  function Job4 return integer32 is -- copy start system from container
-
-    use Standard_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-
-  begin
-    if lp = null then
-      return 4;
-    else
-      PHCpack_Operations.Store_Start_System(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 4 at copy of start system from container.");
-      return 4;
-  end Job4;
-
-  function Job254 return integer32 is -- copy start system from container
-
-    use DoblDobl_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
-
-  begin
-    if lp = null then
-      return 254;
-    else
-      PHCpack_Operations.Store_Start_System(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 254 at copy of start system from container.");
-      return 254;
-  end Job254;
-
-  function Job264 return integer32 is -- copy start system from container
-
-    use QuadDobl_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
-
-  begin
-    if lp = null then
-      return 264;
-    else
-      PHCpack_Operations.Store_Start_System(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 264 at copy of start system from container.");
-      return 264;
-  end Job264;
-
-  function Job284 return integer32 is -- copy start system from container
-
-    use Multprec_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := Multprec_PolySys_Container.Retrieve;
-
-  begin
-    if lp = null then
-      return 284;
-    else
-      PHCpack_Operations.Store_Start_System(lp.all);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 284 at copy of start system from container.");
-      return 284;
-  end Job284;
-
-  function Job5 return integer32 is -- copy target solutions to container
-
-    use Standard_Complex_Solutions;
-    sols : Solution_List;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_Solutions(sols);
-    if Is_Null(sols) then 
-      return 5;
-    else
-      Standard_Solutions_Container.Initialize(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception 5 at copy of target solutions to container.");
-      return 5;
-  end Job5;
-
-  function Job255 return integer32 is -- copy target solutions to container
-
-    use DoblDobl_Complex_Solutions;
-    sols : Solution_List;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_Solutions(sols);
-    if Is_Null(sols) then 
-      return 255;
-    else
-      DoblDobl_Solutions_Container.Initialize(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 255 at copy of target solutions system to container.");
-      return 255;
-  end Job255;
-
-  function Job265 return integer32 is -- copy target solutions to container
-
-    use QuadDobl_Complex_Solutions;
-    sols : Solution_List;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_Solutions(sols);
-    if Is_Null(sols) then 
-      return 265;
-    else
-      QuadDobl_Solutions_Container.Initialize(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 265 at copy of target solutions system to container.");
-      return 265;
-  end Job265;
-
-  function Job285 return integer32 is -- copy target solutions to container
-
-    use Multprec_Complex_Solutions;
-    sols : Solution_List;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_Solutions(sols);
-    if Is_Null(sols) then 
-      return 285;
-    else
-      Multprec_Solutions_Container.Initialize(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 285 at copy of target solutions system to container.");
-      return 285;
-  end Job285;
-
-  function Job6 return integer32 is -- copy container to target solutions
-
-    use Standard_Complex_Solutions;  
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-
-  begin
-    if Is_Null(sols) then
-      return 6;
-    else
-      PHCpack_Operations.Store_Target_Solutions(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 6 at copy of target solutions system from container.");
-      return 6;
-  end Job6;
-
-  function Job256 return integer32 is -- copy container to target solutions
-
-    use DoblDobl_Complex_Solutions;  
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    if Is_Null(sols) then
-      return 256;
-    else
-      PHCpack_Operations.Store_Target_Solutions(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 256 at copy of target solutions system from container.");
-      return 256;
-  end Job256;
-
-  function Job266 return integer32 is -- copy container to target solutions
-
-    use QuadDobl_Complex_Solutions;  
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    if Is_Null(sols) then
-      return 266;
-    else
-      PHCpack_Operations.Store_Target_Solutions(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 266 at copy of target solutions system from container.");
-      return 266;
-  end Job266;
-
-  function Job286 return integer32 is -- copy container to target solutions
-
-    use Multprec_Complex_Solutions;  
-    sols : constant Solution_List := Multprec_Solutions_Container.Retrieve;
-
-  begin
-    if Is_Null(sols) then
-      return 286;
-    else
-      PHCpack_Operations.Store_Target_Solutions(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 286 at copy of target solutions system from container.");
-      return 286;
-  end Job286;
-
-  function Job7 return integer32 is -- copy start solutions to container
-
-    use Standard_Complex_Solutions;
-    sols : Solution_List;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_Solutions(sols);
-    if Is_Null(sols) then
-      return 7;
-    else
-      Standard_Solutions_Container.Initialize(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 7 at copy of start solutions system to container.");
-      return 7;
-  end Job7;
-
-  function Job257 return integer32 is -- copy start solutions to container
-
-    use DoblDobl_Complex_Solutions;
-    sols : Solution_List;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_Solutions(sols);
-    if Is_Null(sols) then
-      return 257;
-    else
-      DoblDobl_Solutions_Container.Initialize(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 257 at copy of start solutions system to container.");
-      return 257;
-  end Job257;
-
-  function Job267 return integer32 is -- copy start solutions to container
-
-    use QuadDobl_Complex_Solutions;
-    sols : Solution_List;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_Solutions(sols);
-    if Is_Null(sols) then
-      return 267;
-    else
-      QuadDobl_Solutions_Container.Initialize(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 267 at copy of start solutions system to container.");
-      return 267;
-  end Job267;
-
-  function Job287 return integer32 is -- copy start solutions to container
-
-    use Multprec_Complex_Solutions;
-    sols : Solution_List;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_Solutions(sols);
-    if Is_Null(sols) then
-      return 287;
-    else
-      Multprec_Solutions_Container.Initialize(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 287 at copy of start solutions system to container.");
-      return 287;
-  end Job287;
-
-  function Job8 return integer32 is -- copy container to start solutions
-
-    use Standard_Complex_Solutions;
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-
-  begin
-    if Is_Null(sols) then
-      return 8;
-    else
-      PHCpack_Operations.Store_Start_Solutions(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 8 at copy of start solutions system from container.");
-      return 8;
-  end Job8;
-
-  function Job258 return integer32 is -- copy container to start solutions
-
-    use DoblDobl_Complex_Solutions;
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    if Is_Null(sols) then
-      return 258;
-    else
-      PHCpack_Operations.Store_Start_Solutions(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 258 at copy of start solutions system from container.");
-      return 258;
-  end Job258;
-
-  function Job268 return integer32 is -- copy container to start solutions
-
-    use QuadDobl_Complex_Solutions;
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    if Is_Null(sols) then
-      return 268;
-    else
-      PHCpack_Operations.Store_Start_Solutions(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 268 at copy of start solutions system from container.");
-      return 268;
-  end Job268;
-
-  function Job288 return integer32 is -- copy container to start solutions
-
-    use Multprec_Complex_Solutions;
-    sols : constant Solution_List := Multprec_Solutions_Container.Retrieve;
-
-  begin
-    if Is_Null(sols) then
-      return 288;
-    else
-      PHCpack_Operations.Store_Start_Solutions(sols);
-      return 0;
-    end if;
-  exception
-    when others =>
-      put_line
-        ("Exception 288 at copy of start solutions system from container.");
-      return 288;
-  end Job288;
 
   function Job9 return integer32 is -- verify the solutions in the container
 
@@ -2395,14 +1789,22 @@ function use_c2phc4c ( job : integer32;
   begin
     case job is
       when 0 => Write_Menu; return 0;
-      when 1 => return Job1; -- copy target system to container
-      when 2 => return Job2; -- copy target system from container
-      when 3 => return Job3; -- copy start system to container
-      when 4 => return Job4; -- copy start system from container
-      when 5 => return Job5; -- copy target solutions to container
-      when 6 => return Job6; -- copy container to target solutions
-      when 7 => return Job7; -- copy start solutions to container
-      when 8 => return Job8; -- copy container to start solutions
+      when 1 =>
+        return Job_Containers.Standard_Copy_Target_System_to_Container;
+      when 2 =>
+        return Job_Containers.Standard_Copy_Container_System_to_Target;
+      when 3 =>
+        return Job_Containers.Standard_Copy_Start_System_to_Container;
+      when 4 =>
+        return Job_Containers.Standard_Copy_Container_System_to_Start;
+      when 5 => 
+        return Job_Containers.Standard_Copy_Target_Solutions_to_Container;
+      when 6 =>
+        return Job_Containers.Standard_Copy_Container_Solutions_to_Target;
+      when 7 =>
+        return Job_Containers.Standard_Copy_Start_Solutions_to_Container;
+      when 8 =>
+        return Job_Containers.Standard_Copy_Container_Solutions_to_Start;
       when 9 => return Job9; -- verify the solutions in the container
       when 10..15 => return C_to_PHCpack(job-10,0);
       when 16 => return Job16; -- call standard path trackers
@@ -2477,26 +1879,42 @@ function use_c2phc4c ( job : integer32;
       when 249 => return Job249; -- double double deflate
       when 250 => return Job250; -- quad double deflate
      -- double double versions for jobs 1 to 8
-      when 251 => return Job251; -- copy target system to container
-      when 252 => return Job252; -- copy target system from container
-      when 253 => return Job253; -- copy start system to container
-      when 254 => return Job254; -- copy start system from container
-      when 255 => return Job255; -- copy target solutions to container
-      when 256 => return Job256; -- copy container to target solutions
-      when 257 => return Job257; -- copy start solutions to container
-      when 258 => return Job258; -- copy container to start solutions
+      when 251 =>
+        return Job_Containers.DoblDobl_Copy_Target_System_to_Container;
+      when 252 =>
+        return Job_Containers.DoblDobl_Copy_Container_System_to_Target;
+      when 253 =>
+        return Job_Containers.DoblDobl_Copy_Start_System_to_Container;
+      when 254 =>
+        return Job_Containers.DoblDobl_Copy_Container_System_to_Start;
+      when 255 =>
+        return Job_Containers.DoblDobl_Copy_Target_Solutions_to_Container;
+      when 256 =>
+        return Job_Containers.DoblDobl_Copy_Container_Solutions_to_Target;
+      when 257 =>
+        return Job_Containers.DoblDobl_Copy_Start_Solutions_to_Container;
+      when 258 =>
+        return Job_Containers.DoblDobl_Copy_Container_Solutions_to_Start;
      -- double double witness set for a hypersurface
       when 259 => return use_track(49,a,b,c);
       when 260 => return Job260; -- embed quad double system
      -- quad double versions for jobs 1 to 8
-      when 261 => return Job261; -- copy target system to container
-      when 262 => return Job262; -- copy target system from container
-      when 263 => return Job263; -- copy start system to container
-      when 264 => return Job264; -- copy start system from container
-      when 265 => return Job265; -- copy target solutions to container
-      when 266 => return Job266; -- copy container to target solutions
-      when 267 => return Job267; -- copy start solutions to container
-      when 268 => return Job268; -- copy container to start solutions
+      when 261 =>
+        return Job_Containers.QuadDobl_Copy_Target_System_to_Container;
+      when 262 =>
+        return Job_Containers.QuadDobl_Copy_Container_System_to_Target;
+      when 263 =>
+        return Job_Containers.QuadDobl_Copy_Start_System_to_Container;
+      when 264 =>
+        return Job_Containers.QuadDobl_Copy_Container_System_to_Start;
+      when 265 =>
+        return Job_Containers.QuadDobl_Copy_Target_Solutions_to_Container;
+      when 266 =>
+        return Job_Containers.QuadDobl_Copy_Container_Solutions_to_Target;
+      when 267 =>
+        return Job_Containers.QuadDobl_Copy_Start_Solutions_to_Container;
+      when 268 =>
+        return Job_Containers.QuadDobl_Copy_Container_Solutions_to_Start;
      -- quad double witness set for a hypersurface
       when 269 => return use_track(50,a,b,c);
      -- interface to diagonal homotopies ...
@@ -2514,14 +1932,22 @@ function use_c2phc4c ( job : integer32;
       when 279 => return use_solcon(279,a,b,c); -- next multprec initialize
       when 280 => return use_c2fac(29,a,b,c); -- standard random complex number
      -- multiprecision versions for jobs 1 to 8
-      when 281 => return Job281; -- copy target system to container
-      when 282 => return Job282; -- copy target system from container
-      when 283 => return Job283; -- copy start system to container
-      when 284 => return Job284; -- copy start system from container
-      when 285 => return Job285; -- copy target solutions to container
-      when 286 => return Job286; -- copy container to target solutions
-      when 287 => return Job287; -- copy start solutions to container
-      when 288 => return Job288; -- copy container to start solutions
+      when 281 =>
+        return Job_Containers.Multprec_Copy_Target_System_to_Container;
+      when 282 =>
+        return Job_Containers.Multprec_Copy_Container_System_to_Target;
+      when 283 =>
+        return Job_Containers.Multprec_Copy_Start_System_to_Container;
+      when 284 =>
+        return Job_Containers.Multprec_Copy_Container_System_to_Start;
+      when 285 =>
+        return Job_Containers.Multprec_Copy_Target_Solutions_to_Container;
+      when 286 =>
+        return Job_Containers.Multprec_Copy_Container_Solutions_to_Target;
+      when 287 =>
+        return Job_Containers.Multprec_Copy_Start_Solutions_to_Container;
+      when 288 =>
+        return Job_Containers.Multprec_Copy_Container_Solutions_to_Start;
      -- diagonal homotopy in double double and quad double precision
       when 289 => return use_track(43,a,b,c); -- dobldobl diagonal homotopy
       when 290 => return use_track(44,a,b,c); -- quaddobl diagonal homotopy

@@ -104,7 +104,8 @@ use_series                       : power series Newton method
 use_multip                       : compute multiplicity structure
 ------------------------------------------------------------------------------
 ts_c2phc.c                       : C routine calls the Ada gateway to PHCpack
-job_handlers                     : function to handle jobs in use_c2phc4c
+job_containers                   : jobs to move data from/into containers
+job_handlers                     : functions to handle jobs in use_c2phc4c
 use_c2phc4c                      : exports PHCpack functionality to C
 use_c2phc                        : includes use_c2phc4c and DEMiCs interface
 ts_use_c2phc.c                   : C test on the interactive operations
