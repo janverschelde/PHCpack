@@ -137,6 +137,72 @@ package body Standard_Coefficient_Circuits is
     return res;
   end Merge;
 
+  function Copy ( c : Circuit ) return Circuit is
+
+    res : Circuit(c.nbr) := Allocate(c.nbr,c.dim);
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    Standard_Floating_Vectors.Copy(c.rcf,res.rcf);
+    Standard_Floating_Vectors.Copy(c.icf,res.icf);
+    res.rcst := c.rcst;
+    res.icst := c.icst;
+    return res;
+  end Copy;
+
+  function Copy ( c : Link_to_Circuit ) return Link_to_Circuit is
+
+    res : Link_to_Circuit;
+
+  begin
+    if c /= null then
+      declare
+        cpc : constant Circuit(c.nbr) := Copy(c.all);
+      begin
+        res := new Circuit'(cpc);
+      end;
+    end if;
+    return res;
+  end Copy;
+
+  function Copy ( c : Circuits ) return Circuits is
+
+    res : Circuits(c'range);
+
+  begin
+    for k in c'range loop
+      res(k) := Copy(c(k));
+    end loop;
+    return res;
+  end Copy;
+
+  function Copy ( s : System ) return System is
+
+    res : System(s.neq,s.dim);
+    crc : constant Circuits(s.crc'range) := Copy(s.crc);
+
+  begin
+    res := Create(crc,s.dim);
+    return res;
+  end Copy;
+
+  function Copy ( s : Link_to_System ) return Link_to_System is
+
+    res : Link_to_System;
+
+  begin
+    if s /= null then
+      declare
+        cps : constant System(s.neq,s.dim) := Copy(s.all);
+      begin
+        res := new System'(cps);
+      end;
+    end if;
+    return res;
+  end Copy;
+
 -- RADIUS COEFFICIENTS :
 
   procedure AbsVal ( c : in out Circuit ) is
@@ -150,6 +216,32 @@ package body Standard_Coefficient_Circuits is
       c.rcf(k) := SQRT(c.rcf(k)**2 + c.icf(k)**2);
       c.icf(k) := 0.0;
     end loop;
+  end AbsVal;
+
+  procedure AbsVal ( c : in Link_to_Circuit ) is
+  begin
+    if c /= null
+     then AbsVal(c.all);
+    end if;
+  end AbsVal;
+
+  procedure AbsVal ( c : in Circuits ) is
+  begin
+    for k in c'range loop
+      AbsVal(c(k));
+    end loop;
+  end AbsVal;
+
+  procedure AbsVal ( s : in System ) is
+  begin
+    AbsVal(s.crc);
+  end AbsVal;
+
+  procedure AbsVal ( s : in Link_to_System ) is
+  begin
+    if s /= null
+     then AbsVal(s.all);
+    end if;
   end AbsVal;
 
 -- EVALUATION OF CIRCUITS :

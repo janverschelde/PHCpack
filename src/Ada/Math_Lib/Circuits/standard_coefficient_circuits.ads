@@ -125,9 +125,30 @@ package Standard_Coefficient_Circuits is
   -- REQUIRED : hrp'range = hip'range,
   --   and for all k in hrp'range: hrp(k)'range = hip(k)'range.
 
+  function Copy ( c : Circuit ) return Circuit;
+  function Copy ( c : Link_to_Circuit ) return Link_to_Circuit;
+  function Copy ( c : Circuits ) return Circuits;
+
+  -- DESCRIPTION :
+  --   Returns a deep copy of the circuit (or circuits) c.
+  --   The work space for the forward, backward, and cross products
+  --   is allocated but the values are not copied from c.
+
+  function Copy ( s : System ) return System;
+  function Copy ( s : Link_to_System ) return Link_to_System;
+
+  -- DESCRIPTION :
+  --   Returns a deep copy of the circuits in s
+  --   and allocates all work space data structures,
+  --   except the data structures for the Hessians.
+
 -- RADIUS COEFFICIENTS :
 
   procedure AbsVal ( c : in out Circuit );
+  procedure AbsVal ( c : in Link_to_Circuit );
+  procedure AbsVal ( c : in Circuits );
+  procedure AbsVal ( s : in System );
+  procedure AbsVal ( s : in Link_to_System );
 
   -- DESCRIPTION :
   --   Replaces all coefficients in c by their radius.

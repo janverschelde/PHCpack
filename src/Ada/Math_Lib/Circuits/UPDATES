@@ -1,5 +1,7 @@
 Tue 16 Jun 2020 : extended standard_circuit_makers with function to make
-  coefficient circuits from coefficient convolutions.
+  coefficient circuits from coefficient convolutions.  Extended
+  standard_coefficient_circuits with Copy functions and more AbsVal
+  procedure sto compute the radii of the coefficients.
 
 Mon 15 Jun 2020 : to standard_coefficient_circuits, added procedures to
   evaluate circuits at vectors with zero imaginary parts and to
