@@ -1491,156 +1491,6 @@ function use_c2phc4c ( job : integer32;
     return PHCpack_Operations.Solve_by_Multprec_Homotopy_Continuation(deci);
   end Job496;
 
-  function Job777 return integer32 is -- copy standard Laurent to start
-
-    use Standard_Complex_Laur_Systems;
-    q : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
-
-  begin
-    if q = null
-     then return 777;
-     else PHCpack_Operations.Store_Start_System(q.all); return 0;
-    end if;
-  end Job777;
-
-  function Job778 return integer32 is -- copy dobldobl Laurent to start
-
-    use DoblDobl_Complex_Laur_Systems;
-    q : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
-
-  begin
-    if q = null
-     then return 778;
-     else PHCpack_Operations.Store_Start_System(q.all); return 0;
-    end if;
-  end Job778;
-
-  function Job779 return integer32 is -- copy quaddobl Laurent to start
-
-    use QuadDobl_Complex_Laur_Systems;
-    q : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
-
-  begin
-    if q = null
-     then return 779;
-     else PHCpack_Operations.Store_Start_System(q.all); return 0;
-    end if;
-  end Job779;
-
-  function Job780 return integer32 is -- copy standard Laurent to target
-
-    use Standard_Complex_Laur_Systems;
-    q : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
-
-  begin
-    if q = null
-     then return 780;
-     else PHCpack_Operations.Store_Target_System(q.all); return 0;
-    end if;
-  end Job780;
-
-  function Job781 return integer32 is -- copy dobldobl Laurent to target
-
-    use DoblDobl_Complex_Laur_Systems;
-    q : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
-
-  begin
-    if q = null
-     then return 781;
-     else PHCpack_Operations.Store_Target_System(q.all); return 0;
-    end if;
-  end Job781;
-
-  function Job782 return integer32 is -- copy quaddobl Laurent to target
-
-    use QuadDobl_Complex_Laur_Systems;
-    q : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
-
-  begin
-    if q = null
-     then return 782;
-     else PHCpack_Operations.Store_Target_System(q.all); return 0;
-    end if;
-  end Job782;
-
-  function Job783 return integer32 is -- standard Laurent start to container
-
-    use Standard_Complex_Laur_Systems;
-    q : Link_to_Laur_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_System(q);
-    if q = null
-     then return 783;
-     else Standard_LaurSys_Container.Initialize(q.all); return 0;
-    end if;
-  end Job783;
-
-  function Job784 return integer32 is -- dobldobl Laurent start to container
-
-    use DoblDobl_Complex_Laur_Systems;
-    q : Link_to_Laur_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_System(q);
-    if q = null
-     then return 784;
-     else DoblDobl_LaurSys_Container.Initialize(q.all); return 0;
-    end if;
-  end Job784;
-
-  function Job785 return integer32 is -- quaddobl Laurent start to container
-
-    use QuadDobl_Complex_Laur_Systems;
-    q : Link_to_Laur_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Start_System(q);
-    if q = null
-     then return 785;
-     else QuadDobl_LaurSys_Container.Initialize(q.all); return 0;
-    end if;
-  end Job785;
-
-  function Job786 return integer32 is -- standard Laurent target to container
-
-    use Standard_Complex_Laur_Systems;
-    q : Link_to_Laur_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_System(q);
-    if q = null
-     then return 786;
-     else Standard_LaurSys_Container.Initialize(q.all); return 0;
-    end if;
-  end Job786;
-
-  function Job787 return integer32 is -- dobldobl Laurent target to container
-
-    use DoblDobl_Complex_Laur_Systems;
-    q : Link_to_Laur_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_System(q);
-    if q = null
-     then return 787;
-     else DoblDobl_LaurSys_Container.Initialize(q.all); return 0;
-    end if;
-  end Job787;
-
-  function Job788 return integer32 is -- quaddobl Laurent target to container
-
-    use QuadDobl_Complex_Laur_Systems;
-    q : Link_to_Laur_Sys;
-
-  begin
-    PHCpack_Operations.Retrieve_Target_System(q);
-    if q = null
-     then return 788;
-     else QuadDobl_LaurSys_Container.Initialize(q.all); return 0;
-    end if;
-  end Job788;
-
   function Job774 return integer32 is -- solve by standard Laurent continuation
 
     use PHCpack_Operations;
@@ -1790,21 +1640,17 @@ function use_c2phc4c ( job : integer32;
     case job is
       when 0 => Write_Menu; return 0;
       when 1 =>
-        return Job_Containers.Standard_Copy_Target_System_to_Container;
+        return Job_Containers.Standard_Target_Poly_System_to_Container;
       when 2 =>
-        return Job_Containers.Standard_Copy_Container_System_to_Target;
+        return Job_Containers.Standard_Container_Poly_System_to_Target;
       when 3 =>
-        return Job_Containers.Standard_Copy_Start_System_to_Container;
+        return Job_Containers.Standard_Start_Poly_System_to_Container;
       when 4 =>
-        return Job_Containers.Standard_Copy_Container_System_to_Start;
-      when 5 => 
-        return Job_Containers.Standard_Copy_Target_Solutions_to_Container;
-      when 6 =>
-        return Job_Containers.Standard_Copy_Container_Solutions_to_Target;
-      when 7 =>
-        return Job_Containers.Standard_Copy_Start_Solutions_to_Container;
-      when 8 =>
-        return Job_Containers.Standard_Copy_Container_Solutions_to_Start;
+        return Job_Containers.Standard_Container_Poly_System_to_Start;
+      when 5 => return Job_Containers.Standard_Target_Solutions_to_Container;
+      when 6 => return Job_Containers.Standard_Container_Solutions_to_Target;
+      when 7 => return Job_Containers.Standard_Start_Solutions_to_Container;
+      when 8 => return Job_Containers.Standard_Container_Solutions_to_Start;
       when 9 => return Job9; -- verify the solutions in the container
       when 10..15 => return C_to_PHCpack(job-10,0);
       when 16 => return Job16; -- call standard path trackers
@@ -1880,41 +1726,33 @@ function use_c2phc4c ( job : integer32;
       when 250 => return Job250; -- quad double deflate
      -- double double versions for jobs 1 to 8
       when 251 =>
-        return Job_Containers.DoblDobl_Copy_Target_System_to_Container;
+        return Job_Containers.DoblDobl_Target_Poly_System_to_Container;
       when 252 =>
-        return Job_Containers.DoblDobl_Copy_Container_System_to_Target;
+        return Job_Containers.DoblDobl_Container_Poly_System_to_Target;
       when 253 =>
-        return Job_Containers.DoblDobl_Copy_Start_System_to_Container;
+        return Job_Containers.DoblDobl_Start_Poly_System_to_Container;
       when 254 =>
-        return Job_Containers.DoblDobl_Copy_Container_System_to_Start;
-      when 255 =>
-        return Job_Containers.DoblDobl_Copy_Target_Solutions_to_Container;
-      when 256 =>
-        return Job_Containers.DoblDobl_Copy_Container_Solutions_to_Target;
-      when 257 =>
-        return Job_Containers.DoblDobl_Copy_Start_Solutions_to_Container;
-      when 258 =>
-        return Job_Containers.DoblDobl_Copy_Container_Solutions_to_Start;
+        return Job_Containers.DoblDobl_Container_Poly_System_to_Start;
+      when 255 => return Job_Containers.DoblDobl_Target_Solutions_to_Container;
+      when 256 => return Job_Containers.DoblDobl_Container_Solutions_to_Target;
+      when 257 => return Job_Containers.DoblDobl_Start_Solutions_to_Container;
+      when 258 => return Job_Containers.DoblDobl_Container_Solutions_to_Start;
      -- double double witness set for a hypersurface
       when 259 => return use_track(49,a,b,c);
       when 260 => return Job260; -- embed quad double system
      -- quad double versions for jobs 1 to 8
       when 261 =>
-        return Job_Containers.QuadDobl_Copy_Target_System_to_Container;
+        return Job_Containers.QuadDobl_Target_Poly_System_to_Container;
       when 262 =>
-        return Job_Containers.QuadDobl_Copy_Container_System_to_Target;
+        return Job_Containers.QuadDobl_Container_Poly_System_to_Target;
       when 263 =>
-        return Job_Containers.QuadDobl_Copy_Start_System_to_Container;
+        return Job_Containers.QuadDobl_Start_Poly_System_to_Container;
       when 264 =>
-        return Job_Containers.QuadDobl_Copy_Container_System_to_Start;
-      when 265 =>
-        return Job_Containers.QuadDobl_Copy_Target_Solutions_to_Container;
-      when 266 =>
-        return Job_Containers.QuadDobl_Copy_Container_Solutions_to_Target;
-      when 267 =>
-        return Job_Containers.QuadDobl_Copy_Start_Solutions_to_Container;
-      when 268 =>
-        return Job_Containers.QuadDobl_Copy_Container_Solutions_to_Start;
+        return Job_Containers.QuadDobl_Container_Poly_System_to_Start;
+      when 265 => return Job_Containers.QuadDobl_Target_Solutions_to_Container;
+      when 266 => return Job_Containers.QuadDobl_Container_Solutions_to_Target;
+      when 267 => return Job_Containers.QuadDobl_Start_Solutions_to_Container;
+      when 268 => return Job_Containers.QuadDobl_Container_Solutions_to_Start;
      -- quad double witness set for a hypersurface
       when 269 => return use_track(50,a,b,c);
      -- interface to diagonal homotopies ...
@@ -1933,21 +1771,17 @@ function use_c2phc4c ( job : integer32;
       when 280 => return use_c2fac(29,a,b,c); -- standard random complex number
      -- multiprecision versions for jobs 1 to 8
       when 281 =>
-        return Job_Containers.Multprec_Copy_Target_System_to_Container;
+        return Job_Containers.Multprec_Target_Poly_System_to_Container;
       when 282 =>
-        return Job_Containers.Multprec_Copy_Container_System_to_Target;
+        return Job_Containers.Multprec_Container_Poly_System_to_Target;
       when 283 =>
-        return Job_Containers.Multprec_Copy_Start_System_to_Container;
+        return Job_Containers.Multprec_Start_Poly_System_to_Container;
       when 284 =>
-        return Job_Containers.Multprec_Copy_Container_System_to_Start;
-      when 285 =>
-        return Job_Containers.Multprec_Copy_Target_Solutions_to_Container;
-      when 286 =>
-        return Job_Containers.Multprec_Copy_Container_Solutions_to_Target;
-      when 287 =>
-        return Job_Containers.Multprec_Copy_Start_Solutions_to_Container;
-      when 288 =>
-        return Job_Containers.Multprec_Copy_Container_Solutions_to_Start;
+        return Job_Containers.Multprec_Container_Poly_System_to_Start;
+      when 285 => return Job_Containers.Multprec_Target_Solutions_to_Container;
+      when 286 => return Job_Containers.Multprec_Container_Solutions_to_Target;
+      when 287 => return Job_Containers.Multprec_Start_Solutions_to_Container;
+      when 288 => return Job_Containers.Multprec_Container_Solutions_to_Start;
      -- diagonal homotopy in double double and quad double precision
       when 289 => return use_track(43,a,b,c); -- dobldobl diagonal homotopy
       when 290 => return use_track(44,a,b,c); -- quaddobl diagonal homotopy
@@ -2130,18 +1964,30 @@ function use_c2phc4c ( job : integer32;
       when 775 => return Job775; -- in double double precision
       when 776 => return Job776; -- in quad double precision
      -- copying Laurent systems from and into the containers
-      when 777 => return Job777; -- copy standard Laurent container to start
-      when 778 => return Job778; -- copy dobldobl Laurent container to start
-      when 779 => return Job779; -- copy quaddobl Laurent container to start
-      when 780 => return Job780; -- copy standard Laurent container to target
-      when 781 => return Job781; -- copy dobldobl Laurent container to target
-      when 782 => return Job782; -- copy quaddobl Laurent container to target
-      when 783 => return Job783; -- copy standard Laurent start to container
-      when 784 => return Job784; -- copy dobldobl Laurent start to container
-      when 785 => return Job785; -- copy quaddobl Laurent start to container
-      when 786 => return Job786; -- copy standard Laurent target to container
-      when 787 => return Job787; -- copy dobldobl Laurent target to container
-      when 788 => return Job788; -- copy quaddobl Laurent target to container
+      when 777 =>
+        return Job_Containers.Standard_Container_Laur_System_to_Start;
+      when 778 =>
+        return Job_Containers.DoblDobl_Container_Laur_System_to_Start;
+      when 779 =>
+        return Job_Containers.QuadDobl_Container_Laur_System_to_Start;
+      when 780 =>
+        return Job_Containers.Standard_Container_Laur_System_to_Target;
+      when 781 =>
+        return Job_Containers.DoblDobl_Container_Laur_System_to_Target;
+      when 782 =>
+        return Job_Containers.QuadDobl_Container_Laur_System_to_Target;
+      when 783 =>
+        return Job_Containers.Standard_Start_Laur_System_to_Container;
+      when 784 =>
+        return Job_Containers.DoblDobl_Start_Laur_System_to_Container;
+      when 785 =>
+        return Job_Containers.QuadDobl_Start_Laur_System_to_Container;
+      when 786 =>
+        return Job_Containers.Standard_Target_Laur_System_to_Container;
+      when 787 =>
+        return Job_Containers.DoblDobl_Target_Laur_System_to_Container;
+      when 788 =>
+        return Job_Containers.QuadDobl_Target_Laur_System_to_Container;
      -- cascades for Laurent homotopies
       when 789 => return use_track(58,a,b,c); -- standard cascade Laurent htpy
       when 790 => return use_track(59,a,b,c); -- dobldobl cascade Laurent htpy

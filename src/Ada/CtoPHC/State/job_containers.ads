@@ -10,224 +10,314 @@ package Job_Containers is
 --   If the verbose level vrbvlv is positive, then the name of the
 --   function is written to screen, to track bugs faster.
 
-  function Standard_Copy_Target_System_to_Container
+-- COPYING POLYNOMIAL SYSTEMS :
+
+  function Standard_Target_Poly_System_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the target system to the systems container,
-  --   for systems in standard double precision.
+  --   for polynomial systems in standard double precision.
 
-  function DoblDobl_Copy_Target_System_to_Container
+  function DoblDobl_Target_Poly_System_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the target system to the systems container,
-  --   for systems in double double precision.
+  --   for polynomial systems in double double precision.
 
-  function QuadDobl_Copy_Target_System_to_Container
+  function QuadDobl_Target_Poly_System_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the target system to the systems container,
-  --   for systems in quad double precision.
+  --   for polynomial systems in quad double precision.
 
-  function Multprec_Copy_Target_System_to_Container
+  function Multprec_Target_Poly_System_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the target system to the systems container,
-  --   for systems in arbitrary multiprecision.
+  --   for polynomial systems in arbitrary multiprecision.
 
-  function Standard_Copy_Container_System_to_Target
+  function Standard_Container_Poly_System_to_Target
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the system in the container to the target system,
-  --   for systems in standard double precision.
+  --   for polynomial systems in standard double precision.
 
-  function DoblDobl_Copy_Container_System_to_Target
+  function DoblDobl_Container_Poly_System_to_Target
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the system in the container to the target system,
-  --   for systems in double double precision.
+  --   for polynomial systems in double double precision.
 
-  function QuadDobl_Copy_Container_System_to_Target
+  function QuadDobl_Container_Poly_System_to_Target
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the system in the container to the target system,
-  --   for systems in quad double precision.
+  --   for polynomial systems in quad double precision.
 
-  function Multprec_Copy_Container_System_to_Target
+  function Multprec_Container_Poly_System_to_Target
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the system in the container to the target system,
-  --   for systems in arbitrary multiprecision.
+  --   for polynomial systems in arbitrary multiprecision.
 
-  function Standard_Copy_Start_System_to_Container
+  function Standard_Start_Poly_System_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the start system to the systems container,
-  --   for systems in standard double precision.
+  --   for polynomial systems in standard double precision.
 
-  function DoblDobl_Copy_Start_System_to_Container
+  function DoblDobl_Start_Poly_System_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the start system to the systems container,
-  --   for systems in double double precision.
+  --   for polynomial systems in double double precision.
 
-  function QuadDobl_Copy_Start_System_to_Container
+  function QuadDobl_Start_Poly_System_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the start system to the systems container,
-  --   for systems in quad double precision.
+  --   for polynomial systems in quad double precision.
 
-  function Multprec_Copy_Start_System_to_Container
+  function Multprec_Start_Poly_System_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the start system to the systems container,
-  --   for systems in arbitrary multiprecision.
+  --   for polynomial systems in arbitrary multiprecision.
 
-  function Standard_Copy_Container_System_to_Start
+  function Standard_Container_Poly_System_to_Start
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the system in the container to the start system,
-  --   for systems in standard double precision.
+  --   for polynomial systems in standard double precision.
 
-  function DoblDobl_Copy_Container_System_to_Start
+  function DoblDobl_Container_Poly_System_to_Start
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the system in the container to the start system,
-  --   for systems in double double precision.
+  --   for polynomial systems in double double precision.
 
-  function QuadDobl_Copy_Container_System_to_Start
+  function QuadDobl_Container_Poly_System_to_Start
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the system in the container to the start system,
-  --   for systems in quad double precision.
+  --   for polynomial systems in quad double precision.
 
-  function Multprec_Copy_Container_System_to_Start
+  function Multprec_Container_Poly_System_to_Start
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the system in the container to the start system,
-  --   for systems in arbitrary multiprecision.
+  --   for polynomial systems in arbitrary multiprecision.
 
-  function Standard_Copy_Target_Solutions_to_Container
+-- COPYING LAURENT POLYNOMIAL SYSTEMS :
+
+  function Standard_Target_Laur_System_to_Container
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the target system to the systems container,
+  --   for Laurent polynomial systems in standard double precision.
+
+  function DoblDobl_Target_Laur_System_to_Container
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the target system to the systems container,
+  --   for Laurent polynomial systems in double double precision.
+
+  function QuadDobl_Target_Laur_System_to_Container
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the target system to the systems container,
+  --   for Laurent polynomial systems in quad double precision.
+
+  function Standard_Container_Laur_System_to_Target
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the system in the container to the target system,
+  --   for Laurent polynomial systems in standard double precision.
+
+  function DoblDobl_Container_Laur_System_to_Target
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the system in the container to the target system,
+  --   for Laurent polynomial systems in double double precision.
+
+  function QuadDobl_Container_Laur_System_to_Target
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the system in the container to the target system,
+  --   for Laurent polynomial systems in quad double precision.
+
+  function Standard_Start_Laur_System_to_Container
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the start system to the systems container,
+  --   for Laurent polynomial systems in standard double precision.
+
+  function DoblDobl_Start_Laur_System_to_Container
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the start system to the systems container,
+  --   for Laurent polynomial systems in double double precision.
+
+  function QuadDobl_Start_Laur_System_to_Container
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the start system to the systems container,
+  --   for Laurent polynomial systems in quad double precision.
+
+  function Standard_Container_Laur_System_to_Start
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the system in the container to the start system,
+  --   for Laurent polynomial systems in standard double precision.
+
+  function DoblDobl_Container_Laur_System_to_Start
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the system in the container to the start system,
+  --   for Laurent polynomial systems in double double precision.
+
+  function QuadDobl_Container_Laur_System_to_Start
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the system in the container to the start system,
+  --   for Laurent polynomial systems in quad double precision.
+
+-- COPYING SOLUTIONS :
+
+  function Standard_Target_Solutions_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the target solutions to the solutions container,
   --   for solutions in standard double precision.
 
-  function DoblDobl_Copy_Target_Solutions_to_Container
+  function DoblDobl_Target_Solutions_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the target solutions to the solutions container,
   --   for solutions in double double precision.
 
-  function QuadDobl_Copy_Target_Solutions_to_Container
+  function QuadDobl_Target_Solutions_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the target solutions to the solutions container,
   --   for solutions in quad double precision.
 
-  function Multprec_Copy_Target_Solutions_to_Container
+  function Multprec_Target_Solutions_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the target solutions to the solutions container,
   --   for solutions in arbitrary multiprecision.
 
-  function Standard_Copy_Container_Solutions_to_Target
+  function Standard_Container_Solutions_to_Target
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the solutions in the container to the target solutions,
   --   for solutions in standard double precision.
 
-  function DoblDobl_Copy_Container_Solutions_to_Target
+  function DoblDobl_Container_Solutions_to_Target
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the solutions in the container to the target solutions,
   --   for solutions in double double precision.
 
-  function QuadDobl_Copy_Container_Solutions_to_Target
+  function QuadDobl_Container_Solutions_to_Target
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the solutions in the container to the target solutions,
   --   for solutions in quad double precision.
 
-  function Multprec_Copy_Container_Solutions_to_Target
+  function Multprec_Container_Solutions_to_Target
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the solutions in the container to the target solutions,
   --   for solutions in arbitrary multiprecision.
 
-  function Standard_Copy_Start_Solutions_to_Container
+  function Standard_Start_Solutions_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the start solutions to the solutions container,
   --   for solutions in standard double precision.
 
-  function DoblDobl_Copy_Start_Solutions_to_Container
+  function DoblDobl_Start_Solutions_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the start solutions to the solutions container,
   --   for solutions in double double precision.
 
-  function QuadDobl_Copy_Start_Solutions_to_Container
+  function QuadDobl_Start_Solutions_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the start solutions to the solutions container,
   --   for solutions in quad double precision.
 
-  function Multprec_Copy_Start_Solutions_to_Container
+  function Multprec_Start_Solutions_to_Container
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the start solutions to the solutions container,
   --   for solutions in arbitrary multiprecision.
 
-  function Standard_Copy_Container_Solutions_to_Start
+  function Standard_Container_Solutions_to_Start
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the solutions in the container to the start solutions,
   --   for solutions in standard double precision.
 
-  function DoblDobl_Copy_Container_Solutions_to_Start
+  function DoblDobl_Container_Solutions_to_Start
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the solutions in the container to the start solutions,
   --   for solutions in double double precision.
 
-  function QuadDobl_Copy_Container_Solutions_to_Start
+  function QuadDobl_Container_Solutions_to_Start
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Copies the solutions in the container to the start solutions,
   --   for solutions in quad double precision.
 
-  function Multprec_Copy_Container_Solutions_to_Start
+  function Multprec_Container_Solutions_to_Start
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
