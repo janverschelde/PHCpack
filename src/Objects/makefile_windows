@@ -2147,82 +2147,83 @@ use_c2phc.o:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 
 lib_read: get_clock.o get_clocks_per_sec.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_read.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c phcpack.o solcon.o lib_read.o \
                     get_clock.o get_clocks_per_sec.o \
                  -o ../bin/lib_read -lm
 
 lib_syscon: get_clock.o get_clocks_per_sec.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/lib_syscon.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc syscon.o lib_syscon.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c syscon.o lib_syscon.o \
                     get_clock.o get_clocks_per_sec.o \
                  -o ../bin/lib_syscon -lm
 
 lib_newton: get_clock.o get_clocks_per_sec.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_newton.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c phcpack.o syscon.o solcon.o lib_newton.o \
                     get_clock.o get_clocks_per_sec.o \
                  -o ../bin/lib_newton -lm
 
 lib_solcon: get_clock.o get_clocks_per_sec.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_solcon.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc solcon.o lib_solcon.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c solcon.o lib_solcon.o \
                     get_clock.o get_clocks_per_sec.o \
                  -o ../bin/lib_solcon -lm
 
 lib_celcon: get_clock.o get_clocks_per_sec.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	$(gcc) -c $(PHCLib)/phcpack.c
 	$(gcc) -c $(PHCLib)/syscon.c
 	$(gcc) -c $(PHCLib)/solcon.c
 	$(gcc) -c $(PHCLib)/celcon.c
 	$(gcc) -c $(PHCLib)/intcelcon.c
 	$(gcc) -c $(PHCLib)/lib_celcon.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c phcpack.o syscon.o solcon.o celcon.o \
                     intcelcon.o lib_celcon.o \
                     get_clock.o get_clocks_per_sec.o \
                  -o ../bin/lib_celcon -lm
 
-lib_poco:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+lib_poco: get_clock.o get_clocks_per_sec.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/lib_poco.c
-	gnatbind -n -C use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_poco.o -o ../bin/lib_poco
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c phcpack.o lib_poco.o \
+		    get_clock.o get_clocks_per_sec.o -o ../bin/lib_poco
 
 lib_factor:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_factor.c
-	gnatbind -n -C use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o lib_factor.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c phcpack.o solcon.o lib_factor.o \
                  -o ../bin/lib_factor
 
 phc_solve: get_clock.o get_clocks_per_sec.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/phc_solve.c
-	gnatbind -n -C use_c2phc
-	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack.o phc_solve.o \
                     get_clock.o get_clocks_per_sec.o -o ../bin/phc_solve
 
 phcpy2c.so:
