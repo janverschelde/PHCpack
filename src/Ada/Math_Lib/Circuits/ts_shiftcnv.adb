@@ -42,6 +42,10 @@ with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Shift_Convolution_Circuits;         use Shift_Convolution_Circuits;
+with Standard_Coefficient_Circuits;
+with Standard_Coefficient_Convolutions;
+with Standard_Convolution_Splitters;
+with Standard_Circuit_Makers;
 with Shift_Coefficient_Convolutions;
 
 procedure ts_shiftcnv is
@@ -296,11 +300,15 @@ procedure ts_shiftcnv is
     use Standard_Complex_Numbers;
     use Standard_Complex_Series;
     use Standard_Complex_Series_Functions;
-    use Standard_Speelpenning_Convolutions;
+   -- use Standard_Speelpenning_Convolutions;
 
-    c : constant Circuits
+    c : constant Standard_Speelpenning_Convolutions.Circuits
       := Standard_Random_Convolution_Circuits(dim,deg,nbr,pwr);
-    s : constant Link_to_System := Create(c,dim,deg);
+    s : constant Standard_Speelpenning_Convolutions.Link_to_System
+      := Standard_Speelpenning_Convolutions.Create(c,dim,deg);
+    cfh : constant Standard_Coefficient_Convolutions.Link_to_System
+        := Standard_Convolution_Splitters.Split(s);
+    cfs : Standard_Coefficient_Circuits.Link_to_System;
     rc : double_float := 0.0;
     zero : constant Complex_Number := Create(0.0);
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
@@ -309,26 +317,47 @@ procedure ts_shiftcnv is
     scst : Series(deg);
     xpt : constant Standard_Complex_Vectors.Vector(1..s.dim)
         := Standard_Random_Vectors.Random_Vector(1,s.dim);
+    vrx,vix : Standard_Floating_Vectors.Vector(xpt'range);
     sy,sz : Standard_Complex_Vectors.Vector(1..s.neq);
     ans : character;
+    xr,xi,rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
     new_line;
     put("Give a real constant for the shift : "); get(rc);
     put("Test shifting of a series ? (y/n) "); Ask_Yes_or_No(ans);
+    rwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    iwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     if ans = 'y' then
       scst.cff := s.crc(1).cst.all;
       y := Eval(scst,-rc);
+      Shift(s,wrk,rc);
       scst.cff := s.crc(1).cst.all;
       z := Eval(scst,zero);
       put("s(-shift constant) : "); put(y); new_line;
       put(" shifted series(0) : "); put(z); new_line;
+      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,rc);
+      Shift_Coefficient_Convolutions.Shift(cfh,rwk,iwk,pwt);
+      put_line("The shifted coefficient series at zero :");
+      put("                     ");
+      put(cfh.crc(1).rct(0)); put("  "); put(cfh.crc(1).ict(0));
     else -- testing shifting the entire system
-      sy := Eval(s.crc,xpt,Standard_Complex_Numbers.Create(-rc));
+      sy := Standard_Speelpenning_Convolutions.Eval
+              (s.crc,xpt,Standard_Complex_Numbers.Create(-rc));
       Shift(s,wrk,rc);
-      sz := Eval(s.crc,xpt,zero);
-      put_line("s(-shift constant) : "); put_line(sy); new_line;
-      put_line(" shifted system(0) : "); put_line(sz); new_line;
+      sz := Standard_Speelpenning_Convolutions.Eval(s.crc,xpt,zero);
+      put_line("s(-shift constant) : "); put_line(sy);
+      put_line(" shifted system(0) : "); put_line(sz);
+      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,rc);
+      Shift_Coefficient_Convolutions.Shift(cfh,rwk,iwk,pwt);
+      cfs := Standard_Circuit_Makers.Make_Coefficient_System(cfh);
+      vrx := Standard_Vector_Splitters.Real_Part(xpt);
+      vix := Standard_Vector_Splitters.Imag_Part(xpt);
+      xr := new Standard_Floating_Vectors.Vector'(vrx);
+      xi := new Standard_Floating_Vectors.Vector'(vix);
+      Standard_Coefficient_Circuits.Eval(cfs,xr,xi);
+      put_line("recomputed         : "); put_line(sz);
     end if;
   end Standard_System_Test;
 
@@ -379,8 +408,8 @@ procedure ts_shiftcnv is
       sy := Eval(s.crc,xpt,DoblDobl_Complex_Numbers.Create(-rc));
       Shift(s,wrk,rc);
       sz := Eval(s.crc,xpt,zero);
-      put_line("s(-shift constant) : "); put_line(sy); new_line;
-      put_line(" shifted system(0) : "); put_line(sz); new_line;
+      put_line("s(-shift constant) : "); put_line(sy);
+      put_line(" shifted system(0) : "); put_line(sz);
     end if;
   end DoblDobl_System_Test;
 
@@ -431,8 +460,8 @@ procedure ts_shiftcnv is
       sy := Eval(s.crc,xpt,QuadDobl_Complex_Numbers.Create(-rc));
       Shift(s,wrk,rc);
       sz := Eval(s.crc,xpt,zero);
-      put_line("s(-shift constant) : "); put_line(sy); new_line;
-      put_line(" shifted system(0) : "); put_line(sz); new_line;
+      put_line("s(-shift constant) : "); put_line(sy);
+      put_line(" shifted system(0) : "); put_line(sz);
     end if;
   end QuadDobl_System_Test;
 

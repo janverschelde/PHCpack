@@ -93,4 +93,136 @@ package body Shift_Coefficient_Convolutions is
     end loop;
   end Shift;
 
+  procedure Shift ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    for k in rcf'range loop
+      Shift(rcf(k),icf(k),rwk,iwk,pwt);
+    end loop;
+  end Shift;
+
+  procedure Shift ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    for k in rcf'range loop
+      Shift(rcf(k),icf(k),rwk,iwk,rpwt,ipwt);
+    end loop;
+  end Shift;
+
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuit;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    use Standard_Floating_Vectors;
+
+  begin
+    Shift(c.rcf,c.icf,rwk,iwk,pwt);
+    if c.rct /= null then
+      Shift(c.rct,c.ict,rwk,iwk,pwt);
+    end if;
+  end Shift;
+
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuit;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    use Standard_Floating_Vectors;
+
+  begin
+    Shift(c.rcf,c.icf,rwk,iwk,rpwt,ipwt);
+    if c.rct /= null then
+      Shift(c.rct,c.ict,rwk,iwk,rpwt,ipwt);
+    end if;
+  end Shift;
+
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Link_to_Circuit;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    use Standard_Coefficient_Convolutions;
+
+  begin
+    if c /= null
+     then Shift(c.all,rwk,iwk,pwt);
+    end if;
+  end Shift;
+
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Link_to_Circuit;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    use Standard_Coefficient_Convolutions;
+
+  begin
+    if c /= null
+     then Shift(c.all,rwk,iwk,rpwt,ipwt);
+    end if;
+  end Shift;
+
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuits;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    for k in c'range loop
+      Shift(c(k),rwk,iwk,pwt);
+    end loop;
+  end Shift;
+
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuits;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    for k in c'range loop
+      Shift(c(k),rwk,iwk,rpwt,ipwt);
+    end loop;
+  end Shift;
+
+-- SHIFTING SYSTEMS OF CIRCUITS :
+
+  procedure Shift ( s : in Standard_Coefficient_Convolutions.System;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    Shift(s.crc,rwk,iwk,pwt);
+  end Shift;
+
+  procedure Shift ( s : in Standard_Coefficient_Convolutions.Link_to_System;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    use Standard_Coefficient_Convolutions;
+
+  begin
+    if s /= null
+     then Shift(s.crc,rwk,iwk,pwt);
+    end if;
+  end Shift;
+
+  procedure Shift ( s : in Standard_Coefficient_Convolutions.System;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    Shift(s.crc,rwk,iwk,rpwt,ipwt);
+  end Shift;
+
+  procedure Shift ( s : in Standard_Coefficient_Convolutions.Link_to_System;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    use Standard_Coefficient_Convolutions;
+
+  begin
+    if s /= null
+     then Shift(s.crc,rwk,iwk,rpwt,ipwt);
+    end if;
+  end Shift;
+
 end Shift_Coefficient_Convolutions;

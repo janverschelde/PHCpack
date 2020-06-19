@@ -1,5 +1,7 @@
 Fri 19 Jun 2020 : new package shift_coefficient_convolutions to shift the
   coefficients in coefficient convolutions series, tested by ts_shiftcnv.
+  Completed shift_coefficient_convolutions with shifts on circuits and
+  systems of circuits, tested by ts_shiftcnv.
 
 Tue 16 Jun 2020 : extended standard_circuit_makers with function to make
   coefficient circuits from coefficient convolutions.  Extended

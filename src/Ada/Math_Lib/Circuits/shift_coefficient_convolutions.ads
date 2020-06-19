@@ -1,11 +1,15 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
+with Standard_Coefficient_Convolutions;
 
 package Shift_Coefficient_Convolutions is
 
 -- DESCRIPTION :
 --   Provides operations to shift the coefficients of convolution circuits,
 --   represented by vectors with splitted real and imaginary parts.
+
+-- COMPUTING POWERS OF THE VALUE IN THE SHIFT :
 
   procedure Powers_of_Shift
               ( pwt : in Standard_Floating_Vectors.Link_to_Vector;
@@ -46,6 +50,8 @@ package Shift_Coefficient_Convolutions is
   -- ON RETURN :
   --   rpwt     real parts of the powers of t;
   --   ipwt     imaginary parts of the powers of t.
+
+-- SHIFTING COEFFICIENTS OF POWER SERIES :
 
   procedure Shift ( rcf,icf : in Standard_Floating_Vectors.Link_to_Vector;
                     rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
@@ -93,5 +99,166 @@ package Shift_Coefficient_Convolutions is
   -- ON RETURN :
   --   rcf      real parts of the shifted coefficients;
   --   icf      imaginary parts of the shifted coefficients.
+
+  procedure Shift ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the shift procedure to all (rcf(k), icf(k)) pairs,
+  --   for the value in pwt(1), using rwk and iwk as work vectors.
+
+  -- REQUIRED : rcf'range = icf'range, and for all k in rcf'range:
+  --   rcf(k)'range = icf(k)'range = rwk'range = iwk'range = 0..deg,
+  --   where deg is the degree of the series, and deg > 0.
+
+  -- ON ENTRY :
+  --   rcf      vector of series coefficients with the
+  --            real parts of the complex coefficients;
+  --   icf      vector of series coefficients with the
+  --            imaginary parts of the complex coefficients;
+  --   rwk      space allocated for the same range as rcf;
+  --   iwk      space allocated for the same range as icf;
+  --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   rcf      real parts of the shifted coefficients;
+  --   icf      imaginary parts of the shifted coefficients.
+
+  procedure Shift ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the shift procedure to all (rcf(k), icf(k)) pairs,
+  --   for the real part rpwt(1) and imaginary part in ipwt(1),
+  --   using rwk and iwk as work vectors.
+
+  -- REQUIRED : rcf'range = icf'range, and for all k in rcf'range:
+  --   rcf(k)'range = icf(k)'range = rwk'range = iwk'range = 0..deg,
+  --   where deg is the degree of the series, and deg > 0.
+
+  -- ON ENTRY :
+  --   rcf      vector of series coefficients with the
+  --            real parts of the complex coefficients;
+  --   icf      vector of series coefficients with the
+  --            imaginary parts of the complex coefficients;
+  --   rwk      space allocated for the same range as rcf;
+  --   iwk      space allocated for the same range as icf;
+  --   rpwt     real part of the powers of the value used in the shift;
+  --   ipwt     imaginary part of the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   rcf      real parts of the shifted coefficients;
+  --   icf      imaginary parts of the shifted coefficients.
+
+-- SHIFTING CIRCUITS :
+
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuit;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Link_to_Circuit;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuits;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shifts all coefficients in the circuit(s) c with the value in pwt(1),
+  --   using rwk and iwk as work space vectors.
+
+  -- REQUIRED : rwk'range = iwk'range = pwt'range = 0..deg,
+  --   where deg is the degree of the series in c.
+
+  -- ON ENTRY :
+  --   c        circuit(s) with splitted coefficient vectors;
+  --   rwk      space allocated for the same range as c.rcf;
+  --   iwk      space allocated for the same range as c.icf;
+  --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   c        circuit(s) with shifted coefficients.
+
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuit;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Link_to_Circuit;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuits;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shifts all coefficients in the circuit(s) c with the value 
+  --   in rpwt(1) + rpwt(1)*i, using rwk and iwk as work space vectors.
+
+  -- REQUIRED : rwk'range = iwk'range = pwt'range = 0..deg,
+  --   where deg is the degree of the series in c.
+
+  -- ON ENTRY :
+  --   c        circuit(s) with splitted coefficient vectors;
+  --   rwk      space allocated for the same range as c.rcf;
+  --   iwk      space allocated for the same range as c.icf;
+  --   rpwt     real parts of the powers of the value used in the shift;
+  --   ipwt     imaginary parts of the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   c        circuit(s) with shifted coefficients.
+
+-- SHIFTING SYSTEMS OF CIRCUITS :
+
+  procedure Shift ( s : in Standard_Coefficient_Convolutions.System;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Shift ( s : in Standard_Coefficient_Convolutions.Link_to_System;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    pwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shifts all coefficients in the circuits of s with the value in pwt(1),
+  --   using rwk and iwk as work space vectors.
+
+  -- REQUIRED : rwk'range = iwk'range = pwt'range = 0..deg,
+  --   where deg is the degree of the series in s.crc.
+
+  -- ON ENTRY :
+  --   s        system of circuits with splitted coefficient vectors;
+  --   rwk      space allocated for the same range as c.rcf;
+  --   iwk      space allocated for the same range as c.icf;
+  --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   s        circuit with shifted coefficients.
+
+  procedure Shift ( s : in Standard_Coefficient_Convolutions.System;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Shift ( s : in Standard_Coefficient_Convolutions.Link_to_System;
+                    rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                    ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shifts all coefficients in the circuits of s with the value 
+  --   in rpwt(1) + ipwt(1)*i, using rwk and iwk as work space vectors.
+
+  -- REQUIRED : rwk'range = iwk'range = pwt'range = 0..deg,
+  --   where deg is the degree of the series in s.crc.
+
+  -- ON ENTRY :
+  --   s        system of circuits with splitted coefficient vectors;
+  --   rwk      space allocated for the same range as c.rcf;
+  --   iwk      space allocated for the same range as c.icf;
+  --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   s        circuit with shifted coefficients.
 
 end Shift_Coefficient_Convolutions;
