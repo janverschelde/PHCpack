@@ -87,6 +87,7 @@ ts_hesscnv                         : test on plain Hessian computation
 jacobian_convolution_circuits      : Jacobians on convolution circuits
 ts_jacocnv                         : test on plain Jacobian computation
 shift_convolution_circuits         : shifting coefficients in the circuits
+shift_coefficient_convolutions     : coefficient versions of shift operations
 ts_shiftcnv                        : test on shifting coefficients
 -------------------------------------------------------------------------------
 ts_perfconv                        : test on performance and convolutions

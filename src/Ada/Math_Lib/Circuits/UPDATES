@@ -1,3 +1,6 @@
+Fri 19 Jun 2020 : new package shift_coefficient_convolutions to shift the
+  coefficients in coefficient convolutions series, tested by ts_shiftcnv.
+
 Tue 16 Jun 2020 : extended standard_circuit_makers with function to make
   coefficient circuits from coefficient convolutions.  Extended
   standard_coefficient_circuits with Copy functions and more AbsVal

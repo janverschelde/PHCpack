@@ -14,6 +14,7 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
+with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors;
@@ -23,6 +24,7 @@ with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
+with Standard_Vector_Splitters;
 with Standard_Complex_Series;
 with Standard_Complex_Series_io;         use Standard_Complex_Series_io;
 with Standard_Complex_Series_Functions;
@@ -40,11 +42,100 @@ with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
 with Shift_Convolution_Circuits;         use Shift_Convolution_Circuits;
+with Shift_Coefficient_Convolutions;
 
 procedure ts_shiftcnv is
 
 -- DESCRIPTION :
 --   Tests the development of the procedures to shift convolution circuits.
+
+  procedure Powers_of_Shift
+              ( pwt : in out Standard_Complex_Vectors.Vector;
+                t : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Returns all powers of t in pwt, for testing purposes.
+
+    use Standard_Complex_Numbers;
+
+  begin
+    pwt(0) := Standard_Complex_Numbers.Create(1.0);
+    pwt(1) := t;
+    for k in 2..pwt'last loop
+      pwt(k) := t*pwt(k-1);
+    end loop;
+  end Powers_of_Shift;
+
+  procedure Standard_Coefficient_Shift
+              ( cff : in Standard_Complex_Vectors.Vector;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                shf : out Standard_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Shifts the coefficients in cff, with the complex constant t,
+  --   using the splitted coefficient vectors.
+  --   On return in shf are the shifted coefficients.
+  --   Computes the shift on the splitted coefficient vector.
+
+    deg : constant integer32 := cff'last;
+    rcf,icf,rwrk,iwrk,rpwt,ipwt : Standard_Floating_Vectors.Link_to_Vector;
+    rpt : constant double_float
+        := Standard_Complex_Numbers.REAL_PART(t);
+    ipt : constant double_float
+        := Standard_Complex_Numbers.IMAG_PART(t);
+    pwt : Standard_Complex_Vectors.Vector(cff'range);
+
+  begin
+    Standard_Vector_Splitters.Split_Complex(cff,rcf,icf);
+    rwrk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    iwrk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    rpwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    ipwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    Shift_Coefficient_Convolutions.Powers_of_Shift(rpwt,ipwt,rpt,ipt);
+    Powers_of_Shift(pwt,t);
+    put_line("Powers of the shift :"); put_line(pwt);
+    put_line("Recomputed powers : ");
+    for k in rpwt'range loop
+      put(rpwt(k)); put("  "); put(ipwt(k)); new_line;
+    end loop;
+    Shift_Coefficient_Convolutions.Shift(rcf,icf,rwrk,iwrk,rpwt,ipwt);
+    Standard_Vector_Splitters.Complex_Merge(rcf,icf,shf);
+    Standard_Floating_Vectors.Clear(rwrk);
+    Standard_Floating_Vectors.Clear(iwrk);
+    Standard_Floating_Vectors.Clear(rpwt);
+    Standard_Floating_Vectors.Clear(ipwt);
+    Standard_Floating_Vectors.Clear(rcf);
+    Standard_Floating_Vectors.Clear(icf);
+  end Standard_Coefficient_Shift;
+
+  procedure Standard_Coefficient_Shift
+              ( cff : in Standard_Complex_Vectors.Vector;
+                t : in double_float;
+                shf : out Standard_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Shifts the coefficients in cff, with the constant t,
+  --   using the splitted coefficient vectors.
+  --   On return in shf are the shifted coefficients.
+  --   Computes the shift on the splitted coefficient vector.
+
+    deg : constant integer32 := cff'last;
+    rcf,icf,rwrk,iwrk,pwt : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    Standard_Vector_Splitters.Split_Complex(cff,rcf,icf);
+    rwrk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    iwrk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,t);
+    Shift_Coefficient_Convolutions.Shift(rcf,icf,rwrk,iwrk,pwt);
+    Standard_Vector_Splitters.Complex_Merge(rcf,icf,shf);
+    Standard_Floating_Vectors.Clear(rwrk);
+    Standard_Floating_Vectors.Clear(iwrk);
+    Standard_Floating_Vectors.Clear(pwt);
+    Standard_Floating_Vectors.Clear(rcf);
+    Standard_Floating_Vectors.Clear(icf);
+  end Standard_Coefficient_Shift;
 
   procedure Standard_Test ( degree : in integer32 ) is
 
@@ -77,6 +168,9 @@ procedure ts_shiftcnv is
     cff := s.cff;
     Shift(cff,wrk,rc);
     put_line("The shifted coefficient vector :"); put_line(cff);
+    cff := s.cff;
+    Standard_Coefficient_Shift(cff,rc,wrk);
+    put_line("The recomputed shifted vector :"); put_line(wrk);
     new_line;
     put_line("Testing with a complex shift ...");
     put("Give a complex number for the shift : "); get(cc);
@@ -89,6 +183,9 @@ procedure ts_shiftcnv is
     cff := s.cff;
     Shift(cff,wrk,cc);
     put_line("The shifted coefficient vector :"); put_line(cff);
+    cff := s.cff;
+    Standard_Coefficient_Shift(cff,cc,wrk);
+    put_line("The recomputed shifted vector :"); put_line(wrk);
   end Standard_Test;
 
   procedure DoblDobl_Test ( degree : in integer32 ) is
