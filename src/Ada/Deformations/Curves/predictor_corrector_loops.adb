@@ -35,6 +35,7 @@ package body Predictor_Corrector_Loops is
     initres,res,err : double_float;
     info : integer32;
     nbr : natural32;
+    xtr : constant natural32 := 1; -- one extra Newton step
 
   begin
     Standard_Predictor_Convolutions.SVD_Prediction
@@ -49,7 +50,7 @@ package body Predictor_Corrector_Loops is
         Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,step);
         Standard_Newton_Circuits.LU_Newton_Steps
           (cfh,abh,psv.sol,psv.radsol,xr,xi,pars.corsteps,pars.tolres,
-           pars.tolres,ipvt,info,initres,res,err,mixres,nbr,fail);
+           pars.tolres,ipvt,info,initres,res,err,mixres,nbr,fail,xtr);
         nbrit := nbrit + integer32(nbr);
         exit when not fail;
         step := step/2.0;
@@ -83,6 +84,7 @@ package body Predictor_Corrector_Loops is
     initres,res,err : double_float;
     info : integer32;
     nbr : natural32;
+    xtr : constant natural32 := 1; -- one extra Newton step
 
   begin
     Standard_Predictor_Convolutions.SVD_Prediction
@@ -105,7 +107,7 @@ package body Predictor_Corrector_Loops is
         Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,step);
         Standard_Newton_Circuits.LU_Newton_Steps
           (file,cfh,abh,psv.sol,psv.radsol,xr,xi,pars.corsteps,pars.tolres,
-           pars.tolres,ipvt,info,initres,res,err,mixres,nbr,fail,verbose);
+           pars.tolres,ipvt,info,initres,res,err,mixres,nbr,fail,xtr,verbose);
         nbrit := nbrit + integer32(nbr);
         exit when not fail;
         step := step/2.0;

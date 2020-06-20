@@ -12,12 +12,115 @@ with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Shift_Convolution_Circuits;
+with Shift_Coefficient_Convolutions;
 with Corrector_Convolutions;             use Corrector_Convolutions;
 with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
 with Standard_Pade_Trackers;
 with Series_and_Trackers;
 
 package body Predictor_Corrector_Trackers is
+
+-- ON COEFFICIENT CONVOLUTION CIRCUITS :
+
+  procedure Track_One_Path
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                acct,mixres : in out double_float;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                minstpz,maxstpz : out double_float;
+                fail : out boolean ) is
+
+    endt : constant double_float := 1.0;
+    step : double_float := 0.0;
+    togo : double_float; 
+    nbrit : integer32;
+
+  begin
+    nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
+    minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
+    for k in 1..pars.maxsteps loop
+      Predictor_Corrector_Loop(hom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,
+        rx,ix,xr,xi,vh,svls,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,
+        nbmaxm,fail);
+      tnbrit := tnbrit + natural32(nbrit);
+      Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
+      togo := endt - acct;
+      if (abs(togo) < pars.epsilon)
+       then nbsteps := k; exit;
+      end if;
+      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-step);
+      Shift_Coefficient_Convolutions.Shift(hom,rwk,iwk,pwt);
+      Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,0.0);
+    end loop;
+  end Track_One_Path;
+
+  procedure Track_One_Path
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                acct,mixres : in out double_float;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                minstpz,maxstpz : out double_float;
+                fail : out boolean; verbose : in boolean := true ) is
+
+    endt : constant double_float := 1.0;
+    step : double_float := 0.0;
+    togo : double_float; 
+    nbrit : integer32;
+
+  begin
+    nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
+    minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
+    for k in 1..pars.maxsteps loop
+      if verbose
+       then put(file,"t :"); put(file,acct,3); put_line(file," :");
+      end if;
+      Predictor_Corrector_Loop(file,hom,cfh,abh,pars,maxit,mhom,idz,
+        prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,endt,acct,
+        step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail,verbose);
+      tnbrit := tnbrit + natural32(nbrit);
+      Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
+      if verbose then
+        if fail
+         then put_line(file,"Predictor-Corrector loop failed.");
+         else put_line(file,"Predictor-Corrector loop succeeded.");
+        end if;
+      end if;
+      togo := endt - acct;
+      if (abs(togo) < pars.epsilon)
+       then nbsteps := k; exit;
+      end if;
+      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-step);
+      Shift_Coefficient_Convolutions.Shift(hom,rwk,iwk,pwt);
+      Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,0.0);
+    end loop;
+  end Track_One_Path;
+
+-- ON COMPLEX CONVOLUTION CIRCUITS :
 
   procedure Track_One_Path
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;

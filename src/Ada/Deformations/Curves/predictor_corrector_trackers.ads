@@ -6,8 +6,11 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
@@ -16,6 +19,8 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;
+with Standard_Coefficient_Circuits;
+with Standard_Coefficient_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Homotopy_Continuation_Parameters;
@@ -29,6 +34,104 @@ package Predictor_Corrector_Trackers is
 --   A predictor-corrector tracker runs a predictor-corrector loop,
 --   for one or on all paths defined by a polynomial homotopy,
 --   in standard double, double double, or quad double precision.
+
+-- ON COEFFICIENT CONVOLUTION CIRCUITS :
+
+  procedure Track_One_Path
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                acct,mixres : in out double_float;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                minstpz,maxstpz : out double_float;
+                fail : out boolean );
+  procedure Track_One_Path
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                maxit : in integer32; mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                prd : in out Standard_Predictor_Convolutions.Predictor;
+                psv : in out Standard_Predictor_Convolutions.Predictor_Vectors;
+                svh : in Standard_Predictor_Convolutions.Link_to_SVD_Hessians;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                acct,mixres : in out double_float;
+                tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
+                minstpz,maxstpz : out double_float;
+                fail : out boolean; verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Tracks one path in double precision.
+
+  -- ON ENTRY :
+  --   file     to write the extra output to, if verbose (optional);
+  --   hom      system of homotopy convolution circuits;
+  --   cfh      coefficient circuits for the homotopy;
+  --   abh      circuits with radii of cfh as coefficients,
+  --            to compute the mixed residuals in the corrector loop;
+  --   pars     values for the tolerances and parameters;
+  --   maxit    maximum number of steps in Newton's method on power series;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
+  --   prd      work space for the Newton-Fabry-Pade predictor;
+  --   psv      work space vectors for the predictor,
+  --            psv.sol contains a start solution;
+  --   svh      work space for Hessian convolutions;
+  --   rx       work space for the real parts of the series coefficients;
+  --   ix       work space for the imaginary parts of the series coefficients;
+  --   xr       work space allocated for the real parts of solution vectors;
+  --   xi       work space allocated for the imag parts of solution vectors;
+  --   vh       space allocated for dim matrices, dim = dimension,
+  --            all matrices have 1..dim for range(1) and range(2);
+  --   svls     svls(0) contains the singular values of s.jm, and
+  --            svls(k) contains the singular values of vh(k),
+  --            for k in vh'range.
+  --   rwk      work space for the real parts of series coefficients;
+  --   iwk      work space for the imaginary parts of series coefficients;
+  --   pwt      work space the powers of the value used in the shift,
+  --            pwt'range = rwk'range = iwk'range;
+  --   acct     start value for the homotopy continuation parameter t;
+  --   verbose  indicates if extra output is requested,
+  --            if a file is given on input.
+
+  -- ON RETURN :
+  --   psv.sol  the corrected solution;
+  --   dx       last update to the solution;
+  --   ipvt     pivoting information for the LU Newton steps;
+  --   acct     accumulated value of the homotopy continuation parameter t;
+  --   mixres   mixed residual of corrector loop if pars.corsteps > 0;
+  --   tnbrit   total number of corrector iterations;
+  --   nbpole   updated number of times the pole step was minimal;
+  --   nbhess   updated number of times the Hessian step was minimal;
+  --   nbmaxm   updated number of times the maximum step was minimal;
+  --   nbsteps  number of predictor-corrector steps done;
+  --   minstpz  minimum step size;
+  --   maxstpz  maximum step size;
+  --   fail     true if the prescribed tolerance was not reached,
+  --            false otherwise.
+
+-- ON COMPLEX CONVOLUTION CIRCUITS :
 
   procedure Track_One_Path
               ( hom : in Standard_Speelpenning_Convolutions.Link_to_System;

@@ -16,6 +16,7 @@ with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
 with Standard_Vector_Splitters;
@@ -36,6 +37,7 @@ with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Homotopy_Continuation_Parameters;
 with Shift_Convolution_Circuits;
+with Shift_Coefficient_Convolutions;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
@@ -136,7 +138,7 @@ procedure ts_pcscnv is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
                 nbpole,nbhess,nbmaxm : out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
@@ -169,8 +171,10 @@ procedure ts_pcscnv is
   --   svls     svls(0) contains the singular values of s.jm, and
   --            svls(k) contains the singular values of vh(k),
   --            for k in vh'range.
-  --   wrk      work space vector for power series coefficients
-  --            during the shifting of the coefficients.
+  --   rwk      work space for the real parts of series coefficients;
+  --   iwk      work space for the imaginary parts of series coefficients;
+  --   pwt      work space the powers of the value used in the shift,
+  --            pwt'range = rwk'range = iwk'range.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;
@@ -189,7 +193,7 @@ procedure ts_pcscnv is
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
-   -- loop
+    loop
       Predictor_Corrector_Loop(standard_output,hom,cfs,abh,
         pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,
         endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail,verbose);
@@ -197,11 +201,12 @@ procedure ts_pcscnv is
        then put_line("Predictor-Corrector loop failed.");
        else put_line("Predictor-Corrector loop succeeded.");
       end if;
-   --   Shift_Convolution_Circuits.Shift(hom,wrk,-step);
-   --   put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
-   --   exit when (ans /= 'y');
-   --   put("t :"); put(acct,3); put_line(" :");
-   -- end loop;
+      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-step);
+      Shift_Coefficient_Convolutions.Shift(hom,rwk,iwk,pwt);
+      put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("t :"); put(acct,3); put_line(" :");
+    end loop;
   end Step_Track;
 
   procedure Step_Track
@@ -467,9 +472,6 @@ procedure ts_pcscnv is
     fail,stepwise : boolean;
     ans : character;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
-   -- dx : Standard_Complex_Vectors.Vector(1..hom.dim);
-    wrk : constant Standard_Complex_Vectors.Link_to_Vector
-        := Standard_Speelpenning_Convolutions.Allocate_Coefficients(deg);
     t,mixres,minstpz,maxstpz : double_float := 0.0;
     rx : Standard_Floating_VecVecs.Link_to_VecVec
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
@@ -487,22 +489,27 @@ procedure ts_pcscnv is
        := Standard_Complex_Circuits.Allocate(hom.neq,dim);
     svls : Standard_Complex_VecVecs.VecVec(0..dim)
          := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
+    rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
-   -- put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
-   -- stepwise := (ans = 'y');
+    rwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    iwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
+    stepwise := (ans = 'y');
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v; t := 0.0;
-     -- if stepwise then
+      if stepwise then
         Step_Track(hom,cfs,abh,pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,
-                   vh,svls,ipvt,wrk,nbpole,nbhess,nbmaxm,fail,true);
-     -- else   
-     --   Track_One_Path(standard_output,hom,abh,homlead,abhlead,pars,maxit,
-     --     mhom,idz,prd,psv,svh,dx,ipvt,wrk,t,mixres,tnbrit,nbpole,nbhess,
-     --     nbmaxm,nbsteps,minstpz,maxstpz,fail,true);
-     -- end if;
+                   vh,svls,ipvt,rwk,iwk,pwt,nbpole,nbhess,nbmaxm,fail,true);
+      else   
+        Track_One_Path(standard_output,hom,cfs,abh,pars,maxit,mhom,idz,
+          prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,rwk,iwk,pwt,t,mixres,tnbrit,
+          nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,true);
+      end if;
       ls.v := psv.sol; ls.res := mixres;
       ls.t := Standard_Complex_Numbers.Create(t); Set_Head(solsptr,ls);
+      put_line("The solution vector :"); put_line(ls.v);
       solsptr := Tail_Of(solsptr);
       exit when Is_Null(solsptr);
       new_line;
@@ -514,6 +521,11 @@ procedure ts_pcscnv is
     Standard_Floating_VecVecs.Deep_Clear(ix);
     Standard_Floating_Vectors.Clear(xr);
     Standard_Floating_Vectors.Clear(xi);
+    Standard_Floating_Vectors.Clear(rwk);
+    Standard_Floating_Vectors.Clear(iwk);
+    Standard_Floating_Vectors.Clear(pwt);
+    Standard_Complex_VecMats.Clear(vh);
+    Standard_Complex_VecVecs.Clear(svls);
   end Standard_Run_Loops;
 
   procedure DoblDobl_Run_Loops
