@@ -131,6 +131,86 @@ package Predictor_Corrector_Trackers is
   --   fail     true if the prescribed tolerance was not reached,
   --            false otherwise.
 
+  procedure Track_All_Paths
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector );
+  procedure Track_All_Paths
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                minpastp,maxpastp,ratpole,rathess,ratmaxm : out double_float;
+                mincorsteps,maxcorsteps : out natural32;
+                minnbrsteps,maxnbrsteps : out natural32 );
+
+  -- DESCRIPTION :
+  --   Tracks all solution paths defined by the homotopy in hom,
+  --   starting at the solutions in sols, without output.
+
+  -- ON ENTRY :
+  --   file     optional output file, if verbose;
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
+  --   verbose  indicates if extra output is requested.
+  
+  -- ON RETURN :
+  --   sols     solutions at the end of the paths;
+  --   minpastp is the minimum step size on a path;
+  --   maxpastp is the maximum step size on a path;
+  --   ratpole  is the ratio of times the pole step size was minimal;
+  --   rathess  is the ratio of times the curvature step size was minimal;
+  --   ratmaxm  is the ratio of times the maximal step bound was minimal;
+  --   mincorsteps is the minimum number of corrector steps on a path;
+  --   maxcorsteps is the maximum number of corrector steps on a path;
+  --   minnbrsteps is the minimum number of steps on a path;
+  --   maxnbrsteps is the maximum number of steps on a path.
+
+  procedure Track_All_Paths
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Tracks all solution paths defined by the homotopy in hom,
+  --   starting at the solutions in sols, writes the solution and
+  --   statistics at the end of each path to file.
+
+  -- ON ENTRY :
+  --   file     optional output file, if verbose;
+  --   hom      system of homotopy convolution circuits;
+  --   abh      radii as coefficients for mixed residuals;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
+  --   verbose  indicates if extra output is requested.
+  
+  -- ON RETURN :
+  --   sols     solutions at the end of the paths.
+
 -- ON COMPLEX CONVOLUTION CIRCUITS :
 
   procedure Track_One_Path

@@ -1,3 +1,6 @@
+Sat 20 Jun 2020 : added extra procedures to predictor_corrector_trackers,
+  modified ts_pcscnv.
+
 Fri 19 Jun 2020 : updates in predictor_corrector_loops.adb, added procedures
   to track one path in predictor_corrector_trackers, tested by ts_pcscnv.
   Tracking one path with the new coefficient circuits seems to work now.

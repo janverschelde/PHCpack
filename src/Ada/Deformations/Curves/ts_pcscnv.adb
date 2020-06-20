@@ -38,6 +38,7 @@ with QuadDobl_Speelpenning_Convolutions;
 with Homotopy_Continuation_Parameters;
 with Shift_Convolution_Circuits;
 with Shift_Coefficient_Convolutions;
+with Standard_Coefficient_Storage;
 with Standard_Predictor_Convolutions;
 with DoblDobl_Predictor_Convolutions;
 with QuadDobl_Predictor_Convolutions;
@@ -490,8 +491,10 @@ procedure ts_pcscnv is
     svls : Standard_Complex_VecVecs.VecVec(0..dim)
          := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
     rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
+    rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
 
   begin
+    Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);
     rwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     iwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
@@ -515,6 +518,7 @@ procedure ts_pcscnv is
       new_line;
       put("Move to the next solution ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
+      Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
     end loop;
     Clear(svh);
     Standard_Floating_VecVecs.Deep_Clear(rx);

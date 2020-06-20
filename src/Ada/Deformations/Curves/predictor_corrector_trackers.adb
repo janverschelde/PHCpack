@@ -7,9 +7,12 @@ with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Vector_Splitters;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
+with Standard_Complex_Circuits;
+with Standard_Newton_Circuits;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Shift_Convolution_Circuits;
 with Shift_Coefficient_Convolutions;
@@ -17,6 +20,7 @@ with Corrector_Convolutions;             use Corrector_Convolutions;
 with Predictor_Corrector_Loops;          use Predictor_Corrector_Loops;
 with Standard_Pade_Trackers;
 with Series_and_Trackers;
+with Standard_Coefficient_Storage;
 
 package body Predictor_Corrector_Trackers is
 
@@ -119,6 +123,220 @@ package body Predictor_Corrector_Trackers is
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,0.0);
     end loop;
   end Track_One_Path;
+
+  procedure Track_All_Paths
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
+
+    minpastp,maxpastp,ratpole,rathess,ratmaxm : double_float;
+    mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps : natural32;
+
+  begin
+    Track_All_Paths(hom,cfh,abh,sols,pars,mhom,idz,
+                    minpastp,maxpastp,ratpole,rathess,ratmaxm,
+                    mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps);
+  end Track_All_Paths;
+
+  procedure Track_All_Paths
+              ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                minpastp,maxpastp,ratpole,rathess,ratmaxm : out double_float;
+                mincorsteps,maxcorsteps : out natural32;
+                minnbrsteps,maxnbrsteps : out natural32 ) is
+
+    use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
+
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxit : constant integer32 := (numdeg + dendeg + 2)/2;
+    dim : constant integer32 := hom.dim;
+    deg : constant integer32 := hom.deg;
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
+    psv : Predictor_Vectors(dim,hom.neq);
+    svh : Link_to_SVD_Hessians := Create(dim);
+    solsptr : Solution_List := sols;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps,nbrit : natural32 := 0;
+    fail : boolean;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    xtr : constant natural32 := 1;
+    acct,mixres,initres : double_float := 0.0;
+    minstpz,maxstpz : double_float := 0.0;
+    rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+    rx : Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ix : Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    vxr : constant Standard_Floating_Vectors.Vector(ls.v'range)
+        := (ls.v'range => 0.0);
+    vxi : constant Standard_Floating_Vectors.Vector(ls.v'range)
+        := (ls.v'range => 0.0);
+    xr : Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(vxr);
+    xi : Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(vxi);
+    vh : Standard_Complex_VecMats.VecMat(1..hom.neq)
+       := Standard_Complex_Circuits.Allocate(hom.neq,dim);
+    svls : Standard_Complex_VecVecs.VecVec(0..dim)
+         := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
+    rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    rwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    iwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);
+    minpastp := 1.0; maxpastp := 0.0;
+    ratpole := 0.0; rathess := 0.0; ratmaxm := 0.0;
+    minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    mincorsteps := (pars.maxsteps+1)*pars.corsteps+1; maxcorsteps := 0;
+    while not Is_Null(solsptr) loop
+      ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
+      Track_One_Path(hom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,
+                     vh,svls,ipvt,rwk,iwk,pwt,acct,mixres,tnbrit,
+                     nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+      Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
+      Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,acct);
+      Standard_Newton_Circuits.LU_Newton_Steps
+        (cfh,abh,psv.sol,psv.radsol,xr,xi,pars.corsteps,pars.tolres,
+         pars.tolres,ipvt,initres,ls.res,ls.rco,ls.err,mixres,nbrit,fail,xtr);
+      tnbrit := tnbrit + nbrit;
+      Series_and_Trackers.Update_MinMax(minpastp,maxpastp,minstpz,maxstpz);
+      Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbsteps);
+      Series_and_Trackers.Update_Counters(mincorsteps,maxcorsteps,tnbrit);
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
+      Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
+    end loop;
+    Standard_Coefficient_Convolutions.Clear(rcfhom);
+    Standard_Coefficient_Convolutions.Clear(icfhom);
+    Clear(prd); Clear(svh);
+    Standard_Floating_VecVecs.Deep_Clear(rx);
+    Standard_Floating_VecVecs.Deep_Clear(ix);
+    Standard_Floating_Vectors.Clear(xr);
+    Standard_Floating_Vectors.Clear(xi);
+    Standard_Floating_Vectors.Clear(rwk);
+    Standard_Floating_Vectors.Clear(iwk);
+    Standard_Floating_Vectors.Clear(pwt);
+    Standard_Complex_VecMats.Clear(vh);
+    Standard_Complex_VecVecs.Clear(svls);
+  end Track_All_Paths;
+
+  procedure Track_All_Paths
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                verbose : in boolean := true ) is
+
+    use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
+
+    timer : Timing_Widget;
+    numdeg : constant integer32 := integer32(pars.numdeg);
+    dendeg : constant integer32 := integer32(pars.dendeg);
+    maxit : constant integer32 := (numdeg + dendeg + 2)/2;
+    dim : constant integer32 := hom.dim;
+    deg : constant integer32 := hom.deg;
+    ls : Link_to_Solution := Head_Of(sols);
+    prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
+    psv : Predictor_Vectors(hom.dim,hom.neq);
+    svh : Link_to_SVD_Hessians := Create(dim);
+    solsptr : Solution_List := sols;
+    tnbrit,nbpole,nbhess,nbmaxm,nbsteps,nbrit : natural32 := 0;
+    fail : boolean;
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    acct,mixres,initres : double_float := 0.0;
+    pathno : natural32 := 0;
+    ratpole,rathess,ratmaxm,minstpz,maxstpz : double_float := 0.0;
+    lensols : constant natural32 := Length_Of(sols);
+    minpastp,maxpastp : double_float;
+    mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps : natural32;
+    xtr : constant natural32 := 1;
+    rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+    rx : Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    ix : Standard_Floating_VecVecs.Link_to_VecVec
+       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
+    vxr : constant Standard_Floating_Vectors.Vector(ls.v'range)
+        := (ls.v'range => 0.0);
+    vxi : constant Standard_Floating_Vectors.Vector(ls.v'range)
+        := (ls.v'range => 0.0);
+    xr : Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(vxr);
+    xi : Standard_Floating_Vectors.Link_to_Vector
+       := new Standard_Floating_Vectors.Vector'(vxi);
+    vh : Standard_Complex_VecMats.VecMat(1..hom.neq)
+       := Standard_Complex_Circuits.Allocate(hom.neq,dim);
+    svls : Standard_Complex_VecVecs.VecVec(0..dim)
+         := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
+    rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    rwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    iwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
+    Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);
+    minpastp := 1.0; maxpastp := 0.0;
+    minnbrsteps := pars.maxsteps+1; maxnbrsteps := 0;
+    mincorsteps := (pars.maxsteps+1)*pars.corsteps+1; maxcorsteps := 0;
+    tstart(timer);
+    while not Is_Null(solsptr) loop
+      pathno := pathno + 1;
+      put(file,"Path "); put(file,pathno,1); put_line(file," :");
+      ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
+      Track_One_Path(file,hom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,rx,ix,
+                     xr,xi,vh,svls,ipvt,rwk,iwk,pwt,acct,mixres,tnbrit,nbpole,
+                     nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,verbose);
+      Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
+      Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,acct);
+      Standard_Newton_Circuits.LU_Newton_Steps
+        (file,cfh,abh,psv.sol,psv.radsol,xr,xi,pars.corsteps,pars.tolres,
+         pars.tolres,ipvt,initres,ls.res,ls.rco,ls.err,mixres,nbrit,
+         fail,xtr,verbose);
+      tnbrit := tnbrit + nbrit;
+      Write_Path_Statistics
+        (file,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
+      Series_and_Trackers.Update_Ratio_Sums
+        (ratpole,rathess,ratmaxm,nbpole,nbhess,nbmaxm,nbsteps*lensols);
+      Series_and_Trackers.Update_MinMax(minpastp,maxpastp,minstpz,maxstpz);
+      Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbsteps);
+      Series_and_Trackers.Update_Counters(mincorsteps,maxcorsteps,tnbrit);
+      solsptr := Tail_Of(solsptr);
+      exit when Is_Null(solsptr);
+      Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
+    end loop;
+    tstop(timer);
+    Write_Total_Path_Statistics
+      (file,minnbrsteps,maxnbrsteps,mincorsteps,maxcorsteps,
+       ratpole,rathess,ratmaxm,minpastp,maxpastp);
+    new_line(file);
+    print_times(file,timer,"tracking "
+                & Characters_and_Numbers.nConvert(lensols)
+                & " paths in double precision");
+    Standard_Coefficient_Convolutions.Clear(rcfhom);
+    Standard_Coefficient_Convolutions.Clear(icfhom);
+    Clear(prd); Clear(svh);
+    Standard_Floating_VecVecs.Deep_Clear(rx);
+    Standard_Floating_VecVecs.Deep_Clear(ix);
+    Standard_Floating_Vectors.Clear(xr);
+    Standard_Floating_Vectors.Clear(xi);
+    Standard_Floating_Vectors.Clear(rwk);
+    Standard_Floating_Vectors.Clear(iwk);
+    Standard_Floating_Vectors.Clear(pwt);
+    Standard_Complex_VecMats.Clear(vh);
+    Standard_Complex_VecVecs.Clear(svls);
+  end Track_All_Paths;
 
 -- ON COMPLEX CONVOLUTION CIRCUITS :
 
