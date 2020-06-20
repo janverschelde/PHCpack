@@ -1,3 +1,6 @@
+Sat 20 Jun 2020 : new package standard_coefficient_storage to store and
+  restore the values of coefficient circuits.
+
 Fri 19 Jun 2020 : new package shift_coefficient_convolutions to shift the
   coefficients in coefficient convolutions series, tested by ts_shiftcnv.
   Completed shift_coefficient_convolutions with shifts on circuits and
