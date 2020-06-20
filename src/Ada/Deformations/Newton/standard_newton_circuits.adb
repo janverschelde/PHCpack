@@ -43,6 +43,7 @@ package body Standard_Newton_Circuits is
     Standard_Coefficient_Circuits.EvalDiff(s,xr,xi);
     res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
     if verbose then
+      put_line(file,"The approximation : "); put_line(file,v);
       put_line(file,"The function value : "); put_line(file,s.fx);
       put(file,"The residual :"); put(file,res,3); new_line(file);
     end if;
@@ -56,13 +57,14 @@ package body Standard_Newton_Circuits is
       Standard_Complex_Vectors.Min(s.fx);
       Standard_Complex_Linear_Solvers.lusolve(s.jm,s.dim,ipvt,s.fx);
       err := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
-      if verbose then
-        put_line(file,"The update : "); put_line(file,s.fx);
-        put(file,"Forward error :"); put(file,err,3); new_line(file);
-      end if;
       for k in v'range loop
         v(k) := v(k) + s.fx(k);
       end loop;
+      if verbose then
+        put_line(file,"The update : "); put_line(file,s.fx);
+        put_line(file,"The updated approximation : "); put_line(file,v);
+        put(file,"Forward error :"); put(file,err,3); new_line(file);
+      end if;
     end if;
   end LU_Newton_Step;
 
@@ -107,6 +109,7 @@ package body Standard_Newton_Circuits is
     Standard_Coefficient_Circuits.EvalDiff(s,xr,xi);
     res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
     if verbose then
+      put_line(file,"The approximation : "); put_line(file,v);
       put_line(file,"The function value : "); put_line(file,s.fx);
       put(file,"The residual :"); put(file,res,3); new_line(file);
     end if;
@@ -123,13 +126,14 @@ package body Standard_Newton_Circuits is
       Standard_Complex_Vectors.Min(s.fx);
       Standard_Complex_Linear_Solvers.lusolve(s.jm,s.dim,ipvt,s.fx);
       err := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
-      if verbose then
-        put_line(file,"The update : "); put_line(file,s.fx);
-        put(file,"Forward error :"); put(file,err,3); new_line(file);
-      end if;
       for k in v'range loop
         v(k) := v(k) + s.fx(k);
       end loop;
+      if verbose then
+        put_line(file,"The update : "); put_line(file,s.fx);
+        put_line(file,"The updated approximation : "); put_line(file,v);
+        put(file,"Forward error :"); put(file,err,3); new_line(file);
+      end if;
     end if;
   end LU_Newton_Step;
 
@@ -226,15 +230,22 @@ package body Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; initres,res,err : out double_float;
-                numit : out natural32; fail : out boolean ) is
+                numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0 ) is
+
+    cntextra : natural32 := 0;
+
   begin
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err);
       if k = 1
        then initres := res;
       end if;
-      if res <= tolres and err <= tolerr
-       then numit := k; fail := false; return;
+      if res <= tolres and err <= tolerr then -- convergence
+        if (cntextra = extra) or (res = 0.0) or (err = 0.0)
+         then numit := k; fail := false; return;
+        end if;
+        cntextra := cntextra + 1; -- do an extra step
       end if;
     end loop;
     fail := true; numit := maxit;
@@ -249,15 +260,22 @@ package body Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; initres,res,err : out double_float;
                 numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := true ) is
+
+    cntextra : natural32 := 0;
+
   begin
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(file,s,v,xr,xi,ipvt,info,res,err,verbose);
       if k = 1
        then initres := res;
       end if;
-      if res <= tolres and err <= tolerr
-       then numit := k; fail := false; return;
+      if res <= tolres and err <= tolerr then -- convergence
+        if (cntextra = extra) or (res = 0.0) or (err = 0.0)
+         then numit := k; fail := false; return;
+        end if;
+        cntextra := cntextra + 1; -- do an extra step
       end if;
     end loop;
     fail := true; numit := maxit;
@@ -270,15 +288,22 @@ package body Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err : out double_float;
-                numit : out natural32; fail : out boolean ) is
+                numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0 ) is
+
+    cntextra : natural32 := 0;
+
   begin
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err);
       if k = 1
        then initres := res;
       end if;
-      if res <= tolres and err <= tolerr
-       then numit := k; fail := false; return;
+      if res <= tolres and err <= tolerr then -- convergence
+        if (cntextra = extra) or (res = 0.0) or (err = 0.0)
+         then numit := k; fail := false; return;
+        end if;
+        cntextra := cntextra + 1; -- do an extra step
       end if;
     end loop;
     fail := true; numit := maxit;
@@ -293,15 +318,22 @@ package body Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err : out double_float;
                 numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := true ) is
+
+    cntextra : natural32 := 0;
+
   begin
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(file,s,v,xr,xi,ipvt,res,rco,err,verbose);
       if k = 1
        then initres := res;
       end if;
-      if res <= tolres and err <= tolerr
-       then numit := k; fail := false; return;
+      if res <= tolres and err <= tolerr then -- convergence
+        if (cntextra = extra) or (res = 0.0) or (err = 0.0)
+         then numit := k; fail := false; return;
+        end if;
+        cntextra := cntextra + 1; -- do an extra step
       end if;
     end loop;
     fail := true; numit := maxit;
@@ -318,15 +350,22 @@ package body Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 initres,res,err,mixres : out double_float;
-                numit : out natural32; fail : out boolean ) is
+                numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0 ) is
+
+    cntextra : natural32 := 0;
+
   begin
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,info,res,err,mixres);
       if k = 1
        then initres := res;
       end if;
-      if mixres <= tolres and err <= tolerr
-       then numit := k; fail := false; return;
+      if mixres <= tolres and err <= tolerr then -- convergence
+        if (cntextra = extra) or (res = 0.0) or (err = 0.0)
+         then numit := k; fail := false; return;
+        end if;
+        cntextra := cntextra + 1; -- do an extra step
       end if;
     end loop;
     fail := true; numit := maxit;
@@ -343,16 +382,23 @@ package body Standard_Newton_Circuits is
                 info : out integer32;
                 initres,res,err,mixres : out double_float;
                 numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := true ) is
+
+    cntextra : natural32 := 0;
+
   begin
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step
         (file,s,abscfs,v,radv,xr,xi,ipvt,info,res,err,mixres,verbose);
       if k = 1
        then initres := res;
       end if;
-      if mixres <= tolres and err <= tolerr
-       then numit := k; fail := false; return;
+      if mixres <= tolres and err <= tolerr then -- convergence
+        if (cntextra = extra) or (res = 0.0) or (err = 0.0)
+         then numit := k; fail := false; return;
+        end if;
+        cntextra := cntextra + 1; -- do an extra step
       end if;
     end loop;
     fail := true; numit := maxit;
@@ -366,15 +412,22 @@ package body Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err,mixres : out double_float;
-                numit : out natural32; fail : out boolean ) is
+                numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0 ) is
+
+    cntextra : natural32 := 0;
+
   begin
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,res,rco,err,mixres);
       if k = 1
        then initres := res;
       end if;
-      if mixres <= tolres and err <= tolerr
-       then numit := k; fail := false; return;
+      if mixres <= tolres and err <= tolerr then -- convergence
+        if (cntextra = extra) or (res = 0.0) or (err = 0.0)
+         then numit := k; fail := false; return;
+        end if;
+        cntextra := cntextra + 1; -- do an extra step
       end if;
     end loop;
     fail := true; numit := maxit;
@@ -390,16 +443,23 @@ package body Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err,mixres : out double_float;
                 numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := true ) is
+
+    cntextra : natural32 := 0;
+
   begin
-    for k in 1..maxit loop
+    for k in 1..maxit+extra loop
       LU_Newton_Step
         (file,s,abscfs,v,radv,xr,xi,ipvt,res,rco,err,mixres,verbose);
       if k = 1
        then initres := res;
       end if;
-      if mixres <= tolres and err <= tolerr
-       then numit := k; fail := false; return;
+      if mixres <= tolres and err <= tolerr then -- convergence
+        if (cntextra = extra) or (res = 0.0) or (err = 0.0)
+         then numit := k; fail := false; return;
+        end if;
+        cntextra := cntextra + 1; -- do an extra step
       end if;
     end loop;
     fail := true; numit := maxit;

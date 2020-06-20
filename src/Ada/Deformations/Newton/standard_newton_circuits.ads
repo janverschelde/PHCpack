@@ -228,7 +228,8 @@ package Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; initres,res,err : out double_float;
-                numit : out natural32; fail : out boolean );
+                numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
@@ -238,6 +239,7 @@ package Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; initres,res,err : out double_float;
                 numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -285,7 +287,8 @@ package Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err : out double_float;
-                numit : out natural32; fail : out boolean );
+                numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
@@ -295,6 +298,7 @@ package Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err : out double_float;
                 numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -348,7 +352,8 @@ package Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 initres,res,err,mixres : out double_float;
-                numit : out natural32; fail : out boolean );
+                numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
@@ -360,6 +365,7 @@ package Standard_Newton_Circuits is
                 info : out integer32;
                 initres,res,err,mixres : out double_float;
                 numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -386,6 +392,7 @@ package Standard_Newton_Circuits is
   --   tolres   tolerance on the residual;
   --   tolerr   tolerance on the forward error;
   --   ipvt     pivoting vector for the LU factorization;
+  --   extra    number of extra iterations;
   --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
@@ -414,7 +421,8 @@ package Standard_Newton_Circuits is
                 maxit : in natural32; tolres,tolerr : in double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err,mixres : out double_float;
-                numit : out natural32; fail : out boolean );
+                numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0 );
   procedure LU_Newton_Steps
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
@@ -425,6 +433,7 @@ package Standard_Newton_Circuits is
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 initres,res,rco,err,mixres : out double_float;
                 numit : out natural32; fail : out boolean;
+                extra : in natural32 := 0;
                 verbose : in boolean := true );
 
   -- DESCRIPTION :
@@ -451,6 +460,7 @@ package Standard_Newton_Circuits is
   --   tolres   tolerance on the residual;
   --   tolerr   tolerance on the forward error;
   --   ipvt     pivoting vector for the LU factorization;
+  --   extra    number of extra iterations;
   --   verbose  optional flag for extra output to file.
 
   -- ON RETURN :
