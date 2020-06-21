@@ -209,6 +209,8 @@ package body Predictor_Corrector_Trackers is
         (cfh,abh,psv.sol,psv.radsol,xr,xi,pars.corsteps,pars.tolres,
          pars.tolres,ipvt,initres,ls.res,ls.rco,ls.err,mixres,nbrit,fail,xtr);
       tnbrit := tnbrit + nbrit;
+      ls.v := psv.sol; ls.res := mixres;
+      ls.t := Standard_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
       Series_and_Trackers.Update_MinMax(minpastp,maxpastp,minstpz,maxstpz);
       Series_and_Trackers.Update_Counters(minnbrsteps,maxnbrsteps,nbsteps);
       Series_and_Trackers.Update_Counters(mincorsteps,maxcorsteps,tnbrit);
@@ -305,6 +307,9 @@ package body Predictor_Corrector_Trackers is
          pars.tolres,ipvt,initres,ls.res,ls.rco,ls.err,mixres,nbrit,
          fail,xtr,verbose);
       tnbrit := tnbrit + nbrit;
+      ls.v := psv.sol; ls.res := mixres;
+      ls.t := Standard_Complex_Numbers.Create(acct); Set_Head(solsptr,ls);
+      put(file,ls.all); new_line(file);
       Write_Path_Statistics
         (file,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz);
       Series_and_Trackers.Update_Ratio_Sums

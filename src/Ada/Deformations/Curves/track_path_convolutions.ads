@@ -6,6 +6,8 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;
+with Standard_Coefficient_Circuits;
+with Standard_Coefficient_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Homotopy_Continuation_Parameters;
@@ -15,6 +17,45 @@ package Track_Path_Convolutions is
 -- DESCRIPTION :
 --   This package provides the main interactive procedures to launch
 --   the path trackers on homotopies defined by convolution circuits.
+
+-- ON COEFFICIENT CONVOLUTION CIRCUITS :
+
+  procedure Track
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean );
+
+  -- DESCRIPTION :
+  --   Tracks all paths defined by the homotopy in hom,
+  --   starting at solutions in sols, in double precision.
+
+  -- REQUIRED : the homotopy is square.
+
+  -- ON ENTRY :
+  --   file     file, opened for output;
+  --   cfh      coefficient circuits for the homotopy;
+  --   abh      circuits with radii of cfh as coefficients,
+  --            to compute the mixed residuals in the corrector loop;
+  --   sols     start solutions;
+  --   pars     values for the tolerances and parameters;
+  --   mhom     0 if affine coordinates are used,
+  --            1 for 1-homogeneous coordinates,
+  --            m, for m > 1, for multi-homogenization;
+  --   idz      the index representation of the partition of the variables,
+  --            idz(k) returns a value between 1 and m,
+  --            depending on which set the k-th variable belongs to;
+  --   arth     true if the homotopy is an artificial-parameter one,
+  --            false otherwise.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the path.
+
+-- ON COMPLEX CONVOLUTION CIRCUITS :
 
   procedure Track
               ( file : in file_type;

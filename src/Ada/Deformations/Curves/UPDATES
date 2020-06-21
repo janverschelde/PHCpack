@@ -1,5 +1,7 @@
 Sat 20 Jun 2020 : added extra procedures to predictor_corrector_trackers,
-  modified ts_pcscnv.
+  modified ts_pcscnv.  To predictor_corrector_trackers.adb, added assignment
+  of solution at the end of the path.  To track_path_convolutions, added
+  a procedure to track all paths, tested by ts_pcscnv.
 
 Fri 19 Jun 2020 : updates in predictor_corrector_loops.adb, added procedures
   to track one path in predictor_corrector_trackers, tested by ts_pcscnv.

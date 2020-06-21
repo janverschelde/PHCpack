@@ -701,7 +701,7 @@ procedure ts_pcscnv is
     pars : Homotopy_Continuation_Parameters.Parameters;
     mhom : natural32 := 0;
     idz : Standard_Natural_Vectors.Link_to_Vector;
-    artificial : boolean;
+    artificial,stepbystep,oncffcirc : boolean;
     ans : character;
     file : file_type;
 
@@ -709,29 +709,39 @@ procedure ts_pcscnv is
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     new_line;
     put("Step-by-step runs ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      new_line;
-      put("Run on coefficient circuits ? (y/n) "); Ask_Yes_or_No(ans);
-      if ans = 'n' then
+    stepbystep := (ans = 'y');
+    new_line;
+    put("Run on coefficient circuits ? (y/n) "); Ask_Yes_or_No(ans);
+    oncffcirc := (ans = 'y');
+    if not oncffcirc then
+      if stepbystep then
         Standard_Run_Loops(cnvhom,abshom,sols,pars,integer32(mhom),idz);
       else
-        declare
-          cffhom : Standard_Coefficient_Convolutions.Link_to_System;
-          cfs,abh : Standard_Coefficient_Circuits.Link_to_System;
-        begin
-          cffhom := Standard_Convolution_Splitters.Split(cnvhom);
-          cfs := Standard_Circuit_Makers.Make_Coefficient_System(cffhom);
-          abh := Standard_Coefficient_Circuits.Copy(cfs);
-          Standard_Coefficient_Circuits.AbsVal(abh);
-          Standard_Run_Loops(cffhom,cfs,abh,sols,pars,integer32(mhom),idz);
-        end;
+        new_line;
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+        Track_Path_Convolutions.Track
+          (file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
       end if;
     else
-      new_line;
-      put_line("Reading the name of the output file ...");
-      Read_Name_and_Create_File(file);
-      Track_Path_Convolutions.Track
-        (file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+      declare
+        cffhom : Standard_Coefficient_Convolutions.Link_to_System;
+        cfs,abh : Standard_Coefficient_Circuits.Link_to_System;
+      begin
+        cffhom := Standard_Convolution_Splitters.Split(cnvhom);
+        cfs := Standard_Circuit_Makers.Make_Coefficient_System(cffhom);
+        abh := Standard_Coefficient_Circuits.Copy(cfs);
+        Standard_Coefficient_Circuits.AbsVal(abh);
+        if stepbystep then
+          Standard_Run_Loops(cffhom,cfs,abh,sols,pars,integer32(mhom),idz);
+        else
+          new_line;
+          put_line("Reading the name of the output file ...");
+          Read_Name_and_Create_File(file);
+          Track_Path_Convolutions.Track
+            (file,cffhom,cfs,abh,sols,pars,integer32(mhom),idz,artificial);
+        end if;
+      end;
     end if;
   end Standard_Test;
 

@@ -27,6 +27,8 @@ with DoblDobl_Homotopy_Convolutions_io;
 with QuadDobl_Homotopy;
 with QuadDobl_Homotopy_Convolutions_io;
 with Homotopy_Continuation_Parameters_io;
+with Standard_Circuit_Makers;
+with Standard_Convolution_Splitters;
 with Predictor_Corrector_Trackers;        use Predictor_Corrector_Trackers;
 with Residual_Convolution_Circuits;       use Residual_Convolution_Circuits;
 with Series_Path_Trackers;
@@ -34,23 +36,31 @@ with Greeting_Banners;
 
 package body Track_Path_Convolutions is
 
-  procedure Track
-              ( file : in file_type;
-                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
-                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+  procedure Standard_Write_Homotopy
+              ( file : in file_type; neq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
-                mhom : in integer32;
-                idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean ) is
+                arth : in boolean; verbose : out boolean ) is
 
-    verbose : boolean;
+  -- DESCRIPTION :
+  --   Auxiliary procedure to write the homotopy, start solutions,
+  --   and the setting of the homotopy parameter to file.
+
+  -- ON ENTRY :
+  --   neq      number of equations in the homotopy;
+  --   sols     the start solutions;
+  --   pars     tuned values of the settings of parameters and tolerances;
+  --   arth     flag to indicatei if homotopy is artificial parameter,
+  --            or (if false), if hom is a natural parameter homotopy.
+
+ -- ON RETURN :
+ --    verbose  true if extra output is wanted.
+
     ans : character;
-    hcrd : constant boolean := (mhom > 0);
 
   begin
     if not arth then
-      put(file,natural32(hom.neq),natural32(hom.neq+1),
+      put(file,natural32(neq),natural32(neq+1),
                Standard_Homotopy.Homotopy_System);
     else
       declare
@@ -77,6 +87,49 @@ package body Track_Path_Convolutions is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+  end Standard_Write_Homotopy;               
+
+-- ON COEFFICIENT CONVOLUTION CIRCUITS :
+
+  procedure Track
+              ( file : in file_type;
+                hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
+
+    verbose : boolean;
+
+  begin
+    Standard_Write_Homotopy(file,hom.neq,sols,pars,arth,verbose);
+    new_line(file);
+    Track_All_Paths(file,hom,cfh,abh,sols,pars,mhom,idz,verbose);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Standard_Complex_Solutions.Length_Of(sols),
+             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
+  end Track;
+
+-- ON COMPLEX COEFFICIENT CIRCUITS :
+
+  procedure Track
+              ( file : in file_type;
+                hom : in Standard_Speelpenning_Convolutions.Link_to_System;
+                abh : in Standard_Speelpenning_Convolutions.Link_to_System;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                arth : in boolean ) is
+
+    verbose : boolean;
+    hcrd : constant boolean := (mhom > 0);
+
+  begin
+    Standard_Write_Homotopy(file,hom.neq,sols,pars,arth,verbose);
     new_line(file);
     Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
     new_line(file);
@@ -352,6 +405,7 @@ package body Track_Path_Convolutions is
     artificial : boolean;
     file : file_type;
     start_moment,ended_moment : Ada.Calendar.Time;
+    ans : character;
 
   begin
     start_moment := Ada.Calendar.Clock;
@@ -360,9 +414,25 @@ package body Track_Path_Convolutions is
     end if;
     Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     new_line;
+    put("Running with coefficient convolution circuits ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
-    Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    if ans = 'n' then
+      Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    else
+      declare
+        cffhom : Standard_Coefficient_Convolutions.Link_to_System;
+        cfs,abh : Standard_Coefficient_Circuits.Link_to_System;
+      begin
+        cffhom := Standard_Convolution_Splitters.Split(cnvhom);
+        cfs := Standard_Circuit_Makers.Make_Coefficient_System(cffhom);
+        abh := Standard_Coefficient_Circuits.Copy(cfs);
+        Standard_Coefficient_Circuits.AbsVal(abh);
+        Track(file,cffhom,cfs,abh,sols,pars,integer32(mhom),idz,artificial);
+      end;
+    end if;
     ended_moment := Ada.Calendar.Clock;
     new_line(file);
     put(file,"PHC ran from "); Write_Time_Stamp(file,start_moment);
