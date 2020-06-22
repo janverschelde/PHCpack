@@ -506,8 +506,8 @@ procedure ts_pcscnv is
         Step_Track(hom,cfs,abh,pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,
                    vh,svls,ipvt,rwk,iwk,pwt,nbpole,nbhess,nbmaxm,fail,true);
       else   
-        Track_One_Path(standard_output,hom,cfs,abh,pars,maxit,mhom,idz,
-          prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,rwk,iwk,pwt,t,mixres,tnbrit,
+        Track_One_Path(standard_output,hom,rcfhom,icfhom,cfs,abh,pars,maxit,
+          mhom,idz,prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,pwt,t,mixres,tnbrit,
           nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,true);
       end if;
       ls.v := psv.sol; ls.res := mixres;

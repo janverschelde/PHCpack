@@ -39,6 +39,8 @@ package Predictor_Corrector_Trackers is
 
   procedure Track_One_Path
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -51,7 +53,7 @@ package Predictor_Corrector_Trackers is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                pwt : in Standard_Floating_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
@@ -59,6 +61,8 @@ package Predictor_Corrector_Trackers is
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -71,7 +75,7 @@ package Predictor_Corrector_Trackers is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                pwt : in Standard_Floating_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
@@ -83,6 +87,8 @@ package Predictor_Corrector_Trackers is
   -- ON ENTRY :
   --   file     to write the extra output to, if verbose (optional);
   --   hom      system of homotopy convolution circuits;
+  --   rcf      real parts of the coefficients, for shifting circuits;
+  --   icf      imaginary parts of the coefficients, for shifting circuits;
   --   cfh      coefficient circuits for the homotopy;
   --   abh      circuits with radii of cfh as coefficients,
   --            to compute the mixed residuals in the corrector loop;
@@ -107,10 +113,8 @@ package Predictor_Corrector_Trackers is
   --   svls     svls(0) contains the singular values of s.jm, and
   --            svls(k) contains the singular values of vh(k),
   --            for k in vh'range.
-  --   rwk      work space for the real parts of series coefficients;
-  --   iwk      work space for the imaginary parts of series coefficients;
   --   pwt      work space the powers of the value used in the shift,
-  --            pwt'range = rwk'range = iwk'range;
+  --            pwt'range = 0..deg, where deg is the degree of the series;
   --   acct     start value for the homotopy continuation parameter t;
   --   verbose  indicates if extra output is requested,
   --            if a file is given on input.

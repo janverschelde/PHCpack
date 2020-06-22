@@ -1,3 +1,7 @@
+Mon 22 Jun 2020 : updated the shift in predictor_corrector_trackers, to
+  shift with the accumulated t value, instead of accumulating the steps,
+  updated ts_pcscnv for change procedure prototypes.
+
 Sat 20 Jun 2020 : added extra procedures to predictor_corrector_trackers,
   modified ts_pcscnv.  To predictor_corrector_trackers.adb, added assignment
   of solution at the end of the path.  To track_path_convolutions, added

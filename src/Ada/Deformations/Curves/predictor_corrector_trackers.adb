@@ -28,6 +28,8 @@ package body Predictor_Corrector_Trackers is
 
   procedure Track_One_Path
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -40,7 +42,7 @@ package body Predictor_Corrector_Trackers is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                pwt : in Standard_Floating_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
@@ -64,8 +66,8 @@ package body Predictor_Corrector_Trackers is
       if (abs(togo) < pars.epsilon)
        then nbsteps := k; exit;
       end if;
-      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-step);
-      Shift_Coefficient_Convolutions.Shift(hom,rwk,iwk,pwt);
+      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-acct);
+      Shift_Coefficient_Convolutions.Map(rcf,icf,hom,pwt);
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,0.0);
     end loop;
   end Track_One_Path;
@@ -73,6 +75,8 @@ package body Predictor_Corrector_Trackers is
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -85,7 +89,7 @@ package body Predictor_Corrector_Trackers is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                pwt : in Standard_Floating_Vectors.Link_to_Vector;
                 acct,mixres : in out double_float;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
@@ -118,8 +122,8 @@ package body Predictor_Corrector_Trackers is
       if (abs(togo) < pars.epsilon)
        then nbsteps := k; exit;
       end if;
-      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-step);
-      Shift_Coefficient_Convolutions.Shift(hom,rwk,iwk,pwt);
+      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-acct);
+      Shift_Coefficient_Convolutions.Map(rcf,icf,hom,pwt);
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,0.0);
     end loop;
   end Track_One_Path;
@@ -187,11 +191,9 @@ package body Predictor_Corrector_Trackers is
        := Standard_Complex_Circuits.Allocate(hom.neq,dim);
     svls : Standard_Complex_VecVecs.VecVec(0..dim)
          := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
-    rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
+    pwt : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
-    rwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
-    iwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);
     minpastp := 1.0; maxpastp := 0.0;
@@ -200,9 +202,10 @@ package body Predictor_Corrector_Trackers is
     mincorsteps := (pars.maxsteps+1)*pars.corsteps+1; maxcorsteps := 0;
     while not Is_Null(solsptr) loop
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
-      Track_One_Path(hom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,
-                     vh,svls,ipvt,rwk,iwk,pwt,acct,mixres,tnbrit,
-                     nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+      Track_One_Path
+        (hom,rcfhom,icfhom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,
+         rx,ix,xr,xi,vh,svls,ipvt,pwt,acct,mixres,tnbrit,
+         nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
       Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,acct);
       Standard_Newton_Circuits.LU_Newton_Steps
@@ -225,8 +228,6 @@ package body Predictor_Corrector_Trackers is
     Standard_Floating_VecVecs.Deep_Clear(ix);
     Standard_Floating_Vectors.Clear(xr);
     Standard_Floating_Vectors.Clear(xi);
-    Standard_Floating_Vectors.Clear(rwk);
-    Standard_Floating_Vectors.Clear(iwk);
     Standard_Floating_Vectors.Clear(pwt);
     Standard_Complex_VecMats.Clear(vh);
     Standard_Complex_VecVecs.Clear(svls);
@@ -282,11 +283,9 @@ package body Predictor_Corrector_Trackers is
        := Standard_Complex_Circuits.Allocate(hom.neq,dim);
     svls : Standard_Complex_VecVecs.VecVec(0..dim)
          := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
-    rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
+    pwt : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
-    rwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
-    iwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);
     minpastp := 1.0; maxpastp := 0.0;
@@ -297,9 +296,10 @@ package body Predictor_Corrector_Trackers is
       pathno := pathno + 1;
       put(file,"Path "); put(file,pathno,1); put_line(file," :");
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
-      Track_One_Path(file,hom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,rx,ix,
-                     xr,xi,vh,svls,ipvt,rwk,iwk,pwt,acct,mixres,tnbrit,nbpole,
-                     nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,verbose);
+      Track_One_Path
+        (file,hom,rcfhom,icfhom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,
+         rx,ix,xr,xi,vh,svls,ipvt,pwt,acct,mixres,tnbrit,
+         nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,verbose);
       Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,acct);
       Standard_Newton_Circuits.LU_Newton_Steps
@@ -336,8 +336,6 @@ package body Predictor_Corrector_Trackers is
     Standard_Floating_VecVecs.Deep_Clear(ix);
     Standard_Floating_Vectors.Clear(xr);
     Standard_Floating_Vectors.Clear(xi);
-    Standard_Floating_Vectors.Clear(rwk);
-    Standard_Floating_Vectors.Clear(iwk);
     Standard_Floating_Vectors.Clear(pwt);
     Standard_Complex_VecMats.Clear(vh);
     Standard_Complex_VecVecs.Clear(svls);
