@@ -1,3 +1,6 @@
+Sun 21 Jun 2020 : extended shift_coefficient_convolutions with procedures
+  that map original coefficients into shifted coefficients.
+
 Sat 20 Jun 2020 : new package standard_coefficient_storage to store and
   restore the values of coefficient circuits.
 

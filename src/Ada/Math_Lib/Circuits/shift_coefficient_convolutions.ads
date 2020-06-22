@@ -75,6 +75,29 @@ package Shift_Coefficient_Convolutions is
   --   rcf      real parts of the coefficients shifted with pwt(1);
   --   icf      imaginary parts of the coefficients shifted with pwt(1).
 
+  procedure Map ( rcf,icf : in Standard_Floating_Vectors.Link_to_Vector;
+                  rsh,ish : in Standard_Floating_Vectors.Link_to_Vector;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shift the real and imaginary parts in rcf and icf
+  --   for the real value in pwt(1),
+  --   mapping the shifted coefficients in rsh and ish.
+
+  -- REQUIRED : rcf'range = icf'range = rsh'range = ish'range = 0..deg,
+  --   where deg is the degree of the series.
+
+  -- ON ENTRY :
+  --   rcf      real parts of the complex coefficients of a series;
+  --   icf      imaginary parts of the complex coefficients of a series;
+  --   rsh      space allocated for the same range as rcf;
+  --   ish      space allocated for the same range as icf;
+  --   pwt      powers of the values used in the shift.
+
+  -- ON RETURN :
+  --   rsh      real parts of the coefficients shifted with pwt(1);
+  --   ish      imaginary parts of the coefficients shifted with pwt(1).
+
   procedure Shift ( rcf,icf : in Standard_Floating_Vectors.Link_to_Vector;
                     rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
                     rpwt : in Standard_Floating_Vectors.Link_to_Vector;
@@ -99,6 +122,31 @@ package Shift_Coefficient_Convolutions is
   -- ON RETURN :
   --   rcf      real parts of the shifted coefficients;
   --   icf      imaginary parts of the shifted coefficients.
+
+  procedure Map ( rcf,icf : in Standard_Floating_Vectors.Link_to_Vector;
+                  rsh,ish : in Standard_Floating_Vectors.Link_to_Vector;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shift the real and imaginary parts in rcf and icf
+  --   for the real part rpwt(1) and imaginary part in ipwt(1),
+  --   mapping the shift coefficients in rsh and ish.
+
+  -- REQUIRED : rcf'range = icf'range = rsh'range = ish'range = 0..deg,
+  --   where deg is the degree of the series, and deg > 0.
+
+  -- ON ENTRY :
+  --   rcf      real parts of the complex coefficients of a series;
+  --   icf      imaginary parts of the complex coefficients of a series;
+  --   rsh      space allocated for the same range as rcf;
+  --   ish      space allocated for the same range as icf;
+  --   rpwt     real part of the powers of the value used in the shift;
+  --   ipwt     imaginary part of the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   rsh      real parts of the shifted coefficients;
+  --   ish      imaginary parts of the shifted coefficients.
 
   procedure Shift ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
                     rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
@@ -125,6 +173,32 @@ package Shift_Coefficient_Convolutions is
   --   rcf      real parts of the shifted coefficients;
   --   icf      imaginary parts of the shifted coefficients.
 
+  procedure Map ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                  rsh,ish : in Standard_Floating_VecVecs.VecVec;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the Map procedure to all (rcf(k), icf(k)) pairs,
+  --   for the value in pwt(1), mapping the results into the
+  --   (rsh(k), ish(k)) pairs of coefficients.
+
+  -- REQUIRED : rcf'range = icf'range, and for all k in rcf'range:
+  --   rcf(k)'range = icf(k)'range = rsh(k)'range = ish(k)'range = 0..deg,
+  --   where deg is the degree of the series, and deg > 0.
+
+  -- ON ENTRY :
+  --   rcf      vector of series coefficients with the
+  --            real parts of the complex coefficients;
+  --   icf      vector of series coefficients with the
+  --            imaginary parts of the complex coefficients;
+  --   rsh      space allocated for the same range as rcf;
+  --   ish      space allocated for the same range as icf;
+  --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   rsh      real parts of the shifted coefficients;
+  --   ish      imaginary parts of the shifted coefficients.
+
   procedure Shift ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
                     rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
                     rpwt : in Standard_Floating_Vectors.Link_to_Vector;
@@ -153,7 +227,35 @@ package Shift_Coefficient_Convolutions is
   --   rcf      real parts of the shifted coefficients;
   --   icf      imaginary parts of the shifted coefficients.
 
--- SHIFTING CIRCUITS :
+  procedure Map ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                  rsh,ish : in Standard_Floating_VecVecs.VecVec;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the shift procedure to all (rcf(k), icf(k)) pairs,
+  --   for the real part rpwt(1) and imaginary part in ipwt(1),
+  --   mapping the shifted coefficients into (rsh(k), ish(k)) pairs.
+
+  -- REQUIRED : rcf'range = icf'range, and for all k in rcf'range:
+  --   rcf(k)'range = icf(k)'range = rsh(k)'range = ish(k)'range = 0..deg,
+  --   where deg is the degree of the series, and deg > 0.
+
+  -- ON ENTRY :
+  --   rcf      vector of series coefficients with the
+  --            real parts of the complex coefficients;
+  --   icf      vector of series coefficients with the
+  --            imaginary parts of the complex coefficients;
+  --   rsh      space allocated for the same range as rcf;
+  --   ish      space allocated for the same range as icf;
+  --   rpwt     real part of the powers of the value used in the shift;
+  --   ipwt     imaginary part of the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   rsh      real parts of the shifted coefficients;
+  --   ish      imaginary parts of the shifted coefficients.
+
+-- SHIFTING CIRCUITS WITH REAL VALUE :
 
   procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuit;
                     rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
@@ -180,6 +282,8 @@ package Shift_Coefficient_Convolutions is
 
   -- ON RETURN :
   --   c        circuit(s) with shifted coefficients.
+
+-- SHIFTING CIRCUITS WITH COMPLEX VALUE :
 
   procedure Shift ( c : in Standard_Coefficient_Convolutions.Circuit;
                     rwk,iwk : in Standard_Floating_Vectors.Link_to_Vector;
@@ -210,6 +314,113 @@ package Shift_Coefficient_Convolutions is
 
   -- ON RETURN :
   --   c        circuit(s) with shifted coefficients.
+
+-- MAPPING COEFFICIENTS SHIFTED WITH REAL VALUE INTO A CIRCUIT :
+
+  procedure Map ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                  c : in Standard_Coefficient_Convolutions.Circuit;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Map ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                  c : in Standard_Coefficient_Convolutions.Link_to_Circuit;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shifts all coefficients in the circuit c with the value in pwt(1),
+  --   mapping the shifts of rcf, icf into the coefficients of c.
+
+  -- REQUIRED : pwt'range = 0..deg,
+  --   where deg is the degree of the series in c.
+
+  -- ON ENTRY :
+  --   rcf      real parts of the series coefficients of circuits,
+  --            rcf(0) is the real part of the series in the constant;
+  --   icf      real parts of the series coefficients of circuits,
+  --            icf(0) is the real part of the series in the constant;
+  --   c        circuit with splitted coefficient vectors;
+  --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   c        circuit with shifted coefficients.
+
+-- MAPPING COEFFICIENTS SHIFTED WITH COMPLEX VALUE INTO A CIRCUIT :
+
+  procedure Map ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                  c : in Standard_Coefficient_Convolutions.Circuit;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Map ( rcf,icf : in Standard_Floating_VecVecs.VecVec;
+                  c : in Standard_Coefficient_Convolutions.Link_to_Circuit;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shifts all coefficients in the circuit c with the value 
+  --   in rpwt(1) + ipwt(1)*i,
+  --   mapping the shifts of rcf, icf into the coefficients of c.
+
+  -- REQUIRED : pwt'range = 0..deg,
+  --   where deg is the degree of the series in c.
+
+  -- ON ENTRY :
+  --   rcf      real parts of the series coefficients of circuits,
+  --            rcf(0) is the real part of the series in the constant;
+  --   icf      real parts of the series coefficients of circuits,
+  --            icf(0) is the real part of the series in the constant;
+  --   c        circuit with splitted coefficient vectors;
+  --   rpwt     real parts of the powers of the value used in the shift;
+  --   ipwt     imaginary parts of the powers of the shift value.
+
+  -- ON RETURN :
+  --   c        circuit with shifted coefficients.
+
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  c : in Standard_Coefficient_Convolutions.Circuits;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shifts all coefficients in the circuits c with the value in pwt(1),
+  --   mapping the shifts of rcf, icf into the coefficients of c.
+
+  -- REQUIRED : pwt'range = 0..deg,
+  --   where deg is the degree of the series in c.
+
+  -- ON ENTRY :
+  --   rcf      real parts of the series coefficients of circuits,
+  --            rcf(k)(0) is the real part of the series in the constant;
+  --   icf      real parts of the series coefficients of circuits,
+  --            icf(k)(0) is the real part of the series in the constant;
+  --   c        circuits with splitted coefficient vectors;
+  --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   c        circuits with shifted coefficients.
+
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  c : in Standard_Coefficient_Convolutions.Circuits;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Shifts all coefficients in the circuit(s) c with the value 
+  --   in rpwt(1) + ipwt(1)*i,
+  --   mapping the shifts of rcf, icf into the coefficients of c.
+
+  -- REQUIRED : pwt'range = 0..deg,
+  --   where deg is the degree of the series in c.
+
+  -- ON ENTRY :
+  --   rcf      real parts of the series coefficients of circuits,
+  --            rcf(k)(0) is the real part of the series in the constant;
+  --   icf      real parts of the series coefficients of circuits,
+  --            icf(k)(0) is the real part of the series in the constant;
+  --   c        circuits with splitted coefficient vectors;
+  --   rpwt     real parts of the powers of the value used in the shift;
+  --   ipwt     imaginary parts of the powers of the shift value.
+
+  -- ON RETURN :
+  --   c        circuits with shifted coefficients.
 
 -- SHIFTING SYSTEMS OF CIRCUITS :
 
@@ -257,6 +468,63 @@ package Shift_Coefficient_Convolutions is
   --   rwk      space allocated for the same range as c.rcf;
   --   iwk      space allocated for the same range as c.icf;
   --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   s        circuit with shifted coefficients.
+
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  s : in Standard_Coefficient_Convolutions.System;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  s : in Standard_Coefficient_Convolutions.Link_to_System;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Maps the coefficients in rcf and icf shifted with the value
+  --   in pwt(1) into the coefficients of s.
+
+  -- REQUIRED : pwt'range = 0..deg,
+  --   where deg is the degree of the series in s.crc.
+
+  -- ON ENTRY :
+  --   rcf      real parts of the series coefficients of circuits,
+  --            rcf(k)(0) is the real part of the series in the constant;
+  --   icf      real parts of the series coefficients of circuits,
+  --            icf(k)(0) is the real part of the series in the constant;
+  --   s        system of circuits with splitted coefficient vectors;
+  --   pwt      the powers of the value used in the shift.
+
+  -- ON RETURN :
+  --   s        circuit with shifted coefficients.
+
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  s : in Standard_Coefficient_Convolutions.System;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  s : in Standard_Coefficient_Convolutions.Link_to_System;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Maps the coefficients in rcf and icf shifted with the value
+  --   in rpwt(1) + ipwt(1)*i into the coefficients of s.
+
+  -- REQUIRED : pwt'range = 0..deg,
+  --   where deg is the degree of the series in s.crc.
+
+  -- ON ENTRY :
+  --   rcf      real parts of the series coefficients of circuits,
+  --            rcf(k)(0) is the real part of the series in the constant;
+  --   icf      real parts of the series coefficients of circuits,
+  --            icf(k)(0) is the real part of the series in the constant;
+  --   s        system of circuits with splitted coefficient vectors;
+  --   rpwt     real parts of powers of the value used in the shift;
+  --   ipwt     imaginary part of powers of the value used in the shift.
 
   -- ON RETURN :
   --   s        circuit with shifted coefficients.
