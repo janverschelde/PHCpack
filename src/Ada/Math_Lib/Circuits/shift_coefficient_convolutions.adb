@@ -162,7 +162,7 @@ package body Shift_Coefficient_Convolutions is
                   pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
     for k in rcf'range loop
-      Shift(rcf(k),icf(k),rsh(k),ish(k),pwt);
+      Map(rcf(k),icf(k),rsh(k),ish(k),pwt);
     end loop;
   end Map;
 
@@ -182,7 +182,7 @@ package body Shift_Coefficient_Convolutions is
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
     for k in rcf'range loop
-      Shift(rcf(k),icf(k),rsh(k),ish(k),rpwt,ipwt);
+      Map(rcf(k),icf(k),rsh(k),ish(k),rpwt,ipwt);
     end loop;
   end Map;
 
@@ -250,10 +250,10 @@ package body Shift_Coefficient_Convolutions is
 
   begin
     if c.rct /= null then
-      Shift(rcf(0),icf(0),c.rct,c.ict,pwt);
+      Map(rcf(0),icf(0),c.rct,c.ict,pwt);
     end if;
     for k in 1..c.nbr loop
-      Shift(rcf(k),icf(k),c.rcf(k),c.icf(k),pwt);
+      Map(rcf(k),icf(k),c.rcf(k),c.icf(k),pwt);
     end loop;
   end Map;
 
@@ -267,10 +267,10 @@ package body Shift_Coefficient_Convolutions is
   begin
     if c /= null then
       if c.rct /= null then
-        Shift(rcf(0),icf(0),c.rct,c.ict,pwt);
+        Map(rcf(0),icf(0),c.rct,c.ict,pwt);
       end if;
       for k in 1..c.nbr loop
-        Shift(rcf(k),icf(k),c.rcf(k),c.icf(k),pwt);
+        Map(rcf(k),icf(k),c.rcf(k),c.icf(k),pwt);
       end loop;
     end if;
   end Map;
@@ -284,10 +284,10 @@ package body Shift_Coefficient_Convolutions is
 
   begin
     if c.rct /= null then
-      Shift(rcf(0),icf(0),c.rct,c.ict,rpwt,ipwt);
+      Map(rcf(0),icf(0),c.rct,c.ict,rpwt,ipwt);
     end if;
     for k in 1..c.nbr loop
-      Shift(rcf(k),icf(k),c.rcf(k),c.icf(k),rpwt,ipwt);
+      Map(rcf(k),icf(k),c.rcf(k),c.icf(k),rpwt,ipwt);
     end loop;
   end Map;
 
@@ -302,10 +302,10 @@ package body Shift_Coefficient_Convolutions is
   begin
     if c /= null then
       if c.rct /= null then
-        Shift(rcf(0),icf(0),c.rct,c.ict,rpwt,ipwt);
+        Map(rcf(0),icf(0),c.rct,c.ict,rpwt,ipwt);
       end if;
       for k in 1..c.nbr loop
-        Shift(rcf(k),icf(k),c.rcf(k),c.icf(k),rpwt,ipwt);
+        Map(rcf(k),icf(k),c.rcf(k),c.icf(k),rpwt,ipwt);
       end loop;
     end if;
   end Map;

@@ -1,5 +1,6 @@
 Mon 22 Jun 2020 : added more Map procedures to shift_coefficient_convolutions,
-  to take in pointer data structures directly.
+  to take in pointer data structures directly.  Bug fix in the Map procedures
+  of shift_coefficient_convolutions.adb, added test to ts_shiftcnv.adb.
 
 Sun 21 Jun 2020 : extended shift_coefficient_convolutions with procedures
   that map original coefficients into shifted coefficients.

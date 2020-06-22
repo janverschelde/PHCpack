@@ -46,6 +46,7 @@ with Standard_Coefficient_Circuits;
 with Standard_Coefficient_Convolutions;
 with Standard_Convolution_Splitters;
 with Standard_Circuit_Makers;
+with Standard_Coefficient_Storage;
 with Shift_Coefficient_Convolutions;
 
 procedure ts_shiftcnv is
@@ -132,8 +133,10 @@ procedure ts_shiftcnv is
     iwrk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,t);
-    Shift_Coefficient_Convolutions.Shift(rcf,icf,rwrk,iwrk,pwt);
-    Standard_Vector_Splitters.Complex_Merge(rcf,icf,shf);
+   -- Shift_Coefficient_Convolutions.Shift(rcf,icf,rwrk,iwrk,pwt);
+   -- Standard_Vector_Splitters.Complex_Merge(rcf,icf,shf);
+    Shift_Coefficient_Convolutions.Map(rcf,icf,rwrk,iwrk,pwt);
+    Standard_Vector_Splitters.Complex_Merge(rwrk,iwrk,shf);
     Standard_Floating_Vectors.Clear(rwrk);
     Standard_Floating_Vectors.Clear(iwrk);
     Standard_Floating_Vectors.Clear(pwt);
@@ -321,6 +324,7 @@ procedure ts_shiftcnv is
     sy,sz : Standard_Complex_Vectors.Vector(1..s.neq);
     ans : character;
     xr,xi,rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
+    rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
 
   begin
     new_line;
@@ -350,7 +354,9 @@ procedure ts_shiftcnv is
       put_line("s(-shift constant) : "); put_line(sy);
       put_line(" shifted system(0) : "); put_line(sz);
       Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,rc);
-      Shift_Coefficient_Convolutions.Shift(cfh,rwk,iwk,pwt);
+     -- Shift_Coefficient_Convolutions.Shift(cfh,rwk,iwk,pwt);
+      Standard_Coefficient_Storage.Allocate_and_Store(cfh.crc,rcfhom,icfhom);
+      Shift_Coefficient_Convolutions.Map(rcfhom,icfhom,cfh,pwt);
       cfs := Standard_Circuit_Makers.Make_Coefficient_System(cfh);
       vrx := Standard_Vector_Splitters.Real_Part(xpt);
       vix := Standard_Vector_Splitters.Imag_Part(xpt);
