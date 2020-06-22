@@ -377,6 +377,10 @@ package Shift_Coefficient_Convolutions is
                   icf : in Standard_Coefficient_Convolutions.VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                  c : in Standard_Coefficient_Convolutions.Circuits;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Shifts all coefficients in the circuits c with the value in pwt(1),
@@ -398,6 +402,11 @@ package Shift_Coefficient_Convolutions is
 
   procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
                   icf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  c : in Standard_Coefficient_Convolutions.Circuits;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector );
@@ -480,6 +489,10 @@ package Shift_Coefficient_Convolutions is
                   icf : in Standard_Coefficient_Convolutions.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                  s : in Standard_Coefficient_Convolutions.Link_to_System;
+                  pwt : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Maps the coefficients in rcf and icf shifted with the value
@@ -506,6 +519,11 @@ package Shift_Coefficient_Convolutions is
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector );
   procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
                   icf : in Standard_Coefficient_Convolutions.VecVecVec;
+                  s : in Standard_Coefficient_Convolutions.Link_to_System;
+                  rpwt : in Standard_Floating_Vectors.Link_to_Vector;
+                  ipwt : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector );
