@@ -1,3 +1,6 @@
+Tue 23 Jun 2020 : new test procedure ts_perfdlu, to develop a more performant
+  LU factorization for complex matrices in double precision.
+
 Wed 3 Jun 2020 : added a test on job = 0 in ts_svd to compute only the
   singular values.
 
