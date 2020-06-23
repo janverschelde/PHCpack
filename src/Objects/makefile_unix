@@ -29,7 +29,7 @@ SAGEPYTHONLIB=/home/microway/Downloads/sage-7.3/local/lib
 # GNAT Community 2019 :
 # ADALIB=/home/jan/opt/GNAT/2019/lib/gcc/x86_64-pc-linux-gnu/8.3.1/adalib
 # GNAT Community 2020 :
-ADALIB=/home/jan/opt/GNAT/2020/lib/gcc/x86_64-pc-linux-gnu/9.3.1/adalib
+ADALIB=/home/microway/opt/GNAT/2020/lib/gcc/x86_64-pc-linux-gnu/9.3.1/adalib
 
 # The location of the g++ compiler
 
@@ -397,6 +397,9 @@ ts_backsubs:
 
 ts_perflu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perflu.adb -o $(BIN)/ts_perflu
+
+ts_perfdlu:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfdlu.adb -o $(BIN)/ts_perfdlu
 
 ts_vvlu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_vvlu.adb -o $(BIN)/ts_vvlu
