@@ -1,3 +1,6 @@
+Tue 23 Jun 2020 : extended {standard,dobldobl,quaddobl}_vector_splitters
+  with allocate procedures that return pointers to vectors of vectors.
+
 Tue 16 Jun 2020 : extended {standard,dobldobl,quaddobl}_vector_splitters
   with allocators from multitasked_hessian_circuits.
 

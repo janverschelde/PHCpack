@@ -139,6 +139,25 @@ package body DoblDobl_Vector_Splitters is
     return res;
   end Allocate;
 
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return DoblDobl_Complex_VecVecs.Link_to_VecVec is
+
+    res : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+    vv : DoblDobl_Complex_VecVecs.VecVec(neqstart..neq);
+
+  begin
+    for i in vv'range loop
+      declare
+        v : constant DoblDobl_Complex_Vectors.Vector(dimstart..dim)
+          := (dimstart..dim => DoblDobl_Complex_Numbers.Create(integer(0)));
+      begin
+        vv(i) := new DoblDobl_Complex_Vectors.Vector'(v);
+      end;
+    end loop;
+    res := new DoblDobl_Complex_VecVecs.VecVec'(vv);
+    return res;
+  end Allocate;
+
 -- MERGE PROCEDURES :
 
   procedure Merge ( x : out Complex_Number;

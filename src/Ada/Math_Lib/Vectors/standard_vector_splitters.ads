@@ -122,6 +122,8 @@ package Standard_Vector_Splitters is
 
   function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
                     return Standard_Floating_VecVecs.VecVec;
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return Standard_Floating_VecVecs.Link_to_VecVec;
 
   -- DESCRIPTION :
   --   Returns an array of range neqstart..neq,
@@ -129,6 +131,8 @@ package Standard_Vector_Splitters is
 
   function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
                     return Standard_Complex_VecVecs.VecVec;
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return Standard_Complex_VecVecs.Link_to_VecVec;
 
   -- DESCRIPTION :
   --   Returns an array of range neqstart..neq,

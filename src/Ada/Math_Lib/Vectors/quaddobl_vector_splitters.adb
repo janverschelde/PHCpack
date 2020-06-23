@@ -218,6 +218,25 @@ package body QuadDobl_Vector_Splitters is
     return res;
   end Allocate;
 
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return QuadDobl_Complex_VecVecs.Link_to_VecVec is
+
+    res : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+    vv : QuadDobl_Complex_VecVecs.VecVec(neqstart..neq);
+
+  begin
+    for i in vv'range loop
+      declare
+        v : constant QuadDobl_Complex_Vectors.Vector(dimstart..dim)
+          := (dimstart..dim => QuadDobl_Complex_Numbers.Create(integer(0)));
+      begin
+        vv(i) := new QuadDobl_Complex_Vectors.Vector'(v);
+      end;
+    end loop;
+    res := new QuadDobl_Complex_VecVecs.VecVec'(vv);
+    return res;
+  end Allocate;
+
 -- SPLITTERS AND MERGERS ON ALLOCATED VECTORS :
 
   procedure Complex_Parts

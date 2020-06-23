@@ -312,6 +312,25 @@ package body Standard_Vector_Splitters is
   end Allocate;
 
   function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return Standard_Floating_VecVecs.Link_to_VecVec is
+
+    res : Standard_Floating_VecVecs.Link_to_VecVec;
+    vv : Standard_Floating_VecVecs.VecVec(neqstart..neq);
+
+  begin
+    for i in vv'range loop
+      declare
+        v : constant Standard_Floating_Vectors.Vector(dimstart..dim)
+          := (dimstart..dim => 0.0);
+      begin
+        vv(i) := new Standard_Floating_Vectors.Vector'(v);
+      end;
+    end loop;
+    res := new Standard_Floating_VecVecs.VecVec'(vv);
+    return res;
+  end Allocate;
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
                     return Standard_Complex_VecVecs.VecVec is
 
     res : Standard_Complex_VecVecs.VecVec(neqstart..neq);
@@ -325,6 +344,25 @@ package body Standard_Vector_Splitters is
         res(i) := new Standard_Complex_Vectors.Vector'(v);
       end;
     end loop;
+    return res;
+  end Allocate;
+
+  function Allocate ( neq,dim : integer32; neqstart,dimstart : integer32 )
+                    return Standard_Complex_VecVecs.Link_to_VecVec is
+
+    res : Standard_Complex_VecVecs.Link_to_VecVec;
+    vv : Standard_Complex_VecVecs.VecVec(neqstart..neq);
+
+  begin
+    for i in vv'range loop
+      declare
+        v : constant Standard_Complex_Vectors.Vector(dimstart..dim)
+          := (dimstart..dim => Standard_Complex_Numbers.Create(integer(0)));
+      begin
+        vv(i) := new Standard_Complex_Vectors.Vector'(v);
+      end;
+    end loop;
+    res := new Standard_Complex_VecVecs.VecVec'(vv);
     return res;
   end Allocate;
 
