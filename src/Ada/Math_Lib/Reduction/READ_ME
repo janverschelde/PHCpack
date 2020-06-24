@@ -52,6 +52,7 @@ ts_qdlu                            : test on quad double LU factorization
 ts_backsubs                        : test on accuracy of back substitution
 ts_vvlu                            : test LU factorization on vecvecs
 ts_perflu                          : performance test on lufac
+standard_inlined_linear_solvers    : inlined complex arithmetic in loops
 ts_perfdlu                         : better performing complex lufac
 -------------------------------------------------------------------------------
 standard_complex_row_reduction     : tools for incremental row reduction

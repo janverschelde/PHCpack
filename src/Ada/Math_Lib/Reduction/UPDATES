@@ -1,4 +1,5 @@
 Wed 24 Jun 2020 : defined vectorized lusolve and estco in ts_perfdlu.
+  New package standard_inlined_linear_solvers with code from ts_perfdlu.
 
 Tue 23 Jun 2020 : new test procedure ts_perfdlu, to develop a more performant
   LU factorization for complex matrices in double precision.
