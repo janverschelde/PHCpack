@@ -1,5 +1,7 @@
 Tue 23 Jun 2020 : new test procedure ts_perfdlu, to develop a more performant
   LU factorization for complex matrices in double precision.
+  Moved complex_parts and complex_merge out of ts_perfdlu and into
+  the new package standard_matrix_splitters.
 
 Wed 3 Jun 2020 : added a test on job = 0 in ts_svd to compute only the
   singular values.

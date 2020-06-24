@@ -16,63 +16,13 @@ with Standard_Vector_Splitters;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Random_Matrices;
+with Standard_Matrix_Splitters;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 
 procedure ts_perfdlu is
 
 -- DESCRIPTION :
 --   Development of a better performing LU factorization of complex matrices.
-
-  procedure Complex_Parts
-              ( mat : in Standard_Complex_Matrices.Matrix;
-                rvv,ivv : in Standard_Floating_VecVecs.Link_to_VecVec ) is
-
-  -- DESCRIPTION :
-  --   Returns in rvv the real parts of the elements in mat
-  --   and in ivv the imaginary parts of the elements in mat.
-  --   The vector representation of the matrix mat is column wise.
-
-  -- REQUIRED :
-  --   rvv'range = ivv'range = mat'range(2), and for all k in rvv'range:
-  --   rvv(k)'range = ivv(k)'range = mat'range(1).
-
-    rlnk,ilnk : Standard_Floating_Vectors.Link_to_Vector;
-
-  begin
-    for k in mat'range(2) loop -- split k-th column of the matrix
-      rlnk := rvv(k);
-      ilnk := ivv(k);
-      for i in mat'range(1) loop
-        rlnk(i) := Standard_Complex_Numbers.REAL_PART(mat(i,k));
-        ilnk(i) := Standard_Complex_Numbers.IMAG_PART(mat(i,k));
-      end loop;
-    end loop;
-  end Complex_Parts;
-
-  procedure Complex_Merge
-              ( rvv,ivv : in Standard_Floating_VecVecs.Link_to_VecVec;
-                mat : out Standard_Complex_Matrices.Matrix ) is
-
-  -- DESCRIPTION :
-  --   Given in rvv and ivv are the real and imaginary parts of the
-  --   columns of a complex matrix, with values defined on return.
-  --   Mirrors the Complex_Parts procedure.
-
-  -- REQUIRED :
-  --   rvv'range = ivv'range = mat'range(2), and for all k in rvv'range:
-  --   rvv(k)'range = ivv(k)'range = mat'range(1).
-
-    rlnk,ilnk : Standard_Floating_Vectors.Link_to_Vector;
-
-  begin
-    for k in rvv'range loop
-      rlnk := rvv(k);
-      ilnk := ivv(k);
-      for i in rlnk'range loop
-        mat(i,k) := Standard_Complex_Numbers.Create(rlnk(i),ilnk(i));
-      end loop;
-    end loop;
-  end Complex_Merge;
 
   procedure lufac ( rcols : in Standard_Floating_VecVecs.Link_to_VecVec; 
                     icols : in Standard_Floating_VecVecs.Link_to_VecVec; 
@@ -168,7 +118,7 @@ procedure ts_perfdlu is
     lufac(wrk,dim,ipvt,info);
     put("info after lufac : "); put(info,1); new_line;
     put("ipvt : "); put(ipvt); new_line;
-    Complex_Parts(mat,rvv,ivv);
+    Standard_Matrix_Splitters.Complex_Parts(mat,rvv,ivv);
     for k in mat'range(2) loop
       put("Elements in column "); put(k,1); put_line(" :");
       for i in mat'range(1) loop
@@ -179,7 +129,7 @@ procedure ts_perfdlu is
     lufac(rvv,ivv,dim,ipvt,info);
     put("info after the vectorized lufac : "); put(info,1); new_line;
     put("ipvt : "); put(ipvt); new_line;
-    Complex_Merge(rvv,ivv,vvfac);
+    Standard_Matrix_Splitters.Complex_Merge(rvv,ivv,vvfac);
     put_line("The complex LU factorization :"); put(wrk,3);
     put_line("The recomputed LU factorization :"); put(vvfac,3);
     Standard_Floating_VecVecs.Deep_Clear(rvv);
@@ -217,9 +167,9 @@ procedure ts_perfdlu is
     print_times(standard_output,timer,"complex LU factorization");
     tstart(timer);
     for k in 1..frq loop
-      Complex_Parts(mat,rvv,ivv);
+      Standard_Matrix_Splitters.Complex_Parts(mat,rvv,ivv);
       lufac(rvv,ivv,dim,ipvt,info);
-      Complex_Merge(rvv,ivv,vvfac);
+      Standard_Matrix_Splitters.Complex_Merge(rvv,ivv,vvfac);
     end loop;
     tstop(timer);
     new_line;

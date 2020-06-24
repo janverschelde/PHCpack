@@ -1,3 +1,6 @@
+Tue 23 Jun 2020 : new package standard_matrix_splitters with code taken
+  from the procedure ts_perfdlu.
+
 Tue 25 Feb 2020 : adjusted generic_vecmats_io.ads for a compiler warning.
 
 Tue 21 Jan 2020 : extended generic_vecmats with a copy procedure.

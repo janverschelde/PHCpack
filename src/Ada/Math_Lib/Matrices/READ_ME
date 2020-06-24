@@ -1,4 +1,4 @@
-Matrix types in PHCv2.4.76
+Matrix types in PHCv2.4.78
 
 Below are some milestones in the development of this library.
 New in the second release is the availability of multiprecision numbers,
@@ -82,6 +82,8 @@ multprec_random_matrices           : matrices of random multiprecision numbers
 matrix_to_vecvec_conversions       : convert matrices to vectors of vectors
 varbprec_matrix_conversions        : convert matrices of various precisions
 random_conditioned_matrices        : random matrices with given condition
+------------------------------------------------------------------------------
+standard_matrix_splitters          : split real from imaginary parts
 ------------------------------------------------------------------------------
 ts_natmat                          : test matrices of natural numbers
 ts_intmat                          : test solvers of integer numbers
