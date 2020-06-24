@@ -59,6 +59,9 @@ package Standard_Refiner_Circuits is
 
   procedure Run ( s : in Link_to_System; sols : in Solution_List;
                   vrb : in integer32 := 0 );
+  procedure Inlined_Run
+                ( s : in Link_to_System; sols : in Solution_List;
+                  vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs several steps of Newton's method on the system s,
@@ -66,8 +69,13 @@ package Standard_Refiner_Circuits is
   --   For each solution writes one line to screen.
   --   This version does not write to file.
   --   The verbose level is given in vrb.
+  --   The Inlined_Run uses inlined linear system solving.
 
   procedure Run ( file : in file_type;
+                  s : in Link_to_System; sols : in Solution_List;
+                  vrb : in integer32 := 0 );
+  procedure Inlined_Run
+                ( file : in file_type;
                   s : in Link_to_System; sols : in Solution_List;
                   vrb : in integer32 := 0 );
 
@@ -76,6 +84,7 @@ package Standard_Refiner_Circuits is
   --   starting at the solutions in sols.
   --   Writes the output to file.
   --   The verbose level is given in vrb.
+  --   The Inlined_Run uses inlined linear system solving.
 
   procedure Main ( vrb : in integer32 := 0 );
 

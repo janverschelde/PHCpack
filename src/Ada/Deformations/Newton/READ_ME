@@ -1,4 +1,4 @@
-Root refining and a modified Newton's method in PHCv2.4.77
+Root refining and a modified Newton's method in PHCv2.4.78
 
 This directory is entirely new in release 2.3.  It contains the
 older root refiners, which were extended in the second release with
@@ -121,6 +121,7 @@ verification_of_solutions        : run sequences of varbprec Newton steps
 ts_vmpnewt                       : test on variable precision Newton
 ------------------------------------------------------------------------------
 standard_newton_circuits         : run Newton on coefficient circuits
+standard_inlined_newton_circuits : on coeff circs with inlined linear solver
 standard_refiner_circuits        : condition tables and cluster report
 ts_newcirc                       : test Newton on coefficient circuits
 ------------------------------------------------------------------------------

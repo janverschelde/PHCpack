@@ -1,3 +1,7 @@
+Wed 24 Jun 2020 : new package standard_inlined_newton_circuits with
+  inlined linear solving, tested in ts_newcirc; added Inlined_Run
+  procedures to standard_refiner_circuits.
+
 Fri 19 Jun 2020 : added an additional parameter to the procedures to run
   many steps in standard_newton_circuits to allow for extra iterations.
 
