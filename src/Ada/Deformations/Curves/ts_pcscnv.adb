@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -106,11 +107,12 @@ procedure ts_pcscnv is
     endt : constant double_float := 1.0;
     acct,step,mixres : double_float := 0.0;
     ans : character;
-    nbrit : integer32;
+    cnt,nbrit : integer32 := 0;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
+      cnt := cnt + 1;
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
         pars,maxit,mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
@@ -119,6 +121,8 @@ procedure ts_pcscnv is
        else put_line("Predictor-Corrector loop succeeded.");
       end if;
       Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+      put("At step "); put(cnt,1);
+      put(", t :"); put(acct,3); put(", step :"); put(step,3); new_line;
       put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       put("t :"); put(acct,3); put_line(" :");
@@ -127,6 +131,8 @@ procedure ts_pcscnv is
 
   procedure Step_Track
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
+                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
                 cfs,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -139,7 +145,7 @@ procedure ts_pcscnv is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 ipvt : out Standard_Integer_Vectors.Vector;
-                rwk,iwk,pwt : in Standard_Floating_Vectors.Link_to_Vector;
+                pwt : in Standard_Floating_Vectors.Link_to_Vector;
                 nbpole,nbhess,nbmaxm : out natural32;
                 fail : out boolean; verbose : in boolean := true ) is
 
@@ -149,6 +155,8 @@ procedure ts_pcscnv is
 
   -- ON ENTRY :
   --   hom      system of homotopy convolution circuits;
+  --   rcf      real parts of all coefficients in the original homotopy;
+  --   icf      imaginary parts of all coefficients in the original homotopy;
   --   cfs      coefficient circuits for the corrector loop;
   --   abh      radii as coefficients of cfs for mixed residuals;
   --   pars     values for the tolerances and parameters;
@@ -172,10 +180,8 @@ procedure ts_pcscnv is
   --   svls     svls(0) contains the singular values of s.jm, and
   --            svls(k) contains the singular values of vh(k),
   --            for k in vh'range.
-  --   rwk      work space for the real parts of series coefficients;
-  --   iwk      work space for the imaginary parts of series coefficients;
   --   pwt      work space the powers of the value used in the shift,
-  --            pwt'range = rwk'range = iwk'range.
+  --            pwt'range = 0..hom.deg.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;
@@ -190,11 +196,12 @@ procedure ts_pcscnv is
     endt : constant double_float := 1.0;
     acct,step,mixres : double_float := 0.0;
     ans : character;
-    nbrit : integer32;
+    cnt,nbrit : integer32 := 0;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
+      cnt := cnt + 1;
       Predictor_Corrector_Loop(standard_output,hom,cfs,abh,
         pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,
         endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail,verbose);
@@ -202,8 +209,11 @@ procedure ts_pcscnv is
        then put_line("Predictor-Corrector loop failed.");
        else put_line("Predictor-Corrector loop succeeded.");
       end if;
-      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-step);
-      Shift_Coefficient_Convolutions.Shift(hom,rwk,iwk,pwt);
+      Shift_Coefficient_Convolutions.Powers_of_Shift(pwt,-acct);
+      Shift_Coefficient_Convolutions.Map(rcf,icf,hom,pwt);
+      Standard_Predictor_Convolutions.EvalCffRad(hom,cfs,abh,0.0);
+      put("At step "); put(cnt,1);
+      put(", t :"); put(acct,3); put(", step :"); put(step,3); new_line;
       put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       put("t :"); put(acct,3); put_line(" :");
@@ -263,11 +273,12 @@ procedure ts_pcscnv is
     endt : constant double_float := 1.0;
     acct,step,mixres : double_double := Create(0.0);
     ans : character;
-    nbrit : integer32;
+    cnt,nbrit : integer32 := 0;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
+      cnt := cnt + 1;
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
         pars,maxit,mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
@@ -276,6 +287,8 @@ procedure ts_pcscnv is
        else put_line("Predictor-Corrector loop succeeded.");
       end if;
       Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+      put("At step "); put(cnt,1);
+      put(", t : "); put(acct,3); put(", step : "); put(step,3); new_line;
       put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       put("t : "); put(acct,3); put_line(" :");
@@ -335,11 +348,12 @@ procedure ts_pcscnv is
     endt : constant double_float := 1.0;
     acct,step,mixres : quad_double := Create(0.0);
     ans : character;
-    nbrit : integer32;
+    cnt,nbrit : integer32 := 0;
 
   begin
     nbpole := 0; nbhess := 0; nbmaxm := 0;
     loop
+      cnt := cnt + 1;
       Predictor_Corrector_Loop(standard_output,hom,abh,homlead,abhlead,
         pars,maxit,mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,
         nbpole,nbhess,nbmaxm,fail,verbose);
@@ -348,6 +362,8 @@ procedure ts_pcscnv is
        else put_line("Predictor-Corrector loop succeeded.");
       end if;
       Shift_Convolution_Circuits.Shift(hom,wrk,-step);
+      put("At step "); put(cnt,1);
+      put(", t : "); put(acct,3); put(", step : "); put(step,3); new_line;
       put("Do the next step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       put("t : "); put(acct,3); put_line(" :");
@@ -490,21 +506,20 @@ procedure ts_pcscnv is
        := Standard_Complex_Circuits.Allocate(hom.neq,dim);
     svls : Standard_Complex_VecVecs.VecVec(0..dim)
          := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
-    rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
+    pwt : Standard_Floating_Vectors.Link_to_Vector;
     rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
 
   begin
     Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);
-    rwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
-    iwk := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     put("Interactive step-by-step run ? (y/n) "); Ask_Yes_or_No(ans);
     stepwise := (ans = 'y');
     loop
       ls := Head_Of(solsptr); psv.sol := ls.v; t := 0.0;
       if stepwise then
-        Step_Track(hom,cfs,abh,pars,maxit,mhom,idz,prd,psv,svh,rx,ix,xr,xi,
-                   vh,svls,ipvt,rwk,iwk,pwt,nbpole,nbhess,nbmaxm,fail,true);
+        Step_Track
+          (hom,rcfhom,icfhom,cfs,abh,pars,maxit,mhom,idz,prd,psv,svh,
+           rx,ix,xr,xi,vh,svls,ipvt,pwt,nbpole,nbhess,nbmaxm,fail,true);
       else   
         Track_One_Path(standard_output,hom,rcfhom,icfhom,cfs,abh,pars,maxit,
           mhom,idz,prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,pwt,t,mixres,tnbrit,
@@ -525,8 +540,6 @@ procedure ts_pcscnv is
     Standard_Floating_VecVecs.Deep_Clear(ix);
     Standard_Floating_Vectors.Clear(xr);
     Standard_Floating_Vectors.Clear(xi);
-    Standard_Floating_Vectors.Clear(rwk);
-    Standard_Floating_Vectors.Clear(iwk);
     Standard_Floating_Vectors.Clear(pwt);
     Standard_Complex_VecMats.Clear(vh);
     Standard_Complex_VecVecs.Clear(svls);
