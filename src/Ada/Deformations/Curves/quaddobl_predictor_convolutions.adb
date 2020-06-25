@@ -190,6 +190,8 @@ package body QuadDobl_Predictor_Convolutions is
                 s : in QuadDobl_Complex_Vectors.Vector ) is
 
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+    zero : constant QuadDobl_Complex_Numbers.Complex_Number
+         := QuadDobl_Complex_Numbers.Create(integer(0));
 
   begin
     case p.kind is
@@ -197,11 +199,17 @@ package body QuadDobl_Predictor_Convolutions is
         for k in p.ludata.sol'range loop
           lnk := p.ludata.sol(k);
           lnk(0) := s(k);
+          for i in 1..lnk'last loop
+            lnk(i) := zero;
+          end loop;
         end loop;
       when SVD =>
         for k in p.svdata.sol'range loop
           lnk := p.svdata.sol(k);
           lnk(0) := s(k);
+          for i in 1..lnk'last loop
+            lnk(i) := zero;
+          end loop;
         end loop;
     end case;
   end Set_Lead_Coefficients;

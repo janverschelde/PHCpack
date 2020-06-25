@@ -201,6 +201,7 @@ package Standard_Predictor_Convolutions is
   -- DESCRIPTION :
   --   Sets the leading coefficients of the data in the predictor p
   --   with the values in the vector s. 
+  --   Resets all higher order coefficients to zero.
 
   procedure Newton_Fabry_Report 
               ( file : in file_type;
