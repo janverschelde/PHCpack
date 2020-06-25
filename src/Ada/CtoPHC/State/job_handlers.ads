@@ -123,4 +123,29 @@ package Job_Handlers is
   --   then a[1] contains the number of characters in b,
   --   where b is the root counter output string.
 
+  function Mixed_Volume
+             ( a : C_intarrs.Pointer; vrblvl : integer := 0 )
+             return integer32;
+
+  -- DESCRIPTION :
+  --   Computes the mixed volume of the system in the polynomial
+  --   system container, with double precision coefficients.
+  --   If there is no system in the polynomial systems container,
+  --   then the Laurent system in the Laurent systems container
+  --   is used as input, also with double precision coefficients.
+  --   On return in a[0] is the mixed volume.
+  --   The mixed cells are in the cells container.
+
+  function Stable_Mixed_Volume
+             ( a,b : C_intarrs.Pointer; vrblvl : integer := 0 )
+             return integer32;
+
+  -- DESCRIPTION :
+  --   Computes the mixed volume and the stable mixed volume
+  --   for the system in the systems container for polynomial
+  --   systems with coefficients in double precision.
+  --   On return in a[0] is the mixed volume
+  --   and in b[0] is the stable mixed volume.
+  --   The mixed cells are in the cells container.
+
 end Job_Handlers;

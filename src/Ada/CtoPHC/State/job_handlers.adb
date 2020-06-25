@@ -2,8 +2,10 @@ with Interfaces.C;
 with text_io;                           use text_io;
 with String_Splitters;                  use String_Splitters;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
+with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with Standard_Laur_Poly_Convertors;
@@ -16,6 +18,8 @@ with QuadDobl_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Floating_Mixed_Subdivisions;
+with Black_Mixed_Volume_Computations;
 with Black_Box_Solvers;
 with Greeting_Banners;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
@@ -28,6 +32,7 @@ with DoblDobl_Solutions_Container;
 with QuadDobl_PolySys_Container;
 with QuadDobl_LaurSys_Container;
 with QuadDobl_Solutions_Container;
+with Cells_Container;
 
 package body Job_Handlers is
 
@@ -615,5 +620,80 @@ package body Job_Handlers is
       end if;
       return 703;
   end QuadDobl_Laurent_Solver;
+
+  function Mixed_Volume
+             ( a : C_intarrs.Pointer; vrblvl : integer := 0 )
+             return integer32 is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Laur_Systems;
+    use Black_Mixed_Volume_Computations;
+
+    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+    mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
+    mv : natural32;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in job_handlers.Mixed_Volume");
+    end if;
+    if lp /= null then
+      Black_Box_Mixed_Volume_Computation
+        (lp.all,mix,perm,iprm,lifsup,mixsub,mv);
+    else
+      declare
+        lq : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+      begin
+        Black_Box_Mixed_Volume_Computation
+          (lq.all,mix,perm,iprm,lifsup,mixsub,mv);
+      end;
+    end if;
+    Assign(integer32(mv),a);
+    Cells_Container.Initialize(mix,lifsup,mixsub);
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised");
+        put_line(" in job_handlers.Mixed_Volume.");
+      end if;
+      return 78;
+  end Mixed_Volume;
+
+  function Stable_Mixed_Volume
+             ( a,b : C_intarrs.Pointer; vrblvl : integer := 0 )
+             return integer32 is
+
+    use Standard_Complex_Poly_Systems;
+    use Black_Mixed_Volume_Computations;
+
+    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
+    mixsub,orgmcc,stbmcc : Floating_Mixed_Subdivisions.Mixed_Subdivision;
+    mv,smv,totmv,orgcnt,stbcnt : natural32;
+    stlb : double_float;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in job_handlers.Stable_Mixed_Volume");
+    end if;
+    Black_Box_Mixed_Volume_Computation
+      (lp.all,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,mv,smv,totmv,
+       orgcnt,stbcnt);
+    Assign(integer32(mv),a);
+    Assign(integer32(smv),b);
+    Cells_Container.Initialize(stlb,mix,lifsup,mixsub,orgmcc,stbmcc);
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised");
+        put_line(" in job_handlers.Stable_Mixed_Volume.");
+      end if;
+      return 79;
+  end Stable_Mixed_Volume;
 
 end Job_Handlers;

@@ -8,7 +8,6 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
-with Arrays_of_Floating_Vector_Lists;
 with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
@@ -48,8 +47,6 @@ with Standard_Deflation_Methods;
 with DoblDobl_Deflation_Methods;
 with QuadDobl_Deflation_Methods;
 with Verification_of_Solutions;
-with Floating_Mixed_Subdivisions;
-with Black_Mixed_Volume_Computations;
 with Witness_Sets_io;
 with Square_and_Embed_Systems;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
@@ -66,7 +63,6 @@ with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
 with Multprec_Solutions_Container;
-with Cells_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
 with C_to_PHCpack;
@@ -1174,57 +1170,6 @@ function use_c2phc4c ( job : integer32;
     return 0;
   end Job194;
 
-  function Job78 return integer32 is -- computes mixed volume
-
-    use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Laur_Systems;
-    use Black_Mixed_Volume_Computations;
-
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-    mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
-    mv : natural32;
-
-  begin
-    if lp /= null then
-      Black_Box_Mixed_Volume_Computation
-        (lp.all,mix,perm,iprm,lifsup,mixsub,mv);
-    else
-      declare
-        lq : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
-      begin
-        Black_Box_Mixed_Volume_Computation
-          (lq.all,mix,perm,iprm,lifsup,mixsub,mv);
-      end;
-    end if;
-    Assign(integer32(mv),a);
-    Cells_Container.Initialize(mix,lifsup,mixsub);
-    return 0;
-  end Job78;
-
-  function Job79 return integer32 is -- computes mixed and stable volume
-
-    use Standard_Complex_Poly_Systems;
-    use Black_Mixed_Volume_Computations;
-
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
-    lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-    mixsub,orgmcc,stbmcc : Floating_Mixed_Subdivisions.Mixed_Subdivision;
-    mv,smv,totmv,orgcnt,stbcnt : natural32;
-    stlb : double_float;
-
-  begin
-    Black_Box_Mixed_Volume_Computation
-      (lp.all,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,mv,smv,totmv,
-       orgcnt,stbcnt);
-    Assign(integer32(mv),a);
-    Assign(integer32(smv),b);
-    Cells_Container.Initialize(stlb,mix,lifsup,mixsub,orgmcc,stbmcc);
-    return 0;
-  end Job79;
-
   function Job189 return integer32 is -- get value of continuation parameter
 
     v_a : constant C_Integer_Array
@@ -1671,8 +1616,8 @@ function use_c2phc4c ( job : integer32;
       when 75 => return Job_Handlers.Standard_Laurent_Solver(a,b);
       when 76 => return use_syscon(76,a,b,c); -- store polynomial as string
       when 77 => return Job_Handlers.Standard_Polynomial_Solver(a,b);
-      when 78 => return Job78; -- computes mixed volume
-      when 79 => return Job79; -- for mixed volume and stable mixed volume
+      when 78 => return Job_Handlers.Mixed_Volume(a);
+      when 79 => return Job_Handlers.Stable_Mixed_Volume(a,b);
       when 80..105 => return use_celcon(job-80,a,b,c);
       when 106 => return use_syscon(68,a,b,c); -- load dobldobl poly as string
       when 107 => return use_syscon(69,a,b,c); -- load quaddobl poly as string
