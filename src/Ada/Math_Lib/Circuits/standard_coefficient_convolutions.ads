@@ -143,29 +143,44 @@ package Standard_Coefficient_Convolutions is
 
   procedure Update ( rvl,ivl : in Standard_Floating_Vectors.Link_to_Vector;
                      rnc,inc : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Update ( deg : in integer32;
+                     rvl,ivl : in Standard_Floating_Vectors.Link_to_Vector;
+                     rnc,inc : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Adds the numbers in rnc to the rvl and 
   --   adds the numbers in inc to the ivl.
+  --   If the degree deg is provided,
+  --   then the update is restricted to the range 0..deg.
 
-  -- REQUIRED : all vectors have the same range.
+  -- REQUIRED : all vectors have the same range,
+  --   or include the range 0..deg.
 
   procedure Multiply
               ( xr,xi,yr,yi : in Standard_Floating_Vectors.Link_to_Vector;
+                zr,zi : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Multiply
+              ( deg : in integer32;
+                xr,xi,yr,yi : in Standard_Floating_Vectors.Link_to_Vector;
                 zr,zi : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Multiplies the coefficients of the vector x with y,
   --   with real parts in xr, yr, and imaginary parts in xi, yi,
   --   and stores the results in the z, with real and imaginary
-  --   parts in zr and zi.
+  --   parts in zr and zi.  If the degree deg is provided,
+  --   then the convolution is restricted up to the degree deg.
 
   -- REQUIRED :
-  --   All vectors have the same range.
+  --   All vectors have the same range, or include the range 0..deg.
 
 -- COMPUTING THE POWER TABLE :
 
   procedure Compute ( rpwt,ipwt : in Link_to_VecVecVec;
+                      mxe : in Standard_Integer_Vectors.Vector;
+                      rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec );
+  procedure Compute ( deg : in integer32;
+                      rpwt,ipwt : in Link_to_VecVecVec;
                       mxe : in Standard_Integer_Vectors.Vector;
                       rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec );
 
@@ -174,9 +189,13 @@ package Standard_Coefficient_Convolutions is
   --   coefficients in the power series in x.
 
   -- REQUIRED : rpwt = Allocate(mxe,deg) and ipwt = Allocate(mxe,deg)
-  --   have been executed, and rpwt'range = x'range = ipwt'range.
+  --   have been executed, and rpwt'range = x'range = ipwt'range,
+  --   or at least include the range 0..deg.
 
   -- ON ENTRY :
+  --   deg      (optional) degree of the power series, if provided,
+  --            then the convolutions are limited to degree deg,
+  --            otherwise the convolutions run till the end of the vectors;
   --   rpwt     allocated power table for the exponent maxima in mxe
   --            and for the real parts of the coefficients of series
   --            of the degree of the series in x;
@@ -197,7 +216,18 @@ package Standard_Coefficient_Convolutions is
                     rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
                     rcrs,icrs : in Standard_Floating_VecVecs.VecVec );
+  procedure Speel ( deg : in integer32;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec );
   procedure Speel ( rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    idx : in Standard_Integer_Vectors.Vector;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec );
+  procedure Speel ( deg : in integer32;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
                     idx : in Standard_Integer_Vectors.Vector;
                     rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
@@ -213,6 +243,9 @@ package Standard_Coefficient_Convolutions is
   --   for some same fixed degree.
 
   -- ON ENTRY :
+  --   deg          (optional) degree of the power series,
+  --                if provided, then the convolutions will stop at deg,
+  --                otherwise continue till the end of the vectors;
   --   rx           a vector with range starting at 1, ending at 2 or higher,
   --                with the real parts of the coefficients of series;
   --   ix           a vector with range starting at 1, ending at 2 or higher,
@@ -255,7 +288,23 @@ package Standard_Coefficient_Convolutions is
                     rbck,ibck : in Standard_Floating_VecVecs.VecVec;
                     rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
                     ryd,iyd : in Standard_Floating_VecVecs.VecVec );
+  procedure Speel ( deg : in integer32;
+                    idx : in Standard_Integer_VecVecs.VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec );
   procedure Speel ( idx : in Standard_Integer_VecVecs.VecVec;
+                    rcff,icff : in Standard_Floating_VecVecs.VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec;
+                    rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Speel ( deg : in integer32;
+                    idx : in Standard_Integer_VecVecs.VecVec;
                     rcff,icff : in Standard_Floating_VecVecs.VecVec;
                     rx,ix : in Standard_Floating_VecVecs.VecVec;
                     rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
@@ -269,6 +318,9 @@ package Standard_Coefficient_Convolutions is
   --   given in indexed format at a power series.
 
   -- ON ENTRY :
+  --   deg          (optional) degree of the power series,
+  --                if provided, then the convolutions will stop at deg,
+  --                otherwise continue till the end of the vectors;
   --   idx          indexed representation of a sum of products of variables;
   --   rcff         real parts of coefficients of the products,
   --                if omitted, then all coefficients are considered as one;
@@ -310,6 +362,14 @@ package Standard_Coefficient_Convolutions is
                     rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
                     rpwt,ipwt : in Link_to_VecVecVec );
+  procedure Multiply_Factor
+                  ( deg : in integer32;
+                    xpk,facidx : in Standard_Integer_Vectors.Link_to_Vector;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rcff,icff : in Standard_Floating_Vectors.Link_to_Vector;
+                    rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
+                    racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt,ipwt : in Link_to_VecVecVec );
 
   -- DESCRIPTION :
   --   Multiplies the coefficient with the common factor.
@@ -317,6 +377,9 @@ package Standard_Coefficient_Convolutions is
   -- REQUIRED : facidx /= null.
 
   -- ON ENTRY :
+  --   deg          (optional) degree of the power series,
+  --                if provided, then the convolutions will stop at deg,
+  --                otherwise continue till the end of the vectors;
   --   xpk          k-th exponent vector;
   --   facidx       factor index of k-th exponents in xpk;
   --   rx           real parts of the values for the variables;
@@ -346,11 +409,18 @@ package Standard_Coefficient_Convolutions is
                   ( multiplier : in integer32;
                     rcff : in Standard_Floating_Vectors.Link_to_Vector; 
                     icff : in Standard_Floating_Vectors.Link_to_Vector ); 
+  procedure Multiply_Power
+                  ( deg,multiplier : in integer32;
+                    rcff : in Standard_Floating_Vectors.Link_to_Vector; 
+                    icff : in Standard_Floating_Vectors.Link_to_Vector ); 
 
   -- DESCRIPTION :
   --   Multiplies the coefficients of the power series with multiplier.
 
   -- ON ENTRY:
+  --   deg          (optional) degree of the power series,
+  --                if provided, then the convolutions will stop at deg,
+  --                otherwise continue till the end of the vectors;
   --   multiplier   is the multiplier exponent;
   --   rcff         real parts of coefficients of a power series;
   --   icff         imaginary parts of coefficients of a power series.
@@ -369,12 +439,26 @@ package Standard_Coefficient_Convolutions is
                     rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                     racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
                     rpwt,ipwt : in Link_to_VecVecVec );
+  procedure Speel ( deg : in integer32;
+                    xps,idx,fac : in Standard_Integer_VecVecs.VecVec;
+                    rcff,icff : in Standard_Floating_VecVecs.VecVec;
+                    rx,ix : in Standard_Floating_VecVecs.VecVec;
+                    rfwd,ifwd : in Standard_Floating_VecVecs.VecVec;
+                    rbck,ibck : in Standard_Floating_VecVecs.VecVec;
+                    rcrs,icrs : in Standard_Floating_VecVecs.VecVec;
+                    ryd,iyd : in Standard_Floating_VecVecs.VecVec;
+                    rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
+                    racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
+                    rpwt,ipwt : in Link_to_VecVecVec );
 
   -- DESCRIPTION :
   --   Evaluation and differentiation of a polynomial,
   --   given in indexed format at a power series.
 
   -- ON ENTRY :
+  --   deg          (optional) degree of the power series,
+  --                if provided, then the convolutions will stop at deg,
+  --                otherwise continue till the end of the vectors;
   --   xps          exponent vector of the monomials;
   --   idx          indexed representation of the variables in exponents;
   --   fac          factor index of the exponents;
@@ -443,6 +527,11 @@ package Standard_Coefficient_Convolutions is
                        ix : in Standard_Floating_VecVecs.VecVec;
                        rpwt,ipwt : in Link_to_VecVecVec;
                        ryd,iyd : in Standard_Floating_VecVecs.VecVec );
+  procedure EvalDiff ( deg : in integer32; c : in Circuit;
+                       rx : in Standard_Floating_VecVecs.VecVec;
+                       ix : in Standard_Floating_VecVecs.VecVec;
+                       rpwt,ipwt : in Link_to_VecVecVec;
+                       ryd,iyd : in Standard_Floating_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Wraps the Speel procedure for the convolution circuit c, to
@@ -451,6 +540,9 @@ package Standard_Coefficient_Convolutions is
   --   in rpwt and ipwt.  The result are placed in ryd and iyd.
 
   -- ON ENTRY :
+  --   deg          (optional) degree of the power series,
+  --                if provided, then the convolutions will stop at deg,
+  --                otherwise continue till the end of the vectors;
   --   c            a circuit properly defined and allocated;
   --   rx           real parts of coefficients of series of same degree;
   --   ix           imaginary parts of coefficients of series of same degree;
@@ -476,12 +568,22 @@ package Standard_Coefficient_Convolutions is
                        ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                        vy : in Standard_Complex_VecVecs.VecVec;
                        vm : in Standard_Complex_VecMats.VecMat );
+  procedure EvalDiff ( deg : in integer32; c : in Circuits;
+                       rx : in Standard_Floating_VecVecs.VecVec;
+                       ix : in Standard_Floating_VecVecs.VecVec;
+                       rpwt,ipwt : in Link_to_VecVecVec;
+                       ryd,iyd : in Standard_Floating_VecVecs.VecVec;
+                       vy : in Standard_Complex_VecVecs.VecVec;
+                       vm : in Standard_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
   --   Evaluates and differentiates the convolution circuits in c
   --   at the series x.
 
   -- ON ENTRY :
+  --   deg          (optional) degree of the power series,
+  --                if provided, then the convolutions will stop at deg,
+  --                otherwise continue till the end of the vectors;
   --   c            an array of convolution circuits;
   --   rx           real parts of coefficients of series of same degree;
   --   ix           imaginary parts of coefficients of series of same degree;
@@ -502,12 +604,16 @@ package Standard_Coefficient_Convolutions is
   --                of some fixe degree with matrix coefficients.
 
   procedure Delinearize ( vy,yv : in Standard_Complex_VecVecs.VecVec );
+  procedure Delinearize ( deg : in integer32;
+                          vy,yv : in Standard_Complex_VecVecs.VecVec );
 
   --  DESCRIPTION :
   --    Converts the linearized representation in vy into the vector yv
   --    of coefficient vectors of the series.
   --    This conversion is convenient for the difference computation
   --    and needed in the application of Newton's method.
+  --    If the degree deg is provided, then the conversion stops at deg,
+  --    otherwise, the conversion runs over all coefficients in the series.
 
   -- REQUIRED :
   --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
@@ -515,13 +621,19 @@ package Standard_Coefficient_Convolutions is
 
   procedure EvalDiff ( s : in System;
                        rx,ix : in Standard_Floating_VecVecs.VecVec );
+  procedure EvalDiff ( deg : in integer32; s : in System;
+                       rx,ix : in Standard_Floating_VecVecs.VecVec );
   procedure EvalDiff ( s : in Link_to_System;
+                       rx,ix : in Standard_Floating_VecVecs.VecVec );
+  procedure EvalDiff ( deg : in integer32; s : in Link_to_System;
                        rx,ix : in Standard_Floating_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Wraps the EvalDiff on the convolution circuits in s.crc,
   --   at the power series with coefficients in x,
   --   with real and imaginary parts in rx and ix.
+  --   If the degree deg is provided, then the convolutions stop at deg,
+  --   otherwise, the convolutions run over all coefficients in the series.
 
   -- REQUIRED :
   --   All data in s are allocated properly with respect to dimension
