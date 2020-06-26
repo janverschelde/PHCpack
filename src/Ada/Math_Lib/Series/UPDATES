@@ -1,3 +1,9 @@
+Fri 26 Jun 2020 : to standard_series_matrix_solvers, added procedures to
+  pass the degree of the series for use in a staggered iterative solving.
+
+Sun 5 Apr 2020 : updated *_series_matrix_solvers.a* to pass the work space
+  vector to the SVD() procedures.
+
 Wed 19 Feb 2020 : to binomial_coefficients added functions to compute the
   binomial coefficients with doubles, double doubles, and quad doubles.
   Applied the changes in *_complex_series_functions.adb so overflow no

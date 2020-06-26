@@ -209,6 +209,26 @@ package body Standard_Series_Matrix_Solvers is
     end if;
   end Solve_by_lufac;
 
+  procedure Solve_by_lufac
+              ( deg : in integer32;
+                A : in Standard_Complex_Matrix_Series.Matrix;
+                b : in Standard_Complex_Vector_Series.Vector;
+                info : out integer32;
+                x : out Standard_Complex_Vector_Series.Vector ) is
+
+    dim : constant integer32 := A.cff(0)'last;
+    lwrk : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+   
+  begin
+    Solve_Lead_by_lufac(A,b,lwrk,ipvt,info,x);
+    if info = 0 then
+      for k in 1..deg loop
+        Solve_Next_by_lusolve(A,b,lwrk,ipvt,k,x);
+      end loop;
+    end if;
+  end Solve_by_lufac;
+
   procedure Solve_by_lufco
               ( A : in Standard_Complex_Matrix_Series.Matrix;
                 b : in Standard_Complex_Vector_Series.Vector;
@@ -223,6 +243,26 @@ package body Standard_Series_Matrix_Solvers is
     Solve_Lead_by_lufco(A,b,lwrk,ipvt,rcond,x);
     if 1.0 + rcond /= 1.0 then
       for k in 1..b.deg loop
+        Solve_Next_by_lusolve(A,b,lwrk,ipvt,k,x);
+      end loop;
+    end if;
+  end Solve_by_lufco;
+
+  procedure Solve_by_lufco
+              ( deg : in integer32;
+                A : in Standard_Complex_Matrix_Series.Matrix;
+                b : in Standard_Complex_Vector_Series.Vector;
+                rcond : out double_float;
+                x : out Standard_Complex_Vector_Series.Vector ) is
+
+    dim : constant integer32 := A.cff(0)'last;
+    lwrk : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+   
+  begin
+    Solve_Lead_by_lufco(A,b,lwrk,ipvt,rcond,x);
+    if 1.0 + rcond /= 1.0 then
+      for k in 1..deg loop
         Solve_Next_by_lusolve(A,b,lwrk,ipvt,k,x);
       end loop;
     end if;
@@ -249,6 +289,28 @@ package body Standard_Series_Matrix_Solvers is
     end if;
   end Solve_by_QRLS;
 
+  procedure Solve_by_QRLS
+              ( deg : in integer32;
+                A : in Standard_Complex_Matrix_Series.Matrix;
+                b : in Standard_Complex_Vector_Series.Vector;
+                info : out integer32;
+                x : out Standard_Complex_Vector_Series.Vector ) is
+
+    nrows : constant integer32 := A.cff(0)'last(1);
+    ncols : constant integer32 := A.cff(0)'last(2);
+    lwrk : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols);
+    qraux : Standard_Complex_Vectors.Vector(1..ncols);
+    ipvt : Standard_Integer_Vectors.Vector(1..ncols);
+
+  begin
+    Solve_Lead_by_QRLS(A,b,lwrk,qraux,ipvt,info,x);
+    if info = 0 then
+      for k in 1..deg loop
+        Solve_Next_by_QRLS(A,b,lwrk,qraux,k,info,x);
+      end loop;
+    end if;
+  end Solve_by_QRLS;
+
   procedure Solve_by_SVD
               ( A : in Standard_Complex_Matrix_Series.Matrix;
                 b : in Standard_Complex_Vector_Series.Vector;
@@ -267,6 +329,30 @@ package body Standard_Series_Matrix_Solvers is
     Solve_Lead_by_SVD(A,b,S,U,V,info,rcond,x);
     if 1.0 + rcond /= 1.0 then
       for k in 1..b.deg loop
+        Solve_Next_by_SVD(A,b,S,U,V,k,x);
+      end loop;
+    end if;
+  end Solve_by_SVD;
+
+  procedure Solve_by_SVD
+              ( deg : in integer32;
+                A : in Standard_Complex_Matrix_Series.Matrix;
+                b : in Standard_Complex_Vector_Series.Vector;
+                info : out integer32; rcond : out double_float;
+                x : out Standard_Complex_Vector_Series.Vector ) is
+
+    nrows : constant integer32 := A.cff(0)'last(1);
+    ncols : constant integer32 := A.cff(0)'last(2);
+    mm : constant integer32
+       := Standard_Complex_Singular_Values.Min0(nrows+1,ncols);
+    S : Standard_Complex_Vectors.Vector(1..mm);
+    U : Standard_Complex_Matrices.Matrix(1..nrows,1..nrows);
+    V : Standard_Complex_Matrices.Matrix(1..ncols,1..ncols);
+
+  begin
+    Solve_Lead_by_SVD(A,b,S,U,V,info,rcond,x);
+    if 1.0 + rcond /= 1.0 then
+      for k in 1..deg loop
         Solve_Next_by_SVD(A,b,S,U,V,k,x);
       end loop;
     end if;
@@ -496,6 +582,22 @@ package body Standard_Series_Matrix_Solvers is
     end if;
   end Solve_by_lufac;
 
+  procedure Solve_by_lufac
+              ( deg : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Solve_Lead_by_lufac(A,b,ipvt,info);
+    if info = 0 then
+      for k in 1..deg loop
+        Solve_Next_by_lusolve(A,b,ipvt,k,wrk);
+      end loop;
+    end if;
+  end Solve_by_lufac;
+
   procedure Solve_by_lufco
               ( A : in Standard_Complex_VecMats.VecMat;
                 b : in Standard_Complex_VecVecs.VecVec;
@@ -506,6 +608,22 @@ package body Standard_Series_Matrix_Solvers is
     Solve_Lead_by_lufco(A,b,ipvt,rcond);
     if 1.0 + rcond /= 1.0 then
       for k in 1..b'last loop
+        Solve_Next_by_lusolve(A,b,ipvt,k,wrk);
+      end loop;
+    end if;
+  end Solve_by_lufco;
+
+  procedure Solve_by_lufco
+              ( deg : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Solve_Lead_by_lufco(A,b,ipvt,rcond);
+    if 1.0 + rcond /= 1.0 then
+      for k in 1..deg loop
         Solve_Next_by_lusolve(A,b,ipvt,k,wrk);
       end loop;
     end if;
@@ -529,6 +647,25 @@ package body Standard_Series_Matrix_Solvers is
     end if;
   end Solve_by_QRLS;
 
+  procedure Solve_by_QRLS
+              ( deg : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                qraux : out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Solve_Lead_by_QRLS(A,b,x(0),qraux,w1,w2,w3,w4,w5,ipvt,info);
+    if info = 0 then
+      for k in 1..deg loop
+        Solve_Next_by_QRLS(A,b,x,qraux,w1,w2,w3,w4,w5,k,info,wrk);
+      end loop;
+    end if;
+  end Solve_by_QRLS;
+
   procedure Solve_by_SVD
               ( A : in Standard_Complex_VecMats.VecMat;
                 b : in Standard_Complex_VecVecs.VecVec;
@@ -542,6 +679,25 @@ package body Standard_Series_Matrix_Solvers is
     Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk,wrkv);
     if 1.0 + rcond /= 1.0 then
       for k in 1..b'last loop
+        Solve_Next_by_SVD(A,b,x,S,U,V,k,wrkv);
+      end loop;
+    end if;
+  end Solve_by_SVD;
+
+  procedure Solve_by_SVD
+              ( deg : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                S : out Standard_Complex_Vectors.Vector;
+                U,V : out Standard_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out double_float;
+                ewrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrkv : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    Solve_Lead_by_SVD(A,b,x(0),S,U,V,info,rcond,ewrk,wrkv);
+    if 1.0 + rcond /= 1.0 then
+      for k in 1..deg loop
         Solve_Next_by_SVD(A,b,x,S,U,V,k,wrkv);
       end loop;
     end if;

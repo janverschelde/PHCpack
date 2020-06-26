@@ -247,6 +247,12 @@ package Standard_Series_Matrix_Solvers is
                 b : in Standard_Complex_Vector_Series.Vector;
                 info : out integer32;
                 x : out Standard_Complex_Vector_Series.Vector );
+  procedure Solve_by_lufac
+              ( deg : in integer32;
+                A : in Standard_Complex_Matrix_Series.Matrix;
+                b : in Standard_Complex_Vector_Series.Vector;
+                info : out integer32;
+                x : out Standard_Complex_Vector_Series.Vector );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using LU factorization on the
@@ -256,6 +262,8 @@ package Standard_Series_Matrix_Solvers is
   --   A.deg >= 0 and b.deg >= 0.  Moreover, the system is square.
 
   -- ON ENTRY :
+  --   deg      (optional) degree, should be less than b.deg,
+  --            the solve loop stops at deg, otherwise runs to b.deg;
   --   A        the coefficient matrix as a matrix series;
   --   b        the right hand side as a vector series.
 
@@ -271,6 +279,12 @@ package Standard_Series_Matrix_Solvers is
                 b : in Standard_Complex_Vector_Series.Vector;
                 rcond : out double_float;
                 x : out Standard_Complex_Vector_Series.Vector );
+  procedure Solve_by_lufco
+              ( deg : in integer32;
+                A : in Standard_Complex_Matrix_Series.Matrix;
+                b : in Standard_Complex_Vector_Series.Vector;
+                rcond : out double_float;
+                x : out Standard_Complex_Vector_Series.Vector );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using LU factorization on the
@@ -280,6 +294,8 @@ package Standard_Series_Matrix_Solvers is
   --   A.deg >= 0 and b.deg >= 0.  Moreover, the system is square.
 
   -- ON ENTRY :
+  --   deg      (optional) degree, should be less than b.deg,
+  --            the solve loop stops at deg, otherwise runs to b.deg;
   --   A        the coefficient matrix as a matrix series;
   --   b        the right hand side as a vector series.
 
@@ -296,6 +312,12 @@ package Standard_Series_Matrix_Solvers is
                 b : in Standard_Complex_Vector_Series.Vector;
                 info : out integer32;
                 x : out Standard_Complex_Vector_Series.Vector );
+  procedure Solve_by_QRLS
+              ( deg : in integer32;
+                A : in Standard_Complex_Matrix_Series.Matrix;
+                b : in Standard_Complex_Vector_Series.Vector;
+                info : out integer32;
+                x : out Standard_Complex_Vector_Series.Vector );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using the QR decomposition of the
@@ -305,6 +327,8 @@ package Standard_Series_Matrix_Solvers is
   --   A.deg >= 0 and b.deg >= 0.
 
   -- ON ENTRY :
+  --   deg      (optional) degree, should be less than b.deg,
+  --            the solve loop stops at deg, otherwise runs to b.deg;
   --   A        the coefficient matrix as a matrix series;
   --   b        the right hand side as a vector series.
 
@@ -320,6 +344,12 @@ package Standard_Series_Matrix_Solvers is
                 b : in Standard_Complex_Vector_Series.Vector;
                 info : out integer32; rcond : out double_float;
                 x : out Standard_Complex_Vector_Series.Vector );
+  procedure Solve_by_SVD
+              ( deg : in integer32;
+                A : in Standard_Complex_Matrix_Series.Matrix;
+                b : in Standard_Complex_Vector_Series.Vector;
+                info : out integer32; rcond : out double_float;
+                x : out Standard_Complex_Vector_Series.Vector );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using the SVD of the
@@ -329,6 +359,8 @@ package Standard_Series_Matrix_Solvers is
   --   A.deg >= 0 and b.deg >= 0.
 
   -- ON ENTRY :
+  --   deg      (optional) degree, should be less than b.deg,
+  --            the solve loop stops at deg, otherwise runs to b.deg;
   --   A        the coefficient matrix as a matrix series;
   --   b        the right hand side as a vector series.
 
@@ -638,6 +670,13 @@ package Standard_Series_Matrix_Solvers is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Solve_by_lufac
+              ( deg : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using LU factorization on the
@@ -648,6 +687,8 @@ package Standard_Series_Matrix_Solvers is
   --   Moreover, all matrices in A are square.
 
   -- ON ENTRY :
+  --   deg      (optional) degree, should be less than b'last,
+  --            the solve loop stops at deg, otherwise runs to b'last;
   --   A        the coefficient matrices in the matrix series;
   --   b        the right hand side coefficients of a vector series;
   --   wrk      work vector, allocated of range at least A(0)'range(1).
@@ -666,6 +707,13 @@ package Standard_Series_Matrix_Solvers is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 rcond : out double_float;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Solve_by_lufco
+              ( deg : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using LU factorization on the
@@ -676,6 +724,8 @@ package Standard_Series_Matrix_Solvers is
   --   Moreover, all matrices in A are square.
 
   -- ON ENTRY :
+  --   deg      (optional) degree, should be less than b'last,
+  --            the solve loop stops at deg, otherwise runs to b'last;
   --   A        the coefficient matrices in the matrix series;
   --   b        the right hand side coefficients of a vector series;
   --   wrk      work vector, allocated of range at least A(0)'range(1).
@@ -697,6 +747,16 @@ package Standard_Series_Matrix_Solvers is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 info : out integer32;
                 wrk : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Solve_by_QRLS
+              ( deg : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                qraux : out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using the QR decomposition of the
@@ -707,6 +767,8 @@ package Standard_Series_Matrix_Solvers is
   --   Moreover, all matrices in A have the same dimension.
 
   -- ON ENTRY :
+  --   deg      (optional) degree, should be less than b'last,
+  --            the solve loop stops at deg, otherwise runs to b'last;
   --   A        the coefficient matrices in the matrix series;
   --   b        the right hand side coefficients of a vector series;
   --   x        space allocated for the solution series;
@@ -736,6 +798,16 @@ package Standard_Series_Matrix_Solvers is
                 info : out integer32; rcond : out double_float;
                 ewrk : in Standard_Complex_Vectors.Link_to_Vector;
                 wrkv : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Solve_by_SVD
+              ( deg : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_VecVecs.VecVec;
+                S : out Standard_Complex_Vectors.Vector;
+                U,V : out Standard_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out double_float;
+                ewrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrkv : in Standard_Complex_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Solves the linear system A*x = b, using the SVD of the
@@ -746,6 +818,8 @@ package Standard_Series_Matrix_Solvers is
   --   Moreover, all matrices in A have the same dimension.
 
   -- ON ENTRY :
+  --   deg      (optional) degree, should be less than b'last,
+  --            the solve loop stops at deg, otherwise runs to b'last;
   --   A        the coefficient matrices in the matrix series;
   --   b        the right hand side coefficients of a vector series;
   --   x        space allocated for the solution series;

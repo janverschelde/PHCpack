@@ -1,4 +1,4 @@
-Truncated power series with complex coefficients for PHCv2.4.76
+Truncated power series with complex coefficients for PHCv2.4.78
 
 Similar to Taylor series approximations for general functions,
 we can approximate roots of polynomials in a parameter by series.
