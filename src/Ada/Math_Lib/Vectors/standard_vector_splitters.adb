@@ -393,7 +393,7 @@ package body Standard_Vector_Splitters is
                 rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
   begin
     for k in x'range loop
-      Split_Complex(x(k),rpx(k),ipx(k));
+      Complex_Parts(x(k),rpx(k),ipx(k));
     end loop;
   end Complex_Parts;
 
@@ -402,7 +402,7 @@ package body Standard_Vector_Splitters is
                 rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
   begin
     for k in x'range loop
-      Split_Complex(x(k),rpx(k),ipx(k));
+      Complex_Parts(x(k),rpx(k),ipx(k));
     end loop;
   end Complex_Parts;
 

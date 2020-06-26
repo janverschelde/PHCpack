@@ -1,3 +1,6 @@
+Fri 26 Jun 2020 : fixed memory leak in standard_vector_splitters.adb,
+  the Complex_Parts() on vectors of vectors should not allocate.
+
 Tue 23 Jun 2020 : extended {standard,dobldobl,quaddobl}_vector_splitters
   with allocate procedures that return pointers to vectors of vectors.
 
