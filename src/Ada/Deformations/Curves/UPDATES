@@ -1,4 +1,11 @@
+Sat 27 Jun 2020 : updated newton_power_convolutions.adb, for the new
+  package newton_coefficient_convolutions.
+
 Thu 25 Jun 2020 : improved step_by_step track in ts_pcscnv.
+  Reset all higher order coefficients of the series when assigning the
+  lead coefficient in {standard,dobldobl,quaddobl}_predictor_convolutions.
+  Called the Set_Lead_Coefficients in the predictor_corrector_loops.adb,
+  when coefficient convolution circuits are applied.
 
 Mon 22 Jun 2020 : updated the shift in predictor_corrector_trackers, to
   shift with the accumulated t value, instead of accumulating the steps,

@@ -1,3 +1,6 @@
+Sat 27 Jun 2020 : new package newton_coefficient_convolutions, with code
+  taken from newton_convolutions, updated ts_fabry.
+
 Fri 26 Jun 2020 : to the procedures in standard_coefficient_convolutions,
   added the degree as an extra parameter to make the convolutions run
   more efficiently on restricted ranges of the series coefficients.

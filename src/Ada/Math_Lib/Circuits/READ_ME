@@ -79,6 +79,7 @@ dobldobl_convolution_splitters     : split dd complex coefficients of circuits
 quaddobl_convolution_splitters     : split qd complex coefficients of circuits
 ts_speelcnv                        : convolutions for series polynomials
 newton_convolutions                : Newton with convolution circuits
+newton_coefficient_convolutions    : Newton on coefficient convolutions
 convergence_radius_estimates       : applies ratio theorem of Fabry
 ts_fabry                           : test on the Fabry ratio theorem
 ts_evalcnv                         : test on plain evaluation

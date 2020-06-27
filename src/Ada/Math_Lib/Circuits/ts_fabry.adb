@@ -50,7 +50,8 @@ with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_System_and_Solutions_io;
 with Convergence_Radius_Estimates;
-with Newton_Convolutions;                use Newton_Convolutions;
+with Newton_Convolutions;
+with Newton_Coefficient_Convolutions;
 
 procedure ts_fabry is
 
@@ -105,20 +106,20 @@ procedure ts_fabry is
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
-        SVD_Newton_Step
+        Newton_Coefficient_Convolutions.SVD_Newton_Step
           (standard_output,s,scf,dx,xd,rx,ix,absdx,svl,U,V,
            info,rcond,ewrk,wrk,scale);
       elsif useqrls then
-        QR_Newton_Step
+        Newton_Coefficient_Convolutions.QR_Newton_Step
           (standard_output,s,scf,dx,xd,rx,ix,absdx,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          LU_Newton_Step
+          Newton_Coefficient_Convolutions.LU_Newton_Step
             (standard_output,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
           put("  rcond :"); put(rcond,3); new_line;
         else
-          LU_Newton_Step
+          Newton_Coefficient_Convolutions.LU_Newton_Step
             (standard_output,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
           put("  info : "); put(info,1); new_line;
         end if;
@@ -175,19 +176,21 @@ procedure ts_fabry is
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
-        SVD_Newton_Step
+        Newton_Convolutions.SVD_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,svl,U,V,
            info,rcond,ewrk,wrk,scale);
       elsif useqrls then
-        QR_Newton_Step
+        Newton_Convolutions.QR_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
+          Newton_Convolutions.LU_Newton_Step
+            (standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
           put("  rcond :"); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk,scale);
+          Newton_Convolutions.LU_Newton_Step
+            (standard_output,s,scf,absdx,info,ipvt,wrk,scale);
           put("  info : "); put(info,1); new_line;
         end if;
       end if;
@@ -245,21 +248,21 @@ procedure ts_fabry is
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
-        SVD_Newton_Step
+        Newton_Coefficient_Convolutions.SVD_Newton_Step
           (standard_output,s,scf,dx,xd,rhx,ihx,rlx,ilx,absdx,svl,U,V,
            info,rcond,ewrk,wrk,scale);
       elsif useqrls then
-        QR_Newton_Step
+        Newton_Coefficient_Convolutions.QR_Newton_Step
           (standard_output,s,scf,dx,xd,rhx,ihx,rlx,ilx,absdx,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,rhx,ihx,rlx,ilx,
-                         absdx,rcond,ipvt,wrk,scale);
+          Newton_Coefficient_Convolutions.LU_Newton_Step
+            (standard_output,s,scf,rhx,ihx,rlx,ilx,absdx,rcond,ipvt,wrk,scale);
           put("  rcond : "); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,rhx,ihx,rlx,ilx,
-                         absdx,info,ipvt,wrk,scale);
+          Newton_Coefficient_Convolutions.LU_Newton_Step
+            (standard_output,s,scf,rhx,ihx,rlx,ilx,absdx,info,ipvt,wrk,scale);
           put("  info : "); put(info,1); new_line;
         end if;
       end if;
@@ -315,19 +318,21 @@ procedure ts_fabry is
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
-        SVD_Newton_Step
+        Newton_Convolutions.SVD_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,svl,U,V,
            info,rcond,ewrk,wrk,scale);
       elsif useqrls then
-        QR_Newton_Step
+        Newton_Convolutions.QR_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
+          Newton_Convolutions.LU_Newton_Step
+            (standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
           put("  rcond : "); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk,scale);
+          Newton_Convolutions.LU_Newton_Step
+            (standard_output,s,scf,absdx,info,ipvt,wrk,scale);
           put("  info : "); put(info,1); new_line;
         end if;
       end if;
@@ -383,19 +388,21 @@ procedure ts_fabry is
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
-        SVD_Newton_Step
+        Newton_Convolutions.SVD_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,svl,U,V,
            info,rcond,ewrk,wrk,scale);
       elsif useqrls then
-        QR_Newton_Step
+        Newton_Convolutions.QR_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          LU_Newton_Step(standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
+          Newton_Convolutions.LU_Newton_Step
+            (standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
           put("rcond : "); put(rcond,3); new_line;
         else
-          LU_Newton_Step(standard_output,s,scf,absdx,info,ipvt,wrk,scale);
+          Newton_Convolutions.LU_Newton_Step
+            (standard_output,s,scf,absdx,info,ipvt,wrk,scale);
           put("info : "); put(info,1); new_line;
         end if;
       end if;
@@ -436,7 +443,7 @@ procedure ts_fabry is
         := Standard_Speelpenning_Convolutions.Create(c,dim,deg);
       cs : Standard_Coefficient_Convolutions.Link_to_System;
       scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
-          := Series_Coefficients(sol.v,deg);
+          := Newton_Convolutions.Series_Coefficients(sol.v,deg);
       rx : constant Standard_Floating_VecVecs.Link_to_VecVec
          := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
       ix : constant Standard_Floating_VecVecs.Link_to_VecVec
@@ -499,7 +506,7 @@ procedure ts_fabry is
         := DoblDobl_Speelpenning_Convolutions.Create(c,dim,deg);
       cs : DoblDobl_Coefficient_Convolutions.Link_to_System;
       scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
-          := Series_Coefficients(sol.v,deg);
+          := Newton_Convolutions.Series_Coefficients(sol.v,deg);
       rhx : constant Standard_Floating_VecVecs.Link_to_VecVec
           := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
       ihx : constant Standard_Floating_VecVecs.Link_to_VecVec
@@ -564,7 +571,7 @@ procedure ts_fabry is
         := Make_Convolution_Circuits(lp.all,natural32(degree));
       s : Link_to_System := Create(c,dim,degree);
       scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
-          := Series_Coefficients(sol.v,degree);
+          := Newton_Convolutions.Series_Coefficients(sol.v,degree);
       z : QuadDobl_Complex_Numbers.Complex_Number;
       r,err : quad_double;
       fail : boolean;
