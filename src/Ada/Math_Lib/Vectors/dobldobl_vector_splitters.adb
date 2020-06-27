@@ -221,6 +221,45 @@ package body DoblDobl_Vector_Splitters is
     end loop;
   end Complex_Parts;
 
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                rhpx,ihpx : in Standard_Floating_Vectors.Link_to_Vector;
+                rlpx,ilpx : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    dd : double_double;
+
+  begin
+    for k in x'first..deg loop
+      dd := DoblDobl_Complex_Numbers.REAL_PART(x(k));
+      rhpx(k) := hi_part(dd); rlpx(k) := lo_part(dd);
+      dd := DoblDobl_Complex_Numbers.IMAG_PART(x(k));
+      ihpx(k) := hi_part(dd); ilpx(k) := lo_part(dd);
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in x'range loop
+      Complex_Parts(deg,x(k),rhpx(k),ihpx(k),rlpx(k),ilpx(k));
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in x'range loop
+      Complex_Parts(deg,x(k),rhpx(k),ihpx(k),rlpx(k),ilpx(k));
+    end loop;
+  end Complex_Parts;
+
   procedure Complex_Merge
               ( rhpx,ihpx : in Standard_Floating_Vectors.Link_to_Vector;
                 rlpx,ilpx : in Standard_Floating_Vectors.Link_to_Vector;
@@ -253,6 +292,44 @@ package body DoblDobl_Vector_Splitters is
   begin
     for k in cvx'range loop
       Complex_Merge(rhpx(k),ihpx(k),rlpx(k),ilpx(k),cvx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+              ( deg : in integer32;
+                rhpx,ihpx : in Standard_Floating_Vectors.Link_to_Vector;
+                rlpx,ilpx : in Standard_Floating_Vectors.Link_to_Vector;
+                cvx : in DoblDobl_Complex_Vectors.Link_to_Vector ) is
+
+    rdd,idd : double_double;
+
+  begin
+    for k in cvx'first..deg loop
+      rdd := Create(rhpx(k),rlpx(k));
+      idd := Create(ihpx(k),ilpx(k));
+      cvx(k) := DoblDobl_Complex_Numbers.Create(rdd,idd);
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+              ( deg : in integer32;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in DoblDobl_Complex_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in cvx'range loop
+      Complex_Merge(deg,rhpx(k),ihpx(k),rlpx(k),ilpx(k),cvx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+              ( deg : in integer32;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in DoblDobl_Complex_VecVecs.VecVec ) is
+  begin
+    for k in cvx'range loop
+      Complex_Merge(deg,rhpx(k),ihpx(k),rlpx(k),ilpx(k),cvx(k));
     end loop;
   end Complex_Merge;
 

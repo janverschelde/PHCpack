@@ -182,6 +182,44 @@ package DoblDobl_Vector_Splitters is
   --   rlpx     low parts of the real numbers in x;
   --   ilpx     low parts of the imaginary numbers in x.
 
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                rhpx,ihpx : in Standard_Floating_Vectors.Link_to_Vector;
+                rlpx,ilpx : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in DoblDobl_Complex_VecVecs.VecVec;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec );
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Parts the complex vector (of vectors) x into two four vectors,
+  --   with its real and imaginary parts of the complex numbers in x,
+  --   separated into real high, imaginary high, real low,
+  --   and imaginary low.
+  --   The coefficient vectors of the series are parted only up
+  --   to the given degree deg.
+
+  -- REQUIRED :
+  --   The vectors rpx and ipx are allocated, at least till degree deg,
+  --   and have the same ranges as x, at least up to the index deg.
+
+  -- ON ENTRY :
+  --   deg      degree of the series coefficients;
+  --   x        a complex vector of double double precision.
+
+  -- ON RETURN :
+  --   rhpx     high parts of the real numbers in x;
+  --   ihpx     high parts of the imaginary numbers in x;
+  --   rlpx     low parts of the real numbers in x;
+  --   ilpx     low parts of the imaginary numbers in x.
+
   procedure Complex_Merge
               ( rhpx,ihpx : in Standard_Floating_Vectors.Link_to_Vector;
                 rlpx,ilpx : in Standard_Floating_Vectors.Link_to_Vector;
@@ -204,6 +242,43 @@ package DoblDobl_Vector_Splitters is
   --   and has the same ranges as rhpx, ihpx, rlpx, and ilpx.
 
   -- ON ENTRY :
+  --   rhpx    high parts of real numbers of a complex vector;
+  --   ihpx    high parts of imaginary numbers of a complex vector;
+  --   rlpx    low parts of real numbers of a complex vector;
+  --   ilpx    low parts of imaginary numbers of a complex vector;
+  --   cvx     allocated with vectors of the same ranges.
+
+  -- ON RETURN :
+  --   cvx     a complex vector of double double precision, 
+  --           with real high from rhpx, imaginary high from ihpx,
+  --           real low from rlpx, and imaginary low from ilpx.
+
+  procedure Complex_Merge
+              ( deg : in integer32;
+                rhpx,ihpx : in Standard_Floating_Vectors.Link_to_Vector;
+                rlpx,ilpx : in Standard_Floating_Vectors.Link_to_Vector;
+                cvx : in DoblDobl_Complex_Vectors.Link_to_Vector );
+  procedure Complex_Merge
+              ( deg : in integer32;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in DoblDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure Complex_Merge
+              ( deg : in integer32;
+                rhpx,ihpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rlpx,ilpx : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in DoblDobl_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Merges the real and imaginary parts, high and low,
+  --   into the vector (of vectors) of complex numbers.
+
+  -- REQUIRED :
+  --   The vector cvx is allocated, at least up to deg,
+  --   and has the same ranges as rhpx, ihpx, rlpx, and ilpx.
+
+  -- ON ENTRY :
+  --   deg     degree of the series coefficients;
   --   rhpx    high parts of real numbers of a complex vector;
   --   ihpx    high parts of imaginary numbers of a complex vector;
   --   rlpx    low parts of real numbers of a complex vector;

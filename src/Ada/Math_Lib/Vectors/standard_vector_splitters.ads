@@ -161,6 +161,32 @@ package Standard_Vector_Splitters is
   --   The vectors rpx and ipx are completely allocated
   --   and have the same ranges as x.
 
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in Standard_Complex_Vectors.Vector;
+                rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in Standard_Complex_VecVecs.VecVec;
+                rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec );
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in Standard_Complex_VecVecs.Link_to_VecVec;
+                rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Parts the complex vector (of vectors) x into two real vectors,
+  --   with its real and imaginary parts of the complex numbers in x,
+  --   with the vectors x(k) splitted up to degree deg.
+
+  -- REQUIRED :
+  --   The vectors rpx and ipx are allocated, at least up to deg,
+  --   and have the same ranges as x, at least up to the index deg.
+
   procedure Complex_Merge
              ( rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector;
                cvx : in Standard_Complex_Vectors.Link_to_Vector );
@@ -181,5 +207,31 @@ package Standard_Vector_Splitters is
   -- REQUIRED :
   --   The vector cvx is completely allocated
   --   and has the same ranges as rpx and ipx.
+
+  procedure Complex_Merge
+             ( deg : in integer32;
+               rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector;
+               cvx : in Standard_Complex_Vectors.Link_to_Vector );
+  procedure Complex_Merge
+             ( deg : in integer32;
+               rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector;
+               cvx : out Standard_Complex_Vectors.Vector );
+  procedure Complex_Merge
+             ( deg : in integer32;
+               rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec;
+               cvx : in Standard_Complex_VecVecs.Link_to_VecVec );
+  procedure Complex_Merge
+             ( deg : in integer32;
+               rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec;
+               cvx : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Merges the real and imaginary parts in rpx and ipx
+  --   into the vector (of vectors) of complex numbers,
+  --   with the vectors cvx(k) merged to degree deg.
+
+  -- REQUIRED :
+  --   The vector cvx is allocated, at least up to the index deg,
+  --   and has the same ranges as rpx and ipx, at least up to deg.
 
 end Standard_Vector_Splitters;

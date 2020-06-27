@@ -279,6 +279,39 @@ package QuadDobl_Vector_Splitters is
   --   xr       real parts of the quad double complex numbers in x;
   --   xi       imaginary parts of the quad double complex numbers in x.
 
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector );
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec );
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Parts the complex vector (of vectors) x into two vectors,
+  --   with its real parts in xr and imaginary parts in xr,
+  --   with highest, second highest, second lowest, and lowest doubles
+  --   stored sequentially in xr and xi.
+  --   The coefficient vectors of the series are parted to degree deg.
+
+  -- REQUIRED :
+  --   The vectors xr and xi are allocated to hold four times the
+  --   numbers as in x, and x'first = xr'first = xi'first,
+  --   for both zero or one, at least up to degree deg.
+
+  -- ON ENTRY :
+  --   deg      degree of the series coefficients;
+  --   x        a complex vector of quad double precision.
+
+  -- ON RETURN :
+  --   xr       real parts of the quad double complex numbers in x;
+  --   xi       imaginary parts of the quad double complex numbers in x.
+
   procedure Complex_Merge
               ( xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 cvx : in QuadDobl_Complex_Vectors.Link_to_Vector );
@@ -298,6 +331,39 @@ package QuadDobl_Vector_Splitters is
   --   and has compatible ragnes with xr and xi.
 
   -- ON ENTRY :
+  --   xr      real parts of the numbers of a complex vector;
+  --   xi      imaginary parts of the numbers of a complex vector;
+  --   cvx     allocated with vectors with compatible ranges.
+
+  -- ON RETURN :
+  --   cvx     a complex vector of quad double precision, 
+  --           with real parts from the doubles in xr,
+  --           and imaginary parts from the doubles in xi.
+
+  procedure Complex_Merge
+              ( deg : in integer32;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                cvx : in QuadDobl_Complex_Vectors.Link_to_Vector );
+  procedure Complex_Merge
+              ( deg : in integer32;
+                xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in QuadDobl_Complex_VecVecs.Link_to_VecVec );
+  procedure Complex_Merge
+              ( deg : in integer32;
+                xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in QuadDobl_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Merges the real and imaginary parts,
+  --   into the vector (of vectors) of complex numbers.
+  --   The coefficient vectors of the series are merged to degree deg.
+
+  -- REQUIRED :
+  --   The vector cvx is allocated, at least till the last index deg,
+  --   and has compatible ranges with xr and xi.
+
+  -- ON ENTRY :
+  --   deg     degree of the series coefficient vectors;
   --   xr      real parts of the numbers of a complex vector;
   --   xi      imaginary parts of the numbers of a complex vector;
   --   cvx     allocated with vectors with compatible ranges.

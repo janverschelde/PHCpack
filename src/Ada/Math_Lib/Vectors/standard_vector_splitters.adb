@@ -406,6 +406,48 @@ package body Standard_Vector_Splitters is
     end loop;
   end Complex_Parts;
 
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in Standard_Complex_Vectors.Vector;
+                rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    for k in x'first..deg loop
+      rpx(k) := Standard_Complex_Numbers.REAL_PART(x(k));
+      ipx(k) := Standard_Complex_Numbers.IMAG_PART(x(k));
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    for k in x'first..deg loop
+      rpx(k) := Standard_Complex_Numbers.REAL_PART(x(k));
+      ipx(k) := Standard_Complex_Numbers.IMAG_PART(x(k));
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in Standard_Complex_VecVecs.VecVec;
+                rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in x'range loop
+      Complex_Parts(deg,x(k),rpx(k),ipx(k));
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in Standard_Complex_VecVecs.Link_to_VecVec;
+                rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in x'range loop
+      Complex_Parts(deg,x(k),rpx(k),ipx(k));
+    end loop;
+  end Complex_Parts;
+
   procedure Complex_Merge
              ( rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector;
                cvx : in Standard_Complex_Vectors.Link_to_Vector ) is
@@ -439,6 +481,46 @@ package body Standard_Vector_Splitters is
   begin
     for k in cvx'range loop
       Complex_Merge(rpx(k),ipx(k),cvx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+             ( deg : in integer32;
+               rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector;
+               cvx : in Standard_Complex_Vectors.Link_to_Vector ) is
+  begin
+    for k in cvx'first..deg loop
+      cvx(k) := Standard_Complex_Numbers.Create(rpx(k),ipx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+             ( deg : in integer32;
+               rpx,ipx : in Standard_Floating_Vectors.Link_to_Vector;
+               cvx : out Standard_Complex_Vectors.Vector ) is
+  begin
+    for k in cvx'first..deg loop
+      cvx(k) := Standard_Complex_Numbers.Create(rpx(k),ipx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+             ( deg : in integer32;
+               rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec;
+               cvx : in Standard_Complex_VecVecs.VecVec ) is
+  begin
+    for k in cvx'range loop
+      Complex_Merge(deg,rpx(k),ipx(k),cvx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+             ( deg : in integer32;
+               rpx,ipx : in Standard_Floating_VecVecs.Link_to_VecVec;
+               cvx : in Standard_Complex_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in cvx'range loop
+      Complex_Merge(deg,rpx(k),ipx(k),cvx(k));
     end loop;
   end Complex_Merge;
 

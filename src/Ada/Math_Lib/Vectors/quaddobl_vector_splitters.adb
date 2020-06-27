@@ -280,6 +280,50 @@ package body QuadDobl_Vector_Splitters is
     end loop;
   end Complex_Parts;
 
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector ) is
+
+    idx : integer32 := xr'first;
+    nbr : quad_double;
+
+  begin
+    for k in x'first..deg loop
+      nbr := QuadDobl_Complex_Numbers.REAL_PART(x(k));
+      xr(idx) := hihi_part(nbr);
+      xr(idx+1) := lohi_part(nbr);
+      xr(idx+2) := hilo_part(nbr);
+      xr(idx+3) := lolo_part(nbr);
+      nbr := QuadDobl_Complex_Numbers.IMAG_PART(x(k));
+      xi(idx) := hihi_part(nbr);
+      xi(idx+1) := lohi_part(nbr);
+      xi(idx+2) := hilo_part(nbr);
+      xi(idx+3) := lolo_part(nbr);
+      idx := idx + 4;
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in QuadDobl_Complex_VecVecs.VecVec;
+                xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in x'range loop
+      Complex_Parts(deg,x(k),xr(k),xi(k));
+    end loop;
+  end Complex_Parts;
+
+  procedure Complex_Parts
+              ( deg : in integer32;
+                x : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in x'range loop
+      Complex_Parts(deg,x(k),xr(k),xi(k));
+    end loop;
+  end Complex_Parts;
+
   procedure Complex_Merge
               ( xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 cvx : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
@@ -311,6 +355,43 @@ package body QuadDobl_Vector_Splitters is
   begin
     for k in cvx'range loop
       Complex_Merge(xr(k),xi(k),cvx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+              ( deg : in integer32; 
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                cvx : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
+
+    idx : integer32 := xr'first;
+    rqd,iqd : quad_double;
+
+  begin
+    for k in cvx'first..deg loop
+      rqd := Create(xr(idx),xr(idx+1),xr(idx+2),xr(idx+3));
+      iqd := Create(xi(idx),xi(idx+1),xi(idx+2),xi(idx+3));
+      cvx(k) := QuadDobl_Complex_Numbers.Create(rqd,iqd);
+      idx := idx + 4;
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+              ( deg : in integer32;
+                xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in QuadDobl_Complex_VecVecs.Link_to_VecVec ) is
+  begin
+    for k in cvx'range loop
+      Complex_Merge(deg,xr(k),xi(k),cvx(k));
+    end loop;
+  end Complex_Merge;
+
+  procedure Complex_Merge
+              ( deg : in integer32;
+                xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
+                cvx : in QuadDobl_Complex_VecVecs.VecVec ) is
+  begin
+    for k in cvx'range loop
+      Complex_Merge(deg,xr(k),xi(k),cvx(k));
     end loop;
   end Complex_Merge;
 
