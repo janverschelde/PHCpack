@@ -51,6 +51,17 @@ package Newton_Convolutions is
   -- DESCRIPTION :
   --   Flips the sign of all coefficients in v.
 
+  procedure Minus ( deg : in integer32;
+                    v : in Standard_Complex_VecVecs.VecVec );
+  procedure Minus ( deg : in integer32;
+                    v : in DoblDobl_Complex_VecVecs.VecVec );
+  procedure Minus ( deg : in integer32;
+                    v : in QuadDobl_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Flips the sign of all coefficients in v,
+  --   up to the given degree deg.
+
   procedure Power_Divide
 	      ( x : in Standard_Complex_VecVecs.VecVec;
                 f : in double_float );
@@ -76,6 +87,17 @@ package Newton_Convolutions is
   -- DESCRIPTION :
   --   Adds to all coefficients of x the corresponding coefficient of y.
 
+  procedure Update ( deg : in integer32;
+                     x,y : in Standard_Complex_VecVecs.VecVec );
+  procedure Update ( deg : in integer32;
+                     x,y : in DoblDobl_Complex_VecVecs.VecVec );
+  procedure Update ( deg : in integer32;
+                     x,y : in QuadDobl_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Adds to all coefficients of x the corresponding coefficient of y,
+  --   up to the given degree deg.
+
   -- REQUIRED : x'range = y'range, and for all k in x'range
   --   x(k)'range = y(k)'range.
 
@@ -89,12 +111,37 @@ package Newton_Convolutions is
   -- DESCRIPTION :
   --   Returns the largest absolute value over all values in v.
 
+  function Max ( deg : integer32;
+                 v : Standard_Complex_Vectors.Link_to_Vector )
+               return double_float;
+  function Max ( deg : integer32;
+                 v : DoblDobl_Complex_Vectors.Link_to_Vector )
+               return double_double;
+  function Max ( deg : integer32;
+                 v : QuadDobl_Complex_Vectors.Link_to_Vector )
+               return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the largest absolute value over all values in v,
+  --   up to the last index, as defined by the value of deg.
+
   function Max ( v : Standard_Complex_VecVecs.VecVec ) return double_float;
   function Max ( v : DoblDobl_Complex_VecVecs.VecVec ) return double_double;
   function Max ( v : QuadDobl_Complex_VecVecs.VecVec ) return quad_double;
 
   -- DESCRIPTION :
   --   Returns the largest absolute value over all values in v.
+
+  function Max ( deg : integer32;
+                 v : Standard_Complex_VecVecs.VecVec ) return double_float;
+  function Max ( deg : integer32;
+                 v : DoblDobl_Complex_VecVecs.VecVec ) return double_double;
+  function Max ( deg : integer32;
+                 v : QuadDobl_Complex_VecVecs.VecVec ) return quad_double;
+
+  -- DESCRIPTION :
+  --   Returns the largest absolute value over all values in v(k),
+  --   for the numbers in v(k) ranging up to the given degree deg.
 
   procedure MaxIdx ( v : in Standard_Complex_VecVecs.VecVec;
                      tol : in double_float;

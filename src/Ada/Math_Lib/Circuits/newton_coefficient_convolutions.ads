@@ -34,7 +34,27 @@ package Newton_Coefficient_Convolutions is
                 scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
+              ( deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx : out double_float; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure LU_Newton_Step
               ( file : in file_type; 
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx : out double_float; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure LU_Newton_Step
+              ( file : in file_type; deg : in integer32;
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -52,6 +72,8 @@ package Newton_Coefficient_Convolutions is
   -- ON ENTRY :
   --   file     if provided, the intermediate coefficient vectors
   --            are written to file, otherwise the procedure is silent;
+  --   deg      (optional) degree of the coefficients in the series,
+  --            for use in a staggered iterative procedure;
   --   s        system of convolution circuits;
   --   scf      vector of coefficients of power series;
   --   rx       work space for the real parts of the coefficients;
@@ -126,7 +148,27 @@ package Newton_Coefficient_Convolutions is
                 scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Step
+              ( deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx,rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure LU_Newton_Step
               ( file : in file_type;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx,rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure LU_Newton_Step
+              ( file : in file_type; deg : in integer32;
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -144,6 +186,8 @@ package Newton_Coefficient_Convolutions is
   -- ON ENTRY :
   --   file     if provided, the intermediate coefficient vectors
   --            are written to file, otherwise the procedure is silent;
+  --   deg      (optional) degree of the coefficients of the series,
+  --            for use in a staggered iterative procedure;
   --   s        system of convolution circuits;
   --   scf      vector of coefficients of power series;
   --   rx       work space for the real parts of the coefficients;
@@ -226,7 +270,33 @@ package Newton_Coefficient_Convolutions is
                 scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure QR_Newton_Step
+              ( deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx : out double_float;
+                qraux : out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure QR_Newton_Step
               ( file : in file_type;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx : out double_float;
+                qraux : out Standard_Complex_Vectors.Vector;
+                w1,w2,w3,w4,w5 : in out Standard_Complex_Vectors.Vector;
+                info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in Standard_Complex_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure QR_Newton_Step
+              ( file : in file_type; deg : in integer32;
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -248,6 +318,8 @@ package Newton_Coefficient_Convolutions is
   --   file     if provided, the intermediate coefficient vectors
   --            are written to file, otherwise the procedure is silent;
   --   s        system of convolution circuits;
+  --   deg      (optional) degree of the coefficients of the series,
+  --            for use in a staggered iterative procedure;
   --   scf      vector of coefficients of power series;
   --   dx       work space for the update to scf, delinearized;
   --   xd       work space for the update to scf, in linearized format;
@@ -348,7 +420,33 @@ package Newton_Coefficient_Convolutions is
                 scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure SVD_Newton_Step
+              ( deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx : out double_float;
+                svl : out Standard_Complex_Vectors.Vector;
+                U,V : out Standard_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out double_float;
+                ewrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure SVD_Newton_Step
               ( file : in file_type;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx : out double_float;
+                svl : out Standard_Complex_Vectors.Vector;
+                U,V : out Standard_Complex_Matrices.Matrix;
+                info : out integer32; rcond : out double_float;
+                ewrk : in Standard_Complex_Vectors.Link_to_Vector;
+                wrkv : in Standard_Complex_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure SVD_Newton_Step
+              ( file : in file_type; deg : in integer32;
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf,dx,xd : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -369,6 +467,8 @@ package Newton_Coefficient_Convolutions is
   -- ON ENTRY :
   --   file     if provided, the intermediate coefficient vectors
   --            are written to file, otherwise the procedure is silent;
+  --   deg      (optional) degree of the coefficients of the series,
+  --            for use in a staggered iterative procedure;
   --   s        system of convolution circuits;
   --   scf      vector of coefficients of power series;
   --   dx       work space for the update to scf, delinearized;

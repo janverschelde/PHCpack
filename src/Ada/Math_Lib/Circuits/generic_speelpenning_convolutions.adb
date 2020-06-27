@@ -1452,6 +1452,22 @@ package body Generic_Speelpenning_Convolutions is
     end loop;
   end Delinearize;
 
+  procedure Delinearize ( deg : in integer32;
+                          vy,yv : in VecVecs.VecVec ) is
+  begin
+    for k in vy'first..deg loop
+      declare
+        vyk : constant Vectors.Link_to_Vector := vy(k);
+        left : Vectors.Link_to_Vector;
+      begin
+        for i in yv'range loop  -- vyk holds k-th coefficient of all series
+          left := yv(i);        -- so we assign to coefficients of series i
+          left(k) := vyk(i);    -- at position k the i-th value of vyk
+        end loop;
+      end;
+    end loop;
+  end Delinearize;
+
   procedure EvalDiff ( s : in System; x : in Vectors.Vector ) is
   begin
     EvalDiff(s.crc,x,s.pwt,s.yd,s.vy,s.vm);

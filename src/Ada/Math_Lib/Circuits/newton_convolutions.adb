@@ -114,6 +114,48 @@ package body Newton_Convolutions is
     end loop;
   end Minus;
 
+  procedure Minus ( deg : in integer32;
+                    v : in Standard_Complex_VecVecs.VecVec ) is
+
+    cf : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'first..deg loop
+      cf := v(i);
+      for j in cf'range loop
+        Standard_Complex_Numbers.Min(cf(j));
+      end loop;
+    end loop;
+  end Minus;
+
+  procedure Minus ( deg : in integer32;
+                    v : in DoblDobl_Complex_VecVecs.VecVec ) is
+
+    cf : DoblDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'first..deg loop
+      cf := v(i);
+      for j in cf'range loop
+        DoblDobl_Complex_Numbers.Min(cf(j));
+      end loop;
+    end loop;
+  end Minus;
+
+  procedure Minus ( deg : in integer32;
+                    v : in QuadDobl_Complex_VecVecs.VecVec ) is
+
+    cf : QuadDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in v'first..deg loop
+      cf := v(i);
+      for j in cf'range loop
+        QuadDobl_Complex_Numbers.Min(cf(j));
+      end loop;
+    end loop;
+  end Minus;
+
   procedure Power_Divide
 	      ( x : in Standard_Complex_VecVecs.VecVec;
 	        f : in double_float ) is
@@ -207,6 +249,51 @@ package body Newton_Convolutions is
     end loop;
   end Update;
 
+  procedure Update ( deg : in integer32;
+                     x,y : in Standard_Complex_VecVecs.VecVec ) is
+
+    xcf,ycf : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in x'range loop
+      xcf := x(i);
+      ycf := y(i);
+      for j in xcf'first..deg loop
+        Standard_Complex_Numbers.Add(xcf(j),ycf(j));
+      end loop;
+    end loop;
+  end Update;
+
+  procedure Update ( deg : in integer32;
+                     x,y : in DoblDobl_Complex_VecVecs.VecVec ) is
+
+    xcf,ycf : DoblDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in x'range loop
+      xcf := x(i);
+      ycf := y(i);
+      for j in xcf'first..deg loop
+        DoblDobl_Complex_Numbers.Add(xcf(j),ycf(j));
+      end loop;
+    end loop;
+  end Update;
+
+  procedure Update ( deg : in integer32;
+                     x,y : in QuadDobl_Complex_VecVecs.VecVec ) is
+
+    xcf,ycf : QuadDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in x'range loop
+      xcf := x(i);
+      ycf := y(i);
+      for j in xcf'first..deg loop
+        QuadDobl_Complex_Numbers.Add(xcf(j),ycf(j));
+      end loop;
+    end loop;
+  end Update;
+
   function Max ( v : Standard_Complex_Vectors.Link_to_Vector )
                return double_float is
 
@@ -255,6 +342,57 @@ package body Newton_Convolutions is
     return res;
   end Max;
 
+  function Max ( deg : integer32;
+                 v : Standard_Complex_Vectors.Link_to_Vector )
+               return double_float is
+
+    res : double_float := Standard_Complex_Numbers.AbsVal(v(v'first));
+    val : double_float;
+
+  begin
+    for k in v'first+1..deg loop
+      val := Standard_Complex_Numbers.AbsVal(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( deg : integer32;
+                 v : DoblDobl_Complex_Vectors.Link_to_Vector )
+               return double_double is
+
+    res : double_double := DoblDobl_Complex_Numbers.AbsVal(v(v'first));
+    val : double_double;
+
+  begin
+    for k in v'first+1..deg loop
+      val := DoblDobl_Complex_Numbers.AbsVal(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( deg : integer32;
+                 v : QuadDobl_Complex_Vectors.Link_to_Vector )
+               return quad_double is
+
+    res : quad_double := QuadDobl_Complex_Numbers.AbsVal(v(v'first));
+    val : quad_double;
+
+  begin
+    for k in v'first+1..deg loop
+      val := QuadDobl_Complex_Numbers.AbsVal(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
   function Max ( v : Standard_Complex_VecVecs.VecVec ) return double_float is
 
     res : double_float := Max(v(v'first));
@@ -293,6 +431,54 @@ package body Newton_Convolutions is
   begin
     for k in v'first+1..v'last loop
       val := Max(v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( deg : integer32;
+                 v : Standard_Complex_VecVecs.VecVec ) return double_float is
+
+    res : double_float := Max(deg,v(v'first));
+    val : double_float;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := Max(deg,v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( deg : integer32;
+                 v : DoblDobl_Complex_VecVecs.VecVec ) return double_double is
+
+    res : double_double := Max(deg,v(v'first));
+    val : double_double;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := Max(deg,v(k));
+      if val > res
+       then res := val;
+      end if;
+    end loop;
+    return res;
+  end Max;
+
+  function Max ( deg : integer32;
+                 v : QuadDobl_Complex_VecVecs.VecVec ) return quad_double is
+
+    res : quad_double := Max(deg,v(v'first));
+    val : quad_double;
+
+  begin
+    for k in v'first+1..v'last loop
+      val := Max(deg,v(k));
       if val > res
        then res := val;
       end if;

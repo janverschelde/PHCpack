@@ -664,6 +664,19 @@ package Generic_Speelpenning_Convolutions is
   --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
   --   then yv'range = 1..dimension and yv(k)'range = 0..degree.
 
+  procedure Delinearize ( deg : in integer32; vy,yv : in VecVecs.VecVec );
+
+  --  DESCRIPTION :
+  --    Converts the linearized representation in vy into the vector yv
+  --    of coefficient vectors of the series.
+  --    This conversion is convenient for the difference computation
+  --    and needed in the application of Newton's method.
+
+  -- REQUIRED :
+  --   if vy'range = 0..degree and vy(k)'range = 1..dimension,
+  --   then yv'range = 1..dimension and yv(k)'range = 0..degree,
+  --   where degree >= deg.
+
   procedure EvalDiff ( s : in System; x : in Vectors.Vector );
   procedure EvalDiff ( s : in Link_to_System; x : in Vectors.Vector );
 

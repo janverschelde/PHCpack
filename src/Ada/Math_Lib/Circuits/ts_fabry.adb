@@ -84,7 +84,8 @@ procedure ts_fabry is
     dx : Standard_Complex_VecVecs.VecVec(1..dim);
     xd : Standard_Complex_VecVecs.VecVec(0..deg);
     ans : character;
-    scale,usesvd,useqrls,needrcond : boolean := false;
+    scale,usesvd,useqrls,needrcond,staggered : boolean := false;
+    wrkdeg : integer32 := 0;
 
   begin
     put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
@@ -99,34 +100,67 @@ procedure ts_fabry is
         needrcond := (ans = 'y');
       end if;
     end if;
+    put("Staggered degrees ? (y/n) "); Ask_Yes_or_No(ans);
+    staggered := (ans = 'y');
     if useqrls or usesvd then
       dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
     end if;
+    if staggered
+     then wrkdeg := 1;
+    end if;
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
-      if usesvd then
-        Newton_Coefficient_Convolutions.SVD_Newton_Step
-          (standard_output,s,scf,dx,xd,rx,ix,absdx,svl,U,V,
-           info,rcond,ewrk,wrk,scale);
-      elsif useqrls then
-        Newton_Coefficient_Convolutions.QR_Newton_Step
-          (standard_output,s,scf,dx,xd,rx,ix,absdx,
-           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
-      else
-        if needrcond then
-          Newton_Coefficient_Convolutions.LU_Newton_Step
-            (standard_output,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
-          put("  rcond :"); put(rcond,3); new_line;
+      if not staggered then
+        if usesvd then
+          Newton_Coefficient_Convolutions.SVD_Newton_Step
+            (standard_output,s,scf,dx,xd,rx,ix,absdx,svl,U,V,
+             info,rcond,ewrk,wrk,scale);
+        elsif useqrls then
+          Newton_Coefficient_Convolutions.QR_Newton_Step
+            (standard_output,s,scf,dx,xd,rx,ix,absdx,
+             qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
         else
-          Newton_Coefficient_Convolutions.LU_Newton_Step
-            (standard_output,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
-          put("  info : "); put(info,1); new_line;
+          if needrcond then
+            Newton_Coefficient_Convolutions.LU_Newton_Step
+              (standard_output,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
+            put("  rcond :"); put(rcond,3); new_line;
+          else
+            Newton_Coefficient_Convolutions.LU_Newton_Step
+              (standard_output,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
+            put("  info : "); put(info,1); new_line;
+          end if;
+        end if;
+      else
+        if usesvd then
+          Newton_Coefficient_Convolutions.SVD_Newton_Step
+            (standard_output,wrkdeg,s,scf,dx,xd,rx,ix,absdx,svl,U,V,
+             info,rcond,ewrk,wrk,scale);
+        elsif useqrls then
+          Newton_Coefficient_Convolutions.QR_Newton_Step
+            (standard_output,wrkdeg,s,scf,dx,xd,rx,ix,absdx,
+             qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
+        else
+          if needrcond then
+            Newton_Coefficient_Convolutions.LU_Newton_Step
+              (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
+            put("  rcond :"); put(rcond,3); new_line;
+          else
+            Newton_Coefficient_Convolutions.LU_Newton_Step
+              (standard_output,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
+            put("  info : "); put(info,1); new_line;
+          end if;
         end if;
       end if;
       put("absdx :"); put(absdx,3);
       put("  Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
+      if staggered then
+        wrkdeg := 2*wrkdeg;
+        if wrkdeg > deg
+         then wrkdeg := deg;
+        end if;
+      end if;
     end loop;
     Standard_Complex_Vectors.Clear(wrk);
     Standard_Complex_Vectors.Clear(ewrk);
