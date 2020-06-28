@@ -92,7 +92,8 @@ package body Predictor_Corrector_Loops is
     Standard_Predictor_Convolutions.SVD_Prediction
       (file,hom,cfh,prd.svdata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
        pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
-       endt,acct,fail,step,nbpole,nbhess,nbmaxm); --,verbose,verbose);
+       endt,acct,fail,step,nbpole,nbhess,nbmaxm,verbose,verbose);
+     --false,verbose);
     if verbose then
       if fail
        then put(file,"Predictor failed to reach tolerance");

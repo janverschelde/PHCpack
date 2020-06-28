@@ -1,6 +1,12 @@
 Sat 27 Jun 2020 : updated newton_power_convolutions.adb, for the new
   package newton_coefficient_convolutions.  Added new package
   staggered_newton_convolutions, tested by ts_sernewconv.
+  In predictor_corrector_loops.adb, passed the verbose flag correctly
+  when applied on coefficient convolutions circuits.
+  In standard_predictor_convolutions.adb, set newton's method to the
+  staggered degree versions.  In staggered_newton_convolutions.adb,
+  for homotopies that are quadratic in t, check convergence only after
+  the second degree -- this is a patch!
 
 Thu 25 Jun 2020 : improved step_by_step track in ts_pcscnv.
   Reset all higher order coefficients of the series when assigning the

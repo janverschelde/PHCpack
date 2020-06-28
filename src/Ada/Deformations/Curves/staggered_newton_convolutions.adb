@@ -39,8 +39,10 @@ package body Staggered_Newton_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
-       then fail := false; nbrit := k; exit;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
       end if;
       wrkdeg := 2*wrkdeg;
       if wrkdeg > csr.deg
@@ -83,8 +85,10 @@ package body Staggered_Newton_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
-       then fail := false; nbrit := k; exit;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
       end if;
       wrkdeg := 2*wrkdeg;
       if wrkdeg > csr.deg
@@ -127,8 +131,10 @@ package body Staggered_Newton_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
-       then fail := false; nbrit := k; exit;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
       end if;
       wrkdeg := 2*wrkdeg;
       if wrkdeg > csr.deg
@@ -171,8 +177,10 @@ package body Staggered_Newton_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
-       then fail := false; nbrit := k; exit;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
       end if;
       wrkdeg := 2*wrkdeg;
       if wrkdeg > csr.deg
@@ -219,8 +227,10 @@ package body Staggered_Newton_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
-       then fail := false; nbrit := k; exit;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
       end if;
       wrkdeg := 2*wrkdeg;
       if wrkdeg > csr.deg
@@ -315,8 +325,10 @@ package body Staggered_Newton_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
-       then fail := false; nbrit := k; exit;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
       end if;
       wrkdeg := 2*wrkdeg;
       if wrkdeg > csr.deg
@@ -363,8 +375,10 @@ package body Staggered_Newton_Convolutions is
          else put(" at index "); put(idx,1); new_line;
         end if;
       end if;
-      if absdx <= tol
-       then fail := false; nbrit := k; exit;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
       end if;
       wrkdeg := 2*wrkdeg;
       if wrkdeg > csr.deg
