@@ -18,6 +18,67 @@ package Track_Path_Convolutions is
 --   This package provides the main interactive procedures to launch
 --   the path trackers on homotopies defined by convolution circuits.
 
+  procedure Standard_Write_Homotopy
+              ( file : in file_type; neq : in integer32;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                arth : in boolean; verbose : out boolean );
+  procedure DoblDobl_Write_Homotopy
+              ( file : in file_type; neq : in integer32;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                arth : in boolean; verbose : out boolean );
+  procedure QuadDobl_Write_Homotopy
+              ( file : in file_type; neq : in integer32;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                arth : in boolean; verbose : out boolean );
+
+  -- DESCRIPTION :
+  --   Before path tracking, the homotopy, start solutions, and the
+  --   values of the homotopy parameters are written to file.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   neq      number of equations in the homotopy;
+  --   sols     the start solutions;
+  --   pars     tuned values of the settings of parameters and tolerances;
+  --   arth     flag to indicatei if homotopy is artificial parameter,
+  --            or (if false), if hom is a natural parameter homotopy.
+
+ -- ON RETURN :
+ --    verbose  true if extra output is wanted.
+
+  procedure Standard_Write_Solutions 
+              ( file : in file_type; arth : in boolean;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure DoblDobl_Write_Solutions 
+              ( file : in file_type; arth : in boolean;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure QuadDobl_Write_Solutions 
+              ( file : in file_type; arth : in boolean;
+                mhom : in integer32;
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   After the tracking, the solutions are written to file,
+  --   with an optional transformation to affine coordinates.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   arth     true if the homotopy is artificial;
+  --   mhom     0 for affine, m for m-homogeneous;
+  --   idz      defines the partition of the variables if mhom > 1;
+  --   sols     solutions at the end of the paths.
+
+  -- ON RETURN :
+  --   sols     solutions in affine coordinates, if arth and hcrd.
+
 -- ON COEFFICIENT CONVOLUTION CIRCUITS :
 
   procedure Track
