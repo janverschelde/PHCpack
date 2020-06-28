@@ -1401,13 +1401,15 @@ procedure ts_serpade is
       put("Random gamma ? (y/n) ");
       Ask_Yes_or_No(ans);
       if ans = 'y' then
-        Homotopy_Series_Readers.Standard_Reader(nbeq,sols,tpow=>1);
+       -- Homotopy_Series_Readers.Standard_Reader(nbeq,sols,tpow=>1);
+        Homotopy_Series_Readers.Standard_Reader(nbeq,sols);
       else
         declare
           gamma : constant Standard_Complex_Numbers.Complex_Number
                 := Standard_Complex_Numbers.Create(1.0);
         begin
-          Homotopy_Series_Readers.Standard_Reader(nbeq,sols,1,gamma);
+         -- Homotopy_Series_Readers.Standard_Reader(nbeq,sols,1,gamma);
+          Homotopy_Series_Readers.Standard_Reader(nbeq,sols,gamma);
         end;
       end if;
       new_line;
@@ -1440,14 +1442,16 @@ procedure ts_serpade is
       put("Random gamma ? (y/n) ");
       Ask_Yes_or_No(ans);
       if ans = 'y' then
-        Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,tpow=>1);
+       -- Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,tpow=>1);
+        Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols);
       else
         declare
           one : constant double_double := create(1.0);
           gamma : constant DoblDobl_Complex_Numbers.Complex_Number
                 := DoblDobl_Complex_Numbers.Create(one);
         begin
-          Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,1,gamma);
+         -- Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,1,gamma);
+          Homotopy_Series_Readers.DoblDobl_Reader(nbeq,sols,gamma);
         end;
       end if;
       new_line;
@@ -1480,14 +1484,16 @@ procedure ts_serpade is
       put("Random gamma ? (y/n) ");
       Ask_Yes_or_No(ans);
       if ans = 'y' then
-        Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,tpow=>1);
+       -- Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,tpow=>1);
+        Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols);
       else
         declare
           one : constant quad_double := create(1.0);
           gamma : constant QuadDobl_Complex_Numbers.Complex_Number
                 := QuadDobl_Complex_Numbers.Create(one);
         begin
-          Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,1,gamma);
+         -- Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,1,gamma);
+          Homotopy_Series_Readers.QuadDobl_Reader(nbeq,sols,gamma);
         end;
       end if;
       new_line;

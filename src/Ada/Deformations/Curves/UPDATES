@@ -1,3 +1,6 @@
+Sun 28 Jun 2020 : modified homotopy_series_readers setting tpow to 1,
+  updated test_series_predictors.adb and ts_serpade.adb.
+
 Sat 27 Jun 2020 : updated newton_power_convolutions.adb, for the new
   package newton_coefficient_convolutions.  Added new package
   staggered_newton_convolutions, tested by ts_sernewconv.

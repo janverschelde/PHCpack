@@ -152,19 +152,19 @@ package Homotopy_Series_Readers is
   procedure Standard_Reader
               ( nbequ : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                tpow : in natural32;
+               -- tpow : in natural32;
                 gamma : in Standard_Complex_Numbers.Complex_Number;
                 homcrd,rabin : in boolean := false );
   procedure DoblDobl_Reader
               ( nbequ : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                tpow : in natural32;
+               -- tpow : in natural32;
                 gamma : in DoblDobl_Complex_Numbers.Complex_Number;
                 homcrd,rabin : in boolean := false );
   procedure QuadDobl_Reader
               ( nbequ : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                tpow : in natural32;
+               -- tpow : in natural32;
                 gamma : in QuadDobl_Complex_Numbers.Complex_Number;
                 homcrd,rabin : in boolean := false );
 
@@ -188,17 +188,17 @@ package Homotopy_Series_Readers is
   procedure Standard_Reader
               ( nbequ : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                tpow : in natural32 := 2;
+               -- tpow : in natural32 := 2;
                 homcrd,rabin : in boolean := false );
   procedure DoblDobl_Reader
               ( nbequ : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                tpow : in natural32 := 2;
+               -- tpow : in natural32 := 2;
                 homcrd,rabin : in boolean := false );
   procedure QuadDobl_Reader
               ( nbequ : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                tpow : in natural32 := 2;
+               -- tpow : in natural32 := 2;
                 homcrd,rabin : in boolean := false );
 
   -- DESCRIPTION :

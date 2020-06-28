@@ -191,7 +191,7 @@ package body Homotopy_Series_Readers is
   procedure Standard_Reader
               ( nbequ : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                tpow : in natural32;
+               -- tpow : in natural32;
                 gamma : in Standard_Complex_Numbers.Complex_Number;
                 homcrd,rabin : in boolean := false ) is
 
@@ -206,7 +206,7 @@ package body Homotopy_Series_Readers is
       end if;
       nbequ := target'last;
       if not homcrd then
-        Standard_Homotopy.Create(target.all,start.all,tpow,gamma);
+        Standard_Homotopy.Create(target.all,start.all,1,gamma); -- tpow,gamma);
       else -- set the value for tpow to one if homcrd
         Standard_Homotopy.Create(target.all,start.all,1,gamma);
         Standard_Coefficient_Homotopy.Create(start.all,target.all,1,gamma);
@@ -217,7 +217,7 @@ package body Homotopy_Series_Readers is
       Ask_Yes_or_No(ans);
       if ans /= 'y' then
         nbequ := target'last;
-        Standard_Homotopy.Create(target.all,start.all,tpow,gamma);
+        Standard_Homotopy.Create(target.all,start.all,1,gamma); -- tpow,gamma);
       else
         declare
           jrbtarget : constant Standard_Complex_Poly_Systems.Poly_Sys
@@ -228,7 +228,7 @@ package body Homotopy_Series_Readers is
                   := Jacobian_Rabinowitsch(sols);
         begin
           nbequ := jrbtarget'last;
-          Standard_Homotopy.Create(jrbtarget,jrbstart,tpow,gamma);
+          Standard_Homotopy.Create(jrbtarget,jrbstart,1,gamma); -- tpow,gamma);
           Standard_Complex_Solutions.Deep_Clear(sols);
           sols := jrbsols;
         end;
@@ -239,7 +239,7 @@ package body Homotopy_Series_Readers is
   procedure DoblDobl_Reader
               ( nbequ : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                tpow : in natural32;
+               -- tpow : in natural32;
                 gamma : in DoblDobl_Complex_Numbers.Complex_Number;
                 homcrd,rabin : in boolean := false ) is
 
@@ -254,7 +254,7 @@ package body Homotopy_Series_Readers is
       end if;
       nbequ := target'last;
       if not homcrd then
-        DoblDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+        DoblDobl_Homotopy.Create(target.all,start.all,1,gamma); -- tpow,gamma);
       else -- set tpow to one for homogeneous coordinates
         DoblDobl_Homotopy.Create(target.all,start.all,1,gamma);
         DoblDobl_Coefficient_Homotopy.Create(start.all,target.all,1,gamma);
@@ -265,7 +265,7 @@ package body Homotopy_Series_Readers is
       Ask_Yes_or_No(ans);
       if ans /= 'y' then
         nbequ := target'last;
-        DoblDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+        DoblDobl_Homotopy.Create(target.all,start.all,1,gamma); -- tpow,gamma);
       else
         declare
           jrbtarget : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
@@ -276,7 +276,7 @@ package body Homotopy_Series_Readers is
                   := Jacobian_Rabinowitsch(sols);
         begin
           nbequ := jrbtarget'last;
-          DoblDobl_Homotopy.Create(jrbtarget,jrbstart,tpow,gamma);
+          DoblDobl_Homotopy.Create(jrbtarget,jrbstart,1,gamma); -- tpow,gamma);
           DoblDobl_Complex_Solutions.Deep_Clear(sols);
           sols := jrbsols;
         end;
@@ -287,7 +287,7 @@ package body Homotopy_Series_Readers is
   procedure QuadDobl_Reader
               ( nbequ : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                tpow : in natural32;
+               -- tpow : in natural32;
                 gamma : in QuadDobl_Complex_Numbers.Complex_Number;
                 homcrd,rabin : in boolean := false ) is
 
@@ -302,7 +302,7 @@ package body Homotopy_Series_Readers is
       end if;
       nbequ := target'last;
       if not homcrd then
-        QuadDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+        QuadDobl_Homotopy.Create(target.all,start.all,1,gamma); -- tpow,gamma);
       else -- set tpow to one for homogeneous coordinates
         QuadDobl_Homotopy.Create(target.all,start.all,1,gamma);
         QuadDobl_Coefficient_Homotopy.Create(start.all,target.all,1,gamma);
@@ -313,7 +313,7 @@ package body Homotopy_Series_Readers is
       Ask_Yes_or_No(ans);
       if ans /= 'y' then
         nbequ := target'last;
-        QuadDobl_Homotopy.Create(target.all,start.all,tpow,gamma);
+        QuadDobl_Homotopy.Create(target.all,start.all,1,gamma); -- tpow,gamma);
       else
         declare
           jrbtarget : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
@@ -324,7 +324,7 @@ package body Homotopy_Series_Readers is
                   := Jacobian_Rabinowitsch(sols);
         begin
           nbequ := jrbtarget'last;
-          QuadDobl_Homotopy.Create(jrbtarget,jrbstart,tpow,gamma);
+          QuadDobl_Homotopy.Create(jrbtarget,jrbstart,1,gamma); -- tpow,gamma);
           QuadDobl_Complex_Solutions.Deep_Clear(sols);
           sols := jrbsols;
         end;
@@ -335,40 +335,43 @@ package body Homotopy_Series_Readers is
   procedure Standard_Reader
               ( nbequ : out integer32;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                tpow : in natural32 := 2;
+               -- tpow : in natural32 := 2;
                 homcrd,rabin : in boolean := false ) is
 
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
 
   begin
-    Standard_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
+   -- Standard_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
+    Standard_Reader(nbequ,sols,gamma,homcrd,rabin);
   end Standard_Reader;
 
   procedure DoblDobl_Reader
               ( nbequ : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                tpow : in natural32 := 2;
+               -- tpow : in natural32 := 2;
                 homcrd,rabin : in boolean := false ) is
 
     gamma : constant DoblDobl_Complex_Numbers.Complex_Number
           := DoblDobl_Random_Numbers.Random1;
 
   begin
-    DoblDobl_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
+   -- DoblDobl_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
+    DoblDobl_Reader(nbequ,sols,gamma,homcrd,rabin);
   end DoblDobl_Reader;
 
   procedure QuadDobl_Reader
               ( nbequ : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                tpow : in natural32 := 2;
+               -- tpow : in natural32 := 2;
                 homcrd,rabin : in boolean := false ) is
 
     gamma : constant QuadDobl_Complex_Numbers.Complex_Number
           := QuadDobl_Random_Numbers.Random1;
 
   begin
-    QuadDobl_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
+   -- QuadDobl_Reader(nbequ,sols,tpow,gamma,homcrd,rabin);
+    QuadDobl_Reader(nbequ,sols,gamma,homcrd,rabin);
   end QuadDobl_Reader;
 
   procedure Standard_Parameter_Reader
