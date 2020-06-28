@@ -41,7 +41,8 @@ with Standard_Coefficient_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Newton_Convolutions;
-with Newton_Power_Convolutions;          use Newton_Power_Convolutions;
+with Newton_Power_Convolutions;
+with Staggered_Newton_Convolutions;
 
 procedure ts_sernewcnv is
 
@@ -53,7 +54,7 @@ procedure ts_sernewcnv is
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sol : in Standard_Complex_Solutions.Link_to_Solution;
                 deg,maxit : in integer32;
-                scale,usesvd,useqrls,lurcond : in boolean ) is
+                scale,usesvd,useqrls,lurcond,stagdeg : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method in double precision,
@@ -67,7 +68,8 @@ procedure ts_sernewcnv is
   --   scale    if scaling is needed;
   --   usesvd   for singular value decomposition;
   --   useqrls  for least squares after QR decomposition;
-  --   lurcond  lu with condition number estimate.
+  --   lurcond  lu with condition number estimate;
+  --   stagdeg  staggered in the degrees.
 
     c : constant Standard_Speelpenning_Convolutions.Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
@@ -111,24 +113,48 @@ procedure ts_sernewcnv is
       dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
       if usesvd then
-        SVD_Newton_Steps
-          (standard_output,cs,scf,dx,xd,rx,ix,maxit,nbrit,tol,absdx,fail,
-           svl,U,V,info,rcond,ewrk,wrk,scale);
+        if stagdeg then
+          Staggered_Newton_Convolutions.SVD_Newton_Steps
+            (standard_output,cs,scf,dx,xd,rx,ix,maxit,nbrit,tol,absdx,fail,
+             svl,U,V,info,rcond,ewrk,wrk,scale);
+        else
+          Newton_Power_Convolutions.SVD_Newton_Steps
+            (standard_output,cs,scf,dx,xd,rx,ix,maxit,nbrit,tol,absdx,fail,
+             svl,U,V,info,rcond,ewrk,wrk,scale);
+        end if;
         put("rcond :"); put(rcond,3); new_line;
       else
-        QR_Newton_Steps
-          (standard_output,cs,scf,dx,xd,rx,ix,maxit,nbrit,tol,absdx,fail,
-           qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
+        if stagdeg then
+          Staggered_Newton_Convolutions.QR_Newton_Steps
+            (standard_output,cs,scf,dx,xd,rx,ix,maxit,nbrit,tol,absdx,fail,
+             qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
+        else
+          Newton_Power_Convolutions.QR_Newton_Steps
+            (standard_output,cs,scf,dx,xd,rx,ix,maxit,nbrit,tol,absdx,fail,
+             qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
+        end if;
       end if;
     elsif lurcond then
-      LU_Newton_Steps
-        (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
-         ipvt,wrk,scale);
+      if stagdeg then
+        Staggered_Newton_Convolutions.LU_Newton_Steps
+          (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
+           ipvt,wrk,scale);
+      else
+        Newton_Power_Convolutions.LU_Newton_Steps
+          (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
+           ipvt,wrk,scale);
+      end if;
       put("rcond :"); put(rcond,3); new_line;
     else
-      LU_Newton_Steps
-        (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,info,
-         ipvt,wrk,scale);
+      if stagdeg then
+        Staggered_Newton_Convolutions.LU_Newton_Steps
+          (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
+           info,ipvt,wrk,scale);
+      else
+        Newton_Power_Convolutions.LU_Newton_Steps
+          (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
+           info,ipvt,wrk,scale);
+      end if;
     end if;
     if fail then
       put("Failed to reach"); put(tol,3);
@@ -198,21 +224,21 @@ procedure ts_sernewcnv is
       dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
       if usesvd then
-        SVD_Newton_Steps
+        Newton_Power_Convolutions.SVD_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            svl,U,V,info,rcond,ewrk,wrk,scale);
         put("rcond :"); put(rcond,3); new_line;
       else
-        QR_Newton_Steps
+        Newton_Power_Convolutions.QR_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
     elsif lurcond then
-      LU_Newton_Steps
+      Newton_Power_Convolutions.LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond :"); put(rcond,3); new_line;
     else
-      LU_Newton_Steps
+      Newton_Power_Convolutions.LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk,scale);
     end if;
     if fail then
@@ -277,21 +303,21 @@ procedure ts_sernewcnv is
       dx := DoblDobl_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := DoblDobl_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
       if usesvd then
-        SVD_Newton_Steps
+        Newton_Power_Convolutions.SVD_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            svl,U,V,info,rcond,ewrk,wrk,scale);
         put("rcond : "); put(rcond,3); new_line;
       else
-        QR_Newton_Steps
+        Newton_Power_Convolutions.QR_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
     elsif lurcond then
-      LU_Newton_Steps
+      Newton_Power_Convolutions.LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond : "); put(rcond,3); new_line;
     else
-      LU_Newton_Steps
+      Newton_Power_Convolutions.LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk,scale);
     end if;
     if fail then
@@ -356,21 +382,21 @@ procedure ts_sernewcnv is
       dx := QuadDobl_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := QuadDobl_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
       if usesvd then
-        SVD_Newton_Steps
+        Newton_Power_Convolutions.SVD_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            svl,U,V,info,rcond,ewrk,wrk,scale);
         put("rcond : "); put(rcond,3); new_line;
       else
-        QR_Newton_Steps
+        Newton_Power_Convolutions.QR_Newton_Steps
           (standard_output,s,scf,dx,xd,maxit,nbrit,tol,absdx,fail,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       end if;
     elsif lurcond then
-      LU_Newton_Steps
+      Newton_Power_Convolutions.LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wrk,scale);
       put("rcond : "); put(rcond,3); new_line;
     else
-      LU_Newton_Steps
+      Newton_Power_Convolutions.LU_Newton_Steps
         (standard_output,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wrk,scale);
     end if;
     if fail then
@@ -441,7 +467,7 @@ procedure ts_sernewcnv is
     sol : constant Standard_Complex_Solutions.Link_to_Solution
         := Standard_Complex_Solutions.Head_Of(sols);
     maxit : integer32 := 0;
-    scale,usesvd,useqrls,needrcond : boolean := false;
+    scale,usesvd,useqrls,needrcond,staggered : boolean := false;
     overdet : constant boolean := (p'last > dim);
     ans : character;
 
@@ -449,10 +475,12 @@ procedure ts_sernewcnv is
     Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond);
     new_line;
     put("Apply coefficient convolution circuits ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    Ask_Yes_or_No(ans); 
     if ans = 'y' then
+      put("Staggered degrees ? (y/n) "); Ask_Yes_or_No(ans);
+      staggered := (ans = 'y');
       Standard_Coefficient_Run
-        (p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
+        (p,sol,deg,maxit,scale,usesvd,useqrls,needrcond,staggered);
     else
       Standard_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
     end if;

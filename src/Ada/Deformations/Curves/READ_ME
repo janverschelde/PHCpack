@@ -49,6 +49,7 @@ power_series_methods             : Newton's method on power series solutions
 ts_sersol                        : test on series and solutions
 -------------------------------------------------------------------------------
 newton_power_convolutions        : Newton on power series with convolutions
+staggered_newton_convolutions    : Newton with staggered degrees
 ts_sernewcnv                     : test on Newton power series convolutions
 -------------------------------------------------------------------------------
 series_and_homotopies            : homotopies as systems with series coeffs

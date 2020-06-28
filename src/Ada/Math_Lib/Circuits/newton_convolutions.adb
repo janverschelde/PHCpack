@@ -555,6 +555,78 @@ package body Newton_Convolutions is
     idx := v'last;
   end MaxIdx;
 
+  procedure MaxIdx ( deg : in integer32;
+                     v : in Standard_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out double_float; idx : out integer32 ) is
+
+    val : double_float;
+
+  begin
+    maxval := Max(v(v'first));
+    if maxval > tol then
+      idx := v'first-1;
+    else
+      for k in v'first+1..deg loop
+        val := Max(v(k));
+        if val < tol then
+          maxval := val;
+        else
+          idx := k-1; return;
+        end if;
+      end loop;
+    end if;
+    idx := v'last;
+  end MaxIdx;
+
+  procedure MaxIdx ( deg : in integer32;
+                     v : in DoblDobl_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out double_double; idx : out integer32 ) is
+
+    val : double_double;
+
+  begin
+    maxval := Max(v(v'first));
+    if maxval > tol then
+      idx := v'first-1;
+    else
+      for k in v'first+1..deg loop
+        val := Max(v(k));
+        if val < tol then
+          maxval := val;
+        else
+          idx := k-1; return;
+        end if;
+      end loop;
+    end if;
+    idx := v'last;
+  end MaxIdx;
+
+  procedure MaxIdx ( deg : in integer32;
+                     v : in QuadDobl_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out quad_double; idx : out integer32 ) is
+
+    val : quad_double;
+
+  begin
+    maxval := Max(v(v'first));
+    if maxval > tol then
+      idx := v'first-1;
+    else
+      for k in v'first+1..deg loop
+        val := Max(v(k));
+        if val < tol then
+          maxval := val;
+        else
+          idx := k-1; return;
+        end if;
+      end loop;
+    end if;
+    idx := v'last;
+  end MaxIdx;
+
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step

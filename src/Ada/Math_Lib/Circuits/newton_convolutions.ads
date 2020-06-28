@@ -164,6 +164,31 @@ package Newton_Convolutions is
   --   in linearized form, that is: v(k) stores all coefficients with t^k,
   --   for k in v'range.
 
+  procedure MaxIdx ( deg : in integer32;
+                     v : in Standard_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out double_float; idx : out integer32 );
+  procedure MaxIdx ( deg : in integer32;
+                     v : in DoblDobl_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out double_double; idx : out integer32 );
+  procedure MaxIdx ( deg : in integer32;
+                     v : in QuadDobl_Complex_VecVecs.VecVec;
+                     tol : in double_float;
+                     maxval : out quad_double; idx : out integer32 );
+
+  -- DESCRIPTION :
+  --   Returns in idx the highest index in v for which 
+  --   maxval = Max(v(idx)) <= tol.
+  --   If idx < v'first, then already Max(v(v'first)) > tol,
+  --   otherwise for all k from v'first to idx, Max(v(k)) <= tol.
+  --   Only coefficients with terms of degree <= deg are considered.
+
+  -- REQUIRED :
+  --   The vector v stores the updates to the coefficients of a power series
+  --   in linearized form, that is: v(k) stores all coefficients with t^k,
+  --   for k in v'range.
+
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Step

@@ -3,7 +3,8 @@ Sat 27 Jun 2020 : new package newton_coefficient_convolutions, with code
   Added Delinearize procedure to generic_speelpenning_convolutions,
   added to newton_convolutions and newton_coefficient_convolutions
   procedures with the degree as extra parameter, tested a staggered degree
-  Newton procedure in ts_fabry.
+  Newton procedure in ts_fabry.  To newton_convolutions, added procedures
+  MaxIdx for coefficient vectors of series with given degree deg.
 
 Fri 26 Jun 2020 : to the procedures in standard_coefficient_convolutions,
   added the degree as an extra parameter to make the convolutions run
