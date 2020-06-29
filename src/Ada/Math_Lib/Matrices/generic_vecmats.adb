@@ -36,4 +36,11 @@ package body Generic_VecMats is
     end if;
   end Deep_Clear;
 
+  procedure Clear ( v : in out VecMat_Array ) is
+  begin
+    for k in v'range loop
+      Deep_Clear(v(k));
+    end loop;
+  end Clear;
+
 end Generic_VecMats;

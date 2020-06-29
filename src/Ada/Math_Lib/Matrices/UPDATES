@@ -1,3 +1,5 @@
+Mon 29 Jun 2020 : added the VecMat_Array type to generic_vecmats.
+
 Tue 23 Jun 2020 : new package standard_matrix_splitters with code taken
   from the procedure ts_perfdlu.
 

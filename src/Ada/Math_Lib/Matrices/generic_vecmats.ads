@@ -15,6 +15,8 @@ package Generic_VecMats is
   type VecMat is array ( integer32 range <> ) of Link_to_Matrix;
   type Link_to_VecMat is access VecMat;
 
+  type VecMat_Array is array ( integer32 range <> ) of Link_to_VecMat;
+
   procedure Copy ( v : in VecMat; w : in out VecMat );
 
   -- DESCRIPTION :
@@ -28,7 +30,13 @@ package Generic_VecMats is
   procedure Deep_Clear ( v : in out Link_to_VecMat );
 
   -- DESCRIPTION :
-  --   A shallow clear on deallocates the pointers, whereas a deep clear
-  --   also releases the content.  By default a clear is always deep.
+  --   A shallow clear deallocates only the pointers.
+  --   A deep clear deallocates both pointers and the content.
+  --   By default a clear is always deep.
+
+  procedure Clear ( v : in out VecMat_Array );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by v.
 
 end Generic_VecMats;
