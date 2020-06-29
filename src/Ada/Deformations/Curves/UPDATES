@@ -1,3 +1,6 @@
+Mon 29 Jun 2020 : in track_path_convolutions.adb, started wall clock
+  timer after the interactions with the user, just before the track.
+
 Sun 28 Jun 2020 : modified homotopy_series_readers setting tpow to 1,
   updated test_series_predictors.adb and ts_serpade.adb.
   Added extra procedures to track_path_convolutions, for use in the

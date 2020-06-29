@@ -449,7 +449,6 @@ package body Track_Path_Convolutions is
     ans : character;
 
   begin
-    start_moment := Ada.Calendar.Clock;
     if vrb > 0
      then put_line("-> in track_path_convolutions.Standard_Main ...");
     end if;
@@ -460,6 +459,7 @@ package body Track_Path_Convolutions is
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
+    start_moment := Ada.Calendar.Clock;
     if ans = 'n' then
       Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
     else
@@ -496,7 +496,6 @@ package body Track_Path_Convolutions is
     start_moment,ended_moment : Ada.Calendar.Time;
 
   begin
-    start_moment := Ada.Calendar.Clock;
     if vrb > 0
      then put_line("-> in track_path_convolutions.DoblDobl_Main ...");
     end if;
@@ -504,6 +503,7 @@ package body Track_Path_Convolutions is
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
+    start_moment := Ada.Calendar.Clock;
     Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
     ended_moment := Ada.Calendar.Clock;
     new_line(file);
@@ -527,7 +527,6 @@ package body Track_Path_Convolutions is
     start_moment,ended_moment : Ada.Calendar.Time;
 
   begin
-    start_moment := Ada.Calendar.Clock;
     if vrb > 0
      then put_line("-> in track_path_convolutions.QuadDobl_Main ...");
     end if;
@@ -535,6 +534,7 @@ package body Track_Path_Convolutions is
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
+    start_moment := Ada.Calendar.Clock;
     Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
     ended_moment := Ada.Calendar.Clock;
     new_line(file);
