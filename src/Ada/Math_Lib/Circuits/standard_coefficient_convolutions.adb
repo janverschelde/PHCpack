@@ -132,6 +132,116 @@ package body Standard_Coefficient_Convolutions is
     return res;
   end Create;
 
+-- COPY PROCEDURES :
+
+  procedure Copy ( v_from : in Link_to_VecVecVec;
+                   v_to : out Link_to_VecVecVec ) is
+
+    use Standard_Floating_VecVecs;
+
+  begin
+    Clear(v_to);
+    if v_from /= null then
+      declare
+        pwt : VecVecVec(v_from'range);
+      begin
+        for k in v_from'range loop
+          if v_from(k) /= null then
+            declare
+              vv : Standard_Floating_VecVecs.VecVec(v_from(k)'range);
+            begin
+              Standard_Floating_VecVecs.Copy(v_from(k).all,vv);
+              pwt(k) := new Standard_Floating_VecVecs.VecVec'(vv);
+            end;
+          end if;
+        end loop;
+        v_to := new VecVecVec'(pwt);
+      end;
+    end if;
+  end Copy;
+
+  procedure Copy ( c_from : in Circuit; c_to : out Circuit ) is
+
+    use Standard_Floating_Vectors;
+
+  begin
+    Standard_Integer_VecVecs.Copy(c_from.xps,c_to.xps);
+    Standard_Integer_VecVecs.Copy(c_from.idx,c_to.idx);
+    Standard_Integer_VecVecs.Copy(c_from.fac,c_to.fac);
+    Standard_Floating_VecVecs.Copy(c_from.rcf,c_to.rcf);
+    Standard_Floating_VecVecs.Copy(c_from.icf,c_to.icf);
+    if c_from.rct /= null
+     then c_to.rct := new Standard_Floating_Vectors.Vector'(c_from.rct.all);
+    end if;
+    if c_from.ict /= null
+     then c_to.ict := new Standard_Floating_Vectors.Vector'(c_from.ict.all);
+    end if;
+    Standard_Floating_VecVecs.Copy(c_from.rfwd,c_to.rfwd);
+    Standard_Floating_VecVecs.Copy(c_from.ifwd,c_to.ifwd);
+    Standard_Floating_VecVecs.Copy(c_from.rbck,c_to.rbck);
+    Standard_Floating_VecVecs.Copy(c_from.ibck,c_to.ibck);
+    Standard_Floating_VecVecs.Copy(c_from.rcrs,c_to.rcrs);
+    Standard_Floating_VecVecs.Copy(c_from.icrs,c_to.icrs);
+    if c_from.rwrk /= null
+     then c_to.rwrk := new Standard_Floating_Vectors.Vector'(c_from.rwrk.all);
+    end if;
+    if c_from.iwrk /= null
+     then c_to.iwrk := new Standard_Floating_Vectors.Vector'(c_from.iwrk.all);
+    end if;
+    if c_from.racc /= null
+     then c_to.racc := new Standard_Floating_Vectors.Vector'(c_from.racc.all);
+    end if;
+    if c_from.iacc /= null
+     then c_to.iacc := new Standard_Floating_Vectors.Vector'(c_from.iacc.all);
+    end if;
+  end Copy;
+
+  procedure Copy ( c_from : in Link_to_Circuit; c_to : out Link_to_Circuit ) is
+  begin
+    Clear(c_to); -- if c_from = null, then c_to becomes null as well
+    if c_from /= null then
+      declare
+        crc : Circuit(c_from.nbr,c_from.dim,c_from.dim1,c_from.dim2);
+      begin
+        Copy(c_from.all,crc);
+        c_to := new Circuit'(crc);
+      end;
+    end if;
+  end Copy;
+
+  procedure Copy ( c_from : in Circuits; c_to : out Circuits ) is
+  begin
+    for k in c_from'range loop
+      Copy(c_from(k),c_to(k));
+    end loop;
+  end Copy;
+
+  procedure Copy ( s_from : in System; s_to : out System ) is
+  begin
+    Copy(s_from.crc,s_to.crc);
+    s_to.mxe := s_from.mxe;
+    Copy(s_from.rpwt,s_to.rpwt);
+    Copy(s_from.ipwt,s_to.ipwt);
+    Standard_Floating_VecVecs.Copy(s_from.ryd,s_to.ryd);
+    Standard_Floating_VecVecs.Copy(s_from.iyd,s_to.iyd);
+    Standard_Complex_VecVecs.Copy(s_from.vy,s_to.vy);
+    Standard_Complex_VecVecs.Copy(s_from.yv,s_to.yv);
+    Standard_Complex_VecMats.Copy(s_from.vm,s_to.vm);
+  end Copy;
+
+  procedure Copy ( s_from : in Link_to_System; s_to : out Link_to_System ) is
+  begin
+    Clear(s_to);
+    if s_from /= null then
+      declare
+        s : System(s_from.neq,s_from.neq1,s_from.dim,s_from.dim1,s_from.deg);
+      begin
+        Copy(s_from.all,s);
+        s_to := new System'(s);
+      end;
+    end if;
+  end Copy;
+
 -- BASIC COMPUTATIONAL PROCEDURES :
 
   procedure Update ( rvl,ivl : in Standard_Floating_Vectors.Link_to_Vector;

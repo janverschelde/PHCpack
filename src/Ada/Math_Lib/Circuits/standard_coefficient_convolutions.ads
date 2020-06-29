@@ -139,6 +139,53 @@ package Standard_Coefficient_Convolutions is
   --   contains the values for the exponent maxima in mxe, and
   --   has allocated space for rpwt, ipwt, ryd, iyd, vy, yv, and vm.
 
+-- COPY PROCEDURES :
+
+  procedure Copy ( v_from : in Link_to_VecVecVec;
+                   v_to : out Link_to_VecVecVec );
+
+  -- DESCRIPTION :
+  --   Copies the v_from to the v_to,
+  --   after the deallocation of v_to.
+
+  procedure Copy ( c_from : in Circuit; c_to : out Circuit );
+
+  -- DESCRIPTION :
+  --   Copies the circuit c_from to the circuit c_to.
+
+  -- REQUIRED :
+  --   c_from.nbr = c_to.nbr, c_from.dim = c_to.dim,
+  --   c_from.dim1 = c_to.dim1, and c_from.dim2 = c_to.dim2.
+
+  procedure Copy ( c_from : in Link_to_Circuit; c_to : out Link_to_Circuit );
+
+  -- DESCRIPTION :
+  --   Copies the circuit c_from to the circuit c_to.
+  --   Deallocates c_to before the copy.
+
+  procedure Copy ( c_from : in Circuits; c_to : out Circuits );
+
+  -- DESCRIPTION :
+  --   Copies all circuits from c_from to c_to.
+
+  -- REQUIRED : c_from'range = c_to'range.
+
+  procedure Copy ( s_from : in System; s_to : out System );
+
+  -- DESCRIPTION :
+  --   Copies the system s_from to the system s_to.
+
+  -- REQUIRED :
+  --   s_from.neq = s_to.neq, s_from.neq1 = s_to.neq1,
+  --   s_from.dim = s_to.dim, s_from.dim1 = s_to.dim1, and
+  --   s_from.deg = s_to.deg.
+
+  procedure Copy ( s_from : in Link_to_System; s_to : out Link_to_System );
+
+  -- DESCRIPTION :
+  --   Copies the system s_from to the system s_to.
+  --   The system s_to is deallocated before the copy.
+
 -- BASIC COMPUTATIONAL PROCEDURES :
 
   procedure Update ( rvl,ivl : in Standard_Floating_Vectors.Link_to_Vector;

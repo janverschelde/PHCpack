@@ -1,3 +1,5 @@
+Sun 28 Jun 2020 : added copy procedures to standard_coefficient_convolutions.
+
 Sat 27 Jun 2020 : new package newton_coefficient_convolutions, with code
   taken from newton_convolutions, updated ts_fabry.
   Added Delinearize procedure to generic_speelpenning_convolutions,
