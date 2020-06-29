@@ -185,6 +185,7 @@ package body Standard_Coefficient_Circuits is
 
   begin
     res := Create(crc,s.dim);
+    Allocate_Hessian_Space(res);
     return res;
   end Copy;
 
