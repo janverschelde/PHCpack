@@ -1230,6 +1230,40 @@ int copy_multprec_container_to_start_solutions ( void );
  *   Copies solutions in container to start solutions,
  *   in quad double precision. */
 
+int standard_condition_report
+      ( int maxit, double tolres, double tolerr, double tolsing,
+        int nbc, char *name, int *cntfail, int *cntreal, int *cntcmplx,
+        int *cntregu, int *cntsing, int *cntclus,
+        int *t_err, int *t_rco, int *t_res, int verbose );
+/*
+ * DESCRIPTION :
+ *   Computes a condition report on the system and solutions
+ *   in the containers in standard double precision.
+ *
+ * ON ENTRY :
+ *   max        maximum number of iterations per solution;
+ *   tolres     tolerance on the residual;
+ *   tolerr     tolerance on the forward error;
+ *   tolsing    tolerance on the inverse condition number for singularity;
+ *   nbc        number of characters in the filename,
+ *              0 if no output to file;
+ *   name       characters for the output file name;
+ *   t_err      space for 16 integers;
+ *   t_rco      space for 16 integers;
+ *   t_res      space for 16 integers;
+ *   verbose    1 if verbose, 0 if not.
+ * 
+ * ON RETURN :
+ *   cntfail    the number of failures;
+ *   cntreal    the number of real solutions;
+ *   cntcmplx   the number of nonreal solutions;
+ *   cntregu    the number of regular solutions;
+ *   cntsing    the number of singular solutions;
+ *   cntclus    the number of clustered solutions;
+ *   t_err      frequency table for the forward errors;
+ *   t_rco      frequency table for the inverse condition numbers;
+ *   t_res      frequency table for the residuals. */
+
 /* OPERATIONS on data in the containers : */
 
 int validate_solutions ( void );

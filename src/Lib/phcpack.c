@@ -1707,6 +1707,66 @@ int copy_multprec_container_to_start_solutions ( void )
    return fail;
 }
 
+int standard_condition_report
+      ( int maxit, double tolres, double tolerr, double tolsing,
+        int nbc, char *name, int *cntfail, int *cntreal, int *cntcmplx,
+        int *cntregu, int *cntsing, int *cntclus,
+        int *t_err, int *t_rco, int *t_res, int verbose )
+{
+   int fail,idx;
+   int a[6];
+   double c[3];
+
+   a[0] = maxit; a[1] = verbose; a[2] = nbc;
+   c[0] = tolres; c[1] = tolerr; c[2] = tolsing;
+
+   if(nbc == 0)
+   {
+      int b[48];
+
+      fail = _ada_use_c2phc4c(920,a,b,c);
+
+      idx = 0;
+      for(int i=0; i<16; i++) t_err[i] = b[idx++];
+      for(int i=0; i<16; i++) t_rco[i] = b[idx++];
+      for(int i=0; i<16; i++) t_res[i] = b[idx++];
+   }
+   else if(nbc > 48)
+   {
+      int b[nbc];
+
+      for(int i=0; i<nbc; i++) b[i] = (int) name[i];
+
+      fail = _ada_use_c2phc4c(920,a,b,c);
+
+      idx = 0;
+      for(int i=0; i<16; i++) t_err[i] = b[idx++];
+      for(int i=0; i<16; i++) t_rco[i] = b[idx++];
+      for(int i=0; i<16; i++) t_res[i] = b[idx++];
+   }
+   else
+   {
+      int b[48];
+
+      for(int i=0; i<nbc; i++) b[i] = (int) name[i];
+
+      fail = _ada_use_c2phc4c(920,a,b,c);
+
+      idx = 0;
+      for(int i=0; i<16; i++) t_err[i] = b[idx++];
+      for(int i=0; i<16; i++) t_rco[i] = b[idx++];
+      for(int i=0; i<16; i++) t_res[i] = b[idx++];
+   }
+   *cntfail = a[0];
+   *cntreal = a[1];
+   *cntcmplx = a[2];
+   *cntregu = a[3];
+   *cntsing = a[4];
+   *cntclus = a[5];
+
+   return fail;
+}
+
 /* OPERATIONS on data in the containers : */
 
 int validate_solutions ( void )
