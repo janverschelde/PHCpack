@@ -3094,6 +3094,26 @@ lib_solcon_cpp:
 	gnatlink -C use_c2phc4c solcon.o lib_solcon.o \
                  -o $(BIN)/lib_solcon --LINK=$(gpp)
 
+lib_solrep:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/lib_solrep.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack.o lib_solrep.o \
+                 -o $(BIN)/lib_solrep
+
+lib_solrep_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
+	$(gpp) -Dcompilewgpp=1  -c $(PHCLib)/syscon.c
+	$(gpp) -Dcompilewgpp=1  -c $(PHCLib)/solcon.c
+	$(gpp) -Dcompilewgpp=1  -c $(PHCLib)/phcpack.c
+	$(gpp) -Dcompilewgpp=1 -c $(PHCLib)/lib_solrep.c
+	gnatbind -n use_c2phc4c
+	gnatlink -C use_c2phc4c syscon.o solcon.o phcpack.o lib_solrep.o \
+                 -o $(BIN)/lib_solrep --LINK=$(gpp)
+
 lib_read:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc4c.adb
 	gcc -c $(PHCLib)/phcpack.c
