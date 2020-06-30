@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.73
+PHCpack as a library of C functions with a state machine in PHCv2.4.78
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -40,6 +40,7 @@ syspool.c            : definitions of functions in syspool.h
 solcon.h             : prototypes for solutions container
 solcon.c             : definitions of functions in solcon.h
 lib_solcon.c         : test on operations in solutions container
+lib_solrep.c         : test on condition report in double precision
 lib_read.c           : reading and writing a polynomial system
 lib_newton.c         : validation of solutions by Newton's method
 lib_conpar.c         : test on tuning the continuation parameters
