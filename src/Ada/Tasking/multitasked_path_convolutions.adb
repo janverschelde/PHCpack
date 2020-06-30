@@ -755,9 +755,13 @@ package body Multitasked_Path_Convolutions is
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     new_line;
     put("Give the number of tasks : "); get(nbt); skip_line;
-    new_line;
-    put("Running with coefficient convolution circuits ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    if mhom > 0 then
+      ans := 'n'; -- no support for homogeneous coefficient circuits yet
+    else
+      new_line;
+      put("Running with coefficient convolution circuits ? (y/n) ");
+      Ask_Yes_or_No(ans);
+    end if;
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);

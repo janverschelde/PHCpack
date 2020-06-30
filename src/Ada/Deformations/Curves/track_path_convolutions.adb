@@ -453,9 +453,13 @@ package body Track_Path_Convolutions is
      then put_line("-> in track_path_convolutions.Standard_Main ...");
     end if;
     Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
-    new_line;
-    put("Running with coefficient convolution circuits ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    if mhom > 0 then
+      ans := 'n'; -- homogenization not yet supported on coefficient conv
+    else
+      new_line;
+      put("Running with coefficient convolution circuits ? (y/n) ");
+      Ask_Yes_or_No(ans);
+    end if;
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
