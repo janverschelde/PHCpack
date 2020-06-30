@@ -1,3 +1,6 @@
+Tue 30 Jun 2020 : extended job_handlers and use_c2phc4c with a job
+  to compute a condition report in double precision.
+
 Wed 24 Jun 2020 : moved definition of jobs for mixed volume and stable 
   mixed volume from use_c2phc4c.adb to job_handlers.
 

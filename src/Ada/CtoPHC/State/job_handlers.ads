@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
+with C_Double_Arrays;                   use C_Double_Arrays;
 
 package Job_Handlers is
 
@@ -124,7 +125,7 @@ package Job_Handlers is
   --   where b is the root counter output string.
 
   function Mixed_Volume
-             ( a : C_intarrs.Pointer; vrblvl : integer := 0 )
+             ( a : C_intarrs.Pointer; vrblvl : integer32 := 0 )
              return integer32;
 
   -- DESCRIPTION :
@@ -137,7 +138,7 @@ package Job_Handlers is
   --   The mixed cells are in the cells container.
 
   function Stable_Mixed_Volume
-             ( a,b : C_intarrs.Pointer; vrblvl : integer := 0 )
+             ( a,b : C_intarrs.Pointer; vrblvl : integer32 := 0 )
              return integer32;
 
   -- DESCRIPTION :
@@ -147,5 +148,40 @@ package Job_Handlers is
   --   On return in a[0] is the mixed volume
   --   and in b[0] is the stable mixed volume.
   --   The mixed cells are in the cells container.
+
+  function Standard_Condition_Report
+             ( a,b : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   For the system and solutions in the containers for double precision,
+  --   computes a condition report.
+
+  -- REQUIRED :
+  --   a holds space for 6 integers;
+  --   b has space for at least 48 integers;
+  --   c has space for three doubles.
+
+  -- ON ENTRY :
+  --   a[0]    the maximum number of Newton iterations per solution;
+  --   a[1]    verbose flag: 1 if verbose, 0 if not;
+  --   a[2]    number of characters in the string for the file,
+  --           for the optional output to file (0 if no file);
+  --   b       contains as many characters as the value of a[2]
+  --           to the define the name of the output file;
+  --   c[0]    tolerance on the residual;
+  --   c[1]    tolerance on the forward error;
+  --   c[2]    tolerance on the inverse condition number for singularity.
+
+  -- ON RETURN :
+  --   a[0]    the number of failures;
+  --   a[1]    the number of real solutions;
+  --   a[2]    the number of nonreal solutions;
+  --   a[3]    the number of regular solutions;
+  --   a[4]    the number of singular solutions;
+  --   a[5]    the number of clustered solutions;
+  --   b[0..15] is the frequency table with forward errors;
+  --   b[16..31] is the frequency table with condition numbers;
+  --   b[32..47] is the frequency table with residuals.
 
 end Job_Handlers;

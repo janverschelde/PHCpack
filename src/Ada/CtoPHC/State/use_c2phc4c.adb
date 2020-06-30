@@ -2059,6 +2059,7 @@ function use_c2phc4c ( job : integer32;
       when 897 => return use_syscon(job,a,b,c);
      -- reading solutions from file with given name
       when 916..918 => return use_solcon(job,a,b,c);
+      when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c);
      -- getting, setting the seed and the version string
       when 997 => return Job_Handlers.Get_Seed(a);
       when 998 => return Job_Handlers.Set_Seed(a);

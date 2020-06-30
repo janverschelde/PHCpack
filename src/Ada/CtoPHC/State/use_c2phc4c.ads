@@ -3094,6 +3094,25 @@ function use_c2phc4c ( job : integer32;
 --                 into affine coordinates, dividing coordinates by the
 --                 value of their corresponding homogeneous coordinate.
 --
+-- CONDITION REPORT :
+--
+--   job   = 920 : computes a job report for the system and solutions in
+--                 the containers in double precision, on entry in 
+--                   a[0] : the number of maximum Newton steps per solution;
+--                   a[1] : value of the verbose flag;
+--                   a[2] : number of characters in the output file name;
+--                 and a contains space for 3 more output numbers,
+--                 in b is the name of the output file if a[2] > 0
+--                 and b contains the output for 48 integers, and
+--                   c[0] : tolerance on the forward error,
+--                   c[1] : tolerance on the residual,
+--                   c[2] : tolerance on inverse condition number;
+--                 on return are the counts for failures, real, complex,
+--                 regular, singular, and clustered solutions, respectively
+--                 in a[0], a[1], a[2], a[3], a[4], and a[5], and in
+--                 b are the 48 integers for the frequency tables for
+--                 the forward erors, condition numbers, and residuals.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   or job not in the right range.
