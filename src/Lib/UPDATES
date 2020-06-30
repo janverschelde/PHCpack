@@ -1,5 +1,5 @@
 Fri 30 Jun 2020 : new file lib_solrep.c to test the condition report,
-  added to phcpack.
+  added to phcpack.  Bug fix in lib_solcon.c.
 
 Thu 3 Oct 2019 : update in padcon.c for an out of bound index.
 

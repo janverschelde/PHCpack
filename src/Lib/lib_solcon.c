@@ -451,7 +451,7 @@ void test_standard_container ( void )
    else if(option == 4)
       parse_solution_strings();
    else
-      printf("%d is wrong choice.  Please try again...\n");
+      printf("%d is wrong choice.  Please try again...\n", option);
 }
 
 void test_dobldobl_container ( void )
