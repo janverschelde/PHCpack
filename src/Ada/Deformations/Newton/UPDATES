@@ -1,3 +1,6 @@
+Tue 30 Jun 2020 : toggled off the verbose mode when making a circuit from
+  a polynomial system in standard_newton_refiners.adb.
+
 Wed 24 Jun 2020 : new package standard_inlined_newton_circuits with
   inlined linear solving, tested in ts_newcirc; added Inlined_Run
   procedures to standard_refiner_circuits.

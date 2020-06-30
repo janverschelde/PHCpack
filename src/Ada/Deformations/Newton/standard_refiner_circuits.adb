@@ -595,7 +595,7 @@ package body Standard_Refiner_Circuits is
       new_line;
       put("Read system of "); put(nbq,1); put(" polynomials and ");
       put(len,1); put(" solutions in dimension "); put(dim,1); put_line(".");
-      s := Standard_Circuit_Makers.Make_Coefficient_System(p);
+      s := Standard_Circuit_Makers.Make_Coefficient_System(p,false);
       new_line;
       put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
       if ans = 'n' then
@@ -641,7 +641,7 @@ package body Standard_Refiner_Circuits is
         new_line;
         put("Read system of "); put(nbq,1); put(" polynomials and ");
         put(len,1); put(" solutions in dimension "); put(dim,1); put_line(".");
-        s := Standard_Circuit_Makers.Make_Coefficient_System(p);
+        s := Standard_Circuit_Makers.Make_Coefficient_System(p,false);
         if outfilename = "" then
           new_line;
           put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
