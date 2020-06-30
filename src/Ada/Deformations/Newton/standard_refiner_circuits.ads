@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Coefficient_Circuits;      use Standard_Coefficient_Circuits;
 
@@ -56,6 +57,68 @@ package Standard_Refiner_Circuits is
   --   res      residual;
   --   wgt      weight of the coordinates;
   --   tolsing  tolerance to decide whether a solution is singular.
+
+  procedure Run ( s : in Link_to_System; sols : in Solution_List;
+                  maxit : in natural32;
+                  tolres,tolerr,tolsing : in double_float;
+                  cntfail,cntreal,cntcmplx : out natural32;
+                  cntregu,cntsing,cntclus : out natural32;
+                  t_err,t_rco,t_res : out Standard_Natural_Vectors.Vector;
+                  verbose : in boolean; vrb : in integer32 := 0 );
+  procedure Run ( file : in file_type;
+                  s : in Link_to_System; sols : in Solution_List;
+                  maxit : in natural32;
+                  tolres,tolerr,tolsing : in double_float;
+                  cntfail,cntreal,cntcmplx : out natural32;
+                  cntregu,cntsing,cntclus : out natural32;
+                  t_err,t_rco,t_res : out Standard_Natural_Vectors.Vector;
+                  verbose : in boolean; vrb : in integer32 := 0 );
+  procedure Inlined_Run
+                ( s : in Link_to_System; sols : in Solution_List;
+                  maxit : in natural32;
+                  tolres,tolerr,tolsing : in double_float;
+                  cntfail,cntreal,cntcmplx : out natural32;
+                  cntregu,cntsing,cntclus : out natural32;
+                  t_err,t_rco,t_res : out Standard_Natural_Vectors.Vector;
+                  verbose : in boolean; vrb : in integer32 := 0 );
+  procedure Inlined_Run
+                ( file : in file_type;
+                  s : in Link_to_System; sols : in Solution_List;
+                  maxit : in natural32;
+                  tolres,tolerr,tolsing : in double_float;
+                  cntfail,cntreal,cntcmplx : out natural32;
+                  cntregu,cntsing,cntclus : out natural32;
+                  t_err,t_rco,t_res : out Standard_Natural_Vectors.Vector;
+                  verbose : in boolean; vrb : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Runs the Newton verification on s and the solutions in sols.
+  --   The Inlined_Run uses inlined linear algebra solving.
+
+  -- ON ENTRY :
+  --   file       (optional) to write all output to file;
+  --   s          a system of circuits;
+  --   sols       approximate solutions;
+  --   maxit      maximum number of Newton steps;
+  --   tolres     tolerance on the residual;
+  --   tolerr     tolerance on the forward error;
+  --   tolsing    tolerance on the inverse condition number.
+  --   t_err      vector of range 0..15;
+  --   t_rco      vector of range 0..15;
+  --   t_res      vector of range 0..15;
+  --   verbose    if true, then one linear is written for every solution;
+  --   vrb        the verbose level.
+
+  -- ON RETURN :
+  --   cntfail    the number of failures;
+  --   cntreal    the number of real solutions;
+  --   cntcmplx   the number of nonreal solutions;
+  --   cntregu    the number of regular solutions;
+  --   cntsing    the number of singular solutions;
+  --   cntclus    the number of clustered solutions;
+  --   t_err      frequency table with forward errors;
+  --   t_rco      frequency table with condition numbers;
+  --   t_res      frequency table with residuals.
 
   procedure Run ( s : in Link_to_System; sols : in Solution_List;
                   vrb : in integer32 := 0 );
