@@ -592,26 +592,51 @@ package body Option_Handlers is
     prc : constant natural32
         := Actions_and_Options.Scan_Precision(args,'u');
     vrblvl : constant integer32 := Actions_and_Options.Verbose_Level(args);
+    nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
 
   begin
     if hpos1 >= integer32(opts'first) or hpos2 >= integer32(opts'first) then
       Greeting_Banners.help4series;
     else
       put_line(welcome);
-      case prc is
-        when 1 =>
-          put_line(seriesban & ", in double precision.");
-          mainseries('1',infile,outfile,vrblvl);
-        when 2 =>
-          put_line(seriesban & ", with double doubles.");
-          mainseries('2',infile,outfile,vrblvl);
-        when 4 =>
-          put_line(seriesban & ", with quad doubles.");
-          mainseries('4',infile,outfile,vrblvl);
-        when others =>
-          put_line(seriesban & ".");
-          mainseries('0',infile,outfile,vrblvl);
-      end case;
+      if nt = 0 then
+        case prc is
+          when 1 =>
+            put_line(seriesban & ", in double precision.");
+            mainseries(0,'1',infile,outfile,vrblvl);
+          when 2 =>
+            put_line(seriesban & ", in double double precision.");
+            mainseries(0,'2',infile,outfile,vrblvl);
+          when 4 =>
+            put_line(seriesban & ", in quad double precision.");
+            mainseries(0,'4',infile,outfile,vrblvl);
+          when others =>
+            put_line(seriesban & ".");
+            mainseries(0,'0',infile,outfile,vrblvl);
+        end case;
+      else
+        declare
+          ns : constant string := Convert(integer32(nt));
+        begin
+          case prc is
+            when 1 =>
+              put(seriesban & ", in double precision");
+              put_line(", with " & ns & " tasks.");
+              mainseries(nt,'1',infile,outfile,vrblvl);
+            when 2 =>
+              put(seriesban & ", in double double precision");
+              put_line(", with " & ns & " tasks.");
+              mainseries(nt,'2',infile,outfile,vrblvl);
+            when 4 =>
+              put(seriesban & ", in quad double precision");
+              put_line(", with " & ns & " tasks.");
+              mainseries(nt,'4',infile,outfile,vrblvl);
+            when others =>
+              put_line(seriesban & ", with " & ns & " tasks.");
+              mainseries(nt,'0',infile,outfile,vrblvl);
+          end case;
+        end;
+      end if;
     end if;
   end Series_Handler;
 

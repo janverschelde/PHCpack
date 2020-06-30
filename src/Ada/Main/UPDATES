@@ -1,3 +1,7 @@
+Tue 30 Jun 2020 : updated banner for phc -u in greeting_banners.ads.
+  Updated greeting_banners for version 2.4.77.
+  Adjusted option_handlers.adb for the number of tasks in mainseries.
+
 Fri 12 Jun 2020 : updated greeting_banners for version 2.4.77.
 
 Thu 11 Jun 2020 : added verbose level to mainvali.adb, and to the

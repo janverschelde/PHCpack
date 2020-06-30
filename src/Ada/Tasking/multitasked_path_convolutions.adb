@@ -2,7 +2,6 @@ with Ada.Calendar;
 with Communications_with_User;           use Communications_with_User;
 with Time_Stamps;                        use Time_Stamps;
 with Write_Seed_Number;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -735,7 +734,7 @@ package body Multitasked_Path_Convolutions is
     Time_Stamps.Write_Elapsed_Time(file,startmoment,stopmoment);
   end Track;
 
-  procedure Standard_Main ( vrb : in integer32 := 0 ) is
+  procedure Standard_Main ( nt : in natural32; vrb : in integer32 := 0 ) is
 
     sols : Standard_Complex_Solutions.Solution_List;
     cnvhom,abshom : Standard_Speelpenning_Convolutions.Link_to_System;
@@ -753,8 +752,12 @@ package body Multitasked_Path_Convolutions is
      then put_line("-> in track_path_convolutions.Standard_Main ...");
     end if;
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
-    new_line;
-    put("Give the number of tasks : "); get(nbt); skip_line;
+    if nt > 0 then
+      nbt := integer32(nt);
+    else
+      new_line;
+      put("Give the number of tasks : "); get(nbt); skip_line;
+    end if;
     if mhom > 0 then
       ans := 'n'; -- no support for homogeneous coefficient circuits yet
     else
@@ -790,7 +793,7 @@ package body Multitasked_Path_Convolutions is
     put_line(file,Greeting_Banners.Version);
   end Standard_Main;
 
-  procedure DoblDobl_Main ( vrb : in integer32 := 0 ) is
+  procedure DoblDobl_Main ( nt : in natural32; vrb : in integer32 := 0 ) is
 
     sols : DoblDobl_Complex_Solutions.Solution_List;
     cnvhom,abshom : DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -808,8 +811,12 @@ package body Multitasked_Path_Convolutions is
      then put_line("-> in track_path_convolutions.DoblDobl_Main ...");
     end if;
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
-    new_line;
-    put("Give the number of tasks : "); get(nbt); skip_line;
+    if nt > 0 then
+      nbt := integer32(nt);
+    else
+      new_line;
+      put("Give the number of tasks : "); get(nbt); skip_line;
+    end if;
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
@@ -824,7 +831,7 @@ package body Multitasked_Path_Convolutions is
     put_line(file,Greeting_Banners.Version);
   end DoblDobl_Main;
 
-  procedure QuadDobl_Main ( vrb : in integer32 := 0 ) is
+  procedure QuadDobl_Main ( nt : in natural32; vrb : in integer32 := 0 ) is
 
     sols : QuadDobl_Complex_Solutions.Solution_List;
     cnvhom,abshom : QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -842,8 +849,12 @@ package body Multitasked_Path_Convolutions is
      then put_line("-> in track_path_convolutions.QuadDobl_Main ...");
     end if;
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
-    new_line;
-    put("Give the number of tasks : "); get(nbt); skip_line;
+    if nt > 0 then
+      nbt := integer32(nt);
+    else
+      new_line;
+      put("Give the number of tasks : "); get(nbt); skip_line;
+    end if;
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);

@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_VecVecs;
@@ -212,14 +213,16 @@ package Multitasked_Path_Convolutions is
   -- ON RETURN :
   --   sols     solutions at the end of the path.
 
-  procedure Standard_Main ( vrb : in integer32 := 0 );
-  procedure DoblDobl_Main ( vrb : in integer32 := 0 );
-  procedure QuadDobl_Main ( vrb : in integer32 := 0 );
+  procedure Standard_Main ( nt : in natural32; vrb : in integer32 := 0 );
+  procedure DoblDobl_Main ( nt : in natural32; vrb : in integer32 := 0 );
+  procedure QuadDobl_Main ( nt : in natural32; vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for a homotopy, setting of the parameters,
-  --   tolerances, and the number of tasks.  Then launches the trackers
-  --   in standard double, double double, or quad double precision.
+  --   tolerances, and the number of tasks, if nt = 0.
+  --   If nt > 0, then nt will be the number of tasks.
+  --   Then launches the trackers in standard double, double double, 
+  --   or quad double precision.
   --   The verbose level is given in vrb.
 
 end Multitasked_Path_Convolutions;

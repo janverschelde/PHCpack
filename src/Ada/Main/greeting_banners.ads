@@ -5,7 +5,7 @@ package Greeting_Banners is
 --   Exports the version string.
 
   welcome : constant string :=
-    "Welcome to PHC (Polynomial Homotopy Continuation) v2.4.77 12 Jun 2020";
+    "Welcome to PHC (Polynomial Homotopy Continuation) v2.4.78 30 Jun 2020";
 
   compban : constant string :=
     "a numerical irreducible decomposition for solution sets";
@@ -53,7 +53,7 @@ package Greeting_Banners is
     "Tracking Solution Paths with Algorithmic Differentiation Methods.";
 
   seriesban : constant string :=
-    "Power Series, Pade Approximants for Path Tracking";
+    "Power Series, Pade Approximants";
 
   veriban : constant string :=
     "Verification, refinement and purification of computed solution lists.";

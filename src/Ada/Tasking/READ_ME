@@ -1,4 +1,4 @@
-Multitasking linear algebra, evaluation and path tracking in PHCv2.4.77
+Multitasking linear algebra, evaluation and path tracking in PHCv2.4.78
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
