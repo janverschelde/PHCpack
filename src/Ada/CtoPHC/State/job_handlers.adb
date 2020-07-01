@@ -789,6 +789,7 @@ package body Job_Handlers is
         new_line(file);
         print_times(file,timer,"Newton with condition table report");
         Standard_Coefficient_Circuits.Clear(s);
+        close(file);
       end;
     end if;
     idx := 0;
