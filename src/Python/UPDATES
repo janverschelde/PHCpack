@@ -1,5 +1,5 @@
 Wed 1 Jul 2020 : added a function to the solver module to compute a
-  condition report in double precision.
+  condition report in double precision.  Updated files for version 1.0.5.
 
 Fri 12 Jun 2020 : added the computation of condition tables to the
   solution modules of the python2 and python3 versions.

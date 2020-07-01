@@ -1,4 +1,4 @@
-phcpy 1.0.4 offers a simple Python interface to PHCv2.4.77
+phcpy 1.0.5 offers a simple Python interface to PHCv2.4.78
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -37,6 +37,12 @@ The package phcpy is defined in the directory PHCpy.
 The directory PHCpy3 contains the version of phcpy for Python 3.5+.
 The directory Jupyter contains an extension of the Jupyter notebook,
 which defines the menus for using phcpy in SageMath and python.
+The use of phcpy on a server hosted by JupyterHub was defined in
+collaboration with Jasmine Otto, and presented at SciPy 2019,
+described in the paper by Jasmine Otto, Angus Forbes, and Jan Verschelde:
+"Solving Polynomial Systems with phcpy", in the Proceedings of the
+18th Python in Science Conference (SciPy 2019), edited by Chris Calloway,
+David Lippa, Dillon Niederhut, and David Shupe, pages 58-64, 2019.
 
 Version 1.0.1 of phcpy started to provide an object oriented interface,
 with classes Solution and Polynomials, to respectively represent a
@@ -73,6 +79,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+1.0.5 : 2020-07-01 : function in solver module for condition report 
 1.0.4 : 2020-06-12 : condition tables in the solutions module
 1.0.3 : 2020-04-29 : bug fix in sweepers module
 1.0.2 : 2019-10-21 : improved documentation
