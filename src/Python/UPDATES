@@ -1,3 +1,6 @@
+Wed 1 Jul 2020 : added a function to the solver module to compute a
+  condition report in double precision.
+
 Fri 12 Jun 2020 : added the computation of condition tables to the
   solution modules of the python2 and python3 versions.
   Updated __init__.py, setup.py, and conf.py for version 1.0.4.

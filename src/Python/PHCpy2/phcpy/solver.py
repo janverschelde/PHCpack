@@ -695,6 +695,47 @@ def quaddobl_multiplicity(system, solution, \
         print 'The multiplicity :', mlt
     return mlt
 
+def standard_condition_report(infilename, outfilename, \
+    maxit=4, tolres=1.0e-8, tolerr=1.0e-8, tolsing=1.0e-8, verbose=True):
+    """
+    Computes a condition report for the system and the solutions on
+    the file with name infile, in double precision.
+    This report is intended for huge solution lists and the solutions
+    are not exported into the Python session.
+    """
+    from phcpy.phcpy2c2 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c2 import py2c_read_standard_start_system_from_file
+    from phcpy.phcpy2c2 import py2c_copy_start_system_to_container
+    from phcpy.phcpy2c2 import py2c_copy_start_solutions_to_container
+    from phcpy.phcpy2c2 import py2c_standard_condition_report
+    py2c_syscon_clear_symbol_table()
+    lnf = len(infilename)
+    if verbose:
+        print 'opening ', infilename, ' ...'
+    fail = py2c_read_standard_start_system_from_file(lnf,infilename)
+    if(fail != 0):
+        print 'oops, something went wrong during reading ', infilename
+    else:
+        py2c_copy_start_system_to_container()
+        py2c_copy_start_solutions_to_container()
+        if verbose:
+            print 'computing the condition report ...'
+        res = py2c_standard_condition_report\
+            (maxit,tolres,tolerr,tolsing,outfilename,int(verbose))
+        (fail, cntregu, cntsing, cntreal, cntcmplx, cntclus, cntfail, \
+            st_err, st_res, st_rco) = res
+        print 'number of regular solutions   : ', cntregu
+        print 'number of singular solutions  : ', cntsing
+        print 'number of real solutions      : ', cntreal
+        print 'number of complex solutions   : ', cntcmplx
+        print 'number of clustered solutions : ', cntclus
+        print 'number of failures            : ', cntfail
+        print 'Frequency tables for forward errors, residuals,'
+        print 'and estimates for inverse condition numbers :'
+        print st_err
+        print st_res
+        print st_rco
+
 def total_degree(pols):
     r"""
     Given in *pols* a list of string representations of polynomials,
