@@ -1,3 +1,7 @@
+Wed 1 Jul 2020 : added new function prototype to phcpy2c.h with
+  definitions in phcpy2c2.c and phcpy2c3.c to compute a condition report,
+  for export to Python.
+
 Fri 30 Jun 2020 : new file lib_solrep.c to test the condition report,
   added to phcpack.  Bug fix in lib_solcon.c.
 

@@ -1736,6 +1736,47 @@ static PyObject *py2c_varbprec_Newton_Laurent_steps
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_standard_condition_report
+ ( PyObject *self, PyObject *args )
+{
+   int fail,maxit,verbose;
+   double tolres,tolerr,tolsing;
+   char *name;
+   int cntfail,cntreal,cntcmplx,cntregu,cntsing,cntclus,nbc;
+   int t_err[16];
+   int t_rco[16];
+   int t_res[16];
+   char st_err[256];
+   char st_rco[256];
+   char st_res[256];
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idddsi",
+      &maxit,&tolres,&tolerr,&tolsing,&name,&verbose))
+      return NULL;
+
+   nbc = strlen(name);
+
+   if(verbose == 1)
+      if(nbc == 0)
+         printf("Writing the output to screen.\n");
+      else
+         printf("Writing the output to file %s.\n", name);
+
+   fail = standard_condition_report
+            (maxit,tolres,tolerr,tolsing,nbc,name,
+             &cntfail,&cntreal,&cntcmplx,&cntregu,&cntsing,&cntclus,
+             t_err,t_rco,t_res,verbose);
+
+   intlist2str(16, t_err, st_err);
+   intlist2str(16, t_rco, st_rco);
+   intlist2str(16, t_res, st_res);
+
+   return Py_BuildValue("(i, i, i, i, i, i, i, s, s, s)", fail,
+                        cntregu, cntsing, cntreal, cntcmplx, cntclus, cntfail,
+                        st_err, st_res, st_rco);
+}
+
 /* The wrapping of the functions in unisolvers.h starts from here */
 
 static PyObject *py2c_usolve_standard
@@ -10204,6 +10245,9 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_varbprec_Newton_Laurent_steps", py2c_varbprec_Newton_Laurent_steps,
      METH_VARARGS,
     "Applies Newton's method in variable precision.\n There are six input parameters:\n 1) the dimension: the number of variables and equations;\n 2) the accuracy, expressed as the correct number of decimal places;\n 3) the maximum number of iterations in Newton's method;\n 4) an upper bound on the number of decimal places in the precision;\n 5) a string, with the representation of the polynomials in the system.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_standard_condition_report", py2c_standard_condition_report,
+     METH_VARARGS,
+    "For the system and solutions in the containers in double precision,\n computes a condition report.  On input are the following:\n 1) maximum number of Newton iterations per solution;\n 2) tolerance on the residual;\n 3) tolerance on the forward error;\n 4) tolerance on the inverse condition number for singularities;\n 5) a string with the name of the output file,\n this string may be empty if no output to file is needed;\n 6) a verbose flag, either 1 or 0.\n On return are the counts of number of solutions that are\n regular, singular, real, complex, clustered, or failures;\n along with the frequency tables for the forward errors,\n residuals and estimates for the inverse condition numbers."},
    {"py2c_usolve_standard", py2c_usolve_standard, METH_VARARGS,
     "Applies the method of Weierstrass to compute all roots of a\n polynomial in one variable with standard double precision arithmetic.\n On input are two numbers:\n 1) the maximum number of iterations in the method of Weierstrass; and\n 2) the epsilon requirement on the accuracy of the roots.\n Before calling this function, the polynomial should be stored in\n the standard systems container.  After the call of this function,\n the standard solutions container contains the roots of the polynomial.\n On return is the number of iterations done by the solver."},
    {"py2c_usolve_dobldobl", py2c_usolve_dobldobl, METH_VARARGS,

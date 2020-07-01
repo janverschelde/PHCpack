@@ -1145,6 +1145,24 @@ static PyObject *py2c_varbprec_Newton_Laurent_steps
  *   5) a string, with the representation of the polynomials in the system.
  *   On return is the failure code, which equals zero if all went well. */
 
+static PyObject *py2c_standard_condition_report
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For the system and solutions in the containers in double precision,
+ *   computes a condition report.  On input are the following:
+ *   1) maximum number of Newton iterations per solution;
+ *   2) tolerance on the residual;
+ *   3) tolerance on the forward error;
+ *   4) tolerance on the inverse condition number for singularities;
+ *   5) a string with the name of the output file,
+ *   this string may be empty if no output to file is needed;
+ *   6) a verbose flag, either 1 or 0.
+ *   On return are the counts of number of solutions that are 
+ *   regular, singular, real, complex, clustered, or failures;
+ *   along with the frequency tables for the forward errors,
+ *   residuals and estimates for the inverse condition numbers.  */
+
 /* The wrapping of functions with prototypes in unisolvers.h starts here. */
 
 static PyObject *py2c_usolve_standard
