@@ -1755,11 +1755,12 @@ static PyObject *py2c_standard_condition_report
    nbc = strlen(name);
 
    if(verbose == 1)
+   {
       if(nbc == 0)
          printf("Writing the output to screen.\n");
       else
          printf("Writing the output to file %s.\n", name);
-
+   }
    fail = standard_condition_report
             (maxit,tolres,tolerr,tolsing,nbc,name,
              &cntfail,&cntreal,&cntcmplx,&cntregu,&cntsing,&cntclus,
