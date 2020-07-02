@@ -58,6 +58,8 @@ package Standard_Coefficient_Circuits is
     iyd : Standard_Floating_Vectors.Link_to_Vector;  -- imag part of gradient
     fx : Standard_Complex_Vectors.Vector(1..neq);    -- function value
     jm : Standard_Complex_Matrices.Matrix(1..neq,1..dim); -- Jacobian matrix
+    jrc,jic : Standard_Floating_VecVecs.Link_to_VecVec;
+   -- real and imaginary parts of the columns of the Jacobian matrix
     hrp,hip : Standard_Floating_VecVecs.Link_to_VecVec;
    -- work space for the rows of Hessians, real and imaginary parts
   end record;
@@ -86,9 +88,42 @@ package Standard_Coefficient_Circuits is
 
   -- DESCRIPTION :
   --   Given well defined circuits for dimension dim,
-  --   computes mxe and allocates space for a system.
+  --   computes mxe and allocates space for a system,
+  --   including the work space columns for the Jacobian matrix,
+  --   as they are defined also by EvalDiff.
   --   The hrp and hip work spaces are not allocated,
   --   as Hessians are optional, only used in EvalDiff2.
+
+  procedure Allocate_Jacobian_Space
+              ( neq,dim : in integer32;
+                jrc,jic : out Standard_Floating_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Allocates in jrc and jic space for the real and imaginary parts
+  --   of the complex numbers in the columns of the Jacobian matrix.
+  --   Every vector jrc(k) and jic(k) will have range 1..neq,
+  --   where neq is the number of equations = the number of rows
+  --   in the Jacobian matrix.
+  --   The number of variables or the number of columns in the
+  --   Jacobian matrix is given in the value of dim.
+
+  -- REQUIRED : jrc'range = jic'range = 1..dim.
+
+  procedure Allocate_Jacobian_Space
+              ( neq,dim : in integer32;
+                jrc,jic : out Standard_Floating_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Returns in jrc and jic two vectors or range 1..dim.
+  --   Every vector in jrc and jic has range 1..neq
+  --   and is initialized to zero.
+
+  procedure Allocate_Jacobian_Space ( s : in out System );
+  procedure Allocate_Jacobian_Space ( s : in Link_to_System );
+
+  -- DESCRIPTION :
+  --   Allocates the space for all columns of the real and imaginary parts
+  --   of the Jacobian matrix, in s.jrc and s.jic.
 
   procedure Allocate_Hessian_Space
               ( dim : in integer32;
@@ -140,7 +175,7 @@ package Standard_Coefficient_Circuits is
   -- DESCRIPTION :
   --   Returns a deep copy of the circuits in s
   --   and allocates all work space data structures,
-  --   except the data structures for the Hessians.
+  --   including the data structures for the Hessians.
 
 -- RADIUS COEFFICIENTS :
 
@@ -255,6 +290,8 @@ package Standard_Coefficient_Circuits is
                 iyd : in Standard_Floating_Vectors.Link_to_Vector;
                 rpwt : in Standard_Floating_VecVecs.VecVec;
                 ipwt : in Standard_Floating_VecVecs.VecVec;
+                jrc : in Standard_Floating_VecVecs.VecVec;
+                jic : in Standard_Floating_VecVecs.VecVec;
                 fx : out Standard_Complex_Vectors.Vector;
                 jm : out Standard_Complex_Matrices.Matrix );
 
@@ -270,9 +307,15 @@ package Standard_Coefficient_Circuits is
   --   ryd      work space for the imag part of function value and gradient,
   --            of range 0..dim, where dim = x'last;
   --   rpwt     real part of power table defined and computed for x;
-  --   ipwt     imag part of power table defined and computed for x.
+  --   ipwt     imag part of power table defined and computed for x;
+  --   jrc      space allocated for the real parts of the complex numbers
+  --            in the columns of the Jacobian matrix;
+  --   jic      space allocated for the imaginary parts of the complex numbers
+  --            in the columns of the Jacobian matrix.
 
   -- ON RETURN :
+  --   jrc      real parts of the columns of the Jacobian matrix;
+  --   jic      imaginary parts of the columns of the Jacobian matrix;
   --   fx       vector of function values of the circuits at x;
   --   jm       matrix of partial derivatives.
 
@@ -284,6 +327,8 @@ package Standard_Coefficient_Circuits is
                 iyd : in Standard_Floating_Vectors.Link_to_Vector;
                 rpwt : in Standard_Floating_VecVecs.VecVec;
                 ipwt : in Standard_Floating_VecVecs.VecVec;
+                jrc : in Standard_Floating_VecVecs.VecVec;
+                jic : in Standard_Floating_VecVecs.VecVec;
                 hrp : in Standard_Floating_VecVecs.VecVec;
                 hip : in Standard_Floating_VecVecs.VecVec;
                 fx : out Standard_Complex_Vectors.Vector;
@@ -304,12 +349,18 @@ package Standard_Coefficient_Circuits is
   --            of range 0..dim, where dim = x'last;
   --   rpwt     real part of power table defined and computed for x;
   --   ipwt     imag part of power table defined and computed for x.
+  --   jrc      space allocated for the real parts of the complex numbers
+  --            in the columns of the Jacobian matrix;
+  --   jic      space allocated for the imaginary parts of the complex numbers
+  --            in the columns of the Jacobian matrix.
   --   hrp      works space for the real parts of Hessian matrices;
   --   hip      works space for the imaginary parts of Hessian matrices;
   --   vh       space allocated for dim matrices,
   --            all matrices have 1..dim for range(1) and range(2).
 
   -- ON RETURN :
+  --   jrc      real parts of the columns of the Jacobian matrix;
+  --   jic      imaginary parts of the columns of the Jacobian matrix;
   --   fx       vector of function values of the circuits at x;
   --   jm       matrix of partial derivatives;
   --   vh       vector of evaluated Hessian matrices.

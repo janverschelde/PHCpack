@@ -978,6 +978,28 @@ procedure ts_perfade is
     print_times(standard_output,timer,"real Speel");
   end Timing_Power_Circuit;
 
+  function Merge_Jacobian_Matrix
+             ( s : Standard_Coefficient_Circuits.Link_to_System )
+             return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the columns of s.jrc and s.jic,
+  --   merged into a complex matrix, for testing purposes.
+
+    res : Standard_Complex_Matrices.Matrix(1..s.neq,1..s.dim);
+    rlnk,ilnk : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for k in 1..s.dim loop -- make the k-th column of the matrix
+      rlnk := s.jrc(k);
+      ilnk := s.jic(k);
+      for i in 1..s.neq loop -- run over all the row elements
+        res(i,k) := Standard_Complex_Numbers.Create(rlnk(i),ilnk(i));
+      end loop;
+    end loop;
+    return res;
+  end Merge_Jacobian_Matrix;
+
   procedure Test_Evaluation_and_Differentiation
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 cs : in Standard_Complex_Circuits.Link_to_System;
@@ -999,6 +1021,7 @@ procedure ts_perfade is
        := Standard_Complex_Jaco_Matrices.Create(p.all);
     jmx : constant Standard_Complex_Matrices.Matrix(p'range,cx'range)
         := Standard_Complex_Jaco_Matrices.Eval(jm,cx);
+    mrg : Standard_Complex_Matrices.Matrix(p'range,cx'range);
     err : double_float;
 
   begin
@@ -1025,6 +1048,11 @@ procedure ts_perfade is
     put_line("The recomputed matrix :"); 
     Standard_Circuit_Makers.Write_Matrix(cffsys.jm);
     err := Evaluation_Differentiation_Errors.Sum_of_Errors(cffsys.jm,jmx);
+    put("Sum of errors :"); put(err,3); new_line;
+    mrg := Merge_Jacobian_Matrix(cffsys);
+    put_line("The merged recomputed matrix :");
+    Standard_Circuit_Makers.Write_Matrix(mrg);
+    err := Evaluation_Differentiation_Errors.Sum_of_Errors(mrg,jmx);
     put("Sum of errors :"); put(err,3); new_line;
     Standard_Complex_Jaco_Matrices.Clear(jm);
   end Test_Evaluation_and_Differentiation;

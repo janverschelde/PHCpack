@@ -69,8 +69,45 @@ package body Standard_Coefficient_Circuits is
     res.ipwt := Allocate(res.mxe);
     res.ryd := new Standard_Floating_Vectors.Vector'(0..dim => 0.0);
     res.iyd := new Standard_Floating_Vectors.Vector'(0..dim => 0.0);
+    Allocate_Jacobian_Space(res.neq,res.dim,res.jrc,res.jic);
     return res;
   end Create;
+
+  procedure Allocate_Jacobian_Space
+              ( neq,dim : in integer32;
+                jrc,jic : out Standard_Floating_VecVecs.VecVec ) is
+  begin
+    for k in 1..dim loop
+      declare
+        row : constant Standard_Floating_Vectors.Vector(1..dim)
+            := (1..neq => 0.0);
+      begin
+        jrc(k) := new Standard_Floating_Vectors.Vector'(row);
+        jic(k) := new Standard_Floating_Vectors.Vector'(row);
+      end;
+    end loop;
+  end Allocate_Jacobian_Space;
+
+  procedure Allocate_Jacobian_Space
+              ( neq,dim : in integer32;
+                jrc,jic : out Standard_Floating_VecVecs.Link_to_VecVec ) is
+
+    jrcols : Standard_Floating_VecVecs.VecVec(1..dim);
+    jicols : Standard_Floating_VecVecs.VecVec(1..dim);
+
+  begin
+    for k in 1..dim loop
+      declare
+        row : constant Standard_Floating_Vectors.Vector(1..dim)
+            := (1..neq => 0.0);
+      begin
+        jrcols(k) := new Standard_Floating_Vectors.Vector'(row);
+        jicols(k) := new Standard_Floating_Vectors.Vector'(row);
+      end;
+    end loop;
+    jrc := new Standard_Floating_VecVecs.VecVec'(jrcols);
+    jic := new Standard_Floating_VecVecs.VecVec'(jicols);
+  end Allocate_Jacobian_Space;
 
   procedure Allocate_Hessian_Space
               ( dim : in integer32;
@@ -107,6 +144,18 @@ package body Standard_Coefficient_Circuits is
     hrp := new Standard_Floating_VecVecs.VecVec'(hrprows);
     hip := new Standard_Floating_VecVecs.VecVec'(hiprows);
   end Allocate_Hessian_Space;
+ 
+  procedure Allocate_Jacobian_Space ( s : in out System ) is
+  begin
+    Allocate_Jacobian_Space(s.neq,s.dim,s.jrc,s.jic);
+  end Allocate_Jacobian_Space;
+
+  procedure Allocate_Jacobian_Space ( s : in Link_to_System ) is
+  begin
+    if s /= null
+     then Allocate_Jacobian_Space(s.all);
+    end if;
+  end Allocate_Jacobian_Space;
  
   procedure Allocate_Hessian_Space ( s : in out System ) is
   begin
@@ -185,6 +234,7 @@ package body Standard_Coefficient_Circuits is
 
   begin
     res := Create(crc,s.dim);
+    Allocate_Jacobian_Space(res);
     Allocate_Hessian_Space(res);
     return res;
   end Copy;
@@ -372,7 +422,8 @@ package body Standard_Coefficient_Circuits is
                 xi : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
     Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
-    EvalDiff(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.fx,s.jm);
+    EvalDiff(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.jrc.all,s.jic.all,
+             s.fx,s.jm);
   end EvalDiff;
 
   procedure EvalDiff
@@ -381,7 +432,8 @@ package body Standard_Coefficient_Circuits is
                 xi : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
     Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
-    EvalDiff(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.fx,s.jm);
+    EvalDiff(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.jrc.all,s.jic.all,
+             s.fx,s.jm);
   end EvalDiff;
 
   procedure EvalDiff2
@@ -391,8 +443,8 @@ package body Standard_Coefficient_Circuits is
                 vh : in Standard_Complex_VecMats.VecMat ) is
   begin
     Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
-    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
-              s.fx,s.jm,vh);
+    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.jrc.all,s.jic.all,
+              s.hrp.all,s.hip.all,s.fx,s.jm,vh);
   end EvalDiff2;
 
   procedure EvalDiff2
@@ -402,8 +454,8 @@ package body Standard_Coefficient_Circuits is
                 vh : in Standard_Complex_VecMats.VecMat ) is
   begin
     Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
-    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
-              s.fx,s.jm,vh);
+    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.jrc.all,s.jic.all,
+              s.hrp.all,s.hip.all,s.fx,s.jm,vh);
   end EvalDiff2;
 
   procedure EvalDiff
@@ -414,15 +466,22 @@ package body Standard_Coefficient_Circuits is
                 iyd : in Standard_Floating_Vectors.Link_to_Vector;
                 rpwt : in Standard_Floating_VecVecs.VecVec;
                 ipwt : in Standard_Floating_VecVecs.VecVec;
+                jrc : in Standard_Floating_VecVecs.VecVec;
+                jic : in Standard_Floating_VecVecs.VecVec;
                 fx : out Standard_Complex_Vectors.Vector;
                 jm : out Standard_Complex_Matrices.Matrix ) is
+
+    rlnk,ilnk : Standard_Floating_Vectors.Link_to_Vector;
+
   begin
     for i in c'range loop
       Speel(c(i).all,xr,xi,ryd,iyd,rpwt,ipwt);
       fx(i) := Standard_Complex_Numbers.Create(ryd(0),iyd(0));
       for j in jm'range(2) loop
         jm(i,j) := Standard_Complex_Numbers.Create(ryd(j),iyd(j));
-        ryd(j) := 0.0; iyd(j) := 0.0;
+        rlnk := jrc(j);    ilnk := jic(j);
+        rlnk(i) := ryd(j); ilnk(i) := iyd(j);
+        ryd(j) := 0.0;     iyd(j) := 0.0;
       end loop;
     end loop;
   end EvalDiff;
@@ -435,6 +494,8 @@ package body Standard_Coefficient_Circuits is
                 iyd : in Standard_Floating_Vectors.Link_to_Vector;
                 rpwt : in Standard_Floating_VecVecs.VecVec;
                 ipwt : in Standard_Floating_VecVecs.VecVec;
+                jrc : in Standard_Floating_VecVecs.VecVec;
+                jic : in Standard_Floating_VecVecs.VecVec;
                 hrp : in Standard_Floating_VecVecs.VecVec;
                 hip : in Standard_Floating_VecVecs.VecVec;
                 fx : out Standard_Complex_Vectors.Vector;
@@ -442,6 +503,7 @@ package body Standard_Coefficient_Circuits is
                 vh : in Standard_Complex_VecMats.VecMat ) is
 
     mat : Standard_Complex_Matrices.Link_to_Matrix;
+    rlnk,ilnk : Standard_Floating_Vectors.Link_to_Vector;
     hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
@@ -451,7 +513,9 @@ package body Standard_Coefficient_Circuits is
       fx(i) := Standard_Complex_Numbers.Create(ryd(0),iyd(0));
       for j in jm'range(2) loop
         jm(i,j) := Standard_Complex_Numbers.Create(ryd(j),iyd(j));
-        ryd(j) := 0.0; iyd(j) := 0.0;
+        rlnk := jrc(j);    ilnk := jic(j);
+        rlnk(i) := ryd(j); ilnk(i) := iyd(j);
+        ryd(j) := 0.0;     iyd(j) := 0.0;
       end loop;
       for j in hrp'range loop
         hrprow := hrp(j); hiprow := hip(j);
@@ -478,8 +542,8 @@ package body Standard_Coefficient_Circuits is
 
   begin
     Power_Table(s.mxe,xr,xi,s.rpwt,s.ipwt);
-    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.hrp.all,s.hip.all,
-              s.fx,s.jm,vh);
+    EvalDiff2(s.crc,xr,xi,s.ryd,s.iyd,s.rpwt,s.ipwt,s.jrc.all,s.jic.all,
+              s.hrp.all,s.hip.all,s.fx,s.jm,vh);
     Standard_Complex_Singular_Values.SVD
       (s.jm,s.dim,s.dim,svls(0).all,e,U,V,0,info);
     for k in vh'range loop
@@ -2319,6 +2383,12 @@ package body Standard_Coefficient_Circuits is
     Standard_Floating_Vectors.Clear(s.iyd);
     Standard_Floating_VecVecs.Clear(s.rpwt);
     Standard_Floating_VecVecs.Clear(s.ipwt);
+    if s.jrc /= null
+     then Standard_Floating_VecVecs.Deep_Clear(s.jrc);
+    end if;
+    if s.jic /= null
+     then Standard_Floating_VecVecs.Deep_Clear(s.jic);
+    end if;
     if s.hrp /= null
      then Standard_Floating_VecVecs.Deep_Clear(s.hrp);
     end if;
