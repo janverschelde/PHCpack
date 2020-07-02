@@ -1,3 +1,6 @@
+Thu 2 Jul 2020 : in predictor_corrector_{loops,trackers}.adb replaced
+  the Newton steps on coefficient circuits by inlined versions.
+
 Tue 30 Jun 2020 : updated track_path_convolutions.adb to reflect that
   homogeneous coordinates are not yet supported for coefficient circuits.
   Adjusted mainseries to pass the number of tasks at the command line.

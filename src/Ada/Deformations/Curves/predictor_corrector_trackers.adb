@@ -12,7 +12,7 @@ with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Complex_Circuits;
-with Standard_Newton_Circuits;
+with Standard_Inlined_Newton_Circuits;
 with Residual_Convolution_Circuits;      use Residual_Convolution_Circuits;
 with Shift_Convolution_Circuits;
 with Shift_Coefficient_Convolutions;
@@ -208,7 +208,7 @@ package body Predictor_Corrector_Trackers is
          nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
       Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,acct);
-      Standard_Newton_Circuits.LU_Newton_Steps
+      Standard_Inlined_Newton_Circuits.LU_Newton_Steps
         (cfh,abh,psv.sol,psv.radsol,xr,xi,pars.corsteps,pars.tolres,
          pars.tolres,ipvt,initres,ls.res,ls.rco,ls.err,mixres,nbrit,fail,xtr);
       tnbrit := tnbrit + nbrit;
@@ -302,7 +302,7 @@ package body Predictor_Corrector_Trackers is
          nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,verbose);
       Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,acct);
-      Standard_Newton_Circuits.LU_Newton_Steps
+      Standard_Inlined_Newton_Circuits.LU_Newton_Steps
         (file,cfh,abh,psv.sol,psv.radsol,xr,xi,pars.corsteps,pars.tolres,
          pars.tolres,ipvt,initres,ls.res,ls.rco,ls.err,mixres,nbrit,
          fail,xtr,verbose);
