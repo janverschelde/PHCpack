@@ -4,7 +4,6 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
 with Standard_Vector_Splitters;
-with Standard_Matrix_Splitters;
 with Standard_Inlined_Linear_Solvers;
 with Standard_Mixed_Residuals;
 
@@ -12,7 +11,6 @@ package body Standard_Inlined_Newton_Circuits is
 
   procedure LU_Newton_Step
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -21,14 +19,13 @@ package body Standard_Inlined_Newton_Circuits is
     Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
     Standard_Coefficient_Circuits.EvalDiff(s,xr,xi);
     res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
-    Standard_Matrix_Splitters.Complex_Parts(s.jm,rcols,icols);
-    Standard_Inlined_Linear_Solvers.lufac(rcols,icols,s.dim,ipvt,info);
+    Standard_Inlined_Linear_Solvers.lufac(s.jrc,s.jic,s.dim,ipvt,info);
     if info = 0 then
       Standard_Vector_Splitters.Complex_Parts(s.fx,xr,xi);
       for k in xr'range loop
         xr(k) := -xr(k); xi(k) := -xi(k);
       end loop;
-      Standard_Inlined_Linear_Solvers.lusolve(rcols,icols,s.dim,ipvt,xr,xi);
+      Standard_Inlined_Linear_Solvers.lusolve(s.jrc,s.jic,s.dim,ipvt,xr,xi);
       Standard_Vector_Splitters.Complex_Merge(xr,xi,s.fx);
       err := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
       for k in v'range loop
@@ -40,7 +37,6 @@ package body Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Step
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -55,8 +51,7 @@ package body Standard_Inlined_Newton_Circuits is
       put_line(file,"The function value : "); put_line(file,s.fx);
       put(file,"The residual :"); put(file,res,3); new_line(file);
     end if;
-    Standard_Matrix_Splitters.Complex_Parts(s.jm,rcols,icols);
-    Standard_Inlined_Linear_Solvers.lufac(rcols,icols,s.dim,ipvt,info);
+    Standard_Inlined_Linear_Solvers.lufac(s.jrc,s.jic,s.dim,ipvt,info);
     if info /= 0 then
       if verbose then
         put(file,"info : "); put(file,info,1);
@@ -67,7 +62,7 @@ package body Standard_Inlined_Newton_Circuits is
       for k in xr'range loop
         xr(k) := -xr(k); xi(k) := -xi(k);
       end loop;
-      Standard_Inlined_Linear_Solvers.lusolve(rcols,icols,s.dim,ipvt,xr,xi);
+      Standard_Inlined_Linear_Solvers.lusolve(s.jrc,s.jic,s.dim,ipvt,xr,xi);
       Standard_Vector_Splitters.Complex_Merge(xr,xi,s.fx);
       err := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
       for k in v'range loop
@@ -83,7 +78,6 @@ package body Standard_Inlined_Newton_Circuits is
 
   procedure LU_Newton_Step
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -95,15 +89,14 @@ package body Standard_Inlined_Newton_Circuits is
     Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
     Standard_Coefficient_Circuits.EvalDiff(s,xr,xi);
     res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
-    Standard_Matrix_Splitters.Complex_Parts(s.jm,rcols,icols);
-    Standard_Inlined_Linear_Solvers.lufco(rcols,icols,s.dim,ipvt,xi,xr,rco);
+    Standard_Inlined_Linear_Solvers.lufco(s.jrc,s.jic,s.dim,ipvt,xi,xr,rco);
     singular := (1.0 + rco = 1.0);
     if not singular then
       Standard_Vector_Splitters.Complex_Parts(s.fx,xr,xi);
       for k in xr'range loop
         xr(k) := -xr(k); xi(k) := -xi(k);
       end loop;
-      Standard_Inlined_Linear_Solvers.lusolve(rcols,icols,s.dim,ipvt,xr,xi);
+      Standard_Inlined_Linear_Solvers.lusolve(s.jrc,s.jic,s.dim,ipvt,xr,xi);
       Standard_Vector_Splitters.Complex_Merge(xr,xi,s.fx);
       err := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
       for k in v'range loop
@@ -115,7 +108,6 @@ package body Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Step
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -133,8 +125,7 @@ package body Standard_Inlined_Newton_Circuits is
       put_line(file,"The function value : "); put_line(file,s.fx);
       put(file,"The residual :"); put(file,res,3); new_line(file);
     end if;
-    Standard_Matrix_Splitters.Complex_Parts(s.jm,rcols,icols);
-    Standard_Inlined_Linear_Solvers.lufco(rcols,icols,s.dim,ipvt,xr,xi,rco);
+    Standard_Inlined_Linear_Solvers.lufco(s.jrc,s.jic,s.dim,ipvt,xr,xi,rco);
     singular := (1.0 + rco = 1.0);
     if verbose then
       put(file,"rco :"); put(file,rco,3);
@@ -148,7 +139,7 @@ package body Standard_Inlined_Newton_Circuits is
       for k in xr'range loop
         xr(k) := -xr(k); xi(k) := -xi(k);
       end loop;
-      Standard_Inlined_Linear_Solvers.lusolve(rcols,icols,s.dim,ipvt,xr,xi);
+      Standard_Inlined_Linear_Solvers.lusolve(s.jrc,s.jic,s.dim,ipvt,xr,xi);
       Standard_Vector_Splitters.Complex_Merge(xr,xi,s.fx);
       err := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
       for k in v'range loop
@@ -167,13 +158,12 @@ package body Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Step
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; res,err,mixres : out double_float ) is
   begin
-    LU_Newton_Step(s,rcols,icols,v,xr,xi,ipvt,info,res,err);
+    LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err);
     Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
     Standard_Coefficient_Circuits.Eval(s,xr,xi);
     res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
@@ -187,14 +177,13 @@ package body Standard_Inlined_Newton_Circuits is
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 info : out integer32; res,err,mixres : out double_float;
                 verbose : in boolean := true ) is
   begin
-    LU_Newton_Step(file,s,rcols,icols,v,xr,xi,ipvt,info,res,err,verbose);
+    LU_Newton_Step(file,s,v,xr,xi,ipvt,info,res,err,verbose);
     Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
     Standard_Coefficient_Circuits.Eval(s,xr,xi);
     res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
@@ -210,13 +199,12 @@ package body Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Step
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 res,rco,err,mixres : out double_float ) is
   begin
-    LU_Newton_Step(s,rcols,icols,v,xr,xi,ipvt,res,rco,err);
+    LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err);
     Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
     Standard_Coefficient_Circuits.Eval(s,xr,xi);
     res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
@@ -230,14 +218,13 @@ package body Standard_Inlined_Newton_Circuits is
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 res,rco,err,mixres : out double_float;
                 verbose : in boolean := true ) is
   begin
-    LU_Newton_Step(file,s,rcols,icols,v,xr,xi,ipvt,res,rco,err,verbose);
+    LU_Newton_Step(file,s,v,xr,xi,ipvt,res,rco,err,verbose);
     Standard_Vector_Splitters.Complex_Parts(v,xr,xi);
     Standard_Coefficient_Circuits.Eval(s,xr,xi);
     res := Standard_Complex_Vector_Norms.Max_Norm(s.fx);
@@ -254,7 +241,6 @@ package body Standard_Inlined_Newton_Circuits is
 
   procedure LU_Newton_Steps
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -267,7 +253,7 @@ package body Standard_Inlined_Newton_Circuits is
 
   begin
     for k in 1..maxit+extra loop
-      LU_Newton_Step(s,rcols,icols,v,xr,xi,ipvt,info,res,err);
+      LU_Newton_Step(s,v,xr,xi,ipvt,info,res,err);
       if k = 1
        then initres := res;
       end if;
@@ -284,7 +270,6 @@ package body Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -298,7 +283,7 @@ package body Standard_Inlined_Newton_Circuits is
 
   begin
     for k in 1..maxit+extra loop
-      LU_Newton_Step(file,s,rcols,icols,v,xr,xi,ipvt,info,res,err,verbose);
+      LU_Newton_Step(file,s,v,xr,xi,ipvt,info,res,err,verbose);
       if k = 1
        then initres := res;
       end if;
@@ -314,7 +299,6 @@ package body Standard_Inlined_Newton_Circuits is
 
   procedure LU_Newton_Steps
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -327,7 +311,7 @@ package body Standard_Inlined_Newton_Circuits is
 
   begin
     for k in 1..maxit+extra loop
-      LU_Newton_Step(s,rcols,icols,v,xr,xi,ipvt,res,rco,err);
+      LU_Newton_Step(s,v,xr,xi,ipvt,res,rco,err);
       if k = 1
        then initres := res;
       end if;
@@ -344,7 +328,6 @@ package body Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -358,7 +341,7 @@ package body Standard_Inlined_Newton_Circuits is
 
   begin
     for k in 1..maxit+extra loop
-      LU_Newton_Step(file,s,rcols,icols,v,xr,xi,ipvt,res,rco,err,verbose);
+      LU_Newton_Step(file,s,v,xr,xi,ipvt,res,rco,err,verbose);
       if k = 1
        then initres := res;
       end if;
@@ -377,7 +360,6 @@ package body Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Steps
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -391,8 +373,7 @@ package body Standard_Inlined_Newton_Circuits is
 
   begin
     for k in 1..maxit+extra loop
-      LU_Newton_Step(s,abscfs,rcols,icols,v,radv,xr,xi,ipvt,info,
-                     res,err,mixres);
+      LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,info,res,err,mixres);
       if k = 1
        then initres := res;
       end if;
@@ -410,7 +391,6 @@ package body Standard_Inlined_Newton_Circuits is
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -425,8 +405,8 @@ package body Standard_Inlined_Newton_Circuits is
 
   begin
     for k in 1..maxit+extra loop
-      LU_Newton_Step(file,s,abscfs,rcols,icols,v,radv,xr,xi,ipvt,info,
-                     res,err,mixres,verbose);
+      LU_Newton_Step
+        (file,s,abscfs,v,radv,xr,xi,ipvt,info,res,err,mixres,verbose);
       if k = 1
        then initres := res;
       end if;
@@ -443,7 +423,6 @@ package body Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Steps
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -456,8 +435,7 @@ package body Standard_Inlined_Newton_Circuits is
 
   begin
     for k in 1..maxit+extra loop
-      LU_Newton_Step(s,abscfs,rcols,icols,v,radv,xr,xi,ipvt,
-                     res,rco,err,mixres);
+      LU_Newton_Step(s,abscfs,v,radv,xr,xi,ipvt,res,rco,err,mixres);
       if k = 1
        then initres := res;
       end if;
@@ -475,7 +453,6 @@ package body Standard_Inlined_Newton_Circuits is
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -489,8 +466,8 @@ package body Standard_Inlined_Newton_Circuits is
 
   begin
     for k in 1..maxit+extra loop
-      LU_Newton_Step(file,s,abscfs,rcols,icols,v,radv,xr,xi,ipvt,
-                     res,rco,err,mixres,verbose);
+      LU_Newton_Step
+        (file,s,abscfs,v,radv,xr,xi,ipvt,res,rco,err,mixres,verbose);
       if k = 1
        then initres := res;
       end if;

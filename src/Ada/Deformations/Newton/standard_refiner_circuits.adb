@@ -6,8 +6,6 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
-with Standard_Floating_VecVecs;
-with Standard_Vector_Splitters;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_System_and_Solutions_io;
@@ -205,10 +203,6 @@ package body Standard_Refiner_Circuits is
     ls : Link_to_Solution;
     cnt : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..s.dim);
-    rcols : Standard_Floating_VecVecs.Link_to_VecVec
-          := Standard_Vector_Splitters.Allocate(s.dim,s.dim,1,1);
-    icols : Standard_Floating_VecVecs.Link_to_VecVec
-          := Standard_Vector_Splitters.Allocate(s.dim,s.dim,1,1);
     vxr : constant Standard_Floating_Vectors.Vector(1..s.dim)
         := (1..s.dim => 0.0);
     vxi : constant Standard_Floating_Vectors.Vector(1..s.dim)
@@ -246,7 +240,7 @@ package body Standard_Refiner_Circuits is
       if verbose then
         put("Solution "); put(cnt,1); put(" :    start residual :");
       end if;
-      LU_Newton_Steps(s,rcols,icols,ls.v,xr,xi,maxit,tolres,tolerr,ipvt,
+      LU_Newton_Steps(s,ls.v,xr,xi,maxit,tolres,tolerr,ipvt,
                       startres,res,rco,err,numit,fail);
       if verbose then
         put(startres,3);
@@ -302,8 +296,6 @@ package body Standard_Refiner_Circuits is
      then put_line("computing clusters ...");
     end if;
     Standard_Solutions_Heap.Count_Clusters(weights,tolsing,cntclus,verbose);
-    Standard_Floating_VecVecs.Deep_Clear(rcols);
-    Standard_Floating_VecVecs.Deep_Clear(icols);
     Standard_Floating_Vectors.Clear(xr);
     Standard_Floating_Vectors.Clear(xi);
     Standard_Solutions_Heap.Clear(weights);
@@ -424,10 +416,6 @@ package body Standard_Refiner_Circuits is
     ls : Link_to_Solution;
     cnt : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..s.dim);
-    rcols : Standard_Floating_VecVecs.Link_to_VecVec
-          := Standard_Vector_Splitters.Allocate(s.dim,s.dim,1,1);
-    icols : Standard_Floating_VecVecs.Link_to_VecVec
-          := Standard_Vector_Splitters.Allocate(s.dim,s.dim,1,1);
     vxr : constant Standard_Floating_Vectors.Vector(1..s.dim)
         := (1..s.dim => 0.0);
     vxi : constant Standard_Floating_Vectors.Vector(1..s.dim)
@@ -465,7 +453,7 @@ package body Standard_Refiner_Circuits is
       ls := Head_Of(ptr); cnt := cnt + 1;
       put(file,"Solution "); put(file,cnt,1);
       put(file," :    start residual :");
-      LU_Newton_Steps(s,rcols,icols,ls.v,xr,xi,maxit,tolres,tolerr,ipvt,
+      LU_Newton_Steps(s,ls.v,xr,xi,maxit,tolres,tolerr,ipvt,
                       startres,res,rco,err,numit,fail);
       put(file,startres,3);
       put(file,"  #iterations : "); put(file,numit,1);
@@ -508,8 +496,6 @@ package body Standard_Refiner_Circuits is
     end loop;
     Standard_Complex_Solutions_io.put_bar(file);
     Standard_Solutions_Heap.Count_Clusters(weights,tolsing,cntclus,verbose);
-    Standard_Floating_VecVecs.Deep_Clear(rcols);
-    Standard_Floating_VecVecs.Deep_Clear(icols);
     Standard_Floating_Vectors.Clear(xr);
     Standard_Floating_Vectors.Clear(xi);
   end Inlined_Run;

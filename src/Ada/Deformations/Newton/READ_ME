@@ -1,4 +1,4 @@
-Root refining and a modified Newton's method in PHCv2.4.78
+Root refining and a modified Newton's method in PHCv2.4.79
 
 This directory is entirely new in release 2.3.  It contains the
 older root refiners, which were extended in the second release with

@@ -21,7 +21,6 @@ package Standard_Inlined_Newton_Circuits is
 
   procedure LU_Newton_Step
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -29,7 +28,6 @@ package Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Step
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -42,17 +40,11 @@ package Standard_Inlined_Newton_Circuits is
   --   No estimate for the condition number is computed.
 
   -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range,
-  --   rcols'range = icols'range = 1..s.dim, and 
-  --   for all k: rcols(k)'range = icols(k)'range = 1..s.dim.
+  --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
   --   file     if verbose, then output will be written to file;
   --   s        coefficient system of circuits;
-  --   rcols    allocated work space for the real parts of the columns
-  --            of the Jacobian matrix;
-  --   icols    allocated work space for the imaginary parts of the columns
-  --            of the Jacobian matrix;
   --   v        vector with approximate values for a solution to s;
   --   xr       work space allocated for the real parts of v;
   --   xi       work space allocated for the imaginary parts of v;
@@ -61,9 +53,9 @@ package Standard_Inlined_Newton_Circuits is
 
   -- ON RETURN :
   --   s        s.fx contains the update value to v, if info = 0,
-  --            otherwise s.fx contains the function value of s at v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the vector v given on input;
+  --            otherwise s.fx contains the function value of s at v;
+  --            s.jm contains the Jacobian at the vector v given on input,
+  --            s.jrc and s.jic contains the LU factorization of s.jm;
   --   v        updated approximation for the solution;
   --   xr       real parts of the complex numbers in v;
   --   xi       imaginary parts of the complex numbers in v;
@@ -74,7 +66,6 @@ package Standard_Inlined_Newton_Circuits is
 
   procedure LU_Newton_Step
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -82,7 +73,6 @@ package Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Step
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -96,17 +86,11 @@ package Standard_Inlined_Newton_Circuits is
   --   of the Jacobian matrix at v.
 
   -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range,
-  --   rcols'range = icols'range = 1..s.dim, and 
-  --   for all k: rcols(k)'range = icols(k)'range = 1..s.dim.
+  --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
   --   file     if verbose, then output will be written to file;
   --   s        coefficient system of circuits;
-  --   rcols    allocated work space for the real parts of the columns
-  --            of the Jacobian matrix;
-  --   icols    allocated work space for the imaginary parts of the columns
-  --            of the Jacobian matrix;
   --   v        vector with approximate values for a solution to s;
   --   xr       work space allocated for the real parts of v;
   --   xi       work space allocated for the imaginary parts of v;
@@ -115,9 +99,9 @@ package Standard_Inlined_Newton_Circuits is
 
   -- ON RETURN :
   --   s        s.fx contains the update value to v, if info = 0,
-  --            otherwise s.fx contains the function value of s at v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the vector v given on input;
+  --            otherwise s.fx contains the function value of s at v;
+  --            s.jm contains the Jacobian at the vector v given on input;
+  --            s.jrc and s.jic contains the LU factorization of s.jm;
   --   v        updated approximation for the solution;
   --   xr       real parts of the complex numbers in v;
   --   xi       imaginary parts of the complex numbers in v;
@@ -132,7 +116,6 @@ package Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Step
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -141,7 +124,6 @@ package Standard_Inlined_Newton_Circuits is
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -155,18 +137,12 @@ package Standard_Inlined_Newton_Circuits is
   --   Does two extra evaluations for the mixed residual.
 
   -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range,
-  --   rcols'range = icols'range = 1..s.dim, and 
-  --   for all k: rcols(k)'range = icols(k)'range = 1..s.dim.
+  --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
   --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
   --   abscfs   same system s, but with radii for coefficients;
-  --   rcols    allocated work space for the real parts of the columns
-  --            of the Jacobian matrix;
-  --   icols    allocated work space for the imaginary parts of the columns
-  --            of the Jacobian matrix;
   --   v        vector with approximate values for a solution to s;
   --   radv     work space vector for the mixed residual;
   --   xr       work space allocated for the real parts of v;
@@ -176,8 +152,8 @@ package Standard_Inlined_Newton_Circuits is
 
   -- ON RETURN :
   --   s        s.fx contains the function value of s at the updated v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the vector v given on input;
+  --            s.jm contains the Jacobian at the vector v given on input;
+  --            s.jrc and s.jic contains the LU factorization of s.jm;
   --   v        updated approximation for the solution;
   --   radv     radii of the components in v;
   --   xr       real parts of the complex numbers in radv;
@@ -193,7 +169,6 @@ package Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Step
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -202,7 +177,6 @@ package Standard_Inlined_Newton_Circuits is
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 ipvt : in out Standard_Integer_Vectors.Vector;
@@ -217,18 +191,12 @@ package Standard_Inlined_Newton_Circuits is
   --   Does two extra evaluations for the mixed residual.
 
   -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range,
-  --   rcols'range = icols'range = 1..s.dim, and 
-  --   for all k: rcols(k)'range = icols(k)'range = 1..s.dim.
+  --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
   --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
   --   abscfs   same system s, but with radii for coefficients;
-  --   rcols    allocated work space for the real parts of the columns
-  --            of the Jacobian matrix;
-  --   icols    allocated work space for the imaginary parts of the columns
-  --            of the Jacobian matrix;
   --   v        vector with approximate values for a solution to s;
   --   radv     work space vector for the mixed residual;
   --   xr       work space allocated for the real parts of v;
@@ -238,8 +206,8 @@ package Standard_Inlined_Newton_Circuits is
 
   -- ON RETURN :
   --   s        s.fx contains the function value of s at the updated v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the vector v given on input;
+  --            s.jm contains the Jacobian at the vector v given on input;
+  --            s.jrc and s.jic contains the LU factorization of s.jm;
   --   v        updated approximation for the solution;
   --   xr       real parts of the complex numbers in radv;
   --   xi       imaginary parts of the complex numbers in radv;
@@ -257,7 +225,6 @@ package Standard_Inlined_Newton_Circuits is
 
   procedure LU_Newton_Steps
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -268,7 +235,6 @@ package Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -286,17 +252,11 @@ package Standard_Inlined_Newton_Circuits is
   --   or the tolerances on residual or forward error are reached.
 
   -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range,
-  --   rcols'range = icols'range = 1..s.dim, and 
-  --   for all k: rcols(k)'range = icols(k)'range = 1..s.dim.
+  --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
   --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
-  --   rcols    allocated work space for the real parts of the columns
-  --            of the Jacobian matrix;
-  --   icols    allocated work space for the imaginary parts of the columns
-  --            of the Jacobian matrix;
   --   v        vector with approximate values for a solution to s;
   --   xr       work space allocated for the real parts of v;
   --   xi       work space allocated for the imaginary parts of v;
@@ -309,8 +269,8 @@ package Standard_Inlined_Newton_Circuits is
   -- ON RETURN :
   --   s        s.fx contains the update value to v, if info = 0,
   --            otherwise s.fx contains the function value of s at v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the given v;
+  --            s.jm contains the evaluated Jacobian matrix
+  --            and its LU factorization is in s.jrc and s.jic;
   --   xr       real parts of the complex numbers in v;
   --   xi       imaginary parts of the complex numbers in v;
   --   ipvt     pivoting information of the LU factorization;
@@ -324,7 +284,6 @@ package Standard_Inlined_Newton_Circuits is
 
   procedure LU_Newton_Steps
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -335,7 +294,6 @@ package Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Steps
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -354,17 +312,11 @@ package Standard_Inlined_Newton_Circuits is
   --   or the tolerances on residual or forward error are reached.
 
   -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range,
-  --   rcols'range = icols'range = 1..s.dim, and 
-  --   for all k: rcols(k)'range = icols(k)'range = 1..s.dim.
+  --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
   --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
-  --   rcols    allocated work space for the real parts of the columns
-  --            of the Jacobian matrix;
-  --   icols    allocated work space for the imaginary parts of the columns
-  --            of the Jacobian matrix;
   --   v        vector with approximate values for a solution to s;
   --   xr       work space allocated for the real parts of v;
   --   xi       work space allocated for the imaginary parts of v;
@@ -377,8 +329,8 @@ package Standard_Inlined_Newton_Circuits is
   -- ON RETURN :
   --   s        s.fx contains the update value to v, if info = 0,
   --            otherwise s.fx contains the function value of s at v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the given v;
+  --            s.jm contains the evaluated Jacobian matrix
+  --            and its LU factorization is in s.jrc and s.jic;
   --   xr       real parts of the complex numbers in v;
   --   xi       imaginary parts of the complex numbers in v;
   --   ipvt     pivoting information of the LU factorization;
@@ -396,7 +348,6 @@ package Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Steps
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -409,7 +360,6 @@ package Standard_Inlined_Newton_Circuits is
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -430,18 +380,12 @@ package Standard_Inlined_Newton_Circuits is
   --   value of the mixed residual in the stop criterium.
 
   -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range,
-  --   rcols'range = icols'range = 1..s.dim, and 
-  --   for all k: rcols(k)'range = icols(k)'range = 1..s.dim.
+  --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
   --   file     to write optional output to, if verbose;
   --   s        coefficient system of circuits;
   --   abscfs   same system s, but with radii for coefficients;
-  --   rcols    allocated work space for the real parts of the columns
-  --            of the Jacobian matrix;
-  --   icols    allocated work space for the imaginary parts of the columns
-  --            of the Jacobian matrix;
   --   v        vector with approximate values for a solution to s;
   --   radv     work space vector for the radii of the components of v;
   --   xr       work space allocated for the real parts of v;
@@ -455,8 +399,9 @@ package Standard_Inlined_Newton_Circuits is
 
   -- ON RETURN :
   --   s        s.fx contains the function value of s at v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the next-to-last values of the vector v;
+  --            s.jm contains the evaluated Jacobian matrix
+  --            and its LU factorization is in s.jrc and s.jic,
+  --            at the next-to-last approximation for the solution;
   --   v        updated approximation for the solution;
   --   radv     radii of the components in v;
   --   xr       real parts of the complex numbers in radv;
@@ -474,7 +419,6 @@ package Standard_Inlined_Newton_Circuits is
   procedure LU_Newton_Steps
               ( s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -486,7 +430,6 @@ package Standard_Inlined_Newton_Circuits is
               ( file : in file_type;
                 s : in Standard_Coefficient_Circuits.Link_to_System;
                 abscfs : in Standard_Coefficient_Circuits.Link_to_System;
-                rcols,icols : in Standard_Floating_VecVecs.Link_to_VecVec;
                 v,radv : in out Standard_Complex_Vectors.Vector;
                 xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
                 maxit : in natural32; tolres,tolerr : in double_float;
@@ -506,18 +449,12 @@ package Standard_Inlined_Newton_Circuits is
   --   value of the mixed residual in the stop criterium.
 
   -- REQUIRED : s.neq = s.dim, i.e.: the system is square,
-  --   and xr'range = xi'range = v'range = ipvt'range,
-  --   rcols'range = icols'range = 1..s.dim, and 
-  --   for all k: rcols(k)'range = icols(k)'range = 1..s.dim.
+  --   and xr'range = xi'range = v'range = ipvt'range.
 
   -- ON ENTRY :
   --   file     to write output to, if verbose is true;
   --   s        coefficient system of circuits;
   --   abscfs   same system s, but with radii for coefficients;
-  --   rcols    allocated work space for the real parts of the columns
-  --            of the Jacobian matrix;
-  --   icols    allocated work space for the imaginary parts of the columns
-  --            of the Jacobian matrix;
   --   v        vector with approximate values for a solution to s;
   --   radv     work space vector for the radii of the components of v;
   --   xr       work space allocated for the real parts of v;
@@ -531,8 +468,9 @@ package Standard_Inlined_Newton_Circuits is
 
   -- ON RETURN :
   --   s        s.fx contains the function value of s at v,
-  --            s.jm contains the LU factorization of the Jacobian
-  --            at the next-to-last values of the vector v;
+  --            s.jm contains the evaluated Jacobian matrix
+  --            and its LU factorization is in s.jrc and s.jic,
+  --            at the next-to-last approximation for the solution;
   --   v        updated approximation for the solution;
   --   radv     radii of the components in v;
   --   xr       real parts of the complex numbers in radv;

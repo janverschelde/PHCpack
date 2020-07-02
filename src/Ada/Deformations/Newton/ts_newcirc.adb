@@ -96,10 +96,6 @@ procedure ts_newcirc is
 
     use Standard_Inlined_Newton_Circuits;
 
-    rcols : Standard_Floating_VecVecs.Link_to_VecVec
-          := Standard_Vector_Splitters.Allocate(s.dim,s.dim,1,1);
-    icols : Standard_Floating_VecVecs.Link_to_VecVec
-          := Standard_Vector_Splitters.Allocate(s.dim,s.dim,1,1);
     ipvt : Standard_Integer_Vectors.Vector(1..s.dim);
     info : integer32;
     vxr : constant Standard_Floating_Vectors.Vector(v'range)
@@ -130,17 +126,15 @@ procedure ts_newcirc is
     loop
       if nomixres then
         if condition
-         then LU_Newton_Step(standard_output,s,rcols,icols,v,xr,xi,ipvt,
-                             res,rco,err,true);
-         else LU_Newton_Step(standard_output,s,rcols,icols,v,xr,xi,ipvt,
-                             info,res,err,true);
+         then LU_Newton_Step(standard_output,s,v,xr,xi,ipvt,res,rco,err,true);
+         else LU_Newton_Step(standard_output,s,v,xr,xi,ipvt,info,res,err,true);
         end if;
       else
         if condition then
-          LU_Newton_Step(standard_output,s,abscfs,rcols,icols,v,radv,xr,xi,
+          LU_Newton_Step(standard_output,s,abscfs,v,radv,xr,xi,
                          ipvt,res,rco,err,mixres,true);
         else
-          LU_Newton_Step(standard_output,s,abscfs,rcols,icols,v,radv,xr,xi,
+          LU_Newton_Step(standard_output,s,abscfs,v,radv,xr,xi,
                          ipvt,info,res,err,mixres,true);
         end if;
       end if;
@@ -148,8 +142,6 @@ procedure ts_newcirc is
       put("Another step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
-    Standard_Floating_VecVecs.Deep_Clear(rcols);
-    Standard_Floating_VecVecs.Deep_Clear(icols);
     Standard_Floating_Vectors.Clear(xr);
     Standard_Floating_Vectors.Clear(xi);
   end Inlined_LU_Newton_Steps;
