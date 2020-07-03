@@ -90,7 +90,8 @@ with Job_Handlers;
 function use_c2phc4c ( job : integer32;
                        a : C_intarrs.Pointer;
                        b : C_intarrs.Pointer;
-                       c : C_dblarrs.Pointer ) return integer32 is
+                       c : C_dblarrs.Pointer;
+                       vrblvl : integer32 := 0 ) return integer32 is
 
   procedure Write_Menu is
   begin
@@ -1585,17 +1586,21 @@ function use_c2phc4c ( job : integer32;
     case job is
       when 0 => Write_Menu; return 0;
       when 1 =>
-        return Job_Containers.Standard_Target_Poly_System_to_Container;
+        return Job_Containers.Standard_Target_Poly_System_to_Container(vrblvl);
       when 2 =>
-        return Job_Containers.Standard_Container_Poly_System_to_Target;
+        return Job_Containers.Standard_Container_Poly_System_to_Target(vrblvl);
       when 3 =>
-        return Job_Containers.Standard_Start_Poly_System_to_Container;
+        return Job_Containers.Standard_Start_Poly_System_to_Container(vrblvl);
       when 4 =>
-        return Job_Containers.Standard_Container_Poly_System_to_Start;
-      when 5 => return Job_Containers.Standard_Target_Solutions_to_Container;
-      when 6 => return Job_Containers.Standard_Container_Solutions_to_Target;
-      when 7 => return Job_Containers.Standard_Start_Solutions_to_Container;
-      when 8 => return Job_Containers.Standard_Container_Solutions_to_Start;
+        return Job_Containers.Standard_Container_Poly_System_to_Start(vrblvl);
+      when 5 => 
+        return Job_Containers.Standard_Target_Solutions_to_Container(vrblvl);
+      when 6 =>
+        return Job_Containers.Standard_Container_Solutions_to_Target(vrblvl);
+      when 7 =>
+        return Job_Containers.Standard_Start_Solutions_to_Container(vrblvl);
+      when 8 =>
+        return Job_Containers.Standard_Container_Solutions_to_Start(vrblvl);
       when 9 => return Job9; -- verify the solutions in the container
       when 10..15 => return C_to_PHCpack(job-10,0);
       when 16 => return Job16; -- call standard path trackers
@@ -1613,11 +1618,11 @@ function use_c2phc4c ( job : integer32;
       when 72 => return Job72; -- retrieve values of continuation parameters
       when 73 => return Job73; -- set values of continuation parameters
       when 74 => return use_syscon(74,a,b,c); -- store Laurential as string
-      when 75 => return Job_Handlers.Standard_Laurent_Solver(a,b);
+      when 75 => return Job_Handlers.Standard_Laurent_Solver(a,b,vrblvl);
       when 76 => return use_syscon(76,a,b,c); -- store polynomial as string
-      when 77 => return Job_Handlers.Standard_Polynomial_Solver(a,b);
-      when 78 => return Job_Handlers.Mixed_Volume(a);
-      when 79 => return Job_Handlers.Stable_Mixed_Volume(a,b);
+      when 77 => return Job_Handlers.Standard_Polynomial_Solver(a,b,vrblvl);
+      when 78 => return Job_Handlers.Mixed_Volume(a,vrblvl);
+      when 79 => return Job_Handlers.Stable_Mixed_Volume(a,b,vrblvl);
       when 80..105 => return use_celcon(job-80,a,b,c);
       when 106 => return use_syscon(68,a,b,c); -- load dobldobl poly as string
       when 107 => return use_syscon(69,a,b,c); -- load quaddobl poly as string
@@ -1671,33 +1676,41 @@ function use_c2phc4c ( job : integer32;
       when 250 => return Job250; -- quad double deflate
      -- double double versions for jobs 1 to 8
       when 251 =>
-        return Job_Containers.DoblDobl_Target_Poly_System_to_Container;
+        return Job_Containers.DoblDobl_Target_Poly_System_to_Container(vrblvl);
       when 252 =>
-        return Job_Containers.DoblDobl_Container_Poly_System_to_Target;
+        return Job_Containers.DoblDobl_Container_Poly_System_to_Target(vrblvl);
       when 253 =>
-        return Job_Containers.DoblDobl_Start_Poly_System_to_Container;
+        return Job_Containers.DoblDobl_Start_Poly_System_to_Container(vrblvl);
       when 254 =>
-        return Job_Containers.DoblDobl_Container_Poly_System_to_Start;
-      when 255 => return Job_Containers.DoblDobl_Target_Solutions_to_Container;
-      when 256 => return Job_Containers.DoblDobl_Container_Solutions_to_Target;
-      when 257 => return Job_Containers.DoblDobl_Start_Solutions_to_Container;
-      when 258 => return Job_Containers.DoblDobl_Container_Solutions_to_Start;
+        return Job_Containers.DoblDobl_Container_Poly_System_to_Start(vrblvl);
+      when 255 =>
+        return Job_Containers.DoblDobl_Target_Solutions_to_Container(vrblvl);
+      when 256 =>
+        return Job_Containers.DoblDobl_Container_Solutions_to_Target(vrblvl);
+      when 257 =>
+        return Job_Containers.DoblDobl_Start_Solutions_to_Container(vrblvl);
+      when 258 =>
+        return Job_Containers.DoblDobl_Container_Solutions_to_Start(vrblvl);
      -- double double witness set for a hypersurface
       when 259 => return use_track(49,a,b,c);
       when 260 => return Job260; -- embed quad double system
      -- quad double versions for jobs 1 to 8
       when 261 =>
-        return Job_Containers.QuadDobl_Target_Poly_System_to_Container;
+        return Job_Containers.QuadDobl_Target_Poly_System_to_Container(vrblvl);
       when 262 =>
-        return Job_Containers.QuadDobl_Container_Poly_System_to_Target;
+        return Job_Containers.QuadDobl_Container_Poly_System_to_Target(vrblvl);
       when 263 =>
-        return Job_Containers.QuadDobl_Start_Poly_System_to_Container;
+        return Job_Containers.QuadDobl_Start_Poly_System_to_Container(vrblvl);
       when 264 =>
-        return Job_Containers.QuadDobl_Container_Poly_System_to_Start;
-      when 265 => return Job_Containers.QuadDobl_Target_Solutions_to_Container;
-      when 266 => return Job_Containers.QuadDobl_Container_Solutions_to_Target;
-      when 267 => return Job_Containers.QuadDobl_Start_Solutions_to_Container;
-      when 268 => return Job_Containers.QuadDobl_Container_Solutions_to_Start;
+        return Job_Containers.QuadDobl_Container_Poly_System_to_Start(vrblvl);
+      when 265 =>
+        return Job_Containers.QuadDobl_Target_Solutions_to_Container(vrblvl);
+      when 266 =>
+        return Job_Containers.QuadDobl_Container_Solutions_to_Target(vrblvl);
+      when 267 =>
+        return Job_Containers.QuadDobl_Start_Solutions_to_Container(vrblvl);
+      when 268 =>
+        return Job_Containers.QuadDobl_Container_Solutions_to_Start(vrblvl);
      -- quad double witness set for a hypersurface
       when 269 => return use_track(50,a,b,c);
      -- interface to diagonal homotopies ...
@@ -1716,17 +1729,21 @@ function use_c2phc4c ( job : integer32;
       when 280 => return use_c2fac(29,a,b,c); -- standard random complex number
      -- multiprecision versions for jobs 1 to 8
       when 281 =>
-        return Job_Containers.Multprec_Target_Poly_System_to_Container;
+        return Job_Containers.Multprec_Target_Poly_System_to_Container(vrblvl);
       when 282 =>
-        return Job_Containers.Multprec_Container_Poly_System_to_Target;
+        return Job_Containers.Multprec_Container_Poly_System_to_Target(vrblvl);
       when 283 =>
-        return Job_Containers.Multprec_Start_Poly_System_to_Container;
+        return Job_Containers.Multprec_Start_Poly_System_to_Container(vrblvl);
       when 284 =>
-        return Job_Containers.Multprec_Container_Poly_System_to_Start;
-      when 285 => return Job_Containers.Multprec_Target_Solutions_to_Container;
-      when 286 => return Job_Containers.Multprec_Container_Solutions_to_Target;
-      when 287 => return Job_Containers.Multprec_Start_Solutions_to_Container;
-      when 288 => return Job_Containers.Multprec_Container_Solutions_to_Start;
+        return Job_Containers.Multprec_Container_Poly_System_to_Start(vrblvl);
+      when 285 =>
+        return Job_Containers.Multprec_Target_Solutions_to_Container(vrblvl);
+      when 286 =>
+        return Job_Containers.Multprec_Container_Solutions_to_Target(vrblvl);
+      when 287 =>
+        return Job_Containers.Multprec_Start_Solutions_to_Container(vrblvl);
+      when 288 =>
+        return Job_Containers.Multprec_Container_Solutions_to_Start(vrblvl);
      -- diagonal homotopy in double double and quad double precision
       when 289 => return use_track(43,a,b,c); -- dobldobl diagonal homotopy
       when 290 => return use_track(44,a,b,c); -- quaddobl diagonal homotopy
@@ -1875,10 +1892,10 @@ function use_c2phc4c ( job : integer32;
       when 698 => return use_syspool(14,a,b,c); -- clear dobldobl system pool
       when 699 => return use_syspool(15,a,b,c); -- clear quaddobl system pool
      -- blackbox solvers in double double and quad double precision
-      when 700 => return Job_Handlers.DoblDobl_Polynomial_Solver(a,b);
-      when 701 => return Job_Handlers.DoblDobl_Laurent_Solver(a,b);
-      when 702 => return Job_Handlers.QuadDobl_Polynomial_Solver(a,b);
-      when 703 => return Job_Handlers.QuadDobl_Laurent_Solver(a,b);
+      when 700 => return Job_Handlers.DoblDobl_Polynomial_Solver(a,b,vrblvl);
+      when 701 => return Job_Handlers.DoblDobl_Laurent_Solver(a,b,vrblvl);
+      when 702 => return Job_Handlers.QuadDobl_Polynomial_Solver(a,b,vrblvl);
+      when 703 => return Job_Handlers.QuadDobl_Laurent_Solver(a,b,vrblvl);
      -- Pade approximants
       when 704 => return use_series(7,a,b,c); -- Pade in double precision
       when 705 => return use_series(8,a,b,c); -- Pade with double doubles
@@ -1910,29 +1927,29 @@ function use_c2phc4c ( job : integer32;
       when 776 => return Job776; -- in quad double precision
      -- copying Laurent systems from and into the containers
       when 777 =>
-        return Job_Containers.Standard_Container_Laur_System_to_Start;
+        return Job_Containers.Standard_Container_Laur_System_to_Start(vrblvl);
       when 778 =>
-        return Job_Containers.DoblDobl_Container_Laur_System_to_Start;
+        return Job_Containers.DoblDobl_Container_Laur_System_to_Start(vrblvl);
       when 779 =>
-        return Job_Containers.QuadDobl_Container_Laur_System_to_Start;
+        return Job_Containers.QuadDobl_Container_Laur_System_to_Start(vrblvl);
       when 780 =>
-        return Job_Containers.Standard_Container_Laur_System_to_Target;
+        return Job_Containers.Standard_Container_Laur_System_to_Target(vrblvl);
       when 781 =>
-        return Job_Containers.DoblDobl_Container_Laur_System_to_Target;
+        return Job_Containers.DoblDobl_Container_Laur_System_to_Target(vrblvl);
       when 782 =>
-        return Job_Containers.QuadDobl_Container_Laur_System_to_Target;
+        return Job_Containers.QuadDobl_Container_Laur_System_to_Target(vrblvl);
       when 783 =>
-        return Job_Containers.Standard_Start_Laur_System_to_Container;
+        return Job_Containers.Standard_Start_Laur_System_to_Container(vrblvl);
       when 784 =>
-        return Job_Containers.DoblDobl_Start_Laur_System_to_Container;
+        return Job_Containers.DoblDobl_Start_Laur_System_to_Container(vrblvl);
       when 785 =>
-        return Job_Containers.QuadDobl_Start_Laur_System_to_Container;
+        return Job_Containers.QuadDobl_Start_Laur_System_to_Container(vrblvl);
       when 786 =>
-        return Job_Containers.Standard_Target_Laur_System_to_Container;
+        return Job_Containers.Standard_Target_Laur_System_to_Container(vrblvl);
       when 787 =>
-        return Job_Containers.DoblDobl_Target_Laur_System_to_Container;
+        return Job_Containers.DoblDobl_Target_Laur_System_to_Container(vrblvl);
       when 788 =>
-        return Job_Containers.QuadDobl_Target_Laur_System_to_Container;
+        return Job_Containers.QuadDobl_Target_Laur_System_to_Container(vrblvl);
      -- cascades for Laurent homotopies
       when 789 => return use_track(58,a,b,c); -- standard cascade Laurent htpy
       when 790 => return use_track(59,a,b,c); -- dobldobl cascade Laurent htpy
@@ -2059,11 +2076,11 @@ function use_c2phc4c ( job : integer32;
       when 897 => return use_syscon(job,a,b,c);
      -- reading solutions from file with given name
       when 916..918 => return use_solcon(job,a,b,c);
-      when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c);
+      when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c,vrblvl);
      -- getting, setting the seed and the version string
-      when 997 => return Job_Handlers.Get_Seed(a);
-      when 998 => return Job_Handlers.Set_Seed(a);
-      when 999 => return Job_Handlers.Version_String(a,b);
+      when 997 => return Job_Handlers.Get_Seed(a,vrblvl);
+      when 998 => return Job_Handlers.Set_Seed(a,vrblvl);
+      when 999 => return Job_Handlers.Version_String(a,b,vrblvl);
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception
