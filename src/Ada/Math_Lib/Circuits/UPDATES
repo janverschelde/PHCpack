@@ -1,3 +1,10 @@
+Fri 3 Jul 2020 : moved the definition of VecVecVec from the package
+  standard_coefficient_convolutions into a new package, updated
+  standard_coefficient_storage, shift_coefficient_convolutions,
+  standard_convolution_splitters, dobldobl_convolution_splitters,
+  quaddobl_convolution_splitters, dobldobl_coefficient_convolutions,
+  quaddobl_coefficient_convolutions, and ts_shiftcnv.
+
 Thu 2 Jul 2020 : to standard_coefficient_circuits, added work space
   vectors for the real and imaginary parts of the columns of the Jacobian,
   with an extra test in ts_perfade.

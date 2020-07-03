@@ -1,5 +1,5 @@
+with Standard_Floating_VecVecVecs;
 with DoblDobl_Speelpenning_Convolutions;
-with Standard_Coefficient_Convolutions;
 with DoblDobl_Coefficient_Convolutions;
 
 package DoblDobl_Convolution_Splitters is
@@ -22,10 +22,10 @@ package DoblDobl_Convolution_Splitters is
 
   procedure Split
               ( p : in DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
-                rhp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec );
+                rhp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec );
 
   -- DESCRIPTION :
   --   Splits the complex coefficients in the power table p in real high,

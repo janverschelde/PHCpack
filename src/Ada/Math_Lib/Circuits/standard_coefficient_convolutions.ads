@@ -4,6 +4,7 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;        use Standard_Floating_VecVecVecs;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
 
@@ -14,15 +15,6 @@ package Standard_Coefficient_Convolutions is
 --   separated real and imaginary parts, splitted from complex vectors.
 
 -- DATA STRUCTURES :
-
-  type VecVecVec is
-    array ( integer32 range <> ) of Standard_Floating_VecVecs.Link_to_VecVec;
-  -- A three dimensional structure to store the coefficient vectors,
-  -- real or imaginary parts, of powers of series.
- 
-  type Link_to_VecVecVec is access VecVecVec; -- to store the power table
-
-  type VecVecVec_Array is array ( integer32 range <> ) of Link_to_VecVecVec;
 
 -- A convolution circuit is a data structure for the efficient evaluation
 -- and differentiation of polynomials in several variables at the
@@ -140,13 +132,6 @@ package Standard_Coefficient_Convolutions is
   --   has allocated space for rpwt, ipwt, ryd, iyd, vy, yv, and vm.
 
 -- COPY PROCEDURES :
-
-  procedure Copy ( v_from : in Link_to_VecVecVec;
-                   v_to : out Link_to_VecVecVec );
-
-  -- DESCRIPTION :
-  --   Copies the v_from to the v_to,
-  --   after the deallocation of v_to.
 
   procedure Copy ( c_from : in Circuit; c_to : out Circuit );
 
@@ -688,13 +673,6 @@ package Standard_Coefficient_Convolutions is
   --   real and imaginary parts in rx and ix.
 
 -- DEALLOCATORS :
-
-  procedure Clear ( pwt : in out VecVecVec );
-  procedure Clear ( pwt : in out Link_to_VecVecVec );
-  procedure Clear ( pwt : in out VecVecVec_Array );
-
-  -- DESCRIPTION :
-  --   Deallocates the space occupied by the power table(s) pwt.
 
   procedure Clear ( c : in out Circuit );
   procedure Clear ( c : in out Link_to_Circuit );

@@ -1,4 +1,5 @@
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with Standard_Coefficient_Convolutions;  use Standard_Coefficient_Convolutions;
 
 package Standard_Coefficient_Storage is
@@ -27,7 +28,9 @@ package Standard_Coefficient_Storage is
   --            with the imaginary part of the constant series at index 0.
 
   procedure Allocate_and_Store
-              ( c : in Circuits; rcf,icf : out Link_to_VecVecVec );
+              ( c : in Circuits;
+                rcf : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : out Standard_Floating_VecVecVecs.Link_to_VecVecVec );
 
   -- DESCRIPTION :
   --   Allocates space for the real and imaginary parts of the coefficients
@@ -70,7 +73,9 @@ package Standard_Coefficient_Storage is
   --            with the values in rcf and icf.
 
   procedure Restore
-              ( rcf,icf : in Link_to_VecVecVec; c : in Circuits );
+              ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                c : in Circuits );
 
   -- DESCRIPTION :
   --   Restores all coefficients in c to the values

@@ -58,25 +58,24 @@ package body Standard_Convolution_Splitters is
 
   procedure Split
               ( p : in Standard_Speelpenning_Convolutions.Link_to_VecVecVec;
-                rp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ip : out Standard_Coefficient_Convolutions.
-                         Link_to_VecVecVec ) is
+                rp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ip : out Standard_Floating_VecVecVecs.Link_to_VecVecVec ) is
 
-    use Standard_Speelpenning_Convolutions;
     use Standard_Complex_VecVecs;
+    use Standard_Speelpenning_Convolutions;
 
   begin
     if p /= null then
       declare
-        rpwt,ipwt : Standard_Coefficient_Convolutions.VecVecVec(p'range);
+        rpwt,ipwt : Standard_Floating_VecVecVecs.VecVecVec(p'range);
       begin
         for k in p'range loop
           if p(k) /= null
            then Standard_Vector_Splitters.Split_Complex(p(k),rpwt(k),ipwt(k));
           end if;
         end loop;
-        rp := new Standard_Coefficient_Convolutions.VecVecVec'(rpwt);
-        ip := new Standard_Coefficient_Convolutions.VecVecVec'(ipwt);
+        rp := new Standard_Floating_VecVecVecs.VecVecVec'(rpwt);
+        ip := new Standard_Floating_VecVecVecs.VecVecVec'(ipwt);
       end;
     end if;
   end Split;

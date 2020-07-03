@@ -66,10 +66,10 @@ package body DoblDobl_Convolution_Splitters is
 
   procedure Split
               ( p : in DoblDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
-                rhp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec
+                rhp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec
               ) is
 
     use DoblDobl_Complex_VecVecs;
@@ -78,10 +78,10 @@ package body DoblDobl_Convolution_Splitters is
   begin
     if p /= null then
       declare
-        rhpwt : Standard_Coefficient_Convolutions.VecVecVec(p'range);
-        ihpwt : Standard_Coefficient_Convolutions.VecVecVec(p'range);
-        rlpwt : Standard_Coefficient_Convolutions.VecVecVec(p'range);
-        ilpwt : Standard_Coefficient_Convolutions.VecVecVec(p'range);
+        rhpwt : Standard_Floating_VecVecVecs.VecVecVec(p'range);
+        ihpwt : Standard_Floating_VecVecVecs.VecVecVec(p'range);
+        rlpwt : Standard_Floating_VecVecVecs.VecVecVec(p'range);
+        ilpwt : Standard_Floating_VecVecVecs.VecVecVec(p'range);
       begin
         for k in p'range loop
           if p(k) /= null then
@@ -89,10 +89,10 @@ package body DoblDobl_Convolution_Splitters is
               (p(k),rhpwt(k),ihpwt(k),rlpwt(k),ilpwt(k));
           end if;
         end loop;
-        rhp := new Standard_Coefficient_Convolutions.VecVecVec'(rhpwt);
-        ihp := new Standard_Coefficient_Convolutions.VecVecVec'(ihpwt);
-        rlp := new Standard_Coefficient_Convolutions.VecVecVec'(rlpwt);
-        ilp := new Standard_Coefficient_Convolutions.VecVecVec'(ilpwt);
+        rhp := new Standard_Floating_VecVecVecs.VecVecVec'(rhpwt);
+        ihp := new Standard_Floating_VecVecVecs.VecVecVec'(ihpwt);
+        rlp := new Standard_Floating_VecVecVecs.VecVecVec'(rlpwt);
+        ilp := new Standard_Floating_VecVecVecs.VecVecVec'(ilpwt);
       end;
     end if;
   end Split;

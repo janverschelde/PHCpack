@@ -1,5 +1,5 @@
+with Standard_Floating_VecVecVecs;
 with QuadDobl_Speelpenning_Convolutions;
-with Standard_Coefficient_Convolutions;
 with QuadDobl_Coefficient_Convolutions;
 
 package QuadDobl_Convolution_Splitters is
@@ -22,8 +22,8 @@ package QuadDobl_Convolution_Splitters is
 
   procedure Split
               ( p : in QuadDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
-                rp : out Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ip : out Standard_Coefficient_Convolutions.Link_to_VecVecVec );
+                rp : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ip : out Standard_Floating_VecVecVecs.Link_to_VecVecVec );
 
   -- DESCRIPTION :
   --   Splits the complex coefficients in the power table p in real and

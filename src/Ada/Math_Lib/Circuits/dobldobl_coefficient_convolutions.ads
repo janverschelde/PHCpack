@@ -3,9 +3,9 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_VecMats;
-with Standard_Coefficient_Convolutions;
 
 package DoblDobl_Coefficient_Convolutions is
 
@@ -18,8 +18,6 @@ package DoblDobl_Coefficient_Convolutions is
 --   and imaginary low (il).
 
 -- DATA STRUCTURES :
---   The vector representations for the power table are defined
---   in the package Standard_Coefficient_Convolutions.
 
 -- A convolution circuit is a data structure for the efficient evaluation
 -- and differentiation of polynomials in several variables at the
@@ -66,10 +64,10 @@ package DoblDobl_Coefficient_Convolutions is
     crc : Circuits(1..neq);    -- circuits for the equations
     mxe : Standard_Integer_Vectors.Vector(1..dim); -- exponent maxima
    -- the power table is stored in four parts
-    rhpwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-    ihpwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-    rlpwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-    ilpwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+    rhpwt : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+    ihpwt : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+    rlpwt : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+    ilpwt : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
    -- work space for EvalDiff on one circuit in ryd and iyd
     rhyd : Standard_Floating_VecVecs.VecVec(1..dim1); -- real high parts
     ihyd : Standard_Floating_VecVecs.VecVec(1..dim1); -- imaginary high parts
@@ -130,10 +128,10 @@ package DoblDobl_Coefficient_Convolutions is
 -- COMPUTING THE POWER TABLE :
 
   procedure Compute
-              ( rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+              ( rhpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
                 rhx,ihx : in Standard_Floating_VecVecs.Link_to_VecVec;
                 rlx,ilx : in Standard_Floating_VecVecs.Link_to_VecVec );
@@ -142,10 +140,10 @@ package DoblDobl_Coefficient_Convolutions is
   --   Computes the powers in the allocated power table for the
   --   coefficients in the power series in x.
 
-  -- REQUIRED : rhpwt = Standard_Coefficient_Convolutions.Allocate(mxe,deg),
-  --   ihpwt = Standard_Coefficient_Convolutions.Allocate(mxe,deg),
-  --   rlpwt = Standard_Coefficient_Convolutions.Allocate(mxe,deg), and
-  --   ilpwt = Standard_Coefficient_Convolutions.Allocate(mxe,deg)
+  -- REQUIRED : rhpwt = Standard_Floating_VecVecVecs.Allocate(mxe,deg),
+  --   ihpwt = Standard_Floating_VecVecVecs.Allocate(mxe,deg),
+  --   rlpwt = Standard_Floating_VecVecVecs.Allocate(mxe,deg), and
+  --   ilpwt = Standard_Floating_VecVecVecs.Allocate(mxe,deg)
   --   have been executed, and *pwt'range = x'range.
 
   -- ON ENTRY :
@@ -373,11 +371,10 @@ package DoblDobl_Coefficient_Convolutions is
                 rlwrk,ilwrk : in Standard_Floating_Vectors.Link_to_Vector;
                 rhacc,ihacc : in Standard_Floating_Vectors.Link_to_Vector;
                 rlacc,ilacc : in Standard_Floating_Vectors.Link_to_Vector;
-                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec
-              );
+                rhpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec );
 
   -- DESCRIPTION :
   --   Multiplies the coefficient with the common factor.
@@ -469,11 +466,10 @@ package DoblDobl_Coefficient_Convolutions is
                 rlwrk,ilwrk : in Standard_Floating_Vectors.Link_to_Vector;
                 rhacc,ihacc : in Standard_Floating_Vectors.Link_to_Vector;
                 rlacc,ilacc : in Standard_Floating_Vectors.Link_to_Vector;
-                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec
-              );
+                rhpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec );
 
   -- DESCRIPTION :
   --   Evaluation and differentiation of a polynomial,
@@ -534,10 +530,10 @@ package DoblDobl_Coefficient_Convolutions is
               ( c : in Circuit;
                 rhx,ihx : in Standard_Floating_VecVecs.VecVec;
                 rlx,ilx : in Standard_Floating_VecVecs.VecVec;
-                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rhpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 rhyd,ihyd : in Standard_Floating_VecVecs.VecVec;
                 rlyd,ilyd : in Standard_Floating_VecVecs.VecVec );
 
@@ -582,10 +578,10 @@ package DoblDobl_Coefficient_Convolutions is
               ( c : in Circuits;
                 rhx,ihx : in Standard_Floating_VecVecs.VecVec;
                 rlx,ilx : in Standard_Floating_VecVecs.VecVec;
-                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rhpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 rhyd,ihyd : in Standard_Floating_VecVecs.VecVec;
                 rlyd,ilyd : in Standard_Floating_VecVecs.VecVec;
                 vy : in DoblDobl_Complex_VecVecs.VecVec;

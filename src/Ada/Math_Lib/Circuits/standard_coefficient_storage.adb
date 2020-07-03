@@ -48,9 +48,11 @@ package body Standard_Coefficient_Storage is
   end Allocate_and_Store;
 
   procedure Allocate_and_Store
-              ( c : in Circuits; rcf,icf : out Link_to_VecVecVec ) is
+              ( c : in Circuits;
+                rcf : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : out Standard_Floating_VecVecVecs.Link_to_VecVecVec ) is
 
-    rcp,icp : VecVecVec(c'range);
+    rcp,icp : Standard_Floating_VecVecVecs.VecVecVec(c'range);
 
   begin
     for k in c'range loop
@@ -58,8 +60,8 @@ package body Standard_Coefficient_Storage is
        then Allocate_and_Store(c(k),rcp(k),icp(k));
       end if;
     end loop;
-    rcf := new VecVecVec'(rcp);
-    icf := new VecVecVec'(icp);
+    rcf := new Standard_Floating_VecVecVecs.VecVecVec'(rcp);
+    icf := new Standard_Floating_VecVecVecs.VecVecVec'(icp);
   end Allocate_and_Store;
 
   procedure Restore
@@ -105,7 +107,9 @@ package body Standard_Coefficient_Storage is
   end Restore;
 
   procedure Restore
-              ( rcf,icf : in Link_to_VecVecVec; c : in Circuits ) is
+              ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                c : in Circuits ) is
   begin
     for k in c'range loop
       if c(k) /= null

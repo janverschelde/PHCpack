@@ -1,6 +1,7 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with Standard_Coefficient_Convolutions;
 
 package Shift_Coefficient_Convolutions is
@@ -373,12 +374,12 @@ package Shift_Coefficient_Convolutions is
   -- ON RETURN :
   --   c        circuit with shifted coefficients.
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector );
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector );
 
@@ -400,13 +401,13 @@ package Shift_Coefficient_Convolutions is
   -- ON RETURN :
   --   c        circuits with shifted coefficients.
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector );
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector );
@@ -481,16 +482,16 @@ package Shift_Coefficient_Convolutions is
   -- ON RETURN :
   --   s        circuit with shifted coefficients.
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.System;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector );
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector );
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector );
 
@@ -512,18 +513,18 @@ package Shift_Coefficient_Convolutions is
   -- ON RETURN :
   --   s        circuit with shifted coefficients.
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.System;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector );
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector );
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector );

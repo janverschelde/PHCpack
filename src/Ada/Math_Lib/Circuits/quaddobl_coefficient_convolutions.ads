@@ -3,9 +3,9 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecMats;
-with Standard_Coefficient_Convolutions;
 
 package QuadDobl_Coefficient_Convolutions is
 
@@ -18,8 +18,6 @@ package QuadDobl_Coefficient_Convolutions is
 --   The floating vectors are thus four times as long as the complex vectors.
 
 -- DATA STRUCTURES :
---   The vector representations for the power table are defined
---   in the package Standard_Coefficient_Convolutions.
 
 -- A convolution circuit is a data structure for the efficient evaluation
 -- and differentiation of polynomials in several variables at the
@@ -62,8 +60,8 @@ package QuadDobl_Coefficient_Convolutions is
     crc : Circuits(1..neq);    -- circuits for the equations
     mxe : Standard_Integer_Vectors.Vector(1..dim); -- exponent maxima
    -- the power table is stored in two parts
-    rpwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-    ipwt : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+    rpwt : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+    ipwt : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
    -- work space for EvalDiff on one circuit in ryd and iyd
     ryd : Standard_Floating_VecVecs.VecVec(1..dim1); -- real parts
     iyd : Standard_Floating_VecVecs.VecVec(1..dim1); -- imaginary parts
@@ -122,8 +120,8 @@ package QuadDobl_Coefficient_Convolutions is
 -- COMPUTING THE POWER TABLE :
 
   procedure Compute
-              ( rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+              ( rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
                 xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
@@ -132,8 +130,8 @@ package QuadDobl_Coefficient_Convolutions is
   --   Computes the powers in the allocated power table for the
   --   coefficients in the power series in x.
 
-  -- REQUIRED : rpwt = Standard_Coefficient_Convolutions.Allocate(mxe,deg)
-  --   and ipwt = Standard_Coefficient_Convolutions.Allocate(mxe,deg)
+  -- REQUIRED : rpwt = Standard_Floating_VecVecVecs.Allocate(mxe,deg)
+  --   and ipwt = Standard_Floating_VecVecVecs.Allocate(mxe,deg)
   --   have been executed, and *pwt'range = x'range.
 
   -- ON ENTRY :
@@ -279,8 +277,8 @@ package QuadDobl_Coefficient_Convolutions is
                 rcff,icff : in Standard_Floating_Vectors.Link_to_Vector;
                 rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                 racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
@@ -342,8 +340,8 @@ package QuadDobl_Coefficient_Convolutions is
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                 rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                 racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
@@ -395,8 +393,8 @@ package QuadDobl_Coefficient_Convolutions is
   procedure EvalDiff
               ( c : in Circuit;
                 xr,xi : in Standard_Floating_VecVecs.VecVec;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector );
 
@@ -429,8 +427,8 @@ package QuadDobl_Coefficient_Convolutions is
   procedure EvalDiff
               ( c : in Circuits;
                 xr,xi : in Standard_Floating_VecVecs.VecVec;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;

@@ -15,6 +15,7 @@ with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors;
@@ -324,7 +325,7 @@ procedure ts_shiftcnv is
     sy,sz : Standard_Complex_Vectors.Vector(1..s.neq);
     ans : character;
     xr,xi,rwk,iwk,pwt : Standard_Floating_Vectors.Link_to_Vector;
-    rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+    rcfhom,icfhom : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
 
   begin
     new_line;

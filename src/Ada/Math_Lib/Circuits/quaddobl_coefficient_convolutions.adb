@@ -7,6 +7,7 @@ with QuadDobl_Complex_Matrices;
 with Standard_Vector_Splitters;
 with QuadDobl_Vector_Splitters;
 with Exponent_Indices;
+with Standard_Coefficient_Convolutions;
 
 package body QuadDobl_Coefficient_Convolutions is
 
@@ -111,8 +112,8 @@ package body QuadDobl_Coefficient_Convolutions is
 -- COMPUTING THE POWER TABLE :
 
   procedure Compute
-              ( rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+              ( rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
                 xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
@@ -331,8 +332,8 @@ package body QuadDobl_Coefficient_Convolutions is
                 rcff,icff : in Standard_Floating_Vectors.Link_to_Vector;
                 rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                 racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     rpwx,ipwx : Standard_Floating_VecVecs.Link_to_VecVec;
@@ -408,8 +409,8 @@ package body QuadDobl_Coefficient_Convolutions is
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                 rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector;
                 racc,iacc : in Standard_Floating_Vectors.Link_to_Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
     use Standard_Integer_Vectors,QuadDobl_Vector_Splitters;
@@ -512,8 +513,8 @@ package body QuadDobl_Coefficient_Convolutions is
   procedure EvalDiff
               ( c : in Circuit;
                 xr,xi : in Standard_Floating_VecVecs.VecVec;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                 u,v,w : in Standard_Floating_Vectors.Link_to_Vector ) is
 
@@ -530,8 +531,8 @@ package body QuadDobl_Coefficient_Convolutions is
   procedure EvalDiff
               ( c : in Circuits;
                 xr,xi : in Standard_Floating_VecVecs.VecVec;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 ryd,iyd : in Standard_Floating_VecVecs.VecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
@@ -672,8 +673,8 @@ package body QuadDobl_Coefficient_Convolutions is
   procedure Clear ( s : in out System ) is
   begin
     Clear(s.crc);
-    Standard_Coefficient_Convolutions.Clear(s.rpwt);
-    Standard_Coefficient_Convolutions.Clear(s.ipwt);
+    Standard_Floating_VecVecVecs.Clear(s.rpwt);
+    Standard_Floating_VecVecVecs.Clear(s.ipwt);
     Standard_Floating_VecVecs.Clear(s.ryd);
     Standard_Floating_VecVecs.Clear(s.iyd);
     QuadDobl_Complex_VecVecs.Clear(s.vy);

@@ -312,8 +312,8 @@ package body Shift_Coefficient_Convolutions is
 
 -- SHIFTING MANY CIRCUITS :
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
@@ -322,8 +322,8 @@ package body Shift_Coefficient_Convolutions is
     end loop;
   end Map;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
@@ -332,8 +332,8 @@ package body Shift_Coefficient_Convolutions is
     end loop;
   end Map;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
@@ -343,8 +343,8 @@ package body Shift_Coefficient_Convolutions is
     end loop;
   end Map;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                   c : in Standard_Coefficient_Convolutions.Circuits;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
@@ -415,16 +415,16 @@ package body Shift_Coefficient_Convolutions is
     end if;
   end Shift;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.System;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
   begin
     Map(rcf,icf,s.crc,pwt);
   end Map;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
 
@@ -436,8 +436,8 @@ package body Shift_Coefficient_Convolutions is
     end if;
   end Map;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   pwt : in Standard_Floating_Vectors.Link_to_Vector ) is
 
@@ -449,8 +449,8 @@ package body Shift_Coefficient_Convolutions is
     end if;
   end Map;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.System;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
@@ -458,8 +458,8 @@ package body Shift_Coefficient_Convolutions is
     Map(rcf,icf,s.crc,rpwt,ipwt);
   end Map;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
@@ -472,8 +472,8 @@ package body Shift_Coefficient_Convolutions is
     end if;
   end Map;
 
-  procedure Map ( rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                  icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+  procedure Map ( rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                  icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                   s : in Standard_Coefficient_Convolutions.Link_to_System;
                   rpwt : in Standard_Floating_Vectors.Link_to_Vector;
                   ipwt : in Standard_Floating_Vectors.Link_to_Vector ) is
