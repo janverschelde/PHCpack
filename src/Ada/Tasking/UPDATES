@@ -1,3 +1,7 @@
+Fri 3 Jul 2020 : for the new package standard_floating_vecvecvecs, updated
+  multitasked_path_convolutions.adb, multitasked_algodiff_convolutions,
+  multitasked_hessian_circuits, ts_mtadcnv, and ts_mtpcscnv.
+
 Tue 30 Jun 2020 : updated multitasked_path_convolutions.adb to reflect that
   homogeneous coordinates are not yet supported for coefficient circuits.
   Adjusted multitasked_path_convolutions so the main procedure can take
