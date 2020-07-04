@@ -1,3 +1,6 @@
+Sat 4 Jul 2020 : new ts_perfserlin to develop a better performing solver
+  for linear systems of power series.
+
 Fri 26 Jun 2020 : to standard_series_matrix_solvers, added procedures to
   pass the degree of the series for use in a staggered iterative solving.
 
