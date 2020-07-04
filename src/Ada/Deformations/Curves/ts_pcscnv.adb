@@ -16,6 +16,7 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
@@ -131,8 +132,8 @@ procedure ts_pcscnv is
 
   procedure Step_Track
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
-                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 cfs,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -507,7 +508,7 @@ procedure ts_pcscnv is
     svls : Standard_Complex_VecVecs.VecVec(0..dim)
          := Standard_Vector_Splitters.Allocate(hom.neq,dim+1,0,1);
     pwt : Standard_Floating_Vectors.Link_to_Vector;
-    rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+    rcfhom,icfhom : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
 
   begin
     Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);

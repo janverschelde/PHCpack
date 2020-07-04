@@ -8,6 +8,7 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
@@ -39,8 +40,8 @@ package Predictor_Corrector_Trackers is
 
   procedure Track_One_Path
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
-                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -61,8 +62,8 @@ package Predictor_Corrector_Trackers is
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
-                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;

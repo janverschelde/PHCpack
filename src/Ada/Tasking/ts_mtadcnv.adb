@@ -16,6 +16,7 @@ with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_VecVecs;
@@ -157,6 +158,7 @@ procedure ts_mtadcnv is
   --   static   flag to apply static load balancing;
   --   output   flag for output during multitasking.
 
+    use Standard_Floating_VecVecVecs;
     use Standard_Coefficient_Convolutions;
 
     s : constant Standard_Coefficient_Convolutions.Link_to_System
@@ -332,13 +334,13 @@ procedure ts_mtadcnv is
         := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     ilx : constant Standard_Floating_VecVecs.Link_to_VecVec
         := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
-    rhpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    rhpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
           := Standard_Coefficient_Convolutions.Allocate(s.mxe,deg);
-    rlpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    rlpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
           := Standard_Coefficient_Convolutions.Allocate(s.mxe,deg);
-    ihpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    ihpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
           := Standard_Coefficient_Convolutions.Allocate(s.mxe,deg);
-    ilpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    ilpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
           := Standard_Coefficient_Convolutions.Allocate(s.mxe,deg);
     vy2 : constant DoblDobl_Complex_VecVecs.VecVec(0..deg)
         := Linearized_Allocation(dim,deg);
@@ -500,9 +502,9 @@ procedure ts_mtadcnv is
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
     xi : constant Standard_Floating_VecVecs.Link_to_VecVec
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
-    rpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    rpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
          := Standard_Coefficient_Convolutions.Allocate(s.mxe,degdim);
-    ipwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    ipwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
          := Standard_Coefficient_Convolutions.Allocate(s.mxe,degdim);
     vy2 : constant QuadDobl_Complex_VecVecs.VecVec(0..deg)
         := Linearized_Allocation(dim,deg);
@@ -781,6 +783,7 @@ procedure ts_mtadcnv is
   --   verbose  if true, then timings are written to screen,
   --            otherwise, no output is written to screen.
 
+    use Standard_Floating_VecVecVecs;
     use Standard_Vector_Splitters;
     use Standard_Coefficient_Convolutions;
 
@@ -982,13 +985,13 @@ procedure ts_mtadcnv is
         := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     ilx : constant Standard_Floating_VecVecs.Link_to_VecVec
         := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
-    rhpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    rhpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
           := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
-    rlpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    rlpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
           := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
-    ihpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    ihpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
           := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
-    ilpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    ilpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
           := Standard_Coefficient_Convolutions.Allocate(mxe,deg);
    -- yd : constant DoblDobl_Complex_VecVecs.VecVec(1..dim+1)
    --    := Allocate_Coefficients(dim+1,deg);
@@ -1187,9 +1190,9 @@ procedure ts_mtadcnv is
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
     xi : constant Standard_Floating_VecVecs.Link_to_VecVec
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,degdim);
-    rpwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    rpwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
          := Standard_Coefficient_Convolutions.Allocate(mxe,degdim);
-    ipwt : constant Standard_Coefficient_Convolutions.Link_to_VecVecVec
+    ipwt : constant Standard_Floating_VecVecVecs.Link_to_VecVecVec
          := Standard_Coefficient_Convolutions.Allocate(mxe,degdim);
     ryd : constant Standard_Floating_VecVecs.Link_to_VecVec
         := Allocate_Floating_Coefficients(dim+1,degdim);

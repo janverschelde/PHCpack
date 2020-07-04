@@ -17,9 +17,9 @@ procedure ts_mtpcscnv is
 
   begin
     case precision is
-      when '0' => Standard_Main;
-      when '1' => DoblDobl_Main;
-      when '2' => QuadDobl_Main;
+      when '0' => Standard_Main(0);
+      when '1' => DoblDobl_Main(0);
+      when '2' => QuadDobl_Main(0);
       when others => null;
     end case;
   end Main;

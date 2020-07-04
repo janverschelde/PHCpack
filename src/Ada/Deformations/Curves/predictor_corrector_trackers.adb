@@ -28,8 +28,8 @@ package body Predictor_Corrector_Trackers is
 
   procedure Track_One_Path
               ( hom : in Standard_Coefficient_Convolutions.Link_to_System;
-                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -75,8 +75,8 @@ package body Predictor_Corrector_Trackers is
   procedure Track_One_Path
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
-                rcf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                icf : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rcf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                icf : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 cfh,abh : in Standard_Coefficient_Circuits.Link_to_System;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 maxit : in integer32; mhom : in integer32;
@@ -174,7 +174,7 @@ package body Predictor_Corrector_Trackers is
     xtr : constant natural32 := 1;
     acct,mixres,initres : double_float := 0.0;
     minstpz,maxstpz : double_float := 0.0;
-    rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+    rcfhom,icfhom : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
     rx : Standard_Floating_VecVecs.Link_to_VecVec
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     ix : Standard_Floating_VecVecs.Link_to_VecVec
@@ -221,8 +221,8 @@ package body Predictor_Corrector_Trackers is
       exit when Is_Null(solsptr);
       Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
     end loop;
-    Standard_Coefficient_Convolutions.Clear(rcfhom);
-    Standard_Coefficient_Convolutions.Clear(icfhom);
+    Standard_Floating_VecVecVecs.Clear(rcfhom);
+    Standard_Floating_VecVecVecs.Clear(icfhom);
     Clear(prd); Clear(svh);
     Standard_Floating_VecVecs.Deep_Clear(rx);
     Standard_Floating_VecVecs.Deep_Clear(ix);
@@ -266,7 +266,7 @@ package body Predictor_Corrector_Trackers is
     minpastp,maxpastp : double_float;
     mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps : natural32;
     xtr : constant natural32 := 1;
-    rcfhom,icfhom : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+    rcfhom,icfhom : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
     rx : Standard_Floating_VecVecs.Link_to_VecVec
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     ix : Standard_Floating_VecVecs.Link_to_VecVec
@@ -329,8 +329,8 @@ package body Predictor_Corrector_Trackers is
     print_times(file,timer,"tracking "
                 & Characters_and_Numbers.nConvert(lensols)
                 & " paths in double precision");
-    Standard_Coefficient_Convolutions.Clear(rcfhom);
-    Standard_Coefficient_Convolutions.Clear(icfhom);
+    Standard_Floating_VecVecVecs.Clear(rcfhom);
+    Standard_Floating_VecVecVecs.Clear(icfhom);
     Clear(prd); Clear(svh);
     Standard_Floating_VecVecs.Deep_Clear(rx);
     Standard_Floating_VecVecs.Deep_Clear(ix);

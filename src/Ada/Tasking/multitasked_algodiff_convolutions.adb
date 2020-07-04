@@ -20,9 +20,9 @@ package body Multitasked_AlgoDiff_Convolutions is
 
   function Allocate_Work_Space
              ( nbt,dim,deg : integer32 )
-             return Standard_Coefficient_Convolutions.VecVecVec is
+             return Standard_Floating_VecVecVecs.VecVecVec is
 
-    use Standard_Coefficient_Convolutions;
+    use Standard_Floating_VecVecVecs;
     use Standard_Vector_Splitters;
 
     res : VecVecVec(1..nbt);
@@ -104,8 +104,8 @@ package body Multitasked_AlgoDiff_Convolutions is
                 c : in Standard_Coefficient_Convolutions.Circuits;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in Standard_Complex_VecVecs.VecVec;
                 vm : in Standard_Complex_VecMats.VecMat;
                 output : in boolean := false ) is
@@ -115,6 +115,7 @@ package body Multitasked_AlgoDiff_Convolutions is
   --   with static load balancing.  Except for the flag "static",
   --   the specification is the same as Standard_Multitasked_EvalDiff.
 
+    use Standard_Floating_VecVecVecs;
     use Standard_Coefficient_Convolutions;
 
     dim : constant integer32 := c'last; -- assuming square circuits
@@ -260,8 +261,8 @@ package body Multitasked_AlgoDiff_Convolutions is
                 c : in Standard_Coefficient_Convolutions.Circuits;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in Standard_Complex_VecVecs.VecVec;
                 vm : in Standard_Complex_VecMats.VecMat;
                 output : in boolean := false ) is
@@ -271,6 +272,7 @@ package body Multitasked_AlgoDiff_Convolutions is
   --   with dynamic load balancing.  Except for the flag "static",
   --   the specification is the same as Standard_Multitasked_EvalDiff.
 
+    use Standard_Floating_VecVecVecs;
     use Standard_Coefficient_Convolutions;
 
     dim : constant integer32 := c'last; -- assuming square circuits
@@ -457,8 +459,8 @@ package body Multitasked_AlgoDiff_Convolutions is
                 c : in Standard_Coefficient_Convolutions.Circuits;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in Standard_Complex_VecVecs.VecVec;
                 vm : in Standard_Complex_VecMats.VecMat;
                 static : in boolean := false;
@@ -476,10 +478,10 @@ package body Multitasked_AlgoDiff_Convolutions is
                 rhx,ihx : in Standard_Floating_VecVecs.Link_to_VecVec;
                 rlx,ilx : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rhpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in DoblDobl_Complex_VecVecs.VecVec;
                 vm : in DoblDobl_Complex_VecMats.VecMat;
                 output : in boolean := false ) is
@@ -494,13 +496,13 @@ package body Multitasked_AlgoDiff_Convolutions is
 
     dim : constant integer32 := c'last; -- assuming square circuits
     deg : constant integer32 := vm'last;
-    rhyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    rhyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
          := Allocate_Work_Space(nbt,dim,deg);
-    ihyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    ihyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
          := Allocate_Work_Space(nbt,dim,deg);
-    rlyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    rlyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
          := Allocate_Work_Space(nbt,dim,deg);
-    ilyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    ilyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
          := Allocate_Work_Space(nbt,dim,deg);
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
@@ -680,10 +682,10 @@ package body Multitasked_AlgoDiff_Convolutions is
                 rhx,ihx : in Standard_Floating_VecVecs.Link_to_VecVec;
                 rlx,ilx : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rhpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in DoblDobl_Complex_VecVecs.VecVec;
                 vm : in DoblDobl_Complex_VecMats.VecMat;
                 output : in boolean := false ) is
@@ -698,13 +700,13 @@ package body Multitasked_AlgoDiff_Convolutions is
 
     dim : constant integer32 := c'last; -- assuming square circuits
     deg : constant integer32 := vm'last;
-    rhyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    rhyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
          := Allocate_Work_Space(nbt,dim,deg);
-    ihyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    ihyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
          := Allocate_Work_Space(nbt,dim,deg);
-    rlyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    rlyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
          := Allocate_Work_Space(nbt,dim,deg);
-    ilyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    ilyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
          := Allocate_Work_Space(nbt,dim,deg);
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     idx1,idx2 : integer32 := 0; -- global indices
@@ -923,10 +925,10 @@ package body Multitasked_AlgoDiff_Convolutions is
                 rhx,ihx : in Standard_Floating_VecVecs.Link_to_VecVec;
                 rlx,ilx : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rhpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ihpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                rlpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ilpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rhpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ihpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rlpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ilpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in DoblDobl_Complex_VecVecs.VecVec;
                 vm : in DoblDobl_Complex_VecMats.VecMat;
                 static : in boolean := false;
@@ -947,8 +949,8 @@ package body Multitasked_AlgoDiff_Convolutions is
                 c : in QuadDobl_Coefficient_Convolutions.Circuits;
                 xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
                 output : in boolean := false ) is
@@ -964,9 +966,9 @@ package body Multitasked_AlgoDiff_Convolutions is
     dim : constant integer32 := c'last; -- assuming square circuits
     deg : constant integer32 := vm'last;
     degdim : constant integer32 := 4*(deg+1)-1;
-    ryd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    ryd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
         := Allocate_Work_Space(nbt,dim,degdim);
-    iyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    iyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
         := Allocate_Work_Space(nbt,dim,degdim);
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     alldone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
@@ -1151,8 +1153,8 @@ package body Multitasked_AlgoDiff_Convolutions is
                 c : in QuadDobl_Coefficient_Convolutions.Circuits;
                 xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
                 output : in boolean := false ) is
@@ -1168,9 +1170,9 @@ package body Multitasked_AlgoDiff_Convolutions is
     dim : constant integer32 := c'last; -- assuming square circuits
     deg : constant integer32 := vm'last;
     degdim : constant integer32 := 4*(deg+1)-1;
-    ryd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    ryd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
         := Allocate_Work_Space(nbt,dim,degdim);
-    iyd : constant Standard_Coefficient_Convolutions.VecVecVec(1..nbt)
+    iyd : constant Standard_Floating_VecVecVecs.VecVecVec(1..nbt)
         := Allocate_Work_Space(nbt,dim,degdim);
     u : constant Standard_Floating_VecVecs.VecVec(1..nbt)
       := Standard_Vector_Splitters.Allocate_Floating_Coefficients(nbt,3);
@@ -1396,8 +1398,8 @@ package body Multitasked_AlgoDiff_Convolutions is
                 c : in QuadDobl_Coefficient_Convolutions.Circuits;
                 xr,xi : in Standard_Floating_VecVecs.Link_to_VecVec;
                 mxe : in Standard_Integer_Vectors.Vector;
-                rpwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-                ipwt : in Standard_Coefficient_Convolutions.Link_to_VecVecVec;
+                rpwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                ipwt : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 vy : in QuadDobl_Complex_VecVecs.VecVec;
                 vm : in QuadDobl_Complex_VecMats.VecMat;
                 static : in boolean := false;

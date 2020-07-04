@@ -3,6 +3,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -11,7 +12,6 @@ with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
-with Standard_Coefficient_Convolutions;
 with DoblDobl_Complex_Circuits;
 with QuadDobl_Complex_Circuits;
 
@@ -24,7 +24,7 @@ package Multitasked_Hessian_Circuits is
 
   procedure Allocate_Hessian_Spaces
               ( dim : in integer32;
-                hrp,hip : out Standard_Coefficient_Convolutions.VecVecVec );
+                hrp,hip : out Standard_Floating_VecVecVecs.VecVecVec );
 
   -- DESCRIPTION :
   --   Allocates space for the real and imaginary parts of Hessian

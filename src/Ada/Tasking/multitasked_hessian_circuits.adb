@@ -24,7 +24,7 @@ package body Multitasked_Hessian_Circuits is
 
   procedure Allocate_Hessian_Spaces
               ( dim : in integer32;
-                hrp,hip : out Standard_Coefficient_Convolutions.VecVecVec ) is
+                hrp,hip : out Standard_Floating_VecVecVecs.VecVecVec ) is
   begin
     for k in hrp'range loop
       Standard_Coefficient_Circuits.Allocate_Hessian_Space(dim,hrp(k),hip(k));
@@ -48,7 +48,7 @@ package body Multitasked_Hessian_Circuits is
     info : integer32;
     idx1,idx2 : integer32 := 0; -- global indices
     lck1,lck2 : Semaphore.Lock;
-    hrps,hips : Standard_Coefficient_Convolutions.VecVecVec(1..nbt);
+    hrps,hips : Standard_Floating_VecVecVecs.VecVecVec(1..nbt);
 
     procedure Reporting_Job ( i,n : integer32 ) is 
 
@@ -226,8 +226,8 @@ package body Multitasked_Hessian_Circuits is
     Standard_Complex_VecVecs.Clear(e);
     Standard_Floating_VecVecs.Clear(ryd);
     Standard_Floating_VecVecs.Clear(iyd);
-    Standard_Coefficient_Convolutions.Clear(hrps);
-    Standard_Coefficient_Convolutions.Clear(hips);
+    Standard_Floating_VecVecVecs.Clear(hrps);
+    Standard_Floating_VecVecVecs.Clear(hips);
   end Multitasked_Singular_Values;
 
   procedure Static_Singular_Values

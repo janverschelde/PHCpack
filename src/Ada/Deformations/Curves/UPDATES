@@ -1,3 +1,6 @@
+Fri 3 Jul 2020 : updated predictor_corrector_trackers for the new
+  package standard_floating_vecvecvecs, updated ts_pcscnv.
+
 Thu 2 Jul 2020 : in predictor_corrector_{loops,trackers}.adb replaced
   the Newton steps on coefficient circuits by inlined versions.
 

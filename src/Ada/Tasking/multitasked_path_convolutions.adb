@@ -11,6 +11,7 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -91,8 +92,8 @@ package body Multitasked_Path_Convolutions is
 
     maxit : constant integer32 := integer32(pars.numdeg + pars.dendeg + 2)/2;
     homsa : Standard_Coefficient_Convolutions.System_Array(1..nbtasks);
-    rcf,icf : Standard_Coefficient_Convolutions.Link_to_VecVecVec;
-    rx,ix : Standard_Coefficient_Convolutions.VecVecVec(1..nbtasks);
+    rcf,icf : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+    rx,ix : Standard_Floating_VecVecVecs.VecVecVec(1..nbtasks);
     cfhsa,abhsa : Standard_Coefficient_Circuits.System_Array(1..nbtasks);
     ipvt : Standard_Integer_VecVecs.VecVec(1..nbtasks);
     first : constant Link_to_Solution := Head_Of(sols);
@@ -223,10 +224,10 @@ package body Multitasked_Path_Convolutions is
     Standard_Floating_VecVecs.Clear(pwt);
     Standard_Floating_VecVecs.Clear(xr);
     Standard_Floating_VecVecs.Clear(xi);
-    Standard_Coefficient_Convolutions.Clear(rcf);
-    Standard_Coefficient_Convolutions.Clear(icf);
-    Standard_Coefficient_Convolutions.Clear(rx);
-    Standard_Coefficient_Convolutions.Clear(ix);
+    Standard_Floating_VecVecVecs.Clear(rcf);
+    Standard_Floating_VecVecVecs.Clear(icf);
+    Standard_Floating_VecVecVecs.Clear(rx);
+    Standard_Floating_VecVecVecs.Clear(ix);
     Standard_Complex_VecMats.Clear(vh);
   end Standard_Multitasked_Tracker;
 
