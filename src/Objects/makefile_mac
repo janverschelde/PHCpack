@@ -686,6 +686,10 @@ ts_cserlin2:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin2.adb \
               -o $(BIN)/ts_cserlin2
 
+ts_perfserlin:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfserlin.adb \
+              -o $(BIN)/ts_perfserlin
+
 ts_serinv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serinv.adb \
               -o $(BIN)/ts_serinv
