@@ -1,3 +1,8 @@
+Sun 5 Jul 2020 : moved the allocate procedure from ts_perfserlin into
+  the package standard_floating_vecvecvecs.  Moved the split_rows from
+  ts_perfserlin to standard_matrix_splitters and move the solver procedures
+  from ts_perfserlin to the new package standard_inlined_linearization.
+
 Sat 4 Jul 2020 : new ts_perfserlin to develop a better performing solver
   for linear systems of power series.
 

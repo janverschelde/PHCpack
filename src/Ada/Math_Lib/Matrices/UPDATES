@@ -1,3 +1,5 @@
+Sun 5 Jul 2020 : added Split_Rows procedures to standard_matrix_splitters.
+
 Mon 29 Jun 2020 : added the VecMat_Array type to generic_vecmats.
 
 Tue 23 Jun 2020 : new package standard_matrix_splitters with code taken

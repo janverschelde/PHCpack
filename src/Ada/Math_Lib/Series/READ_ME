@@ -198,6 +198,7 @@ ts_sersin2                        : test on solving singular linear systems
 ------------------------------------------------------------------------------
 standard_matrix_series2_solvers   : linearization for matrix series systems
 ts_serlin2                        : test on linearization
+standard_inlined_linearization    : linearization with inlined solvers
 ts_perfserlin                     : a better performing solver
 ------------------------------------------------------------------------------
 standard_dense_series            : dense power series, standard coefficients
