@@ -14,7 +14,17 @@ package Standard_Floating_VecVecVecs is
 
   type VecVecVec_Array is array ( integer32 range <> ) of Link_to_VecVecVec;
 
--- COPY PROCEDURES :
+  procedure Allocate ( v : out Link_to_VecVecVec;
+                       d1first,d1last : in integer32;
+                       d2first,d2last : in integer32;
+                       d3first,d3last : in integer32 );
+
+  -- DESCRIPTION :
+  --   Allocates a three dimensional matrix of floating-point numbers,
+  --   with leading dimension in the range d1first..d1last,
+  --   the second dimension has the range d2first..d2last, and
+  --   the third dimension has the range d3first..d3last.
+  --   All numbers in v are initialized to zero.
 
   procedure Copy ( v_from : in Link_to_VecVecVec;
                    v_to : out Link_to_VecVecVec );
@@ -22,8 +32,6 @@ package Standard_Floating_VecVecVecs is
   -- DESCRIPTION :
   --   Copies the v_from to the v_to,
   --   after the deallocation of v_to.
-
--- DEALLOCATORS :
 
   procedure Clear ( v : in out VecVecVec );
   procedure Clear ( v : in out Link_to_VecVecVec );
