@@ -72,40 +72,6 @@ procedure ts_perfserlin is
     end loop;
   end Row_Matrix_Multiply;
 
-  procedure Allocate
-              ( v : out Standard_Floating_VecVecVecs.Link_to_VecVecVec;
-                d1first,d1last : in integer32;
-                d2first,d2last : in integer32;
-                d3first,d3last : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Allocates a three dimensional matrix of floating-point numbers,
-  --   with leading dimension in the range d1first..d1last,
-  --   the second dimension has the range d2first..d2last, and
-  --   the third dimension has the range d3first..d3last.
-  --   All numbers in v are initialized to zero.
-
-    res : Standard_Floating_VecVecVecs.VecVecVec(d1first..d1last);
-
-  begin
-    for k in res'range loop
-      declare
-        vv : Standard_Floating_VecVecs.VecVec(d2first..d2last);
-      begin
-        for j in vv'range loop
-          declare
-            vvv : constant Standard_Floating_Vectors.Vector(d3first..d3last)
-                := (d3first..d3last => 0.0);
-          begin
-            vv(j) := new Standard_Floating_Vectors.Vector'(vvv);
-          end;
-        end loop;
-        res(k) := new Standard_Floating_VecVecs.VecVec'(vv);
-      end;
-    end loop;
-    v := new Standard_Floating_VecVecVecs.VecVecVec'(res);
-  end Allocate;
-
   procedure Split_Rows
               ( A : in Standard_Complex_Matrices.Link_to_Matrix;
                 rArows : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -281,8 +247,8 @@ procedure ts_perfserlin is
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
 
   begin
-    Allocate(rv,1,deg,1,dim,1,dim);
-    Allocate(iv,1,deg,1,dim,1,dim);
+    Standard_Floating_VecVecVecs.Allocate(rv,1,deg,1,dim,1,dim);
+    Standard_Floating_VecVecVecs.Allocate(iv,1,deg,1,dim,1,dim);
     Split_Rows(A,rv,iv);
     rcols := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
     icols := Standard_Vector_Splitters.Allocate(dim,dim,1,1);

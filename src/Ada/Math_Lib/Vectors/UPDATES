@@ -1,3 +1,5 @@
+Sun 5 Jun 2020 : added an Allocate procedure to standard_floating_vecvecvecs.
+
 Fri 3 Jul 2020 : new package standard_floating_vecvecvecs, with definitions
   taken from standard_coefficient_convolutions.
 

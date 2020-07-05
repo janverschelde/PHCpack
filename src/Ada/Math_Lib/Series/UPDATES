@@ -1,3 +1,6 @@
+Sun 5 Jul 2020 : moved the allocate procedure from ts_perfserlin into
+  the package standard_floating_vecvecvecs.
+
 Sat 4 Jul 2020 : new ts_perfserlin to develop a better performing solver
   for linear systems of power series.
 
