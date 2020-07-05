@@ -1,6 +1,5 @@
 with unchecked_deallocation;
 with Standard_Floating_Vectors;
-with Standard_Floating_VecVecs;
 
 package body Standard_Floating_VecVecVecs is
 
