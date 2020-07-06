@@ -1,4 +1,5 @@
-Mon 6 Jul 2020 : added timer to ts_perfserlin.
+Mon 6 Jul 2020 : added timer to ts_perfserlin.  Added lufco procedures
+  to standard_inlined_linearization, tested in ts_perfserlin.
 
 Sun 5 Jul 2020 : moved the allocate procedure from ts_perfserlin into
   the package standard_floating_vecvecvecs.  Moved the split_rows from

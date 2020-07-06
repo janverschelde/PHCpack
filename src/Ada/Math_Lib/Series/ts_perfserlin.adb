@@ -1,7 +1,10 @@
 with text_io;                            use text_io;
 with Timing_Package;                     use Timing_Package;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
@@ -64,10 +67,20 @@ procedure ts_perfserlin is
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..n);
+    rcond : double_float;
+    ans : character;
 
   begin
-    Standard_Series_Matrix_Solvers.Solve_by_lufac(vm1,bcf1,ipvt,info,wrk);
     new_line;
+    put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+    new_line;
+    if ans = 'y' then
+      Standard_Series_Matrix_Solvers.Solve_by_lufco(vm1,bcf1,ipvt,rcond,wrk);
+      put("rcond : "); put(rcond); new_line;
+    else
+      Standard_Series_Matrix_Solvers.Solve_by_lufac(vm1,bcf1,ipvt,info,wrk);
+      put("info : "); put(info,1); new_line;
+    end if;
     put_line("The generated leading vector series of the solution :");
     put_line(xs.cff(0));
     put_line("The computed leading vector series of the solution :");
@@ -78,8 +91,16 @@ procedure ts_perfserlin is
       put("The computed term "); put(k,1);
       put_line(" of the vector series of the solution :"); put_line(bcf1(k));
     end loop;
-    Standard_Inlined_Linearization.Inlined_Solve_by_lufac(vm2,bcf2,ipvt,info);
     new_line;
+    if ans = 'y' then
+      Standard_Inlined_Linearization.Inlined_Solve_by_lufco
+        (vm2,bcf2,ipvt,rcond);
+      put("rcond : "); put(rcond); new_line;
+    else
+      Standard_Inlined_Linearization.Inlined_Solve_by_lufac
+        (vm2,bcf2,ipvt,info);
+      put("info : "); put(info,1); new_line;
+    end if;
     put_line("The generated leading vector series of the solution :");
     put_line(xs.cff(0));
     put_line("The recomputed leading vector series of the solution :");
@@ -133,8 +154,12 @@ procedure ts_perfserlin is
     rcols,icols,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
     ry,iy : Standard_Floating_Vectors.Link_to_Vector;
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+    rcond : double_float;
+    ans : character;
 
   begin
+    new_line;
+    put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
     lead := vm1(0);
     for i in 1..n loop        -- copy lead matrix into the backup A0
       for j in 1..n loop
@@ -149,7 +174,11 @@ procedure ts_perfserlin is
         end loop;
       end loop;
       bcf1 := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
-      Standard_Series_Matrix_Solvers.Solve_by_lufac(vm1,bcf1,ipvt,info,wrk);
+      if ans = 'y' then
+        Standard_Series_Matrix_Solvers.Solve_by_lufco(vm1,bcf1,ipvt,rcond,wrk);
+      else
+        Standard_Series_Matrix_Solvers.Solve_by_lufac(vm1,bcf1,ipvt,info,wrk);
+      end if;
     end loop;
     tstop(timer);
     new_line;
@@ -168,8 +197,13 @@ procedure ts_perfserlin is
         end loop;
       end loop;
       bcf2 := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
-      Standard_Inlined_Linearization.Inlined_Solve_by_lufac
-        (vm2,bcf2,ipvt,info);
+      if ans = 'y' then
+        Standard_Inlined_Linearization.Inlined_Solve_by_lufco
+          (vm2,bcf2,ipvt,rcond);
+      else
+        Standard_Inlined_Linearization.Inlined_Solve_by_lufac
+          (vm2,bcf2,ipvt,info);
+      end if;
     end loop;
     tstop(timer);
     new_line;
@@ -187,8 +221,13 @@ procedure ts_perfserlin is
     for k in 1..f loop
       Standard_Matrix_Splitters.Complex_Parts(A0,rcols,icols);
       bcf2 := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
-      Standard_Inlined_Linearization.Inlined_Solve_by_lufac
-        (n,bcf2,ipvt,info,rv,iv,rcols,icols,rb,ib,ry,iy);
+      if ans = 'y' then
+        Standard_Inlined_Linearization.Inlined_Solve_by_lufco
+          (n,bcf2,ipvt,rcond,rv,iv,rcols,icols,rb,ib,ry,iy);
+      else
+        Standard_Inlined_Linearization.Inlined_Solve_by_lufac
+          (n,bcf2,ipvt,info,rv,iv,rcols,icols,rb,ib,ry,iy);
+      end if;
     end loop;
     tstop(timer);
     new_line;
