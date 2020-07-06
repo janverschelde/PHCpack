@@ -1,3 +1,5 @@
+Mon 6 Jul 2020 : added timer to ts_perfserlin.
+
 Sun 5 Jul 2020 : moved the allocate procedure from ts_perfserlin into
   the package standard_floating_vecvecvecs.  Moved the split_rows from
   ts_perfserlin to standard_matrix_splitters and move the solver procedures
