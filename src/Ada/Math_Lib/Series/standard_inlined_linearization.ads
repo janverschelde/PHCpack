@@ -83,8 +83,8 @@ package Standard_Inlined_Linearization is
   --   dim      dimension of the vectors;
   --   rc       real parts of the columns of A(0);
   --   ic       imaginary parts of the columns of A(0);
-  --   rv       all real pars of all A(k), for k in 1..degree;
-  --   iv       all imaginary pars of all A(k), for k in 1..degree;
+  --   rv       all real parts of all A(k), for k in 1..degree;
+  --   iv       all imaginary parts of all A(k), for k in 1..degree;
   --   rb       real parts of the right hand coefficients of b(t),
   --            where b(t) is a series with vector coefficients;
   --   ib       imaginary parts of the right hand coefficients of b(t),
@@ -145,8 +145,8 @@ package Standard_Inlined_Linearization is
   --   dim      dimension of the vectors;
   --   rc       real parts of the columns of A(0);
   --   ic       imaginary parts of the columns of A(0);
-  --   rv       all real pars of all A(k), for k in 1..degree;
-  --   iv       all imaginary pars of all A(k), for k in 1..degree;
+  --   rv       all real parts of all A(k), for k in 1..degree;
+  --   iv       all imaginary parts of all A(k), for k in 1..degree;
   --   rb       real parts of the right hand coefficients of b(t),
   --            where b(t) is a series with vector coefficients;
   --   ib       imaginary parts of the right hand coefficients of b(t),

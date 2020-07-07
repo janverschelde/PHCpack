@@ -17,7 +17,9 @@ with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
@@ -84,8 +86,11 @@ procedure ts_fabry is
     dx : Standard_Complex_VecVecs.VecVec(1..dim);
     xd : Standard_Complex_VecVecs.VecVec(0..deg);
     ans : character;
-    scale,usesvd,useqrls,needrcond,staggered : boolean := false;
+    scale,usesvd,useqrls,needrcond,staggered,inlined : boolean := false;
     wrkdeg : integer32 := 0;
+    rc,ic,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
+    ry,iy : Standard_Floating_Vectors.Link_to_Vector;
+    rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
 
   begin
     put("Apply scaling ? (y/n) "); Ask_Yes_or_No(ans);
@@ -98,6 +103,8 @@ procedure ts_fabry is
       if not useqrls then
         put("Need condition number estimate ? (y/n) "); Ask_Yes_or_No(ans);
         needrcond := (ans = 'y');
+        put("Inlined solver ? (y/n) "); Ask_Yes_or_No(ans);
+        inlined := (ans = 'y');
       end if;
     end if;
     put("Staggered degrees ? (y/n) "); Ask_Yes_or_No(ans);
@@ -105,6 +112,16 @@ procedure ts_fabry is
     if useqrls or usesvd then
       dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
+    end if;
+    if inlined then -- allocate work space vectors
+      Standard_Floating_VecVecVecs.Allocate(rv,1,deg,1,dim,1,dim);
+      Standard_Floating_VecVecVecs.Allocate(iv,1,deg,1,dim,1,dim);
+      rc := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+      ic := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+      rb := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
+      ib := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
+      ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+      iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
     end if;
     if staggered
      then wrkdeg := 1;
@@ -126,8 +143,14 @@ procedure ts_fabry is
               (standard_output,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
             put("  rcond :"); put(rcond,3); new_line;
           else
-            Newton_Coefficient_Convolutions.LU_Newton_Step
-              (standard_output,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
+            if inlined then
+              Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+                (standard_output,s,scf,rx,ix,absdx,info,ipvt,
+                 rc,ic,rv,iv,rb,ib,ry,iy,scale);
+            else
+              Newton_Coefficient_Convolutions.LU_Newton_Step
+                (standard_output,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
+            end if;
             put("  info : "); put(info,1); new_line;
           end if;
         end if;
@@ -146,8 +169,14 @@ procedure ts_fabry is
               (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
             put("  rcond :"); put(rcond,3); new_line;
           else
-            Newton_Coefficient_Convolutions.LU_Newton_Step
-              (standard_output,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
+            if inlined then
+              Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+                (standard_output,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,
+                 rc,ic,rv,iv,rb,ib,ry,iy,scale);
+            else
+              Newton_Coefficient_Convolutions.LU_Newton_Step
+                (standard_output,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
+            end if;
             put("  info : "); put(info,1); new_line;
           end if;
         end if;

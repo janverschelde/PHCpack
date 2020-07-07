@@ -1,3 +1,6 @@
+Tue 7 Jun 2020 : added procedures with the inlined linearization procedures
+  in newton_coefficient_convolutions, with added tests in ts_fabry.
+
 Fri 3 Jul 2020 : moved the definition of VecVecVec from the package
   standard_coefficient_convolutions into a new package, updated
   standard_coefficient_storage, shift_coefficient_convolutions,
