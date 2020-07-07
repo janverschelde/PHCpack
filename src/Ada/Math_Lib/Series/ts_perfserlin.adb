@@ -213,20 +213,20 @@ procedure ts_perfserlin is
     Standard_Matrix_Splitters.Split_Rows(vm2,rv,iv);
     rcols := Standard_Vector_Splitters.Allocate(n,n,1,1);
     icols := Standard_Vector_Splitters.Allocate(n,n,1,1);
-    rb := Standard_Vector_Splitters.Allocate(n,n,0,1);
-    ib := Standard_Vector_Splitters.Allocate(n,n,0,1);
+    rb := Standard_Vector_Splitters.Allocate(d,n,0,1);
+    ib := Standard_Vector_Splitters.Allocate(d,n,0,1);
     ry := new Standard_Floating_Vectors.Vector'(1..n => 0.0);
     iy := new Standard_Floating_Vectors.Vector'(1..n => 0.0);
     tstart(timer);
     for k in 1..f loop
       Standard_Matrix_Splitters.Complex_Parts(A0,rcols,icols);
-      bcf2 := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
+      Standard_Vector_Splitters.Complex_Parts(bcf2,rb,ib);
       if ans = 'y' then
         Standard_Inlined_Linearization.Inlined_Solve_by_lufco
-          (n,bcf2,ipvt,rcond,rv,iv,rcols,icols,rb,ib,ry,iy);
+          (n,rcols,icols,rv,iv,rb,ib,ipvt,rcond,ry,iy);
       else
         Standard_Inlined_Linearization.Inlined_Solve_by_lufac
-          (n,bcf2,ipvt,info,rv,iv,rcols,icols,rb,ib,ry,iy);
+          (n,rcols,icols,rv,iv,rb,ib,ipvt,info,ry,iy);
       end if;
     end loop;
     tstop(timer);

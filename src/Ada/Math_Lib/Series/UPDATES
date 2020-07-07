@@ -1,5 +1,9 @@
+Tue 7 Jul 2020 : improved standard_inlined_linearization, moving all
+  parts/merge procedures to the wrappers, added versions for use in
+  the staggered Newton methods; updated ts_perfserlin.
+
 Mon 6 Jul 2020 : added timer to ts_perfserlin.  Added lufco procedures
-  to standard_inlined_linearization, tested in ts_perfserlin.
+  to standard_inlined_linearization, tested in ts_perfserling.
 
 Sun 5 Jul 2020 : moved the allocate procedure from ts_perfserlin into
   the package standard_floating_vecvecvecs.  Moved the split_rows from
