@@ -74,17 +74,21 @@ package body Newton_Coefficient_Convolutions is
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
     Newton_Convolutions.Minus(deg,s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
-    Standard_Vector_Splitters.Complex_Parts(deg,s.vy,rb,ib);
+    for k in 0..deg loop
+      Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
+    end loop;
     Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
     Standard_Inlined_Linearization.Inlined_Solve_by_lufac
        (deg,s.dim,rc,ic,rv,iv,rb,ib,ipvt,info,ry,iy);
-    Standard_Vector_Splitters.Complex_Merge(deg,rb,ib,s.vy);
+    for k in 0..deg loop
+      Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
+    end loop;
     if scaledx
      then Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
-    Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(scf,s.yv);
+    Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
+    absdx := Newton_Convolutions.Max(deg,s.yv);
+    Newton_Convolutions.Update(deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -155,7 +159,9 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop -- s.vy, rb, and ib are linearized
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
     end loop;
-    Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
+    for k in rv'first..deg loop
+      Standard_Matrix_Splitters.Split_Rows(s.vm(k),rv(k),iv(k));
+    end loop;
     Standard_Inlined_Linearization.Inlined_Solve_by_lufac
        (deg,s.dim,rc,ic,rv,iv,rb,ib,ipvt,info,ry,iy);
     for k in 0..deg loop
@@ -165,10 +171,173 @@ package body Newton_Coefficient_Convolutions is
       Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
+    Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
+    absdx := Newton_Convolutions.Max(deg,s.yv);
+    put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
+    Newton_Convolutions.Update(deg,scf,s.yv);
+  end Inlined_LU_Newton_Step;
+
+-- ONE INLINED NEWTON STEP WITH CONDITION NUMBER ESTIMATE :
+
+  procedure Inlined_LU_Newton_Step
+              ( s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx,rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0 then
+      put("-> in newton_coefficient_convolutions.");
+      put_line("Inlined_LU_Newton_Step 5 ...");
+    end if;
+    Standard_Vector_Splitters.Complex_Parts(scf,rx,ix);
+    Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
+    Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
+    Newton_Convolutions.Minus(s.vy);
+    Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
+    Standard_Vector_Splitters.Complex_Parts(s.vy,rb,ib);
+    Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
+    Standard_Inlined_Linearization.Inlined_Solve_by_lufco
+       (s.dim,rc,ic,rv,iv,rb,ib,ipvt,rcond,ry,iy);
+    Standard_Vector_Splitters.Complex_Merge(rb,ib,s.vy);
+    if scaledx
+     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+    end if;
+    Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
+    absdx := Newton_Convolutions.Max(s.yv);
+    Newton_Convolutions.Update(scf,s.yv);
+  end Inlined_LU_Newton_Step;
+
+  procedure Inlined_LU_Newton_Step
+              ( deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx,rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0 then
+      put("-> in newton_coefficient_convolutions.");
+      put_line("Inlined_LU_Newton_Step 6 ...");
+    end if;
+    Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
+    Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
+    Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
+    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
+    for k in 0..deg loop
+      Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
+    end loop;
+    Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
+    Standard_Inlined_Linearization.Inlined_Solve_by_lufco
+       (deg,s.dim,rc,ic,rv,iv,rb,ib,ipvt,rcond,ry,iy);
+    for k in 0..deg loop
+      Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
+    end loop;
+    if scaledx
+     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+    end if;
+    Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
+    absdx := Newton_Convolutions.Max(deg,s.yv);
+    Newton_Convolutions.Update(deg,scf,s.yv);
+  end Inlined_LU_Newton_Step;
+
+  procedure Inlined_LU_Newton_Step
+              ( file : in file_type;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx,rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0 then
+      put("-> in newton_coefficient_convolutions.");
+      put_line("Inlined_LU_Newton_Step 7 ...");
+    end if;
+    put_line(file,"scf :"); put_line(file,scf);
+    Standard_Vector_Splitters.Complex_Parts(scf,rx,ix);
+    Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
+    Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
+    put_line(file,"vy :"); put_line(file,s.vy);
+    Newton_Convolutions.Minus(s.vy);
+    Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
+    Standard_Vector_Splitters.Complex_Parts(s.vy,rb,ib);
+    Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
+    Standard_Inlined_Linearization.Inlined_Solve_by_lufco
+       (s.dim,rc,ic,rv,iv,rb,ib,ipvt,rcond,ry,iy);
+    Standard_Vector_Splitters.Complex_Merge(rb,ib,s.vy);
+    if scaledx then
+      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      put_line(file,"scaled dx :"); put_line(file,s.vy);
+    end if;
     Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
     absdx := Newton_Convolutions.Max(s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
     Newton_Convolutions.Update(scf,s.yv);
+  end Inlined_LU_Newton_Step;
+
+  procedure Inlined_LU_Newton_Step
+              ( file : in file_type; deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx,rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0 then
+      put("-> in newton_coefficient_convolutions.");
+      put_line("Inlined_LU_Newton_Step 8 ...");
+    end if;
+    put_line(file,"scf :"); put_line(file,scf);
+    Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
+    Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
+    Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
+    put_line(file,"vy :"); put_line(file,s.vy);
+    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
+    for k in 0..deg loop -- s.vy, rb, and ib are linearized
+      Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
+    end loop;
+    for k in rv'first..deg loop
+      Standard_Matrix_Splitters.Split_Rows(s.vm(k),rv(k),iv(k));
+    end loop;
+    Standard_Inlined_Linearization.Inlined_Solve_by_lufco
+       (deg,s.dim,rc,ic,rv,iv,rb,ib,ipvt,rcond,ry,iy);
+    for k in 0..deg loop
+      Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
+    end loop;
+    if scaledx then
+      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      put_line(file,"scaled dx :"); put_line(file,s.vy);
+    end if;
+    Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
+    absdx := Newton_Convolutions.Max(deg,s.yv);
+    put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
+    Newton_Convolutions.Update(deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :

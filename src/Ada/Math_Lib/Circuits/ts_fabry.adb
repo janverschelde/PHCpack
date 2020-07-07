@@ -139,8 +139,14 @@ procedure ts_fabry is
              qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
         else
           if needrcond then
-            Newton_Coefficient_Convolutions.LU_Newton_Step
-              (standard_output,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
+            if inlined then
+              Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+                (standard_output,s,scf,rx,ix,absdx,rcond,ipvt,
+                 rc,ic,rv,iv,rb,ib,ry,iy,scale);
+            else
+              Newton_Coefficient_Convolutions.LU_Newton_Step
+                (standard_output,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
+            end if;
             put("  rcond :"); put(rcond,3); new_line;
           else
             if inlined then
@@ -165,8 +171,14 @@ procedure ts_fabry is
              qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
         else
           if needrcond then
-            Newton_Coefficient_Convolutions.LU_Newton_Step
-              (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
+            if inlined then
+              Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+                (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,
+                 rc,ic,rv,iv,rb,ib,ry,iy,scale);
+            else
+              Newton_Coefficient_Convolutions.LU_Newton_Step
+                (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
+            end if;
             put("  rcond :"); put(rcond,3); new_line;
           else
             if inlined then
