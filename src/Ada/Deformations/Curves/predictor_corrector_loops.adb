@@ -37,12 +37,22 @@ package body Predictor_Corrector_Loops is
     nbr : natural32;
     xtr : constant natural32 := 1; -- one extra Newton step
 
+    use Standard_Predictor_Convolutions;
+
   begin
     Standard_Predictor_Convolutions.Set_Lead_Coefficients(prd,psv.sol);
-    Standard_Predictor_Convolutions.SVD_Prediction
-      (hom,cfh,prd.svdata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
-       pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
-       endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+    case prd.kind is
+      when LU =>
+        Standard_Predictor_Convolutions.LU_Prediction
+          (hom,cfh,prd.ludata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
+           pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,
+           pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+      when SVD =>
+        Standard_Predictor_Convolutions.SVD_Prediction
+          (hom,cfh,prd.svdata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
+           pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,
+           pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+    end case;
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
       mixres := 1.0; nbrit := 0;
     else
@@ -87,13 +97,24 @@ package body Predictor_Corrector_Loops is
     nbr : natural32;
     xtr : constant natural32 := 1; -- one extra Newton step
 
+    use Standard_Predictor_Convolutions;
+
   begin
     Standard_Predictor_Convolutions.Set_Lead_Coefficients(prd,psv.sol);
-    Standard_Predictor_Convolutions.SVD_Prediction
-      (file,hom,cfh,prd.svdata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
-       pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
-       endt,acct,fail,step,nbpole,nbhess,nbmaxm,verbose,verbose);
-     --false,verbose);
+    case prd.kind is
+      when LU =>
+        Standard_Predictor_Convolutions.LU_Prediction
+          (file,hom,cfh,prd.ludata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
+           pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,
+           pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm,
+           false,verbose); -- verbose,verbose);
+      when SVD =>
+        Standard_Predictor_Convolutions.SVD_Prediction
+          (file,hom,cfh,prd.svdata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
+           pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,
+           pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm,
+           false,verbose); -- verbose,verbose);
+    end case;
     if verbose then
       if fail
        then put(file,"Predictor failed to reach tolerance");

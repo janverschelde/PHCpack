@@ -1,5 +1,10 @@
 Wed 8 Jul 2020 : to staggered_newton_convolutions, added inlined procedures,
-  added tests to ts_sernewcnv.
+  added tests to ts_sernewcnv.  In predictor_corrector_trackers.adb,
+  changed the predictor type to LU for coefficient convolutions,
+  in predictor_corrector_loops.adb, added the call to the LU_Predictor
+  procedure in case the predictor is of type LU, and changed the
+  LU_Newton_Steps to staggered ones in standard_predictor_convolutions,
+  for homotopies given as coefficient convolution systems.
 
 Fri 3 Jul 2020 : updated predictor_corrector_trackers for the new
   package standard_floating_vecvecvecs, updated ts_pcscnv.

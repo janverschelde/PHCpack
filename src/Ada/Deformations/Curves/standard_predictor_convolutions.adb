@@ -259,8 +259,8 @@ package body Standard_Predictor_Convolutions is
 
   begin
     nbrit := 0;
-   -- Staggered_Newton_Convolutions.LU_Newton_Steps
-    Newton_Power_Convolutions.LU_Newton_Steps
+   -- Newton_Power_Convolutions.LU_Newton_Steps
+    Staggered_Newton_Convolutions.LU_Newton_Steps
       (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
        info,prd.newtpiv,prd.wrk,false,false);
     Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
@@ -316,8 +316,8 @@ package body Standard_Predictor_Convolutions is
 
   begin
     nbrit := 0;
-   -- Staggered_Newton_Convolutions.SVD_Newton_Steps
-    Newton_Power_Convolutions.SVD_Newton_Steps
+   -- Newton_Power_Convolutions.SVD_Newton_Steps
+    Staggered_Newton_Convolutions.SVD_Newton_Steps
       (hom,prd.sol,prd.dx,prd.xd,rx,ix,maxit,nbrit,tol,absdx,fail,
        prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
     Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);

@@ -164,7 +164,8 @@ package body Predictor_Corrector_Trackers is
     dim : constant integer32 := hom.dim;
     deg : constant integer32 := hom.deg;
     ls : Link_to_Solution := Head_Of(sols);
-    prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
+   -- prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
+    prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,LU);
     psv : Predictor_Vectors(dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(dim);
     solsptr : Solution_List := sols;
@@ -252,7 +253,8 @@ package body Predictor_Corrector_Trackers is
     dim : constant integer32 := hom.dim;
     deg : constant integer32 := hom.deg;
     ls : Link_to_Solution := Head_Of(sols);
-    prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
+   -- prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,SVD);
+    prd : Predictor := Create(ls.v,hom.neq,deg,numdeg,dendeg,LU);
     psv : Predictor_Vectors(hom.dim,hom.neq);
     svh : Link_to_SVD_Hessians := Create(dim);
     solsptr : Solution_List := sols;
