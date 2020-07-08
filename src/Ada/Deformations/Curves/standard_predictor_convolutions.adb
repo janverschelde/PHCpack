@@ -24,7 +24,8 @@ package body Standard_Predictor_Convolutions is
 -- CONSTRUCTORS :
 
   function Create ( sol : Standard_Complex_Vectors.Vector;
-                    neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor is
+                    neq,deg,numdeg,dendeg : integer32;
+                    inlined : boolean := true ) return LU_Predictor is
 
     res : LU_Predictor(sol'last,deg,numdeg,dendeg);
     zero : constant Complex_Number := Create(0.0);
@@ -40,6 +41,16 @@ package body Standard_Predictor_Convolutions is
       res.numcff(k) := new Standard_Complex_Vectors.Vector'(knum);
       res.dencff(k) := new Standard_Complex_Vectors.Vector'(kden);
     end loop;
+    if inlined then
+      Standard_Floating_VecVecVecs.Allocate(res.rv,1,deg,1,neq,1,neq);
+      Standard_Floating_VecVecVecs.Allocate(res.iv,1,deg,1,neq,1,neq);
+      res.rc := Standard_Vector_Splitters.Allocate(neq,neq,1,1);
+      res.ic := Standard_Vector_Splitters.Allocate(neq,neq,1,1);
+      res.rb := Standard_Vector_Splitters.Allocate(deg,neq,0,1);
+      res.ib := Standard_Vector_Splitters.Allocate(deg,neq,0,1);
+      res.ry := new Standard_Floating_Vectors.Vector'(1..neq => 0.0);
+      res.iy := new Standard_Floating_Vectors.Vector'(1..neq => 0.0);
+    end if;
     return res;
   end Create;
 
@@ -72,11 +83,12 @@ package body Standard_Predictor_Convolutions is
   end Create;
 
   function Create ( sol : Standard_Complex_Vectors.Vector;
-                    neq,deg,numdeg,dendeg : integer32 ) 
+                    neq,deg,numdeg,dendeg : integer32;
+                    inlined : boolean := true ) 
                   return Link_to_LU_Predictor is
 
     prd : constant LU_Predictor(sol'last,deg,numdeg,dendeg)
-        := Create(sol,neq,deg,numdeg,dendeg);
+        := Create(sol,neq,deg,numdeg,dendeg,inlined);
     res : constant Link_to_LU_Predictor := new LU_Predictor'(prd);
 
   begin
@@ -116,14 +128,15 @@ package body Standard_Predictor_Convolutions is
 
   function Create ( sol : Standard_Complex_Vectors.Vector;
 	            neq,deg,numdeg,dendeg : integer32;
-                    kind : Predictor_Type ) return Predictor is
+                    kind : Predictor_Type;
+                    inlined : boolean := true ) return Predictor is
   begin
     case kind is
       when LU =>
         declare
           res : Predictor(LU);
         begin
-          res.ludata := Create(sol,neq,deg,numdeg,dendeg);
+          res.ludata := Create(sol,neq,deg,numdeg,dendeg,inlined);
           return res;
         end;
       when SVD =>
@@ -139,13 +152,14 @@ package body Standard_Predictor_Convolutions is
   function Create ( nbr : integer32;
                     sol : Standard_Complex_Vectors.Vector;
                     neq,deg,numdeg,dendeg : integer32;
-                    kind : Predictor_Type ) return Predictor_Array is
+                    kind : Predictor_Type;
+                    inlined : boolean := true ) return Predictor_Array is
 
     res : Predictor_Array(1..nbr);
 
   begin
     for k in 1..nbr loop
-      res(k) := Create(sol,neq,deg,numdeg,dendeg,kind);
+      res(k) := Create(sol,neq,deg,numdeg,dendeg,kind,inlined);
     end loop;
     return res;
   end Create;
@@ -260,9 +274,15 @@ package body Standard_Predictor_Convolutions is
   begin
     nbrit := 0;
    -- Newton_Power_Convolutions.LU_Newton_Steps
-    Staggered_Newton_Convolutions.LU_Newton_Steps
-      (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
-       info,prd.newtpiv,prd.wrk,false,false);
+   --  LU_Newton_Steps was first replaced by a staggered version
+   -- Staggered_Newton_Convolutions.LU_Newton_Steps
+   --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
+   --    info,prd.newtpiv,prd.wrk,false,false);
+   --  and then by an inlined version :
+    Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+      (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
+       prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+       false,false);
     Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
@@ -286,15 +306,22 @@ package body Standard_Predictor_Convolutions is
     nbrit := 0;
     if output then
      -- Newton_Power_Convolutions.LU_Newton_Steps
-      Staggered_Newton_Convolutions.LU_Newton_Steps
-        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
-         info,prd.newtpiv,prd.wrk,false);
+     -- Staggered_Newton_Convolutions.LU_Newton_Steps
+     --   (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
+     --    info,prd.newtpiv,prd.wrk,false);
+      Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
+         prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,false);
       Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
      -- Newton_Power_Convolutions.LU_Newton_Steps
-      Staggered_Newton_Convolutions.LU_Newton_Steps
-        (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
-         info,prd.newtpiv,prd.wrk,false,false);
+     -- Staggered_Newton_Convolutions.LU_Newton_Steps
+     --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
+     --    info,prd.newtpiv,prd.wrk,false,false);
+      Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+        (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
+         prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+         false,false);
       Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
@@ -1263,6 +1290,14 @@ package body Standard_Predictor_Convolutions is
       Standard_Complex_Vectors.Clear(p.wrk);
       Standard_Complex_VecVecs.Clear(p.numcff);
       Standard_Complex_VecVecs.Clear(p.dencff);
+      Standard_Floating_VecVecs.Deep_Clear(p.rc);
+      Standard_Floating_VecVecs.Deep_Clear(p.ic);
+      Standard_Floating_VecVecVecs.Clear(p.rv);
+      Standard_Floating_VecVecVecs.Clear(p.iv);
+      Standard_Floating_VecVecs.Deep_Clear(p.rb);
+      Standard_Floating_VecVecs.Deep_Clear(p.ib);
+      Standard_Floating_Vectors.Clear(p.ry);
+      Standard_Floating_Vectors.Clear(p.iy);
       free(p);
     end if;
   end Clear;

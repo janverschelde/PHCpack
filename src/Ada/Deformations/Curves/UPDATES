@@ -5,6 +5,9 @@ Wed 8 Jul 2020 : to staggered_newton_convolutions, added inlined procedures,
   procedure in case the predictor is of type LU, and changed the
   LU_Newton_Steps to staggered ones in standard_predictor_convolutions,
   for homotopies given as coefficient convolution systems.
+  To standard_predictor_convolutions, added the 8 parameters for the
+  staggered inlined LU Newton steps to the LU_Predictor type and
+  applied the inlined LU in the Newton_Fabry procedures.
 
 Fri 3 Jul 2020 : updated predictor_corrector_trackers for the new
   package standard_floating_vecvecvecs, updated ts_pcscnv.

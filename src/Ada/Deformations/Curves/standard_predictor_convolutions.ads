@@ -5,8 +5,9 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
-with Standard_Complex_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
+with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
@@ -41,6 +42,11 @@ package Standard_Predictor_Convolutions is
     padepiv : Standard_Integer_Vectors.Vector(1..dendeg); -- pivots for Pade
     mat : Matrix(1..dendeg,1..dendeg); -- matrix for the rational approximation
     rhs : Standard_Complex_Vectors.Vector(1..dendeg); -- right hand side
+   -- work space for the inlined Newton on linear systems of series
+    rc,ic : Standard_Floating_VecVecs.Link_to_VecVec;       -- cols of A(0)
+    rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec; -- row space
+    rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;       -- rhs
+    ry,iy : Standard_Floating_Vectors.Link_to_Vector;       -- work vectors
   end record;
 
   type Link_to_LU_Predictor is access LU_Predictor;
@@ -127,9 +133,11 @@ package Standard_Predictor_Convolutions is
 -- CONSTRUCTORS :
 
   function Create ( sol : Standard_Complex_Vectors.Vector;
-	            neq,deg,numdeg,dendeg : integer32 ) return LU_Predictor;
+	            neq,deg,numdeg,dendeg : integer32;
+                    inlined : boolean := true ) return LU_Predictor;
   function Create ( sol : Standard_Complex_Vectors.Vector;
-                    neq,deg,numdeg,dendeg : integer32 )
+                    neq,deg,numdeg,dendeg : integer32;
+                    inlined : boolean := true )
                   return Link_to_LU_Predictor;
   function Create ( sol : Standard_Complex_Vectors.Vector;
 	            neq,deg,numdeg,dendeg : integer32 ) return SVD_Predictor;
@@ -146,7 +154,9 @@ package Standard_Predictor_Convolutions is
   --   neq      number of equations in the homotopy;
   --   deg      degree of the power series;
   --   numdeg   degree of the numerator of the rational approximation;
-  --   dendeg   degree of the denominator of the rational approximation.
+  --   dendeg   degree of the denominator of the rational approximation;
+  --   inlined  by default, space will be allocated for the inlined
+  --            versions of the linearization.
 
   -- ON RETURN :
   --   data allocated to run the Newton-Fabry-Pade predictor.
@@ -159,7 +169,8 @@ package Standard_Predictor_Convolutions is
 
   function Create ( sol : Standard_Complex_Vectors.Vector;
                     neq,deg,numdeg,dendeg : integer32;
-                    kind : Predictor_Type ) return Predictor;
+                    kind : Predictor_Type; 
+                    inlined : boolean := true ) return Predictor;
 
   -- DESCRIPTION :
   --   Given solution vector, dimensions, and the kind,
@@ -168,7 +179,8 @@ package Standard_Predictor_Convolutions is
   function Create ( nbr : integer32;
                     sol : Standard_Complex_Vectors.Vector;
                     neq,deg,numdeg,dendeg : integer32;
-                    kind : Predictor_Type ) return Predictor_Array;
+                    kind : Predictor_Type;
+                    inlined : boolean := true ) return Predictor_Array;
 
   -- DESCRIPTION :
   --   Given solution vector, dimensions, and the kind,
