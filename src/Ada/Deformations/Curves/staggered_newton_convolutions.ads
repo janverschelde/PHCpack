@@ -2,7 +2,9 @@ with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
@@ -15,8 +17,172 @@ package Staggered_Newton_Convolutions is
 --   with convolutions on the coefficients and linearization.
 --   The iterative methods are staggered in increasing degrees of the
 --   power series, starting with degrees 1, 2, 4, 8, etc.
---   All Newton steps are done on coefficient convolution circuits,
---   in standard double precision.
+--   All Newton steps on coefficient convolution circuits
+--   are done in standard double precision.
+
+-- INLINED NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
+
+  procedure Inlined_LU_Newton_Steps
+              ( csr : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out double_float;
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure Inlined_LU_Newton_Steps
+              ( file : in file_type;
+                csr : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out double_float;
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Applies several Newton steps on the convolution circuits csr,
+  --   departing from the series coefficients in scf, in double precision,
+  --   using inlined LU factorization to solve the linear series systems.
+
+  -- REQUIRED :
+  --   rc'range = ic'range = 1..csr.dim and for all k in rc'range:
+  --   rc(k)'range = ic(k)'range = 1..csr.dim.
+  --   rv'range = iv'range = 1..csr.deg and for all k in rv'range:
+  --   rv(k)'range = iv(k)'range = 1..csr.dim and for all i in rv(k)'range:
+  --   rv(k)(i)'range = iv(k)(i)'range = 1..csr.dim.
+  --   rb'range = ib'range = 0..csr.deg and for all k in rb'range:
+  --   rb(k)'range = ib(k)'range = 1..csr.dim.
+
+  -- ON ENTRY :
+  --   file     if provided, the intermediate coefficient vectors
+  --            are written to file, otherwise the procedure is silent;
+  --   csr      system of convolution circuits;
+  --   scf      vector of coefficients of power series;
+  --   rx       work space for the real parts of the coefficients;
+  --   ix       work space for the imaginary parts of the coefficients;
+  --   maxit    maximum number of iterations;
+  --   tol      tolerance on absdx, used as stop criterium;
+  --   rc       work space for real parts of the columns of A(0);
+  --   ic       work space for imaginary parts of the columns of A(0);
+  --   rv       work space for all real parts of all A(k), for k in 1..degree;
+  --   iv       work space for all imag parts of all A(k), for k in 1..degree;
+  --   rb       real parts of the right hand coefficients of b(t),
+  --            where b(t) is a series with vector coefficients;
+  --   ib       imaginary parts of the right hand coefficients of b(t),
+  --            where b(t) is a series with vector coefficients;
+  --   ry       allocated work space vector of range 1..s.dim;
+  --   iy       allocated work space vector of range 1..s.dim;
+  --   scale    if true, then the k-th component of the update dx
+  --            is divided by k!, otherwise no scaling to dx is applied;
+  --   verbose  if verbose, then the progress index will be written;
+  --   vrblvl   if positive, the name of the procedure is written to screen.
+
+  -- ON RETURN :
+  --   scf      updated coefficients of the series solution;
+  --   nbrit    number of iterations done;
+  --   absdx    absolute value of the update to the last coefficient;
+  --   fail     true if absdx > tol after nbrit iterations;
+  --   info     info from the LU factorization;
+  --   ipvt     pivoting of the LU factorization on the lead matrix;
+  --   rc       real parts of the output of lufac on A(0);
+  --   ic       imaginary parts of the output of lufac on A(0);
+  --   rb       rb(k) stores the real parts of the solution x(k);
+  --   ib       ib(k) stores the imaginary parts of the solution x(k).
+
+-- INLINED NEWTON STEPS WITH LU WITH CONDITION NUMBER ESTIMATE :
+
+  procedure Inlined_LU_Newton_Steps
+              ( csr : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out double_float;
+                fail : out boolean; rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure Inlined_LU_Newton_Steps
+              ( file : in file_type;
+                csr : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out double_float;
+                fail : out boolean; rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Applies several Newton steps on the convolution circuits csr,
+  --   departing from the series coefficients in scf, in double precision,
+  --   using inlined LU factorization to solve the linear series systems.
+
+  -- REQUIRED :
+  --   rc'range = ic'range = 1..csr.dim and for all k in rc'range:
+  --   rc(k)'range = ic(k)'range = 1..csr.dim.
+  --   rv'range = iv'range = 1..csr.deg and for all k in rv'range:
+  --   rv(k)'range = iv(k)'range = 1..csr.dim and for all i in rv(k)'range:
+  --   rv(k)(i)'range = iv(k)(i)'range = 1..csr.dim.
+  --   rb'range = ib'range = 0..csr.deg and for all k in rb'range:
+  --   rb(k)'range = ib(k)'range = 1..csr.dim.
+
+  -- ON ENTRY :
+  --   file     if provided, the intermediate coefficient vectors
+  --            are written to file, otherwise the procedure is silent;
+  --   csr      system of convolution circuits;
+  --   scf      vector of coefficients of power series;
+  --   rx       work space for the real parts of the coefficients;
+  --   ix       work space for the imaginary parts of the coefficients;
+  --   maxit    maximum number of iterations;
+  --   tol      tolerance on absdx, used as stop criterium;
+  --   rc       work space for real parts of the columns of A(0);
+  --   ic       work space for imaginary parts of the columns of A(0);
+  --   rv       work space for all real parts of all A(k), for k in 1..degree;
+  --   iv       work space for all imag parts of all A(k), for k in 1..degree;
+  --   rb       real parts of the right hand coefficients of b(t),
+  --            where b(t) is a series with vector coefficients;
+  --   ib       imaginary parts of the right hand coefficients of b(t),
+  --            where b(t) is a series with vector coefficients;
+  --   ry       allocated work space vector of range 1..s.dim;
+  --   iy       allocated work space vector of range 1..s.dim;
+  --   scale    if true, then the k-th component of the update dx
+  --            is divided by k!, otherwise no scaling to dx is applied;
+  --   verbose  if verbose, then the progress index will be written;
+  --   vrblvl   if positive, the name of the procedure is written to screen.
+
+  -- ON RETURN :
+  --   scf      updated coefficients of the series solution;
+  --   nbrit    number of iterations done;
+  --   absdx    absolute value of the update to the last coefficient;
+  --   fail     true if absdx > tol after nbrit iterations;
+  --   rcond    estimate for the inverse condition number of A(0);
+  --   ipvt     pivoting of the LU factorization on the lead matrix;
+  --   rc       real parts of the output of lufac on A(0);
+  --   ic       imaginary parts of the output of lufac on A(0);
+  --   rb       rb(k) stores the real parts of the solution x(k);
+  --   ib       ib(k) stores the imaginary parts of the solution x(k).
 
 -- NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 

@@ -11,7 +11,9 @@ with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
@@ -54,7 +56,7 @@ procedure ts_sernewcnv is
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sol : in Standard_Complex_Solutions.Link_to_Solution;
                 deg,maxit : in integer32;
-                scale,usesvd,useqrls,lurcond,stagdeg : in boolean ) is
+                scale,usesvd,useqrls,lurcond,stagdeg,inlined : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method in double precision,
@@ -69,7 +71,8 @@ procedure ts_sernewcnv is
   --   usesvd   for singular value decomposition;
   --   useqrls  for least squares after QR decomposition;
   --   lurcond  lu with condition number estimate;
-  --   stagdeg  staggered in the degrees.
+  --   stagdeg  staggered in the degrees;
+  --   inlined  for inlined LU factorization.
 
     c : constant Standard_Speelpenning_Convolutions.Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
@@ -99,6 +102,9 @@ procedure ts_sernewcnv is
     absdx,rcond : double_float;
     tol : constant double_float := 1.0E-14;
     fail : boolean;
+    rc,ic,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
+    ry,iy : Standard_Floating_Vectors.Link_to_Vector;
+    rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
 
   begin
     Add_Parameter_to_Constant(s);
@@ -109,6 +115,16 @@ procedure ts_sernewcnv is
       put("The constant of circuit "); put(k,1); put_line(" :");
       Standard_Complex_Vectors_io.put_line(s.crc(k).cst);
     end loop;
+    if inlined then -- allocate work space vectors
+      Standard_Floating_VecVecVecs.Allocate(rv,1,deg,1,dim,1,dim);
+      Standard_Floating_VecVecVecs.Allocate(iv,1,deg,1,dim,1,dim);
+      rc := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+      ic := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+      rb := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
+      ib := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
+      ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+      iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+    end if;
     if useqrls or usesvd then
       dx := Standard_Speelpenning_Convolutions.Allocate_Coefficients(dim,deg);
       xd := Standard_Speelpenning_Convolutions.Linearized_Allocation(dim,deg);
@@ -136,9 +152,15 @@ procedure ts_sernewcnv is
       end if;
     elsif lurcond then
       if stagdeg then
-        Staggered_Newton_Convolutions.LU_Newton_Steps
-          (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
-           ipvt,wrk,scale);
+        if inlined then
+          Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+            (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
+             ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+        else
+          Staggered_Newton_Convolutions.LU_Newton_Steps
+            (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
+             ipvt,wrk,scale);
+        end if;
       else
         Newton_Power_Convolutions.LU_Newton_Steps
           (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
@@ -147,9 +169,15 @@ procedure ts_sernewcnv is
       put("rcond :"); put(rcond,3); new_line;
     else
       if stagdeg then
-        Staggered_Newton_Convolutions.LU_Newton_Steps
-          (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
-           info,ipvt,wrk,scale);
+        if inlined then
+          Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+            (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
+             info,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+        else
+          Staggered_Newton_Convolutions.LU_Newton_Steps
+            (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
+             info,ipvt,wrk,scale);
+        end if;
       else
         Newton_Power_Convolutions.LU_Newton_Steps
           (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
@@ -413,7 +441,7 @@ procedure ts_sernewcnv is
 
   procedure Prompt_for_Parameters
               ( overdt : in boolean; maxit : out integer32;
-                scale,usesvd,useqrls,lurcond : out boolean ) is
+                scale,usesvd,useqrls,lurcond,inlined : out boolean ) is
 
   -- DESCRIPTION :
   --   Prompts the user for the parameters of a run.
@@ -426,7 +454,8 @@ procedure ts_sernewcnv is
   --   scale    if scaling is needed;
   --   usesvd   for singular value decomposition;
   --   useqrls  for least squares after QR decomposition;
-  --   lurcond  lu with condition number estimate.
+  --   lurcond  LU with condition number estimate;
+  --   inlined  for inlined LU factorization.
 
     ans : character;
 
@@ -440,17 +469,19 @@ procedure ts_sernewcnv is
     Ask_Yes_or_No(ans);
     usesvd := (ans = 'y');
     if usesvd then
-      useqrls := false; lurcond := false;
+      useqrls := false; lurcond := false; inlined := false;
     elsif overdt then
-      useqrls := true; lurcond := false;
+      useqrls := true; lurcond := false; inlined := false;
     else
       put("Solve with least squares and QR ? (y/n) ");
       Ask_Yes_or_No(ans); useqrls := (ans = 'y');
       if useqrls then
-        lurcond := false;
+        lurcond := false; inlined := false;
       else
         put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
         lurcond := (ans = 'y');
+        put("Inlined LU factorization ? (y/n) "); Ask_Yes_or_No(ans);
+        inlined := (ans = 'y');
       end if;
     end if;
   end Prompt_for_Parameters;
@@ -467,12 +498,13 @@ procedure ts_sernewcnv is
     sol : constant Standard_Complex_Solutions.Link_to_Solution
         := Standard_Complex_Solutions.Head_Of(sols);
     maxit : integer32 := 0;
-    scale,usesvd,useqrls,needrcond,staggered : boolean := false;
+    scale,usesvd,useqrls,needrcond,staggered,inlined : boolean := false;
     overdet : constant boolean := (p'last > dim);
     ans : character;
 
   begin
-    Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond);
+    Prompt_for_Parameters
+      (overdet,maxit,scale,usesvd,useqrls,needrcond,inlined);
     new_line;
     put("Apply coefficient convolution circuits ? (y/n) ");
     Ask_Yes_or_No(ans); 
@@ -480,7 +512,7 @@ procedure ts_sernewcnv is
       put("Staggered degrees ? (y/n) "); Ask_Yes_or_No(ans);
       staggered := (ans = 'y');
       Standard_Coefficient_Run
-        (p,sol,deg,maxit,scale,usesvd,useqrls,needrcond,staggered);
+        (p,sol,deg,maxit,scale,usesvd,useqrls,needrcond,staggered,inlined);
     else
       Standard_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
     end if;
@@ -498,11 +530,11 @@ procedure ts_sernewcnv is
     sol : constant DoblDobl_Complex_Solutions.Link_to_Solution
         := DoblDobl_Complex_Solutions.Head_Of(sols);
     maxit : integer32 := 0;
-    scale,usesvd,useqrls,needrcond : boolean;
+    scale,usesvd,useqrls,needrcond,inln : boolean;
     overdet : constant boolean := (p'last > dim);
 
   begin
-    Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond);
+    Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond,inln);
     DoblDobl_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
   end DoblDobl_Run;
 
@@ -518,11 +550,11 @@ procedure ts_sernewcnv is
     sol : constant QuadDobl_Complex_Solutions.Link_to_Solution
         := QuadDobl_Complex_Solutions.Head_Of(sols);
     maxit : integer32 := 0;
-    scale,usesvd,useqrls,needrcond : boolean;
+    scale,usesvd,useqrls,needrcond,inln : boolean;
     overdet : constant boolean := (p'last > dim);
 
   begin
-    Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond);
+    Prompt_for_Parameters(overdet,maxit,scale,usesvd,useqrls,needrcond,inln);
     QuadDobl_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
   end QuadDobl_Run;
 

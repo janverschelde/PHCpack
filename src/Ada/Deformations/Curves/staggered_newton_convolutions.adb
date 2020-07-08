@@ -5,6 +5,208 @@ with Newton_Coefficient_Convolutions;
 
 package body Staggered_Newton_Convolutions is
 
+-- INLINED NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
+
+  procedure Inlined_LU_Newton_Steps
+              ( csr : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out double_float;
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+
+    maxval : double_float;
+    idx : integer32;
+    wrkdeg : integer32 := 1;
+
+  begin
+    fail := true; nbrit := maxit;
+    if vrblvl > 0 then
+      put("-> in staggered_newton_convolutions.");
+      put_line("Inlined_LU_Newton_Steps 1 ...");
+    end if;
+    for k in 1..nbrit loop
+      Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+        (wrkdeg,csr,scf,rx,ix,absdx,info,ipvt,
+         rc,ic,rv,iv,rb,ib,ry,iy,scale,vrblvl-1);
+      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      if verbose then
+        put("max |dx| ="); put(maxval,3);
+        if idx < csr.vy'first
+         then put_line(" too large");
+         else put(" at index "); put(idx,1); new_line;
+        end if;
+      end if;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
+      end if;
+      wrkdeg := 2*wrkdeg;
+      if wrkdeg > csr.deg
+       then wrkdeg := csr.deg;
+      end if;
+    end loop;
+  end Inlined_LU_Newton_Steps;
+
+  procedure Inlined_LU_Newton_Steps
+              ( file : in file_type;
+                csr : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out double_float;
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+
+    maxval : double_float;
+    idx : integer32;
+    wrkdeg : integer32 := 1;
+
+  begin
+    fail := true; nbrit := maxit;
+    if vrblvl > 0 then
+      put("-> in staggered_newton_convolutions.");
+      put_line("Inlined_LU_Newton_Steps 2 ...");
+    end if;
+    for k in 1..nbrit loop
+      Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+        (file,wrkdeg,csr,scf,rx,ix,absdx,info,ipvt,
+         rc,ic,rv,iv,rb,ib,ry,iy,scale,vrblvl-1);
+      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      if verbose then
+        put("max |dx| ="); put(maxval,3);
+        if idx < csr.vy'first
+         then put_line(" too large");
+         else put(" at index "); put(idx,1); new_line;
+        end if;
+      end if;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
+      end if;
+      wrkdeg := 2*wrkdeg;
+      if wrkdeg > csr.deg
+       then wrkdeg := csr.deg;
+      end if;
+    end loop;
+  end Inlined_LU_Newton_Steps;
+
+-- INLINED NEWTON STEPS WITH LU WITH CONDITION NUMBER ESTIMATE :
+
+  procedure Inlined_LU_Newton_Steps
+              ( csr : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out double_float;
+                fail : out boolean; rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+
+    maxval : double_float;
+    idx : integer32;
+    wrkdeg : integer32 := 1;
+
+  begin
+    fail := true; nbrit := maxit;
+    if vrblvl > 0 then
+      put("-> in staggered_newton_convolutions.");
+      put_line("Inlined_LU_Newton_Steps 3 ...");
+    end if;
+    for k in 1..nbrit loop
+      Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+        (wrkdeg,csr,scf,rx,ix,absdx,rcond,ipvt,
+         rc,ic,rv,iv,rb,ib,ry,iy,scale,vrblvl-1);
+      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      if verbose then
+        put("max |dx| ="); put(maxval,3);
+        if idx < csr.vy'first
+         then put_line(" too large");
+         else put(" at index "); put(idx,1); new_line;
+        end if;
+      end if;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
+      end if;
+      wrkdeg := 2*wrkdeg;
+      if wrkdeg > csr.deg
+       then wrkdeg := csr.deg;
+      end if;
+    end loop;
+  end Inlined_LU_Newton_Steps;
+
+  procedure Inlined_LU_Newton_Steps
+              ( file : in file_type;
+                csr : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out double_float;
+                fail : out boolean; rcond : out double_float;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+
+    maxval : double_float;
+    idx : integer32;
+    wrkdeg : integer32 := 1;
+
+  begin
+    fail := true; nbrit := maxit;
+    if vrblvl > 0 then
+      put("-> in staggered_newton_convolutions.");
+      put_line("Inlined_LU_Newton_Steps 4 ...");
+    end if;
+    for k in 1..nbrit loop
+      Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+        (file,wrkdeg,csr,scf,rx,ix,absdx,rcond,ipvt,
+         rc,ic,rv,iv,rb,ib,ry,iy,scale,vrblvl-1);
+      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      if verbose then
+        put("max |dx| ="); put(maxval,3);
+        if idx < csr.vy'first
+         then put_line(" too large");
+         else put(" at index "); put(idx,1); new_line;
+        end if;
+      end if;
+      if wrkdeg > 1 then
+        if absdx <= tol
+         then fail := false; nbrit := k; exit;
+        end if;
+      end if;
+      wrkdeg := 2*wrkdeg;
+      if wrkdeg > csr.deg
+       then wrkdeg := csr.deg;
+      end if;
+    end loop;
+  end Inlined_LU_Newton_Steps;
+
 -- NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure LU_Newton_Steps
@@ -25,8 +227,8 @@ package body Staggered_Newton_Convolutions is
 
   begin
     fail := true; nbrit := maxit;
-    if vrblvl > 0
-     then put_line("-> in newton_power_convolutions.LU_Newton_Steps 1 ...");
+    if vrblvl > 0 then
+      put_line("-> in staggered_newton_convolutions.LU_Newton_Steps 1 ...");
     end if;
     for k in 1..nbrit loop
       Newton_Coefficient_Convolutions.LU_Newton_Step
@@ -70,8 +272,8 @@ package body Staggered_Newton_Convolutions is
 
   begin
     fail := true; nbrit := maxit;
-    if vrblvl > 0
-     then put_line("-> in newton_power_convolutions.LU_Newton_Steps 2 ...");
+    if vrblvl > 0 then
+      put_line("-> in staggered_newton_convolutions.LU_Newton_Steps 2 ...");
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
@@ -117,8 +319,8 @@ package body Staggered_Newton_Convolutions is
 
   begin
     fail := true; nbrit := maxit;
-    if vrblvl > 0
-     then put_line("-> in newton_power_convolutions.LU_Newton_Steps 3 ...");
+    if vrblvl > 0 then
+      put_line("-> in staggered_newton_convolutions.LU_Newton_Steps 3 ...");
     end if;
     for k in 1..nbrit loop
       Newton_Coefficient_Convolutions.LU_Newton_Step
@@ -162,8 +364,8 @@ package body Staggered_Newton_Convolutions is
 
   begin
     fail := true; nbrit := maxit;
-    if vrblvl > 0
-     then put_line("-> in newton_power_convolutions.LU_Newton_Steps 4 ...");
+    if vrblvl > 0 then
+      put_line("-> in staggered_newton_convolutions.LU_Newton_Steps 4 ...");
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
@@ -212,8 +414,8 @@ package body Staggered_Newton_Convolutions is
 
   begin
     fail := true; nbrit := maxit;
-    if vrblvl > 0
-     then put_line("-> in newton_power_convolutions.QR_Newton_Steps 1 ...");
+    if vrblvl > 0 then
+      put_line("-> in staggered_newton_convolutions.QR_Newton_Steps 1 ...");
     end if;
     for k in 1..nbrit loop
       Newton_Coefficient_Convolutions.QR_Newton_Step
@@ -261,8 +463,8 @@ package body Staggered_Newton_Convolutions is
 
   begin
     fail := true; nbrit := maxit;
-    if vrblvl > 0
-     then put_line("-> in newton_power_convolutions.QR_Newton_Steps 2 ...");
+    if vrblvl > 0 then
+      put_line("-> in staggered_newton_convolutions.QR_Newton_Steps 2 ...");
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
@@ -310,8 +512,8 @@ package body Staggered_Newton_Convolutions is
 
   begin
     fail := true; nbrit := maxit;
-    if vrblvl > 0
-     then put_line("-> in newton_power_convolutions.SVD_Newton_Steps 1 ...");
+    if vrblvl > 0 then
+      put_line("-> in newton_power_convolutions.SVD_Newton_Steps 1 ...");
     end if;
     for k in 1..nbrit loop
       Newton_Coefficient_Convolutions.SVD_Newton_Step
@@ -359,8 +561,8 @@ package body Staggered_Newton_Convolutions is
 
   begin
     fail := true; nbrit := maxit;
-    if vrblvl > 0
-     then put_line("-> in newton_power_convolutions.SVD_Newton_Steps 2 ...");
+    if vrblvl > 0 then
+      put_line("-> in newton_power_convolutions.SVD_Newton_Steps 2 ...");
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
