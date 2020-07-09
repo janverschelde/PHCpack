@@ -1,3 +1,6 @@
+Thu 9 Jul 2020 : bug fix in predictor_corrector_loops.adb, added the case
+  for when the predictor is of LU type.
+
 Wed 8 Jul 2020 : to staggered_newton_convolutions, added inlined procedures,
   added tests to ts_sernewcnv.  In predictor_corrector_trackers.adb,
   changed the predictor type to LU for coefficient convolutions,

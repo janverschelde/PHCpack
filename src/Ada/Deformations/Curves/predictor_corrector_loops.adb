@@ -66,8 +66,14 @@ package body Predictor_Corrector_Loops is
         exit when not fail;
         step := step/2.0;
         exit when (step < pars.minsize);
-        Standard_Rational_Approximations.Evaluate
-          (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+        case prd.kind is
+          when LU =>
+            Standard_Rational_Approximations.Evaluate
+              (prd.ludata.numcff,prd.ludata.dencff,step,psv.sol);
+          when SVD =>
+            Standard_Rational_Approximations.Evaluate
+              (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+        end case;
       end loop;
     end if;
   end Predictor_Corrector_Loop;
@@ -140,8 +146,14 @@ package body Predictor_Corrector_Loops is
           put(file,"Reduced step size to"); put(file,step,3);
           put_line(file,".");
         end if;
-        Standard_Rational_Approximations.Evaluate
-          (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+        case prd.kind is
+          when LU =>
+            Standard_Rational_Approximations.Evaluate
+              (prd.ludata.numcff,prd.ludata.dencff,step,psv.sol);
+          when SVD =>
+            Standard_Rational_Approximations.Evaluate
+              (prd.svdata.numcff,prd.svdata.dencff,step,psv.sol);
+        end case;
       end loop;
     end if;
   end Predictor_Corrector_Loop;
