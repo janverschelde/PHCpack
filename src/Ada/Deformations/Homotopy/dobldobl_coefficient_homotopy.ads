@@ -50,12 +50,12 @@ package DoblDobl_Coefficient_Homotopy is
                gamma : in DoblDobl_Complex_Vectors.Vector;
                t : in Complex_Number );
   procedure Evaluated_Coefficients
-             ( cff : in out DoblDobl_Complex_Vectors.Link_to_Vector;
+             ( cff : in DoblDobl_Complex_Vectors.Link_to_Vector;
                cp,cq : in DoblDobl_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                t : in double_double );
   procedure Evaluated_Coefficients
-             ( cff : in out DoblDobl_Complex_Vectors.Link_to_Vector;
+             ( cff : in DoblDobl_Complex_Vectors.Link_to_Vector;
                cp,cq : in DoblDobl_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                k : in natural32;

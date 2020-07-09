@@ -1,5 +1,4 @@
 with unchecked_deallocation;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with QuadDobl_Complex_Poly_SysFun;      use QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;    use QuadDobl_Complex_Jaco_Matrices;
 
@@ -146,7 +145,7 @@ package body QuadDobl_Coefficient_Homotopy is
   end Evaluated_Coefficients;
 
   procedure Evaluated_Coefficients
-             ( cff : in out QuadDobl_Complex_Vectors.Link_to_Vector;
+             ( cff : in QuadDobl_Complex_Vectors.Link_to_Vector;
                cp,cq : in QuadDobl_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                t : in quad_double ) is
@@ -164,7 +163,7 @@ package body QuadDobl_Coefficient_Homotopy is
   end Evaluated_Coefficients;
 
   procedure Evaluated_Coefficients
-             ( cff : in out QuadDobl_Complex_Vectors.Link_to_Vector;
+             ( cff : in QuadDobl_Complex_Vectors.Link_to_Vector;
                cp,cq : in QuadDobl_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                k : in natural32;

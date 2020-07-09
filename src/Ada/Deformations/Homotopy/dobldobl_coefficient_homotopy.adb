@@ -1,5 +1,4 @@
 with unchecked_deallocation;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with DoblDobl_Complex_Poly_SysFun;      use DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;    use DoblDobl_Complex_Jaco_Matrices;
 
@@ -146,7 +145,7 @@ package body DoblDobl_Coefficient_Homotopy is
   end Evaluated_Coefficients;
 
   procedure Evaluated_Coefficients
-             ( cff : in out DoblDobl_Complex_Vectors.Link_to_Vector;
+             ( cff : in DoblDobl_Complex_Vectors.Link_to_Vector;
                cp,cq : in DoblDobl_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                t : in double_double ) is
@@ -164,7 +163,7 @@ package body DoblDobl_Coefficient_Homotopy is
   end Evaluated_Coefficients;
 
   procedure Evaluated_Coefficients
-             ( cff : in out DoblDobl_Complex_Vectors.Link_to_Vector;
+             ( cff : in DoblDobl_Complex_Vectors.Link_to_Vector;
                cp,cq : in DoblDobl_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                k : in natural32;

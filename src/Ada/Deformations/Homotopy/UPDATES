@@ -1,3 +1,6 @@
+Thu 9 Jul 2020 : updated {standard,dobldobl,quaddobl}_coefficient_homotopy,
+  because of compiler warnings.
+
 Fri 24 Apr 2020 : updated hyperplane_solution_scaling for m-homogenization.
 
 Thu 5 Mar 2020 : new package artificial_parameter_homotopy_io to prompt

@@ -1,5 +1,4 @@
 with unchecked_deallocation;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 
@@ -141,7 +140,7 @@ package body Standard_Coefficient_Homotopy is
   end Evaluated_Coefficients;
 
   procedure Evaluated_Coefficients
-             ( cff : in out Standard_Complex_Vectors.Link_to_Vector;
+             ( cff : in Standard_Complex_Vectors.Link_to_Vector;
                cp,cq : in Standard_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                t : in double_float ) is
@@ -159,7 +158,7 @@ package body Standard_Coefficient_Homotopy is
   end Evaluated_Coefficients;
 
   procedure Evaluated_Coefficients
-             ( cff : in out Standard_Complex_Vectors.Link_to_Vector;
+             ( cff : in Standard_Complex_Vectors.Link_to_Vector;
                cp,cq : in Standard_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                k : in natural32;

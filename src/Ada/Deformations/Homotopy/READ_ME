@@ -1,4 +1,4 @@
-Homotopies, scaling and reduction in PHCv2.4.76
+Homotopies, scaling and reduction in PHCv2.4.79
 
 The Creators in the package Homotopy allow more accessibility constants for
 the Cheater's homotopy.  A multiprecision version of the homotopy package
@@ -72,4 +72,5 @@ varbprec_homotopy                  : variable precision homotopy
 ts_vmphom                          : test variable precision homotopies
 ------------------------------------------------------------------------------
 artificial_parameter_homotopy_io   : prompts for artificial-parameter htpy
+ts_homcnv                          : test convolution circuits for homotopies
 ------------------------------------------------------------------------------
