@@ -25,6 +25,63 @@ package body Standard_Inlined_Linearization is
     end loop;
   end Row_Matrix_Multiply;
 
+  procedure Inlined_Solve_Head_by_lufac
+              ( dim : in integer32; 
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rb,ib : in Standard_Floating_Vectors.Link_to_Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 ) is
+  begin
+    Standard_Inlined_Linear_Solvers.lufac(rc,ic,dim,ipvt,info);
+    if info = 0 then
+      Standard_Inlined_Linear_Solvers.lusolve(rc,ic,dim,ipvt,rb,ib);
+    end if;
+  end Inlined_Solve_Head_by_lufac;
+
+  procedure Inlined_Solve_Head_by_lufco
+              ( dim : in integer32; 
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rb,ib : in Standard_Floating_Vectors.Link_to_Vector;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                rcond : out double_float;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector ) is
+  begin
+    Standard_Inlined_Linear_Solvers.lufco(rc,ic,dim,ipvt,ry,iy,rcond);
+    if 1.0 + rcond /= 1.0 then
+      Standard_Inlined_Linear_Solvers.lusolve(rc,ic,dim,ipvt,rb,ib);
+    end if;
+  end Inlined_Solve_Head_by_lufco;
+
+  procedure Inlined_Solve_Tail_by_lusolve
+              ( deg,dim : in integer32; 
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ipvt : in Standard_Integer_Vectors.Vector;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                idx : in integer32 := 1 ) is
+
+    rlnk,ilnk : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for k in idx..deg loop                         -- loop to compute x(k)
+      Row_Matrix_Multiply(rv(k),iv(k),rb(0),ib(0),ry,iy); -- y = A(k)*x(0)
+      rlnk := rb(k); ilnk := ib(k);
+      for j in rlnk'range loop          -- compute b(k) = b(k) - A(k)*x(0)
+        rlnk(j) := rlnk(j) - ry(j);
+        ilnk(j) := ilnk(j) - iy(j);
+      end loop;
+      for i in 1..(k-1) loop
+        Row_Matrix_Multiply(rv(k-i),iv(k-i),rb(i),ib(i),ry,iy);
+        for j in rlnk'range loop         -- subtract A(k-1)*x(k) from b(k)
+          rlnk(j) := rlnk(j) - ry(j);
+          ilnk(j) := ilnk(j) - iy(j);
+        end loop;
+      end loop;
+      Standard_Inlined_Linear_Solvers.lusolve(rc,ic,dim,ipvt,rb(k),ib(k));
+    end loop;
+  end Inlined_Solve_Tail_by_lusolve;
+
   procedure Inlined_Solve_by_lufac
               ( dim : in integer32; 
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
