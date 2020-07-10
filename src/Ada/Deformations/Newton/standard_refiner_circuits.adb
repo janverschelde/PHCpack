@@ -145,7 +145,10 @@ package body Standard_Refiner_Circuits is
         put(" = res :"); put(res,3);
       end if;
       if fail then
-        put_line(" == no solution"); cntfail := cntfail + 1;
+        if verbose
+         then put_line(" == no solution");
+        end if;
+        cntfail := cntfail + 1;
       else
         isreal := Standard_Solution_Diagnostics.Is_Real(ls.all,tolsing);
         val1 := Standard_Solutions_Heap.Weight(ls.v,wv1);
@@ -258,7 +261,10 @@ package body Standard_Refiner_Circuits is
         put(" = res :"); put(res,3);
       end if;
       if fail then
-        put_line(" == no solution"); cntfail := cntfail + 1;
+        if verbose
+         then put_line(" == no solution");
+        end if;
+        cntfail := cntfail + 1;
       else
         isreal := Standard_Solution_Diagnostics.Is_Real(ls.all,tolsing);
         val1 := Standard_Solutions_Heap.Weight(ls.v,wv1);

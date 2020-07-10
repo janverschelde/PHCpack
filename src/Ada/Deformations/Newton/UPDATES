@@ -1,3 +1,6 @@
+Fri 10 Jul 2020 : in standard_refiner_circuits.adb, placed "if verbose"
+  condition in case of a failed solution path.
+
 Thu 2 Jul 2020 : eliminated the rcols, icols parameters from the procedures
   in standard_inlined_newton_circuits, with updated ts_newcirc, and
   updated calls in standard_refiner_circuits.adb.
