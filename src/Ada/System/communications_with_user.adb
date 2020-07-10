@@ -97,7 +97,7 @@ package body Communications_with_User is
   procedure Report_Location_Error ( filename : in string ) is
   begin
     put("The file "); put(filename);
-    put_line(" could not be found, please try again...");
+    put_line(" could not be found, please try again ...");
   end Report_Location_Error;
 
   procedure Read_Name_and_Open_File ( file : in out file_type ) is
@@ -111,7 +111,7 @@ package body Communications_with_User is
        Report_Location_Error(name);
        Read_Name_and_Open_File(file);
     when USE_ERROR =>
-       put_line("File is not readable, please try again...");
+       put_line("File is not readable, please try again ...");
        Read_Name_and_Open_File(file);
   end Read_Name_and_Open_File;
 
@@ -128,7 +128,7 @@ package body Communications_with_User is
        Report_Location_Error(filename);
        Read_Name_and_Open_File(file,name);
     when USE_ERROR =>
-       put_line("File is not readable, please try again...");
+       put_line("File is not readable, please try again ...");
        Read_Name_and_Open_File(file,name);
   end Read_Name_and_Open_File;
 
@@ -214,7 +214,7 @@ package body Communications_with_User is
        Report_Location_Error(name);
        Read_Name_and_Open_File(file);
     when USE_ERROR =>
-       put_line("File is not readable, please try again...");
+       put_line("File is not readable, please try again ...");
        Read_Name_and_Open_File(file);
   end Read_Name_and_Append_File;
 
@@ -228,7 +228,7 @@ package body Communications_with_User is
        Read_Name_and_Open_File(file);
     when USE_ERROR =>
        put("The file "); put(filename);
-       put_line(" is not readable, please try again...");
+       put_line(" is not readable, please try again ...");
        Read_Name_and_Open_File(file);
   end Open_Input_File;
 
@@ -244,7 +244,7 @@ package body Communications_with_User is
        Read_Name_and_Open_File(file,name);
     when USE_ERROR =>
        put("The file "); put(filename);
-       put_line(" is not readable, please try again...");
+       put_line(" is not readable, please try again ...");
        Read_Name_and_Open_File(file,name);
   end Open_Input_File;
 
@@ -261,12 +261,12 @@ package body Communications_with_User is
       when USE_ERROR =>
         put("Could not create file "); put(filename);
         put_line(", file already in use.");
-        put_line("Please, try again...");
+        put_line("Please, try again ...");
         Read_Name_and_Create_File(file);
       when NAME_ERROR =>
         put("Could not create file "); put(filename);
         put_line(", perhaps wrong directory ?");
-        put_line("Please, try again...");
+        put_line("Please, try again ...");
         Read_Name_and_Create_File(file);
     end Retry;
 
@@ -305,12 +305,12 @@ package body Communications_with_User is
       when USE_ERROR =>
         put("Could not create file "); put(filename);
         put_line(", file already in use.");
-        put_line("Please, try again...");
+        put_line("Please, try again ...");
         Read_Name_and_Create_File(file,name);
       when NAME_ERROR =>
         put("Could not create file "); put(filename);
         put_line(", perhaps wrong directory ?");
-        put_line("Please, try again...");
+        put_line("Please, try again ...");
         Read_Name_and_Create_File(file,name);
     end Retry;
 
@@ -347,7 +347,7 @@ package body Communications_with_User is
        Read_Name_and_Append_File(file);
     when USE_ERROR =>
        put("The file "); put(filename);
-       put_line(" is not readable, please try again...");
+       put_line(" is not readable, please try again ...");
        Read_Name_and_Append_File(file);
   end Open_Append_File;
 

@@ -43,7 +43,7 @@ package body QuadDobl_System_and_Solutions_io is
 
   begin
     new_line;
-    put_line("Reading the name of the input file...");
+    put_line("Reading the name of the input file ...");
     Read_Name_and_Open_File(file);
     get(file,p,sols,banner);
     close(file);
@@ -64,7 +64,7 @@ package body QuadDobl_System_and_Solutions_io is
 
   begin
     new_line;
-    put_line("Reading the name of the input file...");
+    put_line("Reading the name of the input file ...");
     Read_Name_and_Open_File(file);
     get(file,p,sols,banner);
     close(file);
