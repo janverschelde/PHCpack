@@ -99,7 +99,7 @@ package body Multitasked_Path_Convolutions is
     first : constant Link_to_Solution := Head_Of(sols);
     prd : Predictor_Array(1..nbtasks)
         := Create(nbtasks,first.v,hom.neq,hom.deg,
-                  integer32(pars.numdeg),integer32(pars.dendeg),SVD);
+                  integer32(pars.numdeg),integer32(pars.dendeg),LU); --SVD);
     psv : Predictor_Vectors_Array(1..nbtasks)
         := Create(nbtasks,hom.dim,hom.neq);
     svh : SVD_Hessians_Array(1..nbtasks) := Create(nbtasks,hom.dim);

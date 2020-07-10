@@ -1,3 +1,6 @@
+Fri 10 Jul 2020 : in multitasked_path_convolutions.adb, flipped the SVD
+  into LU, for the predictor type on coefficient convolution circuits.
+
 Fri 3 Jul 2020 : for the new package standard_floating_vecvecvecs, updated
   multitasked_path_convolutions.adb, multitasked_algodiff_convolutions,
   multitasked_hessian_circuits, ts_mtadcnv, and ts_mtpcscnv.
