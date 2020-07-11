@@ -213,8 +213,12 @@ package body Standard_Complex_Circuits is
     info : integer32;
 
   begin
-    Speel(c,x,yd,pwt,A);
-    Standard_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,0,info);
+    if c.pdg <= 1 then
+      s := (s'range => Standard_Complex_Numbers.Create(0.0));
+    else
+      Speel(c,x,yd,pwt,A);
+      Standard_Complex_Singular_Values.SVD(A,c.dim,c.dim,s,e,U,V,0,info);
+    end if;
   end Singular_Values;
 
   procedure Singular_Values

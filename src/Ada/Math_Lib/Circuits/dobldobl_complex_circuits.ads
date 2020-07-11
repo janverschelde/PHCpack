@@ -249,6 +249,8 @@ package DoblDobl_Complex_Circuits is
   -- DESCRIPTION :
   --   Evaluates the circuit c at x, computes the Hessian matrix A,
   --   and computes the singular value decomposition of A.
+  --   In the special case of c.pdg = 1, all values in s are set to zero
+  --   and nothing else is computed.
 
   -- REQUIRED :
   --   x'range = 1..c.dim, yd'range = 0..c.dim,

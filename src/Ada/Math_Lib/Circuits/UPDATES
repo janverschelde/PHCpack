@@ -4,6 +4,8 @@ Sat 11 Jul 2020 : in evaluation_differentiation_errors removed superfluous
   and added this pdg also in {dobldobl,quaddobl}_complex_circuits,
   updated {standard,dobldobl,quaddobl}_circuit_makers, with added output
   statement when making a system from a given polynomial system.
+  To all *complex_circuits and *coefficient_circuits, the special case
+  of a linear polynomial degree is added.
 
 Tue 7 Jul 2020 : added procedures with the inlined linearization procedures
   in newton_coefficient_convolutions, with added tests in ts_fabry.
