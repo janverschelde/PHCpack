@@ -21,6 +21,7 @@ package DoblDobl_Complex_Circuits is
 
   type Circuit ( nbr : integer32 ) is record
     dim : integer32;                               -- dimension
+    pdg : integer32;                               -- polynomial degree
     xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponents
     idx : Standard_Integer_VecVecs.VecVec(1..nbr); -- indices of exponents
     fac : Standard_Integer_VecVecs.VecVec(1..nbr); -- factor indices

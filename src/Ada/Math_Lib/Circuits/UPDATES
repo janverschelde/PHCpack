@@ -1,4 +1,11 @@
-Tue 7 Jun 2020 : added procedures with the inlined linearization procedures
+Sat 11 Jul 2020 : in evaluation_differentiation_errors removed superfluous
+  with statements, added Polynomial_Degree functions to exponent_indices.
+  To standard_{complex,coefficient}_circuits, added "pdg" to Circuit type,
+  and added this pdg also in {dobldobl,quaddobl}_complex_circuits,
+  updated {standard,dobldobl,quaddobl}_circuit_makers, with added output
+  statement when making a system from a given polynomial system.
+
+Tue 7 Jul 2020 : added procedures with the inlined linearization procedures
   in newton_coefficient_convolutions, with added tests in ts_fabry.
   Added inlined lufco procedures to newton_coefficient_convolutions,
   and added tests to ts_fabry.

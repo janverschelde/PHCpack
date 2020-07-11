@@ -22,6 +22,7 @@ package Standard_Coefficient_Circuits is
 
   type Circuit ( nbr : integer32 ) is record
     dim : integer32; -- the number of variables in the circuit
+    pdg : integer32; -- the polynomial degree of the circuit
     xps : Standard_Integer_VecVecs.VecVec(1..nbr); -- exponents
     idx : Standard_Integer_VecVecs.VecVec(1..nbr); -- indices of exponents
     fac : Standard_Integer_VecVecs.VecVec(1..nbr); -- factor indices

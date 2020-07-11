@@ -133,4 +133,39 @@ package body Exponent_Indices is
     return res;
   end Maxima;
 
+  function Polynomial_Degree
+             ( xp : Standard_Integer_Vectors.Link_to_Vector )
+             return integer32 is
+
+    res : integer32 := 0;
+
+    use Standard_Integer_Vectors;
+
+  begin
+    if xp = null then
+      return -1;
+    else
+      for k in xp'range loop
+        res := res + xp(k);
+      end loop;
+      return res;
+    end if;
+  end Polynomial_Degree;
+
+  function Polynomial_Degree
+             ( xp : Standard_Integer_VecVecs.VecVec ) return integer32 is
+
+    res : integer32 := -1;
+    deg : integer32;
+
+  begin
+    for k in xp'range loop
+      deg := Polynomial_Degree(xp(k));
+      if deg > res
+       then res := deg;
+      end if;
+    end loop;
+    return res;
+  end Polynomial_Degree;
+
 end Exponent_Indices;

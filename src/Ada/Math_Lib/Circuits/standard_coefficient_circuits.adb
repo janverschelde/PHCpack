@@ -26,6 +26,7 @@ package body Standard_Coefficient_Circuits is
 
   begin
     res.dim := dim;
+    res.pdg := -1;
     res.rfwd := new Standard_Floating_Vectors.Vector'(rforward);
     res.ifwd := new Standard_Floating_Vectors.Vector'(iforward);
     res.rbck := new Standard_Floating_Vectors.Vector'(rbackward);
@@ -2347,6 +2348,8 @@ package body Standard_Coefficient_Circuits is
 
   procedure Clear ( c : in out Circuit ) is
   begin
+    c.dim := -1;
+    c.pdg := -1;
     Standard_Floating_Vectors.Clear(c.rfwd);
     Standard_Floating_Vectors.Clear(c.ifwd);
     Standard_Floating_Vectors.Clear(c.rbck);

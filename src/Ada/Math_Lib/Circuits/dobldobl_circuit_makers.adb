@@ -89,6 +89,7 @@ package body DoblDobl_Circuit_Makers is
     end loop;
     res.cff := DoblDobl_Random_Vectors.Random_Vector(1,nbr);
     res.cst := DoblDobl_Random_Numbers.Random1;
+    res.pdg := Exponent_Indices.Polynomial_Degree(res.xps);
     return res;
   end Random_Complex_Circuit;
 
@@ -109,6 +110,7 @@ package body DoblDobl_Circuit_Makers is
     end loop;
     res.cff := DoblDobl_Random_Vectors.Random_Vector(1,nbr);
     res.cst := DoblDobl_Random_Numbers.Random1;
+    res.pdg := Exponent_Indices.Polynomial_Degree(res.xps);
     return res;
   end Random_Complex_Circuit;
 
@@ -175,6 +177,7 @@ package body DoblDobl_Circuit_Makers is
     use QuadDobl_Complex_Vectors_cv;
 
   begin
+    res.pdg := c.pdg;
     res.xps := c.xps;
     res.idx := c.idx;
     res.fac := c.fac;
@@ -397,6 +400,7 @@ package body DoblDobl_Circuit_Makers is
 
   begin
     res.dim := dim;
+    res.pdg := Degree(p);
     res.cst := cst;
     Visit_Terms(p);
     return res;
@@ -421,6 +425,7 @@ package body DoblDobl_Circuit_Makers is
           put(c(k).cff(i)); put(c(k).xps(i)); new_line;
         end loop;
         put(c(k).cst); new_line;
+        put("polynomial degree : "); put(c(k).pdg); new_line;
       end if;
     end loop;
     d := c(c'first).dim;

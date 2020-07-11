@@ -22,6 +22,7 @@ package body DoblDobl_Complex_Circuits is
 
   begin
     res.dim := dim;
+    res.pdg := -1;
     res.fwd := new DoblDobl_Complex_Vectors.Vector'(forward);
     res.bck := new DoblDobl_Complex_Vectors.Vector'(backward);
     res.crs := new DoblDobl_Complex_Vectors.Vector'(cross);
@@ -912,6 +913,8 @@ package body DoblDobl_Complex_Circuits is
 
   procedure Clear ( c : in out Circuit ) is
   begin
+    c.dim := -1;
+    c.pdg := -1;
     DoblDobl_Complex_Vectors.Clear(c.fwd);
     DoblDobl_Complex_Vectors.Clear(c.bck);
     DoblDobl_Complex_Vectors.Clear(c.crs);

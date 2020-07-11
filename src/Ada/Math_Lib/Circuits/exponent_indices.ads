@@ -66,4 +66,19 @@ package Exponent_Indices is
   -- DESCRIPTION :
   --   Returns the largest power for each value in the exponents.
 
+  function Polynomial_Degree
+             ( xp : Standard_Integer_Vectors.Link_to_Vector )
+             return integer32;
+
+  -- DESCRIPTION :
+  --   Returns -1 if xp is null,
+  --   otherwise returns the sum of all elements in xp.
+
+  function Polynomial_Degree
+             ( xp : Standard_Integer_VecVecs.VecVec ) return integer32;
+        
+  -- DESCRIPTION :
+  --   For the exponents in xp, returns the largest degree,
+  --   as this is the degree of the polynomial with exponents in xp.
+
 end Exponent_Indices;

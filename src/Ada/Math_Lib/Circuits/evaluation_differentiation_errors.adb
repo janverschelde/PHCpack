@@ -1,9 +1,7 @@
 with Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
-with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Numbers;
-with QuadDobl_Complex_Matrices;
 
 package body Evaluation_Differentiation_Errors is
 

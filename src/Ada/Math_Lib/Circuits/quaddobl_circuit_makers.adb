@@ -88,6 +88,28 @@ package body QuadDobl_Circuit_Makers is
     end loop;
     res.cff := QuadDobl_Random_Vectors.Random_Vector(1,nbr);
     res.cst := QuadDobl_Random_Numbers.Random1;
+    res.pdg := Exponent_Indices.Polynomial_Degree(res.xps);
+    return res;
+  end Random_Complex_Circuit;
+
+  function Random_Complex_Circuit
+             ( nbr,dim,pwr : integer32 )
+             return QuadDobl_Complex_Circuits.Circuit is
+
+    res : QuadDobl_Complex_Circuits.Circuit(nbr)
+        := QuadDobl_Complex_Circuits.Allocate(nbr,dim);
+    xpk : Standard_Integer_Vectors.Vector(1..dim);
+
+  begin
+    for k in 1..nbr loop
+      xpk := Standard_Random_Vectors.Random_Vector(1,dim,0,pwr);
+      res.xps(k) := new Standard_Integer_Vectors.Vector'(xpk);
+      res.idx(k) := Exponent_Indices.Exponent_Index(res.xps(k));
+      res.fac(k) := Exponent_Indices.Factor_Index(res.xps(k));
+    end loop;
+    res.cff := QuadDobl_Random_Vectors.Random_Vector(1,nbr);
+    res.cst := QuadDobl_Random_Numbers.Random1;
+    res.pdg := Exponent_Indices.Polynomial_Degree(res.xps);
     return res;
   end Random_Complex_Circuit;
 
@@ -116,26 +138,6 @@ package body QuadDobl_Circuit_Makers is
     end loop;
     return res;
   end Random_Complex_Circuits;
-
-  function Random_Complex_Circuit
-             ( nbr,dim,pwr : integer32 )
-             return QuadDobl_Complex_Circuits.Circuit is
-
-    res : QuadDobl_Complex_Circuits.Circuit(nbr)
-        := QuadDobl_Complex_Circuits.Allocate(nbr,dim);
-    xpk : Standard_Integer_Vectors.Vector(1..dim);
-
-  begin
-    for k in 1..nbr loop
-      xpk := Standard_Random_Vectors.Random_Vector(1,dim,0,pwr);
-      res.xps(k) := new Standard_Integer_Vectors.Vector'(xpk);
-      res.idx(k) := Exponent_Indices.Exponent_Index(res.xps(k));
-      res.fac(k) := Exponent_Indices.Factor_Index(res.xps(k));
-    end loop;
-    res.cff := QuadDobl_Random_Vectors.Random_Vector(1,nbr);
-    res.cst := QuadDobl_Random_Numbers.Random1;
-    return res;
-  end Random_Complex_Circuit;
 
   function Random_Complex_System
              ( neq,nbr,dim,pwr : integer32 )
@@ -327,6 +329,7 @@ package body QuadDobl_Circuit_Makers is
 
   begin
     res.dim := dim;
+    res.pdg := Degree(p);
     res.cst := cst;
     Visit_Terms(p);
     return res;
@@ -355,6 +358,7 @@ package body QuadDobl_Circuit_Makers is
           put(c(k).cff(i)); put(c(k).xps(i)); new_line;
         end loop;
         put(c(k).cst); new_line;
+        put("polynomial degree : "); put(c(k).pdg); new_line;
       end if;
     end loop;
     d := c(c'first).dim;
