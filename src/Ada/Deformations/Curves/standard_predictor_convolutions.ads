@@ -123,6 +123,7 @@ package Standard_Predictor_Convolutions is
     ewrk : Standard_Complex_Vectors.Vector(1..dim);      -- work values
     vals : Standard_Complex_Vectors.Vector(0..dim);      -- singular values
     work : Standard_Complex_Vectors.Vector(1..dim);      -- work space for SVD
+    first : boolean;                                     -- first time flag
   end record;
 
   type Link_to_SVD_Hessians is access SVD_Hessians;
@@ -420,6 +421,18 @@ package Standard_Predictor_Convolutions is
 
 -- HESSE-PADE ON COEFFICIENT CIRCUITS :
 
+  procedure Cached_Singular_Values
+              ( cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Computes the singular values of the Hessians with caching for
+  --   lower degree polynomials if not svh.first.
+  --   The other parameters are the same as in the Hesse_Pade procedure.
+
   procedure Hesse_Pade
               ( cfs : in Standard_Coefficient_Circuits.Link_to_System;
                 prd : in Link_to_LU_Predictor;
@@ -447,7 +460,7 @@ package Standard_Predictor_Convolutions is
 
   -- ON ENTRY :
   --   file     to write the output to if verbose (optional);
-  --   cfs      coefficient circuit system
+  --   cfs      coefficient circuit system;
   --   prd      predictor data for LU Newton and Pade approximants;
   --   svh      data for the curvature estimation;
   --   xr       real parts of the solution vector;

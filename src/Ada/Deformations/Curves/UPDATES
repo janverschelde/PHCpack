@@ -1,3 +1,6 @@
+Sat 11 Jul 2020 : to standard_predictor_convolutions, added procedure to
+  compute the singular values of Hessians only once for low degree polynomials.
+
 Thu 9 Jul 2020 : bug fix in predictor_corrector_loops.adb, added the case
   for when the predictor is of LU type.
 

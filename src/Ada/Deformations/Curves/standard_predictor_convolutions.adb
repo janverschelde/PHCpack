@@ -183,6 +183,7 @@ package body Standard_Predictor_Convolutions is
 
   begin
     hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
+    hss.first := true;
     res := new SVD_Hessians'(hss);
     return res;
   end Create;
@@ -513,6 +514,37 @@ package body Standard_Predictor_Convolutions is
 
 -- HESSE-PADE ON COEFFICIENT CIRCUITS :
 
+  procedure Cached_Singular_Values
+              ( cfs : in Standard_Coefficient_Circuits.Link_to_System;
+                svh : in Link_to_SVD_Hessians;
+                xr,xi : in Standard_Floating_Vectors.Link_to_Vector;
+                vh : in Standard_Complex_VecMats.VecMat;
+                svls : in Standard_Complex_VecVecs.VecVec ) is
+
+    use Standard_Coefficient_Circuits;
+
+    info : integer32;
+
+  begin
+    if svh.first then
+      Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+      svh.first := false;
+    else
+      Power_Table(cfs.mxe,xr,xi,cfs.rpwt,cfs.ipwt);
+      EvalDiff2(cfs.crc,xr,xi,cfs.ryd,cfs.iyd,cfs.rpwt,cfs.ipwt,cfs.jrc.all,
+                cfs.jic.all,cfs.hrp.all,cfs.hip.all,cfs.fx,cfs.jm,vh);
+      Standard_Complex_Singular_Values.SVD
+        (cfs.jm,cfs.dim,cfs.dim,svls(0).all,svh.ewrk,svh.U,svh.V,0,info);
+      for k in vh'range loop
+        if cfs.crc(k).pdg > 2 then
+          Standard_Complex_Singular_Values.SVD
+            (vh(k).all,cfs.dim,cfs.dim,svls(k).all,
+             svh.ewrk,svh.U,svh.V,0,info);
+        end if;
+      end loop;
+    end if;
+  end Cached_Singular_Values;
+
   procedure Hesse_Pade
               ( cfs : in Standard_Coefficient_Circuits.Link_to_System;
                 prd : in Link_to_LU_Predictor;
@@ -522,11 +554,8 @@ package body Standard_Predictor_Convolutions is
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float ) is
-
-    use Standard_Coefficient_Circuits;
-
   begin
-    Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+    Cached_Singular_Values(cfs,svh,xr,xi,vh,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
     for k in 1..svls'last loop
       svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
@@ -549,11 +578,8 @@ package body Standard_Predictor_Convolutions is
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
                 verbose : in boolean := true ) is
-
-    use Standard_Coefficient_Circuits;
-
   begin
-    Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+    Cached_Singular_Values(cfs,svh,xr,xi,vh,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
     for k in 1..svls'last loop
       svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
@@ -582,11 +608,8 @@ package body Standard_Predictor_Convolutions is
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float ) is
-
-    use Standard_Coefficient_Circuits;
-
   begin
-    Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+    Cached_Singular_Values(cfs,svh,xr,xi,vh,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
     for k in 1..svls'last loop
       svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
@@ -609,11 +632,8 @@ package body Standard_Predictor_Convolutions is
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
                 verbose : in boolean := true ) is
-
-    use Standard_Coefficient_Circuits;
-
   begin
-    Singular_Values(cfs,xr,xi,vh,svh.U,svh.V,svh.ewrk,svls);
+    Cached_Singular_Values(cfs,svh,xr,xi,vh,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
     for k in 1..svls'last loop
       svh.vals(k) := svls(k)(1);  -- largest singular value of k-th Hessian
