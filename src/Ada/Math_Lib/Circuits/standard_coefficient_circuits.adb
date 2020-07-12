@@ -192,6 +192,7 @@ package body Standard_Coefficient_Circuits is
     res : Circuit(c.nbr) := Allocate(c.nbr,c.dim);
 
   begin
+    res.pdg := c.pdg;
     Standard_Integer_VecVecs.Copy(c.xps,res.xps);
     Standard_Integer_VecVecs.Copy(c.idx,res.idx);
     Standard_Integer_VecVecs.Copy(c.fac,res.fac);
