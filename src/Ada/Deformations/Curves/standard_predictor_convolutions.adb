@@ -524,6 +524,9 @@ package body Standard_Predictor_Convolutions is
     use Standard_Coefficient_Circuits;
 
     info : integer32;
+    rlnk,ilnk : Standard_Floating_Vectors.Link_to_Vector;
+    mat : Standard_Complex_Matrices.Link_to_Matrix;
+    hrprow,hiprow : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
     if svh.first then
@@ -531,8 +534,39 @@ package body Standard_Predictor_Convolutions is
       svh.first := false;
     else
       Power_Table(cfs.mxe,xr,xi,cfs.rpwt,cfs.ipwt);
-      EvalDiff2(cfs.crc,xr,xi,cfs.ryd,cfs.iyd,cfs.rpwt,cfs.ipwt,cfs.jrc.all,
-                cfs.jic.all,cfs.hrp.all,cfs.hip.all,cfs.fx,cfs.jm,vh);
+     -- EvalDiff2(cfs.crc,xr,xi,cfs.ryd,cfs.iyd,cfs.rpwt,cfs.ipwt,cfs.jrc.all,
+     --           cfs.jic.all,cfs.hrp.all,cfs.hip.all,cfs.fx,cfs.jm,vh);
+      for i in cfs.crc'range loop
+        if cfs.crc(i).pdg <= 2 then -- no Hessian evaluation needed
+         -- code copied from Standard_Coefficient_Circuits.EvalDiff
+          Speel(cfs.crc(i).all,xr,xi,cfs.ryd,cfs.iyd,cfs.rpwt,cfs.ipwt);
+          cfs.fx(i) := Create(cfs.ryd(0),cfs.iyd(0));
+          for j in cfs.jm'range(2) loop
+            cfs.jm(i,j) := Create(cfs.ryd(j),cfs.iyd(j));
+            rlnk := cfs.jrc(j);    ilnk := cfs.jic(j);
+            rlnk(i) := cfs.ryd(j); ilnk(i) := cfs.iyd(j);
+            cfs.ryd(j) := 0.0;     cfs.iyd(j) := 0.0;
+          end loop;
+        else -- for pdg > 2, compute the Hessian matrix
+         -- code copied from Standard_Coefficient_Circuits.EvalDiff2
+          Speel(cfs.crc(i).all,xr,xi,cfs.ryd,cfs.iyd,cfs.rpwt,cfs.ipwt,
+                cfs.hrp.all,cfs.hip.all);
+          cfs.fx(i) := Create(cfs.ryd(0),cfs.iyd(0));
+          for j in cfs.jm'range(2) loop
+            cfs.jm(i,j) := Create(cfs.ryd(j),cfs.iyd(j));
+            rlnk := cfs.jrc(j);    ilnk := cfs.jic(j);
+            rlnk(i) := cfs.ryd(j); ilnk(i) := cfs.iyd(j);
+            cfs.ryd(j) := 0.0;     cfs.iyd(j) := 0.0;
+          end loop;
+          mat := vh(i);
+          for j in cfs.hrp'range loop
+            hrprow := cfs.hrp(j); hiprow := cfs.hip(j);
+            for k in hrprow'range loop
+              mat(j,k) := Create(hrprow(k),hiprow(k));
+            end loop;
+          end loop;
+        end if;
+      end loop;
       Standard_Complex_Singular_Values.SVD
         (cfs.jm,cfs.dim,cfs.dim,svls(0).all,svh.ewrk,svh.U,svh.V,0,info);
       for k in vh'range loop

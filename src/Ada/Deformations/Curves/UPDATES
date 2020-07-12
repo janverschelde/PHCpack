@@ -1,3 +1,6 @@
+Sun 12 Jul 2020 : updated standard_predictor_convolutions.adb so that for
+  lower degree polynomials the Hessians are computed only once.
+
 Sat 11 Jul 2020 : to standard_predictor_convolutions, added procedure to
   compute the singular values of Hessians only once for low degree polynomials.
 
