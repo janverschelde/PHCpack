@@ -52,6 +52,19 @@ package Newton_Coefficient_Convolutions is
                 scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure Inlined_LU_Newton_Step
+              ( idx,deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx : out double_float; info : out integer32;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure Inlined_LU_Newton_Step
               ( file : in file_type;
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
@@ -77,6 +90,19 @@ package Newton_Coefficient_Convolutions is
                 ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
                 scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
+  procedure Inlined_LU_Newton_Step
+              ( file : in file_type; idx,deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx : out double_float; info : out integer32;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies one Newton step on the coefficient convolution circuits c,
@@ -95,12 +121,17 @@ package Newton_Coefficient_Convolutions is
   -- ON ENTRY :
   --   file     if provided, the intermediate coefficient vectors
   --            are written to file, otherwise the procedure is silent;
+  --   idx      (optional) start index of the series coefficients,
+  --            to avoid recomputing lower degree coefficients,
+  --            when staggered, idx should be zero in the first step,
+  --            and then deg+1 in the second step;
   --   deg      (optional) degree of the coefficients in the series,
   --            for use in a staggered iterative procedure;
   --   s        system of convolution circuits;
   --   scf      vector of coefficients of power series;
   --   rx       work space for the real parts of the coefficients;
   --   ix       work space for the imaginary parts of the coefficients;
+  --   ipvt     if idx > 0, then pivoting information of previous lufac;
   --   rc       work space for real parts of the columns of A(0);
   --   ic       work space for imaginary parts of the columns of A(0);
   --   rv       work space for all real parts of all A(k), for k in 1..degree;
@@ -118,7 +149,8 @@ package Newton_Coefficient_Convolutions is
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
   --   absdx    the absolute value of the maximal component of the update dx;
-  --   info     info from the LU factorization;
+  --   info     info from the LU factorization,
+  --            only if the optional idx is omitted or equal to zero;
   --   ipvt     pivoting of the LU factorization on the lead matrix;
   --   rc       real parts of the output of lufac on A(0);
   --   ic       imaginary parts of the output of lufac on A(0);
@@ -153,6 +185,19 @@ package Newton_Coefficient_Convolutions is
                 scaledx : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure Inlined_LU_Newton_Step
+              ( idx,deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx,rcond : out double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure Inlined_LU_Newton_Step
               ( file : in file_type;
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
@@ -172,6 +217,19 @@ package Newton_Coefficient_Convolutions is
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
                 absdx,rcond : out double_float;
                 ipvt : out Standard_Integer_Vectors.Vector;
+                rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
+                rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+                rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
+                ry,iy : in Standard_Floating_Vectors.Link_to_Vector;
+                scaledx : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure Inlined_LU_Newton_Step
+              ( file : in file_type; idx,deg : in integer32;
+                s : in Standard_Coefficient_Convolutions.Link_to_System;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                absdx,rcond : out double_float;
+                ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
                 rv,iv : in Standard_Floating_VecVecVecs.Link_to_VecVecVec;
                 rb,ib : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -198,12 +256,17 @@ package Newton_Coefficient_Convolutions is
   -- ON ENTRY :
   --   file     if provided, the intermediate coefficient vectors
   --            are written to file, otherwise the procedure is silent;
+  --   idx      (optional) start index of the series coefficients,
+  --            to avoid recomputing lower degree coefficients,
+  --            when staggered, idx should be zero in the first step,
+  --            and then deg+1 in the second step;
   --   deg      (optional) degree of the coefficients in the series,
   --            for use in a staggered iterative procedure;
   --   s        system of convolution circuits;
   --   scf      vector of coefficients of power series;
   --   rx       work space for the real parts of the coefficients;
   --   ix       work space for the imaginary parts of the coefficients;
+  --   ipvt     if idx > 0, then pivoting information of previous lufco;
   --   rc       work space for real parts of the columns of A(0);
   --   ic       work space for imaginary parts of the columns of A(0);
   --   rv       work space for all real parts of all A(k), for k in 1..degree;
@@ -223,7 +286,8 @@ package Newton_Coefficient_Convolutions is
   --   absdx    the absolute value of the maximal component of the update dx;
   --   rcond    estimate for the inverse of the condition number,
   --            if close to zero, then the Jacobian matrix at scf is
-  --            ill conditioned and scf may be wrongly updated.
+  --            ill conditioned and scf may be wrongly updated,
+  --            only if the optional idx is omitted or equal to zero;
   --   ipvt     pivoting of the LU factorization on the lead matrix;
   --   rc       real parts of the output of lufac on A(0);
   --   ic       imaginary parts of the output of lufac on A(0);

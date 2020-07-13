@@ -264,6 +264,21 @@ package body Newton_Convolutions is
     end loop;
   end Update;
 
+  procedure Update ( idx,deg : in integer32;
+                     x,y : in Standard_Complex_VecVecs.VecVec ) is
+
+    xcf,ycf : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in x'range loop
+      xcf := x(i);
+      ycf := y(i);
+      for j in idx..deg loop
+        Standard_Complex_Numbers.Add(xcf(j),ycf(j));
+      end loop;
+    end loop;
+  end Update;
+
   procedure Update ( deg : in integer32;
                      x,y : in DoblDobl_Complex_VecVecs.VecVec ) is
 

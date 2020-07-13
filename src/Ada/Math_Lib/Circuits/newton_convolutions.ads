@@ -101,6 +101,16 @@ package Newton_Convolutions is
   -- REQUIRED : x'range = y'range, and for all k in x'range
   --   x(k)'range = y(k)'range.
 
+  procedure Update ( idx,deg : in integer32;
+                     x,y : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Adds to all coefficients of x the corresponding coefficient of y,
+  --   starting at idx, up to the given degree deg (included).
+
+  -- REQUIRED : x'range = y'range, and for all k in x'range
+  --   x(k)'range = y(k)'range.
+
   function Max ( v : Standard_Complex_Vectors.Link_to_Vector )
                return double_float;
   function Max ( v : DoblDobl_Complex_Vectors.Link_to_Vector )

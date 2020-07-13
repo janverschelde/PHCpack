@@ -86,8 +86,9 @@ procedure ts_fabry is
     dx : Standard_Complex_VecVecs.VecVec(1..dim);
     xd : Standard_Complex_VecVecs.VecVec(0..deg);
     ans : character;
-    scale,usesvd,useqrls,needrcond,staggered,inlined : boolean := false;
-    wrkdeg : integer32 := 0;
+    scale,usesvd,useqrls,needrcond : boolean := false;
+    staggered,inlined,indexed : boolean := false;
+    wrkdeg,wrkidx : integer32 := 0;
     rc,ic,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
     ry,iy : Standard_Floating_Vectors.Link_to_Vector;
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
@@ -122,9 +123,13 @@ procedure ts_fabry is
       ib := Standard_Vector_Splitters.Allocate(deg,dim,0,1);
       ry := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
       iy := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+      if staggered then
+        put("Indexed ? (y/n) "); Ask_Yes_or_No(ans);
+        indexed := (ans = 'y');
+      end if;
     end if;
     if staggered
-     then wrkdeg := 1;
+     then wrkdeg := 1; wrkidx := 0;
     end if;
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
@@ -172,9 +177,17 @@ procedure ts_fabry is
         else
           if needrcond then
             if inlined then
-              Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
-                (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,
-                 rc,ic,rv,iv,rb,ib,ry,iy,scale);
+              if indexed then
+                put("wrkidx : "); put(wrkidx,1);
+                put("  wrkdeg : "); put(wrkdeg,1); new_line;
+                Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+                  (standard_output,wrkidx,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,
+                   rc,ic,rv,iv,rb,ib,ry,iy,scale);
+              else
+                Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+                  (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,
+                   rc,ic,rv,iv,rb,ib,ry,iy,scale);
+              end if;
             else
               Newton_Coefficient_Convolutions.LU_Newton_Step
                 (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,wrk,scale);
@@ -182,9 +195,17 @@ procedure ts_fabry is
             put("  rcond :"); put(rcond,3); new_line;
           else
             if inlined then
-              Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
-                (standard_output,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,
-                 rc,ic,rv,iv,rb,ib,ry,iy,scale);
+              if indexed then
+                put("wrkidx : "); put(wrkidx,1);
+                put("  wrkdeg : "); put(wrkdeg,1); new_line;
+                Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+                  (standard_output,wrkidx,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,
+                   rc,ic,rv,iv,rb,ib,ry,iy,scale);
+              else
+                Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+                  (standard_output,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,
+                   rc,ic,rv,iv,rb,ib,ry,iy,scale);
+              end if;
             else
               Newton_Coefficient_Convolutions.LU_Newton_Step
                 (standard_output,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,wrk,scale);
@@ -197,11 +218,15 @@ procedure ts_fabry is
       put("  Continue ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
       if staggered then
+        if indexed
+         then wrkidx := wrkdeg+1;
+        end if;
         wrkdeg := 2*wrkdeg;
         if wrkdeg > deg
          then wrkdeg := deg;
         end if;
       end if;
+      exit when indexed and then (wrkidx > deg);
     end loop;
     Standard_Complex_Vectors.Clear(wrk);
     Standard_Complex_Vectors.Clear(ewrk);
