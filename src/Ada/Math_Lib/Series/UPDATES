@@ -1,3 +1,6 @@
+Mon 13 Jul 2020 : to ts_perfserlin, added a test procedure for the indexed
+  solving of a linear system of power series, for use in a staggered Newton.
+
 Thu 9 Jul 2020 : added procedures to standard_inlined_linearization for
   an indexed solving of linear series systems.
 

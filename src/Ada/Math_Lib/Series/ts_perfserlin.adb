@@ -32,6 +32,76 @@ procedure ts_perfserlin is
 --   Test the performance on solving linear systems of power series with
 --   linearization, flat data structures, and inlined linear solvers.
 
+  procedure Standard_Indexed_Test
+              ( needrco : in boolean; n,d : in integer32;
+                A : in Standard_Complex_VecMats.VecMat;
+                b : in Standard_Complex_VecVecs.VecVec;
+                info : out integer32; rcond : out double_float ) is
+
+  -- DESCRIPTION :
+  --   An indexed solver starts with the head and the computes
+  --   the solution term after term.
+  --   This procedure tests the Solve_Head and Solve_Tail procedures,
+  --   solving the linear system in a staggered manner.
+
+  -- REQUIRED : A'range = 0..d = b'range = x'range,
+  --   and for all k in 0..d: b(k)'range = 1..n,
+  --   and A(k)'range(1) = A(k)'range(2) = 1..n.
+
+  -- ON ENTRY :
+  --   needrco  flag to indicate if condition estimate is needed;
+  --   n        dimension of the linear system;
+  --   d        degree of the power series;
+  --   A        matrix coefficients of the system;
+  --   b        right hand side vector of the system.
+
+  -- ON RETURN :
+  --   b        vector coefficients of the solution series;
+  --   info     pivoting information of lufac if no needrco;
+  --   rcond    estimated for inverse condition number if needrco.
+
+    rcols,icols,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
+    ry,iy : Standard_Floating_Vectors.Link_to_Vector;
+    rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    wrkidx,wrkdeg : integer32;
+
+    use Standard_Inlined_Linearization;
+
+  begin
+    Standard_Floating_VecVecVecs.Allocate(rv,1,d,1,n,1,n);
+    Standard_Floating_VecVecVecs.Allocate(iv,1,d,1,n,1,n);
+    Standard_Matrix_Splitters.Split_Rows(A,rv,iv);
+    rcols := Standard_Vector_Splitters.Allocate(n,n,1,1);
+    icols := Standard_Vector_Splitters.Allocate(n,n,1,1);
+    rb := Standard_Vector_Splitters.Allocate(d,n,0,1);
+    ib := Standard_Vector_Splitters.Allocate(d,n,0,1);
+    ry := new Standard_Floating_Vectors.Vector'(1..n => 0.0);
+    iy := new Standard_Floating_Vectors.Vector'(1..n => 0.0);
+    Standard_Matrix_Splitters.Complex_Parts(A(0).all,rcols,icols);
+    Standard_Vector_Splitters.Complex_Parts(b,rb,ib);
+    if needrco then
+      Inlined_Solve_Head_by_lufco(n,rcols,icols,rb(0),ib(0),ipvt,rcond,ry,iy);
+    else
+      Inlined_Solve_Head_by_lufac(n,rcols,icols,rb(0),ib(0),ipvt,info);
+    end if;
+    Standard_Vector_Splitters.Complex_Merge(rb(0),ib(0),b(0));
+    wrkdeg := 1; wrkidx := 1;
+    loop
+      Inlined_Solve_Tail_by_lusolve
+        (wrkdeg,n,rcols,icols,rv,iv,rb,ib,ipvt,ry,iy,wrkidx);
+      for k in wrkidx..wrkdeg loop
+        Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),b(k));
+      end loop;
+      exit when (wrkdeg = d);
+      wrkidx := wrkdeg+1;
+      wrkdeg := 2*wrkdeg;
+      if wrkdeg > d
+       then wrkdeg := d;
+      end if;
+    end loop;
+  end Standard_Indexed_Test;
+
   procedure Standard_Test ( n,d : in integer32 ) is
 
   -- DESCRIPTION :
@@ -52,6 +122,7 @@ procedure ts_perfserlin is
         := Series_Coefficient_Vectors.Standard_Series_Coefficients(As);
     vm2 : constant Standard_Complex_VecMats.VecMat(0..As.deg)
         := Series_Coefficient_Vectors.Standard_Series_Coefficients(As);
+    vm3 : Standard_Complex_VecMats.VecMat(0..As.deg);
     sx : constant Standard_Complex_Series_Vectors.Vector(1..n)
        := Standard_Random_Series_Vectors.Random_Series_Vector(1,n,d);
     xs : constant Standard_Complex_Vector_Series.Vector(d)
@@ -63,18 +134,28 @@ procedure ts_perfserlin is
          := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
     bcf2 : constant Standard_Complex_VecVecs.VecVec(0..bs.deg)
          := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
+    bcf3 : Standard_Complex_VecVecs.VecVec(0..bs.deg);
     info : integer32;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     wrk : constant Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..n);
     rcond : double_float;
     ans : character;
+    lurcond,indexed : boolean := false;
 
   begin
     new_line;
     put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+    lurcond := (ans = 'y');
     new_line;
-    if ans = 'y' then
+    put("Test indexed solver ? (y/n) "); Ask_Yes_or_No(ans);
+    indexed := (ans = 'y');
+    if indexed then
+      vm3 := Series_Coefficient_Vectors.Standard_Series_Coefficients(As);
+      bcf3 := Series_Coefficient_Vectors.Standard_Series_Coefficients(bs);
+    end if;
+    new_line;
+    if lurcond then
       Standard_Series_Matrix_Solvers.Solve_by_lufco(vm1,bcf1,ipvt,rcond,wrk);
       put("rcond : "); put(rcond); new_line;
     else
@@ -92,7 +173,7 @@ procedure ts_perfserlin is
       put_line(" of the vector series of the solution :"); put_line(bcf1(k));
     end loop;
     new_line;
-    if ans = 'y' then
+    if lurcond then
       Standard_Inlined_Linearization.Inlined_Solve_by_lufco
         (vm2,bcf2,ipvt,rcond);
       put("rcond : "); put(rcond); new_line;
@@ -101,15 +182,28 @@ procedure ts_perfserlin is
         (vm2,bcf2,ipvt,info);
       put("info : "); put(info,1); new_line;
     end if;
+    if indexed then
+      Standard_Indexed_Test(lurcond,n,d,vm3,bcf3,info,rcond);
+      if lurcond
+       then put("rcond : "); put(rcond); new_line;
+       else put("info : "); put(info,1); new_line;
+      end if;
+    end if;
     put_line("The generated leading vector series of the solution :");
     put_line(xs.cff(0));
     put_line("The recomputed leading vector series of the solution :");
     put_line(bcf2(0));
+    if indexed then
+      put_line("The indexed recomputed head of the solution :");
+      put_line(bcf3(0));
+    end if;
     for k in 1..bs.deg loop
       put("The term "); put(k,1); put_line(" in the solution :");
       put_line(xs.cff(k));
       put("Recomputed term "); put(k,1); put_line(" in the solution :");
       put_line(bcf2(k));
+      put("Indexed recomputed term "); put(k,1);
+      put_line(" in the solution :"); put_line(bcf3(k));
     end loop;
   end Standard_Test;
 
