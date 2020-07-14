@@ -1,3 +1,6 @@
+Tue 14 Jul 2020 : in newton_coefficient_convolutions.adb, fixed the writing
+  of the tolerance index to file.
+
 Mon 13 Jul 2020 : added indexed versions of the LU Newton steps to
   newton_coefficient_convolutions, with updates in newton_convolutions,
   tested by ts_fabry.  To newton_coefficient_convolutions, added the

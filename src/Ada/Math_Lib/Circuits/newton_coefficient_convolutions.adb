@@ -335,7 +335,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
     Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
     put(file,"max |dx| :"); put(file,absdx,3);
-    put(file,"  tolerance index : "); put(idxtoldx,1); new_line(file);
+    put(file,"  tolerance index : "); put(file,idxtoldx,1); new_line(file);
     Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
