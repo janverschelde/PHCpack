@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
@@ -14,6 +15,34 @@ with DoblDobl_Speelpenning_Convolutions;
 with Newton_Convolutions;
 
 package body Newton_Coefficient_Convolutions is
+
+  procedure Tolerance_Index
+              ( idx,deg : in integer32;
+                v : in Standard_Complex_VecVecs.VecVec;
+                tol : in double_float;
+                idxtoldx : out integer32; absdx : out double_float ) is
+
+    val : double_float;
+    done : boolean := false;
+
+  begin
+    absdx := Newton_Convolutions.Max(v(idx));
+    if absdx > tol
+     then idxtoldx := idx-1; done := true;
+     else idxtoldx := deg;
+    end if;
+    for k in idx+1..deg loop
+      val := Newton_Convolutions.Max(v(k));
+      if not done then
+        if val > tol
+         then idxtoldx := k-1; done := true;
+        end if;
+      end if;
+      if val > absdx
+       then absdx := val;
+      end if;
+    end loop;
+  end Tolerance_Index;
 
 -- ONE INLINED NEWTON STEP WITHOUT CONDITION NUMBER ESTIMATE :
 
@@ -97,6 +126,7 @@ package body Newton_Coefficient_Convolutions is
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                toldx : in double_float; idxtoldx : out integer32;
                 absdx : out double_float; info : out integer32;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -149,7 +179,7 @@ package body Newton_Coefficient_Convolutions is
      then Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
+    Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
     Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
@@ -246,6 +276,7 @@ package body Newton_Coefficient_Convolutions is
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                toldx : in double_float; idxtoldx : out integer32;
                 absdx : out double_float; info : out integer32;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -302,8 +333,9 @@ package body Newton_Coefficient_Convolutions is
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
-    put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
+    Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
+    put(file,"max |dx| :"); put(file,absdx,3);
+    put(file,"  tolerance index : "); put(idxtoldx,1); new_line(file);
     Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
@@ -389,6 +421,7 @@ package body Newton_Coefficient_Convolutions is
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                toldx : in double_float; idxtoldx : out integer32;
                 absdx,rcond : out double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -441,7 +474,7 @@ package body Newton_Coefficient_Convolutions is
      then Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
+    Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
     Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
@@ -538,6 +571,7 @@ package body Newton_Coefficient_Convolutions is
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                toldx : in double_float; idxtoldx : out integer32;
                 absdx,rcond : out double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -595,7 +629,9 @@ package body Newton_Coefficient_Convolutions is
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
     absdx := Newton_Convolutions.Max(deg,s.yv);
-    put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
+    Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
+    put(file,"max |dx| :"); put(file,absdx,3);
+    put(file,"  tolerance index : "); put(file,idxtoldx,1); new_line(file);
     Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 

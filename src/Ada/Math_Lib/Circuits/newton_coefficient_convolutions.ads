@@ -24,6 +24,28 @@ package Newton_Coefficient_Convolutions is
 --   from the input arguments and do not allocate for thread safety.
 --   Double and double double precision procedures are provided.
 
+  procedure Tolerance_Index
+              ( idx,deg : in integer32;
+                v : in Standard_Complex_VecVecs.VecVec;
+                tol : in double_float;
+                idxtoldx : out integer32; absdx : out double_float );
+
+  -- DESCRIPTION :
+  --   Given in v is the update dx of Newton's method,
+  --   computed for indices in range idx..deg.
+  --   The tolerance index is the highest index for which the maximum
+  --   absolute value is less than the tolerance tol.
+
+  -- ON ENTRY :
+  --   idx      start index for updates in v;
+  --   deg      end index for updates in v;
+  --   tol      tolerance on the maximum value in each component of v.
+
+  -- ON RETURN :
+  --   idxtoldx is the tolerance index;
+  --   absdx    is the the largest maximum over all components of v
+  --            in the range idx..deg.
+
 -- ONE INLINED NEWTON STEP WITHOUT CONDITION NUMBER ESTIMATE :
 
   procedure Inlined_LU_Newton_Step
@@ -56,6 +78,7 @@ package Newton_Coefficient_Convolutions is
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                toldx : in double_float; idxtoldx : out integer32;
                 absdx : out double_float; info : out integer32;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -95,6 +118,7 @@ package Newton_Coefficient_Convolutions is
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                toldx : in double_float; idxtoldx : out integer32;
                 absdx : out double_float; info : out integer32;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -131,6 +155,8 @@ package Newton_Coefficient_Convolutions is
   --   scf      vector of coefficients of power series;
   --   rx       work space for the real parts of the coefficients;
   --   ix       work space for the imaginary parts of the coefficients;
+  --   toldx    tolerance for the indexed version to compute the highest
+  --            indexed in the update dx with value less than toldx;
   --   ipvt     if idx > 0, then pivoting information of previous lufac;
   --   rc       work space for real parts of the columns of A(0);
   --   ic       work space for imaginary parts of the columns of A(0);
@@ -148,6 +174,9 @@ package Newton_Coefficient_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
+  --   idxtoldx is the highest index in the update with component less than
+  --            the given tolerance toldx to set the index in the next
+  --            iteration of Newton's method to idxtoldx + 1;
   --   absdx    the absolute value of the maximal component of the update dx;
   --   info     info from the LU factorization,
   --            only if the optional idx is omitted or equal to zero;
@@ -189,6 +218,7 @@ package Newton_Coefficient_Convolutions is
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                toldx : in double_float; idxtoldx : out integer32;
                 absdx,rcond : out double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -228,6 +258,7 @@ package Newton_Coefficient_Convolutions is
                 s : in Standard_Coefficient_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 rx,ix : in Standard_Floating_VecVecs.Link_to_VecVec;
+                toldx : in double_float; idxtoldx : out integer32;
                 absdx,rcond : out double_float;
                 ipvt : in out Standard_Integer_Vectors.Vector;
                 rc,ic : in Standard_Floating_VecVecs.Link_to_VecVec;
@@ -266,6 +297,8 @@ package Newton_Coefficient_Convolutions is
   --   scf      vector of coefficients of power series;
   --   rx       work space for the real parts of the coefficients;
   --   ix       work space for the imaginary parts of the coefficients;
+  --   toldx    tolerance for the indexed version to compute the highest
+  --            indexed in the update dx with value less than toldx;
   --   ipvt     if idx > 0, then pivoting information of previous lufco;
   --   rc       work space for real parts of the columns of A(0);
   --   ic       work space for imaginary parts of the columns of A(0);
@@ -283,6 +316,9 @@ package Newton_Coefficient_Convolutions is
 
   -- ON RETURN :
   --   scf      updated coefficients of the series solution;
+  --   idxtoldx is the highest index in the update with component less than
+  --            the given tolerance toldx to set the index in the next
+  --            iteration of Newton's method to idxtoldx + 1;
   --   absdx    the absolute value of the maximal component of the update dx;
   --   rcond    estimate for the inverse of the condition number,
   --            if close to zero, then the Jacobian matrix at scf is
