@@ -50,7 +50,8 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_float;
                 step,mixres : out double_float; nbrit : out integer32;
-                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
+                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
@@ -69,7 +70,8 @@ package Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_float;
                 step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean; verbose : in boolean := true );
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does one predictor-corrector step on one solution,
@@ -109,7 +111,8 @@ package Predictor_Corrector_Loops is
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
-  --   verbose  flag for extra output, if a file is given on input.
+  --   verbose  flag for extra output, if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;
@@ -140,7 +143,8 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_float;
                 step,mixres : out double_float; nbrit : out integer32;
-                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
+                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -157,7 +161,8 @@ package Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_float;
                 step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean; verbose : in boolean := true );
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
   procedure Predictor_Corrector_Loop
               ( hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -172,7 +177,8 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out double_double;
                 step,mixres : out double_double; nbrit : out integer32;
-                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
+                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -189,7 +195,8 @@ package Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_double;
                 step,mixres : out double_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean; verbose : in boolean := true );
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
   procedure Predictor_Corrector_Loop
               ( hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -204,7 +211,8 @@ package Predictor_Corrector_Loops is
                 ipvt : out Standard_Integer_Vectors.Vector;
                 endt : in double_float; acct : in out quad_double;
                 step,mixres : out quad_double; nbrit : out integer32;
-                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean );
+                nbpole,nbhess,nbmaxm : in out natural32; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Predictor_Corrector_Loop
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -221,7 +229,8 @@ package Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out quad_double;
                 step,mixres : out quad_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean; verbose : in boolean := true );
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does one predictor-corrector step on one solution,
@@ -252,7 +261,8 @@ package Predictor_Corrector_Loops is
   --   nbpole   number of times the pole step was minimal;
   --   nbhess   number of times the Hessian step was minimal;
   --   nbmaxm   number of times the maximum step was minimal;
-  --   verbose  flag for extra output, if a file is given on input.
+  --   verbose  flag for extra output, if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   psv.sol  the corrected solution;

@@ -46,7 +46,7 @@ package body Predictor_Corrector_Trackers is
                 acct,mixres : in out double_float;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     endt : constant double_float := 1.0;
     step : double_float := 0.0;
@@ -54,12 +54,15 @@ package body Predictor_Corrector_Trackers is
     nbrit : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_One_Path 1 ...");
+    end if;
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
       Predictor_Corrector_Loop(hom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,
         rx,ix,xr,xi,vh,svls,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,
-        nbmaxm,fail);
+        nbmaxm,fail,vrblvl-1);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
       togo := endt - acct;
@@ -93,7 +96,8 @@ package body Predictor_Corrector_Trackers is
                 acct,mixres : in out double_float;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
-                fail : out boolean; verbose : in boolean := true ) is
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     endt : constant double_float := 1.0;
     step : double_float := 0.0;
@@ -101,6 +105,9 @@ package body Predictor_Corrector_Trackers is
     nbrit : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_One_Path 2 ...");
+    end if;
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
@@ -109,7 +116,7 @@ package body Predictor_Corrector_Trackers is
       end if;
       Predictor_Corrector_Loop(file,hom,cfh,abh,pars,maxit,mhom,idz,
         prd,psv,svh,rx,ix,xr,xi,vh,svls,ipvt,endt,acct,
-        step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail,verbose);
+        step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail,verbose,vrblvl-1);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
       if verbose then
@@ -134,15 +141,20 @@ package body Predictor_Corrector_Trackers is
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
-                idz : in Standard_Natural_Vectors.Link_to_Vector ) is
+                idz : in Standard_Natural_Vectors.Link_to_Vector;
+                vrblvl : in integer32 := 0 ) is
 
     minpastp,maxpastp,ratpole,rathess,ratmaxm : double_float;
     mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps : natural32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_All_Paths 1 ...");
+    end if;
     Track_All_Paths(hom,cfh,abh,sols,pars,mhom,idz,
                     minpastp,maxpastp,ratpole,rathess,ratmaxm,
-                    mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps);
+                    mincorsteps,maxcorsteps,minnbrsteps,maxnbrsteps,
+                    vrblvl-1);
   end Track_All_Paths;
 
   procedure Track_All_Paths
@@ -154,7 +166,8 @@ package body Predictor_Corrector_Trackers is
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
                 minpastp,maxpastp,ratpole,rathess,ratmaxm : out double_float;
                 mincorsteps,maxcorsteps : out natural32;
-                minnbrsteps,maxnbrsteps : out natural32 ) is
+                minnbrsteps,maxnbrsteps : out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
 
@@ -195,6 +208,9 @@ package body Predictor_Corrector_Trackers is
     pwt : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_All_Paths 2 ...");
+    end if;
     pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);
     minpastp := 1.0; maxpastp := 0.0;
@@ -206,7 +222,7 @@ package body Predictor_Corrector_Trackers is
       Track_One_Path
         (hom,rcfhom,icfhom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,
          rx,ix,xr,xi,vh,svls,ipvt,pwt,acct,mixres,tnbrit,
-         nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail);
+         nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,vrblvl-1);
       Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,acct);
       Standard_Inlined_Newton_Circuits.LU_Newton_Steps
@@ -242,7 +258,7 @@ package body Predictor_Corrector_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
 
@@ -288,6 +304,9 @@ package body Predictor_Corrector_Trackers is
     pwt : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_All_Paths 3 ...");
+    end if;
     pwt := Standard_Vector_Splitters.Allocate_Floating_Coefficients(deg);
     Standard_Coefficient_Storage.Allocate_and_Store(hom.crc,rcfhom,icfhom);
     minpastp := 1.0; maxpastp := 0.0;
@@ -301,7 +320,7 @@ package body Predictor_Corrector_Trackers is
       Track_One_Path
         (file,hom,rcfhom,icfhom,cfh,abh,pars,maxit,mhom,idz,prd,psv,svh,
          rx,ix,xr,xi,vh,svls,ipvt,pwt,acct,mixres,tnbrit,
-         nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,verbose);
+         nbpole,nbhess,nbmaxm,nbsteps,minstpz,maxstpz,fail,verbose,vrblvl-1);
       Standard_Coefficient_Storage.Restore(rcfhom,icfhom,hom.crc);
       Standard_Predictor_Convolutions.EvalCffRad(hom,cfh,abh,acct);
       Standard_Inlined_Newton_Circuits.LU_Newton_Steps
@@ -361,7 +380,7 @@ package body Predictor_Corrector_Trackers is
                 acct,mixres : in out double_float;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     endt : constant double_float := 1.0;
     step : double_float := 0.0;
@@ -369,11 +388,15 @@ package body Predictor_Corrector_Trackers is
     nbrit : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_One_Path 3 ...");
+    end if;
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,prd,
-        psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,
+        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
+        fail,vrblvl-1);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
       togo := endt - acct;
@@ -401,7 +424,8 @@ package body Predictor_Corrector_Trackers is
                 acct,mixres : in out double_float;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
-                fail : out boolean; verbose : in boolean := true ) is
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     endt : constant double_float := 1.0;
     step : double_float := 0.0;
@@ -409,6 +433,9 @@ package body Predictor_Corrector_Trackers is
     nbrit : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_One_Path 4 ...");
+    end if;
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
@@ -417,7 +444,7 @@ package body Predictor_Corrector_Trackers is
       end if;
       Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
         mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,
-        nbhess,nbmaxm,fail,verbose);
+        nbhess,nbmaxm,fail,verbose,vrblvl-1);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,step);
       if verbose then
@@ -450,7 +477,7 @@ package body Predictor_Corrector_Trackers is
                 acct,mixres : in out double_double;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     endt : constant double_float := 1.0;
     step : double_double := create(0.0);
@@ -458,11 +485,15 @@ package body Predictor_Corrector_Trackers is
     nbrit : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_One_Path 5 ...");
+    end if;
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,prd,
-        psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,
+        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
+        fail,vrblvl-1);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hi_part(step));
       togo := endt - acct;
@@ -490,7 +521,8 @@ package body Predictor_Corrector_Trackers is
                 acct,mixres : in out double_double;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
-                fail : out boolean; verbose : in boolean := true ) is
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     endt : constant double_float := 1.0;
     step : double_double := create(0.0);
@@ -498,6 +530,9 @@ package body Predictor_Corrector_Trackers is
     nbrit : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_One_Path 6 ...");
+    end if;
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
@@ -506,7 +541,7 @@ package body Predictor_Corrector_Trackers is
       end if;
       Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
         mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,
-        nbhess,nbmaxm,fail,verbose);
+        nbhess,nbmaxm,fail,verbose,vrblvl-1);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hi_part(step));
       if verbose then
@@ -538,7 +573,8 @@ package body Predictor_Corrector_Trackers is
                 wrk : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 acct,mixres : in out quad_double;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
-                minstpz,maxstpz : out double_float; fail : out boolean ) is
+                minstpz,maxstpz : out double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     endt : constant double_float := 1.0;
     step : quad_double := create(0.0);
@@ -546,11 +582,15 @@ package body Predictor_Corrector_Trackers is
     nbrit : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_One_Path 7 ...");
+    end if;
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
-      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,prd,
-        psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,fail);
+      Predictor_Corrector_Loop(hom,abh,homlead,abhlead,pars,maxit,mhom,idz,
+        prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,nbhess,nbmaxm,
+        fail,vrblvl-1);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hihi_part(step));
       togo := endt - acct;
@@ -578,7 +618,8 @@ package body Predictor_Corrector_Trackers is
                 acct,mixres : in out quad_double;
                 tnbrit,nbpole,nbhess,nbmaxm,nbsteps : out natural32;
                 minstpz,maxstpz : out double_float;
-                fail : out boolean; verbose : in boolean := true ) is
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     endt : constant double_float := 1.0;
     step : quad_double := create(0.0);
@@ -586,6 +627,9 @@ package body Predictor_Corrector_Trackers is
     nbrit : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_One_Path 8 ...");
+    end if;
     nbpole := 0; nbhess := 0; nbmaxm := 0; nbsteps := pars.maxsteps;
     minstpz := 1.0; maxstpz := 0.0; tnbrit := 0;
     for k in 1..pars.maxsteps loop
@@ -594,7 +638,7 @@ package body Predictor_Corrector_Trackers is
       end if;
       Predictor_Corrector_Loop(file,hom,abh,homlead,abhlead,pars,maxit,
         mhom,idz,prd,psv,svh,dx,ipvt,endt,acct,step,mixres,nbrit,nbpole,
-        nbhess,nbmaxm,fail,verbose);
+        nbhess,nbmaxm,fail,verbose,vrblvl-1);
       tnbrit := tnbrit + natural32(nbrit);
       Standard_Pade_Trackers.Update_Step_Sizes(minstpz,maxstpz,hihi_part(step));
       if verbose then
@@ -619,7 +663,7 @@ package body Predictor_Corrector_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions,Standard_Predictor_Convolutions;
 
@@ -650,6 +694,9 @@ package body Predictor_Corrector_Trackers is
     xtr : constant integer32 := 1;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_All_Paths 4 ...");
+    end if;
     Allocate_Coefficients(hom.crc,homcff);
     Store_Coefficients(hom.crc,homcff);
     Allocate_Leading_Coefficients(hom.crc,homlead);
@@ -666,7 +713,7 @@ package body Predictor_Corrector_Trackers is
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := 0.0;
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,mhom,idz,prd,psv,
         svh,dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
-        minstpz,maxstpz,fail,verbose);
+        minstpz,maxstpz,fail,verbose,vrblvl-1);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);
@@ -710,7 +757,7 @@ package body Predictor_Corrector_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions,DoblDobl_Predictor_Convolutions;
 
@@ -741,6 +788,9 @@ package body Predictor_Corrector_Trackers is
     xtr : constant integer32 := 1;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_All_Paths 5 ...");
+    end if;
     Allocate_Coefficients(hom.crc,homcff);
     Store_Coefficients(hom.crc,homcff);
     Allocate_Leading_Coefficients(hom.crc,homlead);
@@ -757,7 +807,7 @@ package body Predictor_Corrector_Trackers is
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,mhom,idz,prd,psv,
         svh,dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,nbsteps,
-        minstpz,maxstpz,fail,verbose);
+        minstpz,maxstpz,fail,verbose,vrblvl-1);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);
@@ -801,7 +851,7 @@ package body Predictor_Corrector_Trackers is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions,QuadDobl_Predictor_Convolutions;
 
@@ -832,6 +882,9 @@ package body Predictor_Corrector_Trackers is
     xtr : constant integer32 := 1;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in predictor_corrector_trackers.Track_All_Paths 6 ...");
+    end if;
     Allocate_Coefficients(hom.crc,homcff);
     Store_Coefficients(hom.crc,homcff);
     Allocate_Leading_Coefficients(hom.crc,homlead);
@@ -848,7 +901,7 @@ package body Predictor_Corrector_Trackers is
       ls := Head_Of(solsptr); psv.sol := ls.v; acct := Create(0.0);
       Track_One_Path(file,hom,abh,homlead,abhlead,pars,maxit,mhom,idz,
         prd,psv,svh,dx,ipvt,wrk,acct,mixres,tnbrit,nbpole,nbhess,nbmaxm,
-        nbsteps,minstpz,maxstpz,fail,verbose);
+        nbsteps,minstpz,maxstpz,fail,verbose,vrblvl-1);
       Restore_Coefficients(homcff,hom.crc);
       Update_Radii_of_Constants(abh,hom);
       Step_Coefficient(hom,acct);

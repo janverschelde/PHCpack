@@ -268,14 +268,17 @@ package body Track_Path_Convolutions is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean ) is
+                arth : in boolean; vrb : in integer32 := 0 ) is
 
     verbose : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Track 1 ...");
+    end if;
     Standard_Write_Homotopy(file,hom.neq,sols,pars,arth,verbose);
     new_line(file);
-    Track_All_Paths(file,hom,cfh,abh,sols,pars,mhom,idz,verbose);
+    Track_All_Paths(file,hom,cfh,abh,sols,pars,mhom,idz,verbose,vrb-1);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Standard_Complex_Solutions.Length_Of(sols),
@@ -292,14 +295,17 @@ package body Track_Path_Convolutions is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean ) is
+                arth : in boolean; vrb : in integer32 := 0 ) is
 
     verbose : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Track 2 ...");
+    end if;
     Standard_Write_Homotopy(file,hom.neq,sols,pars,arth,verbose);
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose,vrb-1);
     Standard_Write_Solutions(file,arth,mhom,idz,sols);
   end Track;
 
@@ -311,14 +317,17 @@ package body Track_Path_Convolutions is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean ) is
+                arth : in boolean; vrb : in integer32 := 0 ) is
 
     verbose : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Track 3 ...");
+    end if;
     DoblDobl_Write_Homotopy(file,hom.neq,sols,pars,arth,verbose);
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose,vrb-1);
     DoblDobl_Write_Solutions(file,arth,mhom,idz,sols);
   end Track;
 
@@ -330,14 +339,17 @@ package body Track_Path_Convolutions is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean ) is
+                arth : in boolean; vrb : in integer32 := 0 ) is
 
     verbose : boolean;
 
   begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Track 4 ...");
+    end if;
     QuadDobl_Write_Homotopy(file,hom.neq,sols,pars,arth,verbose);
     new_line(file);
-    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose);
+    Track_All_Paths(file,hom,abh,sols,pars,mhom,idz,verbose,vrb-1);
     QuadDobl_Write_Solutions(file,arth,mhom,idz,sols);
   end Track;
 
@@ -348,12 +360,16 @@ package body Track_Path_Convolutions is
                 pars : out Homotopy_Continuation_Parameters.Parameters;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 mhom : out natural32;
-                idz : out Standard_Natural_Vectors.Link_to_Vector ) is
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                vrb : in integer32 := 0 ) is
 
     idxpar,deg : integer32;
     z : Link_to_Partition;
 
   begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Main 1 ...");
+    end if;
     arth := Series_Path_Trackers.Prompt_for_Artificial;
     pars := Homotopy_Continuation_Parameters.Default_Values;
     if not arth
@@ -377,7 +393,8 @@ package body Track_Path_Convolutions is
                 pars : out Homotopy_Continuation_Parameters.Parameters;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 mhom : out natural32;
-                idz : out Standard_Natural_Vectors.Link_to_Vector ) is
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                vrb : in integer32 := 0 ) is
 
     idxpar,deg : integer32;
     z : Link_to_Partition;
@@ -386,6 +403,9 @@ package body Track_Path_Convolutions is
     use DoblDobl_Complex_Numbers_cv;
 
   begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Main 2 ...");
+    end if;
     arth := Series_Path_Trackers.Prompt_for_Artificial;
     pars := Homotopy_Continuation_Parameters.Default_Values;
     if not arth
@@ -410,7 +430,8 @@ package body Track_Path_Convolutions is
                 pars : out Homotopy_Continuation_Parameters.Parameters;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
                 mhom : out natural32;
-                idz : out Standard_Natural_Vectors.Link_to_Vector ) is
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                vrb : in integer32 := 0 ) is
 
     idxpar,deg : integer32;
     z : Link_to_Partition;
@@ -419,6 +440,9 @@ package body Track_Path_Convolutions is
     use QuadDobl_Complex_Numbers_cv;
 
   begin
+    if vrb > 0
+     then put_line("-> in track_path_convolutions.Main 3 ...");
+    end if;
     arth := Series_Path_Trackers.Prompt_for_Artificial;
     pars := Homotopy_Continuation_Parameters.Default_Values;
     if not arth
@@ -452,7 +476,7 @@ package body Track_Path_Convolutions is
     if vrb > 0
      then put_line("-> in track_path_convolutions.Standard_Main ...");
     end if;
-    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz,vrb-1);
     if mhom > 0 then
       ans := 'n'; -- homogenization not yet supported on coefficient conv
     else
@@ -465,7 +489,7 @@ package body Track_Path_Convolutions is
     Read_Name_and_Create_File(file);
     start_moment := Ada.Calendar.Clock;
     if ans = 'n' then
-      Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+      Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial,vrb-1);
     else
       declare
         cffhom : Standard_Coefficient_Convolutions.Link_to_System;
@@ -475,7 +499,8 @@ package body Track_Path_Convolutions is
         cfs := Standard_Circuit_Makers.Make_Coefficient_System(cffhom);
         abh := Standard_Coefficient_Circuits.Copy(cfs);
         Standard_Coefficient_Circuits.AbsVal(abh);
-        Track(file,cffhom,cfs,abh,sols,pars,integer32(mhom),idz,artificial);
+        Track(file,cffhom,cfs,abh,sols,pars,
+              integer32(mhom),idz,artificial,vrb-1);
       end;
     end if;
     ended_moment := Ada.Calendar.Clock;
@@ -503,12 +528,12 @@ package body Track_Path_Convolutions is
     if vrb > 0
      then put_line("-> in track_path_convolutions.DoblDobl_Main ...");
     end if;
-    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz,vrb-1);
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
     start_moment := Ada.Calendar.Clock;
-    Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial,vrb-1);
     ended_moment := Ada.Calendar.Clock;
     new_line(file);
     put(file,"PHC ran from "); Write_Time_Stamp(file,start_moment);
@@ -534,12 +559,12 @@ package body Track_Path_Convolutions is
     if vrb > 0
      then put_line("-> in track_path_convolutions.QuadDobl_Main ...");
     end if;
-    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
+    Main(cnvhom,abshom,artificial,pars,sols,mhom,idz,vrb-1);
     new_line;
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
     start_moment := Ada.Calendar.Clock;
-    Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial);
+    Track(file,cnvhom,abshom,sols,pars,integer32(mhom),idz,artificial,vrb-1);
     ended_moment := Ada.Calendar.Clock;
     new_line(file);
     put(file,"PHC ran from "); Write_Time_Stamp(file,start_moment);

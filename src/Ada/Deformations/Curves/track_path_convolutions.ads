@@ -89,7 +89,7 @@ package Track_Path_Convolutions is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean );
+                arth : in boolean; vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
@@ -111,7 +111,8 @@ package Track_Path_Convolutions is
   --            idz(k) returns a value between 1 and m,
   --            depending on which set the k-th variable belongs to;
   --   arth     true if the homotopy is an artificial-parameter one,
-  --            false otherwise.
+  --            false otherwise;
+  --   vrb      the verbose level.
 
   -- ON RETURN :
   --   sols     solutions at the end of the path.
@@ -126,7 +127,7 @@ package Track_Path_Convolutions is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean );
+                arth : in boolean; vrb : in integer32 := 0 );
   procedure Track
               ( file : in file_type;
                 hom : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -135,7 +136,7 @@ package Track_Path_Convolutions is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean );
+                arth : in boolean; vrb : in integer32 := 0 );
   procedure Track
               ( file : in file_type;
                 hom : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -144,7 +145,7 @@ package Track_Path_Convolutions is
                 pars : in Homotopy_Continuation_Parameters.Parameters;
                 mhom : in integer32;
                 idz : in Standard_Natural_Vectors.Link_to_Vector;
-                arth : in boolean );
+                arth : in boolean; vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks all paths defined by the homotopy in hom,
@@ -166,7 +167,8 @@ package Track_Path_Convolutions is
   --            idz(k) returns a value between 1 and m,
   --            depending on which set the k-th variable belongs to;
   --   arth     true if the homotopy is an artificial-parameter one,
-  --            false otherwise.
+  --            false otherwise;
+  --   vrb      the verbose level.
 
   -- ON RETURN :
   --   sols     solutions at the end of the path.
@@ -178,7 +180,8 @@ package Track_Path_Convolutions is
                 pars : out Homotopy_Continuation_Parameters.Parameters;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 mhom : out natural32;
-                idz : out Standard_Natural_Vectors.Link_to_Vector );
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                vrb : in integer32 := 0 );
   procedure Main
               ( hom : out DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : out DoblDobl_Speelpenning_Convolutions.Link_to_System;
@@ -186,7 +189,8 @@ package Track_Path_Convolutions is
                 pars : out Homotopy_Continuation_Parameters.Parameters;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
                 mhom : out natural32;
-                idz : out Standard_Natural_Vectors.Link_to_Vector );
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                vrb : in integer32 := 0 );
   procedure Main
               ( hom : out QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 abh : out QuadDobl_Speelpenning_Convolutions.Link_to_System;
@@ -194,7 +198,8 @@ package Track_Path_Convolutions is
                 pars : out Homotopy_Continuation_Parameters.Parameters;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
                 mhom : out natural32;
-                idz : out Standard_Natural_Vectors.Link_to_Vector );
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Promps the user for a homotopy, tunes the parameter settings,

@@ -30,7 +30,7 @@ package body Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_float;
                 step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     initres,res,err : double_float;
     info : integer32;
@@ -40,18 +40,22 @@ package body Predictor_Corrector_Loops is
     use Standard_Predictor_Convolutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in predictor_corrector_loops.");
+      put_line("Predictor_Corrector_Loop 1 ...");
+    end if;
     Standard_Predictor_Convolutions.Set_Lead_Coefficients(prd,psv.sol);
     case prd.kind is
       when LU =>
         Standard_Predictor_Convolutions.LU_Prediction
           (hom,cfh,prd.ludata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
            pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,
-           pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+           pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm,vrblvl-1);
       when SVD =>
         Standard_Predictor_Convolutions.SVD_Prediction
           (hom,cfh,prd.svdata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
            pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,
-           pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+           pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm,vrblvl-1);
     end case;
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
       mixres := 1.0; nbrit := 0;
@@ -96,7 +100,8 @@ package body Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_float;
                 step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean; verbose : in boolean := true ) is
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     initres,res,err : double_float;
     info : integer32;
@@ -106,6 +111,10 @@ package body Predictor_Corrector_Loops is
     use Standard_Predictor_Convolutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in predictor_corrector_loops.");
+      put_line("Predictor_Corrector_Loop 2 ...");
+    end if;
     Standard_Predictor_Convolutions.Set_Lead_Coefficients(prd,psv.sol);
     case prd.kind is
       when LU =>
@@ -113,13 +122,13 @@ package body Predictor_Corrector_Loops is
           (file,hom,cfh,prd.ludata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
            pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,
            pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm,
-           false,verbose); -- verbose,verbose);
+           verbose,verbose,vrblvl-1); -- false,verbose);
       when SVD =>
         Standard_Predictor_Convolutions.SVD_Prediction
           (file,hom,cfh,prd.svdata,svh,rx,ix,xr,xi,vh,svls,psv,maxit,
            pars.tolres,pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,
            pars.minsize,endt,acct,fail,step,nbpole,nbhess,nbmaxm,
-           false,verbose); -- verbose,verbose);
+           verbose,verbose,vrblvl-1); -- false,verbose);
     end case;
     if verbose then
       if fail
@@ -175,7 +184,7 @@ package body Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_float;
                 step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use Standard_Predictor_Convolutions;
 
@@ -184,6 +193,10 @@ package body Predictor_Corrector_Loops is
     xtr : constant integer32 := 1; -- one extra Newton step
 
   begin
+    if vrblvl > 0 then
+      put("-> in predictor_corrector_loops.");
+      put_line("Predictor_Corrector_Loop 3 ...");
+    end if;
     Set_Lead_Coefficients(prd,psv.sol);
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
@@ -194,7 +207,7 @@ package body Predictor_Corrector_Loops is
     end if;
     SVD_Prediction(hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
-      endt,acct,fail,step,nbpole,nbhess,nbmaxm);
+      endt,acct,fail,step,nbpole,nbhess,nbmaxm,vrblvl-1);
     if pars.corsteps = 0 then -- no corrector for zero pars.corsteps
       mixres := 1.0; nbrit := 0;
     else
@@ -232,7 +245,8 @@ package body Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_float;
                 step,mixres : out double_float; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean; verbose : in boolean := true ) is
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Predictor_Convolutions;
 
@@ -241,6 +255,10 @@ package body Predictor_Corrector_Loops is
     xtr : constant integer32 := 1; -- one extra Newton step
 
   begin
+    if vrblvl > 0 then
+      put("-> in predictor_corrector_loops.");
+      put_line("Predictor_Corrector_Loop 4 ...");
+    end if;
     Set_Lead_Coefficients(prd,psv.sol);
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
@@ -251,7 +269,7 @@ package body Predictor_Corrector_Loops is
     end if;
     SVD_Prediction(file,hom,abh,prd.svdata,svh,psv,maxit,pars.tolres,
       pars.alpha,pars.pbeta,pars.cbeta,pars.maxsize,pars.minsize,
-      endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose);
+      endt,acct,fail,step,nbpole,nbhess,nbmaxm,false,verbose,vrblvl-1);
     if verbose then
       if fail
        then put(file,"Predictor failed to reach tolerance");
@@ -301,7 +319,7 @@ package body Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_double;
                 step,mixres : out double_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Predictor_Convolutions;
 
@@ -310,6 +328,10 @@ package body Predictor_Corrector_Loops is
     xtr : constant integer32 := 1; -- one extra Newton step
 
   begin
+    if vrblvl > 0 then
+      put("-> in predictor_corrector_loops.");
+      put_line("Predictor_Corrector_Loop 5 ...");
+    end if;
     Set_Lead_Coefficients(prd,psv.sol);
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
@@ -358,7 +380,8 @@ package body Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out double_double;
                 step,mixres : out double_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean; verbose : in boolean := true ) is
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Predictor_Convolutions;
 
@@ -367,6 +390,10 @@ package body Predictor_Corrector_Loops is
     xtr : constant integer32 := 1; -- one extra Newton step
 
   begin
+    if vrblvl > 0 then
+      put("-> in predictor_corrector_loops.");
+      put_line("Predictor_Corrector_Loop 6 ...");
+    end if;
     Set_Lead_Coefficients(prd,psv.sol);
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
@@ -427,7 +454,7 @@ package body Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out quad_double;
                 step,mixres : out quad_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Predictor_Convolutions;
 
@@ -436,6 +463,10 @@ package body Predictor_Corrector_Loops is
     xtr : constant integer32 := 1; -- one extra Newton step
 
   begin
+    if vrblvl > 0 then
+      put("-> in predictor_corrector_loops.");
+      put_line("Predictor_Corrector_Loop 7 ...");
+    end if;
     Set_Lead_Coefficients(prd,psv.sol);
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);
@@ -484,7 +515,8 @@ package body Predictor_Corrector_Loops is
                 endt : in double_float; acct : in out quad_double;
                 step,mixres : out quad_double; nbrit : out integer32;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                fail : out boolean; verbose : in boolean := true ) is
+                fail : out boolean; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Predictor_Convolutions;
 
@@ -493,6 +525,10 @@ package body Predictor_Corrector_Loops is
     xtr : constant integer32 := 1; -- one extra Newton step
 
   begin
+    if vrblvl > 0 then
+      put("-> in predictor_corrector_loops.");
+      put_line("Predictor_Corrector_Loop 8 ...");
+    end if;
     Set_Lead_Coefficients(prd,psv.sol);
     if mhom = 1 then
       Hyperplane_Convolution_Scaling.Scale_and_Adjust(hom,psv.sol);

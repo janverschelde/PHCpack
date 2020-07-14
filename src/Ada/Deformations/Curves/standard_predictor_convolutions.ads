@@ -251,7 +251,7 @@ package Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float );
+                rad,err : out double_float; vrblvl : in integer32 := 0 );
   procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
@@ -260,7 +260,8 @@ package Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float; output : in boolean );
+                rad,err : out double_float; output : in boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with LU,
@@ -277,7 +278,8 @@ package Standard_Predictor_Convolutions is
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate data output during computations,
-  --            if a file is provided.
+  --            if a file is provided;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -295,7 +297,7 @@ package Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float );
+                rad,err : out double_float; vrblvl : in integer32 := 0 );
   procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
@@ -304,7 +306,8 @@ package Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float; output : in boolean );
+                rad,err : out double_float; output : in boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with SVD,
@@ -320,7 +323,8 @@ package Standard_Predictor_Convolutions is
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate data output during computations,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -340,7 +344,7 @@ package Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float );
+                rad,err : out double_float; vrblvl : in integer32 := 0 );
   procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -348,7 +352,8 @@ package Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float; output : in boolean );
+                rad,err : out double_float; output : in boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with LU,
@@ -362,7 +367,8 @@ package Standard_Predictor_Convolutions is
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate data output during computations,
-  --            if a file is provided.
+  --            if a file is provided;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -379,7 +385,7 @@ package Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float );
+                rad,err : out double_float; vrblvl : in integer32 := 0 );
   procedure Newton_Fabry
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -387,7 +393,8 @@ package Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float; output : in boolean );
+                rad,err : out double_float; output : in boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with SVD,
@@ -401,7 +408,8 @@ package Standard_Predictor_Convolutions is
   --   maxit    maximum number of iterations in Newton's method;
   --   tol      tolerance on the correction term;
   --   output   flag to indicate data output during computations,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -441,7 +449,8 @@ package Standard_Predictor_Convolutions is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
-                beta2 : in double_float; eta,nrm,step : out double_float );
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                vrblvl : in integer32 := 0 );
   procedure Hesse_Pade
               ( file : in file_type;
                 cfs : in Standard_Coefficient_Circuits.Link_to_System;
@@ -452,7 +461,7 @@ package Standard_Predictor_Convolutions is
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes the singular values of the Hessians and estimates the
@@ -472,7 +481,8 @@ package Standard_Predictor_Convolutions is
   --            for k in vh'range.
   --   beta2    multiplication factor for the curvature step;
   --   verbose  flag for intermediate numerical output,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   res      solution error estimated by Pade approximants in prd,
@@ -488,7 +498,8 @@ package Standard_Predictor_Convolutions is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
-                beta2 : in double_float; eta,nrm,step : out double_float );
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                vrblvl : in integer32 := 0 );
   procedure Hesse_Pade
               ( file : in file_type;
                 cfs : in Standard_Coefficient_Circuits.Link_to_System;
@@ -499,7 +510,7 @@ package Standard_Predictor_Convolutions is
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes the singular values of the Hessians and estimates the
@@ -519,7 +530,8 @@ package Standard_Predictor_Convolutions is
   --            for k in vh'range.
   --   beta2    multiplication factor for the curvature step;
   --   verbose  flag for intermediate numerical output,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   res      solution error estimated by Pade approximants in prd,
@@ -544,7 +556,8 @@ package Standard_Predictor_Convolutions is
                 svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
-                beta2 : in double_float; eta,nrm,step : out double_float );
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                vrblvl : in integer32 := 0 );
   procedure Hesse_Pade
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -553,7 +566,7 @@ package Standard_Predictor_Convolutions is
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes the singular values of the Hessians and estimates the
@@ -567,7 +580,8 @@ package Standard_Predictor_Convolutions is
   --   sol      the leading coefficients of the solution series;
   --   beta2    multiplication factor for the curvature step;
   --   verbose  flag for intermediate numerical output,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   res      solution error estimated by Pade approximants in prd,
@@ -581,7 +595,8 @@ package Standard_Predictor_Convolutions is
                 svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
-                beta2 : in double_float; eta,nrm,step : out double_float );
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                vrblvl : in integer32 := 0 );
   procedure Hesse_Pade
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -590,7 +605,7 @@ package Standard_Predictor_Convolutions is
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes the singular values of the Hessians and estimates the
@@ -604,7 +619,8 @@ package Standard_Predictor_Convolutions is
   --   sol      the leading coefficients of the solution series;
   --   beta2    multiplication factor for the curvature step;
   --   verbose  flag for intermediate numerical output,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   res      solution error estimated by Pade approximants in prd,
@@ -647,7 +663,8 @@ package Standard_Predictor_Convolutions is
                 psv : in out Predictor_Vectors;
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; minstep,alpha : in double_float;
-                nrm,mixres : out double_float; nbfail : out integer32 );
+                nrm,mixres : out double_float; nbfail : out integer32;
+                vrblvl : in integer32 := 0 );
   procedure Predictor_Feedback
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
@@ -657,7 +674,7 @@ package Standard_Predictor_Convolutions is
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; minstep,alpha : in double_float;
                 nrm,mixres : out double_float; nbfail : out integer32;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given a step size, runs a predictor feedback loop,
@@ -680,7 +697,8 @@ package Standard_Predictor_Convolutions is
   --   minstep  the minimum step size;
   --   alpha    tolerance on the mixed predictor residual;
   --   verbose  flag for extra output if true,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   step     shorter step size if nbfail > 0;
@@ -699,7 +717,8 @@ package Standard_Predictor_Convolutions is
                 psv : in out Predictor_Vectors;
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; minstep,alpha : in double_float;
-                nrm,mixres : out double_float; nbfail : out integer32 );
+                nrm,mixres : out double_float; nbfail : out integer32;
+                vrblvl : in integer32 := 0 );
   procedure Predictor_Feedback
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -708,7 +727,7 @@ package Standard_Predictor_Convolutions is
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; minstep,alpha : in double_float;
                 nrm,mixres : out double_float; nbfail : out integer32;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given a step size, runs a predictor feedback loop,
@@ -727,7 +746,8 @@ package Standard_Predictor_Convolutions is
   --   minstep  the minimum step size;
   --   alpha    tolerance on the mixed predictor residual;
   --   verbose  flag for extra output if true,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   step     shorter step size if nbfail > 0;
@@ -753,7 +773,8 @@ package Standard_Predictor_Convolutions is
                 alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32 );
+                nbpole,nbhess,nbmaxm : in out natural32;
+                vrblvl : in integer32 := 0 );
   procedure LU_Prediction
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
@@ -769,7 +790,8 @@ package Standard_Predictor_Convolutions is
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false; verbose : in boolean := false );
+                output : in boolean := false; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with LU,
@@ -808,7 +830,8 @@ package Standard_Predictor_Convolutions is
   --   output   flag to indicate data output during computations,
   --            if a file is given on input;
   --   verbose  flag for intermediate numerical output,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -836,7 +859,8 @@ package Standard_Predictor_Convolutions is
                 alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32 );
+                nbpole,nbhess,nbmaxm : in out natural32;
+                vrblvl : in integer32 := 0 );
   procedure SVD_Prediction
               ( file : in file_type;
                 hom : in Standard_Coefficient_Convolutions.Link_to_System;
@@ -852,7 +876,8 @@ package Standard_Predictor_Convolutions is
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false; verbose : in boolean := false );
+                output : in boolean := false; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with SVD,
@@ -891,7 +916,8 @@ package Standard_Predictor_Convolutions is
   --   output   flag to indicate data output during computations,
   --            if a file is given on input;
   --   verbose  flag for intermediate numerical output,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -917,7 +943,8 @@ package Standard_Predictor_Convolutions is
                 alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32 );
+                nbpole,nbhess,nbmaxm : in out natural32;
+                vrblvl : in integer32 := 0 );
   procedure LU_Prediction
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -929,7 +956,8 @@ package Standard_Predictor_Convolutions is
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false; verbose : in boolean := false );
+                output : in boolean := false; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with LU,
@@ -959,7 +987,8 @@ package Standard_Predictor_Convolutions is
   --   output   flag to indicate data output during computations,
   --            if a file is given on input;
   --   verbose  flag for intermediate numerical output,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;
@@ -983,7 +1012,8 @@ package Standard_Predictor_Convolutions is
                 alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32 );
+                nbpole,nbhess,nbmaxm : in out natural32;
+                vrblvl : in integer32 := 0 );
   procedure SVD_Prediction
               ( file : in file_type;
                 hom : in Standard_Speelpenning_Convolutions.Link_to_System;
@@ -995,7 +1025,8 @@ package Standard_Predictor_Convolutions is
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
-                output : in boolean := false; verbose : in boolean := false );
+                output : in boolean := false; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on the power series in prd with SVD,
@@ -1026,7 +1057,8 @@ package Standard_Predictor_Convolutions is
   --   output   flag to indicate data output during computations,
   --            if a file is given on input;
   --   verbose  flag for intermediate numerical output,
-  --            if a file is given on input.
+  --            if a file is given on input;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   prd      contains solution series and Pade approximants;

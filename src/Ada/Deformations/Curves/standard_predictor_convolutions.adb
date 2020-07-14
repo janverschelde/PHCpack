@@ -266,25 +266,33 @@ package body Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float ) is
+                rad,err : out double_float; vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
 
-    info,idxtol : integer32;
+    info : integer32;
+   -- idxtol : integer32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Newton_Fabry 1 ...");
+    end if;
     nbrit := 0;
    -- Newton_Power_Convolutions.LU_Newton_Steps
    --  LU_Newton_Steps was first replaced by a staggered version
    -- Staggered_Newton_Convolutions.LU_Newton_Steps
    --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
    --    info,prd.newtpiv,prd.wrk,false,false);
-   --  and then by an inlined version, and finally with an indexed version
-   -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-    Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-      (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,prd.newtpiv,
+   --  and then by an inlined version
+    Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+      (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
        prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
        false,false);
+   -- and finally with an indexed version ...
+   -- Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+   --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,prd.newtpiv,
+   --    prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+   --    false,false);
     Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
@@ -298,35 +306,46 @@ package body Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float; output : in boolean ) is
+                rad,err : out double_float; output : in boolean;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
 
-    info,idxtol : integer32;
+    info : integer32;
+   -- idxtol : integer32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Newton_Fabry 2 ...");
+    end if;
     nbrit := 0;
     if output then
      -- Newton_Power_Convolutions.LU_Newton_Steps
      -- Staggered_Newton_Convolutions.LU_Newton_Steps
      --   (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
      --    info,prd.newtpiv,prd.wrk,false);
-     -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+      Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,
          prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
-         false);
+         true);
+     -- Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+     --   (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+     --    prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+     --    true);
       Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
      -- Newton_Power_Convolutions.LU_Newton_Steps
      -- Staggered_Newton_Convolutions.LU_Newton_Steps
      --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
      --    info,prd.newtpiv,prd.wrk,false,false);
-     -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-        (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+      Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+        (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,
          prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
          false,false);
+     -- Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+     --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+     --    prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+     --    false,false);
       Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
@@ -340,13 +359,16 @@ package body Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float ) is
+                rad,err : out double_float; vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
 
     info : integer32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Newton_Fabry 3 ...");
+    end if;
     nbrit := 0;
    -- Newton_Power_Convolutions.SVD_Newton_Steps
     Staggered_Newton_Convolutions.SVD_Newton_Steps
@@ -365,20 +387,23 @@ package body Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float; output : in boolean ) is
+                rad,err : out double_float; output : in boolean;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
 
     info : integer32;
 
   begin
-   -- put_line("in Newton_Fabry ...");
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Newton_Fabry 4 ...");
+    end if;
     nbrit := 0;
     if output then
      -- Newton_Power_Convolutions.SVD_Newton_Steps
       Staggered_Newton_Convolutions.SVD_Newton_Steps
         (file,hom,prd.sol,prd.dx,prd.xd,rx,ix,maxit,nbrit,tol,absdx,
-         fail, prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
+         fail,prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
       Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
      -- Newton_Power_Convolutions.SVD_Newton_Steps
@@ -399,7 +424,7 @@ package body Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float ) is
+                rad,err : out double_float; vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
     use Newton_Power_Convolutions;
@@ -407,6 +432,9 @@ package body Standard_Predictor_Convolutions is
     info : integer32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Newton_Fabry 5 ...");
+    end if;
     nbrit := 0;
     LU_Newton_Steps
       (hom,prd.sol,maxit,nbrit,tol,absdx,fail,
@@ -423,7 +451,8 @@ package body Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float; output : in boolean ) is
+                rad,err : out double_float; output : in boolean;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
     use Newton_Power_Convolutions;
@@ -431,6 +460,9 @@ package body Standard_Predictor_Convolutions is
     info : integer32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Newton_Fabry 6 ...");
+    end if;
     nbrit := 0;
     if output then
       LU_Newton_Steps
@@ -453,7 +485,7 @@ package body Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float ) is
+                rad,err : out double_float; vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
     use Newton_Power_Convolutions;
@@ -461,6 +493,9 @@ package body Standard_Predictor_Convolutions is
     info : integer32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Newton_Fabry 7 ...");
+    end if;
     nbrit := 0;
     SVD_Newton_Steps
       (hom,prd.sol,prd.dx,prd.xd,maxit,nbrit,tol,absdx,fail,
@@ -477,7 +512,8 @@ package body Standard_Predictor_Convolutions is
                 maxit : in integer32; tol : in double_float;
                 nbrit : out integer32; absdx,rcond : out double_float;
                 fail : out boolean; z : out Complex_Number;
-                rad,err : out double_float; output : in boolean ) is
+                rad,err : out double_float; output : in boolean;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
     use Newton_Power_Convolutions;
@@ -485,6 +521,9 @@ package body Standard_Predictor_Convolutions is
     info : integer32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Newton_Fabry 8 ...");
+    end if;
     nbrit := 0;
     if output then
       SVD_Newton_Steps
@@ -591,8 +630,12 @@ package body Standard_Predictor_Convolutions is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
-                beta2 : in double_float; eta,nrm,step : out double_float ) is
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Hesse_Pade 1 ...");
+    end if;
     Cached_Singular_Values(cfs,svh,xr,xi,vh,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
     for k in 1..svls'last loop
@@ -615,8 +658,11 @@ package body Standard_Predictor_Convolutions is
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Hesse_Pade 2 ...");
+    end if;
     Cached_Singular_Values(cfs,svh,xr,xi,vh,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
     for k in 1..svls'last loop
@@ -645,8 +691,12 @@ package body Standard_Predictor_Convolutions is
                 vh : in Standard_Complex_VecMats.VecMat;
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
-                beta2 : in double_float; eta,nrm,step : out double_float ) is
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Hesse_Pade 3 ...");
+    end if;
     Cached_Singular_Values(cfs,svh,xr,xi,vh,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
     for k in 1..svls'last loop
@@ -669,8 +719,11 @@ package body Standard_Predictor_Convolutions is
                 svls : in Standard_Complex_VecVecs.VecVec;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Hesse_Pade 4 ...");
+    end if;
     Cached_Singular_Values(cfs,svh,xr,xi,vh,svls);
     svh.vals(0) := svls(0)(svh.dim); -- smallest singular value of Jacobian
     for k in 1..svls'last loop
@@ -718,13 +771,17 @@ package body Standard_Predictor_Convolutions is
                 svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
-                beta2 : in double_float; eta,nrm,step : out double_float ) is
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
     use Standard_Complex_Singular_Values;
 
   begin -- with LU, the system is square so svh.H work space works
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Hesse_Pade 5 ...");
+    end if;
     svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
     SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,0,info,svh.work);
     svh.vals(0) := svh.svl(svh.dim);
@@ -744,13 +801,16 @@ package body Standard_Predictor_Convolutions is
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     info : integer32;
 
     use Standard_Complex_Singular_Values;
 
   begin -- with LU, the system is square so svh.H work space works
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Hesse_Pade 6 ...");
+    end if;
     svh.H := Jacobian_Convolution_Circuits.Jacobian(hom.crc,sol);
     SVD(svh.H,svh.dim,svh.dim,svh.svl,svh.ewrk,svh.U,svh.V,0,info,svh.work);
     svh.vals(0) := svh.svl(svh.dim);
@@ -776,8 +836,12 @@ package body Standard_Predictor_Convolutions is
                 svh : in Link_to_SVD_Hessians;
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
-                beta2 : in double_float; eta,nrm,step : out double_float ) is
+                beta2 : in double_float; eta,nrm,step : out double_float;
+                vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Hesse_Pade 7 ...");
+    end if;
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
     eta := Distance(svh);
@@ -795,8 +859,11 @@ package body Standard_Predictor_Convolutions is
                 sol : in Standard_Complex_Vectors.Vector;
                 res : out Standard_Complex_Vectors.Vector;
                 beta2 : in double_float; eta,nrm,step : out double_float;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.Hesse_Pade 8 ...");
+    end if;
     svh.vals(0) := prd.svl(prd.dim);
     Second(hom,svh,sol);
     if verbose
@@ -872,8 +939,13 @@ package body Standard_Predictor_Convolutions is
                 psv : in out Predictor_Vectors;
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; minstep,alpha : in double_float;
-                nrm,mixres : out double_float; nbfail : out integer32 ) is
+                nrm,mixres : out double_float; nbfail : out integer32;
+                vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put("-> in standard_predictor_convolutions.");
+      put_line("Predictor_Feedback 1 ...");
+    end if;
     nbfail := 0;
     loop
       Standard_Rational_Approximations.Evaluate(numcff,dencff,step,psv.sol);
@@ -906,8 +978,12 @@ package body Standard_Predictor_Convolutions is
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; minstep,alpha : in double_float;
                 nrm,mixres : out double_float; nbfail : out integer32;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put("-> in standard_predictor_convolutions.");
+      put_line("Predictor_Feedback 2 ...");
+    end if;
     nbfail := 0;
     loop
       if verbose then
@@ -955,13 +1031,18 @@ package body Standard_Predictor_Convolutions is
                 psv : in out Predictor_Vectors;
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; minstep,alpha : in double_float;
-                nrm,mixres : out double_float; nbfail : out integer32 ) is
+                nrm,mixres : out double_float; nbfail : out integer32;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
 
     use Standard_Speelpenning_Convolutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in standard_predictor_convolutions.");
+      put_line("Predictor_Feedback 3 ...");
+    end if;
     nbfail := 0;
     loop
       Standard_Rational_Approximations.Evaluate(numcff,dencff,step,psv.sol);
@@ -988,13 +1069,17 @@ package body Standard_Predictor_Convolutions is
                 numcff,dencff : in Standard_Complex_VecVecs.VecVec;
                 step : in out double_float; minstep,alpha : in double_float;
                 nrm,mixres : out double_float; nbfail : out integer32;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
 
     use Standard_Speelpenning_Convolutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in standard_predictor_convolutions.");
+      put_line("Predictor_Feedback 4 ...");
+    end if;
     nbfail := 0;
     loop
       if verbose then
@@ -1044,7 +1129,8 @@ package body Standard_Predictor_Convolutions is
                 alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32 ) is
+                nbpole,nbhess,nbmaxm : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,mixres : double_float;
@@ -1054,17 +1140,21 @@ package body Standard_Predictor_Convolutions is
     use Three_Way_Minima;
 
   begin
-    Newton_Fabry(hom,prd,rx,ix,maxit,tol,nbrit,absdx,fail,z,r,err);
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.LU_Prediction 1 ...");
+    end if;
+    Newton_Fabry(hom,prd,rx,ix,maxit,tol,nbrit,absdx,fail,z,r,err,vrblvl-1);
     pole_step := beta1*r;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
     Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
-    Hesse_Pade(cfh,prd,svh,xr,xi,vh,svls,psv.res,beta2,eta,nrm,curv_step);
+    Hesse_Pade(cfh,prd,svh,xr,xi,vh,svls,psv.res,
+               beta2,eta,nrm,curv_step,vrblvl-1);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(hom,cfh,xr,xi,psv,prd.numcff,prd.dencff,
-                       step,minstep,alpha,nrm,mixres,nbfail);
+                       step,minstep,alpha,nrm,mixres,nbfail,vrblvl-1);
     fail := (mixres > alpha);
   end LU_Prediction;
 
@@ -1084,7 +1174,8 @@ package body Standard_Predictor_Convolutions is
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,mixres : double_float;
@@ -1094,18 +1185,22 @@ package body Standard_Predictor_Convolutions is
     use Three_Way_Minima;
 
   begin
-    Newton_Fabry(file,hom,prd,rx,ix,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.LU_Prediction 2 ...");
+    end if;
+    Newton_Fabry(file,hom,prd,rx,ix,maxit,tol,nbrit,absdx,fail,z,r,err,
+                 output,vrblvl-1);
     pole_step := beta1*r;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
     Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
     Hesse_Pade(file,cfh,prd,svh,xr,xi,vh,svls,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
+               eta,nrm,curv_step,verbose,vrblvl-1);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(file,hom,cfh,xr,xi,psv,prd.numcff,prd.dencff,
-                       step,minstep,alpha,nrm,mixres,nbfail,verbose);
+                       step,minstep,alpha,nrm,mixres,nbfail,verbose,vrblvl-1);
     fail := (mixres > alpha);
   end LU_Prediction;
 
@@ -1122,7 +1217,8 @@ package body Standard_Predictor_Convolutions is
                 alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32 ) is
+                nbpole,nbhess,nbmaxm : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,mixres : double_float;
@@ -1132,17 +1228,22 @@ package body Standard_Predictor_Convolutions is
     use Three_Way_Minima;
 
   begin
-    Newton_Fabry(hom,prd,rx,ix,maxit,tol,nbrit,absdx,rcond,fail,z,r,err);
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.SVD_Prediction 1 ...");
+    end if;
+    Newton_Fabry(hom,prd,rx,ix,maxit,tol,nbrit,absdx,rcond,fail,
+                 z,r,err,vrblvl-1);
     pole_step := beta1*r;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
     Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
-    Hesse_Pade(cfh,prd,svh,xr,xi,vh,svls,psv.res,beta2,eta,nrm,curv_step);
+    Hesse_Pade(cfh,prd,svh,xr,xi,vh,svls,psv.res,
+               beta2,eta,nrm,curv_step,vrblvl-1);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(hom,cfh,xr,xi,psv,prd.numcff,prd.dencff,
-                       step,minstep,alpha,nrm,mixres,nbfail);
+                       step,minstep,alpha,nrm,mixres,nbfail,vrblvl-1);
     fail := (mixres > alpha);
   end SVD_Prediction;
 
@@ -1162,7 +1263,8 @@ package body Standard_Predictor_Convolutions is
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,mixres : double_float;
@@ -1172,19 +1274,22 @@ package body Standard_Predictor_Convolutions is
     use Three_Way_Minima;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.SVD_Prediction 2 ...");
+    end if;
     Newton_Fabry(file,hom,prd,rx,ix,maxit,tol,nbrit,absdx,rcond,
-                 fail,z,r,err,output);
+                 fail,z,r,err,output,vrblvl-1);
     pole_step := beta1*r;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
     Standard_Vector_Splitters.Complex_Parts(psv.sol,xr,xi);
     Hesse_Pade(file,cfh,prd,svh,xr,xi,vh,svls,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
+               eta,nrm,curv_step,verbose,vrblvl-1);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(file,hom,cfh,xr,xi,psv,prd.numcff,prd.dencff,
-                       step,minstep,alpha,nrm,mixres,nbfail,verbose);
+                       step,minstep,alpha,nrm,mixres,nbfail,verbose,vrblvl-1);
     fail := (mixres > alpha);
   end SVD_Prediction;
 
@@ -1199,7 +1304,8 @@ package body Standard_Predictor_Convolutions is
                 alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32 ) is
+                nbpole,nbhess,nbmaxm : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,mixres : double_float;
@@ -1209,16 +1315,19 @@ package body Standard_Predictor_Convolutions is
     use Three_Way_Minima;
 
   begin
-    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err);
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.LU_Prediction 3 ...");
+    end if;
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,vrblvl-1);
     pole_step := beta1*r;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
-    Hesse_Pade(hom,prd,svh,psv.sol,psv.res,beta2,eta,nrm,curv_step);
+    Hesse_Pade(hom,prd,svh,psv.sol,psv.res,beta2,eta,nrm,curv_step,vrblvl-1);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(hom,abh,psv,prd.numcff,prd.dencff,
-                       step,minstep,alpha,nrm,mixres,nbfail);
+                       step,minstep,alpha,nrm,mixres,nbfail,vrblvl-1);
     fail := (mixres > alpha);
   end LU_Prediction;
 
@@ -1234,7 +1343,8 @@ package body Standard_Predictor_Convolutions is
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,pole_step,eta,nrm,curv_step,mixres : double_float;
@@ -1244,7 +1354,11 @@ package body Standard_Predictor_Convolutions is
     use Three_Way_Minima;
 
   begin
-    Newton_Fabry(file,hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,output);
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.LU_Prediction 4 ...");
+    end if;
+    Newton_Fabry(file,hom,prd,maxit,tol,nbrit,absdx,fail,
+                 z,r,err,output,vrblvl-1);
     pole_step := beta1*r;
     if verbose then
       Newton_Fabry_Report(file,nbrit,absdx,fail,z,r,err,
@@ -1254,11 +1368,11 @@ package body Standard_Predictor_Convolutions is
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
     Hesse_Pade(file,hom,prd,svh,psv.sol,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
+               eta,nrm,curv_step,verbose,vrblvl-1);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
-                       step,minstep,alpha,nrm,mixres,nbfail,verbose);
+                       step,minstep,alpha,nrm,mixres,nbfail,verbose,vrblvl-1);
     fail := (mixres > alpha);
   end LU_Prediction;
 
@@ -1271,7 +1385,8 @@ package body Standard_Predictor_Convolutions is
                 alpha,beta1,beta2,maxstep,minstep,endt : in double_float;
                 acct : in out double_float;
                 fail : out boolean; step : out double_float;
-                nbpole,nbhess,nbmaxm : in out natural32 ) is
+                nbpole,nbhess,nbmaxm : in out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,mixres : double_float;
@@ -1281,16 +1396,19 @@ package body Standard_Predictor_Convolutions is
     use Three_Way_Minima;
 
   begin
-    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err);
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.SVD_Prediction 3 ...");
+    end if;
+    Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,vrblvl-1);
     pole_step := beta1*r;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
-    Hesse_Pade(hom,prd,svh,psv.sol,psv.res,beta2,eta,nrm,curv_step);
+    Hesse_Pade(hom,prd,svh,psv.sol,psv.res,beta2,eta,nrm,curv_step,vrblvl-1);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(hom,abh,psv,prd.numcff,prd.dencff,
-      step,minstep,alpha,nrm,mixres,nbfail);
+      step,minstep,alpha,nrm,mixres,nbfail,vrblvl-1);
     fail := (mixres > alpha);
   end SVD_Prediction;
 
@@ -1306,7 +1424,8 @@ package body Standard_Predictor_Convolutions is
                 fail : out boolean; step : out double_float;
                 nbpole,nbhess,nbmaxm : in out natural32;
                 output : in boolean := false;
-                verbose : in boolean := false ) is
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     z : Standard_Complex_Numbers.Complex_Number;
     r,err,absdx,rcond,pole_step,eta,nrm,curv_step,mixres : double_float;
@@ -1316,8 +1435,11 @@ package body Standard_Predictor_Convolutions is
     use Three_Way_Minima;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in standard_predictor_convolutions.SVD_Prediction 4 ...");
+    end if;
     Newton_Fabry
-      (file,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output);
+      (file,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output,vrblvl-1);
     pole_step := beta1*r;
     if verbose then
       Newton_Fabry_Report(file,nbrit,absdx,fail,z,r,err,
@@ -1327,7 +1449,7 @@ package body Standard_Predictor_Convolutions is
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
     Hesse_Pade(file,hom,prd,svh,psv.sol,psv.res,beta2,
-               eta,nrm,curv_step,verbose);
+               eta,nrm,curv_step,verbose,vrblvl-1);
     Minimum(pole_step,curv_step,maxstep,step,nbpole,nbhess,nbmaxm);
     Bounded_Update(acct,step,endt,minstep);
     Predictor_Feedback(file,hom,abh,psv,prd.numcff,prd.dencff,
