@@ -1,5 +1,6 @@
 Tue 14 Jul 2020 : to staggered_newton_convolutions, added indexed LU Newton
-  procedures, tested by ts_sernewcnv.
+  procedures, tested by ts_sernewcnv.  In standard_predictor_convolutions.adb,
+  replaced the Inlined_LU_Newton_Steps by Indexed_LU_Newton_Steps.
 
 Sun 12 Jul 2020 : updated standard_predictor_convolutions.adb so that for
   lower degree polynomials the Hessians are computed only once.

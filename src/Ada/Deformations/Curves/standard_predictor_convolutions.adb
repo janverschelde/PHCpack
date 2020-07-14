@@ -270,7 +270,7 @@ package body Standard_Predictor_Convolutions is
 
     use Standard_Rational_Approximations;
 
-    info : integer32;
+    info,idxtol : integer32;
 
   begin
     nbrit := 0;
@@ -279,9 +279,10 @@ package body Standard_Predictor_Convolutions is
    -- Staggered_Newton_Convolutions.LU_Newton_Steps
    --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
    --    info,prd.newtpiv,prd.wrk,false,false);
-   --  and then by an inlined version :
-    Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-      (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
+   --  and then by an inlined version, and finally with an indexed version
+   -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+    Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+      (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,prd.newtpiv,
        prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
        false,false);
     Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
@@ -301,7 +302,7 @@ package body Standard_Predictor_Convolutions is
 
     use Standard_Rational_Approximations;
 
-    info : integer32;
+    info,idxtol : integer32;
 
   begin
     nbrit := 0;
@@ -310,18 +311,21 @@ package body Standard_Predictor_Convolutions is
      -- Staggered_Newton_Convolutions.LU_Newton_Steps
      --   (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
      --    info,prd.newtpiv,prd.wrk,false);
-      Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
-         prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,false);
+     -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+         prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+         false);
       Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
      -- Newton_Power_Convolutions.LU_Newton_Steps
      -- Staggered_Newton_Convolutions.LU_Newton_Steps
      --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
      --    info,prd.newtpiv,prd.wrk,false,false);
-      Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-        (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
-         prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+     -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+        (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+         prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
          false,false);
       Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     end if;
