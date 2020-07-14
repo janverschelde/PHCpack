@@ -56,7 +56,8 @@ procedure ts_sernewcnv is
               ( p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sol : in Standard_Complex_Solutions.Link_to_Solution;
                 deg,maxit : in integer32;
-                scale,usesvd,useqrls,lurcond,stagdeg,inlined : in boolean ) is
+                scale,usesvd,useqrls,lurcond : in boolean;
+                stagdeg,inlined,indexed : in boolean ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method in double precision,
@@ -72,7 +73,8 @@ procedure ts_sernewcnv is
   --   useqrls  for least squares after QR decomposition;
   --   lurcond  lu with condition number estimate;
   --   stagdeg  staggered in the degrees;
-  --   inlined  for inlined LU factorization.
+  --   inlined  for inlined LU factorization;
+  --   indexed  for inlined LU and staggered indexed Newton.
 
     c : constant Standard_Speelpenning_Convolutions.Circuits(p'range)
       := Make_Convolution_Circuits(p.all,natural32(deg));
@@ -87,7 +89,7 @@ procedure ts_sernewcnv is
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     ix : constant Standard_Floating_VecVecs.Link_to_VecVec
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
-    info,nbrit : integer32 := 0;
+    info,nbrit,idxtoldx : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
     ewrk : Standard_Complex_Vectors.Link_to_Vector
         := new Standard_Complex_Vectors.Vector(1..dim);
@@ -100,7 +102,7 @@ procedure ts_sernewcnv is
     U : Standard_Complex_Matrices.Matrix(1..neq,1..neq);
     V : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     absdx,rcond : double_float;
-    tol : constant double_float := 1.0E-14;
+    tol : constant double_float := 1.0E-12;
     fail : boolean;
     rc,ic,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
     ry,iy : Standard_Floating_Vectors.Link_to_Vector;
@@ -153,9 +155,15 @@ procedure ts_sernewcnv is
     elsif lurcond then
       if stagdeg then
         if inlined then
-          Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-            (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
-             ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+          if indexed then
+            Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+              (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+               fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+          else
+            Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+              (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
+               ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+          end if;
         else
           Staggered_Newton_Convolutions.LU_Newton_Steps
             (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,rcond,
@@ -170,9 +178,15 @@ procedure ts_sernewcnv is
     else
       if stagdeg then
         if inlined then
-          Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-            (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
-             info,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+          if indexed then
+            Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+              (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
+               fail,info,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+          else
+            Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+              (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
+               info,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
+          end if;
         else
           Staggered_Newton_Convolutions.LU_Newton_Steps
             (standard_output,cs,scf,rx,ix,maxit,nbrit,tol,absdx,fail,
@@ -499,6 +513,7 @@ procedure ts_sernewcnv is
         := Standard_Complex_Solutions.Head_Of(sols);
     maxit : integer32 := 0;
     scale,usesvd,useqrls,needrcond,staggered,inlined : boolean := false;
+    indexed : boolean := false;
     overdet : constant boolean := (p'last > dim);
     ans : character;
 
@@ -509,10 +524,13 @@ procedure ts_sernewcnv is
     put("Apply coefficient convolution circuits ? (y/n) ");
     Ask_Yes_or_No(ans); 
     if ans = 'y' then
-      put("Staggered degrees ? (y/n) "); Ask_Yes_or_No(ans);
+      put("Staggered on highest degree ? (y/n) "); Ask_Yes_or_No(ans);
       staggered := (ans = 'y');
+      put("Indexed on lower degrees ? (y/n) "); Ask_Yes_or_No(ans);
+      indexed := (ans = 'y');
       Standard_Coefficient_Run
-        (p,sol,deg,maxit,scale,usesvd,useqrls,needrcond,staggered,inlined);
+        (p,sol,deg,maxit,scale,usesvd,useqrls,needrcond,
+         staggered,inlined,indexed);
     else
       Standard_Run(p,sol,deg,maxit,scale,usesvd,useqrls,needrcond);
     end if;
