@@ -1,3 +1,6 @@
+Wed 15 Jul 2020 : shortened output in newton_coefficient_convolutions.adb,
+  in the staggered procedures.
+
 Tue 14 Jul 2020 : in newton_coefficient_convolutions.adb, fixed the writing
   of the tolerance index to file.
 

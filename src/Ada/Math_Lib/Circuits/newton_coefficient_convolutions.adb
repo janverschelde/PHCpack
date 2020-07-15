@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
 with Standard_Vector_Splitters;
@@ -246,7 +247,10 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    put_line(file,"vy :"); put_line(file,s.vy);
+    put_line(file,"vy :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     Newton_Convolutions.Minus(deg,s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     for k in 0..deg loop -- s.vy, rb, and ib are linearized
@@ -260,7 +264,10 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
-    put_line(file,"dx :"); put_line(file,s.vy);
+    put_line(file,"dx :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     if scaledx then
       Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
@@ -297,7 +304,10 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    put_line(file,"vy :"); put_line(file,s.vy);
+    put_line(file,"vy :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     Newton_Convolutions.Minus(deg,s.vy);
     for k in idx..deg loop -- s.vy, rb, and ib are linearized
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
@@ -327,7 +337,10 @@ package body Newton_Coefficient_Convolutions is
     for k in idx..deg loop
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
-    put_line(file,"dx :"); put_line(file,s.vy);
+    put_line(file,"dx :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     if scaledx then
       Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
@@ -541,7 +554,10 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    put_line(file,"vy :"); put_line(file,s.vy);
+    put_line(file,"vy :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     Newton_Convolutions.Minus(deg,s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     for k in 0..deg loop -- s.vy, rb, and ib are linearized
@@ -555,7 +571,10 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
-    put_line(file,"dx :"); put_line(file,s.vy);
+    put_line(file,"dx :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     if scaledx then
       Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
@@ -592,7 +611,10 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    put_line(file,"vy :"); put_line(file,s.vy);
+    put_line(file,"vy :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     Newton_Convolutions.Minus(deg,s.vy);
     for k in idx..deg loop -- s.vy, rb, and ib are linearized
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
@@ -622,7 +644,10 @@ package body Newton_Coefficient_Convolutions is
     for k in idx..deg loop
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
-    put_line(file,"dx :"); put_line(file,s.vy);
+    put_line(file,"dx :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     if scaledx then
       Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
@@ -740,10 +765,16 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    put_line(file,"vy :"); put_line(file,s.vy);
+    put_line(file,"vy :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufac(deg,s.vm,s.vy,ipvt,info,wrk);
-    put_line(file,"dx :"); put_line(file,s.vy);
+    put_line(file,"dx :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     if scaledx then
       Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
@@ -930,11 +961,17 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    put_line(file,"vy :"); put_line(file,s.vy);
+    put_line(file,"vy :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufco
       (deg,s.vm,s.vy,ipvt,rcond,wrk);
-    put_line(file,"dx :"); put_line(file,s.vy);
+    put_line(file,"dx :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     if scaledx then
       Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
@@ -1135,11 +1172,17 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    put_line(file,"vy :"); put_line(file,s.vy);
+    put_line(file,"vy :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_QRLS
       (deg,s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
-    put_line(file,"dx :"); put_line(file,xd);
+    put_line(file,"dx :");
+    for k in 0..deg loop
+      put_line(file,xd(k)); new_line(file);
+    end loop;
     if scaledx then
       Newton_Convolutions.Power_Divide(xd,1.0);
       put(file,"scaled dx :"); put_line(file,xd);
@@ -1347,11 +1390,17 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    put_line(file,"vy :"); put_line(file,s.vy);
+    put_line(file,"vy :");
+    for k in 0..deg loop
+      put_line(file,s.vy(k)); new_line(file);
+    end loop;
     Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_SVD
       (deg,s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
-    put_line(file,"dx :"); put_line(file,xd);
+    put_line(file,"dx :");
+    for k in 0..deg loop
+      put_line(file,xd(k)); new_line(file);
+    end loop;
     if scaledx then
       Newton_Convolutions.Power_Divide(xd,1.0);
       put(file,"scaled dx :"); put_line(file,xd);
