@@ -161,7 +161,7 @@ package body Newton_Coefficient_Convolutions is
     else
       info := 0; -- assuming the previous info was zero
       for k in idx..deg loop
-        rlnk := rb(k); ilnk := rb(k);
+        rlnk := rb(k); ilnk := ib(k);
         for i in idx..(k-1) loop -- all rhs vectors prior to idx are zero
           Standard_Inlined_Linearization.Row_Matrix_Multiply
             (rv(k-i),iv(k-i),rb(i),ib(i),ry,iy);
@@ -213,6 +213,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
     Standard_Inlined_Linearization.Inlined_Solve_by_lufac
        (s.dim,rc,ic,rv,iv,rb,ib,ipvt,info,ry,iy);
+    put(file,"info : "); put(file,info,1); new_line(file);
     Standard_Vector_Splitters.Complex_Merge(rb,ib,s.vy);
     put_line(file,"dx :"); put_line(file,s.vy);
     if scaledx then
@@ -261,6 +262,7 @@ package body Newton_Coefficient_Convolutions is
     end loop;
     Standard_Inlined_Linearization.Inlined_Solve_by_lufac
       (deg,s.dim,rc,ic,rv,iv,rb,ib,ipvt,info,ry,iy);
+    put(file,"info : "); put(file,info,1); new_line(file);
     for k in 0..deg loop
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
@@ -319,14 +321,15 @@ package body Newton_Coefficient_Convolutions is
       Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
       Standard_Inlined_Linearization.Inlined_Solve_by_lufac
         (deg,s.dim,rc,ic,rv,iv,rb,ib,ipvt,info,ry,iy);
+      put(file,"info : "); put(file,info,1); new_line(file);
     else
       info := 0; -- assuming previous info was zero ...
       for k in idx..deg loop
-        rlnk := rb(k); ilnk := rb(k);
+        rlnk := rb(k); ilnk := ib(k);
         for i in idx..(k-1) loop -- all rhs vectors prior to idx are zero
           Standard_Inlined_Linearization.Row_Matrix_Multiply
             (rv(k-i),iv(k-i),rb(i),ib(i),ry,iy);
-          for j in rlnk'range loop         -- subtract A(k-1)*x(k) from b(k)
+          for j in rlnk'range loop         -- subtract A(k-i)*x(i) from b(k)
             rlnk(j) := rlnk(j) - ry(j);
             ilnk(j) := ilnk(j) - iy(j);
           end loop;
@@ -468,7 +471,7 @@ package body Newton_Coefficient_Convolutions is
     else
       rcond := 1.0; -- assuming perfect condition
       for k in idx..deg loop
-        rlnk := rb(k); ilnk := rb(k);
+        rlnk := rb(k); ilnk := ib(k);
         for i in idx..(k-1) loop -- all rhs vectors prior to idx are zero
           Standard_Inlined_Linearization.Row_Matrix_Multiply
             (rv(k-i),iv(k-i),rb(i),ib(i),ry,iy);
@@ -520,6 +523,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
     Standard_Inlined_Linearization.Inlined_Solve_by_lufco
        (s.dim,rc,ic,rv,iv,rb,ib,ipvt,rcond,ry,iy);
+    put(file,"rcond :"); put(file,rcond,3); new_line(file);
     Standard_Vector_Splitters.Complex_Merge(rb,ib,s.vy);
     put_line(file,"dx :"); put_line(file,s.vy);
     if scaledx then
@@ -568,6 +572,7 @@ package body Newton_Coefficient_Convolutions is
     end loop;
     Standard_Inlined_Linearization.Inlined_Solve_by_lufco
        (deg,s.dim,rc,ic,rv,iv,rb,ib,ipvt,rcond,ry,iy);
+    put(file,"rcond :"); put(file,rcond,3); new_line(file);
     for k in 0..deg loop
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
@@ -626,10 +631,11 @@ package body Newton_Coefficient_Convolutions is
       Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
       Standard_Inlined_Linearization.Inlined_Solve_by_lufco
         (deg,s.dim,rc,ic,rv,iv,rb,ib,ipvt,rcond,ry,iy);
+      put(file,"rcond :"); put(file,rcond,3); new_line(file);
     else
       rcond := 1.0; -- assuming perfect condition ...
       for k in idx..deg loop
-        rlnk := rb(k); ilnk := rb(k);
+        rlnk := rb(k); ilnk := ib(k);
         for i in idx..(k-1) loop -- all rhs vectors prior to idx are zero
           Standard_Inlined_Linearization.Row_Matrix_Multiply
             (rv(k-i),iv(k-i),rb(i),ib(i),ry,iy);
