@@ -60,7 +60,9 @@ package body Standard_Inlined_Linear_Solvers is
       end loop;
     end if;
     ipvt(dim) := dim;
-    if rak(dim) = 0.0 and iak(dim) = 0.0
+    rak := rcols(dim); iak := icols(dim);
+    smax := abs(rak(dim)) + abs(iak(dim));
+    if smax = 0.0
      then info := dim;
     end if;
   end lufac;

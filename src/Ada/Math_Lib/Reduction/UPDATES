@@ -1,3 +1,5 @@
+Wed 15 Jul 2020 : fixed bug in lufac in standard_inlined_linear_solvers.adb.
+
 Wed 24 Jun 2020 : defined vectorized lusolve and estco in ts_perfdlu.
   New package standard_inlined_linear_solvers with code from ts_perfdlu.
 
