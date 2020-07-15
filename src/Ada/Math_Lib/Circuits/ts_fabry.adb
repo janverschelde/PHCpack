@@ -88,7 +88,7 @@ procedure ts_fabry is
     ans : character;
     scale,usesvd,useqrls,needrcond : boolean := false;
     staggered,inlined,indexed : boolean := false;
-    wrkdeg,wrkidx : integer32 := 0;
+    wrkdeg,wrkidx,idxtoldx : integer32 := 0;
     rc,ic,rb,ib : Standard_Floating_VecVecs.Link_to_VecVec;
     ry,iy : Standard_Floating_Vectors.Link_to_Vector;
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
@@ -181,8 +181,8 @@ procedure ts_fabry is
                 put("wrkidx : "); put(wrkidx,1);
                 put("  wrkdeg : "); put(wrkdeg,1); new_line;
                 Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
-                  (standard_output,wrkidx,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,
-                   rc,ic,rv,iv,rb,ib,ry,iy,scale);
+                  (standard_output,wrkidx,wrkdeg,s,scf,rx,ix,1.0E-8,
+                   idxtoldx,absdx,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
               else
                 Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
                   (standard_output,wrkdeg,s,scf,rx,ix,absdx,rcond,ipvt,
@@ -199,8 +199,8 @@ procedure ts_fabry is
                 put("wrkidx : "); put(wrkidx,1);
                 put("  wrkdeg : "); put(wrkdeg,1); new_line;
                 Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
-                  (standard_output,wrkidx,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,
-                   rc,ic,rv,iv,rb,ib,ry,iy,scale);
+                  (standard_output,wrkidx,wrkdeg,s,scf,rx,ix,1.0E-8,
+                   idxtoldx,absdx,info,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
               else
                 Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
                   (standard_output,wrkdeg,s,scf,rx,ix,absdx,info,ipvt,
@@ -219,7 +219,7 @@ procedure ts_fabry is
       exit when (ans /= 'y');
       if staggered then
         if indexed
-         then wrkidx := wrkdeg+1;
+         then wrkidx := idxtoldx+1;
         end if;
         wrkdeg := 2*wrkdeg;
         if wrkdeg > deg
@@ -228,6 +228,15 @@ procedure ts_fabry is
       end if;
       exit when indexed and then (wrkidx > deg);
     end loop;
+    if indexed then
+      loop
+        put("One extra step ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+        Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
+          (standard_output,s,scf,rx,ix,absdx,info,ipvt,
+           rc,ic,rv,iv,rb,ib,ry,iy,scale);
+      end loop;
+    end if;
     Standard_Complex_Vectors.Clear(wrk);
     Standard_Complex_Vectors.Clear(ewrk);
   end Standard_Newton_Steps;
