@@ -1,3 +1,6 @@
+Thu 16 Jul 2020 : in standard_inlined_newton_circuits.adb ,added check 
+  on divergence to the LU_Newton_Steps procedures.
+
 Fri 10 Jul 2020 : in standard_refiner_circuits.adb, placed "if verbose"
   condition in case of a failed solution path.
 

@@ -250,6 +250,7 @@ package body Standard_Inlined_Newton_Circuits is
                 extra : in natural32 := 0 ) is
 
     cntextra : natural32 := 0;
+    prev_err,prev_res : double_float := 1.0;
 
   begin
     for k in 1..maxit+extra loop
@@ -262,7 +263,13 @@ package body Standard_Inlined_Newton_Circuits is
          then numit := k; fail := false; return;
         end if;
         cntextra := cntextra + 1; -- do an extra step
+      elsif k > 1 then -- check for divergence
+        if ((res > prev_res) and (err > prev_err))
+         then numit := k; exit;
+        end if;
       end if;
+      prev_err := err;
+      prev_res := res;
     end loop;
     fail := true; numit := maxit;
   end LU_Newton_Steps;
@@ -280,6 +287,7 @@ package body Standard_Inlined_Newton_Circuits is
                 verbose : in boolean := true ) is
 
     cntextra : natural32 := 0;
+    prev_err,prev_res : double_float := 1.0;
 
   begin
     for k in 1..maxit+extra loop
@@ -292,7 +300,13 @@ package body Standard_Inlined_Newton_Circuits is
          then numit := k; fail := false; return;
         end if;
         cntextra := cntextra + 1; -- do an extra step
+      elsif k > 1 then -- check for divergence
+        if ((res > prev_res) and (err > prev_err))
+         then numit := k; exit;
+        end if;
       end if;
+      prev_err := err;
+      prev_res := res;
     end loop;
     fail := true; numit := maxit;
   end LU_Newton_Steps;
@@ -308,6 +322,7 @@ package body Standard_Inlined_Newton_Circuits is
                 extra : in natural32 := 0 ) is
 
     cntextra : natural32 := 0;
+    prev_err,prev_res : double_float := 1.0;
 
   begin
     for k in 1..maxit+extra loop
@@ -320,7 +335,13 @@ package body Standard_Inlined_Newton_Circuits is
          then numit := k; fail := false; return;
         end if;
         cntextra := cntextra + 1; -- do an extra step
+      elsif k > 1 then -- check for divergence
+        if ((res > prev_res) and (err > prev_err))
+         then numit := k; exit;
+        end if;
       end if;
+      prev_err := err;
+      prev_res := res;
     end loop;
     fail := true; numit := maxit;
   end LU_Newton_Steps;
@@ -338,6 +359,7 @@ package body Standard_Inlined_Newton_Circuits is
                 verbose : in boolean := true ) is
 
     cntextra : natural32 := 0;
+    prev_err,prev_res : double_float := 1.0;
 
   begin
     for k in 1..maxit+extra loop
@@ -350,7 +372,13 @@ package body Standard_Inlined_Newton_Circuits is
          then numit := k; fail := false; return;
         end if;
         cntextra := cntextra + 1; -- do an extra step
+      elsif k > 1 then -- check for divergence
+        if ((res > prev_res) and (err > prev_err))
+         then numit := k; exit;
+        end if;
       end if;
+      prev_err := err;
+      prev_res := res;
     end loop;
     fail := true; numit := maxit;
   end LU_Newton_Steps;
@@ -370,6 +398,7 @@ package body Standard_Inlined_Newton_Circuits is
                 extra : in natural32 := 0 ) is
 
     cntextra : natural32 := 0;
+    prev_err,prev_mixres : double_float := 1.0;
 
   begin
     for k in 1..maxit+extra loop
@@ -382,7 +411,13 @@ package body Standard_Inlined_Newton_Circuits is
          then numit := k; fail := false; return;
         end if;
         cntextra := cntextra + 1; -- do an extra step
+      elsif k > 1 then -- check for divergence
+        if ((mixres > prev_mixres) and (err > prev_err))
+         then numit := k; exit;
+        end if;
       end if;
+      prev_err := err;
+      prev_mixres := mixres;
     end loop;
     fail := true; numit := maxit;
   end LU_Newton_Steps;
@@ -402,6 +437,7 @@ package body Standard_Inlined_Newton_Circuits is
                 verbose : in boolean := true ) is
 
     cntextra : natural32 := 0;
+    prev_err,prev_mixres : double_float := 1.0;
 
   begin
     for k in 1..maxit+extra loop
@@ -415,7 +451,13 @@ package body Standard_Inlined_Newton_Circuits is
          then numit := k; fail := false; return;
         end if;
         cntextra := cntextra + 1; -- do an extra step
+      elsif k > 1 then -- check for divergence
+        if ((mixres > prev_mixres) and (err > prev_err))
+         then numit := k; exit;
+        end if;
       end if;
+      prev_err := err;
+      prev_mixres := mixres;
     end loop;
     fail := true; numit := maxit;
   end LU_Newton_Steps;
@@ -432,6 +474,7 @@ package body Standard_Inlined_Newton_Circuits is
                 extra : in natural32 := 0 ) is
 
     cntextra : natural32 := 0;
+    prev_err,prev_mixres : double_float := 1.0;
 
   begin
     for k in 1..maxit+extra loop
@@ -444,7 +487,13 @@ package body Standard_Inlined_Newton_Circuits is
          then numit := k; fail := false; return;
         end if;
         cntextra := cntextra + 1; -- do an extra step
+      elsif k > 1 then -- check for divergence
+        if ((mixres > prev_mixres) and (err > prev_err))
+         then numit := k; exit;
+        end if;
       end if;
+      prev_err := err;
+      prev_mixres := mixres;
     end loop;
     fail := true; numit := maxit;
   end LU_Newton_Steps;
@@ -463,6 +512,7 @@ package body Standard_Inlined_Newton_Circuits is
                 verbose : in boolean := true ) is
 
     cntextra : natural32 := 0;
+    prev_err,prev_mixres : double_float := 1.0;
 
   begin
     for k in 1..maxit+extra loop
@@ -476,7 +526,13 @@ package body Standard_Inlined_Newton_Circuits is
          then numit := k; fail := false; return;
         end if;
         cntextra := cntextra + 1; -- do an extra step
+      elsif k > 1 then -- check for divergence
+        if ((mixres > prev_mixres) and (err > prev_err))
+         then numit := k; exit;
+        end if;
       end if;
+      prev_err := err;
+      prev_mixres := mixres;
     end loop;
     fail := true; numit := maxit;
   end LU_Newton_Steps;
