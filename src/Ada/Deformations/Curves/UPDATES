@@ -1,3 +1,6 @@
+Thu 16 Jul 2020 : minor improvement in the menu for the settings of the
+  parameters in homotopy_continuation_parameters_io.adb.
+
 Tue 14 Jul 2020 : to staggered_newton_convolutions, added indexed LU Newton
   procedures, tested by ts_sernewcnv.  In standard_predictor_convolutions.adb,
   replaced the Inlined_LU_Newton_Steps by Indexed_LU_Newton_Steps.
