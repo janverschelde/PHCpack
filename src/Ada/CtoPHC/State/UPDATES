@@ -1,3 +1,6 @@
+Fri 17 Jul 2020 : added vrblvl to use_numbtrop and redefined the functions,
+  adding verbose message and exception handlers.
+
 Fri 3 Jul 2020 : in use_c2phc4c, added vrblvl parameter.
 
 Wed 1 Jul 2020 : added close(file) to job_handlers.adb.

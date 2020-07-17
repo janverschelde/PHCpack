@@ -12,15 +12,20 @@ with Double_Double_Vectors;
 with Double_Double_vecVecs;
 with Quad_Double_Vectors;
 with Quad_Double_vecVecs;
-with Numerical_Tropisms_Container;       use Numerical_Tropisms_Container;
+with Numerical_Tropisms_Container;
 with Assignments_in_Ada_and_C;           use Assignments_in_Ada_and_C;
 
 function use_numbtrop ( job : integer32;
                         a : C_intarrs.Pointer;
                         b : C_intarrs.Pointer;
-                        c : C_dblarrs.Pointer ) return integer32 is
+                        c : C_dblarrs.Pointer;
+                        vrblvl : integer32 := 0 ) return integer32 is
 
-  function Job1 return integer32 is -- standard initialize
+  function Standard_Initialize return integer32 is
+
+  -- DESCRIPTION :
+  --   Initializes the container for numerical tropisms computed
+  --   in standard double precision.
 
     use Interfaces.C;
 
@@ -36,6 +41,9 @@ function use_numbtrop ( job : integer32;
     idx : integer32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Standard_Initialize ...");
+    end if;
     Assign(natural32(nbt),b,wnd);
     Assign(natural32(nfl),c,dre);
     idx := 0;
@@ -51,9 +59,19 @@ function use_numbtrop ( job : integer32;
     end loop;
     Numerical_Tropisms_Container.Standard_Initialize(wnd,dir,err);
     return 0;
-  end Job1;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.Standard_Initialize.");
+      end if;
+      return 711;
+  end Standard_Initialize;
 
-  function Job2 return integer32 is -- dobldobl initialize
+  function DoblDobl_Initialize return integer32 is
+
+  -- DESCRIPTION :
+  --   Initializes the container for numerical tropisms computed
+  --   in double double precision.
 
     use Interfaces.C;
 
@@ -69,6 +87,9 @@ function use_numbtrop ( job : integer32;
     idx : integer32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.DoblDobl_Initialize ...");
+    end if;
     Assign(natural32(nbt),b,wnd);
     Assign(natural32(nfl),c,dre);
     idx := 0;
@@ -95,9 +116,19 @@ function use_numbtrop ( job : integer32;
     end loop;
     Numerical_Tropisms_Container.DoblDobl_Initialize(wnd,dir,err);
     return 0;
-  end Job2;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.DoblDobl_Initialize.");
+      end if;
+      return 712;
+  end DoblDobl_Initialize;
 
-  function Job3 return integer32 is -- quaddobl initialize
+  function QuadDobl_Initialize return integer32 is
+
+  -- DESCRIPTION :
+  --   Initializes the container for numerical tropisms computed
+  --   in quad double precision.
 
     use Interfaces.C;
 
@@ -113,6 +144,9 @@ function use_numbtrop ( job : integer32;
     idx : integer32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.QuadDobl_Initialize ...");
+    end if;
     Assign(natural32(nbt),b,wnd);
     Assign(natural32(nfl),c,dre);
     idx := 0;
@@ -143,9 +177,19 @@ function use_numbtrop ( job : integer32;
     end loop;
     Numerical_Tropisms_Container.QuadDobl_Initialize(wnd,dir,err);
     return 0;
-  end Job3;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.QuadDobl_Initialize.");
+      end if;
+      return 713;
+  end QuadDobl_Initialize;
 
-  function Job4 return integer32 is -- store standard tropisms
+  function Store_Standard_Tropism return integer32 is
+
+  -- DESCRIPTION :
+  --   Stores a tropism computed in standard double precision
+  --   in the container.
 
     use Interfaces.C;
 
@@ -160,6 +204,9 @@ function use_numbtrop ( job : integer32;
     err : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Store_Standard_Tropism ...");
+    end if;
     Assign(b,wnd);
     Assign(natural32(nfl),c,dre);
     for i in dir'range loop
@@ -168,9 +215,20 @@ function use_numbtrop ( job : integer32;
     err := dre(nfl);
     Numerical_Tropisms_Container.Store_Standard_Tropism(idx,wnd,dir,err);
     return 0;
-  end Job4;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("Store_Standard_Tropism.");
+      end if;
+      return 714;
+  end Store_Standard_Tropism;
 
-  function Job5 return integer32 is -- store dobldobl tropisms
+  function Store_DoblDobl_Tropism return integer32 is
+
+  -- DESCRIPTION :
+  --   Stores a tropism computed in double double precision
+  --   in the container.
 
     use Interfaces.C;
 
@@ -187,6 +245,9 @@ function use_numbtrop ( job : integer32;
     hi,lo : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Store_DoblDobl_Tropism ...");
+    end if;
     Assign(b,wnd);
     Assign(natural32(nfl),c,dre);
     ind := 0;
@@ -200,9 +261,20 @@ function use_numbtrop ( job : integer32;
     err := Double_Double_Numbers.create(hi,lo);
     Numerical_Tropisms_Container.Store_DoblDobl_Tropism(idx,wnd,dir,err);
     return 0;
-  end Job5;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("Store_DoblDobl_Tropism.");
+      end if;
+      return 715;
+  end Store_DoblDobl_Tropism;
 
-  function Job6 return integer32 is -- store quaddobl tropisms
+  function Store_QuadDobl_Tropism return integer32 is
+
+  -- DESCRIPTION :
+  --   Stores a tropism computed in quad double precision
+  --   in the container.
 
     use Interfaces.C;
 
@@ -219,6 +291,9 @@ function use_numbtrop ( job : integer32;
     hihi,lohi,hilo,lolo : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Store_QuadDobl_Tropism ...");
+    end if;
     Assign(b,wnd);
     Assign(natural32(nfl),c,dre);
     ind := 0;
@@ -236,15 +311,28 @@ function use_numbtrop ( job : integer32;
     err := Quad_Double_Numbers.create(hihi,lohi,hilo,lolo);
     Numerical_Tropisms_Container.Store_QuadDobl_Tropism(idx,wnd,dir,err);
     return 0;
-  end Job6;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("Store_QuadDobl_Tropism.");
+      end if;
+      return 716;
+  end Store_QuadDobl_Tropism;
 
-  function Job7 return integer32 is -- standard retrieve
+  function Standard_Retrieve_All_Tropisms return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves all tropisms in double precision.
 
     w : Standard_Integer_Vectors.Link_to_Vector;
     v : Standard_Floating_VecVecs.Link_to_VecVec;
     e : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Standard_Retrieve_All_Tropisms ...");
+    end if;
     Numerical_Tropisms_Container.Standard_Retrieve(w,v,e);
     declare
       nbt : constant integer32 := w'last;
@@ -257,6 +345,7 @@ function use_numbtrop ( job : integer32;
     begin
       nbd(1) := nbt;
       nbd(2) := dim;
+      Assign(nbd,a);
       Assign(w.all,b);
       for i in v'range loop
         for j in v(i)'range loop
@@ -271,15 +360,28 @@ function use_numbtrop ( job : integer32;
       Assign(cff,c);
     end;
     return 0;
-  end Job7;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("Standard_Retrieve_All_Tropisms.");
+      end if;
+      return 717;
+  end Standard_Retrieve_All_Tropisms;
 
-  function Job8 return integer32 is -- dobldobl retrieve
+  function DoblDobl_Retrieve_All_Tropisms return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves all tropism in double double precision.
 
     w : Standard_Integer_Vectors.Link_to_Vector;
     v : Double_Double_VecVecs.Link_to_VecVec;
     e : Double_Double_Vectors.Link_to_Vector;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.DoblDobl_Retrieve_All_Tropisms ...");
+    end if;
     Numerical_Tropisms_Container.DoblDobl_Retrieve(w,v,e);
     declare
       nbt : constant integer32 := w'last;
@@ -293,6 +395,7 @@ function use_numbtrop ( job : integer32;
     begin
       nbd(1) := nbt;
       nbd(2) := dim;
+      Assign(nbd,a);
       Assign(w.all,b);
       for i in v'range loop
         for j in v(i)'range loop
@@ -307,15 +410,28 @@ function use_numbtrop ( job : integer32;
       Assign(cff,c);
     end;
     return 0;
-  end Job8;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("DoblDobl_Retrieve_All_Tropisms.");
+      end if;
+      return 718;
+  end DoblDobl_Retrieve_All_Tropisms;
 
-  function Job9 return integer32 is -- quaddobl retrieve
+  function QuadDobl_Retrieve_All_Tropisms return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves all tropism in quad double precision.
 
     w : Standard_Integer_Vectors.Link_to_Vector;
     v : Quad_Double_VecVecs.Link_to_VecVec;
     e : Quad_Double_Vectors.Link_to_Vector;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.QuadDobl_Retrieve_All_Tropisms ...");
+    end if;
     Numerical_Tropisms_Container.QuadDobl_Retrieve(w,v,e);
     declare
       nbt : constant integer32 := w'last;
@@ -329,6 +445,7 @@ function use_numbtrop ( job : integer32;
     begin
       nbd(1) := nbt;
       nbd(2) := dim;
+      Assign(nbd,a);
       Assign(w.all,b);
       for i in v'range loop
         for j in v(i)'range loop
@@ -347,63 +464,145 @@ function use_numbtrop ( job : integer32;
       Assign(cff,c);
     end;
     return 0;
-  end Job9;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("QuadDobl_Retrieve_All_Tropisms.");
+      end if;
+      return 719;
+  end QuadDobl_Retrieve_All_Tropisms;
 
-  function Job10 return integer32 is -- number of standard tropisms
+  function Standard_Size return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of tropisms in double precision.
 
     n : constant integer32 := Numerical_Tropisms_Container.Standard_Size;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Standard_Size ...");
+    end if;
     Assign(n,a);
     return 0;
-  end Job10;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.Standard_Size");
+      end if;
+      return 720;
+  end Standard_Size;
 
-  function Job11 return integer32 is -- number of dobldobl tropisms
+  function DoblDobl_Size return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of tropisms in double double precision.
 
     n : constant integer32 := Numerical_Tropisms_Container.DoblDobl_Size;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.DoblDobl_Size ...");
+    end if;
     Assign(n,a);
     return 0;
-  end Job11;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.DoblDobl_Size");
+      end if;
+      return 721;
+  end DoblDobl_Size;
 
-  function Job12 return integer32 is -- number of quaddobl tropisms
+  function QuadDobl_Size return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of tropisms in quad double precision.
 
     n : constant integer32 := Numerical_Tropisms_Container.QuadDobl_Size;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.QuadDobl_Size ...");
+    end if;
     Assign(n,a);
     return 0;
-  end Job12;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.QuadDobl_Size");
+      end if;
+      return 722;
+  end QuadDobl_Size;
 
-  function Job19 return integer32 is -- dimension of standard tropisms
+  function Standard_Dimension return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the dimension of the tropisms in double precision.
 
     n : constant integer32 := Numerical_Tropisms_Container.Standard_Dimension;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Standard_Dimension ...");
+    end if;
     Assign(n,a);
     return 0;
-  end Job19;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.Standard_Dimension");
+      end if;
+      return 729;
+  end Standard_Dimension;
 
-  function Job20 return integer32 is -- dimension of dobldobl tropisms
+  function DoblDobl_Dimension return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the dimension of the tropisms in double double precision.
 
     n : constant integer32 := Numerical_Tropisms_Container.DoblDobl_Dimension;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.DoblDobl_Dimension ...");
+    end if;
     Assign(n,a);
     return 0;
-  end Job20;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.DoblDobl_Dimension");
+      end if;
+      return 730;
+  end DoblDobl_Dimension;
 
-  function Job21 return integer32 is -- dimension of quaddobl tropisms
+  function QuadDobl_Dimension return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the dimension of the tropisms in quad double precision.
 
     n : constant integer32 := Numerical_Tropisms_Container.QuadDobl_Dimension;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.QuadDobl_Dimension ...");
+    end if;
     Assign(n,a);
     return 0;
-  end Job21;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.QuadDobl_Dimension");
+      end if;
+      return 731;
+  end QuadDobl_Dimension;
 
-  function Job13 return integer32 is -- standard retrieve tropism
+  function Standard_Retrieve_One_Tropism return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves one tropism computed in standard double precision.
 
     use Interfaces.C;
 
@@ -417,6 +616,9 @@ function use_numbtrop ( job : integer32;
     cff : Standard_Floating_Vectors.Vector(1..dim+1);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Standard_Retrieve_One_Tropism ...");
+    end if;
     Numerical_Tropisms_Container.Standard_Retrieve_Tropism(idx,wnd,dir,err);
     Assign(wnd,b);
     for i in dir'range loop
@@ -425,9 +627,19 @@ function use_numbtrop ( job : integer32;
     cff(cff'last) := err;
     Assign(cff,c);
     return 0;
-  end Job13;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("Standard_Retrieve_One_Tropism.");
+      end if;
+      return 723;
+  end Standard_Retrieve_One_Tropism;
 
-  function Job14 return integer32 is -- dobldobl retrieve tropism
+  function DoblDobl_Retrieve_One_Tropism return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves one tropism computed in double double precision.
 
     use Interfaces.C;
 
@@ -441,6 +653,9 @@ function use_numbtrop ( job : integer32;
     cff : Double_Double_Vectors.Vector(1..dim+1);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.DoblDobl_Retrieve_One_Tropism ...");
+    end if;
     Numerical_Tropisms_Container.DoblDobl_Retrieve_Tropism(idx,wnd,dir,err);
     Assign(wnd,b);
     for i in dir'range loop
@@ -449,9 +664,19 @@ function use_numbtrop ( job : integer32;
     cff(cff'last) := err;
     Assign(cff,c);
     return 0;
-  end Job14;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("DoblDobl_Retrieve_One_Tropism.");
+      end if;
+      return 724;
+  end DoblDobl_Retrieve_One_Tropism;
 
-  function Job15 return integer32 is -- quaddobl retrieve tropism
+  function QuadDobl_Retrieve_One_Tropism return integer32 is
+
+  -- DESCRIPTION :
+  --   Retrieves one tropism computed in quad double precision.
 
     use Interfaces.C;
 
@@ -465,6 +690,9 @@ function use_numbtrop ( job : integer32;
     cff : Quad_Double_Vectors.Vector(1..dim+1);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.QuadDobl_Retrieve_One_Tropism ...");
+    end if;
     Numerical_Tropisms_Container.QuadDobl_Retrieve_Tropism(idx,wnd,dir,err);
     Assign(wnd,b);
     for i in dir'range loop
@@ -473,50 +701,96 @@ function use_numbtrop ( job : integer32;
     cff(cff'last) := err;
     Assign(cff,c);
     return 0;
-  end Job15; 
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in use_numbtrop.");
+        put_line("QuadDobl_Retrieve_One_Tropism.");
+      end if;
+      return 725;
+  end QuadDobl_Retrieve_One_Tropism; 
 
-  function Job16 return integer32 is -- standard clear
+  function Standard_Clear return integer32 is
+
+  -- DESCRIPTION :
+  --   Deallocates data for numerical tropisms in double precision.
+
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.Standard_Clear ...");
+    end if;
     Numerical_Tropisms_Container.Standard_Clear;
     return 0;
-  end Job16;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.Standard_Clear.");
+      end if;
+      return 726;
+  end Standard_Clear;
 
-  function Job17 return integer32 is -- dobldobl clear
+  function DoblDobl_Clear return integer32 is
+
+  -- DESCRIPTION :
+  --   Deallocates data for numerical tropisms in double double precision.
+
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.DoblDobl_Clear ...");
+    end if;
     Numerical_Tropisms_Container.DoblDobl_Clear;
     return 0;
-  end Job17;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.DoblDobl_Clear.");
+      end if;
+      return 727;
+  end DoblDobl_Clear;
 
-  function Job18 return integer32 is -- quaddobl clear
+  function QuadDobl_Clear return integer32 is
+
+  -- DESCRIPTION :
+  --   Deallocates data for numerical tropisms in quad double precision.
+
   begin
+    if vrblvl > 0
+     then put_line("-> in use_numbtrop.QuadDobl_Clear ...");
+    end if;
     Numerical_Tropisms_Container.QuadDobl_Clear;
     return 0;
-  end Job18;
+  exception
+    when others => 
+      if vrblvl > 0
+       then put_line("Exception raised in use_numbtrop.QuadDobl_Clear.");
+      end if;
+      return 728;
+  end QuadDobl_Clear;
 
   function Handle_Jobs return integer32 is
   begin
     case job is
-      when 1 => return Job1; -- standard initialize
-      when 2 => return Job2; -- dobldobl initialize
-      when 3 => return Job3; -- quaddobl initialize
-      when 4 => return Job4; -- store standard tropism
-      when 5 => return Job5; -- store dobldobl tropism
-      when 6 => return Job6; -- store quaddobl tropism
-      when 7 => return Job7; -- standard retrieve
-      when 8 => return Job8; -- dobldobl retrieve
-      when 9 => return Job9; -- quaddobl retrieve
-      when 10 => return Job10; -- number of standard double tropisms
-      when 11 => return Job11; -- number of double double tropisms
-      when 12 => return Job12; -- number of quad double tropisms
-      when 13 => return Job13; -- standard retrieve tropism
-      when 14 => return Job14; -- dobldobl retrieve tropism
-      when 15 => return Job15; -- quaddobl retrieve tropism
-      when 16 => return Job16; -- standard clear
-      when 17 => return Job17; -- dobldobl clear
-      when 18 => return Job18; -- quaddobl clear
-      when 19 => return Job19; -- dimension of standard double tropisms
-      when 20 => return Job20; -- dimension of double double tropisms
-      when 21 => return Job21; -- dimension of quad double tropisms
+      when 1 => return Standard_Initialize;
+      when 2 => return DoblDobl_Initialize;
+      when 3 => return QuadDobl_Initialize;
+      when 4 => return Store_Standard_Tropism;
+      when 5 => return Store_Dobldobl_Tropism;
+      when 6 => return Store_Quaddobl_Tropism;
+      when 7 => return Standard_Retrieve_All_Tropisms;
+      when 8 => return DoblDobl_Retrieve_All_Tropisms;
+      when 9 => return QuadDobl_Retrieve_All_Tropisms;
+      when 10 => return Standard_Size;
+      when 11 => return DoblDobl_Size;
+      when 12 => return QuadDobl_Size;
+      when 13 => return Standard_Retrieve_One_Tropism;
+      when 14 => return DoblDobl_Retrieve_One_Tropism;
+      when 15 => return QuadDobl_Retrieve_One_Tropism;
+      when 16 => return Standard_Clear;
+      when 17 => return DoblDobl_Clear;
+      when 18 => return QuadDobl_Clear;
+      when 19 => return Standard_Dimension;
+      when 20 => return DoblDobl_Dimension;
+      when 21 => return QuadDobl_Dimension;
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception
