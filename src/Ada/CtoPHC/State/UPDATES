@@ -1,5 +1,7 @@
 Fri 17 Jul 2020 : added vrblvl to use_numbtrop and redefined the functions,
-  adding verbose message and exception handlers.
+  adding verbose message and exception handlers.  Moved all functions that
+  handle jobs from use_numbtrop into numerical_tropisms_interface, a new
+  package to define the C interface to the numerical tropisms container.
 
 Fri 3 Jul 2020 : in use_c2phc4c, added vrblvl parameter.
 
