@@ -65,6 +65,8 @@ with QuadDobl_LaurSys_Container;
 with Multprec_LaurSys_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Interface;
+with DoblDobl_PolySys_Interface;
+with QuadDobl_PolySys_Interface;
 
 function use_syscon ( job : integer32;
                       a : C_intarrs.Pointer;
@@ -119,30 +121,6 @@ function use_syscon ( job : integer32;
     Multprec_LaurSys_Container.Initialize(lp.all);
     return 0;
   end Job130;
-
-  function Job200 return integer32 is -- read dobldobl system into container
-
-    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-
-  begin
-    new_line;
-    put_line("Reading a polynomial system...");
-    get(lp);
-    DoblDobl_PolySys_Container.Initialize(lp.all);
-    return 0;
-  end Job200;
-
-  function Job210 return integer32 is -- read quaddobl system into container
-
-    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-
-  begin
-    new_line;
-    put_line("Reading a polynomial system...");
-    get(lp);
-    QuadDobl_PolySys_Container.Initialize(lp.all);
-    return 0;
-  end Job210;
 
   function Job220 return integer32 is -- read multprec system into container
 
@@ -263,56 +241,6 @@ function use_syscon ( job : integer32;
     return 0;
   end Job131;
 
-  function Job201 return integer32 is -- write system in container
- 
-    use DoblDobl_Complex_Polynomials;
-    use DoblDobl_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
-    nvr : natural32;
-
-  begin
-    if lp /= null then
-      nvr := Number_of_Unknowns(lp(lp'first));
-      if PHCpack_Operations.file_okay then
-        if integer32(nvr) = lp'last then
-          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
-        else
-          put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
-        end if;
-      elsif integer32(nvr) = lp'last then
-        put(standard_output,natural32(lp'last),lp.all);
-      else
-        put(standard_output,natural32(lp'last),nvr,lp.all);
-      end if;
-    end if;
-    return 0;
-  end Job201;
-
-  function Job211 return integer32 is -- write system in container
- 
-    use QuadDobl_Complex_Polynomials;
-    use QuadDobl_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
-    nvr : natural32;
-
-  begin
-    if lp /= null then
-      nvr := Number_of_Unknowns(lp(lp'first));
-      if PHCpack_Operations.file_okay then
-        if integer32(nvr) = lp'last then
-          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
-        else   
-          put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
-        end if;
-      elsif integer32(nvr) = lp'last then
-        put(standard_output,natural32(lp'last),lp.all);
-      else
-        put(standard_output,natural32(lp'last),nvr,lp.all);
-      end if;
-    end if;
-    return 0;
-  end Job211;
-
   function Job221 return integer32 is -- write system in container
  
     use Multprec_Complex_Poly_Systems;
@@ -353,18 +281,6 @@ function use_syscon ( job : integer32;
     Assign(integer32(Multprec_LaurSys_Container.Dimension),a);
     return 0;
   end Job132;
-
-  function Job202 return integer32 is -- return dimension of system
-  begin
-    Assign(integer32(DoblDobl_PolySys_Container.Dimension),a);
-    return 0;
-  end Job202;
-
-  function Job212 return integer32 is -- return dimension of system
-  begin
-    Assign(integer32(QuadDobl_PolySys_Container.Dimension),a);
-    return 0;
-  end Job212;
 
   function Job222 return integer32 is -- return dimension of system
   begin
@@ -419,30 +335,6 @@ function use_syscon ( job : integer32;
     Symbol_Table.Init(natural32(n));
     return 0;
   end Job133;
-
-  function Job203 return integer32 is -- initialize container with dimension
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer32 := integer32(v(v'first));
-
-  begin
-    DoblDobl_PolySys_Container.Initialize(n);
-    Symbol_Table.Init(natural32(n));
-    return 0;
-  end Job203;
-
-  function Job213 return integer32 is -- initialize container with dimension
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer32 := integer32(v(v'first));
-
-  begin
-    QuadDobl_PolySys_Container.Initialize(n);
-    Symbol_Table.Init(natural32(n));
-    return 0;
-  end Job213;
 
   function Job223 return integer32 is -- initialize container with dimension
 
@@ -503,30 +395,6 @@ function use_syscon ( job : integer32;
     Assign(integer32(Multprec_LaurSys_Container.Number_of_Terms(i)),a);
     return 0;
   end Job134;
-
-  function Job204 return integer32 is -- returns #terms of a polynomial
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    use Interfaces.C;
-    i : constant integer32 := integer32(v(v'first+1));
-
-  begin
-    Assign(integer32(DoblDobl_PolySys_Container.Number_of_Terms(i)),a);
-    return 0;
-  end Job204;
-
-  function Job214 return integer32 is -- returns #terms of a polynomial
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    use Interfaces.C;
-    i : constant integer32 := integer32(v(v'first+1));
-
-  begin
-    Assign(integer32(QuadDobl_PolySys_Container.Number_of_Terms(i)),a);
-    return 0;
-  end Job214;
 
   function Job224 return integer32 is -- returns #terms of a polynomial
 
@@ -600,36 +468,6 @@ function use_syscon ( job : integer32;
     return 0;
   end Job135;
 
-  function Job205 return integer32 is -- returns a term of a polynomial
-
-    v : constant C_Integer_Array(0..2)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    i : constant integer32 := integer32(v(1));
-    j : constant natural32 := natural32(v(2));
-    t : constant DoblDobl_Complex_Polynomials.Term
-      := DoblDobl_PolySys_Container.Retrieve_Term(i,j);
-
-  begin
-    Assign(t.cf,c);
-    Assign(t.dg.all,b);
-    return 0;
-  end Job205;
-
-  function Job215 return integer32 is -- returns a term of a polynomial
-
-    v : constant C_Integer_Array(0..2)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    i : constant integer32 := integer32(v(1));
-    j : constant natural32 := natural32(v(2));
-    t : constant QuadDobl_Complex_Polynomials.Term
-      := QuadDobl_PolySys_Container.Retrieve_Term(i,j);
-
-  begin
-    Assign(t.cf,c);
-    Assign(t.dg.all,b);
-    return 0;
-  end Job215;
-
   function Job106 return integer32 is -- add a term to a Laurential
 
     v : constant C_Integer_Array(0..1)
@@ -698,40 +536,6 @@ function use_syscon ( job : integer32;
     return 0;
   end Job136;
 
-  function Job206 return integer32 is -- add a term to a polynomial
-
-    v : constant C_Integer_Array(0..1)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    n : constant integer32 := integer32(v(0));
-    i : constant integer32 := integer32(v(1));
-    e : Standard_Natural_Vectors.Vector(1..n);
-    t : DoblDobl_Complex_Polynomials.Term;
-
-  begin
-    Assign(c,t.cf);
-    Assign(natural32(n),b,e);
-    t.dg := new Standard_Natural_Vectors.Vector'(e);
-    DoblDobl_PolySys_Container.Add_Term(i,t);
-    return 0;
-  end Job206;
-
-  function Job216 return integer32 is -- add a term to a polynomial
-
-    v : constant C_Integer_Array(0..1)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    n : constant integer32 := integer32(v(0));
-    i : constant integer32 := integer32(v(1));
-    e : Standard_Natural_Vectors.Vector(1..n);
-    t : QuadDobl_Complex_Polynomials.Term;
-
-  begin
-    Assign(c,t.cf);
-    Assign(natural32(n),b,e);
-    t.dg := new Standard_Natural_Vectors.Vector'(e);
-    QuadDobl_PolySys_Container.Add_Term(i,t);
-    return 0;
-  end Job216;
-
   function Job107 return integer32 is -- clears the container
   begin
     Standard_LaurSys_Container.Clear;
@@ -755,18 +559,6 @@ function use_syscon ( job : integer32;
     Multprec_LaurSys_Container.Clear;
     return 0;
   end Job137;
-
-  function Job207 return integer32 is -- clears the container
-  begin
-    DoblDobl_PolySys_Container.Clear;
-    return 0;
-  end Job207;
-
-  function Job217 return integer32 is -- clears the container
-  begin
-    QuadDobl_PolySys_Container.Clear;
-    return 0;
-  end Job217;
 
   function Job227 return integer32 is -- clears the container
   begin
@@ -2223,13 +2015,15 @@ function use_syscon ( job : integer32;
   function Handle_Jobs return integer32 is
 
     use Standard_PolySys_Interface;
+    use DoblDobl_PolySys_Interface;
+    use QuadDobl_PolySys_Interface;
 
   begin
     case job is
       when 0 => return Standard_PolySys_Read(vrblvl);
       when 1 => return Standard_PolySys_Write(vrblvl);
-      when 2 => return Standard_PolySys_Dimension(a,vrblvl);
-      when 3 => return Standard_PolySys_Initialize_Dimension(a,vrblvl);
+      when 2 => return Standard_PolySys_Get_Dimension(a,vrblvl);
+      when 3 => return Standard_PolySys_Set_Dimension(a,vrblvl);
       when 4 => return Standard_PolySys_Size(a,vrblvl);
       when 5 => return Standard_PolySys_Get_Term(a,b,c,vrblvl);
       when 6 => return Standard_PolySys_Add_Term(a,b,c,vrblvl);
@@ -2295,25 +2089,25 @@ function use_syscon ( job : integer32;
       when 138 => return Job138; -- store multprec Laurential string
       when 139 => return Job139; -- load multprec Laurential into string
      -- jobs for double double complex polynomials
-      when 200 => return Job200; -- read system into container
-      when 201 => return Job201; -- write system in container
-      when 202 => return Job202; -- return dimension of system
-      when 203 => return Job203; -- initialize container with dimension
-      when 204 => return Job204; -- return #terms of a polynomial
-      when 205 => return Job205; -- return a term of a polynomial
-      when 206 => return Job206; -- add a term to a polynomial
-      when 207 => return Job207; -- clear the container
+      when 200 => return DoblDobl_PolySys_Read(vrblvl);
+      when 201 => return DoblDobl_PolySys_Write(vrblvl);
+      when 202 => return DoblDobl_PolySys_Get_Dimension(a,vrblvl);
+      when 203 => return DoblDobl_PolySys_Set_Dimension(a,vrblvl);
+      when 204 => return DoblDobl_PolySys_Size(a,vrblvl);
+      when 205 => return DoblDobl_PolySys_Get_Term(a,b,c,vrblvl);
+      when 206 => return DoblDobl_PolySys_Add_Term(a,b,c,vrblvl);
+      when 207 => return DoblDobl_PolySys_Clear(vrblvl);
       when 208 => return Job208; -- store dobldobl polynomial string
       when 209 => return Job209; -- return degree of a polynomial
      -- jobs for quad double complex polynomials
-      when 210 => return Job210; -- read system into container
-      when 211 => return Job211; -- write system in container
-      when 212 => return Job212; -- return dimension of system
-      when 213 => return Job213; -- initialize container with dimension
-      when 214 => return Job214; -- return #terms of a polynomial
-      when 215 => return Job215; -- return a term of a polynomial
-      when 216 => return Job216; -- add a term to a polynomial
-      when 217 => return Job217; -- clear the container
+      when 210 => return QuadDobl_PolySys_Read(vrblvl);
+      when 211 => return QuadDobl_PolySys_Write(vrblvl);
+      when 212 => return QuadDobl_PolySys_Get_Dimension(a,vrblvl);
+      when 213 => return QuadDobl_PolySys_Set_Dimension(a,vrblvl);
+      when 214 => return QuadDobl_PolySys_Size(a,vrblvl);
+      when 215 => return QuadDobl_PolySys_Get_Term(a,b,c,vrblvl);
+      when 216 => return QuadDobl_PolySys_Add_Term(a,b,c,vrblvl);
+      when 217 => return QuadDobl_PolySys_Clear(vrblvl);
       when 218 => return Job218; -- store quaddobl polynomial string
       when 219 => return Job219; -- return degree of a polynomial
      -- jobs for multiprecision complex polynomials

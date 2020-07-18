@@ -2,63 +2,63 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
 with C_Double_Arrays;                   use C_Double_Arrays;
 
-package Standard_PolySys_Interface is
+package QuadDobl_PolySys_Interface is
 
 -- DESCRIPTION :
 --   The functions below define the interface to the container of
---   polynomials in double precision.  The integer returned by all
+--   polynomials in quad double precision.  The integer returned by all
 --   functions should be zero if the job was successful,
 --   otherwise the nonzero job code is returned.
 
-  function Standard_PolySys_Read
+  function QuadDobl_PolySys_Read
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
-  --   Prompts the user for a polynomial system in double precision and
-  --   initializes the container with the system provided by the user.
+  --   Prompts the user for a polynomial system in quad double precision
+  --   and initializes the container with the system provided by the user.
   --   The verbose level is given in vrblvl.
 
-  function Standard_PolySys_Write
+  function QuadDobl_PolySys_Write
              ( vrblvl : in integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
-  --   Writes the polynomial system stored in double precision
+  --   Writes the polynomial system stored in quad double precision
   --   to the defined output file or to screen.
   --   The verbose level is given in vrblvl.
  
-  function Standard_PolySys_Get_Dimension
+  function QuadDobl_PolySys_Get_Dimension
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the dimension of the polynomial system stored
-  --   in double precision.
+  --   in quad double precision.
 
   -- ON ENTRY :
   --   vrblvl  the verbose level.
 
   -- ON RETURN :
-  --   a       the number of polynomials stored in double precision.
+  --   a       the number of polynomials stored in quad double precision.
 
-  function Standard_PolySys_Set_Dimension
+  function QuadDobl_PolySys_Set_Dimension
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
-  --   Initializes the number of polynomials in double precision
+  --   Initializes the number of polynomials in quad double precision
   --   and initializes the symbol table as well.
 
   -- ON ENTRY :
   --   a       the dimension of the polynomial system;
   --   vrblvl  the verbose level.
 
-  function Standard_PolySys_Size
+  function QuadDobl_PolySys_Size
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the number of terms of a polynomial stored
-  --   in double precision.
+  --   in quad double precision.
 
   -- ON ENTRY :
   --   a       a[1] is the index of a polynomial;
@@ -66,16 +66,16 @@ package Standard_PolySys_Interface is
 
   -- ON RETURN :
   --   a       a[0] is the number of terms of a polynomial 
-  --           stored in double precision with index in a[1].
+  --           stored in quad double precision with index in a[1].
 
-  function Standard_PolySys_Get_Term
+  function QuadDobl_PolySys_Get_Term
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
-  --   Returns a term of a polynomial stored in double precision.
+  --   Returns a term of a polynomial stored in quad double precision.
 
   -- ON ENTRY :
   --   a       a[1] contains the number of the polynomial,
@@ -86,14 +86,14 @@ package Standard_PolySys_Interface is
   --   b       contains the exponent vector of the term;
   --   c       real and imaginary part of the coefficient.
 
-  function Standard_PolySys_Add_Term
+  function QuadDobl_PolySys_Add_Term
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
-  --   Adds a term to a polynomial stored in double precision.
+  --   Adds a term to a polynomial stored in quad double precision.
 
   -- ON ENTRY :
   --   a       a[1] contains the index of the polynomial;
@@ -101,11 +101,11 @@ package Standard_PolySys_Interface is
   --   c       real and imaginary part of the coefficient;
   --   vrblvl  the verbose level.
 
-  function Standard_PolySys_Clear
+  function QuadDobl_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
-  --   Clears all polynomials stored in double precision.
+  --   Clears all polynomials stored in quad double precision.
   --   The verbose level is given in vrblvl.
 
-end Standard_PolySys_Interface;
+end QuadDobl_PolySys_Interface;
