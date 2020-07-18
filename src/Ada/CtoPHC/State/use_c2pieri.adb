@@ -1,27 +1,21 @@
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+-- with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+-- with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
-with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
+-- with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
-with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors;
-with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Natural_Matrices;
 with Standard_Complex_Matrices;
-with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Complex_VecMats;          use Standard_Complex_VecMats;
-with Standard_Complex_VecMats_io;       use Standard_Complex_VecMats_io;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
-with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
-with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
 with Brackets;                          use Brackets;
 with Matrix_Indeterminates;
@@ -110,7 +104,7 @@ function use_c2pieri ( job : integer32;
 
     nbcff : constant integer32 := 2*(m+p)*m*n;
     d : constant Interfaces.C.size_t := Interfaces.C.size_t(nbcff);
-    v : C_Double_Array(0..d-1)
+    v : constant C_Double_Array(0..d-1)
       := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(d));
     ind : Interfaces.C.size_t := 0;
     planes : VecMat(1..n);
@@ -175,7 +169,7 @@ function use_c2pieri ( job : integer32;
     res : Standard_Complex_Vectors.Vector(1..n);
     nbcff : constant integer32 := 2*n;
     d : constant Interfaces.C.size_t := Interfaces.C.size_t(nbcff);
-    v : C_Double_Array(0..d-1)
+    v : constant C_Double_Array(0..d-1)
       := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(d));
     ind : Interfaces.C.size_t := 0;
     
@@ -223,15 +217,15 @@ function use_c2pieri ( job : integer32;
     end loop;
   end Get_Pivots;
 
-  procedure Write_Pivots
-              ( top,bottom : in Standard_Natural_Vectors.Vector ) is
-  begin
-    put("Ada: [");
-    put(top);
-    put(" ],[");
-    put(bottom);
-    put_line(" ]");
-  end Write_Pivots;
+ -- procedure Write_Pivots
+ --             ( top,bottom : in Standard_Natural_Vectors.Vector ) is
+ -- begin
+ --   put("Ada: [");
+ --   put(top);
+ --   put(" ],[");
+ --   put(bottom);
+ --   put_line(" ]");
+ -- end Write_Pivots;
 
   function Job1 return integer32 is -- initialize dimensions
 
@@ -334,7 +328,7 @@ function use_c2pieri ( job : integer32;
     declare
       root : constant Node(p)
            := Trivial_Root(natural32(m),natural32(p),natural32(q));
-      lnkroot : Link_to_Node := new Node'(root);
+      lnkroot : constant Link_to_Node := new Node'(root);
       nq : constant integer32 := m*p + q*(m+p);
       level_poset : Array_of_Nodes(0..nq);
     begin
@@ -353,40 +347,40 @@ function use_c2pieri ( job : integer32;
     return 0;
   end Job14;
 
-  procedure Show_Input_Planes_and_Points
-              ( n,m,p,q : in integer32;
-                c : in Standard_Floating_Vectors.Vector ) is
+ -- procedure Show_Input_Planes_and_Points
+ --             ( n,m,p,q : in integer32;
+ --               c : in Standard_Floating_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Writes the coefficients c of the n input m-planes to screen
   --   for testing purposes.
   --   If q > 0, then the interpolation points are shown as well.
 
-    ind : integer32 := 0;
+ --   ind : integer32 := 0;
 
-  begin
-    for i in 1..n loop
-      put("input plane "); put(i,1); put_line(" :");
-      for j in 1..(m+p) loop
-        for k in 1..m loop
-          put("(");
-          ind := ind + 1; put(c(ind)); put(" ");
-          ind := ind + 1; put(c(ind)); put(")");
-         -- if ind mod 2 = 0
-         --  then new_line;
-         -- end if;
-        end loop;
-        new_line;
-      end loop;
-    end loop;
-    if q > 0 then
-      put_line("the interpolation points :");
-      for i in 1..n loop
-        ind := ind + 1; put(c(ind)); put(" ");
-        ind := ind + 1; put(c(ind)); new_line;
-      end loop;
-    end if;
-  end Show_Input_Planes_and_Points;
+ -- begin
+ --   for i in 1..n loop
+ --     put("input plane "); put(i,1); put_line(" :");
+ --     for j in 1..(m+p) loop
+ --       for k in 1..m loop
+ --         put("(");
+ --         ind := ind + 1; put(c(ind)); put(" ");
+ --         ind := ind + 1; put(c(ind)); put(")");
+ --        -- if ind mod 2 = 0
+ --        --  then new_line;
+ --        -- end if;
+ --       end loop;
+ --       new_line;
+ --     end loop;
+ --   end loop;
+ --   if q > 0 then
+ --     put_line("the interpolation points :");
+ --     for i in 1..n loop
+ --       ind := ind + 1; put(c(ind)); put(" ");
+ --       ind := ind + 1; put(c(ind)); new_line;
+ --     end loop;
+ --   end if;
+ -- end Show_Input_Planes_and_Points;
 
   function Construct_Input_Planes
              ( n,m,p : in integer32;
@@ -479,7 +473,7 @@ function use_c2pieri ( job : integer32;
     cff : Standard_Floating_Vectors.Vector(1..tdim);
     planes : VecMat(1..n);
     root : constant Node(p) := Trivial_Root(natural32(m),natural32(p));
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     level_poset : Array_of_Nodes(0..m*p);
     index_poset : Array_of_Array_of_Nodes(0..m*p);
     deform_poset : Array_of_Array_of_VecMats(index_poset'range);
@@ -534,7 +528,7 @@ function use_c2pieri ( job : integer32;
            := Curves_into_Grassmannian.Standard_Coordinate_Frame
                 (natural32(m),natural32(p),natural32(q),
                  top,bot,solplanes(1).all);
-    sols : Solution_List
+    sols : constant Solution_List
          := Determinantal_Systems.Solution_Planes
               (top,bot,locmap,solplanes);
     locsys : constant Poly_Sys(planes'range)
@@ -568,7 +562,7 @@ function use_c2pieri ( job : integer32;
     deform_poset : Array_of_Array_of_VecMats(index_poset'range);
     the_root : constant Node(p)
              := Trivial_Root(natural32(m),natural32(p),natural32(q));
-    lnkroot : Link_to_Node := new Node'(the_root);
+    lnkroot : constant Link_to_Node := new Node'(the_root);
     npaths : Standard_Natural_Vectors.Vector(1..n) := (1..n => 0);
     timings : Duration_Array(1..n) := (1..n => 0.0);
 
@@ -659,9 +653,9 @@ function use_c2pieri ( job : integer32;
    -- put("c2pieri expects "); put(n,1); put(" points ...");
     declare
       s : Standard_Floating_Vectors.Vector(1..n);
-      n1 : Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+      n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
       i1 : Interfaces.C.size_t;
-      v : C_Double_Array(0..n1)
+      v : constant C_Double_Array(0..n1)
         := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(n));
       planes : VecMat(1..n);
       coeffs : Standard_Floating_Vectors.Vector(1..n*m*d);
@@ -722,7 +716,7 @@ function use_c2pieri ( job : integer32;
     xpm : constant Standard_Complex_Poly_Matrices.Matrix(1..d,1..p)
         := Symbolic_Minor_Equations.Localization_Pattern
              (natural32(d),root.top,root.bottom);
-    locmap : Standard_Natural_Matrices.Matrix(1..m+p,1..p)
+    locmap : constant Standard_Natural_Matrices.Matrix(1..m+p,1..p)
            := Standard_Localization_Map(m,p,root.top,root.bottom);
     locsys : Poly_Sys(planes'range);
    
@@ -767,13 +761,13 @@ function use_c2pieri ( job : integer32;
       when 9 => Pieri_Homotopy.Track_Path(Standard_Output);
       when 10 =>
         declare
-          res : double_float := Pieri_Homotopy.Verify_Determinants;
+          res : constant double_float := Pieri_Homotopy.Verify_Determinants;
         begin
           Assign(res,c);
         end;
       when 11 =>
         declare
-          res : double_float
+          res : constant double_float
               := Pieri_Homotopy.Verify_Determinants(Standard_Output);
         begin
           Assign(res,c);
