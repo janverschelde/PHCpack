@@ -1,3 +1,6 @@
+Sat 18 Jul 2020 : new package standard_polysys_interface with functions
+  extracted from use_syscon, added verbose level to use_syscon.
+
 Fri 17 Jul 2020 : added vrblvl to use_numbtrop and redefined the functions,
   adding verbose message and exception handlers.  Moved all functions that
   handle jobs from use_numbtrop into numerical_tropisms_interface, a new

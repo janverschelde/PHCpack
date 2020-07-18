@@ -64,23 +64,13 @@ with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
 with Multprec_LaurSys_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
+with Standard_PolySys_Interface;
 
 function use_syscon ( job : integer32;
                       a : C_intarrs.Pointer;
-		      b : C_intarrs.Pointer;
-                      c : C_dblarrs.Pointer ) return integer32 is
-
-  function Job0 return integer32 is -- read system into container
-
-    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-
-  begin
-    new_line;
-    put_line("Reading a polynomial system...");
-    get(lp);
-    Standard_PolySys_Container.Initialize(lp.all);
-    return 0;
-  end Job0;
+                      b : C_intarrs.Pointer;
+                      c : C_dblarrs.Pointer;
+                      vrblvl : integer32 := 0 ) return integer32 is
 
   function Job100 return integer32 is -- read Laurent sys into st container
 
@@ -88,7 +78,7 @@ function use_syscon ( job : integer32;
 
   begin
     new_line;
-    put_line("Reading a Laurent polynomial system...");
+    put_line("Reading a Laurent polynomial system ...");
     get(lp);
     Standard_LaurSys_Container.Initialize(lp.all);
     return 0;
@@ -171,31 +161,6 @@ function use_syscon ( job : integer32;
     Multprec_PolySys_Container.Initialize(lp.all);
     return 0;
   end Job220;
-
-  function Job1 return integer32 is -- write system in container
- 
-    use Standard_Complex_Polynomials;
-    use Standard_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    nvr : natural32;
-
-  begin
-    if lp /= null then
-      nvr := Number_of_Unknowns(lp(lp'first));
-      if PHCpack_Operations.file_okay then
-        if integer32(nvr) = lp'last then
-          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
-        else
-          put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
-        end if;
-      elsif integer32(nvr) = lp'last then
-        put(standard_output,natural32(lp'last),lp.all);
-      else
-        put(standard_output,natural32(lp'last),nvr,lp.all);
-      end if;
-    end if;
-    return 0;
-  end Job1;
 
   function Job101 return integer32 is -- write system in container
    
@@ -365,12 +330,6 @@ function use_syscon ( job : integer32;
     return 0;
   end Job221;
 
-  function Job2 return integer32 is -- return dimension of system
-  begin
-    Assign(integer32(Standard_PolySys_Container.Dimension),a);
-    return 0;
-  end Job2;
-
   function Job102 return integer32 is -- return dimension of Laurent system
   begin
     Assign(integer32(Standard_LaurSys_Container.Dimension),a);
@@ -412,18 +371,6 @@ function use_syscon ( job : integer32;
     Assign(integer32(Multprec_PolySys_Container.Dimension),a);
     return 0;
   end Job222;
-
-  function Job3 return integer32 is -- initialize container with dimension
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer32 := integer32(v(v'first));
-
-  begin
-    Standard_PolySys_Container.Initialize(n);
-    Symbol_Table.Init(natural32(n));
-    return 0;
-  end Job3;
 
   function Job103 return integer32 is -- initialize container with dimension
 
@@ -509,18 +456,6 @@ function use_syscon ( job : integer32;
     return 0;
   end Job223;
 
-  function Job4 return integer32 is -- returns #terms of a polynomial
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    use Interfaces.C;
-    i : constant integer32 := integer32(v(v'first+1));
-
-  begin
-    Assign(integer32(Standard_PolySys_Container.Number_of_Terms(i)),a);
-    return 0;
-  end Job4;
-
   function Job104 return integer32 is -- returns #terms of a Laurential
 
     v : constant C_Integer_Array
@@ -604,21 +539,6 @@ function use_syscon ( job : integer32;
     Assign(integer32(Multprec_PolySys_Container.Number_of_Terms(i)),a);
     return 0;
   end Job224;
-
-  function Job5 return integer32 is -- returns a term of a polynomial
-
-    v : constant C_Integer_Array(0..2)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    i : constant integer32 := integer32(v(1));
-    j : constant natural32 := natural32(v(2));
-    t : constant Standard_Complex_Polynomials.Term
-      := Standard_PolySys_Container.Retrieve_Term(i,j);
-
-  begin
-    Assign(t.cf,c);
-    Assign(t.dg.all,b);
-    return 0;
-  end Job5;
 
   function Job105 return integer32 is -- returns a term of a Laurential
 
@@ -709,23 +629,6 @@ function use_syscon ( job : integer32;
     Assign(t.dg.all,b);
     return 0;
   end Job215;
-
-  function Job6 return integer32 is -- add a term to a polynomial
-
-    v : constant C_Integer_Array(0..1)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    n : constant integer32 := integer32(v(0));
-    i : constant integer32 := integer32(v(1));
-    e : Standard_Natural_Vectors.Vector(1..n);
-    t : Standard_Complex_Polynomials.Term;
-
-  begin
-    Assign(c,t.cf);
-    Assign(natural32(n),b,e);
-    t.dg := new Standard_Natural_Vectors.Vector'(e);
-    Standard_PolySys_Container.Add_Term(i,t);
-    return 0;
-  end Job6;
 
   function Job106 return integer32 is -- add a term to a Laurential
 
@@ -828,12 +731,6 @@ function use_syscon ( job : integer32;
     QuadDobl_PolySys_Container.Add_Term(i,t);
     return 0;
   end Job216;
-
-  function Job7 return integer32 is -- clears the container
-  begin
-    Standard_PolySys_Container.Clear;
-    return 0;
-  end Job7;
 
   function Job107 return integer32 is -- clears the container
   begin
@@ -2324,16 +2221,19 @@ function use_syscon ( job : integer32;
   end Job909;
 
   function Handle_Jobs return integer32 is
+
+    use Standard_PolySys_Interface;
+
   begin
     case job is
-      when 0 => return Job0; -- read system into container
-      when 1 => return Job1; -- write system in container
-      when 2 => return Job2; -- return dimension of system
-      when 3 => return Job3; -- initialize container with dimension
-      when 4 => return Job4; -- return #terms of a polynomial
-      when 5 => return Job5; -- return a term of a polynomial
-      when 6 => return Job6; -- add a term to a polynomial
-      when 7 => return Job7; -- clear the container
+      when 0 => return Standard_PolySys_Read(vrblvl);
+      when 1 => return Standard_PolySys_Write(vrblvl);
+      when 2 => return Standard_PolySys_Dimension(a,vrblvl);
+      when 3 => return Standard_PolySys_Initialize_Dimension(a,vrblvl);
+      when 4 => return Standard_PolySys_Size(a,vrblvl);
+      when 5 => return Standard_PolySys_Get_Term(a,b,c,vrblvl);
+      when 6 => return Standard_PolySys_Add_Term(a,b,c,vrblvl);
+      when 7 => return Standard_PolySys_Clear(vrblvl);
       when 8 => return Job8; -- return total degree
       when 9 => return Job9; -- clear the symbol table
       when 10 => return Job10; -- creates a system evaluator

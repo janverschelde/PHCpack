@@ -18,6 +18,7 @@ assignments_in_ada_and_c         : assign data in Ada and C format
 file_management                  : encapsulation of file_type variables
 ts_filman                        : quick test on file_management
 standard_polysys_container       : management of Ada polynomial systems
+standard_polysys_interface       : interface to double precision polynomials
 dobldobl_polysys_container       : polynomial systems with double doubles
 quaddobl_polysys_container       : polynomial systems with quad doubles
 multprec_polysys_container       : multiprecision poly system container
