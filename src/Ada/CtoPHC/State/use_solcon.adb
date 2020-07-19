@@ -51,21 +51,13 @@ with QuadDobl_Solutions_Container;
 with Multprec_Solutions_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
+with Standard_Solutions_Interface;
 
 function use_solcon ( job : integer32;
                       a : C_intarrs.Pointer;
                       b : C_intarrs.Pointer;
-                      c : C_dblarrs.Pointer ) return integer32 is
-
-  function Job0 return integer32 is -- read from file into container
-
-    sols : Standard_Complex_Solutions.Solution_List;
-
-  begin
-    Standard_Complex_Solutions_io.Read(sols);
-    Standard_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job0;
+                      c : C_dblarrs.Pointer;
+                      vrblvl : integer32 := 0 ) return integer32 is
 
   function Job40 return integer32 is -- read from file into container
 
@@ -96,23 +88,6 @@ function use_solcon ( job : integer32;
     Multprec_Solutions_Container.Initialize(sols);
     return 0;
   end Job120;
-
-  function Job1 return integer32 is -- write container to file
-
-    use Standard_Complex_Solutions,Standard_Complex_Solutions_io;
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-
-  begin
-    if not Is_Null(sols) then
-      if PHCpack_Operations.Is_File_Defined then
-        put(PHCpack_Operations.output_file,
-            Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      else
-        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      end if;
-    end if;
-    return 0;
-  end Job1;
 
   function Job41 return integer32 is -- write container to file
 
@@ -165,23 +140,6 @@ function use_solcon ( job : integer32;
     return 0;
   end Job121;
 
-  function Job4 return integer32 is -- return solution in container
-
-    use Standard_Complex_Solutions;
-    ls : Link_to_Solution;
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v(v'first));
-    fail : boolean;
-
-  begin
-    Standard_Solutions_Container.Retrieve(k,ls,fail);
-    if fail
-     then return 34;
-     else Assign_Solution(ls,b,c); return 0;
-    end if;
-  end Job4;
-
   function Job44 return integer32 is -- return solution in container
 
     use DoblDobl_Complex_Solutions;
@@ -215,24 +173,6 @@ function use_solcon ( job : integer32;
      else Assign_Solution(ls,b,c); return 0;
     end if;
   end Job84;
-
-  function Job5 return integer32 is -- change standard solution in container
-
-    use Standard_Complex_Solutions;
-    ls : Link_to_Solution := Convert_to_Solution(b,c);
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v(v'first));
-    fail : boolean;
-
-  begin
-    Standard_Solutions_Container.Replace(k,ls.all,fail);
-    Clear(ls);
-    if fail
-     then return 35;
-     else return 0;
-    end if;
-  end Job5;
 
   function Job45 return integer32 is -- change dobldobl solution in container
 
@@ -269,16 +209,6 @@ function use_solcon ( job : integer32;
      else return 0;
     end if;
   end Job85;
-
-  function Job6 return integer32 is -- append standard solution to container
-
-    use Standard_Complex_Solutions;
-    ls : constant Link_to_Solution := Convert_to_Solution(b,c);
-
-  begin
-    Standard_Solutions_Container.Append(ls);
-    return 0;
-  end Job6;
 
   function Job46 return integer32 is -- append dobldobl solution to container
 
@@ -1959,18 +1889,19 @@ function use_solcon ( job : integer32;
   end Job915;
 
   function Handle_Jobs return integer32 is
+
+    use Standard_Solutions_Interface;
+
   begin
     case job is
-      when 0 => return Job0; -- read from file into container
-      when 1 => return Job1; -- write container to file
-      when 2 =>
-        Assign(integer32(Standard_Solutions_Container.Length),b); return 0;
-      when 3 =>
-        Assign(integer32(Standard_Solutions_Container.Dimension),b); return 0;
-      when 4 => return Job4; -- return standard solution in container
-      when 5 => return Job5; -- change standard solution in container
-      when 6 => return Job6; -- append standard solution to container
-      when 7 => Standard_Solutions_Container.Clear; return 0;
+      when 0 => return Standard_Solutions_Read(vrblvl);
+      when 1 => return Standard_Solutions_Write(vrblvl); -- write container to file
+      when 2 => return Standard_Solutions_Size(b,vrblvl);
+      when 3 => return Standard_Solutions_Dimension(b,vrblvl);
+      when 4 => return Standard_Solutions_Get(a,b,c,vrblvl);
+      when 5 => return Standard_Solutions_Update(a,b,c,vrblvl);
+      when 6 => return Standard_Solutions_Add(b,c,vrblvl);
+      when 7 => return Standard_Solutions_Clear(vrblvl);
       when 8 => return Job8;   -- drop coordinate by index from solutions
       when 9 => return Job9;   -- drop coordinate by name from solutions
       when 10 => return Job10; -- prompts for input file and opens it

@@ -40,6 +40,7 @@ use_syspool                      : Ada gateway to the systems pool
 ts_use_syspool.c                 : C routine calls the Ada gateway
 ------------------------------------------------------------------------------
 standard_solutions_container     : management of Ada solution lists
+standard_solutions_interface     : interface to double precision solutions
 dobldobl_solutions_container     : solutions with double doubles
 quaddobl_solutions_container     : solutions with quad doubles
 multprec_solutions_container     : multiprecision solutions
