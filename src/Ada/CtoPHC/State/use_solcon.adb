@@ -52,32 +52,14 @@ with Multprec_Solutions_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_Solutions_Interface;
+with DoblDobl_Solutions_Interface;
+with QuadDobl_Solutions_Interface;
 
 function use_solcon ( job : integer32;
                       a : C_intarrs.Pointer;
                       b : C_intarrs.Pointer;
                       c : C_dblarrs.Pointer;
                       vrblvl : integer32 := 0 ) return integer32 is
-
-  function Job40 return integer32 is -- read from file into container
-
-    sols : DoblDobl_Complex_Solutions.Solution_List;
-
-  begin
-    DoblDobl_Complex_Solutions_io.Read(sols);
-    DoblDobl_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job40;
-
-  function Job80 return integer32 is -- read from file into container
-
-    sols : QuadDobl_Complex_Solutions.Solution_List;
-
-  begin
-    QuadDobl_Complex_Solutions_io.Read(sols);
-    QuadDobl_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job80;
 
   function Job120 return integer32 is -- read from file into container
 
@@ -88,40 +70,6 @@ function use_solcon ( job : integer32;
     Multprec_Solutions_Container.Initialize(sols);
     return 0;
   end Job120;
-
-  function Job41 return integer32 is -- write container to file
-
-    use DoblDobl_Complex_Solutions,DoblDobl_Complex_Solutions_io;
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    if not Is_Null(sols) then
-      if PHCpack_Operations.Is_File_Defined then
-        put(PHCpack_Operations.output_file,
-            Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      else
-        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      end if;
-    end if;
-    return 0;
-  end Job41;
-
-  function Job81 return integer32 is -- write container to file
-
-    use QuadDobl_Complex_Solutions,QuadDobl_Complex_Solutions_io;
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    if not Is_Null(sols) then
-      if PHCpack_Operations.Is_File_Defined then
-        put(PHCpack_Operations.output_file,
-            Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      else
-        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      end if;
-    end if;
-    return 0;
-  end Job81;
 
   function Job121 return integer32 is -- write container to file
 
@@ -139,96 +87,6 @@ function use_solcon ( job : integer32;
     end if;
     return 0;
   end Job121;
-
-  function Job44 return integer32 is -- return solution in container
-
-    use DoblDobl_Complex_Solutions;
-    ls : Link_to_Solution;
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v(v'first));
-    fail : boolean;
-
-  begin
-    DoblDobl_Solutions_Container.Retrieve(k,ls,fail);
-    if fail
-     then return 44;
-     else Assign_Solution(ls,b,c); return 0;
-    end if;
-  end Job44;
-
-  function Job84 return integer32 is -- return solution in container
-
-    use QuadDobl_Complex_Solutions;
-    ls : Link_to_Solution;
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v(v'first));
-    fail : boolean;
-
-  begin
-    QuadDobl_Solutions_Container.Retrieve(k,ls,fail);
-    if fail
-     then return 84;
-     else Assign_Solution(ls,b,c); return 0;
-    end if;
-  end Job84;
-
-  function Job45 return integer32 is -- change dobldobl solution in container
-
-    use DoblDobl_Complex_Solutions;
-    ls : Link_to_Solution := Convert_to_Solution(b,c);
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v(v'first));
-    fail : boolean;
-
-  begin
-    DoblDobl_Solutions_Container.Replace(k,ls.all,fail);
-    Clear(ls);
-    if fail
-     then return 345;
-     else return 0;
-    end if;
-  end Job45;
-
-  function Job85 return integer32 is -- change quaddobl solution in container
-
-    use QuadDobl_Complex_Solutions;
-    ls : Link_to_Solution := Convert_to_Solution(b,c);
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v(v'first));
-    fail : boolean;
-
-  begin
-    QuadDobl_Solutions_Container.Replace(k,ls.all,fail);
-    Clear(ls);
-    if fail
-     then return 395;
-     else return 0;
-    end if;
-  end Job85;
-
-  function Job46 return integer32 is -- append dobldobl solution to container
-
-    use DoblDobl_Complex_Solutions;
-    ls : constant Link_to_Solution := Convert_to_Solution(b,c);
-
-  begin
-    DoblDobl_Solutions_Container.Append(ls);
-    return 0;
-  end Job46;
-
-  function Job86 return integer32 is -- append quaddobl solution to container
-
-    use QuadDobl_Complex_Solutions;
-    ls : constant Link_to_Solution := Convert_to_Solution(b,c);
-
-  begin
-    QuadDobl_Solutions_Container.Append(ls);
-    return 0;
-  end Job86;
 
   function Job10 return integer32 is -- prompts for input file and opens it
   begin
@@ -1891,11 +1749,13 @@ function use_solcon ( job : integer32;
   function Handle_Jobs return integer32 is
 
     use Standard_Solutions_Interface;
+    use DoblDobl_Solutions_Interface;
+    use QuadDobl_Solutions_Interface;
 
   begin
     case job is
       when 0 => return Standard_Solutions_Read(vrblvl);
-      when 1 => return Standard_Solutions_Write(vrblvl); -- write container to file
+      when 1 => return Standard_Solutions_Write(vrblvl);
       when 2 => return Standard_Solutions_Size(b,vrblvl);
       when 3 => return Standard_Solutions_Dimension(b,vrblvl);
       when 4 => return Standard_Solutions_Get(a,b,c,vrblvl);
@@ -1931,32 +1791,28 @@ function use_solcon ( job : integer32;
       when 38 => return Job38; -- appends solution string to container
       when 39 => return Job39; -- replaces solution string in container
      -- corresponding operations for double double solutions
-      when 40 => return Job40; -- read from file into container
-      when 41 => return Job41; -- write container to file
-      when 42 =>
-        Assign(integer32(DoblDobl_Solutions_Container.Length),b); return 0;
-      when 43 =>
-        Assign(integer32(DoblDobl_Solutions_Container.Dimension),b); return 0;
-      when 44 => return Job44; -- return dobldobl solution in container
-      when 45 => return Job45; -- change dobldobl solution in container
-      when 46 => return Job46; -- append dobldobl solution to container
-      when 47 => DoblDobl_Solutions_Container.Clear; return 0;
+      when 40 => return DoblDobl_Solutions_Read(vrblvl);
+      when 41 => return DoblDobl_Solutions_Write(vrblvl);
+      when 42 => return DoblDobl_Solutions_Size(b,vrblvl);
+      when 43 => return DoblDobl_Solutions_Dimension(b,vrblvl);
+      when 44 => return DoblDobl_Solutions_Get(a,b,c,vrblvl);
+      when 45 => return DoblDobl_Solutions_Update(a,b,c,vrblvl);
+      when 46 => return DoblDobl_Solutions_Add(b,c,vrblvl);
+      when 47 => return DoblDobl_Solutions_Clear(vrblvl);
       when 48 => return Job48; -- drop coordinate by index from solutions
       when 49 => return Job49; -- drop coordinate by name from solutions
       when 70 => return Job70; -- returns size of solution string
       when 71 => return Job71; -- returns solution string
       when 78 => return Job78; -- appends solution string to container
      -- corresponding operations for quad double solutions
-      when 80 => return Job80; -- read from file into container
-      when 81 => return Job81; -- write container to file
-      when 82 =>
-        Assign(integer32(QuadDobl_Solutions_Container.Length),b); return 0;
-      when 83 =>
-        Assign(integer32(QuadDobl_Solutions_Container.Dimension),b); return 0;
-      when 84 => return Job84; -- return quaddobl solution in container
-      when 85 => return Job85; -- change quaddobl solution in container
-      when 86 => return Job86; -- append quaddobl solution to container
-      when 87 => QuadDobl_Solutions_Container.Clear; return 0;
+      when 80 => return QuadDobl_Solutions_Read(vrblvl);
+      when 81 => return QuadDobl_Solutions_Write(vrblvl);
+      when 82 => return QuadDobl_Solutions_Size(b,vrblvl);
+      when 83 => return QuadDobl_Solutions_Dimension(b,vrblvl);
+      when 84 => return QuadDobl_Solutions_Get(a,b,c,vrblvl);
+      when 85 => return QuadDobl_Solutions_Update(a,b,c,vrblvl);
+      when 86 => return QuadDobl_Solutions_Add(b,c,vrblvl);
+      when 87 => return QuadDobl_Solutions_Clear(vrblvl);
       when 88 => return Job88; -- drop coordinate by index from solutions
       when 89 => return Job89; -- drop coordinate by name from solutions
       when 110 => return Job110; -- returns size of solution string
