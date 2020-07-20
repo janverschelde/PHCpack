@@ -1582,31 +1582,30 @@ function use_c2phc4c ( job : integer32;
   end Job821;
 
   function Handle_Jobs return integer32 is
+
+    use Job_Containers;
+    use Job_Handlers;
+
   begin
+    if vrblvl > 0
+     then put_line("-> in use_c2phc4c.Handle_Jobs ...");
+    end if;
     case job is
       when 0 => Write_Menu; return 0;
-      when 1 =>
-        return Job_Containers.Standard_Target_Poly_System_to_Container(vrblvl);
-      when 2 =>
-        return Job_Containers.Standard_Container_Poly_System_to_Target(vrblvl);
-      when 3 =>
-        return Job_Containers.Standard_Start_Poly_System_to_Container(vrblvl);
-      when 4 =>
-        return Job_Containers.Standard_Container_Poly_System_to_Start(vrblvl);
-      when 5 => 
-        return Job_Containers.Standard_Target_Solutions_to_Container(vrblvl);
-      when 6 =>
-        return Job_Containers.Standard_Container_Solutions_to_Target(vrblvl);
-      when 7 =>
-        return Job_Containers.Standard_Start_Solutions_to_Container(vrblvl);
-      when 8 =>
-        return Job_Containers.Standard_Container_Solutions_to_Start(vrblvl);
+      when 1 => return Standard_Target_Poly_System_to_Container(vrblvl-1);
+      when 2 => return Standard_Container_Poly_System_to_Target(vrblvl-1);
+      when 3 => return Standard_Start_Poly_System_to_Container(vrblvl-1);
+      when 4 => return Standard_Container_Poly_System_to_Start(vrblvl-1);
+      when 5 => return Standard_Target_Solutions_to_Container(vrblvl-1);
+      when 6 => return Standard_Container_Solutions_to_Target(vrblvl-1);
+      when 7 => return Standard_Start_Solutions_to_Container(vrblvl-1);
+      when 8 => return Standard_Container_Solutions_to_Start(vrblvl-1);
       when 9 => return Job9; -- verify the solutions in the container
       when 10..15 => return C_to_PHCpack(job-10,0);
       when 16 => return Job16; -- call standard path trackers
       when 17..19 => return C_to_PHCpack(job-10,0);
-      when 20..29 => return use_syscon(job-20,a,b,c);
-      when 30..38 => return use_solcon(job-30,a,b,c);
+      when 20..29 => return use_syscon(job-20,a,b,c,vrblvl-1);
+      when 30..38 => return use_solcon(job-30,a,b,c,vrblvl-1);
       when 39 => return use_c2fac(28,a,b,c); -- set state to silent
       when 40..65 => return use_c2fac(job-40,a,b,c);
       when 66 => return Job66; -- return embedded standard double system 
@@ -1617,27 +1616,35 @@ function use_c2phc4c ( job : integer32;
       when 71 => return Job71; -- interactive setting of output level
       when 72 => return Job72; -- retrieve values of continuation parameters
       when 73 => return Job73; -- set values of continuation parameters
-      when 74 => return use_syscon(74,a,b,c); -- store Laurential as string
-      when 75 => return Job_Handlers.Standard_Laurent_Solver(a,b,vrblvl);
-      when 76 => return use_syscon(76,a,b,c); -- store polynomial as string
-      when 77 => return Job_Handlers.Standard_Polynomial_Solver(a,b,vrblvl);
-      when 78 => return Job_Handlers.Mixed_Volume(a,vrblvl);
-      when 79 => return Job_Handlers.Stable_Mixed_Volume(a,b,vrblvl);
+     -- store Laurential as string
+      when 74 => return use_syscon(74,a,b,c,vrblvl-1);
+      when 75 => return Standard_Laurent_Solver(a,b,vrblvl);
+     -- store polynomial as string
+      when 76 => return use_syscon(76,a,b,c,vrblvl-1);
+      when 77 => return Standard_Polynomial_Solver(a,b,vrblvl-1);
+      when 78 => return Mixed_Volume(a,vrblvl-1);
+      when 79 => return Stable_Mixed_Volume(a,b,vrblvl-1);
       when 80..105 => return use_celcon(job-80,a,b,c);
-      when 106 => return use_syscon(68,a,b,c); -- load dobldobl poly as string
-      when 107 => return use_syscon(69,a,b,c); -- load quaddobl poly as string
-      when 108 => return use_syscon(70,a,b,c); -- load multprec poly as string
-      when 109 => return use_syscon(71,a,b,c); -- random system in container
+     -- load dobldobl poly as string
+      when 106 => return use_syscon(68,a,b,c,vrblvl-1);
+     -- load quaddobl poly as string
+      when 107 => return use_syscon(69,a,b,c,vrblvl-1);
+     -- load multprec poly as string
+      when 108 => return use_syscon(70,a,b,c,vrblvl-1);
+     -- random system in container
+      when 109 => return use_syscon(71,a,b,c,vrblvl-1);
       when 110..118 => return use_roco(job-110,a,b,c);
-      when 119 => return use_syscon(20,a,b,c); -- degree of standard polynomial
+     -- degree of standard polynomial
+      when 119 => return use_syscon(20,a,b,c,vrblvl-1);
      -- operations on Laurent systems :
-      when 120..127 => return use_syscon(job-20,a,b,c);
+      when 120..127 => return use_syscon(job-20,a,b,c,vrblvl-1);
       when 128 => return use_syscon(77,a,b,c); -- load standard Laur as string
       when 129 => return Job129; -- embed double double system
-      when 130..145 => return use_solcon(job-120,a,b,c);
-      when 146 => return use_solcon(9,a,b,c); -- drop coordinate by name
-      when 147 => return use_syscon(10,a,b,c);
-      when 148 => return use_syscon(11,a,b,c);
+      when 130..145 => return use_solcon(job-120,a,b,c,vrblvl-1);
+     -- drop coordinate by name
+      when 146 => return use_solcon(9,a,b,c,vrblvl-1);
+      when 147 => return use_syscon(10,a,b,c,vrblvl-1);
+      when 148 => return use_syscon(11,a,b,c,vrblvl-1);
       when 149..171 => return use_track(job-150,a,b,c);
      -- track operations for double double precision :
       when 172..178 => return use_track(job-150,a,b,c);
@@ -1659,7 +1666,7 @@ function use_c2phc4c ( job : integer32;
       when 197 => return Job197; -- 1 Newton step on quaddobl containers
       when 198 => return Job198; -- 1 Newton step on dobldobl containers
       when 199 => return Job199; -- 1 Newton step on standard containers
-      when 200..209 => return use_solcon(job-170,a,b,c);
+      when 200..209 => return use_solcon(job-170,a,b,c,vrblvl-1);
       when 210..227 => return use_c2pieri(job-210,a,b,c);
       when 228..229 => return use_c2lrhom(job-228,a,b,c);
       when 230 => return use_track(42,a,b,c);
@@ -1722,28 +1729,20 @@ function use_c2phc4c ( job : integer32;
       when 274 => return unisolve(3,a,b,c); -- quad double precision
       when 275 => return unisolve(4,a,b,c); -- arbitrary multiprecision
      -- read next of solutions
-      when 276 => return use_solcon(276,a,b,c); -- next standard solution
-      when 277 => return use_solcon(277,a,b,c); -- next double double solution
-      when 278 => return use_solcon(278,a,b,c); -- next quad double solution
-      when 279 => return use_solcon(279,a,b,c); -- next multprec initialize
+      when 276 => return use_solcon(276,a,b,c,vrblvl-1); -- next standard
+      when 277 => return use_solcon(277,a,b,c,vrblvl-1); -- next double double
+      when 278 => return use_solcon(278,a,b,c,vrblvl-1); -- next quad double
+      when 279 => return use_solcon(279,a,b,c,vrblvl-1); -- next multprec
       when 280 => return use_c2fac(29,a,b,c); -- standard random complex number
      -- multiprecision versions for jobs 1 to 8
-      when 281 =>
-        return Job_Containers.Multprec_Target_Poly_System_to_Container(vrblvl);
-      when 282 =>
-        return Job_Containers.Multprec_Container_Poly_System_to_Target(vrblvl);
-      when 283 =>
-        return Job_Containers.Multprec_Start_Poly_System_to_Container(vrblvl);
-      when 284 =>
-        return Job_Containers.Multprec_Container_Poly_System_to_Start(vrblvl);
-      when 285 =>
-        return Job_Containers.Multprec_Target_Solutions_to_Container(vrblvl);
-      when 286 =>
-        return Job_Containers.Multprec_Container_Solutions_to_Target(vrblvl);
-      when 287 =>
-        return Job_Containers.Multprec_Start_Solutions_to_Container(vrblvl);
-      when 288 =>
-        return Job_Containers.Multprec_Container_Solutions_to_Start(vrblvl);
+      when 281 => return Multprec_Target_Poly_System_to_Container(vrblvl-1);
+      when 282 => return Multprec_Container_Poly_System_to_Target(vrblvl-1);
+      when 283 => return Multprec_Start_Poly_System_to_Container(vrblvl-1);
+      when 284 => return Multprec_Container_Poly_System_to_Start(vrblvl-1);
+      when 285 => return Multprec_Target_Solutions_to_Container(vrblvl-1);
+      when 286 => return Multprec_Container_Solutions_to_Target(vrblvl-1);
+      when 287 => return Multprec_Start_Solutions_to_Container(vrblvl-1);
+      when 288 => return Multprec_Container_Solutions_to_Start(vrblvl-1);
      -- diagonal homotopy in double double and quad double precision
       when 289 => return use_track(43,a,b,c); -- dobldobl diagonal homotopy
       when 290 => return use_track(44,a,b,c); -- quaddobl diagonal homotopy
@@ -1773,37 +1772,37 @@ function use_c2phc4c ( job : integer32;
      -- operations on double double system container
       when 330..339 => return use_syscon(job-130,a,b,c);
      -- operations on double double solution container
-      when 340..349 => return use_solcon(job-300,a,b,c);
-      when 370..371 => return use_solcon(job-300,a,b,c);
-      when 378 => return use_solcon(job-300,a,b,c);
+      when 340..349 => return use_solcon(job-300,a,b,c,vrblvl-1);
+      when 370..371 => return use_solcon(job-300,a,b,c,vrblvl-1);
+      when 378 => return use_solcon(job-300,a,b,c,vrblvl-1);
      -- operations on quad double system container
       when 380..389 => return use_syscon(job-170,a,b,c);
      -- operations on quad double solution container
-      when 390..399 => return use_solcon(job-310,a,b,c);
-      when 420..421 => return use_solcon(job-310,a,b,c);
-      when 428 => return use_solcon(job-310,a,b,c);
+      when 390..399 => return use_solcon(job-310,a,b,c,vrblvl-1);
+      when 420..421 => return use_solcon(job-310,a,b,c,vrblvl-1);
+      when 428 => return use_solcon(job-310,a,b,c,vrblvl-1);
      -- operations on monomial maps as solutions to binomial systems
       when 430..438 => return use_mapcon(job-430,a,b,c);
      -- scan for the number of variables
       when 439 => return Job439;
      -- operations on multiprecision system container
-      when 440..444 => return use_syscon(job-220,a,b,c);
-      when 447..449 => return use_syscon(job-220,a,b,c);
+      when 440..444 => return use_syscon(job-220,a,b,c,vrblvl-1);
+      when 447..449 => return use_syscon(job-220,a,b,c,vrblvl-1);
      -- operations on multiprecision solutions :
-      when 450..453 => return use_solcon(job-330,a,b,c);
-      when 457 => return use_solcon(job-330,a,b,c);
+      when 450..453 => return use_solcon(job-330,a,b,c,vrblvl-1);
+      when 457 => return use_solcon(job-330,a,b,c,vrblvl-1);
      -- moving pointer to the current solution
-      when 454 => return use_solcon(300,a,b,c);
-      when 455 => return use_solcon(301,a,b,c);
-      when 456 => return use_solcon(302,a,b,c);
-      when 458 => return use_solcon(303,a,b,c);
+      when 454 => return use_solcon(300,a,b,c,vrblvl-1);
+      when 455 => return use_solcon(301,a,b,c,vrblvl-1);
+      when 456 => return use_solcon(302,a,b,c,vrblvl-1);
+      when 458 => return use_solcon(303,a,b,c,vrblvl-1);
      -- polyhedral homotopies in double double precision :
       when 460..469 => return use_celcon(job-434,a,b,c);
      -- polyhedral homotopies in quad double precision :
       when 470..479 => return use_celcon(job-434,a,b,c);
      -- string representations of multiprecision solutions :
-      when 480..481 => return use_solcon(job-330,a,b,c);
-      when 488 => return use_solcon(job-330,a,b,c);
+      when 480..481 => return use_solcon(job-330,a,b,c,vrblvl-1);
+      when 488 => return use_solcon(job-330,a,b,c,vrblvl-1);
      -- PHCpack operations for multiprecision arithmetic
       when 491 => return Job491; -- read multiprecision target system   
       when 492 => PHCpack_Operations_io.Write_Multprec_Target_System; return 0;
@@ -1820,17 +1819,17 @@ function use_c2phc4c ( job : integer32;
      -- multiprecision homotopies :
       when 522..524 => return use_track(job-470,a,b,c);
      -- get length of current solution string :
-      when 525 => return use_solcon(304,a,b,c);
-      when 526 => return use_solcon(305,a,b,c);
-      when 527 => return use_solcon(306,a,b,c);
-      when 528 => return use_solcon(307,a,b,c);
+      when 525 => return use_solcon(304,a,b,c,vrblvl-1);
+      when 526 => return use_solcon(305,a,b,c,vrblvl-1);
+      when 527 => return use_solcon(306,a,b,c,vrblvl-1);
+      when 528 => return use_solcon(307,a,b,c,vrblvl-1);
      -- multihomogeneous Bezout numbers and start systems
       when 530..532 => return use_roco(job-520,a,b,c);
      -- returns current solution string :
-      when 533 => return use_solcon(308,a,b,c);
-      when 534 => return use_solcon(309,a,b,c);
-      when 535 => return use_solcon(310,a,b,c);
-      when 536 => return use_solcon(311,a,b,c);
+      when 533 => return use_solcon(308,a,b,c,vrblvl-1);
+      when 534 => return use_solcon(309,a,b,c,vrblvl-1);
+      when 535 => return use_solcon(310,a,b,c,vrblvl-1);
+      when 536 => return use_solcon(311,a,b,c,vrblvl-1);
      -- homotopy membership tests
       when 537 => return use_c2mbt(0,a,b,c); -- standard membership test
       when 538 => return use_c2mbt(1,a,b,c); -- dobldobl membership test
@@ -1840,17 +1839,17 @@ function use_c2phc4c ( job : integer32;
      -- operations to read systems and solutions into the containers
       when 544..547 => return use_solcon(job,a,b,c);
      -- random dobldobl and quaddobl systems
-      when 548 => return use_syscon(78,a,b,c);
-      when 549 => return use_syscon(79,a,b,c);
+      when 548 => return use_syscon(78,a,b,c,vrblvl-1);
+      when 549 => return use_syscon(79,a,b,c,vrblvl-1);
      -- operations on Laurent container for double doubles :
-      when 550..558 => return use_syscon(job-440,a,b,c);
-      when 559 => return use_syscon(72,a,b,c);
+      when 550..558 => return use_syscon(job-440,a,b,c,vrblvl-1);
+      when 559 => return use_syscon(72,a,b,c,vrblvl-1);
      -- operations on Laurent container for quad doubles :
-      when 560..568 => return use_syscon(job-440,a,b,c);
+      when 560..568 => return use_syscon(job-440,a,b,c,vrblvl-1);
       when 569 => return use_syscon(73,a,b,c);
      -- operations on Laurent container for multiprecision :
-      when 570..574 => return use_syscon(job-440,a,b,c);
-      when 577..579 => return use_syscon(job-440,a,b,c);
+      when 570..574 => return use_syscon(job-440,a,b,c,vrblvl-1);
+      when 577..579 => return use_syscon(job-440,a,b,c,vrblvl-1);
      -- convex hull via giftwrapping :
       when 580..589 => return use_giftwrap(job-579,a,b,c);
      -- scaling systems and solutions :
@@ -1892,10 +1891,10 @@ function use_c2phc4c ( job : integer32;
       when 698 => return use_syspool(14,a,b,c); -- clear dobldobl system pool
       when 699 => return use_syspool(15,a,b,c); -- clear quaddobl system pool
      -- blackbox solvers in double double and quad double precision
-      when 700 => return Job_Handlers.DoblDobl_Polynomial_Solver(a,b,vrblvl);
-      when 701 => return Job_Handlers.DoblDobl_Laurent_Solver(a,b,vrblvl);
-      when 702 => return Job_Handlers.QuadDobl_Polynomial_Solver(a,b,vrblvl);
-      when 703 => return Job_Handlers.QuadDobl_Laurent_Solver(a,b,vrblvl);
+      when 700 => return DoblDobl_Polynomial_Solver(a,b,vrblvl-1);
+      when 701 => return DoblDobl_Laurent_Solver(a,b,vrblvl-1);
+      when 702 => return QuadDobl_Polynomial_Solver(a,b,vrblvl-1);
+      when 703 => return QuadDobl_Laurent_Solver(a,b,vrblvl-1);
      -- Pade approximants
       when 704 => return use_series(7,a,b,c); -- Pade in double precision
       when 705 => return use_series(8,a,b,c); -- Pade with double doubles
@@ -1926,30 +1925,18 @@ function use_c2phc4c ( job : integer32;
       when 775 => return Job775; -- in double double precision
       when 776 => return Job776; -- in quad double precision
      -- copying Laurent systems from and into the containers
-      when 777 =>
-        return Job_Containers.Standard_Container_Laur_System_to_Start(vrblvl);
-      when 778 =>
-        return Job_Containers.DoblDobl_Container_Laur_System_to_Start(vrblvl);
-      when 779 =>
-        return Job_Containers.QuadDobl_Container_Laur_System_to_Start(vrblvl);
-      when 780 =>
-        return Job_Containers.Standard_Container_Laur_System_to_Target(vrblvl);
-      when 781 =>
-        return Job_Containers.DoblDobl_Container_Laur_System_to_Target(vrblvl);
-      when 782 =>
-        return Job_Containers.QuadDobl_Container_Laur_System_to_Target(vrblvl);
-      when 783 =>
-        return Job_Containers.Standard_Start_Laur_System_to_Container(vrblvl);
-      when 784 =>
-        return Job_Containers.DoblDobl_Start_Laur_System_to_Container(vrblvl);
-      when 785 =>
-        return Job_Containers.QuadDobl_Start_Laur_System_to_Container(vrblvl);
-      when 786 =>
-        return Job_Containers.Standard_Target_Laur_System_to_Container(vrblvl);
-      when 787 =>
-        return Job_Containers.DoblDobl_Target_Laur_System_to_Container(vrblvl);
-      when 788 =>
-        return Job_Containers.QuadDobl_Target_Laur_System_to_Container(vrblvl);
+      when 777 => return Standard_Container_Laur_System_to_Start(vrblvl-1);
+      when 778 => return DoblDobl_Container_Laur_System_to_Start(vrblvl-1);
+      when 779 => return QuadDobl_Container_Laur_System_to_Start(vrblvl-1);
+      when 780 => return Standard_Container_Laur_System_to_Target(vrblvl-1);
+      when 781 => return DoblDobl_Container_Laur_System_to_Target(vrblvl-1);
+      when 782 => return QuadDobl_Container_Laur_System_to_Target(vrblvl-1);
+      when 783 => return Standard_Start_Laur_System_to_Container(vrblvl-1);
+      when 784 => return DoblDobl_Start_Laur_System_to_Container(vrblvl-1);
+      when 785 => return QuadDobl_Start_Laur_System_to_Container(vrblvl-1);
+      when 786 => return Standard_Target_Laur_System_to_Container(vrblvl-1);
+      when 787 => return DoblDobl_Target_Laur_System_to_Container(vrblvl-1);
+      when 788 => return QuadDobl_Target_Laur_System_to_Container(vrblvl-1);
      -- cascades for Laurent homotopies
       when 789 => return use_track(58,a,b,c); -- standard cascade Laurent htpy
       when 790 => return use_track(59,a,b,c); -- dobldobl cascade Laurent htpy
@@ -2044,7 +2031,7 @@ function use_c2phc4c ( job : integer32;
      -- write homotopy continuation paramaters to defined output file
       when 874 => return use_padcon(17,a,b,c); 
      -- set value of the continuation parameter to zero
-      when 875..877 => return use_solcon(job,a,b,c);
+      when 875..877 => return use_solcon(job,a,b,c,vrblvl-1);
      -- initializes natural parameter homotopy in series-Pade tracker
       when 878 => return use_padcon(18,a,b,c);
      -- functions for stable mixed cells
@@ -2063,15 +2050,19 @@ function use_c2phc4c ( job : integer32;
       when 889 => return use_tabform(0,a,b,c); -- store standard tableau form
       when 890 => return use_tabform(1,a,b,c); -- get std tableau dimensions
      -- projective transformations of systems
-      when 891..893 => return use_syscon(job,a,b,c); -- one-homogeneous
-      when 901..903 => return use_syscon(job,a,b,c); -- from 1-hom to affine
-      when 904..906 => return use_syscon(job,a,b,c); -- multi-homogeneous
-      when 907..909 => return use_syscon(job,a,b,c); -- from m-hom to affine
+      when 891..893 => return use_syscon(job,a,b,c,vrblvl-1); -- 1-homogeneous
+      when 901..903 => return use_syscon(job,a,b,c,vrblvl-1); -- to affine
+     -- multi-homogeneous
+      when 904..906 => return use_syscon(job,a,b,c,vrblvl-1);
+     -- from m-hom to affine
+      when 907..909 => return use_syscon(job,a,b,c,vrblvl-1);
      -- projective transformations of solutions
-      when 894..896 => return use_solcon(job,a,b,c); -- one-homogeneous
-      when 898..900 => return use_solcon(job,a,b,c); -- to affine
-      when 910..912 => return use_solcon(job,a,b,c); -- multi-homogeneous
-      when 913..915 => return use_solcon(job,a,b,c); -- from m-hom to affine
+      when 894..896 => return use_solcon(job,a,b,c,vrblvl-1); -- 1-homogeneous
+      when 898..900 => return use_solcon(job,a,b,c,vrblvl-1); -- to affine
+     -- multi-homogeneous
+      when 910..912 => return use_solcon(job,a,b,c,vrblvl-1);
+     -- from m-hom to affine
+      when 913..915 => return use_solcon(job,a,b,c,vrblvl-1);
      -- adding a symbol passed as string
       when 897 => return use_syscon(job,a,b,c);
      -- reading solutions from file with given name
