@@ -1,3 +1,5 @@
+Mon 20 Jul 2020 :
+
 Wed 1 Jul 2020 : added new function prototype to phcpy2c.h with
   definitions in phcpy2c2.c and phcpy2c3.c to compute a condition report,
   for export to Python.  Added brackets to phcpy2c2.c and phcpy2c3.c

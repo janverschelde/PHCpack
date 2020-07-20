@@ -9,11 +9,11 @@
 
 #ifdef compilewgpp
 extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
+extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
 extern "C" void adafinal( void );
 #else
 extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
+extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
 extern void adafinal( void );
 #endif
 

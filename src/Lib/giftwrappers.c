@@ -13,7 +13,7 @@ int convex_hull_2d ( int nc_pts, char *pts, int *nc_hull, char *hull )
 
    for(i=0; i<nc_pts; i++) points[i] = (int) pts[i];
 
-   fail = _ada_use_c2phc4c(580,&nc_pts,points,c);
+   fail = _ada_use_c2phc4c(580,&nc_pts,points,c,0);
 
    *nc_hull = nc_pts;
 
@@ -30,7 +30,7 @@ int convex_hull ( int nc_pts, char *pts )
 
    for(i=0; i<nc_pts; i++) points[i] = (int) pts[i];
 
-   fail = _ada_use_c2phc4c(581,&nc_pts,points,c);
+   fail = _ada_use_c2phc4c(581,&nc_pts,points,c,0);
 
    return fail;
 }
@@ -40,7 +40,7 @@ int number_of_facets ( int dim, int *nbr )
    int fail;
    double *c;
 
-   fail = _ada_use_c2phc4c(582,&dim,nbr,c);
+   fail = _ada_use_c2phc4c(582,&dim,nbr,c,0);
 
    return fail;
 }
@@ -54,7 +54,7 @@ int retrieve_facet ( int dim, int fcn, int *nc_rep, char *fctrep )
 
    b[0] = fcn;
 
-   fail = _ada_use_c2phc4c(583,&a,b,c);
+   fail = _ada_use_c2phc4c(583,&a,b,c,0);
 
    *nc_rep = a;
    for(k=0; k<a; k++) fctrep[k] = (char) b[k];
@@ -68,7 +68,7 @@ int clear_3d_facets ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc4c(584,a,b,c);
+   fail = _ada_use_c2phc4c(584,a,b,c,0);
 
    return fail;
 }
@@ -78,7 +78,7 @@ int clear_4d_facets ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc4c(585,a,b,c);
+   fail = _ada_use_c2phc4c(585,a,b,c,0);
 
    return fail;
 }
@@ -89,7 +89,7 @@ int support_size ( void )
    int *b;
    double *c;
 
-   fail = _ada_use_c2phc4c(586,&nbr,b,c);
+   fail = _ada_use_c2phc4c(586,&nbr,b,c,0);
 
    return nbr;
 }
@@ -100,7 +100,7 @@ int support_string ( int size, char *supp )
    int support[size];
    double *c;
 
-   fail = _ada_use_c2phc4c(587,&size,support,c);
+   fail = _ada_use_c2phc4c(587,&size,support,c,0);
    for(i=0; i<size; i++) supp[i] = (char) support[i];
    supp[size] = '\0';
 
@@ -112,7 +112,7 @@ int clear_support_string ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc4c(588,a,b,c);
+   fail = _ada_use_c2phc4c(588,a,b,c,0);
 
    return fail;
 }
@@ -128,7 +128,7 @@ int initial_form ( int dim, int nbc, char *normal )
    pars[1] = nbc;
    /* printf("the normal in C is %s\n", normal); */
    for(i=0; i<nbc; i++) nrm[i] = (int) normal[i];
-   fail = _ada_use_c2phc4c(589,pars,nrm,c);
+   fail = _ada_use_c2phc4c(589,pars,nrm,c,0);
 
    return fail;
 }

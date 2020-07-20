@@ -8,11 +8,11 @@
 
 #ifdef compilewgpp
 extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
+extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
 extern "C" void adafinal( void );
 #else
 extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c );
+extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
 extern void adafinal( void );
 #endif
 
@@ -42,7 +42,7 @@ int get_seed ( int *seed );
  *   for debugging and testing benchmark problems. */
 
 int solve_standard_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double polynomial systems
@@ -52,7 +52,10 @@ int solve_standard_system
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
  *              the computed root counts to screen.
- *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking;
+ *   vrb        is the verbose level, if 0, nothing will be written,
+ *              for vrb > 0, the value of vrb is the depth of the tree
+ *              of nested subroutine calls for which information is shown.
  *
  * ON RETURN :
  *   root_count is the root count used in the homotopy;
@@ -61,7 +64,7 @@ int solve_standard_system
  *              but only if silent = 0. */
 
 int solve_dobldobl_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the double double polynomial systems
@@ -71,7 +74,10 @@ int solve_dobldobl_system
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
  *              the computed root counts to screen.
- *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking;
+ *   vrb        is the verbose level, if 0, nothing will be written,
+ *              for vrb > 0, the value of vrb is the depth of the tree
+ *              of nested subroutine calls for which information is shown.
  *
  * ON RETURN :
  *   root_count is the root count used in the homotopy;
@@ -80,7 +86,7 @@ int solve_dobldobl_system
  *              but only if silent = 0. */
 
 int solve_quaddobl_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the quad double polynomial systems
@@ -90,7 +96,10 @@ int solve_quaddobl_system
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
  *              the computed root counts to screen.
- *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *   nbtasks    number of threads to be used, if 0, then no multitasking;
+ *   vrb        is the verbose level, if 0, nothing will be written,
+ *              for vrb > 0, the value of vrb is the depth of the tree
+ *              of nested subroutine calls for which information is shown.
  *
  * ON RETURN :
  *   root_count is the root count used in the homotopy;

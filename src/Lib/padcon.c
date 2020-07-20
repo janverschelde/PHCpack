@@ -13,7 +13,7 @@ int padcon_set_default_parameters ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc4c(735,a,b,c);
+   fail = _ada_use_c2phc4c(735,a,b,c,0);
 
    return fail;
 }
@@ -23,7 +23,7 @@ int padcon_clear_parameters ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc4c(736,a,b,c);
+   fail = _ada_use_c2phc4c(736,a,b,c,0);
 
    return fail;
 }
@@ -77,7 +77,7 @@ int padcon_write_homotopy_continuation_parameters_to_defined_output ( void )
    int fail,*a,*b;
    double *c;
 
-   fail = _ada_use_c2phc4c(874,a,b,c);
+   fail = _ada_use_c2phc4c(874,a,b,c,0);
 
    return fail;
 }
@@ -171,12 +171,12 @@ int padcon_get_homotopy_continuation_parameter ( int k, double *val )
 
    if((k == 2) || (k == 3) || (k == 11) || (k == 12))
    {
-      fail = _ada_use_c2phc4c(737,&k,&parval,val);
+      fail = _ada_use_c2phc4c(737,&k,&parval,val,0);
 
       *val = (double) parval; // pass integer value
    }
    else
-      fail = _ada_use_c2phc4c(737,&k,&parval,val);
+      fail = _ada_use_c2phc4c(737,&k,&parval,val,0);
 
    return fail;
 }
@@ -189,10 +189,10 @@ int padcon_set_homotopy_continuation_parameter ( int k, double *val )
    {
       parval = (int) (*val); // pass integer value
 
-      fail = _ada_use_c2phc4c(738,&k,&parval,val);
+      fail = _ada_use_c2phc4c(738,&k,&parval,val,0);
    }
    else
-      fail = _ada_use_c2phc4c(738,&k,&parval,val);
+      fail = _ada_use_c2phc4c(738,&k,&parval,val,0);
 
    return fail;
 }
@@ -404,12 +404,12 @@ int padcon_standard_track
    if(mhom < 2)
    {
       if(nbc == 0)
-         fail = _ada_use_c2phc4c(739,pars,b,c);
+         fail = _ada_use_c2phc4c(739,pars,b,c,0);
       else
       {
          int iname[nbc];
          for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
-         fail = _ada_use_c2phc4c(739,pars,iname,c);
+         fail = _ada_use_c2phc4c(739,pars,iname,c,0);
       }
    }
    else
@@ -418,12 +418,12 @@ int padcon_standard_track
       for(int idx=0; idx<nvr; idx++) z[idx] = (double) idz[idx];
  
       if(nbc == 0)
-         fail = _ada_use_c2phc4c(739,pars,b,z);
+         fail = _ada_use_c2phc4c(739,pars,b,z,0);
       else
       {
          int iname[nbc];
          for(int i=0; i<nbc; i++) iname[i] = (int) name[i];
-         fail = _ada_use_c2phc4c(739,pars,iname,z);
+         fail = _ada_use_c2phc4c(739,pars,iname,z,0);
       }
    }
    return fail;
@@ -448,12 +448,12 @@ int padcon_dobldobl_track
    if(mhom < 2)
    {
       if(nbc == 0)
-         fail = _ada_use_c2phc4c(739,pars,b,c);
+         fail = _ada_use_c2phc4c(739,pars,b,c,0);
       else
       {
          int iname[nbc];
          for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
-         fail = _ada_use_c2phc4c(739,pars,iname,c);
+         fail = _ada_use_c2phc4c(739,pars,iname,c,0);
       }
    }
    else
@@ -462,12 +462,12 @@ int padcon_dobldobl_track
       for(idx=0; idx<nvr; idx++) z[idx] = (double) idz[idx];
 
       if(nbc == 0)
-         fail = _ada_use_c2phc4c(739,pars,b,z);
+         fail = _ada_use_c2phc4c(739,pars,b,z,0);
       else
       {
          int iname[nbc];
          for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
-         fail = _ada_use_c2phc4c(739,pars,iname,z);
+         fail = _ada_use_c2phc4c(739,pars,iname,z,0);
       }
    }
    return fail;
@@ -492,12 +492,12 @@ int padcon_quaddobl_track
    if(mhom < 2)
    {
       if(nbc == 0)
-         fail = _ada_use_c2phc4c(739,pars,b,c);
+         fail = _ada_use_c2phc4c(739,pars,b,c,0);
       else
       {
          int iname[nbc];
          for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
-         fail = _ada_use_c2phc4c(739,pars,iname,c);
+         fail = _ada_use_c2phc4c(739,pars,iname,c,0);
       }
    }
    else
@@ -506,12 +506,12 @@ int padcon_quaddobl_track
       for(idx=0; idx<nvr; idx++) z[idx] = (double) idz[idx];
 
       if(nbc == 0)
-         fail = _ada_use_c2phc4c(739,pars,b,z);
+         fail = _ada_use_c2phc4c(739,pars,b,z,0);
       else
       {
          int iname[nbc];
          for(idx=0; idx<nbc; idx++) iname[idx] = (int) name[idx];
-         fail = _ada_use_c2phc4c(739,pars,iname,z);
+         fail = _ada_use_c2phc4c(739,pars,iname,z,0);
       }
    }
    return fail;
@@ -527,7 +527,7 @@ int padcon_standard_initialize_homotopy ( int verbose, int homo )
    pars[0] = verbose;
    pars[1] = homo;
 
-   fail = _ada_use_c2phc4c(860,&precision,pars,c);
+   fail = _ada_use_c2phc4c(860,&precision,pars,c,0);
 
    return fail;
 }
@@ -542,7 +542,7 @@ int padcon_dobldobl_initialize_homotopy ( int verbose, int homo )
    pars[0] = verbose;
    pars[1] = homo;
 
-   fail = _ada_use_c2phc4c(860,&precision,pars,c);
+   fail = _ada_use_c2phc4c(860,&precision,pars,c,0);
 
    return fail;
 }
@@ -557,7 +557,7 @@ int padcon_quaddobl_initialize_homotopy ( int verbose, int homo )
    pars[0] = verbose;
    pars[1] = homo;
 
-   fail = _ada_use_c2phc4c(860,&precision,pars,c);
+   fail = _ada_use_c2phc4c(860,&precision,pars,c,0);
 
    return fail;
 }
@@ -572,7 +572,7 @@ int padcon_standard_initialize_parameter_homotopy ( int idx, int verbose )
    pars[0] = idx;
    pars[1] = verbose;
 
-   fail = _ada_use_c2phc4c(878,&precision,pars,c);
+   fail = _ada_use_c2phc4c(878,&precision,pars,c,0);
 
    return fail;
 }
@@ -587,7 +587,7 @@ int padcon_dobldobl_initialize_parameter_homotopy ( int idx, int verbose )
    pars[0] = idx;
    pars[1] = verbose;
 
-   fail = _ada_use_c2phc4c(878,&precision,pars,c);
+   fail = _ada_use_c2phc4c(878,&precision,pars,c,0);
 
    return fail;
 }
@@ -602,7 +602,7 @@ int padcon_quaddobl_initialize_parameter_homotopy ( int idx, int verbose )
    pars[0] = idx;
    pars[1] = verbose;
 
-   fail = _ada_use_c2phc4c(878,&precision,pars,c);
+   fail = _ada_use_c2phc4c(878,&precision,pars,c,0);
 
    return fail;
 }
@@ -616,7 +616,7 @@ int padcon_initialize_standard_solution ( int idx, int verbose )
    pars[0] = 0;    /* double precision */
    pars[1] = idx;
 
-   fail = _ada_use_c2phc4c(861,pars,&verbose,c);
+   fail = _ada_use_c2phc4c(861,pars,&verbose,c,0);
 
    return fail;
 }
@@ -630,7 +630,7 @@ int padcon_initialize_dobldobl_solution ( int idx, int verbose )
    pars[0] = 1;    /* double precision */
    pars[1] = idx;
 
-   fail = _ada_use_c2phc4c(861,pars,&verbose,c);
+   fail = _ada_use_c2phc4c(861,pars,&verbose,c,0);
 
    return fail;
 }
@@ -644,7 +644,7 @@ int padcon_initialize_quaddobl_solution ( int idx, int verbose )
    pars[0] = 2;    /* double precision */
    pars[1] = idx;
 
-   fail = _ada_use_c2phc4c(861,pars,&verbose,c);
+   fail = _ada_use_c2phc4c(861,pars,&verbose,c,0);
 
    return fail;
 }
@@ -655,7 +655,7 @@ int padcon_standard_predict_correct ( int* fail, int verbose )
    int precision = 0;
    double *c;
 
-   callfail = _ada_use_c2phc4c(862,&precision,&verbose,c);
+   callfail = _ada_use_c2phc4c(862,&precision,&verbose,c,0);
 
    *fail = precision;
 
@@ -668,7 +668,7 @@ int padcon_dobldobl_predict_correct ( int* fail, int verbose )
    int precision = 1;
    double *c;
 
-   callfail = _ada_use_c2phc4c(862,&precision,&verbose,c);
+   callfail = _ada_use_c2phc4c(862,&precision,&verbose,c,0);
 
    *fail = precision;
 
@@ -681,7 +681,7 @@ int padcon_quaddobl_predict_correct ( int* fail, int verbose )
    int precision = 2;
    double *c;
 
-   callfail = _ada_use_c2phc4c(862,&precision,&verbose,c);
+   callfail = _ada_use_c2phc4c(862,&precision,&verbose,c,0);
 
    *fail = precision;
 
@@ -697,7 +697,7 @@ int padcon_get_standard_solution ( int idx, int verbose )
    pars[0] = 0;    /* double precision */
    pars[1] = idx;
 
-   fail = _ada_use_c2phc4c(863,pars,&verbose,c);
+   fail = _ada_use_c2phc4c(863,pars,&verbose,c,0);
 
    if(pars[0] != 0) fail = pars[0];
 
@@ -713,7 +713,7 @@ int padcon_get_dobldobl_solution ( int idx, int verbose )
    pars[0] = 1;    /* double double precision */
    pars[1] = idx;
 
-   fail = _ada_use_c2phc4c(863,pars,&verbose,c);
+   fail = _ada_use_c2phc4c(863,pars,&verbose,c,0);
 
    if(pars[0] != 0) fail = pars[0];
 
@@ -729,7 +729,7 @@ int padcon_get_quaddobl_solution ( int idx, int verbose )
    pars[0] = 2;    /* quad double precision */
    pars[1] = idx;
 
-   fail = _ada_use_c2phc4c(863,pars,&verbose,c);
+   fail = _ada_use_c2phc4c(863,pars,&verbose,c,0);
 
    if(pars[0] != 0) fail = pars[0];
 
@@ -742,7 +742,7 @@ int padcon_get_standard_pole_radius ( double* frp )
    int precision = 0;
    int *b;
 
-   fail = _ada_use_c2phc4c(865,&precision,b,frp);
+   fail = _ada_use_c2phc4c(865,&precision,b,frp,0);
 
    return fail;
 }
@@ -753,7 +753,7 @@ int padcon_get_dobldobl_pole_radius ( double* frp )
    int precision = 1;
    int *b;
 
-   fail = _ada_use_c2phc4c(865,&precision,b,frp);
+   fail = _ada_use_c2phc4c(865,&precision,b,frp,0);
 
    return fail;
 }
@@ -764,7 +764,7 @@ int padcon_get_quaddobl_pole_radius ( double* frp )
    int precision = 2;
    int *b;
 
-   fail = _ada_use_c2phc4c(865,&precision,b,frp);
+   fail = _ada_use_c2phc4c(865,&precision,b,frp,0);
 
    return fail;
 }
@@ -776,7 +776,7 @@ int padcon_get_standard_closest_pole ( double* cre, double* cim )
    int *b;
    double nbr[2];
 
-   fail = _ada_use_c2phc4c(866,&precision,b,nbr);
+   fail = _ada_use_c2phc4c(866,&precision,b,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -791,7 +791,7 @@ int padcon_get_dobldobl_closest_pole ( double* cre, double* cim )
    int *b;
    double nbr[2];
 
-   fail = _ada_use_c2phc4c(866,&precision,b,nbr);
+   fail = _ada_use_c2phc4c(866,&precision,b,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -806,7 +806,7 @@ int padcon_get_quaddobl_closest_pole ( double* cre, double* cim )
    int *b;
    double nbr[2];
 
-   fail = _ada_use_c2phc4c(866,&precision,b,nbr);
+   fail = _ada_use_c2phc4c(866,&precision,b,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -820,7 +820,7 @@ int padcon_get_standard_t_value ( double *tval )
    int precision = 0;
    int *b;
 
-   fail = _ada_use_c2phc4c(867,&precision,b,tval);
+   fail = _ada_use_c2phc4c(867,&precision,b,tval,0);
 
    return fail;
 }
@@ -831,7 +831,7 @@ int padcon_get_dobldobl_t_value ( double *tval )
    int precision = 1;
    int *b;
 
-   fail = _ada_use_c2phc4c(867,&precision,b,tval);
+   fail = _ada_use_c2phc4c(867,&precision,b,tval,0);
 
    return fail;
 }
@@ -842,7 +842,7 @@ int padcon_get_quaddobl_t_value ( double *tval )
    int precision = 2;
    int *b;
 
-   fail = _ada_use_c2phc4c(867,&precision,b,tval);
+   fail = _ada_use_c2phc4c(867,&precision,b,tval,0);
 
    return fail;
 }
@@ -853,7 +853,7 @@ int padcon_get_standard_step_size ( double *step )
    int precision = 0;
    int *b;
 
-   fail = _ada_use_c2phc4c(868,&precision,b,step);
+   fail = _ada_use_c2phc4c(868,&precision,b,step,0);
 
    return fail;
 }
@@ -864,7 +864,7 @@ int padcon_get_dobldobl_step_size ( double *step )
    int precision = 1;
    int *b;
 
-   fail = _ada_use_c2phc4c(868,&precision,b,step);
+   fail = _ada_use_c2phc4c(868,&precision,b,step,0);
 
    return fail;
 }
@@ -875,7 +875,7 @@ int padcon_get_quaddobl_step_size ( double *step )
    int precision = 2;
    int *b;
 
-   fail = _ada_use_c2phc4c(868,&precision,b,step);
+   fail = _ada_use_c2phc4c(868,&precision,b,step,0);
 
    return fail;
 }
@@ -886,7 +886,7 @@ int padcon_get_standard_series_step ( double *step )
    int precision = 0;
    int *b;
 
-   fail = _ada_use_c2phc4c(885,&precision,b,step);
+   fail = _ada_use_c2phc4c(885,&precision,b,step,0);
 
    return fail;
 }
@@ -897,7 +897,7 @@ int padcon_get_dobldobl_series_step ( double *step )
    int precision = 1;
    int *b;
 
-   fail = _ada_use_c2phc4c(885,&precision,b,step);
+   fail = _ada_use_c2phc4c(885,&precision,b,step,0);
 
    return fail;
 }
@@ -908,7 +908,7 @@ int padcon_get_quaddobl_series_step ( double *step )
    int precision = 2;
    int *b;
 
-   fail = _ada_use_c2phc4c(885,&precision,b,step);
+   fail = _ada_use_c2phc4c(885,&precision,b,step,0);
 
    return fail;
 }
@@ -919,7 +919,7 @@ int padcon_get_standard_pole_step ( double *step )
    int precision = 0;
    int *b;
 
-   fail = _ada_use_c2phc4c(886,&precision,b,step);
+   fail = _ada_use_c2phc4c(886,&precision,b,step,0);
 
    return fail;
 }
@@ -930,7 +930,7 @@ int padcon_get_dobldobl_pole_step ( double *step )
    int precision = 1;
    int *b;
 
-   fail = _ada_use_c2phc4c(886,&precision,b,step);
+   fail = _ada_use_c2phc4c(886,&precision,b,step,0);
 
    return fail;
 }
@@ -941,7 +941,7 @@ int padcon_get_quaddobl_pole_step ( double *step )
    int precision = 2;
    int *b;
 
-   fail = _ada_use_c2phc4c(886,&precision,b,step);
+   fail = _ada_use_c2phc4c(886,&precision,b,step,0);
 
    return fail;
 }
@@ -952,7 +952,7 @@ int padcon_get_standard_estimated_distance ( double *eta )
    int precision = 0;
    int *b;
 
-   fail = _ada_use_c2phc4c(887,&precision,b,eta);
+   fail = _ada_use_c2phc4c(887,&precision,b,eta,0);
 
    return fail;
 }
@@ -963,7 +963,7 @@ int padcon_get_dobldobl_estimated_distance ( double *eta )
    int precision = 1;
    int *b;
 
-   fail = _ada_use_c2phc4c(887,&precision,b,eta);
+   fail = _ada_use_c2phc4c(887,&precision,b,eta,0);
 
    return fail;
 }
@@ -974,7 +974,7 @@ int padcon_get_quaddobl_estimated_distance ( double *eta )
    int precision = 2;
    int *b;
 
-   fail = _ada_use_c2phc4c(887,&precision,b,eta);
+   fail = _ada_use_c2phc4c(887,&precision,b,eta,0);
 
    return fail;
 }
@@ -985,7 +985,7 @@ int padcon_get_standard_hessian_step ( double *step )
    int precision = 0;
    int *b;
 
-   fail = _ada_use_c2phc4c(888,&precision,b,step);
+   fail = _ada_use_c2phc4c(888,&precision,b,step,0);
 
    return fail;
 }
@@ -996,7 +996,7 @@ int padcon_get_dobldobl_hessian_step ( double *step )
    int precision = 1;
    int *b;
 
-   fail = _ada_use_c2phc4c(888,&precision,b,step);
+   fail = _ada_use_c2phc4c(888,&precision,b,step,0);
 
    return fail;
 }
@@ -1007,7 +1007,7 @@ int padcon_get_quaddobl_hessian_step ( double *step )
    int precision = 2;
    int *b;
 
-   fail = _ada_use_c2phc4c(888,&precision,b,step);
+   fail = _ada_use_c2phc4c(888,&precision,b,step,0);
 
    return fail;
 }
@@ -1023,7 +1023,7 @@ int padcon_get_standard_series_coefficient
    inpars[1] = leadidx;
    inpars[2] = idx;
 
-   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1042,7 +1042,7 @@ int padcon_get_dobldobl_series_coefficient
    inpars[1] = leadidx;
    inpars[2] = idx;
 
-   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1061,7 +1061,7 @@ int padcon_get_quaddobl_series_coefficient
    inpars[1] = leadidx;
    inpars[2] = idx;
 
-   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(869,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1081,7 +1081,7 @@ int padcon_get_standard_numerator_coefficient
    inpars[2] = leadidx;
    inpars[3] = idx;
 
-   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1101,7 +1101,7 @@ int padcon_get_dobldobl_numerator_coefficient
    inpars[2] = leadidx;
    inpars[3] = idx;
 
-   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1121,7 +1121,7 @@ int padcon_get_quaddobl_numerator_coefficient
    inpars[2] = leadidx;
    inpars[3] = idx;
 
-   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1141,7 +1141,7 @@ int padcon_get_standard_denominator_coefficient
    inpars[2] = leadidx;
    inpars[3] = idx;
 
-   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1161,7 +1161,7 @@ int padcon_get_dobldobl_denominator_coefficient
    inpars[2] = leadidx;
    inpars[3] = idx;
 
-   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1181,7 +1181,7 @@ int padcon_get_quaddobl_denominator_coefficient
    inpars[2] = leadidx;
    inpars[3] = idx;
 
-   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(870,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1200,7 +1200,7 @@ int padcon_get_standard_pole
    inpars[1] = leadidx;
    inpars[2] = poleidx;
 
-   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1219,7 +1219,7 @@ int padcon_get_dobldobl_pole
    inpars[1] = leadidx;
    inpars[2] = poleidx;
 
-   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1238,7 +1238,7 @@ int padcon_get_quaddobl_pole
    inpars[1] = leadidx;
    inpars[2] = poleidx;
 
-   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr);
+   fail = _ada_use_c2phc4c(871,inpars,&verbose,nbr,0);
 
    *cre = nbr[0];
    *cim = nbr[1];
@@ -1253,7 +1253,7 @@ int padcon_clear_standard_data ( void )
    int *b;
    double *c;
    
-   fail = _ada_use_c2phc4c(864,&precision,b,c);
+   fail = _ada_use_c2phc4c(864,&precision,b,c,0);
 
    return fail;
 }
@@ -1265,7 +1265,7 @@ int padcon_clear_dobldobl_data ( void )
    int *b;
    double *c;
    
-   fail = _ada_use_c2phc4c(864,&precision,b,c);
+   fail = _ada_use_c2phc4c(864,&precision,b,c,0);
 
    return fail;
 }
@@ -1277,7 +1277,7 @@ int padcon_clear_quaddobl_data ( void )
    int *b;
    double *c;
    
-   fail = _ada_use_c2phc4c(864,&precision,b,c);
+   fail = _ada_use_c2phc4c(864,&precision,b,c,0);
 
    return fail;
 }

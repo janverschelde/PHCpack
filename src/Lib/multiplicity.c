@@ -11,7 +11,7 @@ int standard_multiplicity_structure
    *multiplicity = order;
    hilbert[0] = verbose;
 
-   fail = _ada_use_c2phc4c(732,multiplicity,hilbert,&tol);
+   fail = _ada_use_c2phc4c(732,multiplicity,hilbert,&tol,0);
 
    return fail;
 }
@@ -24,7 +24,7 @@ int dobldobl_multiplicity_structure
    *multiplicity = order;
    hilbert[0] = verbose;
 
-   fail = _ada_use_c2phc4c(733,multiplicity,hilbert,&tol);
+   fail = _ada_use_c2phc4c(733,multiplicity,hilbert,&tol,0);
 
    return fail;
 }
@@ -37,7 +37,7 @@ int quaddobl_multiplicity_structure
    *multiplicity = order;
    hilbert[0] = verbose;
 
-   fail = _ada_use_c2phc4c(734,multiplicity,hilbert,&tol);
+   fail = _ada_use_c2phc4c(734,multiplicity,hilbert,&tol,0);
 
    return fail;
 }
