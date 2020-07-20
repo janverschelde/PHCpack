@@ -1,7 +1,8 @@
 Sun 19 Jun 2020 : small update in standard_solution_interface.ads.
   New packages {dobldobl,quaddobl}_solution_interface with code extracted
   from use_solcon.adb.  Updated use_c2phc4c.adb to pass the verbose level
-  to the use_syscon and use_solcon functions.
+  to the use_syscon and use_solcon functions.  New package 
+  symbol_table_interface with code extracted from use_c2phc4c.adb.
 
 Sat 18 Jul 2020 : new package standard_polysys_interface with functions
   extracted from use_syscon, added verbose level to use_syscon.

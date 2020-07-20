@@ -6,9 +6,7 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;
-with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
-with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -86,6 +84,7 @@ with use_multip;  -- multiplicity structure
 with use_witsols;
 with Job_Containers;
 with Job_Handlers;
+with Symbol_Table_Interface;
 
 function use_c2phc4c ( job : integer32;
                        a : C_intarrs.Pointer;
@@ -1236,145 +1235,6 @@ function use_c2phc4c ( job : integer32;
       return 192;
   end Job192;
 
-  function Job291 return integer32 is -- remove a symbol from the table
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-   -- put("removing symbol "); put(n,1); put(" from the table... ");
-    Symbol_Table.Remove(n);
-    Symbol_Table.Downsize(1);
-   -- put_line(" ... done");
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when removing a symbol from the table");
-      return 291;
-  end Job291;
-
-  function Job296 return integer32 is -- remove a symbol by name
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant natural32 := natural32(v_a(v_a'first));
-    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
-       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
-    sv : constant String(1..integer(nc)) := C_Integer_Array_to_String(nc,vb);   
-    sb : Symbol_Table.Symbol;
-    ind : natural32;
-
-  begin
-    for i in 1..integer(nc) loop
-      sb(i) := sv(i);
-    end loop;
-    for i in integer(nc)+1..sb'last loop
-      sb(i) := ' ';
-    end loop;
-    ind := Symbol_Table.Get(sb);
-    Symbol_Table.Remove(ind);
-    Symbol_Table.Downsize(1);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when removing a symbol name");
-      return 296;
-  end Job296;
-
-  function Job292 return integer32 is -- sort embed symbols
-
-    use Standard_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    dim : natural32;
-
-  begin
-    if lp /= null then
-      dim := Witness_Sets_io.Count_Embed_Symbols(natural32(lp'last),"zz");
-      if dim > 0 then
-        Witness_Sets_io.Swap_Symbols_to_End(natural32(lp'last),dim,"zz",lp.all);
-        if dim > 1 then
-          Witness_Sets_io.Sort_Embed_Symbols
-            (natural32(lp'last),natural32(lp'last)-dim,dim,lp.all);
-        end if;
-      end if;
-      Assign(integer32(dim),a);
-    else
-      Assign(-1,a);
-    end if;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when sorting the embed symbols");
-      return 292;
-  end Job292;
-
-  function Job293 return integer32 is -- number of symbols
-  begin
-    Assign(integer32(Symbol_Table.Number),a); 
-    return 0;
-  exception
-    when others => return 293;
-  end Job293;
-
-  function Job294 return integer32 is -- write symbols to screen
-  begin
-    for i in 1..Symbol_Table.Number loop
-      put(" "); Symbol_Table_io.put(Symbol_Table.Get(i));
-    end loop;
-    return 0;
-  exception
-    when others => return 294;
-  end Job294;
-
-  function Characters_of_Symbol ( i : natural32 ) return string is
-
-  -- DESCRIPTION :
-  --   Returns the non-blank characters of the i-th symbol.
-
-    sb : constant Symbol_Table.Symbol := Symbol_Table.Get(i);
-    res : string(sb'range);
-    cnt : natural32 := 0;
-
-  begin
-    for i in sb'range loop
-      exit when (sb(i) = ' ');
-      cnt := cnt + 1;
-      res(i) := sb(i);
-    end loop;
-    return res(1..integer(cnt));
-  end Characters_of_Symbol;
-
-  function String_of_Symbols ( i : natural32 ) return string is
-
-  -- DESCRIPTION :
-  --   Returns a string of all symbols in the symbol table,
-  --   separated by one space.
-
-  begin
-    if i > Symbol_Table.Number then
-      return "";
-    elsif i = Symbol_Table.Number then
-      return Characters_of_Symbol(i);
-    else
-      return Characters_of_Symbol(i) & " " & String_of_Symbols(i+1);
-    end if;  
-  end String_of_Symbols;
-
-  function Job295 return integer32 is -- return string of symbols
-
-    s : constant string := String_of_Symbols(1);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-
-  begin
-    Assign(integer32(s'last),a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 295;
-  end Job295;
-
   function Job491 return integer32 is -- read multiprecision target system
 
     v_a : constant C_Integer_Array
@@ -1585,6 +1445,7 @@ function use_c2phc4c ( job : integer32;
 
     use Job_Containers;
     use Job_Handlers;
+    use Symbol_Table_Interface;
 
   begin
     if vrblvl > 0
@@ -1682,42 +1543,26 @@ function use_c2phc4c ( job : integer32;
       when 249 => return Job249; -- double double deflate
       when 250 => return Job250; -- quad double deflate
      -- double double versions for jobs 1 to 8
-      when 251 =>
-        return Job_Containers.DoblDobl_Target_Poly_System_to_Container(vrblvl);
-      when 252 =>
-        return Job_Containers.DoblDobl_Container_Poly_System_to_Target(vrblvl);
-      when 253 =>
-        return Job_Containers.DoblDobl_Start_Poly_System_to_Container(vrblvl);
-      when 254 =>
-        return Job_Containers.DoblDobl_Container_Poly_System_to_Start(vrblvl);
-      when 255 =>
-        return Job_Containers.DoblDobl_Target_Solutions_to_Container(vrblvl);
-      when 256 =>
-        return Job_Containers.DoblDobl_Container_Solutions_to_Target(vrblvl);
-      when 257 =>
-        return Job_Containers.DoblDobl_Start_Solutions_to_Container(vrblvl);
-      when 258 =>
-        return Job_Containers.DoblDobl_Container_Solutions_to_Start(vrblvl);
+      when 251 => return DoblDobl_Target_Poly_System_to_Container(vrblvl-1);
+      when 252 => return DoblDobl_Container_Poly_System_to_Target(vrblvl-1);
+      when 253 => return DoblDobl_Start_Poly_System_to_Container(vrblvl-1);
+      when 254 => return DoblDobl_Container_Poly_System_to_Start(vrblvl-1);
+      when 255 => return DoblDobl_Target_Solutions_to_Container(vrblvl-1);
+      when 256 => return DoblDobl_Container_Solutions_to_Target(vrblvl-1);
+      when 257 => return DoblDobl_Start_Solutions_to_Container(vrblvl-1);
+      when 258 => return DoblDobl_Container_Solutions_to_Start(vrblvl-1);
      -- double double witness set for a hypersurface
       when 259 => return use_track(49,a,b,c);
       when 260 => return Job260; -- embed quad double system
      -- quad double versions for jobs 1 to 8
-      when 261 =>
-        return Job_Containers.QuadDobl_Target_Poly_System_to_Container(vrblvl);
-      when 262 =>
-        return Job_Containers.QuadDobl_Container_Poly_System_to_Target(vrblvl);
-      when 263 =>
-        return Job_Containers.QuadDobl_Start_Poly_System_to_Container(vrblvl);
-      when 264 =>
-        return Job_Containers.QuadDobl_Container_Poly_System_to_Start(vrblvl);
-      when 265 =>
-        return Job_Containers.QuadDobl_Target_Solutions_to_Container(vrblvl);
-      when 266 =>
-        return Job_Containers.QuadDobl_Container_Solutions_to_Target(vrblvl);
-      when 267 =>
-        return Job_Containers.QuadDobl_Start_Solutions_to_Container(vrblvl);
-      when 268 =>
-        return Job_Containers.QuadDobl_Container_Solutions_to_Start(vrblvl);
+      when 261 => return QuadDobl_Target_Poly_System_to_Container(vrblvl-1);
+      when 262 => return QuadDobl_Container_Poly_System_to_Target(vrblvl-1);
+      when 263 => return QuadDobl_Start_Poly_System_to_Container(vrblvl-1);
+      when 264 => return QuadDobl_Container_Poly_System_to_Start(vrblvl-1);
+      when 265 => return QuadDobl_Target_Solutions_to_Container(vrblvl-1);
+      when 266 => return QuadDobl_Container_Solutions_to_Target(vrblvl-1);
+      when 267 => return QuadDobl_Start_Solutions_to_Container(vrblvl-1);
+      when 268 => return QuadDobl_Container_Solutions_to_Start(vrblvl-1);
      -- quad double witness set for a hypersurface
       when 269 => return use_track(50,a,b,c);
      -- interface to diagonal homotopies ...
@@ -1747,12 +1592,12 @@ function use_c2phc4c ( job : integer32;
       when 289 => return use_track(43,a,b,c); -- dobldobl diagonal homotopy
       when 290 => return use_track(44,a,b,c); -- quaddobl diagonal homotopy
      -- manipulation of symbols
-      when 291 => return Job291; -- remove a symbol from the table
-      when 292 => return Job292; -- sort the embed symbols and permute
-      when 293 => return Job293; -- number of symbols in the table
-      when 294 => return Job294; -- writes the symbols to screen
-      when 295 => return Job295; -- returns string of symbols
-      when 296 => return Job296; -- removes symbol by name
+      when 291 => return Symbol_Table_Remove_by_Index(a,vrblvl-1);
+      when 292 => return Symbol_Table_Sort_Embedded(a,vrblvl-1);
+      when 293 => return Symbol_Table_Size(a,vrblvl-1);
+      when 294 => return Symbol_Table_Write(vrblvl-1);
+      when 295 => return Symbol_Table_String(a,b,vrblvl-1);
+      when 296 => return Symbol_Table_Remove_by_Name(a,b,vrblvl-1);
      -- interface to diagonal homotopies continued
       when 297 => return use_track(45,a,b,c); -- dobldobl diagonal startsols
       when 298 => return use_track(46,a,b,c); -- quaddobl diagonal startsols
