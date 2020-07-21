@@ -1,4 +1,4 @@
-Numerical Linear Algebra in PHCv2.4.78
+Numerical Linear Algebra in PHCv2.4.79
 
 This "Reduction" directory implements "row reduction" on linear systems
 of floating-point number of various precisions: double, double double,
@@ -81,6 +81,7 @@ dobldobl_complex_singular_values   : SVD in double double arithmetic
 quaddobl_complex_singular_values   : SVD in quad double arithmetic
 multprec_complex_singular_values   : SVD in multiprecision arithmetic
 ts_svd                             : test singular value decomposition
+ts_perfdsvd                        : develop better performing SVD
 -------------------------------------------------------------------------------
 standard_floating_eigenvalues      : eigenvalues of floating-point matrices
 double_double_eigenvalues          : eigenvalues in double double precision
