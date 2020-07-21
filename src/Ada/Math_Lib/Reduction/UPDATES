@@ -1,3 +1,6 @@
+Tue 21 Jul 2020 : moved from standard_complex_singular_values.adb
+  helper routines into a separate package standard_complex_blas_helpers.
+
 Mon 20 Jul 2020 : new test procedure ts_perfdsvd.
 
 Wed 15 Jul 2020 : fixed bug in lufac in standard_inlined_linear_solvers.adb.
