@@ -270,7 +270,7 @@ ts_circuit:
 
 test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
                 ts_mgs ts_mgsrnk ts_backsubs ts_perflu ts_vvlu ts_vmplu \
-                ts_perfdlu
+                ts_perfdlu ts_perfdsvd
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -310,6 +310,9 @@ ts_perflu:
 
 ts_perfdlu:
 	make -f $(MAKEFILE) ts_perfdlu
+
+ts_perfdsvd:
+	make -f $(MAKEFILE) ts_perfdsvd
 
 ts_vvlu:
 	make -f $(MAKEFILE) ts_vvlu

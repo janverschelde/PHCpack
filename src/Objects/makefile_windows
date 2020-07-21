@@ -411,6 +411,11 @@ ts_perfdlu: get_clock.o get_clocks_per_sec.o
                     $(INCLULIBS) $(GNATOPTFLAGS) ts_perfdlu.adb \
                  -largs get_clock.o get_clocks_per_sec.o
 
+ts_perfdsvd: get_clock.o get_clocks_per_sec.o
+	gnatmake -o $(BIN)/ts_perfdsvd \
+                    $(INCLULIBS) $(GNATOPTFLAGS) ts_perfdsvd.adb \
+                 -largs get_clock.o get_clocks_per_sec.o
+
 ts_vvlu:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vvlu.adb -o $(BIN)/ts_vvlu
 

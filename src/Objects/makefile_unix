@@ -401,6 +401,10 @@ ts_perflu:
 ts_perfdlu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfdlu.adb -o $(BIN)/ts_perfdlu
 
+ts_perfdsvd:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perfdsvd.adb \
+              -o $(BIN)/ts_perfdsvd
+
 ts_vvlu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_vvlu.adb -o $(BIN)/ts_vvlu
 
