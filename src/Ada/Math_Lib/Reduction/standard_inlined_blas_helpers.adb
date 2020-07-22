@@ -2,6 +2,21 @@ with Standard_Mathematical_Functions;    use Standard_Mathematical_Functions;
 
 package body Standard_Inlined_BLAS_Helpers is
 
+  function cdabs ( zr,zi : double_float ) return double_float is
+  begin
+    return SQRT(zr*zr + zi*zi);
+  end cdabs;
+
+  procedure csign ( pr,pi,qr,qi : in double_float;
+                    zr,zi : out double_float ) is
+
+    f : constant double_float := cdabs(pr,pi)/cdabs(qr,qi);
+
+  begin
+    zr := f*qr;
+    zi := f*qi;
+  end csign;
+
   function dznrm2 ( n : integer32;
                     xre : Standard_Floating_Vectors.Link_to_Vector;
                     xim : Standard_Floating_Vectors.Link_to_Vector;

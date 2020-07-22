@@ -19,18 +19,14 @@ package Standard_Inlined_Singular_Values is
 
   -- DESCRIPTION : returns the minimum of a and b.
 
-  procedure SVD ( xrv : in Standard_Floating_VecVecs.Link_to_VecVec;
-                  xiv : in Standard_Floating_VecVecs.Link_to_VecVec;
+  procedure SVD ( xrv,xiv : in Standard_Floating_VecVecs.Link_to_VecVec;
                   n,p : in integer32;
-                  s : in Standard_Floating_Vectors.Link_to_Vector;
-                  e : in Standard_Floating_Vectors.Link_to_Vector;
-                  urv : in Standard_Floating_VecVecs.Link_to_VecVec;
-                  uiv : in Standard_Floating_VecVecs.Link_to_VecVec;
-                  vrv : in Standard_Floating_VecVecs.Link_to_VecVec;
-                  viv : in Standard_Floating_VecVecs.Link_to_VecVec;
+                  sr,si : in Standard_Floating_Vectors.Link_to_Vector;
+                  er,ei : in Standard_Floating_Vectors.Link_to_Vector;
+                  urv,uiv : in Standard_Floating_VecVecs.Link_to_VecVec;
+                  vrv,viv : in Standard_Floating_VecVecs.Link_to_VecVec;
                   job : in integer32; info : out integer32;
-                  rwrk : in Standard_Floating_Vectors.Link_to_Vector;
-                  iwrk : in Standard_Floating_Vectors.Link_to_Vector );
+                  rwrk,iwrk : in Standard_Floating_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Takes on input the real and imaginary parts of the columns of
@@ -50,8 +46,10 @@ package Standard_Inlined_Singular_Values is
   --                      vectors in u,
   --              b = 0 : do not compute the right singular vectors,
   --              b = 1 : return the right singular vectors in v;
-  --   s        space allocated for min(n+1,p) doubles;  
-  --   e        space allocated for p doubles;
+  --   sr       space allocated for min(n+1,p) doubles;  
+  --   si       space allocated for min(n+1,p) doubles;  
+  --   er       space allocated for p doubles;
+  --   ei       space allocated for p doubles;
   --   urv      space allocated for n vectors of range 1..n;
   --   uiv      space allocated for n vectors of range 1..n;
   --   vrv      space allocated for p vectors of range 1..p;
@@ -62,9 +60,9 @@ package Standard_Inlined_Singular_Values is
   -- ON RETURN :
   --   xrv      destroyed real parts of the columns;
   --   xiv      destroyed imaginary parts of the columns;
-  --   s        first min(n,p) entries contain the singular values,
+  --   sr       first min(n,p) entries contain the singular values,
   --            arranged in descending order of magnitude;
-  --   e        ordinarily a vector of p zeros, see info for exceptions;
+  --   er       ordinarily a vector of p zeros, see info for exceptions;
   --   urv      real parts of the n left singular vectors;
   --   uiv      imaginary parts of the n left singular vectors;
   --   vrv      real parts of the n right singular vectors;

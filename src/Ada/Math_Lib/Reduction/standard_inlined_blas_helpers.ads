@@ -9,6 +9,20 @@ package Standard_Inlined_BLAS_Helpers is
 --   Functions and procedures to help the inlined SVD computation,
 --   with complex arithmetic inlined with the vector arithmetic.
 
+  function cdabs ( zr,zi : double_float ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the modulus of the complex number z,
+  --   with real part in zr and imaginary part in zi.
+
+  procedure csign ( pr,pi,qr,qi : in double_float; zr,zi : out double_float );
+
+  -- DESCRIPTION :
+  --   Given are two complex numbers p and q,
+  --   as pairs of real and imaginary parts (pr, pi), (qr, qi).
+  --   Returns in zr and zi respectively the real and imaginary
+  --   parts of(cdabs(pr,pi)/cdabs(qr,qi)) multiplied with q.
+
   function dznrm2 ( n : integer32;
                     xre : Standard_Floating_Vectors.Link_to_Vector;
                     xim : Standard_Floating_Vectors.Link_to_Vector;
