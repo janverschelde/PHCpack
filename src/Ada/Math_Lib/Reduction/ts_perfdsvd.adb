@@ -4,10 +4,14 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Mathematical_Functions;    use Standard_Mathematical_Functions;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with Standard_Random_Numbers;
+with Standard_Mathematical_Functions;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Floating_Vectors;
+with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
 with Standard_Floating_VecVecs;
 with Standard_Floating_VecVecs_io;       use Standard_Floating_VecVecs_io;
 with Standard_Random_Vectors;
@@ -17,6 +21,7 @@ with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Random_Matrices;
 with Standard_Matrix_Splitters;
 with Standard_Complex_BLAS_Helpers;
+with Standard_Inlined_BLAS_Helpers;
 with Standard_Complex_Singular_Values;   use Standard_Complex_Singular_Values;
 
 procedure ts_perfdsvd is
@@ -24,105 +29,6 @@ procedure ts_perfdsvd is
 -- DESCRIPTION :
 --   Test the development of a better performing SVD implementation,
 --   in double precision.
-
-  function dznrm2 ( n : integer32;
-                    xre : Standard_Floating_Vectors.Link_to_Vector;
-                    xim : Standard_Floating_Vectors.Link_to_Vector;
-                    ind,incx : integer32 ) return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the Euclidean norm of a vector given as a pair of vectors,
-  --   as a vector of its real parts and a vector of its imaginary parts,
-  --   starting at xre(ind), xim(ind), with n steps of increment incx.
-
-  -- REQUIRED :
-  --   xre'range = xim'range and xre'last >= ind + (n-1)*incx.
-
-    ix : integer32;
-    norm,scale,ssq,temp : double_float;
-
-  begin
-    if n < 1 or incx < 1 then
-      norm := 0.0;
-    else
-      scale := 0.0;
-      ssq := 1.0;
-      ix := ind;
-      while ix <= ind + (n-1)*incx loop
-        if xre(ix) /= 0.0 then
-          temp := abs(xre(ix));
-          if scale < temp then
-            ssq := 1.0 + ssq*(scale/temp)**2;
-            scale := temp;
-          else
-            ssq := ssq + (temp/scale)**2;
-          end if;
-        end if;
-        if xim(ix) /= 0.0 then
-          temp := abs(xim(ix));
-          if scale < temp then
-            ssq := 1.0 + ssq*(scale/temp)**2;
-            scale := temp;
-          else
-            ssq := ssq + (temp/scale)**2;
-          end if;
-        end if;
-        ix := ix + incx;
-      end loop;
-      norm := scale*SQRT(ssq);
-    end if;
-    return norm;
-  end dznrm2;
-
-  function dznrm2 ( n : integer32;
-                    rvv,ivv : Standard_Floating_VecVecs.Link_to_VecVec;
-                    row,col,incx : integer32 ) return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the Euclidean norm of a column of a matrix given
-  --   as columns of real and imaginary parts.
-
-  -- ON ENTRY :
-  --   n        number of steps done in the matrix;
-  --   rvv      real parts of the columns of the matrix;
-  --   ivv      imaginary parts of the columns of the matrix;
-  --   row      start row in the column col of the matrix;
-  --   col      index to the column in the matrix;
-  --   incx     increment in the matrix.
-
-    ix : integer32;
-    norm,scale,ssq,temp : double_float;
-    xre,xim : Standard_Floating_Vectors.Link_to_Vector;
-
-  begin
-    if n < 1 or incx < 1 then
-      norm := 0.0;
-    else
-      scale := 0.0; ssq := 1.0; ix := row;
-      xre := rvv(col); xim := ivv(col);
-      while ix <= row + (n-1)*incx loop
-        if xre(ix) /= 0.0 then
-          temp := abs(xre(ix));
-          if scale < temp then
-            ssq := 1.0 + ssq*(scale/temp)**2; scale := temp;
-          else
-            ssq := ssq + (temp/scale)**2;
-          end if;
-        end if;
-        if xim(ix) /= 0.0 then
-          temp := abs(xim(ix));
-          if scale < temp then
-            ssq := 1.0 + ssq*(scale/temp)**2; scale := temp;
-          else
-            ssq := ssq + (temp/scale)**2;
-          end if;
-        end if;
-        ix := ix + incx;
-      end loop;
-      norm := scale*SQRT(ssq);
-    end if;
-    return norm;
-  end dznrm2;
 
   procedure Test_Euclidean_Norm_of_Vector ( n : in integer32 ) is
 
@@ -139,10 +45,33 @@ procedure ts_perfdsvd is
   begin
     Standard_Vector_Splitters.Split_Complex(x,xre,xim);
     nrm1 := Standard_Complex_BLAS_Helpers.dznrm2(n,x,1,1);
-    nrm2 := dznrm2(n,xre,xim,1,1);
+    nrm2 := Standard_Inlined_BLAS_Helpers.dznrm2(n,xre,xim,1,1);
     put("nrm1 : "); put(nrm1); new_line;
     put("nrm2 : "); put(nrm2); new_line;
   end Test_Euclidean_Norm_of_Vector;
+
+  procedure Test_Vector_Scaling ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --    Generates a random n-dimensional vector and compares
+  --    the output of the zscal on the complex vector with
+  --    the output on the splitted vector.
+
+    x : Standard_Complex_Vectors.Vector(1..n)
+      := Standard_Random_Vectors.Random_Vector(1,n);
+    z : constant Complex_Number := Standard_Random_Numbers.Random1;
+    zre : constant double_float := REAL_PART(z);
+    zim : constant double_float := IMAG_PART(z);
+    xre,xim : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    Standard_Vector_Splitters.Split_Complex(x,xre,xim);
+    Standard_Complex_BLAS_Helpers.zscal(n,z,x,1,1);
+    put_line("zscal on the complex vector :"); put_line(x);
+    Standard_Inlined_BLAS_Helpers.zscal(n,zre,zim,xre,xim,1,1);
+    put_line("real parts of zscal on splitted vector :"); put_line(xre);
+    put_line("imaginary parts of zscal on splitted vector :"); put_line(xim);
+  end Test_Vector_Scaling;
 
   procedure Test_Euclidean_Norm_of_Column ( n,p : in integer32 ) is
 
@@ -160,10 +89,250 @@ procedure ts_perfdsvd is
     ivv := Standard_Vector_Splitters.Allocate(p,n,1,1);
     Standard_Matrix_Splitters.Complex_Parts(A,rvv,ivv);
     nrm1 := Standard_Complex_BLAS_Helpers.dznrm2(n,A,1,1,1);
-    nrm2 := dznrm2(n,rvv,ivv,1,1,1);
+    nrm2 := Standard_Inlined_BLAS_Helpers.dznrm2(n,rvv,ivv,1,1,1);
     put("nrm1 : "); put(nrm1); new_line;
     put("nrm2 : "); put(nrm2); new_line;
   end Test_Euclidean_Norm_of_Column;
+
+  procedure Test_Column_Scaling ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-by-p complex matrix and compares the output of
+  --   zscal on the complex matrix with the output of the splitted matrix.
+
+    A : Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    rvv,ivv : Standard_Floating_VecVecs.Link_to_VecVec;
+    z : constant Complex_Number := Standard_Random_Numbers.Random1;
+    zre : constant double_float := REAL_PART(z);
+    zim : constant double_float := IMAG_PART(z);
+
+  begin
+    rvv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    ivv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    Standard_Matrix_Splitters.Complex_Parts(A,rvv,ivv);
+    Standard_Complex_BLAS_Helpers.zscal(n,z,A,1,1,1);
+    Standard_Inlined_BLAS_Helpers.zscal(n,zre,zim,rvv,ivv,1,1,1);
+    put_line("zscal on the complex column : ");
+    for i in 1..n loop
+      put(A(i,1)); new_line;
+    end loop;
+    put_line("real parts of zscal on splitted column : ");
+    put_line(rvv(1));
+    put_line("imaginary parts of zscal on splitted column : ");
+    put_line(ivv(1));
+  end Test_Column_Scaling;
+
+  procedure Test_Update_Column_with_Vector ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-by-p complex matrix and compares the output of
+  --   zaxpy on the complex matrix with the output of the splitted matrix.
+
+    x : constant Standard_Complex_Vectors.Vector(1..n)
+      := Standard_Random_Vectors.Random_Vector(1,n);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    xre,xim : Standard_Floating_Vectors.Link_to_Vector;
+    rvv,ivv : Standard_Floating_VecVecs.Link_to_VecVec;
+    z : constant Complex_Number := Standard_Random_Numbers.Random1;
+    zre : constant double_float := REAL_PART(z);
+    zim : constant double_float := IMAG_PART(z);
+
+  begin
+    Standard_Vector_Splitters.Split_Complex(x,xre,xim);
+    rvv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    ivv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    Standard_Matrix_Splitters.Complex_Parts(y,rvv,ivv);
+    Standard_Complex_BLAS_Helpers.zaxpy(n,z,x,1,1,y,1,1,1);
+    Standard_Inlined_BLAS_Helpers.zaxpy(n,zre,zim,xre,xim,1,1,rvv,ivv,1,1,1);
+    put_line("zaxpy on the complex column : ");
+    for i in 1..n loop
+      put(y(i,1)); new_line;
+    end loop;
+    put_line("real parts of zaxpy on splitted column : ");
+    put_line(rvv(1));
+    put_line("imaginary parts of zaxpy on splitted column : ");
+    put_line(ivv(1));
+  end Test_Update_Column_with_Vector;
+
+  procedure Test_Update_Vector_with_Column ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-by-p complex matrix and compares the output of
+  --   zaxpy on the complex matrix with the output of the splitted matrix.
+
+    x : constant Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    y : Standard_Complex_Vectors.Vector(1..n)
+      := Standard_Random_Vectors.Random_Vector(1,n);
+    yre,yim : Standard_Floating_Vectors.Link_to_Vector;
+    rvv,ivv : Standard_Floating_VecVecs.Link_to_VecVec;
+    z : constant Complex_Number := Standard_Random_Numbers.Random1;
+    zre : constant double_float := REAL_PART(z);
+    zim : constant double_float := IMAG_PART(z);
+
+  begin
+    rvv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    ivv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    Standard_Matrix_Splitters.Complex_Parts(x,rvv,ivv);
+    Standard_Vector_Splitters.Split_Complex(y,yre,yim);
+    Standard_Complex_BLAS_Helpers.zaxpy(n,z,x,1,1,1,y,1,1);
+    Standard_Inlined_BLAS_Helpers.zaxpy(n,zre,zim,rvv,ivv,1,1,1,yre,yim,1,1);
+    put_line("zaxpy on the complex vector : "); put_line(y);
+    put_line("real parts of zaxpy on splitted column : ");
+    put_line(yre);
+    put_line("imaginary parts of zaxpy on splitted column : ");
+    put_line(yim);
+  end Test_Update_Vector_with_Column;
+
+  procedure Test_Update_Column_with_Column ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-by-p complex matrix and compares the output of
+  --   zaxpy on the complex matrix with the output of the splitted matrix.
+
+    x : constant Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    xrv,xiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    yrv,yiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    z : constant Complex_Number := Standard_Random_Numbers.Random1;
+    zre : constant double_float := REAL_PART(z);
+    zim : constant double_float := IMAG_PART(z);
+
+  begin
+    xrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    xiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    yrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    yiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    Standard_Matrix_Splitters.Complex_Parts(x,xrv,xiv);
+    Standard_Matrix_Splitters.Complex_Parts(y,yrv,yiv);
+    Standard_Complex_BLAS_Helpers.zaxpy(n,z,x,1,1,1,y,1,1,1);
+    Standard_Inlined_BLAS_Helpers.zaxpy(n,zre,zim,xrv,xiv,1,1,1,yrv,yiv,1,1,1);
+    put_line("zaxpy on the complex vector : ");
+    for i in 1..n loop
+      put(y(i,1)); new_line;
+    end loop;
+    put_line("real parts of zaxpy on splitted column : ");
+    put_line(yrv(1));
+    put_line("imaginary parts of zaxpy on splitted column : ");
+    put_line(yiv(1));
+  end Test_Update_Column_with_Column;
+
+  procedure Test_Dot_Product ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-by-p complex matrix and compares the output of
+  --   zdotc on the complex matrix with the output of the splitted matrix.
+
+    x : constant Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    y : constant Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    xrv,xiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    yrv,yiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    z : Complex_Number;
+    zre,zim : double_float;
+
+  begin
+    xrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    xiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    yrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    yiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    Standard_Matrix_Splitters.Complex_Parts(x,xrv,xiv);
+    Standard_Matrix_Splitters.Complex_Parts(y,yrv,yiv);
+    z := Standard_Complex_BLAS_Helpers.zdotc(n,x,1,1,1,y,1,1,1);
+    Standard_Inlined_BLAS_Helpers.zdotc(n,xrv,xiv,1,1,1,yrv,yiv,1,1,1,zre,zim);
+    put_line("zdotc on the complex vector : "); put(z); new_line;
+    put_line("zdotc on the splitted vector : ");
+    put(zre); put("  "); put(zim); new_line;
+  end Test_Dot_Product;
+
+  procedure Test_Rotation ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-by-p complex matrix and compares the output of
+  --   zdotc on the complex matrix with the output of the splitted matrix.
+
+    x : Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    xrv,xiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    yrv,yiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    angle : constant double_float := Standard_Random_Numbers.Random; 
+    pi : constant double_float := Standard_Mathematical_Functions.PI;
+    c : constant double_float := Standard_Mathematical_Functions.COS(pi*angle);
+    s : constant double_float := Standard_Mathematical_Functions.SIN(pi*angle);
+
+  begin
+    xrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    xiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    yrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    yiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    Standard_Matrix_Splitters.Complex_Parts(x,xrv,xiv);
+    Standard_Matrix_Splitters.Complex_Parts(y,yrv,yiv);
+    Standard_Complex_BLAS_Helpers.zdrot(n,x,1,1,1,y,1,1,1,c,s);
+    Standard_Inlined_BLAS_Helpers.zdrot(n,xrv,xiv,1,1,1,yrv,yiv,1,1,1,c,s);
+    put_line("zdrot on the first complex column : ");
+    for i in 1..n loop
+      put(x(i,1)); new_line;
+    end loop;
+    put_line("real parts of zdrot on the first splitted vector : ");
+    put_line(xrv(1));
+    put_line("imaginary parts of zdrot on the first splitted vector : ");
+    put_line(xiv(1));
+    put_line("zdrot on the second complex column : ");
+    for i in 1..n loop
+      put(y(i,1)); new_line;
+    end loop;
+    put_line("real parts of zdrot on the second splitted vector : ");
+    put_line(yrv(1));
+    put_line("imaginary parts of zdrot on the second splitted vector : ");
+    put_line(yiv(1));
+  end Test_Rotation;
+
+  procedure Test_Swap ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-by-p complex matrix and compares the output of
+  --   zswap on the complex matrix with the output of the splitted matrix.
+
+    x : Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    xrv,xiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    yrv,yiv : Standard_Floating_VecVecs.Link_to_VecVec;
+
+  begin
+    xrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    xiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    yrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    yiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    Standard_Matrix_Splitters.Complex_Parts(x,xrv,xiv);
+    Standard_Matrix_Splitters.Complex_Parts(y,yrv,yiv);
+    Standard_Complex_BLAS_Helpers.zswap(n,x,1,1,1,y,1,1,1);
+    Standard_Inlined_BLAS_Helpers.zswap(n,xrv,xiv,1,1,1,yrv,yiv,1,1,1);
+    put_line("zswap on the first complex column : ");
+    for i in 1..n loop
+      put(x(i,1)); new_line;
+    end loop;
+    put_line("real parts of zswap on the first splitted vector : ");
+    put_line(xrv(1));
+    put_line("imaginary parts of zswap on the first splitted vector : ");
+    put_line(xiv(1));
+    put_line("zswap on the second complex column : ");
+    for i in 1..n loop
+      put(y(i,1)); new_line;
+    end loop;
+    put_line("real parts of zswap on the second splitted vector : ");
+    put_line(yrv(1));
+    put_line("imaginary parts of zswap on the second splitted vector : ");
+    put_line(yiv(1));
+  end Test_Swap;
 
   procedure Test ( n,p : in integer32;
                    A : in Standard_Complex_Matrices.Matrix ) is
@@ -220,29 +389,48 @@ procedure ts_perfdsvd is
     new_line;
     put_line("MENU to test inlined SVD operations :");
     put_line("  1. Euclidean norm of a random vector; ");
-    put_line("  2. Euclidean norm of a column of a random matrix; ");
-    put_line("  3. SVD of a given matrix.");
-    put("Type 1, 2, or 3 to select a test : ");
-    Ask_Alternative(ans,"123");
+    put_line("  2. Scaling a random vector; ");
+    put_line("  3. Euclidean norm of a column of a random matrix; ");
+    put_line("  4. Scaling a column of a random matrix; ");
+    put_line("  5. Test column update with multiple of a vector;");
+    put_line("  6. Test vector update with multiple of a column;");
+    put_line("  7. Test column update with multiple of a column;");
+    put_line("  8. Test dot product of two columns;");
+    put_line("  9. Test rotation of two columns;");
+    put_line("  A. Test swap of two columns.");
+    put_line("  B. SVD of a given matrix.");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, or B to select a test : ");
+    Ask_Alternative(ans,"123456789AB");
     new_line;
     case ans is
-      when '1' =>
+      when '1' | '2' =>
         declare
           dim : integer32 := 0;
         begin
           put("Give the dimension : "); get(dim);
-          Test_Euclidean_Norm_of_Vector(dim);
+          if ans = '1'
+           then Test_Euclidean_Norm_of_Vector(dim);
+           else Test_Vector_Scaling(dim);
+          end if;
         end;
-      when '2' | '3' =>
+      when '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'A' | 'B' =>
         declare
           nrows,ncols : integer32 := 0;
         begin
           put("Give the number of rows : "); get(nrows);
           put("Give the number of columns : "); get(ncols);
-          if ans = '2'
-           then Test_Euclidean_Norm_of_Column(nrows,ncols);
-           else Test_SVD(nrows,ncols);
-          end if;
+          case ans is
+            when '3' => Test_Euclidean_Norm_of_Column(nrows,ncols);
+            when '4' => Test_Column_Scaling(nrows,ncols);
+            when '5' => Test_Update_Column_with_Vector(nrows,ncols);
+            when '6' => Test_Update_Vector_with_Column(nrows,ncols);
+            when '7' => Test_Update_Column_with_Column(nrows,ncols);
+            when '8' => Test_Dot_Product(nrows,ncols);
+            when '9' => Test_Rotation(nrows,ncols);
+            when 'A' => Test_Swap(nrows,ncols);
+            when 'B' => Test_SVD(nrows,ncols);
+            when others => null;
+          end case;
         end;
       when others => null;
     end case;

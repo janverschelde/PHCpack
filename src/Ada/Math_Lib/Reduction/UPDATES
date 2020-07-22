@@ -1,6 +1,7 @@
 Tue 21 Jul 2020 : moved from standard_complex_singular_values.adb
   helper routines into a separate package standard_complex_blas_helpers.
   Added inlined versions of the dznrm2 functions to ts_perfdsvd.
+  New package standard_inlined_blas_helpers, tested by ts_perfdsvd.
 
 Mon 20 Jul 2020 : new test procedure ts_perfdsvd.
 
