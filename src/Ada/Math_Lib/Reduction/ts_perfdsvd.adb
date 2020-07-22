@@ -22,7 +22,8 @@ with Standard_Random_Matrices;
 with Standard_Matrix_Splitters;
 with Standard_Complex_BLAS_Helpers;
 with Standard_Inlined_BLAS_Helpers;
-with Standard_Complex_Singular_Values;   use Standard_Complex_Singular_Values;
+with Standard_Complex_Singular_Values;
+with Standard_Inlined_Singular_Values;
 
 procedure ts_perfdsvd is
 
@@ -338,22 +339,28 @@ procedure ts_perfdsvd is
                    A : in Standard_Complex_Matrices.Matrix ) is
 
   -- DESCRIPTION :
-  --   Given in A is an n-by-p matrix, computes its SVD.
+  --   Given in A is an n-by-p matrix, computes its SVD,
+  --   and compares the output with the inlined SVD output.
 
     wrk : Standard_Complex_Matrices.Matrix(1..n,1..p) := A;
+    wrk2 : Standard_Complex_Matrices.Matrix(1..n,1..p) := A;
     mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
-    S : Standard_Complex_Vectors.Vector(1..mm);
-    e : Standard_Complex_Vectors.Vector(1..p);
-    U : Standard_Complex_Matrices.Matrix(1..n,1..n);
-    V : Standard_Complex_Matrices.Matrix(1..p,1..p);
+    S,S2 : Standard_Complex_Vectors.Vector(1..mm);
+    e,e2 : Standard_Complex_Vectors.Vector(1..p);
+    U,U2 : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    V,V2 : Standard_Complex_Matrices.Matrix(1..p,1..p);
     job : constant integer32 := 11;
     info : integer32;
 
   begin
-    SVD(wrk,n,p,S,e,U,V,job,info);
+    Standard_Complex_Singular_Values.SVD(wrk,n,p,S,e,U,V,job,info);
+    Standard_Inlined_Singular_Values.SVD(wrk2,n,p,S2,e2,U2,V2,job,info);
     put_line("The singular values : "); put_line(S);
+    put_line("The recomputed singular values : "); put_line(S2);
     put_line("The matrix U :"); put(U,2);
+    put_line("The recomputed matrix U :"); put(U2,2);
     put_line("The matrix V :"); put(V,2);
+    put_line("The recomputed matrix V :"); put(V2,2);
   end Test;
 
   procedure Test_SVD ( n,p : in integer32 ) is

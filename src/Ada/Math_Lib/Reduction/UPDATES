@@ -1,3 +1,6 @@
+Wed 22 Jul 2020 : new package standard_inlined_singular_values has wrapper,
+  with a test defined in ts_perfdsvd.
+
 Tue 21 Jul 2020 : moved from standard_complex_singular_values.adb
   helper routines into a separate package standard_complex_blas_helpers.
   Added inlined versions of the dznrm2 functions to ts_perfdsvd.
