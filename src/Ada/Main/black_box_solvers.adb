@@ -237,7 +237,7 @@ package body Black_Box_Solvers is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;
@@ -296,7 +296,7 @@ package body Black_Box_Solvers is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;
@@ -355,7 +355,7 @@ package body Black_Box_Solvers is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;
@@ -392,7 +392,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 10,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
@@ -420,7 +420,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 11,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -448,7 +448,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 12,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -475,7 +475,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 13,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
@@ -502,7 +502,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 14,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -529,7 +529,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 15,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -557,7 +557,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 16,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
@@ -585,7 +585,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 17,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -613,7 +613,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 18,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -876,7 +876,7 @@ package body Black_Box_Solvers is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;
@@ -940,7 +940,7 @@ package body Black_Box_Solvers is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;
@@ -1004,7 +1004,7 @@ package body Black_Box_Solvers is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;
@@ -1046,7 +1046,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 28,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
@@ -1081,7 +1081,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 29,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -1116,7 +1116,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 30,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -1151,7 +1151,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 31,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
@@ -1186,7 +1186,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 32,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -1221,7 +1221,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 33,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -1256,7 +1256,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 34,");
       put_line("for Laurent polynomial systems in double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
@@ -1291,7 +1291,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 35,");
       put_line("for Laurent polynomial systems in double double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := DoblDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       DoblDobl_Complex_Laur_Systems.Copy(p,pp);
@@ -1326,7 +1326,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 36,");
       put_line("for Laurent polynomial systems in quad double precision ...");
     end if;
-    Black_Box_Simplex_Solver(p,sols,fail);
+    Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
     rc := QuadDobl_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       QuadDobl_Complex_Laur_Systems.Copy(p,pp);

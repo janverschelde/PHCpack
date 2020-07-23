@@ -176,7 +176,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
       put(outfile,p);
     end if;
     tstart(timer);
-    Black_Box_Binomial_Solver(p,false,sols,fail);
+    Black_Box_Binomial_Solver(p,false,sols,fail,v-1);
     tstop(timer);
     if not fail and sols /= null then
       if append_sols

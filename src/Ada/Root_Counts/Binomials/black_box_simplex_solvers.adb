@@ -14,7 +14,7 @@ package body Black_Box_Simplex_Solvers is
   procedure Black_Box_Simplex_Solver
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -25,6 +25,10 @@ package body Black_Box_Simplex_Solvers is
     deflate : boolean := false;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 1 ...");
+    end if;
     Standard_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if (not fail and then (Length_Of(sols) > 0)) then
       epsxa := 1.0E-12;
@@ -39,7 +43,7 @@ package body Black_Box_Simplex_Solvers is
   procedure Black_Box_Simplex_Solver
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -49,6 +53,10 @@ package body Black_Box_Simplex_Solvers is
     zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 2 ...");
+    end if;
     DoblDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if (not fail and then (Length_Of(sols) > 0)) then
       epsxa := 1.0E-24;
@@ -63,7 +71,7 @@ package body Black_Box_Simplex_Solvers is
   procedure Black_Box_Simplex_Solver
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -73,6 +81,10 @@ package body Black_Box_Simplex_Solvers is
     zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 3 ...");
+    end if;
     QuadDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if (not fail and then (Length_Of(sols) > 0)) then
       epsxa := 1.0E-48;
@@ -87,42 +99,48 @@ package body Black_Box_Simplex_Solvers is
   procedure Black_Box_Simplex_Solver
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
-
-    use Standard_Complex_Solutions;
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     tol_zero : constant double_float := 1.0E-12;
     zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 4 ...");
+    end if;
     Standard_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
   end Black_Box_Simplex_Solver;
 
   procedure Black_Box_Simplex_Solver
               ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
-
-    use DoblDobl_Complex_Solutions;
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     tol_zero : constant double_double := create(1.0E-24);
     zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 5 ...");
+    end if;
     DoblDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
   end Black_Box_Simplex_Solver;
 
   procedure Black_Box_Simplex_Solver
               ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
-
-    use QuadDobl_Complex_Solutions;
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     tol_zero : constant quad_double := create(1.0E-48);
     zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 6 ...");
+    end if;
     QuadDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
   end Black_Box_Simplex_Solver;
 
@@ -130,7 +148,7 @@ package body Black_Box_Simplex_Solvers is
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -141,6 +159,10 @@ package body Black_Box_Simplex_Solvers is
     deflate : boolean := false;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 7 ...");
+    end if;
     Standard_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if not fail then
       if zero_y then
@@ -167,7 +189,7 @@ package body Black_Box_Simplex_Solvers is
               ( file : in file_type;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -175,9 +197,13 @@ package body Black_Box_Simplex_Solvers is
     numit,max : natural32;
     tol_zero : constant double_double := create(1.0E-24);
     zero_y : boolean;
-    deflate : boolean := false;
+   -- deflate : boolean := false;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 8 ...");
+    end if;
     DoblDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if not fail then
       if zero_y then
@@ -203,7 +229,7 @@ package body Black_Box_Simplex_Solvers is
               ( file : in file_type;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -211,9 +237,13 @@ package body Black_Box_Simplex_Solvers is
     numit,max : natural32;
     tol_zero : constant quad_double := create(1.0E-48);
     zero_y : boolean;
-    deflate : boolean := false;
+   -- deflate : boolean := false;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 9 ...");
+    end if;
     QuadDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if not fail then
       if zero_y then
@@ -239,7 +269,7 @@ package body Black_Box_Simplex_Solvers is
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -250,6 +280,10 @@ package body Black_Box_Simplex_Solvers is
     ref_sols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 10 ...");
+    end if;
     Standard_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if not fail then
       if Length_Of(sols) > 0 then
@@ -273,14 +307,16 @@ package body Black_Box_Simplex_Solvers is
               ( file : in file_type;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
-
-    use DoblDobl_Complex_Solutions;
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     tol_zero : constant double_double := create(1.0E-24);
     zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 11 ...");
+    end if;
     DoblDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if fail
      then put_line(file,"Blackbox simpomial solver reports failure.");
@@ -294,14 +330,16 @@ package body Black_Box_Simplex_Solvers is
               ( file : in file_type;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
-
-    use QuadDobl_Complex_Solutions;
+                fail : out boolean; verbose : in integer32 := 0 ) is
 
     tol_zero : constant quad_double := create(1.0E-48);
     zero_y : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in black_box_simplex_solvers.");
+      put_line("Black_Box_Simplex_Solver 12 ...");
+    end if;
     QuadDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if fail
      then put_line(file,"Blackbox simpomial solver reports failure.");

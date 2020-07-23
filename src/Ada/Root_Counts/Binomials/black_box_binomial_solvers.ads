@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -19,33 +20,33 @@ package Black_Box_Binomial_Solvers is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 pure : in boolean;
          sols : out Standard_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Black_Box_Binomial_Solver
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 pure : in boolean;
          sols : out DoblDobl_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Black_Box_Binomial_Solver
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 pure : in boolean;
          sols : out QuadDobl_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
 
   procedure Black_Box_Binomial_Solver
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
          sols : out Standard_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Black_Box_Binomial_Solver
               ( file : in file_type;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
          sols : out DoblDobl_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Black_Box_Binomial_Solver
               ( file : in file_type;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
          sols : out QuadDobl_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Returns the solutions of p if p is simplex,
@@ -65,33 +66,33 @@ package Black_Box_Binomial_Solvers is
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 pure : in boolean;
          sols : out Standard_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Black_Box_Binomial_Solver
               ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 pure : in boolean;
          sols : out DoblDobl_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Black_Box_Binomial_Solver
               ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 pure : in boolean;
          sols : out QuadDobl_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
 
   procedure Black_Box_Binomial_Solver
               ( file : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
          sols : out Standard_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Black_Box_Binomial_Solver
               ( file : in file_type;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
          sols : out DoblDobl_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
   procedure Black_Box_Binomial_Solver
               ( file : in file_type;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
          sols : out QuadDobl_Monomial_Maps.Link_to_Array_of_Monomial_Map_Lists;
-                fail : out boolean );
+                fail : out boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Returns the solutions of p if p is simplex,

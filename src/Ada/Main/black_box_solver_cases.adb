@@ -555,13 +555,13 @@ package body Black_Box_Solver_Cases is
     end if;
     tstart(timer);
     if output_to_file
-     then Black_Box_Simplex_Solver(outfile,p.all,sols,fail);
-     else Black_Box_Simplex_Solver(p.all,sols,fail);
+     then Black_Box_Simplex_Solver(outfile,p.all,sols,fail,verbose-1);
+     else Black_Box_Simplex_Solver(p.all,sols,fail,verbose-1);
     end if;
     if fail or (Length_Of(sols) = 0) then
       if output_to_file
-       then Black_Box_Binomial_Solver(outfile,p.all,maps,fail);
-       else Black_Box_Binomial_Solver(p.all,false,maps,fail);
+       then Black_Box_Binomial_Solver(outfile,p.all,maps,fail,verbose-1);
+       else Black_Box_Binomial_Solver(p.all,false,maps,fail,verbose-1);
       end if;
     end if;
     if fail or (Length_Of(sols) = 0) then
@@ -663,13 +663,13 @@ package body Black_Box_Solver_Cases is
     end if;
     tstart(timer);
     if output_to_file
-     then Black_Box_Simplex_Solver(outfile,p.all,sols,fail);
-     else Black_Box_Simplex_Solver(p.all,sols,fail);
+     then Black_Box_Simplex_Solver(outfile,p.all,sols,fail,verbose-1);
+     else Black_Box_Simplex_Solver(p.all,sols,fail,verbose-1);
     end if;
     if fail or (Length_Of(sols) = 0) then
       if output_to_file
-       then Black_Box_Binomial_Solver(outfile,p.all,maps,fail);
-       else Black_Box_Binomial_Solver(p.all,false,maps,fail);
+       then Black_Box_Binomial_Solver(outfile,p.all,maps,fail,verbose-1);
+       else Black_Box_Binomial_Solver(p.all,false,maps,fail,verbose-1);
       end if;
     end if;
     if fail or (Length_Of(sols) = 0) then
@@ -774,13 +774,13 @@ package body Black_Box_Solver_Cases is
     end if;
     tstart(timer);
     if output_to_file
-     then Black_Box_Simplex_Solver(outfile,p.all,sols,fail);
-     else Black_Box_Simplex_Solver(p.all,sols,fail);
+     then Black_Box_Simplex_Solver(outfile,p.all,sols,fail,verbose-1);
+     else Black_Box_Simplex_Solver(p.all,sols,fail,verbose-1);
     end if;
     if fail or (Length_Of(sols) = 0) then
       if output_to_file
-       then Black_Box_Binomial_Solver(outfile,p.all,maps,fail);
-       else Black_Box_Binomial_Solver(p.all,false,maps,fail);
+       then Black_Box_Binomial_Solver(outfile,p.all,maps,fail,verbose-1);
+       else Black_Box_Binomial_Solver(p.all,false,maps,fail,verbose-1);
       end if;
     end if;
     if fail or (Length_Of(sols) = 0) then
@@ -886,8 +886,8 @@ package body Black_Box_Solver_Cases is
     tstart(timer);
     if Are_Constants_In(p.all) then
       if output_to_file
-       then Black_Box_Simplex_Solver(outfile,p.all,sols,fail);
-       else Black_Box_Simplex_Solver(p.all,sols,fail);
+       then Black_Box_Simplex_Solver(outfile,p.all,sols,fail,verbose-1);
+       else Black_Box_Simplex_Solver(p.all,sols,fail,verbose-1);
       end if;
       fail := (fail or (Length_Of(sols) = 0));
     else
@@ -1024,8 +1024,8 @@ package body Black_Box_Solver_Cases is
     tstart(timer);
     if Are_Constants_In(p.all) then
       if output_to_file
-       then Black_Box_Simplex_Solver(outfile,p.all,sols,fail);
-       else Black_Box_Simplex_Solver(p.all,sols,fail);
+       then Black_Box_Simplex_Solver(outfile,p.all,sols,fail,verbose-1);
+       else Black_Box_Simplex_Solver(p.all,sols,fail,verbose-1);
       end if;
       fail := (fail or (Length_Of(sols) = 0));
     else
@@ -1164,8 +1164,8 @@ package body Black_Box_Solver_Cases is
     tstart(timer);
     if Are_Constants_In(p.all) then
       if output_to_file
-       then Black_Box_Simplex_Solver(outfile,p.all,sols,fail);
-       else Black_Box_Simplex_Solver(p.all,sols,fail);
+       then Black_Box_Simplex_Solver(outfile,p.all,sols,fail,verbose-1);
+       else Black_Box_Simplex_Solver(p.all,sols,fail,verbose-1);
       end if;
       fail := (fail or (Length_Of(sols) = 0));
     else
@@ -1305,7 +1305,7 @@ package body Black_Box_Solver_Cases is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;
@@ -1351,7 +1351,7 @@ package body Black_Box_Solver_Cases is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;
@@ -1397,7 +1397,7 @@ package body Black_Box_Solver_Cases is
         Construct(ls,sols);
       else
         if Are_Constants_In(p) then
-          Black_Box_Simplex_Solver(p,sols,fail);
+          Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
           fail := true;

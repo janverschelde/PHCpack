@@ -1,5 +1,7 @@
 Thu 23 Jul 2020 : updated black_box_solvers.adb and black_box_solver_cases.adb
   to pass the verbose level to the black box continuation procedures.
+  Updated bablphc.adb, black_box_solver_cases.adb, and black_box_solvers.adb
+  for passing of verbose level to the black box simplex/binomial solvers.
 
 Tue 30 Jun 2020 : updated banner for phc -u in greeting_banners.ads.
   Updated greeting_banners for version 2.4.77.
