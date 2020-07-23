@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Timing_Package;                     use Timing_Package;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -383,6 +384,96 @@ procedure ts_perfdsvd is
     Test(n,p,A);
   end Test_SVD;
 
+  procedure Time_SVD ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-by-p matrix and prompts the user
+  --   for a frequence to test the time of SVD computations.
+
+    timer : Timing_Widget;
+    A : constant Standard_Complex_Matrices.Matrix(1..n,1..p)
+      := Standard_Random_Matrices.Random_Matrix(1,n,1,p);
+    frq : integer32 := 0;
+    wrk,wrk2 : Standard_Complex_Matrices.Matrix(1..n,1..p);
+    mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
+    S,S2 : Standard_Complex_Vectors.Vector(1..mm);
+    e,e2 : Standard_Complex_Vectors.Vector(1..p);
+    U,U2 : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    V,V2 : Standard_Complex_Matrices.Matrix(1..p,1..p);
+    job : integer32 := 11;
+    info : integer32;
+    xrv,xiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    urv,uiv : Standard_Floating_VecVecs.Link_to_VecVec;
+    vrv,viv : Standard_Floating_VecVecs.Link_to_VecVec;
+    sr,si,er,ei,wr,wi : Standard_Floating_Vectors.Link_to_Vector;
+    ans : character;
+
+  begin
+    put("Give the frequency : "); get(frq);
+    put("Compute only singular values ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then job := 0;
+    end if;
+    tstart(timer);
+    for k in 1..frq loop
+      wrk := A;
+      Standard_Complex_Singular_Values.SVD(wrk,n,p,S,e,U,V,job,info);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"complex SVD");
+    tstart(timer);
+    for k in 1..frq loop
+      wrk2 := A;
+      Standard_Inlined_Singular_Values.SVD(wrk2,n,p,S2,e2,U2,V2,job,info);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"wrapped SVD");
+    xrv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    xiv := Standard_Vector_Splitters.Allocate(p,n,1,1);
+    if job /= 0 then
+      urv := Standard_Vector_Splitters.Allocate(n,n,1,1);
+      uiv := Standard_Vector_Splitters.Allocate(n,n,1,1);
+      vrv := Standard_Vector_Splitters.Allocate(p,p,1,1);
+      viv := Standard_Vector_Splitters.Allocate(p,p,1,1);
+    end if;
+    sr := new Standard_Floating_Vectors.Vector'(1..mm => 0.0);
+    si := new Standard_Floating_Vectors.Vector'(1..mm => 0.0);
+    er := new Standard_Floating_Vectors.Vector'(1..p => 0.0);
+    ei := new Standard_Floating_Vectors.Vector'(1..p => 0.0);
+    wr := new Standard_Floating_Vectors.Vector'(1..n => 0.0);
+    wi := new Standard_Floating_Vectors.Vector'(1..n => 0.0);
+    tstart(timer);
+    for k in 1..frq loop -- only do relevant parts/merge
+      Standard_Matrix_Splitters.Complex_Parts(A,xrv,xiv);
+      Standard_Inlined_Singular_Values.SVD
+        (xrv,xiv,n,p,sr,si,er,ei,urv,uiv,vrv,viv,job,info,wr,wi);
+      Standard_Vector_Splitters.Complex_Merge(sr,si,s);
+      if job /= 0 then
+        Standard_Matrix_Splitters.Complex_Merge(urv,uiv,u);
+        Standard_Matrix_Splitters.Complex_Merge(vrv,viv,v);
+      end if;
+    end loop;
+    tstop(timer);
+    Standard_Floating_Vectors.Clear(sr);
+    Standard_Floating_Vectors.Clear(si);
+    Standard_Floating_Vectors.Clear(er);
+    Standard_Floating_Vectors.Clear(ei);
+    Standard_Floating_Vectors.Clear(wr);
+    Standard_Floating_Vectors.Clear(wi);
+    Standard_Floating_VecVecs.Deep_Clear(xrv);
+    Standard_Floating_VecVecs.Deep_Clear(xiv);
+    if job /= 0 then
+      Standard_Floating_VecVecs.Deep_Clear(urv);
+      Standard_Floating_VecVecs.Deep_Clear(uiv);
+      Standard_Floating_VecVecs.Deep_Clear(vrv);
+      Standard_Floating_VecVecs.Deep_Clear(viv);
+    end if;
+    new_line;
+    print_times(standard_output,timer,"inlined SVD");
+  end Time_SVD;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -406,8 +497,9 @@ procedure ts_perfdsvd is
     put_line("  9. test rotation of two columns;");
     put_line("  A. test swap of two columns.");
     put_line("  B. SVD of a random matrix.");
-    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, or B to select a test : ");
-    Ask_Alternative(ans,"123456789AB");
+    put_line("  C. time the SVD of a random matrix.");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, or C to select a test : ");
+    Ask_Alternative(ans,"123456789ABC");
     new_line;
     case ans is
       when '1' | '2' =>
@@ -420,7 +512,7 @@ procedure ts_perfdsvd is
            else Test_Vector_Scaling(dim);
           end if;
         end;
-      when '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'A' | 'B' =>
+      when '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'A' | 'B' | 'C' =>
         declare
           nrows,ncols : integer32 := 0;
         begin
@@ -436,6 +528,7 @@ procedure ts_perfdsvd is
             when '9' => Test_Rotation(nrows,ncols);
             when 'A' => Test_Swap(nrows,ncols);
             when 'B' => Test_SVD(nrows,ncols);
+            when 'C' => Time_SVD(nrows,ncols);
             when others => null;
           end case;
         end;
