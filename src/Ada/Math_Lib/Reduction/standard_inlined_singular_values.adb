@@ -111,7 +111,8 @@ package body Standard_Inlined_Singular_Values is
             zscal(p-ell,f,g,er,ei,lp1,1);
             er(lp1) := 1.0 + er(lp1);
           end if;
-          ei(ell) := -ei(ell); -- e(l) := -Conjugate(e(l));
+          er(ell) := -er(ell);
+          ei(ell) := ei(ell); -- e(l) := -Conjugate(e(l));
           if lp1 <= n and ((abs(er(ell)) + abs(ei(ell))) /= 0.0) then
              -- apply the transformation
             for i in lp1..n loop
@@ -124,8 +125,9 @@ package body Standard_Inlined_Singular_Values is
              -- zaxpy(n-l,Conjugate(-e(j)/e(lp1)),work,lp1,1,x,lp1,j,1);
              -- compute Conjugate(-e(j)/e(lp1)) and store in zr and zi
               f := er(lp1); g := ei(lp1); b := f*f + g*g;
-              tr := -er(j); ti := -ei(j);
-              zr := tr*f + ti*g; zi := -ti*f + tr*g; -- conjugate
+              tr := -er(j); ti := -ei(j); -- take -e(j)
+              zr := tr*f + ti*g; zi := ti*f - tr*g;
+              zr := zr/b; zi := -zi/b; -- take conjugate
               zaxpy(n-ell,zr,zi,rwrk,iwrk,lp1,1,xrv,xiv,lp1,j,1);
             end loop;
           end if;
