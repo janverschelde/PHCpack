@@ -32,7 +32,7 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 1,");
       put_line("for polynomial systems in double precision ...");
     end if;
-    Solve_for_Special_Cases(p,rc,sols,fail);
+    Solve_for_Special_Cases(p,rc,sols,fail,verbose-1);
     if fail then -- not a special case
       Standard_Complex_Poly_Systems.Copy(p,pp);
       Black_Box_Root_Counting
@@ -95,14 +95,14 @@ package body Black_Box_Solvers is
       put_line("-> in black_box_solvers.Solve 3,");
       put_line("for polynomial systems in quad double precision ...");
     end if;
-    Solve_for_Special_Cases(p,rc,sols,fail);
+    Solve_for_Special_Cases(p,rc,sols,fail,verbose-1);
     if fail then -- not a special case
       QuadDobl_Complex_Poly_Systems.Copy(p,pp);
       Black_Box_Root_Counting
         (0,silent,pp,false,rc,q,sols,sols0,roco,hoco,verbose-1);
       if rc /= 0 then
         QuadDobl_Scaling.Scale(pp);
-        Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco);
+        Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco,verbose-1);
         Push(sols0,sols);
       end if;
     end if;

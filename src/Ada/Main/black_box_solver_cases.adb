@@ -573,20 +573,23 @@ package body Black_Box_Solver_Cases is
           Black_Box_Root_Counting
             (outfile,integer32(nt),pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(outfile,pp,q,sols,poco);
-             else Black_Box_Polynomial_Continuation
-                    (outfile,integer32(nt),pp,q,sols,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation
+                (outfile,pp,q,sols,poco,verbose-1);
+            else
+              Black_Box_Polynomial_Continuation
+                (outfile,integer32(nt),pp,q,sols,poco,verbose-1);
             end if;
           end if;
         else
           Black_Box_Root_Counting
             (integer32(nt),false,pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(pp,q,sols,poco);
-             else Black_Box_Polynomial_Continuation
-                    (integer32(nt),pp,q,sols,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+            else
+              Black_Box_Polynomial_Continuation
+                (integer32(nt),pp,q,sols,poco,verbose-1);
             end if;
           end if;
         end if;
@@ -678,20 +681,23 @@ package body Black_Box_Solver_Cases is
           Black_Box_Root_Counting
             (outfile,integer32(nt),pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(outfile,pp,q,sols,poco);
-             else Black_Box_Polynomial_Continuation
-                    (outfile,integer32(nt),pp,q,sols,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation
+                (outfile,pp,q,sols,poco,verbose-1);
+            else
+              Black_Box_Polynomial_Continuation
+                (outfile,integer32(nt),pp,q,sols,poco,verbose-1);
             end if;
           end if;
         else
           Black_Box_Root_Counting
             (integer32(nt),false,pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(pp,q,sols,poco);
-             else Black_Box_Polynomial_Continuation
-                    (integer32(nt),pp,q,sols,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+            else
+              Black_Box_Polynomial_Continuation
+                (integer32(nt),pp,q,sols,poco,verbose-1);
             end if;
           end if;
         end if;
@@ -786,20 +792,23 @@ package body Black_Box_Solver_Cases is
           Black_Box_Root_Counting
             (outfile,integer32(nt),pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(outfile,pp,q,sols,poco);
-             else Black_Box_Polynomial_Continuation
-                    (outfile,integer32(nt),pp,q,sols,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation
+                (outfile,pp,q,sols,poco,verbose-1);
+            else
+              Black_Box_Polynomial_Continuation
+                (outfile,integer32(nt),pp,q,sols,poco,verbose-1);
             end if;
           end if;
         else
           Black_Box_Root_Counting
             (integer32(nt),false,pp,rc,q,sols,roco,hoco,verbose-1);
           if rc /= 0 then
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(pp,q,sols,poco);
-             else Black_Box_Polynomial_Continuation
-                    (integer32(nt),pp,q,sols,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation(pp,q,sols,poco,verbose-1);
+            else
+              Black_Box_Polynomial_Continuation
+                (integer32(nt),pp,q,sols,poco,verbose-1);
             end if;
           end if;
         end if;
@@ -917,10 +926,10 @@ package body Black_Box_Solver_Cases is
           if output_to_file then
             if nt = 0 then
               Black_Box_Polynomial_Continuation
-                (outfile,deflate,pp,q,sols,sols0,poco);
+                (outfile,deflate,pp,q,sols,sols0,poco,verbose-1);
             else
               Black_Box_Polynomial_Continuation
-                (outfile,deflate,integer32(nt),pp,q,sols,sols0,poco);
+                (outfile,deflate,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
             end if;
           else
            -- put_line("in Black_Box_Solvers.Square_Main ...");
@@ -929,10 +938,10 @@ package body Black_Box_Solver_Cases is
            -- put_line("the target system : "); put(pp);
             if nt = 0 then
               Black_Box_Polynomial_Continuation
-                (deflate,pp,q,sols,sols0,poco);
+                (deflate,pp,q,sols,sols0,poco,verbose-1);
             else
               Black_Box_Polynomial_Continuation
-                (deflate,integer32(nt),pp,q,sols,sols0,poco);
+                (deflate,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
             end if;
           end if;
          -- put("Length_Of(sols) = "); put(Length_Of(sols),1); new_line;
@@ -1057,20 +1066,22 @@ package body Black_Box_Solver_Cases is
           if output_to_file then
             if nt = 0 then
               Black_Box_Polynomial_Continuation
-                (outfile,pp,q,sols,sols0,poco);
+                (outfile,pp,q,sols,sols0,poco,verbose-1);
             else
               Black_Box_Polynomial_Continuation
-                (outfile,integer32(nt),pp,q,sols,sols0,poco);
+                (outfile,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
             end if;
           else
            -- put_line("in Black_Box_Solvers.Square_Main ...");
            -- put_line("Calling Black_Box_Polynomial_Continuation ...");
            -- put_line("the start system : "); put(q);
            -- put_line("the target system : "); put(pp);
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco);
-             else Black_Box_Polynomial_Continuation
-                    (integer32(nt),pp,q,sols,sols0,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation
+                (pp,q,sols,sols0,poco,verbose-1);
+            else
+              Black_Box_Polynomial_Continuation
+                (integer32(nt),pp,q,sols,sols0,poco,verbose-1);
             end if;
           end if;
          -- put("Length_Of(sols) = "); put(Length_Of(sols),1); new_line;
@@ -1194,20 +1205,22 @@ package body Black_Box_Solver_Cases is
           if output_to_file then
             if nt = 0 then
               Black_Box_Polynomial_Continuation
-                (outfile,pp,q,sols,sols0,poco);
+                (outfile,pp,q,sols,sols0,poco,verbose-1);
             else
               Black_Box_Polynomial_Continuation
-                (outfile,integer32(nt),pp,q,sols,sols0,poco);
+                (outfile,integer32(nt),pp,q,sols,sols0,poco,verbose-1);
             end if;
           else
            -- put_line("in Black_Box_Solvers.Square_Main ...");
            -- put_line("Calling Black_Box_Polynomial_Continuation ...");
            -- put_line("the start system : "); put(q);
            -- put_line("the target system : "); put(pp);
-            if nt = 0
-             then Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco);
-             else Black_Box_Polynomial_Continuation
-                    (integer32(nt),pp,q,sols,sols0,poco);
+            if nt = 0 then
+              Black_Box_Polynomial_Continuation
+                (pp,q,sols,sols0,poco,verbose-1);
+            else
+              Black_Box_Polynomial_Continuation
+                (integer32(nt),pp,q,sols,sols0,poco,verbose-1);
             end if;
           end if;
          -- put("Length_Of(sols) = "); put(Length_Of(sols),1); new_line;
