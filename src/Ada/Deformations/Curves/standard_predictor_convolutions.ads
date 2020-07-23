@@ -124,6 +124,13 @@ package Standard_Predictor_Convolutions is
     vals : Standard_Complex_Vectors.Vector(0..dim);      -- singular values
     work : Standard_Complex_Vectors.Vector(1..dim);      -- work space for SVD
     first : boolean;                                     -- first time flag
+   -- work space for the inlined singular value computation
+    sr,si : Standard_Floating_Vectors.Link_to_Vector;   -- singular values
+    er,ei : Standard_Floating_Vectors.Link_to_Vector;   -- real and imag error
+    xrv,xiv : Standard_Floating_VecVecs.Link_to_VecVec; -- columns of H
+    urv,uiv : Standard_Floating_VecVecs.Link_to_VecVec; -- columns of U
+    vrv,viv : Standard_Floating_VecVecs.Link_to_VecVec; -- columns of V
+    wr,wi : Standard_Floating_Vectors.Link_to_Vector;   -- work space
   end record;
 
   type Link_to_SVD_Hessians is access SVD_Hessians;
@@ -1093,6 +1100,7 @@ package Standard_Predictor_Convolutions is
   -- DESCRIPTION :
   --   Deallocates the memory occupied by p.
 
+  procedure Clear ( h : in out SVD_Hessians );
   procedure Clear ( h : in out Link_to_SVD_Hessians );
 
   -- DESCRIPTION :

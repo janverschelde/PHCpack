@@ -1,3 +1,6 @@
+Thu 23 Jul 2020 : applied the inlined singular value computation in
+  standard_predictor_convolutions.
+
 Thu 16 Jul 2020 : minor improvement in the menu for the settings of the
   parameters in homotopy_continuation_parameters_io.adb.
 

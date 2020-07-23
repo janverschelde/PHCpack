@@ -6,7 +6,9 @@ with Standard_Mathematical_Functions;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
 with Standard_Vector_Splitters;
+with Standard_Matrix_Splitters;
 with Standard_Complex_Singular_Values;
+with Standard_Inlined_Singular_Values;
 with Standard_Mixed_Residuals;
 with Standard_Rational_Approximations;
 with Newton_Convolutions;
@@ -184,6 +186,19 @@ package body Standard_Predictor_Convolutions is
   begin
     hss.vals := (hss.vals'range => Standard_Complex_Numbers.Create(0.0));
     hss.first := true;
+    hss.sr := new Standard_Floating_Vectors.Vector'(1..dim+1 => 0.0);
+    hss.si := new Standard_Floating_Vectors.Vector'(1..dim+1 => 0.0);
+    hss.er := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+    hss.ei := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+    hss.wr := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+    hss.wi := new Standard_Floating_Vectors.Vector'(1..dim => 0.0);
+    hss.xrv := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+    hss.xiv := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+   -- job = 0, so no allocations for urv, uiv, vrv, and viv
+   -- hss.urv := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+   -- hss.urv := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+   -- hss.viv := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
+   -- hss.viv := Standard_Vector_Splitters.Allocate(dim,dim,1,1);
     res := new SVD_Hessians'(hss);
     return res;
   end Create;
@@ -271,7 +286,7 @@ package body Standard_Predictor_Convolutions is
     use Standard_Rational_Approximations;
 
     info : integer32;
-   -- idxtol : integer32;
+    idxtol : integer32;
 
   begin
     if vrblvl > 0 then
@@ -284,15 +299,15 @@ package body Standard_Predictor_Convolutions is
    --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
    --    info,prd.newtpiv,prd.wrk,false,false);
    --  and then by an inlined version
-    Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-      (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
-       prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
-       false,false);
-   -- and finally with an indexed version ...
-   -- Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-   --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,prd.newtpiv,
+   -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+   --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,prd.newtpiv,
    --    prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
    --    false,false);
+   -- and finally with an indexed version ...
+    Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+      (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,prd.newtpiv,
+       prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+       false,false);
     Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
                 prd.mat,prd.rhs,prd.padepiv,info,false);
@@ -312,7 +327,7 @@ package body Standard_Predictor_Convolutions is
     use Standard_Rational_Approximations;
 
     info : integer32;
-   -- idxtol : integer32;
+    idxtol : integer32;
 
   begin
     if vrblvl > 0 then
@@ -324,28 +339,28 @@ package body Standard_Predictor_Convolutions is
      -- Staggered_Newton_Convolutions.LU_Newton_Steps
      --   (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
      --    info,prd.newtpiv,prd.wrk,false);
-      Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,
-         prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
-         true);
-     -- Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-     --   (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+     -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+     --   (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,
      --    prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
      --    true);
+      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+        (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+         prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+         true);
       Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
      -- Newton_Power_Convolutions.LU_Newton_Steps
      -- Staggered_Newton_Convolutions.LU_Newton_Steps
      --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
      --    info,prd.newtpiv,prd.wrk,false,false);
-      Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
-        (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,
-         prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
-         false,false);
-     -- Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
-     --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+     -- Staggered_Newton_Convolutions.Inlined_LU_Newton_Steps
+     --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,info,
      --    prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
      --    false,false);
+      Staggered_Newton_Convolutions.Indexed_LU_Newton_Steps
+        (hom,prd.sol,rx,ix,maxit,nbrit,tol,idxtol,absdx,fail,info,
+         prd.newtpiv,prd.rc,prd.ic,prd.rv,prd.iv,prd.rb,prd.ib,prd.ry,prd.iy,
+         false,false);
       Convergence_Radius_Estimates.Fabry(prd.sol,z,rad,err,fail,2,false);
     end if;
     Pade_Vector(prd.numdeg,prd.dendeg,prd.sol,prd.numcff,prd.dencff,
@@ -610,13 +625,21 @@ package body Standard_Predictor_Convolutions is
           end loop;
         end if;
       end loop;
-      Standard_Complex_Singular_Values.SVD
-        (cfs.jm,cfs.dim,cfs.dim,svls(0).all,svh.ewrk,svh.U,svh.V,0,info);
+     -- Standard_Complex_Singular_Values.SVD
+     --   (cfs.jm,cfs.dim,cfs.dim,svls(0).all,svh.ewrk,svh.U,svh.V,0,info);
+      Standard_Matrix_Splitters.Complex_Parts(cfs.jm,svh.xrv,svh.xiv);
+      Standard_Inlined_Singular_Values.SVD
+        (svh.xrv,svh.xiv,svh.dim,svh.dim,svh.sr,svh.si,svh.er,svh.ei,
+         svh.urv,svh.uiv,svh.vrv,svh.viv,0,info,svh.wr,svh.wi);
       for k in vh'range loop
         if cfs.crc(k).pdg > 2 then
-          Standard_Complex_Singular_Values.SVD
-            (vh(k).all,cfs.dim,cfs.dim,svls(k).all,
-             svh.ewrk,svh.U,svh.V,0,info);
+         -- Standard_Complex_Singular_Values.SVD
+         --   (vh(k).all,cfs.dim,cfs.dim,svls(k).all,
+         --    svh.ewrk,svh.U,svh.V,0,info);
+          Standard_Matrix_Splitters.Complex_Parts(vh(k).all,svh.xrv,svh.xiv);
+          Standard_Inlined_Singular_Values.SVD
+            (svh.xrv,svh.xiv,svh.dim,svh.dim,svh.sr,svh.si,svh.er,svh.ei,
+             svh.urv,svh.uiv,svh.vrv,svh.viv,0,info,svh.wr,svh.wi);
         end if;
       end loop;
     end if;
@@ -1519,14 +1542,32 @@ package body Standard_Predictor_Convolutions is
     end if;
   end Clear;
 
+  procedure Clear ( h : in out SVD_Hessians ) is
+  begin
+    Standard_Floating_Vectors.Clear(h.sr);
+    Standard_Floating_Vectors.Clear(h.si);
+    Standard_Floating_Vectors.Clear(h.er);
+    Standard_Floating_Vectors.Clear(h.ei);
+    Standard_Floating_Vectors.Clear(h.wr);
+    Standard_Floating_Vectors.Clear(h.wi);
+    Standard_Floating_VecVecs.Deep_Clear(h.xrv);
+    Standard_Floating_VecVecs.Deep_Clear(h.xiv);
+   -- not allocated because job = 0
+   -- Standard_Floating_VecVecs.Deep_Clear(h.urv);
+   -- Standard_Floating_VecVecs.Deep_Clear(h.uiv);
+   -- Standard_Floating_VecVecs.Deep_Clear(h.vrv);
+   -- Standard_Floating_VecVecs.Deep_Clear(h.viv);
+  end Clear;
+
   procedure Clear ( h : in out Link_to_SVD_Hessians ) is
 
     procedure free is
       new unchecked_deallocation(SVD_Hessians,Link_to_SVD_Hessians);
 
   begin
-    if h /= null
-     then free(h);
+    if h /= null then
+      Clear(h.all);
+      free(h);
     end if;
   end Clear;
 
