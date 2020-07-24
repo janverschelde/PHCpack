@@ -24,10 +24,12 @@ dobldobl_polysys_interface       : interface to double double polynomials
 quaddobl_polysys_container       : polynomial systems with quad doubles
 quaddobl_polysys_interface       : interface to quad double polynomials
 multprec_polysys_container       : multiprecision poly system container
+multprec_polysys_interface       : interface to multiprecision polynomials
 standard_laursys_container       : management of Ada Laurent systems
 dobldobl_laursys_container       : for Laurent systems with dobldobl coeffs
 quaddobl_laursys_container       : for Laurent systems with quaddobl coeffs
 multprec_laursys_container       : for Laurent systems with multprec coeffs
+multprec_laursys_interface       : interface to multiprecision Laurent systems
 ts_syscon                        : tests the systems container
 use_syscon                       : Ada gateway to the systems container
 use_tabform                      : pass tableau forms of systems

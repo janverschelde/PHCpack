@@ -1,4 +1,7 @@
-Thu 23 Jul 2020 : move functions from use_syscon.adb into new packages
+Fri 24 Jul 2020 : moved functions from use_syscon.adb into new packages
+  multprec_{polysys,laursys}_interface.
+
+Thu 23 Jul 2020 : moved functions from use_syscon.adb into new packages
   {standard,dobldobl,quaddobl}_laursys_interface.
 
 Sun 19 Jul 2020 : small update in standard_solution_interface.ads.
