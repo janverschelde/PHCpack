@@ -1,4 +1,7 @@
-Sun 19 Jun 2020 : small update in standard_solution_interface.ads.
+Thu 23 Jul 2020 : move functions from use_syscon.adb into new packages
+  {standard,dobldobl,quaddobl}_laursys_interface.
+
+Sun 19 Jul 2020 : small update in standard_solution_interface.ads.
   New packages {dobldobl,quaddobl}_solution_interface with code extracted
   from use_solcon.adb.  Updated use_c2phc4c.adb to pass the verbose level
   to the use_syscon and use_solcon functions.  New package 
