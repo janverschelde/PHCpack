@@ -6,6 +6,8 @@ Sat 25 Jul 2020 : new package multprec_solutions_interface with functions
   to apply equation and coefficient scaling, added the verbose level
   to use_scaling.  Moved functions from use_witsols to a new package
   irreducible_components_interface, added verbose level to use_witsols.
+  Move functions from use_mapcon into monomial_maps_interface,
+  added verbose level to use_mapcon.
 
 Fri 24 Jul 2020 : moved functions from use_syscon.adb into new packages
   multprec_{polysys,laursys}_interface.  Move functions from use_padcon

@@ -94,6 +94,7 @@ use_celcon                       : Ada gateway to the cells container
 ts_use_celcon.c                  : C routine to test the cells container
 ------------------------------------------------------------------------------
 monomial_maps_container          : monomial maps as solution to binomials
+monomial_maps_interface          : interface function to monomial maps
 use_mapcon                       : Ada gateway to monomial maps container
 ------------------------------------------------------------------------------
 unisolve                         : roots of univariate polynomials
