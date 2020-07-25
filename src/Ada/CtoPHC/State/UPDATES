@@ -2,6 +2,9 @@ Sat 25 Jul 2020 : new package multprec_solutions_interface with functions
   from use_solcon.  Updated use_c2phc4c.adb to pass the verbose level.
   Moved functions from use_series.adb into power_series_interface,
   a new package to group the functions to run Newton's method on series.
+  Moved functions from use_scaling.adb into scaling_interface,
+  to apply equation and coefficient scaling, added the verbose level
+  to use_scaling.
 
 Fri 24 Jul 2020 : moved functions from use_syscon.adb into new packages
   multprec_{polysys,laursys}_interface.  Move functions from use_padcon

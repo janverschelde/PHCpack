@@ -5,7 +5,8 @@ with C_Double_Arrays;                   use C_Double_Arrays;
 function use_scaling ( job : integer32;
                        a : C_intarrs.Pointer;
                        b : C_intarrs.Pointer;
-                       c : C_dblarrs.Pointer ) return integer32;
+                       c : C_dblarrs.Pointer;
+                       vrblvl : integer32 := 0 ) return integer32;
 
 -- DESCRIPTION :
 --   Gateway to the coefficient and variable scaling methods in PHCpack.
