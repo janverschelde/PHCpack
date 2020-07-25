@@ -4,12 +4,14 @@ with C_Double_Arrays;                   use C_Double_Arrays;
 
 function use_witsols ( job : integer32;
                        a : C_intarrs.Pointer;
-		       b : C_intarrs.Pointer;
-                       c : C_dblarrs.Pointer ) return integer32;
+                       b : C_intarrs.Pointer;
+                       c : C_dblarrs.Pointer;
+                       vrblvl : integer32 := 0 ) return integer32;
 
 -- DESCRIPTION :
 --   Provides a gateway from C to the cascade homotopies, the filter,
 --   and factor operations for a numerical irreducible decomposition.
+--   The verbose level is given by the parameter vrblvl.
 
 -- ON ENTRY :
 --   job =  0 : numerical irreducible decomposition with standard doubles,

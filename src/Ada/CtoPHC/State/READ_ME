@@ -126,3 +126,6 @@ use_c2phc4c                      : exports PHCpack functionality to C
 use_c2phc                        : includes use_c2phc4c and DEMiCs interface
 ts_use_c2phc.c                   : C test on the interactive operations
 -----------------------------------------------------------------------------
+irreducible_components_interface : numerical irreducible decomposition
+use_witsols                      : gateway to blackbox solver
+-----------------------------------------------------------------------------
