@@ -1,5 +1,7 @@
 Fri 24 Jul 2020 : moved functions from use_syscon.adb into new packages
-  multprec_{polysys,laursys}_interface.
+  multprec_{polysys,laursys}_interface.  Move functions from use_padcon
+  into the new package pade_continuation_interface, added the verbose
+  level as parameter to use_padcon.
 
 Thu 23 Jul 2020 : moved functions from use_syscon.adb into new packages
   {standard,dobldobl,quaddobl}_laursys_interface.

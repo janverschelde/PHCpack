@@ -5,10 +5,11 @@ with C_Double_Arrays;                   use C_Double_Arrays;
 function use_padcon ( job : integer32;
                       a : C_intarrs.Pointer;
                       b : C_intarrs.Pointer;
-                      c : C_dblarrs.Pointer ) return integer32;
+                      c : C_dblarrs.Pointer;
+                      vrblvl : integer32 := 0 ) return integer32;
 
 -- DESCRIPTION :
---   Manages the homotopy continuatin parameter for the Pade trackers.
+--   Function to access the Pade continuation.
 
 -- ON ENTRY :
 --   job   =   0 : gives homotopy continuation parameters default values;

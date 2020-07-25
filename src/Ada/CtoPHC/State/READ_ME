@@ -109,6 +109,8 @@ crude_path_trackers              : path trackers without postprocessing
 ts_runtrack                      : calls the crude path trackers
 ------------------------------------------------------------------------------
 use_series                       : power series Newton method
+pade_continuation_interface      : interface to Pade continuation
+use_padcon                       : handles Pade continuation
 ------------------------------------------------------------------------------
 use_multip                       : compute multiplicity structure
 ------------------------------------------------------------------------------
