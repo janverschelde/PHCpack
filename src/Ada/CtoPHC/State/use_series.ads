@@ -4,14 +4,16 @@ with C_Double_Arrays;                   use C_Double_Arrays;
 
 function use_series ( job : integer32;
                       a : C_intarrs.Pointer;
-		      b : C_intarrs.Pointer;
-                      c : C_dblarrs.Pointer ) return integer32;
+                      b : C_intarrs.Pointer;
+                      c : C_dblarrs.Pointer;
+                      vrblvl : integer32 := 0 ) return integer32;
 
 -- DESCRIPTION :
 --   Provides a gateway from C to the power series Newton method.
 --   Before calling this procedure, the systems and solutions containers
 --   must be initialized properly.  The resulting series are stored in
 --   the systems pool, corresponding to each precision level.
+--   The verbose level is given by the parameter vrblvl.
 
 -- ON ENTRY :
 --   job =  0 : power series Newton method in standard double precision,
