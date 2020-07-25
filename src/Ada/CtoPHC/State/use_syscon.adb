@@ -41,8 +41,6 @@ with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Laurentials;
 with Multprec_Complex_Laur_Strings;
-with Multprec_Complex_Laur_Systems;
-with Multprec_Complex_Laur_Systems_io;  use Multprec_Complex_Laur_Systems_io;
 with Polynomial_Drops;
 with Total_Degree_Start_Systems;
 with Projective_Transformations;
@@ -51,7 +49,6 @@ with Partitions_of_Sets_of_Unknowns_io;
 with Multi_Projective_Transformations;
 with Affine_Transformations;
 with Homogenization;
-with PHCpack_Operations;
 with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
@@ -67,145 +64,14 @@ with DoblDobl_PolySys_Interface;
 with DoblDobl_LaurSys_Interface;
 with QuadDobl_PolySys_Interface;
 with QuadDobl_LaurSys_Interface;
+with Multprec_PolySys_Interface;
+with Multprec_LaurSys_Interface;
 
 function use_syscon ( job : integer32;
                       a : C_intarrs.Pointer;
                       b : C_intarrs.Pointer;
                       c : C_dblarrs.Pointer;
                       vrblvl : integer32 := 0 ) return integer32 is
-
-  function Job130 return integer32 is -- read Laurent sys into mp container
-
-    lp : Multprec_Complex_Laur_Systems.Link_to_Laur_Sys;
-
-  begin
-    new_line;
-    put_line("Reading a Laurent polynomial system...");
-    get(lp);
-    Multprec_LaurSys_Container.Initialize(lp.all);
-    return 0;
-  end Job130;
-
-  function Job220 return integer32 is -- read multprec system into container
-
-    lp : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    deci : constant natural32 := natural32(v(v'first));
-    size : constant natural32
-         := Multprec_Floating_Numbers.Decimal_to_Size(deci);
-
-  begin
-    Multprec_Complex_Polynomials_io.Set_Working_Precision(size);
-    new_line;
-    put_line("Reading a polynomial system...");
-    get(lp);
-    Multprec_PolySys_Container.Initialize(lp.all);
-    return 0;
-  end Job220;
-
-  function Job131 return integer32 is -- write system in container
- 
-   -- use Multprec_Complex_Laurentials;
-    use Multprec_Complex_Laur_Systems;
-    lp : constant Link_to_Laur_Sys := Multprec_LaurSys_Container.Retrieve;
-   -- nvr : natural32;
-
-  begin
-    if lp /= null then
-     -- nvr := Number_of_Unknowns(lp(lp'first));
-      if PHCpack_Operations.file_okay then
-       -- if integer32(nvr) = lp'last then
-          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
-       -- else
-       --   put(PHCpack_Operations.output_file,natural32(lp'last),nvr,lp.all);
-       -- end if;
-     -- elsif integer32(nvr) = lp'last then
-      else
-        put(standard_output,natural32(lp'last),lp.all);
-     -- else
-     --   put(standard_output,natural32(lp'last),nvr,lp.all);
-      end if;
-    end if;
-    return 0;
-  end Job131;
-
-  function Job221 return integer32 is -- write system in container
- 
-    use Multprec_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := Multprec_PolySys_Container.Retrieve;
-
-  begin
-    if lp /= null then
-      if PHCpack_Operations.file_okay
-      -- then put(PHCpack_Operations.output_file,lp'last,lp.all);
-       then put(PHCpack_Operations.output_file,lp.all);
-      -- else put(standard_output,lp'last,lp.all);
-       else put(standard_output,lp.all);
-      end if;
-    end if;
-    return 0;
-  end Job221;
-
-  function Job132 return integer32 is -- return dimension of Laurent system
-  begin
-    Assign(integer32(Multprec_LaurSys_Container.Dimension),a);
-    return 0;
-  end Job132;
-
-  function Job222 return integer32 is -- return dimension of system
-  begin
-    Assign(integer32(Multprec_PolySys_Container.Dimension),a);
-    return 0;
-  end Job222;
-
-  function Job133 return integer32 is -- initialize container with dimension
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer32 := integer32(v(v'first));
-
-  begin
-    Multprec_LaurSys_Container.Initialize(n);
-    Symbol_Table.Init(natural32(n));
-    return 0;
-  end Job133;
-
-  function Job223 return integer32 is -- initialize container with dimension
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer32 := integer32(v(v'first));
-
-  begin
-    Multprec_PolySys_Container.Initialize(n);
-    Symbol_Table.Init(natural32(n));
-    return 0;
-  end Job223;
-
-  function Job134 return integer32 is -- returns #terms of a Laurential
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    use Interfaces.C;
-    i : constant integer32 := integer32(v(v'first+1));
-
-  begin
-    Assign(integer32(Multprec_LaurSys_Container.Number_of_Terms(i)),a);
-    return 0;
-  end Job134;
-
-  function Job224 return integer32 is -- returns #terms of a polynomial
-
-    v : constant C_Integer_Array
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    use Interfaces.C;
-    i : constant integer32 := integer32(v(v'first+1));
-
-  begin
-    Assign(integer32(Multprec_PolySys_Container.Number_of_Terms(i)),a);
-    return 0;
-  end Job224;
 
   function Job135 return integer32 is -- returns a term of a Laurential
 
@@ -238,18 +104,6 @@ function use_syscon ( job : integer32;
     Multprec_LaurSys_Container.Add_Term(i,t);
     return 0;
   end Job136;
-
-  function Job137 return integer32 is -- clears the container
-  begin
-    Multprec_LaurSys_Container.Clear;
-    return 0;
-  end Job137;
-
-  function Job227 return integer32 is -- clears the container
-  begin
-    Multprec_PolySys_Container.Clear;
-    return 0;
-  end Job227;
 
   function Job8 return integer32 is -- returns total degree
 
@@ -1705,6 +1559,8 @@ function use_syscon ( job : integer32;
     use DoblDobl_LaurSys_Interface;
     use QuadDobl_PolySys_Interface;
     use QuadDobl_LaurSys_Interface;
+    use MultPrec_PolySys_Interface;
+    use MultPrec_LaurSys_Interface;
 
   begin
     case job is
@@ -1766,14 +1622,14 @@ function use_syscon ( job : integer32;
       when 127 => return QuadDobl_LaurSys_Clear(vrblvl);
       when 128 => return Job128; -- store quaddobl Laurential string
      -- jobs for multiprecision complex Laurent polynomials :
-      when 130 => return Job130; -- read system into container
-      when 131 => return Job131; -- write system in container
-      when 132 => return Job132; -- return dimension of system
-      when 133 => return Job133; -- initialize container with dimension
-      when 134 => return Job134; -- return #terms of a polynomial
+      when 130 => return Multprec_LaurSys_Read(vrblvl);
+      when 131 => return Multprec_LaurSys_Write(vrblvl);
+      when 132 => return Multprec_LaurSys_Get_Dimension(a,vrblvl);
+      when 133 => return Multprec_LaurSys_Set_Dimension(a,vrblvl);
+      when 134 => return Multprec_LaurSys_Size(a,vrblvl);
       when 135 => return Job135; -- return a term of a polynomial
       when 136 => return Job136; -- add a term to a polynomial
-      when 137 => return Job137; -- clear the container
+      when 137 => return Multprec_LaurSys_Clear(vrblvl);
       when 138 => return Job138; -- store multprec Laurential string
       when 139 => return Job139; -- load multprec Laurential into string
      -- jobs for double double complex polynomials
@@ -1799,12 +1655,12 @@ function use_syscon ( job : integer32;
       when 218 => return Job218; -- store quaddobl polynomial string
       when 219 => return Job219; -- return degree of a polynomial
      -- jobs for multiprecision complex polynomials
-      when 220 => return Job220; -- read system into container
-      when 221 => return Job221; -- write system in container
-      when 222 => return Job222; -- return dimension of system
-      when 223 => return Job223; -- initialize container with dimension
-      when 224 => return Job224; -- return #terms of a polynomial
-      when 227 => return Job227; -- clear the container
+      when 220 => return Multprec_PolySys_Read(vrblvl);
+      when 221 => return Multprec_PolySys_Write(vrblvl);
+      when 222 => return Multprec_PolySys_Get_Dimension(a,vrblvl);
+      when 223 => return Multprec_PolySys_Set_Dimension(a,vrblvl);
+      when 224 => return Multprec_PolySys_Size(a,vrblvl);
+      when 227 => return Multprec_PolySys_Clear(vrblvl);
       when 228 => return Job228; -- store multprecision polynomial string
       when 229 => return Job229; -- return degree of a polynomial
      -- jobs for interchanging polynomial as strings :
