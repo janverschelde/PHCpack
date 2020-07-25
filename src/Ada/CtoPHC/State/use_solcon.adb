@@ -23,7 +23,6 @@ with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions;
-with Multprec_Complex_Solutions_io;
 with Standard_Solution_Strings;
 with DoblDobl_Solution_Strings;
 with QuadDobl_Solution_Strings;
@@ -54,39 +53,13 @@ with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_Solutions_Interface;
 with DoblDobl_Solutions_Interface;
 with QuadDobl_Solutions_Interface;
+with Multprec_Solutions_Interface;
 
 function use_solcon ( job : integer32;
                       a : C_intarrs.Pointer;
                       b : C_intarrs.Pointer;
                       c : C_dblarrs.Pointer;
                       vrblvl : integer32 := 0 ) return integer32 is
-
-  function Job120 return integer32 is -- read from file into container
-
-    sols : Multprec_Complex_Solutions.Solution_List;
-
-  begin
-    Multprec_Complex_Solutions_io.Read(sols);
-    Multprec_Solutions_Container.Initialize(sols);
-    return 0;
-  end Job120;
-
-  function Job121 return integer32 is -- write container to file
-
-    use Multprec_Complex_Solutions,Multprec_Complex_Solutions_io;
-    sols : constant Solution_List := Multprec_Solutions_Container.Retrieve;
-
-  begin
-    if not Is_Null(sols) then
-      if PHCpack_Operations.Is_File_Defined then
-        put(PHCpack_Operations.output_file,
-            Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      else
-        put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      end if;
-    end if;
-    return 0;
-  end Job121;
 
   function Job10 return integer32 is -- prompts for input file and opens it
   begin
@@ -1751,6 +1724,7 @@ function use_solcon ( job : integer32;
     use Standard_Solutions_Interface;
     use DoblDobl_Solutions_Interface;
     use QuadDobl_Solutions_Interface;
+    use Multprec_Solutions_Interface;
 
   begin
     case job is
@@ -1819,13 +1793,11 @@ function use_solcon ( job : integer32;
       when 111 => return Job111; -- returns solution string
       when 118 => return Job118; -- appends solution string to container
      -- corresponding operations for multiprecision solutions
-      when 120 => return Job120; -- read from file into container
-      when 121 => return Job121; -- write container to file
-      when 122 =>
-        Assign(integer32(Multprec_Solutions_Container.Length),b); return 0;
-      when 123 => 
-        Assign(integer32(Multprec_Solutions_Container.Dimension),b); return 0;
-      when 127 => Multprec_Solutions_Container.Clear; return 0;
+      when 120 => return Multprec_Solutions_Read(vrblvl);
+      when 121 => return Multprec_Solutions_Write(vrblvl);
+      when 122 => return Multprec_Solutions_Size(b,vrblvl);
+      when 123 => return Multprec_Solutions_Dimension(b,vrblvl);
+      when 127 => return Multprec_Solutions_Clear(vrblvl);
       when 150 => return Job150; -- returns size of solution string
       when 151 => return Job151; -- returns solution string
       when 158 => return Job158; -- append solution string to container

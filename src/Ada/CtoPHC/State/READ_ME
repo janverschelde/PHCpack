@@ -48,6 +48,7 @@ dobldobl_solutions_interface     : interface to double double solutions
 quaddobl_solutions_container     : solutions with quad doubles
 quaddobl_solutions_interface     : interface to quad double solutions
 multprec_solutions_container     : multiprecision solutions
+multprec_solutions_interface     : interface to multiprecision solutions
 assignments_of_solutions         : converts between PHCpack and (b,c) format
 ts_solcon                        : tests the solutions container
 use_solcon                       : Ada gateway to the solutions container

@@ -1470,7 +1470,7 @@ function use_c2phc4c ( job : integer32;
       when 39 => return use_c2fac(28,a,b,c); -- set state to silent
       when 40..65 => return use_c2fac(job-40,a,b,c);
       when 66 => return Job66; -- return embedded standard double system 
-      when 67 => return use_syscon(67,a,b,c); -- load polynomial as string
+      when 67 => return use_syscon(67,a,b,c,vrblvl-1); -- load poly as string
       when 68 => return use_c2fac(job-42,a,b,c); -- return #factors
       when 69 => return use_c2fac(job-42,a,b,c); -- return irreducible factor
       when 70 => return Job70; -- interactive tuning of parameters
@@ -1479,7 +1479,7 @@ function use_c2phc4c ( job : integer32;
       when 73 => return Job73; -- set values of continuation parameters
      -- store Laurential as string
       when 74 => return use_syscon(74,a,b,c,vrblvl-1);
-      when 75 => return Standard_Laurent_Solver(a,b,vrblvl);
+      when 75 => return Standard_Laurent_Solver(a,b,vrblvl-1);
      -- store polynomial as string
       when 76 => return use_syscon(76,a,b,c,vrblvl-1);
       when 77 => return Standard_Polynomial_Solver(a,b,vrblvl-1);
@@ -1499,7 +1499,7 @@ function use_c2phc4c ( job : integer32;
       when 119 => return use_syscon(20,a,b,c,vrblvl-1);
      -- operations on Laurent systems :
       when 120..127 => return use_syscon(job-20,a,b,c,vrblvl-1);
-      when 128 => return use_syscon(77,a,b,c); -- load standard Laur as string
+      when 128 => return use_syscon(77,a,b,c,vrblvl-1); -- load Laur as string
       when 129 => return Job129; -- embed double double system
       when 130..145 => return use_solcon(job-120,a,b,c,vrblvl-1);
      -- drop coordinate by name
@@ -1512,7 +1512,7 @@ function use_c2phc4c ( job : integer32;
      -- variable precision Newton step :
       when 179 => return Job179;
      -- double double and quad double L-R homotopies :
-      when 180..181 => return use_c2lrhom(job-178,a,b,c);
+      when 180..181 => return use_c2lrhom(job-178,a,b,c,vrblvl-1);
      -- track operations for quad double precision :
       when 182..188 => return use_track(job-150,a,b,c);
      -- tuning continuation parameters, deflation, and Newton step
@@ -1529,7 +1529,7 @@ function use_c2phc4c ( job : integer32;
       when 199 => return Job199; -- 1 Newton step on standard containers
       when 200..209 => return use_solcon(job-170,a,b,c,vrblvl-1);
       when 210..227 => return use_c2pieri(job-210,a,b,c);
-      when 228..229 => return use_c2lrhom(job-228,a,b,c);
+      when 228..229 => return use_c2lrhom(job-228,a,b,c,vrblvl-1);
       when 230 => return use_track(42,a,b,c);
       when 231..235 => return C_to_PHCpack(job-220,0);
       when 236 => return Job236; -- solve by double double path tracking
@@ -1603,7 +1603,7 @@ function use_c2phc4c ( job : integer32;
       when 298 => return use_track(46,a,b,c); -- quaddobl diagonal startsols
       when 299 => return use_track(47,a,b,c); -- dobldobl collapse diagonal
       when 300..305 => return use_syspool(job-300,a,b,c);
-      when 306..311 => return use_syscon(job-294,a,b,c);
+      when 306..311 => return use_syscon(job-294,a,b,c,vrblvl-1);
       when 312 => return use_track(48,a,b,c); -- quaddobl collapse diagonal
       when 313..317 => return use_syspool(job-307,a,b,c);
       when 318 => return use_syspool(11,a,b,c); -- init dobldobl sys pool
@@ -1615,13 +1615,13 @@ function use_c2phc4c ( job : integer32;
       when 328 => return Job328; -- quaddobl Newton step on Laurent
       when 329 => return Job329; -- multprec Newton step on Laurent
      -- operations on double double system container
-      when 330..339 => return use_syscon(job-130,a,b,c);
+      when 330..339 => return use_syscon(job-130,a,b,c,vrblvl-1);
      -- operations on double double solution container
       when 340..349 => return use_solcon(job-300,a,b,c,vrblvl-1);
       when 370..371 => return use_solcon(job-300,a,b,c,vrblvl-1);
       when 378 => return use_solcon(job-300,a,b,c,vrblvl-1);
      -- operations on quad double system container
-      when 380..389 => return use_syscon(job-170,a,b,c);
+      when 380..389 => return use_syscon(job-170,a,b,c,vrblvl-1);
      -- operations on quad double solution container
       when 390..399 => return use_solcon(job-310,a,b,c,vrblvl-1);
       when 420..421 => return use_solcon(job-310,a,b,c,vrblvl-1);
@@ -1680,7 +1680,7 @@ function use_c2phc4c ( job : integer32;
       when 538 => return use_c2mbt(1,a,b,c); -- dobldobl membership test
       when 539 => return use_c2mbt(2,a,b,c); -- quaddobl membership test
      -- operations to read systems into the containers
-      when 540..543 => return use_syscon(job,a,b,c);
+      when 540..543 => return use_syscon(job,a,b,c,vrblvl-1);
      -- operations to read systems and solutions into the containers
       when 544..547 => return use_solcon(job,a,b,c);
      -- random dobldobl and quaddobl systems
@@ -1691,7 +1691,7 @@ function use_c2phc4c ( job : integer32;
       when 559 => return use_syscon(72,a,b,c,vrblvl-1);
      -- operations on Laurent container for quad doubles :
       when 560..568 => return use_syscon(job-440,a,b,c,vrblvl-1);
-      when 569 => return use_syscon(73,a,b,c);
+      when 569 => return use_syscon(73,a,b,c,vrblvl-1);
      -- operations on Laurent container for multiprecision :
       when 570..574 => return use_syscon(job-440,a,b,c,vrblvl-1);
       when 577..579 => return use_syscon(job-440,a,b,c,vrblvl-1);
@@ -1756,11 +1756,11 @@ function use_c2phc4c ( job : integer32;
       when 733 => return use_multip(0,a,b,c); -- double double precision
       when 734 => return use_multip(0,a,b,c); -- quad double precision
      -- pade continuation
-      when 735 => return use_padcon(0,a,b,c); -- default parameter values
-      when 736 => return use_padcon(1,a,b,c); -- clear parameter values
-      when 737 => return use_padcon(2,a,b,c); -- get a parameter value
-      when 738 => return use_padcon(3,a,b,c); -- set a parameter value
-      when 739 => return use_padcon(4,a,b,c); -- track paths
+      when 735 => return use_padcon(0,a,b,c,vrblvl-1); -- set default values
+      when 736 => return use_padcon(1,a,b,c,vrblvl-1); -- clear parameter vals
+      when 737 => return use_padcon(2,a,b,c,vrblvl-1); -- get a parameter value
+      when 738 => return use_padcon(3,a,b,c,vrblvl-1); -- set a parameter value
+      when 739 => return use_padcon(4,a,b,c,vrblvl-1); -- track paths
      -- integer mixed cell configurations
       when 741..758 => return use_celcon(job-690,a,b,c);
      -- reading, writing Laurent start and target systems
@@ -1837,12 +1837,12 @@ function use_c2phc4c ( job : integer32;
       when 826 => return use_c2mbt(10,a,b,c); -- dobldobl Laurent ismember test
       when 827 => return use_c2mbt(11,a,b,c); -- quaddobl Laurent ismember test
      -- dropping a variable from Laurent polynomial systems
-      when 828 => return use_syscon(22,a,b,c); -- st Laurent drop var by idx
-      when 829 => return use_syscon(23,a,b,c); -- dd Laurent drop var by idx
-      when 830 => return use_syscon(24,a,b,c); -- qd Laurent drop var by idx
-      when 831 => return use_syscon(25,a,b,c); -- st Laurent drop var by name
-      when 832 => return use_syscon(26,a,b,c); -- dd Laurent drop var by name
-      when 833 => return use_syscon(27,a,b,c); -- qd Laurent drop var by name
+      when 828 => return use_syscon(22,a,b,c,vrblvl-1); -- st Laurent by idx
+      when 829 => return use_syscon(23,a,b,c,vrblvl-1); -- dd Laurent by idx
+      when 830 => return use_syscon(24,a,b,c,vrblvl-1); -- qd Laurent by idx
+      when 831 => return use_syscon(25,a,b,c,vrblvl-1); -- st Laurent by name
+      when 832 => return use_syscon(26,a,b,c,vrblvl-1); -- dd Laurent by name
+      when 833 => return use_syscon(27,a,b,c,vrblvl-1); -- qd Laurent by name
      -- extract DEMiCs output data
      -- when 834 => return use_outdata(0,a,b,c); -- allocate memory for lifting
      -- when 835 => return use_outdata(1,a,b,c); -- assign a lifting value
@@ -1858,18 +1858,18 @@ function use_c2phc4c ( job : integer32;
      -- numerical irreducible decomposition
       when 845..859 => return use_witsols(job-845,a,b,c); -- solvers
      -- Pade continuation in a step wise fashion
-      when 860 => return use_padcon(5,a,b,c); -- init series-Pade homotopy
-      when 861 => return use_padcon(6,a,b,c); -- init next start solution
-      when 862 => return use_padcon(7,a,b,c); -- next predict-correct step
-      when 863 => return use_padcon(8,a,b,c); -- get current solution
-      when 864 => return use_padcon(9,a,b,c); -- clear data
-      when 865 => return use_padcon(10,a,b,c); -- get pole radius
-      when 866 => return use_padcon(11,a,b,c); -- get closest radius
-      when 867 => return use_padcon(12,a,b,c); -- get t value
-      when 868 => return use_padcon(13,a,b,c); -- get step size
-      when 869 => return use_padcon(14,a,b,c); -- get series coefficient
-      when 870 => return use_padcon(15,a,b,c); -- get Pade coefficient
-      when 871 => return use_padcon(16,a,b,c); -- get pole
+      when 860 => return use_padcon(5,a,b,c,vrblvl-1); -- init homotopy
+      when 861 => return use_padcon(6,a,b,c,vrblvl-1); -- set start solution
+      when 862 => return use_padcon(7,a,b,c,vrblvl-1); -- do next step
+      when 863 => return use_padcon(8,a,b,c,vrblvl-1); -- get current solution
+      when 864 => return use_padcon(9,a,b,c,vrblvl-1); -- clear data
+      when 865 => return use_padcon(10,a,b,c,vrblvl-1); -- get pole radius
+      when 866 => return use_padcon(11,a,b,c,vrblvl-1); -- get closest radius
+      when 867 => return use_padcon(12,a,b,c,vrblvl-1); -- get t value
+      when 868 => return use_padcon(13,a,b,c,vrblvl-1); -- get step size
+      when 869 => return use_padcon(14,a,b,c,vrblvl-1); -- series coefficient
+      when 870 => return use_padcon(15,a,b,c,vrblvl-1); -- get Pade coefficient
+      when 871 => return use_padcon(16,a,b,c,vrblvl-1); -- get pole
      -- reading dobldobl and quaddobl target systems without solutions
       when 872 => return use_track(67,a,b,c); -- read dobldobl target
       when 873 => return use_track(68,a,b,c); -- read quaddobl target
@@ -1878,7 +1878,7 @@ function use_c2phc4c ( job : integer32;
      -- set value of the continuation parameter to zero
       when 875..877 => return use_solcon(job,a,b,c,vrblvl-1);
      -- initializes natural parameter homotopy in series-Pade tracker
-      when 878 => return use_padcon(18,a,b,c);
+      when 878 => return use_padcon(18,a,b,c,vrblvl-1);
      -- functions for stable mixed cells
       when 879 => return use_celcon(69,a,b,c);
       when 880 => return use_celcon(70,a,b,c);
@@ -1909,14 +1909,14 @@ function use_c2phc4c ( job : integer32;
      -- from m-hom to affine
       when 913..915 => return use_solcon(job,a,b,c,vrblvl-1);
      -- adding a symbol passed as string
-      when 897 => return use_syscon(job,a,b,c);
+      when 897 => return use_syscon(job,a,b,c,vrblvl-1);
      -- reading solutions from file with given name
-      when 916..918 => return use_solcon(job,a,b,c);
-      when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c,vrblvl);
+      when 916..918 => return use_solcon(job,a,b,c,vrblvl-1);
+      when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c,vrblvl-1);
      -- getting, setting the seed and the version string
-      when 997 => return Job_Handlers.Get_Seed(a,vrblvl);
-      when 998 => return Job_Handlers.Set_Seed(a,vrblvl);
-      when 999 => return Job_Handlers.Version_String(a,b,vrblvl);
+      when 997 => return Job_Handlers.Get_Seed(a,vrblvl-1);
+      when 998 => return Job_Handlers.Set_Seed(a,vrblvl-1);
+      when 999 => return Job_Handlers.Version_String(a,b,vrblvl-1);
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception
