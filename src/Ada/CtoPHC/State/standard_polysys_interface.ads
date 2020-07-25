@@ -18,6 +18,20 @@ package Standard_PolySys_Interface is
   --   initializes the container with the system provided by the user.
   --   The verbose level is given in vrblvl.
 
+  function Standard_PolySys_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a system with double precision coefficients
+  --   from file into the systems container.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the file name;
+  --   b       the characters in the file name;
+  --   vrblvl  the verbose level.
+
   function Standard_PolySys_Write
              ( vrblvl : in integer32 := 0 ) return integer32;
 
@@ -68,6 +82,37 @@ package Standard_PolySys_Interface is
   --   a       a[0] is the number of terms of a polynomial 
   --           stored in double precision with index in a[1].
 
+  function Standard_PolySys_Degree
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the degree of a polynomial stored
+  --   in double precision.
+
+  -- ON ENTRY :
+  --   a       a[0] is the index of a polynomial;
+  --   vrblvl  the verbose level.
+
+  -- ON RETURN :
+  --   b       b[0] is the degree of a polynomial 
+  --           stored in double precision with index in a[0].
+
+  function Standard_PolySys_Total_Degree
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the total degree of the system.
+
+  -- ON ENTRY :
+  --   vrblvl  the verbose level.
+
+  -- ON RETURN :
+  --   a       the product of the degrees of the polynomials
+  --           with double precision coefficients.
+
   function Standard_PolySys_Get_Term
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
@@ -100,6 +145,12 @@ package Standard_PolySys_Interface is
   --   b       the exponents in the term;
   --   c       real and imaginary part of the coefficient;
   --   vrblvl  the verbose level.
+
+  function Standard_PolySys_Clear_Symbols
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Clears the symbol table.
 
   function Standard_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;

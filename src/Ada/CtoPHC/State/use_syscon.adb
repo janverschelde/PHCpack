@@ -16,13 +16,11 @@ with Standard_Complex_Laur_Strings;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with Symbol_Table;
-with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Random_Polynomials;
 with DoblDobl_Complex_Poly_Strings;
 with DoblDobl_Complex_Laur_Strings;
 with DoblDobl_Complex_Poly_Systems;
-with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Polynomials;
@@ -30,19 +28,14 @@ with QuadDobl_Random_Polynomials;
 with QuadDobl_Complex_Poly_Strings;
 with QuadDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems;
 with Multprec_Floating_Numbers;
 with Multprec_Complex_Polynomials;
-with Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Strings;
-with Multprec_Complex_Poly_Systems;
-with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Laurentials;
 with Multprec_Complex_Laur_Strings;
 with Polynomial_Drops;
-with Total_Degree_Start_Systems;
 with Projective_Transformations;
 with Partitions_of_Sets_of_Unknowns;
 with Partitions_of_Sets_of_Unknowns_io;
@@ -104,30 +97,6 @@ function use_syscon ( job : integer32;
     Multprec_LaurSys_Container.Add_Term(i,t);
     return 0;
   end Job136;
-
-  function Job8 return integer32 is -- returns total degree
-
-    use Standard_Complex_Poly_Systems;
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    td : natural32;
-
-    use Total_Degree_Start_Systems;
-
-  begin
-    if lp = null then
-      return 1;
-    else
-      td := Product(Total_Degree_Start_Systems.Degrees(lp.all));
-      Assign(integer32(td),a);
-    end if;
-    return 0;
-  end Job8;
-
-  function Job9 return integer32 is -- clears the symbol table
-  begin
-    Symbol_Table.clear;
-    return 0;
-  end Job9;
 
   function Job10 return integer32 is -- creates an evaluator
 
@@ -854,54 +823,6 @@ function use_syscon ( job : integer32;
     when others => return 228;
   end Job228;
 
-  function Job20 return integer32 is -- degree of a polynomial
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    deg : constant integer32 := Standard_PolySys_Container.Degree(equ);
-
-  begin
-    Assign(deg,b);
-    return 0;
-  end Job20;
-
-  function Job209 return integer32 is -- degree of a double double polynomial
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    deg : constant integer32 := DoblDobl_PolySys_Container.Degree(equ);
-
-  begin
-    Assign(deg,b);
-    return 0;
-  end Job209;
-
-  function Job219 return integer32 is -- degree of a quad double polynomial
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    deg : constant integer32 := QuadDobl_PolySys_Container.Degree(equ);
-
-  begin
-    Assign(deg,b);
-    return 0;
-  end Job219;
-
-  function Job229 return integer32 is -- degree of a multiprecision polynomial
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    deg : constant integer32 := Multprec_PolySys_Container.Degree(equ);
-
-  begin
-    Assign(deg,b);
-    return 0;
-  end Job229;
-
 -- The jobs to drop a coordinate of a system come in two flavors:
 -- (1) by index: given the index of the variable in a[0];
 -- (2) by name: given the number of characters of the symbol in a[0]
@@ -1166,136 +1087,6 @@ function use_syscon ( job : integer32;
     QuadDobl_LaurSys_Container.Initialize(dropped);
     return 0;
   end Job27;
-
-  function Job540 return integer32 is -- read standard system from file
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant natural := natural(v_a(v_a'first));
-    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
-       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
-    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
-
-  begin
-   -- new_line;
-   -- put_line("Opening the file with name " & sv & " ...");
-    declare
-      file : file_type;
-      p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-    begin
-      Open(file,in_file,sv);
-      get(file,p);
-      Standard_PolySys_Container.Clear;
-      Standard_PolySys_Container.Initialize(p.all);
-      exception 
-        when NAME_ERROR =>
-          put_line("File with name " & sv & " could not be found!");
-          return 540;
-        when USE_ERROR =>
-          put_line("File with name " & sv & " could not be read!");
-          return 540;
-    end;
-    return 0;
-  end Job540;
-
-  function Job541 return integer32 is -- read double double system from file
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant natural := natural(v_a(v_a'first));
-    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
-       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
-    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
-
-  begin
-   -- new_line;
-   -- put_line("Opening the file with name " & sv & " ...");
-    declare
-      file : file_type;
-      p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    begin
-      Open(file,in_file,sv);
-      get(file,p);
-      DoblDobl_PolySys_Container.Clear;
-      DoblDobl_PolySys_Container.Initialize(p.all);
-      exception 
-        when NAME_ERROR =>
-          put_line("File with name " & sv & " could not be found!");
-          return 541;
-        when USE_ERROR =>
-          put_line("File with name " & sv & " could not be read!");
-          return 541;
-    end;
-    return 0;
-  end Job541;
-
-  function Job542 return integer32 is -- read quad double system from file
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant natural := natural(v_a(v_a'first));
-    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
-       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
-    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
-
-  begin
-   -- new_line;
-   -- put_line("Opening the file with name " & sv & " ...");
-    declare
-      file : file_type;
-      p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    begin
-      Open(file,in_file,sv);
-      get(file,p);
-      QuadDobl_PolySys_Container.Clear;
-      QuadDobl_PolySys_Container.Initialize(p.all);
-      exception 
-        when NAME_ERROR =>
-          put_line("File with name " & sv & " could not be found!");
-          return 542;
-        when USE_ERROR =>
-          put_line("File with name " & sv & " could not be read!");
-          return 542;
-    end;
-    return 0;
-  end Job542;
-
-  function Job543 return integer32 is -- read multiprecision system from file
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant natural := natural(v_a(v_a'first));
-    use Interfaces.C;
-    nbdeci : constant natural32 := natural32(v_a(v_a'first+1));
-    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
-       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
-    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
-    size : constant natural32
-         := Multprec_Floating_Numbers.Decimal_to_Size(nbdeci);
-
-  begin
-    Multprec_Complex_Polynomials_io.Set_Working_Precision(size);
-   -- new_line;
-   -- put_line("Opening the file with name " & sv & " ...");
-   -- put("number of decimal places : "); put(nbdeci,1); new_line;
-    declare
-      file : file_type;
-      p : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
-    begin
-      Open(file,in_file,sv);
-      get(file,p);
-      Multprec_PolySys_Container.Clear;
-      Multprec_PolySys_Container.Initialize(p.all);
-      exception 
-        when NAME_ERROR =>
-          put_line("File with name " & sv & " could not be found!");
-          return 543;
-        when USE_ERROR =>
-          put_line("File with name " & sv & " could not be read!");
-          return 543;
-    end;
-    return 0;
-  end Job543;
 
   function Job891 return integer32 is -- 1-homogeneous standard system
 
@@ -1572,8 +1363,8 @@ function use_syscon ( job : integer32;
       when 5 => return Standard_PolySys_Get_Term(a,b,c,vrblvl);
       when 6 => return Standard_PolySys_Add_Term(a,b,c,vrblvl);
       when 7 => return Standard_PolySys_Clear(vrblvl);
-      when 8 => return Job8; -- return total degree
-      when 9 => return Job9; -- clear the symbol table
+      when 8 => return Standard_PolySys_Total_Degree(a,vrblvl);
+      when 9 => return Standard_PolySys_Clear_Symbols(vrblvl);
       when 10 => return Job10; -- creates a system evaluator
       when 11 => return Job11; -- creates a Jacobian matrix evaluator
      -- dropping variables from polynomials
@@ -1584,7 +1375,7 @@ function use_syscon ( job : integer32;
       when 16 => return Job16; -- dobldobl drop variable by name
       when 17 => return Job17; -- quaddobl drop variable by name
      -- degrees of polynomials :
-      when 20 => return Job20;   -- degree of standard polynomial
+      when 20 => return Standard_PolySys_Degree(a,b,vrblvl);
      -- dropping variables from Laurent polynomials
       when 22 => return Job22; -- standard Laurent drop variable by index
       when 23 => return Job23; -- dobldobl Laurent drop variable by index
@@ -1642,7 +1433,7 @@ function use_syscon ( job : integer32;
       when 206 => return DoblDobl_PolySys_Add_Term(a,b,c,vrblvl);
       when 207 => return DoblDobl_PolySys_Clear(vrblvl);
       when 208 => return Job208; -- store dobldobl polynomial string
-      when 209 => return Job209; -- return degree of a polynomial
+      when 209 => return DoblDobl_PolySys_Degree(a,b,vrblvl);
      -- jobs for quad double complex polynomials
       when 210 => return QuadDobl_PolySys_Read(vrblvl);
       when 211 => return QuadDobl_PolySys_Write(vrblvl);
@@ -1653,7 +1444,7 @@ function use_syscon ( job : integer32;
       when 216 => return QuadDobl_PolySys_Add_Term(a,b,c,vrblvl);
       when 217 => return QuadDobl_PolySys_Clear(vrblvl);
       when 218 => return Job218; -- store quaddobl polynomial string
-      when 219 => return Job219; -- return degree of a polynomial
+      when 219 => return QuadDobl_PolySys_Degree(a,b,vrblvl);
      -- jobs for multiprecision complex polynomials
       when 220 => return Multprec_PolySys_Read(vrblvl);
       when 221 => return Multprec_PolySys_Write(vrblvl);
@@ -1662,7 +1453,7 @@ function use_syscon ( job : integer32;
       when 224 => return Multprec_PolySys_Size(a,vrblvl);
       when 227 => return Multprec_PolySys_Clear(vrblvl);
       when 228 => return Job228; -- store multprecision polynomial string
-      when 229 => return Job229; -- return degree of a polynomial
+      when 229 => return Multprec_PolySys_Degree(a,b,vrblvl);
      -- jobs for interchanging polynomial as strings :
       when 67 => return Job67; -- load standard polynomial from container
       when 68 => return Job68; -- load dobldobl polynomial from container
@@ -1687,10 +1478,10 @@ function use_syscon ( job : integer32;
       when 86 => return Job86; -- size limit of k-th quaddobl Laurential
       when 87 => return Job87; -- size limit of k-th multprec Laurential
      -- reading systems into the containers :
-      when 540 => return Job540; -- read standard system from file
-      when 541 => return Job541; -- read double double system from file
-      when 542 => return Job542; -- read quad double system from file
-      when 543 => return Job543; -- read multiprecision system from file
+      when 540 => return Standard_PolySys_Read_from_File(a,b,vrblvl); 
+      when 541 => return DoblDobl_PolySys_Read_from_File(a,b,vrblvl); 
+      when 542 => return QuadDobl_PolySys_Read_from_File(a,b,vrblvl); 
+      when 543 => return Multprec_PolySys_Read_from_File(a,b,vrblvl); 
      -- projective transformations :
       when 891 => return Job891; -- 1-homogeneous standard system
       when 892 => return Job892; -- 1-homogeneous dobldobl system

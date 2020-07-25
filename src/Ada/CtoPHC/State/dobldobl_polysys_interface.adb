@@ -35,6 +35,51 @@ package body DoblDobl_PolySys_Interface is
       return 200;
   end DoblDobl_PolySys_Read;
 
+  function DoblDobl_PolySys_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in DoblDobl_PolySys_Interface.");
+      put_line("DoblDobl_PolySys_Read_from_File ...");
+    end if;
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    begin
+      Open(file,in_file,sv);
+      get(file,p);
+      DoblDobl_PolySys_Container.Clear;
+      DoblDobl_PolySys_Container.Initialize(p.all);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 541;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 541;
+    end;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in DoblDobl_PolySys_Interface.");
+        put_line("DoblDobl_PolySys_Read_from_File.");
+      end if;
+      return 541;
+  end DoblDobl_PolySys_Read_from_File;
+
   function DoblDobl_PolySys_Write
              ( vrblvl : in integer32 := 0 ) return integer32 is
 
@@ -140,6 +185,31 @@ package body DoblDobl_PolySys_Interface is
       end if;
       return 204;
   end DoblDobl_PolySys_Size;
+
+  function DoblDobl_PolySys_Degree
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    deg : constant integer32 := DoblDobl_PolySys_Container.Degree(equ);
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in dobldobl_polysys_interface.DoblDobl_PolySys_Degree ...");
+    end if;
+    Assign(deg,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_polysys_interface.");
+        put_line("DoblDobl_PolySys_Degree");
+      end if;
+      return 209;
+  end DoblDobl_PolySys_Degree;
 
   function DoblDobl_PolySys_Get_Term
              ( a : C_intarrs.Pointer;

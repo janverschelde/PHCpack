@@ -6,6 +6,7 @@ with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with Total_Degree_Start_Systems;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
 with Standard_PolySys_Container;
@@ -34,6 +35,49 @@ package body Standard_PolySys_Interface is
       end if;
       return 20;
   end Standard_PolySys_Read;
+
+  function Standard_PolySys_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Read_from_File ...");
+    end if;
+    declare
+      file : file_type;
+      p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    begin
+      Open(file,in_file,sv);
+      get(file,p);
+      Standard_PolySys_Container.Clear;
+      Standard_PolySys_Container.Initialize(p.all);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 540;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 540;
+    end;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Read_from_File.");
+      end if;
+      return 540;
+  end Standard_PolySys_Read_from_File;
 
   function Standard_PolySys_Write
              ( vrblvl : in integer32 := 0 ) return integer32 is
@@ -141,6 +185,62 @@ package body Standard_PolySys_Interface is
       return 24;
   end Standard_PolySys_Size;
 
+  function Standard_PolySys_Degree
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    deg : constant integer32 := Standard_PolySys_Container.Degree(equ);
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in standard_polysys_interface.Standard_PolySys_Degree ...");
+    end if;
+    Assign(deg,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Degree");
+      end if;
+      return 20;
+  end Standard_PolySys_Degree;
+
+  function Standard_PolySys_Total_Degree
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Poly_Systems;
+    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    td : natural32;
+
+    use Total_Degree_Start_Systems;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Total_Degree ...");
+    end if;
+    if lp = null then
+      return 1;
+    else
+      td := Product(Total_Degree_Start_Systems.Degrees(lp.all));
+      Assign(integer32(td),a);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Total_Degree");
+      end if;
+      return 28;
+  end Standard_PolySys_Total_Degree;
+
   function Standard_PolySys_Get_Term
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
@@ -202,6 +302,24 @@ package body Standard_PolySys_Interface is
       end if;
       return 26;
   end Standard_PolySys_Add_Term;
+
+  function Standard_PolySys_Clear_Symbols
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Clear_Symbols ...");
+    end if;
+    Symbol_Table.Clear;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Clear_Symbols.");
+      end if;
+      return 29;
+  end Standard_PolySys_Clear_Symbols;
 
   function Standard_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

@@ -3,7 +3,8 @@ Fri 24 Jul 2020 : moved functions from use_syscon.adb into new packages
   into the new package pade_continuation_interface, added the verbose
   level as parameter to use_padcon.  Moved functions from use_c2lrhom
   into the new package schubert_interface, added the verbose level
-  parameter to use_c2lrhom.
+  parameter to use_c2lrhom.  Move more functions from use_syscon.adb
+  into the *polysys_interface packages.
 
 Thu 23 Jul 2020 : moved functions from use_syscon.adb into new packages
   {standard,dobldobl,quaddobl}_laursys_interface.

@@ -18,6 +18,20 @@ package DoblDobl_PolySys_Interface is
   --   and initializes the container with the system provided by the user.
   --   The verbose level is given in vrblvl.
 
+  function DoblDobl_PolySys_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a system with double double precision coefficients
+  --   from file into the systems container.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the file name;
+  --   b       the characters in the file name;
+  --   vrblvl  the verbose level.
+
   function DoblDobl_PolySys_Write
              ( vrblvl : in integer32 := 0 ) return integer32;
 
@@ -67,6 +81,23 @@ package DoblDobl_PolySys_Interface is
   -- ON RETURN :
   --   a       a[0] is the number of terms of a polynomial 
   --           stored in double double precision with index in a[1].
+
+  function DoblDobl_PolySys_Degree
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the degree of a polynomial stored
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   a       a[0] is the index of a polynomial;
+  --   vrblvl  the verbose level.
+
+  -- ON RETURN :
+  --   b       b[0] is the degree of a polynomial 
+  --           stored in double double precision with index in a[0].
 
   function DoblDobl_PolySys_Get_Term
              ( a : C_intarrs.Pointer;

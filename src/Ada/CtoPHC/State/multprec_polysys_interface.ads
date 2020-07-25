@@ -17,6 +17,21 @@ package Multprec_PolySys_Interface is
   --   coefficients and initializes the container with the system.
   --   The verbose level is given in vrblvl.
 
+  function Multprec_PolySys_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a system with quad double precision coefficients
+  --   from file into the systems container.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the file name;
+  --           in a[1] is the working precision to parse the coefficients;
+  --   b       the characters in the file name;
+  --   vrblvl  the verbose level.
+
   function Multprec_PolySys_Write
              ( vrblvl : in integer32 := 0 ) return integer32;
 
@@ -66,6 +81,23 @@ package Multprec_PolySys_Interface is
   -- ON RETURN :
   --   a       a[0] is the number of terms of a polynomial 
   --           stored in multiprecision with index in a[1].
+
+  function Multprec_PolySys_Degree
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the degree of a polynomial stored
+  --   in multiprecision.
+
+  -- ON ENTRY :
+  --   a       a[0] is the index of a polynomial;
+  --   vrblvl  the verbose level.
+
+  -- ON RETURN :
+  --   b       b[0] is the degree of a polynomial 
+  --           stored in multiprecision with index in a[0].
 
   function Multprec_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
