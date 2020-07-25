@@ -1627,7 +1627,7 @@ function use_c2phc4c ( job : integer32;
       when 420..421 => return use_solcon(job-310,a,b,c,vrblvl-1);
       when 428 => return use_solcon(job-310,a,b,c,vrblvl-1);
      -- operations on monomial maps as solutions to binomial systems
-      when 430..438 => return use_mapcon(job-430,a,b,c);
+      when 430..438 => return use_mapcon(job-430,a,b,c,vrblvl-1);
      -- scan for the number of variables
       when 439 => return Job439;
      -- operations on multiprecision system container
@@ -1698,7 +1698,7 @@ function use_c2phc4c ( job : integer32;
      -- convex hull via giftwrapping :
       when 580..589 => return use_giftwrap(job-579,a,b,c);
      -- scaling systems and solutions :
-      when 590..596 => return use_scaling(job-589,a,b,c);
+      when 590..596 => return use_scaling(job-589,a,b,c,vrblvl-1);
      -- copy start solutions from cell container to solutions container
       when 597 => return use_celcon(48,a,b,c); -- standard start solution
       when 598 => return use_celcon(49,a,b,c); -- dobldobl start solution
@@ -1730,7 +1730,7 @@ function use_c2phc4c ( job : integer32;
       when 661..679 => return use_c2fac(job-600,a,b,c);
       when 682..690 => return use_c2fac(job-600,a,b,c);
      -- power series Newton method
-      when 691..696 => return use_series(job-690,a,b,c);
+      when 691..696 => return use_series(job-690,a,b,c,vrblvl-1);
      -- clear systems pool
       when 697 => return use_syspool(13,a,b,c); -- clear standard system pool
       when 698 => return use_syspool(14,a,b,c); -- clear dobldobl system pool
@@ -1741,16 +1741,16 @@ function use_c2phc4c ( job : integer32;
       when 702 => return QuadDobl_Polynomial_Solver(a,b,vrblvl-1);
       when 703 => return QuadDobl_Laurent_Solver(a,b,vrblvl-1);
      -- Pade approximants
-      when 704 => return use_series(7,a,b,c); -- Pade in double precision
-      when 705 => return use_series(8,a,b,c); -- Pade with double doubles
-      when 706 => return use_series(9,a,b,c); -- Pade with quad doubles
+      when 704 => return use_series(7,a,b,c,vrblvl-1); -- in double precision
+      when 705 => return use_series(8,a,b,c,vrblvl-1); -- double doubles
+      when 706 => return use_series(9,a,b,c,vrblvl-1); -- quad doubles
      -- reduction of polynomial systems
       when 707 => return use_reduction(1,a,b,c); -- standard linear reduction
       when 708 => return use_reduction(2,a,b,c); -- dobldobl linear reduction
       when 709 => return use_reduction(3,a,b,c); -- quaddobl linear reduction
       when 710 => return use_reduction(4,a,b,c); -- standard nonlinear reduce
      -- container for numerically computed tropisms
-      when 711..731 => return use_numbtrop(job-710,a,b,c);
+      when 711..731 => return use_numbtrop(job-710,a,b,c,vrblvl-1);
      -- computation of multiplicity structure
       when 732 => return use_multip(0,a,b,c); -- standard double precision
       when 733 => return use_multip(0,a,b,c); -- double double precision
@@ -1856,7 +1856,7 @@ function use_c2phc4c ( job : integer32;
      -- when 843 => return use_outdata(9,a,b,c); -- call DEMiCs for mixed volume
      -- when 844 => return use_outdata(10,a,b,c); -- stable mv by DEMiCs
      -- numerical irreducible decomposition
-      when 845..859 => return use_witsols(job-845,a,b,c); -- solvers
+      when 845..859 => return use_witsols(job-845,a,b,c,vrblvl-1); -- solvers
      -- Pade continuation in a step wise fashion
       when 860 => return use_padcon(5,a,b,c,vrblvl-1); -- init homotopy
       when 861 => return use_padcon(6,a,b,c,vrblvl-1); -- set start solution
