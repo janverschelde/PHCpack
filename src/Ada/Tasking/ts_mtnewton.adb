@@ -110,7 +110,7 @@ procedure ts_mtnewton is
                 s : in Standard_Speelpenning_Convolutions.Link_to_System;
                 scf : in Standard_Complex_VecVecs.VecVec;
                 serelp,mltelp,speedup,efficiency : in out Duration;
-                output : in boolean; verbose : in boolean := true ) is
+                output,estco : in boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method with nbt tasks in double precision.
@@ -125,6 +125,7 @@ procedure ts_mtnewton is
   --   mltelp     the previous elapsed wall clock time of a multitasked run;
   --   speedup    the previous speedup of a multitasked run;
   --   output     if true, then Newton is verbose, else silent;
+  --   estco      if true, then the condition number is estimated;
   --   verbose    if true, then timings are shown, otherwise not.
 
   -- ON RETURN :
@@ -141,7 +142,7 @@ procedure ts_mtnewton is
     info,nbrit : integer32 := 0;
     fail : boolean;
     tol : constant double_float := 1.0E-12;
-    absdx : double_float;
+    rcond,absdx : double_float;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
     use Ada.Calendar; -- for the difference operation on Duration
@@ -156,12 +157,23 @@ procedure ts_mtnewton is
      else multstart := Ada.Calendar.Clock;
     end if;
     if verbose then
-      Multitasked_LU_Newton_Steps
-       (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-        info,ipvt,wks,output);
+      if estco then
+        Multitasked_LU_Newton_Steps
+         (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+          rcond,ipvt,wks,output);
+      else
+        Multitasked_LU_Newton_Steps
+         (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+          info,ipvt,wks,output);
+      end if;
     else
-      Multitasked_LU_Newton_Steps
-       (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      if estco then
+        Multitasked_LU_Newton_Steps
+         (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
+      else
+        Multitasked_LU_Newton_Steps
+         (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      end if;
     end if;
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
@@ -205,7 +217,7 @@ procedure ts_mtnewton is
                 s : in DoblDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in DoblDobl_Complex_VecVecs.VecVec;
                 serelp,mltelp,speedup,efficiency : in out Duration;
-                output : in boolean; verbose : in boolean := true ) is
+                output,estco : in boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method with nbt tasks in double precision.
@@ -220,6 +232,7 @@ procedure ts_mtnewton is
   --   mltelp     the previous elapsed wall clock time of a multitasked run;
   --   speedup    the previous speedup of a multitasked run;
   --   output     if true, then Newton is verbose, else silent;
+  --   estco      if true, then the condition number will be estimated;
   --   verbose    if true, then timings are shown, else silent.
 
   -- ON RETURN :
@@ -236,7 +249,7 @@ procedure ts_mtnewton is
     info,nbrit : integer32 := 0;
     fail : boolean;
     tol : constant double_double := create(1.0E-24);
-    absdx : double_double;
+    rcond,absdx : double_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
     use Ada.Calendar; -- for the difference operation on Duration
@@ -251,12 +264,23 @@ procedure ts_mtnewton is
      else multstart := Ada.Calendar.Clock;
     end if;
     if verbose then
-      Multitasked_LU_Newton_Steps
-        (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-         info,ipvt,wks,output);
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           rcond,ipvt,wks,output);
+      else
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           info,ipvt,wks,output);
+      end if;
     else
-      Multitasked_LU_Newton_Steps
-        (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
+      else
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      end if;
     end if;
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
@@ -300,7 +324,7 @@ procedure ts_mtnewton is
                 s : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
                 serelp,mltelp,speedup,efficiency : in out Duration;
-                output : in boolean; verbose : in boolean := true ) is
+                output,estco : in boolean; verbose : in boolean := true ) is
 
   -- DESCRIPTION :
   --   Runs Newton's method with nbt tasks in double precision.
@@ -316,6 +340,7 @@ procedure ts_mtnewton is
   --   mltelp     the previous elapsed wall clock time of a multitasked run;
   --   speedup    the previous speedup of a multitasked run;
   --   output     if true, then Newton is verbose, else silent;
+  --   estco      if true, then the condition number is estimated;
   --   verbose    if true, then timings are shown, else silent;
 
   -- ON RETURN :
@@ -332,7 +357,7 @@ procedure ts_mtnewton is
     info,nbrit : integer32 := 0;
     fail : boolean;
     tol : constant quad_double := create(1.0E-48);
-    absdx : quad_double;
+    rcond,absdx : quad_double;
     seristart,seristop,multstart,multstop : Ada.Calendar.Time;
 
     use Ada.Calendar; -- for the difference operation on Duration
@@ -347,12 +372,23 @@ procedure ts_mtnewton is
      else multstart := Ada.Calendar.Clock;
     end if;
     if verbose then
-      Multitasked_LU_Newton_Steps
-        (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
-         info,ipvt,wks,output);
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           rcond,ipvt,wks,output);
+      else
+        Multitasked_LU_Newton_Steps
+          (standard_output,nbt,s,scf,maxit,nbrit,tol,absdx,fail,
+           info,ipvt,wks,output);
+      end if;
     else
-      Multitasked_LU_Newton_Steps
-        (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      if estco then
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,rcond,ipvt,wks);
+      else
+        Multitasked_LU_Newton_Steps
+          (nbt,s,scf,maxit,nbrit,tol,absdx,fail,info,ipvt,wks);
+      end if;
     end if;
     if nbt = 1 then
       seristop := Ada.Calendar.Clock;
@@ -409,7 +445,7 @@ procedure ts_mtnewton is
     scf : Standard_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
-    otp : boolean;
+    otp,est : boolean;
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
 
   begin
@@ -421,9 +457,11 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
       scf := Newton_Convolutions.Series_Coefficients(sol,deg);
       Standard_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,otp);
+                   speedup,efficiency,otp,est);
       Standard_Complex_VecVecs.Clear(scf);
     end loop;
   end Standard_Run_Loop;
@@ -446,7 +484,7 @@ procedure ts_mtnewton is
     scf : DoblDobl_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
-    otp : boolean;
+    otp,est : boolean;
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
 
   begin
@@ -458,9 +496,11 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
       scf := Newton_Convolutions.Series_Coefficients(sol,deg);
       DoblDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,otp);
+                   speedup,efficiency,otp,est);
       DoblDobl_Complex_VecVecs.Clear(scf);
     end loop;
   end DoblDobl_Run_Loop;
@@ -483,7 +523,7 @@ procedure ts_mtnewton is
     scf : QuadDobl_Complex_VecVecs.VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
-    otp : boolean;
+    otp,est : boolean;
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
 
   begin
@@ -495,9 +535,11 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
       scf := Newton_Convolutions.Series_Coefficients(sol,deg);
       QuadDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,otp);
+                   speedup,efficiency,otp,est);
       QuadDobl_Complex_VecVecs.Clear(scf);
     end loop;
   end QuadDobl_Run_Loop;
@@ -603,7 +645,7 @@ procedure ts_mtnewton is
     scf : VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
-    otp : boolean;
+    otp,est : boolean;
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
 
   begin
@@ -615,9 +657,11 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
       Standard_Complex_VecVecs.Copy(x.all,scf);
       Standard_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,otp);
+                   speedup,efficiency,otp,est);
       Standard_Complex_VecVecs.Clear(scf);
     end loop;
   end Standard_Random_Test;
@@ -642,7 +686,7 @@ procedure ts_mtnewton is
     scf : VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
-    otp : boolean;
+    otp,est : boolean;
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
 
   begin
@@ -654,9 +698,11 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
       DoblDobl_Complex_VecVecs.Copy(x.all,scf);
       DoblDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,otp);
+                   speedup,efficiency,otp,est);
       DoblDobl_Complex_VecVecs.Clear(scf);
     end loop;
   end DoblDobl_Random_Test;
@@ -681,7 +727,7 @@ procedure ts_mtnewton is
     scf : VecVec(1..dim);
     maxit,nbt : integer32 := 0;
     ans : character;
-    otp : boolean;
+    otp,est : boolean;
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
 
   begin
@@ -693,9 +739,11 @@ procedure ts_mtnewton is
       exit when (nbt = 0);
       put("Output during multitasking ? (y/n) "); Ask_Yes_or_No(ans);
       otp := (ans = 'y');
+      put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
+      est := (ans = 'y');
       QuadDobl_Complex_VecVecs.Copy(x.all,scf);
       QuadDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                   speedup,efficiency,otp);
+                   speedup,efficiency,otp,est);
       QuadDobl_Complex_VecVecs.Clear(scf);
     end loop;
   end QuadDobl_Random_Test;
@@ -729,7 +777,7 @@ procedure ts_mtnewton is
     put_line(file,"double precision");
     Standard_Complex_VecVecs.Copy(x.all,scf);
     Standard_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                 speedup,efficiency,false,verbose);
+                 speedup,efficiency,false,false,verbose);
     Standard_Complex_VecVecs.Clear(scf);
     put(file,"  1 : ");
     duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
@@ -737,7 +785,7 @@ procedure ts_mtnewton is
       for k in 1..nbruns loop
         Standard_Complex_VecVecs.Copy(x.all,scf);
         Standard_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                     speedup,efficiency,false,verbose);
+                     speedup,efficiency,false,false,verbose);
         Standard_Complex_VecVecs.Clear(scf);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mult_elapsed,1,3);
@@ -751,7 +799,7 @@ procedure ts_mtnewton is
         nbt := nbtseq(k);
         Standard_Complex_VecVecs.Copy(x.all,scf);
         Standard_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                     speedup,efficiency,false,verbose);
+                     speedup,efficiency,false,false,verbose);
         Standard_Complex_VecVecs.Clear(scf);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mult_elapsed,1,3);
@@ -791,7 +839,7 @@ procedure ts_mtnewton is
     put_line(file,"double double precision");
     DoblDobl_Complex_VecVecs.Copy(x.all,scf);
     DoblDobl_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                 speedup,efficiency,false,verbose);
+                 speedup,efficiency,false,false,verbose);
     DoblDobl_Complex_VecVecs.Clear(scf);
     put(file,"  1 : ");
     duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
@@ -799,7 +847,7 @@ procedure ts_mtnewton is
       for k in 1..nbruns loop
         DoblDobl_Complex_VecVecs.Copy(x.all,scf);
         DoblDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                     speedup,efficiency,false,verbose);
+                     speedup,efficiency,false,false,verbose);
         DoblDobl_Complex_VecVecs.Clear(scf);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mult_elapsed,1,3);
@@ -813,7 +861,7 @@ procedure ts_mtnewton is
         nbt := nbtseq(k);
         DoblDobl_Complex_VecVecs.Copy(x.all,scf);
         DoblDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                     speedup,efficiency,false,verbose);
+                     speedup,efficiency,false,false,verbose);
         DoblDobl_Complex_VecVecs.Clear(scf);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mult_elapsed,1,3);
@@ -853,7 +901,7 @@ procedure ts_mtnewton is
     put_line(file,"quad double precision");
     QuadDobl_Complex_VecVecs.Copy(x.all,scf);
     QuadDobl_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                 speedup,efficiency,false,verbose);
+                 speedup,efficiency,false,false,verbose);
     QuadDobl_Complex_VecVecs.Clear(scf);
     put(file,"  1 : ");
     duration_io.put(file,seri_elapsed,1,3); new_line(file); flush(file);
@@ -861,7 +909,7 @@ procedure ts_mtnewton is
       for k in 1..nbruns loop
         QuadDobl_Complex_VecVecs.Copy(x.all,scf);
         QuadDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                     speedup,efficiency,false,verbose);
+                     speedup,efficiency,false,false,verbose);
         QuadDobl_Complex_VecVecs.Clear(scf);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mult_elapsed,1,3);
@@ -875,7 +923,7 @@ procedure ts_mtnewton is
         nbt := nbtseq(k);
         QuadDobl_Complex_VecVecs.Copy(x.all,scf);
         QuadDobl_Run(nbt,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
-                     speedup,efficiency,false,verbose);
+                     speedup,efficiency,false,false,verbose);
         QuadDobl_Complex_VecVecs.Clear(scf);
         put(file,nbt,3);
         put(file," : "); duration_io.put(file,mult_elapsed,1,3);

@@ -1,3 +1,6 @@
+Mon 27 Jul 2020 : to multitasked_newton_convolutions, added procedures to
+  return the estimated condition numbers, tested by ts_mtnewton.
+
 Fri 10 Jul 2020 : in multitasked_path_convolutions.adb, flipped the SVD
   into LU, for the predictor type on coefficient convolution circuits.
 
