@@ -11,6 +11,9 @@ The default extension is .ads (specification of Ada package).
 In mixing C with Ada we give the extension, because sometimes we give
 the same name (but different suffix) to related C and Ada routines.
 
+In version 2.4.79, many new interface packages were added to organize
+and document the definitions of the interface functions better.
+
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
@@ -107,6 +110,7 @@ ts_use_giftwrap                  : test on use_giftwrap
 ts_giftwcon                      : test on giftwrapping container
 ------------------------------------------------------------------------------
 parameter_homotopy_state         : definition of parameter indices
+sweep_interface                  : interface to the sweep operations
 use_sweep                        : C interface for sweep homotopy
 ts_use_sweep                     : test on use_sweep
 ------------------------------------------------------------------------------
