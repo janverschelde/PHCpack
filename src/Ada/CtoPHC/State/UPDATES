@@ -1,3 +1,6 @@
+Sun 26 Jul 2020 : new package giftwrap_interface with functions taken
+  from use_giftwrap.
+
 Sat 25 Jul 2020 : new package multprec_solutions_interface with functions
   from use_solcon.  Updated use_c2phc4c.adb to pass the verbose level.
   Moved functions from use_series.adb into power_series_interface,

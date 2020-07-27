@@ -100,9 +100,10 @@ use_mapcon                       : Ada gateway to monomial maps container
 unisolve                         : roots of univariate polynomials
 ts_unisolve                      : test on unisolve
 ------------------------------------------------------------------------------
+multprec_giftwrap_container      : hold results of giftwrapping method
+giftwrap_interface               : interface to giftwrapping functions
 use_giftwrap                     : giftwrapping for convex hulls
 ts_use_giftwrap                  : test on use_giftwrap
-multprec_giftwrap_container      : hold results of giftwrapping method
 ts_giftwcon                      : test on giftwrapping container
 ------------------------------------------------------------------------------
 parameter_homotopy_state         : definition of parameter indices
