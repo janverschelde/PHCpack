@@ -1696,7 +1696,7 @@ function use_c2phc4c ( job : integer32;
       when 570..574 => return use_syscon(job-440,a,b,c,vrblvl-1);
       when 577..579 => return use_syscon(job-440,a,b,c,vrblvl-1);
      -- convex hull via giftwrapping :
-      when 580..589 => return use_giftwrap(job-579,a,b,c);
+      when 580..589 => return use_giftwrap(job-579,a,b,c,vrblvl-1);
      -- scaling systems and solutions :
       when 590..596 => return use_scaling(job-589,a,b,c,vrblvl-1);
      -- copy start solutions from cell container to solutions container
