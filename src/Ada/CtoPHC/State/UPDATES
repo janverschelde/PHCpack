@@ -1,5 +1,7 @@
 Mon 27 Jul 2020 : moved functions from use_sweep into a new package
   sweep_interface, added verbose level to use_sweep.
+  Added new package member_interface, with the functions from use_c2mbt,
+  added verbose level parameter to use_c2mbt.
 
 Sun 26 Jul 2020 : new package giftwrap_interface with functions taken
   from use_giftwrap.  Updated use_c2phc4c.adb to pass verbose level.

@@ -88,6 +88,7 @@ dobldobl_monodromy_permutations  : permutations on double double data
 quaddobl_monodromy_permutations  : permutations on quad double data
 use_c2fac                        : Ada gateway to factorization in PHCpack
 ts_use_c2fac                     : C testing operations in use_c2fac
+member_interface                 : interface functions for membership test
 use_c2mbt                        : homotopy membership test jobs for in C
 ------------------------------------------------------------------------------
 cells_container                  : manages mixed-cell configurations
