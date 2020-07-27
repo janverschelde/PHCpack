@@ -1,8 +1,17 @@
 with text_io;                            use text_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Complex_Vector_Norms;
+with DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;
+-- with Standard_Complex_VecVecs_io;
+-- with DoblDobl_Complex_VecVecs_io;
+-- with QuadDobl_Complex_VecVecs_io;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_QR_Least_Squares;  use Standard_Complex_QR_Least_Squares;
 with Standard_Complex_Singular_Values;
@@ -1092,6 +1101,18 @@ package body Multitasked_Series_Linearization is
       end if;
       Multitasked_Solve_Next_by_lusolve(k,nbt,A,b,ipvt,wrk,output);
     end loop;
+    if output then
+      put_line("Norm of solution components of the multitasked solve by lu :");
+     -- Standard_Complex_VecVecs_io.put_line(b);
+      for k in b'range loop
+        declare
+          nrm : constant double_float
+              := Standard_Complex_Vector_Norms.Max_Norm(b(k).all);
+        begin
+          put("||x("); put(k,1); put(")|| :"); put(nrm,3); new_line;
+        end;
+      end loop;
+    end if;
   end Multitasked_Solve_Loop_by_lusolve;
 
   procedure Multitasked_Solve_Loop_by_lusolve
@@ -1109,6 +1130,18 @@ package body Multitasked_Series_Linearization is
       end if;
       Multitasked_Solve_Next_by_lusolve(k,nbt,A,b,ipvt,wrk,output);
     end loop;
+    if output then
+      put_line("Norm of solution components of the multitasked solve by lu :");
+     -- DoblDobl_Complex_VecVecs_io.put_line(b);
+      for k in b'range loop
+        declare
+          nrm : constant double_double
+              := DoblDobl_Complex_Vector_Norms.Max_Norm(b(k).all);
+        begin
+          put("||x("); put(k,1); put(")|| : "); put(nrm,3); new_line;
+        end;
+      end loop;
+    end if;
   end Multitasked_Solve_Loop_by_lusolve;
 
   procedure Multitasked_Solve_Loop_by_lusolve
@@ -1126,6 +1159,18 @@ package body Multitasked_Series_Linearization is
       end if;
       Multitasked_Solve_Next_by_lusolve(k,nbt,A,b,ipvt,wrk,output);
     end loop;
+    if output then
+      put_line("Norm of solution components of the multitasked solve by lu :");
+     -- QuadDobl_Complex_VecVecs_io.put_line(b);
+      for k in b'range loop
+        declare
+          nrm : constant quad_double
+              := QuadDobl_Complex_Vector_Norms.Max_Norm(b(k).all);
+        begin
+          put("||x("); put(k,1); put(")|| : "); put(nrm,3); new_line;
+        end;
+      end loop;
+    end if;
   end Multitasked_Solve_Loop_by_lusolve;
 
   procedure Multitasked_Solve_Loop_by_QRLS
