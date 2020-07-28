@@ -1,3 +1,6 @@
+Tue 28 Jul 2020 : new package cells_interface with improved versions of
+  the interface function called in use_celcon.
+
 Mon 27 Jul 2020 : moved functions from use_sweep into a new package
   sweep_interface, added verbose level to use_sweep.
   Added new package member_interface, with the functions from use_c2mbt,
