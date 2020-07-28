@@ -54,7 +54,8 @@ with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 function use_celcon ( job : integer32;
                       a : C_intarrs.Pointer;
                       b : C_intarrs.Pointer;
-                      c : C_dblarrs.Pointer ) return integer32 is
+                      c : C_dblarrs.Pointer;
+                      vrblvl : integer32 := 0 ) return integer32 is
 
   function Select_Point ( L : Lists_of_Integer_Vectors.List; k : natural32 )
                         return Standard_Integer_Vectors.Link_to_Vector is
@@ -100,7 +101,13 @@ function use_celcon ( job : integer32;
     return res;
   end Select_Point;
 
-  function Job0 return integer32 is  -- read mcc and initialize container
+  function Cells_Read_Floating_Mixed_Cells
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a regular mixed cell configuration,
+  --   induced by a floating-point lifting function,
+  --   and stores the mixed cells in the container.
 
     use Arrays_of_Floating_Vector_Lists;
     use Floating_mixed_Subdivisions;
@@ -113,6 +120,9 @@ function use_celcon ( job : integer32;
     sub : Mixed_Subdivision;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in cells_interface.Cells_Read_Floating_Mixed_Cells ...");
+    end if;
     new_line;
     put_line("Reading the file name for a mixed-cell configuration.");
     Read_Name_and_Open_File(file);
@@ -122,9 +132,21 @@ function use_celcon ( job : integer32;
     lif := new Array_of_Lists'(Lifted_Supports(r,sub));
     Cells_Container.Initialize(mix,lif,sub);
     return 0;
-  end Job0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Read_Floating_Mixed_Cells.");
+      end if;
+      return 80;
+  end Cells_Read_Floating_Mixed_Cells;
 
-  function Job1 return integer32 is -- write the mcc in the container
+  function Cells_Write_Floating_Mixed_Cells
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Writes the mixed cells stored in the container
+  --   for configurations induced by floating-point lifting.
 
     use Floating_mixed_Subdivisions;
 
@@ -133,6 +155,9 @@ function use_celcon ( job : integer32;
     n,mv : natural32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in cells_interface.Cells_Write_Floating_Mixed_Cells ...");
+    end if;
     if not Is_Null(mcc) then
       n := Cells_Container.Dimension;
       mix := Cells_Container.Type_of_Mixture;
@@ -140,15 +165,74 @@ function use_celcon ( job : integer32;
       put("The mixed volume is "); put(mv,1); put_line(".");
     end if;
     return 0;
-  end Job1;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Write_Floating_Mixed_Cells.");
+      end if;
+      return 81;
+  end Cells_Write_Floating_Mixed_Cells;
 
-  function Job4 return integer32 is -- return type of mixture
+  function Cells_Number_of_Floating_Mixed_Cells
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of mixed cells stored in the container,
+  --   induced by a floating-point lifting.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Number_of_Floating_Mixed_Cells ...");
+    end if;
+    Assign(integer32(Cells_Container.Length),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Number_of_Floating_Mixed_Cells.");
+      end if;
+      return 82;
+  end Cells_Number_of_Floating_Mixed_Cells;
+
+  function Cells_Dimension_of_Floating_Mixed_Cells
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the dimension of the mixed cells stored in the container,
+  --   induced by a floating-point lifting.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Dimension_of_Floating_Mixed_Cells ...");
+    end if;
+    Assign(integer32(Cells_Container.Dimension),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Dimension_of_Floating_Mixed_Cells.");
+      end if;
+      return 83;
+  end Cells_Dimension_of_Floating_Mixed_Cells;
+
+  function Cells_Floating_Mixture
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     use Standard_Integer_Vectors;
     mix : Link_to_Vector;
     r : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in cells_interface.Cells_Floating_Mixture ...");
+    end if;
     mix := Cells_Container.Type_of_Mixture;
     if mix /= null
      then r := mix'last; Assign(mix.all,b);
@@ -156,7 +240,14 @@ function use_celcon ( job : integer32;
     end if;
     Assign(r,a);
     return 0;
-  end Job4;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Floating_Mixture.");
+      end if;
+      return 84;
+  end Cells_Floating_Mixture;
 
   function Job5 return integer32 is -- return cardinalities of supports
 
@@ -407,48 +498,177 @@ function use_celcon ( job : integer32;
     end if;
   end Job15;
 
-  function Job17 return integer32 is -- init random coefficient system
+  function Cells_Make_Standard_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Generates a random coefficient polynomial system in double
+  --   precision using the mixtures and supports in the cells container.
+  --   The system is stored in the cells container.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Make_Standard_Coefficient_System ...");
+    end if;
+    Cells_Container.Generate_Random_Standard_Coefficient_System;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Make_Standard_Coefficient_System.");
+      end if;
+      return 96;
+  end Cells_Make_Standard_Coefficient_System;
+
+  function Cells_Make_DoblDobl_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Generates a random coefficient polynomial system in double double
+  --   precision using the mixtures and supports in the cells container.
+  --   The system is stored in the cells container.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Make_DoblDobl_Coefficient_System ...");
+    end if;
+    Cells_Container.Generate_Random_DoblDobl_Coefficient_System;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Make_DoblDobl_Coefficient_System.");
+      end if;
+      return 460;
+  end Cells_Make_DoblDobl_Coefficient_System;
+
+  function Cells_Make_QuadDobl_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Generates a random coefficient polynomial system in quad double
+  --   precision using the mixtures and supports in the cells container.
+  --   The system is stored in the cells container.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Make_QuadDobl_Coefficient_System ...");
+    end if;
+    Cells_Container.Generate_Random_QuadDobl_Coefficient_System;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Make_QuadDobl_Coefficient_System.");
+      end if;
+      return 470;
+  end Cells_Make_QuadDobl_Coefficient_System;
+
+  function Cells_Read_Standard_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a coefficient polynomial system
+  --   in double precision and stores it in the container.
 
     q : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Read_Standard_Coefficient_System ...");
+    end if;
     new_line;
     put_line("Reading a random coefficient polynomial system ...");
     get(q);
     Cells_Container.Initialize_Random_Standard_Coefficient_System(q.all);
     return 0;
-  end Job17;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Read_Standard_Coefficient_System.");
+      end if;
+      return 97;
+  end Cells_Read_Standard_Coefficient_System;
 
-  function Job27 return integer32 is -- init random dd coefficient system
+  function Cells_Read_DoblDobl_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a coefficient polynomial system
+  --   in double double precision and stores it in the container.
 
     q : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Read_DoblDobl_Coefficient_System ...");
+    end if;
     new_line;
     put_line("Reading a random coefficient polynomial system ...");
     get(q);
     Cells_Container.Initialize_Random_DoblDobl_Coefficient_System(q.all);
     return 0;
-  end Job27;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Read_DoblDobl_Coefficient_System.");
+      end if;
+      return 461;
+  end Cells_Read_DoblDobl_Coefficient_System;
 
-  function Job37 return integer32 is -- init random qd coefficient system
+  function Cells_Read_QuadDobl_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a coefficient polynomial system
+  --   in quad double precision and stores it in the container.
 
     q : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Read_QuadDobl_Coefficient_System ...");
+    end if;
     new_line;
     put_line("Reading a random coefficient polynomial system ...");
     get(q);
     Cells_Container.Initialize_Random_QuadDobl_Coefficient_System(q.all);
     return 0;
-  end Job37;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Read_QuadDobl_Coefficient_System.");
+      end if;
+      return 471;
+  end Cells_Read_QuadDobl_Coefficient_System;
 
-  function Job18 return integer32 is -- write random coefficient system
+  function Cells_Write_Standard_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Writes the coefficient system in double precision
+  --   to standard output or to the defined output file.
 
     q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
       := Cells_Container.Retrieve_Random_Standard_Coefficient_System;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Write_Standard_Coefficient_System ...");
+    end if;
     if PHCpack_Operations.Is_File_Defined then
       put_line(PHCpack_Operations.output_file,q.all);
       new_line(PHCpack_Operations.output_file);
@@ -459,14 +679,30 @@ function use_celcon ( job : integer32;
       put_line(standard_output,"THE SOLUTIONS :");
     end if;
     return 0;
-  end Job18;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Write_Standard_Coefficient_System.");
+      end if;
+      return 98;
+  end Cells_Write_Standard_Coefficient_System;
 
-  function Job28 return integer32 is -- write random dd coefficient system
+  function Cells_Write_DoblDobl_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Writes the coefficient system in double double precision
+  --   to standard output or to the defined output file.
 
     q : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := Cells_Container.Retrieve_Random_DoblDobl_Coefficient_System;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Write_DoblDobl_Coefficient_System ...");
+    end if;
     if PHCpack_Operations.Is_File_Defined then
       put_line(PHCpack_Operations.output_file,q.all);
       new_line(PHCpack_Operations.output_file);
@@ -477,14 +713,30 @@ function use_celcon ( job : integer32;
       put_line(standard_output,"THE SOLUTIONS :");
     end if;
     return 0;
-  end Job28;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Write_DoblDobl_Coefficient_System.");
+      end if;
+      return 462;
+  end Cells_Write_DoblDobl_Coefficient_System;
 
-  function Job38 return integer32 is -- write random qd coefficient system
+  function Cells_Write_QuadDobl_Coefficient_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Writes the coefficient system in quad double precision
+  --   to standard output or to the defined output file.
 
     q : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := Cells_Container.Retrieve_Random_QuadDobl_Coefficient_System;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Write_QuadDobl_Coefficient_System ...");
+    end if;
     if PHCpack_Operations.Is_File_Defined then
       put_line(PHCpack_Operations.output_file,q.all);
       new_line(PHCpack_Operations.output_file);
@@ -495,111 +747,370 @@ function use_celcon ( job : integer32;
       put_line(standard_output,"THE SOLUTIONS :");
     end if;
     return 0;
-  end Job38;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Write_QuadDobl_Coefficient_System.");
+      end if;
+      return 472;
+  end Cells_Write_QuadDobl_Coefficient_System;
 
-  function Job19 return integer32 is -- copy into st systems container
+  function Cells_Standard_System_into_Container
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Copies the coefficient system in double precision
+  --   into the systems container.
 
     q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
       := Cells_Container.Retrieve_Random_Standard_Coefficient_System;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Standard_System_into_Container ...");
+    end if;
     Standard_PolySys_Container.Initialize(q.all);
     return 0;
-  end Job19;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Standard_System_into_Container.");
+      end if;
+      return 99;
+  end Cells_Standard_System_into_Container;
 
-  function Job29 return integer32 is -- copy into dd systems container
+  function Cells_DoblDobl_System_into_Container
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Copies the coefficient system in double double precision
+  --   into the systems container.
 
     q : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := Cells_Container.Retrieve_Random_DoblDobl_Coefficient_System;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_DoblDobl_System_into_Container ...");
+    end if;
     DoblDobl_PolySys_Container.Initialize(q.all);
     return 0;
-  end Job29;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_DoblDobl_System_into_Container.");
+      end if;
+      return 463;
+  end Cells_DoblDobl_System_into_Container;
 
-  function Job39 return integer32 is -- copy into qd systems container
+  function Cells_QuadDobl_System_into_Container
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Copies the coefficient system in quad double precision
+  --   into the systems container.
 
     q : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := Cells_Container.Retrieve_Random_QuadDobl_Coefficient_System;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_QuadDobl_System_into_Container ...");
+    end if;
     QuadDobl_PolySys_Container.Initialize(q.all);
     return 0;
-  end Job39;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_QuadDobl_System_into_Container.");
+      end if;
+      return 473;
+  end Cells_QuadDobl_System_into_Container;
 
-  function Job20 return integer32 is -- copy from systems container
+  function Cells_Standard_System_from_Container
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Copies the system in the container for double precision
+  --   into the cells container.
 
     q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
       := Standard_PolySys_Container.Retrieve;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Standard_System_from_Container ...");
+    end if;
     Cells_Container.Initialize_Random_Standard_Coefficient_System(q.all);
     return 0;
-  end Job20;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Standard_System_from_Container.");
+      end if;
+      return 100;
+  end Cells_Standard_System_from_Container;
 
-  function Job30 return integer32 is -- copy from dd systems container
+  function Cells_DoblDobl_System_from_Container
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Copies the system in the container for double double precision
+  --   into the cells container.
 
     q : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := DoblDobl_PolySys_Container.Retrieve;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_DoblDobl_System_from_Container ...");
+    end if;
     Cells_Container.Initialize_Random_DoblDobl_Coefficient_System(q.all);
     return 0;
-  end Job30;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_DoblDobl_System_from_Container.");
+      end if;
+      return 464;
+  end Cells_DoblDobl_System_from_Container;
 
-  function Job40 return integer32 is -- copy from qd systems container
+  function Cells_QuadDobl_System_from_Container
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Copies the system in the container for quad double precision
+  --   into the cells container.
 
     q : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
       := QuadDobl_PolySys_Container.Retrieve;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_QuadDobl_System_from_Container ...");
+    end if;
     Cells_Container.Initialize_Random_QuadDobl_Coefficient_System(q.all);
     return 0;
-  end Job40;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_QuadDobl_System_from_Container.");
+      end if;
+      return 474;
+  end Cells_QuadDobl_System_from_Container;
 
-  function Job22 return integer32 is -- solve a standard start system
+  function Cells_Standard_Polyhedral_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Makes a polyhedral homotopy to solve a random system
+  --   in double precision.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Standard_Polyhedral_Homotopy ...");
+    end if;
+    Cells_Container.Standard_Polyhedral_Homotopy;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Standard_Polyhedral_Homotopy.");
+      end if;
+      return 101;
+  end Cells_Standard_Polyhedral_Homotopy;
+
+  function Cells_DoblDobl_Polyhedral_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Makes a polyhedral homotopy to solve a random system
+  --   in double double precision.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_DoblDobl_Polyhedral_Homotopy ...");
+    end if;
+    Cells_Container.DoblDobl_Polyhedral_Homotopy;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_DoblDobl_Polyhedral_Homotopy.");
+      end if;
+      return 465;
+  end Cells_DoblDobl_Polyhedral_Homotopy;
+
+  function Cells_QuadDobl_Polyhedral_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Makes a polyhedral homotopy to solve a random system
+  --   in quad double precision.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_QuadDobl_Polyhedral_Homotopy ...");
+    end if;
+    Cells_Container.QuadDobl_Polyhedral_Homotopy;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_QuadDobl_Polyhedral_Homotopy.");
+      end if;
+      return 475;
+  end Cells_QuadDobl_Polyhedral_Homotopy;
+
+  function Cells_Standard_Start_Solve 
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Solves the start system which corresponds to a mixed cell,
+  --   in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to the mixed cells;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       in b[0] is the number of solutions.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
     mv : natural32;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Standard_Start_Solve ...");
+    end if;
    -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
     Cells_Container.Solve_Standard_Start_System(k,mv);
     Assign(integer32(mv),b);
    -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
     return 0;
-  end Job22;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Standard_Start_Solve.");
+      end if;
+      return 102;
+  end Cells_Standard_Start_Solve;
 
-  function Job32 return integer32 is -- solve a dobldobl start system
+  function Cells_DoblDobl_Start_Solve
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Solves the start system which corresponds to a mixed cell,
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to the mixed cells;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       in b[0] is the number of solutions.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
     mv : natural32;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_DoblDobl_Start_Solve ...");
+    end if;
    -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
     Cells_Container.Solve_DoblDobl_Start_System(k,mv);
     Assign(integer32(mv),b);
    -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
     return 0;
-  end Job32;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_DoblDobl_Start_Solve.");
+      end if;
+      return 466;
+  end Cells_DoblDobl_Start_Solve;
 
-  function Job42 return integer32 is -- solve a quaddobl start system
+  function Cells_QuadDobl_Start_Solve
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Solves the start system which corresponds to a mixed cell,
+  --   in quad double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to the mixed cells;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       in b[0] is the number of solutions.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
     mv : natural32;
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_QuadDobl_Start_Solve ...");
+    end if;
    -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
     Cells_Container.Solve_QuadDobl_Start_System(k,mv);
     Assign(integer32(mv),b);
    -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
     return 0;
-  end Job42;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_QuadDobl_Start_Solve.");
+      end if;
+      return 476;
+  end Cells_QuadDobl_Start_Solve;
 
-  function Job23 return integer32 is -- track a solution path
+  function Cells_Standard_Track_One_Path
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Tracks one solution path in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to a mixed cell;
+  --   b       in b[0] is the index to the start solution;
+  --           in b[1] is the output code for the trackers;
+  --   vrblvl  is the verbose level.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
@@ -609,11 +1120,34 @@ function use_celcon ( job : integer32;
     otp : constant natural32 := natural32(vb(vb'first+1));
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Standard_Track_One_Path ...");
+    end if;
     Cells_Container.Track_Standard_Solution_Path(k,i,otp);
     return 0;
-  end Job23;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Standard_Track_One_Path.");
+      end if;
+      return 103;
+  end Cells_Standard_Track_One_Path;
 
-  function Job33 return integer32 is -- track a solution path
+  function Cells_DoblDobl_Track_One_Path
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Tracks one solution path in double double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to a mixed cell;
+  --   b       in b[0] is the index to the start solution;
+  --           in b[1] is the output code for the trackers;
+  --   vrblvl  is the verbose level.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
@@ -623,11 +1157,34 @@ function use_celcon ( job : integer32;
     otp : constant natural32 := natural32(vb(vb'first+1));
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_DoblDobl_Track_One_Path ...");
+    end if;
     Cells_Container.Track_DoblDobl_Solution_Path(k,i,otp);
     return 0;
-  end Job33;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_DoblDobl_Track_One_Path.");
+      end if;
+      return 467;
+  end Cells_DoblDobl_Track_One_Path;
 
-  function Job43 return integer32 is -- track a solution path
+  function Cells_QuadDobl_Track_One_Path
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Tracks one solution path in quad double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to a mixed cell;
+  --   b       in b[0] is the index to the start solution;
+  --           in b[1] is the output code for the trackers;
+  --   vrblvl  is the verbose level.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
@@ -637,9 +1194,20 @@ function use_celcon ( job : integer32;
     otp : constant natural32 := natural32(vb(vb'first+1));
 
   begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_QuadDobl_Track_One_Path ...");
+    end if;
     Cells_Container.Track_QuadDobl_Solution_Path(k,i,otp);
     return 0;
-  end Job43;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_QuadDobl_Track_One_Path.");
+      end if;
+      return 477;
+  end Cells_QuadDobl_Track_One_Path;
 
   function Job24 return integer32 is -- copy target solution to st container
 
@@ -927,7 +1495,13 @@ function use_celcon ( job : integer32;
     return 0;
   end Job47;
 
-  function Job51 return integer32 is  -- read mcc and initialize container
+  function Cells_Read_Integer_Mixed_Cells
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a regular mixed cell configuration,
+  --   induced by an integer valued lifting function,
+  --   and stores the mixed cells in the container.
 
     use Arrays_of_Integer_Vector_Lists;
     use Integer_Mixed_Subdivisions;
@@ -940,6 +1514,9 @@ function use_celcon ( job : integer32;
     sub : Mixed_Subdivision;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in cells_interface.Cells_Read_Integer_Mixed_Cells ...");
+    end if;
     new_line;
     put_line("Reading the file name for a mixed-cell configuration.");
     Read_Name_and_Open_File(file);
@@ -949,9 +1526,21 @@ function use_celcon ( job : integer32;
     lif := new Array_of_Lists'(Lifted_Supports(r,sub));
     Integer_Cells_Container.Initialize(mix,lif,sub);
     return 0;
-  end Job51;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Read_Integer_Mixed_Cells.");
+      end if;
+      return 741;
+  end Cells_Read_Integer_Mixed_Cells;
 
-  function Job52 return integer32 is -- write the mcc in the container
+  function Cells_Write_Integer_Mixed_Cells
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Writes the mixed cells stored in the container
+  --   for configurations induced by floating-point lifting.
 
     use Integer_Mixed_Subdivisions;
 
@@ -960,6 +1549,9 @@ function use_celcon ( job : integer32;
     n,mv : natural32;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in cells_interface.Cells_Write_Integer_Mixed_Cells ...");
+    end if;
     if not Is_Null(mcc) then
       n := Integer_Cells_Container.Dimension;
       mix := Integer_Cells_Container.Type_of_Mixture;
@@ -967,7 +1559,60 @@ function use_celcon ( job : integer32;
       put("The mixed volume is "); put(mv,1); put_line(".");
     end if;
     return 0;
-  end Job52;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Write_Integer_Mixed_Cells.");
+      end if;
+      return 742;
+  end Cells_Write_Integer_Mixed_Cells;
+
+  function Cells_Number_of_Integer_Mixed_Cells
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of mixed cells stored in the container,
+  --   induced by an integer-valued lifting.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Number_of_Integer_Mixed_Cells ...");
+    end if;
+    Assign(integer32(Integer_Cells_Container.Length),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Number_of_Integer_Mixed_Cells.");
+      end if;
+      return 743;
+  end Cells_Number_of_Integer_Mixed_Cells;
+
+  function Cells_Dimension_of_Integer_Mixed_Cells
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the dimension of the mixed cells stored in the container,
+  --   induced by an integer-valued lifting.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in cells_interface.");
+      put_line("Cells_Dimension_of_Integer_Mixed_Cells ...");
+    end if;
+    Assign(integer32(Integer_Cells_Container.Dimension),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Dimension_of_Integer_Mixed_Cells.");
+      end if;
+      return 744;
+  end Cells_Dimension_of_Integer_Mixed_Cells;
 
   function Job55 return integer32 is -- return type of mixture
 
@@ -1313,50 +1958,98 @@ function use_celcon ( job : integer32;
     return 0;
   end Job71;
 
-  function Job72 return integer32 is -- solve a stable standard start system
+  function Cells_Standard_Stable_Solve
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Solve a stable start system in double precision.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
     mv : natural32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in cells_interface.Cells_Standard_Stable_Solve ...");
+    end if;
     Cells_Container.Solve_Stable_Standard_Start_System(k,mv);
     Assign(integer32(mv),b);
     return 0;
-  end Job72;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_Standard_Stable_Solve.");
+      end if;
+      return 882;
+  end Cells_Standard_Stable_Solve;
 
-  function Job73 return integer32 is -- solve a stable dobldobl start system
+  function Cells_DoblDobl_Stable_Solve
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Solve a stable start system in double double precision.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
     mv : natural32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in cells_interface.Cells_DoblDobl_Stable_Solve ...");
+    end if;
     Cells_Container.Solve_Stable_DoblDobl_Start_System(k,mv);
     Assign(integer32(mv),b);
     return 0;
-  end Job73;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_DoblDobl_Stable_Solve.");
+      end if;
+      return 883;
+  end Cells_DoblDobl_Stable_Solve;
 
-  function Job74 return integer32 is -- solve a stable quaddobl start system
+  function Cells_QuadDobl_Stable_Solve
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Solve a stable start system in quad double precision.
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
     mv : natural32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in cells_interface.Cells_QuadDobl_Stable_Solve ...");
+    end if;
     Cells_Container.Solve_Stable_QuadDobl_Start_System(k,mv);
     Assign(integer32(mv),b);
     return 0;
-  end Job74;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in cells_interface.");
+        put_line("Cells_QuadDobl_Stable_Solve.");
+      end if;
+      return 884;
+  end Cells_QuadDobl_Stable_Solve;
  
   function Handle_Jobs return integer32 is
   begin
     case job is
-      when 0 => return Job0;   -- read a mcc and initialize the container
-      when 1 => return Job1;   -- write the mcc in the container
-      when 2 => Assign(integer32(Cells_Container.Length),a); return 0;
-      when 3 => Assign(integer32(Cells_Container.Dimension),a); return 0;
-      when 4 => return Job4;   -- return type of mixture
+      when 0 => return Cells_Read_Floating_Mixed_Cells(vrblvl);
+      when 1 => return Cells_Write_Floating_Mixed_Cells(vrblvl);
+      when 2 => return Cells_Number_of_Floating_Mixed_Cells(vrblvl);
+      when 3 => return Cells_Dimension_of_Floating_Mixed_Cells(vrblvl);
+      when 4 => return Cells_Floating_Mixture(a,b,vrblvl);
       when 5 => return Job5;   -- return cardinalities of supports
       when 6 => return Job6;   -- return point in support 
       when 7 => return Job7;   -- return innner normal
@@ -1368,37 +2061,34 @@ function use_celcon ( job : integer32;
       when 13 => return Job13; -- append mixed cell to container
       when 14 => Cells_Container.Clear; return 0;
       when 15 => return Job15; -- retrieve a mixed cell
-      when 16 => Cells_Container.Generate_Random_Standard_Coefficient_System;
-                 return 0;
-      when 17 => return Job17; -- initialize random coefficient system
-      when 18 => return Job18; -- write random coefficient system
-      when 19 => return Job19; -- copy into systems container
-      when 20 => return Job20; -- copy from systems container
-      when 21 => Cells_Container.Standard_Polyhedral_Homotopy; return 0;
-      when 22 => return Job22; -- solve a standard start system
-      when 23 => return Job23; -- track path in standard precision
+      when 16 => return Cells_Make_Standard_Coefficient_System(vrblvl);
+      when 17 => return Cells_Read_Standard_Coefficient_System(vrblvl);
+      when 18 => return Cells_Write_Standard_Coefficient_System(vrblvl);
+      when 19 => return Cells_Standard_System_into_Container(vrblvl);
+      when 20 => return Cells_Standard_System_from_Container(vrblvl);
+      when 21 => return Cells_Standard_Polyhedral_Homotopy(vrblvl);
+      when 22 => return Cells_Standard_Start_Solve(a,b,vrblvl);
+      when 23 => return Cells_Standard_Track_One_Path(a,b,vrblvl);
       when 24 => return Job24; -- copy target solution to st container
       when 25 => return Job25; -- permute a standard target system
-      when 26 => Cells_Container.Generate_Random_DoblDobl_Coefficient_System;
-                 return 0;
-      when 27 => return Job27; -- init random dobldobl coefficient system
-      when 28 => return Job28; -- write random dobldobl coefficient system
-      when 29 => return Job29; -- copy into dobldobl systems container
-      when 30 => return Job30; -- copy from dobldobl systems container
-      when 31 => Cells_Container.DoblDobl_Polyhedral_Homotopy; return 0;
-      when 32 => return Job32; -- solve a dobldobl start system
-      when 33 => return Job33; -- track path in double double precision
+      when 26 => return Cells_Make_DoblDobl_Coefficient_System(vrblvl);
+      when 27 => return Cells_Read_DoblDobl_Coefficient_System(vrblvl);
+      when 28 => return Cells_Write_DoblDobl_Coefficient_System(vrblvl);
+      when 29 => return Cells_DoblDobl_System_into_Container(vrblvl);
+      when 30 => return Cells_DoblDobl_System_from_Container(vrblvl);
+      when 31 => return Cells_DoblDobl_Polyhedral_Homotopy(vrblvl);
+      when 32 => return Cells_DoblDobl_Start_Solve(a,b,vrblvl);
+      when 33 => return Cells_DoblDobl_Track_One_Path(a,b,vrblvl);
       when 34 => return Job34; -- copy target solution to dd container
       when 35 => return Job35; -- permute dobldobl target system
-      when 36 => Cells_Container.Generate_Random_QuadDobl_Coefficient_System;
-                 return 0;
-      when 37 => return Job37; -- init random quaddobl coefficient system
-      when 38 => return Job38; -- write random quaddobl coefficient system
-      when 39 => return Job39; -- copy into quaddobl systems container
-      when 40 => return Job40; -- copy from quaddobl systems container
-      when 41 => Cells_Container.QuadDobl_Polyhedral_Homotopy; return 0;
-      when 42 => return Job42; -- solve a quaddobl start system
-      when 43 => return Job43; -- track path in quad double precision
+      when 36 => return Cells_Make_QuadDobl_Coefficient_System(vrblvl);
+      when 37 => return Cells_Read_QuadDobl_Coefficient_System(vrblvl);
+      when 38 => return Cells_Write_QuadDobl_Coefficient_System(vrblvl);
+      when 39 => return Cells_QuadDobl_System_into_Container(vrblvl);
+      when 40 => return Cells_QuadDobl_System_from_Container(vrblvl);
+      when 41 => return Cells_QuadDobl_Polyhedral_Homotopy(vrblvl);
+      when 42 => return Cells_QuadDobl_Start_Solve(a,b,vrblvl);
+      when 43 => return Cells_QuadDobl_Track_One_Path(a,b,vrblvl);
       when 44 => return Job44; -- copy target solution to qd container
       when 45 => return Job45; -- permute quaddobl target system
       when 46 => return Job46; -- mixed volume computation
@@ -1406,12 +2096,10 @@ function use_celcon ( job : integer32;
       when 48 => return Job48; -- copy start solution to st container
       when 49 => return Job49; -- copy start solution to dd container
       when 50 => return Job50; -- copy start solution to qd container
-      when 51 => return Job51; -- read mcc, initialize integer cells
-      when 52 => return Job52; -- write mcc from the integer cells container
-      when 53 => Assign(integer32(Integer_Cells_Container.Length),a);
-                 return 0;
-      when 54 => Assign(integer32(Integer_Cells_Container.Dimension),a);
-                 return 0;
+      when 51 => return Cells_Read_Integer_Mixed_Cells(vrblvl);
+      when 52 => return Cells_Write_Integer_Mixed_Cells(vrblvl);
+      when 53 => return Cells_Number_of_Integer_Mixed_Cells(vrblvl);
+      when 54 => return Cells_Dimension_of_Integer_Mixed_Cells(vrblvl);
       when 55 => return Job55; -- return type of mixture for integer cells
       when 56 => return Job56; -- return cardinalities of supports
       when 57 => return Job57; -- return integer point in support 
@@ -1429,9 +2117,9 @@ function use_celcon ( job : integer32;
       when 69 => return Job69; -- returns Is_Stable
       when 70 => return Job70; -- return the number of original cells
       when 71 => return Job71; -- return the number of stable cells
-      when 72 => return Job72; -- solve a stable standard start system
-      when 73 => return Job73; -- solve a stable dobldobl start system
-      when 74 => return Job74; -- solve a stable quaddobl start system
+      when 72 => return Cells_Standard_Stable_Solve(a,b,vrblvl);
+      when 73 => return Cells_DoblDobl_Stable_Solve(a,b,vrblvl);
+      when 74 => return Cells_QuadDobl_Stable_Solve(a,b,vrblvl);
       when others => put_line("invalid operation"); return 1;
     end case;
   exception
