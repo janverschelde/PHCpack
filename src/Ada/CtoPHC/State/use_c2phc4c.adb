@@ -1485,7 +1485,7 @@ function use_c2phc4c ( job : integer32;
       when 77 => return Standard_Polynomial_Solver(a,b,vrblvl-1);
       when 78 => return Mixed_Volume(a,vrblvl-1);
       when 79 => return Stable_Mixed_Volume(a,b,vrblvl-1);
-      when 80..105 => return use_celcon(job-80,a,b,c);
+      when 80..105 => return use_celcon(job-80,a,b,c,vrblvl-1);
      -- load dobldobl poly as string
       when 106 => return use_syscon(68,a,b,c,vrblvl-1);
      -- load quaddobl poly as string
@@ -1528,14 +1528,14 @@ function use_c2phc4c ( job : integer32;
       when 198 => return Job198; -- 1 Newton step on dobldobl containers
       when 199 => return Job199; -- 1 Newton step on standard containers
       when 200..209 => return use_solcon(job-170,a,b,c,vrblvl-1);
-      when 210..227 => return use_c2pieri(job-210,a,b,c);
+      when 210..227 => return use_c2pieri(job-210,a,b,c,vrblvl-1);
       when 228..229 => return use_c2lrhom(job-228,a,b,c,vrblvl-1);
       when 230 => return use_track(42,a,b,c);
       when 231..235 => return C_to_PHCpack(job-220,0);
       when 236 => return Job236; -- solve by double double path tracking
       when 237..238 => return C_to_PHCpack(job-220,0);
-      when 239 => return use_celcon(46,a,b,c);
-      when 240 => return use_celcon(47,a,b,c);
+      when 239 => return use_celcon(46,a,b,c,vrblvl-1);
+      when 240 => return use_celcon(47,a,b,c,vrblvl-1);
       when 241..245 => return C_to_PHCpack(job-220,0);
       when 246 => return Job246; -- solve by quad double path tracking
       when 247..248 => return C_to_PHCpack(job-220,0);
@@ -1642,9 +1642,9 @@ function use_c2phc4c ( job : integer32;
       when 456 => return use_solcon(302,a,b,c,vrblvl-1);
       when 458 => return use_solcon(303,a,b,c,vrblvl-1);
      -- polyhedral homotopies in double double precision :
-      when 460..469 => return use_celcon(job-434,a,b,c);
+      when 460..469 => return use_celcon(job-434,a,b,c,vrblvl-1);
      -- polyhedral homotopies in quad double precision :
-      when 470..479 => return use_celcon(job-434,a,b,c);
+      when 470..479 => return use_celcon(job-434,a,b,c,vrblvl-1);
      -- string representations of multiprecision solutions :
       when 480..481 => return use_solcon(job-330,a,b,c,vrblvl-1);
       when 488 => return use_solcon(job-330,a,b,c,vrblvl-1);
@@ -1676,9 +1676,9 @@ function use_c2phc4c ( job : integer32;
       when 535 => return use_solcon(310,a,b,c,vrblvl-1);
       when 536 => return use_solcon(311,a,b,c,vrblvl-1);
      -- homotopy membership tests
-      when 537 => return use_c2mbt(0,a,b,c); -- standard membership test
-      when 538 => return use_c2mbt(1,a,b,c); -- dobldobl membership test
-      when 539 => return use_c2mbt(2,a,b,c); -- quaddobl membership test
+      when 537 => return use_c2mbt(0,a,b,c,vrblvl-1); -- standard membertest
+      when 538 => return use_c2mbt(1,a,b,c,vrblvl-1); -- dobldobl membertest
+      when 539 => return use_c2mbt(2,a,b,c,vrblvl-1); -- quaddobl membertest
      -- operations to read systems into the containers
       when 540..543 => return use_syscon(job,a,b,c,vrblvl-1);
      -- operations to read systems and solutions into the containers
@@ -1700,16 +1700,16 @@ function use_c2phc4c ( job : integer32;
      -- scaling systems and solutions :
       when 590..596 => return use_scaling(job-589,a,b,c,vrblvl-1);
      -- copy start solutions from cell container to solutions container
-      when 597 => return use_celcon(48,a,b,c); -- standard start solution
-      when 598 => return use_celcon(49,a,b,c); -- dobldobl start solution
-      when 599 => return use_celcon(50,a,b,c); -- quaddobl start solution
+      when 597 => return use_celcon(48,a,b,c,vrblvl-1); -- st start solution
+      when 598 => return use_celcon(49,a,b,c,vrblvl-1); -- dd start solution
+      when 599 => return use_celcon(50,a,b,c,vrblvl-1); -- qd start solution
      -- size limits of string representations of polynomials
       when 600..607 => return use_syscon(job-520,a,b,c);
      -- make system in the dobldobl and quaddobl systems pool
       when 608 => return use_syspool(16,a,b,c); -- k-th dobldobl system
       when 609 => return use_syspool(17,a,b,c); -- k-th quaddobl system
      -- run the sweep homotopy :
-      when 610..621 => return use_sweep(job-610,a,b,c);
+      when 610..621 => return use_sweep(job-610,a,b,c,vrblvl-1);
      -- crude path trackers :
       when 622 => return use_track(55,a,b,c); -- double crude tracker
       when 623 => return use_track(56,a,b,c); -- double double crude tracker
@@ -1762,7 +1762,7 @@ function use_c2phc4c ( job : integer32;
       when 738 => return use_padcon(3,a,b,c,vrblvl-1); -- set a parameter value
       when 739 => return use_padcon(4,a,b,c,vrblvl-1); -- track paths
      -- integer mixed cell configurations
-      when 741..758 => return use_celcon(job-690,a,b,c);
+      when 741..758 => return use_celcon(job-690,a,b,c,vrblvl-1);
      -- reading, writing Laurent start and target systems
       when 759..773 => return c_to_phcpack(job-730,0);
      -- solve by Laurent homotopy continuation
@@ -1793,9 +1793,9 @@ function use_c2phc4c ( job : integer32;
       when 794 =>
         PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy; return 0;
      -- homotopy membership tests on Laurent systems
-      when 795 => return use_c2mbt(3,a,b,c); -- Laurent standard membership
-      when 796 => return use_c2mbt(4,a,b,c); -- Laurent dobldobl membership
-      when 797 => return use_c2mbt(5,a,b,c); -- Laurent quaddobl membership
+      when 795 => return use_c2mbt(3,a,b,c,vrblvl-1); -- Laurent st membertest
+      when 796 => return use_c2mbt(4,a,b,c,vrblvl-1); -- Laurent dd membertest
+      when 797 => return use_c2mbt(5,a,b,c,vrblvl-1); -- Laurent qd membertest
      -- read a witness set defined by a Laurent polynomial system
       when 798 => return use_c2fac(91,a,b,c); -- read standard Laurent witset
       when 799 => return use_c2fac(92,a,b,c); -- read dobldobl Laurent witset
@@ -1830,12 +1830,12 @@ function use_c2phc4c ( job : integer32;
       when 820 => return Job820; -- swap slack for dobldobl Laurent witset
       when 821 => return Job821; -- swap slack for quaddobl Laurent witset
      -- homotopy membership tests with symbolic test points
-      when 822 => return use_c2mbt(6,a,b,c); -- standard ismember test
-      when 823 => return use_c2mbt(7,a,b,c); -- dobldobl ismember test
-      when 824 => return use_c2mbt(8,a,b,c); -- quaddobl ismember test
-      when 825 => return use_c2mbt(9,a,b,c);  -- standard Laurent ismember test
-      when 826 => return use_c2mbt(10,a,b,c); -- dobldobl Laurent ismember test
-      when 827 => return use_c2mbt(11,a,b,c); -- quaddobl Laurent ismember test
+      when 822 => return use_c2mbt(6,a,b,c,vrblvl-1); -- standard membertest
+      when 823 => return use_c2mbt(7,a,b,c,vrblvl-1); -- dobldobl membertest
+      when 824 => return use_c2mbt(8,a,b,c,vrblvl-1); -- quaddobl membertest
+      when 825 => return use_c2mbt(9,a,b,c,vrblvl-1);  -- st Laur membertest
+      when 826 => return use_c2mbt(10,a,b,c,vrblvl-1); -- dd Laur membertest
+      when 827 => return use_c2mbt(11,a,b,c,vrblvl-1); -- qd Laur membertest
      -- dropping a variable from Laurent polynomial systems
       when 828 => return use_syscon(22,a,b,c,vrblvl-1); -- st Laurent by idx
       when 829 => return use_syscon(23,a,b,c,vrblvl-1); -- dd Laurent by idx
@@ -1874,23 +1874,23 @@ function use_c2phc4c ( job : integer32;
       when 872 => return use_track(67,a,b,c); -- read dobldobl target
       when 873 => return use_track(68,a,b,c); -- read quaddobl target
      -- write homotopy continuation paramaters to defined output file
-      when 874 => return use_padcon(17,a,b,c); 
+      when 874 => return use_padcon(17,a,b,c,vrblvl-1); 
      -- set value of the continuation parameter to zero
       when 875..877 => return use_solcon(job,a,b,c,vrblvl-1);
      -- initializes natural parameter homotopy in series-Pade tracker
       when 878 => return use_padcon(18,a,b,c,vrblvl-1);
      -- functions for stable mixed cells
-      when 879 => return use_celcon(69,a,b,c);
-      when 880 => return use_celcon(70,a,b,c);
-      when 881 => return use_celcon(71,a,b,c);
-      when 882 => return use_celcon(72,a,b,c); -- solve st stable start sys
-      when 883 => return use_celcon(73,a,b,c); -- solve dd stable start sys
-      when 884 => return use_celcon(74,a,b,c); -- solve qd stable start sys
+      when 879 => return use_celcon(69,a,b,c,vrblvl-1);
+      when 880 => return use_celcon(70,a,b,c,vrblvl-1);
+      when 881 => return use_celcon(71,a,b,c,vrblvl-1);
+      when 882 => return use_celcon(72,a,b,c,vrblvl-1); -- solve st stable
+      when 883 => return use_celcon(73,a,b,c,vrblvl-1); -- solve dd stable
+      when 884 => return use_celcon(74,a,b,c,vrblvl-1); -- solve qd stable
      -- retrieving step sizes for the step-by-step series-Pade tracker
-      when 885 => return use_padcon(19,a,b,c); -- get series step
-      when 886 => return use_padcon(20,a,b,c); -- get pole step
-      when 887 => return use_padcon(21,a,b,c); -- get estimated distance eta
-      when 888 => return use_padcon(22,a,b,c); -- get Hessian step
+      when 885 => return use_padcon(19,a,b,c,vrblvl-1); -- get series step
+      when 886 => return use_padcon(20,a,b,c,vrblvl-1); -- get pole step
+      when 887 => return use_padcon(21,a,b,c,vrblvl-1); -- get distance eta
+      when 888 => return use_padcon(22,a,b,c,vrblvl-1); -- get Hessian step
      -- passing the tableau forms to the systems containers
       when 889 => return use_tabform(0,a,b,c); -- store standard tableau form
       when 890 => return use_tabform(1,a,b,c); -- get std tableau dimensions
