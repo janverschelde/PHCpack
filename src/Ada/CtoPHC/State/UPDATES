@@ -1,5 +1,7 @@
 Tue 28 Jul 2020 : new package cells_interface with improved versions of
-  the interface function called in use_celcon.
+  the interface function called in use_celcon.  Moved functions out of
+  use_c2pieri.adb into a new package pieri_interface.  Added the verbose
+  level to the input of use_c2pieri.
 
 Mon 27 Jul 2020 : moved functions from use_sweep into a new package
   sweep_interface, added verbose level to use_sweep.

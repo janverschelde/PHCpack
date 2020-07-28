@@ -75,6 +75,7 @@ use_reduction                    : reduction of system to lower total degree
 ------------------------------------------------------------------------------
 pieri_homotopy                   : Pieri homotopies as a state machine
 ts_pirhom                        : interactive test on pieri_homotopy
+pieri_interface                  : interface to Pieri homotopy functions
 use_c2pieri                      : Ada routine as gateway to Pieri machine
 ts_use_c2pieri                   : C test on the interactive operations
 schubert_interface               : interface to LR homotopies
