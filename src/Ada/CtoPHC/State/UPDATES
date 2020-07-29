@@ -1,3 +1,6 @@
+Wed 29 Jul 2020 : passed verbose level to the blackbox solvers in the
+  solve procedures of job_handlers.adb.
+
 Tue 28 Jul 2020 : new package cells_interface with improved versions of
   the interface function called in use_celcon.  Moved functions out of
   use_c2pieri.adb into a new package pieri_interface.  Added the verbose
