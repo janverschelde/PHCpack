@@ -2,7 +2,10 @@ with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Multprec_Floating_Numbers;
+with Standard_Integer_Vectors;
 with Symbol_Table;
+with Multprec_Complex_Polynomials;
+with Multprec_Complex_Poly_Strings;
 with Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
@@ -210,6 +213,118 @@ package body Multprec_PolySys_Interface is
       end if;
       return 229;
   end Multprec_PolySys_Degree;
+
+  function Multprec_PolySys_String_Save
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
+    nc : constant integer := integer(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    k : constant integer32 := integer32(v_a(v_a'first+2));
+    deci : constant natural32 := natural32(v_a(v_a'first+3));
+    size : constant natural32
+         := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
+    p : Multprec_Complex_Polynomials.Poly;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in multprec_polysys_interface.");
+      put_line("Multprec_PolySys_String_Save.");
+    end if;
+   -- put("Polynomial "); put(k,1);
+   -- put(" given as string of "); put(nc,1);
+   -- put_line(" characters.");
+   -- put("The string : "); put_line(s);
+    if Symbol_Table.Empty then
+      Symbol_Table.Init(n);
+    elsif Symbol_Table.Maximal_Size < n then
+      Symbol_Table.Clear;
+      Symbol_Table.Init(n);
+    end if;
+    p := Multprec_Complex_Poly_Strings.Parse(n,size,s);
+    Multprec_PolySys_Container.Add_Poly(k,p);
+    Multprec_Complex_Polynomials.Clear(p);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in multprec_polysys_interface.");
+        put_line("Multprec_PolySys_String_Save.");
+      end if;
+      return 448;
+  end Multprec_PolySys_String_Save;
+
+  function Multprec_PolySys_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Multprec_Complex_Polynomials.Poly
+      := Multprec_PolySys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(Multprec_Complex_Poly_Strings.Size_Limit(p));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in multprec_polysys_interface.");
+      put_line("Multprec_PolySys_String_Size ...");
+    end if;
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_polysys_interface.");
+        put_line("QuadDobl_PolySys_String_Size.");
+      end if;
+      return 603;
+  end Multprec_PolySys_String_Size;
+
+  function Multprec_PolySys_String_Load 
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Multprec_Complex_Polynomials.Poly
+      := Multprec_PolySys_Container.Retrieve_Poly(equ);
+    s : constant string := Multprec_Complex_Poly_Strings.Write(p);
+    sv : constant Standard_Integer_Vectors.Vector
+       := String_to_Integer_Vector(s);
+    slast : constant integer32 := integer32(s'last);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in multprec_polysys_interface.");
+      put_line("Multprec_PolySys_String_Load.");
+    end if;
+   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
+   -- put("#characters : "); put(s'last,1); new_line;
+    Assign(slast,a);
+    Assign(sv,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in multprec_polysys_interface.");
+        put_line("Multprec_PolySys_String_Load.");
+      end if;
+      return 108;
+  end Multprec_PolySys_String_Load;
 
   function Multprec_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

@@ -101,6 +101,56 @@ package Standard_LaurSys_Interface is
   --   c       real and imaginary part of the coefficient;
   --   vrblvl  the verbose level.
 
+  function Standard_LaurSys_String_Save
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Given the string representation of a Laurent polynomial,
+  --   stores the Laurent polynomial in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string,
+  --           in a[1] is the number of variables in the polynomial,
+  --           in a[2] is the index of the polynomial in the system;
+  --   b       the string representation of the Laurent polynomial;
+  --   vrblvl  is the verbose level.
+
+  function Standard_LaurSys_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size limit of the string representation of
+  --   a Laurent polynomial in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the Laurent polynomial;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the size limit of the string representation of the
+  --           Laurent polynomial in double precision with index a[0].
+
+  function Standard_LaurSys_String_Load 
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the string representation of a Laurent polynomial
+  --   stored in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the polynomial;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the number of characters in b;
+  --   b       the string representation of a polynomial.
+
   function Standard_LaurSys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 

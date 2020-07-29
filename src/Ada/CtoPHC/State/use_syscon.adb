@@ -4,37 +4,21 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 -- with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
-with Standard_Complex_Polynomials;
 --   with Standard_Integer_Numbers_io;
 --    use Standard_Integer_Numbers_io;
 --   with Standard_Complex_Polynomials_io;
 --    use Standard_Complex_Polynomials_io;
 with Standard_Random_Polynomials;
-with Standard_Complex_Poly_Strings;
-with Standard_Complex_Laurentials;
-with Standard_Complex_Laur_Strings;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with Symbol_Table;
-with DoblDobl_Complex_Polynomials;
 with DoblDobl_Random_Polynomials;
-with DoblDobl_Complex_Poly_Strings;
-with DoblDobl_Complex_Laur_Strings;
 with DoblDobl_Complex_Poly_Systems;
-with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Systems;
-with QuadDobl_Complex_Polynomials;
 with QuadDobl_Random_Polynomials;
-with QuadDobl_Complex_Poly_Strings;
-with QuadDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems;
-with Multprec_Floating_Numbers;
-with Multprec_Complex_Polynomials;
-with Multprec_Complex_Poly_Strings;
 with Multprec_Complex_Laurentials;
-with Multprec_Complex_Laur_Strings;
 with Polynomial_Drops;
 with Projective_Transformations;
 with Partitions_of_Sets_of_Unknowns;
@@ -45,7 +29,6 @@ with Homogenization;
 with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
-with Multprec_PolySys_Container;
 with Standard_LaurSys_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
@@ -123,160 +106,6 @@ function use_syscon ( job : integer32;
       return 0;
     end if;
   end Job11;
-
-  function Job67 return integer32 is -- polynomial as string from container
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Standard_Complex_Polynomials.Poly
-      := Standard_PolySys_Container.Retrieve_Poly(equ);
-    s : constant string := Standard_Complex_Poly_Strings.Write(p);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-    slast : constant integer32 := integer32(s'last);
-
-  begin
-   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
-   -- put("#characters : "); put(s'last,1); new_line;
-    Assign(slast,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 67;
-  end Job67;
-
-  function Job68 return integer32 is -- poly as string from dobldobl container
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant DoblDobl_Complex_Polynomials.Poly
-      := DoblDobl_PolySys_Container.Retrieve_Poly(equ);
-    s : constant string := DoblDobl_Complex_Poly_Strings.Write(p);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-    slast : constant integer32 := integer32(s'last);
-
-  begin
-   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
-   -- put("#characters : "); put(s'last,1); new_line;
-    Assign(slast,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 68;
-  end Job68;
-
-  function Job77 return integer32 is -- Laurpoly as string from st container
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Standard_Complex_Laurentials.Poly
-      := Standard_LaurSys_Container.Retrieve_Poly(equ);
-    s : constant string := Standard_Complex_Laur_Strings.Write(p);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-    slast : constant integer32 := integer32(s'last);
-
-  begin
-   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
-   -- put("#characters : "); put(s'last,1); new_line;
-    Assign(slast,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 77;
-  end Job77;
-
-  function Job72 return integer32 is -- Laurpoly as string from dd container
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant DoblDobl_Complex_Laurentials.Poly
-      := DoblDobl_LaurSys_Container.Retrieve_Poly(equ);
-    s : constant string := DoblDobl_Complex_Laur_Strings.Write(p);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-    slast : constant integer32 := integer32(s'last);
-
-  begin
-   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
-   -- put("#characters : "); put(s'last,1); new_line;
-    Assign(slast,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 72;
-  end Job72;
-
-  function Job73 return integer32 is -- Laurpoly as string from qd container
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant QuadDobl_Complex_Laurentials.Poly
-      := QuadDobl_LaurSys_Container.Retrieve_Poly(equ);
-    s : constant string := QuadDobl_Complex_Laur_Strings.Write(p);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-    slast : constant integer32 := integer32(s'last);
-
-  begin
-   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
-   -- put("#characters : "); put(s'last,1); new_line;
-    Assign(slast,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 73;
-  end Job73;
-
-  function Job69 return integer32 is -- poly as string from quaddobl container
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant QuadDobl_Complex_Polynomials.Poly
-      := QuadDobl_PolySys_Container.Retrieve_Poly(equ);
-    s : constant string := QuadDobl_Complex_Poly_Strings.Write(p);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-    slast : constant integer32 := integer32(s'last);
-
-  begin
-   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
-   -- put("#characters : "); put(s'last,1); new_line;
-    Assign(slast,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 69;
-  end Job69;
-
-  function Job70 return integer32 is -- poly as string from multprec container
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Multprec_Complex_Polynomials.Poly
-      := Multprec_PolySys_Container.Retrieve_Poly(equ);
-    s : constant string := Multprec_Complex_Poly_Strings.Write(p);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-    slast : constant integer32 := integer32(s'last);
-
-  begin
-   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
-   -- put("#characters : "); put(s'last,1); new_line;
-    Assign(slast,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 70;
-  end Job70;
 
   function Job71 return integer32 is -- puts random system in the container
 
@@ -373,455 +202,6 @@ function use_syscon ( job : integer32;
   exception
     when others => return 79;
   end Job79;
-
-  function Job74 return integer32 is -- Laurential as string to container
-
-    use Interfaces.C;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    nc : constant integer := integer(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    k : constant integer32 := integer32(v_a(v_a'first+2));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : Standard_Complex_Laurentials.Poly;
-
-  begin
-   -- put("Polynomial "); put(k,1);
-   -- put(" given as string of "); put(integer32(nc),1);
-   -- put_line(" characters.");
-   -- put("n = "); put(n,1); new_line;
-   -- put("Symbol_Table.Number = "); put(Symbol_Table.Number,1); new_line;
-   -- put("The string : "); put_line(s);
-    if Symbol_Table.Empty then
-   --   put_line("initializing symbol table ...");
-      Symbol_Table.Init(n);
-    elsif Symbol_Table.Maximal_Size < n then
-   --   put_line("resetting symbol table ...");
-      Symbol_Table.Clear;
-      Symbol_Table.Init(n);
-   -- else
-   --   put_line("symbol table is okay");
-    end if;
-    p := Standard_Complex_Laur_Strings.Parse(n,s);
-    Standard_LaurSys_Container.Add_Poly(k,p);
-    Standard_Complex_Laurentials.Clear(p);
-    return 0;
-  end Job74;
-
-  function Job76 return integer32 is -- polynomial as string to container
-
-    use Interfaces.C;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    nc : constant integer := integer(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    k : constant integer32 := integer32(v_a(v_a'first+2));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : Standard_Complex_Polynomials.Poly;
-
-  begin
-   -- put("Polynomial "); put(k,1);
-   -- put(" given as string of "); put(nc,1);
-   -- put_line(" characters.");
-   -- put("The string : "); put_line(s);
-    if Symbol_Table.Empty then
-      Symbol_Table.Init(n);
-    elsif Symbol_Table.Maximal_Size < n then
-      Symbol_Table.Clear;
-      Symbol_Table.Init(n);
-    end if;
-    p := Standard_Complex_Poly_Strings.Parse(n,s);
-    Standard_PolySys_Container.Add_Poly(k,p);
-    Standard_Complex_Polynomials.Clear(p);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised in parsing polynomial.  Ignored.");
-      Symbol_Table.Clear;
-      return 76;
-  end Job76;
-
-  function Job80 return integer32 is -- size limit of k-th standard polynomial
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Standard_Complex_Polynomials.Poly
-      := Standard_PolySys_Container.Retrieve_Poly(equ);
-    sz : constant integer32
-       := integer32(Standard_Complex_Poly_Strings.Size_Limit(p));
-
-  begin
-    Assign(sz,b);
-    return 0;
-  exception
-    when others => put_line("Exception raised in job 80 of use_syscon.");
-                   return 80;
-  end Job80;
-
-  function Job81 return integer32 is -- size limit of k-th dobldobl polynomial
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant DoblDobl_Complex_Polynomials.Poly
-      := DoblDobl_PolySys_Container.Retrieve_Poly(equ);
-    sz : constant integer32
-       := integer32(DoblDobl_Complex_Poly_Strings.Size_Limit(p));
-
-  begin
-    Assign(sz,b);
-    return 0;
-  exception
-    when others => put_line("Exception raised in job 81 of use_syscon.");
-                   return 81;
-  end Job81;
-
-  function Job82 return integer32 is -- size limit of k-th quaddobl polynomial
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant QuadDobl_Complex_Polynomials.Poly
-      := QuadDobl_PolySys_Container.Retrieve_Poly(equ);
-    sz : constant integer32
-       := integer32(QuadDobl_Complex_Poly_Strings.Size_Limit(p));
-
-  begin
-    Assign(sz,b);
-    return 0;
-  exception
-    when others => put_line("Exception raised in job 82 of use_syscon.");
-                   return 82;
-  end Job82;
-
-  function Job83 return integer32 is -- size limit of k-th multprec polynomial
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Multprec_Complex_Polynomials.Poly
-      := Multprec_PolySys_Container.Retrieve_Poly(equ);
-    sz : constant integer32
-       := integer32(Multprec_Complex_Poly_Strings.Size_Limit(p));
-
-  begin
-    Assign(sz,b);
-    return 0;
-  exception
-    when others => put_line("Exception raised in job 83 of use_syscon.");
-                   return 83;
-  end Job83;
-
-  function Job84 return integer32 is -- size limit of k-th standard Laurential
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Standard_Complex_Laurentials.Poly
-      := Standard_LaurSys_Container.Retrieve_Poly(equ);
-    sz : constant integer32
-       := integer32(Standard_Complex_Laur_Strings.Size_Limit(p));
-
-  begin
-    Assign(sz,b);
-    return 0;
-  exception
-    when others => put_line("Exception raised in job 84 of use_syscon.");
-                   return 84;
-  end Job84;
-
-  function Job85 return integer32 is -- size limit of k-th dobldobl Laurential
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant DoblDobl_Complex_Laurentials.Poly
-      := DoblDobl_LaurSys_Container.Retrieve_Poly(equ);
-    sz : constant integer32
-       := integer32(DoblDobl_Complex_Laur_Strings.Size_Limit(p));
-
-  begin
-    Assign(sz,b);
-    return 0;
-  exception
-    when others => put_line("Exception raised in job 85 of use_syscon.");
-                   return 85;
-  end Job85;
-
-  function Job86 return integer32 is -- size limit of k-th quaddobl Laurential
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant QuadDobl_Complex_Laurentials.Poly
-      := QuadDobl_LaurSys_Container.Retrieve_Poly(equ);
-    sz : constant integer32
-       := integer32(QuadDobl_Complex_Laur_Strings.Size_Limit(p));
-
-  begin
-    Assign(sz,b);
-    return 0;
-  exception
-    when others => put_line("Exception raised in job 86 of use_syscon.");
-                   return 86;
-  end Job86;
-
-  function Job87 return integer32 is -- size limit of k-th multprec Laurential
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Multprec_Complex_Laurentials.Poly
-      := Multprec_LaurSys_Container.Retrieve_Poly(equ);
-    sz : constant integer32
-       := integer32(Multprec_Complex_Laur_Strings.Size_Limit(p));
-
-  begin
-    Assign(sz,b);
-    return 0;
-  exception
-    when others => put_line("Exception raised in job 87 of use_syscon.");
-                   return 87;
-  end Job87;
-
-  function Job118 return integer32 is -- dd laur poly as str to container
-
-    use Interfaces.C;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    nc : constant integer := integer(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    k : constant integer32 := integer32(v_a(v_a'first+2));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : DoblDobl_Complex_Laurentials.Poly;
-
-  begin
-   -- put("Polynomial "); put(k,1);
-   -- put(" given as string of "); put(nc,1);
-   -- put_line(" characters.");
-   -- put("The string : "); put_line(s);
-    if Symbol_Table.Empty then
-      Symbol_Table.Init(n);
-    elsif Symbol_Table.Maximal_Size < n then
-      Symbol_Table.Clear;
-      Symbol_Table.Init(n);
-    end if;
-    p := DoblDobl_Complex_Laur_Strings.Parse(n,s);
-    DoblDobl_LaurSys_Container.Add_Poly(k,p);
-    DoblDobl_Complex_Laurentials.Clear(p);
-    return 0;
-  exception
-    when others => return 118;
-  end Job118;
-
-  function Job128 return integer32 is -- qd laur poly as str to container
-
-    use Interfaces.C;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    nc : constant integer := integer(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    k : constant integer32 := integer32(v_a(v_a'first+2));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : QuadDobl_Complex_Laurentials.Poly;
-
-  begin
-   -- put("Polynomial "); put(k,1);
-   -- put(" given as string of "); put(nc,1);
-   -- put_line(" characters.");
-   -- put("The string : "); put_line(s);
-    if Symbol_Table.Empty then
-      Symbol_Table.Init(n);
-    elsif Symbol_Table.Maximal_Size < n then
-      Symbol_Table.Clear;
-      Symbol_Table.Init(n);
-    end if;
-    p := QuadDobl_Complex_Laur_Strings.Parse(n,s);
-    QuadDobl_LaurSys_Container.Add_Poly(k,p);
-    QuadDobl_Complex_Laurentials.Clear(p);
-    return 0;
-  exception
-    when others => return 128;
-  end Job128;
-
-  function Job138 return integer32 is -- mp laur poly as str to container
-
-    use Interfaces.C;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
-    nc : constant integer := integer(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    k : constant integer32 := integer32(v_a(v_a'first+2));
-    size : constant natural32 := natural32(v_a(v_a'first+3));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : Multprec_Complex_Laurentials.Poly;
-
-  begin
-   -- put("Polynomial "); put(k,1);
-   -- put(" given as string of "); put(nc,1);
-   -- put_line(" characters.");
-   -- put("The string : "); put_line(s);
-    if Symbol_Table.Empty then
-      Symbol_Table.Init(n);
-    elsif Symbol_Table.Maximal_Size < n then
-      Symbol_Table.Clear;
-      Symbol_Table.Init(n);
-    end if;
-    p := Multprec_Complex_Laur_Strings.Parse(n,size,s);
-    Multprec_LaurSys_Container.Add_Poly(k,p);
-    Multprec_Complex_Laurentials.Clear(p);
-    return 0;
-  exception
-    when others => return 138;
-  end Job138;
-
-  function Job139 return integer32 is -- Laurpoly as string from mp container
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    equ : constant integer32 := integer32(v_a(v_a'first));
-    p : constant Multprec_Complex_Laurentials.Poly
-      := Multprec_LaurSys_Container.Retrieve_Poly(equ);
-    s : constant string := Multprec_Complex_Laur_Strings.Write(p);
-    sv : constant Standard_Integer_Vectors.Vector
-       := String_to_Integer_Vector(s);
-    slast : constant integer32 := integer32(s'last);
-
-  begin
-   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
-   -- put("#characters : "); put(s'last,1); new_line;
-    Assign(slast,a);
-    Assign(sv,b);
-    return 0;
-  exception
-    when others => return 139;
-  end Job139;
-
-  function Job208 return integer32 is -- dd poly as string to container
-
-    use Interfaces.C;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    nc : constant integer := integer(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    k : constant integer32 := integer32(v_a(v_a'first+2));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : DoblDobl_Complex_Polynomials.Poly;
-
-  begin
-   -- put("Polynomial "); put(k,1);
-   -- put(" given as string of "); put(nc,1);
-   -- put_line(" characters.");
-   -- put("The string : "); put_line(s);
-    if Symbol_Table.Empty then
-      Symbol_Table.Init(n);
-    elsif Symbol_Table.Maximal_Size < n then
-      Symbol_Table.Clear;
-      Symbol_Table.Init(n);
-    end if;
-    p := DoblDobl_Complex_Poly_Strings.Parse(n,s);
-    DoblDobl_PolySys_Container.Add_Poly(k,p);
-    DoblDobl_Complex_Polynomials.Clear(p);
-    return 0;
-  exception
-    when others => return 208;
-  end Job208;
-
-  function Job218 return integer32 is -- qd poly as string to container
-
-    use Interfaces.C;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    nc : constant integer := integer(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    k : constant integer32 := integer32(v_a(v_a'first+2));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : QuadDobl_Complex_Polynomials.Poly;
-
-  begin
-   -- put("Polynomial "); put(k,1);
-   -- put(" given as string of "); put(nc,1);
-   -- put_line(" characters.");
-   -- put("The string : "); put_line(s);
-    if Symbol_Table.Empty then
-      Symbol_Table.Init(n);
-    elsif Symbol_Table.Maximal_Size < n then
-      Symbol_Table.Clear;
-      Symbol_Table.Init(n);
-    end if;
-    p := QuadDobl_Complex_Poly_Strings.Parse(n,s);
-    QuadDobl_PolySys_Container.Add_Poly(k,p);
-    QuadDobl_Complex_Polynomials.Clear(p);
-    return 0;
-  exception
-    when others => return 218;
-  end Job218;
-
-  function Job228 return integer32 is -- mp poly as string to container
-
-    use Interfaces.C;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
-    nc : constant integer := integer(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    k : constant integer32 := integer32(v_a(v_a'first+2));
-    deci : constant natural32 := natural32(v_a(v_a'first+3));
-    size : constant natural32
-         := Multprec_Floating_Numbers.Decimal_to_Size(deci);
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : Multprec_Complex_Polynomials.Poly;
-
-  begin
-   -- put("Polynomial "); put(k,1);
-   -- put(" given as string of "); put(nc,1);
-   -- put_line(" characters.");
-   -- put("The string : "); put_line(s);
-    if Symbol_Table.Empty then
-      Symbol_Table.Init(n);
-    elsif Symbol_Table.Maximal_Size < n then
-      Symbol_Table.Clear;
-      Symbol_Table.Init(n);
-    end if;
-    p := Multprec_Complex_Poly_Strings.Parse(n,size,s);
-    Multprec_PolySys_Container.Add_Poly(k,p);
-    Multprec_Complex_Polynomials.Clear(p);
-    return 0;
-  exception
-    when others => return 228;
-  end Job228;
 
 -- The jobs to drop a coordinate of a system come in two flavors:
 -- (1) by index: given the index of the variable in a[0];
@@ -1401,7 +781,7 @@ function use_syscon ( job : integer32;
       when 115 => return DoblDobl_LaurSys_Get_Term(a,b,c,vrblvl);
       when 116 => return DoblDobl_LaurSys_Add_Term(a,b,c,vrblvl);
       when 117 => return DoblDobl_LaurSys_Clear(vrblvl);
-      when 118 => return Job118; -- store dobldobl Laurential string
+      when 118 => return DoblDobl_LaurSys_String_Save(a,b,vrblvl);
      -- jobs for quad double complex Laurent polynomials :
       when 120 => return QuadDobl_LaurSys_Read(vrblvl);
       when 121 => return QuadDobl_LaurSys_Write(vrblvl);
@@ -1411,7 +791,7 @@ function use_syscon ( job : integer32;
       when 125 => return QuadDobl_LaurSys_Get_Term(a,b,c,vrblvl);
       when 126 => return QuadDobl_LaurSys_Add_Term(a,b,c,vrblvl);
       when 127 => return QuadDobl_LaurSys_Clear(vrblvl);
-      when 128 => return Job128; -- store quaddobl Laurential string
+      when 128 => return QuadDobl_LaurSys_String_Save(a,b,vrblvl);
      -- jobs for multiprecision complex Laurent polynomials :
       when 130 => return Multprec_LaurSys_Read(vrblvl);
       when 131 => return Multprec_LaurSys_Write(vrblvl);
@@ -1421,8 +801,8 @@ function use_syscon ( job : integer32;
       when 135 => return Job135; -- return a term of a polynomial
       when 136 => return Job136; -- add a term to a polynomial
       when 137 => return Multprec_LaurSys_Clear(vrblvl);
-      when 138 => return Job138; -- store multprec Laurential string
-      when 139 => return Job139; -- load multprec Laurential into string
+      when 138 => return Multprec_LaurSys_String_Save(a,b,vrblvl);
+      when 139 => return Multprec_LaurSys_String_Load(a,b,vrblvl);
      -- jobs for double double complex polynomials
       when 200 => return DoblDobl_PolySys_Read(vrblvl);
       when 201 => return DoblDobl_PolySys_Write(vrblvl);
@@ -1432,7 +812,7 @@ function use_syscon ( job : integer32;
       when 205 => return DoblDobl_PolySys_Get_Term(a,b,c,vrblvl);
       when 206 => return DoblDobl_PolySys_Add_Term(a,b,c,vrblvl);
       when 207 => return DoblDobl_PolySys_Clear(vrblvl);
-      when 208 => return Job208; -- store dobldobl polynomial string
+      when 208 => return DoblDobl_PolySys_String_Save(a,b,vrblvl);
       when 209 => return DoblDobl_PolySys_Degree(a,b,vrblvl);
      -- jobs for quad double complex polynomials
       when 210 => return QuadDobl_PolySys_Read(vrblvl);
@@ -1443,7 +823,7 @@ function use_syscon ( job : integer32;
       when 215 => return QuadDobl_PolySys_Get_Term(a,b,c,vrblvl);
       when 216 => return QuadDobl_PolySys_Add_Term(a,b,c,vrblvl);
       when 217 => return QuadDobl_PolySys_Clear(vrblvl);
-      when 218 => return Job218; -- store quaddobl polynomial string
+      when 218 => return QuadDobl_PolySys_String_Save(a,b,vrblvl);
       when 219 => return QuadDobl_PolySys_Degree(a,b,vrblvl);
      -- jobs for multiprecision complex polynomials
       when 220 => return Multprec_PolySys_Read(vrblvl);
@@ -1452,31 +832,31 @@ function use_syscon ( job : integer32;
       when 223 => return Multprec_PolySys_Set_Dimension(a,vrblvl);
       when 224 => return Multprec_PolySys_Size(a,vrblvl);
       when 227 => return Multprec_PolySys_Clear(vrblvl);
-      when 228 => return Job228; -- store multprecision polynomial string
+      when 228 => return Multprec_PolySys_String_Save(a,b,vrblvl);
       when 229 => return Multprec_PolySys_Degree(a,b,vrblvl);
      -- jobs for interchanging polynomial as strings :
-      when 67 => return Job67; -- load standard polynomial from container
-      when 68 => return Job68; -- load dobldobl polynomial from container
-      when 69 => return Job69; -- load quaddobl polynomial from container
-      when 70 => return Job70; -- load multprec polynomial from container
+      when 67 => return Standard_PolySys_String_Load(a,b,vrblvl);
+      when 68 => return DoblDobl_PolySys_String_Load(a,b,vrblvl);
+      when 69 => return QuadDobl_PolySys_String_Load(a,b,vrblvl);
+      when 70 => return Multprec_PolySys_String_Load(a,b,vrblvl);
       when 71 => return Job71; -- store random system in container
-      when 72 => return Job72; -- load dobldobl Laurential from container
-      when 73 => return Job73; -- load quaddobl Laurential from container
-      when 74 => return Job74; -- store standard Laurential in container
-      when 76 => return Job76; -- store standard polynomial in container
-      when 77 => return Job77; -- load standard Laurential from container
+      when 72 => return DoblDobl_LaurSys_String_Load(a,b,vrblvl);
+      when 73 => return QuadDobl_LaurSys_String_Load(a,b,vrblvl);
+      when 74 => return Standard_LaurSys_String_Save(a,b,vrblvl);
+      when 76 => return Standard_PolySys_String_Save(a,b,vrblvl);
+      when 77 => return Standard_LaurSys_String_Load(a,b,vrblvl);
      -- random systems in double double and quad double precision
       when 78 => return Job78; -- store random system in dobldobl container 
       when 79 => return Job79; -- store random system in quaddobl container
      -- jobs to return the size limit of the string representations
-      when 80 => return Job80; -- size limit of k-th standard polynomial
-      when 81 => return Job81; -- size limit of k-th dobldobl polynomial
-      when 82 => return Job82; -- size limit of k-th quaddobl polynomial
-      when 83 => return Job83; -- size limit of k-th multprec polynomial
-      when 84 => return Job84; -- size limit of k-th standard Laurential
-      when 85 => return Job85; -- size limit of k-th dobldobl Laurential
-      when 86 => return Job86; -- size limit of k-th quaddobl Laurential
-      when 87 => return Job87; -- size limit of k-th multprec Laurential
+      when 80 => return Standard_PolySys_String_Size(a,b,vrblvl);
+      when 81 => return DoblDobl_PolySys_String_Size(a,b,vrblvl);
+      when 82 => return QuadDobl_PolySys_String_Size(a,b,vrblvl);
+      when 83 => return Multprec_PolySys_String_Size(a,b,vrblvl);
+      when 84 => return Standard_LaurSys_String_Size(a,b,vrblvl);
+      when 85 => return DoblDobl_LaurSys_String_Size(a,b,vrblvl);
+      when 86 => return QuadDobl_LaurSys_String_Size(a,b,vrblvl);
+      when 87 => return Multprec_LaurSys_String_Size(a,b,vrblvl);
      -- reading systems into the containers :
       when 540 => return Standard_PolySys_Read_from_File(a,b,vrblvl); 
       when 541 => return DoblDobl_PolySys_Read_from_File(a,b,vrblvl); 

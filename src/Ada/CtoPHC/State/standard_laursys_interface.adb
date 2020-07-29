@@ -4,6 +4,7 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Vectors;
 with Symbol_Table;
 with Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Strings;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
@@ -202,6 +203,121 @@ package body Standard_LaurSys_Interface is
       end if;
       return 106;
   end Standard_LaurSys_Add_Term;
+
+  function Standard_LaurSys_String_Save
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nc : constant integer := integer(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    k : constant integer32 := integer32(v_a(v_a'first+2));
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
+    p : Standard_Complex_Laurentials.Poly;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_laursys_interface.");
+      put_line("Standard_LaurSys_String_Save.");
+    end if;
+   -- put("Polynomial "); put(k,1);
+   -- put(" given as string of "); put(integer32(nc),1);
+   -- put_line(" characters.");
+   -- put("n = "); put(n,1); new_line;
+   -- put("Symbol_Table.Number = "); put(Symbol_Table.Number,1); new_line;
+   -- put("The string : "); put_line(s);
+    if Symbol_Table.Empty then
+   --   put_line("initializing symbol table ...");
+      Symbol_Table.Init(n);
+    elsif Symbol_Table.Maximal_Size < n then
+   --   put_line("resetting symbol table ...");
+      Symbol_Table.Clear;
+      Symbol_Table.Init(n);
+   -- else
+   --   put_line("symbol table is okay");
+    end if;
+    p := Standard_Complex_Laur_Strings.Parse(n,s);
+    Standard_LaurSys_Container.Add_Poly(k,p);
+    Standard_Complex_Laurentials.Clear(p);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_Laursys_interface.");
+        put_line("Standard_LaurSys_String_Save.");
+      end if;
+      return 74;
+  end Standard_LaurSys_String_Save;
+
+  function Standard_LaurSys_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Standard_Complex_Laurentials.Poly
+      := Standard_LaurSys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(Standard_Complex_Laur_Strings.Size_Limit(p));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_laursys_interface.");
+      put_line("Standard_LaurSys_String_Size ...");
+    end if;
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_laursys_interface.");
+        put_line("Standard_LaurSys_String_Size.");
+      end if;
+      return 604;
+  end Standard_LaurSys_String_Size;
+
+  function Standard_LaurSys_String_Load 
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Standard_Complex_Laurentials.Poly
+      := Standard_LaurSys_Container.Retrieve_Poly(equ);
+    s : constant string := Standard_Complex_Laur_Strings.Write(p);
+    sv : constant Standard_Integer_Vectors.Vector
+       := String_to_Integer_Vector(s);
+    slast : constant integer32 := integer32(s'last);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_laursys_interface.");
+      put_line("Standard_LaurSys_String_Load.");
+    end if;
+   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
+   -- put("#characters : "); put(s'last,1); new_line;
+    Assign(slast,a);
+    Assign(sv,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_laursys_interface.");
+        put_line("Standard_LaurSys_String_Load.");
+      end if;
+      return 128;
+  end Standard_LaurSys_String_Load;
 
   function Standard_LaurSys_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

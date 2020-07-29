@@ -99,6 +99,56 @@ package Multprec_PolySys_Interface is
   --   b       b[0] is the degree of a polynomial 
   --           stored in multiprecision with index in a[0].
 
+  function Multprec_PolySys_String_Save
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Given the string representation of a polynomial,
+  --   stores the polynomial in multiprecision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string,
+  --           in a[1] is the number of variables in the polynomial,
+  --           in a[2] is the index of the polynomial in the system;
+  --   b       the string representation of the polynomial;
+  --   vrblvl  is the verbose level.
+
+  function Multprec_PolySys_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size limit of the string representation of
+  --   a polynomial in multiprecision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the polynomial;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the size limit of the string representation of the
+  --           polynomial in multprecision with index a[0].
+
+  function Multprec_PolySys_String_Load 
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the string representation of the polynomial
+  --   stored in multiprecision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the polynomial;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the number of characters in b;
+  --   b       the string representation of the polynomial.
+
   function Multprec_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 
