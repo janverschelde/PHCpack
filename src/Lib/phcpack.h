@@ -51,7 +51,7 @@ int solve_standard_system
  * ON ENTRY :
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
- *              the computed root counts to screen.
+ *              the computed root counts to screen;
  *   nbtasks    number of threads to be used, if 0, then no multitasking;
  *   vrb        is the verbose level, if 0, nothing will be written,
  *              for vrb > 0, the value of vrb is the depth of the tree
@@ -73,7 +73,7 @@ int solve_dobldobl_system
  * ON ENTRY :
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
- *              the computed root counts to screen.
+ *              the computed root counts to screen;
  *   nbtasks    number of threads to be used, if 0, then no multitasking;
  *   vrb        is the verbose level, if 0, nothing will be written,
  *              for vrb > 0, the value of vrb is the depth of the tree
@@ -95,7 +95,7 @@ int solve_quaddobl_system
  * ON ENTRY :
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
- *              the computed root counts to screen.
+ *              the computed root counts to screen;
  *   nbtasks    number of threads to be used, if 0, then no multitasking;
  *   vrb        is the verbose level, if 0, nothing will be written,
  *              for vrb > 0, the value of vrb is the depth of the tree
@@ -108,7 +108,7 @@ int solve_quaddobl_system
  *              but only if silent = 0. */
 
 int solve_standard_Laurent_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double Laurent systems
@@ -117,8 +117,11 @@ int solve_standard_Laurent_system
  * ON ENTRY :
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
- *              the computed root counts to screen.
- *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *              the computed root counts to screen;
+ *   nbtasks    number of threads to be used, if 0, then no multitasking;
+ *   vrb        is the verbose level, if 0, nothing will be written,
+ *              for vrb > 0, the value of vrb is the depth of the tree
+ *              of nested subroutine calls for which information is shown.
  *
  * ON RETURN :
  *   root_count is the root count used in the homotopy;
@@ -127,7 +130,7 @@ int solve_standard_Laurent_system
  *              but only if silent = 0. */
 
 int solve_dobldobl_Laurent_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the double double Laurent systems
@@ -136,8 +139,11 @@ int solve_dobldobl_Laurent_system
  * ON ENTRY :
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
- *              the computed root counts to screen.
- *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *              the computed root counts to screen;
+ *   nbtasks    number of threads to be used, if 0, then no multitasking;
+ *   vrb        is the verbose level, if 0, nothing will be written,
+ *              for vrb > 0, the value of vrb is the depth of the tree
+ *              of nested subroutine calls for which information is shown.
  *
  * ON RETURN :
  *   root_count is the root count used in the homotopy;
@@ -146,7 +152,7 @@ int solve_dobldobl_Laurent_system
  *              but only if silent = 0. */
 
 int solve_quaddobl_Laurent_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks );
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the quad double Laurent systems
@@ -155,8 +161,11 @@ int solve_quaddobl_Laurent_system
  * ON ENTRY :
  *   silent     if 1, then the solver will not write the computed root
  *              counts to screen, otherwise, if 0, the user will see
- *              the computed root counts to screen.
- *   nbtasks    number of threads to be used, if 0, then no multitasking.
+ *              the computed root counts to screen;
+ *   nbtasks    number of threads to be used, if 0, then no multitasking;
+ *   vrb        is the verbose level, if 0, nothing will be written,
+ *              for vrb > 0, the value of vrb is the depth of the tree
+ *              of nested subroutine calls for which information is shown.
  *
  * ON RETURN :
  *   root_count is the root count used in the homotopy;

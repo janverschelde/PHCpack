@@ -141,7 +141,7 @@ int input_output_on_files ( int precision )
 
 int Laurent_input_output_on_files ( int precision )
 {
-   int fail,rc,nrc,nbtasks,i;
+   int fail,rc,nrc,nbtasks,vrb,i;
    char rocos[1024];
 
    if(precision == 0)
@@ -150,7 +150,8 @@ int Laurent_input_output_on_files ( int precision )
       printf("\nThe system in the container : \n");
       fail = syscon_write_standard_Laurent_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
-      fail = solve_standard_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nGive the verbose level : "); scanf("%d",&vrb);
+      fail = solve_standard_Laurent_system(&rc,0,&nrc,rocos,nbtasks,vrb);
       printf("\nROOT COUNTS :\n");
       for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
@@ -163,7 +164,8 @@ int Laurent_input_output_on_files ( int precision )
       printf("\nThe system in the container : \n");
       fail = syscon_write_dobldobl_Laurent_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
-      fail = solve_dobldobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nGive the verbose level : "); scanf("%d",&vrb);
+      fail = solve_dobldobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks,vrb);
       printf("\nROOT COUNTS :\n");
       for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
@@ -176,7 +178,8 @@ int Laurent_input_output_on_files ( int precision )
       printf("\nThe system in the container : \n");
       fail = syscon_write_quaddobl_Laurent_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
-      fail = solve_quaddobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+      printf("\nGive the verbose level : "); scanf("%d",&vrb);
+      fail = solve_quaddobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks,vrb);
       printf("\nROOT COUNTS :\n");
       for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
@@ -341,7 +344,7 @@ int interactive_input_output ( int precision )
 
 int standard_interactive_Laurent_input_output ( void )
 {
-   int n,fail,k,nc,nrc,i,rc,len,nbtasks;
+   int n,fail,k,nc,nrc,i,rc,len,nbtasks,vrb;
    char rocos[1024];
    char ch,p[800];
 
@@ -364,7 +367,8 @@ int standard_interactive_Laurent_input_output ( void )
    printf("The system in the container : \n");
    syscon_write_standard_Laurent_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
-   fail = solve_standard_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+   printf("\nGive the verbose level : "); scanf("%d",&vrb);
+   fail = solve_standard_Laurent_system(&rc,0,&nrc,rocos,nbtasks,vrb);
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
    fail = solcon_write_standard_solutions(); */
@@ -387,7 +391,7 @@ int standard_interactive_Laurent_input_output ( void )
 
 int dobldobl_interactive_Laurent_input_output ( void )
 {
-   int n,fail,k,nc,i,rc,nrc,len,nbtasks;
+   int n,fail,k,nc,i,rc,nrc,len,nbtasks,vrb;
    char rocos[1024];
    char ch,p[800];
 
@@ -410,7 +414,8 @@ int dobldobl_interactive_Laurent_input_output ( void )
    printf("The system in the container : \n");
    syscon_write_dobldobl_Laurent_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
-   fail = solve_dobldobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+   printf("\nGive the verbose level : "); scanf("%d",&vrb);
+   fail = solve_dobldobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks,vrb);
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
    fail = solcon_write_dobldobl_solutions(); */
@@ -433,7 +438,7 @@ int dobldobl_interactive_Laurent_input_output ( void )
 
 int quaddobl_interactive_Laurent_input_output ( void )
 {
-   int n,fail,k,nc,i,rc,nrc,len,nbtasks;
+   int n,fail,k,nc,i,rc,nrc,len,nbtasks,vrb;
    char rocos[1024];
    char ch,p[800];
 
@@ -456,7 +461,8 @@ int quaddobl_interactive_Laurent_input_output ( void )
    printf("The system in the container : \n");
    syscon_write_quaddobl_Laurent_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
-   fail = solve_quaddobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks);
+   printf("\nGive the verbose level : "); scanf("%d",&vrb);
+   fail = solve_quaddobl_Laurent_system(&rc,0,&nrc,rocos,nbtasks,vrb);
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
    fail = solcon_write_quaddobl_solutions(); */

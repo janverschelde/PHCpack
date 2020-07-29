@@ -1,4 +1,15 @@
-Mon 20 Jul 2020 :
+Wed 29 Jul 2020 : added the verbose level to the blackbox solvers on
+  Laurent systems in phcpack; updated phcpy2c2.c, phcpy2c3.c, phc_solve.c.
+
+Mon 20 Jul 2020 : to pass the verbose level in the C interface, updated
+  phcpack.h, phcpack.c, solcon.h, solcon.c, syscon.h, syscon.c, phc_solve.c,
+  product.h, product.c, celcon.h, celcon.c, intcelcon.h, intcelcon.c,
+  scalers.h, scalers.c, reducers.h, reducers.c, unisolvers.h, unisolvers.c,
+  sweep.h, sweep.c, jump_track.h, jump_track.c, next_track.h, next_track.c,
+  giftwrappers.h, giftwrappers.c, numbtrop.h, numbrop.c, mapcon.h, mapcon.c,
+  syspool.h, syspool.c, witset.h, witset.c, witsols.h, witsols.c,
+  series.h, series.c, padcon.h, padcon.c, multiplicity.h, multiplicity.c,
+  tabform.h, tabform.c, schubert.h, schubert.c, phcpy2c2.c, phcpy2c3.c.
 
 Wed 1 Jul 2020 : added new function prototype to phcpy2c.h with
   definitions in phcpy2c2.c and phcpy2c3.c to compute a condition report,

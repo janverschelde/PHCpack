@@ -65,7 +65,6 @@ int solve_standard_system
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
       rocos[*nrcs] = '\0';
    }
-
    return fail;
 }
 
@@ -90,7 +89,6 @@ int solve_dobldobl_system
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
       rocos[*nrcs] = '\0';
    }
-
    return fail;
 }
 
@@ -115,12 +113,11 @@ int solve_quaddobl_system
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
       rocos[*nrcs] = '\0';
    }
-
    return fail;
 }
 
 int solve_standard_Laurent_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb )
 {
    int fail,i;
    int a[2];
@@ -130,7 +127,7 @@ int solve_standard_Laurent_system
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc4c(75,a,b,c,0);
+   fail = _ada_use_c2phc4c(75,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -144,7 +141,7 @@ int solve_standard_Laurent_system
 }
 
 int solve_dobldobl_Laurent_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb )
 {
    int fail,i;
    int a[2];
@@ -154,7 +151,7 @@ int solve_dobldobl_Laurent_system
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc4c(701,a,b,c,0);
+   fail = _ada_use_c2phc4c(701,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -164,12 +161,11 @@ int solve_dobldobl_Laurent_system
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
       rocos[*nrcs] = '\0';
    }
-
    return fail;
 }
 
 int solve_quaddobl_Laurent_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks )
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb )
 {
    int fail,i;
    int a[2];
@@ -179,7 +175,7 @@ int solve_quaddobl_Laurent_system
    b[0] = silent;
    b[1] = nbtasks;
 
-   fail = _ada_use_c2phc4c(703,a,b,c,0);
+   fail = _ada_use_c2phc4c(703,a,b,c,vrb);
 
    *root_count = a[0];
 
@@ -189,7 +185,6 @@ int solve_quaddobl_Laurent_system
       for(i=0; i<(*nrcs); i++) rocos[i] = (char) b[i];
       rocos[*nrcs] = '\0';
    }
-
    return fail;
 }
 
