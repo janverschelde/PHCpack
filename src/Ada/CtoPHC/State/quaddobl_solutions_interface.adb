@@ -1,11 +1,14 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;
+with QuadDobl_System_and_Solutions_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with PHCpack_Operations;
+with QuadDobl_PolySys_Container;
 with QuadDobl_Solutions_Container;
 
 package body QuadDobl_Solutions_Interface is
@@ -31,6 +34,99 @@ package body QuadDobl_Solutions_Interface is
       end if;
       return 390;
   end QuadDobl_Solutions_Read;
+
+  function QuadDobl_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_Read_from_File ...");
+    end if;
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      sols : QuadDobl_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      QuadDobl_Complex_Solutions_io.get(file,sols);
+      QuadDobl_Solutions_Container.Clear;
+      QuadDobl_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 918;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 917;
+    end;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Read_from_file.");
+      end if;
+      return 545;
+  end QuadDobl_Solutions_Read_from_File;
+
+  function QuadDobl_System_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_System_Solutions_Read_from_File ...");
+    end if;
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+      sols : QuadDobl_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      QuadDobl_System_and_Solutions_io.get(file,p,sols);
+      QuadDobl_PolySys_Container.Clear;
+      QuadDobl_PolySys_Container.Initialize(p.all);
+      QuadDobl_Solutions_Container.Clear;
+      QuadDobl_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 546;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 546;
+    end;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_System_Solutions_Read_from_file.");
+      end if;
+      return 545;
+  end QuadDobl_System_Solutions_Read_from_File;
 
   function QuadDobl_Solutions_Write
              ( vrblvl : integer32 := 0 ) return integer32 is

@@ -17,6 +17,20 @@ package Multprec_Solutions_Interface is
   --   and initializes the container with the user input.
   --   The verbose level is given in vrblvl.
 
+  function Multprec_System_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION 
+  --   Reads a system with solutions in quad double precision from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the file name,
+  --           in a[1] is the number of decimal places;
+  --   b       the file name to read the system and solutions;
+  --   vrblvl  is the verbose level.
+
   function Multprec_Solutions_Write
              ( vrblvl : integer32 := 0 ) return integer32;
 

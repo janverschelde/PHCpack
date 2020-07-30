@@ -18,6 +18,32 @@ package QuadDobl_Solutions_Interface is
   --   and initializes the container with the user input.
   --   The verbose level is given in vrblvl.
 
+  function QuadDobl_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION 
+  --   Reads solutions in quad double precision from file.
+
+  -- ON ENTRY :
+  --   a       the number of characters in the file name;
+  --   b       the file name to read the solutions from;
+  --   vrblvl  is the verbose level.
+
+  function QuadDobl_System_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION 
+  --   Reads a system with solutions in quad double precision from file.
+
+  -- ON ENTRY :
+  --   a       the number of characters in the file name;
+  --   b       the file name to read the system and solutions from;
+  --   vrblvl  is the verbose level.
+
   function QuadDobl_Solutions_Write
              ( vrblvl : integer32 := 0 ) return integer32;
 

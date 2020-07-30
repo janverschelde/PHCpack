@@ -1,11 +1,14 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;
+with Standard_System_and_Solutions_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with PHCpack_Operations;
+with Standard_PolySys_Container;
 with Standard_Solutions_Container;
 
 package body Standard_Solutions_Interface is
@@ -31,6 +34,99 @@ package body Standard_Solutions_Interface is
       end if;
       return 30;
   end Standard_Solutions_Read;
+
+  function Standard_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Read_from_File ...");
+    end if;
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      sols : Standard_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      Standard_Complex_Solutions_io.get(file,sols);
+      Standard_Solutions_Container.Clear;
+      Standard_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 916;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 916;
+    end;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Read_from_file.");
+      end if;
+      return 916;
+  end Standard_Solutions_Read_from_File;
+
+  function Standard_System_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_System_Solutions_Read_from_File ...");
+    end if;
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+      sols : Standard_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      Standard_System_and_Solutions_io.get(file,p,sols);
+      Standard_PolySys_Container.Clear;
+      Standard_PolySys_Container.Initialize(p.all);
+      Standard_Solutions_Container.Clear;
+      Standard_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 544;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 544;
+    end;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_System_Solutions_Read_from_file.");
+      end if;
+      return 544;
+  end Standard_System_Solutions_Read_from_File;
 
   function Standard_Solutions_Write
              ( vrblvl : integer32 := 0 ) return integer32 is

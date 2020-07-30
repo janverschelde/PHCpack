@@ -1,11 +1,14 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;
+with DoblDobl_System_and_Solutions_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with PHCpack_Operations;
+with DoblDobl_PolySys_Container;
 with DoblDobl_Solutions_Container;
 
 package body DoblDobl_Solutions_Interface is
@@ -31,6 +34,99 @@ package body DoblDobl_Solutions_Interface is
       end if;
       return 340;
   end DoblDobl_Solutions_Read;
+
+  function DoblDobl_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_solutions_interface.");
+      put_line("DoblDobl_Solutions_Read_from_File ...");
+    end if;
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      sols : DoblDobl_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      DoblDobl_Complex_Solutions_io.get(file,sols);
+      DoblDobl_Solutions_Container.Clear;
+      DoblDobl_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 917;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 917;
+    end;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_solutions_interface.");
+        put_line("DoblDobl_Solutions_Read_from_file.");
+      end if;
+      return 917;
+  end DoblDobl_Solutions_Read_from_File;
+
+  function DoblDobl_System_Solutions_Read_from_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_solutions_interface.");
+      put_line("DoblDobl_System_Solutions_Read_from_File ...");
+    end if;
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+      sols : DoblDobl_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      DoblDobl_System_and_Solutions_io.get(file,p,sols);
+      DoblDobl_PolySys_Container.Clear;
+      DoblDobl_PolySys_Container.Initialize(p.all);
+      DoblDobl_Solutions_Container.Clear;
+      DoblDobl_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 545;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 545;
+    end;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_solutions_interface.");
+        put_line("DoblDobl_System_Solutions_Read_from_file.");
+      end if;
+      return 545;
+  end DoblDobl_System_Solutions_Read_from_File;
 
   function DoblDobl_Solutions_Write
              ( vrblvl : integer32 := 0 ) return integer32 is
