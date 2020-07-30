@@ -1,3 +1,5 @@
+Thu 30 Jul 2020 : updated files for version 1.0.6.
+
 Wed 29 Jul 2020 : to the blackbox solver functions, added added the parameter
   verbose_level for listing the called procedures during the solving.
 
