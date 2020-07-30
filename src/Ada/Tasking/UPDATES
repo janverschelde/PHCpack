@@ -1,3 +1,6 @@
+Thu 30 Jul 2020 : set the default to coefficient convolution circuits
+  in multitasked_path_convolutions.adb; fixed output when verbose level > 0.
+
 Mon 27 Jul 2020 : to multitasked_newton_convolutions, added procedures to
   return the estimated condition numbers, tested by ts_mtnewton.
   Updated multitasked_series_linearization.adb so if the output flag is true,

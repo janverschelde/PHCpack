@@ -196,7 +196,7 @@ package body Multitasked_Path_Convolutions is
            := Standard_Complex_Circuits.Allocate(hom.neq,hom.dim);
         rz : constant Standard_Floating_Vectors.Vector(0..hom.deg)
            := (0..hom.deg => 0.0);
-        sv : Standard_Complex_VecVecs.VecVec(0..hom.dim)
+        sv : constant Standard_Complex_VecVecs.VecVec(0..hom.dim)
            := Standard_Vector_Splitters.Allocate(hom.neq,hom.dim+1,0,1);
       begin
         pwt(k) := new Standard_Floating_Vectors.Vector'(rz);
@@ -750,7 +750,7 @@ package body Multitasked_Path_Convolutions is
 
   begin
     if vrb > 0
-     then put_line("-> in track_path_convolutions.Standard_Main ...");
+     then put_line("-> in multitasked_path_convolutions.Standard_Main ...");
     end if;
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     if nt > 0 then
@@ -762,9 +762,10 @@ package body Multitasked_Path_Convolutions is
     if mhom > 0 then
       ans := 'n'; -- no support for homogeneous coefficient circuits yet
     else
-      new_line;
-      put("Running with coefficient convolution circuits ? (y/n) ");
-      Ask_Yes_or_No(ans);
+     -- new_line;
+     -- put("Running with coefficient convolution circuits ? (y/n) ");
+     -- Ask_Yes_or_No(ans);
+      ans := 'y'; -- make coefficient convolution circuits the default
     end if;
     new_line;
     put_line("Reading the name of the output file ...");
@@ -809,7 +810,7 @@ package body Multitasked_Path_Convolutions is
   begin
     start_moment := Ada.Calendar.Clock;
     if vrb > 0
-     then put_line("-> in track_path_convolutions.DoblDobl_Main ...");
+     then put_line("-> in multitasked_path_convolutions.DoblDobl_Main ...");
     end if;
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     if nt > 0 then
@@ -847,7 +848,7 @@ package body Multitasked_Path_Convolutions is
   begin
     start_moment := Ada.Calendar.Clock;
     if vrb > 0
-     then put_line("-> in track_path_convolutions.QuadDobl_Main ...");
+     then put_line("-> in multitasked_path_convolutions.QuadDobl_Main ...");
     end if;
     Track_Path_Convolutions.Main(cnvhom,abshom,artificial,pars,sols,mhom,idz);
     if nt > 0 then

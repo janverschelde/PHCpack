@@ -480,9 +480,10 @@ package body Track_Path_Convolutions is
     if mhom > 0 then
       ans := 'n'; -- homogenization not yet supported on coefficient conv
     else
-      new_line;
-      put("Running with coefficient convolution circuits ? (y/n) ");
-      Ask_Yes_or_No(ans);
+     -- new_line;
+     -- put("Running with coefficient convolution circuits ? (y/n) ");
+     -- Ask_Yes_or_No(ans);
+      ans := 'y'; -- make coefficient convolution circuits the default
     end if;
     new_line;
     put_line("Reading the name of the output file ...");
