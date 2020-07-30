@@ -4,7 +4,7 @@ package body Greeting_Banners is
 
   function Version return string is
 
-    res : constant string := "PHCv2.4.78 released 2020-06-30";
+    res : constant string := "PHCv2.4.79 released 2020-07-30";
 
   begin
     return res;
@@ -18,7 +18,7 @@ package body Greeting_Banners is
     put_line("Algorithm 795: PHCpack: A general-purpose solver for polynomial");
     put_line("systems by homotopy continuation.");
     put_line
-      ("ACM Transactions on Mathematical Software, 25(2):251--276, 1999.");
+      ("ACM Transactions on Mathematical Software, 25(2):251-276, 1999.");
   end How_to_Cite;
 
   procedure show_help is
