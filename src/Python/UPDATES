@@ -1,3 +1,6 @@
+Wed 29 Jul 2020 : to the blackbox solver functions, added added the parameter
+  verbose_level for listing the called procedures during the solving.
+
 Wed 1 Jul 2020 : added a function to the solver module to compute a
   condition report in double precision.  Updated files for version 1.0.5.
 

@@ -203,7 +203,8 @@ def is_square(pols):
     nbreqs = len(pols)
     return nbrvar == nbreqs
 
-def standard_solve(pols, verbose=True, tasks=0, dictionary_output=False):
+def standard_solve(pols, verbose=True, tasks=0, dictionary_output=False, \
+    verbose_level=0):
     r"""
     Calls the blackbox solver to compute all isolated solutions in
     standard double precision.  On input in *pols* is a list of strings.
@@ -213,6 +214,8 @@ def standard_solve(pols, verbose=True, tasks=0, dictionary_output=False):
     The default zero value for *tasks* indicates no multithreading.
     If *dictionary_output*, then on return is a list of dictionaries,
     else the returned list is a list of strings.
+    If *verbose_level* is larger than 0, then the names of the procedures
+    called in the running of the blackbox solver will be listed.
     The solving happens in standard double precision arithmetic.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_standard_Laurent_system
@@ -232,9 +235,10 @@ def standard_solve(pols, verbose=True, tasks=0, dictionary_output=False):
         py2c_syscon_store_standard_Laurential(nchar, dim, ind+1, pol)
     silent = not verbose
     if silent:
-        py2c_solve_standard_Laurent_system(silent, tasks)
+        py2c_solve_standard_Laurent_system(silent, tasks, verbose_level)
     else:
-        (rc, counts) = py2c_solve_standard_Laurent_system(silent, tasks)
+        (rc, counts) = py2c_solve_standard_Laurent_system\
+                         (silent, tasks, verbose_level)
         if counts != "":
             print counts
     sols = load_standard_solutions()
@@ -244,7 +248,8 @@ def standard_solve(pols, verbose=True, tasks=0, dictionary_output=False):
     else:
         return sols
 
-def dobldobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
+def dobldobl_solve(pols, verbose=True, tasks=0, dictionary_output=False, \
+    verbose_level=0):
     r"""
     Calls the blackbox solver to compute all isolated solutions in
     double double precision.  On input in *pols* is a list of strings.
@@ -254,6 +259,8 @@ def dobldobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
     The default zero value for *tasks* indicates no multithreading.
     If *dictionary_output*, then on return is a list of dictionaries,
     else the returned list is a list of strings.
+    If *verbose_level* is larger than 0, then the names of the procedures
+    called in the running of the blackbox solver will be listed.
     The solving happens in double double precision arithmetic.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_dobldobl_Laurent_system
@@ -273,9 +280,10 @@ def dobldobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
         py2c_syscon_store_dobldobl_Laurential(nchar, dim, ind+1, pol)
     silent = not verbose
     if silent:
-        py2c_solve_dobldobl_Laurent_system(silent, tasks)
+        py2c_solve_dobldobl_Laurent_system(silent, tasks, verbose_level)
     else:
-        (rc, counts) = py2c_solve_dobldobl_Laurent_system(silent, tasks)
+        (rc, counts) = py2c_solve_dobldobl_Laurent_system\
+                         (silent, tasks, verbose_level)
         if counts != "":
             print counts
     sols = load_dobldobl_solutions()
@@ -285,7 +293,8 @@ def dobldobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
     else:
         return sols
 
-def quaddobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
+def quaddobl_solve(pols, verbose=True, tasks=0, dictionary_output=False, \
+    verbose_level=0):
     r"""
     Calls the blackbox solver to compute all isolated solutions in
     quad double precision.  On input in *pols* is a list of strings.
@@ -295,6 +304,8 @@ def quaddobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
     The default zero value for *tasks* indicates no multithreading.
     If *dictionary_output*, then on return is a list of dictionaries,
     else the returned list is a list of strings.
+    If *verbose_level* is larger than 0, then the names of the procedures
+    called in the running of the blackbox solver will be listed.
     The solving happens in quad double precision arithmetic.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_quaddobl_Laurent_system
@@ -314,9 +325,10 @@ def quaddobl_solve(pols, verbose=True, tasks=0, dictionary_output=False):
         py2c_syscon_store_quaddobl_Laurential(nchar, dim, ind+1, pol)
     silent = not verbose
     if silent:
-        py2c_solve_quaddobl_Laurent_system(silent, tasks)
+        py2c_solve_quaddobl_Laurent_system(silent, tasks, verbose_level)
     else:
-        (rc, counts) = py2c_solve_quaddobl_Laurent_system(silent, tasks)
+        (rc, counts) = py2c_solve_quaddobl_Laurent_system\
+                         (silent, tasks, verbose_level)
         if counts != "":
             print counts
     sols = load_quaddobl_solutions()
@@ -343,7 +355,7 @@ def solve_checkin(pols, msg):
         print 'to solve polynomial systems that are not square.'
 
 def solve(pols, verbose=True, tasks=0, precision='d', checkin=True, \
-    dictionary_output=False):
+    dictionary_output=False, verbose_level=0):
     r"""
     Calls the blackbox solver to compute all isolated solutions.
     To compute all solutions, also the positive dimensional solution sets,
@@ -364,6 +376,8 @@ def solve(pols, verbose=True, tasks=0, precision='d', checkin=True, \
     If *checkin* (by default), the input *pols* is checked for being square.
     If *dictionary_output*, then on return is a list of dictionaries,
     else the returned list is a list of strings.
+    If *verbose_level* is larger than 0, then the names of the procedures
+    called in the running of the blackbox solver will be listed.
     """
     if checkin:
         errmsg = 'The blackbox solver accepts only square systems,'
@@ -373,11 +387,14 @@ def solve(pols, verbose=True, tasks=0, precision='d', checkin=True, \
             print 'The number of tasks must be a nonnegative integer.'
             return None
     if(precision == 'd'):
-        return standard_solve(pols, verbose, tasks, dictionary_output)
+        return standard_solve\
+                 (pols, verbose, tasks, dictionary_output, verbose_level)
     elif(precision == 'dd'):
-        return dobldobl_solve(pols, verbose, tasks, dictionary_output)
+        return dobldobl_solve\
+                 (pols, verbose, tasks, dictionary_output, verbose_level)
     elif(precision == 'qd'):
-        return quaddobl_solve(pols, verbose, tasks, dictionary_output)
+        return quaddobl_solve\
+                 (pols, verbose, tasks, dictionary_output, verbose_level)
     else:
         print 'wrong level of precision, use d, dd, or qd'
 
