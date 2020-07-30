@@ -1,5 +1,7 @@
 Wed 29 Jul 2020 : added the verbose level to the blackbox solvers on
   Laurent systems in phcpack; updated phcpy2c2.c, phcpy2c3.c, phc_solve.c.
+  To phcpy2c.h, phcpy2c2.c, and phcpy2c3.c, added the verbose level to
+  the blackbox solvers.
 
 Mon 20 Jul 2020 : to pass the verbose level in the C interface, updated
   phcpack.h, phcpack.c, solcon.h, solcon.c, syscon.h, syscon.c, phc_solve.c,
