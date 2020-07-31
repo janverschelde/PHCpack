@@ -1,5 +1,8 @@
 Fri 31 Jul 2020 : new package univariate_solvers_interface with jobs
   taken from unisolve.  Passed verbose level to unisolve.
+  Moved functions from use_roco.adb into linear_products_interface,
+  a new package for linear product bounds and start systems.
+  The verbose level is added as a parameter in use_roco.ads.
 
 Thu 30 Jul 2020 : moved job functions from use_solcon.adb to the
   *_solution_interface packages.

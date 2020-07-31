@@ -61,17 +61,17 @@ ts_solpool                       : test on the solutions pool
 use_solpool                      : Ada gateway to the solutions pool
 ts_use_solpool.c                 : C routine calls the Ada gateway use_solpool
 ------------------------------------------------------------------------------
-numerical_tropisms_container     : manages numerically computed tropisms
-numerical_tropisms_interface     : to define the C interface to the tropisms
-use_numbtrop                     : interface to the tropisms container
 phcpack_operations               : PHCpack as a state machine
 phcpack_operations_io            : input/output of main data of PHCpack
 c_to_phcpack                     : Ada routine as gateway to the machine
 ts_c2str.c                       : test on having phc write C strings
+-----------------------------------------------------------------------------
 use_track                        : access to jumpstarting path trackers
 scaling_interface                : interface to equation & coefficient scaling
 use_scaling                      : access to scaling systems and solutions
 use_reduction                    : reduction of system to lower total degree
+linear_products_interface        : linear product bounds and start systems
+use_roco                         : job handlers for linear products
 ------------------------------------------------------------------------------
 pieri_homotopy                   : Pieri homotopies as a state machine
 ts_pirhom                        : interactive test on pieri_homotopy
@@ -112,6 +112,10 @@ giftwrap_interface               : interface to giftwrapping functions
 use_giftwrap                     : giftwrapping for convex hulls
 ts_use_giftwrap                  : test on use_giftwrap
 ts_giftwcon                      : test on giftwrapping container
+-----------------------------------------------------------------------------
+numerical_tropisms_container     : manages numerically computed tropisms
+numerical_tropisms_interface     : to define the C interface to the tropisms
+use_numbtrop                     : interface to the tropisms container
 ------------------------------------------------------------------------------
 parameter_homotopy_state         : definition of parameter indices
 sweep_interface                  : interface to the sweep operations
