@@ -15,24 +15,9 @@ with Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
 with Symbol_Table; -- ,Symbol_Table_io;
-with Standard_Complex_Polynomials;
-with Standard_Complex_Laurentials;
-with Standard_Complex_Poly_Strings;
-with Standard_Complex_Laur_Strings;
 with Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;
-with DoblDobl_Complex_Polynomials;
-with DoblDobl_Complex_Laurentials;
-with DoblDobl_Complex_Poly_Strings;
-with DoblDobl_Complex_Laur_Strings;
 with DoblDobl_Complex_Poly_Systems;
-with DoblDobl_Complex_Laur_Systems;
-with QuadDobl_Complex_Polynomials;
-with QuadDobl_Complex_Laurentials;
-with QuadDobl_Complex_Poly_Strings;
-with QuadDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
@@ -51,27 +36,25 @@ with Extrinsic_Diagonal_Homotopies;
 with Extrinsic_Diagonal_Homotopies_io;  use Extrinsic_Diagonal_Homotopies_io;
 with Extrinsic_Diagonal_Solvers;
 with Standard_Hypersurface_Witdrivers;
-with DoblDobl_Hypersurface_Witdrivers;
-with QuadDobl_Hypersurface_Witdrivers;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
-with Standard_LaurSys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_PolySys_Container;
-with DoblDobl_LaurSys_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_PolySys_Container;
-with QuadDobl_LaurSys_Container;
 with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
 with Crude_Path_Trackers;
 
+with Diagonal_Homotopy_Interface;
+
 function use_track ( job : integer32;
                      a : C_intarrs.Pointer;
                      b : C_intarrs.Pointer;
-                     c : C_dblarrs.Pointer ) return integer32 is
+                     c : C_dblarrs.Pointer;
+                     vrblvl : integer32 := 0 ) return integer32 is
  
   function JobM1 return integer32 is -- refine solution with Newton
 
@@ -547,114 +530,6 @@ function use_track ( job : integer32;
       return 13;
   end Job13;
 
-  function Job15 return integer32 is -- create a diagonal homotopy
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.Standard_Diagonal_Homotopy(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when creating a diagonal homotopy.");
-      return 15;
-  end Job15;
-
-  function Job43 return integer32 is -- dobldobl diagonal homotopy
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.DoblDobl_Diagonal_Homotopy(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when creating a dobldobl diagonal homotopy.");
-      return 43;
-  end Job43;
-
-  function Job44 return integer32 is -- quaddobl diagonal homotopy
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.QuadDobl_Diagonal_Homotopy(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when creating a quaddobl diagonal homotopy.");
-      return 44;
-  end Job44;
-
-  function Job61 return integer32 is -- standard diagonal Laurent homotopy
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.Standard_Diagonal_Laurent_Homotopy(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at standard diagonal Laurent homotopy.");
-      return 61;
-  end Job61;
-
-  function Job62 return integer32 is -- dobldobl diagonal Laurent homotopy
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.DoblDobl_Diagonal_Laurent_Homotopy(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at dobldobl diagonal Laurent homotopy.");
-      return 62;
-  end Job62;
-
-  function Job63 return integer32 is -- quaddobl diagonal Laurent homotopy
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.QuadDobl_Diagonal_Laurent_Homotopy(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at quaddobl diagonal Laurent homotopy.");
-      return 63;
-  end Job63;
-
   function Job16 return integer32 is -- read a witness set
 
     v_a : constant C_Integer_Array
@@ -904,246 +779,6 @@ function use_track ( job : integer32;
       return 21;
   end Job21;
 
-  function Job40 return integer32 is -- standard witness set of hypersurface
-
-    use Standard_Hypersurface_Witdrivers;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nv : constant natural32 := natural32(v_a(v_a'first));
-    nc : constant integer := integer(v_a(v_a'first+1));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : Standard_Complex_Polynomials.Poly;
-    eps : constant double_float := 1.0E-12;
-    fail : boolean;
-    e : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-    esols : Standard_Complex_Solutions.Solution_List;
-
-  begin
-    if Symbol_Table.Empty
-     then Symbol_Table.Init(nv);
-    end if;
-    p := Standard_Complex_Poly_Strings.Parse(nv,s);
-    Silent_Root_Finder(p,eps,fail,e,esols);
-   -- if fail
-   --  then put_line("a failure occurred");
-   --  else put_line("no failure occurred");
-   -- end if;
-    Witness_Sets_io.Add_Embed_Symbols(nv-1);
-    Standard_PolySys_Container.Clear;
-    Standard_PolySys_Container.Initialize(e.all);
-    Standard_Solutions_Container.Clear;
-    Standard_Solutions_Container.Initialize(esols);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in standard double witness set for hypersurface.");
-      return 270;
-  end Job40;
-
-  function Job64 return integer32 is -- standard witness set of Laurent poly
-
-    use Standard_Hypersurface_Witdrivers;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nv : constant natural32 := natural32(v_a(v_a'first));
-    nc : constant integer := integer(v_a(v_a'first+1));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : Standard_Complex_Laurentials.Poly;
-    eps : constant double_float := 1.0E-12;
-    fail : boolean;
-    e : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
-    esols : Standard_Complex_Solutions.Solution_List;
-
-  begin
-    if Symbol_Table.Empty
-     then Symbol_Table.Init(nv);
-    end if;
-    p := Standard_Complex_Laur_Strings.Parse(nv,s);
-    Silent_Root_Finder(p,eps,fail,e,esols);
-   -- if fail
-   --  then put_line("a failure occurred");
-   --  else put_line("no failure occurred");
-   -- end if;
-    Witness_Sets_io.Add_Embed_Symbols(nv-1);
-    Standard_LaurSys_Container.Clear;
-    Standard_LaurSys_Container.Initialize(e.all);
-    Standard_Solutions_Container.Clear;
-    Standard_Solutions_Container.Initialize(esols);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in standard witness set for Laurent polynomial.");
-      return 270;
-  end Job64;
-
-  function Job49 return integer32 is -- dobldobl witness set of hypersurface
-
-    use DoblDobl_Hypersurface_Witdrivers;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nv : constant natural32 := natural32(v_a(v_a'first));
-    nc : constant integer := integer(v_a(v_a'first+1));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : DoblDobl_Complex_Polynomials.Poly;
-    eps : constant double_double := create(1.0E-12);
-    fail : boolean;
-    e : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    esols : DoblDobl_Complex_Solutions.Solution_List;
-
-  begin
-    if Symbol_Table.Empty
-     then Symbol_Table.Init(nv);
-    end if;
-    p := DoblDobl_Complex_Poly_Strings.Parse(nv,s);
-    Silent_Root_Finder(p,eps,fail,e,esols);
-   -- if fail
-   --  then put_line("a failure occurred");
-   --  else put_line("no failure occurred");
-   -- end if;
-    Witness_Sets_io.Add_Embed_Symbols(nv-1);
-    DoblDobl_PolySys_Container.Clear;
-    DoblDobl_PolySys_Container.Initialize(e.all);
-    DoblDobl_Solutions_Container.Clear;
-    DoblDobl_Solutions_Container.Initialize(esols);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in double double witness set for hypersurface.");
-      return 259;
-  end Job49;
-
-  function Job65 return integer32 is -- dobldobl witness set of Laurent poly
-
-    use DoblDobl_Hypersurface_Witdrivers;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nv : constant natural32 := natural32(v_a(v_a'first));
-    nc : constant integer := integer(v_a(v_a'first+1));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : DoblDobl_Complex_Laurentials.Poly;
-    eps : constant double_double := create(1.0E-12);
-    fail : boolean;
-    e : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
-    esols : DoblDobl_Complex_Solutions.Solution_List;
-
-  begin
-    if Symbol_Table.Empty
-     then Symbol_Table.Init(nv);
-    end if;
-    p := DoblDobl_Complex_Laur_Strings.Parse(nv,s);
-    Silent_Root_Finder(p,eps,fail,e,esols);
-   -- if fail
-   --  then put_line("a failure occurred");
-   --  else put_line("no failure occurred");
-   -- end if;
-    Witness_Sets_io.Add_Embed_Symbols(nv-1);
-    DoblDobl_LaurSys_Container.Clear;
-    DoblDobl_LaurSys_Container.Initialize(e.all);
-    DoblDobl_Solutions_Container.Clear;
-    DoblDobl_Solutions_Container.Initialize(esols);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in dobldobl witness set for Laurent polynomial.");
-      return 259;
-  end Job65;
-
-  function Job50 return integer32 is -- quaddobl witness set of hypersurface
-
-    use QuadDobl_Hypersurface_Witdrivers;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nv : constant natural32 := natural32(v_a(v_a'first));
-    nc : constant integer := integer(v_a(v_a'first+1));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : QuadDobl_Complex_Polynomials.Poly;
-    eps : constant quad_double := create(1.0E-12);
-    fail : boolean;
-    e : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-    esols : QuadDobl_Complex_Solutions.Solution_List;
-
-  begin
-    if Symbol_Table.Empty
-     then Symbol_Table.Init(nv);
-    end if;
-    p := QuadDobl_Complex_Poly_Strings.Parse(nv,s);
-    Silent_Root_Finder(p,eps,fail,e,esols);
-   -- if fail
-   --  then put_line("a failure occurred");
-   --  else put_line("no failure occurred");
-   -- end if;
-    Witness_Sets_io.Add_Embed_Symbols(nv-1);
-    QuadDobl_PolySys_Container.Clear;
-    QuadDobl_PolySys_Container.Initialize(e.all);
-    QuadDobl_Solutions_Container.Clear;
-    QuadDobl_Solutions_Container.Initialize(esols);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in quad double witness set for hypersurface.");
-      return 269;
-  end Job50;
-
-  function Job66 return integer32 is -- quaddobl witness set of Laurent poly
-
-    use QuadDobl_Hypersurface_Witdrivers;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nv : constant natural32 := natural32(v_a(v_a'first));
-    nc : constant integer := integer(v_a(v_a'first+1));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    p : QuadDobl_Complex_Laurentials.Poly;
-    eps : constant quad_double := create(1.0E-12);
-    fail : boolean;
-    e : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
-    esols : QuadDobl_Complex_Solutions.Solution_List;
-
-  begin
-    if Symbol_Table.Empty
-     then Symbol_Table.Init(nv);
-    end if;
-    p := QuadDobl_Complex_Laur_Strings.Parse(nv,s);
-    Silent_Root_Finder(p,eps,fail,e,esols);
-   -- if fail
-   --  then put_line("a failure occurred");
-   --  else put_line("no failure occurred");
-   -- end if;
-    Witness_Sets_io.Add_Embed_Symbols(nv-1);
-    QuadDobl_LaurSys_Container.Clear;
-    QuadDobl_LaurSys_Container.Initialize(e.all);
-    QuadDobl_Solutions_Container.Clear;
-    QuadDobl_Solutions_Container.Initialize(esols);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in quaddobl witness set for Laurent polynomial.");
-      return 269;
-  end Job66;
-
   function Job41 return integer32 is -- standard startsols in diagonal cascade
 
     v_a : constant C_Integer_Array
@@ -1328,6 +963,9 @@ function use_track ( job : integer32;
   end Job57;
 
   function Handle_Jobs return integer32 is
+
+    use Diagonal_Homotopy_Interface;
+
   begin
     case job is
       when -1 => return JobM1; -- refine solution with Newton
@@ -1348,7 +986,7 @@ function use_track ( job : integer32;
       when 12 => return Job12; -- file name to read start system
       when 13 => return Job13; -- file name to read linear-product system
       when 14 => PHCpack_Operations.Standard_Cascade_Homotopy; return 0;
-      when 15 => return Job15; -- create a diagonal homotopy
+      when 15 => return Diagonal_Homotopy_Standard_Polynomial_Make(a,b,vrblvl);
       when 16 => return Job16; -- read a witness set
       when 17 => return Job17; -- reset input file for witness set k
       when 18 => return Job18; -- returns the extrinsic cascade dimension
@@ -1372,19 +1010,19 @@ function use_track ( job : integer32;
       when 37 => return Job37; -- write solution with diagnostics
       when 38 => PHCpack_Operations.QuadDobl_Cascade_Homotopy; return 0;
      -- redefining diagonal homotopies ...
-      when 40 => return Job40; -- standard witness set of hypersurface
+      when 40 => return Diagonal_Homotopy_Standard_Polynomial_Set(a,b,vrblvl);
       when 41 => return Job41; -- solutions to start diagonal cascade
       when 42 => return Job42; -- diagonal symbols doubler
      -- diagonal homotopy in double double and quad double precision
-      when 43 => return Job43; -- double double diagonal homotopy
-      when 44 => return Job44; -- quad double diagonal homotopy
+      when 43 => return Diagonal_Homotopy_DoblDobl_Polynomial_Make(a,b,vrblvl);
+      when 44 => return Diagonal_Homotopy_QuadDobl_Polynomial_Make(a,b,vrblvl);
       when 45 => return Job45; -- dobldobl startsols in diagonal cascade
       when 46 => return Job46; -- quaddobl startsols in diagonal cascade
       when 47 => return Job47; -- dobldobl collapse extrinsic diagonal
       when 48 => return Job48; -- quaddobl collapse extrinsic diagonal
      -- double double and quad double witness sets for hypersurface
-      when 49 => return Job49; -- dobldobl witness set for hypersurface
-      when 50 => return Job50; -- quaddobl witness set for hypersurface
+      when 49 => return Diagonal_Homotopy_DoblDobl_Polynomial_Set(a,b,vrblvl);
+      when 50 => return Diagonal_Homotopy_QuadDobl_Polynomial_Set(a,b,vrblvl);
      -- multiprecision versions to create homotopy :
       when 52 => PHCpack_Operations.Create_Multprec_Homotopy; return 0;
       when 53 => return Job53; -- multiprecision homotopy with given gamma
@@ -1400,12 +1038,12 @@ function use_track ( job : integer32;
         PHCpack_Operations.DoblDobl_Cascade_Laurent_Homotopy; return 0;
       when 60 =>
         PHCpack_Operations.QuadDobl_Cascade_Laurent_Homotopy; return 0;
-      when 61 => return Job61; -- standard diagonal Laurent homotopy
-      when 62 => return Job62; -- dobldobl diagonal Laurent homotopy
-      when 63 => return Job63; -- quaddobl diagonal Laurent homotopy
-      when 64 => return Job64; -- witness set for standard Laurent polynomial
-      when 65 => return Job65; -- witness set for dobldobl Laurent polynomial
-      when 66 => return Job66; -- witness set for quaddobl Laurent polynomial
+      when 61 => return Diagonal_Homotopy_Standard_Laurent_Make(a,b,vrblvl);
+      when 62 => return Diagonal_Homotopy_DoblDobl_Laurent_Make(a,b,vrblvl);
+      when 63 => return Diagonal_Homotopy_QuadDobl_Laurent_Make(a,b,vrblvl);
+      when 64 => return Diagonal_Homotopy_Standard_Laurential_Set(a,b,vrblvl);
+      when 65 => return Diagonal_Homotopy_DoblDobl_Laurential_Set(a,b,vrblvl);
+      when 66 => return Diagonal_Homotopy_QuadDobl_Laurential_Set(a,b,vrblvl);
       when 67
         => PHCpack_Operations_io.Read_DoblDobl_Target_System_without_Solutions;
            return 0;

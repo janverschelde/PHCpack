@@ -65,13 +65,15 @@ phcpack_operations               : PHCpack as a state machine
 phcpack_operations_io            : input/output of main data of PHCpack
 c_to_phcpack                     : Ada routine as gateway to the machine
 ts_c2str.c                       : test on having phc write C strings
------------------------------------------------------------------------------
-use_track                        : access to jumpstarting path trackers
+------------------------------------------------------------------------------
 scaling_interface                : interface to equation & coefficient scaling
 use_scaling                      : access to scaling systems and solutions
 use_reduction                    : reduction of system to lower total degree
 linear_products_interface        : linear product bounds and start systems
 use_roco                         : job handlers for linear products
+------------------------------------------------------------------------------
+diagonal_homotopy_interface      : interface to diagonal homotopy
+use_track                        : access to jumpstarting path trackers
 ------------------------------------------------------------------------------
 pieri_homotopy                   : Pieri homotopies as a state machine
 ts_pirhom                        : interactive test on pieri_homotopy
