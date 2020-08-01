@@ -124,6 +124,8 @@ sweep_interface                  : interface to the sweep operations
 use_sweep                        : C interface for sweep homotopy
 ts_use_sweep                     : test on use_sweep
 ------------------------------------------------------------------------------
+step_trackers_interface          : interface to step-by-step trackers
+use_nxtsol                       : handles jobs to step-by-step trackers
 crude_path_trackers              : path trackers without postprocessing
 ts_runtrack                      : calls the crude path trackers
 ------------------------------------------------------------------------------
