@@ -4,6 +4,8 @@ Sat 1 Aug 2020 : new package step_trackers_interface with the functions
   Added verbose level to use_reduction.ads.
   Moved all functions to drop a variable by index or by name from
   use_syscon.adb into the proper *sys_interface packages.
+  Added value of verbose level parameter in the calls to the handlers
+  in use_c2phc4c.adb.
 
 Fri 31 Jul 2020 : new package univariate_solvers_interface with jobs
   taken from unisolve.  Passed verbose level to unisolve.

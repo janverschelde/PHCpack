@@ -1506,15 +1506,15 @@ function use_c2phc4c ( job : integer32;
       when 146 => return use_solcon(9,a,b,c,vrblvl-1);
       when 147 => return use_syscon(10,a,b,c,vrblvl-1);
       when 148 => return use_syscon(11,a,b,c,vrblvl-1);
-      when 149..171 => return use_track(job-150,a,b,c);
+      when 149..171 => return use_track(job-150,a,b,c,vrblvl-1);
      -- track operations for double double precision :
-      when 172..178 => return use_track(job-150,a,b,c);
+      when 172..178 => return use_track(job-150,a,b,c,vrblvl-1);
      -- variable precision Newton step :
       when 179 => return Job179;
      -- double double and quad double L-R homotopies :
       when 180..181 => return use_c2lrhom(job-178,a,b,c,vrblvl-1);
      -- track operations for quad double precision :
-      when 182..188 => return use_track(job-150,a,b,c);
+      when 182..188 => return use_track(job-150,a,b,c,vrblvl-1);
      -- tuning continuation parameters, deflation, and Newton step
       when 189 => return Job189; -- get value of a continuation parameter
       when 190 => return Job190; -- set value of a continuation parameter
@@ -1530,7 +1530,7 @@ function use_c2phc4c ( job : integer32;
       when 200..209 => return use_solcon(job-170,a,b,c,vrblvl-1);
       when 210..227 => return use_c2pieri(job-210,a,b,c,vrblvl-1);
       when 228..229 => return use_c2lrhom(job-228,a,b,c,vrblvl-1);
-      when 230 => return use_track(42,a,b,c);
+      when 230 => return use_track(42,a,b,c,vrblvl-1);
       when 231..235 => return C_to_PHCpack(job-220,0);
       when 236 => return Job236; -- solve by double double path tracking
       when 237..238 => return C_to_PHCpack(job-220,0);
@@ -1552,7 +1552,7 @@ function use_c2phc4c ( job : integer32;
       when 257 => return DoblDobl_Start_Solutions_to_Container(vrblvl-1);
       when 258 => return DoblDobl_Container_Solutions_to_Start(vrblvl-1);
      -- double double witness set for a hypersurface
-      when 259 => return use_track(49,a,b,c);
+      when 259 => return use_track(49,a,b,c,vrblvl-1);
       when 260 => return Job260; -- embed quad double system
      -- quad double versions for jobs 1 to 8
       when 261 => return QuadDobl_Target_Poly_System_to_Container(vrblvl-1);
@@ -1564,15 +1564,15 @@ function use_c2phc4c ( job : integer32;
       when 267 => return QuadDobl_Start_Solutions_to_Container(vrblvl-1);
       when 268 => return QuadDobl_Container_Solutions_to_Start(vrblvl-1);
      -- quad double witness set for a hypersurface
-      when 269 => return use_track(50,a,b,c);
+      when 269 => return use_track(50,a,b,c,vrblvl-1);
      -- interface to diagonal homotopies ...
-      when 270 => return use_track(40,a,b,c); -- standard witset of hypersurface
-      when 271 => return use_track(41,a,b,c); -- start diagonal cascade sols
+      when 270 => return use_track(40,a,b,c,vrblvl-1); -- st witset of poly
+      when 271 => return use_track(41,a,b,c,vrblvl-1); -- start diagl csc sols
      -- univariate polynomial solvers
-      when 272 => return unisolve(1,a,b,c); -- standard double precision
-      when 273 => return unisolve(2,a,b,c); -- double double precision
-      when 274 => return unisolve(3,a,b,c); -- quad double precision
-      when 275 => return unisolve(4,a,b,c); -- arbitrary multiprecision
+      when 272 => return unisolve(1,a,b,c,vrblvl-1); -- double precision
+      when 273 => return unisolve(2,a,b,c,vrblvl-1); -- double double precision
+      when 274 => return unisolve(3,a,b,c,vrblvl-1); -- quad double precision
+      when 275 => return unisolve(4,a,b,c,vrblvl-1); -- multiprecision
      -- read next of solutions
       when 276 => return use_solcon(276,a,b,c,vrblvl-1); -- next standard
       when 277 => return use_solcon(277,a,b,c,vrblvl-1); -- next double double
@@ -1589,8 +1589,8 @@ function use_c2phc4c ( job : integer32;
       when 287 => return Multprec_Start_Solutions_to_Container(vrblvl-1);
       when 288 => return Multprec_Container_Solutions_to_Start(vrblvl-1);
      -- diagonal homotopy in double double and quad double precision
-      when 289 => return use_track(43,a,b,c); -- dobldobl diagonal homotopy
-      when 290 => return use_track(44,a,b,c); -- quaddobl diagonal homotopy
+      when 289 => return use_track(43,a,b,c,vrblvl-1); -- dd diagonal homotopy
+      when 290 => return use_track(44,a,b,c,vrblvl-1); -- qd diagonal homotopy
      -- manipulation of symbols
       when 291 => return Symbol_Table_Remove_by_Index(a,vrblvl-1);
       when 292 => return Symbol_Table_Sort_Embedded(a,vrblvl-1);
@@ -1599,12 +1599,12 @@ function use_c2phc4c ( job : integer32;
       when 295 => return Symbol_Table_String(a,b,vrblvl-1);
       when 296 => return Symbol_Table_Remove_by_Name(a,b,vrblvl-1);
      -- interface to diagonal homotopies continued
-      when 297 => return use_track(45,a,b,c); -- dobldobl diagonal startsols
-      when 298 => return use_track(46,a,b,c); -- quaddobl diagonal startsols
-      when 299 => return use_track(47,a,b,c); -- dobldobl collapse diagonal
+      when 297 => return use_track(45,a,b,c,vrblvl-1); -- dd diag startsols
+      when 298 => return use_track(46,a,b,c,vrblvl-1); -- qd diag startsols
+      when 299 => return use_track(47,a,b,c,vrblvl-1); -- dd collapse diagonal
       when 300..305 => return use_syspool(job-300,a,b,c);
       when 306..311 => return use_syscon(job-294,a,b,c,vrblvl-1);
-      when 312 => return use_track(48,a,b,c); -- quaddobl collapse diagonal
+      when 312 => return use_track(48,a,b,c,vrblvl-1); -- qd collapse diagonal
       when 313..317 => return use_syspool(job-307,a,b,c);
       when 318 => return use_syspool(11,a,b,c); -- init dobldobl sys pool
       when 319 => return use_syspool(12,a,b,c); -- init quaddobl sys pool
@@ -1660,9 +1660,9 @@ function use_c2phc4c ( job : integer32;
         PHCpack_Operations_io.Write_Multprec_Target_Solutions; return 0;
       when 498 => PHCpack_Operations.Multprec_Clear; return 0;
      -- path trackers with generators :
-      when 500..520 => return use_nxtsol(job-500,a,b,c);
+      when 500..520 => return use_nxtsol(job-500,a,b,c,vrblvl-1);
      -- multiprecision homotopies :
-      when 522..524 => return use_track(job-470,a,b,c);
+      when 522..524 => return use_track(job-470,a,b,c,vrblvl-1);
      -- get length of current solution string :
       when 525 => return use_solcon(304,a,b,c,vrblvl-1);
       when 526 => return use_solcon(305,a,b,c,vrblvl-1);
@@ -1711,9 +1711,9 @@ function use_c2phc4c ( job : integer32;
      -- run the sweep homotopy :
       when 610..621 => return use_sweep(job-610,a,b,c,vrblvl-1);
      -- crude path trackers :
-      when 622 => return use_track(55,a,b,c); -- double crude tracker
-      when 623 => return use_track(56,a,b,c); -- double double crude tracker
-      when 624 => return use_track(57,a,b,c); -- quad double crude tracker
+      when 622 => return use_track(55,a,b,c,vrblvl-1); -- sd crude tracker
+      when 623 => return use_track(56,a,b,c,vrblvl-1); -- dd crude tracker
+      when 624 => return use_track(57,a,b,c,vrblvl-1); -- qd crude tracker
      -- embedding of Laurent systems :
       when 625 => return Job625; -- embed standard double Laurent system
       when 626 => return Job626; -- embed double double Laurent system
@@ -1745,10 +1745,10 @@ function use_c2phc4c ( job : integer32;
       when 705 => return use_series(8,a,b,c,vrblvl-1); -- double doubles
       when 706 => return use_series(9,a,b,c,vrblvl-1); -- quad doubles
      -- reduction of polynomial systems
-      when 707 => return use_reduction(1,a,b,c); -- standard linear reduction
-      when 708 => return use_reduction(2,a,b,c); -- dobldobl linear reduction
-      when 709 => return use_reduction(3,a,b,c); -- quaddobl linear reduction
-      when 710 => return use_reduction(4,a,b,c); -- standard nonlinear reduce
+      when 707 => return use_reduction(1,a,b,c,vrblvl-1); -- standard linear
+      when 708 => return use_reduction(2,a,b,c,vrblvl-1); -- dobldobl linear
+      when 709 => return use_reduction(3,a,b,c,vrblvl-1); -- quaddobl linear
+      when 710 => return use_reduction(4,a,b,c,vrblvl-1); -- standard nonlinear
      -- container for numerically computed tropisms
       when 711..731 => return use_numbtrop(job-710,a,b,c,vrblvl-1);
      -- computation of multiplicity structure
@@ -1783,9 +1783,9 @@ function use_c2phc4c ( job : integer32;
       when 787 => return DoblDobl_Target_Laur_System_to_Container(vrblvl-1);
       when 788 => return QuadDobl_Target_Laur_System_to_Container(vrblvl-1);
      -- cascades for Laurent homotopies
-      when 789 => return use_track(58,a,b,c); -- standard cascade Laurent htpy
-      when 790 => return use_track(59,a,b,c); -- dobldobl cascade Laurent htpy
-      when 791 => return use_track(60,a,b,c); -- quaddobl cascade Laurent htpy
+      when 789 => return use_track(58,a,b,c,vrblvl-1); -- st csc Laur htpy
+      when 790 => return use_track(59,a,b,c,vrblvl-1); -- dd csc Laur htpy
+      when 791 => return use_track(60,a,b,c,vrblvl-1); -- qd csc Laur htpy
       when 792 =>
         PHCpack_Operations.Create_Standard_Laurent_Homotopy; return 0;
       when 793 =>
@@ -1815,13 +1815,13 @@ function use_c2phc4c ( job : integer32;
       when 808 => return use_c2fac(101,a,b,c); -- dobldobl Laurent copy
       when 809 => return use_c2fac(102,a,b,c); -- quaddobl Laurent copy
      -- construct a diagonal Laurent homotopy
-      when 810 => return use_track(61,a,b,c); -- standard diagonal Laurent htp
-      when 811 => return use_track(62,a,b,c); -- dobldobl diagonal Laurent htp
-      when 812 => return use_track(63,a,b,c); -- quaddobl diagonal Laurent htp
+      when 810 => return use_track(61,a,b,c,vrblvl-1); -- st diag Laur htp
+      when 811 => return use_track(62,a,b,c,vrblvl-1); -- dd diag Laur htp
+      when 812 => return use_track(63,a,b,c,vrblvl-1); -- qd diag Laur htp
      -- witness sets for Laurent polynomials
-      when 813 => return use_track(64,a,b,c); -- standard witset for Laurent
-      when 814 => return use_track(65,a,b,c); -- dobldobl witset for Laurent
-      when 815 => return use_track(66,a,b,c); -- quaddobl witset for Laurent
+      when 813 => return use_track(64,a,b,c,vrblvl-1); -- st witset Laurent
+      when 814 => return use_track(65,a,b,c,vrblvl-1); -- dd witset Laurent
+      when 815 => return use_track(66,a,b,c,vrblvl-1); -- qd witset Laurent
      -- swap slack variables to the end
       when 816 => return Job816; -- swap slack for standard witset
       when 817 => return Job817; -- swap slack for dobldobl witset
@@ -1871,8 +1871,8 @@ function use_c2phc4c ( job : integer32;
       when 870 => return use_padcon(15,a,b,c,vrblvl-1); -- get Pade coefficient
       when 871 => return use_padcon(16,a,b,c,vrblvl-1); -- get pole
      -- reading dobldobl and quaddobl target systems without solutions
-      when 872 => return use_track(67,a,b,c); -- read dobldobl target
-      when 873 => return use_track(68,a,b,c); -- read quaddobl target
+      when 872 => return use_track(67,a,b,c,vrblvl-1); -- read dobldobl target
+      when 873 => return use_track(68,a,b,c,vrblvl-1); -- read quaddobl target
      -- write homotopy continuation paramaters to defined output file
       when 874 => return use_padcon(17,a,b,c,vrblvl-1); 
      -- set value of the continuation parameter to zero
