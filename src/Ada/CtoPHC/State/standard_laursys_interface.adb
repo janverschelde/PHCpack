@@ -7,6 +7,7 @@ with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Strings;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
+with Polynomial_Drops;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
 with Standard_LaurSys_Container;
@@ -318,6 +319,77 @@ package body Standard_LaurSys_Interface is
       end if;
       return 128;
   end Standard_LaurSys_String_Load;
+
+  function Standard_LaurSys_Drop_by_Index
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    ind : constant integer32 := integer32(v_a(v_a'first));
+    use Standard_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+    dropped : constant Laur_Sys(lp'range) := Polynomial_Drops.Drop(lp.all,ind);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_laursys_interface.");
+      put_line("Standard_LaurSys_Drop_by_Index ...");
+    end if;
+    Standard_LaurSys_Container.Clear;
+    Standard_LaurSys_Container.Initialize(dropped);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_laursys_interface.");
+        put_line("Standard_LaurSys_Drop_by_Index.");
+      end if;
+      return 828;
+  end Standard_LaurSys_Drop_by_Index;
+
+  function Standard_LaurSys_Drop_by_Name
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc)
+       := C_Integer_Array_to_String(natural32(nc),vb);   
+    sb : Symbol_Table.Symbol;
+    ind : natural32;
+    use Standard_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+    dropped : Laur_Sys(lp'range);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_laursys_interface.");
+      put_line("Standard_LaurSys_Drop_by_Name ...");
+    end if;
+    for i in 1..nc loop
+      sb(i) := sv(i);
+    end loop;
+    for i in nc+1..sb'last loop
+      sb(i) := ' ';
+    end loop;
+    ind := Symbol_Table.Get(sb);
+    dropped := Polynomial_Drops.Drop(lp.all,integer32(ind));
+    Standard_LaurSys_Container.Clear;
+    Standard_LaurSys_Container.Initialize(dropped);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_laursys_interface.");
+        put_line("Standard_LaurSys_Drop_by_Name.");
+      end if;
+      return 831;
+  end Standard_LaurSys_Drop_by_Name;
 
   function Standard_LaurSys_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

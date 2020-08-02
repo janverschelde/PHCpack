@@ -7,6 +7,7 @@ with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Strings;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
+with Polynomial_Drops;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
 with DoblDobl_LaurSys_Container;
@@ -313,6 +314,75 @@ package body DoblDobl_LaurSys_Interface is
       return 559;
   end DoblDobl_LaurSys_String_Load;
 
+  function DoblDobl_LaurSys_Drop_by_Index
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    ind : constant integer32 := integer32(v_a(v_a'first));
+    use DoblDobl_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    dropped : constant Laur_Sys(lp'range) := Polynomial_Drops.Drop(lp.all,ind);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_laursys_interface.");
+      put_line("DoblDobl_LaurSys_Drop_by_Index ...");
+    end if;
+    DoblDobl_LaurSys_Container.Clear;
+    DoblDobl_LaurSys_Container.Initialize(dropped);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_laursys_interface.");
+        put_line("DoblDobl_LaurSys_Drop_by_Index.");
+      end if;
+      return 829;
+  end DoblDobl_LaurSys_Drop_by_Index;
+
+  function DoblDobl_LaurSys_Drop_by_Name
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+    sb : Symbol_Table.Symbol;
+    ind : natural32;
+    use DoblDobl_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    dropped : Laur_Sys(lp'range);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_laursys_interface.");
+      put_line("DoblDobl_LaurSys_Drop_by_Name ...");
+    end if;
+    for i in 1..nc loop
+      sb(i) := sv(i);
+    end loop;
+    for i in nc+1..sb'last loop
+      sb(i) := ' ';
+    end loop;
+    ind := Symbol_Table.Get(sb);
+    dropped := Polynomial_Drops.Drop(lp.all,integer32(ind));
+    DoblDobl_LaurSys_Container.Clear;
+    DoblDobl_LaurSys_Container.Initialize(dropped);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_laursys_interface.");
+        put_line("DoblDobl_LaurSys_Drop_by_Name.");
+      end if;
+      return 832;
+  end DoblDobl_LaurSys_Drop_by_Name;
 
   function DoblDobl_LaurSys_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

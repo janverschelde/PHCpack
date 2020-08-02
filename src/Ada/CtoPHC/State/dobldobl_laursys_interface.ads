@@ -153,6 +153,34 @@ package DoblDobl_LaurSys_Interface is
   --   a       in a[0] is the number of characters in b;
   --   b       the string representation of a polynomial.
 
+  function DoblDobl_LaurSys_Drop_by_Index
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Drops a variable from the Laurent system
+  --   stored in double double precision.
+  --   The variable to be dropped is given by its index.
+
+  -- ON ENTRY :
+  --   a      in a[0] is the index of the variable;
+  --   vrblvl is the verbose level.
+
+  function DoblDobl_LaurSys_Drop_by_Name
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Drops a variable from the Laurent system 
+  --   stored in double double precision.
+  --   The variable to be dropped is given by its name.
+
+  -- ON ENTRY :
+  --   a      in a[0] is the number of characters in b;
+  --   b      contains the name of the variable to be dropped;
+  --   vrblvl is the verbose level.
+
   function DoblDobl_LaurSys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 
