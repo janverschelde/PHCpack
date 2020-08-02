@@ -1,14 +1,8 @@
-with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_Matrices;
-with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
-with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
-with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
-with Symbol_Table;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
@@ -17,7 +11,6 @@ with Checker_Posets_io;
 with Checker_Localization_Patterns;
 with Checker_Homotopies;
 with Setup_Flag_Homotopies;             use Setup_Flag_Homotopies;
-with Moving_Flag_Homotopies;            use Moving_Flag_Homotopies;
 with Moving_Flag_Continuation;          use Moving_Flag_Continuation;
 
 package body Checker_Poset_Deformations is
@@ -784,7 +777,8 @@ package body Checker_Poset_Deformations is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
-                sols : out Standard_Complex_Solutions.Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -809,6 +803,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 1 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 
@@ -818,7 +816,8 @@ package body Checker_Poset_Deformations is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
-                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -843,6 +842,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 2 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 
@@ -852,7 +855,8 @@ package body Checker_Poset_Deformations is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
-                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -877,6 +881,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 3 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 
@@ -888,7 +896,8 @@ package body Checker_Poset_Deformations is
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in Standard_Complex_Solutions.Solution_List;
-                sols : out Standard_Complex_Solutions.Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -925,6 +934,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 4 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 
@@ -936,7 +949,8 @@ package body Checker_Poset_Deformations is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in DoblDobl_Complex_Solutions.Solution_List;
-                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -973,6 +987,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 5 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 
@@ -984,7 +1002,8 @@ package body Checker_Poset_Deformations is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in QuadDobl_Complex_Solutions.Solution_List;
-                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -1021,6 +1040,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 6 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 
@@ -1032,7 +1055,8 @@ package body Checker_Poset_Deformations is
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in Standard_Complex_Solutions.Solution_List;
-                sols : out Standard_Complex_Solutions.Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -1060,6 +1084,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 7 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 
@@ -1071,7 +1099,8 @@ package body Checker_Poset_Deformations is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in DoblDobl_Complex_Solutions.Solution_List;
-                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -1099,6 +1128,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 8 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 
@@ -1110,7 +1143,8 @@ package body Checker_Poset_Deformations is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in QuadDobl_Complex_Solutions.Solution_List;
-                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -1138,6 +1172,10 @@ package body Checker_Poset_Deformations is
     procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_All_Paths_in_Poset 9 ...");
+    end if;
     Enumerate_Paths(ps);
   end Track_All_Paths_in_Poset;
 

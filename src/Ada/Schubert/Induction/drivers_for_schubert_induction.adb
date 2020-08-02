@@ -285,13 +285,19 @@ package body Drivers_for_Schubert_Induction is
     return res;
   end Is_Valid_Intersection_Condition;
 
-  procedure Resolve_Intersection_Condition ( n : in natural32 ) is
+  procedure Resolve_Intersection_Condition
+              ( n : in natural32; vrblvl : in integer32 := 0 ) is
 
-    bm : Bracket_Monomial := Prompt_for_Bracket_Monomial;
+    bm : Bracket_Monomial;
     nbsols : Natural_Number;
     isvalid : boolean;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("Resolve_Intersection_Condition ...");
+    end if;
+    bm := Prompt_for_Bracket_Monomial;
     put("Your product : "); put(bm); new_line;
     isvalid := Is_Valid_Intersection_Condition(n,bm);
     if not isvalid then
@@ -1329,7 +1335,8 @@ package body Drivers_for_Schubert_Induction is
   procedure Resolve_Schubert_Problem
               ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
-                flags : in Standard_Complex_VecMats.VecMat ) is
+                flags : in Standard_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -1358,6 +1365,10 @@ package body Drivers_for_Schubert_Induction is
     timer : Timing_Widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("Resolve_Schubert_Problem 1 ...");
+    end if;
     new_line;
     top_roco := Final_Sum(ips);
     put("The formal root count : "); put(top_roco); new_line;
@@ -1385,10 +1396,10 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols,vrblvl-1);
     else
       Resolve(file,monitor,report,n,k,nt,tol,ips,sps,verify,minrep,tosquare,
-              conds,flags,sols);
+              conds,flags,sols,vrblvl-1);
     end if;
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
@@ -1403,7 +1414,8 @@ package body Drivers_for_Schubert_Induction is
   procedure Resolve_Schubert_Problem
               ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
-                flags : in DoblDobl_Complex_VecMats.VecMat ) is
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -1432,6 +1444,10 @@ package body Drivers_for_Schubert_Induction is
     timer : Timing_Widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("Resolve_Schubert_Problem 2 ...");
+    end if;
     new_line;
     top_roco := Final_Sum(ips);
     put("The formal root count : "); put(top_roco); new_line;
@@ -1459,10 +1475,10 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols,vrblvl-1);
     else
       Resolve(file,monitor,report,n,k,nt,tol,ips,sps,verify,minrep,tosquare,
-              conds,flags,sols);
+              conds,flags,sols,vrblvl-1);
     end if;
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
@@ -1477,7 +1493,8 @@ package body Drivers_for_Schubert_Induction is
   procedure Resolve_Schubert_Problem
               ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
-                flags : in QuadDobl_Complex_VecMats.VecMat ) is
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -1506,6 +1523,10 @@ package body Drivers_for_Schubert_Induction is
     timer : Timing_Widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("Resolve_Schubert_Problem 3 ...");
+    end if;
     new_line;
     top_roco := Final_Sum(ips);
     put("The formal root count : "); put(top_roco); new_line;
@@ -1533,10 +1554,10 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols);
+      Resolve(n,k,nt,tol,ips,sps,minrep,tosquare,conds,flags,sols,vrblvl-1);
     else
       Resolve(file,monitor,report,n,k,nt,tol,ips,sps,verify,minrep,tosquare,
-              conds,flags,sols);
+              conds,flags,sols,vrblvl-1);
     end if;
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
@@ -1548,65 +1569,92 @@ package body Drivers_for_Schubert_Induction is
   end Resolve_Schubert_Problem;
 
   procedure Standard_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+              ( n,k : in integer32; bm : in Bracket_Monomial;
+                vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    flags : constant Standard_Complex_VecMats.VecMat(1..nbc-2)
+    flags : Standard_Complex_VecMats.VecMat(1..nbc-2);
        -- := Random_Flags(n,nbc-2);
-          := Prompt_for_Generic_Flags(n,nbc-2);
+       -- := Prompt_for_Generic_Flags(n,nbc-2);
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("Standard_Resolve_Schubert_Problem ...");
+    end if;
+    flags := Prompt_for_Generic_Flags(n,nbc-2);
     new_line;
     put_line("Reading a name for the output file ...");
     Read_Name_and_Create_File(file);
-    Resolve_Schubert_Problem(file,n,k,cnd,flags);
+    Resolve_Schubert_Problem(file,n,k,cnd,flags,vrblvl-1);
     close(file);
+    Standard_Complex_VecMats.Clear(flags);
   end Standard_Resolve_Schubert_Problem;
 
   procedure DoblDobl_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+              ( n,k : in integer32; bm : in Bracket_Monomial;
+                vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    flags : constant DoblDobl_Complex_VecMats.VecMat(1..nbc-2)
+    flags : DoblDobl_Complex_VecMats.VecMat(1..nbc-2);
        -- := Random_Flags(n,nbc-2);
-          := Prompt_for_Generic_Flags(n,nbc-2);
+       -- := Prompt_for_Generic_Flags(n,nbc-2);
 
   begin
+   
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("DoblDobl_Resolve_Schubert_Problem ...");
+    end if;
+    flags := Prompt_for_Generic_Flags(n,nbc-2);
     new_line;
     put_line("Reading a name for the output file ...");
     Read_Name_and_Create_File(file);
-    Resolve_Schubert_Problem(file,n,k,cnd,flags);
+    Resolve_Schubert_Problem(file,n,k,cnd,flags,vrblvl-1);
     close(file);
+    DoblDobl_Complex_VecMats.Clear(flags);
   end DoblDobl_Resolve_Schubert_Problem;
 
   procedure QuadDobl_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+              ( n,k : in integer32; bm : in Bracket_Monomial;
+                vrblvl : in integer32 := 0 ) is
 
     file : file_type;
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    flags : constant QuadDobl_Complex_VecMats.VecMat(1..nbc-2)
+    flags : QuadDobl_Complex_VecMats.VecMat(1..nbc-2);
        -- := Random_Flags(n,nbc-2);
-          := Prompt_for_Generic_Flags(n,nbc-2);
+       -- := Prompt_for_Generic_Flags(n,nbc-2);
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("QuadDobl_Resolve_Schubert_Problem ...");
+    end if;
+    flags := Prompt_for_Generic_Flags(n,nbc-2);
     new_line;
     put_line("Reading a name for the output file ...");
     Read_Name_and_Create_File(file);
-    Resolve_Schubert_Problem(file,n,k,cnd,flags);
+    Resolve_Schubert_Problem(file,n,k,cnd,flags,vrblvl-1);
     close(file);
+    QuadDobl_Complex_VecMats.Clear(flags);
   end QuadDobl_Resolve_Schubert_Problem;
 
   procedure Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+              ( n,k : in integer32; bm : in Bracket_Monomial;
+                vrblvl : in integer32 := 0 ) is
 
     ans : character;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("Resolve_Schubert_Problem ...");
+    end if;
     new_line;
     put_line("MENU for the working precision :");
     put_line("  0. standard double precision; or");
@@ -1615,17 +1663,18 @@ package body Drivers_for_Schubert_Induction is
     put("Type 0, 1, or 2 to select the precision : ");
     Ask_Alternative(ans,"012");
     case ans is
-      when '0' => Standard_Resolve_Schubert_Problem(n,k,bm);
-      when '1' => DoblDobl_Resolve_Schubert_Problem(n,k,bm);
-      when '2' => QuadDobl_Resolve_Schubert_Problem(n,k,bm);
+      when '0' => Standard_Resolve_Schubert_Problem(n,k,bm,vrblvl-1);
+      when '1' => DoblDobl_Resolve_Schubert_Problem(n,k,bm,vrblvl-1);
+      when '2' => QuadDobl_Resolve_Schubert_Problem(n,k,bm,vrblvl-1);
       when others => null;
     end case;
   end Resolve_Schubert_Problem;
 
-  procedure Solve_Schubert_Problems ( n : in integer32 ) is
+  procedure Solve_Schubert_Problems
+              ( n : in integer32; vrblvl : in integer32 := 0 ) is
 
     k : integer32;
-    bm : Bracket_Monomial := Prompt_for_Bracket_Monomial;
+    bm : Bracket_Monomial;
     rows,cols : Standard_Natural_Vectors.Link_to_Vector;
     cnds : Standard_Natural_VecVecs.Link_to_VecVec;
     nbsols : Natural_Number;
@@ -1634,6 +1683,11 @@ package body Drivers_for_Schubert_Induction is
    -- tol : constant double_float := 1.0E-5;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_schubert_induction.");
+      put_line("Solve_Schubert_Problems ...");
+    end if;
+    bm := Prompt_for_Bracket_Monomial;
     isvalid := Is_Valid_Intersection_Condition(natural32(n),bm);
     if not isvalid then
       put_line("Your product is not a valid intersection condition.");
@@ -1648,7 +1702,7 @@ package body Drivers_for_Schubert_Induction is
       put("Type 0, 1, or 2 to select from menu : ");
       Ask_Alternative(ans,"012");
       if ans = '0' then
-        Resolve_Schubert_Problem(n,k,bm);
+        Resolve_Schubert_Problem(n,k,bm,vrblvl-1);
       else
         new_line;
         put_line("resolving the intersection conditions ...");

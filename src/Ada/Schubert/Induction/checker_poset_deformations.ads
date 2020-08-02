@@ -202,21 +202,24 @@ package Checker_Poset_Deformations is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
-                sols : out Standard_Complex_Solutions.Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
-                sols : out DoblDobl_Complex_Solutions.Solution_List );
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
-                sols : out QuadDobl_Complex_Solutions.Solution_List );
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks paths for one entire checker game in n-space,
@@ -234,7 +237,8 @@ package Checker_Poset_Deformations is
   --   tosqr    to square the overdetermined homotopies;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
-  --   tol      tolerance on residuals to decide failure.
+  --   tol      tolerance on residuals to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     all solutions at the end of the paths.
@@ -247,7 +251,8 @@ package Checker_Poset_Deformations is
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in Standard_Complex_Solutions.Solution_List;
-                sols : out Standard_Complex_Solutions.Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
@@ -256,7 +261,8 @@ package Checker_Poset_Deformations is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in DoblDobl_Complex_Solutions.Solution_List;
-                sols : out DoblDobl_Complex_Solutions.Solution_List );
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
@@ -265,7 +271,8 @@ package Checker_Poset_Deformations is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in QuadDobl_Complex_Solutions.Solution_List;
-                sols : out QuadDobl_Complex_Solutions.Solution_List );
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks paths for one entire checker game in n-space,
@@ -287,7 +294,8 @@ package Checker_Poset_Deformations is
   --   vf       coordinates of general flags to keep fixed;
   --   start    contains solutions of the previous level, transformed
   --            to serve as the start solutions for the current level;
-  --   tol      tolerance on residuals to decide failure.
+  --   tol      tolerance on residuals to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     all solutions at the end of the paths.
@@ -300,7 +308,8 @@ package Checker_Poset_Deformations is
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in Standard_Complex_Solutions.Solution_List;
-                sols : out Standard_Complex_Solutions.Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
@@ -309,7 +318,8 @@ package Checker_Poset_Deformations is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in DoblDobl_Complex_Solutions.Solution_List;
-                sols : out DoblDobl_Complex_Solutions.Solution_List );
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
@@ -318,7 +328,8 @@ package Checker_Poset_Deformations is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 start : in QuadDobl_Complex_Solutions.Solution_List;
-                sols : out QuadDobl_Complex_Solutions.Solution_List );
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks paths for one entire checker game in n-space,
@@ -343,7 +354,8 @@ package Checker_Poset_Deformations is
   --   vf       coordinates of general flags to keep fixed;
   --   start    contains solutions of the previous level, transformed
   --            to serve as the start solutions for the current level;
-  --   tol      tolerance on residuals to decide failure.
+  --   tol      tolerance on residuals to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     all solutions at the end of the paths.

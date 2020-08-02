@@ -42,8 +42,8 @@ begin
     when '1' => Driver_for_SAGBI_Homotopies(m+p,p);
     when '2' => Driver_for_Pieri_Homotopies(m+p,p);
     when '3' => Driver_for_Quantum_Pieri(m+p,p,q);
-    when '4' => Resolve_Intersection_Condition(n);
-    when '5' => Solve_Schubert_Problems(integer32(n));
+    when '4' => Resolve_Intersection_Condition(n,verbose-1);
+    when '5' => Solve_Schubert_Problems(integer32(n),verbose-1);
     when others => put_line("Option not recognized.  Please try again...");
   end case;
 end mainenum;

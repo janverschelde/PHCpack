@@ -1,3 +1,7 @@
+Sun 2 Aug 2020 : in mainenum.adb, passed the verbose level to the
+  main procedures in drivers_for_schubert_condition, and then to
+  resolve_schubert_problems, and then to check_poset_deformations.
+
 Thu 29 Aug 2019 : updated drivers_for_schubert_induction.adb for compiler
   warnings.
 

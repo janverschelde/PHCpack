@@ -107,11 +107,13 @@ package Drivers_for_Schubert_Induction is
   --   Returns true if bm represents a valid intersection condition,
   --   returns false otherwise.
 
-  procedure Resolve_Intersection_Condition ( n : in natural32 );
+  procedure Resolve_Intersection_Condition
+              ( n : in natural32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive procedure to resolve a Schubert condition in n-space.
   --   Prompts the user for a condition and shows its resolution on screen.
+  --   The verbose level is given by the parameter vrblvl.
 
   function Get_Intersection_Conditions 
               ( k : natural32 ) return Standard_Natural_VecVecs.Link_to_VecVec;
@@ -397,15 +399,18 @@ package Drivers_for_Schubert_Induction is
   procedure Resolve_Schubert_Problem
               ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
-                flags : in Standard_Complex_VecMats.VecMat );
+                flags : in Standard_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
   procedure Resolve_Schubert_Problem
               ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
-                flags : in DoblDobl_Complex_VecMats.VecMat );
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
   procedure Resolve_Schubert_Problem
               ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
-                flags : in QuadDobl_Complex_VecMats.VecMat );
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Resolves the Schubert problem defined by the brackets in cnd
@@ -419,14 +424,18 @@ package Drivers_for_Schubert_Induction is
   --   n        ambient space;
   --   k        dimension of the solution planes;
   --   cnt      intersection conditions;
-  --   flags    random flags. 
+  --   flags    random flags;
+  --   vrblvl   is the verbose level.
 
   procedure Standard_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial );
+              ( n,k : in integer32; bm : in Bracket_Monomial;
+                vrblvl : in integer32 := 0 );
   procedure DoblDobl_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial );
+              ( n,k : in integer32; bm : in Bracket_Monomial;
+                vrblvl : in integer32 := 0 );
   procedure QuadDobl_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial );
+              ( n,k : in integer32; bm : in Bracket_Monomial;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for the name of the output file and for other
@@ -436,10 +445,12 @@ package Drivers_for_Schubert_Induction is
   -- ON ENTRY :
   --   n        ambient space;
   --   k        dimension of the solution planes;
-  --   bm       product of k-brackets, with conditions on the k-planes.
+  --   bm       product of k-brackets, with conditions on the k-planes;
+  --   vrblvl   is the verbose level.
 
   procedure Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial );
+              ( n,k : in integer32; bm : in Bracket_Monomial;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for the working precision 
@@ -448,13 +459,16 @@ package Drivers_for_Schubert_Induction is
   -- ON ENTRY :
   --   n        ambient space;
   --   k        dimension of the solution planes;
-  --   bm       product of k-brackets, with conditions on the k-planes.
+  --   bm       product of k-brackets, with conditions on the k-planes;
+  --   vrblvl   is the verbose level.
 
-  procedure Solve_Schubert_Problems ( n : in integer32 );
+  procedure Solve_Schubert_Problems
+              ( n : in integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive procedure to compute solutions to Schubert problems
   --   in n-space.  Prompts the user for data: for intersections conditions
   --   on k-planes in n-space and resolve the Schubert problem.
+  --   The verbose level is given by the parameter vrblvl.
 
 end Drivers_for_Schubert_Induction;
