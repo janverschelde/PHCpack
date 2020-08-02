@@ -68,6 +68,7 @@ ts_c2str.c                       : test on having phc write C strings
 ------------------------------------------------------------------------------
 scaling_interface                : interface to equation & coefficient scaling
 use_scaling                      : access to scaling systems and solutions
+reduction_interface              : interface to degree reduction methods
 use_reduction                    : reduction of system to lower total degree
 linear_products_interface        : linear product bounds and start systems
 use_roco                         : job handlers for linear products
