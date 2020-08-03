@@ -122,6 +122,70 @@ package DoblDobl_Solutions_Interface is
   --   c       double attributes of the solutions.
   --   vrblvl  the verbose level.
 
+  function DoblDobl_Solutions_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size of the string representation of
+  --   a solution stored in double double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the number of characters in the string representation
+  --           of the solution with the given index.
+
+  function DoblDobl_Solutions_Get_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the string representation of
+  --   a solution stored in double double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution,
+  --           in a[1] is the number of characters in the string
+  --           representation of the solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the string representation of the solution 
+  --           with the given index.
+
+  function DoblDobl_Solutions_Drop_by_Index
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Drops from the solutions stored in double double precision
+  --   one of the coordinates.
+  --   The coordinate to be dropped is given by its index.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the coordinated to be dropped;
+  --   vrblvl  is the verbose level.
+
+  function DoblDobl_Solutions_Drop_by_Name
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Drops from the solutions stored in double double precision
+  --   one of the coordinates.
+  --   The coordinate to be dropped is given by its name.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       is the name of the coordinate to be dropped;
+  --   vrblvl  is the verbose level.
+
   function DoblDobl_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 

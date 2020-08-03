@@ -20,8 +20,6 @@ with Standard_Solution_Strings;
 with DoblDobl_Solution_Strings;
 with QuadDobl_Solution_Strings;
 with Multprec_Solution_Strings;
-with Symbol_Table;
-with Solution_Drops;
 with Total_Degree_Start_Systems;        use Total_Degree_Start_Systems;
 with Lexicographic_Root_Enumeration;    use Lexicographic_Root_Enumeration;
 with Drivers_to_Track_Standard_Paths;   use Drivers_to_Track_Standard_Paths;
@@ -322,217 +320,6 @@ function use_solcon ( job : integer32;
          return 145;
   end Job25;
 
-  function Job30 return integer32 is -- returns size of solution string
-
-    use Standard_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    ls : Link_to_Solution;
-    fail : boolean;
-    n : natural32;
-
-  begin
-    Standard_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      Assign(0,b);
-      return 200;
-    else
-      n := Standard_Solution_Strings.Length(ls.all);
-      Assign(integer32(n),b);
-    end if;
-    return 0;
-  exception
-    when others => return 200;
-  end Job30;
-
-  function Job70 return integer32 is -- returns size of solution string
-
-    use DoblDobl_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    ls : Link_to_Solution;
-    fail : boolean;
-    n : natural32;
-
-  begin
-    DoblDobl_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      Assign(0,b);
-      return 240;
-    else
-      n := DoblDobl_Solution_Strings.Length(ls.all);
-      Assign(integer32(n),b);
-    end if;
-    return 0;
-  exception
-    when others => return 240;
-  end Job70;
-
-  function Job110 return integer32 is -- returns size of solution string
-
-    use QuadDobl_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    ls : Link_to_Solution;
-    fail : boolean;
-    n : natural32;
-
-  begin
-    QuadDobl_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      Assign(0,b);
-      return 280;
-    else
-      n := QuadDobl_Solution_Strings.Length(ls.all);
-      Assign(integer32(n),b);
-    end if;
-    return 0;
-  exception
-    when others => return 280;
-  end Job110;
-
-  function Job150 return integer32 is -- returns size of solution string
-
-    use Multprec_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    ls : Link_to_Solution;
-    fail : boolean;
-    n : natural32;
-
-  begin
-    Multprec_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      Assign(0,b);
-      return 280;
-    else
-      n := Multprec_Solution_Strings.Length(ls.all);
-      Assign(integer32(n),b);
-    end if;
-    return 0;
-  exception
-    when others => return 280;
-  end Job150;
-
-  function Job31 return integer32 is -- returns solution string
-
-    use Standard_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    ls : Link_to_Solution;
-    fail : boolean;
-    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
-
-  begin
-    Standard_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      return 201;
-    else
-      declare
-        s  : constant string := Standard_Solution_Strings.Write(ls.all);
-      begin
-        sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
-      end;
-      Assign(sv,b);
-      return 0;
-    end if;
-  exception
-    when others => return 201;
-  end Job31;
-
-  function Job71 return integer32 is -- returns solution string
-
-    use DoblDobl_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    ls : Link_to_Solution;
-    fail : boolean;
-    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
-
-  begin
-    DoblDobl_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      return 241;
-    else
-      declare
-        s : constant string := DoblDobl_Solution_Strings.Write(ls.all);
-      begin
-        sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
-      end;
-      Assign(sv,b);
-      return 0;
-    end if;
-  exception
-    when others => return 241;
-  end Job71;
-
-  function Job111 return integer32 is -- returns solution string
-
-    use QuadDobl_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    ls : Link_to_Solution;
-    fail : boolean;
-    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
-
-  begin
-    QuadDobl_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      return 281;
-    else
-      declare
-        s : constant string := QuadDobl_Solution_Strings.Write(ls.all);
-      begin
-        sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
-      end;
-      Assign(sv,b);
-      return 0;
-    end if;
-  exception
-    when others => return 281;
-  end Job111;
-
-  function Job151 return integer32 is -- returns solution string
-
-    use Multprec_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    ls : Link_to_Solution;
-    fail : boolean;
-    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
-
-  begin
-    Multprec_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      return 201;
-    else
-      declare
-        s : constant string := Multprec_Solution_Strings.Write(ls.all);
-      begin
-       -- put_line("The string in Job151 : " & s);
-       -- put("  s'last = "); put(natural32(s'last),1);
-       -- put("  n = "); put(n,1); new_line;
-        sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
-      end;
-      Assign(sv,b);
-      return 0;
-    end if;
-  exception
-    when others => return 281;
-  end Job151;
-
   function Job32 return integer32 is -- returns size of solution intro
 
     use Standard_Complex_Solutions;
@@ -829,135 +616,6 @@ function use_solcon ( job : integer32;
 -- (1) by index: given the index of the variable in a[0];
 -- (2) by name: given the number of characters of the symbol in a[0]
 --     and the characters for the symbol name in b.
-
-  function Job8 return integer32 is -- drop by index from solution list
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    ind : constant natural32 := natural32(v_a(v_a'first));
-    use Standard_Complex_Solutions;
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-    dropped : constant Solution_List := Solution_Drops.Drop(sols,ind);
-
-  begin
-    Standard_Solutions_Container.Clear;
-    Standard_Solutions_Container.Initialize(dropped);
-    return 0;
-  end Job8;
-
-  function Job9 return integer32 is -- drop by name from solution list
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant integer := integer(v_a(v_a'first));
-    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
-       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
-    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
-    sb : Symbol_Table.Symbol;
-    ind : natural32;
-    use Standard_Complex_Solutions;
-    sols,dropped : Solution_List;
-
-  begin
-    for i in 1..nc loop
-      sb(i) := sv(i);
-    end loop;
-    for i in nc+1..sb'last loop
-      sb(i) := ' ';
-    end loop;
-    ind := Symbol_Table.Get(sb);
-    sols := Standard_Solutions_Container.Retrieve;
-    dropped := Solution_Drops.Drop(sols,ind);
-    Standard_Solutions_Container.Clear;
-    Standard_Solutions_Container.Initialize(dropped);
-    return 0;
-  end Job9;
-
-  function Job48 return integer32 is -- drop by index from solution list
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    ind : constant natural32 := natural32(v_a(v_a'first));
-    use DoblDobl_Complex_Solutions;
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-    dropped : constant Solution_List := Solution_Drops.Drop(sols,ind);
-
-  begin
-    DoblDobl_Solutions_Container.Clear;
-    DoblDobl_Solutions_Container.Initialize(dropped);
-    return 0;
-  end Job48;
-
-  function Job49 return integer32 is -- drop by name from solution list
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant integer := integer(v_a(v_a'first));
-    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
-       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
-    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
-    sb : Symbol_Table.Symbol;
-    ind : natural32;
-    use DoblDobl_Complex_Solutions;
-    sols,dropped : Solution_List;
-
-  begin
-    for i in 1..nc loop
-      sb(i) := sv(i);
-    end loop;
-    for i in nc+1..sb'last loop
-      sb(i) := ' ';
-    end loop;
-    ind := Symbol_Table.Get(sb);
-    sols := DoblDobl_Solutions_Container.Retrieve;
-    dropped := Solution_Drops.Drop(sols,ind);
-    DoblDobl_Solutions_Container.Clear;
-    DoblDobl_Solutions_Container.Initialize(dropped);
-    return 0;
-  end Job49;
-
-  function Job88 return integer32 is -- drop by index from solution list
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    ind : constant natural32 := natural32(v_a(v_a'first));
-    use QuadDobl_Complex_Solutions;
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-    dropped : constant Solution_List := Solution_Drops.Drop(sols,ind);
-
-  begin
-    QuadDobl_Solutions_Container.Clear;
-    QuadDobl_Solutions_Container.Initialize(dropped);
-    return 0;
-  end Job88;
-
-  function Job89 return integer32 is -- drop by name from solution list
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant integer := integer(v_a(v_a'first));
-    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
-       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
-    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
-    sb : Symbol_Table.Symbol;
-    ind : natural32;
-    use QuadDobl_Complex_Solutions;
-    sols,dropped : Solution_List;
-
-  begin
-    for i in 1..nc loop
-      sb(i) := sv(i);
-    end loop;
-    for i in nc+1..sb'last loop
-      sb(i) := ' ';
-    end loop;
-    ind := Symbol_Table.Get(sb);
-    sols := QuadDobl_Solutions_Container.Retrieve;
-    dropped := Solution_Drops.Drop(sols,ind);
-    QuadDobl_Solutions_Container.Clear;
-    QuadDobl_Solutions_Container.Initialize(dropped);
-    return 0;
-  end Job89;
 
   function Job276 return integer32 is -- retrieve next standard solution
 
@@ -1488,8 +1146,8 @@ function use_solcon ( job : integer32;
       when 5 => return Standard_Solutions_Update(a,b,c,vrblvl);
       when 6 => return Standard_Solutions_Add(b,c,vrblvl);
       when 7 => return Standard_Solutions_Clear(vrblvl);
-      when 8 => return Job8;   -- drop coordinate by index from solutions
-      when 9 => return Job9;   -- drop coordinate by name from solutions
+      when 8 => return Standard_Solutions_Drop_by_Index(a,vrblvl);
+      when 9 => return Standard_Solutions_Drop_by_Name(a,b,vrblvl);
       when 10 => return Job10; -- prompts for input file and opens it
       when 11 => return Job11; -- prompts for output file and creates it
       when 12 => return Job12; -- scans input for "SOLUTIONS"
@@ -1506,8 +1164,8 @@ function use_solcon ( job : integer32;
       when 23 => return Job23; -- computes next linear product solution
       when 24 => return Job24; -- retrieves next linear product solution
       when 25 => return Job25; -- reads next witness point from file
-      when 30 => return Job30; -- returns size of solution string
-      when 31 => return Job31; -- returns solution string
+      when 30 => return Standard_Solutions_String_Size(a,b,vrblvl);
+      when 31 => return Standard_Solutions_Get_String(a,b,vrblvl);
       when 32 => return Job32; -- returns size of solution intro
       when 33 => return Job33; -- returns solution intro string
       when 34 => return Job34; -- returns size of solution vector
@@ -1525,10 +1183,10 @@ function use_solcon ( job : integer32;
       when 45 => return DoblDobl_Solutions_Update(a,b,c,vrblvl);
       when 46 => return DoblDobl_Solutions_Add(b,c,vrblvl);
       when 47 => return DoblDobl_Solutions_Clear(vrblvl);
-      when 48 => return Job48; -- drop coordinate by index from solutions
-      when 49 => return Job49; -- drop coordinate by name from solutions
-      when 70 => return Job70; -- returns size of solution string
-      when 71 => return Job71; -- returns solution string
+      when 48 => return DoblDobl_Solutions_Drop_by_Index(a,vrblvl);
+      when 49 => return DoblDobl_Solutions_Drop_by_Name(a,b,vrblvl);
+      when 70 => return DoblDobl_Solutions_String_Size(a,b,vrblvl);
+      when 71 => return DoblDobl_Solutions_Get_String(a,b,vrblvl);
       when 78 => return Job78; -- appends solution string to container
      -- corresponding operations for quad double solutions
       when 80 => return QuadDobl_Solutions_Read(vrblvl);
@@ -1539,10 +1197,10 @@ function use_solcon ( job : integer32;
       when 85 => return QuadDobl_Solutions_Update(a,b,c,vrblvl);
       when 86 => return QuadDobl_Solutions_Add(b,c,vrblvl);
       when 87 => return QuadDobl_Solutions_Clear(vrblvl);
-      when 88 => return Job88; -- drop coordinate by index from solutions
-      when 89 => return Job89; -- drop coordinate by name from solutions
-      when 110 => return Job110; -- returns size of solution string
-      when 111 => return Job111; -- returns solution string
+      when 88 => return QuadDobl_Solutions_Drop_by_Index(a,vrblvl);
+      when 89 => return QuadDobl_Solutions_Drop_by_Name(a,b,vrblvl);
+      when 110 => return QuadDobl_Solutions_String_Size(a,b,vrblvl);
+      when 111 => return QuadDobl_Solutions_Get_String(a,b,vrblvl);
       when 118 => return Job118; -- appends solution string to container
      -- corresponding operations for multiprecision solutions
       when 120 => return Multprec_Solutions_Read(vrblvl);
@@ -1550,8 +1208,8 @@ function use_solcon ( job : integer32;
       when 122 => return Multprec_Solutions_Size(b,vrblvl);
       when 123 => return Multprec_Solutions_Dimension(b,vrblvl);
       when 127 => return Multprec_Solutions_Clear(vrblvl);
-      when 150 => return Job150; -- returns size of solution string
-      when 151 => return Job151; -- returns solution string
+      when 150 => return Multprec_Solutions_String_Size(a,b,vrblvl);
+      when 151 => return Multprec_Solutions_Get_String(a,b,vrblvl);
       when 158 => return Job158; -- append solution string to container
      -- retrieve next solution
       when 276 => return Job276; -- retrieve next standard solution

@@ -1,11 +1,13 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Vectors;
 with Multprec_Floating_Numbers;
 with Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;
+with Multprec_Solution_Strings;
 with Multprec_System_and_Solutions_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
@@ -158,6 +160,88 @@ package body Multprec_Solutions_Interface is
       end if;
       return 453;
   end Multprec_Solutions_Dimension;
+
+  function Multprec_Solutions_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Multprec_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    ls : Link_to_Solution;
+    fail : boolean;
+    n : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in multprec_solutions_interface.");
+      put_line("Multprec_Solutions_String_Size ...");
+    end if;
+    Multprec_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      Assign(0,b);
+      return 480;
+    else
+      n := Multprec_Solution_Strings.Length(ls.all);
+      Assign(integer32(n),b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in multprec_solutions_interface.");
+        put_line("Multprec_Solutions_String_Size.");
+      end if;
+      return 480;
+  end Multprec_Solutions_String_Size;
+
+  function Multprec_Solutions_Get_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use Multprec_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    ls : Link_to_Solution;
+    fail : boolean;
+    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in multprec_solutions_interface.");
+      put_line("Multprec_Solutions_Get_String ...");
+    end if;
+    Multprec_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      return 201;
+    else
+      declare
+        s : constant string := Multprec_Solution_Strings.Write(ls.all);
+      begin
+       -- put_line("The string in Job151 : " & s);
+       -- put("  s'last = "); put(natural32(s'last),1);
+       -- put("  n = "); put(n,1); new_line;
+        sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
+      end;
+      Assign(sv,b);
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in multprec_solutions_interface.");
+        put_line("Multprec_Solutions_Get_String.");
+      end if;
+      return 281;
+  end Multprec_Solutions_Get_String;
 
   function Multprec_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

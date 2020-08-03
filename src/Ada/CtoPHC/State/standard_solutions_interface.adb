@@ -1,10 +1,14 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Vectors;
+with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;
+with Standard_Solution_Strings;
 with Standard_System_and_Solutions_io;
+with Solution_Drops;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with PHCpack_Operations;
@@ -288,6 +292,156 @@ package body Standard_Solutions_Interface is
       end if;
       return 36;
   end Standard_Solutions_Add;
+
+  function Standard_Solutions_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    ls : Link_to_Solution;
+    fail : boolean;
+    n : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_String_Size ...");
+    end if;
+    Standard_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      Assign(0,b);
+      return 200;
+    else
+      n := Standard_Solution_Strings.Length(ls.all);
+      Assign(integer32(n),b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_String_Size.");
+      end if;
+      return 200;
+  end Standard_Solutions_String_Size;
+
+  function Standard_Solutions_Get_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+
+    use Interfaces.C;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    ls : Link_to_Solution;
+    fail : boolean;
+    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Get_String ...");
+    end if;
+    Standard_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      return 201;
+    else
+      declare
+        s  : constant string := Standard_Solution_Strings.Write(ls.all);
+      begin
+        sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
+      end;
+      Assign(sv,b);
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Get_String.");
+      end if;
+      return 201;
+  end Standard_Solutions_Get_String;
+
+  function Standard_Solutions_Drop_by_Index
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    ind : constant natural32 := natural32(v_a(v_a'first));
+    use Standard_Complex_Solutions;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
+    dropped : constant Solution_List := Solution_Drops.Drop(sols,ind);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Drop_by_Index ...");
+    end if;
+    Standard_Solutions_Container.Clear;
+    Standard_Solutions_Container.Initialize(dropped);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Drop_by_Index.");
+      end if;
+      return 38;
+  end Standard_Solutions_Drop_by_Index;
+
+  function Standard_Solutions_Drop_by_Name
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant integer := integer(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+    sb : Symbol_Table.Symbol;
+    ind : natural32;
+    use Standard_Complex_Solutions;
+    sols,dropped : Solution_List;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Drop_by_Name ...");
+    end if;
+    for i in 1..nc loop
+      sb(i) := sv(i);
+    end loop;
+    for i in nc+1..sb'last loop
+      sb(i) := ' ';
+    end loop;
+    ind := Symbol_Table.Get(sb);
+    sols := Standard_Solutions_Container.Retrieve;
+    dropped := Solution_Drops.Drop(sols,ind);
+    Standard_Solutions_Container.Clear;
+    Standard_Solutions_Container.Initialize(dropped);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Drop_by_Name.");
+      end if;
+      return 146;
+  end Standard_Solutions_Drop_by_Name;
 
   function Standard_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is
