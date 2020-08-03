@@ -8501,7 +8501,7 @@ static PyObject *py2c_padcon_quaddobl_track
 
    initialize();
    if(!PyArg_ParseTuple(args,"isiiiis",
-      &nbc,&name,&localfile,&verbose,&mhom)) return NULL;
+      &nbc,&name,&localfile,&verbose,&mhom,&nvr,&stridz)) return NULL;
 
    if(mhom == 1)
       padcon_quaddobl_projective_transformation();
