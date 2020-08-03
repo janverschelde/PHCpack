@@ -21,17 +21,14 @@ with Matrix_Indeterminates;
 with Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
-with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io;
 with DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_SysFun;
-with DoblDobl_Complex_Poly_Matrices;
 with DoblDobl_Complex_Poly_Matrices_io;
 with QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_SysFun;
-with QuadDobl_Complex_Poly_Matrices;
 with QuadDobl_Complex_Poly_Matrices_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
@@ -56,7 +53,7 @@ package body Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Poly_SysFun;
@@ -77,6 +74,9 @@ package body Moving_Flag_Continuation is
     deflate : boolean := false;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_First_Move 1 ...");
+    end if;
     Start_Solution(h,fail,x,res);
     if fail then
       put_line(file,"no start solution found...");
@@ -108,7 +108,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
       Clear(sh0); --Clear(sols);
-      Call_Path_Trackers(file,n,sh,xt,sol);
+      Call_Path_Trackers(file,n,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -126,7 +126,7 @@ package body Moving_Flag_Continuation is
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Poly_SysFun;
@@ -146,6 +146,9 @@ package body Moving_Flag_Continuation is
     numit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_First_Move 2 ...");
+    end if;
     Start_Solution(h,fail,x,res);
     if fail then
       put_line(file,"no start solution found...");
@@ -177,7 +180,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Clear(sh0); --Clear(sols);
-      Call_Path_Trackers(file,n,sh,xt,sol);
+      Call_Path_Trackers(file,n,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -195,7 +198,7 @@ package body Moving_Flag_Continuation is
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Poly_SysFun;
@@ -215,6 +218,9 @@ package body Moving_Flag_Continuation is
     numit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_First_Move 3 ...");
+    end if;
     Start_Solution(h,fail,x,res);
     if fail then
       put_line(file,"no start solution found...");
@@ -246,7 +252,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Clear(sh0); --Clear(sols);
-      Call_Path_Trackers(file,n,sh,xt,sol);
+      Call_Path_Trackers(file,n,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -264,7 +270,7 @@ package body Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Poly_SysFun;
@@ -284,6 +290,9 @@ package body Moving_Flag_Continuation is
     deflate : boolean := false;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 1 ...");
+    end if;
     xt(sol.v'range) := sol.v;
     xt(xt'last) := Standard_Complex_Numbers.Create(0.0);
     y := Eval(h,xt);
@@ -311,7 +320,7 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,Standard_Complex_Numbers.Create(0.0),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
-      Call_Path_Trackers(file,nv,sh,xt,sol);
+      Call_Path_Trackers(file,nv,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -329,7 +338,7 @@ package body Moving_Flag_Continuation is
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Poly_SysFun;
@@ -348,6 +357,9 @@ package body Moving_Flag_Continuation is
     numit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 2 ...");
+    end if;
     xt(sol.v'range) := sol.v;
     xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
     y := Eval(h,xt);
@@ -375,7 +387,7 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(0)),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
-      Call_Path_Trackers(file,nv,sh,xt,sol);
+      Call_Path_Trackers(file,nv,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -393,7 +405,7 @@ package body Moving_Flag_Continuation is
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Poly_SysFun;
@@ -412,6 +424,9 @@ package body Moving_Flag_Continuation is
     numit : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 3 ...");
+    end if;
     xt(sol.v'range) := sol.v;
     xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
     y := Eval(h,xt);
@@ -439,7 +454,7 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(0)),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
-      Call_Path_Trackers(file,nv,sh,xt,sol);
+      Call_Path_Trackers(file,nv,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -457,7 +472,7 @@ package body Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Poly_SysFun;
@@ -483,6 +498,9 @@ package body Moving_Flag_Continuation is
         := Standard_Complex_Numbers.Create(1.0);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 4 ...");
+    end if;
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       xt(ls.v'range) := ls.v;
@@ -531,18 +549,19 @@ package body Moving_Flag_Continuation is
         numit := 0;
         Reporting_Root_Sharpener
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,deflate,false);
+        Standard_Complex_Poly_Systems.Clear(h0);
       end;
       if tosqr then
         if nt > 0
          then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(file,nv,sh,xtsols,sols);
+         else Call_Path_Trackers(file,nv,sh,xtsols,sols,vrblvl-1);
         end if;
         Clear(sh0);
         sh0 := Eval(sh,one,nv+1);
       else
         if nt > 0 
          then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(file,nv,h,xtsols,sols);
+         else Call_Path_Trackers(file,nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -581,7 +600,7 @@ package body Moving_Flag_Continuation is
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Poly_SysFun;
@@ -606,6 +625,9 @@ package body Moving_Flag_Continuation is
         := DoblDobl_Complex_Numbers.Create(integer(1));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 5 ...");
+    end if;
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       xt(ls.v'range) := ls.v;
@@ -654,18 +676,19 @@ package body Moving_Flag_Continuation is
         numit := 0;
         Reporting_Root_Refiner
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,false);
+        DoblDobl_Complex_Poly_Systems.Clear(h0);
       end;
       if tosqr then
         if nt > 0
          then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(file,nv,sh,xtsols,sols);
+         else Call_Path_Trackers(file,nv,sh,xtsols,sols,vrblvl-1);
         end if;
         Clear(sh0);
         sh0 := Eval(sh,one,nv+1);
       else
         if nt > 0
          then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(file,nv,h,xtsols,sols);
+         else Call_Path_Trackers(file,nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -704,7 +727,7 @@ package body Moving_Flag_Continuation is
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Poly_SysFun;
@@ -729,6 +752,9 @@ package body Moving_Flag_Continuation is
         := QuadDobl_Complex_Numbers.Create(integer(1));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 6 ...");
+    end if;
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       xt(ls.v'range) := ls.v;
@@ -777,18 +803,19 @@ package body Moving_Flag_Continuation is
         numit := 0;
         Reporting_Root_Refiner
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,false);
+        QuadDobl_Complex_Poly_Systems.Clear(h0);
       end;
       if tosqr then
         if nt > 0
          then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(file,nv,sh,xtsols,sols);
+         else Call_Path_Trackers(file,nv,sh,xtsols,sols,vrblvl-1);
         end if;
         Clear(sh0);
         sh0 := Eval(sh,one,nv+1);
       else
         if nt > 0
          then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(file,nv,h,xtsols,sols);
+         else Call_Path_Trackers(file,nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -827,7 +854,7 @@ package body Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -839,6 +866,9 @@ package body Moving_Flag_Continuation is
     xtsols,xt_sols_last : Solution_List;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 7 ...");
+    end if;
     fail := false;
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
@@ -853,12 +883,12 @@ package body Moving_Flag_Continuation is
         sh := Square(nv,h);
         if nt > 0
          then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(nv,sh,xtsols,sols);
+         else Call_Path_Trackers(nv,sh,xtsols,sols,vrblvl-1);
         end if;
       else
         if nt > 0
          then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(nv,h,xtsols,sols);
+         else Call_Path_Trackers(nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -886,7 +916,7 @@ package body Moving_Flag_Continuation is
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -898,6 +928,9 @@ package body Moving_Flag_Continuation is
     xtsols,xt_sols_last : Solution_List;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 8 ...");
+    end if;
     fail := false;
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
@@ -912,12 +945,12 @@ package body Moving_Flag_Continuation is
         sh := Square(nv,h);
         if nt > 0
          then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(nv,sh,xtsols,sols);
+         else Call_Path_Trackers(nv,sh,xtsols,sols,vrblvl-1);
         end if;
       else
         if nt > 0
          then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(nv,h,xtsols,sols);
+         else Call_Path_Trackers(nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -945,7 +978,7 @@ package body Moving_Flag_Continuation is
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -957,6 +990,9 @@ package body Moving_Flag_Continuation is
     xtsols,xt_sols_last : Solution_List;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Track_Next_Move 9 ...");
+    end if;
     fail := false;
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
@@ -971,12 +1007,12 @@ package body Moving_Flag_Continuation is
         sh := Square(nv,h);
         if nt > 0
          then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(nv,sh,xtsols,sols);
+         else Call_Path_Trackers(nv,sh,xtsols,sols,vrblvl-1);
         end if;
       else
         if nt > 0
          then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(nv,h,xtsols,sols);
+         else Call_Path_Trackers(nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -1468,7 +1504,7 @@ package body Moving_Flag_Continuation is
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -1479,6 +1515,9 @@ package body Moving_Flag_Continuation is
     res : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 1 ...");
+    end if;
     fail := false;
     if ind = 0 then
       if minrep
@@ -1523,7 +1562,7 @@ package body Moving_Flag_Continuation is
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -1534,6 +1573,9 @@ package body Moving_Flag_Continuation is
     res : double_double;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 2 ...");
+    end if;
     fail := false;
     if ind = 0 then
       if minrep
@@ -1580,7 +1622,7 @@ package body Moving_Flag_Continuation is
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -1591,6 +1633,9 @@ package body Moving_Flag_Continuation is
     res : quad_double;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 3 ...");
+    end if;
     fail := false;
     if ind = 0 then
       if minrep
@@ -1637,11 +1682,15 @@ package body Moving_Flag_Continuation is
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 4 ...");
+    end if;
     put(file,"Transforming solution planes with critical row = ");
     put(file,ctr,1); put_line(file,".");
     put_line(file,"The solution given to the Trivial_Stay_Coordinates : ");
@@ -1661,11 +1710,15 @@ package body Moving_Flag_Continuation is
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 5 ...");
+    end if;
     put(file,"Transforming solution planes with critical row = ");
     put(file,ctr,1); put_line(file,".");
     put_line(file,"The solution given to the Trivial_Stay_Coordinates : ");
@@ -1687,11 +1740,15 @@ package body Moving_Flag_Continuation is
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 6 ...");
+    end if;
     put(file,"Transforming solution planes with critical row = ");
     put(file,ctr,1); put_line(file,".");
     put_line(file,"The solution given to the Trivial_Stay_Coordinates : ");
@@ -1712,8 +1769,11 @@ package body Moving_Flag_Continuation is
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 7 ...");
+    end if;
     fail := false; -- no checks anymore ...
     Checker_Homotopies.Trivial_Stay_Coordinates
       (n,k,ctr,q,p,qr,qc,pr,pc,sols);
@@ -1726,8 +1786,11 @@ package body Moving_Flag_Continuation is
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 8 ...");
+    end if;
     fail := false; -- no checks anymore ...
     Checker_Homotopies.Trivial_Stay_Coordinates
       (n,k,ctr,q,p,qr,qc,pr,pc,sols);
@@ -1740,8 +1803,11 @@ package body Moving_Flag_Continuation is
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean ) is
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Trivial_Stay 9 ...");
+    end if;
     fail := false; -- no checks anymore ...
     Checker_Homotopies.Trivial_Stay_Coordinates
       (n,k,ctr,q,p,qr,qc,pr,pc,sols);
@@ -1755,7 +1821,8 @@ package body Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution; 
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -1767,6 +1834,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 1 ...");
+    end if;
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp);
@@ -1810,7 +1880,8 @@ package body Moving_Flag_Continuation is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution; 
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -1822,6 +1893,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 2 ...");
+    end if;
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp);
@@ -1865,7 +1939,8 @@ package body Moving_Flag_Continuation is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution; 
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -1877,6 +1952,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 3 ...");
+    end if;
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp);
@@ -1920,7 +1998,8 @@ package body Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -1932,6 +2011,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 4 ...");
+    end if;
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp);
@@ -1973,7 +2055,8 @@ package body Moving_Flag_Continuation is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -1985,6 +2068,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 5 ...");
+    end if;
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp);
@@ -2026,7 +2112,8 @@ package body Moving_Flag_Continuation is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -2038,6 +2125,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 6 ...");
+    end if;
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp);
@@ -2079,7 +2169,8 @@ package body Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -2091,6 +2182,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 7 ...");
+    end if;
     fail := true;
     xpm := Moving_Flag(start_mf,xp);
     if minrep
@@ -2117,7 +2211,8 @@ package body Moving_Flag_Continuation is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -2129,6 +2224,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 8 ...");
+    end if;
     fail := true;
     xpm := Moving_Flag(start_mf,xp);
     if minrep
@@ -2155,7 +2253,8 @@ package body Moving_Flag_Continuation is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -2167,6 +2266,9 @@ package body Moving_Flag_Continuation is
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Stay_Homotopy 9 ...");
+    end if;
     fail := true;
     xpm := Moving_Flag(start_mf,xp);
     if minrep
@@ -2191,7 +2293,7 @@ package body Moving_Flag_Continuation is
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 rlq : out Standard_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use Recondition_Swap_Homotopies;
 
@@ -2200,6 +2302,10 @@ package body Moving_Flag_Continuation is
     sol : Standard_Complex_Solutions.Solution(ls.n+1);
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 1 ...");
+    end if;
     put_line(file,"reconditioning the swap homotopy ...");
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     put(file,"the index of variable x(r+1,s+1) : ");
@@ -2228,7 +2334,7 @@ package body Moving_Flag_Continuation is
                 x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
                 rlq : out DoblDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use Recondition_Swap_Homotopies;
 
@@ -2237,6 +2343,10 @@ package body Moving_Flag_Continuation is
     sol : DoblDobl_Complex_Solutions.Solution(ls.n+1);
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 2 ...");
+    end if;
     put_line(file,"reconditioning the swap homotopy ...");
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     put(file,"the index of variable x(r+1,s+1) : ");
@@ -2265,7 +2375,7 @@ package body Moving_Flag_Continuation is
                 x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
                 rlq : out QuadDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use Recondition_Swap_Homotopies;
 
@@ -2274,6 +2384,10 @@ package body Moving_Flag_Continuation is
     sol : QuadDobl_Complex_Solutions.Solution(ls.n+1);
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 3 ...");
+    end if;
     put_line(file,"reconditioning the swap homotopy ...");
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     put(file,"the index of variable x(r+1,s+1) : ");
@@ -2302,16 +2416,20 @@ package body Moving_Flag_Continuation is
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 rlq : out Standard_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Recondition_Swap_Homotopies;
 
-    rowpiv : constant integer32
-           := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
+   -- rowpiv : constant integer32
+   --        := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
     rcndsols : Standard_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 4 ...");
+    end if;
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     if pividx /= 0 then
       Recondition(x,locmap,dim,s);
@@ -2328,16 +2446,20 @@ package body Moving_Flag_Continuation is
                 x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 rlq : out DoblDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use Recondition_Swap_Homotopies;
 
-    rowpiv : constant integer32
-           := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
+   -- rowpiv : constant integer32
+   --        := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
     rcndsols : DoblDobl_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 5 ...");
+    end if;
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     if pividx /= 0 then
       Recondition(x,locmap,dim,s);
@@ -2354,16 +2476,20 @@ package body Moving_Flag_Continuation is
                 x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 rlq : out QuadDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use Recondition_Swap_Homotopies;
 
-    rowpiv : constant integer32
-           := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
+   -- rowpiv : constant integer32
+   --        := Checker_Localization_Patterns.Row_of_Pivot(locmap,s+1);
     rcndsols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 6 ...");
+    end if;
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     if pividx /= 0 then
       Recondition(x,locmap,dim,s);
@@ -2380,7 +2506,7 @@ package body Moving_Flag_Continuation is
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 rlq : out Standard_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Recondition_Swap_Homotopies;
@@ -2390,6 +2516,10 @@ package body Moving_Flag_Continuation is
     rcndsols : Standard_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 7 ...");
+    end if;
     put_line(file,"reconditioning the swap homotopy ...");
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     put(file,"the index of variable x(r+1,s+1) : ");
@@ -2418,7 +2548,7 @@ package body Moving_Flag_Continuation is
                 x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 rlq : out DoblDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use Recondition_Swap_Homotopies;
@@ -2428,6 +2558,10 @@ package body Moving_Flag_Continuation is
     rcndsols : DoblDobl_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 8 ...");
+    end if;
     put_line(file,"reconditioning the swap homotopy ...");
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     put(file,"the index of variable x(r+1,s+1) : ");
@@ -2456,7 +2590,7 @@ package body Moving_Flag_Continuation is
                 x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 rlq : out QuadDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 ) is
+                pividx : out integer32; vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use Recondition_Swap_Homotopies;
@@ -2466,6 +2600,10 @@ package body Moving_Flag_Continuation is
     rcndsols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0 then
+      put("-> in moving_flag_continuation.");
+      put_line("Recondition_Swap_Homotopy 9 ...");
+    end if;
     put_line(file,"reconditioning the swap homotopy ...");
     pividx := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
     put(file,"the index of variable x(r+1,s+1) : ");
@@ -2496,7 +2634,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -2513,6 +2652,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 1 ...");
+    end if;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp); 
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
@@ -2581,7 +2723,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -2598,6 +2741,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 2 ...");
+    end if;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp); 
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
@@ -2664,7 +2810,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -2681,6 +2828,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 3 ...");
+    end if;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp); 
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
@@ -2747,7 +2897,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -2764,6 +2915,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 4 ...");
+    end if;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp); 
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
@@ -2788,7 +2942,7 @@ package body Moving_Flag_Continuation is
       put_line(file,gh.all);
       Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail);
       declare
-        rsols : Standard_Complex_Solutions.Solution_List
+        rsols : constant Standard_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
                    (sols,s,locmap,xp,pivot);
         use Standard_Complex_Solutions;
@@ -2830,7 +2984,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -2847,6 +3002,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 5 ...");
+    end if;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp); 
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
@@ -2871,7 +3029,7 @@ package body Moving_Flag_Continuation is
       put_line(file,gh.all);
       Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail);
       declare
-        rsols : DoblDobl_Complex_Solutions.Solution_List
+        rsols : constant DoblDobl_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
                    (sols,s,locmap,xp,pivot);
         use DoblDobl_Complex_Solutions;
@@ -2913,7 +3071,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -2930,6 +3089,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 6 ...");
+    end if;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
    -- put_line(file,"The moving coordinates : "); put(file,xp); 
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
@@ -2954,7 +3116,7 @@ package body Moving_Flag_Continuation is
       put_line(file,gh.all);
       Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail);
       declare
-        rsols : QuadDobl_Complex_Solutions.Solution_List
+        rsols : constant QuadDobl_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
                    (sols,s,locmap,xp,pivot);
         use QuadDobl_Complex_Solutions;
@@ -2996,7 +3158,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -3013,6 +3176,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 7 ...");
+    end if;
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
      then pivot := 0; -- no reconditioning needed
      else Recondition_Swap_Homotopy(dim,ctr,s,locmap,xp,sols,rlq,pivot);
@@ -3029,10 +3195,9 @@ package body Moving_Flag_Continuation is
       Setup_Flag_Homotopies.Append(gh,rlq);
       Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail);
       declare
-        rsols : Standard_Complex_Solutions.Solution_List
+        rsols : constant Standard_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
                    (sols,s,locmap,xp,pivot);
-        use Standard_Complex_Solutions;
       begin
         Standard_Complex_Solutions.Clear(sols);
         sols := rsols;
@@ -3062,7 +3227,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -3079,6 +3245,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 8 ...");
+    end if;
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
      then pivot := 0; -- no reconditioning needed
      else Recondition_Swap_Homotopy(dim,ctr,s,locmap,xp,sols,rlq,pivot);
@@ -3095,10 +3264,9 @@ package body Moving_Flag_Continuation is
       Setup_Flag_Homotopies.Append(gh,rlq);
       Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail);
       declare
-        rsols : DoblDobl_Complex_Solutions.Solution_List
+        rsols : constant DoblDobl_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
                    (sols,s,locmap,xp,pivot);
-        use DoblDobl_Complex_Solutions;
       begin
         DoblDobl_Complex_Solutions.Clear(sols);
         sols := rsols;
@@ -3128,7 +3296,8 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean ) is
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -3145,6 +3314,9 @@ package body Moving_Flag_Continuation is
     pivot : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in moving_flag_continuation.Swap_Homotopy 9 ...");
+    end if;
     if Checker_Homotopies.Is_Zone_A_Empty(locmap,p,ctr,s,dc)
      then pivot := 0; -- no reconditioning needed
      else Recondition_Swap_Homotopy(dim,ctr,s,locmap,xp,sols,rlq,pivot);
@@ -3161,10 +3333,9 @@ package body Moving_Flag_Continuation is
       Setup_Flag_Homotopies.Append(gh,rlq);
       Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail);
       declare
-        rsols : QuadDobl_Complex_Solutions.Solution_List
+        rsols : constant QuadDobl_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
                    (sols,s,locmap,xp,pivot);
-        use QuadDobl_Complex_Solutions;
       begin
         QuadDobl_Complex_Solutions.Clear(sols);
         sols := rsols;

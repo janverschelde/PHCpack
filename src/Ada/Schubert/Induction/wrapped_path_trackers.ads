@@ -56,17 +56,20 @@ package Wrapped_Path_Trackers is
               ( n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Standard_Complex_Solutions.Link_to_Solution ); 
+                sol : out Standard_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ); 
   procedure Call_Path_Trackers
               ( n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xt : in out DoblDobl_Complex_Vectors.Vector;
-                sol : out DoblDobl_Complex_Solutions.Link_to_Solution ); 
+                sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ); 
   procedure Call_Path_Trackers
               ( n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xt : in out QuadDobl_Complex_Vectors.Vector;
-                sol : out QuadDobl_Complex_Solutions.Link_to_Solution ); 
+                sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ); 
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution in xt,
@@ -77,7 +80,8 @@ package Wrapped_Path_Trackers is
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
   --   xt       start solution with its last component equal to zero,
-  --            satisfies the homotopy h (upto tolerance).
+  --            satisfies the homotopy h (upto tolerance);
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   xt       solution at the end of the path, tracked to the
@@ -90,17 +94,20 @@ package Wrapped_Path_Trackers is
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Standard_Complex_Solutions.Link_to_Solution ); 
+                sol : out Standard_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ); 
   procedure Call_Path_Trackers
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xt : in out DoblDobl_Complex_Vectors.Vector;
-                sol : out DoblDobl_Complex_Solutions.Link_to_Solution ); 
+                sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ); 
   procedure Call_Path_Trackers
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xt : in out QuadDobl_Complex_Vectors.Vector;
-                sol : out QuadDobl_Complex_Solutions.Link_to_Solution ); 
+                sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ); 
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution in xt,
@@ -113,7 +120,8 @@ package Wrapped_Path_Trackers is
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
   --   xt       start solution with its last component equal to zero,
-  --            satisfies the homotopy h (upto tolerance).
+  --            satisfies the homotopy h (upto tolerance);
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   xt       solution at the end of the path, tracked to the
@@ -126,17 +134,20 @@ package Wrapped_Path_Trackers is
               ( n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Call_Path_Trackers
               ( n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Call_Path_Trackers
               ( n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution in xt,
@@ -147,7 +158,8 @@ package Wrapped_Path_Trackers is
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
   --   xtsols   start solutions with their last component equal to zero,
-  --            satisfies the homotopy h (upto tolerance).
+  --            satisfies the homotopy h (upto tolerance);
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   xtsols   solutions at the end of the path, tracked to the
@@ -158,17 +170,20 @@ package Wrapped_Path_Trackers is
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
-                sols : in out Standard_Complex_Solutions.Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Call_Path_Trackers
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Call_Path_Trackers
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks paths starting at the solution in xtsols,
@@ -181,7 +196,8 @@ package Wrapped_Path_Trackers is
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
   --   xtsols   start solutions with their last component equal to zero,
-  --            satisfies the homotopy h (upto tolerance).
+  --            satisfies the homotopy h (upto tolerance);
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   xtsols   solutions at the end of the path, tracked to the

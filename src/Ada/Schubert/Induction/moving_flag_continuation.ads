@@ -38,19 +38,19 @@ package Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given a homotopy with last variable (with index n+1) the 
@@ -66,7 +66,8 @@ package Moving_Flag_Continuation is
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
   --   sol      if not null, then the start solution for the homotopy,
-  --            otherwise, the start solution will be computed.
+  --            otherwise, the start solution will be computed;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sol      solution at the end of the path if not fail;
@@ -78,19 +79,19 @@ package Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( file : in file_type; nv : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( file : in file_type; nv : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks a path for the next move in the checker poset,
@@ -104,7 +105,8 @@ package Moving_Flag_Continuation is
   --   h        homotopy in nv+1 variables;
   --   tosqr    true if the overdetermined homotopy will be squared up, or
   --            false if the Gauss-Newton path trackers will be applied;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sol      solution at the end of the path if not fail;
@@ -116,19 +118,19 @@ package Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks a path for the next move in the checker poset,
@@ -143,7 +145,8 @@ package Moving_Flag_Continuation is
   --   tosqr    true if the overdetermined homotopy will be squared up, or
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
-  --   sols     start solutions for the homotopy.
+  --   sols     start solutions for the homotopy;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     solutions at the end of the path if not fail;
@@ -155,19 +158,19 @@ package Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( file : in file_type; nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( file : in file_type; nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks a path for the next move in the checker poset,
@@ -184,7 +187,8 @@ package Moving_Flag_Continuation is
   --   tosqr    true if the overdetermined homotopy will be squared up, or
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
-  --   sols     start solutions for the homotopy.
+  --   sols     start solutions for the homotopy;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     solutions at the end of the path if not fail;
@@ -351,7 +355,7 @@ package Moving_Flag_Continuation is
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -360,7 +364,7 @@ package Moving_Flag_Continuation is
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -369,7 +373,7 @@ package Moving_Flag_Continuation is
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   In the trivial stay case instead of a homotopy,
@@ -394,7 +398,8 @@ package Moving_Flag_Continuation is
   --   cond     intersection conditions for the general fixed flags;
   --   mf       coordinates of the moving flag;
   --   vf       coordinates of general flags to keep fixed;
-  --   ls       current solution if ind > 0.
+  --   ls       current solution if ind > 0;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   ls       solution in the proper coordinates;
@@ -407,7 +412,7 @@ package Moving_Flag_Continuation is
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -415,7 +420,7 @@ package Moving_Flag_Continuation is
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -423,7 +428,7 @@ package Moving_Flag_Continuation is
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                fail : out boolean );
+                fail : out boolean; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   In the trivial stay case instead of a homotopy,
@@ -447,7 +452,8 @@ package Moving_Flag_Continuation is
   --   mf       coordinates of the moving flag;
   --   vf       coordinates of general flags to keep fixed;
   --   sols     current list of solutions;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     solutions in the proper coordinates;
@@ -461,7 +467,8 @@ package Moving_Flag_Continuation is
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -470,7 +477,8 @@ package Moving_Flag_Continuation is
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -479,7 +487,8 @@ package Moving_Flag_Continuation is
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   In the trivial stay case instead of a homotopy,
@@ -506,7 +515,8 @@ package Moving_Flag_Continuation is
   --   mf       coordinates of the moving flag;
   --   vf       coordinates of general flags to keep fixed;
   --   sols     current list of solutions;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     solutions in the proper coordinates;
@@ -520,7 +530,8 @@ package Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -529,7 +540,8 @@ package Moving_Flag_Continuation is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -538,7 +550,8 @@ package Moving_Flag_Continuation is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   In a stay homotopy, the white checkers stay in position.
@@ -566,7 +579,8 @@ package Moving_Flag_Continuation is
   --   mf       the new moving flag at the target;
   --   start_mf is the moving flag at the start of the homotopy;
   --   ls       link to the current solution;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   ls       solution in the proper coordinates;
@@ -580,7 +594,8 @@ package Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -589,7 +604,8 @@ package Moving_Flag_Continuation is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -598,7 +614,8 @@ package Moving_Flag_Continuation is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   In a stay homotopy, the white checkers stay in position.
@@ -626,7 +643,8 @@ package Moving_Flag_Continuation is
   --   mf       the new moving flag at the target;
   --   start_mf is the moving flag at the start of the homotopy;
   --   sols     the start solutions for the homotopy;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     solution in the proper coordinates;
@@ -640,7 +658,8 @@ package Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -649,7 +668,8 @@ package Moving_Flag_Continuation is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -658,7 +678,8 @@ package Moving_Flag_Continuation is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   In a stay homotopy, the white checkers stay in position.
@@ -688,7 +709,8 @@ package Moving_Flag_Continuation is
   --   mf       the new moving flag at the target;
   --   start_mf is the moving flag at the start of the homotopy;
   --   sols     the start solutions for the homotopy;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     solution in the proper coordinates;
@@ -700,21 +722,21 @@ package Moving_Flag_Continuation is
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 rlq : out Standard_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
   procedure Recondition_Swap_Homotopy
               ( file : in file_type; dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
                 x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
                 rlq : out DoblDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
   procedure Recondition_Swap_Homotopy
               ( file : in file_type; dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
                 x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
                 rlq : out QuadDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   The variable k-plane x may have no pivot in column s in case of
@@ -729,7 +751,8 @@ package Moving_Flag_Continuation is
   --   s        the swap column;
   --   locmap   localization pattern for x;
   --   x        variable coordinates for the solution k-plane;
-  --   ls       start solution.
+  --   ls       start solution;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   x        matrix x with one scaling variable added if pividx /= 0;
@@ -745,21 +768,21 @@ package Moving_Flag_Continuation is
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 rlq : out Standard_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
   procedure Recondition_Swap_Homotopy
               ( dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
                 x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 rlq : out DoblDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
   procedure Recondition_Swap_Homotopy
               ( dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
                 x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 rlq : out QuadDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   The variable k-plane x may have no pivot in column s in case of
@@ -773,7 +796,8 @@ package Moving_Flag_Continuation is
   --   s        the swap column;
   --   locmap   localization pattern for x;
   --   x        variable coordinates for the solution k-plane;
-  --   ls       start solutions.
+  --   sols     start solutions;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   x        matrix x with one scaling variable added if pividx /= 0;
@@ -789,21 +813,21 @@ package Moving_Flag_Continuation is
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 rlq : out Standard_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
   procedure Recondition_Swap_Homotopy
               ( file : in file_type; dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
                 x : in out DoblDobl_Complex_Poly_Matrices.Matrix;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 rlq : out DoblDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
   procedure Recondition_Swap_Homotopy
               ( file : in file_type; dim,r,s : in integer32;
                 locmap : in Standard_Natural_Matrices.Matrix;
                 x : in out QuadDobl_Complex_Poly_Matrices.Matrix;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 rlq : out QuadDobl_Complex_Polynomials.Poly;
-                pividx : out integer32 );
+                pividx : out integer32; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   The variable k-plane x may have no pivot in column s in case of
@@ -818,7 +842,8 @@ package Moving_Flag_Continuation is
   --   s        the swap column;
   --   locmap   localization pattern for x;
   --   x        variable coordinates for the solution k-plane;
-  --   ls       start solutions.
+  --   sols     start solutions;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   x        matrix x with one scaling variable added if pividx /= 0;
@@ -836,7 +861,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -845,7 +871,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -854,7 +881,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   In a swap homotopy, two white checkers get swapped.
@@ -882,7 +910,8 @@ package Moving_Flag_Continuation is
   --   start_mf is the moving flag at the start of the homotopy;
   --   vf       coordinates of general flags to keep fixed;
   --   ls       link to the current solution;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   ls       solution in the proper coordinates;
@@ -896,7 +925,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -905,7 +935,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -914,7 +945,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
 
 
   -- DESCRIPTION :
@@ -944,7 +976,8 @@ package Moving_Flag_Continuation is
   --   start_mf is the moving flag at the start of the homotopy;
   --   vf       coordinates of general flags to keep fixed;
   --   sols     start solutions for the homotopy;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     solutions in the proper coordinates;
@@ -958,7 +991,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -967,7 +1001,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -976,7 +1011,8 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; fail : out boolean );
+                tol : in double_float; fail : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   In a swap homotopy, two white checkers get swapped.
@@ -1006,7 +1042,8 @@ package Moving_Flag_Continuation is
   --   start_mf is the moving flag at the start of the homotopy;
   --   vf       coordinates of general flags to keep fixed;
   --   sols     start solutions for the homotopy;
-  --   tol      tolerance on the residual to decide failure.
+  --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sols     solutions in the proper coordinates;

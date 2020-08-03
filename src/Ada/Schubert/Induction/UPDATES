@@ -1,3 +1,8 @@
+Mon 3 Aug 2020 : modifications in resolve_schubert_problems.adb,
+  checker_poset_deformations, and moving_flag_continuation to pass
+  the verbose level.  Modified moving_flag_continuation and procedures
+  in wrapped_path_trackers to pass the verbose level.
+
 Sun 2 Aug 2020 : in mainenum.adb, passed the verbose level to the
   main procedures in drivers_for_schubert_condition, and then to
   resolve_schubert_problems, and then to check_poset_deformations.

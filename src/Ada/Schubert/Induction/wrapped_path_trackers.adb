@@ -1,6 +1,6 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+-- with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
@@ -121,7 +121,8 @@ package body Wrapped_Path_Trackers is
               ( n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Standard_Complex_Solutions.Link_to_Solution ) is
+                sol : out Standard_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Standard_IncFix_Continuation;
@@ -134,6 +135,9 @@ package body Wrapped_Path_Trackers is
                           Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 1 ...");
+    end if;
     Standard_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(sols,false,target=>Standard_Complex_Numbers.Create(1.0));
@@ -153,7 +157,8 @@ package body Wrapped_Path_Trackers is
               ( n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xt : in out DoblDobl_Complex_Vectors.Vector;
-                sol : out DoblDobl_Complex_Solutions.Link_to_Solution ) is
+                sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_IncFix_Continuation;
@@ -167,6 +172,9 @@ package body Wrapped_Path_Trackers is
                           DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 2 ...");
+    end if;
     DoblDobl_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(sols,target=>DoblDobl_Complex_Numbers.Create(one));
@@ -185,7 +193,8 @@ package body Wrapped_Path_Trackers is
               ( n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xt : in out QuadDobl_Complex_Vectors.Vector;
-                sol : out QuadDobl_Complex_Solutions.Link_to_Solution ) is
+                sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_IncFix_Continuation;
@@ -199,6 +208,9 @@ package body Wrapped_Path_Trackers is
                           QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 3 ...");
+    end if;
     QuadDobl_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(sols,target=>QuadDobl_Complex_Numbers.Create(one));
@@ -219,7 +231,8 @@ package body Wrapped_Path_Trackers is
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Standard_Complex_Solutions.Link_to_Solution ) is
+                sol : out Standard_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Standard_IncFix_Continuation;
@@ -232,6 +245,9 @@ package body Wrapped_Path_Trackers is
                              Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 4 ...");
+    end if;
     Standard_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(file,sols,false,target=>Standard_Complex_Numbers.Create(1.0));
@@ -251,7 +267,8 @@ package body Wrapped_Path_Trackers is
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xt : in out DoblDobl_Complex_Vectors.Vector;
-                sol : out DoblDobl_Complex_Solutions.Link_to_Solution ) is
+                sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_IncFix_Continuation;
@@ -265,6 +282,9 @@ package body Wrapped_Path_Trackers is
                              DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 5 ...");
+    end if;
     DoblDobl_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(file,sols,target=>DoblDobl_Complex_Numbers.Create(one));
@@ -283,7 +303,8 @@ package body Wrapped_Path_Trackers is
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xt : in out QuadDobl_Complex_Vectors.Vector;
-                sol : out QuadDobl_Complex_Solutions.Link_to_Solution ) is
+                sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_IncFix_Continuation;
@@ -297,6 +318,9 @@ package body Wrapped_Path_Trackers is
                              QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 6 ...");
+    end if;
     QuadDobl_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(file,sols,target=>QuadDobl_Complex_Numbers.Create(one));
@@ -397,7 +421,8 @@ package body Wrapped_Path_Trackers is
               ( n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_IncFix_Continuation;
 
@@ -408,6 +433,9 @@ package body Wrapped_Path_Trackers is
                           Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 7 ...");
+    end if;
     Standard_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(xtsols,false,target=>Standard_Complex_Numbers.Create(1.0));
@@ -425,7 +453,8 @@ package body Wrapped_Path_Trackers is
               ( n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_IncFix_Continuation;
 
@@ -437,6 +466,9 @@ package body Wrapped_Path_Trackers is
                           DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 8 ...");
+    end if;
     DoblDobl_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(xtsols,target=>DoblDobl_Complex_Numbers.Create(one));
@@ -453,7 +485,8 @@ package body Wrapped_Path_Trackers is
               ( n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_IncFix_Continuation;
 
@@ -465,6 +498,9 @@ package body Wrapped_Path_Trackers is
                           QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 9 ...");
+    end if;
     QuadDobl_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(xtsols,target=>QuadDobl_Complex_Numbers.Create(one));
@@ -483,7 +519,8 @@ package body Wrapped_Path_Trackers is
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Standard_IncFix_Continuation;
@@ -495,6 +532,9 @@ package body Wrapped_Path_Trackers is
                              Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 10 ...");
+    end if;
     Standard_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(file,xtsols,false,target=>Standard_Complex_Numbers.Create(1.0));
@@ -517,7 +557,8 @@ package body Wrapped_Path_Trackers is
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_IncFix_Continuation;
@@ -530,6 +571,9 @@ package body Wrapped_Path_Trackers is
                              DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 11 ...");
+    end if;
     DoblDobl_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(file,xtsols,target=>DoblDobl_Complex_Numbers.Create(one));
@@ -552,7 +596,8 @@ package body Wrapped_Path_Trackers is
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_IncFix_Continuation;
@@ -565,6 +610,9 @@ package body Wrapped_Path_Trackers is
                              QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in wrapped_path_trackers.Call_Path_Trackers 12 ...");
+    end if;
     QuadDobl_Homotopy.Create(h,n+1);
     if nbequ = n then -- square homotopy
       Track(file,xtsols,target=>QuadDobl_Complex_Numbers.Create(one));
