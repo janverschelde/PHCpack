@@ -66,6 +66,7 @@ package body QuadDobl_Solutions_Interface is
       QuadDobl_Complex_Solutions_io.get(file,sols);
       QuadDobl_Solutions_Container.Clear;
       QuadDobl_Solutions_Container.Initialize(sols);
+      close(file);
       exception 
         when NAME_ERROR =>
           put_line("File with name " & sv & " could not be found!");
@@ -114,6 +115,7 @@ package body QuadDobl_Solutions_Interface is
       QuadDobl_PolySys_Container.Initialize(p.all);
       QuadDobl_Solutions_Container.Clear;
       QuadDobl_Solutions_Container.Initialize(sols);
+      close(file);
       exception 
         when NAME_ERROR =>
           put_line("File with name " & sv & " could not be found!");

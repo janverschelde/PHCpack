@@ -1,3 +1,6 @@
+Tue 5 Aug 2020 : in *_solutions_interface.adb, added close(file) at all
+  places where a file was opened for reading.
+
 Mon 4 Aug 2020 : moved job functions from use_syscon.adb to the packages
   {standard,dobldobl,quaddobl}_polysys_interface.
 

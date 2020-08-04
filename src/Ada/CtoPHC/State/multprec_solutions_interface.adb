@@ -74,6 +74,7 @@ package body Multprec_Solutions_Interface is
       Multprec_PolySys_Container.Initialize(p.all);
       Multprec_Solutions_Container.Clear;
       Multprec_Solutions_Container.Initialize(sols);
+      close(file);
       exception 
         when NAME_ERROR =>
           put_line("File with name " & sv & " could not be found!");

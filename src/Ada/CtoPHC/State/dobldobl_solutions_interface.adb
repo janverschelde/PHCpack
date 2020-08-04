@@ -66,6 +66,7 @@ package body DoblDobl_Solutions_Interface is
       DoblDobl_Complex_Solutions_io.get(file,sols);
       DoblDobl_Solutions_Container.Clear;
       DoblDobl_Solutions_Container.Initialize(sols);
+      close(file);
       exception 
         when NAME_ERROR =>
           put_line("File with name " & sv & " could not be found!");
@@ -114,6 +115,7 @@ package body DoblDobl_Solutions_Interface is
       DoblDobl_PolySys_Container.Initialize(p.all);
       DoblDobl_Solutions_Container.Clear;
       DoblDobl_Solutions_Container.Initialize(sols);
+      close(file);
       exception 
         when NAME_ERROR =>
           put_line("File with name " & sv & " could not be found!");

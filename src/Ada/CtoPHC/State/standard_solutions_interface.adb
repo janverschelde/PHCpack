@@ -66,6 +66,7 @@ package body Standard_Solutions_Interface is
       Standard_Complex_Solutions_io.get(file,sols);
       Standard_Solutions_Container.Clear;
       Standard_Solutions_Container.Initialize(sols);
+      close(file);
       exception 
         when NAME_ERROR =>
           put_line("File with name " & sv & " could not be found!");
@@ -114,6 +115,7 @@ package body Standard_Solutions_Interface is
       Standard_PolySys_Container.Initialize(p.all);
       Standard_Solutions_Container.Clear;
       Standard_Solutions_Container.Initialize(sols);
+      close(file);
       exception 
         when NAME_ERROR =>
           put_line("File with name " & sv & " could not be found!");
