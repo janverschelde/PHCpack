@@ -23,7 +23,8 @@ package body Checker_Poset_Deformations is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution; 
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -41,6 +42,10 @@ package body Checker_Poset_Deformations is
     use Standard_Complex_Matrices;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 1 ...");
+    end if;
     new_line(file);
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       put(file,"No tracking for path "); put(file,count,1);
@@ -82,14 +87,15 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,
+             fail,vrblvl-1);
         elsif homtp = 1 then
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,vf,mf,start_mf,ls,tol,fail);
+                        cond,vf,mf,start_mf,ls,tol,fail,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,mf,start_mf,vf,ls,tol,fail);
+                        cond,mf,start_mf,vf,ls,tol,fail,vrblvl-1);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -108,7 +114,8 @@ package body Checker_Poset_Deformations is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution; 
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -126,6 +133,10 @@ package body Checker_Poset_Deformations is
     use DoblDobl_Complex_Matrices;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 2 ...");
+    end if;
     new_line(file);
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       put(file,"No tracking for path "); put(file,count,1);
@@ -167,14 +178,15 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,
+             fail,vrblvl-1);
         elsif homtp = 1 then
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,vf,mf,start_mf,ls,tol,fail);
+                        cond,vf,mf,start_mf,ls,tol,fail,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,mf,start_mf,vf,ls,tol,fail);
+                        cond,mf,start_mf,vf,ls,tol,fail,vrblvl-1);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -193,7 +205,8 @@ package body Checker_Poset_Deformations is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution; 
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -211,6 +224,10 @@ package body Checker_Poset_Deformations is
     use QuadDobl_Complex_Matrices;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 3 ...");
+    end if;
     new_line(file);
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       put(file,"No tracking for path "); put(file,count,1);
@@ -247,19 +264,20 @@ package body Checker_Poset_Deformations is
        -- put_line(file,"The moving flag after the update :");
        -- Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
         Checker_Homotopies.Define_Generalizing_Homotopy
-           (file,n,q,qr,qc,stay_child,homtp,ctr);
+          (file,n,q,qr,qc,stay_child,homtp,ctr);
         Initialize_Symbol_Table(n,k,q,qr,qc,dim);
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,
+             fail,vrblvl-1);
         elsif homtp = 1 then
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,vf,mf,start_mf,ls,tol,fail);
+                        cond,vf,mf,start_mf,ls,tol,fail,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,mf,start_mf,vf,ls,tol,fail);
+                        cond,mf,start_mf,vf,ls,tol,fail,vrblvl-1);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -279,7 +297,8 @@ package body Checker_Poset_Deformations is
                 mf : in out Standard_Complex_Matrices.Matrix;
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -298,6 +317,10 @@ package body Checker_Poset_Deformations is
     use Standard_Complex_Solutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 4 ...");
+    end if;
     new_line(file);
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       put(file,"No tracking for path "); put(file,count,1);
@@ -350,14 +373,14 @@ package body Checker_Poset_Deformations is
         if homtp = 0 then
           Trivial_Stay
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
-             mf,vf,sols,tol,fail);
+             mf,vf,sols,tol,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,vf,mf,start_mf,sols,tol,fail);
+          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+                        tosqr,cond,vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,mf,start_mf,vf,sols,tol,fail);
+          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+                        tosqr,cond,mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -378,7 +401,8 @@ package body Checker_Poset_Deformations is
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
                 start : in DoblDobl_Complex_Solutions.Solution_List;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -397,6 +421,10 @@ package body Checker_Poset_Deformations is
     use DoblDobl_Complex_Solutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 5 ...");
+    end if;
     new_line(file);
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       put(file,"No tracking for path "); put(file,count,1);
@@ -449,14 +477,14 @@ package body Checker_Poset_Deformations is
         if homtp = 0 then
           Trivial_Stay
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
-             mf,vf,sols,tol,fail);
+             mf,vf,sols,tol,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,vf,mf,start_mf,sols,tol,fail);
+          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+                        tosqr,cond,vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,mf,start_mf,vf,sols,tol,fail);
+          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+                        tosqr,cond,mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -477,7 +505,8 @@ package body Checker_Poset_Deformations is
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
                 start : in QuadDobl_Complex_Solutions.Solution_List;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -496,6 +525,10 @@ package body Checker_Poset_Deformations is
     use QuadDobl_Complex_Solutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 6 ...");
+    end if;
     new_line(file);
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       put(file,"No tracking for path "); put(file,count,1);
@@ -548,14 +581,14 @@ package body Checker_Poset_Deformations is
         if homtp = 0 then
           Trivial_Stay
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
-             mf,vf,sols,tol,fail);
+             mf,vf,sols,tol,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,vf,mf,start_mf,sols,tol,fail);
+          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+                        tosqr,cond,vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,tosqr,
-                        cond,mf,start_mf,vf,sols,tol,fail);
+          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+                        tosqr,cond,mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -576,7 +609,8 @@ package body Checker_Poset_Deformations is
                 mf : in out Standard_Complex_Matrices.Matrix;
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -595,6 +629,10 @@ package body Checker_Poset_Deformations is
     use Standard_Complex_Solutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 7 ...");
+    end if;
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       unhappy := true;
     else
@@ -619,13 +657,13 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
+            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail,vrblvl-1);
         elsif homtp = 1 then
           Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
-                        vf,mf,start_mf,sols,tol,fail);
+                        vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
           Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
-                        mf,start_mf,vf,sols,tol,fail);
+                        mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
           unhappy := true; -- prevent from being concatenated
@@ -644,7 +682,8 @@ package body Checker_Poset_Deformations is
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
                 start : in DoblDobl_Complex_Solutions.Solution_List;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -663,6 +702,10 @@ package body Checker_Poset_Deformations is
     use DoblDobl_Complex_Solutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 8 ...");
+    end if;
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       unhappy := true;
     else
@@ -687,13 +730,13 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
+            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail,vrblvl-1);
         elsif homtp = 1 then
           Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
-                        vf,mf,start_mf,sols,tol,fail);
+                        vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
           Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
-                        mf,start_mf,vf,sols,tol,fail);
+                        mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
           unhappy := true; -- prevent from being concatenated
@@ -712,7 +755,8 @@ package body Checker_Poset_Deformations is
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
                 start : in QuadDobl_Complex_Solutions.Solution_List;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -731,6 +775,10 @@ package body Checker_Poset_Deformations is
     use QuadDobl_Complex_Solutions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in checker_poset_deformations.");
+      put_line("Track_Path_in_Poset 9 ...");
+    end if;
     if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
       unhappy := true;
     else
@@ -755,13 +803,13 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
+            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail,vrblvl-1);
         elsif homtp = 1 then
           Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
-                        vf,mf,start_mf,sols,tol,fail);
+                        vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
           Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
-                        mf,start_mf,vf,sols,tol,fail);
+                        mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
           unhappy := true; -- prevent from being concatenated
@@ -794,7 +842,8 @@ package body Checker_Poset_Deformations is
     begin
       cnt := cnt + 1;
       Track_Path_in_Poset
-        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail);
+        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail,
+         vrblvl-1);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -833,7 +882,8 @@ package body Checker_Poset_Deformations is
     begin
       cnt := cnt + 1;
       Track_Path_in_Poset
-        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail);
+        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail,
+         vrblvl-1);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -872,7 +922,8 @@ package body Checker_Poset_Deformations is
     begin
       cnt := cnt + 1;
       Track_Path_in_Poset
-        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail);
+        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail,
+         vrblvl-1);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -924,7 +975,7 @@ package body Checker_Poset_Deformations is
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
           (file,n,k,nt,ps,nds,cnt,verify,minrep,tosqr,
-           cond,vf,mf,start,pp_sols,tol,fail);
+           cond,vf,mf,start,pp_sols,tol,fail,vrblvl-1);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -977,7 +1028,7 @@ package body Checker_Poset_Deformations is
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
           (file,n,k,nt,ps,nds,cnt,verify,minrep,tosqr,
-           cond,vf,mf,start,pp_sols,tol,fail);
+           cond,vf,mf,start,pp_sols,tol,fail,vrblvl-1);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1030,7 +1081,7 @@ package body Checker_Poset_Deformations is
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
           (file,n,k,nt,ps,nds,cnt,verify,minrep,tosqr,
-           cond,vf,mf,start,pp_sols,tol,fail);
+           cond,vf,mf,start,pp_sols,tol,fail,vrblvl-1);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1074,7 +1125,8 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail,
+           vrblvl-1);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1118,7 +1170,8 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail,
+           vrblvl-1);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1162,7 +1215,8 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,nt,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail,
+           vrblvl-1);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;

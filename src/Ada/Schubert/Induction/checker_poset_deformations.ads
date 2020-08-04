@@ -27,7 +27,8 @@ package Checker_Poset_Deformations is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -36,7 +37,8 @@ package Checker_Poset_Deformations is
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
                 ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -45,7 +47,8 @@ package Checker_Poset_Deformations is
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
                 ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path in the poset, given as an array of nodes.
@@ -67,6 +70,7 @@ package Checker_Poset_Deformations is
   --   mf       coordinates of the moving flag,
   --            should be equal to the identity matrix at the start;
   --   tol      tolerance on the residual to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   mf       moving flag at the end of the path;
@@ -83,7 +87,8 @@ package Checker_Poset_Deformations is
                 mf : in out Standard_Complex_Matrices.Matrix;
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -93,7 +98,8 @@ package Checker_Poset_Deformations is
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
                 start : in DoblDobl_Complex_Solutions.Solution_List;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -103,7 +109,8 @@ package Checker_Poset_Deformations is
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
                 start : in QuadDobl_Complex_Solutions.Solution_List;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path in the poset, given as an array of nodes.
@@ -128,7 +135,8 @@ package Checker_Poset_Deformations is
   --            should be equal to the identity matrix at the start;
   --   start    the start solutions from the nodes at the previous level
   --            in the intersection poset;
-  --   tol      tolerance on residuals to decide failure.
+  --   tol      tolerance on residuals to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   mf       moving flag at the end of the path;
@@ -145,7 +153,8 @@ package Checker_Poset_Deformations is
                 mf : in out Standard_Complex_Matrices.Matrix;
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -155,7 +164,8 @@ package Checker_Poset_Deformations is
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
                 start : in DoblDobl_Complex_Solutions.Solution_List;
                 sols : out DoblDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -165,7 +175,8 @@ package Checker_Poset_Deformations is
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
                 start : in QuadDobl_Complex_Solutions.Solution_List;
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
-                tol : in double_float; unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path in the poset, given as an array of nodes.
@@ -188,7 +199,8 @@ package Checker_Poset_Deformations is
   --            should be equal to the identity matrix at the start;
   --   start    the start solutions from the nodes at the previous level
   --            in the intersection poset;
-  --   tol      tolerance on residuals to decide failure.
+  --   tol      tolerance on residuals to decide failure;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   mf       moving flag at the end of the path;

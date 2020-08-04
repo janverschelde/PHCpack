@@ -25,7 +25,6 @@ with Checker_Posets,Checker_Posets_io;   use Checker_Posets_io;
 with Checker_Localization_Patterns;
 with Checker_Homotopies;
 with Flag_Transformations;
-with Setup_Flag_Homotopies;              use Setup_Flag_Homotopies;
 with Start_Flag_Homotopies;              use Start_Flag_Homotopies;
 with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
 with Checker_Poset_Deformations;
@@ -83,16 +82,16 @@ package body Resolve_Schubert_Problems is
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                snd : in out Standard_Solution_Posets.Link_to_Solution_Node;
+                snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out double_float ) is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
-    rows : Standard_Natural_Vectors.Vector
+    rows : constant Standard_Natural_Vectors.Vector
          := Checker_Posets.Root_Rows(slnp);
-    cols : Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
+    cols : constant Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
     q : constant Standard_Natural_Vectors.Vector
       := slnp.black(slnp.black'last).all;
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
@@ -132,16 +131,16 @@ package body Resolve_Schubert_Problems is
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
-                snd : in out DoblDobl_Solution_Posets.Link_to_Solution_Node;
+                snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out double_double ) is
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Solutions;
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
-    rows : Standard_Natural_Vectors.Vector
+    rows : constant Standard_Natural_Vectors.Vector
          := Checker_Posets.Root_Rows(slnp);
-    cols : Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
+    cols : constant Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
     q : constant Standard_Natural_Vectors.Vector
       := slnp.black(slnp.black'last).all;
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
@@ -183,16 +182,16 @@ package body Resolve_Schubert_Problems is
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
-                snd : in out QuadDobl_Solution_Posets.Link_to_Solution_Node;
+                snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out quad_double ) is
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Solutions;
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
-    rows : Standard_Natural_Vectors.Vector
+    rows : constant Standard_Natural_Vectors.Vector
          := Checker_Posets.Root_Rows(slnp);
-    cols : Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
+    cols : constant Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
     q : constant Standard_Natural_Vectors.Vector
       := slnp.black(slnp.black'last).all;
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
@@ -234,16 +233,16 @@ package body Resolve_Schubert_Problems is
               ( n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                snd : in out Standard_Solution_Posets.Link_to_Solution_Node;
+                snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out double_float ) is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
-    rows : Standard_Natural_Vectors.Vector
+    rows : constant Standard_Natural_Vectors.Vector
          := Checker_Posets.Root_Rows(slnp);
-    cols : Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
+    cols : constant Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
     q : constant Standard_Natural_Vectors.Vector
       := slnp.black(slnp.black'last).all;
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
@@ -271,16 +270,16 @@ package body Resolve_Schubert_Problems is
               ( n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
-                snd : in out DoblDobl_Solution_Posets.Link_to_Solution_Node;
+                snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out double_double ) is
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Solutions;
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
-    rows : Standard_Natural_Vectors.Vector
+    rows : constant Standard_Natural_Vectors.Vector
          := Checker_Posets.Root_Rows(slnp);
-    cols : Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
+    cols : constant Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
     q : constant Standard_Natural_Vectors.Vector
       := slnp.black(slnp.black'last).all;
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
@@ -310,16 +309,16 @@ package body Resolve_Schubert_Problems is
               ( n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
-                snd : in out QuadDobl_Solution_Posets.Link_to_Solution_Node;
+                snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out quad_double ) is
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Complex_Solutions;
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
-    rows : Standard_Natural_Vectors.Vector
+    rows : constant Standard_Natural_Vectors.Vector
          := Checker_Posets.Root_Rows(slnp);
-    cols : Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
+    cols : constant Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
     q : constant Standard_Natural_Vectors.Vector
       := slnp.black(slnp.black'last).all;
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
@@ -870,7 +869,8 @@ package body Resolve_Schubert_Problems is
   end Transform_Start_Solutions;
 
   procedure Connect_Checker_Posets_to_Count
-              ( pl : in Poset_List; nd : in Poset_Node ) is
+              ( pl : in Poset_List; nd : in Poset_Node;
+                vrblvl : in integer32 := 0 ) is
 
     procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
 
@@ -884,8 +884,8 @@ package body Resolve_Schubert_Problems is
                  := childnode.rows;     -- root
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
-      parentconds : constant Standard_Natural_Vectors.Vector
-                  := node.ps.white(node.ps.white'last).cols; -- leaf
+     -- parentconds : constant Standard_Natural_Vectors.Vector
+     --             := node.ps.white(node.ps.white'last).cols; -- leaf
 
       use Checker_Posets;
 
@@ -902,12 +902,17 @@ package body Resolve_Schubert_Problems is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);
 
   begin
+    if vrblvl > 0 then
+      put("-> in resolve_schubert_problems.");
+      put_line("Connect_Checker_Posets_to_Count 1 ...");
+    end if;
     Connect_Parents(pl,nd);
   end Connect_Checker_Posets_to_Count;
 
   procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;
-                pl : in Poset_List; nd : in Poset_Node ) is
+                pl : in Poset_List; nd : in Poset_Node;
+                vrblvl : in integer32 := 0 ) is
 
     procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
 
@@ -921,8 +926,8 @@ package body Resolve_Schubert_Problems is
                  := childnode.rows;     -- root
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
-      parentconds : constant Standard_Natural_Vectors.Vector
-                  := node.ps.white(node.ps.white'last).cols; -- leaf
+     -- parentconds : constant Standard_Natural_Vectors.Vector
+     --             := node.ps.white(node.ps.white'last).cols; -- leaf
 
       use Checker_Posets;
 
@@ -944,6 +949,10 @@ package body Resolve_Schubert_Problems is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);
 
   begin
+    if vrblvl > 0 then
+      put("-> in resolve_schubert_problems.");
+      put_line("Connect_Checker_Posets_to_Count 2 ...");
+    end if;
     Connect_Parents(pl,nd);
   end Connect_Checker_Posets_to_Count;
 
@@ -956,7 +965,8 @@ package body Resolve_Schubert_Problems is
                 sps : in out Standard_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in Standard_Complex_VecMats.VecMat ) is
+                flags : in Standard_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -978,8 +988,8 @@ package body Resolve_Schubert_Problems is
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
-      childrows : constant Standard_Natural_Vectors.Vector
-                := Flip(childconds);
+     -- childrows : constant Standard_Natural_Vectors.Vector
+     --           := Flip(childconds);
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
       parentconds : constant Standard_Natural_Vectors.Vector
@@ -1033,7 +1043,8 @@ package body Resolve_Schubert_Problems is
             Track_All_Paths_in_Poset
               (file,n,k,nt,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
+               flags(flags'last-nbflags+1..flags'last),
+               tol,startsols,sols,vrblvl-1);
             Push(sols,parent_snd.sols);
             put(file,"Before push : #sols returned = ");
             put(file,Length_Of(sols),1); new_line(file);
@@ -1053,6 +1064,10 @@ package body Resolve_Schubert_Problems is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);
 
   begin
+    if vrblvl > 0 then
+      put("-> in resolve_schubert_problems.");
+      put_line("Connect_Checker_Posets_to_Track 1 ...");
+    end if;
     Connect_Parents(pl,nd.all);
   end Connect_Checker_Posets_to_Track;
 
@@ -1065,7 +1080,8 @@ package body Resolve_Schubert_Problems is
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in DoblDobl_Complex_VecMats.VecMat ) is
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -1087,8 +1103,8 @@ package body Resolve_Schubert_Problems is
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
-      childrows : constant Standard_Natural_Vectors.Vector
-                := Flip(childconds);
+     -- childrows : constant Standard_Natural_Vectors.Vector
+     --           := Flip(childconds);
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
       parentconds : constant Standard_Natural_Vectors.Vector
@@ -1142,7 +1158,8 @@ package body Resolve_Schubert_Problems is
             Track_All_Paths_in_Poset
               (file,n,k,nt,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
+               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols,
+               vrblvl-1);
             Push(sols,parent_snd.sols);
             put(file,"Before push : #sols returned = ");
             put(file,Length_Of(sols),1); new_line(file);
@@ -1162,6 +1179,10 @@ package body Resolve_Schubert_Problems is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);
 
   begin
+    if vrblvl > 0 then
+      put("-> in resolve_schubert_problems.");
+      put_line("Connect_Checker_Posets_to_Track 2 ...");
+    end if;
     Connect_Parents(pl,nd.all);
   end Connect_Checker_Posets_to_Track;
 
@@ -1174,7 +1195,8 @@ package body Resolve_Schubert_Problems is
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in QuadDobl_Complex_VecMats.VecMat ) is
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -1196,8 +1218,8 @@ package body Resolve_Schubert_Problems is
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
-      childrows : constant Standard_Natural_Vectors.Vector
-                := Flip(childconds);
+     -- childrows : constant Standard_Natural_Vectors.Vector
+     --           := Flip(childconds);
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
       parentconds : constant Standard_Natural_Vectors.Vector
@@ -1251,7 +1273,8 @@ package body Resolve_Schubert_Problems is
             Track_All_Paths_in_Poset
               (file,n,k,nt,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
+               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols,
+               vrblvl-1);
             Push(sols,parent_snd.sols);
             put(file,"Before push : #sols returned = ");
             put(file,Length_Of(sols),1); new_line(file);
@@ -1271,6 +1294,10 @@ package body Resolve_Schubert_Problems is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);
 
   begin
+    if vrblvl > 0 then
+      put("-> in resolve_schubert_problems.");
+      put_line("Connect_Checker_Posets_to_Track 3 ...");
+    end if;
     Connect_Parents(pl,nd.all);
   end Connect_Checker_Posets_to_Track;
 
@@ -1282,7 +1309,8 @@ package body Resolve_Schubert_Problems is
                 sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in Standard_Complex_VecMats.VecMat ) is
+                flags : in Standard_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -1304,14 +1332,14 @@ package body Resolve_Schubert_Problems is
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
-      childrows : constant Standard_Natural_Vectors.Vector
-                := Flip(childconds);
+     -- childrows : constant Standard_Natural_Vectors.Vector
+     --           := Flip(childconds);
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
-      parentconds : constant Standard_Natural_Vectors.Vector
-                  := node.ps.white(node.ps.white'last).cols; -- leaf
-      parentrows : constant Standard_Natural_Vectors.Vector
-                 := node.ps.white(node.ps.white'last).rows;
+     -- parentconds : constant Standard_Natural_Vectors.Vector
+     --             := node.ps.white(node.ps.white'last).cols; -- leaf
+     -- parentrows : constant Standard_Natural_Vectors.Vector
+     --            := node.ps.white(node.ps.white'last).rows;
       startsols : Solution_List;
 
       use Standard_Complex_Matrices;
@@ -1329,13 +1357,14 @@ package body Resolve_Schubert_Problems is
           end if;
           declare
             sols : Solution_List;
-            totalflags : constant natural32 := natural32(flags'length);
+           -- totalflags : constant natural32 := natural32(flags'length);
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
               (n,k,nt,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
+               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols,
+               vrblvl-1);
             Push(sols,parent_snd.sols);
           end;
           Deep_Clear(startsols);
@@ -1348,6 +1377,10 @@ package body Resolve_Schubert_Problems is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);
 
   begin
+    if vrblvl > 0 then
+      put("-> in resolve_schubert_problems.");
+      put_line("Connect_Checker_Posets_to_Track 4 ...");
+    end if;
     Connect_Parents(pl,nd.all);
   end Connect_Checker_Posets_to_Track;
 
@@ -1359,7 +1392,8 @@ package body Resolve_Schubert_Problems is
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in DoblDobl_Complex_VecMats.VecMat ) is
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -1381,14 +1415,14 @@ package body Resolve_Schubert_Problems is
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
-      childrows : constant Standard_Natural_Vectors.Vector
-                := Flip(childconds);
+     -- childrows : constant Standard_Natural_Vectors.Vector
+     --           := Flip(childconds);
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
-      parentconds : constant Standard_Natural_Vectors.Vector
-                  := node.ps.white(node.ps.white'last).cols; -- leaf
-      parentrows : constant Standard_Natural_Vectors.Vector
-                 := node.ps.white(node.ps.white'last).rows;
+     -- parentconds : constant Standard_Natural_Vectors.Vector
+     --             := node.ps.white(node.ps.white'last).cols; -- leaf
+     -- parentrows : constant Standard_Natural_Vectors.Vector
+     --            := node.ps.white(node.ps.white'last).rows;
       startsols : Solution_List;
 
       use DoblDobl_Complex_Matrices;
@@ -1406,13 +1440,14 @@ package body Resolve_Schubert_Problems is
           end if;
           declare
             sols : Solution_List;
-            totalflags : constant natural32 := natural32(flags'length);
+           -- totalflags : constant natural32 := natural32(flags'length);
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
               (n,k,nt,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
+               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols,
+               vrblvl-1);
             Push(sols,parent_snd.sols);
           end;
           Deep_Clear(startsols);
@@ -1425,6 +1460,10 @@ package body Resolve_Schubert_Problems is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);
 
   begin
+    if vrblvl > 0 then
+      put("-> in resolve_schubert_problems.");
+      put_line("Connect_Checker_Posets_to_Track 5 ...");
+    end if;
     Connect_Parents(pl,nd.all);
   end Connect_Checker_Posets_to_Track;
 
@@ -1436,7 +1475,8 @@ package body Resolve_Schubert_Problems is
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in QuadDobl_Complex_VecMats.VecMat ) is
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -1458,14 +1498,14 @@ package body Resolve_Schubert_Problems is
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
-      childrows : constant Standard_Natural_Vectors.Vector
-                := Flip(childconds);
+     -- childrows : constant Standard_Natural_Vectors.Vector
+     --           := Flip(childconds);
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
-      parentconds : constant Standard_Natural_Vectors.Vector
-                  := node.ps.white(node.ps.white'last).cols; -- leaf
-      parentrows : constant Standard_Natural_Vectors.Vector
-                 := node.ps.white(node.ps.white'last).rows;
+     -- parentconds : constant Standard_Natural_Vectors.Vector
+     --             := node.ps.white(node.ps.white'last).cols; -- leaf
+     -- parentrows : constant Standard_Natural_Vectors.Vector
+     --            := node.ps.white(node.ps.white'last).rows;
       startsols : Solution_List;
 
       use QuadDobl_Complex_Matrices;
@@ -1483,13 +1523,14 @@ package body Resolve_Schubert_Problems is
           end if;
           declare
             sols : Solution_List;
-            totalflags : constant natural32 := natural32(flags'length);
+           -- totalflags : constant natural32 := natural32(flags'length);
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
               (n,k,nt,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
+               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols,
+               vrblvl-1);
             Push(sols,parent_snd.sols);
           end;
           Deep_Clear(startsols);
@@ -1502,12 +1543,16 @@ package body Resolve_Schubert_Problems is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);
 
   begin
+    if vrblvl > 0 then
+      put("-> in resolve_schubert_problems.");
+      put_line("Connect_Checker_Posets_to_Track 6 ...");
+    end if;
     Connect_Parents(pl,nd.all);
   end Connect_Checker_Posets_to_Track;
 
   procedure Count_Roots
               ( ips : in out Intersection_Poset;
-                roco : out Natural_Number ) is
+                roco : out Natural_Number; vrblvl : in integer32 := 0 ) is
    
     tmp : Poset_List;
     lpn : Link_to_Poset_Node;
@@ -1523,7 +1568,7 @@ package body Resolve_Schubert_Problems is
         lpn := Head_Of(tmp);
         Checker_Posets.Add_from_Leaves_to_Root(lpn.ps);
         if i > 1 then
-          Connect_Checker_Posets_to_Count(ips.nodes(i-1),lpn.all);
+          Connect_Checker_Posets_to_Count(ips.nodes(i-1),lpn.all,vrblvl-1);
         end if;
         tmp := Tail_Of(tmp);
       end loop;
@@ -1533,7 +1578,7 @@ package body Resolve_Schubert_Problems is
 
   procedure Count_Roots
               ( file : in file_type; ips : in out Intersection_Poset;
-                roco : out Natural_Number ) is
+                roco : out Natural_Number; vrblvl : in integer32 := 0 ) is
    
     tmp : Poset_List;
     lpn : Link_to_Poset_Node;
@@ -1559,7 +1604,8 @@ package body Resolve_Schubert_Problems is
         put_line(file," ***");
         if i > 1 then
           put_line(file,"-> solving at the leaves of its parents :");
-          Connect_Checker_Posets_to_Count(file,ips.nodes(i-1),lpn.all);
+          Connect_Checker_Posets_to_Count
+            (file,ips.nodes(i-1),lpn.all,vrblvl-1);
         end if;
         tmp := Tail_Of(tmp);
       end loop;
@@ -1575,7 +1621,8 @@ package body Resolve_Schubert_Problems is
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                sols : out Standard_Complex_Solutions.Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Solution_Posets;
     use Flag_Transformations;
@@ -1591,6 +1638,9 @@ package body Resolve_Schubert_Problems is
     sqA,sqinvA,sqT : Standard_Complex_VecMats.VecMat(stack'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in resolve_schubert_problems.Resolve 1 ...");
+    end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
@@ -1640,21 +1690,21 @@ package body Resolve_Schubert_Problems is
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,tosqr,conds,flags);
+                 verify,minrep,tosqr,conds,flags,vrblvl-1);
             else
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,tosqr,conds,workf.all);
+                 verify,minrep,tosqr,conds,workf.all,vrblvl-1);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,tosqr,conds,flags);
+                 minrep,tosqr,conds,flags,vrblvl-1);
             else
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,tosqr,conds,workf.all);
+                 minrep,tosqr,conds,workf.all,vrblvl-1);
             end if;
           end if;
         end if;
@@ -1684,7 +1734,8 @@ package body Resolve_Schubert_Problems is
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
-                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Solution_Posets;
     use Flag_Transformations;
@@ -1700,6 +1751,9 @@ package body Resolve_Schubert_Problems is
     sqA,sqinvA,sqT : DoblDobl_Complex_VecMats.VecMat(stack'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in resolve_schubert_problems.Resolve 2 ...");
+    end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
@@ -1739,21 +1793,21 @@ package body Resolve_Schubert_Problems is
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,tosqr,conds,flags);
+                 verify,minrep,tosqr,conds,flags,vrblvl-1);
             else
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,tosqr,conds,workf.all);
+                 verify,minrep,tosqr,conds,workf.all,vrblvl-1);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,tosqr,conds,flags);
+                 minrep,tosqr,conds,flags,vrblvl-1);
             else
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,tosqr,conds,workf.all);
+                 minrep,tosqr,conds,workf.all,vrblvl-1);
             end if;
           end if;
         end if;
@@ -1783,7 +1837,8 @@ package body Resolve_Schubert_Problems is
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
-                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Solution_Posets;
     use Flag_Transformations;
@@ -1799,6 +1854,9 @@ package body Resolve_Schubert_Problems is
     sqA,sqinvA,sqT : QuadDobl_Complex_VecMats.VecMat(stack'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in resolve_schubert_problems.Resolve 3 ...");
+    end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
@@ -1838,21 +1896,21 @@ package body Resolve_Schubert_Problems is
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,tosqr,conds,flags);
+                 verify,minrep,tosqr,conds,flags,vrblvl-1);
             else
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,tosqr,conds,workf.all);
+                 verify,minrep,tosqr,conds,workf.all,vrblvl-1);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,tosqr,conds,flags);
+                 minrep,tosqr,conds,flags,vrblvl-1);
             else
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,tosqr,conds,workf.all);
+                 minrep,tosqr,conds,workf.all,vrblvl-1);
             end if;
           end if;
         end if;
@@ -1881,7 +1939,8 @@ package body Resolve_Schubert_Problems is
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                sols : out Standard_Complex_Solutions.Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Solution_Posets;
     use Flag_Transformations;
@@ -1897,6 +1956,9 @@ package body Resolve_Schubert_Problems is
     sqA,sqinvA,sqT : Standard_Complex_VecMats.VecMat(stack'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in resolve_schubert_problems.Resolve 4 ...");
+    end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
@@ -1924,11 +1986,11 @@ package body Resolve_Schubert_Problems is
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
               (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,tosqr,conds,flags);
+               minrep,tosqr,conds,flags,vrblvl-1);
           else
             Connect_Checker_Posets_to_Track
               (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,tosqr,conds,workf.all);
+               minrep,tosqr,conds,workf.all,vrblvl-1);
           end if;
         end if;
         tmp := Tail_Of(tmp);
@@ -1953,7 +2015,8 @@ package body Resolve_Schubert_Problems is
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
-                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Solution_Posets;
     use Flag_Transformations;
@@ -1969,6 +2032,9 @@ package body Resolve_Schubert_Problems is
     sqA,sqinvA,sqT : DoblDobl_Complex_VecMats.VecMat(stack'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in resolve_schubert_problems.Resolve 5 ...");
+    end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
@@ -1996,11 +2062,11 @@ package body Resolve_Schubert_Problems is
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
               (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,tosqr,conds,flags);
+               minrep,tosqr,conds,flags,vrblvl-1);
           else
             Connect_Checker_Posets_to_Track
               (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,tosqr,conds,workf.all);
+               minrep,tosqr,conds,workf.all,vrblvl-1);
           end if;
         end if;
         tmp := Tail_Of(tmp);
@@ -2025,7 +2091,8 @@ package body Resolve_Schubert_Problems is
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
-                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Solution_Posets;
     use Flag_Transformations;
@@ -2041,6 +2108,9 @@ package body Resolve_Schubert_Problems is
     sqA,sqinvA,sqT : QuadDobl_Complex_VecMats.VecMat(stack'range);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in resolve_schubert_problems.Resolve 6 ...");
+    end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
@@ -2068,11 +2138,11 @@ package body Resolve_Schubert_Problems is
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
               (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,tosqr,conds,flags);
+               minrep,tosqr,conds,flags,vrblvl-1);
           else
             Connect_Checker_Posets_to_Track
               (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,tosqr,conds,workf.all);
+               minrep,tosqr,conds,workf.all,vrblvl-1);
           end if;
         end if;
         tmp := Tail_Of(tmp);
