@@ -33,7 +33,7 @@ package body Multprec_LaurSys_Interface is
         put("Exception raised in multprec_laursys_interface.");
         put_line("Multprec_LaurSys_Read.");
       end if;
-      return 130;
+      return 570;
   end Multprec_LaurSys_Read;
 
   function Multprec_LaurSys_Write
@@ -64,7 +64,7 @@ package body Multprec_LaurSys_Interface is
         put("Exception raised in multprec_laursys_interface.");
         put_line("Multprec_LaurSys_Write.");
       end if;
-      return 131;
+      return 571;
   end Multprec_LaurSys_Write;
 
   function Multprec_LaurSys_Get_Dimension
@@ -83,7 +83,7 @@ package body Multprec_LaurSys_Interface is
         put("Exception raised in multprec_laursys_interface.");
         put_line("Multprec_LaurSys_Get_Dimension.");
       end if;
-      return 132;
+      return 572;
   end Multprec_LaurSys_Get_Dimension;
 
   function Multprec_LaurSys_Set_Dimension
@@ -108,7 +108,7 @@ package body Multprec_LaurSys_Interface is
         put("Exception raised in multprec_laursys_interface.");
         put_line("Multprec_LaurSys_Set_Dimension.");
       end if;
-      return 133;
+      return 573;
   end Multprec_LaurSys_Set_Dimension;
 
   function Multprec_LaurSys_Size
@@ -133,7 +133,7 @@ package body Multprec_LaurSys_Interface is
         put("Exception raised in multprec_laursys_interface.");
         put_line("Multprec_LaurSys_Size");
       end if;
-      return 134;
+      return 574;
   end Multprec_LaurSys_Size;
 
   function Multprec_LaurSys_String_Save
@@ -260,7 +260,7 @@ package body Multprec_LaurSys_Interface is
         put("Exception raised in multprec_laursys_interface.");
         put_line("Multprec_LaurSys_Clear.");
       end if;
-      return 137;
+      return 577;
   end Multprec_LaurSys_Clear;
 
 end Multprec_LaurSys_Interface;

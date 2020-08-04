@@ -290,6 +290,20 @@ package Standard_PolySys_Interface is
   --   a       in a[0] is the value for m;
   --   vrblvl  is the verbose level.
 
+  function Standard_PolySys_Make_Function
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a function to evaluate polynomial systems via
+  --   nested Horner schemes more efficiently.
+
+  function Standard_PolySys_Jacobian_Function
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a function to evaluate Jacobian matrices via
+  --   nested Horner schemes more efficiently.
+
   function Standard_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 

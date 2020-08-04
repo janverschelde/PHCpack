@@ -1,18 +1,4 @@
 with text_io;                           use text_io;
-with Interfaces.C;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
--- with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Vectors;
---   with Standard_Integer_Numbers_io;
---    use Standard_Integer_Numbers_io;
---   with Standard_Complex_Polynomials_io;
---    use Standard_Complex_Polynomials_io;
-with Symbol_Table;
-with Standard_Complex_Poly_Systems;
-with Multprec_Complex_Laurentials;
-with Standard_PolySys_Container;
-with Multprec_LaurSys_Container;
-with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Symbol_Table_Interface;
 with Standard_PolySys_Interface;
 with Standard_LaurSys_Interface;
@@ -28,64 +14,6 @@ function use_syscon ( job : integer32;
                       b : C_intarrs.Pointer;
                       c : C_dblarrs.Pointer;
                       vrblvl : integer32 := 0 ) return integer32 is
-
-  function Job135 return integer32 is -- returns a term of a Laurential
-
-    v : constant C_Integer_Array(0..2)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    i : constant integer32 := integer32(v(1));
-    j : constant natural32 := natural32(v(2));
-    t : constant Multprec_Complex_Laurentials.Term 
-      := Multprec_LaurSys_Container.Retrieve_Term(i,j);
-
-  begin
-   -- Assign(t.cf,c);
-    Assign(t.dg.all,b);
-    return 0;
-  end Job135;
-
-  function Job136 return integer32 is -- add a term to a Laurential
-
-    v : constant C_Integer_Array(0..1)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    n : constant integer32 := integer32(v(0));
-    i : constant integer32 := integer32(v(1));
-    e : Standard_Integer_Vectors.Vector(1..n);
-    t : Multprec_Complex_Laurentials.Term;
-
-  begin
-   -- Assign(c,t.cf);
-    Assign(natural32(n),b,e);
-    t.dg := new Standard_Integer_Vectors.Vector'(e);
-    Multprec_LaurSys_Container.Add_Term(i,t);
-    return 0;
-  end Job136;
-
-  function Job10 return integer32 is -- creates an evaluator
-
-    use Standard_Complex_Poly_Systems;
-
-  begin
-    if Standard_PolySys_Container.Retrieve = null then
-      return 10;
-    else
-      Standard_PolySys_Container.Create_Evaluator;
-      return 0;
-    end if;
-  end Job10;
-
-  function Job11 return integer32 is -- creates a Jacobian matrix evaluator
-
-    use Standard_Complex_Poly_Systems;
-
-  begin
-    if Standard_PolySys_Container.Retrieve = null then
-      return 11;
-    else
-      Standard_PolySys_Container.Create_Jacobian_Evaluator;
-      return 0;
-    end if;
-  end Job11;
 
   function Handle_Jobs return integer32 is
 
@@ -111,8 +39,8 @@ function use_syscon ( job : integer32;
       when 7 => return Standard_PolySys_Clear(vrblvl);
       when 8 => return Standard_PolySys_Total_Degree(a,vrblvl);
       when 9 => return Symbol_Table_Clear(vrblvl);
-      when 10 => return Job10; -- creates a system evaluator
-      when 11 => return Job11; -- creates a Jacobian matrix evaluator
+      when 10 => return Standard_PolySys_Make_Function(vrblvl);
+      when 11 => return Standard_PolySys_Jacobian_Function(vrblvl);
      -- dropping variables from polynomials
       when 12 => return Standard_PolySys_Drop_by_Index(a,vrblvl);
       when 13 => return DoblDobl_PolySys_Drop_by_Index(a,vrblvl);
@@ -164,8 +92,6 @@ function use_syscon ( job : integer32;
       when 132 => return Multprec_LaurSys_Get_Dimension(a,vrblvl);
       when 133 => return Multprec_LaurSys_Set_Dimension(a,vrblvl);
       when 134 => return Multprec_LaurSys_Size(a,vrblvl);
-      when 135 => return Job135; -- return a term of a polynomial
-      when 136 => return Job136; -- add a term to a polynomial
       when 137 => return Multprec_LaurSys_Clear(vrblvl);
       when 138 => return Multprec_LaurSys_String_Save(a,b,vrblvl);
       when 139 => return Multprec_LaurSys_String_Load(a,b,vrblvl);

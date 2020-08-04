@@ -668,6 +668,56 @@ package body Standard_PolySys_Interface is
       return 907;
   end Standard_PolySys_mHom2Affine;
 
+  function Standard_PolySys_Make_Function
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Poly_Systems;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Make_Function ...");
+    end if;
+    if Standard_PolySys_Container.Retrieve = null then
+      return 147;
+    else
+      Standard_PolySys_Container.Create_Evaluator;
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Make_Function.");
+      end if;
+      return 147;
+  end Standard_PolySys_Make_Function;
+
+  function Standard_PolySys_Jacobian_Function
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Poly_Systems;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Jacobian_Function ...");
+    end if;
+    if Standard_PolySys_Container.Retrieve = null then
+      return 11;
+    else
+      Standard_PolySys_Container.Create_Jacobian_Evaluator;
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Jacobian_Function.");
+      end if;
+      return 148;
+  end Standard_PolySys_Jacobian_Function;
+
   function Standard_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is
   begin
