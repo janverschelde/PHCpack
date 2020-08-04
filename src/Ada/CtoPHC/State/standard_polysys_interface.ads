@@ -290,12 +290,6 @@ package Standard_PolySys_Interface is
   --   a       in a[0] is the value for m;
   --   vrblvl  is the verbose level.
 
-  function Standard_PolySys_Clear_Symbols
-             ( vrblvl : integer32 := 0 ) return integer32;
-
-  -- DESCRIPTION :
-  --   Clears the symbol table.
-
   function Standard_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 

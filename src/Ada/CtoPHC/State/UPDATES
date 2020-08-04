@@ -1,7 +1,10 @@
-Tue 5 Aug 2020 : in *_solutions_interface.adb, added close(file) at all
-  places where a file was opened for reading.
+Tue 4 Aug 2020 : in *_solutions_interface.adb, added close(file) at all
+  places where a file was opened for reading.  Moved the function to clear
+  the symbol table from standard_polysys_interface to symbol_table_interface
+  and moved the function to add a symbol to the table from use_syscon.adb
+  to symbol_table_interface.
 
-Mon 4 Aug 2020 : moved job functions from use_syscon.adb to the packages
+Mon 3 Aug 2020 : moved job functions from use_syscon.adb to the packages
   {standard,dobldobl,quaddobl}_polysys_interface.
 
 Sun 2 Aug 2020 : moved to *solutions_interface* functions from use_solcon.adb.

@@ -23,17 +23,6 @@ package Symbol_Table_Interface is
   -- DESCRIPTION :
   --   Writes the symbols stored in the table to screen.
 
-  function Characters_of_Symbol ( i : natural32 ) return string;
-
-  -- DESCRIPTION :
-  --   Returns the non-blank characters of the i-th symbol.
-
-  function String_of_Symbols ( i : natural32 ) return string;
-
-  -- DESCRIPTION :
-  --   Returns a string of all symbols in the symbol table,
-  --   separated by one space.
-
   function Symbol_Table_String
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
@@ -64,6 +53,19 @@ package Symbol_Table_Interface is
   -- ON RETURN :
   --   a       number of embedded symbols sorted.
 
+  function Symbol_Table_Add
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Adds a symbol passed as a string to the table.
+
+  -- ON ENTRY :
+  --   a       in a[0] are the number of characters in the string b;
+  --   b       the characters of the name of the variable added;
+  --   vrblvl  is the verbose level.
+
   function Symbol_Table_Remove_by_Index
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
@@ -89,5 +91,11 @@ package Symbol_Table_Interface is
   --   a       number of characters in b;
   --   b       the name of the symbol that will be removed;
   --   vrblvl  the verbose level.
+
+  function Symbol_Table_Clear
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Clears the symbol table.
 
 end Symbol_Table_Interface;

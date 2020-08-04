@@ -668,24 +668,6 @@ package body Standard_PolySys_Interface is
       return 907;
   end Standard_PolySys_mHom2Affine;
 
-  function Standard_PolySys_Clear_Symbols
-             ( vrblvl : integer32 := 0 ) return integer32 is
-  begin
-    if vrblvl > 0 then
-      put("-> in standard_polysys_interface.");
-      put_line("Standard_PolySys_Clear_Symbols ...");
-    end if;
-    Symbol_Table.Clear;
-    return 0;
-  exception
-    when others => 
-      if vrblvl > 0 then
-        put("Exception raised in standard_polysys_interface.");
-        put_line("Standard_PolySys_Clear_Symbols.");
-      end if;
-      return 29;
-  end Standard_PolySys_Clear_Symbols;
-
   function Standard_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is
   begin

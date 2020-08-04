@@ -13,6 +13,7 @@ with Multprec_Complex_Laurentials;
 with Standard_PolySys_Container;
 with Multprec_LaurSys_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
+with Symbol_Table_Interface;
 with Standard_PolySys_Interface;
 with Standard_LaurSys_Interface;
 with DoblDobl_PolySys_Interface;
@@ -86,25 +87,9 @@ function use_syscon ( job : integer32;
     end if;
   end Job11;
 
-  function Job897 return integer32 is -- add symbol passed as string
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nc : constant integer := integer(v_a(v_a'first));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    smb : constant String(1..nc)
-        := C_Integer_Array_to_String(natural32(nc),v_b);
-
-  begin
-    Symbol_Table.Enlarge(1);
-    Symbol_Table.Add_String(smb);
-    return 0;
-  end Job897;
-
   function Handle_Jobs return integer32 is
 
+    use Symbol_Table_Interface;
     use Standard_PolySys_Interface;
     use Standard_LaurSys_Interface;
     use DoblDobl_PolySys_Interface;
@@ -125,7 +110,7 @@ function use_syscon ( job : integer32;
       when 6 => return Standard_PolySys_Add_Term(a,b,c,vrblvl);
       when 7 => return Standard_PolySys_Clear(vrblvl);
       when 8 => return Standard_PolySys_Total_Degree(a,vrblvl);
-      when 9 => return Standard_PolySys_Clear_Symbols(vrblvl);
+      when 9 => return Symbol_Table_Clear(vrblvl);
       when 10 => return Job10; -- creates a system evaluator
       when 11 => return Job11; -- creates a Jacobian matrix evaluator
      -- dropping variables from polynomials
@@ -251,7 +236,7 @@ function use_syscon ( job : integer32;
       when 905 => return DoblDobl_PolySys_Multi_Homogeneous(a,b,vrblvl);
       when 906 => return QuadDobl_PolySys_Multi_Homogeneous(a,b,vrblvl);
      -- add symbol passed as string to the table
-      when 897 => return Job897; -- add symbol to the table
+      when 897 => return Symbol_Table_Add(a,b,vrblvl);
      -- affine transformations :
       when 901 => return Standard_PolySys_1Hom2Affine(vrblvl);
       when 902 => return DoblDobl_PolySys_1Hom2Affine(vrblvl);

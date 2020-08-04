@@ -48,6 +48,9 @@ package body Symbol_Table_Interface is
 
   function Characters_of_Symbol ( i : natural32 ) return string is
 
+  -- DESCRIPTION :
+  --   Returns the non-blank characters of the i-th symbol.
+
     sb : constant Symbol_Table.Symbol := Symbol_Table.Get(i);
     res : string(sb'range);
     cnt : natural32 := 0;
@@ -62,6 +65,11 @@ package body Symbol_Table_Interface is
   end Characters_of_Symbol;
 
   function String_of_Symbols ( i : natural32 ) return string is
+
+  -- DESCRIPTION :
+  --   Returns a string of all symbols in the symbol table,
+  --   separated by one space.
+
   begin
     if i > Symbol_Table.Number then
       return "";
@@ -134,6 +142,36 @@ package body Symbol_Table_Interface is
       return 292;
   end Symbol_Table_Sort_Embedded;
 
+  function Symbol_Table_Add
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is 
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nc : constant integer := integer(v_a(v_a'first));
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    smb : constant String(1..nc)
+        := C_Integer_Array_to_String(natural32(nc),v_b);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in symbol_table_interface.Symbol_Table_Add ...");
+    end if;
+    Symbol_Table.Enlarge(1);
+    Symbol_Table.Add_String(smb);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in symbol_table_interface.");
+        put_line("Symbol_Table_Add.");
+      end if;
+      return 897;
+  end Symbol_Table_Add;
+
   function Symbol_Table_Remove_by_Index
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
@@ -196,5 +234,22 @@ package body Symbol_Table_Interface is
       end if;
       return 296;
   end Symbol_Table_Remove_by_Name;
+
+  function Symbol_Table_Clear
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0
+     then put_line("-> in symbol_table_interface.Symbol_Table_Clear ...");
+    end if;
+    Symbol_Table.Clear;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in symbol_table_interface.");
+        put_line("Symbol_Table_Clear.");
+      end if;
+      return 29;
+  end Symbol_Table_Clear;
 
 end Symbol_Table_Interface;
