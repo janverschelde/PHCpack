@@ -209,6 +209,74 @@ package QuadDobl_PolySys_Interface is
   --   b      contains the name of the variable to be dropped;
   --   vrblvl is the verbose level.
 
+  function QuadDobl_PolySys_Random_System
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a random system with coefficients in quad double precision
+  --   and stores the system.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables,
+  --           in a[1] is the number of equations;
+  --   b       in b[0] is the number of monomials per equation,
+  --           in b[1] is the degree bound on the monomials,
+  --           in b[2] is 0, 1, or 2, to set the type of coefficient:
+  --           if 0, then complex coefficients on the unit circle,
+  --           if 1, then all coefficients are equal to one,
+  --           if 2, then real coefficients in [-1,+1].
+
+  function QuadDobl_PolySys_Make_Homogeneous
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes the system stored in quad double precision 1-homogeneous,
+  --   eventually adding one random hyperplane.
+
+  -- ON ENTRY :
+  --   a       1 or 0, depending whether a random hyperplane
+  --           needs to be added (if 1);
+  --   vrblvl  is the verbose level.
+
+  function QuadDobl_PolySys_Multi_Homogeneous
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes the system stored in quad double precision multihomogeneous,
+  --   eventually adding one random hyperplane.
+
+  -- ON ENTRY :
+  --   a       in a[0] = 0 is the number of variables,
+  --           in a[1] is the value of m, the size of the partition;
+  --           if a[2] = 0, then random linear equations are added,
+  --           if a[2] = 1, then euations of the for z0 - 1 = 0 are added;
+  --   b       is the index representation of the partition;
+  --   vrblvl  is the verbose level.
+
+  function QuadDobl_PolySys_1Hom2Affine
+             ( vrblvl : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Turns the stored system in quad double precision
+  --   from 1-homogeneous to affine coordinates.
+
+  function QuadDobl_PolySys_mHom2Affine
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Turns the stored system in quad double precision
+  --   from m-homogeneous to affine coordinates.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the value for m;
+  --   vrblvl  is the verbose level.
+
   function QuadDobl_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 

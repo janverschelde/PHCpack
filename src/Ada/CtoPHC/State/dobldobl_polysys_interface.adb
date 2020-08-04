@@ -8,7 +8,14 @@ with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Strings;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Random_Polynomials;
 with Polynomial_Drops;
+with Homogenization;
+with Projective_Transformations;
+with Partitions_of_Sets_of_Unknowns;
+with Partitions_of_Sets_of_Unknowns_io;
+with Multi_Projective_Transformations;
+with Affine_Transformations;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
 with DoblDobl_PolySys_Container;
@@ -454,6 +461,181 @@ package body DoblDobl_PolySys_Interface is
       end if;
       return 310;
   end DoblDobl_PolySys_Drop_by_Name;
+
+  function DoblDobl_PolySys_Random_System
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    neq : constant integer32 := integer32(v_a(v_a'first+1));
+    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..neq);
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(3));
+    m : constant natural32 := natural32(v_b(v_b'first));
+    d : constant natural32 := natural32(v_b(v_b'first+1));
+    c : constant natural32 := natural32(v_b(v_b'first+2));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_polysys_interface.");
+      put_line("DoblDobl_PolySys_Random_System ...");
+    end if;
+    for i in p'range loop
+      if m = 0 then
+        p(i) := DoblDobl_Random_Polynomials.Random_Dense_Poly(nvr,d,c);
+      else
+        p(i) := DoblDobl_Random_Polynomials.Random_Sparse_Poly(nvr,d,m,c);
+      end if;
+    end loop;
+    DoblDobl_PolySys_Container.Clear; 
+    DoblDobl_PolySys_Container.Initialize(p); 
+   -- must initialize the symbol table with actual symbols for printing
+    Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(nvr)));
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_polysys_interface.");
+        put_line("DoblDobl_PolySys_Random_System.");
+      end if;
+      return 548;
+  end Dobldobl_PolySys_Random_System;
+
+  function DoblDobl_PolySys_Make_Homogeneous
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    opt : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last+1);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_polysys_interface.");
+      put_line("DoblDobl_PolySys_Make_Homogeneous ...");
+    end if;
+    Projective_Transformations.Projective_Transformation(lp.all);
+    if opt = 0
+     then res := Homogenization.Add_Random_Hyperplanes(lp.all,1,false);
+     else res := Homogenization.Add_Standard_Hyperplanes(lp.all,1);
+    end if;
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(res);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_polysys_interface.");
+        put_line("DoblDobl_PolySys_Make_Homogeneous.");
+      end if;
+      return 892;
+  end DoblDobl_PolySys_Make_Homogeneous;
+
+  function DoblDobl_PolySys_Multi_Homogeneous
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    mhom : constant natural32 := natural32(v_a(v_a'first+1));
+    opt : constant natural32 := natural32(v_a(v_a'first+2));
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    md : constant integer32 := integer32(mhom);
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last+md);
+    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
+    z : Partitions_of_Sets_of_Unknowns.Partition(1..mhom);
+
+    use Multi_Projective_Transformations;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_polysys_interface.");
+      put_line("DoblDobl_PolySys_Multi_Homogeneous ...");
+    end if;
+    Assign(nvr,b,idz);
+    z := Partitions_of_Sets_of_Unknowns_io.Make_Partition(nvr,mhom,idz);
+    if opt = 0
+     then res := Multi_Projective_Transformation(lp.all,mhom,z,false);
+     else res := Multi_Projective_Transformation(lp.all,mhom,z,true);
+    end if;
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(res);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_polysys_interface.");
+        put_line("DoblDobl_PolySys_Multi_Homogeneous.");
+      end if;
+      return 905;
+  end DoblDobl_PolySys_Multi_Homogeneous;
+
+  function DoblDobl_PolySys_1Hom2Affine
+             ( vrblvl : integer32 ) return integer32 is
+
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    res : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last-1)
+        := Affine_Transformations.Make_Affine(lp.all);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_polysys_interface.");
+      put_line("DoblDobl_PolySys_1Hom2Affine ...");
+    end if;
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(res);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_polysys_interface.");
+        put_line("DoblDobl_PolySys_1Hom2Affine.");
+      end if;
+      return 902;
+  end DoblDobl_PolySys_1Hom2Affine;
+
+  function DoblDobl_PolySys_mHom2Affine
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    mhom : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    res : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+        := Affine_Transformations.Make_Affine(lp.all,mhom);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_polysys_interface.");
+      put_line("DoblDobl_PolySys_mHom2Affine ...");
+    end if;
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(res);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_polysys_interface.");
+        put_line("DoblDobl_PolySys_mHom2Affine.");
+      end if;
+      return 907;
+  end DoblDobl_PolySys_mHom2Affine;
 
   function DoblDobl_PolySys_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is
