@@ -18,7 +18,6 @@ with DoblDobl_Complex_Solutions;
 with DoblDobl_Solution_Posets;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Solution_Posets;
-with Brackets;                           use Brackets;
 with Intersection_Posets;                use Intersection_Posets;
 
 package Resolve_Schubert_Problems is
@@ -113,19 +112,19 @@ package Resolve_Schubert_Problems is
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                snd : in out Standard_Solution_Posets.Link_to_Solution_Node;
+                snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out double_float );
   procedure Start_Solution 
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
-                snd : in out DoblDobl_Solution_Posets.Link_to_Solution_Node;
+                snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out double_double );
   procedure Start_Solution 
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
-                snd : in out QuadDobl_Solution_Posets.Link_to_Solution_Node;
+                snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out quad_double );
 
   -- DESCRIPTION :
@@ -160,19 +159,19 @@ package Resolve_Schubert_Problems is
               ( n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                snd : in out Standard_Solution_Posets.Link_to_Solution_Node;
+                snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out double_float );
   procedure Start_Solution 
               ( n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
-                snd : in out DoblDobl_Solution_Posets.Link_to_Solution_Node;
+                snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out double_double );
   procedure Start_Solution 
               ( n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
-                snd : in out QuadDobl_Solution_Posets.Link_to_Solution_Node;
+                snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean; res : out quad_double );
 
   -- DESCRIPTION :
@@ -279,7 +278,8 @@ package Resolve_Schubert_Problems is
 
   procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;
-                pl : in Poset_List; nd : in Poset_Node );
+                pl : in Poset_List; nd : in Poset_Node;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Connects the root counts at the root of the child poset with
@@ -301,7 +301,8 @@ package Resolve_Schubert_Problems is
                 sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in Standard_Complex_VecMats.VecMat );
+                flags : in Standard_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
   procedure Connect_Checker_Posets_to_Track
               ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
@@ -310,7 +311,8 @@ package Resolve_Schubert_Problems is
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in DoblDobl_Complex_VecMats.VecMat );
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
   procedure Connect_Checker_Posets_to_Track
               ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
@@ -319,7 +321,8 @@ package Resolve_Schubert_Problems is
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in QuadDobl_Complex_VecMats.VecMat );
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Extension of the Connect_Checker_Posets_to_Count to track the
@@ -339,7 +342,8 @@ package Resolve_Schubert_Problems is
   --   minrep   to use a more efficient problem formulation;
   --   tosqr    to square overdetermined homotopies;
   --   conds    conditions on the current fixed flags;
-  --   flags    current fixed flags.
+  --   flags    current fixed flags;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sps      updated solution poset.
@@ -353,7 +357,8 @@ package Resolve_Schubert_Problems is
                 sps : in out Standard_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in Standard_Complex_VecMats.VecMat );
+                flags : in Standard_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type;
                 n,k,level,nt : in integer32; tol : in double_float;
@@ -363,7 +368,8 @@ package Resolve_Schubert_Problems is
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in DoblDobl_Complex_VecMats.VecMat );
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type;
                 n,k,level,nt : in integer32; tol : in double_float;
@@ -373,7 +379,8 @@ package Resolve_Schubert_Problems is
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in QuadDobl_Complex_VecMats.VecMat );
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Extension of the Connect_Checker_Posets_to_Count to track the
@@ -395,17 +402,18 @@ package Resolve_Schubert_Problems is
   --   minrep   to use a more efficient problem formulation;
   --   tosqr    to square overdetermined homotopies;
   --   conds    conditions on the current fixed flags;
-  --   flags    current fixed flags.
+  --   flags    current fixed flags;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   sps      updated solution poset.
 
   procedure Count_Roots
               ( ips : in out Intersection_Poset;
-                roco : out Natural_Number );
+                roco : out Natural_Number; vrblvl : in integer32 := 0 );
   procedure Count_Roots
               ( file : in file_type; ips : in out Intersection_Poset;
-                roco : out Natural_Number );
+                roco : out Natural_Number; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Performs a bottom up root count, in the same order as the
@@ -419,7 +427,8 @@ package Resolve_Schubert_Problems is
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
-  --   ips      an intersection poset built to resolve Schubert conditions.
+  --   ips      an intersection poset built to resolve Schubert conditions;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   ips      intersection poset with Littlewood-Richardson coefficients,
@@ -434,7 +443,8 @@ package Resolve_Schubert_Problems is
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                sols : out Standard_Complex_Solutions.Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
                 n,k,nt : in integer32; tol : in double_float;
@@ -443,7 +453,8 @@ package Resolve_Schubert_Problems is
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
-                sols : out DoblDobl_Complex_Solutions.Solution_List );
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
                 n,k,nt : in integer32; tol : in double_float;
@@ -452,7 +463,8 @@ package Resolve_Schubert_Problems is
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
-                sols : out QuadDobl_Complex_Solutions.Solution_List );
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies the Littlewood-Richardson homotopies running in
@@ -481,7 +493,8 @@ package Resolve_Schubert_Problems is
   --   tosqr    to square overdetermined homotopies;
   --   conds    intersection conditions on the fixed flags;
   --   flags    generic complex matrices that represented nested linear
-  --            space for use in the homotopies.
+  --            space for use in the homotopies;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   ips      intersection poset with Littlewood-Richardson coefficients,
@@ -497,7 +510,8 @@ package Resolve_Schubert_Problems is
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                sols : out Standard_Complex_Solutions.Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Resolve
               ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
@@ -505,7 +519,8 @@ package Resolve_Schubert_Problems is
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
-                sols : out DoblDobl_Complex_Solutions.Solution_List );
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Resolve
               ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
@@ -513,7 +528,8 @@ package Resolve_Schubert_Problems is
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
-                sols : out QuadDobl_Complex_Solutions.Solution_List );
+                sols : out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
  
   -- DESCRIPTION :
   --   Applies the Littlewood-Richardson homotopies running in
@@ -540,7 +556,8 @@ package Resolve_Schubert_Problems is
   --   tosqr    to square overdetermined homotopies;
   --   conds    intersection conditions on the fixed flags;
   --   flags    generic complex matrices that represented nested linear
-  --            space for use in the homotopies.
+  --            space for use in the homotopies;
+  --   verblvl  is the verbose level.
 
   -- ON RETURN :
   --   ips      intersection poset with Littlewood-Richardson coefficients,
