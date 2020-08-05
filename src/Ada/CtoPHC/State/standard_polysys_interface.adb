@@ -615,7 +615,7 @@ package body Standard_PolySys_Interface is
   end Standard_PolySys_Multi_Homogeneous;
 
   function Standard_PolySys_1Hom2Affine
-             ( vrblvl : integer32 ) return integer32 is
+             ( vrblvl : integer32 := 0 ) return integer32 is
 
     lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
@@ -641,7 +641,7 @@ package body Standard_PolySys_Interface is
 
   function Standard_PolySys_mHom2Affine
              ( a : C_intarrs.Pointer;
-               vrblvl : integer32 ) return integer32 is
+               vrblvl : integer32 := 0 ) return integer32 is
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));

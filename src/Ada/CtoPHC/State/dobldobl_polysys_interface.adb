@@ -584,7 +584,7 @@ package body DoblDobl_PolySys_Interface is
   end DoblDobl_PolySys_Multi_Homogeneous;
 
   function DoblDobl_PolySys_1Hom2Affine
-             ( vrblvl : integer32 ) return integer32 is
+             ( vrblvl : integer32 := 0 ) return integer32 is
 
     lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := DoblDobl_PolySys_Container.Retrieve;
@@ -610,7 +610,7 @@ package body DoblDobl_PolySys_Interface is
 
   function DoblDobl_PolySys_mHom2Affine
              ( a : C_intarrs.Pointer;
-               vrblvl : integer32 ) return integer32 is
+               vrblvl : integer32 := 0 ) return integer32 is
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));

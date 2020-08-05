@@ -251,7 +251,7 @@ package QuadDobl_PolySys_Interface is
   --   eventually adding one random hyperplane.
 
   -- ON ENTRY :
-  --   a       in a[0] = 0 is the number of variables,
+  --   a       in a[0] is the number of variables,
   --           in a[1] is the value of m, the size of the partition;
   --           if a[2] = 0, then random linear equations are added,
   --           if a[2] = 1, then euations of the for z0 - 1 = 0 are added;
@@ -259,7 +259,7 @@ package QuadDobl_PolySys_Interface is
   --   vrblvl  is the verbose level.
 
   function QuadDobl_PolySys_1Hom2Affine
-             ( vrblvl : integer32 ) return integer32;
+             ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Turns the stored system in quad double precision
@@ -267,7 +267,7 @@ package QuadDobl_PolySys_Interface is
 
   function QuadDobl_PolySys_mHom2Affine
              ( a : C_intarrs.Pointer;
-               vrblvl : integer32 ) return integer32;
+               vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Turns the stored system in quad double precision

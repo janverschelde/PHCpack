@@ -1,3 +1,7 @@
+Wed 5 Aug 2020 : moved functions from use_solcon into the solution interface
+  packages, {standard, dobldobl, quaddobl}_solution_interface, and fixed
+  specification errors in {standard, dobldobl, quaddobl}_polysys_interface.
+
 Tue 4 Aug 2020 : in *_solutions_interface.adb, added close(file) at all
   places where a file was opened for reading.  Moved the function to clear
   the symbol table from standard_polysys_interface to symbol_table_interface

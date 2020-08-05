@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Symbol_Table;
 with QuadDobl_Complex_Poly_Systems;
@@ -9,6 +10,8 @@ with QuadDobl_Complex_Solutions_io;
 with QuadDobl_Solution_Strings;
 with QuadDobl_System_and_Solutions_io;
 with Solution_Drops;
+with Projective_Transformations;
+with Multi_Projective_Transformations;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with PHCpack_Operations;
@@ -443,6 +446,116 @@ package body QuadDobl_Solutions_Interface is
       end if;
       return 399;
   end QuadDobl_Solutions_Drop_by_Name;
+
+  function QuadDobl_Solutions_Make_Homogeneous
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    sols : QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_Make_Homogeneous ...");
+    end if;
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Projective_Transformation(sols);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Make_Homogeneous.");
+      end if;
+      return 896;
+  end QuadDobl_Solutions_Make_Homogeneous;
+
+  function QuadDobl_Solutions_Multi_Homogeneous
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    m : constant natural32 := natural32(v_a(v_a'first));
+    sols : QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_Multi_Homogeneous ...");
+    end if;
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then Multi_Projective_Transformations.Add_Ones(sols,m);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Multi_Homogeneous.");
+      end if;
+      return 912;
+  end QuadDobl_Solutions_Multi_Homogeneous;
+
+  function QuadDobl_Solutions_1Hom2Affine
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    sols : QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_1Hom2Affine ...");
+    end if;
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Affine_Transformation(sols);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_1Hom2Affine.");
+      end if;
+      return 900;
+  end QuadDobl_Solutions_1Hom2Affine;
+
+  function QuadDobl_Solutions_mHom2Affine
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    mhom : constant natural32 := natural32(v_a(v_a'first+1));
+    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
+    sols : QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_mHom2Affine ...");
+    end if;
+    Assign(nvr,b,idz);
+    if not QuadDobl_Complex_Solutions.Is_Null(sols)
+     then Multi_Projective_Transformations.Make_Affine(sols,mhom,idz);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_mHom2Affine.");
+      end if;
+      return 915;
+  end QuadDobl_Solutions_mHom2Affine;
 
   function QuadDobl_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

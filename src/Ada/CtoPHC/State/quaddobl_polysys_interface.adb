@@ -584,7 +584,7 @@ package body QuadDobl_PolySys_Interface is
   end QuadDobl_PolySys_Multi_Homogeneous;
 
   function QuadDobl_PolySys_1Hom2Affine
-             ( vrblvl : integer32 ) return integer32 is
+             ( vrblvl : integer32 := 0 ) return integer32 is
 
     lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := QuadDobl_PolySys_Container.Retrieve;
@@ -610,7 +610,7 @@ package body QuadDobl_PolySys_Interface is
 
   function QuadDobl_PolySys_mHom2Affine
              ( a : C_intarrs.Pointer;
-               vrblvl : integer32 ) return integer32 is
+               vrblvl : integer32 := 0 ) return integer32 is
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));

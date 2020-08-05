@@ -23,8 +23,6 @@ with Multprec_Solution_Strings;
 with Total_Degree_Start_Systems;        use Total_Degree_Start_Systems;
 with Lexicographic_Root_Enumeration;    use Lexicographic_Root_Enumeration;
 with Drivers_to_Track_Standard_Paths;   use Drivers_to_Track_Standard_Paths;
-with Projective_Transformations;
-with Multi_Projective_Transformations;
 with PHCpack_Operations;
 with File_Management;
 with Standard_Solutions_Container;
@@ -958,177 +956,6 @@ function use_solcon ( job : integer32;
     return 0;
   end Job877;
 
-  function Job894 return integer32 is -- 1-homogeneous standard solutions
-
-    sols : Standard_Complex_Solutions.Solution_List
-         := Standard_Solutions_Container.Retrieve;
-
-  begin
-    if not Standard_Complex_Solutions.Is_Null(sols)
-     then Projective_Transformations.Projective_Transformation(sols);
-    end if;
-    return 0;
-  end Job894;
-
-  function Job895 return integer32 is -- 1-homogeneous dobldobl solutions
-
-    sols : DoblDobl_Complex_Solutions.Solution_List
-         := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    if not DoblDobl_Complex_Solutions.Is_Null(sols)
-     then Projective_Transformations.Projective_Transformation(sols);
-    end if;
-    return 0;
-  end Job895;
-
-  function Job896 return integer32 is -- 1-homogeneous quaddobl solutions
-
-    sols : QuadDobl_Complex_Solutions.Solution_List
-         := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    if not QuadDobl_Complex_Solutions.Is_Null(sols)
-     then Projective_Transformations.Projective_Transformation(sols);
-    end if;
-    return 0;
-  end Job896;
-
-  function Job910 return integer32 is -- m-homogeneous standard solutions
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    m : constant natural32 := natural32(v_a(v_a'first));
-    sols : Standard_Complex_Solutions.Solution_List
-         := Standard_Solutions_Container.Retrieve;
-
-  begin
-    if not Standard_Complex_Solutions.Is_Null(sols)
-     then Multi_Projective_Transformations.Add_Ones(sols,m);
-    end if;
-    return 0;
-  end Job910;
-
-  function Job911 return integer32 is -- m-homogeneous dobldobl solutions
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    m : constant natural32 := natural32(v_a(v_a'first));
-    sols : DoblDobl_Complex_Solutions.Solution_List
-         := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    if not DoblDobl_Complex_Solutions.Is_Null(sols)
-     then Multi_Projective_Transformations.Add_Ones(sols,m);
-    end if;
-    return 0;
-  end Job911;
-
-  function Job912 return integer32 is -- m-homogeneous quaddobl solutions
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    m : constant natural32 := natural32(v_a(v_a'first));
-    sols : QuadDobl_Complex_Solutions.Solution_List
-         := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    if not QuadDobl_Complex_Solutions.Is_Null(sols)
-     then Multi_Projective_Transformations.Add_Ones(sols,m);
-    end if;
-    return 0;
-  end Job912;
-
-  function Job898 return integer32 is -- double affine transformations
-
-    sols : Standard_Complex_Solutions.Solution_List
-         := Standard_Solutions_Container.Retrieve;
-
-  begin
-    if not Standard_Complex_Solutions.Is_Null(sols)
-     then Projective_Transformations.Affine_Transformation(sols);
-    end if;
-    return 0;
-  end Job898;
-
-  function Job899 return integer32 is -- dobldobl affine transformations
-
-    sols : DoblDobl_Complex_Solutions.Solution_List
-         := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    if not DoblDobl_Complex_Solutions.Is_Null(sols)
-     then Projective_Transformations.Affine_Transformation(sols);
-    end if;
-    return 0;
-  end Job899;
-
-  function Job900 return integer32 is -- quaddobl affine transformations
-
-    sols : QuadDobl_Complex_Solutions.Solution_List
-         := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    if not QuadDobl_Complex_Solutions.Is_Null(sols)
-     then Projective_Transformations.Affine_Transformation(sols);
-    end if;
-    return 0;
-  end Job900;
-
-  function Job913 return integer32 is -- standard m-hom to affine
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    mhom : constant natural32 := natural32(v_a(v_a'first+1));
-    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
-    sols : Standard_Complex_Solutions.Solution_List
-         := Standard_Solutions_Container.Retrieve;
-
-  begin
-    Assign(nvr,b,idz);
-    if not Standard_Complex_Solutions.Is_Null(sols)
-     then Multi_Projective_Transformations.Make_Affine(sols,mhom,idz);
-    end if;
-    return 0;
-  end Job913;
-
-  function Job914 return integer32 is -- dobldobl m-hom to affine
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    mhom : constant natural32 := natural32(v_a(v_a'first+1));
-    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
-    sols : DoblDobl_Complex_Solutions.Solution_List
-         := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    Assign(nvr,b,idz);
-    if not DoblDobl_Complex_Solutions.Is_Null(sols)
-     then Multi_Projective_Transformations.Make_Affine(sols,mhom,idz);
-    end if;
-    return 0;
-  end Job914;
-
-  function Job915 return integer32 is -- quaddobl m-hom to affine
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    mhom : constant natural32 := natural32(v_a(v_a'first+1));
-    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
-    sols : QuadDobl_Complex_Solutions.Solution_List
-         := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    Assign(nvr,b,idz);
-    if not QuadDobl_Complex_Solutions.Is_Null(sols)
-     then Multi_Projective_Transformations.Make_Affine(sols,mhom,idz);
-    end if;
-    return 0;
-  end Job915;
-
   function Handle_Jobs return integer32 is
 
     use Standard_Solutions_Interface;
@@ -1241,20 +1068,20 @@ function use_solcon ( job : integer32;
       when 876 => return Job876; -- for dobldobl solutions, set t = 0
       when 877 => return Job877; -- for quaddobl solutions, set t = 0
      -- add one to each solution in 1-homogeneous coordinate transformation
-      when 894 => return Job894; -- 1-homogeneous standard solutions
-      when 895 => return Job895; -- 1-homogeneous dobldobl solutions
-      when 896 => return Job896; -- 1-homogeneous quaddobl solutions
+      when 894 => return Standard_Solutions_Make_Homogeneous(vrblvl);
+      when 895 => return DoblDobl_Solutions_Make_Homogeneous(vrblvl);
+      when 896 => return QuadDobl_Solutions_Make_Homogeneous(vrblvl);
      -- add ones to each solution in m-homogeneous coordinate transformation
-      when 910 => return Job910; -- m-homogeneous standard solutions
-      when 911 => return Job911; -- m-homogeneous dobldobl solutions
-      when 912 => return Job912; -- m-homogeneous quaddobl solutions
+      when 910 => return Standard_Solutions_Multi_Homogeneous(a,vrblvl);
+      when 911 => return DoblDobl_Solutions_Multi_Homogeneous(a,vrblvl);
+      when 912 => return QuadDobl_Solutions_Multi_Homogeneous(a,vrblvl);
      -- affine transformations of the solutions
-      when 898 => return Job898; -- double solutions to affine
-      when 899 => return Job899; -- double double solutions to affine
-      when 900 => return Job900; -- quad double solutions to affine
-      when 913 => return Job913; -- double m-hom sols to affine
-      when 914 => return Job914; -- double double m-hom sols to affine
-      when 915 => return Job915; -- quad double m-hom sols to affine
+      when 898 => return Standard_Solutions_1Hom2Affine(vrblvl);
+      when 899 => return DoblDobl_Solutions_1Hom2Affine(vrblvl);
+      when 900 => return QuadDobl_Solutions_1Hom2Affine(vrblvl);
+      when 913 => return Standard_Solutions_mHom2Affine(a,b,vrblvl);
+      when 914 => return DoblDobl_Solutions_mHom2Affine(a,b,vrblvl);
+      when 915 => return QuadDobl_Solutions_mHom2Affine(a,b,vrblvl);
       when 916 => return Standard_Solutions_Read_from_File(a,b,vrblvl);
       when 917 => return Dobldobl_Solutions_Read_from_File(a,b,vrblvl);
       when 918 => return QuadDobl_Solutions_Read_from_File(a,b,vrblvl);

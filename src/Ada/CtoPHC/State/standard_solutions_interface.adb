@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems;
@@ -9,6 +10,8 @@ with Standard_Complex_Solutions_io;
 with Standard_Solution_Strings;
 with Standard_System_and_Solutions_io;
 with Solution_Drops;
+with Projective_Transformations;
+with Multi_Projective_Transformations;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with PHCpack_Operations;
@@ -444,6 +447,116 @@ package body Standard_Solutions_Interface is
       end if;
       return 146;
   end Standard_Solutions_Drop_by_Name;
+
+  function Standard_Solutions_Make_Homogeneous
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Make_Homogeneous ...");
+    end if;
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Projective_Transformation(sols);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Make_Homogeneous.");
+      end if;
+      return 894;
+  end Standard_Solutions_Make_Homogeneous;
+
+  function Standard_Solutions_Multi_Homogeneous
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    m : constant natural32 := natural32(v_a(v_a'first));
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Multi_Homogeneous ...");
+    end if;
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then Multi_Projective_Transformations.Add_Ones(sols,m);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Multi_Homogeneous.");
+      end if;
+      return 910;
+  end Standard_Solutions_Multi_Homogeneous;
+
+  function Standard_Solutions_1Hom2Affine
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_1Hom2Affine ...");
+    end if;
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then Projective_Transformations.Affine_Transformation(sols);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_1Hom2Affine.");
+      end if;
+      return 898;
+  end Standard_Solutions_1Hom2Affine;
+
+  function Standard_Solutions_mHom2Affine
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    nvr : constant natural32 := natural32(v_a(v_a'first));
+    mhom : constant natural32 := natural32(v_a(v_a'first+1));
+    idz : Standard_Natural_Vectors.Vector(1..integer32(nvr));
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_mHom2Affine ...");
+    end if;
+    Assign(nvr,b,idz);
+    if not Standard_Complex_Solutions.Is_Null(sols)
+     then Multi_Projective_Transformations.Make_Affine(sols,mhom,idz);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_mHom2Affine.");
+      end if;
+      return 913;
+  end Standard_Solutions_mHom2Affine;
 
   function Standard_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

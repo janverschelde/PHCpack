@@ -186,6 +186,48 @@ package DoblDobl_Solutions_Interface is
   --   b       is the name of the coordinate to be dropped;
   --   vrblvl  is the verbose level.
 
+  function DoblDobl_Solutions_Make_Homogeneous
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes the solutions store in double double precision 1-homogeous,
+  --   adding one extra coordinate equal to one to every solution.
+
+  function DoblDobl_Solutions_Multi_Homogeneous
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes the solutions store in double double precision m-homogeous,
+  --   adding m extra coordinates equal to one to every solution.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the value for m;
+  --   vrblvl  is the verbose level.
+
+  function DoblDobl_Solutions_1Hom2Affine
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Turns the solutions stored in double double precision
+  --   from 1-homogeneous to affine coordinates.
+  --   The verbose level is given in vrblvl.
+
+  function DoblDobl_Solutions_mHom2Affine
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Turns the solutions stored in double double precision
+  --   from m-homogeneous to affine coordinates.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables,
+  --           in a[1] is the number of sets in the partition;
+  --   b       contains the index representation of the partition;
+  --   vrblvl  is the verbose level.
+
   function DoblDobl_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 
