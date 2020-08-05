@@ -232,7 +232,7 @@ package body Greeting_Banners is
     put_line("An application of Pieri homotopies is the output pole place");
     put_line("placement problem in linear systems control, see phc -k.");
     new_line;
-    put_line("Littlewood-Richardson homotopies` solve general Schubert");
+    put_line("Littlewood-Richardson homotopies solve general Schubert");
     put_line("problems.  On input is a sequence of square matrices.");
     put_line("With each matrix corresponds a bracket of conditions on");
     put_line("p-planes.  Each intersection condition is the dimension of");

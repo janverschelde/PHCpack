@@ -11,7 +11,7 @@ package Greeting_Banners is
     "a numerical irreducible decomposition for solution sets";
 
   enumban : constant string :=
-    "SAGBI/Pieri homotopies to solve a problem in enumerative geometry.";
+    "SAGBI/Pieri and Littlewood-Richardson homotopies";
 
   facban : constant string :=
     "Factor a pure dimensional solution set into irreducibles";

@@ -397,17 +397,17 @@ package Drivers_for_Schubert_Induction is
   --            if false, then user will generate random flags.
 
   procedure Resolve_Schubert_Problem
-              ( file : in file_type;
+              ( file : in file_type; nt : in natural32;
                 n,k : in integer32; cnd : in Array_of_Brackets;
                 flags : in Standard_Complex_VecMats.VecMat;
                 vrblvl : in integer32 := 0 );
   procedure Resolve_Schubert_Problem
-              ( file : in file_type;
+              ( file : in file_type; nt : in natural32;
                 n,k : in integer32; cnd : in Array_of_Brackets;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
                 vrblvl : in integer32 := 0 );
   procedure Resolve_Schubert_Problem
-              ( file : in file_type;
+              ( file : in file_type; nt : in natural32;
                 n,k : in integer32; cnd : in Array_of_Brackets;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
                 vrblvl : in integer32 := 0 );
@@ -421,6 +421,7 @@ package Drivers_for_Schubert_Induction is
 
   -- ON INPUT :
   --   file     for extra output;
+  --   nt       the number of tasks, 0 for no multitasking;
   --   n        ambient space;
   --   k        dimension of the solution planes;
   --   cnt      intersection conditions;
@@ -428,14 +429,14 @@ package Drivers_for_Schubert_Induction is
   --   vrblvl   is the verbose level.
 
   procedure Standard_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial;
-                vrblvl : in integer32 := 0 );
+              ( nt : in natural32; n,k : in integer32;
+                bm : in Bracket_Monomial; vrblvl : in integer32 := 0 );
   procedure DoblDobl_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial;
-                vrblvl : in integer32 := 0 );
+              ( nt : in natural32; n,k : in integer32;
+                bm : in Bracket_Monomial; vrblvl : in integer32 := 0 );
   procedure QuadDobl_Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial;
-                vrblvl : in integer32 := 0 );
+              ( nt : in natural32; n,k : in integer32;
+                bm : in Bracket_Monomial; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for the name of the output file and for other
@@ -443,32 +444,39 @@ package Drivers_for_Schubert_Induction is
   --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
+  --   nt       the number of tasks, 0 for no multitasking;
   --   n        ambient space;
   --   k        dimension of the solution planes;
   --   bm       product of k-brackets, with conditions on the k-planes;
   --   vrblvl   is the verbose level.
 
   procedure Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial;
-                vrblvl : in integer32 := 0 );
+              ( nt : in natural32; n,k : in integer32;
+                bm : in Bracket_Monomial; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts the user for the working precision 
   --   and then calls the proper resolution procedure.
 
   -- ON ENTRY :
+  --   nt       the number of tasks, 0 for no multitasking;
   --   n        ambient space;
   --   k        dimension of the solution planes;
   --   bm       product of k-brackets, with conditions on the k-planes;
   --   vrblvl   is the verbose level.
 
   procedure Solve_Schubert_Problems
-              ( n : in integer32; vrblvl : in integer32 := 0 );
+              ( nt : in natural32; n : in integer32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive procedure to compute solutions to Schubert problems
-  --   in n-space.  Prompts the user for data: for intersections conditions
+  --   in n-space.  Prompts the user intersections conditions
   --   on k-planes in n-space and resolve the Schubert problem.
-  --   The verbose level is given by the parameter vrblvl.
+  --
+  --  ON ENTRY :
+  --   nt       the number of tasks, 0 for no multitasking;
+  --   n        the ambient dimension;
+  --   vrblvl   the verbose level.
 
 end Drivers_for_Schubert_Induction;

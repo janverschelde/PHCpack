@@ -498,6 +498,7 @@ package body Option_Handlers is
               ( args : in Array_of_Strings;
                 opts : in string; infile,outfile : in string ) is
 
+    nt : constant natural32 := Actions_and_Options.Number_of_Tasks(args);
     hpos1 : constant integer32 := Actions_and_Options.Position(opts,'h');
     hpos2 : constant integer32 := Actions_and_Options.Position(opts,'-');
     bpos : constant integer32 := Actions_and_Options.Position(opts,'b');
@@ -509,8 +510,19 @@ package body Option_Handlers is
     elsif bpos >= integer32(opts'first) then
       bablenum(infile,outfile,vrblvl);
     else
-      put_line(welcome); put_line(enumban);
-      mainenum(vrblvl);
+      if nt > 0 then
+        declare
+          ns : constant string := Convert(integer32(nt));
+        begin
+          put_line(welcome);
+          put_line(enumban & " with " & ns & " tasks.");
+          mainenum(nt,vrblvl);
+        end;
+      else
+        put_line(welcome);
+        put_line(enumban & ", no multitasking.");
+        mainenum(0,vrblvl);
+      end if;
     end if;
   end Enumeration_Handler;
 

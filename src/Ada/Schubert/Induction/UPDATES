@@ -1,3 +1,6 @@
+Tue 4 Aug 2020 : updates in drivers_for_schubert_induction and mainenum
+  to pass the number of tasks, given at the command line prompt.
+
 Mon 3 Aug 2020 : modifications in resolve_schubert_problems.adb,
   checker_poset_deformations, and moving_flag_continuation to pass
   the verbose level.  Modified moving_flag_continuation and procedures

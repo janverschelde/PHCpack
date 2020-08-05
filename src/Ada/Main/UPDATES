@@ -1,3 +1,8 @@
+Tue 4 Aug 2020 : modified greeting_banners.ads and greeting_banners.adb,
+  adding the Littlewood-Richardson homotopies in the banner and removing
+  one character from the help output.  Updated option_handlers.adb to pass
+  the number of tasks to the main procedure for enumerative geometry.
+
 Thu 30 Jul 2020 : updated greeting_banners for version 2.4.49.
 
 Thu 23 Jul 2020 : updated black_box_solvers.adb and black_box_solver_cases.adb

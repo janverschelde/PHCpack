@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Drivers_for_SAGBI_Homotopies;       use Drivers_for_SAGBI_Homotopies;
@@ -8,7 +7,7 @@ with Drivers_for_Pieri_Homotopies;       use Drivers_for_Pieri_Homotopies;
 with Drivers_for_Quantum_Pieri;          use Drivers_for_Quantum_Pieri;
 with Drivers_for_Schubert_Induction;     use Drivers_for_Schubert_Induction;
 
-procedure mainenum ( verbose : in integer32 := 0 ) is
+procedure mainenum ( nt : in natural32; verbose : in integer32 := 0 ) is
 
   m,p,q,n : natural32 := 0;
   ans : character;
@@ -43,7 +42,7 @@ begin
     when '2' => Driver_for_Pieri_Homotopies(m+p,p);
     when '3' => Driver_for_Quantum_Pieri(m+p,p,q);
     when '4' => Resolve_Intersection_Condition(n,verbose-1);
-    when '5' => Solve_Schubert_Problems(integer32(n),verbose-1);
+    when '5' => Solve_Schubert_Problems(nt,integer32(n),verbose-1);
     when others => put_line("Option not recognized.  Please try again...");
   end case;
 end mainenum;
