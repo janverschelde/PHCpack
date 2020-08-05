@@ -377,6 +377,180 @@ package body DoblDobl_Solutions_Interface is
       return 241;
   end DoblDobl_Solutions_Get_String;
 
+  function DoblDobl_Solutions_Add_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use DoblDobl_Complex_Solutions;
+
+    va : constant C_Integer_Array 
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    nv : constant natural32 := natural32(va(va'first));
+    nc : constant integer := integer(va(va'first+1));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : String(1..nc);   
+    ind : integer := 1;
+    sol : Solution(integer32(nv));
+    fail : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_solutions_interface.");
+      put_line("DoblDobl_Solutions_Add_String ...");
+    end if;
+    sv := C_Integer_Array_to_String(natural32(nc),vb);
+    DoblDobl_Solution_Strings.Parse(sv,ind,nv,sol,fail);
+   -- put_line("the parsed solution : ");
+   -- DoblDobl_Complex_Solutions_io.put(sol);
+    if fail then
+      return 378;
+    else
+      DoblDobl_Solutions_Container.Append(sol);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_solutions_interface.");
+        put_line("DoblDobl_Solutions_Add_String.");
+      end if;
+      return 378;
+  end DoblDobl_Solutions_Add_String;
+
+  function DoblDobl_Solutions_Retrieve_Next
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use DoblDobl_Complex_Solutions;
+
+    ls : Link_to_Solution;
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v(v'first));
+    idx : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_solutions_interface.");
+      put_line("DoblDobl_Solutions_Retrieve_Next ...");
+    end if;
+    if k = 0 then
+      DoblDobl_Solutions_Container.Retrieve_Next_Initialize;
+    else
+      DoblDobl_Solutions_Container.Retrieve_Next(ls,idx);
+      Assign(integer32(idx),a);
+      if idx = 0
+       then return 277;
+       else Assign_Solution(ls,b,c);
+      end if;
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_solutions_interface.");
+        put_line("DoblDobl_Solutions_Retrieve_Next.");
+      end if;
+      return 277;
+  end DoblDobl_Solutions_Retrieve_Next;
+
+  function DoblDobl_Solutions_Move_Pointer
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    ind : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_solutions_interface.");
+      put_line("DoblDobl_Solutions_Move_Pointer ...");
+    end if;
+    DoblDobl_Solutions_Container.Move_Current(ind);
+    Assign(integer32(ind),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_solutions_interface.");
+        put_line("DoblDobl_Solutions_Move_Pointer.");
+      end if;
+      return 455;
+  end DoblDobl_Solutions_Move_Pointer;
+
+  function DoblDobl_Solutions_Current_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use DoblDobl_Complex_Solutions;
+
+    ind,len : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_solutions_interface.");
+      put_line("DoblDobl_Solutions_Current_Size ...");
+    end if;
+    DoblDobl_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      len := DoblDobl_Solution_Strings.Length(ls.all);
+      Assign(integer32(len),b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_solutions_interface.");
+        put_line("DoblDobl_Solutions_Current_Size.");
+      end if;
+      return 526;
+  end DoblDobl_Solutions_Current_Size;
+
+  function DoblDobl_Solutions_Current_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use DoblDobl_Complex_Solutions;
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    len : constant natural32 := natural32(v_a(v_a'first));
+    ind : natural32;
+    ls : Link_to_Solution;
+    sv : Standard_Integer_Vectors.Vector(1..integer32(len));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_solutions_interface.");
+      put_line("DoblDobl_Solutions_Current_String ...");
+    end if;
+    DoblDobl_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      declare
+        s : constant string := DoblDobl_Solution_Strings.Write(ls.all);
+      begin
+        sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      end;
+      Assign(sv,b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_solutions_interface.");
+        put_line("DoblDobl_Solutions_Current_String.");
+      end if;
+      return 534;
+  end DoblDobl_Solutions_Current_String;
+
   function DoblDobl_Solutions_Drop_by_Index
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is

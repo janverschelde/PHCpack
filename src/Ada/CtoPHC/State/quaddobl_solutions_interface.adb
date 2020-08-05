@@ -377,6 +377,179 @@ package body QuadDobl_Solutions_Interface is
       return 281;
   end QuadDobl_Solutions_Get_String;
 
+  function QuadDobl_Solutions_Add_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use QuadDobl_Complex_Solutions;
+
+    va : constant C_Integer_Array 
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    nv : constant natural32 := natural32(va(va'first));
+    nc : constant integer := integer(va(va'first+1));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : String(1..nc);   
+    ind : integer := 1;
+    sol : Solution(integer32(nv));
+    fail : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_Add_String ...");
+    end if;
+    sv := C_Integer_Array_to_String(natural32(nc),vb);
+    QuadDobl_Solution_Strings.Parse(sv,ind,nv,sol,fail);
+    if fail then
+      return 428;
+    else
+      QuadDobl_Solutions_Container.Append(sol);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Add_String.");
+      end if;
+      return 428;
+  end QuadDobl_Solutions_Add_String;
+
+  function QuadDobl_Solutions_Move_Pointer
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    ind : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_Move_Pointer ...");
+    end if;
+    QuadDobl_Solutions_Container.Move_Current(ind);
+    Assign(integer32(ind),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Move_Pointer.");
+      end if;
+      return 456;
+  end QuadDobl_Solutions_Move_Pointer;
+
+  function QuadDobl_Solutions_Retrieve_Next
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use QuadDobl_Complex_Solutions;
+
+    ls : Link_to_Solution;
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v(v'first));
+    idx : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_Retrieve_Next ...");
+    end if;
+    if k = 0 then
+      QuadDobl_Solutions_Container.Retrieve_Next_Initialize;
+    else
+      QuadDobl_Solutions_Container.Retrieve_Next(ls,idx);
+      Assign(integer32(idx),a);
+      if idx = 0
+       then return 278;
+       else Assign_Solution(ls,b,c);
+      end if;
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in Quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Retrieve_Next.");
+      end if;
+      return 278;
+  end QuadDobl_Solutions_Retrieve_Next;
+
+  function QuadDobl_Solutions_Current_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use QuadDobl_Complex_Solutions;
+
+    ind,len : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_Current_Size ...");
+    end if;
+    QuadDobl_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      len := QuadDobl_Solution_Strings.Length(ls.all);
+      Assign(integer32(len),b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Current_Size.");
+      end if;
+      return 527;
+  end QuadDobl_Solutions_Current_Size;
+
+  function QuadDobl_Solutions_Current_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use QuadDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    len : constant natural32 := natural32(v_a(v_a'first));
+    ind : natural32;
+    ls : Link_to_Solution;
+    sv : Standard_Integer_Vectors.Vector(1..integer32(len));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solutions_interface.");
+      put_line("QuadDobl_Solutions_Current_String ...");
+    end if;
+    QuadDobl_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      declare
+        s : constant string := QuadDobl_Solution_Strings.Write(ls.all);
+      begin
+        sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      end;
+      Assign(sv,b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Current_String.");
+      end if;
+      return 535;
+  end QuadDobl_Solutions_Current_String;
+
   function QuadDobl_Solutions_Drop_by_Index
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is

@@ -158,6 +158,109 @@ package Standard_Solutions_Interface is
   --   b       the string representation of the solution 
   --           with the given index.
 
+  function Standard_Solutions_Add_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Appends a solution given in its string representation
+  --   to the list of solutions stored in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables,
+  --           in a[1] is the number of characters in the string b;
+  --   b       the string representation of a solution;
+  --   vrblvl  is the verbose level.
+
+  function Standard_Solutions_Replace_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Replaces a solution stored in double precision by
+  --   the solution given in its string representation.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution to be replace,
+  --           in a[1] is the number of variables,
+  --           in a[2] is the number of characters in the string b;
+  --   b       the string representation of a solution;
+  --   vrblvl  is the verbose level.
+
+  function Standard_Solutions_Retrieve_Next
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the pointer to the start of the list of solutions in
+  --   double precision or returns the next solution.
+
+  -- ON ENTRY :
+  --   a       if a[0] = 0, then the pointer with be initialized,
+  --           otherwise the next solution is returned;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       if a[0] /= 0, the a[0] contains the index of the
+  --           returned solution;
+  --   b       the multiplicity of the next solution;
+  --   c       2*n+5 doubles, first for the two double for t,
+  --           then 2*n doubles for the coefficients of the solution vector,
+  --           followed by one double for forward error,
+  --           one double for the estimate of the inverse condition number,
+  --           and one double for the backward error.
+
+  function Standard_Solutions_Move_Pointer
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Moves the pointer in the list to the next solution
+  --   stored in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the index of the current solution,
+  --           after the moving of the pointer.
+
+  function Standard_Solutions_Current_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size of the string representation
+  --   of the current solution stored in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the index of the current solution;
+  --   b       in b[0] is the size of the string representation.
+
+  function Standard_Solutions_Current_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the string representation
+  --   of the current solution stored in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the length of the string representation,
+  --   vrblvl  the verbose level.
+
+  -- ON RETURN :
+  --   b       the string representation of the current solution.
+
   function Standard_Solutions_Drop_by_Index
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;

@@ -100,6 +100,75 @@ package Multprec_Solutions_Interface is
   --   b       the string representation of the solution 
   --           with the given index.
 
+  function Multprec_Solutions_Add_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Appends a solution given in its string representation
+  --   to the list of solutions stored in multiprecision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables,
+  --           in a[1] is the number of characters in the string b;
+  --   b       the string representation of a solution;
+  --   vrblvl  is the verbose level.
+
+  function Multprec_Solutions_Set_Pointer
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Initializes the pointer to the start of the list
+  --   of solutions stored in multiprecision.
+
+  function Multprec_Solutions_Move_Pointer
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Moves the pointer in the list to the next solution
+  --   stored in multiprecision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the index of the current solution,
+  --           after the moving of the pointer.
+
+  function Multprec_Solutions_Current_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size of the string representation
+  --   of the current solution stored in multiprecision.
+
+  -- ON ENTRY :
+  --   vrblvl  the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the index of the current solution;
+  --   b       in b[0] is the size of the string representation.
+
+  function Multprec_Solutions_Current_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the string representation
+  --   of the current solution stored in multiprecision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the length of the string representation,
+  --   vrblvl  the verbose level.
+
+  -- ON RETURN :
+  --   b       the string representation of the current solution.
+
   function Multprec_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 
