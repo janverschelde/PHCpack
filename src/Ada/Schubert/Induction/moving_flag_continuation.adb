@@ -1852,8 +1852,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -1911,8 +1911,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -1970,8 +1970,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2028,7 +2028,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2085,7 +2085,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2142,7 +2142,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2191,7 +2191,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2233,7 +2233,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2275,7 +2275,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2673,16 +2673,16 @@ package body Moving_Flag_Continuation is
     end if;
     if pivot = 0 then
       if ind = 0
-       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
-       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
       end if;
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
       put_line(file,"The reconditioned swap homotopy :");
       put_line(file,gh.all);
       if ind = 0
-       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail);
-       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail);
+       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,vrblvl-1);
       end if;
       declare
         nls : constant Standard_Complex_Solutions.Solution
@@ -2760,16 +2760,16 @@ package body Moving_Flag_Continuation is
     end if;
     if pivot = 0 then
       if ind = 0
-       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
-       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
       end if;
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
       put_line(file,"The reconditioned swap homotopy :");
       put_line(file,gh.all);
       if ind = 0
-       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail);
-       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail);
+       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,vrblvl-1);
       end if;
       declare
         nls : constant DoblDobl_Complex_Solutions.Solution
@@ -2847,16 +2847,16 @@ package body Moving_Flag_Continuation is
     end if;
     if pivot = 0 then
       if ind = 0
-       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
-       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
       end if;
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
       put_line(file,"The reconditioned swap homotopy :");
       put_line(file,gh.all);
       if ind = 0
-       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail);
-       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail);
+       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,vrblvl-1);
       end if;
       declare
         nls : constant QuadDobl_Complex_Solutions.Solution
@@ -2935,12 +2935,12 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if pivot = 0 then
-      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
       put_line(file,"The reconditioned swap homotopy :");
       put_line(file,gh.all);
-      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
       declare
         rsols : constant Standard_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
@@ -3022,12 +3022,12 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if pivot = 0 then
-      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
       put_line(file,"The reconditioned swap homotopy :");
       put_line(file,gh.all);
-      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
       declare
         rsols : constant DoblDobl_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
@@ -3109,12 +3109,12 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if pivot = 0 then
-      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
       put_line(file,"The reconditioned swap homotopy :");
       put_line(file,gh.all);
-      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
       declare
         rsols : constant QuadDobl_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
@@ -3190,10 +3190,10 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if pivot = 0 then
-      Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
-      Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
       declare
         rsols : constant Standard_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
@@ -3259,10 +3259,10 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if pivot = 0 then
-      Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
-      Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
       declare
         rsols : constant DoblDobl_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
@@ -3328,10 +3328,10 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if pivot = 0 then
-      Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
-      Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail);
+      Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
       declare
         rsols : constant QuadDobl_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
