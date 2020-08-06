@@ -2,7 +2,9 @@ with Communications_with_User;           use Communications_with_User;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 
@@ -83,8 +85,18 @@ package body DoblDobl_System_and_Solutions_io is
   procedure put ( file : in file_type;
                   p : in Poly_Sys; sols : in Solution_List;
                   banner : in string := "THE SOLUTIONS :" ) is
+
+    nbvar : constant natural32
+          := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+    nbequ : constant natural32 := natural32(p'last);
+
   begin
-    put(file,natural32(p'last),1); new_line(file);
+    if nbequ = nbvar then
+      put(file,nbequ,1); new_line(file);
+    else
+      put(file,nbequ,1); put(file,"  ");
+      put(file,nbvar,1); new_line(file);
+    end if;
     put(file,p);
     Write_Solutions(file,sols,banner);
   end put;
@@ -92,8 +104,18 @@ package body DoblDobl_System_and_Solutions_io is
   procedure put ( file : in file_type;
                   p : in Laur_Sys; sols : in Solution_List;
                   banner : in string := "THE SOLUTIONS :" ) is
+
+    nbvar : constant natural32
+          := DoblDobl_Complex_Laurentials.Number_of_Unknowns(p(p'first));
+    nbequ : constant natural32 := natural32(p'last);
+
   begin
-    put(file,natural32(p'last),1); new_line(file);
+    if nbequ = nbvar then
+      put(file,nbequ,1); new_line(file);
+    else
+      put(file,nbequ,1); put(file,"  ");
+      put(file,nbvar,1); new_line(file);
+    end if;
     put(file,p);
     Write_Solutions(file,sols,banner);
   end put;

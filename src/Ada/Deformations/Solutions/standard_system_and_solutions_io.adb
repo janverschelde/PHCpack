@@ -1,6 +1,8 @@
 with Communications_with_User;          use Communications_with_User;
 with File_Scanning;                     use File_Scanning;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 
@@ -103,16 +105,32 @@ package body Standard_System_and_Solutions_io is
   procedure put ( file : in file_type;
                   p : in Poly_Sys; sols : in Solution_List;
                   banner : in string := "THE SOLUTIONS :" ) is
+
+    nbvar : constant natural32
+          := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+    nbequ : constant natural32 := natural32(p'last);
+
   begin
-    put(file,natural32(p'last),p);
+    if nbequ = nbvar
+     then put(file,nbequ,p);
+     else put(file,nbequ,nbvar,p);
+    end if;
     Write_Solutions(file,sols,banner);
   end put;
 
   procedure put ( file : in file_type;
                   p : in Laur_Sys; sols : in Solution_List;
                   banner : in string := "THE SOLUTIONS :" ) is
+
+    nbvar : constant natural32
+          := Standard_Complex_Laurentials.Number_of_Unknowns(p(p'first));
+    nbequ : constant natural32 := natural32(p'last);
+
   begin
-    put(file,natural32(p'last),p);
+    if nbequ = nbvar
+     then put(file,nbequ,p);
+     else put(file,nbequ,nbvar,p);
+    end if;
     Write_Solutions(file,sols,banner);
   end put;
 

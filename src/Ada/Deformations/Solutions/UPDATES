@@ -1,3 +1,6 @@
+Thu 6 Aug 2020 : updated *_system_and_solutions_io.adb to output systems
+  that have a different number of polynomials than equations.
+
 Fri 10 Jul 2020 : in {standard,dobldobl,quaddobl}_system_and_solutions_io.adb
   made the dot dot dot consistent with other prompters.
 

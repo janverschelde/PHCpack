@@ -1,8 +1,10 @@
 with Communications_with_User;           use Communications_with_User;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 
@@ -81,8 +83,18 @@ package body QuadDobl_System_and_Solutions_io is
   procedure put ( file : in file_type;
                   p : in Poly_Sys; sols : in Solution_List;
                   banner : in string := "THE SOLUTIONS :" ) is
+
+    nbvar : constant natural32
+          := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+    nbequ : constant natural32 := natural32(p'last);
+
   begin
-    put(file,p'last,1); new_line(file);
+    if nbequ = nbvar then
+      put(file,nbequ,1); new_line(file);
+    else
+      put(file,nbequ,1); put(file,"  ");
+      put(file,nbvar,1); new_line(file);
+    end if;
     put(file,p);
     Write_Solutions(file,sols,banner);
   end put;
@@ -90,8 +102,18 @@ package body QuadDobl_System_and_Solutions_io is
   procedure put ( file : in file_type;
                   p : in Laur_Sys; sols : in Solution_List;
                   banner : in string := "THE SOLUTIONS :" ) is
+
+    nbvar : constant natural32
+          := QuadDobl_Complex_Laurentials.Number_of_Unknowns(p(p'first));
+    nbequ : constant natural32 := natural32(p'last);
+
   begin
-    put(file,p'last,1); new_line(file);
+    if nbequ = nbvar then
+      put(file,nbequ,1); new_line(file);
+    else
+      put(file,nbequ,1); put(file,"  ");
+      put(file,nbvar,1); new_line(file);
+    end if;
     put(file,p);
     Write_Solutions(file,sols,banner);
   end put;
