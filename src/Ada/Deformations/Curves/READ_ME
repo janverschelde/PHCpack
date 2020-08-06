@@ -1,4 +1,4 @@
-Univariate solvers and algebraic curves in PHCpack version 2.4.79
+Univariate solvers and algebraic curves in PHCpack version 2.4.80
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,
@@ -116,4 +116,7 @@ dobldobl_seriespade_tracker      : a get_next() tracker with double doubles
 quaddobl_seriespade_tracker      : a get_next() tracker with quad doubles
 interactive_pade_trackers        : calls the step-by-step path trackers
 ts_nxtpadsol                     : test on the get_next() trackers
+-------------------------------------------------------------------------------
+wrapped_pade_trackers            : wrapping of the trackers
+ts_wrappade                      : test on the wrapping
 -------------------------------------------------------------------------------
