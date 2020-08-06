@@ -1,8 +1,11 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
+with Standard_Complex_Vectors;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
@@ -12,8 +15,12 @@ with Standard_System_and_Solutions_io;
 with Solution_Drops;
 with Projective_Transformations;
 with Multi_Projective_Transformations;
+with Total_Degree_Start_Systems;        use Total_Degree_Start_Systems;
+with Lexicographic_Root_Enumeration;    use Lexicographic_Root_Enumeration;
+with Drivers_to_Track_Standard_Paths;   use Drivers_to_Track_Standard_Paths;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
+with File_Management;
 with PHCpack_Operations;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
@@ -781,6 +788,309 @@ package body Standard_Solutions_Interface is
       end if;
       return 913;
   end Standard_Solutions_mHom2Affine;
+
+  function Standard_Solutions_Tzero
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions;
+
+    sols : Solution_List := Standard_Solutions_Container.Retrieve;
+    zero : constant Standard_Complex_Numbers.Complex_Number
+         := Standard_Complex_Numbers.Create(0.0);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solution_interface.");
+      put_line("Standard_Solutions_Tzero ...");
+    end if;
+    if not Is_Null(sols)
+     then Set_Continuation_Parameter(sols,zero);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Tzero.");
+      end if;
+      return 875;
+  end Standard_Solutions_Tzero;
+
+  function Standard_Solutions_Read_Next
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions;
+    use Standard_Complex_Solutions_io;
+
+    dim : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Read_Next ...");
+    end if;
+    Assign(a,integer32(dim));
+   -- put("Dimension : "); put(dim,1); put_line(", calling Read_Next ...");
+    Read_Next(File_Management.Link_to_Input.all,dim,ls);
+   -- put_line("The solution read : "); put(ls.all); new_line;
+    Assign_Solution(ls,b,c);
+    Clear(ls);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Read_Next.");
+      end if;
+      return 135;
+  end Standard_Solutions_Read_Next;
+
+  function Standard_Solutions_Write_Next
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions;
+    use Standard_Complex_Solutions_io;
+
+    cnt : natural32;
+    ls : Link_to_Solution := Convert_to_Solution(b,c);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Write_Next ...");
+    end if;
+    Assign(a,integer32(cnt));
+    Write_Next(File_Management.Link_to_Output.all,cnt,ls);
+   -- put_line("Written solution : "); put(ls.all); new_line;
+    Assign(integer32(cnt),a);
+    Clear(ls);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Write_Next.");
+      end if;
+      return 136;
+  end Standard_Solutions_Write_Next;
+
+  function Standard_Solutions_Next_to_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions;
+    use Standard_Complex_Solutions_io;
+
+    cnt : natural32;
+    ls : Link_to_Solution := Convert_to_Solution(b,c);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Next_to_File ...");
+    end if;
+    Assign(a,integer32(cnt));
+    if PHCpack_Operations.Is_File_Defined
+     then Write_Next(PHCpack_Operations.output_file,cnt,ls);
+     else Write_Next(standard_output,cnt,ls);
+    end if;
+   -- put_line("Written solution : "); put(ls.all); new_line;
+    Assign(integer32(cnt),a);
+    Clear(ls);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Next_to_File.");
+      end if;
+      return 141;
+  end Standard_Solutions_Next_to_File;
+
+  function Standard_Solutions_Total_Degree
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    i : constant natural32 := natural32(v_a(v_a'first+1));
+    lq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    d,s : Standard_Natural_Vectors.Vector(1..integer32(n));
+    cff,sol : Standard_Complex_Vectors.Vector(1..integer32(n));
+    ls : Link_to_Solution;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Total_Degree ...");
+    end if;
+    PHCpack_Operations.Retrieve_Start_System(lq);
+    d := Degrees(lq.all);
+    cff := Coefficients(lq.all);
+    s := Root_Map(n,i,d);
+    sol := Root(d,s,cff);
+    ls := new Solution'(Create(sol));
+    Assign_Solution(ls,b,c);
+    Clear(ls);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Total_Degree.");
+      end if;
+      return 142;
+  end Standard_Solutions_Total_Degree;
+
+  function Standard_Solutions_Next_Product
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    i : constant natural32 := natural32(v_a(v_a'first+1));
+    lq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    d : Standard_Natural_Vectors.Vector(1..integer32(n));
+   -- cp : Standard_Natural_Vectors.Vector(1..n-1);
+    ls : Link_to_Solution;
+    cnt,len : natural32;
+    tol : constant double_float := 1.0E-10;
+    fail : boolean;
+    new_a : Standard_Natural_Vectors.Vector(1..2);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Next_Product ...");
+    end if;
+    PHCpack_Operations.Retrieve_Start_System(lq);
+    d := Degrees(lq.all);
+    len := Product(d);
+   -- cp := Consecutive_Products(d);
+    cnt := i;
+   -- Next_Lex_Linear_Product_Start_Solution
+   --   (false,n,d,cp,cnt,len,5,tol,ls,fail);
+    Get_Next_Linear_Product_Start_Solution(false,n,cnt,len,5,tol,ls,fail);
+    new_a(1) := n;   
+    new_a(2) := cnt;
+    Assign(new_a,a);
+    if fail then
+      return 143;
+    else
+      Assign_Solution(ls,b,c);
+      Clear(ls);
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Next_Product.");
+      end if;
+      return 143;
+  end Standard_Solutions_Next_Product;
+
+  function Standard_Solutions_Lex_Product
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    i : constant natural32 := natural32(v_a(v_a'first+1));
+    lq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    d : Standard_Natural_Vectors.Vector(1..integer32(n));
+    cp : Standard_Natural_Vectors.Vector(1..integer32(n)-1);
+    ls : Link_to_Solution;
+    tol : constant double_float := 1.0E-10;
+    fail : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Lex_Product ...");
+    end if;
+    PHCpack_Operations.Retrieve_Start_System(lq);
+    d := Degrees(lq.all);
+    cp := Consecutive_Products(d);
+    Get_Lex_Linear_Product_Start_Solution(false,n,d,cp,i,5,tol,ls,fail);
+    if fail then
+      return 144;
+    else
+      Assign_Solution(ls,b,c);
+      Clear(ls);
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Lex_Product.");
+      end if;
+      return 144;
+  end Standard_Solutions_Lex_Product;
+
+  function Standard_Solutions_Next_Witness
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use Standard_Complex_Solutions;
+    use Standard_Complex_Solutions_io;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    ls : Link_to_Solution;
+
+  begin
+   -- put("reading next witness point from set "); put(k,1); new_line;
+   -- put("  solution vector has length "); put(n,1); new_line;
+    Read_Next(File_Management.Link_to_Input(k).all,n,ls,
+              Standard_Solutions_Container.Retrieve_Symbol_Table(0).all);
+   -- was the following:
+   --           Standard_Solutions_Container.Retrieve_Symbol_Table(k).all);
+   -- put_line("The solution vector read : "); put(ls.all); new_line;
+    Assign_Solution(ls,b,c);
+    Clear(ls);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Next_Witness.");
+      end if;
+      return 145;
+  end Standard_Solutions_Next_Witness;
 
   function Standard_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

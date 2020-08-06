@@ -331,6 +331,168 @@ package Standard_Solutions_Interface is
   --   b       contains the index representation of the partition;
   --   vrblvl  is the verbose level.
 
+  function Standard_Solutions_Tzero
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the continuation parameter t of all solutions in double
+  --   precision to zero.  The verbose level is in vrblvl.
+
+  function Standard_Solutions_Read_Next
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads the next solution in double precision from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the multiplicity of the solution;
+  --   c       2*n + 5 doubles, starting with two doubles for t,
+  --           2*n doubles for the solution vectors,
+  --           one double for the forward error,
+  --           one double for the estimate for the inverse condition number,
+  --           and one double for the backward error.
+
+  function Standard_Solutions_Write_Next
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the next solution in double precision to file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables;
+  --   b       the multiplicity of the solution;
+  --   c       2*n + 5 doubles, starting with two doubles for t,
+  --           2*n doubles for the solution vectors,
+  --           one double for the forward error,
+  --           one double for the estimate for the inverse condition number,
+  --           and one double for the backward error;
+  --   vrblvl  is the verbose level.
+
+  function Standard_Solutions_Next_to_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the next solution in double precision
+  --   to the defined output file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution;
+  --   b       the multiplicity of the solution;
+  --   c       2*n + 5 doubles, starting with two doubles for t,
+  --           2*n doubles for the solution vectors,
+  --           one double for the forward error,
+  --           one double for the estimate for the inverse condition number,
+  --           and one double for the backward error;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       the count of the solutions written to file.
+
+  function Standard_Solutions_Total_Degree
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Computes the next total degree start solution in double precision.
+  --   This start solution is the solution of a total degree start system.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables,
+  --           in a[1] is the index of the start solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the multiplicity of the solution;
+  --   c       2*n + 5 doubles, starting with two doubles for t,
+  --           2*n doubles for the solution vectors,
+  --           one double for the forward error,
+  --           one double for the estimate for the inverse condition number,
+  --           and one double for the backward error.
+
+  function Standard_Solutions_Next_Product
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Computes the next linear-product start solution in double precision.
+  --   This start solution is the solution of a linear-product start system.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables,
+  --           in a[1] is the index of the start solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the multiplicity of the solution;
+  --   c       2*n + 5 doubles, starting with two doubles for t,
+  --           2*n doubles for the solution vectors,
+  --           one double for the forward error,
+  --           one double for the estimate for the inverse condition number,
+  --           and one double for the backward error.
+
+  function Standard_Solutions_Lex_Product
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Computes the linear-product start solution in double precision,
+  --   indexed by the lexicographic order defined by the given index.
+  --   This start solution is the solution of a linear-product start system.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of variables,
+  --           in a[1] is the index of the start solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the multiplicity of the solution;
+  --   c       2*n + 5 doubles, starting with two doubles for t,
+  --           2*n doubles for the solution vectors,
+  --           one double for the forward error,
+  --           one double for the estimate for the inverse condition number,
+  --           and one double for the backward error.
+
+  function Standard_Solutions_Next_Witness
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads the next witness point solution from file in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the witness set,
+  --           in a[1] is the number of variables.
+
+  -- ON RETURN :
+  --   b       the multiplicity of the solution;
+  --   c       2*n + 5 doubles, starting with two doubles for t,
+  --           2*n doubles for the solution vectors,
+  --           one double for the forward error,
+  --           one double for the estimate for the inverse condition number,
+  --           and one double for the backward error;
+  --   vrblvl  is the verbose level.
+
   function Standard_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 
