@@ -46,7 +46,6 @@ with Checker_Homotopies;
 with Intersection_Posets;                use Intersection_Posets;
 with Intersection_Posets_io;             use Intersection_Posets_io;
 with Setup_Flag_Homotopies;              use Setup_Flag_Homotopies;
-with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
 with Flag_Transformations;
 
 procedure ts_induce is
@@ -81,7 +80,7 @@ procedure ts_induce is
   --   Shows all boards, flags and transformations in a generalizing
   --   moving flag homotopy towards a general triangular matrix.
 
-    use Standard_Complex_Numbers;
+   -- use Standard_Complex_Numbers;
 
     fg : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Random_Flag(n);
@@ -94,7 +93,7 @@ procedure ts_induce is
     nt : Standard_Complex_Matrices.Matrix(1..n,1..n);
     acc : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
     f,a : integer32;
-    gamma : Complex_Number := Create(-1.0);
+   -- gamma : Complex_Number := Create(-1.0);
 
     use Standard_Complex_Matrices;
 

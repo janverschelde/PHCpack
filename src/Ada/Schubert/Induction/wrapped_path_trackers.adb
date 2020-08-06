@@ -17,86 +17,9 @@ with DoblDobl_IncFix_Continuation;
 with QuadDobl_IncFix_Continuation;
 with Drivers_for_Poly_Continuation;
 with Multitasking_Continuation;         use Multitasking_Continuation;
+with Wrapped_Solution_Vectors;
 
 package body Wrapped_Path_Trackers is
-
-  function Create ( x : Standard_Complex_Vectors.Vector )
-                  return Standard_Complex_Solutions.Solution is
-
-    res : Standard_Complex_Solutions.Solution(x'last-1);
-
-  begin
-    res.t := x(x'last);
-    res.m := 1;
-    res.v := x(x'first..x'last-1);
-    res.err := 0.0;
-    res.rco := 1.0;
-    res.res := 0.0;
-    return res;
-  end Create;
-
-  function Create ( x : DoblDobl_Complex_Vectors.Vector )
-                  return DoblDobl_Complex_Solutions.Solution is
-
-    res : DoblDobl_Complex_Solutions.Solution(x'last-1);
-
-  begin
-    res.t := x(x'last);
-    res.m := 1;
-    res.v := x(x'first..x'last-1);
-    res.err := create(0.0);
-    res.rco := create(1.0);
-    res.res := create(0.0);
-    return res;
-  end Create;
-
-  function Create ( x : QuadDobl_Complex_Vectors.Vector )
-                  return QuadDobl_Complex_Solutions.Solution is
-
-    res : QuadDobl_Complex_Solutions.Solution(x'last-1);
-
-  begin
-    res.t := x(x'last);
-    res.m := 1;
-    res.v := x(x'first..x'last-1);
-    res.err := create(0.0);
-    res.rco := create(1.0);
-    res.res := create(0.0);
-    return res;
-  end Create;
-
-  function Create ( x : Standard_Complex_Vectors.Vector ) 
-                  return Standard_Complex_Solutions.Solution_List is
-
-    sol : constant Standard_Complex_Solutions.Solution(x'last-1) := Create(x);
-    res : Standard_Complex_Solutions.Solution_List;
-
-  begin
-    Standard_Complex_Solutions.Add(res,sol);
-    return res;
-  end Create;
-
-  function Create ( x : DoblDobl_Complex_Vectors.Vector ) 
-                  return DoblDobl_Complex_Solutions.Solution_List is
-
-    sol : constant DoblDobl_Complex_Solutions.Solution(x'last-1) := Create(x);
-    res : DoblDobl_Complex_Solutions.Solution_List;
-
-  begin
-    DoblDobl_Complex_Solutions.Add(res,sol);
-    return res;
-  end Create;
-
-  function Create ( x : QuadDobl_Complex_Vectors.Vector ) 
-                  return QuadDobl_Complex_Solutions.Solution_List is
-
-    sol : constant QuadDobl_Complex_Solutions.Solution(x'last-1) := Create(x);
-    res : QuadDobl_Complex_Solutions.Solution_List;
-
-  begin
-    QuadDobl_Complex_Solutions.Add(res,sol);
-    return res;
-  end Create;
 
   procedure Set_Parameters ( file : in file_type; report : out boolean ) is
 
@@ -127,7 +50,7 @@ package body Wrapped_Path_Trackers is
     use Standard_Complex_Solutions;
     use Standard_IncFix_Continuation;
 
-    sols : Solution_List := Create(xt);
+    sols : Solution_List := Wrapped_Solution_Vectors.Create(xt);
     nbequ : constant integer32 := h'last;
 
     procedure Track is
@@ -163,7 +86,7 @@ package body Wrapped_Path_Trackers is
     use DoblDobl_Complex_Solutions;
     use DoblDobl_IncFix_Continuation;
 
-    sols : Solution_List := Create(xt);
+    sols : Solution_List := Wrapped_Solution_Vectors.Create(xt);
     one : constant double_double := create(1.0);
     nbequ : constant integer32 := h'last;
 
@@ -199,7 +122,7 @@ package body Wrapped_Path_Trackers is
     use QuadDobl_Complex_Solutions;
     use QuadDobl_IncFix_Continuation;
 
-    sols : Solution_List := Create(xt);
+    sols : Solution_List := Wrapped_Solution_Vectors.Create(xt);
     one : constant quad_double := create(1.0);
     nbequ : constant integer32 := h'last;
 
@@ -237,7 +160,7 @@ package body Wrapped_Path_Trackers is
     use Standard_Complex_Solutions;
     use Standard_IncFix_Continuation;
 
-    sols : Solution_List := Create(xt);
+    sols : Solution_List := Wrapped_Solution_Vectors.Create(xt);
     nbequ : constant integer32 := h'last;
 
     procedure Track is
@@ -273,7 +196,7 @@ package body Wrapped_Path_Trackers is
     use DoblDobl_Complex_Solutions;
     use DoblDobl_IncFix_Continuation;
 
-    sols : Solution_List := Create(xt);
+    sols : Solution_List := Wrapped_Solution_Vectors.Create(xt);
     one : constant double_double := create(1.0);
     nbequ : constant integer32 := h'last;
 
@@ -309,7 +232,7 @@ package body Wrapped_Path_Trackers is
     use QuadDobl_Complex_Solutions;
     use QuadDobl_IncFix_Continuation;
 
-    sols : Solution_List := Create(xt);
+    sols : Solution_List := Wrapped_Solution_Vectors.Create(xt);
     one : constant quad_double := create(1.0);
     nbequ : constant integer32 := h'last;
 
@@ -334,86 +257,6 @@ package body Wrapped_Path_Trackers is
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 6"); raise;
   end Call_Path_Trackers;
-
--- UPDATING SOLUTION LISTS :
-
-  procedure Update ( sols : in out Standard_Complex_Solutions.Solution_List;
-                     xtsols : in Standard_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Given in the list xtsols the coordinates of the solutions
-  --   jointly with the value of continuation parameter,
-  --   the list sols is updated, separating the continuation parameter t
-  --   from the last coordinate of the solution vectors in xtsols.
-
-    use Standard_Complex_Solutions;
-    tmp : Solution_List := sols;
-    xtp : Solution_List := xtsols;
-    ls,xtls : Link_to_Solution;
-
-  begin
-    while not Is_Null(xtp) loop
-      xtls := Head_Of(xtp);
-      ls := Head_Of(tmp);
-      ls.v := xtls.v(ls.v'range);
-      ls.t := xtls.t;
-      Set_Head(tmp,ls);
-      tmp := Tail_Of(tmp);
-      xtp := Tail_Of(xtp);
-    end loop;
-  end Update;
-
-  procedure Update ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                     xtsols : in DoblDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Given in the list xtsols the coordinates of the solutions
-  --   jointly with the value of continuation parameter,
-  --   the list sols is updated, separating the continuation parameter t
-  --   from the last coordinate of the solution vectors in xtsols.
-
-    use DoblDobl_Complex_Solutions;
-    tmp : Solution_List := sols;
-    xtp : Solution_List := xtsols;
-    ls,xtls : Link_to_Solution;
-
-  begin
-    while not Is_Null(xtp) loop
-      xtls := Head_Of(xtp);
-      ls := Head_Of(tmp);
-      ls.v := xtls.v(ls.v'range);
-      ls.t := xtls.t;
-      Set_Head(tmp,ls);
-      tmp := Tail_Of(tmp);
-      xtp := Tail_Of(xtp);
-    end loop;
-  end Update;
-
-  procedure Update ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                     xtsols : in QuadDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Given in the list xtsols the coordinates of the solutions
-  --   jointly with the value of continuation parameter,
-  --   the list sols is updated, separating the continuation parameter t
-  --   from the last coordinate of the solution vectors in xtsols.
-
-    use QuadDobl_Complex_Solutions;
-    tmp : Solution_List := sols;
-    xtp : Solution_List := xtsols;
-    ls,xtls : Link_to_Solution;
-
-  begin
-    while not Is_Null(xtp) loop
-      xtls := Head_Of(xtp);
-      ls := Head_Of(tmp);
-      ls.v := xtls.v(ls.v'range);
-      ls.t := xtls.t;
-      Set_Head(tmp,ls);
-      tmp := Tail_Of(tmp);
-      xtp := Tail_Of(xtp);
-    end loop;
-  end Update;
 
 -- TRACKING MANY PATHS WITHOUT OUTPUT :
 
@@ -443,7 +286,7 @@ package body Wrapped_Path_Trackers is
       Track(xtsols,false,nbq=>nbequ,
             target=>Standard_Complex_Numbers.Create(1.0));
     end if;
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 7"); raise;
@@ -475,7 +318,7 @@ package body Wrapped_Path_Trackers is
     else      -- overdetermined homotopy
       Track(xtsols,nbq=>nbequ,target=>DoblDobl_Complex_Numbers.Create(one));
     end if;
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 8"); raise;
@@ -507,7 +350,7 @@ package body Wrapped_Path_Trackers is
     else      -- overdetermined homotopy
       Track(xtsols,nbq=>nbequ,target=>QuadDobl_Complex_Numbers.Create(one));
     end if;
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 9"); raise;
@@ -547,7 +390,7 @@ package body Wrapped_Path_Trackers is
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
     put(file,Length_Of(xtsols),1); new_line(file);
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 10"); raise;
@@ -586,7 +429,7 @@ package body Wrapped_Path_Trackers is
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
     put(file,Length_Of(xtsols),1); new_line(file);
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 11"); raise;
@@ -625,7 +468,7 @@ package body Wrapped_Path_Trackers is
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
     put(file,Length_Of(xtsols),1); new_line(file);
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 12"); raise;
@@ -648,7 +491,7 @@ package body Wrapped_Path_Trackers is
     else      -- overdetermined homotopy
       Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
     end if;
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 7"); raise;
@@ -669,7 +512,7 @@ package body Wrapped_Path_Trackers is
     else      -- overdetermined homotopy
       Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
     end if;
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 8"); raise;
@@ -690,7 +533,7 @@ package body Wrapped_Path_Trackers is
     else      -- overdetermined homotopy
       Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
     end if;
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 9"); raise;
@@ -720,7 +563,7 @@ package body Wrapped_Path_Trackers is
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
     put(file,Length_Of(xtsols),1); new_line(file);
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 10"); raise;
@@ -748,7 +591,7 @@ package body Wrapped_Path_Trackers is
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
     put(file,Length_Of(xtsols),1); new_line(file);
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 11"); raise;
@@ -776,7 +619,7 @@ package body Wrapped_Path_Trackers is
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
     put(file,Length_Of(xtsols),1); new_line(file);
-    Update(sols,xtsols);
+    Wrapped_Solution_Vectors.Update(sols,xtsols);
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 12"); raise;

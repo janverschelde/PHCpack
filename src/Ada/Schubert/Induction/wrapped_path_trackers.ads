@@ -19,28 +19,6 @@ package Wrapped_Path_Trackers is
 --   The homotopy continuation parameter is typically the last variable
 --   in the polynomial system.
 
-  function Create ( x : Standard_Complex_Vectors.Vector )
-                  return Standard_Complex_Solutions.Solution;
-  function Create ( x : DoblDobl_Complex_Vectors.Vector )
-                  return DoblDobl_Complex_Solutions.Solution;
-  function Create ( x : QuadDobl_Complex_Vectors.Vector )
-                  return QuadDobl_Complex_Solutions.Solution;
-
-  -- DESCRIPTION :
-  --   Returns the solution representation of the vector x,
-  --   in double, double double, or quad double precision.
-
-  function Create ( x : Standard_Complex_Vectors.Vector ) 
-                  return Standard_Complex_Solutions.Solution_List;
-  function Create ( x : DoblDobl_Complex_Vectors.Vector ) 
-                  return DoblDobl_Complex_Solutions.Solution_List;
-  function Create ( x : QuadDobl_Complex_Vectors.Vector ) 
-                  return QuadDobl_Complex_Solutions.Solution_List;
-
-  -- DESCRIPTION :
-  --   Returns the solution list representation of the vector x,
-  --   in double, double double, or quad double precision.
-
   procedure Set_Parameters ( file : in file_type; report : out boolean );
 
   -- DESCRIPTION :

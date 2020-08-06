@@ -15,19 +15,15 @@ with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
-with Checker_Boards_io;                  use Checker_Boards_io;
 with Checker_Moves;                      use Checker_Moves;
-with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
+with Checker_Posets,Checker_Posets_io;   use Checker_Posets;
 with Intersection_Posets;
 with Intersection_Posets_io;             use Intersection_Posets_io;
 with Wrapped_Path_Trackers;
-with Moving_Flag_Continuation;
 with Setup_Flag_Homotopies;
-with Moving_Flag_Homotopies;
 with Standard_Solution_Posets;           use Standard_Solution_Posets;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
 with Drivers_for_Schubert_Induction;     use Drivers_for_Schubert_Induction;
@@ -69,7 +65,8 @@ procedure ts_lrhom is
 
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    ips : constant Intersection_Poset(nbc-1)
+        := Process_Conditions(n,k,nbc,cnd);
     tmp : Poset_List;
     lpn : Link_to_Poset_Node;
 
@@ -134,8 +131,8 @@ procedure ts_lrhom is
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
       gamenode : Link_to_Node := node.ps.white(node.ps.white'last);
-      parentconds : constant Standard_Natural_Vectors.Vector
-                  := node.ps.white(node.ps.white'last).cols; -- leaf
+     -- parentconds : constant Standard_Natural_Vectors.Vector
+     --             := node.ps.white(node.ps.white'last).cols; -- leaf
 
     begin
      -- Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'first);
@@ -266,7 +263,8 @@ procedure ts_lrhom is
 
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
-    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    ips : constant Intersection_Poset(nbc-1)
+        := Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
     tmp : Solnode_List;
     snd : Link_to_Solution_Node;
@@ -313,7 +311,7 @@ procedure ts_lrhom is
          := Bracket_to_Vector(cnd(cnd'first).all);
     cols : constant Standard_Natural_Vectors.Vector
          := Bracket_to_Vector(cnd(cnd'first+1).all);
-    conds : Standard_Natural_VecVecs.VecVec(1..nbc-2)
+    conds : constant Standard_Natural_VecVecs.VecVec(1..nbc-2)
           := Remaining_Intersection_Conditions(cnd);
     link2conds : constant Standard_Natural_VecVecs.Link_to_VecVec
                := new Standard_Natural_VecVecs.VecVec'(conds);

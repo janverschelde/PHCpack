@@ -1,3 +1,6 @@
+Thu 6 Aug 2020 : new package wrapped_solution_vectors with code extracted
+  for the wrapped_path_trackers used in the Littlewood-Richardson homotopies.
+
 Thu 9 Jul 2020 : updated {standard,dobldobl,quaddobl}_coefficient_homotopy,
   because of compiler warnings.
 

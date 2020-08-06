@@ -9,7 +9,7 @@ with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
-with Standard_Random_Numbers;
+-- with Standard_Random_Numbers;
 with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
 with Multprec_Natural_Numbers_io;       use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors;
@@ -65,9 +65,9 @@ with Standard_Bracket_Polynomials_io;   use Standard_Bracket_Polynomials_io;
 with Standard_Bracket_Systems;
 with Standard_Bracket_Systems_io;       use Standard_Bracket_Systems_io;
 with DoblDobl_Bracket_Polynomials;
-with QuadDobl_Bracket_Polynomials;
+-- with QuadDobl_Bracket_Polynomials;
 with Bracket_Polynomial_Convertors;     use Bracket_Polynomial_Convertors;
-with Plane_Representations;
+-- with Plane_Representations;
 with Standard_Matrix_Inversion;
 with Symbolic_Schubert_Conditions;      use Symbolic_Schubert_Conditions;
 with Checker_Boards,Checker_Moves;      use Checker_Boards,Checker_Moves;
@@ -1067,28 +1067,28 @@ procedure ts_flagcond is
     end loop;
   end Truncate_Triangular_Part;
 
-  procedure Add_Random_Last_Columns
-              ( A : in out Standard_Complex_Matrices.Matrix ) is
+ -- procedure Add_Random_Last_Columns
+ --             ( A : in out Standard_Complex_Matrices.Matrix ) is
 
   -- DESCRIPTION :
   --   Adds a random multiple of the last column to the other columns
   --   to make the matrix no longer upper triangular.
 
-    use Standard_Complex_Numbers;
+ --   use Standard_Complex_Numbers;
 
-    rnd : Complex_Number;
+ --   rnd : Complex_Number;
 
-  begin
-    for k in reverse A'first(2)+1..A'last(2) loop
+ -- begin
+ --   for k in reverse A'first(2)+1..A'last(2) loop
       -- add multiple of k-th column to previous columns
-      for j in A'first(2)..k-1 loop
-        rnd := Standard_Random_Numbers.Random1;
-        for i in A'range(1) loop
-          A(i,j) := A(i,j) + rnd*A(i,k);
-        end loop;
-      end loop;
-    end loop;
-  end Add_Random_Last_Columns;
+ --     for j in A'first(2)..k-1 loop
+ --       rnd := Standard_Random_Numbers.Random1;
+ --       for i in A'range(1) loop
+ --         A(i,j) := A(i,j) + rnd*A(i,k);
+ --       end loop;
+ --     end loop;
+ --   end loop;
+ -- end Add_Random_Last_Columns;
 
   procedure Point_Test_at_Minimal_Conditions ( n,k : in integer32 ) is
 

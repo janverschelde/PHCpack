@@ -40,6 +40,7 @@ with Brackets;
 with Checker_Moves;
 with Checker_Localization_Patterns;
 with Checker_Homotopies;
+with Wrapped_Solution_Vectors;
 with Wrapped_Path_Trackers;             use Wrapped_Path_Trackers;
 with Start_Flag_Homotopies;             use Start_Flag_Homotopies;
 with Setup_Flag_Homotopies;             use Setup_Flag_Homotopies;
@@ -95,7 +96,7 @@ package body Moving_Flag_Continuation is
       y := Eval(h,xt);
       put_line(file,"Value of the start solution at the original homotopy :");
       put_line(file,y);
-      sols := Create(xt);
+      sols := Wrapped_Solution_Vectors.Create(xt);
       if sol = null then
         put_line(file,"In Track_First_Move, sol is null.");
       else
@@ -167,7 +168,7 @@ package body Moving_Flag_Continuation is
       y := Eval(h,xt);
       put_line(file,"Value of the start solution at the original homotopy :");
       put_line(file,y);
-      sols := Create(xt);
+      sols := Wrapped_Solution_Vectors.Create(xt);
       if sol = null then
         put_line(file,"In Track_First_Move, sol is null.");
       else
@@ -239,7 +240,7 @@ package body Moving_Flag_Continuation is
       y := Eval(h,xt);
       put_line(file,"Value of the start solution at the original homotopy :");
       put_line(file,y);
-      sols := Create(xt);
+      sols := Wrapped_Solution_Vectors.Create(xt);
       if sol = null then
         put_line(file,"In Track_First_Move, sol is null.");
       else
@@ -316,7 +317,7 @@ package body Moving_Flag_Continuation is
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
     else
-      sols := Create(xt);
+      sols := Wrapped_Solution_Vectors.Create(xt);
       sh0 := Eval(sh,Standard_Complex_Numbers.Create(0.0),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
@@ -383,7 +384,7 @@ package body Moving_Flag_Continuation is
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
     else
-      sols := Create(xt);
+      sols := Wrapped_Solution_Vectors.Create(xt);
       sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(0)),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
@@ -450,7 +451,7 @@ package body Moving_Flag_Continuation is
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
     else
-      sols := Create(xt);
+      sols := Wrapped_Solution_Vectors.Create(xt);
       sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(0)),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
@@ -526,7 +527,7 @@ package body Moving_Flag_Continuation is
         put(file,res,3); new_line(file);
       end if;
       fail := fail and (res > tolsing);
-      Append(xtsols,xt_sols_last,Create(xt));
+      Append(xtsols,xt_sols_last,Wrapped_Solution_Vectors.Create(xt));
       tmp := Tail_Of(tmp);
     end loop;
     if fail then
@@ -653,7 +654,7 @@ package body Moving_Flag_Continuation is
         put(file,res,3); new_line(file);
       end if;
       fail := fail and (res > tolsing);
-      Append(xtsols,xt_sols_last,Create(xt));
+      Append(xtsols,xt_sols_last,Wrapped_Solution_Vectors.Create(xt));
       tmp := Tail_Of(tmp);
     end loop;
     if fail then
@@ -780,7 +781,7 @@ package body Moving_Flag_Continuation is
         put(file,res,3); new_line(file);
       end if;
       fail := fail and (res > tolsing);
-      Append(xtsols,xt_sols_last,Create(xt));
+      Append(xtsols,xt_sols_last,Wrapped_Solution_Vectors.Create(xt));
       tmp := Tail_Of(tmp);
     end loop;
     if fail then
@@ -875,7 +876,7 @@ package body Moving_Flag_Continuation is
       xt(ls.v'range) := ls.v;
       xt(xt'last) := Standard_Complex_Numbers.Create(0.0);
       fail := fail and (ls.res > tol);
-      Append(xtsols,xt_sols_last,Create(xt));
+      Append(xtsols,xt_sols_last,Wrapped_Solution_Vectors.Create(xt));
       tmp := Tail_Of(tmp);
     end loop;
     if not fail then
@@ -937,7 +938,7 @@ package body Moving_Flag_Continuation is
       xt(ls.v'range) := ls.v;
       xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
       fail := fail and (ls.res > tol);
-      Append(xtsols,xt_sols_last,Create(xt));
+      Append(xtsols,xt_sols_last,Wrapped_Solution_Vectors.Create(xt));
       tmp := Tail_Of(tmp);
     end loop;
     if not fail then
@@ -999,7 +1000,7 @@ package body Moving_Flag_Continuation is
       xt(ls.v'range) := ls.v;
       xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
       fail := fail and (ls.res > tol);
-      Append(xtsols,xt_sols_last,Create(xt));
+      Append(xtsols,xt_sols_last,Wrapped_Solution_Vectors.Create(xt));
       tmp := Tail_Of(tmp);
     end loop;
     if not fail then
