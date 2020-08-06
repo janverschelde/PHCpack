@@ -1075,6 +1075,11 @@ ts_scalecnv: get_clock.o get_clocks_per_sec.o
               -o $(BIN)/ts_scalecnv \
               -largs get_clock.o get_clocks_per_sec.o
 
+ts_wrappade: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_wrappade.adb \
+              -o $(BIN)/ts_wrappade \
+              -largs get_clock.o get_clocks_per_sec.o
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:

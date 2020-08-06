@@ -783,7 +783,7 @@ test_curves: ts_durker ts_extrapol ts_extrapts \
              ts_sernew ts_sersol ts_serhom ts_serpred ts_serpath ts_serpade \
              ts_padepred ts_jacrabin ts_nxtpadsol ts_hesscrit ts_hesspred \
              ts_predstep ts_sernewcnv ts_ratapp ts_padepcnv ts_hesspcnv \
-             ts_corcnv ts_pcscnv ts_scalecnv
+             ts_corcnv ts_pcscnv ts_scalecnv ts_wrappade
 
 ts_durker:
 	make -f $(MAKEFILE) ts_durker
@@ -850,6 +850,9 @@ ts_pcscnv:
 
 ts_scalecnv:
 	make -f $(MAKEFILE) ts_scalecnv
+
+ts_wrappade:
+	make -f $(MAKEFILE) ts_wrappade
 
 # Test programs for the Deformations/End_Games library :
 

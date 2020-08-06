@@ -954,6 +954,10 @@ ts_scalecnv:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_scalecnv.adb \
               -o $(BIN)/ts_scalecnv
 
+ts_wrappade:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_wrappade.adb \
+              -o $(BIN)/ts_wrappade
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:

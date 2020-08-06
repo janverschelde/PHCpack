@@ -3482,18 +3482,13 @@ phcpy2c37.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
 	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PYTHON36) \
                -I$(PYTHON37)/Include $(PHCLib)/phcpy2c3.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	gnatbind -n -static use_c2phc
-	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
-            solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
-            giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
-            scalers.o reducers.o sweep.o multiplicity.o numbtrop.o schubert.o \
-            syspool.o series.o witsols.o padcon.o tabform.o \
-            inputData.o outputData.o iTest.o fTest.o \
-            simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
-            parameter.o lib2path.o $(QD_LIB)/libqd.a \
-                /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
-               -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
-               -lm --LINK=$(gpp) -Wl,-no_compact_unwind \
+	gnatbind -n -static use_c2phc -o use_c2phc_binder.adb
+	gnatmake -static -c use_c2phc_binder.adb
+	ar ruv phcpy2c3.a *.o
+	ranlib phcpy2c3.a
+	$(gcc) -dynamiclib -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
+               phcpy2c3.a $(QD_LIB)/libqd.a \
+               -lm -Wl,-no_compact_unwind \
 -L/Users/jan/miniconda3/lib/python3.7/config-3.7m-darwin -lpython3.7m -ldl \
 -framework CoreFoundation
 
