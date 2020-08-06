@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Symbol_Table;
@@ -729,6 +730,33 @@ package body QuadDobl_Solutions_Interface is
       end if;
       return 915;
   end QuadDobl_Solutions_mHom2Affine;
+
+  function QuadDobl_Solutions_Tzero
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    use QuadDobl_Complex_Solutions;
+
+    sols : Solution_List := QuadDobl_Solutions_Container.Retrieve;
+    zero : constant QuadDobl_Complex_Numbers.Complex_Number
+         := QuadDobl_Complex_Numbers.Create(integer32(0));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_solution_interface.");
+      put_line("QuadDobl_Solutions_Tzero ...");
+    end if;
+    if not Is_Null(sols)
+     then Set_Continuation_Parameter(sols,zero);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_solutions_interface.");
+        put_line("QuadDobl_Solutions_Tzero.");
+      end if;
+      return 877;
+  end QuadDobl_Solutions_Tzero;
 
   function QuadDobl_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

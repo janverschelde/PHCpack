@@ -3,6 +3,8 @@ Wed 5 Aug 2020 : moved functions from use_solcon into the solution interface
   specification errors in {standard, dobldobl, quaddobl}_polysys_interface.
   Moved more functions from use_solcon.adb to *_solution_interface packages.
   To standard_solutions_interface, added more functions from use_solcon.adb.
+  To *dobl_solutions_interface, added interface function to set the value
+  of the continuation parameter to zero.
 
 Tue 4 Aug 2020 : in *_solutions_interface.adb, added close(file) at all
   places where a file was opened for reading.  Moved the function to clear

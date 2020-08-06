@@ -315,6 +315,13 @@ package DoblDobl_Solutions_Interface is
   --   b       contains the index representation of the partition;
   --   vrblvl  is the verbose level.
 
+  function DoblDobl_Solutions_Tzero
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the continuation parameter t of all solutions in double
+  --   double precision to zero.  The verbose level is in vrblvl.
+
   function DoblDobl_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 

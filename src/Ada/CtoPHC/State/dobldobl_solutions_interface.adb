@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with DoblDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Symbol_Table;
@@ -730,6 +731,33 @@ package body DoblDobl_Solutions_Interface is
       end if;
       return 914;
   end DoblDobl_Solutions_mHom2Affine;
+
+  function DoblDobl_Solutions_Tzero
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    use DoblDobl_Complex_Solutions;
+
+    sols : Solution_List := DoblDobl_Solutions_Container.Retrieve;
+    zero : constant DoblDobl_Complex_Numbers.Complex_Number
+         := DoblDobl_Complex_Numbers.Create(integer32(0));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_solution_interface.");
+      put_line("DoblDobl_Solutions_Tzero ...");
+    end if;
+    if not Is_Null(sols)
+     then Set_Continuation_Parameter(sols,zero);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_solutions_interface.");
+        put_line("DoblDobl_Solutions_Tzero.");
+      end if;
+      return 876;
+  end DoblDobl_Solutions_Tzero;
 
   function DoblDobl_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is
