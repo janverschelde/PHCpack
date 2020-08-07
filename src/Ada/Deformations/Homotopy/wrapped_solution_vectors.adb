@@ -85,6 +85,111 @@ package body Wrapped_Solution_Vectors is
     return res;
   end Create;
 
+  function Create ( xt : Standard_Complex_Solutions.Link_to_Solution )
+                  return Standard_Complex_Solutions.Link_to_Solution is
+ 
+    sol : Standard_Complex_Solutions.Solution(xt.n-1);
+    res : Standard_Complex_Solutions.Link_to_Solution;
+
+  begin
+    sol.t := xt.v(xt.v'last);
+    sol.m := 1;
+    sol.v := xt.v(xt.v'first..xt.v'last-1);
+    sol.err := xt.err;
+    sol.rco := xt.rco;
+    sol.res := xt.res;
+    res := new Standard_Complex_Solutions.Solution'(sol);
+    return res;
+  end Create;
+
+  function Create ( xt : DoblDobl_Complex_Solutions.Link_to_Solution )
+                  return DoblDobl_Complex_Solutions.Link_to_Solution is
+ 
+    sol : DoblDobl_Complex_Solutions.Solution(xt.n-1);
+    res : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    sol.t := xt.v(xt.v'last);
+    sol.m := 1;
+    sol.v := xt.v(xt.v'first..xt.v'last-1);
+    sol.err := xt.err;
+    sol.rco := xt.rco;
+    sol.res := xt.res;
+    res := new DoblDobl_Complex_Solutions.Solution'(sol);
+    return res;
+  end Create;
+
+  function Create ( xt : QuadDobl_Complex_Solutions.Link_to_Solution )
+                  return QuadDobl_Complex_Solutions.Link_to_Solution is
+ 
+    sol : QuadDobl_Complex_Solutions.Solution(xt.n-1);
+    res : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    sol.t := xt.v(xt.v'last);
+    sol.m := 1;
+    sol.v := xt.v(xt.v'first..xt.v'last-1);
+    sol.err := xt.err;
+    sol.rco := xt.rco;
+    sol.res := xt.res;
+    res := new QuadDobl_Complex_Solutions.Solution'(sol);
+    return res;
+  end Create;
+
+  function Create ( xt : Standard_Complex_Solutions.Solution_List )
+                  return Standard_Complex_Solutions.Solution_List is
+
+    use Standard_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := xt;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Create(ls));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( xt : DoblDobl_Complex_Solutions.Solution_List )
+                  return DoblDobl_Complex_Solutions.Solution_List is
+
+    use DoblDobl_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := xt;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Create(ls));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( xt : QuadDobl_Complex_Solutions.Solution_List )
+                  return QuadDobl_Complex_Solutions.Solution_List is
+
+    use QuadDobl_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := xt;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Create(ls));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Create;
+
 -- UPDATING SOLUTION LISTS :
 
   procedure Update ( sols : in out Standard_Complex_Solutions.Solution_List;

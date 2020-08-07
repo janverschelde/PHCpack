@@ -36,6 +36,23 @@ package Wrapped_Solution_Vectors is
   --   in double, double double, or quad double precision,
   --   wrapping the function which turns the vector xt into a solution.
 
+  function Create ( xt : Standard_Complex_Solutions.Link_to_Solution )
+                  return Standard_Complex_Solutions.Link_to_Solution;
+  function Create ( xt : DoblDobl_Complex_Solutions.Link_to_Solution )
+                  return DoblDobl_Complex_Solutions.Link_to_Solution;
+  function Create ( xt : QuadDobl_Complex_Solutions.Link_to_Solution )
+                  return QuadDobl_Complex_Solutions.Link_to_Solution;
+  function Create ( xt : Standard_Complex_Solutions.Solution_List )
+                  return Standard_Complex_Solutions.Solution_List;
+  function Create ( xt : DoblDobl_Complex_Solutions.Solution_List )
+                  return DoblDobl_Complex_Solutions.Solution_List;
+  function Create ( xt : QuadDobl_Complex_Solutions.Solution_List )
+                  return QuadDobl_Complex_Solutions.Solution_List;
+
+  -- DESCRIPTION :
+  --   Returns the solution list representation of the solution(s) xt,
+  --   in double, double double, or quad double precision.
+
 -- UPDATING SOLUTION LISTS :
 
   procedure Update ( sols : in out Standard_Complex_Solutions.Solution_List;
