@@ -27,7 +27,7 @@ procedure ts_wrappade is
   begin
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
-      Wrapped_Pade_Trackers.Run(file,p'last,p,ls.v,ls);
+      Wrapped_Pade_Trackers.Run(file,p'last+1,p,ls.v,ls);
       tmp := Tail_Of(tmp);
     end loop;
   end Standard_Track;
