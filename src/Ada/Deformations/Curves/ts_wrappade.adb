@@ -45,7 +45,7 @@ procedure ts_wrappade is
     end loop;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,Length_Of(sols),natural32(Head_Of(Sols).n),sols);
+    put(File,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Standard_Track;
 
   procedure Standard_Track
@@ -108,6 +108,7 @@ procedure ts_wrappade is
       put("Track one after the other ? "); Ask_Yes_or_No(ans);
       if ans = 'y' then
         Standard_Track(lp.all,xtsols,99);
+        sols := Wrapped_Solution_Vectors.Create(xtsols);
       else
         sols := Wrapped_Solution_Vectors.Create(xtsols);
         Wrapped_Pade_Trackers.Run(lp'last+1,lp.all,sols,99);

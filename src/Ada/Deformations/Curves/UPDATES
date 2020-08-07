@@ -2,7 +2,8 @@ Fri 7 Aug 2020 : added mhom := 0 for the natural parameter homotopies in
   {standard,dobldobl,quaddobl}_homotopy_convolutions_io.adb.
   Corrected call to the Run in ts_wrappade.adb to p'last+1 = #variables.
   Extended wrapped_pade_trackers with procedures on lists of solutions,
-  with more tests in ts_wrappade.
+  with more tests in ts_wrappade.  Fixed a test in ts_wrappade and
+  simplified code for the run on one pathin wrapped_pade_trackers.adb.
 
 Thu 6 Aug 2020 : new package wrapped_pade_trackers, tested by ts_wrappade.
 
