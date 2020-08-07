@@ -65,6 +65,7 @@ package body QuadDobl_Homotopy_Convolutions_io is
       idxpar := nbq + 1;
       s := sols;
     else
+      mhom := 0;
       Homotopy_Series_Readers.QuadDobl_Parameter_Reader(nbq,nvr,idxpar,sols);
       declare
         dropsols : constant QuadDobl_Complex_Solutions.Solution_List

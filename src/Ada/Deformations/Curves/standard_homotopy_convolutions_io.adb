@@ -65,6 +65,7 @@ package body Standard_Homotopy_Convolutions_io is
       idxpar := nbq + 1;
       s := sols;
     else
+      mhom := 0;
       Homotopy_Series_Readers.Standard_Parameter_Reader(nbq,nvr,idxpar,sols);
       declare
         dropsols : constant Standard_Complex_Solutions.Solution_List

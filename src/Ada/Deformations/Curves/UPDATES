@@ -1,3 +1,6 @@
+Fri 7 Aug 2020 : added mhom := 0 for the natural parameter homotopies in
+  {standard,dobldobl,quaddobl}_homotopy_convolutions_io.adb.
+
 Thu 6 Aug 2020 : new package wrapped_pade_trackers, tested by ts_wrappade.
 
 Thu 30 Jul 2020 : in track_path_convolutions.adb, set the default to 
