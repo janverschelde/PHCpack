@@ -25,12 +25,18 @@ package Wrapped_Pade_Trackers is
   --   The settings of the parameter values are saved and written to
   --   file if a file is provided.
 
--- TRACKING ONE PATH WITH OUTPUT TO FILE :
+-- TRACKING ONE PATH WITH OR WITHOUT OUTPUT TO FILE :
 
+  procedure Run ( n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out Standard_Complex_Vectors.Vector;
+                  sol : out Standard_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 );
   procedure Run ( file : in file_type; n : in integer32;
                   h : in Standard_Complex_Poly_Systems.Poly_Sys;
                   xt : in out Standard_Complex_Vectors.Vector;
                   sol : out Standard_Complex_Solutions.Link_to_Solution;
+                  verbose : in boolean := false;
                   vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -40,18 +46,52 @@ package Wrapped_Pade_Trackers is
   -- REQUIRED : Set_Parameters() was executed.
 
   -- ON ENTRY :
-  --   file     output file for intermediate results and diagnostics,
+  --   file     optional output file for diagnostics and statistics,
   --            if omitted, then there is no intermediate output;
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
   --   xt       start solution with its last component equal to zero,
   --            satisfies the homotopy h (upto tolerance);
+  --   verbose  if extra output is needed (only possible with file);
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   xt       solution at the end of the path, tracked to the
   --            last component of xt to be equal to one;
   --   sol      standard representation of the solution.
+
+-- TRACKING MANY PATHS WITH OR WITHOUT OUTPUT TO FILE :
+
+  procedure Run ( n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  sols : in out Standard_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 );
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  sols : in out Standard_Complex_Solutions.Solution_List;
+                  verbose : in boolean := false;
+                  vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Tracks one path starting at the solution in xt,
+  --   as defined by the homotopy h, with intermediate output.
+
+  -- REQUIRED : Set_Parameters() was executed.
+
+  -- ON ENTRY :
+  --   file     optional output file for diagnostics and statistics,
+  --            if omitted, then there is no intermediate output;
+  --   n        number of variables in the ambient space;
+  --   h        homotopy in n+1 variables;
+  --   xtsols   start solutions with their last component equal to zero,
+  --            satisfies the homotopy h (upto tolerance);
+  --   verbose  if extra output is needed (only possible with file);
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   xtsols   solutions at the end of the path, tracked to the
+  --            last component of vectors in xtsols to be equal to one;
+  --   sols     standard representation of the solutions.
 
 -- DESTRUCTOR :
 
