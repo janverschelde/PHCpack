@@ -1,3 +1,6 @@
+Thu 6 Aug 2020 : moved interface functions into standard_solutions_interface
+  from the job handler function use_solcon.adb.
+
 Wed 5 Aug 2020 : moved functions from use_solcon into the solution interface
   packages, {standard, dobldobl, quaddobl}_solution_interface, and fixed
   specification errors in {standard, dobldobl, quaddobl}_polysys_interface.

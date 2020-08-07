@@ -493,6 +493,102 @@ package Standard_Solutions_Interface is
   --           and one double for the backward error;
   --   vrblvl  is the verbose level.
 
+  function Standard_Solutions_Prompt_Input_File
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for the name of an input file and
+  --   opens the file for input.
+  --   The verbose level is given by the value of vrblvl.
+
+  function Standard_Solutions_Prompt_Output_File
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for the name of an output file and
+  --   and makes a file for output.
+  --   The verbose level is given by the value of vrblvl.
+
+  function Standard_Solutions_Scan_Banner
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Scans the input file for the SOLUTIONS banner and returns 0
+  --   if the banner is found, otherwise the job code is returned.
+  --   The verbose level is given by the value of vrblvl.
+
+  function Standard_Solutions_Read_Dimensions
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads the length of the solution list and the dimension
+  --   of the solution vectors from the input file.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the length of the solution list;
+  --   b       in b[0] is the dimension of each solution vector.
+
+  function Standard_Solutions_Write_Dimensions
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the length of the solution list and the dimension
+  --   of the solution vectors to the output file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the length of the solution list;
+  --   b       in b[0] is the dimension of each solution vector;
+  --   vrblvl  is the verbose level.
+
+  function Standard_Solutions_Close_Input_File
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Closes the input file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the file,
+  --           if 0, then there is only one input file,
+  --           otherwise, there may be many input files;
+  --   vrblvl  is the verbose level.
+
+  function Standard_Solutions_Close_Output_File
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Closes the output file.
+  --   The verbose level is given by the value of vrblvl.
+
+  function Standard_Solutions_Banner_to_Output
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the SOLUTIONS banner to the defined output file,
+  --   or if the output is undefined, to standard output.
+
+  function Standard_Solutions_Dimensions_to_Output
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the length of the solution list and the dimension
+  --   of the solution vectors to the defined output file,
+  --   or if undefined, to the standard output.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the length of the solution list;
+  --   b       in b[0] is the dimension of each solution vector;
+  --   vrblvl  is the verbose level.
+
   function Standard_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32;
 

@@ -1,5 +1,6 @@
 with text_io;                           use text_io;
 with Interfaces.C;
+with File_Scanning;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
@@ -1091,6 +1092,222 @@ package body Standard_Solutions_Interface is
       end if;
       return 145;
   end Standard_Solutions_Next_Witness;
+
+  function Standard_Solutions_Prompt_Input_File
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Prompt_Input_File.");
+    end if;
+    File_Management.Open_Input_File;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Prompt_Input_File.");
+      end if;
+      return 130;
+  end Standard_Solutions_Prompt_Input_File;
+
+  function Standard_Solutions_Prompt_Output_File
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Prompt_Output_File.");
+    end if;
+    File_Management.Create_Output_File;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Prompt_Output_File.");
+      end if;
+      return 131;
+  end Standard_Solutions_Prompt_Output_File;
+
+  function Standard_Solutions_Scan_Banner
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+    use File_Scanning;
+
+    found : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Scan_Banner.");
+    end if;
+    Scan_and_Skip(File_Management.Link_to_Input.all,"SOLUTIONS",found);
+    if found
+     then return 0;
+     else return 132;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Scan_Banner.");
+      end if;
+      return 132;
+  end Standard_Solutions_Scan_Banner;
+
+  function Standard_Solutions_Read_Dimensions
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions_io;
+
+    len,dim : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Read_Dimensions.");
+    end if;
+    Read_First(File_Management.Link_to_Input.all,len,dim);
+    Assign(integer32(len),a);
+    Assign(integer32(dim),b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Read_Dimensions.");
+      end if;
+      Assign(0,a); Assign(0,b);
+      return 133;
+  end Standard_Solutions_Read_Dimensions;
+
+  function Standard_Solutions_Write_Dimensions
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions_io;
+
+    len,dim : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Write_Dimensions.");
+    end if;
+    Assign(a,integer32(len));
+    Assign(b,integer32(dim));
+    Write_First(File_Management.Link_to_Output.all,len,dim);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Write_Dimensions.");
+      end if;
+      return 134;
+  end Standard_Solutions_Write_Dimensions;
+
+  function Standard_Solutions_Close_Input_File
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Close_Input_File.");
+    end if;
+    if k = 0
+     then File_Management.Close_Input_File;
+     else File_Management.Close_Input_File(k);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Close_Input_File.");
+      end if;
+      return 137;
+  end Standard_Solutions_Close_Input_File;
+
+  function Standard_Solutions_Close_Output_File
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Close_Output_File.");
+    end if;
+    File_Management.Close_Output_File;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Close_Output_File.");
+      end if;
+      return 138;
+  end Standard_Solutions_Close_Output_File;
+
+  function Standard_Solutions_Banner_to_Output
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Banner_to_Output.");
+    end if;
+    if PHCpack_Operations.Is_File_Defined then
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE SOLUTIONS");
+    else
+      new_line(standard_output);
+      put_line(standard_output,"THE SOLUTIONS");
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Banner_to_Output.");
+      end if;
+      return 139;
+  end Standard_Solutions_Banner_to_Output;
+
+  function Standard_Solutions_Dimensions_to_Output
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions_io;
+
+    len,dim : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Dimensions_to_Output.");
+    end if;
+    Assign(a,integer32(len));
+    Assign(b,integer32(dim));
+    if PHCpack_Operations.Is_File_Defined
+     then Write_First(PHCpack_Operations.output_file,len,dim);
+     else Write_First(standard_output,len,dim);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Dimensions_to_Output.");
+      end if;
+      return 140;
+  end Standard_Solutions_Dimensions_to_Output;
 
   function Standard_Solutions_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is

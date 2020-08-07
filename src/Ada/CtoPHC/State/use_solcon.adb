@@ -1,13 +1,9 @@
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
-with File_Scanning;                     use File_Scanning;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Solutions;
-with Standard_Complex_Solutions_io;
 with Standard_Solution_Strings;
-with PHCpack_Operations;
-with File_Management;
 with Standard_Solutions_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_Solutions_Interface;
@@ -20,105 +16,6 @@ function use_solcon ( job : integer32;
                       b : C_intarrs.Pointer;
                       c : C_dblarrs.Pointer;
                       vrblvl : integer32 := 0 ) return integer32 is
-
-  function Job10 return integer32 is -- prompts for input file and opens it
-  begin
-    File_Management.Open_Input_File;
-    return 0;
-  end Job10;
-
-  function Job11 return integer32 is -- prompts for output file and creates it
-  begin
-    File_Management.Create_Output_File;
-    return 0;
-  end Job11;
-
-  function Job12 return integer32 is -- scans input file for "SOLUTIONS"
-
-    found : boolean;
-
-  begin
-    Scan_and_Skip(File_Management.Link_to_Input.all,"SOLUTIONS",found);
-    if found
-     then return 0;
-     else return 132;
-    end if;
-  exception
-    when others => return 132;
-  end Job12;
-
-  function Job13 return integer32 is -- reads length and dimensions
-
-    use Standard_Complex_Solutions_io;
-    len,dim : natural32;
-
-  begin
-    Read_First(File_Management.Link_to_Input.all,len,dim);
-    Assign(integer32(len),a);
-    Assign(integer32(dim),b);
-    return 0;
-  exception
-    when others => Assign(0,a); Assign(0,b); return 133;
-  end Job13;
-
-  function Job14 return integer32 is -- writes length and dimensions
-
-    use Standard_Complex_Solutions_io;
-    len,dim : natural32;
-
-  begin
-    Assign(a,integer32(len));
-    Assign(b,integer32(dim));
-    Write_First(File_Management.Link_to_Output.all,len,dim);
-    return 0;
-  exception
-    when others => return 134;
-  end Job14;
-
-  function Job17 return integer32 is -- close a solution input file
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-    if k = 0
-     then File_Management.Close_Input_File;
-     else File_Management.Close_Input_File(k);
-    end if;
-    return 0;
-  exception 
-    when others => return 137;
-  end Job17;
-
-  function Job19 return integer32 is -- writes solutions banner to defined file
-  begin
-    if PHCpack_Operations.Is_File_Defined then
-      new_line(PHCpack_Operations.output_file);
-      put_line(PHCpack_Operations.output_file,"THE SOLUTIONS");
-    else
-      new_line(standard_output);
-      put_line(standard_output,"THE SOLUTIONS");
-    end if;
-    return 0;
-  end Job19;
-
-  function Job20 return integer32 is -- writes sols dimensions to defined file
-
-    use Standard_Complex_Solutions_io;
-    len,dim : natural32;
-
-  begin
-    Assign(a,integer32(len));
-    Assign(b,integer32(dim));
-    if PHCpack_Operations.Is_File_Defined
-     then Write_First(PHCpack_Operations.output_file,len,dim);
-     else Write_First(standard_output,len,dim);
-    end if;
-    return 0;
-  exception
-    when others => return 140;
-  end Job20;
 
   function Job32 return integer32 is -- returns size of solution intro
 
@@ -277,17 +174,17 @@ function use_solcon ( job : integer32;
       when 7 => return Standard_Solutions_Clear(vrblvl);
       when 8 => return Standard_Solutions_Drop_by_Index(a,vrblvl);
       when 9 => return Standard_Solutions_Drop_by_Name(a,b,vrblvl);
-      when 10 => return Job10; -- prompts for input file and opens it
-      when 11 => return Job11; -- prompts for output file and creates it
-      when 12 => return Job12; -- scans input for "SOLUTIONS"
-      when 13 => return Job13; -- reads length and dimensions
-      when 14 => return Job14; -- writes length and dimensions
+      when 10 => return Standard_Solutions_Prompt_Input_File(vrblvl);
+      when 11 => return Standard_Solutions_Prompt_Output_File(vrblvl);
+      when 12 => return Standard_Solutions_Scan_Banner(vrblvl);
+      when 13 => return Standard_Solutions_Read_Dimensions(a,b,vrblvl);
+      when 14 => return Standard_Solutions_Write_Dimensions(a,b,vrblvl);
       when 15 => return Standard_Solutions_Read_Next(a,b,c,vrblvl);
       when 16 => return Standard_Solutions_Write_Next(a,b,c,vrblvl);
-      when 17 => return Job17; -- close a solution input file
-      when 18 => File_Management.Close_Output_File; return 0;
-      when 19 => return Job19; -- writes solutions banner to defined file
-      when 20 => return Job20; -- writes solution dimensions defined file
+      when 17 => return Standard_Solutions_Close_Input_File(a,vrblvl);
+      when 18 => return Standard_Solutions_Close_Output_File(vrblvl);
+      when 19 => return Standard_Solutions_Banner_to_Output(vrblvl);
+      when 20 => return Standard_Solutions_Dimensions_to_Output(a,b,vrblvl);
       when 21 => return Standard_Solutions_Next_to_File(a,b,c,vrblvl);
       when 22 => return Standard_Solutions_Total_Degree(a,b,c,vrblvl);
       when 23 => return Standard_Solutions_Next_Product(a,b,c,vrblvl);
