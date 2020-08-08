@@ -27,6 +27,8 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Witness_Sets_io;
+with Extrinsic_Diagonal_Homotopies_io;
+with Extrinsic_Diagonal_Solvers;
 with Standard_Hypersurface_Witdrivers;
 with DoblDobl_Hypersurface_Witdrivers;
 with QuadDobl_Hypersurface_Witdrivers;
@@ -511,5 +513,276 @@ package body Diagonal_Homotopy_Interface is
       end if;
       return 812;
   end Diagonal_Homotopy_QuadDobl_Laurent_Make;
+
+  function Diagonal_Homotopy_Symbols_Doubler
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Symbol_Table;
+    use Extrinsic_Diagonal_Homotopies_io;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    n : constant integer32 := integer32(v_a(v_a'first));
+    d : constant natural32 := natural32(v_a(v_a'first+1));
+    nc : constant integer := integer(v_a(v_a'first+2));
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
+    sa1 : Array_of_Symbols(1..n);
+    nb2 : constant natural32 := Symbol_Table.Number;
+    sa2e : constant Array_of_Symbols(1..integer32(nb2)) := Symbol_Table.Content;
+    sa2 : constant Array_of_Symbols := Remove_Embed_Symbols(sa2e);
+    s11 : Array_of_Symbols(sa1'range);
+    s22 : constant Array_of_Symbols(sa2'range) := Add_Suffix(sa2,'2');
+    ind : integer := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_Symbols_Doubler ...");
+    end if;
+   -- put_line("The string of names in Ada : " & s); 
+    for i in 1..n loop
+      declare
+        sb : Symbol;
+        ksb : integer;
+      begin
+        sb := (sb'range => ' ');
+        ind := ind + 1;
+        ksb := sb'first-1;
+        while ind <= s'last loop
+          exit when s(ind) = ' ';
+          ksb := ksb + 1;
+          sb(ksb) := s(ind);
+          ind := ind + 1;
+        end loop;
+        sa1(i) := sb;
+      end;
+    end loop;
+    s11 := Add_Suffix(sa1,'1');
+   -- put("The symbols in the first array of symbols :");
+   -- Write_Symbols(sa1);
+   -- put("The symbols in the second array of symbols :");
+   -- Write_Symbols(sa2);
+   -- put("The first suffixed symbols :"); Write_Symbols(s11);
+   -- put("The second suffixed symbols :"); Write_Symbols(s22);
+    Symbol_Table.Clear;
+    Assign_Symbol_Table(s11,s22);
+    Witness_Sets_io.Add_Embed_Symbols(d);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_Symbols_Doubler.");
+      end if;
+      return 230;
+  end Diagonal_Homotopy_Symbols_Doubler;
+
+  function Diagonal_Homotopy_Standard_Start_Solutions
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_Standard_Start_Solutions ...");
+    end if;
+    PHCpack_Operations.Standard_Diagonal_Cascade_Solutions(a_dim,b_dim);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_Standard_Start_Solutions.");
+      end if;
+      return 271;
+  end Diagonal_Homotopy_Standard_Start_Solutions;
+
+  function Diagonal_Homotopy_DoblDobl_Start_Solutions
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_DoblDobl_Start_Solutions ...");
+    end if;
+    PHCpack_Operations.DoblDobl_Diagonal_Cascade_Solutions(a_dim,b_dim);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_DoblDobl_Start_Solutions.");
+      end if;
+      return 297;
+  end Diagonal_Homotopy_DoblDobl_Start_Solutions;
+
+  function Diagonal_Homotopy_QuadDobl_Start_Solutions
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_QuadDobl_Start_Solutions ...");
+    end if;
+    PHCpack_Operations.QuadDobl_Diagonal_Cascade_Solutions(a_dim,b_dim);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_QuadDobl_Start_Solutions.");
+      end if;
+      return 298;
+  end Diagonal_Homotopy_QuadDobl_Start_Solutions;
+
+  function Diagonal_Homotopy_Standard_Collapse
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    d : constant natural32 := natural32(v_a(v_a'first+1));
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
+    sols : constant Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+    clps : Standard_Complex_Solutions.Solution_List;
+    cp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_Standard_Collapse ...");
+    end if;
+   -- put("#equations in systems container : "); put(lp'last,1); new_line;
+   -- put("#solutions in solutions container : ");
+   -- put(Standard_Complex_Solutions.Length_Of(sols),1); new_line;
+    Standard_Complex_Solutions.Copy(sols,clps);
+   -- put("Collapse system with k = ");
+   -- put(k,1); put(" and d = "); put(d,1); new_line;
+    Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
+    Standard_PolySys_Container.Clear;
+    Standard_PolySys_Container.Initialize(cp.all);
+    Standard_Solutions_Container.Clear;
+    Standard_Solutions_Container.Initialize(clps);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_Standard_Collapse.");
+      end if;
+      return 170;
+  end Diagonal_Homotopy_Standard_Collapse;
+
+  function Diagonal_Homotopy_DoblDobl_Collapse
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    d : constant natural32 := natural32(v_a(v_a'first+1));
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    sols : constant DoblDobl_Complex_Solutions.Solution_List
+         := DoblDobl_Solutions_Container.Retrieve;
+    clps : DoblDobl_Complex_Solutions.Solution_List;
+    cp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_DoblDobl_Collapse ...");
+    end if;
+   -- put("#equations in systems container : "); put(lp'last,1); new_line;
+   -- put("#solutions in solutions container : ");
+   -- put(Length_Of(sols),1); new_line;
+    DoblDobl_Complex_Solutions.Copy(sols,clps);
+    Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(cp.all);
+    DoblDobl_Solutions_Container.Clear;
+    DoblDobl_Solutions_Container.Initialize(clps);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_DoblDobl_Collapse.");
+      end if;
+      return 299;
+  end Diagonal_Homotopy_DoblDobl_Collapse;
+
+  function Diagonal_Homotopy_QuadDobl_Collapse
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    d : constant natural32 := natural32(v_a(v_a'first+1));
+    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := QuadDobl_PolySys_Container.Retrieve;
+    sols : constant QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+    clps : QuadDobl_Complex_Solutions.Solution_List;
+    cp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_QuadDobl_Collapse ...");
+    end if;
+   -- put("#equations in systems container : "); put(lp'last,1); new_line;
+   -- put("#solutions in solutions container : ");
+   -- put(Length_Of(sols),1); new_line;
+    QuadDobl_Complex_Solutions.Copy(sols,clps);
+    Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
+    QuadDobl_PolySys_Container.Clear;
+    QuadDobl_PolySys_Container.Initialize(cp.all);
+    QuadDobl_Solutions_Container.Clear;
+    QuadDobl_Solutions_Container.Initialize(clps);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_QuadDobl_Collapse.");
+      end if;
+      return 312;
+  end Diagonal_Homotopy_QuadDobl_Collapse;
 
 end Diagonal_Homotopy_Interface;

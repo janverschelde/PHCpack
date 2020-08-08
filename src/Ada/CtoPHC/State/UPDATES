@@ -1,5 +1,6 @@
 Sat 8 Aug 2020 : new package tableau_form_interface with functions from
   use_tabform.adb, added the verbose level to use_tabform.ads.
+  To diagonal_homotopy_interface, added job functions from use_track.adb.
 
 Fri 7 Aug 2020 : moved into standard_solutions_interface the last remaining
   functions from use_solcon.adb so only one case handler remains.

@@ -14,10 +14,7 @@ with QuadDobl_Complex_Numbers;
 with Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
-with Symbol_Table; -- ,Symbol_Table_io;
 with Standard_Complex_Poly_Systems;
-with DoblDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
@@ -31,19 +28,13 @@ with DoblDobl_Continuation_Data_io;
 with QuadDobl_Homotopy;
 with QuadDobl_Continuation_Data_io;
 with Multprec_Homotopy;
-with Witness_Sets,Witness_Sets_io;
+with Witness_Sets;
 with Extrinsic_Diagonal_Homotopies;
-with Extrinsic_Diagonal_Homotopies_io;  use Extrinsic_Diagonal_Homotopies_io;
-with Extrinsic_Diagonal_Solvers;
 with Standard_Hypersurface_Witdrivers;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
-with DoblDobl_PolySys_Container;
-with DoblDobl_Solutions_Container;
-with QuadDobl_PolySys_Container;
-with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
 with Crude_Path_Trackers;
@@ -659,98 +650,6 @@ function use_track ( job : integer32;
       return 19;
   end Job19;
 
-  function Job20 return integer32 is -- standard collapse extrinsic diagonal
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    d : constant natural32 := natural32(v_a(v_a'first+1));
-    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-       := Standard_PolySys_Container.Retrieve;
-    sols : constant Standard_Complex_Solutions.Solution_List
-         := Standard_Solutions_Container.Retrieve;
-    clps : Standard_Complex_Solutions.Solution_List;
-    cp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-
-  begin
-   -- put("#equations in systems container : "); put(lp'last,1); new_line;
-   -- put("#solutions in solutions container : ");
-   -- put(Standard_Complex_Solutions.Length_Of(sols),1); new_line;
-    Standard_Complex_Solutions.Copy(sols,clps);
-   -- put("Collapse system with k = ");
-   -- put(k,1); put(" and d = "); put(d,1); new_line;
-    Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
-    Standard_PolySys_Container.Clear;
-    Standard_PolySys_Container.Initialize(cp.all);
-    Standard_Solutions_Container.Clear;
-    Standard_Solutions_Container.Initialize(clps);
-    return 0;
-  exception 
-     when others =>
-       put_line("Exception at collapsing of standard extrinsic diagonal.");
-       return 20;
-  end Job20;
-
-  function Job47 return integer32 is -- dobldobl collapse extrinsic diagonal
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    d : constant natural32 := natural32(v_a(v_a'first+1));
-    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
-       := DoblDobl_PolySys_Container.Retrieve;
-    sols : constant DoblDobl_Complex_Solutions.Solution_List
-         := DoblDobl_Solutions_Container.Retrieve;
-    clps : DoblDobl_Complex_Solutions.Solution_List;
-    cp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-
-  begin
-   -- put("#equations in systems container : "); put(lp'last,1); new_line;
-   -- put("#solutions in solutions container : ");
-   -- put(Length_Of(sols),1); new_line;
-    DoblDobl_Complex_Solutions.Copy(sols,clps);
-    Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
-    DoblDobl_PolySys_Container.Clear;
-    DoblDobl_PolySys_Container.Initialize(cp.all);
-    DoblDobl_Solutions_Container.Clear;
-    DoblDobl_Solutions_Container.Initialize(clps);
-    return 0;
-  exception 
-     when others =>
-       put_line("Exception at collapsing of dobldobl extrinsic diagonal.");
-       return 47;
-  end Job47;
-
-  function Job48 return integer32 is -- quaddobl collapse extrinsic diagonal
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    d : constant natural32 := natural32(v_a(v_a'first+1));
-    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
-       := QuadDobl_PolySys_Container.Retrieve;
-    sols : constant QuadDobl_Complex_Solutions.Solution_List
-         := QuadDobl_Solutions_Container.Retrieve;
-    clps : QuadDobl_Complex_Solutions.Solution_List;
-    cp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-
-  begin
-   -- put("#equations in systems container : "); put(lp'last,1); new_line;
-   -- put("#solutions in solutions container : ");
-   -- put(Length_Of(sols),1); new_line;
-    QuadDobl_Complex_Solutions.Copy(sols,clps);
-    Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
-    QuadDobl_PolySys_Container.Clear;
-    QuadDobl_PolySys_Container.Initialize(cp.all);
-    QuadDobl_Solutions_Container.Clear;
-    QuadDobl_Solutions_Container.Initialize(clps);
-    return 0;
-  exception 
-     when others =>
-       put_line("Exception at collapsing of dobldobl extrinsic diagonal.");
-       return 47;
-  end Job48;
-
   function Job21 return integer32 is -- remove last slack variable
 
     v_a : constant C_Integer_Array
@@ -779,60 +678,6 @@ function use_track ( job : integer32;
       return 21;
   end Job21;
 
-  function Job41 return integer32 is -- standard startsols in diagonal cascade
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.Standard_Diagonal_Cascade_Solutions(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in making standard solutions to start a cascade.");
-      return 271;
-  end Job41;
-
-  function Job45 return integer32 is -- dobldobl startsols in diagonal cascade
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.DoblDobl_Diagonal_Cascade_Solutions(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in making dobldobl solutions to start a cascade.");
-      return 297;
-  end Job45;
-
-  function Job46 return integer32 is -- quaddobl startsols in diagonal cascade
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    a_dim : constant natural32 := natural32(v_a(v_a'first));
-    b_dim : constant natural32 := natural32(v_b(v_b'first));
-
-  begin
-    PHCpack_Operations.QuadDobl_Diagonal_Cascade_Solutions(a_dim,b_dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception in making quaddobl solutions to start a cascade.");
-      return 298;
-  end Job46;
-
  -- procedure Write_Symbols ( s : in Symbol_Table.Array_of_Symbols ) is
 
   -- DESCRIPTION :
@@ -844,63 +689,6 @@ function use_track ( job : integer32;
  --   end loop;
  --   new_line;
  -- end Write_Symbols;
-
-  function Job42 return integer32 is -- diagonal symbols doubler
-
-    use Symbol_Table;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    n : constant integer32 := integer32(v_a(v_a'first));
-    d : constant natural32 := natural32(v_a(v_a'first+1));
-    nc : constant integer := integer(v_a(v_a'first+2));
-    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
-    v_b : constant C_Integer_Array(0..nc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
-    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
-    sa1 : Array_of_Symbols(1..n);
-    nb2 : constant natural32 := Symbol_Table.Number;
-    sa2e : constant Array_of_Symbols(1..integer32(nb2)) := Symbol_Table.Content;
-    sa2 : constant Array_of_Symbols := Remove_Embed_Symbols(sa2e);
-    s11 : Array_of_Symbols(sa1'range);
-    s22 : constant Array_of_Symbols(sa2'range) := Add_Suffix(sa2,'2');
-    ind : integer := 0;
-
-  begin
-   -- put_line("The string of names in Ada : " & s); 
-    for i in 1..n loop
-      declare
-        sb : Symbol;
-        ksb : integer;
-      begin
-        sb := (sb'range => ' ');
-        ind := ind + 1;
-        ksb := sb'first-1;
-        while ind <= s'last loop
-          exit when s(ind) = ' ';
-          ksb := ksb + 1;
-          sb(ksb) := s(ind);
-          ind := ind + 1;
-        end loop;
-        sa1(i) := sb;
-      end;
-    end loop;
-    s11 := Add_Suffix(sa1,'1');
-   -- put("The symbols in the first array of symbols :");
-   -- Write_Symbols(sa1);
-   -- put("The symbols in the second array of symbols :");
-   -- Write_Symbols(sa2);
-   -- put("The first suffixed symbols :"); Write_Symbols(s11);
-   -- put("The second suffixed symbols :"); Write_Symbols(s22);
-    Symbol_Table.Clear;
-    Assign_Symbol_Table(s11,s22);
-    Witness_Sets_io.Add_Embed_Symbols(d);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when doubling the symbols for diagonal.");
-      return 230;
-  end Job42;
 
   function Job55 return integer32 is -- crude tracker in double precision
 
@@ -991,7 +779,7 @@ function use_track ( job : integer32;
       when 17 => return Job17; -- reset input file for witness set k
       when 18 => return Job18; -- returns the extrinsic cascade dimension
       when 19 => return Job19; -- witness set for one polynomial
-      when 20 => return Job20; -- collapse extrinsic diagonal
+      when 20 => return Diagonal_Homotopy_Standard_Collapse(a,vrblvl);
       when 21 => return Job21; -- remove last slack variable
      -- tracking in double double precision :
       when 22 => PHCpack_Operations.Create_DoblDobl_Homotopy; return 0;
@@ -1011,15 +799,15 @@ function use_track ( job : integer32;
       when 38 => PHCpack_Operations.QuadDobl_Cascade_Homotopy; return 0;
      -- redefining diagonal homotopies ...
       when 40 => return Diagonal_Homotopy_Standard_Polynomial_Set(a,b,vrblvl);
-      when 41 => return Job41; -- solutions to start diagonal cascade
-      when 42 => return Job42; -- diagonal symbols doubler
+      when 41 => return Diagonal_Homotopy_Standard_Start_Solutions(a,b,vrblvl);
+      when 42 => return Diagonal_Homotopy_Symbols_Doubler(a,b,vrblvl);
      -- diagonal homotopy in double double and quad double precision
       when 43 => return Diagonal_Homotopy_DoblDobl_Polynomial_Make(a,b,vrblvl);
       when 44 => return Diagonal_Homotopy_QuadDobl_Polynomial_Make(a,b,vrblvl);
-      when 45 => return Job45; -- dobldobl startsols in diagonal cascade
-      when 46 => return Job46; -- quaddobl startsols in diagonal cascade
-      when 47 => return Job47; -- dobldobl collapse extrinsic diagonal
-      when 48 => return Job48; -- quaddobl collapse extrinsic diagonal
+      when 45 => return Diagonal_Homotopy_DoblDobl_Start_Solutions(a,b,vrblvl);
+      when 46 => return Diagonal_Homotopy_QuadDobl_Start_Solutions(a,b,vrblvl);
+      when 47 => return Diagonal_Homotopy_DoblDobl_Collapse(a,vrblvl);
+      when 48 => return Diagonal_Homotopy_QuadDobl_Collapse(a,vrblvl);
      -- double double and quad double witness sets for hypersurface
       when 49 => return Diagonal_Homotopy_DoblDobl_Polynomial_Set(a,b,vrblvl);
       when 50 => return Diagonal_Homotopy_QuadDobl_Polynomial_Set(a,b,vrblvl);
