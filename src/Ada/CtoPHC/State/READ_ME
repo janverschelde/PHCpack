@@ -35,6 +35,7 @@ multprec_laursys_container       : for Laurent systems with multprec coeffs
 multprec_laursys_interface       : interface to multiprecision Laurent systems
 ts_syscon                        : tests the systems container
 use_syscon                       : Ada gateway to the systems container
+tableau_form_interface           : tableau form of systems
 use_tabform                      : pass tableau forms of systems
 ts_use_syscon.c                  : C routine calls the Ada gateway use_syscon
 standard_systems_pool            : pool of systems and associated structures
