@@ -30,24 +30,21 @@ package Wrapped_Path_Trackers is
 
 -- TRACKING ONE PATH WITHOUT OUTPUT :
 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Standard_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ); 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                xt : in out DoblDobl_Complex_Vectors.Vector;
-                sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ); 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                xt : in out QuadDobl_Complex_Vectors.Vector;
-                sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ); 
+  procedure Run ( n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out Standard_Complex_Vectors.Vector;
+                  sol : out Standard_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ); 
+  procedure Run ( n : in integer32;
+                  h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out DoblDobl_Complex_Vectors.Vector;
+                  sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ); 
+  procedure Run ( n : in integer32;
+                  h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out QuadDobl_Complex_Vectors.Vector;
+                  sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ); 
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution in xt,
@@ -68,24 +65,21 @@ package Wrapped_Path_Trackers is
 
 -- TRACKING ONE PATH WITH OUTPUT TO FILE :
 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Standard_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ); 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                xt : in out DoblDobl_Complex_Vectors.Vector;
-                sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ); 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                xt : in out QuadDobl_Complex_Vectors.Vector;
-                sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ); 
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out Standard_Complex_Vectors.Vector;
+                  sol : out Standard_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ); 
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out DoblDobl_Complex_Vectors.Vector;
+                  sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ); 
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out QuadDobl_Complex_Vectors.Vector;
+                  sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ); 
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution in xt,
@@ -108,24 +102,21 @@ package Wrapped_Path_Trackers is
 
 -- TRACKING MANY PATHS WITHOUT OUTPUT :
 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out Standard_Complex_Solutions.Solution_List;
-                sols : in out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
+  procedure Run ( n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out Standard_Complex_Solutions.Solution_List;
+                  sols : in out Standard_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 );
+  procedure Run ( n : in integer32;
+                  h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 );
+  procedure Run ( n : in integer32;
+                  h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution in xt,
@@ -144,24 +135,21 @@ package Wrapped_Path_Trackers is
   --            last component of vectors in xtsols to be equal to one;
   --   sols     standard representation of the solutions.
 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out Standard_Complex_Solutions.Solution_List;
-                sols : in out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out Standard_Complex_Solutions.Solution_List;
+                  sols : in out Standard_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 );
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 );
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Tracks paths starting at the solution in xtsols,
@@ -184,17 +172,17 @@ package Wrapped_Path_Trackers is
 
 -- MULTITASKED TRACKING OF MANY PATHS WITHOUT OUTPUT :
 
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( nv,nt : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
                 sols : in out Standard_Complex_Solutions.Solution_List );
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -219,17 +207,17 @@ package Wrapped_Path_Trackers is
 
 -- MULTITASKED TRACKING OF MANY PATHS WITH OUTPUT TO FILE :
 
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( file : in file_type; nv,nt : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
                 sols : in out Standard_Complex_Solutions.Solution_List );
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( file : in file_type; nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( file : in file_type; nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out QuadDobl_Complex_Solutions.Solution_List;

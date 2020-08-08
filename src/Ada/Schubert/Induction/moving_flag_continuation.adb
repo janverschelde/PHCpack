@@ -41,7 +41,7 @@ with Checker_Moves;
 with Checker_Localization_Patterns;
 with Checker_Homotopies;
 with Wrapped_Solution_Vectors;
-with Wrapped_Path_Trackers;             use Wrapped_Path_Trackers;
+with Wrapped_Path_Trackers;
 with Start_Flag_Homotopies;             use Start_Flag_Homotopies;
 with Setup_Flag_Homotopies;             use Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;            use Moving_Flag_Homotopies;
@@ -109,7 +109,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
       Clear(sh0); --Clear(sols);
-      Call_Path_Trackers(file,n,sh,xt,sol,vrblvl-1);
+      Wrapped_Path_Trackers.Run(file,n,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -181,7 +181,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Clear(sh0); --Clear(sols);
-      Call_Path_Trackers(file,n,sh,xt,sol,vrblvl-1);
+      Wrapped_Path_Trackers.Run(file,n,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -253,7 +253,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Clear(sh0); --Clear(sols);
-      Call_Path_Trackers(file,n,sh,xt,sol,vrblvl-1);
+      Wrapped_Path_Trackers.Run(file,n,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -321,7 +321,7 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,Standard_Complex_Numbers.Create(0.0),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
-      Call_Path_Trackers(file,nv,sh,xt,sol,vrblvl-1);
+      Wrapped_Path_Trackers.Run(file,nv,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -388,7 +388,7 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(0)),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
-      Call_Path_Trackers(file,nv,sh,xt,sol,vrblvl-1);
+      Wrapped_Path_Trackers.Run(file,nv,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -455,7 +455,7 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(0)),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
-      Call_Path_Trackers(file,nv,sh,xt,sol,vrblvl-1);
+      Wrapped_Path_Trackers.Run(file,nv,sh,xt,sol,vrblvl-1);
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -554,15 +554,15 @@ package body Moving_Flag_Continuation is
       end;
       if tosqr then
         if nt > 0
-         then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(file,nv,sh,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,sh,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(file,nv,sh,xtsols,sols,vrblvl-1);
         end if;
         Clear(sh0);
         sh0 := Eval(sh,one,nv+1);
       else
-        if nt > 0 
-         then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(file,nv,h,xtsols,sols,vrblvl-1);
+        if nt > 0
+         then Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,h,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(file,nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -681,15 +681,15 @@ package body Moving_Flag_Continuation is
       end;
       if tosqr then
         if nt > 0
-         then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(file,nv,sh,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,sh,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(file,nv,sh,xtsols,sols,vrblvl-1);
         end if;
         Clear(sh0);
         sh0 := Eval(sh,one,nv+1);
       else
         if nt > 0
-         then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(file,nv,h,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,h,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(file,nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -808,15 +808,15 @@ package body Moving_Flag_Continuation is
       end;
       if tosqr then
         if nt > 0
-         then Multitasked_Path_Trackers(file,nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(file,nv,sh,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,sh,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(file,nv,sh,xtsols,sols,vrblvl-1);
         end if;
         Clear(sh0);
         sh0 := Eval(sh,one,nv+1);
       else
         if nt > 0
-         then Multitasked_Path_Trackers(file,nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(file,nv,h,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,h,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(file,nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -883,13 +883,13 @@ package body Moving_Flag_Continuation is
       if tosqr then
         sh := Square(nv,h);
         if nt > 0
-         then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(nv,sh,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(nv,nt,sh,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(nv,sh,xtsols,sols,vrblvl-1);
         end if;
       else
         if nt > 0
-         then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(nv,h,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(nv,nt,h,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -945,13 +945,13 @@ package body Moving_Flag_Continuation is
       if tosqr then
         sh := Square(nv,h);
         if nt > 0
-         then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(nv,sh,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(nv,nt,sh,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(nv,sh,xtsols,sols,vrblvl-1);
         end if;
       else
         if nt > 0
-         then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(nv,h,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(nv,nt,h,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;
@@ -1007,13 +1007,13 @@ package body Moving_Flag_Continuation is
       if tosqr then
         sh := Square(nv,h);
         if nt > 0
-         then Multitasked_Path_Trackers(nv,nt,sh,xtsols,sols);
-         else Call_Path_Trackers(nv,sh,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(nv,nt,sh,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(nv,sh,xtsols,sols,vrblvl-1);
         end if;
       else
         if nt > 0
-         then Multitasked_Path_Trackers(nv,nt,h,xtsols,sols);
-         else Call_Path_Trackers(nv,h,xtsols,sols,vrblvl-1);
+         then Wrapped_Path_Trackers.Multitasked_Run(nv,nt,h,xtsols,sols);
+         else Wrapped_Path_Trackers.Run(nv,h,xtsols,sols,vrblvl-1);
         end if;
       end if;
       tmp := xtsols;

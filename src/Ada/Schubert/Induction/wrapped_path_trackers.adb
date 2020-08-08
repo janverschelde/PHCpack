@@ -40,12 +40,11 @@ package body Wrapped_Path_Trackers is
 
 -- TRACKING ONE PATH WITHOUT OUTPUT :
 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Standard_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out Standard_Complex_Vectors.Vector;
+                  sol : out Standard_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Standard_IncFix_Continuation;
@@ -74,14 +73,13 @@ package body Wrapped_Path_Trackers is
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 1"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                xt : in out DoblDobl_Complex_Vectors.Vector;
-                sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( n : in integer32;
+                  h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out DoblDobl_Complex_Vectors.Vector;
+                  sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_IncFix_Continuation;
@@ -110,14 +108,13 @@ package body Wrapped_Path_Trackers is
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 2"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                xt : in out QuadDobl_Complex_Vectors.Vector;
-                sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( n : in integer32;
+                  h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out QuadDobl_Complex_Vectors.Vector;
+                  sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_IncFix_Continuation;
@@ -146,16 +143,15 @@ package body Wrapped_Path_Trackers is
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 3"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
 -- TRACKING ONE PATH WITH OUTPUT TO FILE :
 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Standard_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out Standard_Complex_Vectors.Vector;
+                  sol : out Standard_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Standard_IncFix_Continuation;
@@ -184,14 +180,13 @@ package body Wrapped_Path_Trackers is
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 4"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                xt : in out DoblDobl_Complex_Vectors.Vector;
-                sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out DoblDobl_Complex_Vectors.Vector;
+                  sol : out DoblDobl_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_IncFix_Continuation;
@@ -220,14 +215,13 @@ package body Wrapped_Path_Trackers is
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 5"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                xt : in out QuadDobl_Complex_Vectors.Vector;
-                sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                  xt : in out QuadDobl_Complex_Vectors.Vector;
+                  sol : out QuadDobl_Complex_Solutions.Link_to_Solution;
+                  vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_IncFix_Continuation;
@@ -256,16 +250,15 @@ package body Wrapped_Path_Trackers is
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 6"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
 -- TRACKING MANY PATHS WITHOUT OUTPUT :
 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out Standard_Complex_Solutions.Solution_List;
-                sols : in out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out Standard_Complex_Solutions.Solution_List;
+                  sols : in out Standard_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 ) is
 
     use Standard_IncFix_Continuation;
 
@@ -290,14 +283,13 @@ package body Wrapped_Path_Trackers is
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 7"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( n : in integer32;
+                  h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_IncFix_Continuation;
 
@@ -322,14 +314,13 @@ package body Wrapped_Path_Trackers is
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 8"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
-  procedure Call_Path_Trackers
-              ( n : in integer32;
-                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( n : in integer32;
+                  h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_IncFix_Continuation;
 
@@ -354,16 +345,15 @@ package body Wrapped_Path_Trackers is
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 9"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
 -- TRACKING MANY PATHS WITH OUTPUT TO FILE :
 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out Standard_Complex_Solutions.Solution_List;
-                sols : in out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out Standard_Complex_Solutions.Solution_List;
+                  sols : in out Standard_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
     use Standard_IncFix_Continuation;
@@ -394,14 +384,13 @@ package body Wrapped_Path_Trackers is
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 10"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_IncFix_Continuation;
@@ -433,14 +422,13 @@ package body Wrapped_Path_Trackers is
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 11"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32;
-                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 ) is
+  procedure Run ( file : in file_type; n : in integer32;
+                  h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                  xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  vrblvl : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_IncFix_Continuation;
@@ -472,11 +460,11 @@ package body Wrapped_Path_Trackers is
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 12"); raise;
-  end Call_Path_Trackers;
+  end Run;
 
 -- MULTITASKED TRACKING OF MANY PATHS WITHOUT OUTPUT :
 
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( nv,nt : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
@@ -495,9 +483,9 @@ package body Wrapped_Path_Trackers is
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 7"); raise;
-  end Multitasked_Path_Trackers;
+  end Multitasked_Run;
 
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
@@ -516,9 +504,9 @@ package body Wrapped_Path_Trackers is
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 8"); raise;
-  end Multitasked_Path_Trackers;
+  end Multitasked_Run;
 
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -537,11 +525,11 @@ package body Wrapped_Path_Trackers is
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 9"); raise;
-  end Multitasked_Path_Trackers;
+  end Multitasked_Run;
 
 -- MULTITASKED TRACKING OF MANY PATHS WITH OUTPUT TO FILE :
 
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( file : in file_type; nv,nt : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
@@ -558,7 +546,6 @@ package body Wrapped_Path_Trackers is
     else      -- overdetermined homotopy
       Silent_Multitasking_Path_Tracker(xtsols,nt,nbq=>nbequ);
     end if;
-   -- put_line(file,"In Call_Path_Trackers ...");
     put(file,"Number of solutions in sols   : ");
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
@@ -567,9 +554,9 @@ package body Wrapped_Path_Trackers is
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 10"); raise;
-  end Multitasked_Path_Trackers;
+  end Multitasked_Run;
 
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( file : in file_type; nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
@@ -595,9 +582,9 @@ package body Wrapped_Path_Trackers is
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 11"); raise;
-  end Multitasked_Path_Trackers;
+  end Multitasked_Run;
 
-  procedure Multitasked_Path_Trackers
+  procedure Multitasked_Run
               ( file : in file_type; nv,nt : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -623,6 +610,6 @@ package body Wrapped_Path_Trackers is
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers 12"); raise;
-  end Multitasked_Path_Trackers;
+  end Multitasked_Run;
 
 end Wrapped_Path_Trackers;
