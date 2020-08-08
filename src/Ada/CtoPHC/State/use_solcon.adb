@@ -1,11 +1,4 @@
 with text_io;                           use text_io;
-with Interfaces.C;                      use Interfaces.C;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Integer_Vectors;
-with Standard_Complex_Solutions;
-with Standard_Solution_Strings;
-with Standard_Solutions_Container;
-with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_Solutions_Interface;
 with DoblDobl_Solutions_Interface;
 with QuadDobl_Solutions_Interface;
@@ -16,144 +9,6 @@ function use_solcon ( job : integer32;
                       b : C_intarrs.Pointer;
                       c : C_dblarrs.Pointer;
                       vrblvl : integer32 := 0 ) return integer32 is
-
-  function Job32 return integer32 is -- returns size of solution intro
-
-    use Standard_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    ls : Link_to_Solution;
-    fail : boolean;
-    n : natural32;
-
-  begin
-    Standard_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      Assign(0,b);
-      return 202;
-    else
-      n := Standard_Solution_Strings.Length_Intro(ls.all);
-      Assign(integer32(n),b);
-    end if;
-    return 0;
-  exception
-    when others => return 202;
-  end Job32;
-
-  function Job33 return integer32 is -- returns solution intro string
-
-    use Standard_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    ls : Link_to_Solution;
-    fail : boolean;
-    s : string(1..integer(n));
-    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
-
-  begin
-    Standard_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      return 203;
-    else
-      s := Standard_Solution_Strings.Write_Intro(ls.all);
-      sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
-      Assign(sv,b);
-      return 0;
-    end if;
-  exception
-    when others => return 203;
-  end Job33;
-
-  function Job34 return integer32 is -- returns size of solution vector
-
-    use Standard_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    ls : Link_to_Solution;
-    fail : boolean;
-    n : natural32;
-
-  begin
-    Standard_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      Assign(0,b);
-      return 204;
-    else
-      n := Standard_Solution_Strings.Length_Vector(ls.all);
-      Assign(integer32(n),b);
-    end if;
-    return 0;
-  exception
-    when others => return 204;
-  end Job34;
-
-  function Job35 return integer32 is -- returns solution vector string
-
-    use Standard_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    ls : Link_to_Solution;
-    fail : boolean;
-    s : string(1..integer(n));
-    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
-
-  begin
-    Standard_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      return 205;
-    else
-      s := Standard_Solution_Strings.Write_Vector(ls.all);
-      sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
-      Assign(sv,b);
-      return 0;
-    end if;
-  exception
-    when others => return 205;
-  end Job35;
-
-  function Job36 return integer32 is -- returns size of solution diagnostics
-
-    n : natural32;
-
-  begin
-    n := Standard_Solution_Strings.Length_Diagnostics;
-    Assign(integer32(n),b);
-    return 0;
-  exception
-    when others => return 206;
-  end Job36;
-
-  function Job37 return integer32 is -- returns solution vector diagnostics
-
-    use Standard_Complex_Solutions;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    n : constant natural32 := natural32(v_a(v_a'first+1));
-    ls : Link_to_Solution;
-    fail : boolean;
-    s : string(1..integer(n));
-    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
-
-  begin
-    Standard_Solutions_Container.Retrieve(k,ls,fail);
-    if fail then
-      return 207;
-    else
-      s := Standard_Solution_Strings.Write_Diagnostics(ls.all);
-      sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
-      Assign(sv,b);
-      return 0;
-    end if;
-  exception
-    when others => return 207;
-  end Job37;
 
   function Handle_Jobs return integer32 is
 
@@ -192,12 +47,12 @@ function use_solcon ( job : integer32;
       when 25 => return Standard_Solutions_Next_Witness(a,b,c,vrblvl);
       when 30 => return Standard_Solutions_String_Size(a,b,vrblvl);
       when 31 => return Standard_Solutions_Get_String(a,b,vrblvl);
-      when 32 => return Job32; -- returns size of solution intro
-      when 33 => return Job33; -- returns solution intro string
-      when 34 => return Job34; -- returns size of solution vector
-      when 35 => return Job35; -- returns solution vector string
-      when 36 => return Job36; -- returns size of solution diagnostics
-      when 37 => return Job37; -- returns solution diagnostics string
+      when 32 => return Standard_Solutions_Intro_String_Size(a,b,vrblvl);
+      when 33 => return Standard_Solutions_Intro_String(a,b,vrblvl);
+      when 34 => return Standard_Solutions_Vector_String_Size(a,b,vrblvl);
+      when 35 => return Standard_Solutions_Vector_String(a,b,vrblvl);
+      when 36 => return Standard_Solutions_Diagnostics_String_Size(b,vrblvl);
+      when 37 => return Standard_Solutions_Diagnostics_String(a,b,vrblvl);
       when 38 => return Standard_Solutions_Add_String(a,b,vrblvl);
       when 39 => return Standard_Solutions_Replace_String(a,b,vrblvl);
      -- corresponding operations for double double solutions

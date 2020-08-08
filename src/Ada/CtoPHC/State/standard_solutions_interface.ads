@@ -189,6 +189,106 @@ package Standard_Solutions_Interface is
   --   b       the string representation of a solution;
   --   vrblvl  is the verbose level.
 
+  function Standard_Solutions_Intro_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the number of characters of the string representation
+  --           of the intro to the solution in double precision.
+
+  function Standard_Solutions_Intro_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the string representation of the intro
+  --   to a solution in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution,
+  --           in a[1] is the number of characters in the string
+  --           representation of the diagnostics of the solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the string representation of the intro
+  --           to the solution in double precision.
+
+  function Standard_Solutions_Vector_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size of the string representation of all coordinates 
+  --   of a solution in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the number of characters of the string representation
+  --           of all coordinates of the solution in double precision.
+
+  function Standard_Solutions_Vector_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the string representation of all coordinates
+  --   of a solution in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution,
+  --           in a[1] is the number of characters in the string
+  --           representation of the diagnostics of the solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the string representation of all coordinates
+  --           of the solution in double precision.
+
+  function Standard_Solutions_Diagnostics_String_Size
+             ( b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size of the diagnostics string of a solution
+  --   stored in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the number of characters in the diagnostics string.
+
+  function Standard_Solutions_Diagnostics_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the diagnostics string of a solution in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the solution,
+  --           in a[1] is the number of characters in the string
+  --           representation of the diagnostics of the solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       the string representation of the diagnostics
+  --           of a solution in double precision.
+
   function Standard_Solutions_Retrieve_Next
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;

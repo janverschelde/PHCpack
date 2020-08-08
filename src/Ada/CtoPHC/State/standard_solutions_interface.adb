@@ -478,6 +478,223 @@ package body Standard_Solutions_Interface is
       return 209;
   end Standard_Solutions_Replace_String;
 
+  function Standard_Solutions_Intro_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    ls : Link_to_Solution;
+    fail : boolean;
+    n : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Intro_String_Size ...");
+    end if;
+    Standard_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      Assign(0,b);
+      return 202;
+    else
+      n := Standard_Solution_Strings.Length_Intro(ls.all);
+      Assign(integer32(n),b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Intro_String_Size.");
+      end if;
+      return 202;
+  end Standard_Solutions_Intro_String_Size;
+
+  function Standard_Solutions_Intro_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    ls : Link_to_Solution;
+    fail : boolean;
+    s : string(1..integer(n));
+    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Intro_String ...");
+    end if;
+    Standard_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      return 203;
+    else
+      s := Standard_Solution_Strings.Write_Intro(ls.all);
+      sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
+      Assign(sv,b);
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Intro_String.");
+      end if;
+      return 203;
+  end Standard_Solutions_Intro_String;
+
+  function Standard_Solutions_Vector_String_Size
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    ls : Link_to_Solution;
+    fail : boolean;
+    n : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Vector_String_Size ...");
+    end if;
+    Standard_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      Assign(0,b);
+      return 204;
+    else
+      n := Standard_Solution_Strings.Length_Vector(ls.all);
+      Assign(integer32(n),b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Vector_String_Size.");
+      end if;
+      return 204;
+  end Standard_Solutions_Vector_String_Size;
+
+  function Standard_Solutions_Vector_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    ls : Link_to_Solution;
+    fail : boolean;
+    s : string(1..integer(n));
+    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Vector_String ...");
+    end if;
+    Standard_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      return 205;
+    else
+      s := Standard_Solution_Strings.Write_Vector(ls.all);
+      sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
+      Assign(sv,b);
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Vector_String.");
+      end if;
+      return 205;
+  end Standard_Solutions_Vector_String;
+
+  function Standard_Solutions_Diagnostics_String_Size
+             ( b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    n : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Diagnostics_String_Size ...");
+    end if;
+    n := Standard_Solution_Strings.Length_Diagnostics;
+    Assign(integer32(n),b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Diagnostics_String_Size.");
+      end if;
+      return 206;
+  end Standard_Solutions_Diagnostics_String_Size;
+
+  function Standard_Solutions_Diagnostics_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    ls : Link_to_Solution;
+    fail : boolean;
+    s : string(1..integer(n));
+    sv : Standard_Integer_Vectors.Vector(1..integer32(n));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_solutions_interface.");
+      put_line("Standard_Solutions_Diagnostics_String ...");
+    end if;
+    Standard_Solutions_Container.Retrieve(k,ls,fail);
+    if fail then
+      return 207;
+    else
+      s := Standard_Solution_Strings.Write_Diagnostics(ls.all);
+      sv := String_to_Integer_Vector(Pad_with_Spaces(n,s));
+      Assign(sv,b);
+      return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_solutions_interface.");
+        put_line("Standard_Solutions_Diagnostics_String.");
+      end if;
+      return 207;
+  end Standard_Solutions_Diagnostics_String;
+
   function Standard_Solutions_Retrieve_Next
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
