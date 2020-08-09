@@ -28,7 +28,7 @@ package Checker_Poset_Deformations is
                 mf : in out Standard_Complex_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 tol : in double_float; unhappy : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -70,6 +70,7 @@ package Checker_Poset_Deformations is
   --   mf       coordinates of the moving flag,
   --            should be equal to the identity matrix at the start;
   --   tol      tolerance on the residual to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -88,7 +89,7 @@ package Checker_Poset_Deformations is
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; unhappy : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -136,6 +137,7 @@ package Checker_Poset_Deformations is
   --   start    the start solutions from the nodes at the previous level
   --            in the intersection poset;
   --   tol      tolerance on residuals to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -154,7 +156,7 @@ package Checker_Poset_Deformations is
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; unhappy : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Track_Path_in_Poset
               ( n,k,nt : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
@@ -200,6 +202,7 @@ package Checker_Poset_Deformations is
   --   start    the start solutions from the nodes at the previous level
   --            in the intersection poset;
   --   tol      tolerance on residuals to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -215,7 +218,7 @@ package Checker_Poset_Deformations is
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 verify,minrep,tosqr : in boolean;
@@ -250,6 +253,7 @@ package Checker_Poset_Deformations is
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   tol      tolerance on residuals to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -264,7 +268,7 @@ package Checker_Poset_Deformations is
                 tol : in double_float;
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
@@ -307,6 +311,7 @@ package Checker_Poset_Deformations is
   --   start    contains solutions of the previous level, transformed
   --            to serve as the start solutions for the current level;
   --   tol      tolerance on residuals to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -321,7 +326,7 @@ package Checker_Poset_Deformations is
                 tol : in double_float;
                 start : in Standard_Complex_Solutions.Solution_List;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k,nt : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
@@ -367,6 +372,7 @@ package Checker_Poset_Deformations is
   --   start    contains solutions of the previous level, transformed
   --            to serve as the start solutions for the current level;
   --   tol      tolerance on residuals to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :

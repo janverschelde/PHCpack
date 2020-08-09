@@ -302,7 +302,7 @@ package Resolve_Schubert_Problems is
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Connect_Checker_Posets_to_Track
               ( n,k,level,nt : in integer32; tol : in double_float;
                 pl : in Poset_List;
@@ -343,6 +343,7 @@ package Resolve_Schubert_Problems is
   --   tosqr    to square overdetermined homotopies;
   --   conds    conditions on the current fixed flags;
   --   flags    current fixed flags;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -358,7 +359,7 @@ package Resolve_Schubert_Problems is
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type;
                 n,k,level,nt : in integer32; tol : in double_float;
@@ -403,6 +404,7 @@ package Resolve_Schubert_Problems is
   --   tosqr    to square overdetermined homotopies;
   --   conds    conditions on the current fixed flags;
   --   flags    current fixed flags;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -444,7 +446,7 @@ package Resolve_Schubert_Problems is
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Resolve
               ( file : in file_type; extopt,repcon : in boolean;
                 n,k,nt : in integer32; tol : in double_float;
@@ -494,6 +496,7 @@ package Resolve_Schubert_Problems is
   --   conds    intersection conditions on the fixed flags;
   --   flags    generic complex matrices that represented nested linear
   --            space for use in the homotopies;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -511,7 +514,7 @@ package Resolve_Schubert_Problems is
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Resolve
               ( n,k,nt : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
@@ -557,6 +560,7 @@ package Resolve_Schubert_Problems is
   --   conds    intersection conditions on the fixed flags;
   --   flags    generic complex matrices that represented nested linear
   --            space for use in the homotopies;
+  --   rpt      flag to run the robust path tracker;
   --   verblvl  is the verbose level.
 
   -- ON RETURN :

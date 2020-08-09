@@ -1,5 +1,8 @@
 Sat 8 Aug 2020 : simplified names in wrapped_path_trackers, and then
-  updated moving_flag_continuation.adb.
+  updated moving_flag_continuation.adb.  Added the rpt flag to apply the
+  robust path tracker in moving_flag_continuation, with caused updates in
+  checker_poset_deformations, resolve_schubert_problems, and
+  drivers_for_schubert_induction.adb.
 
 Thu 6 Aug 2020 : moved functions and procedure to wrap solution vectors
   from wrapped_path_trackers into a new package wrapped_solution_vectors,

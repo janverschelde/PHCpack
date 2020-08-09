@@ -35,6 +35,7 @@ with Standard_Solution_Posets;
 with DoblDobl_Solution_Posets;
 with QuadDobl_Solution_Posets;
 with Wrapped_Path_Trackers;
+with Wrapped_Pade_Trackers;
 with Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;
 with Checker_Poset_Deformations;
@@ -1371,6 +1372,8 @@ package body Drivers_for_Schubert_Induction is
     sols : Solution_List;
     tol : constant double_float := 1.0E-6;
     timer : Timing_Widget;
+    ans : character;
+    rpt : boolean := true;
 
   begin
     if vrblvl > 0 then
@@ -1392,6 +1395,12 @@ package body Drivers_for_Schubert_Induction is
       new_line(file);
     end loop;
     Prompt_for_Resolve_Options(outlvl,nbt,monitor,verify,minrep,tosquare);
+    if not tosquare then
+      rpt := false;
+    else
+      put("Run the robust path tracker ? (y/n) "); Ask_Yes_or_No(ans);
+      rpt := (ans = 'y');
+    end if;
     new_line(file);
     if minrep
      then put_line(file,"An efficient problem formulation will be used.");
@@ -1401,13 +1410,22 @@ package body Drivers_for_Schubert_Induction is
      then put_line(file,"Overdetermined homotopies will be made square.");
      else put_line(file,"Gauss-Newton trackers in overdetermined homotopies.");
     end if;
-    Wrapped_Path_Trackers.Set_Parameters(file,report);
+    if rpt then
+      put_line(file,"The robust path tracker will run.");
+      Wrapped_Pade_Trackers.Set_Parameters(file);
+      if outlvl > 0
+       then report := true;
+      end if;
+    else
+      Wrapped_Path_Trackers.Set_Parameters(file,report);
+    end if;
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,nbt,tol,ips,sps,minrep,tosquare,conds,flags,sols,vrblvl-1);
+      Resolve(n,k,nbt,tol,ips,sps,minrep,tosquare,conds,flags,sols,
+              rpt,vrblvl-1);
     else
       Resolve(file,monitor,report,n,k,nbt,tol,ips,sps,verify,minrep,tosquare,
-              conds,flags,sols,vrblvl-1);
+              conds,flags,sols,rpt,vrblvl-1);
     end if;
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);

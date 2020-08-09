@@ -42,6 +42,7 @@ with Checker_Localization_Patterns;
 with Checker_Homotopies;
 with Wrapped_Solution_Vectors;
 with Wrapped_Path_Trackers;
+with Wrapped_Pade_Trackers;
 with Start_Flag_Homotopies;             use Start_Flag_Homotopies;
 with Setup_Flag_Homotopies;             use Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;            use Moving_Flag_Homotopies;
@@ -54,7 +55,8 @@ package body Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean; vrblvl : in integer32 := 0 ) is
+                fail : out boolean; rpt : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Poly_SysFun;
@@ -109,7 +111,10 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
       Clear(sh0); --Clear(sols);
-      Wrapped_Path_Trackers.Run(file,n,sh,xt,sol,vrblvl-1);
+      if rpt
+       then Wrapped_Pade_Trackers.Run(file,n,sh,xt,sol,false,vrblvl-1);
+       else Wrapped_Path_Trackers.Run(file,n,sh,xt,sol,vrblvl-1);
+      end if;
       put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -271,7 +276,8 @@ package body Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean; vrblvl : in integer32 := 0 ) is
+                fail : out boolean; rpt : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Poly_SysFun;
@@ -321,7 +327,10 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,Standard_Complex_Numbers.Create(0.0),nv+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
-      Wrapped_Path_Trackers.Run(file,nv,sh,xt,sol,vrblvl-1);
+      if rpt 
+       then Wrapped_Pade_Trackers.Run(file,nv,sh,xt,sol,false,vrblvl-1);
+       else Wrapped_Path_Trackers.Run(file,nv,sh,xt,sol,vrblvl-1);
+      end if;
       put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
@@ -473,7 +482,8 @@ package body Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean; vrblvl : in integer32 := 0 ) is
+                fail : out boolean; rpt : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Poly_SysFun;
@@ -553,9 +563,15 @@ package body Moving_Flag_Continuation is
         Standard_Complex_Poly_Systems.Clear(h0);
       end;
       if tosqr then
-        if nt > 0
-         then Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,sh,xtsols,sols);
-         else Wrapped_Path_Trackers.Run(file,nv,sh,xtsols,sols,vrblvl-1);
+        if nt > 0 then
+          Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,sh,xtsols,sols);
+        else
+          if rpt then
+            Wrapped_Pade_Trackers.Run(file,nv,sh,xtsols,false,vrblvl-1);
+            Wrapped_Solution_Vectors.Update(sols,xtsols);
+          else
+            Wrapped_Path_Trackers.Run(file,nv,sh,xtsols,sols,vrblvl-1);
+          end if;
         end if;
         Clear(sh0);
         sh0 := Eval(sh,one,nv+1);
@@ -855,7 +871,8 @@ package body Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean; vrblvl : in integer32 := 0 ) is
+                fail : out boolean; rpt : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -882,9 +899,15 @@ package body Moving_Flag_Continuation is
     if not fail then
       if tosqr then
         sh := Square(nv,h);
-        if nt > 0
-         then Wrapped_Path_Trackers.Multitasked_Run(nv,nt,sh,xtsols,sols);
-         else Wrapped_Path_Trackers.Run(nv,sh,xtsols,sols,vrblvl-1);
+        if nt > 0 then
+          Wrapped_Path_Trackers.Multitasked_Run(nv,nt,sh,xtsols,sols);
+        else
+          if rpt then
+            Wrapped_Pade_Trackers.Run(nv,sh,xtsols,vrblvl-1);
+            Wrapped_Solution_Vectors.Update(sols,xtsols);
+          else
+            Wrapped_Path_Trackers.Run(nv,sh,xtsols,sols,vrblvl-1);
+          end if;
         end if;
       else
         if nt > 0
@@ -1823,7 +1846,7 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution; 
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     gh : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -1853,8 +1876,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
-     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,rpt,vrblvl-1);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,rpt,vrblvl-1);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2000,7 +2023,7 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     gh : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -2029,7 +2052,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
+    Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,rpt,vrblvl-1);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2171,7 +2194,7 @@ package body Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     gh : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -2192,7 +2215,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
+    Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,rpt,vrblvl-1);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2636,7 +2659,7 @@ package body Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -2674,16 +2697,16 @@ package body Moving_Flag_Continuation is
     end if;
     if pivot = 0 then
       if ind = 0
-       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
-       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+       then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail,rpt,vrblvl-1);
+       else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail,rpt,vrblvl-1);
       end if;
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
       put_line(file,"The reconditioned swap homotopy :");
       put_line(file,gh.all);
       if ind = 0
-       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,vrblvl-1);
-       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,vrblvl-1);
+       then Track_First_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,rpt,vrblvl-1);
+       else Track_Next_Move(file,dim+1,gh.all,tosqr,tol,ls,fail,rpt,vrblvl-1);
       end if;
       declare
         nls : constant Standard_Complex_Solutions.Solution
@@ -2899,7 +2922,7 @@ package body Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -2936,12 +2959,12 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if pivot = 0 then
-      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
+      Track_Next_Move(file,dim,nt,gh.all,tosqr,tol,sols,fail,rpt,vrblvl-1);
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
       put_line(file,"The reconditioned swap homotopy :");
       put_line(file,gh.all);
-      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
+      Track_Next_Move(file,dim+1,nt,gh.all,tosqr,tol,sols,fail,rpt,vrblvl-1);
       declare
         rsols : constant Standard_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions
@@ -3160,7 +3183,7 @@ package body Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -3191,10 +3214,10 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if pivot = 0 then
-      Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
+      Track_Next_Move(dim,nt,gh.all,tosqr,tol,sols,fail,rpt,vrblvl-1);
     else -- pivot /= 0, reconditioned homotopy has one extra variable
       Setup_Flag_Homotopies.Append(gh,rlq);
-      Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail,vrblvl-1);
+      Track_Next_Move(dim+1,nt,gh.all,tosqr,tol,sols,fail,rpt,vrblvl-1);
       declare
         rsols : constant Standard_Complex_Solutions.Solution_List
               := Recondition_Swap_Homotopies.Rescale_Solutions

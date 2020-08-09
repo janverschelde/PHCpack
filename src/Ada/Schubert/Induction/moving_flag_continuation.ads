@@ -38,7 +38,8 @@ package Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean; vrblvl : in integer32 := 0 );
+                fail : out boolean; rpt : in boolean := true;
+                vrblvl : in integer32 := 0 );
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -67,6 +68,7 @@ package Moving_Flag_Continuation is
   --   tol      tolerance on the residual to decide failure;
   --   sol      if not null, then the start solution for the homotopy,
   --            otherwise, the start solution will be computed;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -79,7 +81,8 @@ package Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
-                fail : out boolean; vrblvl : in integer32 := 0 );
+                fail : out boolean; rpt : in boolean := true;
+                vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( file : in file_type; nv : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -106,6 +109,7 @@ package Moving_Flag_Continuation is
   --   tosqr    true if the overdetermined homotopy will be squared up, or
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
+  --   rpt      flag to run robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -118,7 +122,8 @@ package Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean; vrblvl : in integer32 := 0 );
+                fail : out boolean; rpt : in boolean := true;
+                vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -146,6 +151,7 @@ package Moving_Flag_Continuation is
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
   --   sols     start solutions for the homotopy;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -158,7 +164,8 @@ package Moving_Flag_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                fail : out boolean; vrblvl : in integer32 := 0 );
+                fail : out boolean; rpt : in boolean := true;
+                vrblvl : in integer32 := 0 );
   procedure Track_Next_Move
               ( file : in file_type; nv,nt : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -188,6 +195,7 @@ package Moving_Flag_Continuation is
   --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
   --   sols     start solutions for the homotopy;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -531,7 +539,7 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -580,6 +588,7 @@ package Moving_Flag_Continuation is
   --   start_mf is the moving flag at the start of the homotopy;
   --   ls       link to the current solution;
   --   tol      tolerance on the residual to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -595,7 +604,7 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -644,6 +653,7 @@ package Moving_Flag_Continuation is
   --   start_mf is the moving flag at the start of the homotopy;
   --   sols     the start solutions for the homotopy;
   --   tol      tolerance on the residual to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -659,7 +669,7 @@ package Moving_Flag_Continuation is
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -710,6 +720,7 @@ package Moving_Flag_Continuation is
   --   start_mf is the moving flag at the start of the homotopy;
   --   sols     the start solutions for the homotopy;
   --   tol      tolerance on the residual to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -862,7 +873,7 @@ package Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -911,6 +922,7 @@ package Moving_Flag_Continuation is
   --   vf       coordinates of general flags to keep fixed;
   --   ls       link to the current solution;
   --   tol      tolerance on the residual to decide failure;
+  --   rpt      flag to run robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -926,7 +938,7 @@ package Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -977,6 +989,7 @@ package Moving_Flag_Continuation is
   --   vf       coordinates of general flags to keep fixed;
   --   sols     start solutions for the homotopy;
   --   tol      tolerance on the residual to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -992,7 +1005,7 @@ package Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean;
-                vrblvl : in integer32 := 0 );
+                rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -1043,6 +1056,7 @@ package Moving_Flag_Continuation is
   --   vf       coordinates of general flags to keep fixed;
   --   sols     start solutions for the homotopy;
   --   tol      tolerance on the residual to decide failure;
+  --   rpt      flag to run the robust path tracker;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :

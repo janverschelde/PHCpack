@@ -966,7 +966,7 @@ package body Resolve_Schubert_Problems is
                 verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -1044,7 +1044,7 @@ package body Resolve_Schubert_Problems is
               (file,n,k,nt,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),
-               tol,startsols,sols,vrblvl-1);
+               tol,startsols,sols,rpt,vrblvl-1);
             Push(sols,parent_snd.sols);
             put(file,"Before push : #sols returned = ");
             put(file,Length_Of(sols),1); new_line(file);
@@ -1310,7 +1310,7 @@ package body Resolve_Schubert_Problems is
                 minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -1364,7 +1364,7 @@ package body Resolve_Schubert_Problems is
               (n,k,nt,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols,
-               vrblvl-1);
+               rpt,vrblvl-1);
             Push(sols,parent_snd.sols);
           end;
           Deep_Clear(startsols);
@@ -1622,7 +1622,7 @@ package body Resolve_Schubert_Problems is
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     use Standard_Solution_Posets;
     use Flag_Transformations;
@@ -1690,21 +1690,21 @@ package body Resolve_Schubert_Problems is
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,tosqr,conds,flags,vrblvl-1);
+                 verify,minrep,tosqr,conds,flags,rpt,vrblvl-1);
             else
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,tosqr,conds,workf.all,vrblvl-1);
+                 verify,minrep,tosqr,conds,workf.all,rpt,vrblvl-1);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,tosqr,conds,flags,vrblvl-1);
+                 minrep,tosqr,conds,flags,rpt,vrblvl-1);
             else
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,tosqr,conds,workf.all,vrblvl-1);
+                 minrep,tosqr,conds,workf.all,rpt,vrblvl-1);
             end if;
           end if;
         end if;
@@ -1940,7 +1940,7 @@ package body Resolve_Schubert_Problems is
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List;
-                vrblvl : in integer32 := 0 ) is
+                rpt : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     use Standard_Solution_Posets;
     use Flag_Transformations;
@@ -1986,11 +1986,11 @@ package body Resolve_Schubert_Problems is
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
               (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,tosqr,conds,flags,vrblvl-1);
+               minrep,tosqr,conds,flags,rpt,vrblvl-1);
           else
             Connect_Checker_Posets_to_Track
               (n,k,i-1,nt,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,tosqr,conds,workf.all,vrblvl-1);
+               minrep,tosqr,conds,workf.all,rpt,vrblvl-1);
           end if;
         end if;
         tmp := Tail_Of(tmp);
