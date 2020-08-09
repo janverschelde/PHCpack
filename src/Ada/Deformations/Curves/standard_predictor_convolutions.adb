@@ -1167,7 +1167,10 @@ package body Standard_Predictor_Convolutions is
       put_line("-> in standard_predictor_convolutions.LU_Prediction 1 ...");
     end if;
     Newton_Fabry(hom,prd,rx,ix,maxit,tol,nbrit,absdx,fail,z,r,err,vrblvl-1);
-    pole_step := beta1*r;
+    if fail
+     then pole_step := maxstep;
+     else pole_step := beta1*r;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
@@ -1213,7 +1216,10 @@ package body Standard_Predictor_Convolutions is
     end if;
     Newton_Fabry(file,hom,prd,rx,ix,maxit,tol,nbrit,absdx,fail,z,r,err,
                  output,vrblvl-1);
-    pole_step := beta1*r;
+    if fail
+     then pole_step := maxstep;
+     else pole_step := beta1*r;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
@@ -1256,7 +1262,10 @@ package body Standard_Predictor_Convolutions is
     end if;
     Newton_Fabry(hom,prd,rx,ix,maxit,tol,nbrit,absdx,rcond,fail,
                  z,r,err,vrblvl-1);
-    pole_step := beta1*r;
+    if fail
+     then pole_step := maxstep;
+     else pole_step := beta1*r;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
@@ -1302,7 +1311,10 @@ package body Standard_Predictor_Convolutions is
     end if;
     Newton_Fabry(file,hom,prd,rx,ix,maxit,tol,nbrit,absdx,rcond,
                  fail,z,r,err,output,vrblvl-1);
-    pole_step := beta1*r;
+    if fail
+     then pole_step := maxstep;
+     else pole_step := beta1*r;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
@@ -1342,7 +1354,10 @@ package body Standard_Predictor_Convolutions is
       put_line("-> in standard_predictor_convolutions.LU_Prediction 3 ...");
     end if;
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,fail,z,r,err,vrblvl-1);
-    pole_step := beta1*r;
+    if fail
+     then pole_step := maxstep;
+     else pole_step := beta1*r;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
@@ -1382,7 +1397,10 @@ package body Standard_Predictor_Convolutions is
     end if;
     Newton_Fabry(file,hom,prd,maxit,tol,nbrit,absdx,fail,
                  z,r,err,output,vrblvl-1);
-    pole_step := beta1*r;
+    if fail
+     then pole_step := maxstep;
+     else pole_step := beta1*r;
+    end if;
     if verbose then
       Newton_Fabry_Report(file,nbrit,absdx,fail,z,r,err,
         pole_step,prd.numcff,prd.dencff,output);
@@ -1423,7 +1441,10 @@ package body Standard_Predictor_Convolutions is
       put_line("-> in standard_predictor_convolutions.SVD_Prediction 3 ...");
     end if;
     Newton_Fabry(hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,vrblvl-1);
-    pole_step := beta1*r;
+    if fail
+     then pole_step := maxstep;
+     else pole_step := beta1*r;
+    end if;
     for k in prd.sol'range loop
       lnk := prd.sol(k); psv.sol(k) := lnk(0);
     end loop;
@@ -1463,7 +1484,10 @@ package body Standard_Predictor_Convolutions is
     end if;
     Newton_Fabry
       (file,hom,prd,maxit,tol,nbrit,absdx,rcond,fail,z,r,err,output,vrblvl-1);
-    pole_step := beta1*r;
+    if fail
+     then pole_step := maxstep;
+     else pole_step := beta1*r;
+    end if;
     if verbose then
       Newton_Fabry_Report(file,nbrit,absdx,fail,z,r,err,
         pole_step,prd.numcff,prd.dencff,output);
