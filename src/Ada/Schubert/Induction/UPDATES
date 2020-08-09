@@ -1,3 +1,6 @@
+Sun 9 Aug 2020 : modifications in moving_flag_continuation
+  and checker_poset_deformations.adb for compiler warnings.
+
 Sat 8 Aug 2020 : simplified names in wrapped_path_trackers, and then
   updated moving_flag_continuation.adb.  Added the rpt flag to apply the
   robust path tracker in moving_flag_continuation, with caused updates in

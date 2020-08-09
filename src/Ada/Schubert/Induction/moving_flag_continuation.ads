@@ -414,27 +414,18 @@ package Moving_Flag_Continuation is
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Trivial_Stay
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                cond : in Standard_Natural_VecVecs.VecVec;
-                mf : in Standard_Complex_Matrices.Matrix;
-                vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                cond : in Standard_Natural_VecVecs.VecVec;
-                mf : in DoblDobl_Complex_Matrices.Matrix;
-                vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fail : out boolean; vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                cond : in Standard_Natural_VecVecs.VecVec;
-                mf : in QuadDobl_Complex_Matrices.Matrix;
-                vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fail : out boolean; vrblvl : in integer32 := 0 );
 
@@ -448,7 +439,6 @@ package Moving_Flag_Continuation is
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
-  --   ind      index of the move;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
   --   qr       position of the rows of the white checkers with q;
@@ -456,9 +446,6 @@ package Moving_Flag_Continuation is
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
   --   minrep   to use a more efficient representation of the problem;
-  --   cond     intersection conditions for the general fixed flags;
-  --   mf       coordinates of the moving flag;
-  --   vf       coordinates of general flags to keep fixed;
   --   sols     current list of solutions;
   --   tol      tolerance on the residual to decide failure;
   --   vrblvl   is the verbose level.
@@ -468,7 +455,7 @@ package Moving_Flag_Continuation is
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Trivial_Stay
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -478,7 +465,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -488,7 +475,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 vrblvl : in integer32 := 0 );
   procedure Trivial_Stay
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -510,7 +497,6 @@ package Moving_Flag_Continuation is
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
-  --   ind      index of the move;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
   --   qr       position of the rows of the white checkers with q;
@@ -596,7 +582,7 @@ package Moving_Flag_Continuation is
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Stay_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -606,7 +592,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -616,7 +602,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -636,7 +622,6 @@ package Moving_Flag_Continuation is
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
-  --   ind      index of the move, if 0 then ls will be a first solution;
   --   nt       number of tasks, if zero, then no multitasking;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
@@ -661,7 +646,7 @@ package Moving_Flag_Continuation is
   --   fail     true if sols contains no longer a solution, false otherwise.
 
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -671,7 +656,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -681,7 +666,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 vrblvl : in integer32 := 0 );
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -702,7 +687,6 @@ package Moving_Flag_Continuation is
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
-  --   ind      index of the move, if 0 then ls will be a first solution;
   --   nt       number of tasks, if zero, then no multitasking;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
@@ -930,7 +914,7 @@ package Moving_Flag_Continuation is
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Swap_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -940,7 +924,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -950,7 +934,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -973,7 +957,6 @@ package Moving_Flag_Continuation is
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
-  --   ind      index of the move, if 0 then ls will be a first solution;
   --   nt       number of tasks, if zero, then no multitasking;
   --   q        parent permutation in the poset used for target;
   --   p        current permutation in the poset used for start;
@@ -997,7 +980,7 @@ package Moving_Flag_Continuation is
   --   fail     true if sols contains no longer a solution, false otherwise.
 
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1007,7 +990,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 rpt : in boolean := true; vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1017,7 +1000,7 @@ package Moving_Flag_Continuation is
                 tol : in double_float; fail : out boolean;
                 vrblvl : in integer32 := 0 );
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;

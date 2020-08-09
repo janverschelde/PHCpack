@@ -568,7 +568,10 @@ package body Moving_Flag_Continuation is
         else
           if rpt then
             Wrapped_Pade_Trackers.Run(file,nv,sh,xtsols,false,vrblvl-1);
-            Wrapped_Solution_Vectors.Update(sols,xtsols);
+            put_line(file,"update is just a copy ...");
+            Standard_Complex_Solutions.Clear(sols); sols := xtsols;
+            put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+           -- Wrapped_Solution_Vectors.Update(sols,xtsols);
           else
             Wrapped_Path_Trackers.Run(file,nv,sh,xtsols,sols,vrblvl-1);
           end if;
@@ -1699,7 +1702,7 @@ package body Moving_Flag_Continuation is
   end Trivial_Stay;
 
   procedure Trivial_Stay
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1721,13 +1724,15 @@ package body Moving_Flag_Continuation is
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Checker_Homotopies.Trivial_Stay_Coordinates
       (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
-    put_line(file,"Verifying after coordinate changes ...");
-    Verify_Intersection_Conditions
-      (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    if verify then
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    end if;
   end Trivial_Stay;
 
   procedure Trivial_Stay
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1757,7 +1762,7 @@ package body Moving_Flag_Continuation is
   end Trivial_Stay;
 
   procedure Trivial_Stay
-              ( file : in file_type; n,k,ctr,ind : in integer32;
+              ( file : in file_type; n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1787,11 +1792,8 @@ package body Moving_Flag_Continuation is
   end Trivial_Stay;
 
   procedure Trivial_Stay
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                cond : in Standard_Natural_VecVecs.VecVec;
-                mf : in Standard_Complex_Matrices.Matrix;
-                vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean; vrblvl : in integer32 := 0 ) is
   begin
@@ -1804,11 +1806,8 @@ package body Moving_Flag_Continuation is
   end Trivial_Stay;
 
   procedure Trivial_Stay
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                cond : in Standard_Natural_VecVecs.VecVec;
-                mf : in DoblDobl_Complex_Matrices.Matrix;
-                vf : in DoblDobl_Complex_VecMats.VecMat;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fail : out boolean; vrblvl : in integer32 := 0 ) is
   begin
@@ -1821,11 +1820,8 @@ package body Moving_Flag_Continuation is
   end Trivial_Stay;
 
   procedure Trivial_Stay
-              ( n,k,ctr,ind : in integer32;
+              ( n,k,ctr : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                cond : in Standard_Natural_VecVecs.VecVec;
-                mf : in QuadDobl_Complex_Matrices.Matrix;
-                vf : in QuadDobl_Complex_VecMats.VecMat;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fail : out boolean; vrblvl : in integer32 := 0 ) is
   begin
@@ -2015,7 +2011,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2072,7 +2068,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2129,7 +2125,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2186,7 +2182,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2228,7 +2224,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2270,7 +2266,7 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -2914,7 +2910,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -3001,7 +2997,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -3088,7 +3084,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( file : in file_type; n,k,ctr,ind,nt : in integer32;
+              ( file : in file_type; n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -3175,7 +3171,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -3244,7 +3240,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -3313,7 +3309,7 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
-              ( n,k,ctr,ind,nt : in integer32;
+              ( n,k,ctr,nt : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;

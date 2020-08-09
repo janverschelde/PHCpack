@@ -372,14 +372,14 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
+            (file,n,k,ctr,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+          Stay_Homotopy(file,n,k,ctr,nt,q,p,qr,qc,pr,pc,verify,minrep,
                         tosqr,cond,vf,mf,start_mf,sols,tol,fail,rpt,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+          Swap_Homotopy(file,n,k,ctr,nt,q,p,qr,qc,pr,pc,verify,minrep,
                         tosqr,cond,mf,start_mf,vf,sols,tol,fail,rpt,vrblvl-1);
         end if;
         if fail then
@@ -476,14 +476,14 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
+            (file,n,k,ctr,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+          Stay_Homotopy(file,n,k,ctr,nt,q,p,qr,qc,pr,pc,verify,minrep,
                         tosqr,cond,vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+          Swap_Homotopy(file,n,k,ctr,nt,q,p,qr,qc,pr,pc,verify,minrep,
                         tosqr,cond,mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
@@ -580,14 +580,14 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
+            (file,n,k,ctr,q,p,qr,qc,pr,pc,verify,minrep,cond,
              mf,vf,sols,tol,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+          Stay_Homotopy(file,n,k,ctr,nt,q,p,qr,qc,pr,pc,verify,minrep,
                         tosqr,cond,vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,verify,minrep,
+          Swap_Homotopy(file,n,k,ctr,nt,q,p,qr,qc,pr,pc,verify,minrep,
                         tosqr,cond,mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
@@ -656,13 +656,12 @@ package body Checker_Poset_Deformations is
           (n,q,qr,qc,stay_child,homtp,ctr);
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
-          Trivial_Stay
-            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail,vrblvl-1);
+          Trivial_Stay(n,k,ctr,q,p,qr,qc,pr,pc,sols,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail,rpt,vrblvl-1);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail,rpt,vrblvl-1);
         end if;
         if fail then
@@ -729,13 +728,12 @@ package body Checker_Poset_Deformations is
           (n,q,qr,qc,stay_child,homtp,ctr);
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
-          Trivial_Stay
-            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail,vrblvl-1);
+          Trivial_Stay(n,k,ctr,q,p,qr,qc,pr,pc,sols,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
@@ -802,13 +800,12 @@ package body Checker_Poset_Deformations is
           (n,q,qr,qc,stay_child,homtp,ctr);
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
-          Trivial_Stay
-            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail,vrblvl-1);
+          Trivial_Stay(n,k,ctr,q,p,qr,qc,pr,pc,sols,fail,vrblvl-1);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Stay_Homotopy(n,k,ctr,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         vf,mf,start_mf,sols,tol,fail,vrblvl-1);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
+          Swap_Homotopy(n,k,ctr,nt,q,p,qr,qc,pr,pc,minrep,tosqr,cond,
                         mf,start_mf,vf,sols,tol,fail,vrblvl-1);
         end if;
         if fail then
