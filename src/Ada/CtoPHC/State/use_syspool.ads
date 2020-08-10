@@ -4,8 +4,9 @@ with C_Double_Arrays;                   use C_Double_Arrays;
 
 function use_syspool ( job : integer32;
                        a : C_intarrs.Pointer;
-		       b : C_intarrs.Pointer;
-                       c : C_dblarrs.Pointer ) return integer32;
+                       b : C_intarrs.Pointer;
+                       c : C_dblarrs.Pointer;
+                       vrblvl : integer32 := 0 ) return integer32;
 
 -- DESCRIPTION :
 --   Provides a gateway to the systems pool.
