@@ -567,10 +567,10 @@ package body Moving_Flag_Continuation is
           Wrapped_Path_Trackers.Multitasked_Run(file,nv,nt,sh,xtsols,sols);
         else
           if rpt then
-            Wrapped_Pade_Trackers.Run(file,nv,sh,xtsols,false,vrblvl-1);
-            put_line(file,"update is just a copy ...");
+            Wrapped_Pade_Trackers.Run(file,nv+1,sh,xtsols,false,vrblvl-1);
+           -- put_line(file,"update is just a copy ...");
             Standard_Complex_Solutions.Clear(sols); sols := xtsols;
-            put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+           -- put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
            -- Wrapped_Solution_Vectors.Update(sols,xtsols);
           else
             Wrapped_Path_Trackers.Run(file,nv,sh,xtsols,sols,vrblvl-1);
@@ -906,8 +906,10 @@ package body Moving_Flag_Continuation is
           Wrapped_Path_Trackers.Multitasked_Run(nv,nt,sh,xtsols,sols);
         else
           if rpt then
-            Wrapped_Pade_Trackers.Run(nv,sh,xtsols,vrblvl-1);
-            Wrapped_Solution_Vectors.Update(sols,xtsols);
+            Wrapped_Pade_Trackers.Run(nv+1,sh,xtsols,vrblvl-1);
+           -- just a copy ...
+           -- Wrapped_Solution_Vectors.Update(sols,xtsols);
+            Standard_Complex_Solutions.Clear(sols); sols := xtsols;
           else
             Wrapped_Path_Trackers.Run(nv,sh,xtsols,sols,vrblvl-1);
           end if;
