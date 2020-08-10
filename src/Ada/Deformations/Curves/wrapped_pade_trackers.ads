@@ -27,12 +27,12 @@ package Wrapped_Pade_Trackers is
 
 -- TRACKING ONE PATH WITH OR WITHOUT OUTPUT TO FILE :
 
-  procedure Run ( n : in integer32;
+  procedure Run ( idxpar : in integer32;
                   h : in Standard_Complex_Poly_Systems.Poly_Sys;
                   xt : in out Standard_Complex_Vectors.Vector;
                   sol : out Standard_Complex_Solutions.Link_to_Solution;
                   vrblvl : in integer32 := 0 );
-  procedure Run ( file : in file_type; n : in integer32;
+  procedure Run ( file : in file_type; idxpar : in integer32;
                   h : in Standard_Complex_Poly_Systems.Poly_Sys;
                   xt : in out Standard_Complex_Vectors.Vector;
                   sol : out Standard_Complex_Solutions.Link_to_Solution;
@@ -48,10 +48,12 @@ package Wrapped_Pade_Trackers is
   -- ON ENTRY :
   --   file     optional output file for diagnostics and statistics,
   --            if omitted, then there is no intermediate output;
-  --   n        number of variables in the ambient space;
-  --   h        homotopy in n+1 variables;
-  --   xt       start solution with its last component equal to zero,
-  --            satisfies the homotopy h (upto tolerance);
+  --   idxpar   the continuation parameter is one of the variables in h,
+  --            idxpar is the index of the variable in h that plays
+  --            the role of the continuation parameter;
+  --   h        a natural parameter homotopy;
+  --   xt       start solution which statisfies h if the value
+  --            for the variable with index equal to idxpar is zero;
   --   verbose  if extra output is needed (only possible with file);
   --   vrblvl   is the verbose level.
 
@@ -62,18 +64,18 @@ package Wrapped_Pade_Trackers is
 
 -- TRACKING MANY PATHS WITH OR WITHOUT OUTPUT TO FILE :
 
-  procedure Run ( n : in integer32;
+  procedure Run ( idxpar : in integer32;
                   h : in Standard_Complex_Poly_Systems.Poly_Sys;
                   sols : in out Standard_Complex_Solutions.Solution_List;
                   vrblvl : in integer32 := 0 );
-  procedure Run ( file : in file_type; n : in integer32;
+  procedure Run ( file : in file_type; idxpar : in integer32;
                   h : in Standard_Complex_Poly_Systems.Poly_Sys;
                   sols : in out Standard_Complex_Solutions.Solution_List;
                   verbose : in boolean := false;
                   vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
-  --   Tracks one path starting at the solution in xt,
+  --   Tracks many paths starting at the solution in sols,
   --   as defined by the homotopy h, with intermediate output.
 
   -- REQUIRED : Set_Parameters() was executed.
@@ -81,16 +83,18 @@ package Wrapped_Pade_Trackers is
   -- ON ENTRY :
   --   file     optional output file for diagnostics and statistics,
   --            if omitted, then there is no intermediate output;
-  --   n        number of variables in the ambient space;
-  --   h        homotopy in n+1 variables;
-  --   xtsols   start solutions with their last component equal to zero,
-  --            satisfies the homotopy h (upto tolerance);
+  --   idxpar   the continuation parameter is one of the variables in h,
+  --            idxpar is the index of the variable in h that plays
+  --            the role of the continuation parameter;
+  --   h        a natural parameter homotopy;
+  --   xtsols   start solutions which satisfy h if the value for
+  --            the variable with index equal to idxpar is zero;
   --   verbose  if extra output is needed (only possible with file);
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   xtsols   solutions at the end of the path, tracked to the
-  --            last component of vectors in xtsols to be equal to one;
+  --            variable with index equal to idxpar in h, set to one;
   --   sols     standard representation of the solutions.
 
 -- DESTRUCTOR :
