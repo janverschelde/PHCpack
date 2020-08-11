@@ -62,6 +62,7 @@ use_solcon                       : Ada gateway to the solutions container
 ts_use_solcon.c                  : C routine calls the Ada gateway use_solcon
 solutions_pool                   : pool of solution lists
 ts_solpool                       : test on the solutions pool
+standard_solspool_interface      : interface to functions on the pool of sols
 use_solpool                      : Ada gateway to the solutions pool
 ts_use_solpool.c                 : C routine calls the Ada gateway use_solpool
 ------------------------------------------------------------------------------

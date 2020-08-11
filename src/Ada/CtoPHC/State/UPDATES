@@ -1,3 +1,6 @@
+Tue 11 Aug 2020 : new package standard_solspool_interface with code from
+  use_solpool.adb.  Added verbose level to use_solpool.ads.
+
 Sun 9 Aug 2020 : new packages {standard,dobldobl,quaddobl}_syspool_interface
   with code from use_syspool.adb.  Add verbose level to use_syspool.ads.
 
