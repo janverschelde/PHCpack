@@ -1080,6 +1080,11 @@ ts_wrappade: get_clock.o get_clocks_per_sec.o
               -o $(BIN)/ts_wrappade \
               -largs get_clock.o get_clocks_per_sec.o
 
+ts_fabryhom: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_fabryhom.adb \
+              -o $(BIN)/ts_fabryhom \
+              -largs get_clock.o get_clocks_per_sec.o
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:

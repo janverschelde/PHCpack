@@ -958,6 +958,10 @@ ts_wrappade:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_wrappade.adb \
               -o $(BIN)/ts_wrappade
 
+ts_fabryhom:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_fabryhom.adb \
+              -o $(BIN)/ts_fabryhom
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:

@@ -854,6 +854,9 @@ ts_scalecnv:
 ts_wrappade:
 	make -f $(MAKEFILE) ts_wrappade
 
+ts_fabryhom:
+	make -f $(MAKEFILE) ts_fabryhom
+
 # Test programs for the Deformations/End_Games library :
 
 test_end_games: ts_vlprs postpoco valipoco
