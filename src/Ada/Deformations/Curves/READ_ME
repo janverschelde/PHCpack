@@ -73,6 +73,7 @@ ts_ratapp                        : test on thread safe constructions
 standard_homotopy_convolutions_io : prompts for double homotopy convolutions
 dobldobl_homotopy_convolutions_io : prompts for dobldobl homotopy convolutions
 quaddobl_homotopy_convolutions_io : prompts for quaddobl homotopy convolutions
+ts_fabryhom                       : tests Newton-Fabry on a homotopy
 singular_values_of_hessians       : wraps SVD for the Hessian criterion
 series_and_predictors             : apply power series to predict solutions
 test_series_predictors            : procedure to help in the testing
