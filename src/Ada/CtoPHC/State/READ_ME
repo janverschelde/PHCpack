@@ -65,6 +65,7 @@ ts_solpool                       : test on the solutions pool
 standard_solspool_interface      : interface to functions on the pool of sols
 use_solpool                      : Ada gateway to the solutions pool
 ts_use_solpool.c                 : C routine calls the Ada gateway use_solpool
+newton_interface                 : interface to Newton's method
 ------------------------------------------------------------------------------
 phcpack_operations               : PHCpack as a state machine
 phcpack_operations_io            : input/output of main data of PHCpack
