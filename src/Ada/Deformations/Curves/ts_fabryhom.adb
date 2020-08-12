@@ -4,7 +4,9 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
@@ -28,6 +30,7 @@ with Standard_Convolution_Splitters;
 with Standard_Homotopy_Convolutions_io;
 with Newton_Convolutions;
 with Staggered_Newton_Convolutions;
+with Convergence_Radius_Estimates;
 
 procedure ts_fabryhom is
 
@@ -55,11 +58,12 @@ procedure ts_fabryhom is
     ry,iy : Standard_Floating_Vectors.Link_to_Vector;
     rv,iv : Standard_Floating_VecVecVecs.Link_to_VecVecVec;
     tol : constant double_float := 1.0E-12;
-    rcond,absdx : double_float;
+    rcond,absdx,rad,err : double_float;
     maxit,nbrit,idxtoldx : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     fail : boolean;
     scale : constant boolean := false;
+    zpt : Standard_Complex_Numbers.Complex_Number;
 
   begin
     Standard_Floating_VecVecVecs.Allocate(rv,1,deg,1,dim,1,dim);
@@ -76,6 +80,11 @@ procedure ts_fabryhom is
       (standard_output,cfs,scf,rx,ix,maxit,nbrit,tol,idxtoldx,absdx,
        fail,rcond,ipvt,rc,ic,rv,iv,rb,ib,ry,iy,scale);
     put_line("The coefficients of the series : "); put_line(scf);
+    Convergence_Radius_Estimates.Fabry
+      (standard_output,scf,zpt,rad,err,fail,1,true);
+    put("the convergence radius :"); put(rad,3);
+    put("   error estimate :"); put(err,3); new_line;
+    put(zpt); put_line("  estimates nearest singularity");
     Standard_Floating_Vectors.Clear(ry);
     Standard_Floating_Vectors.Clear(iy);
     Standard_Floating_VecVecs.Deep_Clear(rc);

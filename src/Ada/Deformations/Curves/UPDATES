@@ -1,5 +1,6 @@
 Tue 11 Aug 2020 : new test procedure ts_fabryhom on the application of
   Fabry's theorem to a homotopy defined as a coefficient convolution system.
+  Added the convergence radius estimates to ts_fabryhom.
 
 Mon 10 Aug 2020 : the "n" as the parameter in the Run procedures of
   wrapped_pade_trackers is changed into "idxpar", as this better indicates
