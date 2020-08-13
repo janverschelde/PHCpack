@@ -1,3 +1,6 @@
+Wed 12 Aug 2020 : new package continuation_parameter_interface with code
+  from use_c2phc4c.adb.
+
 Tue 11 Aug 2020 : new package standard_solspool_interface with code from
   use_solpool.adb.  Added verbose level to use_solpool.ads.
   New package newton_interface with code from use_c2phc4c.adb.

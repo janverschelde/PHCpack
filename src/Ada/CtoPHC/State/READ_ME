@@ -79,6 +79,7 @@ use_reduction                    : reduction of system to lower total degree
 linear_products_interface        : linear product bounds and start systems
 use_roco                         : job handlers for linear products
 ------------------------------------------------------------------------------
+continuation_parameters_interface : tune continuation parameters
 diagonal_homotopy_interface      : interface to diagonal homotopy
 use_track                        : access to jumpstarting path trackers
 ------------------------------------------------------------------------------

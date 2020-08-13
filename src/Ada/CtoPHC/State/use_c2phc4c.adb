@@ -5,7 +5,6 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Floating_Vectors;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -18,11 +17,7 @@ with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Multprec_Complex_Solutions;
 with Standard_Root_Refiners;
-with Continuation_Parameters; 
-with Continuation_Parameters_io; 
-with Pack_Continuation_Parameters;
 -- with Standard_Continuation_Data_io;     use Standard_Continuation_Data_io;
-with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
 with Standard_Deflation_Methods;
 with DoblDobl_Deflation_Methods;
 with QuadDobl_Deflation_Methods;
@@ -66,6 +61,7 @@ with Job_Containers;
 with Job_Handlers;
 with Symbol_Table_Interface;
 with Newton_Interface;
+with Continuation_Parameters_Interface;
 
 function use_c2phc4c ( job : integer32;
                        a : C_intarrs.Pointer;
@@ -775,107 +771,6 @@ function use_c2phc4c ( job : integer32;
     when others => return 629;
   end Job629;
 
-  function Job70 return integer32 is -- interactive tuning of parameters
-  begin
-    if PHCpack_Operations.Is_File_Defined then
-      Driver_for_Continuation_Parameters
-        (PHCpack_Operations.output_file);
-    else
-      Driver_for_Continuation_Parameters;
-    end if;
-    return 0;
-  end Job70;
-
-  function Job71 return integer32 is -- interactive setting of output level
-
-    oc : natural32;
-
-  begin
-    if PHCpack_Operations.Is_File_Defined then
-      Driver_for_Process_io
-        (PHCpack_Operations.output_file,oc);
-    else
-      Driver_for_Process_io(standard_output,oc);
-    end if;
-    return 0;
-  end Job71;
-
-  function Job72 return integer32 is -- retrieve continuation parameters
-
-    v : constant Standard_Floating_Vectors.Vector(1..34)
-      := Pack_Continuation_Parameters.Get;
-
-  begin
-    Assign(v,c);
-    return 0;
-  end Job72;
-
-  function Job73 return integer32 is -- set continuation parameters
-
-    v : Standard_Floating_Vectors.Vector(1..34);
-
-  begin
-    Assign(34,c,v);
-    Pack_Continuation_Parameters.Set(v);
-    return 0;
-  end Job73;
-
-  function Job193 return integer32 is -- autotune continuation parameters
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    level : constant natural32  := natural32(v_a(v_a'first));
-    nbdgt : constant natural32  := natural32(v_b(v_b'first));
-
-  begin
-    Continuation_Parameters.Tune(level,nbdgt);
-    return 0;
-  end Job193;
-
-  function Job194 return integer32 is -- show continuation parameters
-  begin
-    Continuation_Parameters_io.put;
-    return 0;
-  end Job194;
-
-  function Job189 return integer32 is -- get value of continuation parameter
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    res : Standard_Floating_Vectors.Vector(1..1);
-
-  begin
-    if k = 0 or k > 34 then
-      return 189;
-    else
-      res(1) := Pack_Continuation_Parameters.Get_Value(k);
-      Assign(res,c);
-    end if;
-    return 0;
-  exception
-    when others => return 189;
-  end Job189;
-
-  function Job190 return integer32 is -- set value of continuation parameter
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    v_c : constant C_Double_Array
-        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(1));
-    v : constant double_float := double_float(v_c(v_c'first));
-
-  begin
-    if k = 0 or k > 34
-     then return 190;
-     else Pack_Continuation_Parameters.Set_Value(k,v);
-    end if;
-    return 0;
-  end Job190;
-
   function Job191 return integer32 is -- define output file from string
 
     v_a : constant C_Integer_Array
@@ -1117,6 +1012,7 @@ function use_c2phc4c ( job : integer32;
     use Job_Handlers;
     use Symbol_Table_Interface;
     use Newton_Interface;
+    use Continuation_Parameters_Interface;
 
   begin
     if vrblvl > 0
@@ -1144,10 +1040,10 @@ function use_c2phc4c ( job : integer32;
       when 67 => return use_syscon(67,a,b,c,vrblvl-1); -- load poly as string
       when 68 => return use_c2fac(job-42,a,b,c); -- return #factors
       when 69 => return use_c2fac(job-42,a,b,c); -- return irreducible factor
-      when 70 => return Job70; -- interactive tuning of parameters
-      when 71 => return Job71; -- interactive setting of output level
-      when 72 => return Job72; -- retrieve values of continuation parameters
-      when 73 => return Job73; -- set values of continuation parameters
+      when 70 => return Continuation_Parameters_Ask_Values(vrblvl-1);
+      when 71 => return Continuation_Parameters_Ask_Output_Level(vrblvl-1);
+      when 72 => return Continuation_Parameters_Get_All(c,vrblvl-1);
+      when 73 => return Continuation_Parameters_Set_All(c,vrblvl-1);
      -- store Laurential as string
       when 74 => return use_syscon(74,a,b,c,vrblvl-1);
       when 75 => return Standard_Laurent_Solver(a,b,vrblvl-1);
@@ -1187,12 +1083,12 @@ function use_c2phc4c ( job : integer32;
      -- track operations for quad double precision :
       when 182..188 => return use_track(job-150,a,b,c,vrblvl-1);
      -- tuning continuation parameters, deflation, and Newton step
-      when 189 => return Job189; -- get value of a continuation parameter
-      when 190 => return Job190; -- set value of a continuation parameter
+      when 189 => return Continuation_Parameters_Get_Value(a,c,vrblvl-1);
+      when 190 => return Continuation_Parameters_Set_Value(a,c,vrblvl-1);
       when 191 => return Job191; -- define output file from string
       when 192 => return Job192; -- close the defined output file
-      when 193 => return Job193; -- autotune continuation parameters
-      when 194 => return Job194; -- print continuation parameters to screen
+      when 193 => return Continuation_Parameters_Autotune(a,b,vrblvl-1);
+      when 194 => return Continuation_Parameters_Show(vrblvl-1);
       when 195 => return Newton_Multprec_Polynomial_Step(a,vrblvl-1);
       when 196 => return Job196; -- apply deflation
       when 197 => return Newton_QuadDobl_Polynomial_Step(vrblvl-1);
