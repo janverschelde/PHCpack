@@ -33,7 +33,6 @@ with DoblDobl_Sampling_Machine;
 with DoblDobl_Sampling_Laurent_Machine;
 with QuadDobl_Sampling_Machine;
 with QuadDobl_Sampling_Laurent_Machine;
-with Witness_Sets_io;                   use Witness_Sets_io;
 with Monodromy_Partitions;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
@@ -53,10 +52,13 @@ with Standard_Monodromy_Permutations;
 with DoblDobl_Monodromy_Permutations;
 with QuadDobl_Monodromy_Permutations;
 
+with Witness_Interface;
+
 function use_c2fac ( job : integer32;
                      a : C_intarrs.Pointer;
-		     b : C_intarrs.Pointer;
-                     c : C_dblarrs.Pointer ) return integer32 is
+                     b : C_intarrs.Pointer;
+                     c : C_dblarrs.Pointer;
+                     vrblvl : integer32 := 0 ) return integer32 is
 
   procedure Write_Menu is
   begin
@@ -140,156 +142,6 @@ function use_c2fac ( job : integer32;
     end loop;
     return res;
   end Convert_to_Coefficients;
-
-  function Job1 return integer32 is -- prompts for a standard witness set
-
-    use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Solutions;
-
-    p : Link_to_Poly_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Standard_Read_Embedding(p,sols,dim);
-    Standard_PolySys_Container.Initialize(p.all);
-    Standard_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception raised when reading witness set.");
-      return 41;
-  end Job1;
-
-  function Job31 return integer32 is -- prompts for a dobldobl witness set
-
-    use DoblDobl_Complex_Poly_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    p : Link_to_Poly_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    DoblDobl_Read_Embedding(p,sols,dim);
-    DoblDobl_PolySys_Container.Initialize(p.all);
-    DoblDobl_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception raised when reading witness set.");
-      return 631;
-  end Job31;
-
-  function Job61 return integer32 is -- prompts for a quaddobl witness set
-
-    use QuadDobl_Complex_Poly_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    p : Link_to_Poly_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    QuadDobl_Read_Embedding(p,sols,dim);
-    QuadDobl_PolySys_Container.Initialize(p.all);
-    QuadDobl_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception raised when reading witness set.");
-      return 661;
-  end Job61;
-
-  function Job91 return integer32 is -- readstandard Laurent witness set
-
-    use Standard_Complex_Laur_Systems;
-    use Standard_Complex_Solutions;
-
-    p : Link_to_Laur_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Standard_Read_Embedding(p,sols,dim);
-    Standard_LaurSys_Container.Initialize(p.all);
-    Standard_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception raised when reading witness set.");
-      return 798;
-  end Job91;
-
-  function Job92 return integer32 is -- read dobldobl Laurent witness set
-
-    use DoblDobl_Complex_Laur_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    p : Link_to_Laur_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    DoblDobl_Read_Embedding(p,sols,dim);
-    DoblDobl_LaurSys_Container.Initialize(p.all);
-    DoblDobl_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when reading dobldobl Laurent witness set.");
-      return 799;
-  end Job92;
-
-  function Job93 return integer32 is -- read quaddobl Laurent witness set
-
-    use QuadDobl_Complex_Laur_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    p : Link_to_Laur_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    QuadDobl_Read_Embedding(p,sols,dim);
-    QuadDobl_LaurSys_Container.Initialize(p.all);
-    QuadDobl_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when reading quaddobl Laurent witness set.");
-      return 800;
-  end Job93;
 
   function Job2 return integer32 is -- initializes standard sampling machine
 
@@ -1398,114 +1250,6 @@ function use_c2fac ( job : integer32;
       return 683;
   end Job83;
 
-  function Job24 return integer32 is -- reads standard witness set from file
-
-    use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    p : Link_to_Poly_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Open(file,in_file,filename);
-    Standard_Read_Embedding(file,p,sols,dim);
-    Standard_PolySys_Container.Initialize(p.all);
-    Standard_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when reading standard witness set from file.");
-      return 64;
-  end Job24;
-
-  function Job54 return integer32 is -- reads dobldobl witness set from file
-
-    use DoblDobl_Complex_Poly_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    p : Link_to_Poly_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Open(file,in_file,filename);
-    DoblDobl_Read_Embedding(file,p,sols,dim);
-    DoblDobl_PolySys_Container.Initialize(p.all);
-    DoblDobl_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when reading dobldobl witness set from file.");
-      return 654;
-  end Job54;
-
-  function Job84 return integer32 is -- reads quaddobl witness set from file
-
-    use QuadDobl_Complex_Poly_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    p : Link_to_Poly_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Open(file,in_file,filename);
-    QuadDobl_Read_Embedding(file,p,sols,dim);
-    QuadDobl_PolySys_Container.Initialize(p.all);
-    QuadDobl_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when reading quaddobl witness set from file.");
-      return 684;
-  end Job84;
-
   function Job25 return integer32 is -- write standard witness set to file
 
     use Standard_Complex_Poly_Systems;
@@ -1764,114 +1508,6 @@ function use_c2fac ( job : integer32;
       return 689;
   end Job89;
 
-  function Job94 return integer32 is -- standard Laurent witness set from file
-
-    use Standard_Complex_Laur_Systems;
-    use Standard_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    p : Link_to_Laur_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Open(file,in_file,filename);
-    Standard_Read_Embedding(file,p,sols,dim);
-    Standard_LaurSys_Container.Initialize(p.all);
-    Standard_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception reading standard Laurent witness set from file.");
-      return 801;
-  end Job94;
-
-  function Job95 return integer32 is -- dobldobl Laurent witness set from file
-
-    use DoblDobl_Complex_Laur_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    p : Link_to_Laur_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Open(file,in_file,filename);
-    DoblDobl_Read_Embedding(file,p,sols,dim);
-    DoblDobl_LaurSys_Container.Initialize(p.all);
-    DoblDobl_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when reading dobldobl witness set from file.");
-      return 802;
-  end Job95;
-
-  function Job96 return integer32 is -- quaddobl Laurent witness set from file
-
-    use QuadDobl_Complex_Laur_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    p : Link_to_Laur_Sys;
-    sols : Solution_List;
-    dim : natural32;
-    data : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Open(file,in_file,filename);
-    QuadDobl_Read_Embedding(file,p,sols,dim);
-    QuadDobl_LaurSys_Container.Initialize(p.all);
-    QuadDobl_Solutions_Container.Initialize(sols);
-    data(1) := dim;
-    data(2) := Length_Of(sols);
-    Assign(p'last,a);
-    Assign(data,b);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception reading quaddobl Laurent witness set from file.");
-      return 803;
-  end Job96;
-
   function Job97 return integer32 is -- initializes standard Laurent sampler
 
     use Standard_Complex_Laur_Systems;
@@ -1977,10 +1613,13 @@ function use_c2fac ( job : integer32;
   end Job102;
 
   function Handle_Jobs return integer32 is
+
+    use Witness_Interface;
+
   begin
     case job is
       when   0 => Write_Menu; return 0;
-      when   1 => return Job1; -- read witness set in double precision
+      when   1 => return Witness_Standard_Polynomial_Prompt(a,b,vrblvl-1);
       when   2 => return Job2; -- initialize standard sampling machine
       when   3 => return Job3; -- assigning standard coefficient of slice
       when   4 => return Job4; -- store standard double gamma constant
@@ -2003,14 +1642,14 @@ function use_c2fac ( job : integer32;
       when  21 => return Job21; -- returning coefficients of a slice
       when  22 => return Job22; -- setting standard target slices
       when  23 => return Job23; -- one sampling loop in double precision
-      when  24 => return Job24; -- reads standard witness set from file
+      when  24 => return Witness_Standard_Polynomial_Read(a,b,vrblvl-1);
       when  25 => return Job25; -- writes standard witness set to file
       when  26 => return Job26; -- returns number of standard factors
       when  27 => return Job27; -- returns labels in standard component
       when  28 => return Job28; -- make standard monodromy permutations silent
       when  29 => return Job29; -- standard random complex number
       when  30 => return Job30; -- make standard monodromy permutations verbose 
-      when  31 => return Job31; -- read witness set in double double precision
+      when  31 => return Witness_DoblDobl_Polynomial_Prompt(a,b,vrblvl-1);
       when  32 => return Job32; -- initialize dobldobl sampling machine
       when  33 => return Job33; -- assign dobldobl coefficient of slice
       when  34 => return Job34; -- store double double gamma constant
@@ -2031,14 +1670,14 @@ function use_c2fac ( job : integer32;
       when  49 => return Job49; -- init slices in DoblDobl_Sampling_Operations
       when  52 => return Job52; -- setting dobldobl target slices
       when  53 => return Job53; -- one sampling loop in dobldobl precision
-      when  54 => return Job54; -- reads dobldobl witness set from file
+      when  54 => return Witness_DoblDobl_Polynomial_Read(a,b,vrblvl-1);
       when  55 => return Job55; -- writes dobldobl witness set to file
       when  56 => return Job56; -- returns number of dobldobl factors
       when  57 => return Job57; -- returns labels in dobldobl component
       when  58 => return Job58; -- make dobldobl monodromy permutations silent
       when  59 => return Job59; -- random dobldobl complex number
       when  60 => return Job60; -- make dobldobl monodromy permutations verbose 
-      when  61 => return Job61; -- read witness set in quad double precision
+      when  61 => return Witness_QuadDobl_Polynomial_Prompt(a,b,vrblvl-1);
       when  62 => return Job62; -- initialize quaddobl sampling machine
       when  63 => return Job63; -- assign quaddobl coefficient of slice
       when  64 => return Job64; -- store quaddobl gamma constant
@@ -2058,20 +1697,20 @@ function use_c2fac ( job : integer32;
       when  78 => return Job78; -- index of quaddobl solution label
       when  79 => return Job79; -- init slices in QuadDobl_Sampling_Operations
       when  82 => return Job82; -- setting quaddobl target slices
-      when  83 => return Job23; -- one sampling loop in quaddobl precision
-      when  84 => return Job84; -- reads quaddobl witness set from file
+      when  83 => return Job83; -- one sampling loop in quaddobl precision
+      when  84 => return Witness_QuadDobl_Polynomial_Read(a,b,vrblvl-1);
       when  85 => return Job85; -- writes quaddobl witness set to file
       when  86 => return Job86; -- returns number of quaddobl factors
       when  87 => return Job87; -- returns labels in quaddobl component
       when  88 => return Job88; -- make quaddobl monodromy permutations silent
       when  89 => return Job89; -- random quaddobl complex number
       when  90 => return Job90; -- make quaddobl monodromy permutations verbose 
-      when  91 => return Job91; -- prompt for standard Laurent witness set
-      when  92 => return Job92; -- prompt for dobldobl Laurent witness set
-      when  93 => return Job93; -- prompt for quaddobl Laurent witness set
-      when  94 => return Job94; -- read standard Laurent witness set from file
-      when  95 => return Job95; -- read dobldobl Laurent witness set from file
-      when  96 => return Job95; -- read quaddobl Laurent witness set from file
+      when  91 => return Witness_Standard_Laurent_Prompt(a,b,vrblvl-1);
+      when  92 => return Witness_DoblDobl_Laurent_Prompt(a,b,vrblvl-1);
+      when  93 => return Witness_QuadDobl_Laurent_Prompt(a,b,vrblvl-1);
+      when  94 => return Witness_Standard_Laurent_Read(a,b,vrblvl-1);
+      when  95 => return Witness_DoblDobl_Laurent_Read(a,b,vrblvl-1);
+      when  96 => return Witness_QuadDobl_Laurent_Read(a,b,vrblvl-1);
       when  97 => return Job97; -- initialize standard Laurent sampler
       when  98 => return Job98; -- initialize dobldobl Laurent sampler
       when  99 => return Job99; -- initialize quaddobl Laurent sampler

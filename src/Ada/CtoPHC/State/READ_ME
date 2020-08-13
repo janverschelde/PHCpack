@@ -97,6 +97,7 @@ quaddobl_sampling_operations     : supports monodromy with quad doubles
 standard_monodromy_permutations  : computes permutations by monodromy
 dobldobl_monodromy_permutations  : permutations on double double data
 quaddobl_monodromy_permutations  : permutations on quad double data
+witness_interface                : interface to witness sets
 use_c2fac                        : Ada gateway to factorization in PHCpack
 ts_use_c2fac                     : C testing operations in use_c2fac
 member_interface                 : interface functions for membership test

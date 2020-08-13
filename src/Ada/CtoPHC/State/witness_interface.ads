@@ -1,0 +1,195 @@
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with C_Integer_Arrays;                  use C_Integer_Arrays;
+
+package Witness_Interface is
+
+-- DESCRIPTION :
+--   Provides functions interface with witness sets for polynomial and
+--   Laurent systems in double, double double, and quad double precision.
+
+  function Witness_Standard_Polynomial_Prompt
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system witness set
+  --   in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the total number of equations;
+  --   b       in b[0] is the dimension of the witness set,
+  --           in b[1] is the degree of the witness set.
+
+  function Witness_DoblDobl_Polynomial_Prompt
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system witness set
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the total number of equations;
+  --   b       in b[0] is the dimension of the witness set,
+  --           in b[1] is the degree of the witness set.
+
+  function Witness_QuadDobl_Polynomial_Prompt
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system witness set
+  --   in quad double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the total number of equations;
+  --   b       in b[0] is the dimension of the witness set,
+  --           in b[1] is the degree of the witness set.
+
+  function Witness_Standard_Laurent_Prompt
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a Laurent system witness set
+  --   in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the total number of equations;
+  --   b       in b[0] is the dimension of the witness set,
+  --           in b[1] is the degree of the witness set.
+
+  function Witness_DoblDobl_Laurent_Prompt
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a Laurent system witness set
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the total number of equations;
+  --   b       in b[0] is the dimension of the witness set,
+  --           in b[1] is the degree of the witness set.
+
+  function Witness_QuadDobl_Laurent_Prompt
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a Laurent system witness set
+  --   in quad double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the total number of equations;
+  --   b       in b[0] is the dimension of the witness set,
+  --           in b[1] is the degree of the witness set.
+
+  function Witness_Standard_Polynomial_Read
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a polynomial system witness set in double precision from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       the file name for the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_DoblDobl_Polynomial_Read
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a polynomial system witness set 
+  --   in double double precision from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       the file name for the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_QuadDobl_Polynomial_Read
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a polynomial system witness set 
+  --   in quad double precision from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       the file name for the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_Standard_Laurent_Read
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a Laurent system witness set 
+  --   in double precision from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       the file name for the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_DoblDobl_Laurent_Read
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a Laurent system witness set 
+  --   in double double precision from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       the file name for the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_QuadDobl_Laurent_Read
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a Laurent system witness set 
+  --   in quad double precision from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       the file name for the witness set;
+  --   vrblvl  is the verbose level.
+
+end Witness_Interface;
