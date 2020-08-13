@@ -6,11 +6,8 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
-with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Laur_Systems;
 with Parse_Dimensions;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -22,16 +19,11 @@ with Standard_Deflation_Methods;
 with DoblDobl_Deflation_Methods;
 with QuadDobl_Deflation_Methods;
 with Verification_of_Solutions;
-with Witness_Sets_io;
-with Square_and_Embed_Systems;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 -- with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
-with Standard_LaurSys_Container;
 with DoblDobl_PolySys_Container;
-with DoblDobl_LaurSys_Container;
 with QuadDobl_PolySys_Container;
-with QuadDobl_LaurSys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
@@ -62,6 +54,7 @@ with Job_Handlers;
 with Symbol_Table_Interface;
 with Newton_Interface;
 with Continuation_Parameters_Interface;
+with Witness_Interface;
 
 function use_c2phc4c ( job : integer32;
                        a : C_intarrs.Pointer;
@@ -637,126 +630,6 @@ function use_c2phc4c ( job : integer32;
     return 0;
   end Job250;
 
-  function Job66 return integer32 is -- embed standard double system
-
-    use Standard_Complex_Poly_Systems;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_a(v_a'first));
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    ep : Link_to_Poly_Sys;
-
-  begin
-    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
-    Standard_PolySys_Container.Clear;
-    Standard_PolySys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
-    return 0;
-  exception
-    when others => return 66;
-  end Job66;
-
-  function Job129 return integer32 is -- embed double double system
-
-    use DoblDobl_Complex_Poly_Systems;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_a(v_a'first));
-    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
-    ep : Link_to_Poly_Sys;
-
-  begin
-    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
-    DoblDobl_PolySys_Container.Clear;
-    DoblDobl_PolySys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
-    return 0;
-  exception
-    when others => return 129;
-  end Job129;
-
-  function Job260 return integer32 is -- embed quad double system
-
-    use QuadDobl_Complex_Poly_Systems;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_a(v_a'first));
-    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
-    ep : Link_to_Poly_Sys;
-
-  begin
-    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
-    QuadDobl_PolySys_Container.Clear;
-    QuadDobl_PolySys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
-    return 0;
-  exception
-    when others => return 260;
-  end Job260;
-
-  function Job625 return integer32 is -- embed standard double Laurent system
-
-    use Standard_Complex_Laur_Systems;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_a(v_a'first));
-    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
-    ep : Link_to_Laur_Sys;
-
-  begin
-    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
-    Standard_LaurSys_Container.Clear;
-    Standard_LaurSys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
-    return 0;
-  exception
-    when others => return 625;
-  end Job625;
-
-  function Job626 return integer32 is -- embed double double Laurent system
-
-    use DoblDobl_Complex_Laur_Systems;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_a(v_a'first));
-    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
-    ep : Link_to_Laur_Sys;
-
-  begin
-    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
-    DoblDobl_LaurSys_Container.Clear;
-    DoblDobl_LaurSys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
-    return 0;
-  exception
-    when others => return 626;
-  end Job626;
-
-  function Job627 return integer32 is -- embed quad double Laurent system
-
-    use QuadDobl_Complex_Laur_Systems;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_a(v_a'first));
-    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
-    ep : Link_to_Laur_Sys;
-
-  begin
-    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
-    QuadDobl_LaurSys_Container.Clear;
-    QuadDobl_LaurSys_Container.Initialize(ep.all);
-    Witness_Sets_io.Add_Embed_Symbols(dim);
-    return 0;
-  exception
-    when others => return 627;
-  end Job627;
-
   function Job628 return integer32 is -- create standard Laurent cascade
   begin
     return 0;
@@ -898,114 +771,6 @@ function use_c2phc4c ( job : integer32;
     return Solve_by_QuadDobl_Laurent_Homotopy_Continuation(nbr);
   end Job776;
 
-  function Job816 return integer32 is -- swap slacks for standard witset
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_b(v_b'first));
-    p : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Standard_PolySys_Container.Retrieve;
-    sols : Standard_Complex_Solutions.Solution_List
-         := Standard_Solutions_Container.Retrieve;
-
-  begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
-    return 0;
-  end Job816;
-
-  function Job817 return integer32 is -- swap slacks for dobldobl witset
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_b(v_b'first));
-    p : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
-      := DoblDobl_PolySys_Container.Retrieve;
-    sols : DoblDobl_Complex_Solutions.Solution_List
-         := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
-    return 0;
-  end Job817;
-
-  function Job818 return integer32 is -- swap slacks for quaddobl witset
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_b(v_b'first));
-    p : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
-      := QuadDobl_PolySys_Container.Retrieve;
-    sols : QuadDobl_Complex_Solutions.Solution_List
-         := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
-    return 0;
-  end Job818;
-
-  function Job819 return integer32 is -- swap slacks for standard witset
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_b(v_b'first));
-    p : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
-      := Standard_LaurSys_Container.Retrieve;
-    sols : Standard_Complex_Solutions.Solution_List
-         := Standard_Solutions_Container.Retrieve;
-
-  begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
-    return 0;
-  end Job819;
-
-  function Job820 return integer32 is -- swap slacks for dobldobl witset
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_b(v_b'first));
-    p : constant DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys
-      := DoblDobl_LaurSys_Container.Retrieve;
-    sols : DoblDobl_Complex_Solutions.Solution_List
-         := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
-    return 0;
-  end Job820;
-
-  function Job821 return integer32 is -- swap slacks for quaddobl witset
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nvr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    dim : constant natural32 := natural32(v_b(v_b'first));
-    p : constant QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys
-      := QuadDobl_LaurSys_Container.Retrieve;
-    sols : QuadDobl_Complex_Solutions.Solution_List
-         := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    Witness_Sets_io.Swap_Symbols_to_End(nvr,dim,"zz",p.all,sols);
-    return 0;
-  end Job821;
-
   function Handle_Jobs return integer32 is
 
     use Job_Containers;
@@ -1013,6 +778,7 @@ function use_c2phc4c ( job : integer32;
     use Symbol_Table_Interface;
     use Newton_Interface;
     use Continuation_Parameters_Interface;
+    use Witness_Interface;
 
   begin
     if vrblvl > 0
@@ -1034,12 +800,12 @@ function use_c2phc4c ( job : integer32;
       when 17..19 => return C_to_PHCpack(job-10,0);
       when 20..29 => return use_syscon(job-20,a,b,c,vrblvl-1);
       when 30..38 => return use_solcon(job-30,a,b,c,vrblvl-1);
-      when 39 => return use_c2fac(28,a,b,c); -- set state to silent
-      when 40..65 => return use_c2fac(job-40,a,b,c);
-      when 66 => return Job66; -- return embedded standard double system 
+      when 39 => return use_c2fac(28,a,b,c,vrblvl-1); -- set state to silent
+      when 40..65 => return use_c2fac(job-40,a,b,c,vrblvl-1);
+      when 66 => return Witness_Standard_Polynomial_Embed(a,vrblvl-1);
       when 67 => return use_syscon(67,a,b,c,vrblvl-1); -- load poly as string
-      when 68 => return use_c2fac(job-42,a,b,c); -- return #factors
-      when 69 => return use_c2fac(job-42,a,b,c); -- return irreducible factor
+      when 68 => return use_c2fac(job-42,a,b,c,vrblvl-1); -- return #factors
+      when 69 => return use_c2fac(job-42,a,b,c,vrblvl-1); -- return factor
       when 70 => return Continuation_Parameters_Ask_Values(vrblvl-1);
       when 71 => return Continuation_Parameters_Ask_Output_Level(vrblvl-1);
       when 72 => return Continuation_Parameters_Get_All(c,vrblvl-1);
@@ -1067,7 +833,7 @@ function use_c2phc4c ( job : integer32;
      -- operations on Laurent systems :
       when 120..127 => return use_syscon(job-20,a,b,c,vrblvl-1);
       when 128 => return use_syscon(77,a,b,c,vrblvl-1); -- load Laur as string
-      when 129 => return Job129; -- embed double double system
+      when 129 => return Witness_DoblDobl_Polynomial_Embed(a,vrblvl-1);
       when 130..145 => return use_solcon(job-120,a,b,c,vrblvl-1);
      -- drop coordinate by name
       when 146 => return use_solcon(9,a,b,c,vrblvl-1);
@@ -1120,7 +886,7 @@ function use_c2phc4c ( job : integer32;
       when 258 => return DoblDobl_Container_Solutions_to_Start(vrblvl-1);
      -- double double witness set for a hypersurface
       when 259 => return use_track(49,a,b,c,vrblvl-1);
-      when 260 => return Job260; -- embed quad double system
+      when 260 => return Witness_QuadDobl_Polynomial_Embed(a,vrblvl-1);
      -- quad double versions for jobs 1 to 8
       when 261 => return QuadDobl_Target_Poly_System_to_Container(vrblvl-1);
       when 262 => return QuadDobl_Container_Poly_System_to_Target(vrblvl-1);
@@ -1145,7 +911,7 @@ function use_c2phc4c ( job : integer32;
       when 277 => return use_solcon(277,a,b,c,vrblvl-1); -- next double double
       when 278 => return use_solcon(278,a,b,c,vrblvl-1); -- next quad double
       when 279 => return use_solcon(279,a,b,c,vrblvl-1); -- next multprec
-      when 280 => return use_c2fac(29,a,b,c); -- standard random complex number
+      when 280 => return use_c2fac(29,a,b,c,vrblvl-1); -- st rnd cmplx nbr
      -- multiprecision versions for jobs 1 to 8
       when 281 => return Multprec_Target_Poly_System_to_Container(vrblvl-1);
       when 282 => return Multprec_Container_Poly_System_to_Target(vrblvl-1);
@@ -1282,20 +1048,20 @@ function use_c2phc4c ( job : integer32;
       when 623 => return use_track(56,a,b,c,vrblvl-1); -- dd crude tracker
       when 624 => return use_track(57,a,b,c,vrblvl-1); -- qd crude tracker
      -- embedding of Laurent systems :
-      when 625 => return Job625; -- embed standard double Laurent system
-      when 626 => return Job626; -- embed double double Laurent system
-      when 627 => return Job627; -- embed quad double Laurent system
+      when 625 => return Witness_Standard_Laurent_Embed(a,vrblvl-1);
+      when 626 => return Witness_DoblDobl_Laurent_Embed(a,vrblvl-1);
+      when 627 => return Witness_QuadDobl_Laurent_Embed(a,vrblvl-1);
      -- cascade of Laurent systems :
       when 628 => return Job628; -- create double Laurent cascade
       when 629 => return Job629; -- create double double Laurent cascade
      -- make standard monodromy breakup verbose
-      when 630 => return use_c2fac(30,a,b,c);
+      when 630 => return use_c2fac(30,a,b,c,vrblvl-1);
      -- monodromy breakup in double double precision :
-      when 631..649 => return use_c2fac(job-600,a,b,c);
-      when 652..660 => return use_c2fac(job-600,a,b,c);
+      when 631..649 => return use_c2fac(job-600,a,b,c,vrblvl-1);
+      when 652..660 => return use_c2fac(job-600,a,b,c,vrblvl-1);
      -- monodromy breakup in quad double precision :
-      when 661..679 => return use_c2fac(job-600,a,b,c);
-      when 682..690 => return use_c2fac(job-600,a,b,c);
+      when 661..679 => return use_c2fac(job-600,a,b,c,vrblvl-1);
+      when 682..690 => return use_c2fac(job-600,a,b,c,vrblvl-1);
      -- power series Newton method
       when 691..696 => return use_series(job-690,a,b,c,vrblvl-1);
      -- clear systems pool
@@ -1364,23 +1130,20 @@ function use_c2phc4c ( job : integer32;
       when 796 => return use_c2mbt(4,a,b,c,vrblvl-1); -- Laurent dd membertest
       when 797 => return use_c2mbt(5,a,b,c,vrblvl-1); -- Laurent qd membertest
      -- read a witness set defined by a Laurent polynomial system
-      when 798 => return use_c2fac(91,a,b,c); -- read standard Laurent witset
-      when 799 => return use_c2fac(92,a,b,c); -- read dobldobl Laurent witset
-      when 800 => return use_c2fac(93,a,b,c); -- read quaddobl Laurent witset
-      when 801 =>
-        return use_c2fac(94,a,b,c); -- read standard Laurent witset from file
-      when 802 =>
-        return use_c2fac(95,a,b,c); -- read dobldobl Laurent witset from file
-      when 803 =>
-        return use_c2fac(96,a,b,c); -- read quaddobl Laurent witset from file
+      when 798 => return use_c2fac(91,a,b,c,vrblvl-1); -- prompt st Laur witset
+      when 799 => return use_c2fac(92,a,b,c,vrblvl-1); -- prompt dd Laur witset
+      when 800 => return use_c2fac(93,a,b,c,vrblvl-1); -- prompt qd Laur witset
+      when 801 => return use_c2fac(94,a,b,c,vrblvl-1); -- read st Laur witset
+      when 802 => return use_c2fac(95,a,b,c,vrblvl-1); -- read dd Laur witset
+      when 803 => return use_c2fac(96,a,b,c,vrblvl-1); -- read qd Laur witset
      -- monodromy factorization on witness sets defined by Laurent systems
-      when 804 => return use_c2fac(97,a,b,c); -- init standard Laurent sampler
-      when 805 => return use_c2fac(98,a,b,c); -- init dobldobl Laurent sampler
-      when 806 => return use_c2fac(99,a,b,c); -- init quaddobl Laurent sampler
+      when 804 => return use_c2fac(97,a,b,c,vrblvl-1); -- init st Laur sampler
+      when 805 => return use_c2fac(98,a,b,c,vrblvl-1); -- init dd Laur sampler
+      when 806 => return use_c2fac(99,a,b,c,vrblvl-1); -- init qd Laur sampler
      -- copy embedded system from sampler to container
-      when 807 => return use_c2fac(100,a,b,c); -- standard Laurent copy
-      when 808 => return use_c2fac(101,a,b,c); -- dobldobl Laurent copy
-      when 809 => return use_c2fac(102,a,b,c); -- quaddobl Laurent copy
+      when 807 => return use_c2fac(100,a,b,c,vrblvl-1); -- sd Laurent copy
+      when 808 => return use_c2fac(101,a,b,c,vrblvl-1); -- dd Laurent copy
+      when 809 => return use_c2fac(102,a,b,c,vrblvl-1); -- qd Laurent copy
      -- construct a diagonal Laurent homotopy
       when 810 => return use_track(61,a,b,c,vrblvl-1); -- st diag Laur htp
       when 811 => return use_track(62,a,b,c,vrblvl-1); -- dd diag Laur htp
@@ -1390,12 +1153,12 @@ function use_c2phc4c ( job : integer32;
       when 814 => return use_track(65,a,b,c,vrblvl-1); -- dd witset Laurent
       when 815 => return use_track(66,a,b,c,vrblvl-1); -- qd witset Laurent
      -- swap slack variables to the end
-      when 816 => return Job816; -- swap slack for standard witset
-      when 817 => return Job817; -- swap slack for dobldobl witset
-      when 818 => return Job818; -- swap slack for quaddobl witset
-      when 819 => return Job819; -- swap slack for standard Laurent witset
-      when 820 => return Job820; -- swap slack for dobldobl Laurent witset
-      when 821 => return Job821; -- swap slack for quaddobl Laurent witset
+      when 816 => return Witness_Standard_Polynomial_Swap(a,b,vrblvl-1);
+      when 817 => return Witness_DoblDobl_Polynomial_Swap(a,b,vrblvl-1);
+      when 818 => return Witness_QuadDobl_Polynomial_Swap(a,b,vrblvl-1);
+      when 819 => return Witness_Standard_Laurent_Swap(a,b,vrblvl-1);
+      when 820 => return Witness_DoblDobl_Laurent_Swap(a,b,vrblvl-1);
+      when 821 => return Witness_QuadDobl_Laurent_Swap(a,b,vrblvl-1);
      -- homotopy membership tests with symbolic test points
       when 822 => return use_c2mbt(6,a,b,c,vrblvl-1); -- standard membertest
       when 823 => return use_c2mbt(7,a,b,c,vrblvl-1); -- dobldobl membertest

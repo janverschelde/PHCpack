@@ -1,3 +1,5 @@
+Thu 13 Aug 2020 : moved functions from use_c2phc4c.adb to witness_interface.
+
 Wed 12 Aug 2020 : new package continuation_parameter_interface with code
   from use_c2phc4c.adb.  Extracted functions from use_c2fac.adb into the
   new package witness_interface.  Added verbose level to use_c2fac.ads.

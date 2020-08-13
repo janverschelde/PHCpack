@@ -192,4 +192,160 @@ package Witness_Interface is
   --   b       the file name for the witness set;
   --   vrblvl  is the verbose level.
 
+  function Witness_Standard_Polynomial_Swap
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Swaps the variables in the polynomial system and solutions stored
+  --   in double precision so the slack variables are last.
+
+  -- ON ENTRY :
+  --   a       in a[0] are the number of variables;
+  --   b       in b[0] is the dimension of the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_DoblDobl_Polynomial_Swap
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Swaps the variables in the polynomial system and solutions stored
+  --   in double double precision so the slack variables are last.
+
+  -- ON ENTRY :
+  --   a       in a[0] are the number of variables;
+  --   b       in b[0] is the dimension of the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_QuadDobl_Polynomial_Swap
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Swaps the variables in the polynomial system and solutions stored
+  --   in quad double precision so the slack variables are last.
+
+  -- ON ENTRY :
+  --   a       in a[0] are the number of variables;
+  --   b       in b[0] is the dimension of the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_Standard_Laurent_Swap
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Swaps the variables in the Laurent system and solutions stored
+  --   in double precision so the slack variables are last.
+
+  -- ON ENTRY :
+  --   a       in a[0] are the number of variables;
+  --   b       in b[0] is the dimension of the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_DoblDobl_Laurent_Swap
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Swaps the variables in the Laurent system and solutions stored
+  --   in double double precision so the slack variables are last.
+
+  -- ON ENTRY :
+  --   a       in a[0] are the number of variables;
+  --   b       in b[0] is the dimension of the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_QuadDobl_Laurent_Swap
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Swaps the variables in the Laurent system and solutions stored
+  --   in quad double precision so the slack variables are last.
+
+  -- ON ENTRY :
+  --   a       in a[0] are the number of variables;
+  --   b       in b[0] is the dimension of the witness set;
+  --   vrblvl  is the verbose level.
+
+  function Witness_Standard_Polynomial_Embed
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Embeds the polynomial system in double precision 
+  --   adding as many slack variables as the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of slack variables to add;
+  --   vrblvl  is the verbose level.
+
+  function Witness_DoblDobl_Polynomial_Embed
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Embeds the polynomial system in double precision 
+  --   adding as many slack variables as the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of slack variables to add;
+  --   vrblvl  is the verbose level.
+
+  function Witness_QuadDobl_Polynomial_Embed
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Embeds the polynomial system in quad double precision 
+  --   adding as many slack variables as the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of slack variables to add;
+  --   vrblvl  is the verbose level.
+
+  function Witness_Standard_Laurent_Embed
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Embeds the Laurent system in double precision 
+  --   adding as many slack variables as the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of slack variables to add;
+  --   vrblvl  is the verbose level.
+
+  function Witness_DoblDobl_Laurent_Embed
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Embeds the Laurent system in double precision 
+  --   adding as many slack variables as the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of slack variables to add;
+  --   vrblvl  is the verbose level.
+
+  function Witness_QuadDobl_Laurent_Embed
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Embeds the Laurent system in double precision 
+  --   adding as many slack variables as the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of slack variables to add;
+  --   vrblvl  is the verbose level.
+
 end Witness_Interface;
