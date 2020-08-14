@@ -9,13 +9,17 @@
 # Python bindings and the use of MPI.
 
 PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
-# PYTHON=/usr/include/python2.7
 PYTHON37=/Library/Frameworks/Python.framework/Versions/3.7/include/python3.7m
 PYTHON37lib=/Library/Frameworks/Python.framework/Versions/3.7/lib
 PYTHON36=/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
 PYTHON36lib=/Library/Frameworks/Python.framework/Versions/3.6/lib
 PYTHON35=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
 PYTHON35lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
+
+PYTHON38=/opt/miniconda3/include/python3.8
+
+ADALIB=/Users/jan/opt/GNAT/2020/lib/gcc/x86_64-apple-darwin17.7.0/8.4.1/adalib
+
 MPI_HOME=/usr/local
 
 # which gcc to use
@@ -3461,7 +3465,7 @@ phcpy2c36.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
                $(PYTHON36lib)/libpython3.6m.dylib \
                -lm --LINK=$(gpp) -Wl,-no_compact_unwind
 
-phcpy2c37.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
+phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
              simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/tabform.c
@@ -3487,21 +3491,23 @@ phcpy2c37.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PYTHON36) \
-               -I$(PYTHON37)/Include $(PHCLib)/phcpy2c3.c
+	$(gpp) -Dcompilewgpp=1 -c -O3 \
+               -I/opt/miniconda3/include -I$(PYTHON38) $(PHCLib)/phcpy2c3.c
 	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n -static use_c2phc -o use_c2phc_binder.adb
 	gnatmake -static -c use_c2phc_binder.adb
 	ar ruv phcpy2c3.a *.o
 	ranlib phcpy2c3.a
-	$(gcc) -dynamiclib -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
-               phcpy2c3.a $(QD_LIB)/libqd.a \
-               -lm -Wl,-no_compact_unwind \
--L/Users/jan/miniconda3/lib/python3.7/config-3.7m-darwin -lpython3.7m -ldl \
--framework CoreFoundation
+	g++ -dynamiclib -undefined dynamic_lookup phcpy2c3.o \
+               -L/opt/miniconda3/lib \
+               -arch x86_64 -L/opt/miniconda3/lib -arch x86_64 \
+               -L/opt/miniconda3/lib/python3.8/site-packages \
+               phcpy2c3.a $(QD_LIB)/libqd.a $(ADALIB)/libgnat.a \
+               $(ADALIB)/libgnarl.a -lm -Wl,-no_compact_unwind \
+               -L/opt/miniconda3/lib/python3.8/config-3.8-darwin \
+               -ldl -framework CoreFoundation \
+               -o ../Python/PHCpy3/phcpy/phcpy2c3.so
 
-# The last lines above were gotten from the output of
-# python3-config --ldflags
 
 # phcpy2c with double version of Path library :
 
