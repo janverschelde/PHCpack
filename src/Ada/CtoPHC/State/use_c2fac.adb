@@ -11,7 +11,6 @@ with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
-with Standard_Natural_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -30,7 +29,6 @@ with QuadDobl_System_and_Solutions_io;
 with Sampling_Laurent_Machine;
 with DoblDobl_Sampling_Laurent_Machine;
 with QuadDobl_Sampling_Laurent_Machine;
-with Monodromy_Partitions;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
 with Standard_LaurSys_Container;
@@ -41,7 +39,6 @@ with DoblDobl_Solutions_Container;
 with QuadDobl_PolySys_Container;
 with QuadDobl_LaurSys_Container;
 with QuadDobl_Solutions_Container;
-with PHCpack_Operations;
 with Standard_Sampling_Operations;
 with DoblDobl_Sampling_Operations;
 with QuadDobl_Sampling_Operations;
@@ -140,375 +137,6 @@ function use_c2fac ( job : integer32;
     end loop;
     return res;
   end Convert_to_Coefficients;
-
-  function Job10 return integer32 is
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vb : constant C_Integer_Array
-       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    n : constant integer32 := integer32(va(va'first));
-    d : constant integer32 := integer32(vb(0));
-    k : constant integer32 := integer32(vb(1));
-
-  begin
-    Standard_Monodromy_Permutations.Initialize(n,d,k);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at init of Monodromy_Permutations.");
-      return 50;
-  end Job10;
-
-  function Job40 return integer32 is -- init dobldobl monodromy permutations
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vb : constant C_Integer_Array
-       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    n : constant integer32 := integer32(va(va'first));
-    d : constant integer32 := integer32(vb(0));
-    k : constant integer32 := integer32(vb(1));
-
-  begin
-    DoblDobl_Monodromy_Permutations.Initialize(n,d,k);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at init of DoblDobl_Monodromy_Permutations.");
-      return 640;
-  end Job40;
-
-  function Job70 return integer32 is -- init quaddobl monodromy permutations
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vb : constant C_Integer_Array
-       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    n : constant integer32 := integer32(va(va'first));
-    d : constant integer32 := integer32(vb(0));
-    k : constant integer32 := integer32(vb(1));
-
-  begin
-    QuadDobl_Monodromy_Permutations.Initialize(n,d,k);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at init of QuadDobl_Monodromy_Permutations.");
-      return 670;
-  end Job70;
-
-  function Job11 return integer32 is -- standard sols to Monodromy_Permutations
-
-    use Standard_Complex_Solutions;
-
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-
-  begin
-    Standard_Monodromy_Permutations.Store(sols);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception at standard solutions to Monodromy_Permutations.");
-      return 51;
-  end Job11;
-
-  function Job41 return integer32 is -- dobldobl sols to Monodromy_Permutations
-
-    use DoblDobl_Complex_Solutions;
-
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    DoblDobl_Monodromy_Permutations.Store(sols);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception at dobldobl solutions to Monodromy_Permutations.");
-      return 641;
-  end Job41;
-
-  function Job71 return integer32 is -- quaddobl sols to Monodromy_Permutations
-
-    use QuadDobl_Complex_Solutions;
-
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    QuadDobl_Monodromy_Permutations.Store(sols);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception at quaddobl solutions to Monodromy_Permutations.");
-      return 671;
-  end Job71;
-
-  function Job12 return integer32 is -- standard monodromy permutation
-
-    perm : constant Standard_Natural_Vectors.Vector
-         := Standard_Monodromy_Permutations.Permutation;
-
-  begin
-    Assign(perm,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at a standard double monodromy permutation.");
-      return 52;
-  end Job12;
-
-  function Job42 return integer32 is -- dobldobl monodromy permutation
-
-    perm : constant Standard_Natural_Vectors.Vector
-         := DoblDobl_Monodromy_Permutations.Permutation;
-
-  begin
-    Assign(perm,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at a double double monodromy permutation.");
-      return 642;
-  end Job42;
-
-  function Job72 return integer32 is -- quaddobl monodromy permutation
-
-    perm : constant Standard_Natural_Vectors.Vector
-         := QuadDobl_Monodromy_Permutations.Permutation;
-
-  begin
-    Assign(perm,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at a double double monodromy permutation.");
-      return 672;
-  end Job72;
-
-  function Job13 return integer32 is -- update with standard permutation
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    n : constant integer32 := integer32(va(va'first));
-    p : Standard_Natural_Vectors.Vector(1..n);
-    nf : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Assign(natural32(n),b,p);
-    Standard_Monodromy_Permutations.Update_Decomposition(p,nf(1),nf(2));
-    Assign(nf,a);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at update with standard double permutation");
-      return 53;
-  end Job13;
-
-  function Job43 return integer32 is -- update with dobldobl permutation
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    n : constant integer32 := integer32(va(va'first));
-    p : Standard_Natural_Vectors.Vector(1..n);
-    nf : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Assign(natural32(n),b,p);
-    DoblDobl_Monodromy_Permutations.Update_Decomposition(p,nf(1),nf(2));
-    Assign(nf,a);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at update with double double permutation");
-      return 643;
-  end Job43;
-
-  function Job73 return integer32 is -- update with quaddobl permutation
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    n : constant integer32 := integer32(va(va'first));
-    p : Standard_Natural_Vectors.Vector(1..n);
-    nf : Standard_Natural_Vectors.Vector(1..2);
-
-  begin
-    Assign(natural32(n),b,p);
-    QuadDobl_Monodromy_Permutations.Update_Decomposition(p,nf(1),nf(2));
-    Assign(nf,a);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at update with quad double permutation");
-      return 673;
-  end Job73;
-
-  function Job14 return integer32 is -- writes the standard decomposition
-
-    deco : constant Standard_Natural_VecVecs.Link_to_VecVec
-         := Standard_Monodromy_Permutations.Decomposition;
-    use Standard_Natural_VecVecs;
-
-  begin
-    if deco /= null then
-      if PHCpack_Operations.Is_File_Defined then
-        Monodromy_Partitions.Write_Factors
-          (PHCpack_Operations.output_file,deco.all);
-      else
-        Monodromy_Partitions.Write_Factors(standard_output,deco.all);
-      end if;
-    end if;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when writing the standard decomposition.");
-      return 54;
-  end Job14;
-
-  function Job44 return integer32 is -- writes the dobldobl decomposition
-
-    deco : constant Standard_Natural_VecVecs.Link_to_VecVec
-         := DoblDobl_Monodromy_Permutations.Decomposition;
-    use Standard_Natural_VecVecs;
-
-  begin
-    if deco /= null then
-      if PHCpack_Operations.Is_File_Defined then
-        Monodromy_Partitions.Write_Factors
-          (PHCpack_Operations.output_file,deco.all);
-      else
-        Monodromy_Partitions.Write_Factors(standard_output,deco.all);
-      end if;
-    end if;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when writing the dobldobl decomposition.");
-      return 644;
-  end Job44;
-
-  function Job74 return integer32 is -- writes the quaddobl decomposition
-
-    deco : constant Standard_Natural_VecVecs.Link_to_VecVec
-         := QuadDobl_Monodromy_Permutations.Decomposition;
-    use Standard_Natural_VecVecs;
-
-  begin
-    if deco /= null then
-      if PHCpack_Operations.Is_File_Defined then
-        Monodromy_Partitions.Write_Factors
-          (PHCpack_Operations.output_file,deco.all);
-      else
-        Monodromy_Partitions.Write_Factors(standard_output,deco.all);
-      end if;
-    end if;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when writing the quaddobl decomposition.");
-      return 674;
-  end Job74;
-
-  function Monodromy_Standard_Trace_Test
-             ( a : C_intarrs.Pointer;
-               vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Applies the linear trace test to stop the monodromy loops
-  --   in double precision.
-
-  -- ON ENTRY :
-  --   vrblvl  is the verbose level.
-
-  -- ON RETURN :
-  --   a       in a[0] is 1 if done, or 1 if not done.
-
-    done : constant boolean
-         := Standard_Monodromy_Permutations.Certify_with_Linear_Trace;
-
-  begin
-    if vrblvl > 0 then
-      put("-> in monodromy_interface.");
-      put_line("Monodromy_Standard_Trace_Test ...");
-    end if;
-    if done
-     then Assign(1,a);
-     else Assign(0,a);
-    end if;
-    return 0;
-  exception
-    when others => 
-      if vrblvl > 0 then
-        put("Exception raised in monodromy_interface.");
-        put_line("Monodromy_Standard_Trace_Test.");
-      end if;
-      return 55;
-  end Monodromy_Standard_Trace_Test;
-
-  function Monodromy_DoblDobl_Trace_Test
-             ( a : C_intarrs.Pointer;
-               vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Applies the linear trace test to stop the monodromy loops
-  --   in double double precision.
-
-  -- ON ENTRY :
-  --   vrblvl  is the verbose level.
-
-  -- ON RETURN :
-  --   a       in a[0] is 1 if done, or 1 if not done.
-
-    done : constant boolean
-         := DoblDobl_Monodromy_Permutations.Certify_with_Linear_Trace;
-
-  begin
-    if vrblvl > 0 then
-      put("-> in monodromy_interface.");
-      put_line("Monodromy_DoblDobl_Trace_Test ...");
-    end if;
-    if done
-     then Assign(1,a);
-     else Assign(0,a);
-    end if;
-    return 0;
-  exception
-    when others => 
-      if vrblvl > 0 then
-        put("Exception raised in monodromy_interface.");
-        put_line("Monodromy_DoblDobl_Trace_Test.");
-      end if;
-      return 645;
-  end Monodromy_DoblDobl_Trace_Test;
-
-  function Monodromy_QuadDobl_Trace_Test
-             ( a : C_intarrs.Pointer;
-               vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Applies the linear trace test to stop the monodromy loops
-  --   in quad double precision.
-
-  -- ON ENTRY :
-  --   vrblvl  is the verbose level.
-
-  -- ON RETURN :
-  --   a       in a[0] is 1 if done, or 1 if not done.
-
-    done : constant boolean
-         := QuadDobl_Monodromy_Permutations.Certify_with_Linear_Trace;
-
-  begin
-    if vrblvl > 0 then
-      put("-> in monodromy_interface.");
-      put_line("Monodromy_QuadDobl_Trace_Test ...");
-    end if;
-    if done
-     then Assign(1,a);
-     else Assign(0,a);
-    end if;
-    return 0;
-  exception
-    when others => 
-      if vrblvl > 0 then
-        put("Exception raised in monodromy_interface.");
-        put_line("Monodromy_QuadDobl_Trace_Test.");
-      end if;
-      return 675;
-  end Monodromy_QuadDobl_Trace_Test;
 
   function Job16 return integer32 is -- standard trace grid diagnostics
 
@@ -1312,11 +940,11 @@ function use_c2fac ( job : integer32;
       when   7 => return Monodromy_Standard_Copy_System(vrblvl-1);
       when   8 => return Monodromy_Standard_Copy_Solutions(vrblvl-1);
       when   9 => return Monodromy_Standard_Grid_Solutions(a,vrblvl-1);
-      when  10 => return Job10; -- initializing Monodromy_Permutations
-      when  11 => return Job11; -- standard solutions to Monodromy_Permutations
-      when  12 => return Job12; -- compute standard monodromy permutation
-      when  13 => return Job13; -- update with standard permutation
-      when  14 => return Job14; -- writes the standard decomposition
+      when  10 => return Monodromy_Standard_Init_Permutations(a,b,vrblvl-1);
+      when  11 => return Monodromy_Standard_Perm_Solutions(vrblvl-1);
+      when  12 => return Monodromy_Standard_Permutation(b,vrblvl-1);
+      when  13 => return Monodromy_Standard_Update(a,b,vrblvl-1);
+      when  14 => return Monodromy_Standard_Write(vrblvl-1);
       when  15 => return Monodromy_Standard_Trace_Test(a,vrblvl-1);
       when  16 => return Job16; -- return standard trace grid diagnostics
       when  17 => return Job17; -- comparing standard trace sum differences
@@ -1342,11 +970,11 @@ function use_c2fac ( job : integer32;
       when  37 => return Monodromy_DoblDobl_Copy_System(vrblvl-1);
       when  38 => return Monodromy_DoblDobl_Copy_Solutions(vrblvl-1);
       when  39 => return Monodromy_DoblDobl_Grid_Solutions(a,vrblvl-1);
-      when  40 => return Job40; -- initialize dobldobl monodromy permutations
-      when  41 => return Job41; -- dobldobl solutions to Monodromy_Permutations
-      when  42 => return Job42; -- compute dobldobl monodromy permutation
-      when  43 => return Job43; -- update with dobldobl permutation
-      when  44 => return Job44; -- writes the dobldobl decomposition
+      when  40 => return Monodromy_DoblDobl_Init_Permutations(a,b,vrblvl-1);
+      when  41 => return Monodromy_DoblDobl_Perm_Solutions(vrblvl-1);
+      when  42 => return Monodromy_DoblDobl_Permutation(b,vrblvl-1);
+      when  43 => return Monodromy_DoblDobl_Update(a,b,vrblvl-1);
+      when  44 => return Monodromy_DoblDobl_Write(vrblvl-1);
       when  45 => return Monodromy_DoblDobl_Trace_Test(a,vrblvl-1);
       when  46 => return Job46; -- return dobldobl trace grid diagnostics
       when  47 => return Job47; -- comparing dobldobl trace sum differences
@@ -1370,11 +998,11 @@ function use_c2fac ( job : integer32;
       when  67 => return Monodromy_QuadDobl_Copy_System(vrblvl-1);
       when  68 => return Monodromy_QuadDobl_Copy_Solutions(vrblvl-1);
       when  69 => return Monodromy_QuadDobl_Grid_Solutions(a,vrblvl-1);
-      when  70 => return Job70; -- initialize quaddobl monodromy permutations
-      when  71 => return Job71; -- quaddobl solutions to Monodromy_Permutations
-      when  72 => return Job72; -- compute quaddobl monodromy permutation
-      when  73 => return Job73; -- update with quaddobl permutation
-      when  74 => return Job74; -- writes the quaddobl decomposition
+      when  70 => return Monodromy_QuadDobl_Init_Permutations(a,b,vrblvl-1);
+      when  71 => return Monodromy_QuadDobl_Perm_Solutions(vrblvl-1);
+      when  72 => return Monodromy_QuadDobl_Permutation(b,vrblvl-1);
+      when  73 => return Monodromy_QuadDobl_Update(a,b,vrblvl-1);
+      when  74 => return Monodromy_QuadDobl_Write(vrblvl-1);
       when  75 => return Monodromy_QuadDobl_Trace_Test(a,vrblvl-1);
       when  76 => return Job76; -- return quaddobl trace grid diagnostics
       when  77 => return Job77; -- comparing quaddobl trace sum differences
