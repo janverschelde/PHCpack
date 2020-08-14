@@ -27,11 +27,8 @@ with QuadDobl_Complex_Solutions;
 with Standard_System_and_Solutions_io;
 with DoblDobl_System_and_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
-with Sampling_Machine;
 with Sampling_Laurent_Machine;
-with DoblDobl_Sampling_Machine;
 with DoblDobl_Sampling_Laurent_Machine;
-with QuadDobl_Sampling_Machine;
 with QuadDobl_Sampling_Laurent_Machine;
 with Monodromy_Partitions;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
@@ -53,6 +50,7 @@ with DoblDobl_Monodromy_Permutations;
 with QuadDobl_Monodromy_Permutations;
 
 with Witness_Interface;
+with Monodromy_Interface;
 
 function use_c2fac ( job : integer32;
                      a : C_intarrs.Pointer;
@@ -142,378 +140,6 @@ function use_c2fac ( job : integer32;
     end loop;
     return res;
   end Convert_to_Coefficients;
-
-  function Job2 return integer32 is -- initializes standard sampling machine
-
-    use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Solutions;
-
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    dim : constant integer32 := integer32(va(va'first));
-
-  begin
-    Standard_Sampling_Operations.Initialize(lp.all,sols,dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at initializing standard sampling machine.");
-      return 42;
-  end Job2;
-
-  function Job32 return integer32 is -- initializes dobldobl sampling machine
-
-    use DoblDobl_Complex_Poly_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    dim : constant integer32 := integer32(va(va'first));
-
-  begin
-    DoblDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at initializing dobldobl sampling machine.");
-      return 632;
-  end Job32;
-
-  function Job62 return integer32 is -- initializes quaddobl sampling machine
-
-    use QuadDobl_Complex_Poly_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    dim : constant integer32 := integer32(va(va'first));
-
-  begin
-    QuadDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at initializing quaddobl sampling machine.");
-      return 662;
-  end Job62;
-
-  function Job3 return integer32 is -- assign standard coefficient
-
-    use Standard_Complex_Numbers;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vb : constant C_Integer_Array := C_intarrs.Value(b);
-    i : constant integer32 := integer32(va(va'first));
-    j : constant integer32 := integer32(vb(vb'first));
-    vc : constant C_Double_Array
-       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(2));
-    re : constant double_float := double_float(vc(0));
-    im : constant double_float := double_float(vc(1));
-    cf : constant Complex_Number := Create(re,im);
-
-  begin
-    Standard_Sampling_Operations.Assign_Slice(cf,i,j);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when assigning standard coefficient.");
-      return 43;
-  end Job3;
-
-  function Job33 return integer32 is -- assign dobldobl coefficient
-
-    use DoblDobl_Complex_Numbers;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vb : constant C_Integer_Array := C_intarrs.Value(b);
-    i : constant integer32 := integer32(va(va'first));
-    j : constant integer32 := integer32(vb(vb'first));
-    vc : constant C_Double_Array
-       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(4));
-    re_hi : constant double_float := double_float(vc(0));
-    re_lo : constant double_float := double_float(vc(1));
-    im_hi : constant double_float := double_float(vc(2));
-    im_lo : constant double_float := double_float(vc(3));
-    re : constant double_double := Create(re_hi,re_lo);
-    im : constant double_double := Create(im_hi,im_lo);
-    cf : constant Complex_Number := Create(re,im);
-
-  begin
-    DoblDobl_Sampling_Operations.Assign_Slice(cf,i,j);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when assigning dobldobl coefficient.");
-      return 633;
-  end Job33;
-
-  function Job63 return integer32 is -- assign quaddobl coefficient
-
-    use QuadDobl_Complex_Numbers;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vb : constant C_Integer_Array := C_intarrs.Value(b);
-    i : constant integer32 := integer32(va(va'first));
-    j : constant integer32 := integer32(vb(vb'first));
-    vc : constant C_Double_Array
-       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(8));
-    re_hihi : constant double_float := double_float(vc(0));
-    re_lohi : constant double_float := double_float(vc(1));
-    re_hilo : constant double_float := double_float(vc(2));
-    re_lolo : constant double_float := double_float(vc(3));
-    im_hihi : constant double_float := double_float(vc(4));
-    im_lohi : constant double_float := double_float(vc(5));
-    im_hilo : constant double_float := double_float(vc(6));
-    im_lolo : constant double_float := double_float(vc(7));
-    re : constant quad_double := Create(re_hihi,re_lohi,re_hilo,re_lolo);
-    im : constant quad_double := Create(im_hihi,im_lohi,im_hilo,im_lolo);
-    cf : constant Complex_Number := Create(re,im);
-
-  begin
-    QuadDobl_Sampling_Operations.Assign_Slice(cf,i,j);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when assigning quaddobl coefficient.");
-      return 633;
-  end Job63;
-
-  function Job4 return integer32 is -- storing standard gamma constant
-
-    use Standard_Complex_Numbers;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vc : constant C_Double_Array
-       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(2));
-    re : constant double_float := double_float(vc(0));
-    im : constant double_float := double_float(vc(1));
-    gamma : constant Complex_Number := Create(re,im);
-    i : constant integer32 := integer32(va(va'first));
-
-  begin
-    Standard_Sampling_Operations.Store_Gamma(gamma,i);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when storing standard double gamma constant.");
-      return 44;
-  end Job4;
-
-  function Job34 return integer32 is -- storing dobldobl gamma constant
-
-    use DoblDobl_Complex_Numbers;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vc : constant C_Double_Array
-       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(4));
-    re_hi : constant double_float := double_float(vc(0));
-    re_lo : constant double_float := double_float(vc(1));
-    im_hi : constant double_float := double_float(vc(2));
-    im_lo : constant double_float := double_float(vc(3));
-    re : constant double_double := create(re_hi,re_lo);
-    im : constant double_double := create(im_hi,im_lo);
-    gamma : constant Complex_Number := Create(re,im);
-    i : constant integer32 := integer32(va(va'first));
-
-  begin
-    DoblDobl_Sampling_Operations.Store_Gamma(gamma,i);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when storing double double gamma constant.");
-      return 634;
-  end Job34;
-
-  function Job64 return integer32 is -- storing quaddobl gamma constant
-
-    use QuadDobl_Complex_Numbers;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    vc : constant C_Double_Array
-       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(8));
-    re_hihi : constant double_float := double_float(vc(0));
-    re_lohi : constant double_float := double_float(vc(1));
-    re_hilo : constant double_float := double_float(vc(2));
-    re_lolo : constant double_float := double_float(vc(3));
-    im_hihi : constant double_float := double_float(vc(4));
-    im_lohi : constant double_float := double_float(vc(5));
-    im_hilo : constant double_float := double_float(vc(6));
-    im_lolo : constant double_float := double_float(vc(7));
-    re : constant quad_double := create(re_hihi,re_lohi,re_hilo,re_lolo);
-    im : constant quad_double := create(im_hihi,im_lohi,im_hilo,im_lolo);
-    gamma : constant Complex_Number := Create(re,im);
-    i : constant integer32 := integer32(va(va'first));
-
-  begin
-    QuadDobl_Sampling_Operations.Store_Gamma(gamma,i);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when storing quad double gamma constant.");
-      return 664;
-  end Job64;
-
-  function Job7 return integer32 is -- copy from standard sampler to container
-
-     use Standard_Complex_Poly_Systems;
-
-     p : constant Poly_Sys := Sampling_Machine.Embedded_System;
-
-  begin
-    Standard_PolySys_Container.Initialize(p);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when copying from standard sampler to container.");
-      return 47;
-  end Job7;
-
-  function Job37 return integer32 is -- copy from dobldobl sampler to container
-
-     use DoblDobl_Complex_Poly_Systems;
-
-     p : constant Poly_Sys := DoblDobl_Sampling_Machine.Embedded_System;
-
-  begin
-    DoblDobl_PolySys_Container.Initialize(p);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when copying from dobldobl sampler to container.");
-      return 637;
-  end Job37;
-
-  function Job67 return integer32 is -- copy from quaddobl sampler to container
-
-     use QuadDobl_Complex_Poly_Systems;
-
-     p : constant Poly_Sys := QuadDobl_Sampling_Machine.Embedded_System;
-
-  begin
-    QuadDobl_PolySys_Container.Initialize(p);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when copying from quaddobl sampler to container.");
-      return 667;
-  end Job67;
-
-  function Job8 return integer32 is -- copy standard 1st solutions to container
-
-    use Standard_Complex_Solutions;
-
-    s : constant Solution_List
-      := Standard_Sampling_Operations.Retrieve_First_Solutions;
-
-  begin
-    Standard_Solutions_Container.Clear;
-    Standard_Solutions_Container.Initialize(s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when copying standard 1st solutions to container.");
-      return 48;
-  end Job8;
-
-  function Job38 return integer32 is -- copy dobldobl 1st solutions to container
-
-    use DoblDobl_Complex_Solutions;
-
-    s : constant Solution_List
-      := DoblDobl_Sampling_Operations.Retrieve_First_Solutions;
-
-  begin
-    DoblDobl_Solutions_Container.Clear;
-    DoblDobl_Solutions_Container.Initialize(s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when copying dobldobl 1st solutions to container.");
-      return 638;
-  end Job38;
-
-  function Job68 return integer32 is -- copy quaddobl 1st solutions to container
-
-    use QuadDobl_Complex_Solutions;
-
-    s : constant Solution_List
-      := QuadDobl_Sampling_Operations.Retrieve_First_Solutions;
-
-  begin
-    QuadDobl_Solutions_Container.Clear;
-    QuadDobl_Solutions_Container.Initialize(s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when copying quaddobl 1st solutions to container.");
-      return 668;
-  end Job68;
-
-  function Job9 return integer32 is -- standard sols from grid to container
-
-    use Standard_Complex_Solutions;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    i : constant integer32 := integer32(va(va'first));
-    s : constant Solution_List
-      := Standard_Monodromy_Permutations.Retrieve(i);
-    cp_s : Solution_List;  -- will be a copy of s
-
-  begin -- since this will be traffic on the same node
-    Copy(s,cp_s); -- we better make a copy
-    Standard_Solutions_Container.Clear;
-    Standard_Solutions_Container.Initialize(cp_s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when standard copying from grid to container.");
-      return 59;
-  end Job9;
-
-  function Job39 return integer32 is -- dobldobl sols from grid to container
-
-    use DoblDobl_Complex_Solutions;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    i : constant integer32 := integer32(va(va'first));
-    s : constant Solution_List
-      := DoblDobl_Monodromy_Permutations.Retrieve(i);
-    cp_s : Solution_List;  -- will be a copy of s
-
-  begin -- since this will be traffic on the same node
-    Copy(s,cp_s); -- we better make a copy
-    DoblDobl_Solutions_Container.Clear;
-    DoblDobl_Solutions_Container.Initialize(cp_s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when dobldobl copying from grid to container.");
-      return 639;
-  end Job39;
-
-  function Job69 return integer32 is -- quaddobl sols from grid to container
-
-    use QuadDobl_Complex_Solutions;
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    i : constant integer32 := integer32(va(va'first));
-    s : constant Solution_List
-      := QuadDobl_Monodromy_Permutations.Retrieve(i);
-    cp_s : Solution_List;  -- will be a copy of s
-
-  begin -- since this will be traffic on the same node
-    Copy(s,cp_s); -- we better make a copy
-    QuadDobl_Solutions_Container.Clear;
-    QuadDobl_Solutions_Container.Initialize(cp_s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when quaddobl copying from grid to container.");
-      return 669;
-  end Job69;
 
   function Job10 return integer32 is
 
@@ -776,56 +402,113 @@ function use_c2fac ( job : integer32;
       return 674;
   end Job74;
 
-  function Job15 return integer32 is -- standard linear trace test
+  function Monodromy_Standard_Trace_Test
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Applies the linear trace test to stop the monodromy loops
+  --   in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is 1 if done, or 1 if not done.
 
     done : constant boolean
          := Standard_Monodromy_Permutations.Certify_with_Linear_Trace;
 
   begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Trace_Test ...");
+    end if;
     if done
      then Assign(1,a);
      else Assign(0,a);
     end if;
     return 0;
   exception
-    when others =>
-      put_line("Exception at applying linear trace test with doubles.");
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Trace_Test.");
+      end if;
       return 55;
-  end Job15;
+  end Monodromy_Standard_Trace_Test;
 
-  function Job45 return integer32 is -- dobldobl linear trace test
+  function Monodromy_DoblDobl_Trace_Test
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Applies the linear trace test to stop the monodromy loops
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is 1 if done, or 1 if not done.
 
     done : constant boolean
          := DoblDobl_Monodromy_Permutations.Certify_with_Linear_Trace;
 
   begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Trace_Test ...");
+    end if;
     if done
      then Assign(1,a);
      else Assign(0,a);
     end if;
     return 0;
   exception
-    when others =>
-      put_line("Exception at linear trace test with double doubles.");
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Trace_Test.");
+      end if;
       return 645;
-  end Job45;
+  end Monodromy_DoblDobl_Trace_Test;
 
-  function Job75 return integer32 is -- quaddobl linear trace test
+  function Monodromy_QuadDobl_Trace_Test
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Applies the linear trace test to stop the monodromy loops
+  --   in quad double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is 1 if done, or 1 if not done.
 
     done : constant boolean
          := QuadDobl_Monodromy_Permutations.Certify_with_Linear_Trace;
 
   begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Trace_Test ...");
+    end if;
     if done
      then Assign(1,a);
      else Assign(0,a);
     end if;
     return 0;
   exception
-    when others =>
-      put_line("Exception at linear trace test with quad doubles.");
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Trace_Test.");
+      end if;
       return 675;
-  end Job75;
+  end Monodromy_QuadDobl_Trace_Test;
 
   function Job16 return integer32 is -- standard trace grid diagnostics
 
@@ -1615,25 +1298,26 @@ function use_c2fac ( job : integer32;
   function Handle_Jobs return integer32 is
 
     use Witness_Interface;
+    use Monodromy_Interface;
 
   begin
     case job is
       when   0 => Write_Menu; return 0;
       when   1 => return Witness_Standard_Polynomial_Prompt(a,b,vrblvl-1);
-      when   2 => return Job2; -- initialize standard sampling machine
-      when   3 => return Job3; -- assigning standard coefficient of slice
-      when   4 => return Job4; -- store standard double gamma constant
-      when   5 => Standard_Sampling_Operations.Sample; return 0;
-      when   6 => Standard_Sampling_Operations.Swap_Slices; return 0;
-      when   7 => return Job7; -- copy from standard sampler to container
-      when   8 => return Job8; -- copy first standard solutions to container
-      when   9 => return Job9; -- standard solutions from grid to container
+      when   2 => return Monodromy_Standard_Initialize_Sampler(a,vrblvl-1);
+      when   3 => return Monodromy_Standard_Set_Coefficient(a,b,c,vrblvl-1);
+      when   4 => return Monodromy_Standard_Store_Gamma(a,c,vrblvl-1);
+      when   5 => return Monodromy_Standard_Sample(vrblvl-1);
+      when   6 => return Monodromy_Standard_Swap_Slices(vrblvl-1);
+      when   7 => return Monodromy_Standard_Copy_System(vrblvl-1);
+      when   8 => return Monodromy_Standard_Copy_Solutions(vrblvl-1);
+      when   9 => return Monodromy_Standard_Grid_Solutions(a,vrblvl-1);
       when  10 => return Job10; -- initializing Monodromy_Permutations
       when  11 => return Job11; -- standard solutions to Monodromy_Permutations
       when  12 => return Job12; -- compute standard monodromy permutation
       when  13 => return Job13; -- update with standard permutation
       when  14 => return Job14; -- writes the standard decomposition
-      when  15 => return Job15; -- apply standard linear trace test
+      when  15 => return Monodromy_Standard_Trace_Test(a,vrblvl-1);
       when  16 => return Job16; -- return standard trace grid diagnostics
       when  17 => return Job17; -- comparing standard trace sum differences
       when  18 => return Job18; -- finding index of solution label
@@ -1650,20 +1334,20 @@ function use_c2fac ( job : integer32;
       when  29 => return Job29; -- standard random complex number
       when  30 => return Job30; -- make standard monodromy permutations verbose 
       when  31 => return Witness_DoblDobl_Polynomial_Prompt(a,b,vrblvl-1);
-      when  32 => return Job32; -- initialize dobldobl sampling machine
-      when  33 => return Job33; -- assign dobldobl coefficient of slice
-      when  34 => return Job34; -- store double double gamma constant
-      when  35 => DoblDobl_Sampling_Operations.Sample; return 0;
-      when  36 => DoblDobl_Sampling_Operations.Swap_Slices; return 0;
-      when  37 => return Job37; -- copy from dobldobl sampler to container
-      when  38 => return Job38; -- copy first dobldobl solutions to container
-      when  39 => return Job39; -- dobldobl solutions from grid to container
+      when  32 => return Monodromy_DoblDobl_Initialize_Sampler(a,vrblvl-1);
+      when  33 => return Monodromy_DoblDobl_Set_Coefficient(a,b,c,vrblvl-1);
+      when  34 => return Monodromy_DoblDobl_Store_Gamma(a,c,vrblvl-1);
+      when  35 => return Monodromy_DoblDobl_Sample(vrblvl-1);
+      when  36 => return Monodromy_DoblDobl_Swap_Slices(vrblvl-1);
+      when  37 => return Monodromy_DoblDobl_Copy_System(vrblvl-1);
+      when  38 => return Monodromy_DoblDobl_Copy_Solutions(vrblvl-1);
+      when  39 => return Monodromy_DoblDobl_Grid_Solutions(a,vrblvl-1);
       when  40 => return Job40; -- initialize dobldobl monodromy permutations
       when  41 => return Job41; -- dobldobl solutions to Monodromy_Permutations
       when  42 => return Job42; -- compute dobldobl monodromy permutation
       when  43 => return Job43; -- update with dobldobl permutation
       when  44 => return Job44; -- writes the dobldobl decomposition
-      when  45 => return Job45; -- apply dobldobl linear trace test
+      when  45 => return Monodromy_DoblDobl_Trace_Test(a,vrblvl-1);
       when  46 => return Job46; -- return dobldobl trace grid diagnostics
       when  47 => return Job47; -- comparing dobldobl trace sum differences
       when  48 => return Job48; -- index of dobldobl solution label
@@ -1678,20 +1362,20 @@ function use_c2fac ( job : integer32;
       when  59 => return Job59; -- random dobldobl complex number
       when  60 => return Job60; -- make dobldobl monodromy permutations verbose 
       when  61 => return Witness_QuadDobl_Polynomial_Prompt(a,b,vrblvl-1);
-      when  62 => return Job62; -- initialize quaddobl sampling machine
-      when  63 => return Job63; -- assign quaddobl coefficient of slice
-      when  64 => return Job64; -- store quaddobl gamma constant
-      when  65 => QuadDobl_Sampling_Operations.Sample; return 0;
-      when  66 => QuadDobl_Sampling_Operations.Swap_Slices; return 0;
-      when  67 => return Job67; -- copy from quaddobl sampler to container
-      when  68 => return Job68; -- copy first quaddobl solutions to container
-      when  69 => return Job69; -- quaddobl solutions from grid to container
+      when  62 => return Monodromy_QuadDobl_Initialize_Sampler(a,vrblvl-1);
+      when  63 => return Monodromy_QuadDobl_Set_Coefficient(a,b,c,vrblvl-1);
+      when  64 => return Monodromy_QuadDobl_Store_Gamma(a,c,vrblvl-1);
+      when  65 => return Monodromy_QuadDobl_Sample(vrblvl-1);
+      when  66 => return Monodromy_QuadDobl_Swap_Slices(vrblvl-1);
+      when  67 => return Monodromy_QuadDobl_Copy_System(vrblvl-1);
+      when  68 => return Monodromy_QuadDobl_Copy_Solutions(vrblvl-1);
+      when  69 => return Monodromy_QuadDobl_Grid_Solutions(a,vrblvl-1);
       when  70 => return Job70; -- initialize quaddobl monodromy permutations
       when  71 => return Job71; -- quaddobl solutions to Monodromy_Permutations
       when  72 => return Job72; -- compute quaddobl monodromy permutation
       when  73 => return Job73; -- update with quaddobl permutation
       when  74 => return Job74; -- writes the quaddobl decomposition
-      when  75 => return Job75; -- apply quaddobl linear trace test
+      when  75 => return Monodromy_QuadDobl_Trace_Test(a,vrblvl-1);
       when  76 => return Job76; -- return quaddobl trace grid diagnostics
       when  77 => return Job77; -- comparing quaddobl trace sum differences
       when  78 => return Job78; -- index of quaddobl solution label
