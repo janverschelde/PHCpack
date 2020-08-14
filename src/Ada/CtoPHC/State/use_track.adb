@@ -5,29 +5,12 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Double_Double_Numbers;             use Double_Double_Numbers;
-with Quad_Double_Numbers;               use Quad_Double_Numbers;
-with Multprec_Floating_Numbers;
-with Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers;
-with Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
-with Standard_Floating_Vectors;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
-with DoblDobl_Complex_Solutions;
-with QuadDobl_Complex_Solutions;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
-with Standard_Homotopy;
-with Standard_Continuation_Data_io;
-with DoblDobl_Homotopy;
-with DoblDobl_Continuation_Data_io;
-with QuadDobl_Homotopy;
-with QuadDobl_Continuation_Data_io;
-with Multprec_Homotopy;
 with Witness_Sets;
 with Extrinsic_Diagonal_Homotopies;
 with Standard_Hypersurface_Witdrivers;
@@ -40,6 +23,7 @@ with PHCpack_Operations_io;
 with Crude_Path_Trackers;
 
 with Diagonal_Homotopy_Interface;
+with Path_Trackers_Interface;
 
 function use_track ( job : integer32;
                      a : C_intarrs.Pointer;
@@ -81,303 +65,6 @@ function use_track ( job : integer32;
     when others => put_line("exception occurred in root refiner...");
                    return 149;
   end JobM1;
-
-  function Job3 return integer32 is -- standard homotopy with given gamma
-
-    g : Standard_Floating_Vectors.Vector(1..2);
-    gamma : Standard_Complex_Numbers.Complex_Number;
-
-  begin
-    Assign(2,c,g);
-    gamma := Standard_Complex_Numbers.Create(g(1),g(2));
-    PHCpack_Operations.Create_Standard_Homotopy(gamma);
-    return 0;
-  end Job3;
-
-  function Job23 return integer32 is -- create homotopy with given gamma
-
-    g : Standard_Floating_Vectors.Vector(1..2);
-    g_re,g_im : double_double;
-    gamma : DoblDobl_Complex_Numbers.Complex_Number;
-
-  begin
-    Assign(2,c,g);
-    g_re := create(g(1));
-    g_im := create(g(2));
-    gamma := DoblDobl_Complex_Numbers.Create(g_re,g_im);
-    PHCpack_Operations.Create_DoblDobl_Homotopy(gamma);
-    return 0;
-  end Job23;
-
-  function Job33 return integer32 is -- quaddobl homotopy with given gamma
-
-    g : Standard_Floating_Vectors.Vector(1..2);
-    g_re,g_im : quad_double;
-    gamma : QuadDobl_Complex_Numbers.Complex_Number;
-
-  begin
-    Assign(2,c,g);
-    g_re := create(g(1));
-    g_im := create(g(1));
-    gamma := QuadDobl_Complex_Numbers.Create(g_re,g_im);
-    PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
-    return 0;
-  end Job33;
-
-  function Job53 return integer32 is -- multprec homotopy with given gamma
-
-    g : Standard_Floating_Vectors.Vector(1..2);
-    g_re,g_im : Multprec_Floating_Numbers.Floating_Number;
-    gamma : Multprec_Complex_Numbers.Complex_Number;
-
-  begin
-    Assign(2,c,g);
-    g_re := Multprec_Floating_Numbers.create(g(1));
-    g_im := Multprec_Floating_Numbers.create(g(1));
-    gamma := Multprec_Complex_Numbers.Create(g_re,g_im);
-    Multprec_Floating_Numbers.Clear(g_re);
-    Multprec_Floating_Numbers.Clear(g_im);
-    PHCpack_Operations.Create_Multprec_Homotopy(gamma);
-    return 0;
-  end Job53;
-
-  function Job5 return integer32 is -- track one path silently
-
-    ls : Standard_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    length : double_float;
-    nbstep,nbfail,nbiter,nbsyst : natural32;
-    nbs : Standard_Natural_Vectors.Vector(1..4);
-    crash : boolean;
-
-  begin
-    PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,crash);
-    nbs(1) := nbstep; nbs(2) := nbfail;
-    nbs(3) := nbiter; nbs(4) := nbsyst;
-    Assign(nbs,a);
-    Assign_Solution(ls,b,c);
-    Standard_Complex_Solutions.Clear(ls);
-    if crash
-     then return 5;
-     else return 0;
-    end if;
-  end Job5;
-
-  function Job25 return integer32 is -- track one path silently
-
-    ls : DoblDobl_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    length : double_float;
-    nbstep,nbfail,nbiter,nbsyst : natural32;
-    nbs : Standard_Natural_Vectors.Vector(1..4);
-    crash : boolean;
-
-  begin
-    PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,crash);
-    nbs(1) := nbstep; nbs(2) := nbfail;
-    nbs(3) := nbiter; nbs(4) := nbsyst;
-    Assign(nbs,a);
-    Assign_Solution(ls,b,c);
-    DoblDobl_Complex_Solutions.Clear(ls);
-    if crash
-     then return 25;
-     else return 0;
-    end if;
-  end Job25;
-
-  function Job35 return integer32 is -- track one path silently
-
-    ls : QuadDobl_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    length : double_float;
-    nbstep,nbfail,nbiter,nbsyst : natural32;
-    nbs : Standard_Natural_Vectors.Vector(1..4);
-    crash : boolean;
-
-  begin
-    PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,crash);
-    nbs(1) := nbstep; nbs(2) := nbfail;
-    nbs(3) := nbiter; nbs(4) := nbsyst;
-    Assign(nbs,a);
-    Assign_Solution(ls,b,c);
-    QuadDobl_Complex_Solutions.Clear(ls);
-    if crash
-     then return 25;
-     else return 0;
-    end if;
-  end Job35;
-
-  function Job6 return integer32 is -- track one path with reporting
-
-    ls : Standard_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    length : double_float;
-    nbstep,nbfail,nbiter,nbsyst : natural32;
-    nbs : Standard_Natural_Vectors.Vector(1..4);
-    crash : boolean;
-
-  begin
-    PHCpack_Operations.Reporting_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,crash);
-    nbs(1) := nbstep; nbs(2) := nbfail;
-    nbs(3) := nbiter; nbs(4) := nbsyst;
-    Assign(nbs,a);
-    Assign_Solution(ls,b,c);
-    Standard_Complex_Solutions.Clear(ls);
-    if crash
-     then return 6;
-     else return 0;
-    end if;
-  end Job6;
-
-  function Job26 return integer32 is -- track one path with reporting
-
-    ls : DoblDobl_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    length : double_float;
-    nbstep,nbfail,nbiter,nbsyst : natural32;
-    nbs : Standard_Natural_Vectors.Vector(1..4);
-    crash : boolean;
-
-  begin
-    PHCpack_Operations.Reporting_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,crash);
-    nbs(1) := nbstep; nbs(2) := nbfail;
-    nbs(3) := nbiter; nbs(4) := nbsyst;
-    Assign(nbs,a);
-    Assign_Solution(ls,b,c);
-    DoblDobl_Complex_Solutions.Clear(ls);
-    if crash
-     then return 26;
-     else return 0;
-    end if;
-  end Job26;
-
-  function Job36 return integer32 is -- track one path with reporting
-
-    ls : QuadDobl_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    length : double_float;
-    nbstep,nbfail,nbiter,nbsyst : natural32;
-    nbs : Standard_Natural_Vectors.Vector(1..4);
-    crash : boolean;
-
-  begin
-    PHCpack_Operations.Reporting_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,crash);
-    nbs(1) := nbstep; nbs(2) := nbfail;
-    nbs(3) := nbiter; nbs(4) := nbsyst;
-    Assign(nbs,a);
-    Assign_Solution(ls,b,c);
-    QuadDobl_Complex_Solutions.Clear(ls);
-    if crash
-     then return 36;
-     else return 0;
-    end if;
-  end Job36;
-
-  function Job7 return integer32 is -- write solution with diagnostics
-
-    use Standard_Complex_Numbers,Standard_Continuation_Data_io;
-
-    ls : constant Standard_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    nb : Standard_Natural_Vectors.Vector(1..5);
-    length_path : constant double_float := IMAG_PART(ls.t);
-    nbfail,nbregu,nbsing,kind : natural32 := 0;
-    tol_zero : constant double_float := 1.0E-12;
-    tol_sing : constant double_float := 1.0E-8;
-
-
-  begin
-    Assign(5,a,nb);
-    if PHCpack_Operations.Is_File_Defined then
-      Write_Statistics(PHCpack_Operations.output_file,
-                       integer32(nb(5)),nb(1),nb(2),nb(3),nb(4));
-      Write_Diagnostics(PHCpack_Operations.output_file,
-                        ls.all,tol_zero,tol_sing,nbfail,nbregu,nbsing,kind);
-    else
-      Write_Statistics(standard_output,
-                       integer32(nb(5)),nb(1),nb(2),nb(3),nb(4));
-      Write_Diagnostics(standard_output,
-                        ls.all,tol_zero,tol_sing,nbfail,nbregu,nbsing,kind);
-    end if;
-    ls.t := Create(REAL_PART(ls.t),0.0);
-    if PHCpack_Operations.Is_File_Defined
-     then Write_Solution(PHCpack_Operations.output_file,ls.all,length_path);
-     else Write_Solution(standard_output,ls.all,length_path);
-    end if;
-    return 0;
-  end Job7;
-
-  function Job27 return integer32 is -- write solution with diagnostics
-
-    use DoblDobl_Complex_Numbers,DoblDobl_Continuation_Data_io;
-
-    ls : constant DoblDobl_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    nb : Standard_Natural_Vectors.Vector(1..5);
-    length_path : constant double_double := IMAG_PART(ls.t);
-    nbfail,nbregu,nbsing,kind : natural32 := 0;
-    tol_zero : constant double_float := 1.0E-12;
-    tol_sing : constant double_float := 1.0E-8;
-
-
-  begin
-    Assign(5,a,nb);
-    if PHCpack_Operations.Is_File_Defined then
-      Write_Statistics(PHCpack_Operations.output_file,
-                       nb(5),nb(1),nb(2),nb(3),nb(4));
-      Write_Diagnostics(PHCpack_Operations.output_file,
-                        ls.all,tol_zero,tol_sing,nbfail,nbregu,nbsing,kind);
-    else
-      Write_Statistics(standard_output,nb(5),nb(1),nb(2),nb(3),nb(4));
-      Write_Diagnostics(standard_output,
-                        ls.all,tol_zero,tol_sing,nbfail,nbregu,nbsing,kind);
-    end if;
-    ls.t := Create(REAL_PART(ls.t),Double_Double_Numbers.create(0.0));
-    if PHCpack_Operations.Is_File_Defined
-     then Write_Solution(PHCpack_Operations.output_file,ls.all,length_path);
-     else Write_Solution(standard_output,ls.all,length_path);
-    end if;
-    return 0;
-  end Job27;
-
-  function Job37 return integer32 is -- write solution with diagnostics
-
-    use QuadDobl_Complex_Numbers,QuadDobl_Continuation_Data_io;
-
-    ls : constant QuadDobl_Complex_Solutions.Link_to_Solution
-       := Convert_to_Solution(b,c);
-    nb : Standard_Natural_Vectors.Vector(1..5);
-    length_path : constant quad_double := IMAG_PART(ls.t);
-    nbfail,nbregu,nbsing,kind : natural32 := 0;
-    tol_zero : constant double_float := 1.0E-12;
-    tol_sing : constant double_float := 1.0E-8;
-
-
-  begin
-    Assign(5,a,nb);
-    if PHCpack_Operations.Is_File_Defined then
-      Write_Statistics(PHCpack_Operations.output_file,
-                       nb(5),nb(1),nb(2),nb(3),nb(4));
-      Write_Diagnostics(PHCpack_Operations.output_file,
-                        ls.all,tol_zero,tol_sing,nbfail,nbregu,nbsing,kind);
-    else
-      Write_Statistics(standard_output,nb(5),nb(1),nb(2),nb(3),nb(4));
-      Write_Diagnostics(standard_output,
-                        ls.all,tol_zero,tol_sing,nbfail,nbregu,nbsing,kind);
-    end if;
-    ls.t := Create(REAL_PART(ls.t),Quad_Double_Numbers.create(integer(0)));
-    if PHCpack_Operations.Is_File_Defined
-     then Write_Solution(PHCpack_Operations.output_file,ls.all,length_path);
-     else Write_Solution(standard_output,ls.all,length_path);
-    end if;
-    return 0;
-  end Job37;
 
   function Job8 return integer32 is -- write a string to defined output
 
@@ -753,6 +440,7 @@ function use_track ( job : integer32;
   function Handle_Jobs return integer32 is
 
     use Diagonal_Homotopy_Interface;
+    use Path_Trackers_Interface;
 
   begin
     case job is
@@ -761,12 +449,12 @@ function use_track ( job : integer32;
                 return 0;
       when 1 => PHCpack_Operations_io.Read_Start_System_without_Solutions;
                 return 0;
-      when 2 => PHCpack_Operations.Create_Standard_Homotopy; return 0;
-      when 3 => return Job3;   -- create homotopy with given gamma
-      when 4 => Standard_Homotopy.Clear; return 0;
-      when 5 => return Job5;   -- track one path silently
-      when 6 => return Job6;   -- track one path with reporting
-      when 7 => return Job7;   -- write next solution with diagnostics
+      when 2 => return Path_Trackers_Standard_Homotopy_Random(vrblvl-1);
+      when 3 => return Path_Trackers_Standard_Homotopy_Gamma(c,vrblvl-1);
+      when 4 => return Path_Trackers_Standard_Homotopy_Clear(vrblvl-1);
+      when 5 => return Path_Trackers_Standard_Silent_Track(a,b,c,vrblvl-1);
+      when 6 => return Path_Trackers_Standard_Report_Track(a,b,c,vrblvl-1);
+      when 7 => return Path_Trackers_Standard_Write_Solution(a,b,c,vrblvl-1);
       when 8 => return Job8;   -- write string to defined output file
       when 9 => return Job9;   -- write integers to defined output file
       when 10 => return Job10; -- write doubles to defined output file
@@ -782,20 +470,20 @@ function use_track ( job : integer32;
       when 20 => return Diagonal_Homotopy_Standard_Collapse(a,vrblvl);
       when 21 => return Job21; -- remove last slack variable
      -- tracking in double double precision :
-      when 22 => PHCpack_Operations.Create_DoblDobl_Homotopy; return 0;
-      when 23 => return Job23; -- double double homotopy with given gamma
-      when 24 => DoblDobl_Homotopy.Clear; return 0;
-      when 25 => return Job25; -- track one path silently
-      when 26 => return Job26; -- track one path with reporting
-      when 27 => return Job27; -- write solution with diagnostics
+      when 22 => return Path_Trackers_DoblDobl_Homotopy_Random(vrblvl-1);
+      when 23 => return Path_Trackers_DoblDobl_Homotopy_Gamma(c,vrblvl-1);
+      when 24 => return Path_Trackers_DoblDobl_Homotopy_Clear(vrblvl-1);
+      when 25 => return Path_Trackers_DoblDobl_Silent_Track(a,b,c,vrblvl-1);
+      when 26 => return Path_Trackers_DoblDobl_Report_Track(a,b,c,vrblvl-1);
+      when 27 => return Path_Trackers_DoblDobl_Write_Solution(a,b,c,vrblvl-1);
       when 28 => PHCpack_Operations.DoblDobl_Cascade_Homotopy; return 0;
      -- tracking in quad double precision :
-      when 32 => PHCpack_Operations.Create_QuadDobl_Homotopy; return 0;
-      when 33 => return Job33; -- quad double homotopy with given gamma
-      when 34 => QuadDobl_Homotopy.Clear; return 0;
-      when 35 => return Job35; -- track one path silently
-      when 36 => return Job36; -- track one path with reporting
-      when 37 => return Job37; -- write solution with diagnostics
+      when 32 => return Path_Trackers_QuadDobl_Homotopy_Random(vrblvl-1);
+      when 33 => return Path_Trackers_QuadDobl_Homotopy_Gamma(c,vrblvl-1);
+      when 34 => return Path_Trackers_QuadDobl_Homotopy_Clear(vrblvl-1);
+      when 35 => return Path_Trackers_QuadDobl_Silent_Track(a,b,c,vrblvl-1);
+      when 36 => return Path_Trackers_QuadDobl_Report_Track(a,b,c,vrblvl-1);
+      when 37 => return Path_Trackers_QuadDobl_Write_Solution(a,b,c,vrblvl-1);
       when 38 => PHCpack_Operations.QuadDobl_Cascade_Homotopy; return 0;
      -- redefining diagonal homotopies ...
       when 40 => return Diagonal_Homotopy_Standard_Polynomial_Set(a,b,vrblvl);
@@ -812,9 +500,9 @@ function use_track ( job : integer32;
       when 49 => return Diagonal_Homotopy_DoblDobl_Polynomial_Set(a,b,vrblvl);
       when 50 => return Diagonal_Homotopy_QuadDobl_Polynomial_Set(a,b,vrblvl);
      -- multiprecision versions to create homotopy :
-      when 52 => PHCpack_Operations.Create_Multprec_Homotopy; return 0;
-      when 53 => return Job53; -- multiprecision homotopy with given gamma
-      when 54 => Multprec_Homotopy.Clear; return 0;
+      when 52 => return Path_Trackers_Multprec_Homotopy_Random(vrblvl-1);
+      when 53 => return Path_Trackers_Multprec_Homotopy_Gamma(c,vrblvl-1);
+      when 54 => return Path_Trackers_Multprec_Homotopy_Clear(vrblvl-1);
      -- crude path trackers
       when 55 => return Job55; -- crude tracker in double precision
       when 56 => return Job56; -- crude tracker in double double precision

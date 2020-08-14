@@ -1724,13 +1724,13 @@ function use_c2phc4c ( job : integer32;
 --         = 152 : create homotopy with random gamma constant;
 --         = 153 : create homotopy with gamma given in c;
 --         = 154 : clear the homotopy.
---         = 155 : track one path with a silent homotopy,
+--         = 155 : track one path silently, without intermediate output,
 --                 with in a the dimension of the solution,
 --                      in b the multiplicity flag, and
 --                      in c the coordinates of the start solution,
 --                 on return is the solution at the end of the path,
 --                 and in a are (#step,#fail,#iter,#syst);
---         = 156 : track one path with a silent homotopy,
+--         = 156 : track one path with intermediate output,
 --                 with in a the dimension of the solution,
 --                      in b the multiplicity flag, and
 --                      in c the coordinates of the start solution,
@@ -1823,13 +1823,13 @@ function use_c2phc4c ( job : integer32;
 --         = 173 : make a homotopy in double double precision
 --                 with a given gamma constant.
 --         = 174 : clear the homotopy.
---         = 175 : track one path with a silent homotopy,
+--         = 175 : track one path silently, without intermediate output,
 --                 with in a the dimension of the solution,
 --                      in b the multiplicity flag, and
 --                      in c the coordinates of the start solution,
 --                 on return is the solution at the end of the path,
 --                 and in a are (#step,#fail,#iter,#syst);
---         = 176 : track one path with a reporting homotopy,
+--         = 176 : track one path with intermediate output,
 --                 with in a the dimension of the solution,
 --                      in b the multiplicity flag, and
 --                      in c the coordinates of the start solution,
@@ -1847,13 +1847,13 @@ function use_c2phc4c ( job : integer32;
 --         = 183 : create homotopy in quad double precision,
 --                 with a given gamma constant.
 --         = 184 : clear the homotopy.
---         = 185 : track one path with a silent homotopy,
+--         = 185 : track one path silently, without intermediate output,
 --                 with in a the dimension of the solution,
 --                      in b the multiplicity flag, and
 --                      in c the coordinates of the start solution,
 --                 on return is the solution at the end of the path,
 --                 and in a are (#step,#fail,#iter,#syst);
---         = 186 : track one path with a reporting homotopy,
+--         = 186 : track one path with intermediate output,
 --                 with in a the dimension of the solution,
 --                      in b the multiplicity flag, and
 --                      in c the coordinates of the start solution,

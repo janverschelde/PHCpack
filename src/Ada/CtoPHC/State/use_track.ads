@@ -23,13 +23,13 @@ function use_track ( job : integer32;
 --          =   2 : create homotopy with random gamma constant;
 --          =   3 : create homotopy with gamma given in c;
 --          =   4 : clear the homotopy.
---          =   5 : track one path with a silent homotopy,
+--          =   5 : track one path silently, without intermediate output,
 --                  with in a the dimension of the solution,
 --                       in b the multiplicity flag, and
 --                       in c the coordinates of the start solution,
 --                  on return is the solution at the end of the path,
 --                  and in a are (#step,#fail,#iter,#syst);
---          =   6 : track one path with a reporting homotopy,
+--          =   6 : track one path with intermediate output,
 --                  with in a the dimension of the solution,
 --                       in b the multiplicity flag, and
 --                       in c the coordinates of the start solution,
@@ -98,13 +98,13 @@ function use_track ( job : integer32;
 --          =  23 : create homotopy with double double precision,
 --                  with a gamma constant given by two doubles in c.
 --          =  24 : clear the homotopy.
---          =  25 : track one path with a silent homotopy,
+--          =  25 : track one path silently, without intermediate output,
 --                  with in a the dimension of the solution,
 --                       in b the multiplicity flag, and
 --                       in c the coordinates of the start solution,
 --                  on return is the solution at the end of the path,
 --                  and in a are (#step,#fail,#iter,#syst);
---          =  26 : track one path with a reporting homotopy,
+--          =  26 : track one path with intermediate output,
 --                  with in a the dimension of the solution,
 --                       in b the multiplicity flag, and
 --                       in c the coordinates of the start solution,
@@ -122,13 +122,13 @@ function use_track ( job : integer32;
 --          =  33 : create homotopy with quad double precision,
 --                  with a gamma constant given by two doubles in c.
 --          =  34 : clear the homotopy.
---          =  35 : track one path with a silent homotopy,
+--          =  35 : track one path silently, without intermediate output,
 --                  with in a the dimension of the solution,
 --                       in b the multiplicity flag, and
 --                       in c the coordinates of the start solution,
 --                  on return is the solution at the end of the path,
 --                  and in a are (#step,#fail,#iter,#syst);
---          =  36 : track one path with a reporting homotopy,
+--          =  36 : track one path with intermediate output,
 --                  with in a the dimension of the solution,
 --                       in b the multiplicity flag, and
 --                       in c the coordinates of the start solution,
