@@ -7,6 +7,9 @@ with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
@@ -1157,5 +1160,516 @@ package body Monodromy_Interface is
       end if;
       return 675;
   end Monodromy_QuadDobl_Trace_Test;
+
+  function Monodromy_Standard_Diagnostics
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Numbers;
+
+    err,dis : double_float;
+    ada_c : Complex_Number;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Diagnostics ...");
+    end if;
+    Standard_Monodromy_Permutations.Trace_Grid_Diagnostics(err,dis);
+    ada_c := Create(err,dis);  -- a complex number is an array
+    Assign(ada_c,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Diagnostics.");
+      end if;
+      return 56;
+  end Monodromy_Standard_Diagnostics;
+
+  function Monodromy_DoblDobl_Diagnostics
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Numbers; -- return hi_parts of double doubles
+
+    dd_err,dd_dis : double_double;
+    st_err,st_dis : double_float;
+    ada_c : Complex_Number;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Diagnostics ...");
+    end if;
+    DoblDobl_Monodromy_Permutations.Trace_Grid_Diagnostics(dd_err,dd_dis);
+    st_err := to_double(dd_err);
+    st_dis := to_double(dd_dis);
+    ada_c := Create(st_err,st_dis);  -- a complex number is an array
+    Assign(ada_c,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Diagnostics.");
+      end if;
+      return 646;
+  end Monodromy_DoblDobl_Diagnostics;
+
+  function Monodromy_QuadDobl_Diagnostics
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Numbers; -- return hi_parts of quad doubles
+
+    qd_err,qd_dis : quad_double;
+    st_err,st_dis : double_float;
+    ada_c : Complex_Number;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Diagnostics ...");
+    end if;
+    QuadDobl_Monodromy_Permutations.Trace_Grid_Diagnostics(qd_err,qd_dis);
+    st_err := to_double(qd_err);
+    st_dis := to_double(qd_dis);
+    ada_c := Create(st_err,st_dis);  -- a complex number is an array
+    Assign(ada_c,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Diagnostics.");
+      end if;
+      return 676;
+  end Monodromy_QuadDobl_Diagnostics;
+
+  function Monodromy_Standard_Trace_Sum
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(va(va'first));
+    f : Standard_Natural_Vectors.Vector(1..n);
+    d : double_float;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Trace_Sum ...");
+    end if;
+    Assign(natural32(n),b,f);
+    d := Standard_Monodromy_Permutations.Trace_Sum_Difference(f);
+    Assign(d,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Trace_Sum.");
+      end if;
+      return 57;
+  end Monodromy_Standard_Trace_Sum;
+
+  function Monodromy_DoblDobl_Trace_Sum
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(va(va'first));
+    f : Standard_Natural_Vectors.Vector(1..n);
+    dd_d : double_double;
+    st_d : double_float;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Trace_Sum ...");
+    end if;
+    Assign(natural32(n),b,f);
+    dd_d := DoblDobl_Monodromy_Permutations.Trace_Sum_Difference(f);
+    st_d := to_double(dd_d);
+    Assign(st_d,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Trace_Sum.");
+      end if;
+      return 647;
+  end Monodromy_DoblDobl_Trace_Sum;
+
+  function Monodromy_QuadDobl_Trace_Sum
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(va(va'first));
+    f : Standard_Natural_Vectors.Vector(1..n);
+    qd_d : quad_double;
+    st_d : double_float;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Trace_Sum ...");
+    end if;
+    Assign(natural32(n),b,f);
+    qd_d := QuadDobl_Monodromy_Permutations.Trace_Sum_Difference(f);
+    st_d := to_double(qd_d);
+    Assign(st_d,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Trace_Sum.");
+      end if;
+      return 677;
+  end Monodromy_QuadDobl_Trace_Sum;
+
+  function Monodromy_Standard_Factor_Count
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    f : constant natural32
+      := Standard_Monodromy_Permutations.Number_of_Irreducible_Factors;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Factor_Count ...");
+    end if;
+    Assign(integer32(f),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Factor_Count.");
+      end if;
+      return 68;
+  end Monodromy_Standard_Factor_Count;
+
+  function Monodromy_DoblDobl_Factor_Count
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    f : constant natural32
+      := DoblDobl_Monodromy_Permutations.Number_of_Irreducible_Factors;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Factor_Count ...");
+    end if;
+    Assign(integer32(f),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Factor_Count.");
+      end if;
+      return 656;
+  end Monodromy_DoblDobl_Factor_Count;
+
+  function Monodromy_QuadDobl_Factor_Count
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    f : constant natural32
+      := QuadDobl_Monodromy_Permutations.Number_of_Irreducible_Factors;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Factor_Count ...");
+    end if;
+    Assign(integer32(f),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Factor_Count.");
+      end if;
+      return 686;
+  end Monodromy_QuadDobl_Factor_Count;
+
+  function Monodromy_Standard_Get_Factor
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant integer32 := integer32(v_a(v_a'first));
+    f : constant Standard_Natural_Vectors.Link_to_Vector
+      := Standard_Monodromy_Permutations.Component(k);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Get_Factor ...");
+    end if;
+    Assign(f'last,a);
+    Assign(f.all,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Get_Factor.");
+      end if;
+      return 69;
+  end Monodromy_Standard_Get_Factor;
+
+  function Monodromy_DoblDobl_Get_Factor
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant integer32 := integer32(v_a(v_a'first));
+    f : constant Standard_Natural_Vectors.Link_to_Vector
+      := DoblDobl_Monodromy_Permutations.Component(k);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Get_Factor ...");
+    end if;
+    Assign(f'last,a);
+    Assign(f.all,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Get_Factor.");
+      end if;
+      return 657;
+  end Monodromy_DoblDobl_Get_Factor;
+
+  function Monodromy_QuadDobl_Get_Factor
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant integer32 := integer32(v_a(v_a'first));
+    f : constant Standard_Natural_Vectors.Link_to_Vector
+      := QuadDobl_Monodromy_Permutations.Component(k);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Get_Factor ...");
+    end if;
+    Assign(f'last,a);
+    Assign(f.all,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Get_Factor.");
+      end if;
+      return 687;
+  end Monodromy_QuadDobl_Get_Factor;
+
+  function Monodromy_Standard_Set_Silent
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Set_Silent ...");
+    end if;
+    Standard_Monodromy_Permutations.stay_silent := true;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Set_Silent.");
+      end if;
+      return 39;
+  end Monodromy_Standard_Set_Silent;
+
+  function Monodromy_DoblDobl_Set_Silent
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Set_Silent ...");
+    end if;
+    DoblDobl_Monodromy_Permutations.stay_silent := true;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Set_Silent.");
+      end if;
+      return 658;
+  end Monodromy_DoblDobl_Set_Silent;
+
+  function Monodromy_QuadDobl_Set_Silent
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Set_Silent ...");
+    end if;
+    QuadDobl_Monodromy_Permutations.stay_silent := true;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Set_Silent.");
+      end if;
+      return 688;
+  end Monodromy_QuadDobl_Set_Silent;
+
+  function Monodromy_Standard_Set_Verbose
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Set_Verbose ...");
+    end if;
+    Standard_Monodromy_Permutations.stay_silent := false;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Set_Verbose.");
+      end if;
+      return 630;
+  end Monodromy_Standard_Set_Verbose;
+
+  function Monodromy_DoblDobl_Set_Verbose
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Set_Verbose ...");
+    end if;
+    DoblDobl_Monodromy_Permutations.stay_silent := false;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Set_Verbose.");
+      end if;
+      return 660;
+  end Monodromy_DoblDobl_Set_Verbose;
+
+  function Monodromy_QuadDobl_Set_Verbose
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Set_Verbose ...");
+    end if;
+    QuadDobl_Monodromy_Permutations.stay_silent := false;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Set_Verbose.");
+      end if;
+      return 690;
+  end Monodromy_QuadDobl_Set_Verbose;
+
+  function Monodromy_Standard_Random
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Numbers;
+
+    res : constant Complex_Number := Standard_Random_Numbers.Random1;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Random ...");
+    end if;
+    Assign(res,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Random.");
+      end if;
+      return 280;
+  end Monodromy_Standard_Random;
+
+  function Monodromy_DoblDobl_Random
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use DoblDobl_Complex_Numbers;
+
+    res : constant Complex_Number := DoblDobl_Random_Numbers.Random1;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Random ...");
+    end if;
+    Assign(res,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Random.");
+      end if;
+      return 659;
+  end Monodromy_DoblDobl_Random;
+
+  function Monodromy_QuadDobl_Random
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use QuadDobl_Complex_Numbers;
+
+    res : constant Complex_Number := QuadDobl_Random_Numbers.Random1;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Random ...");
+    end if;
+    Assign(res,c);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Random.");
+      end if;
+      return 689;
+  end Monodromy_QuadDobl_Random;
 
 end Monodromy_Interface;

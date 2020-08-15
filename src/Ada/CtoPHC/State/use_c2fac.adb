@@ -2,41 +2,24 @@ with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Double_Double_Numbers;             use Double_Double_Numbers;
-with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
-with DoblDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers;
-with Standard_Random_Numbers;
-with DoblDobl_Random_Numbers;
-with QuadDobl_Random_Numbers;
-with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
-with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Laur_Systems;
-with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
-with Standard_System_and_Solutions_io;
-with DoblDobl_System_and_Solutions_io;
-with QuadDobl_System_and_Solutions_io;
 with Sampling_Laurent_Machine;
 with DoblDobl_Sampling_Laurent_Machine;
 with QuadDobl_Sampling_Laurent_Machine;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
-with Standard_PolySys_Container;
 with Standard_LaurSys_Container;
 with Standard_Solutions_Container;
-with DoblDobl_PolySys_Container;
 with DoblDobl_LaurSys_Container;
 with DoblDobl_Solutions_Container;
-with QuadDobl_PolySys_Container;
 with QuadDobl_LaurSys_Container;
 with QuadDobl_Solutions_Container;
 with Standard_Sampling_Operations;
@@ -137,124 +120,6 @@ function use_c2fac ( job : integer32;
     end loop;
     return res;
   end Convert_to_Coefficients;
-
-  function Job16 return integer32 is -- standard trace grid diagnostics
-
-    use Standard_Complex_Numbers;
-
-    err,dis : double_float;
-    ada_c : Complex_Number;
-
-  begin
-    Standard_Monodromy_Permutations.Trace_Grid_Diagnostics(err,dis);
-    ada_c := Create(err,dis);  -- a complex number is an array
-    Assign(ada_c,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at diagnostics from standard trace grid.");
-      return 56;
-  end Job16;
-
-  function Job46 return integer32 is -- dobldobl trace grid diagnostics
-
-    use Standard_Complex_Numbers; -- return hi_parts of double doubles
-
-    dd_err,dd_dis : double_double;
-    st_err,st_dis : double_float;
-    ada_c : Complex_Number;
-
-  begin
-    DoblDobl_Monodromy_Permutations.Trace_Grid_Diagnostics(dd_err,dd_dis);
-    st_err := to_double(dd_err);
-    st_dis := to_double(dd_dis);
-    ada_c := Create(st_err,st_dis);  -- a complex number is an array
-    Assign(ada_c,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at diagnostics from dobldobl trace grid.");
-      return 646;
-  end Job46;
-
-  function Job76 return integer32 is -- quaddobl trace grid diagnostics
-
-    use Standard_Complex_Numbers; -- return hi_parts of quad doubles
-
-    qd_err,qd_dis : quad_double;
-    st_err,st_dis : double_float;
-    ada_c : Complex_Number;
-
-  begin
-    QuadDobl_Monodromy_Permutations.Trace_Grid_Diagnostics(qd_err,qd_dis);
-    st_err := to_double(qd_err);
-    st_dis := to_double(qd_dis);
-    ada_c := Create(st_err,st_dis);  -- a complex number is an array
-    Assign(ada_c,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at diagnostics from quaddobl trace grid.");
-      return 676;
-  end Job76;
-
-  function Job17 return integer32 is -- standard trace sum differences
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    n : constant integer32 := integer32(va(va'first));
-    f : Standard_Natural_Vectors.Vector(1..n);
-    d : double_float;
-
-  begin
-    Assign(natural32(n),b,f);
-    d := Standard_Monodromy_Permutations.Trace_Sum_Difference(f);
-    Assign(d,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when comparing standard trace sum differences.");
-      return 57;
-  end Job17;
-
-  function Job47 return integer32 is -- dobldobl trace sum differences
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    n : constant integer32 := integer32(va(va'first));
-    f : Standard_Natural_Vectors.Vector(1..n);
-    dd_d : double_double;
-    st_d : double_float;
-
-  begin
-    Assign(natural32(n),b,f);
-    dd_d := DoblDobl_Monodromy_Permutations.Trace_Sum_Difference(f);
-    st_d := to_double(dd_d);
-    Assign(st_d,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when comparing dobldobl trace sum differences.");
-      return 647;
-  end Job47;
-
-  function Job77 return integer32 is -- quaddobl trace sum differences
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    n : constant integer32 := integer32(va(va'first));
-    f : Standard_Natural_Vectors.Vector(1..n);
-    qd_d : quad_double;
-    st_d : double_float;
-
-  begin
-    Assign(natural32(n),b,f);
-    qd_d := QuadDobl_Monodromy_Permutations.Trace_Sum_Difference(f);
-    st_d := to_double(qd_d);
-    Assign(st_d,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when comparing quaddobl trace sum differences.");
-      return 677;
-  end Job77;
 
   function Job18 return integer32 is -- index of standard solution label
 
@@ -561,264 +426,6 @@ function use_c2fac ( job : integer32;
       return 683;
   end Job83;
 
-  function Job25 return integer32 is -- write standard witness set to file
-
-    use Standard_Complex_Poly_Systems;
-    use Standard_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-
-  begin
-    Create(file,out_file,filename);
-    Standard_System_and_Solutions_io.put(file,lp.all,sols);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when writing a standard witness set to file.");
-      return 65;
-  end Job25;
-
-  function Job55 return integer32 is -- write dobldobl witness set to file
-
-    use DoblDobl_Complex_Poly_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-
-  begin
-    Create(file,out_file,filename);
-    DoblDobl_System_and_Solutions_io.put(file,lp.all,sols);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when writing a dobldobl witness set to file.");
-      return 655;
-  end Job55;
-
-  function Job85 return integer32 is -- write quaddobl witness set to file
-
-    use QuadDobl_Complex_Poly_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..integer(n))
-             := C_Integer_Array_to_String(n,v_b);
-    file : file_type;
-    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-
-  begin
-    Create(file,out_file,filename);
-    QuadDobl_System_and_Solutions_io.put(file,lp.all,sols);
-    Close(file);
-    return 0;
-  exception 
-    when others =>
-      put_line("Exception when writing a quaddobl witness set to file.");
-      return 685;
-  end Job85;
-
-  function Job26 return integer32 is -- number of standard factors
-
-    f : constant natural32
-      := Standard_Monodromy_Permutations.Number_of_Irreducible_Factors;
-
-  begin
-    Assign(integer32(f),a);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at number of standard irreducible factors.");
-      return 68;
-  end Job26;
-
-  function Job56 return integer32 is -- number of dobldobl factors
-
-    f : constant natural32
-      := DoblDobl_Monodromy_Permutations.Number_of_Irreducible_Factors;
-
-  begin
-    Assign(integer32(f),a);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at number of dobldobl irreducible factors.");
-      return 656;
-  end Job56;
-
-  function Job86 return integer32 is -- number of quaddobl factors
-
-    f : constant natural32
-      := QuadDobl_Monodromy_Permutations.Number_of_Irreducible_Factors;
-
-  begin
-    Assign(integer32(f),a);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at number of quaddobl irreducible factors.");
-      return 686;
-  end Job86;
-
-  function Job27 return integer32 is -- standard irreducible factor
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant integer32 := integer32(v_a(v_a'first));
-    f : constant Standard_Natural_Vectors.Link_to_Vector
-      := Standard_Monodromy_Permutations.Component(k);
-
-  begin
-    Assign(f'last,a);
-    Assign(f.all,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when retrieving an irreducible factor.");
-      return 69;
-  end Job27;
-
-  function Job57 return integer32 is -- dobldobl irreducible factor
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant integer32 := integer32(v_a(v_a'first));
-    f : constant Standard_Natural_Vectors.Link_to_Vector
-      := DoblDobl_Monodromy_Permutations.Component(k);
-
-  begin
-    Assign(f'last,a);
-    Assign(f.all,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at retrieving a dobldobl irreducible factor.");
-      return 657;
-  end Job57;
-
-  function Job87 return integer32 is -- quaddobl irreducible factor
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant integer32 := integer32(v_a(v_a'first));
-    f : constant Standard_Natural_Vectors.Link_to_Vector
-      := QuadDobl_Monodromy_Permutations.Component(k);
-
-  begin
-    Assign(f'last,a);
-    Assign(f.all,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at retrieving a quaddobl irreducible factor.");
-      return 687;
-  end Job87;
-
-  function Job28 return integer32 is -- set state of standard to silent
-  begin
-    Standard_Monodromy_Permutations.stay_silent := true;
-    return 0;
-  end Job28;
-
-  function Job58 return integer32 is -- set state of dobldobl to silent
-  begin
-    DoblDobl_Monodromy_Permutations.stay_silent := true;
-    return 0;
-  end Job58;
-
-  function Job88 return integer32 is -- set state of quaddobl to silent
-  begin
-    QuadDobl_Monodromy_Permutations.stay_silent := true;
-    return 0;
-  end Job88;
-
-  function Job30 return integer32 is -- set state of standard to verbose
-  begin
-    Standard_Monodromy_Permutations.stay_silent := false;
-    return 0;
-  end Job30;
-
-  function Job60 return integer32 is -- set state of dobldobl to verbose
-  begin
-    DoblDobl_Monodromy_Permutations.stay_silent := false;
-    return 0;
-  end Job60;
-
-  function Job90 return integer32 is -- set state of quaddobl to verbose
-  begin
-    QuadDobl_Monodromy_Permutations.stay_silent := false;
-    return 0;
-  end Job90;
-
-  function Job29 return integer32 is -- standard random complex number
-
-    use Standard_Complex_Numbers;
-    res : constant Complex_Number := Standard_Random_Numbers.Random1;
-
-  begin
-    Assign(res,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at generating standard random complex number.");
-      return 280;
-  end Job29;
-
-  function Job59 return integer32 is -- dobldobl random complex number
-
-    use DoblDobl_Complex_Numbers;
-    res : constant Complex_Number := DoblDobl_Random_Numbers.Random1;
-
-  begin
-    Assign(res,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at generating dobldobl random complex number.");
-      return 659;
-  end Job59;
-
-  function Job89 return integer32 is -- quaddobl random complex number
-
-    use QuadDobl_Complex_Numbers;
-    res : constant Complex_Number := QuadDobl_Random_Numbers.Random1;
-
-  begin
-    Assign(res,c);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at generating quaddobl random complex number.");
-      return 689;
-  end Job89;
-
   function Job97 return integer32 is -- initializes standard Laurent sampler
 
     use Standard_Complex_Laur_Systems;
@@ -946,8 +553,8 @@ function use_c2fac ( job : integer32;
       when  13 => return Monodromy_Standard_Update(a,b,vrblvl-1);
       when  14 => return Monodromy_Standard_Write(vrblvl-1);
       when  15 => return Monodromy_Standard_Trace_Test(a,vrblvl-1);
-      when  16 => return Job16; -- return standard trace grid diagnostics
-      when  17 => return Job17; -- comparing standard trace sum differences
+      when  16 => return Monodromy_Standard_Diagnostics(c,vrblvl-1);
+      when  17 => return Monodromy_Standard_Trace_Sum(a,b,c,vrblvl-1);
       when  18 => return Job18; -- finding index of solution label
       when  19 => return Job19; -- init slices in Standard_Sampling_Operations
       when  20 => return Job20; -- adding new slice to Sampling_Operations
@@ -955,12 +562,12 @@ function use_c2fac ( job : integer32;
       when  22 => return Job22; -- setting standard target slices
       when  23 => return Job23; -- one sampling loop in double precision
       when  24 => return Witness_Standard_Polynomial_Read(a,b,vrblvl-1);
-      when  25 => return Job25; -- writes standard witness set to file
-      when  26 => return Job26; -- returns number of standard factors
-      when  27 => return Job27; -- returns labels in standard component
-      when  28 => return Job28; -- make standard monodromy permutations silent
-      when  29 => return Job29; -- standard random complex number
-      when  30 => return Job30; -- make standard monodromy permutations verbose 
+      when  25 => return Witness_Standard_Polynomial_Write(a,b,vrblvl-1);
+      when  26 => return Monodromy_Standard_Factor_Count(a,vrblvl-1);
+      when  27 => return Monodromy_Standard_Get_Factor(a,b,vrblvl-1);
+      when  28 => return Monodromy_Standard_Set_Silent(vrblvl-1);
+      when  29 => return Monodromy_Standard_Random(c,vrblvl-1);
+      when  30 => return Monodromy_Standard_Set_Verbose(vrblvl-1);
       when  31 => return Witness_DoblDobl_Polynomial_Prompt(a,b,vrblvl-1);
       when  32 => return Monodromy_DoblDobl_Initialize_Sampler(a,vrblvl-1);
       when  33 => return Monodromy_DoblDobl_Set_Coefficient(a,b,c,vrblvl-1);
@@ -976,19 +583,19 @@ function use_c2fac ( job : integer32;
       when  43 => return Monodromy_DoblDobl_Update(a,b,vrblvl-1);
       when  44 => return Monodromy_DoblDobl_Write(vrblvl-1);
       when  45 => return Monodromy_DoblDobl_Trace_Test(a,vrblvl-1);
-      when  46 => return Job46; -- return dobldobl trace grid diagnostics
-      when  47 => return Job47; -- comparing dobldobl trace sum differences
+      when  46 => return Monodromy_DoblDobl_Diagnostics(c,vrblvl-1);
+      when  47 => return Monodromy_DoblDobl_Trace_Sum(a,b,c,vrblvl-1);
       when  48 => return Job48; -- index of dobldobl solution label
       when  49 => return Job49; -- init slices in DoblDobl_Sampling_Operations
       when  52 => return Job52; -- setting dobldobl target slices
       when  53 => return Job53; -- one sampling loop in dobldobl precision
       when  54 => return Witness_DoblDobl_Polynomial_Read(a,b,vrblvl-1);
-      when  55 => return Job55; -- writes dobldobl witness set to file
-      when  56 => return Job56; -- returns number of dobldobl factors
-      when  57 => return Job57; -- returns labels in dobldobl component
-      when  58 => return Job58; -- make dobldobl monodromy permutations silent
-      when  59 => return Job59; -- random dobldobl complex number
-      when  60 => return Job60; -- make dobldobl monodromy permutations verbose 
+      when  55 => return Witness_DoblDobl_Polynomial_Write(a,b,vrblvl-1);
+      when  56 => return Monodromy_DoblDobl_Factor_Count(a,vrblvl-1);
+      when  57 => return Monodromy_DoblDobl_Get_Factor(a,b,vrblvl-1);
+      when  58 => return Monodromy_DoblDobl_Set_Silent(vrblvl-1);
+      when  59 => return Monodromy_DoblDobl_Random(c,vrblvl-1);
+      when  60 => return Monodromy_DoblDobl_Set_Verbose(vrblvl-1);
       when  61 => return Witness_QuadDobl_Polynomial_Prompt(a,b,vrblvl-1);
       when  62 => return Monodromy_QuadDobl_Initialize_Sampler(a,vrblvl-1);
       when  63 => return Monodromy_QuadDobl_Set_Coefficient(a,b,c,vrblvl-1);
@@ -1004,19 +611,19 @@ function use_c2fac ( job : integer32;
       when  73 => return Monodromy_QuadDobl_Update(a,b,vrblvl-1);
       when  74 => return Monodromy_QuadDobl_Write(vrblvl-1);
       when  75 => return Monodromy_QuadDobl_Trace_Test(a,vrblvl-1);
-      when  76 => return Job76; -- return quaddobl trace grid diagnostics
-      when  77 => return Job77; -- comparing quaddobl trace sum differences
+      when  76 => return Monodromy_QuadDobl_Diagnostics(c,vrblvl-1);
+      when  77 => return Monodromy_QuadDobl_Trace_Sum(a,b,c,vrblvl-1);
       when  78 => return Job78; -- index of quaddobl solution label
       when  79 => return Job79; -- init slices in QuadDobl_Sampling_Operations
       when  82 => return Job82; -- setting quaddobl target slices
       when  83 => return Job83; -- one sampling loop in quaddobl precision
       when  84 => return Witness_QuadDobl_Polynomial_Read(a,b,vrblvl-1);
-      when  85 => return Job85; -- writes quaddobl witness set to file
-      when  86 => return Job86; -- returns number of quaddobl factors
-      when  87 => return Job87; -- returns labels in quaddobl component
-      when  88 => return Job88; -- make quaddobl monodromy permutations silent
-      when  89 => return Job89; -- random quaddobl complex number
-      when  90 => return Job90; -- make quaddobl monodromy permutations verbose 
+      when  85 => return Witness_QuadDobl_Polynomial_Write(a,b,vrblvl-1);
+      when  86 => return Monodromy_QuadDobl_Factor_Count(a,vrblvl-1);
+      when  87 => return Monodromy_QuadDobl_Get_Factor(a,b,vrblvl-1);
+      when  88 => return Monodromy_QuadDobl_Set_Silent(vrblvl-1);
+      when  89 => return Monodromy_QuadDobl_Random(c,vrblvl-1);
+      when  90 => return Monodromy_QuadDobl_Set_Verbose(vrblvl-1);
       when  91 => return Witness_Standard_Laurent_Prompt(a,b,vrblvl-1);
       when  92 => return Witness_DoblDobl_Laurent_Prompt(a,b,vrblvl-1);
       when  93 => return Witness_QuadDobl_Laurent_Prompt(a,b,vrblvl-1);

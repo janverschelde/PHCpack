@@ -11,6 +11,9 @@ with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with Standard_System_and_Solutions_io;
+with DoblDobl_System_and_Solutions_io;
+with QuadDobl_System_and_Solutions_io;
 with Square_and_Embed_Systems;
 with Witness_Sets_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
@@ -889,5 +892,119 @@ package body Witness_Interface is
       end if;
       return 627;
   end Witness_QuadDobl_Laurent_Embed;
+
+  function Witness_Standard_Polynomial_Write
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is 
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    filename : constant String(1..integer(n))
+             := C_Integer_Array_to_String(n,v_b);
+    file : file_type;
+    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in witness_interface.");
+      put_line("Witness_Standard_Polynomial_Write ...");
+    end if;
+    Create(file,out_file,filename);
+    Standard_System_and_Solutions_io.put(file,lp.all,sols);
+    Close(file);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in witness_interface.");
+        put_line("Witness_Standard_Polynomial_Write.");
+      end if;
+      return 65;
+  end Witness_Standard_Polynomial_Write;
+
+  function Witness_DoblDobl_Polynomial_Write
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is 
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    filename : constant String(1..integer(n))
+             := C_Integer_Array_to_String(n,v_b);
+    file : file_type;
+    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in witness_interface.");
+      put_line("Witness_DoblDobl_Polynomial_Write ...");
+    end if;
+    Create(file,out_file,filename);
+    DoblDobl_System_and_Solutions_io.put(file,lp.all,sols);
+    Close(file);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in witness_interface.");
+        put_line("Witness_Standard_Polynomial_Write.");
+      end if;
+      return 655;
+  end Witness_DoblDobl_Polynomial_Write;
+
+  function Witness_QuadDobl_Polynomial_Write
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is 
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    filename : constant String(1..integer(n))
+             := C_Integer_Array_to_String(n,v_b);
+    file : file_type;
+    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in witness_interface.");
+      put_line("Witness_QuadDobl_Polynomial_Write ...");
+    end if;
+    Create(file,out_file,filename);
+    QuadDobl_System_and_Solutions_io.put(file,lp.all,sols);
+    Close(file);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in witness_interface.");
+        put_line("Witness_QuadDobl_Polynomial_Write.");
+      end if;
+      return 685;
+  end Witness_QuadDobl_Polynomial_Write;
 
 end Witness_Interface;

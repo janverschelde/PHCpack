@@ -348,4 +348,46 @@ package Witness_Interface is
   --   a       in a[0] is the number of slack variables to add;
   --   vrblvl  is the verbose level.
 
+  function Witness_Standard_Polynomial_Write
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes a witness set for a polynomial system in double precision
+  --   to the file with the given name.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the file name;
+  --   b       contains the characters of the file name;
+  --   vrblvl  is the verbose level.
+
+  function Witness_DoblDobl_Polynomial_Write
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes a witness set for a polynomial system in double double
+  --   precision to the file with the given name.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the file name;
+  --   b       contains the characters of the file name;
+  --   vrblvl  is the verbose level.
+
+  function Witness_QuadDobl_Polynomial_Write
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes a witness set for a polynomial system in quad double
+  --   precision to the file with the given name.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the file name;
+  --   b       contains the characters of the file name;
+  --   vrblvl  is the verbose level.
+
 end Witness_Interface;

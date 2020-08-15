@@ -490,4 +490,268 @@ package Monodromy_Interface is
   -- ON RETURN :
   --   a       in a[0] is 1 if done, or 1 if not done.
 
+  function Monodromy_Standard_Diagnostics
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the diagnostics of the grid in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       in c[0] is the maximum error of the samples,
+  --           in c[1] is the minimum distance between the samples.
+
+  function Monodromy_DoblDobl_Diagnostics
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the diagnostics of the grid in double double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       in c[0] is the maximum error of the samples,
+  --           in c[1] is the minimum distance between the samples.
+
+  function Monodromy_QuadDobl_Diagnostics
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the diagnostics of the grid in quad double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       in c[0] is the maximum error of the samples,
+  --           in c[1] is the minimum distance between the samples.
+
+  function Monodromy_Standard_Trace_Sum
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the difference between the trace and the actual sum
+  --   for a factor in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of points in the factor;
+  --   b       identifies the points in the factor;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       in c[0] is the difference between the trace and actual sum.
+
+  function Monodromy_DoblDobl_Trace_Sum
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the difference between the trace and the actual sum
+  --   for a factor in double double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of points in the factor;
+  --   b       identifies the points in the factor;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       in c[0] is the difference between the trace and actual sum.
+
+  function Monodromy_QuadDobl_Trace_Sum
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the difference between the trace and the actual sum
+  --   for a factor in quad double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of points in the factor;
+  --   b       identifies the points in the factor;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       in c[0] is the difference between the trace and actual sum.
+
+  function Monodromy_Standard_Factor_Count
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the number of factors in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the number of factors.
+
+  function Monodromy_DoblDobl_Factor_Count
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the number of factors in double double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the number of factors.
+
+  function Monodromy_QuadDobl_Factor_Count
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the number of factors in quad double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the number of factors.
+
+  function Monodromy_Standard_Get_Factor
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns a factor in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to the factor;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       defines the points in the factor.
+
+  function Monodromy_DoblDobl_Get_Factor
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns a factor in double double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to the factor;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       defines the points in the factor.
+
+  function Monodromy_QuadDobl_Get_Factor
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns a factor in quad double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index to the factor;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       defines the points in the factor.
+
+  function Monodromy_Standard_Set_Silent
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the state of monodromy in double precision to silent.
+  --   The verbose level is given in vrblvl.
+
+  function Monodromy_DoblDobl_Set_Silent
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the state of monodromy in double double precision to silent.
+  --   The verbose level is given in vrblvl.
+
+  function Monodromy_QuadDobl_Set_Silent
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the state of monodromy in quad double precision to silent.
+  --   The verbose level is given in vrblvl.
+
+  function Monodromy_Standard_Set_Verbose
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the state of monodromy in double precision to verbose.
+  --   The verbose level is given in vrblvl.
+
+  function Monodromy_DoblDobl_Set_Verbose
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the state of monodromy in double double precision to verbose.
+  --   The verbose level is given in vrblvl.
+
+  function Monodromy_QuadDobl_Set_Verbose
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the state of monodromy in double double precision to verbose.
+  --   The verbose level is given in vrblvl.
+
+  function Monodromy_Standard_Random
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns a random complex numbers in double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       contains real and imaginary parts of a double
+  --           complex number.
+
+  function Monodromy_DoblDobl_Random
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns a random complex numbers in double double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       contains real and imaginary parts of a double double
+  --           complex number.
+
+  function Monodromy_QuadDobl_Random
+             ( c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns a random complex numbers in quad double precision.
+
+  -- ON ENTRY :
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       contains real and imaginary parts of a quad double
+  --           complex number.
+
 end Monodromy_Interface;
