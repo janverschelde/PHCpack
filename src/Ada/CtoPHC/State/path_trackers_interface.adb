@@ -1,4 +1,5 @@
 with text_io;                           use text_io;
+with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
@@ -280,6 +281,60 @@ package body Path_Trackers_Interface is
       end if;
      return 524;
   end Path_Trackers_Multprec_Homotopy_Clear;
+
+  function Path_Trackers_Standard_Laurent_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_Standard_Laurent_Homotopy ...");
+    end if;
+    PHCpack_Operations.Create_Standard_Laurent_Homotopy;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_Standard_Laurent_Homotopy.");
+      end if;
+     return 792;
+  end Path_Trackers_Standard_Laurent_Homotopy;
+
+  function Path_Trackers_DoblDobl_Laurent_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_DoblDobl_Laurent_Homotopy ...");
+    end if;
+    PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_DoblDobl_Laurent_Homotopy.");
+      end if;
+     return 793;
+  end Path_Trackers_DoblDobl_Laurent_Homotopy;
+
+  function Path_Trackers_QuadDobl_Laurent_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_QuadDobl_Laurent_Homotopy ...");
+    end if;
+    PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_QuadDobl_Laurent_Homotopy.");
+      end if;
+     return 794;
+  end Path_Trackers_QuadDobl_Laurent_Homotopy;
 
   function Path_Trackers_Standard_Silent_Track
              ( a : C_intarrs.Pointer;
@@ -650,5 +705,186 @@ package body Path_Trackers_Interface is
       end if;
      return 187;
   end Path_Trackers_QuadDobl_Write_Solution;
+
+  function Path_Trackers_Standard_Polynomial_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
+    rtr : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_Standard_Polynomial_Solve ...");
+    end if;
+    rtr := PHCpack_Operations.Solve_by_Standard_Homotopy_Continuation(nbt);
+    return rtr;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_Standard_Polynomial_Solve.");
+      end if;
+     return 16;
+  end Path_Trackers_Standard_Polynomial_Solve;
+
+  function Path_Trackers_DoblDobl_Polynomial_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
+    rtr : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_DoblDobl_Polynomial_Solve ...");
+    end if;
+    rtr := PHCpack_Operations.Solve_by_DoblDobl_Homotopy_Continuation(nbt);
+    return rtr;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_DoblDobl_Polynomial_Solve.");
+      end if;
+     return 236;
+  end Path_Trackers_DoblDobl_Polynomial_Solve;
+
+  function Path_Trackers_QuadDobl_Polynomial_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
+    rtr : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_QuadDobl_Polynomial_Solve ...");
+    end if;
+    rtr := PHCpack_Operations.Solve_by_QuadDobl_Homotopy_Continuation(nbt);
+    return rtr;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_QuadDobl_Polynomial_Solve.");
+      end if;
+      return 246;
+  end Path_Trackers_QuadDobl_Polynomial_Solve;
+
+  function Path_Trackers_Multprec_Polynomial_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    deci : constant natural32 := natural32(v_a(v_a'first));
+    rtr : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_Multprec_Polynomial_Solve ...");
+    end if;
+    rtr := PHCpack_Operations.Solve_by_Multprec_Homotopy_Continuation(deci);
+    return rtr;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_Multprec_Polynomial_Solve.");
+      end if;
+      return 496;
+  end Path_Trackers_Multprec_Polynomial_Solve;
+
+  function Path_Trackers_Standard_Laurent_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use PHCpack_Operations;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nbr : constant natural32 := natural32(v_a(v_a'first));
+    rtr : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_Standard_Laurent_Solve ...");
+    end if;
+    rtr := Solve_by_Standard_Laurent_Homotopy_Continuation(nbr);
+    return rtr;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_Standard_Laurent_Solve.");
+      end if;
+      return 774;
+  end Path_Trackers_Standard_Laurent_Solve;
+
+  function Path_Trackers_DoblDobl_Laurent_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use PHCpack_Operations;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nbr : constant natural32 := natural32(v_a(v_a'first));
+    rtr : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_DoblDobl_Laurent_Solve ...");
+    end if;
+    rtr := Solve_by_DoblDobl_Laurent_Homotopy_Continuation(nbr);
+    return rtr;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_DoblDobl_Laurent_Solve.");
+      end if;
+      return 775;
+  end Path_Trackers_DoblDobl_Laurent_Solve;
+
+  function Path_Trackers_QuadDobl_Laurent_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use PHCpack_Operations;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nbr : constant natural32 := natural32(v_a(v_a'first));
+    rtr : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_QuadDobl_Laurent_Solve ...");
+    end if;
+    rtr := Solve_by_QuadDobl_Laurent_Homotopy_Continuation(nbr);
+    return rtr;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_QuadDobl_Laurent_Solve.");
+      end if;
+      return 776;
+  end Path_Trackers_QuadDobl_Laurent_Solve;
 
 end Path_Trackers_Interface;

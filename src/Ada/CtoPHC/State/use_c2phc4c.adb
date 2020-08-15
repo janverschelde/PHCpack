@@ -54,6 +54,7 @@ with Job_Handlers;
 with Symbol_Table_Interface;
 with Newton_Interface;
 with Continuation_Parameters_Interface;
+with Path_Trackers_Interface;
 with Witness_Interface;
 
 function use_c2phc4c ( job : integer32;
@@ -695,82 +696,6 @@ function use_c2phc4c ( job : integer32;
     return 0;
   end Job493;
 
-  function Job16 return integer32 is -- call standard path trackers
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
-
-  begin
-    return PHCpack_Operations.Solve_by_Standard_Homotopy_Continuation(nbt);
-  end Job16;
-
-  function Job236 return integer32 is -- call double double path trackers
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
-
-  begin
-    return PHCpack_Operations.Solve_by_DoblDobl_Homotopy_Continuation(nbt);
-  end Job236;
-
-  function Job246 return integer32 is -- call quad double path trackers
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
-
-  begin
-    return PHCpack_Operations.Solve_by_QuadDobl_Homotopy_Continuation(nbt);
-  end Job246;
-
-  function Job496 return integer32 is -- call multiprecision trackers
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    deci : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-    return PHCpack_Operations.Solve_by_Multprec_Homotopy_Continuation(deci);
-  end Job496;
-
-  function Job774 return integer32 is -- solve by standard Laurent continuation
-
-    use PHCpack_Operations;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nbr : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-    return Solve_by_Standard_Laurent_Homotopy_Continuation(nbr);
-  end Job774;
-
-  function Job775 return integer32 is -- solve by dobldobl Laurent continuation
-
-    use PHCpack_Operations;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nbr : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-    return Solve_by_DoblDobl_Laurent_Homotopy_Continuation(nbr);
-  end Job775;
-
-  function Job776 return integer32 is -- solve by quaddobl Laurent continuation
-
-    use PHCpack_Operations;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nbr : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-    return Solve_by_QuadDobl_Laurent_Homotopy_Continuation(nbr);
-  end Job776;
-
   function Handle_Jobs return integer32 is
 
     use Job_Containers;
@@ -778,6 +703,7 @@ function use_c2phc4c ( job : integer32;
     use Symbol_Table_Interface;
     use Newton_Interface;
     use Continuation_Parameters_Interface;
+    use Path_Trackers_Interface;
     use Witness_Interface;
 
   begin
@@ -796,7 +722,7 @@ function use_c2phc4c ( job : integer32;
       when 8 => return Standard_Container_Solutions_to_Start(vrblvl-1);
       when 9 => return Job9; -- verify the solutions in the container
       when 10..15 => return C_to_PHCpack(job-10,0);
-      when 16 => return Job16; -- call standard path trackers
+      when 16 => return Path_Trackers_Standard_Polynomial_Solve(a,vrblvl-1);
       when 17..19 => return C_to_PHCpack(job-10,0);
       when 20..29 => return use_syscon(job-20,a,b,c,vrblvl-1);
       when 30..38 => return use_solcon(job-30,a,b,c,vrblvl-1);
@@ -865,12 +791,12 @@ function use_c2phc4c ( job : integer32;
       when 228..229 => return use_c2lrhom(job-228,a,b,c,vrblvl-1);
       when 230 => return use_track(42,a,b,c,vrblvl-1);
       when 231..235 => return C_to_PHCpack(job-220,0);
-      when 236 => return Job236; -- solve by double double path tracking
+      when 236 => return Path_Trackers_DoblDobl_Polynomial_Solve(a,vrblvl-1);
       when 237..238 => return C_to_PHCpack(job-220,0);
       when 239 => return use_celcon(46,a,b,c,vrblvl-1);
       when 240 => return use_celcon(47,a,b,c,vrblvl-1);
       when 241..245 => return C_to_PHCpack(job-220,0);
-      when 246 => return Job246; -- solve by quad double path tracking
+      when 246 => return Path_Trackers_QuadDobl_Polynomial_Solve(a,vrblvl-1);
       when 247..248 => return C_to_PHCpack(job-220,0);
      -- deflation in double double and quad double precision
       when 249 => return Job249; -- double double deflate
@@ -988,7 +914,7 @@ function use_c2phc4c ( job : integer32;
       when 494 => PHCpack_Operations_io.Write_Multprec_Start_System; return 0;
       when 495 =>
         PHCpack_Operations_io.Write_Multprec_Start_Solutions; return 0;
-      when 496 => return Job496;
+      when 496 => return Path_Trackers_Multprec_Polynomial_Solve(a,vrblvl-1);
       when 497 =>
         PHCpack_Operations_io.Write_Multprec_Target_Solutions; return 0;
       when 498 => PHCpack_Operations.Multprec_Clear; return 0;
@@ -1099,9 +1025,9 @@ function use_c2phc4c ( job : integer32;
      -- reading, writing Laurent start and target systems
       when 759..773 => return c_to_phcpack(job-730,0);
      -- solve by Laurent homotopy continuation
-      when 774 => return Job774; -- in standard double precision
-      when 775 => return Job775; -- in double double precision
-      when 776 => return Job776; -- in quad double precision
+      when 774 => return Path_Trackers_Standard_Laurent_Solve(a,vrblvl-1);
+      when 775 => return Path_Trackers_DoblDobl_Laurent_Solve(a,vrblvl-1);
+      when 776 => return Path_Trackers_QuadDobl_Laurent_Solve(a,vrblvl-1);
      -- copying Laurent systems from and into the containers
       when 777 => return Standard_Container_Laur_System_to_Start(vrblvl-1);
       when 778 => return DoblDobl_Container_Laur_System_to_Start(vrblvl-1);
@@ -1119,12 +1045,9 @@ function use_c2phc4c ( job : integer32;
       when 789 => return use_track(58,a,b,c,vrblvl-1); -- st csc Laur htpy
       when 790 => return use_track(59,a,b,c,vrblvl-1); -- dd csc Laur htpy
       when 791 => return use_track(60,a,b,c,vrblvl-1); -- qd csc Laur htpy
-      when 792 =>
-        PHCpack_Operations.Create_Standard_Laurent_Homotopy; return 0;
-      when 793 =>
-        PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy; return 0;
-      when 794 =>
-        PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy; return 0;
+      when 792 => return Path_Trackers_Standard_Laurent_Homotopy(vrblvl-1);
+      when 793 => return Path_Trackers_DoblDobl_Laurent_Homotopy(vrblvl-1);
+      when 794 => return Path_Trackers_QuadDobl_Laurent_Homotopy(vrblvl-1);
      -- homotopy membership tests on Laurent systems
       when 795 => return use_c2mbt(3,a,b,c,vrblvl-1); -- Laurent st membertest
       when 796 => return use_c2mbt(4,a,b,c,vrblvl-1); -- Laurent dd membertest

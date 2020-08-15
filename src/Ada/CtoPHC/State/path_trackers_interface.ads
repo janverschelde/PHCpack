@@ -108,6 +108,27 @@ package Path_Trackers_Interface is
   --   Clears the data for the homotopy in multiprecision.
   --   The verbose level is in vrblvl.
 
+  function Path_Trackers_Standard_Laurent_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a homotopy in double precision with random gamma constant,
+  --   to solve a Laurent system.  The verbose level is in vrblvl.
+
+  function Path_Trackers_DoblDobl_Laurent_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a homotopy in double double precision with random gamma constant,
+  --   to solve a Laurent system.  The verbose level is in vrblvl.
+
+  function Path_Trackers_QuadDobl_Laurent_Homotopy
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a homotopy in quad double precision with random gamma constant,
+  --   to solve a Laurent system.  The verbose level is in vrblvl.
+
   function Path_Trackers_Standard_Silent_Track
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
@@ -290,6 +311,90 @@ package Path_Trackers_Interface is
   --   a       diagnostics of the path tracker;
   --   b       multiplicity flag;
   --   c       coordinates of the solution;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_Standard_Polynomial_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   With the polynomial homotopy defined in double precision,
+  --   runs the path trackers, with the number of tasks on input.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of tasks;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_DoblDobl_Polynomial_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   With the polynomial homotopy defined in double double precision,
+  --   runs the path trackers, with the number of tasks on input.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of tasks;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_QuadDobl_Polynomial_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   With the polynomial homotopy defined in quad double precision,
+  --   runs the path trackers, with the number of tasks on input.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of tasks;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_Multprec_Polynomial_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   With the polynomial homotopy defined in multiprecision,
+  --   runs the path trackers, with the number of tasks on input.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of decimal places;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_Standard_Laurent_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   With the Laurent homotopy defined in double precision,
+  --   runs the path trackers, with the number of tasks on input.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of tasks;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_DoblDobl_Laurent_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   With the Laurent homotopy defined in double double precision,
+  --   runs the path trackers, with the number of tasks on input.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of tasks;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_QuadDobl_Laurent_Solve
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   With the Laurent homotopy defined in quad double precision,
+  --   runs the path trackers, with the number of tasks on input.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of tasks;
   --   vrblvl  is the verbose level.
 
 end Path_Trackers_Interface;
