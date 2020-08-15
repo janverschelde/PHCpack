@@ -145,6 +145,7 @@ use_series                       : power series Newton method
 pade_continuation_interface      : interface to Pade continuation
 use_padcon                       : handles Pade continuation
 ------------------------------------------------------------------------------
+deflation_interface              : interface to deflation and multiplicities
 use_multip                       : compute multiplicity structure
 ------------------------------------------------------------------------------
 ts_c2phc.c                       : C routine calls the Ada gateway to PHCpack

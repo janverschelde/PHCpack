@@ -18,6 +18,7 @@ with Supporting_Set_Structure;
 with Degree_Sets_Tables;
 with Standard_Linear_Product_System;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
+with PHCpack_Operations_io;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
 
@@ -111,6 +112,40 @@ package body Linear_Products_Interface is
       end if;
       return 113;
   end Linear_Products_System_Make;
+
+  function Linear_Products_System_Read
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant integer := integer(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
+    fail : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in linear_products_interface.");
+      put_line("Linear_Products_System_Read ...");
+    end if;
+   -- put_line("opening the file " & s & " for the start system ...");
+    PHCpack_Operations_io.Read_Linear_Product_Start_System(s,fail);
+    if fail
+     then return 163;
+     else return 0;
+    end if;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in linear_products_interface.");
+        put_line("Linear_Products_System_Read.");
+      end if;
+      return 163;
+  end Linear_Products_System_Read;
 
   function Linear_Products_System_Solve
              ( vrblvl : integer32 := 0 ) return integer32 is

@@ -6,27 +6,16 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
-with DoblDobl_Complex_Poly_Systems;
-with QuadDobl_Complex_Poly_Systems;
 with Parse_Dimensions;
 with Standard_Complex_Solutions;
-with DoblDobl_Complex_Solutions;
-with QuadDobl_Complex_Solutions;
 with Multprec_Complex_Solutions;
 with Standard_Root_Refiners;
 -- with Standard_Continuation_Data_io;     use Standard_Continuation_Data_io;
-with Standard_Deflation_Methods;
-with DoblDobl_Deflation_Methods;
-with QuadDobl_Deflation_Methods;
 with Verification_of_Solutions;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 -- with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
-with DoblDobl_PolySys_Container;
-with QuadDobl_PolySys_Container;
 with Standard_Solutions_Container;
-with DoblDobl_Solutions_Container;
-with QuadDobl_Solutions_Container;
 with Multprec_Solutions_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
@@ -52,8 +41,9 @@ with use_witsols;
 with Job_Containers;
 with Job_Handlers;
 with Symbol_Table_Interface;
-with Newton_Interface;
 with Continuation_Parameters_Interface;
+with Newton_Interface;
+with Deflation_Interface;
 with Path_Trackers_Interface;
 with Witness_Interface;
 
@@ -529,108 +519,6 @@ function use_c2phc4c ( job : integer32;
       return 439;
   end Job439;
 
-  function Job196 return integer32 is -- apply deflation as in main driver
-
-    use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
-    use Interfaces.C;
-
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-    work : Solution_List;
-   -- symbolic,output : boolean;
-   -- nbdgts : natural32;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    maxitr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    maxdef : constant natural32 := natural32(v_b(v_b'first));
-    v_c : constant C_Double_Array
-        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
-    tolerr : constant double_float := double_float(v_c(v_c'first));
-    tolres : constant double_float := double_float(v_c(v_c'first+1));
-    tolrnk : constant double_float := double_float(v_c(v_c'first+2));
-
-  begin
-    Copy(sols,work);
-   -- Deflate_Singularities(lp.all,work);
-   -- Set_Default_Parameters
-   --   (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
-    Standard_Deflation_Methods.Algorithmic_Deflation_and_Clustering
-      (lp.all,work,maxitr,maxdef,tolerr,tolres,tolrnk);
-    Standard_Solutions_Container.Clear;
-    Standard_Solutions_Container.Initialize(work);
-    return 0;
-  end Job196;
-
-  function Job249 return integer32 is -- deflation in double double precision
-
-    use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
-    use Interfaces.C;
-
-    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-    work : Solution_List;
-   -- symbolic,output : boolean;
-   -- nbdgts : natural32;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    maxitr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    maxdef : constant natural32 := natural32(v_b(v_b'first));
-    v_c : constant C_Double_Array
-        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
-    tolerr : constant double_float := double_float(v_c(v_c'first));
-    tolres : constant double_float := double_float(v_c(v_c'first+1));
-    tolrnk : constant double_float := double_float(v_c(v_c'first+2));
-
-  begin
-    Copy(sols,work);
-   -- Deflate_Singularities(lp.all,work);
-   -- Set_Default_Parameters
-   --   (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
-    DoblDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
-      (lp.all,work,maxitr,maxdef,tolerr,tolres,tolrnk);
-    DoblDobl_Solutions_Container.Clear;
-    DoblDobl_Solutions_Container.Initialize(work);
-    return 0;
-  end Job249;
-
-  function Job250 return integer32 is -- deflation in quad double precision
-
-    use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
-    use Interfaces.C;
-
-    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-    work : Solution_List;
-   -- symbolic,output : boolean;
-   -- nbdgts : natural32;
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    maxitr : constant natural32 := natural32(v_a(v_a'first));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
-    maxdef : constant natural32 := natural32(v_b(v_b'first));
-    v_c : constant C_Double_Array
-        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
-    tolerr : constant double_float := double_float(v_c(v_c'first));
-    tolres : constant double_float := double_float(v_c(v_c'first+1));
-    tolrnk : constant double_float := double_float(v_c(v_c'first+2));
-
-  begin
-    Copy(sols,work);
-   -- Deflate_Singularities(lp.all,work);
-   -- Set_Default_Parameters
-   --   (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
-    QuadDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
-      (lp.all,work,maxitr,maxdef,tolerr,tolres,tolrnk);
-    QuadDobl_Solutions_Container.Clear;
-    QuadDobl_Solutions_Container.Initialize(work);
-    return 0;
-  end Job250;
-
   function Job628 return integer32 is -- create standard Laurent cascade
   begin
     return 0;
@@ -702,6 +590,7 @@ function use_c2phc4c ( job : integer32;
     use Job_Handlers;
     use Symbol_Table_Interface;
     use Newton_Interface;
+    use Deflation_Interface;
     use Continuation_Parameters_Interface;
     use Path_Trackers_Interface;
     use Witness_Interface;
@@ -782,7 +671,7 @@ function use_c2phc4c ( job : integer32;
       when 193 => return Continuation_Parameters_Autotune(a,b,vrblvl-1);
       when 194 => return Continuation_Parameters_Show(vrblvl-1);
       when 195 => return Newton_Multprec_Polynomial_Step(a,vrblvl-1);
-      when 196 => return Job196; -- apply deflation
+      when 196 => return Deflation_Standard_Run(a,b,c,vrblvl-1);
       when 197 => return Newton_QuadDobl_Polynomial_Step(vrblvl-1);
       when 198 => return Newton_DoblDobl_Polynomial_Step(vrblvl-1);
       when 199 => return Newton_Standard_Polynomial_Step(vrblvl-1);
@@ -799,8 +688,8 @@ function use_c2phc4c ( job : integer32;
       when 246 => return Path_Trackers_QuadDobl_Polynomial_Solve(a,vrblvl-1);
       when 247..248 => return C_to_PHCpack(job-220,0);
      -- deflation in double double and quad double precision
-      when 249 => return Job249; -- double double deflate
-      when 250 => return Job250; -- quad double deflate
+      when 249 => return Deflation_DoblDobl_Run(a,b,c,vrblvl-1);
+      when 250 => return Deflation_QuadDobl_Run(a,b,c,vrblvl-1);
      -- double double versions for jobs 1 to 8
       when 251 => return DoblDobl_Target_Poly_System_to_Container(vrblvl-1);
       when 252 => return DoblDobl_Container_Poly_System_to_Target(vrblvl-1);
@@ -1011,9 +900,9 @@ function use_c2phc4c ( job : integer32;
      -- container for numerically computed tropisms
       when 711..731 => return use_numbtrop(job-710,a,b,c,vrblvl-1);
      -- computation of multiplicity structure
-      when 732 => return use_multip(0,a,b,c); -- standard double precision
-      when 733 => return use_multip(0,a,b,c); -- double double precision
-      when 734 => return use_multip(0,a,b,c); -- quad double precision
+      when 732 => return use_multip(0,a,b,c,vrblvl-1); -- double precision
+      when 733 => return use_multip(0,a,b,c,vrblvl-1); -- with double doubles
+      when 734 => return use_multip(0,a,b,c,vrblvl-1); -- with quad doubles
      -- pade continuation
       when 735 => return use_padcon(0,a,b,c,vrblvl-1); -- set default values
       when 736 => return use_padcon(1,a,b,c,vrblvl-1); -- clear parameter vals

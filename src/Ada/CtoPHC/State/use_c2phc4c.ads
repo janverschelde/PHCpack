@@ -1928,7 +1928,7 @@ function use_c2phc4c ( job : integer32;
 --                 on return in a is the computed multiplicity
 --                 and in b are order+1 integers with the values
 --                 of the Hilbert function;
---   job   = 732 : computes in double double precision,
+--   job   = 733 : computes in double double precision,
 --                 on entry in a[0] is the maximum deflation order
 --                 in b[0] is 0 or 1, as a flag to indicate whether
 --                 to be silent or verbose (to screen) respectively,
@@ -1936,7 +1936,7 @@ function use_c2phc4c ( job : integer32;
 --                 on return in a is the computed multiplicity
 --                 and in b are order+1 integers with the values
 --                 of the Hilbert function;
---   job   = 733 : computes in quad double precision,
+--   job   = 734 : computes in quad double precision,
 --                 on entry in a[0] is the maximum deflation order
 --                 in b[0] is 0 or 1, as a flag to indicate whether
 --                 to be silent or verbose (to screen) respectively,

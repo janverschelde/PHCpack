@@ -1,5 +1,8 @@
-Sat 15 Aug 2020 : moved functions into path_trackers_interface, with
-  code from use_c2phc4c.adb.
+Sat 15 Aug 2020 : moved functions into path_trackers_interface, with code
+  from use_c2phc4c.adb.  Added to linear_products_interface, a function
+  from use_track.adb.  Fixed documentation error in use_c2phc4c.ads.
+  Moved functions from use_c2phc4c.adb and use_multip.adb into the new 
+  package deflation_interface.  Added verbose level to use_multip.ads.
 
 Fri 14 Aug 2020 : moved code from use_c2fac.adb into monodromy_interface.
   Move more code from use_c2fac.adb into witness_ and monodromy_interface.

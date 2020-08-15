@@ -42,6 +42,19 @@ package Linear_Products_Interface is
   --   Makes a random linear-product system based
   --   on the defined set structure.
 
+  function Linear_Products_System_Read
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads a linear-product system from file, for given file name.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       contains the name of the file;
+  --   vrblvl  is the verbose level.
+
   function Linear_Products_System_Solve
              ( vrblvl : integer32 := 0 ) return integer32;
 

@@ -22,8 +22,9 @@ with PHCpack_Operations;
 with PHCpack_Operations_io;
 with Crude_Path_Trackers;
 
-with Diagonal_Homotopy_Interface;
+with Linear_Products_Interface;
 with Path_Trackers_Interface;
+with Diagonal_Homotopy_Interface;
 
 function use_track ( job : integer32;
                      a : C_intarrs.Pointer;
@@ -183,30 +184,6 @@ function use_track ( job : integer32;
       put_line("Exception raised when opening " & s & " for start system.");
       return 12;
   end Job12;
-
-  function Job13 return integer32 is -- name to read linear-product system
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer := integer(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
-    fail : boolean;
-
-  begin
-   -- put_line("opening the file " & s & " for the start system ...");
-    PHCpack_Operations_io.Read_Linear_Product_Start_System(s,fail);
-    if fail
-     then return 163;
-     else return 0;
-    end if;
-  exception
-    when others =>
-      put_line("Exception raised when opening " & s & " for start system.");
-      return 13;
-  end Job13;
 
   function Job16 return integer32 is -- read a witness set
 
@@ -439,8 +416,9 @@ function use_track ( job : integer32;
 
   function Handle_Jobs return integer32 is
 
-    use Diagonal_Homotopy_Interface;
+    use Linear_Products_Interface;
     use Path_Trackers_Interface;
+    use Diagonal_Homotopy_Interface;
 
   begin
     case job is
@@ -460,9 +438,10 @@ function use_track ( job : integer32;
       when 10 => return Job10; -- write doubles to defined output file
       when 11 => return Job11; -- file name to read target system
       when 12 => return Job12; -- file name to read start system
-      when 13 => return Job13; -- file name to read linear-product system
+      when 13 => return Linear_Products_System_Read(a,b,vrblvl-1);
       when 14 => PHCpack_Operations.Standard_Cascade_Homotopy; return 0;
-      when 15 => return Diagonal_Homotopy_Standard_Polynomial_Make(a,b,vrblvl);
+      when 15 =>
+        return Diagonal_Homotopy_Standard_Polynomial_Make(a,b,vrblvl-1);
       when 16 => return Job16; -- read a witness set
       when 17 => return Job17; -- reset input file for witness set k
       when 18 => return Job18; -- returns the extrinsic cascade dimension
@@ -486,14 +465,20 @@ function use_track ( job : integer32;
       when 37 => return Path_Trackers_QuadDobl_Write_Solution(a,b,c,vrblvl-1);
       when 38 => PHCpack_Operations.QuadDobl_Cascade_Homotopy; return 0;
      -- redefining diagonal homotopies ...
-      when 40 => return Diagonal_Homotopy_Standard_Polynomial_Set(a,b,vrblvl);
-      when 41 => return Diagonal_Homotopy_Standard_Start_Solutions(a,b,vrblvl);
-      when 42 => return Diagonal_Homotopy_Symbols_Doubler(a,b,vrblvl);
+      when 40 =>
+        return Diagonal_Homotopy_Standard_Polynomial_Set(a,b,vrblvl-1);
+      when 41 =>
+        return Diagonal_Homotopy_Standard_Start_Solutions(a,b,vrblvl-1);
+      when 42 => return Diagonal_Homotopy_Symbols_Doubler(a,b,vrblvl-1);
      -- diagonal homotopy in double double and quad double precision
-      when 43 => return Diagonal_Homotopy_DoblDobl_Polynomial_Make(a,b,vrblvl);
-      when 44 => return Diagonal_Homotopy_QuadDobl_Polynomial_Make(a,b,vrblvl);
-      when 45 => return Diagonal_Homotopy_DoblDobl_Start_Solutions(a,b,vrblvl);
-      when 46 => return Diagonal_Homotopy_QuadDobl_Start_Solutions(a,b,vrblvl);
+      when 43 =>
+        return Diagonal_Homotopy_DoblDobl_Polynomial_Make(a,b,vrblvl-1);
+      when 44 =>
+        return Diagonal_Homotopy_QuadDobl_Polynomial_Make(a,b,vrblvl-1);
+      when 45 =>
+        return Diagonal_Homotopy_DoblDobl_Start_Solutions(a,b,vrblvl-1);
+      when 46 =>
+        return Diagonal_Homotopy_QuadDobl_Start_Solutions(a,b,vrblvl-1);
       when 47 => return Diagonal_Homotopy_DoblDobl_Collapse(a,vrblvl);
       when 48 => return Diagonal_Homotopy_QuadDobl_Collapse(a,vrblvl);
      -- double double and quad double witness sets for hypersurface
