@@ -240,6 +240,72 @@ package Diagonal_Homotopy_Interface is
   --   b       in b[0] is the dimension of the second witness set;
   --   vrblvl  is the verbose level.
 
+  function Diagonal_Homotopy_Prompt_Set
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts for the first or second witness set to be read from file.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the set (one or two);
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       in b[0] is the dimension of the witness set,
+  --           in b[1] is the degree of the witness set.
+
+  function Diagonal_Homotopy_Reset_Input
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Resets the input file for a witness set.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the witness set;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       in b[0] is the degree of the witness set,
+  --           in b[1] is the dimension of the witness set.
+
+  function Diagonal_Homotopy_Cascade_Dimension
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the dimension of the cascade to intersect two
+  --   witness sets in extrinsic coordinates.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the ambient dimension of the first set,
+  --           in a[1] is the ambient dimension of the second set;
+  --   b       in b[0] is the dimension of the first set,
+  --           in b[1] is the dimension of the second set;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the dimension of the extrinsic cascade.
+
+  function Diagonal_Homotopy_Standard_Hyperset
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   For one of the polynomials stored in double precision,
+  --   makes a witness set for the hypersurface defined by that polynomial.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the polynomial in double precision,
+  --           in a[1] is the number of characters in the string b;
+  --   b       contains the name of the output file;
+  --   vrblvl  is the verbose level.
+
   function Diagonal_Homotopy_Standard_Collapse
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;

@@ -6,7 +6,6 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
-with Parse_Dimensions;
 with Standard_Complex_Solutions;
 with Multprec_Complex_Solutions;
 with Standard_Root_Refiners;
@@ -492,33 +491,6 @@ function use_c2phc4c ( job : integer32;
       return 179;
   end Job179;
 
-  function Job439 return integer32 is -- scan for the number of symbols
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    nbc : constant natural32 := natural32(v_a(v_a'first));
-    nbc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nbc-1);
-    v_b : constant C_Integer_Array(0..nbc1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
-    s : constant String(1..integer(nbc)) := C_Integer_Array_to_String(nbc,v_b);
-    cnt : constant natural := String_Splitters.Count_Delimiters(s,';');
-    ls : Array_of_Strings(1..integer(cnt))
-       := String_Splitters.Split(cnt,s,';');
-    dim : natural32;
-    maxvar : constant natural32 := 2*natural32(cnt); -- better than 1024
-
-  begin
-    dim := Parse_Dimensions.Dim(maxvar,ls);
-    Assign(integer32(dim),a);
-    String_Splitters.Clear(ls);
-    Parse_Dimensions.Clear;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception occurred when scanning for number of symbols.");
-      return 439;
-  end Job439;
-
   function Job628 return integer32 is -- create standard Laurent cascade
   begin
     return 0;
@@ -777,7 +749,7 @@ function use_c2phc4c ( job : integer32;
      -- operations on monomial maps as solutions to binomial systems
       when 430..438 => return use_mapcon(job-430,a,b,c,vrblvl-1);
      -- scan for the number of variables
-      when 439 => return Job439;
+      when 439 => return Symbol_Table_Scan(a,b,vrblvl-1);
      -- operations on multiprecision system container
       when 440..444 => return use_syscon(job-220,a,b,c,vrblvl-1);
       when 447..449 => return use_syscon(job-220,a,b,c,vrblvl-1);

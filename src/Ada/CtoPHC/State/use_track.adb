@@ -1,19 +1,15 @@
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Standard_Natural_Vectors;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
 with Witness_Sets;
-with Extrinsic_Diagonal_Homotopies;
-with Standard_Hypersurface_Witdrivers;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
@@ -185,135 +181,6 @@ function use_track ( job : integer32;
       return 12;
   end Job12;
 
-  function Job16 return integer32 is -- read a witness set
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    n,dim,deg : natural32;
-    nbs : Standard_Natural_Vectors.Vector(1..2);
-    fail : boolean;
-
-  begin
-    if k = 1 or k = 2 then
-      PHCpack_Operations_io.Read_Witness_Set_for_Diagonal_Homotopy
-        (k,n,dim,deg,fail);
-      if fail then
-        return 16;
-      else
-        Assign(integer32(n),a);
-        nbs(1) := dim; nbs(2) := deg;
-        Assign(nbs,b);
-      end if;
-    else
-      put("Wrong value on input : "); put(k,1); new_line;
-      return 16;
-    end if;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when reading a witness set.");
-      return 16;
-  end Job16;
-
-  function Job17 return integer32 is -- reset input file for witness set k
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural32 := natural32(v_a(v_a'first));
-    deg,dim : natural32;
-    nbs : Standard_Natural_Vectors.Vector(1..2);
-    fail : boolean;
-
-  begin
-   -- put("resetting the input file for witness set "); put(k,1); new_line;
-    PHCpack_Operations_io.Reset_Witness_Input_File(k,deg,dim,fail);
-    if fail  then
-      return 17;
-    else
-      -- put("  degree : "); put(deg,1);
-      -- put("  n : "); put(dim,1); new_line;
-      nbs(1) := deg; nbs(2) := dim;
-      Assign(nbs,b);
-    end if;
-    return 0;
-  exception
-    when others =>
-      put("Exception raised when resetting input file for witness set ");
-      put(k,1); put_line(".");
-      return 17;
-  end Job17;
-
-  function Job18 return integer32 is -- returns extrinsic cascade dimension
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    n1 : constant natural32 := natural32(v_a(v_a'first));
-    n2 : constant natural32 := natural32(v_a(v_a'first+1));
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    a_d : constant natural32 := natural32(v_b(v_b'first));
-    b_d : constant natural32 := natural32(v_b(v_b'first+1));
-    cd : natural32;
-
-  begin
-   -- put("  n1 = "); put(n1,1);
-   -- put("  n2 = "); put(n2,1);
-   -- put("  a = "); put(a_d,1);
-   -- put("  b = "); put(b_d,1); new_line;
-    if a_d >= b_d then
-      cd := Extrinsic_Diagonal_Homotopies.Cascade_Dimension(n1,n2,a_d,b_d);
-    else
-      cd := Extrinsic_Diagonal_Homotopies.Cascade_Dimension(n2,n1,b_d,a_d);
-    end if;
-   -- put("cascade dimension cd = "); put(cd,1); new_line;
-    Assign(integer32(cd),a);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when computing cascade dimension.");
-      return 18;
-  end Job18;
-
-  function Job19 return integer32 is -- computes witness set for hypersurface
-
-    use Standard_Hypersurface_Witdrivers;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    k : constant integer32 := integer32(v_a(v_a'first));
-    n : constant integer := integer(v_a(v_a'first+1));
-    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-       := Standard_PolySys_Container.Retrieve;
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    filename : constant String(1..n)
-             := C_Integer_Array_to_String(natural32(n),v_b);
-    file : file_type;
-    fail : boolean;
-
-  begin
-   -- put("The number of the equation : "); put(k,1); new_line;
-   -- if lp = null then
-   --   put_line("But the systems container is empty!");
-   -- elsif lp'last < k then
-   --   put("But there are only "); put(lp'last,1);
-   --   put_line(" polynomials in container!");
-   -- else
-   --   put("Polynomial : "); put(lp(k)); new_line;
-   --   put_line("Creating the output file with name " & filename);
-      Create(file,out_file,filename);
-      Call_Root_Finder(file,lp(k),false,1.0E-10,fail);
-      Close(file);
-   -- end if;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised at hypersurface witness set computation.");
-      return 19;
-  end Job19;
-
   function Job21 return integer32 is -- remove last slack variable
 
     v_a : constant C_Integer_Array
@@ -442,11 +309,11 @@ function use_track ( job : integer32;
       when 14 => PHCpack_Operations.Standard_Cascade_Homotopy; return 0;
       when 15 =>
         return Diagonal_Homotopy_Standard_Polynomial_Make(a,b,vrblvl-1);
-      when 16 => return Job16; -- read a witness set
-      when 17 => return Job17; -- reset input file for witness set k
-      when 18 => return Job18; -- returns the extrinsic cascade dimension
-      when 19 => return Job19; -- witness set for one polynomial
-      when 20 => return Diagonal_Homotopy_Standard_Collapse(a,vrblvl);
+      when 16 => return Diagonal_Homotopy_Prompt_Set(a,b,vrblvl-1);
+      when 17 => return Diagonal_Homotopy_Reset_Input(a,b,vrblvl-1);
+      when 18 => return Diagonal_Homotopy_Cascade_Dimension(a,b,vrblvl-1);
+      when 19 => return Diagonal_Homotopy_Standard_Hyperset(a,b,vrblvl-1);
+      when 20 => return Diagonal_Homotopy_Standard_Collapse(a,vrblvl-1);
       when 21 => return Job21; -- remove last slack variable
      -- tracking in double double precision :
       when 22 => return Path_Trackers_DoblDobl_Homotopy_Random(vrblvl-1);
@@ -479,11 +346,13 @@ function use_track ( job : integer32;
         return Diagonal_Homotopy_DoblDobl_Start_Solutions(a,b,vrblvl-1);
       when 46 =>
         return Diagonal_Homotopy_QuadDobl_Start_Solutions(a,b,vrblvl-1);
-      when 47 => return Diagonal_Homotopy_DoblDobl_Collapse(a,vrblvl);
-      when 48 => return Diagonal_Homotopy_QuadDobl_Collapse(a,vrblvl);
+      when 47 => return Diagonal_Homotopy_DoblDobl_Collapse(a,vrblvl-1);
+      when 48 => return Diagonal_Homotopy_QuadDobl_Collapse(a,vrblvl-1);
      -- double double and quad double witness sets for hypersurface
-      when 49 => return Diagonal_Homotopy_DoblDobl_Polynomial_Set(a,b,vrblvl);
-      when 50 => return Diagonal_Homotopy_QuadDobl_Polynomial_Set(a,b,vrblvl);
+      when 49 =>
+        return Diagonal_Homotopy_DoblDobl_Polynomial_Set(a,b,vrblvl-1);
+      when 50 =>
+        return Diagonal_Homotopy_QuadDobl_Polynomial_Set(a,b,vrblvl-1);
      -- multiprecision versions to create homotopy :
       when 52 => return Path_Trackers_Multprec_Homotopy_Random(vrblvl-1);
       when 53 => return Path_Trackers_Multprec_Homotopy_Gamma(c,vrblvl-1);
@@ -499,12 +368,15 @@ function use_track ( job : integer32;
         PHCpack_Operations.DoblDobl_Cascade_Laurent_Homotopy; return 0;
       when 60 =>
         PHCpack_Operations.QuadDobl_Cascade_Laurent_Homotopy; return 0;
-      when 61 => return Diagonal_Homotopy_Standard_Laurent_Make(a,b,vrblvl);
-      when 62 => return Diagonal_Homotopy_DoblDobl_Laurent_Make(a,b,vrblvl);
-      when 63 => return Diagonal_Homotopy_QuadDobl_Laurent_Make(a,b,vrblvl);
-      when 64 => return Diagonal_Homotopy_Standard_Laurential_Set(a,b,vrblvl);
-      when 65 => return Diagonal_Homotopy_DoblDobl_Laurential_Set(a,b,vrblvl);
-      when 66 => return Diagonal_Homotopy_QuadDobl_Laurential_Set(a,b,vrblvl);
+      when 61 => return Diagonal_Homotopy_Standard_Laurent_Make(a,b,vrblvl-1);
+      when 62 => return Diagonal_Homotopy_DoblDobl_Laurent_Make(a,b,vrblvl-1);
+      when 63 => return Diagonal_Homotopy_QuadDobl_Laurent_Make(a,b,vrblvl-1);
+      when 64 =>
+        return Diagonal_Homotopy_Standard_Laurential_Set(a,b,vrblvl-1);
+      when 65 =>
+        return Diagonal_Homotopy_DoblDobl_Laurential_Set(a,b,vrblvl-1);
+      when 66 =>
+        return Diagonal_Homotopy_QuadDobl_Laurential_Set(a,b,vrblvl-1);
       when 67
         => PHCpack_Operations_io.Read_DoblDobl_Target_System_without_Solutions;
            return 0;

@@ -1339,6 +1339,375 @@ package body Monodromy_Interface is
       return 677;
   end Monodromy_QuadDobl_Trace_Sum;
 
+  function Monodromy_Standard_Initialize_Slices
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    nb : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Initialize_Slices ...");
+    end if;
+    Standard_Sampling_Operations.Initialize_Slices(nb);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Initialize_Slices.");
+      end if;
+      return 59;
+  end Monodromy_Standard_Initialize_Slices;
+
+  function Monodromy_DoblDobl_Initialize_Slices
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    nb : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Initialize_Slices ...");
+    end if;
+    DoblDobl_Sampling_Operations.Initialize_Slices(nb);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Initialize_Slices.");
+      end if;
+      return 649;
+  end Monodromy_DoblDobl_Initialize_Slices;
+
+  function Monodromy_QuadDobl_Initialize_Slices
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    nb : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Initialize_Slices ...");
+    end if;
+    QuadDobl_Sampling_Operations.Initialize_Slices(nb);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Initialize_Slices.");
+      end if;
+      return 679;
+  end Monodromy_QuadDobl_Initialize_Slices;
+
+  function Monodromy_Standard_Index
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    label : constant integer32 := integer32(va(0));
+    slice : constant integer32 := integer32(va(1));
+    result : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in monodromy_interface.Monodromy_Standard_Index ...");
+    end if;
+    result := Standard_Monodromy_Permutations.In_Slice(label,slice);
+    Assign(result,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Index.");
+      end if;
+      return 58;
+  end Monodromy_Standard_Index;
+
+  function Monodromy_DoblDobl_Index
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    label : constant integer32 := integer32(va(0));
+    slice : constant integer32 := integer32(va(1));
+    result : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in monodromy_interface.Monodromy_DoblDobl_Index ...");
+    end if;
+    result := DoblDobl_Monodromy_Permutations.In_Slice(label,slice);
+    Assign(result,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Index.");
+      end if;
+      return 648;
+  end Monodromy_DoblDobl_Index;
+
+  function Monodromy_QuadDobl_Index
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    label : constant integer32 := integer32(va(0));
+    slice : constant integer32 := integer32(va(1));
+    result : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in monodromy_interface.Monodromy_QuadDobl_Index ...");
+    end if;
+    result := QuadDobl_Monodromy_Permutations.In_Slice(label,slice);
+    Assign(result,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Index.");
+      end if;
+      return 678;
+  end Monodromy_QuadDobl_index;
+
+  function Monodromy_Standard_Set_Target
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    i : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Set_Target ...");
+    end if;
+    Standard_Sampling_Operations.Set_Target_Slices(i);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Set_Target.");
+      end if;
+      return 62;
+  end Monodromy_Standard_Set_Target;
+
+  function Monodromy_DoblDobl_Set_Target
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    i : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Set_Target ...");
+    end if;
+    DoblDobl_Sampling_Operations.Set_Target_Slices(i);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Set_Target.");
+      end if;
+      return 652;
+  end Monodromy_DoblDobl_Set_Target;
+
+  function Monodromy_QuadDobl_Set_Target
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    i : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Set_Target ...");
+    end if;
+    QuadDobl_Sampling_Operations.Set_Target_Slices(i);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Set_Target.");
+      end if;
+      return 682;
+  end Monodromy_QuadDobl_Set_Target;
+
+  function Monodromy_Standard_Loop
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Solutions;
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    start_slice : constant integer32 := integer32(va(0));
+    target_slice : constant integer32 := integer32(va(1));
+    start_label : constant integer32 := integer32(vb(vb'first));
+    target_label : integer32;
+    tol : constant double_float := 1.0E-8;
+    sls,tls : Link_to_Solution;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Loop ...");
+    end if;
+    if start_slice = 0 then
+      sls := Standard_Monodromy_Permutations.Retrieve
+               (start_label,start_slice);
+    else
+      sls := Standard_Monodromy_Permutations.Retrieve
+               (start_label,start_slice+2);
+                         -- +2 for trace grid
+    end if;
+    tls := Standard_Sampling_Operations.Sample_Loop
+             (start_slice,target_slice,sls);
+    if target_slice = 0 then
+      target_label := Standard_Monodromy_Permutations.Match
+                        (tls,target_slice,tol);
+    else
+      target_label := Standard_Monodromy_Permutations.Match
+                        (tls,target_slice+2,tol);
+    end if;
+    Assign(target_label,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Loop.");
+      end if;
+      return 63;
+  end Monodromy_Standard_Loop;
+
+  function Monodromy_DoblDobl_Loop
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use DoblDobl_Complex_Solutions;
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    start_slice : constant integer32 := integer32(va(0));
+    target_slice : constant integer32 := integer32(va(1));
+    start_label : constant integer32 := integer32(vb(vb'first));
+    target_label : integer32;
+    tol : constant double_float := 1.0E-8;
+    sls,tls : Link_to_Solution;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Loop ...");
+    end if;
+    if start_slice = 0 then
+      sls := DoblDobl_Monodromy_Permutations.Retrieve
+               (start_label,start_slice);
+    else
+      sls := DoblDobl_Monodromy_Permutations.Retrieve
+               (start_label,start_slice+2);
+                         -- +2 for trace grid
+    end if;
+    tls := DoblDobl_Sampling_Operations.Sample_Loop
+             (start_slice,target_slice,sls);
+    if target_slice = 0 then
+      target_label := DoblDobl_Monodromy_Permutations.Match
+                        (tls,target_slice,tol);
+    else
+      target_label := DoblDobl_Monodromy_Permutations.Match
+                        (tls,target_slice+2,tol);
+    end if;
+    Assign(target_label,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Loop.");
+      end if;
+      return 653;
+  end Monodromy_DoblDobl_Loop;
+
+  function Monodromy_QuadDobl_Loop
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use QuadDobl_Complex_Solutions;
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    start_slice : constant integer32 := integer32(va(0));
+    target_slice : constant integer32 := integer32(va(1));
+    start_label : constant integer32 := integer32(vb(vb'first));
+    target_label : integer32;
+    tol : constant double_float := 1.0E-8;
+    sls,tls : Link_to_Solution;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Loop ...");
+    end if;
+    if start_slice = 0 then
+      sls := QuadDobl_Monodromy_Permutations.Retrieve
+               (start_label,start_slice);
+    else
+      sls := QuadDobl_Monodromy_Permutations.Retrieve
+               (start_label,start_slice+2);
+                         -- +2 for trace grid
+    end if;
+    tls := QuadDobl_Sampling_Operations.Sample_Loop
+             (start_slice,target_slice,sls);
+    if target_slice = 0 then
+      target_label := QuadDobl_Monodromy_Permutations.Match
+                        (tls,target_slice,tol);
+    else
+      target_label := QuadDobl_Monodromy_Permutations.Match
+                        (tls,target_slice+2,tol);
+    end if;
+    Assign(target_label,b);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Loop.");
+      end if;
+      return 683;
+  end Monodromy_QuadDobl_Loop;
+
   function Monodromy_Standard_Factor_Count
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is

@@ -1,4 +1,3 @@
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
 
@@ -97,5 +96,22 @@ package Symbol_Table_Interface is
 
   -- DESCRIPTION :
   --   Clears the symbol table.
+
+  function Symbol_Table_Scan
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Scans the string representation of the polynomial system 
+  --   in the input for the number of symbols.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       contains the string representation of a polynomial system;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the number of variables in the string b.
 
 end Symbol_Table_Interface;

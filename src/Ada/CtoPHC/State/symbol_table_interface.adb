@@ -1,8 +1,11 @@
 with text_io;                           use text_io;
 with Interfaces.C;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with String_Splitters;
 with Standard_Integer_Vectors;
 with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Poly_Systems;
+with Parse_Dimensions;
 with Witness_Sets_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
@@ -251,5 +254,41 @@ package body Symbol_Table_Interface is
       end if;
       return 29;
   end Symbol_Table_Clear;
+
+  function Symbol_Table_Scan
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    nbc : constant natural32 := natural32(v_a(v_a'first));
+    nbc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nbc-1);
+    v_b : constant C_Integer_Array(0..nbc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nbc));
+    s : constant String(1..integer(nbc)) := C_Integer_Array_to_String(nbc,v_b);
+    cnt : constant natural := String_Splitters.Count_Delimiters(s,';');
+    ls : String_Splitters.Array_of_Strings(1..integer(cnt))
+       := String_Splitters.Split(cnt,s,';');
+    dim : natural32;
+    maxvar : constant natural32 := 2*natural32(cnt); -- better than 1024
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in symbol_table_interface.Symbol_Table_Scan ...");
+    end if;
+    dim := Parse_Dimensions.Dim(maxvar,ls);
+    Assign(integer32(dim),a);
+    String_Splitters.Clear(ls);
+    Parse_Dimensions.Clear;
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised in symbol_table_interface.");
+        put_line("Symbol_Table_Scan.");
+      end if;
+      return 439;
+  end Symbol_Table_Scan;
 
 end Symbol_Table_Interface;

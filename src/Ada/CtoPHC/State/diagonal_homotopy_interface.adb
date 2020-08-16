@@ -1,9 +1,11 @@
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Standard_Natural_Vectors;
 with Symbol_Table; -- ,Symbol_Table_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
@@ -27,6 +29,7 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Witness_Sets_io;
+with Extrinsic_Diagonal_Homotopies;
 with Extrinsic_Diagonal_Homotopies_io;
 with Extrinsic_Diagonal_Solvers;
 with Standard_Hypersurface_Witdrivers;
@@ -43,6 +46,7 @@ with QuadDobl_PolySys_Container;
 with QuadDobl_LaurSys_Container;
 with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
+with PHCpack_Operations_io;
 
 package body Diagonal_Homotopy_Interface is
 
@@ -665,6 +669,174 @@ package body Diagonal_Homotopy_Interface is
       end if;
       return 298;
   end Diagonal_Homotopy_QuadDobl_Start_Solutions;
+
+  function Diagonal_Homotopy_Prompt_Set
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    n,dim,deg : natural32;
+    nbs : Standard_Natural_Vectors.Vector(1..2);
+    fail : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_Prompt_Set ...");
+    end if;
+    if k = 1 or k = 2 then
+      PHCpack_Operations_io.Read_Witness_Set_for_Diagonal_Homotopy
+        (k,n,dim,deg,fail);
+      if fail then
+        return 166;
+      else
+        Assign(integer32(n),a);
+        nbs(1) := dim; nbs(2) := deg;
+        Assign(nbs,b);
+      end if;
+    else
+      put("Wrong value on input : "); put(k,1); new_line;
+      return 166;
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_Prompt_Set.");
+      end if;
+      return 166;
+  end Diagonal_Homotopy_Prompt_Set;
+
+  function Diagonal_Homotopy_Reset_Input
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    deg,dim : natural32;
+    nbs : Standard_Natural_Vectors.Vector(1..2);
+    fail : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_Reset_Input ...");
+    end if;
+   -- put("resetting the input file for witness set "); put(k,1); new_line;
+    PHCpack_Operations_io.Reset_Witness_Input_File(k,deg,dim,fail);
+    if fail  then
+      return 167;
+    else
+      -- put("  degree : "); put(deg,1);
+      -- put("  n : "); put(dim,1); new_line;
+      nbs(1) := deg; nbs(2) := dim;
+      Assign(nbs,b);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_Reset_Input.");
+      end if;
+      return 167;
+  end Diagonal_Homotopy_Reset_Input;
+
+  function Diagonal_Homotopy_Cascade_Dimension
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    n1 : constant natural32 := natural32(v_a(v_a'first));
+    n2 : constant natural32 := natural32(v_a(v_a'first+1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    a_d : constant natural32 := natural32(v_b(v_b'first));
+    b_d : constant natural32 := natural32(v_b(v_b'first+1));
+    cd : natural32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_Cascade_Dimension ...");
+    end if;
+   -- put("  n1 = "); put(n1,1);
+   -- put("  n2 = "); put(n2,1);
+   -- put("  a = "); put(a_d,1);
+   -- put("  b = "); put(b_d,1); new_line;
+    if a_d >= b_d then
+      cd := Extrinsic_Diagonal_Homotopies.Cascade_Dimension(n1,n2,a_d,b_d);
+    else
+      cd := Extrinsic_Diagonal_Homotopies.Cascade_Dimension(n2,n1,b_d,a_d);
+    end if;
+   -- put("cascade dimension cd = "); put(cd,1); new_line;
+    Assign(integer32(cd),a);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_Cascade_Dimension.");
+      end if;
+      return 168;
+  end Diagonal_Homotopy_Cascade_Dimension;
+
+  function Diagonal_Homotopy_Standard_Hyperset
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Hypersurface_Witdrivers;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant integer32 := integer32(v_a(v_a'first));
+    n : constant integer := integer(v_a(v_a'first+1));
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    filename : constant String(1..n)
+             := C_Integer_Array_to_String(natural32(n),v_b);
+    file : file_type;
+    fail : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in diagonal_homotopy_interface.");
+      put_line("Diagonal_Homotopy_Standard_Hyperset ...");
+    end if;
+   -- put("The number of the equation : "); put(k,1); new_line;
+   -- if lp = null then
+   --   put_line("But the systems container is empty!");
+   -- elsif lp'last < k then
+   --   put("But there are only "); put(lp'last,1);
+   --   put_line(" polynomials in container!");
+   -- else
+   --   put("Polynomial : "); put(lp(k)); new_line;
+   --   put_line("Creating the output file with name " & filename);
+      Create(file,out_file,filename);
+      Call_Root_Finder(file,lp(k),false,1.0E-10,fail);
+      Close(file);
+   -- end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in diagonal_homotopy_interface.");
+        put_line("Diagonal_Homotopy_Standard_Hyperset.");
+      end if;
+      return 169;
+  end Diagonal_Homotopy_Standard_Hyperset;
 
   function Diagonal_Homotopy_Standard_Collapse
              ( a : C_intarrs.Pointer;

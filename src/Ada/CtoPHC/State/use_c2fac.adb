@@ -1,7 +1,6 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
@@ -25,9 +24,6 @@ with QuadDobl_Solutions_Container;
 with Standard_Sampling_Operations;
 with DoblDobl_Sampling_Operations;
 with QuadDobl_Sampling_Operations;
-with Standard_Monodromy_Permutations;
-with DoblDobl_Monodromy_Permutations;
-with QuadDobl_Monodromy_Permutations;
 
 with Witness_Interface;
 with Monodromy_Interface;
@@ -121,102 +117,6 @@ function use_c2fac ( job : integer32;
     return res;
   end Convert_to_Coefficients;
 
-  function Job18 return integer32 is -- index of standard solution label
-
-    va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    label : constant integer32 := integer32(va(0));
-    slice : constant integer32 := integer32(va(1));
-    result : integer32;
-
-  begin
-    result := Standard_Monodromy_Permutations.In_Slice(label,slice);
-    Assign(result,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when finding index of a solution label.");
-      return 58;
-  end Job18;
-
-  function Job48 return integer32 is -- index of dobldobl solution label
-
-    va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    label : constant integer32 := integer32(va(0));
-    slice : constant integer32 := integer32(va(1));
-    result : integer32;
-
-  begin
-    result := DoblDobl_Monodromy_Permutations.In_Slice(label,slice);
-    Assign(result,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when finding index of a solution label.");
-      return 648;
-  end Job48;
-
-  function Job78 return integer32 is -- index of quaddobl solution label
-
-    va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    label : constant integer32 := integer32(va(0));
-    slice : constant integer32 := integer32(va(1));
-    result : integer32;
-
-  begin
-    result := QuadDobl_Monodromy_Permutations.In_Slice(label,slice);
-    Assign(result,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when finding index of a solution label.");
-      return 678;
-  end Job78;
-
-  function Job19 return integer32 is
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    nb : constant integer32 := integer32(va(va'first));
-
-  begin
-    Standard_Sampling_Operations.Initialize_Slices(nb);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at init slices in Standard_Sampling_Operations");
-      return 59;
-  end Job19;
-
-  function Job49 return integer32 is
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    nb : constant integer32 := integer32(va(va'first));
-
-  begin
-    DoblDobl_Sampling_Operations.Initialize_Slices(nb);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at init slices in DoblDobl_Sampling_Operations");
-      return 649;
-  end Job49;
-
-  function Job79 return integer32 is
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    nb : constant integer32 := integer32(va(va'first));
-
-  begin
-    QuadDobl_Sampling_Operations.Initialize_Slices(nb);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at init slices in QuadDobl_Sampling_Operations");
-      return 679;
-  end Job79;
-
   function Job20 return integer32 is -- add new slice to Sampling_Operations
 
     va : constant C_Integer_Array
@@ -263,168 +163,6 @@ function use_c2fac ( job : integer32;
       put_line("Exception when returning coefficients of a slice.");
       return 61;
   end Job21;
-
-  function Job22 return integer32 is -- set target standard slices
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    i : constant integer32 := integer32(va(va'first));
-
-  begin
-    Standard_Sampling_Operations.Set_Target_Slices(i);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when setting target slices.");
-      return 62;
-  end Job22;
-
-  function Job52 return integer32 is -- set target dobldobl slices
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    i : constant integer32 := integer32(va(va'first));
-
-  begin
-    DoblDobl_Sampling_Operations.Set_Target_Slices(i);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when setting dobldobl target slices.");
-      return 652;
-  end Job52;
-
-  function Job82 return integer32 is -- set target quaddobl slices
-
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    i : constant integer32 := integer32(va(va'first));
-
-  begin
-    QuadDobl_Sampling_Operations.Set_Target_Slices(i);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when setting quaddobl target slices.");
-      return 682;
-  end Job82;
-
-  function Job23 return integer32 is -- one standard sampling loop
-
-    use Standard_Complex_Solutions;
-
-    va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    vb : constant C_Integer_Array := C_intarrs.Value(b);
-    start_slice : constant integer32 := integer32(va(0));
-    target_slice : constant integer32 := integer32(va(1));
-    start_label : constant integer32 := integer32(vb(vb'first));
-    target_label : integer32;
-    tol : constant double_float := 1.0E-8;
-    sls,tls : Link_to_Solution;
-
-  begin
-    if start_slice = 0 then
-      sls := Standard_Monodromy_Permutations.Retrieve
-               (start_label,start_slice);
-    else
-      sls := Standard_Monodromy_Permutations.Retrieve
-               (start_label,start_slice+2);
-                         -- +2 for trace grid
-    end if;
-    tls := Standard_Sampling_Operations.Sample_Loop
-             (start_slice,target_slice,sls);
-    if target_slice = 0 then
-      target_label := Standard_Monodromy_Permutations.Match
-                        (tls,target_slice,tol);
-    else
-      target_label := Standard_Monodromy_Permutations.Match
-                        (tls,target_slice+2,tol);
-    end if;
-    Assign(target_label,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when sampling one loop.");
-      return 63;
-  end Job23;
-
-  function Job53 return integer32 is -- one dobldobl sampling loop
-
-    use DoblDobl_Complex_Solutions;
-
-    va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    vb : constant C_Integer_Array := C_intarrs.Value(b);
-    start_slice : constant integer32 := integer32(va(0));
-    target_slice : constant integer32 := integer32(va(1));
-    start_label : constant integer32 := integer32(vb(vb'first));
-    target_label : integer32;
-    tol : constant double_float := 1.0E-8;
-    sls,tls : Link_to_Solution;
-
-  begin
-    if start_slice = 0 then
-      sls := DoblDobl_Monodromy_Permutations.Retrieve
-               (start_label,start_slice);
-    else
-      sls := DoblDobl_Monodromy_Permutations.Retrieve
-               (start_label,start_slice+2);
-                         -- +2 for trace grid
-    end if;
-    tls := DoblDobl_Sampling_Operations.Sample_Loop
-             (start_slice,target_slice,sls);
-    if target_slice = 0 then
-      target_label := DoblDobl_Monodromy_Permutations.Match
-                        (tls,target_slice,tol);
-    else
-      target_label := DoblDobl_Monodromy_Permutations.Match
-                        (tls,target_slice+2,tol);
-    end if;
-    Assign(target_label,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at sampling one loop in dobldobl precision.");
-      return 653;
-  end Job53;
-
-  function Job83 return integer32 is -- one quaddobl sampling loop
-
-    use QuadDobl_Complex_Solutions;
-
-    va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
-    vb : constant C_Integer_Array := C_intarrs.Value(b);
-    start_slice : constant integer32 := integer32(va(0));
-    target_slice : constant integer32 := integer32(va(1));
-    start_label : constant integer32 := integer32(vb(vb'first));
-    target_label : integer32;
-    tol : constant double_float := 1.0E-8;
-    sls,tls : Link_to_Solution;
-
-  begin
-    if start_slice = 0 then
-      sls := QuadDobl_Monodromy_Permutations.Retrieve
-               (start_label,start_slice);
-    else
-      sls := QuadDobl_Monodromy_Permutations.Retrieve
-               (start_label,start_slice+2);
-                         -- +2 for trace grid
-    end if;
-    tls := QuadDobl_Sampling_Operations.Sample_Loop
-             (start_slice,target_slice,sls);
-    if target_slice = 0 then
-      target_label := QuadDobl_Monodromy_Permutations.Match
-                        (tls,target_slice,tol);
-    else
-      target_label := QuadDobl_Monodromy_Permutations.Match
-                        (tls,target_slice+2,tol);
-    end if;
-    Assign(target_label,b);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at sampling one loop in quaddobl precision.");
-      return 683;
-  end Job83;
 
   function Job97 return integer32 is -- initializes standard Laurent sampler
 
@@ -555,12 +293,12 @@ function use_c2fac ( job : integer32;
       when  15 => return Monodromy_Standard_Trace_Test(a,vrblvl-1);
       when  16 => return Monodromy_Standard_Diagnostics(c,vrblvl-1);
       when  17 => return Monodromy_Standard_Trace_Sum(a,b,c,vrblvl-1);
-      when  18 => return Job18; -- finding index of solution label
-      when  19 => return Job19; -- init slices in Standard_Sampling_Operations
+      when  18 => return Monodromy_Standard_Index(a,b,vrblvl-1);
+      when  19 => return Monodromy_Standard_Initialize_Slices(a,vrblvl-1);
       when  20 => return Job20; -- adding new slice to Sampling_Operations
       when  21 => return Job21; -- returning coefficients of a slice
-      when  22 => return Job22; -- setting standard target slices
-      when  23 => return Job23; -- one sampling loop in double precision
+      when  22 => return Monodromy_Standard_Set_Target(a,vrblvl-1);
+      when  23 => return Monodromy_Standard_Loop(a,b,vrblvl-1);
       when  24 => return Witness_Standard_Polynomial_Read(a,b,vrblvl-1);
       when  25 => return Witness_Standard_Polynomial_Write(a,b,vrblvl-1);
       when  26 => return Monodromy_Standard_Factor_Count(a,vrblvl-1);
@@ -585,10 +323,10 @@ function use_c2fac ( job : integer32;
       when  45 => return Monodromy_DoblDobl_Trace_Test(a,vrblvl-1);
       when  46 => return Monodromy_DoblDobl_Diagnostics(c,vrblvl-1);
       when  47 => return Monodromy_DoblDobl_Trace_Sum(a,b,c,vrblvl-1);
-      when  48 => return Job48; -- index of dobldobl solution label
-      when  49 => return Job49; -- init slices in DoblDobl_Sampling_Operations
-      when  52 => return Job52; -- setting dobldobl target slices
-      when  53 => return Job53; -- one sampling loop in dobldobl precision
+      when  48 => return Monodromy_DoblDobl_Index(a,b,vrblvl-1);
+      when  49 => return Monodromy_DoblDobl_Initialize_Slices(a,vrblvl-1);
+      when  52 => return Monodromy_DoblDobl_Set_Target(a,vrblvl-1);
+      when  53 => return Monodromy_DoblDobl_Loop(a,b,vrblvl-1);
       when  54 => return Witness_DoblDobl_Polynomial_Read(a,b,vrblvl-1);
       when  55 => return Witness_DoblDobl_Polynomial_Write(a,b,vrblvl-1);
       when  56 => return Monodromy_DoblDobl_Factor_Count(a,vrblvl-1);
@@ -613,10 +351,10 @@ function use_c2fac ( job : integer32;
       when  75 => return Monodromy_QuadDobl_Trace_Test(a,vrblvl-1);
       when  76 => return Monodromy_QuadDobl_Diagnostics(c,vrblvl-1);
       when  77 => return Monodromy_QuadDobl_Trace_Sum(a,b,c,vrblvl-1);
-      when  78 => return Job78; -- index of quaddobl solution label
-      when  79 => return Job79; -- init slices in QuadDobl_Sampling_Operations
-      when  82 => return Job82; -- setting quaddobl target slices
-      when  83 => return Job83; -- one sampling loop in quaddobl precision
+      when  78 => return Monodromy_QuadDobl_Index(a,b,vrblvl-1);
+      when  79 => return Monodromy_QuadDobl_Initialize_Slices(a,vrblvl-1);
+      when  82 => return Monodromy_QuadDobl_Set_Target(a,vrblvl-1);
+      when  83 => return Monodromy_QuadDobl_Loop(a,b,vrblvl-1);
       when  84 => return Witness_QuadDobl_Polynomial_Read(a,b,vrblvl-1);
       when  85 => return Witness_QuadDobl_Polynomial_Write(a,b,vrblvl-1);
       when  86 => return Monodromy_QuadDobl_Factor_Count(a,vrblvl-1);

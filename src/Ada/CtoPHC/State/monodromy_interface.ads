@@ -586,6 +586,177 @@ package Monodromy_Interface is
   -- ON RETURN :
   --   c       in c[0] is the difference between the trace and actual sum.
 
+  function Monodromy_Standard_Initialize_Slices
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Initializes the slices in the sampler in double precision
+  --   with the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number to initialize the slices;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_DoblDobl_Initialize_Slices
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Initializes the slices in the sampler in double double precision
+  --   with the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number to initialize the slices;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_QuadDobl_Initialize_Slices
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Initializes the slices in the sampler in quad double precision
+  --   with the given number.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number to initialize the slices;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_Standard_Index
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Finds the index of a solution in a double precision slice.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the label of the solution,
+  --           in a[1] is the index of the slice;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       is the index of the solution in the slice.
+
+  function Monodromy_DoblDobl_Index
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Finds the index of a solution in a double double precision slice.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the label of the solution,
+  --           in a[1] is the index of the slice;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       is the index of the solution in the slice.
+
+  function Monodromy_QuadDobl_Index
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Finds the index of a solution in a quad double precision slice.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the label of the solution,
+  --           in a[1] is the index of the slice;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       is the index of the solution in the slice.
+
+  function Monodromy_Standard_Set_Target
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the target slices in double precision
+  --   to the slice stored with the given index.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the slices;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_DoblDobl_Set_Target
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the target slices in double double precision
+  --   to the slice stored with the given index.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the slices;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_QuadDobl_Set_Target
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Sets the target slices in quad double precision
+  --   to the slice stored with the given index.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the slices;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_Standard_Loop
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Does one loop in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the start slice,
+  --           in a[1] is the index of the target slice;
+  --   b       in b[0] is the index of the start solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       in b[0] is the index of the target solution.
+
+  function Monodromy_DoblDobl_Loop
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Does one loop in double double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the start slice,
+  --           in a[1] is the index of the target slice;
+  --   b       in b[0] is the index of the start solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       in b[0] is the index of the target solution.
+
+  function Monodromy_QuadDobl_Loop
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Does one loop in double double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the index of the start slice,
+  --           in a[1] is the index of the target slice;
+  --   b       in b[0] is the index of the start solution;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       in b[0] is the index of the target solution.
+
   function Monodromy_Standard_Factor_Count
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
