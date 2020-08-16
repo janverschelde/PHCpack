@@ -24,6 +24,7 @@ with QuadDobl_Continuation_Data_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with PHCpack_Operations;
+with Crude_Path_Trackers;
 
 package body Path_Trackers_Interface is
 
@@ -886,5 +887,80 @@ package body Path_Trackers_Interface is
       end if;
       return 776;
   end Path_Trackers_QuadDobl_Laurent_Solve;
+
+  function Path_Trackers_Standard_Crude_Track
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    val : constant natural32 := natural32(v_a(v_a'first));
+    verbose : constant boolean := (val = 1);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface");
+      put_line("Path_Trackers_Standard_Crude_Track ...");
+    end if;
+    Crude_Path_Trackers.Standard_Track_Paths(verbose);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_Standard_Crude_Track.");
+      end if;
+      return 622;
+  end Path_Trackers_Standard_Crude_Track;
+
+  function Path_Trackers_DoblDobl_Crude_Track
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    val : constant natural32 := natural32(v_a(v_a'first));
+    verbose : constant boolean := (val = 1);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface");
+      put_line("Path_Trackers_DoblDobl_Crude_Track ...");
+    end if;
+    Crude_Path_Trackers.DoblDobl_Track_Paths(verbose);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_DoblDobl_Crude_Track.");
+      end if;
+      return 623;
+  end Path_Trackers_DoblDobl_Crude_Track;
+
+  function Path_Trackers_QuadDobl_Crude_Track
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    val : constant natural32 := natural32(v_a(v_a'first));
+    verbose : constant boolean := (val = 1);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface");
+      put_line("Path_Trackers_QuadDobl_Crude_Track ...");
+    end if;
+    Crude_Path_Trackers.QuadDobl_Track_Paths(verbose);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_QuadDobl_Crude_Track.");
+      end if;
+      return 624;
+  end Path_Trackers_QuadDobl_Crude_Track;
 
 end Path_Trackers_Interface;

@@ -4,6 +4,9 @@ with C_Double_Arrays;                   use C_Double_Arrays;
 
 package Path_Trackers_Interface is
 
+-- DESCRIPTION :
+--   Provides functions to define homotopies and run path trackers.
+
   function Path_Trackers_Standard_Homotopy_Random
              ( vrblvl : integer32 := 0 ) return integer32;
 
@@ -395,6 +398,45 @@ package Path_Trackers_Interface is
 
   -- ON ENTRY :
   --   a       in a[0] is the number of tasks;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_Standard_Crude_Track
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Runs the crude path tracker in double precision
+  --   on the defined homotopy and stored start solutions.
+  --   A crude path trackers does no postprocessing on the solutions.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the verbose flag;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_DoblDobl_Crude_Track
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Runs the crude path tracker in double double precision
+  --   on the defined homotopy and stored start solutions.
+  --   A crude path trackers does no postprocessing on the solutions.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the verbose flag;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_QuadDobl_Crude_Track
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Runs the crude path tracker in quad double precision
+  --   on the defined homotopy and stored start solutions.
+  --   A crude path trackers does no postprocessing on the solutions.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the verbose flag;
   --   vrblvl  is the verbose level.
 
 end Path_Trackers_Interface;

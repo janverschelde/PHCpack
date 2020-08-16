@@ -491,20 +491,6 @@ function use_c2phc4c ( job : integer32;
       return 179;
   end Job179;
 
-  function Job628 return integer32 is -- create standard Laurent cascade
-  begin
-    return 0;
-  exception
-    when others => return 628;
-  end Job628;
-
-  function Job629 return integer32 is -- create dobldobl Laurent cascade
-  begin
-    return 0;
-  exception
-    when others => return 629;
-  end Job629;
-
   function Job191 return integer32 is -- define output file from string
 
     v_a : constant C_Integer_Array
@@ -838,9 +824,6 @@ function use_c2phc4c ( job : integer32;
       when 625 => return Witness_Standard_Laurent_Embed(a,vrblvl-1);
       when 626 => return Witness_DoblDobl_Laurent_Embed(a,vrblvl-1);
       when 627 => return Witness_QuadDobl_Laurent_Embed(a,vrblvl-1);
-     -- cascade of Laurent systems :
-      when 628 => return Job628; -- create double Laurent cascade
-      when 629 => return Job629; -- create double double Laurent cascade
      -- make standard monodromy breakup verbose
       when 630 => return use_c2fac(30,a,b,c,vrblvl-1);
      -- monodromy breakup in double double precision :

@@ -9,17 +9,15 @@ with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
-with Witness_Sets;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
-with Standard_Solutions_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
-with Crude_Path_Trackers;
 
 with Linear_Products_Interface;
 with Path_Trackers_Interface;
+with Cascade_Homotopy_Interface;
 with Diagonal_Homotopy_Interface;
 
 function use_track ( job : integer32;
@@ -181,110 +179,11 @@ function use_track ( job : integer32;
       return 12;
   end Job12;
 
-  function Job21 return integer32 is -- remove last slack variable
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    k : constant natural := natural(v_a(v_a'first));
-    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-       := Standard_PolySys_Container.Retrieve;
-    sols : Standard_Complex_Solutions.Solution_List
-         := Standard_Solutions_Container.Retrieve;
-    np : Standard_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last-1);
-
-  begin
-   -- put("#equations in systems container : "); put(lp'last,1); new_line;
-   -- put("#solutions in solutions container : ");
-   -- put(Length_Of(sols),1); new_line;
-    if k > 0 then
-      Witness_Sets.Remove_Component(sols);
-      np := Witness_Sets.Remove_Embedding1(lp.all,1);
-      Standard_PolySys_Container.Clear;
-      Standard_PolySys_Container.Initialize(np);
-    end if;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when removing last slack variable.");
-      return 21;
-  end Job21;
-
- -- procedure Write_Symbols ( s : in Symbol_Table.Array_of_Symbols ) is
-
-  -- DESCRIPTION :
-  --   Writes the symbols in s to screen, useful for checking.
-
- -- begin
- --   for i in s'range loop
- --     put(" "); Symbol_Table_io.put(s(i));
- --   end loop;
- --   new_line;
- -- end Write_Symbols;
-
-  function Job55 return integer32 is -- crude tracker in double precision
-
-  -- DESCRIPTION :
-  --   Gets the flag for the verbose mode from the first parameter a[0]
-  --   and launches the crude path tracker in double precision.
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    val : constant natural32 := natural32(v_a(v_a'first));
-    verbose : constant boolean := (val = 1);
-
-  begin
-    Crude_Path_Trackers.Standard_Track_Paths(verbose);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when launching crude tracker in double precision.");
-      raise;
-  end Job55;
-
-  function Job56 return integer32 is -- crude tracker with double doubles
-
-  -- DESCRIPTION :
-  --   Gets the flag for the verbose mode from the first parameter a[0]
-  --   and launches the crude path tracker in double double precision.
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    val : constant natural32 := natural32(v_a(v_a'first));
-    verbose : constant boolean := (val = 1);
-
-  begin
-    Crude_Path_Trackers.DoblDobl_Track_Paths(verbose);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when launching crude tracker with double doubles.");
-      raise;
-  end Job56;
-
-  function Job57 return integer32 is -- crude tracker with quad doubles
-
-  -- DESCRIPTION :
-  --   Gets the flag for the verbose mode from the first parameter a[0]
-  --   and launches the crude path tracker in double double precision.
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    val : constant natural32 := natural32(v_a(v_a'first));
-    verbose : constant boolean := (val = 1);
-
-  begin
-    Crude_Path_Trackers.QuadDobl_Track_Paths(verbose);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when launching crude tracker with double doubles.");
-      raise;
-  end Job57;
-
   function Handle_Jobs return integer32 is
 
     use Linear_Products_Interface;
     use Path_Trackers_Interface;
+    use Cascade_Homotopy_Interface;
     use Diagonal_Homotopy_Interface;
 
   begin
@@ -306,7 +205,7 @@ function use_track ( job : integer32;
       when 11 => return Job11; -- file name to read target system
       when 12 => return Job12; -- file name to read start system
       when 13 => return Linear_Products_System_Read(a,b,vrblvl-1);
-      when 14 => PHCpack_Operations.Standard_Cascade_Homotopy; return 0;
+      when 14 => return Cascade_Homotopy_Standard_Polynomial(vrblvl-1);
       when 15 =>
         return Diagonal_Homotopy_Standard_Polynomial_Make(a,b,vrblvl-1);
       when 16 => return Diagonal_Homotopy_Prompt_Set(a,b,vrblvl-1);
@@ -314,7 +213,7 @@ function use_track ( job : integer32;
       when 18 => return Diagonal_Homotopy_Cascade_Dimension(a,b,vrblvl-1);
       when 19 => return Diagonal_Homotopy_Standard_Hyperset(a,b,vrblvl-1);
       when 20 => return Diagonal_Homotopy_Standard_Collapse(a,vrblvl-1);
-      when 21 => return Job21; -- remove last slack variable
+      when 21 => return Cascade_Homotopy_Cut_Slack(a,vrblvl-1);
      -- tracking in double double precision :
       when 22 => return Path_Trackers_DoblDobl_Homotopy_Random(vrblvl-1);
       when 23 => return Path_Trackers_DoblDobl_Homotopy_Gamma(c,vrblvl-1);
@@ -322,7 +221,7 @@ function use_track ( job : integer32;
       when 25 => return Path_Trackers_DoblDobl_Silent_Track(a,b,c,vrblvl-1);
       when 26 => return Path_Trackers_DoblDobl_Report_Track(a,b,c,vrblvl-1);
       when 27 => return Path_Trackers_DoblDobl_Write_Solution(a,b,c,vrblvl-1);
-      when 28 => PHCpack_Operations.DoblDobl_Cascade_Homotopy; return 0;
+      when 28 => return Cascade_Homotopy_DoblDobl_Polynomial(vrblvl-1);
      -- tracking in quad double precision :
       when 32 => return Path_Trackers_QuadDobl_Homotopy_Random(vrblvl-1);
       when 33 => return Path_Trackers_QuadDobl_Homotopy_Gamma(c,vrblvl-1);
@@ -330,7 +229,7 @@ function use_track ( job : integer32;
       when 35 => return Path_Trackers_QuadDobl_Silent_Track(a,b,c,vrblvl-1);
       when 36 => return Path_Trackers_QuadDobl_Report_Track(a,b,c,vrblvl-1);
       when 37 => return Path_Trackers_QuadDobl_Write_Solution(a,b,c,vrblvl-1);
-      when 38 => PHCpack_Operations.QuadDobl_Cascade_Homotopy; return 0;
+      when 38 => return Cascade_Homotopy_QuadDobl_Polynomial(vrblvl-1);
      -- redefining diagonal homotopies ...
       when 40 =>
         return Diagonal_Homotopy_Standard_Polynomial_Set(a,b,vrblvl-1);
@@ -358,16 +257,13 @@ function use_track ( job : integer32;
       when 53 => return Path_Trackers_Multprec_Homotopy_Gamma(c,vrblvl-1);
       when 54 => return Path_Trackers_Multprec_Homotopy_Clear(vrblvl-1);
      -- crude path trackers
-      when 55 => return Job55; -- crude tracker in double precision
-      when 56 => return Job56; -- crude tracker in double double precision
-      when 57 => return Job57; -- crude tracker in quad double precision
+      when 55 => return Path_Trackers_Standard_Crude_Track(a,vrblvl-1);
+      when 56 => return Path_Trackers_DoblDobl_Crude_Track(a,vrblvl-1);
+      when 57 => return Path_Trackers_QuadDobl_Crude_Track(a,vrblvl-1);
      -- homotopies for Laurent systems
-      when 58 =>
-        PHCpack_Operations.Standard_Cascade_Laurent_Homotopy; return 0;
-      when 59 =>
-        PHCpack_Operations.DoblDobl_Cascade_Laurent_Homotopy; return 0;
-      when 60 =>
-        PHCpack_Operations.QuadDobl_Cascade_Laurent_Homotopy; return 0;
+      when 58 => return Cascade_Homotopy_Standard_Laurent(vrblvl-1);
+      when 59 => return Cascade_Homotopy_DoblDobl_Laurent(vrblvl-1);
+      when 60 => return Cascade_Homotopy_QuadDobl_Laurent(vrblvl-1);
       when 61 => return Diagonal_Homotopy_Standard_Laurent_Make(a,b,vrblvl-1);
       when 62 => return Diagonal_Homotopy_DoblDobl_Laurent_Make(a,b,vrblvl-1);
       when 63 => return Diagonal_Homotopy_QuadDobl_Laurent_Make(a,b,vrblvl-1);
