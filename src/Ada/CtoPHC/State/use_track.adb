@@ -4,18 +4,12 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Standard_Complex_Poly_Systems;
-with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
-with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
-with Standard_Complex_Solutions;
-with Standard_Root_Refiners;            use Standard_Root_Refiners;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
-with Assignments_of_Solutions;          use Assignments_of_Solutions;
-with Standard_PolySys_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
 
 with Linear_Products_Interface;
+with Newton_Interface;
 with Path_Trackers_Interface;
 with Cascade_Homotopy_Interface;
 with Diagonal_Homotopy_Interface;
@@ -26,41 +20,6 @@ function use_track ( job : integer32;
                      c : C_dblarrs.Pointer;
                      vrblvl : integer32 := 0 ) return integer32 is
  
-  function JobM1 return integer32 is -- refine solution with Newton
-
-    ls : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-       := Standard_PolySys_Container.Retrieve;
-    ep : constant Link_to_Eval_Poly_Sys
-       := Standard_PolySys_Container.Evaluator;
-    jf : constant Link_to_Eval_Jaco_Mat
-       := Standard_PolySys_Container.Jacobian_Evaluator;
-    sol : Standard_Complex_Solutions.Solution(ls'last)
-        := Convert_to_Solution(b,c);
-    epsxa : constant double_float := 1.0E-14;
-    epsfa : constant double_float := 1.0E-14;
-    max : constant natural32 := 3;
-    numit : natural32 := 0;
-    fail : boolean;
-   -- x : Standard_Complex_Vectors.Vector(ls'range)
-   --   := (ls'range => Create(1.0));
-   -- y : Standard_Complex_Vectors.Vector(ls'range);
-   -- r : constant integer := Standard_Random_Numbers.Random(0,1000);
-
-  begin
-   -- put("starting evaluation with id = "); put(r,1); new_line;
-   -- for i in 1..1000 loop
-   --   y := Eval(ls.all,x);
-   --   -- y := Eval(ls.all,sol.v); --y := Eval(ep.all,sol.v);
-   -- end loop;
-   -- put("ending evaluation with id = "); put(r,1); new_line;
-    Silent_Newton(ep.all,jf.all,sol,epsxa,epsfa,numit,max,fail);
-    Assign_Solution(sol,b,c);
-    return 0;
-  exception
-    when others => put_line("exception occurred in root refiner...");
-                   return 149;
-  end JobM1;
-
   function Job8 return integer32 is -- write a string to defined output
 
     v_a : constant C_Integer_Array
@@ -182,13 +141,14 @@ function use_track ( job : integer32;
   function Handle_Jobs return integer32 is
 
     use Linear_Products_Interface;
+    use Newton_Interface;
     use Path_Trackers_Interface;
     use Cascade_Homotopy_Interface;
     use Diagonal_Homotopy_Interface;
 
   begin
     case job is
-      when -1 => return JobM1; -- refine solution with Newton
+      when -1 => return Newton_Standard_Polynomial_Refine(b,c,vrblvl-1);
       when 0 => PHCpack_Operations_io.Read_Target_System_without_Solutions;
                 return 0;
       when 1 => PHCpack_Operations_io.Read_Start_System_without_Solutions;

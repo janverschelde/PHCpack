@@ -1,21 +1,10 @@
 with Interfaces.C;
 with text_io;                           use text_io;
-with String_Splitters;                  use String_Splitters;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;
-with Multprec_Complex_Solutions;
-with Standard_Root_Refiners;
 -- with Standard_Continuation_Data_io;     use Standard_Continuation_Data_io;
-with Verification_of_Solutions;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 -- with Assignments_of_Solutions;          use Assignments_of_Solutions;
-with Standard_PolySys_Container;
-with Standard_Solutions_Container;
-with Multprec_Solutions_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
 with C_to_PHCpack;
@@ -386,111 +375,6 @@ function use_c2phc4c ( job : integer32;
     put_line("511. deallocate and reset quad double path tracker.");
   end Write_Menu;
 
-  function Job9 return integer32 is -- verify the solutions in the container
-
-    use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
-    use Standard_Root_Refiners;
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-    work : Solution_List;
-   -- tmp : Solution_List;
-
-  begin
-   -- put_line("refining the roots ...");
-   -- put(lp.all);
-    if lp = null or Is_Null(sols) then
-      return 9;             
-    else
-    -- put_line("Solutions before the refine :");
-    -- put(standard_output,Length_Of(sols),Head_Of(sols).n,sols);
-      Copy(sols,work);
-      declare
-        epsxa : constant double_float := 1.0E-12;
-        epsfa : constant double_float := 1.0E-12;
-        tolsi : constant double_float := 1.0E-8;
-        deflate : boolean := false;
-        nit : natural32 := 0;
-      begin
-        if PHCpack_Operations.Is_File_Defined then
-          put(PHCpack_Operations.output_file,natural32(lp'last),lp.all);
-          Reporting_Root_Refiner
-            (PHCpack_Operations.output_file,
-             lp.all,work,epsxa,epsfa,tolsi,nit,5,deflate,false);
-        else
-          Silent_Root_Refiner
-            (lp.all,work,epsxa,epsfa,tolsi,nit,5,deflate);
-        end if;
-        Standard_Solutions_Container.Clear;
-        Standard_Solutions_Container.Initialize(work);
-       -- put("Refiner Results :");
-       -- tmp := work;
-       -- while not Is_Null(tmp) loop
-       --   put(" ");
-       --   put(Head_Of(tmp).m,1);
-       --   tmp := Tail_Of(tmp);
-       -- end loop;
-       -- new_line;
-      end;
-      return 0;
-     -- sols := Standard_Solutions_Container.Retrieve;
-     -- put_line("Solutions after the refine :");
-     -- put(standard_output,Length_Of(sols),Head_Of(sols).n,sols);
-    end if;
-  exception
-    when others =>
-      put_line("Exception 9 at verification of solutions.");
-      return 9;
-  end Job9;
-
-  function Job179 return integer32 is -- variable precision Newton step
-
-    use Interfaces.C;
-    use Verification_of_Solutions;
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(5));
-    dim : constant natural32 := natural32(v_a(v_a'first));
-    ns : constant natural32 := natural32(v_a(v_a'first+1));
-    wanted : constant natural32 := natural32(v_a(v_a'first+2));
-    maxitr : constant natural32 := natural32(v_a(v_a'first+3));
-    maxprc : constant natural32 := natural32(v_a(v_a'first+4));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(ns-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(ns));
-    s : constant String(1..integer(ns)) := C_Integer_Array_to_String(ns,v_b);
-    ls : Array_of_Strings(1..integer(dim)) := Split(natural(dim),s,';');
-    sols : constant Multprec_Complex_Solutions.Solution_List
-         := Multprec_Solutions_Container.Retrieve;
-    work : Multprec_Complex_Solutions.Solution_List;
-
-  begin
-   -- put("The dimension : "); put(integer32(dim),1); new_line;
-   -- put("The number of characters in the system : ");
-   -- put(integer32(ns),1); new_line;
-   -- put("The number of wanted number of decimal places : ");
-   -- put(integer32(wanted),1); new_line;
-   -- put("The maximum number of Newton steps : ");
-   -- put(integer32(maxitr),1); new_line;
-   -- put("The maximum number of decimal places to estimate the loss : ");
-   -- put(integer32(maxprc),1); new_line;
-   -- put_line("The polynomials : "); put_line(s);
-   -- for i in ls'range loop
-   --   put("Polynomial "); put(integer32(i),1); put_line(" :");
-   --   put_line(ls(i).all);
-   -- end loop;
-    Multprec_Complex_Solutions.Copy(sols,work);
-    Verify_Solutions_of_Laurent_Polynomials
-      (ls,work,wanted,maxitr,maxprc);
-    Multprec_Solutions_Container.Clear;
-    Multprec_Solutions_Container.Initialize(work);
-    Clear(ls);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception occurred in variable precision Newton step.");
-      return 179;
-  end Job179;
-
   function Job191 return integer32 is -- define output file from string
 
     v_a : constant C_Integer_Array
@@ -567,7 +451,7 @@ function use_c2phc4c ( job : integer32;
       when 6 => return Standard_Container_Solutions_to_Target(vrblvl-1);
       when 7 => return Standard_Start_Solutions_to_Container(vrblvl-1);
       when 8 => return Standard_Container_Solutions_to_Start(vrblvl-1);
-      when 9 => return Job9; -- verify the solutions in the container
+      when 9 => return Newton_Standard_Polynomial_Verify(vrblvl-1);
       when 10..15 => return C_to_PHCpack(job-10,0);
       when 16 => return Path_Trackers_Standard_Polynomial_Solve(a,vrblvl-1);
       when 17..19 => return C_to_PHCpack(job-10,0);
@@ -616,7 +500,7 @@ function use_c2phc4c ( job : integer32;
      -- track operations for double double precision :
       when 172..178 => return use_track(job-150,a,b,c,vrblvl-1);
      -- variable precision Newton step :
-      when 179 => return Job179;
+      when 179 => return Newton_Varbprec_Step(a,b,vrblvl-1);
      -- double double and quad double L-R homotopies :
       when 180..181 => return use_c2lrhom(job-178,a,b,c,vrblvl-1);
      -- track operations for quad double precision :
