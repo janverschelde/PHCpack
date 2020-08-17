@@ -593,22 +593,6 @@ package Standard_Solutions_Interface is
   --           and one double for the backward error;
   --   vrblvl  is the verbose level.
 
-  function Standard_Solutions_Prompt_Input_File
-             ( vrblvl : integer32 := 0 ) return integer32;
-
-  -- DESCRIPTION :
-  --   Prompts the user for the name of an input file and
-  --   opens the file for input.
-  --   The verbose level is given by the value of vrblvl.
-
-  function Standard_Solutions_Prompt_Output_File
-             ( vrblvl : integer32 := 0 ) return integer32;
-
-  -- DESCRIPTION :
-  --   Prompts the user for the name of an output file and
-  --   and makes a file for output.
-  --   The verbose level is given by the value of vrblvl.
-
   function Standard_Solutions_Scan_Banner
              ( vrblvl : integer32 := 0 ) return integer32;
 

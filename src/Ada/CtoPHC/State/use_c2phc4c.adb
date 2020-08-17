@@ -28,6 +28,7 @@ with use_multip;  -- multiplicity structure
 with use_witsols;
 with Job_Containers;
 with Job_Handlers;
+with File_Management_Interface;
 with Symbol_Table_Interface;
 with Continuation_Parameters_Interface;
 with Newton_Interface;
@@ -375,35 +376,6 @@ function use_c2phc4c ( job : integer32;
     put_line("511. deallocate and reset quad double path tracker.");
   end Write_Menu;
 
-  function Job191 return integer32 is -- define output file from string
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    s : constant String(1..integer(n)) := C_Integer_Array_to_String(n,v_b);
-
-  begin
-    PHCpack_Operations.Define_Output_File(s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when defining output file from string.");
-      return 191;
-  end Job191;
-
-  function Job192 return integer32 is -- close the defined output file
-  begin
-    PHCpack_Operations.Close_Output_File;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when closing defined output file.");
-      return 192;
-  end Job192;
-
   function Job491 return integer32 is -- read multiprecision target system
 
     v_a : constant C_Integer_Array
@@ -431,6 +403,7 @@ function use_c2phc4c ( job : integer32;
     use Job_Containers;
     use Job_Handlers;
     use Symbol_Table_Interface;
+    use File_Management_Interface;
     use Newton_Interface;
     use Deflation_Interface;
     use Continuation_Parameters_Interface;
@@ -508,8 +481,8 @@ function use_c2phc4c ( job : integer32;
      -- tuning continuation parameters, deflation, and Newton step
       when 189 => return Continuation_Parameters_Get_Value(a,c,vrblvl-1);
       when 190 => return Continuation_Parameters_Set_Value(a,c,vrblvl-1);
-      when 191 => return Job191; -- define output file from string
-      when 192 => return Job192; -- close the defined output file
+      when 191 => return File_Management_Set_Output(a,b,vrblvl-1);
+      when 192 => return File_Management_Close_Output(vrblvl-1);
       when 193 => return Continuation_Parameters_Autotune(a,b,vrblvl-1);
       when 194 => return Continuation_Parameters_Show(vrblvl-1);
       when 195 => return Newton_Multprec_Polynomial_Step(a,vrblvl-1);

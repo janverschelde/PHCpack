@@ -8,6 +8,7 @@ with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
 
+with File_Management_Interface;
 with Linear_Products_Interface;
 with Newton_Interface;
 with Path_Trackers_Interface;
@@ -20,84 +21,6 @@ function use_track ( job : integer32;
                      c : C_dblarrs.Pointer;
                      vrblvl : integer32 := 0 ) return integer32 is
  
-  function Job8 return integer32 is -- write a string to defined output
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer := integer(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
-
-  begin
-    if PHCpack_Operations.Is_File_Defined
-     then put(PHCpack_Operations.output_file,s);
-     else put(standard_output,s);
-    end if;
-    return 0;
-  end Job8;
-
-  function Job9 return integer32 is -- writes integers to defined output
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-
-   -- use Interfaces.C;
-
-  begin
-    if PHCpack_Operations.Is_File_Defined then
-      put(PHCpack_Operations.output_file,integer32(v_b(v_b'first)),1);
-      for i in v_b'first+1..v_b'last loop
-        put(PHCpack_Operations.output_file," ");
-        put(PHCpack_Operations.output_file,integer32(v_b(i)),1);
-      end loop;
-    else
-      put(standard_output,integer32(v_b(v_b'first)),1);
-      for i in v_b'first+1..v_b'last loop
-        put(standard_output," ");
-        put(standard_output,integer32(v_b(i)),1);
-      end loop;
-    end if;
-    return 0;
-  end Job9;
-
-  function Job10 return integer32 is -- writes doubles to defined output
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant natural32 := natural32(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_c : constant C_Double_Array(0..n1)
-        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(n));
-    d : double_float;
-
-   -- use Interfaces.C;
-
-  begin
-    d := double_float(v_c(v_c'first));
-    if PHCpack_Operations.Is_File_Defined then
-      put(PHCpack_Operations.output_file,d);
-      for i in v_c'first+1..v_c'last loop
-        put(PHCpack_Operations.output_file," ");
-        d := double_float(v_c(i));
-        put(PHCpack_Operations.output_file,d);
-      end loop;
-    else
-      put(standard_output,d);
-      for i in v_c'first+1..v_c'last loop
-        put(standard_output," ");
-        d := double_float(v_c(i));
-        put(standard_output,d);
-      end loop;
-    end if;
-    return 0;
-  end Job10;
-
   function Job11 return integer32 is -- file name to read target system
 
     v_a : constant C_Integer_Array
@@ -140,6 +63,7 @@ function use_track ( job : integer32;
 
   function Handle_Jobs return integer32 is
 
+    use File_Management_Interface;
     use Linear_Products_Interface;
     use Newton_Interface;
     use Path_Trackers_Interface;
@@ -159,9 +83,9 @@ function use_track ( job : integer32;
       when 5 => return Path_Trackers_Standard_Silent_Track(a,b,c,vrblvl-1);
       when 6 => return Path_Trackers_Standard_Report_Track(a,b,c,vrblvl-1);
       when 7 => return Path_Trackers_Standard_Write_Solution(a,b,c,vrblvl-1);
-      when 8 => return Job8;   -- write string to defined output file
-      when 9 => return Job9;   -- write integers to defined output file
-      when 10 => return Job10; -- write doubles to defined output file
+      when 8 => return File_Management_Write_String(a,b,vrblvl-1);
+      when 9 => return File_Management_Write_Integers(a,b,vrblvl-1);
+      when 10 => return File_Management_Write_Doubles(a,c,vrblvl-1);
       when 11 => return Job11; -- file name to read target system
       when 12 => return Job12; -- file name to read start system
       when 13 => return Linear_Products_System_Read(a,b,vrblvl-1);

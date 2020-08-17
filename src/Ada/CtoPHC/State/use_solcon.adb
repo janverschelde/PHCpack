@@ -1,4 +1,5 @@
 with text_io;                           use text_io;
+with File_Management_Interface;
 with Standard_Solutions_Interface;
 with DoblDobl_Solutions_Interface;
 with QuadDobl_Solutions_Interface;
@@ -12,6 +13,7 @@ function use_solcon ( job : integer32;
 
   function Handle_Jobs return integer32 is
 
+    use File_Management_Interface;
     use Standard_Solutions_Interface;
     use DoblDobl_Solutions_Interface;
     use QuadDobl_Solutions_Interface;
@@ -29,8 +31,8 @@ function use_solcon ( job : integer32;
       when 7 => return Standard_Solutions_Clear(vrblvl);
       when 8 => return Standard_Solutions_Drop_by_Index(a,vrblvl);
       when 9 => return Standard_Solutions_Drop_by_Name(a,b,vrblvl);
-      when 10 => return Standard_Solutions_Prompt_Input_File(vrblvl);
-      when 11 => return Standard_Solutions_Prompt_Output_File(vrblvl);
+      when 10 => return File_Management_Prompt_Input_File(vrblvl);
+      when 11 => return File_Management_Prompt_Output_File(vrblvl);
       when 12 => return Standard_Solutions_Scan_Banner(vrblvl);
       when 13 => return Standard_Solutions_Read_Dimensions(a,b,vrblvl);
       when 14 => return Standard_Solutions_Write_Dimensions(a,b,vrblvl);
