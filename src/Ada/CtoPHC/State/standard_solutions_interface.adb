@@ -1310,42 +1310,6 @@ package body Standard_Solutions_Interface is
       return 145;
   end Standard_Solutions_Next_Witness;
 
-  function Standard_Solutions_Prompt_Input_File
-             ( vrblvl : integer32 := 0 ) return integer32 is
-  begin
-    if vrblvl > 0 then
-      put("-> in standard_solutions_interface.");
-      put_line("Standard_Solutions_Prompt_Input_File.");
-    end if;
-    File_Management.Open_Input_File;
-    return 0;
-  exception
-    when others => 
-      if vrblvl > 0 then
-        put("Exception raised in standard_solutions_interface.");
-        put_line("Standard_Solutions_Prompt_Input_File.");
-      end if;
-      return 130;
-  end Standard_Solutions_Prompt_Input_File;
-
-  function Standard_Solutions_Prompt_Output_File
-             ( vrblvl : integer32 := 0 ) return integer32 is
-  begin
-    if vrblvl > 0 then
-      put("-> in standard_solutions_interface.");
-      put_line("Standard_Solutions_Prompt_Output_File.");
-    end if;
-    File_Management.Create_Output_File;
-    return 0;
-  exception
-    when others => 
-      if vrblvl > 0 then
-        put("Exception raised in standard_solutions_interface.");
-        put_line("Standard_Solutions_Prompt_Output_File.");
-      end if;
-      return 131;
-  end Standard_Solutions_Prompt_Output_File;
-
   function Standard_Solutions_Scan_Banner
              ( vrblvl : integer32 := 0 ) return integer32 is
 
