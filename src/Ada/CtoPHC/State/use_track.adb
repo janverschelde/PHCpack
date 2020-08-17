@@ -1,10 +1,7 @@
 with text_io;                           use text_io;
-with Interfaces.C;                      use Interfaces.C;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations_io;
-
 with File_Management_Interface;
+with Standard_PolySys_Interface;
 with Linear_Products_Interface;
 with Newton_Interface;
 with Path_Trackers_Interface;
@@ -16,50 +13,11 @@ function use_track ( job : integer32;
                      b : C_intarrs.Pointer;
                      c : C_dblarrs.Pointer;
                      vrblvl : integer32 := 0 ) return integer32 is
- 
-  function Job11 return integer32 is -- file name to read target system
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer := integer(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
-
-  begin
-   -- put_line("opening the file " & s & " for the target system ...");
-    PHCpack_Operations_io.Read_Target_System_without_Solutions(s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when opening " & s & " for target system.");
-      return 161;
-  end Job11;
-
-  function Job12 return integer32 is -- file name to read start system
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer := integer(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
-
-  begin
-   -- put_line("opening the file " & s & " for the start system ...");
-    PHCpack_Operations_io.Read_Start_System_without_Solutions(s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when opening " & s & " for start system.");
-      return 12;
-  end Job12;
 
   function Handle_Jobs return integer32 is
 
     use File_Management_Interface;
+    use Standard_PolySys_Interface;
     use Linear_Products_Interface;
     use Newton_Interface;
     use Path_Trackers_Interface;
@@ -82,8 +40,8 @@ function use_track ( job : integer32;
       when 8 => return File_Management_Write_String(a,b,vrblvl-1);
       when 9 => return File_Management_Write_Integers(a,b,vrblvl-1);
       when 10 => return File_Management_Write_Doubles(a,c,vrblvl-1);
-      when 11 => return Job11; -- file name to read target system
-      when 12 => return Job12; -- file name to read start system
+      when 11 => return Standard_PolySys_Read_Target_on_File(a,b,vrblvl-1);
+      when 12 => return Standard_PolySys_Read_Start_on_File(a,b,vrblvl-1);
       when 13 => return Linear_Products_System_Read(a,b,vrblvl-1);
       when 14 => return Cascade_Homotopy_Standard_Polynomial(vrblvl-1);
       when 15 =>

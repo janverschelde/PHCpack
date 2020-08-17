@@ -19,6 +19,7 @@ with Polynomial_Drops;
 with Total_Degree_Start_Systems;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
+with PHCpack_Operations_io;
 with Standard_PolySys_Container;
 
 package body Standard_PolySys_Interface is
@@ -734,5 +735,65 @@ package body Standard_PolySys_Interface is
       end if;
       return 27;
   end Standard_PolySys_Clear;
+
+  function Standard_PolySys_Read_Target_on_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant integer := integer(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Read_Target_on_File ...");
+    end if;
+   -- put_line("opening the file " & s & " for the target system ...");
+    PHCpack_Operations_io.Read_Target_System_without_Solutions(s);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Read_Target_on_File.");
+      end if;
+      return 161;
+  end Standard_PolySys_Read_Target_on_File;
+
+  function Standard_PolySys_Read_Start_on_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant integer := integer(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Read_Start_on_File ...");
+    end if;
+   -- put_line("opening the file " & s & " for the start system ...");
+    PHCpack_Operations_io.Read_Start_System_without_Solutions(s);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Read_Start_on_File.");
+      end if;
+      return 162;
+  end Standard_PolySys_Read_Start_on_File;
 
 end Standard_PolySys_Interface;

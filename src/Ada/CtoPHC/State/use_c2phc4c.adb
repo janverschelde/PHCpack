@@ -1,10 +1,5 @@
-with Interfaces.C;
 with text_io;                           use text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
--- with Standard_Continuation_Data_io;     use Standard_Continuation_Data_io;
-with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
--- with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
 with C_to_PHCpack;
@@ -28,6 +23,7 @@ with use_multip;  -- multiplicity structure
 with use_witsols;
 with Job_Containers;
 with Job_Handlers;
+with Multprec_PolySys_Interface;
 with File_Management_Interface;
 with Symbol_Table_Interface;
 with Continuation_Parameters_Interface;
@@ -376,33 +372,12 @@ function use_c2phc4c ( job : integer32;
     put_line("511. deallocate and reset quad double path tracker.");
   end Write_Menu;
 
-  function Job491 return integer32 is -- read multiprecision target system
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    deci : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-    PHCpack_Operations_io.Read_Multprec_Target_System(deci);
-    return 0;
-  end Job491;
-
-  function Job493 return integer32 is -- read multiprecision start system
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    deci : constant natural32 := natural32(v_a(v_a'first));
-
-  begin
-    PHCpack_Operations_io.Read_Multprec_Start_System(deci);
-    return 0;
-  end Job493;
-
   function Handle_Jobs return integer32 is
 
     use Job_Containers;
     use Job_Handlers;
     use Symbol_Table_Interface;
+    use Multprec_PolySys_Interface;
     use File_Management_Interface;
     use Newton_Interface;
     use Deflation_Interface;
@@ -612,10 +587,10 @@ function use_c2phc4c ( job : integer32;
       when 480..481 => return use_solcon(job-330,a,b,c,vrblvl-1);
       when 488 => return use_solcon(job-330,a,b,c,vrblvl-1);
      -- PHCpack operations for multiprecision arithmetic
-      when 491 => return Job491; -- read multiprecision target system   
-      when 492 => PHCpack_Operations_io.Write_Multprec_Target_System; return 0;
-      when 493 => return Job493; -- read multiprecision start system
-      when 494 => PHCpack_Operations_io.Write_Multprec_Start_System; return 0;
+      when 491 => return Multprec_PolySys_Prompt_for_Target(a,vrblvl-1);
+      when 492 => return Multprec_PolySys_Write_Target(vrblvl-1);
+      when 493 => return Multprec_PolySys_Prompt_for_Start(a,vrblvl-1);
+      when 494 => return Multprec_PolySys_Write_Start(vrblvl-1);
       when 495 =>
         PHCpack_Operations_io.Write_Multprec_Start_Solutions; return 0;
       when 496 => return Path_Trackers_Multprec_Polynomial_Solve(a,vrblvl-1);

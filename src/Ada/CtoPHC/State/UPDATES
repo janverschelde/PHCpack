@@ -1,4 +1,6 @@
 Mon 17 Aug 2020 : updates in use_track.adb for compiler warnings.
+  Moved functions from use_c2phc4c.adb to multprec_polysys_interface.
+  Moved functions from use_track.adb to standard_polysys_interface.
 
 Sun 16 Aug 2020 : new package cascade_homotopy_interface with functions
   from use_track.adb, extended path_trackers_interface.adb with functions
