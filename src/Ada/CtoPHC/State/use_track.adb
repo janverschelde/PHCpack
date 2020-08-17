@@ -1,11 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
-with PHCpack_Operations;
 with PHCpack_Operations_io;
 
 with File_Management_Interface;

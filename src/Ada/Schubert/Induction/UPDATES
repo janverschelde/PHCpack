@@ -1,3 +1,6 @@
+Mon 17 Aug 2020 : updated drivers_for_schubert_induction.adb with the
+  final message that no more input is needed.
+
 Mon 10 Aug 2020 : in moving_flag_continuation.adb, fixed calling the wrapped
   pade trackers.  Added new_line to drivers_for_schubert_induction.adb.
 
