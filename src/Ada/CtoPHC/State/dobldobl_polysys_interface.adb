@@ -18,6 +18,7 @@ with Multi_Projective_Transformations;
 with Affine_Transformations;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
+with PHCpack_Operations_io;
 with DoblDobl_PolySys_Container;
 
 package body DoblDobl_PolySys_Interface is
@@ -653,5 +654,23 @@ package body DoblDobl_PolySys_Interface is
       end if;
       return 207;
   end DoblDobl_PolySys_Clear;
+
+  function DoblDobl_PolySys_Prompt_for_Target
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in dobldobl_polysys_interface.");
+      put_line("DoblDobl_PolySys_Prompt_for_Target ...");
+    end if;
+    PHCpack_Operations_io.Read_DoblDobl_Target_System_without_Solutions;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in dobldobl_polysys_interface.");
+        put_line("DoblDobl_PolySys_Prompt_for_Target.");
+      end if;
+      return 872;
+  end DoblDobl_PolySys_Prompt_for_Target;
 
 end DoblDobl_PolySys_Interface;

@@ -736,6 +736,42 @@ package body Standard_PolySys_Interface is
       return 27;
   end Standard_PolySys_Clear;
 
+  function Standard_PolySys_Prompt_for_Target
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Prompt_for_Target ...");
+    end if;
+    PHCpack_Operations_io.Read_Target_System_without_Solutions;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Prompt_for_Target.");
+      end if;
+      return 150;
+  end Standard_PolySys_Prompt_for_Target;
+
+  function Standard_PolySys_Prompt_for_Start
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in standard_polysys_interface.");
+      put_line("Standard_PolySys_Prompt_for_Start ...");
+    end if;
+    PHCpack_Operations_io.Read_Start_System_without_Solutions;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in standard_polysys_interface.");
+        put_line("Standard_PolySys_Prompt_for_Start.");
+      end if;
+      return 151;
+  end Standard_PolySys_Prompt_for_Start;
+
   function Standard_PolySys_Read_Target_on_File
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
