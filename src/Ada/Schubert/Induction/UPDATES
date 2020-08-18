@@ -1,3 +1,6 @@
+Tue 18 Aug 2020 : modified flag_transformations.adb for compiler warnings.
+  Modified also setup_flag_homotopies for compiler warnings.
+
 Mon 17 Aug 2020 : updated drivers_for_schubert_induction.adb with the
   final message that no more input is needed.
 
