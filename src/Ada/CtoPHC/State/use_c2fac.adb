@@ -1,30 +1,4 @@
 with text_io;                           use text_io;
-with Interfaces.C;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Complex_Numbers;
-with Standard_Floating_Vectors;
-with Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;
-with Standard_Complex_Laur_Systems;
-with DoblDobl_Complex_Laur_Systems;
-with QuadDobl_Complex_Laur_Systems;
-with Standard_Complex_Solutions;
-with DoblDobl_Complex_Solutions;
-with QuadDobl_Complex_Solutions;
-with Sampling_Laurent_Machine;
-with DoblDobl_Sampling_Laurent_Machine;
-with QuadDobl_Sampling_Laurent_Machine;
-with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
-with Standard_LaurSys_Container;
-with Standard_Solutions_Container;
-with DoblDobl_LaurSys_Container;
-with DoblDobl_Solutions_Container;
-with QuadDobl_LaurSys_Container;
-with QuadDobl_Solutions_Container;
-with Standard_Sampling_Operations;
-with DoblDobl_Sampling_Operations;
-with QuadDobl_Sampling_Operations;
-
 with Witness_Interface;
 with Monodromy_Interface;
 
@@ -69,205 +43,6 @@ function use_c2fac ( job : integer32;
     put_line(" 28. set the state of monodromy permutations to silent.");
   end Write_Menu;
 
-  function Convert_to_Hyperplanes
-             ( v : Standard_Floating_Vectors.Vector; k,n : integer32 )
-             return Standard_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Uses the numbers in v to create k hyperplanes in n-space.
-
-    res : Standard_Complex_VecVecs.VecVec(1..k);
-    ind : integer32 := v'first;
-
-  begin
-    for i in 1..k loop 
-      declare
-        hyp : Standard_Complex_Vectors.Vector(0..n);
-      begin
-        for j in 0..n loop
-          hyp(j) := Standard_Complex_Numbers.Create(v(ind),v(ind+1));
-          ind := ind+2;
-        end loop;
-        res(i) := new Standard_Complex_Vectors.Vector'(hyp);
-      end;
-    end loop;
-    return res;
-  end Convert_to_Hyperplanes;
-
-  function Convert_to_Coefficients
-             ( n : integer32; v : Standard_Complex_VecVecs.VecVec )
-             return Standard_Floating_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns a vector of range 1..n with the complex coefficients of v
-  --   stored as sequences of real and imaginary parts.
-
-    res : Standard_Floating_Vectors.Vector(1..n);
-    lv : Standard_Complex_Vectors.Link_to_Vector;
-    ind : integer32 := 0;
-
-  begin
-    for i in v'range loop
-      lv := v(i);
-      for j in lv'range loop
-        ind := ind + 1; res(ind) := Standard_Complex_Numbers.REAL_PART(lv(j));
-        ind := ind + 1; res(ind) := Standard_Complex_Numbers.IMAG_PART(lv(j));
-      end loop;
-    end loop;
-    return res;
-  end Convert_to_Coefficients;
-
-  function Job20 return integer32 is -- add new slice to Sampling_Operations
-
-    va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    nb_cff : constant integer32 := integer32(va(0));
-    k : constant integer32 := integer32(va(1));
-    n : constant integer32 := integer32(va(2));
-    cff : Standard_Floating_Vectors.Vector(1..nb_cff);
-    v : Standard_Complex_VecVecs.VecVec(1..k);
-
-  begin
-    Assign(natural32(nb_cff),c,cff);
-    v := Convert_to_Hyperplanes(cff,k,n);
-    Standard_Sampling_Operations.Add_Slices(v);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when adding new slice to Sampling_Operations");
-      return 60;
-  end Job20;
-
-  function Job21 return integer32 is -- returning coefficients of slice
-
-    vb : constant C_Integer_Array := C_intarrs.Value(b);
-    i : constant integer32 := integer32(vb(vb'first));
-    va : constant C_Integer_Array
-       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
-    nb_cff : constant integer32 := integer32(va(0));
-   -- dim : constant natural32 := natural32(va(1));
-   -- n : constant natural32 := natural32(va(2));
-    v : Standard_Complex_VecVecs.Link_to_VecVec;
-    cff : Standard_Floating_Vectors.Vector(1..nb_cff);
-    use Standard_Complex_VecVecs;
-
-  begin
-    v := Standard_Sampling_Operations.Retrieve_Slices(i);
-    if v /= null then
-      cff := Convert_to_Coefficients(nb_cff,v.all);
-      Assign(cff,c);
-    end if;
-    return 0;
-  exception
-    when others =>
-      put_line("Exception when returning coefficients of a slice.");
-      return 61;
-  end Job21;
-
-  function Job97 return integer32 is -- initializes standard Laurent sampler
-
-    use Standard_Complex_Laur_Systems;
-    use Standard_Complex_Solutions;
-
-    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
-    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    dim : constant integer32 := integer32(va(va'first));
-
-  begin
-    Standard_Sampling_Operations.Initialize(lp.all,sols,dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at initializing standard Laurent sampler.");
-      return 804;
-  end Job97;
-
-  function Job98 return integer32 is -- initializes dobldobl Laurent sampler
-
-    use DoblDobl_Complex_Laur_Systems;
-    use DoblDobl_Complex_Solutions;
-
-    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
-    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    dim : constant integer32 := integer32(va(va'first));
-
-  begin
-    DoblDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at initializing dobldobl Laurent sampler.");
-      return 805;
-  end Job98;
-
-  function Job99 return integer32 is -- initializes quaddobl Laurent sampler
-
-    use QuadDobl_Complex_Laur_Systems;
-    use QuadDobl_Complex_Solutions;
-
-    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
-    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
-    va : constant C_Integer_Array := C_intarrs.Value(a);
-    dim : constant integer32 := integer32(va(va'first));
-
-  begin
-    QuadDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at initializing quaddobl Laurent sampler.");
-      return 806;
-  end Job99;
-
-  function Job100 return integer32 is -- standard sampler -> laur container
-
-     use Standard_Complex_Laur_Systems;
-
-     p : constant Laur_Sys := Sampling_Laurent_Machine.Embedded_System;
-
-  begin
-    Standard_LaurSys_Container.Initialize(p);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at copy standard sampler -> Laurent container.");
-      return 807;
-  end Job100;
-
-  function Job101 return integer32 is -- dobldobl sampler -> laur container
-
-     use DoblDobl_Complex_Laur_Systems;
-
-     p : constant Laur_Sys
-       := DoblDobl_Sampling_Laurent_Machine.Embedded_System;
-
-  begin
-    DoblDobl_LaurSys_Container.Initialize(p);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at copy dobldoblsampler -> Laurent container.");
-      return 808;
-  end Job101;
-
-  function Job102 return integer32 is -- quaddobl sampler -> laur container
-
-     use QuadDobl_Complex_Laur_Systems;
-
-     p : constant Laur_Sys
-       := QuadDobl_Sampling_Laurent_Machine.Embedded_System;
-
-  begin
-    QuadDobl_LaurSys_Container.Initialize(p);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception at copy dobldoblsampler -> Laurent container.");
-      return 808;
-  end Job102;
-
   function Handle_Jobs return integer32 is
 
     use Witness_Interface;
@@ -295,8 +70,8 @@ function use_c2fac ( job : integer32;
       when  17 => return Monodromy_Standard_Trace_Sum(a,b,c,vrblvl-1);
       when  18 => return Monodromy_Standard_Index(a,b,vrblvl-1);
       when  19 => return Monodromy_Standard_Initialize_Slices(a,vrblvl-1);
-      when  20 => return Job20; -- adding new slice to Sampling_Operations
-      when  21 => return Job21; -- returning coefficients of a slice
+      when  20 => return Monodromy_Standard_Add_Slice(a,c,vrblvl-1);
+      when  21 => return Monodromy_Standard_Get_Slice(a,b,c,vrblvl-1);
       when  22 => return Monodromy_Standard_Set_Target(a,vrblvl-1);
       when  23 => return Monodromy_Standard_Loop(a,b,vrblvl-1);
       when  24 => return Witness_Standard_Polynomial_Read(a,b,vrblvl-1);
@@ -368,12 +143,12 @@ function use_c2fac ( job : integer32;
       when  94 => return Witness_Standard_Laurent_Read(a,b,vrblvl-1);
       when  95 => return Witness_DoblDobl_Laurent_Read(a,b,vrblvl-1);
       when  96 => return Witness_QuadDobl_Laurent_Read(a,b,vrblvl-1);
-      when  97 => return Job97; -- initialize standard Laurent sampler
-      when  98 => return Job98; -- initialize dobldobl Laurent sampler
-      when  99 => return Job99; -- initialize quaddobl Laurent sampler
-      when 100 => return Job100; -- standard sampler -> Laurent container
-      when 101 => return Job101; -- dobldobl sampler -> Laurent container
-      when 102 => return Job102; -- quaddobl sampler -> Laurent container
+      when  97 => return Monodromy_Standard_Init_Laurent_Sampler(a,vrblvl-1);
+      when  98 => return Monodromy_DoblDobl_Init_Laurent_Sampler(a,vrblvl-1);
+      when  99 => return Monodromy_QuadDobl_Init_Laurent_Sampler(a,vrblvl-1);
+      when 100 => return Monodromy_Standard_Copy_Laurent_System(vrblvl-1);
+      when 101 => return Monodromy_DoblDobl_Copy_Laurent_System(vrblvl-1);
+      when 102 => return Monodromy_QuadDobl_Copy_Laurent_System(vrblvl-1);
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;
