@@ -156,4 +156,40 @@ package Multprec_PolySys_Interface is
   --   Clears all polynomials with multiprecision coefficients.
   --   The verbose level is given in vrblvl.
 
+  function Multprec_PolySys_Prompt_for_Target
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a target system in multiprecision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of decimal places in the precision;
+  --   vrblvl  is the verbose level.
+
+  function Multprec_PolySys_Write_Target
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the target system in multiprecision.
+  --   The verbose level is in vrblvl.
+
+  function Multprec_PolySys_Prompt_for_Start
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a start system in multiprecision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of decimal places in the precision;
+  --   vrblvl  is the verbose level.
+
+  function Multprec_PolySys_Write_Start
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the start system in multiprecision.
+  --   The verbose level is in vrblvl.
+
 end Multprec_PolySys_Interface;

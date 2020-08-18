@@ -284,4 +284,11 @@ package QuadDobl_PolySys_Interface is
   --   Clears all polynomials stored in quad double precision.
   --   The verbose level is given in vrblvl.
 
+  function QuadDobl_PolySys_Prompt_for_Target
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a target system in quad double precision.
+  --   No solutions are read.  The verbose level is in vrblvl.
+
 end QuadDobl_PolySys_Interface;

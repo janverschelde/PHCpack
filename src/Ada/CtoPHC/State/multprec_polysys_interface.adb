@@ -11,6 +11,7 @@ with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
+with PHCpack_Operations_io;
 with Multprec_PolySys_Container;
 
 package body Multprec_PolySys_Interface is
@@ -342,5 +343,89 @@ package body Multprec_PolySys_Interface is
       end if;
       return 227;
   end Multprec_PolySys_Clear;
+
+  function Multprec_PolySys_Prompt_for_Target
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    deci : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in multprec_polysys_interface.");
+      put_line("Multprec_PolySys_Prompt_for_Target ...");
+    end if;
+    PHCpack_Operations_io.Read_Multprec_Target_System(deci);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in Multprec_Polysys_interface.");
+        put_line("Multprec_PolySys_Prompt_for_Target.");
+      end if;
+      return 491;
+  end Multprec_PolySys_Prompt_for_Target;
+
+  function Multprec_PolySys_Write_Target
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put_line("-> in multprec_polysys_interface.");
+      put_line("Multprec_PolySys_Write_Target ...");
+    end if;
+    PHCpack_Operations_io.Write_Multprec_Target_System;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in Multprec_Polysys_interface.");
+        put_line("Multprec_PolySys_Write_Target.");
+      end if;
+      return 492;
+  end Multprec_PolySys_Write_Target;
+
+  function Multprec_PolySys_Prompt_for_Start
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    deci : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in multprec_polysys_interface.");
+      put_line("Multprec_PolySys_Prompt_for_Start ...");
+    end if;
+    PHCpack_Operations_io.Read_Multprec_Start_System(deci);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in Multprec_Polysys_interface.");
+        put_line("Multprec_PolySys_Prompt_for_Start.");
+      end if;
+      return 493;
+  end Multprec_PolySys_Prompt_for_Start;
+
+  function Multprec_PolySys_Write_Start
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put_line("-> in multprec_polysys_interface.");
+      put_line("Multprec_PolySys_Write_Start ...");
+    end if;
+    PHCpack_Operations_io.Write_Multprec_Start_System;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in Multprec_Polysys_interface.");
+        put_line("Multprec_PolySys_Write_Start.");
+      end if;
+      return 494;
+  end Multprec_PolySys_Write_Start;
 
 end Multprec_PolySys_Interface;

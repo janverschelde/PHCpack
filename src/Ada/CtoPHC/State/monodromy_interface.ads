@@ -925,4 +925,98 @@ package Monodromy_Interface is
   --   c       contains real and imaginary parts of a quad double
   --           complex number.
 
+  function Monodromy_Standard_Add_Slice
+             ( a : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Adds new slices in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the total number of doubles,
+  --           in a[1] is the dimension of the solution set,
+  --           in a[2] is the ambient dimension;
+  --   c       the coefficients of the slices;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_Standard_Get_Slice
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Gets the coefficients of the slices in double precision.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the total number of doubles,
+  --           in a[1] is the dimension of the solution set,
+  --           in a[2] is the ambient dimension;
+  --   b       in b[0] is the index of the slice;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   c       the coefficients of the slices.
+
+  function Monodromy_Standard_Init_Laurent_Sampler
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Initializes the sampler with Laurent system and solutions
+  --   stored in double precision.
+ 
+  -- ON ENTRY :
+  --   a       in a[0] is the dimension of the set;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_DoblDobl_Init_Laurent_Sampler
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Initializes the sampler with Laurent system and solutions
+  --   stored in double double precision.
+ 
+  -- ON ENTRY :
+  --   a       in a[0] is the dimension of the set;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_QuadDobl_Init_Laurent_Sampler
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Initializes the sampler with Laurent system and solutions
+  --   stored in quad double precision.
+ 
+  -- ON ENTRY :
+  --   a       in a[0] is the dimension of the set;
+  --   vrblvl  is the verbose level.
+
+  function Monodromy_Standard_Copy_Laurent_System
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the embedded Laurent system from the sampler
+  --   to the container in double precision.
+  --   The verbose level is given in vrblvl.
+
+  function Monodromy_DoblDobl_Copy_Laurent_System
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the embedded Laurent system from the sampler
+  --   to the container in double double precision.
+  --   The verbose level is given in vrblvl.
+
+  function Monodromy_QuadDobl_Copy_Laurent_System
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Copies the embedded Laurent system from the sampler
+  --   to the container in quad double precision.
+  --   The verbose level is given in vrblvl.
+
 end Monodromy_Interface;

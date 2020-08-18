@@ -1,14 +1,8 @@
 with text_io;                           use text_io;
-with Interfaces.C;                      use Interfaces.C;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
-with PHCpack_Operations;
-with PHCpack_Operations_io;
-
 with File_Management_Interface;
+with Standard_PolySys_Interface;
+with DoblDobl_PolySys_Interface;
+with QuadDobl_PolySys_Interface;
 with Linear_Products_Interface;
 with Newton_Interface;
 with Path_Trackers_Interface;
@@ -20,50 +14,13 @@ function use_track ( job : integer32;
                      b : C_intarrs.Pointer;
                      c : C_dblarrs.Pointer;
                      vrblvl : integer32 := 0 ) return integer32 is
- 
-  function Job11 return integer32 is -- file name to read target system
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer := integer(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
-
-  begin
-   -- put_line("opening the file " & s & " for the target system ...");
-    PHCpack_Operations_io.Read_Target_System_without_Solutions(s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when opening " & s & " for target system.");
-      return 161;
-  end Job11;
-
-  function Job12 return integer32 is -- file name to read start system
-
-    v_a : constant C_Integer_Array
-        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
-    n : constant integer := integer(v_a(v_a'first));
-    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
-    v_b : constant C_Integer_Array(0..n1)
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
-    s : constant String(1..n) := C_Integer_Array_to_String(natural32(n),v_b);
-
-  begin
-   -- put_line("opening the file " & s & " for the start system ...");
-    PHCpack_Operations_io.Read_Start_System_without_Solutions(s);
-    return 0;
-  exception
-    when others =>
-      put_line("Exception raised when opening " & s & " for start system.");
-      return 12;
-  end Job12;
 
   function Handle_Jobs return integer32 is
 
     use File_Management_Interface;
+    use Standard_PolySys_Interface;
+    use DoblDobl_PolySys_Interface;
+    use QuadDobl_PolySys_Interface;
     use Linear_Products_Interface;
     use Newton_Interface;
     use Path_Trackers_Interface;
@@ -73,10 +30,8 @@ function use_track ( job : integer32;
   begin
     case job is
       when -1 => return Newton_Standard_Polynomial_Refine(b,c,vrblvl-1);
-      when 0 => PHCpack_Operations_io.Read_Target_System_without_Solutions;
-                return 0;
-      when 1 => PHCpack_Operations_io.Read_Start_System_without_Solutions;
-                return 0;
+      when 0 => return Standard_PolySys_Prompt_for_Target(vrblvl-1);
+      when 1 => return Standard_PolySys_Prompt_for_Start(vrblvl-1);
       when 2 => return Path_Trackers_Standard_Homotopy_Random(vrblvl-1);
       when 3 => return Path_Trackers_Standard_Homotopy_Gamma(c,vrblvl-1);
       when 4 => return Path_Trackers_Standard_Homotopy_Clear(vrblvl-1);
@@ -86,8 +41,8 @@ function use_track ( job : integer32;
       when 8 => return File_Management_Write_String(a,b,vrblvl-1);
       when 9 => return File_Management_Write_Integers(a,b,vrblvl-1);
       when 10 => return File_Management_Write_Doubles(a,c,vrblvl-1);
-      when 11 => return Job11; -- file name to read target system
-      when 12 => return Job12; -- file name to read start system
+      when 11 => return Standard_PolySys_Read_Target_on_File(a,b,vrblvl-1);
+      when 12 => return Standard_PolySys_Read_Start_on_File(a,b,vrblvl-1);
       when 13 => return Linear_Products_System_Read(a,b,vrblvl-1);
       when 14 => return Cascade_Homotopy_Standard_Polynomial(vrblvl-1);
       when 15 =>
@@ -157,12 +112,8 @@ function use_track ( job : integer32;
         return Diagonal_Homotopy_DoblDobl_Laurential_Set(a,b,vrblvl-1);
       when 66 =>
         return Diagonal_Homotopy_QuadDobl_Laurential_Set(a,b,vrblvl-1);
-      when 67
-        => PHCpack_Operations_io.Read_DoblDobl_Target_System_without_Solutions;
-           return 0;
-      when 68
-        => PHCpack_Operations_io.Read_QuadDobl_Target_System_without_Solutions;
-           return 0;
+      when 67 => return DoblDobl_PolySys_Prompt_for_Target(vrblvl-1);
+      when 68 => return QuadDobl_PolySys_Prompt_for_Target(vrblvl-1);
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;

@@ -311,4 +311,48 @@ package Standard_PolySys_Interface is
   --   Clears all polynomials stored in double precision.
   --   The verbose level is given in vrblvl.
 
+  function Standard_PolySys_Prompt_for_Target
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a target system in double precision.
+  --   No solutions are read.  The verbose level is in vrblvl.
+
+  function Standard_PolySys_Prompt_for_Start
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a start system in double precision.
+  --   No solutions are read.  The verbose level is in vrblvl.
+
+  function Standard_PolySys_Read_Target_on_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads the target system in double precision 
+  --   from file with the given name.
+  --   No solutions are read.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       contains the file name;
+  --   vrblvl  is the verbose level.
+
+  function Standard_PolySys_Read_Start_on_File
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Reads the target system in double precision 
+  --   from file with the given name.
+  --   No start solutions are read.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the number of characters in the string b;
+  --   b       contains the file name;
+  --   vrblvl  is the verbose level.
+
 end Standard_PolySys_Interface;

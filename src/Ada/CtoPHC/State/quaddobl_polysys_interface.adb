@@ -18,6 +18,7 @@ with Multi_Projective_Transformations;
 with Affine_Transformations;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
+with PHCpack_Operations_io;
 with QuadDobl_PolySys_Container;
 
 package body QuadDobl_PolySys_Interface is
@@ -653,5 +654,23 @@ package body QuadDobl_PolySys_Interface is
       end if;
       return 217;
   end QuadDobl_PolySys_Clear;
+
+  function QuadDobl_PolySys_Prompt_for_Target
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in quaddobl_polysys_interface.");
+      put_line("QuadDobl_PolySys_Prompt_for_Target ...");
+    end if;
+    PHCpack_Operations_io.Read_QuadDobl_Target_System_without_Solutions;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in quaddobl_polysys_interface.");
+        put_line("QuadDobl_PolySys_Prompt_for_Target.");
+      end if;
+      return 873;
+  end QuadDobl_PolySys_Prompt_for_Target;
 
 end QuadDobl_PolySys_Interface;

@@ -1414,6 +1414,9 @@ package body Drivers_for_Schubert_Induction is
       put_line(file,"The robust path tracker will run.");
       new_line;
       Wrapped_Pade_Trackers.Set_Parameters(file);
+      new_line;
+      put_line("No more input expected.  See output file for results...");
+      new_line;
       if outlvl > 0
        then report := true;
       end if;

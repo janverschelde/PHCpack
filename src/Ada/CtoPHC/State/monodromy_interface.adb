@@ -12,15 +12,24 @@ with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
+with Standard_Floating_Vectors;
+with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Sampling_Machine;
+with Sampling_Laurent_Machine;
 with DoblDobl_Sampling_Machine;
+with DoblDobl_Sampling_Laurent_Machine;
 with QuadDobl_Sampling_Machine;
+with QuadDobl_Sampling_Laurent_Machine;
 with Standard_Monodromy_Permutations;
 with DoblDobl_Monodromy_Permutations;
 with QuadDobl_Monodromy_Permutations;
@@ -28,8 +37,11 @@ with Monodromy_Partitions;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
 with Standard_PolySys_Container;
+with Standard_LaurSys_Container;
 with DoblDobl_PolySys_Container;
+with DoblDobl_LaurSys_Container;
 with QuadDobl_PolySys_Container;
+with QuadDobl_LaurSys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
@@ -2040,5 +2052,276 @@ package body Monodromy_Interface is
       end if;
       return 689;
   end Monodromy_QuadDobl_Random;
+
+  function Convert_to_Hyperplanes
+             ( v : Standard_Floating_Vectors.Vector; k,n : integer32 )
+             return Standard_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Uses the numbers in v to create k hyperplanes in n-space.
+
+    res : Standard_Complex_VecVecs.VecVec(1..k);
+    ind : integer32 := v'first;
+
+  begin
+    for i in 1..k loop 
+      declare
+        hyp : Standard_Complex_Vectors.Vector(0..n);
+      begin
+        for j in 0..n loop
+          hyp(j) := Standard_Complex_Numbers.Create(v(ind),v(ind+1));
+          ind := ind+2;
+        end loop;
+        res(i) := new Standard_Complex_Vectors.Vector'(hyp);
+      end;
+    end loop;
+    return res;
+  end Convert_to_Hyperplanes;
+
+  function Convert_to_Coefficients
+             ( n : integer32; v : Standard_Complex_VecVecs.VecVec )
+             return Standard_Floating_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 1..n with the complex coefficients of v
+  --   stored as sequences of real and imaginary parts.
+
+    res : Standard_Floating_Vectors.Vector(1..n);
+    lv : Standard_Complex_Vectors.Link_to_Vector;
+    ind : integer32 := 0;
+
+  begin
+    for i in v'range loop
+      lv := v(i);
+      for j in lv'range loop
+        ind := ind + 1; res(ind) := Standard_Complex_Numbers.REAL_PART(lv(j));
+        ind := ind + 1; res(ind) := Standard_Complex_Numbers.IMAG_PART(lv(j));
+      end loop;
+    end loop;
+    return res;
+  end Convert_to_Coefficients;
+
+  function Monodromy_Standard_Add_Slice
+             ( a : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nb_cff : constant integer32 := integer32(va(0));
+    k : constant integer32 := integer32(va(1));
+    n : constant integer32 := integer32(va(2));
+    cff : Standard_Floating_Vectors.Vector(1..nb_cff);
+    v : Standard_Complex_VecVecs.VecVec(1..k);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Add_Slice ...");
+    end if;
+    Assign(natural32(nb_cff),c,cff);
+    v := Convert_to_Hyperplanes(cff,k,n);
+    Standard_Sampling_Operations.Add_Slices(v);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Add_Slice.");
+      end if;
+      return 60;
+  end Monodromy_Standard_Add_Slice;
+
+  function Monodromy_Standard_Get_Slice
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    i : constant integer32 := integer32(vb(vb'first));
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nb_cff : constant integer32 := integer32(va(0));
+   -- dim : constant natural32 := natural32(va(1));
+   -- n : constant natural32 := natural32(va(2));
+    v : Standard_Complex_VecVecs.Link_to_VecVec;
+    cff : Standard_Floating_Vectors.Vector(1..nb_cff);
+    use Standard_Complex_VecVecs;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Get_Slice ...");
+    end if;
+    v := Standard_Sampling_Operations.Retrieve_Slices(i);
+    if v /= null then
+      cff := Convert_to_Coefficients(nb_cff,v.all);
+      Assign(cff,c);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Get_Slice.");
+      end if;
+      return 61;
+  end Monodromy_Standard_Get_Slice;
+
+  function Monodromy_Standard_Init_Laurent_Sampler
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+    lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Init_Laurent_Sampler ...");
+    end if;
+    Standard_Sampling_Operations.Initialize(lp.all,sols,dim);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Init_Sampler.");
+      end if;
+      return 804;
+  end Monodromy_Standard_Init_Laurent_sampler;
+
+  function Monodromy_DoblDobl_Init_Laurent_Sampler
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Init_Laurent_Sampler ...");
+    end if;
+    DoblDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Init_Sampler.");
+      end if;
+      return 805;
+  end Monodromy_DoblDobl_Init_Laurent_Sampler;
+
+  function Monodromy_QuadDobl_Init_Laurent_Sampler
+             ( a : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(va(va'first));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Init_Laurent_Sampler ...");
+    end if;
+    QuadDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Init_Sampler.");
+      end if;
+      return 806;
+  end Monodromy_QuadDobl_Init_Laurent_Sampler;
+
+  function Monodromy_Standard_Copy_Laurent_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+     use Standard_Complex_Laur_Systems;
+
+     p : constant Laur_Sys := Sampling_Laurent_Machine.Embedded_System;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_Standard_Copy_Laurent_System ...");
+    end if;
+    Standard_LaurSys_Container.Initialize(p);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_Standard_Copy_System.");
+      end if;
+      return 807;
+  end Monodromy_Standard_Copy_Laurent_System;
+
+  function Monodromy_DoblDobl_Copy_Laurent_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+     use DoblDobl_Complex_Laur_Systems;
+
+     p : constant Laur_Sys
+       := DoblDobl_Sampling_Laurent_Machine.Embedded_System;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_DoblDobl_Copy_Laurent_System ...");
+    end if;
+    DoblDobl_LaurSys_Container.Initialize(p);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_DoblDobl_Copy_System.");
+      end if;
+      return 808;
+  end Monodromy_DoblDobl_Copy_Laurent_System;
+
+  function Monodromy_QuadDobl_Copy_Laurent_System
+             ( vrblvl : integer32 := 0 ) return integer32 is
+
+     use QuadDobl_Complex_Laur_Systems;
+
+     p : constant Laur_Sys
+       := QuadDobl_Sampling_Laurent_Machine.Embedded_System;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in monodromy_interface.");
+      put_line("Monodromy_QuadDobl_Copy_Laurent_System ...");
+    end if;
+    QuadDobl_LaurSys_Container.Initialize(p);
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in monodromy_interface.");
+        put_line("Monodromy_QuadDobl_Copy_System.");
+      end if;
+      return 808;
+  end Monodromy_QuadDobl_Copy_Laurent_System;
 
 end Monodromy_Interface;
