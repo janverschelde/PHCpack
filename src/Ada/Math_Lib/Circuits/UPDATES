@@ -1,3 +1,6 @@
+Wed 19 Aug 2020 : extended standard_circuit_makers with function to make
+  complex circuits from Speelpenning convolution circuits.
+
 Wed 15 Jul 2020 : shortened output in newton_coefficient_convolutions.adb,
   in the staggered procedures.  Bug fix in the staggered indexed procedures
   of newton_coefficient_convolution.adb.

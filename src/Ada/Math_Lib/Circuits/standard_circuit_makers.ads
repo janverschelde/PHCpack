@@ -6,6 +6,7 @@ with Standard_Complex_Matrices;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Circuits;
+with Standard_Speelpenning_Convolutions;
 with Standard_Coefficient_Circuits;
 with Standard_Coefficient_Convolutions;
 with QuadDobl_Complex_Circuits;
@@ -198,6 +199,32 @@ package Standard_Circuit_Makers is
   -- DESCRIPTION :
   --   Writes the matrix A component-wise, with explicit indexing,
   --   for visual inspection of small matrices while testing.
+
+-- FROM CONVOLUTION CIRCUITS TO COMPLEX CIRCUITS :
+
+  function Make_Complex_Circuit
+             ( c : Standard_Speelpenning_Convolutions.Circuit )
+             return Standard_Complex_Circuits.Circuit;
+  function Make_Complex_Circuit
+             ( c : Standard_Speelpenning_Convolutions.Link_to_Circuit )
+             return Standard_Complex_Circuits.Link_to_Circuit;
+
+  -- DESCRIPTION :
+  --   The circuit on return has the leading coefficient of every 
+  --   power series coefficient of the given c and stores copies
+  --   of the exponents, indices, and factors, as stored in c.
+  --   All data structures are allocated.
+
+  function Make_Complex_System
+             ( s : Standard_Speelpenning_Convolutions.System )
+             return Standard_Complex_Circuits.System;
+  function Make_Complex_System
+             ( s : Standard_Speelpenning_Convolutions.Link_to_System )
+             return Standard_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Takes the leading coefficient for every power series coefficient
+  --   in s.crc on input as the coefficient for the circuits on output.
 
 -- FROM CONVOLUTION COEFFICIENT CIRCUITS TO COEFFICIENT CIRCUITS :
 
