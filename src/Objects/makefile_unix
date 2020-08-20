@@ -3000,6 +3000,10 @@ ts_mtpcscnv:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtpcscnv.adb \
               -o $(BIN)/ts_mtpcscnv
 
+ts_mtprdcnv:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtprdcnv.adb \
+              -o $(BIN)/ts_mtprdcnv
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \

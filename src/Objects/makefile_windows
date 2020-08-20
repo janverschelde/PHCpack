@@ -2153,6 +2153,10 @@ ts_mtpcscnv: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtpcscnv.adb \
               -o $(BIN)/ts_mtpcscnv -largs get_clock.o get_clocks_per_sec.o
 
+ts_mtprdcnv: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtprdcnv.adb \
+              -o $(BIN)/ts_mtprdcnv -largs get_clock.o get_clocks_per_sec.o
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco:

@@ -8,19 +8,12 @@
 # This makefile is specific for Mac OS X, mainly because of the
 # Python bindings and the use of MPI.
 
-PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
-PYTHON37=/Library/Frameworks/Python.framework/Versions/3.7/include/python3.7m
-PYTHON37lib=/Library/Frameworks/Python.framework/Versions/3.7/lib
-PYTHON36=/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
-PYTHON36lib=/Library/Frameworks/Python.framework/Versions/3.6/lib
-PYTHON35=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
-PYTHON35lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
-
+PYTHON=/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+# PYTHON=/usr/include/python2.7
 PYTHON38=/opt/miniconda3/include/python3.8
+MPI_HOME=/usr/local
 
 ADALIB=/Users/jan/opt/GNAT/2020/lib/gcc/x86_64-apple-darwin17.7.0/8.4.1/adalib
-
-MPI_HOME=/usr/local
 
 # which gcc to use
 gcc=/usr/bin/gcc
@@ -36,7 +29,8 @@ SAGEPYTHONLIB=/Users/jan/sage-8.5/local/lib
 
 # The location of the QD library
 
-QD_ROOT=/usr/local/qd-2.3.17
+# QD_ROOT=/usr/local/qd-2.3.17
+QD_ROOT=../QD/qd-2.3.22
 QD_LIB=/usr/local/lib
 
 # Definitions of the PHCpack specific names start here:
@@ -71,12 +65,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 # GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
-# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-GNATFLAGS=-gnatv -gnatwa -gnatVa
+# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+# GNATFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -2544,6 +2538,9 @@ ts_mtshiftcnv:
 ts_mtpcscnv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtpcscnv.adb \
               -o $(BIN)/ts_mtpcscnv
+ts_mtprdcnv:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtprdcnv.adb \
+              -o $(BIN)/ts_mtprdcnv
 
 # Test programs for the Main interactive drivers :
 
@@ -3351,9 +3348,8 @@ phcpy2c2.so: lib2path.o parameter.o inputData.o outputData.o iTest.o fTest.o \
             simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
             parameter.o lib2path.o $(QD_LIB)/libqd.a \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so \
-                 /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -lm --LINK=$(gpp) -Wl,-no_compact_unwind \
--L/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config \
+-L/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config \
 -lpython2.7 -ldl -framework CoreFoundation
 
 # The above last two lines are the output of python-config --ldflags,
@@ -3422,49 +3418,6 @@ sage_phcpy2c2.so: parameter.o lib2path.o inputData.o outputData.o iTest.o \
 # (4) With the sage python interpreter do 'python setup.py install'
 #     and then check if import phcpy works at the sage prompt.
 
-phcpy2c36.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
-             simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/tabform.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/solcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/product.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/lists_and_strings.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/celcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/intcelcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/scalers.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/reducers.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/sweep.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/multiplicity.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/numbtrop.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witset.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/witsols.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/schubert.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/unisolvers.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/giftwrappers.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/phcpack.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/mapcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/jump_track.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/next_track.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syspool.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/series.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/padcon.c
-	$(gpp) -Dcompilewgpp=1 -c -O3 -I$(PYTHON36) \
-               -I$(PYTHON36)/Include $(PHCLib)/phcpy2c3.c
-	gnatmake -c -O3 -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	gnatbind -n -static use_c2phc
-	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
-            solcon.o witset.o mapcon.o jump_track.o next_track.o unisolvers.o \
-            giftwrappers.o product.o lists_and_strings.o celcon.o intcelcon.o \
-            scalers.o reducers.o sweep.o multiplicity.o numbtrop.o schubert.o \
-            syspool.o series.o witsols.o padcon.o tabform.o \
-            inputData.o outputData.o iTest.o fTest.o \
-            simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
-            parameter.o lib2path.o $(QD_LIB)/libqd.a \
-                  /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
-               -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
-               $(PYTHON36lib)/libpython3.6m.dylib \
-               -lm --LINK=$(gpp) -Wl,-no_compact_unwind
-
 phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
              simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o
 	$(gpp) -Dcompilewgpp=1 -c -O3 $(PHCLib)/syscon.c
@@ -3508,6 +3461,9 @@ phcpy2c3.so: parameter.o lib2path.o inputData.o outputData.o iTest.o fTest.o \
                -ldl -framework CoreFoundation \
                -o ../Python/PHCpy3/phcpy/phcpy2c3.so
 
+# In setting up the last linker instruction, the output of
+# python3-config --ldflags
+# turned out useful.  Adding the phcpy2c3.o was needed...
 
 # phcpy2c with double version of Path library :
 

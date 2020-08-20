@@ -1753,7 +1753,7 @@ test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont \
               ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp ts_mtperm \
               ts_mtpermctl ts_mtmbthom ts_mtcelidx ts_corecount ts_mtadcnv \
               ts_mtserlin ts_mtnewton ts_mthessian ts_mtratapp ts_mtshiftcnv \
-              ts_mtpcscnv ts_mthesscrc
+              ts_mtpcscnv ts_mthesscrc ts_mtprdcnv
 #             ts_mtmatvec ts_mtpolval ts_mtlinsol
 
 ts_corecount:
@@ -1852,9 +1852,11 @@ ts_mtratapp:
 ts_mtshiftcnv:
 	make -f $(MAKEFILE) ts_mtshiftcnv
 
-# Test programs for the Main interactive drivers :
 ts_mtpcscnv:
 	make -f $(MAKEFILE) ts_mtpcscnv
+
+ts_mtprdcnv:
+	make -f $(MAKEFILE) ts_mtprdcnv
 
 # Test programs for the Main interactive drivers :
 
