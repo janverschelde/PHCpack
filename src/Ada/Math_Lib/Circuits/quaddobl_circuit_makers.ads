@@ -6,6 +6,7 @@ with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Circuits;
+with QuadDobl_Speelpenning_Convolutions;
 
 package QuadDobl_Circuit_Makers is
 
@@ -13,7 +14,7 @@ package QuadDobl_Circuit_Makers is
 --   A circuit maker is one of the following kinds:
 --   (1) make a random circuit for testing purposes,
 --   (2) convert between circuit and polynomial types,
---   (3) split the coefficients into real and imaginary parts.
+--   (3) make a circuit from a convolution circuit.
 --   The package also offers useful procedures in testing.
 
   function Random_Indices
@@ -140,5 +141,31 @@ package QuadDobl_Circuit_Makers is
   -- DESCRIPTION :
   --   Writes the matrix A component-wise, with explicit indexing,
   --   for visual inspection of small matrices while testing.
+
+-- FROM CONVOLUTION CIRCUITS TO COMPLEX CIRCUITS :
+
+  function Make_Complex_Circuit
+             ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+             return QuadDobl_Complex_Circuits.Circuit;
+  function Make_Complex_Circuit
+             ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return QuadDobl_Complex_Circuits.Link_to_Circuit;
+
+  -- DESCRIPTION :
+  --   The circuit on return has the leading coefficient of every 
+  --   power series coefficient of the given c and stores copies
+  --   of the exponents, indices, and factors, as stored in c.
+  --   All data structures are allocated.
+
+  function Make_Complex_System
+             ( s : QuadDobl_Speelpenning_Convolutions.System )
+             return QuadDobl_Complex_Circuits.System;
+  function Make_Complex_System
+             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System )
+             return QuadDobl_Complex_Circuits.Link_to_System;
+
+  -- DESCRIPTION :
+  --   Takes the leading coefficient for every power series coefficient
+  --   in s.crc on input as the coefficient for the circuits on output.
 
 end QuadDobl_Circuit_Makers;

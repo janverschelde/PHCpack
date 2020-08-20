@@ -1,3 +1,6 @@
+Thu 20 Aug 2020 : added functions to {dobldobl,quaddobl}_circuit_makers
+  to make complex circuits from Speelpenning convolution circuits.
+
 Wed 19 Aug 2020 : extended standard_circuit_makers with function to make
   complex circuits from Speelpenning convolution circuits.
 

@@ -8,6 +8,7 @@ with QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;         use Standard_Natural_Vectors_io;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
+with Standard_Integer_VecVecs;
 with Standard_Random_Vectors;
 with QuadDobl_Random_Vectors;
 with QuadDobl_Complex_Poly_Functions;
@@ -375,5 +376,88 @@ package body QuadDobl_Circuit_Makers is
       end loop;
     end loop;
   end Write_Matrix;
+
+-- FROM CONVOLUTION CIRCUITS TO COMPLEX CIRCUITS :
+
+  function Make_Complex_Circuit
+             ( c : QuadDobl_Speelpenning_Convolutions.Circuit )
+             return QuadDobl_Complex_Circuits.Circuit is
+
+    res : QuadDobl_Complex_Circuits.Circuit(c.nbr)
+        := QuadDobl_Complex_Circuits.Allocate(c.nbr,c.dim);
+    lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
+
+    use QuadDobl_Complex_Vectors;
+
+  begin
+    Standard_Integer_VecVecs.Copy(c.xps,res.xps);
+    Standard_Integer_VecVecs.Copy(c.idx,res.idx);
+    Standard_Integer_VecVecs.Copy(c.fac,res.fac);
+    res.pdg := Exponent_Indices.Polynomial_Degree(res.xps);
+    for k in 1..c.nbr loop 
+      lnk := c.cff(k);         -- coefficient power series
+      res.cff(k) := lnk(0);    -- take leading coefficient
+    end loop;
+    if c.cst = null
+     then res.cst := QuadDobl_Complex_Numbers.Create(integer(0));
+     else res.cst := c.cst(0);
+    end if;
+    return res;
+  end Make_Complex_Circuit;
+
+  function Make_Complex_Circuit
+             ( c : QuadDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return QuadDobl_Complex_Circuits.Link_to_Circuit is
+
+    res : QuadDobl_Complex_Circuits.Link_to_Circuit;
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if c /= null then
+      declare
+        crc : constant QuadDobl_Complex_Circuits.Circuit(c.nbr)
+            := Make_Complex_Circuit(c.all);
+      begin
+        res := new QuadDobl_Complex_Circuits.Circuit'(crc);
+      end;
+    end if;
+    return res;
+  end Make_Complex_Circuit;
+
+  function Make_Complex_System
+             ( s : QuadDobl_Speelpenning_Convolutions.System )
+             return QuadDobl_Complex_Circuits.System is
+
+    res : QuadDobl_Complex_Circuits.System(s.neq,s.dim);
+    crc : QuadDobl_Complex_Circuits.Circuits(s.crc'range);
+
+  begin
+    for k in crc'range loop
+      crc(k) := Make_Complex_Circuit(s.crc(k));
+    end loop;
+    res := QuadDobl_Complex_Circuits.Create(crc,s.dim);
+    return res;
+  end Make_Complex_System;
+
+  function Make_Complex_System
+             ( s : QuadDobl_Speelpenning_Convolutions.Link_to_System )
+             return QuadDobl_Complex_Circuits.Link_to_System is
+
+    res : QuadDobl_Complex_Circuits.Link_to_System;
+
+    use QuadDobl_Speelpenning_Convolutions;
+
+  begin
+    if s /= null then
+      declare
+        cfs : constant QuadDobl_Complex_Circuits.System(s.neq,s.dim)
+            := Make_Complex_System(s.all);
+      begin
+        res := new QuadDobl_Complex_Circuits.System'(cfs);
+      end;
+    end if;
+    return res;
+  end Make_Complex_System;
 
 end QuadDobl_Circuit_Makers;
