@@ -1,3 +1,6 @@
+Wed 19 Aug 2020 : new test procedure ts_mtprdcnv, for the multitasked
+  computation of Newton-Fabry and Hesse-Pade.
+
 Thu 30 Jul 2020 : set the default to coefficient convolution circuits
   in multitasked_path_convolutions.adb; fixed output when verbose level > 0.
 
