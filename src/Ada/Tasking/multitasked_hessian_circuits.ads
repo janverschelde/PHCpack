@@ -8,8 +8,11 @@ with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_VecMats;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecMats;
 with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
 with DoblDobl_Complex_Circuits;
@@ -57,6 +60,106 @@ package Multitasked_Hessian_Circuits is
   --            to evaluate the Hessians;
   --   values   space allocated for all singular values,
   --            as a vector of range 1..s.dim;
+  --   verbose  if verbose, then one line is written for each job,
+  --            otherwise, the jobs are preformed without output.
+
+  -- ON RETURN :
+  --   values   values(0) contains the singular values of the Jacobian;
+  --            values(k) contains the singular values of the k-th Hessian.
+
+  procedure Static_Singular_Values
+              ( nbt : in integer32;
+                s : in Standard_Complex_Circuits.Link_to_System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                values : in out Standard_Complex_VecVecs.VecVec;
+                A,U,V : in out Standard_Complex_VecMats.VecMat;
+                e : in out Standard_Complex_VecVecs.VecVec;
+                yd : in out Standard_Complex_VecVecs.VecVec;
+		verbose : in boolean := false );
+  procedure Static_Singular_Values
+              ( nbt : in integer32;
+                s : in DoblDobl_Complex_Circuits.Link_to_System;
+                x : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                values : in out DoblDobl_Complex_VecVecs.VecVec;
+                A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
+                e : in out DoblDobl_Complex_VecVecs.VecVec;
+                yd : in out DoblDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
+  procedure Static_Singular_Values
+              ( nbt : in integer32;
+                s : in QuadDobl_Complex_Circuits.Link_to_System;
+                x : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                values : in out QuadDobl_Complex_VecVecs.VecVec;
+                A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
+                e : in out QuadDobl_Complex_VecVecs.VecVec;
+                yd : in out QuadDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Evaluates all Hessians and computes the singular values with static
+  --   load balancing, in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   s        a system of complex circuits;
+  --   x        coordinates of the point to evaluate the Hessians;
+  --   values   space allocated for all singular values,
+  --            as a vector of range 1..s.dim;
+  --   A        vector of range 1..nbt of work space matrices;
+  --   U        vector of range 1..nbt of work space matrices;
+  --   V        vector of range 1..nbt of work space matrices;
+  --   e        vector of range 1..nbt of vector space vectors;
+  --   yd       vector of range 1..s.neq of works space for gradients;
+  --   verbose  if verbose, then one line is written for each job,
+  --            otherwise, the jobs are preformed without output.
+
+  -- ON RETURN :
+  --   values   values(0) contains the singular values of the Jacobian;
+  --            values(k) contains the singular values of the k-th Hessian.
+
+  procedure Dynamic_Singular_Values
+              ( nbt : in integer32;
+                s : in DoblDobl_Complex_Circuits.Link_to_System;
+                x : in DoblDobl_Complex_Vectors.Link_to_Vector;
+                values : in out DoblDobl_Complex_VecVecs.VecVec;
+                A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
+                e : in out DoblDobl_Complex_VecVecs.VecVec;
+                yd : in out DoblDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
+  procedure Dynamic_Singular_Values
+              ( nbt : in integer32;
+                s : in Standard_Complex_Circuits.Link_to_System;
+                x : in Standard_Complex_Vectors.Link_to_Vector;
+                values : in out Standard_Complex_VecVecs.VecVec;
+                A,U,V : in out Standard_Complex_VecMats.VecMat;
+                e : in out Standard_Complex_VecVecs.VecVec;
+                yd : in out Standard_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
+  procedure Dynamic_Singular_Values
+              ( nbt : in integer32;
+                s : in QuadDobl_Complex_Circuits.Link_to_System;
+                x : in QuadDobl_Complex_Vectors.Link_to_Vector;
+                values : in out QuadDobl_Complex_VecVecs.VecVec;
+                A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
+                e : in out QuadDobl_Complex_VecVecs.VecVec;
+                yd : in out QuadDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Evaluates all Hessians ad computes the singular values with dynamic
+  --   load balancing, in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   nbt      the number of tasks;
+  --   s        a system of complex circuits;
+  --   x        coordinates of the point to evaluate the Hessians;
+  --   values   space allocated for all singular values,
+  --            as a vector of range 1..s.dim;
+  --   A        vector of range 1..nbt of work space matrices;
+  --   U        vector of range 1..nbt of work space matrices;
+  --   V        vector of range 1..nbt of work space matrices;
+  --   e        vector of range 1..nbt of vector space vectors;
+  --   yd       vector of range 1..s.neq of works space for gradients;
   --   verbose  if verbose, then one line is written for each job,
   --            otherwise, the jobs are preformed without output.
 

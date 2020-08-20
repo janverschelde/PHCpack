@@ -16,6 +16,7 @@ with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
@@ -189,7 +190,7 @@ procedure ts_mtprdcnv is
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 svl : in out Standard_Complex_VecVecs.VecVec;
-                walltime : out Duration ) is
+                eta : out double_float; walltime : out Duration ) is
 
   -- DESCRIPTION :
   --   Computes all singular values of the Hessian matrices,
@@ -204,6 +205,7 @@ procedure ts_mtprdcnv is
 
   -- ON RETURN :
   --   svl      the singular values of all Hessian matrices;
+  --   eta      the eta constant computed from the singular values;
   --   walltime is the elapsed wall time.
 
     tstart,tstop : Ada.Calendar.Time;
@@ -214,6 +216,7 @@ procedure ts_mtprdcnv is
   begin
     tstart := Ada.Calendar.Clock;
     Multitasked_Singular_Values(nbt,s,x,svl,false,false);
+    eta := Multitasked_Hessian_Circuits.Standard_Distance(svl);
     tstop := Ada.Calendar.Clock;
     walltime := tstop - tstart;
   end Singular_Values;
@@ -223,7 +226,7 @@ procedure ts_mtprdcnv is
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 svl : in out DoblDobl_Complex_VecVecs.VecVec;
-                walltime : out Duration ) is
+                eta : out double_double; walltime : out Duration ) is
 
   -- DESCRIPTION :
   --   Computes all singular values of the Hessian matrices,
@@ -238,6 +241,7 @@ procedure ts_mtprdcnv is
 
   -- ON RETURN :
   --   svl      the singular values of all Hessian matrices;
+  --   eta      the eta constant computed from the singular values;
   --   walltime is the elapsed wall time.
 
     tstart,tstop : Ada.Calendar.Time;
@@ -248,6 +252,7 @@ procedure ts_mtprdcnv is
   begin
     tstart := Ada.Calendar.Clock;
     Multitasked_Singular_Values(nbt,s,x,svl,false,false);
+    eta := Multitasked_Hessian_Circuits.DoblDobl_Distance(svl);
     tstop := Ada.Calendar.Clock;
     walltime := tstop - tstart;
   end Singular_Values;
@@ -257,7 +262,7 @@ procedure ts_mtprdcnv is
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 svl : in out QuadDobl_Complex_VecVecs.VecVec;
-                walltime : out Duration ) is
+                eta : out quad_double; walltime : out Duration ) is
 
   -- DESCRIPTION :
   --   Computes all singular values of the Hessian matrices,
@@ -272,6 +277,7 @@ procedure ts_mtprdcnv is
 
   -- ON RETURN :
   --   svl      the singular values of all Hessian matrices;
+  --   eta      the eta constant computed from the singular values;
   --   walltime is the elapsed wall time.
 
     tstart,tstop : Ada.Calendar.Time;
@@ -282,6 +288,7 @@ procedure ts_mtprdcnv is
   begin
     tstart := Ada.Calendar.Clock;
     Multitasked_Singular_Values(nbt,s,x,svl,false,false);
+    eta := Multitasked_Hessian_Circuits.QuadDobl_Distance(svl);
     tstop := Ada.Calendar.Clock;
     walltime := tstop - tstart;
   end Singular_Values;
@@ -305,7 +312,7 @@ procedure ts_mtprdcnv is
     lnkcff,leadsol : Standard_Complex_Vectors.Link_to_Vector;
     crs : Standard_Complex_Circuits.Link_to_System;
     mxt : integer32 := 0;
-    radius,raderr : double_float;
+    radius,raderr,eta : double_float;
     walltime : duration;
 
   begin
@@ -337,7 +344,9 @@ procedure ts_mtprdcnv is
       svl : Standard_Complex_VecVecs.VecVec(0..crs.neq)
           := Standard_Vector_Splitters.Allocate(crs.neq,crs.dim+1,0,1);
     begin
-      Singular_Values(nbt,crs,leadsol,svl,walltime);
+      Singular_Values(nbt,crs,leadsol,svl,eta,walltime);
+      put_line("all singular values : "); put_line(svl);
+      put("eta :"); put(eta,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
     end;
     Standard_Speelpenning_Convolutions.Clear(hom);
@@ -363,7 +372,7 @@ procedure ts_mtprdcnv is
     lnkcff,leadsol : DoblDobl_Complex_Vectors.Link_to_Vector;
     crs : DoblDobl_Complex_Circuits.Link_to_System;
     mxt : integer32 := 0;
-    radius,raderr : double_double;
+    radius,raderr,eta : double_double;
     walltime : duration;
 
   begin
@@ -395,7 +404,8 @@ procedure ts_mtprdcnv is
       svl : DoblDobl_Complex_VecVecs.VecVec(0..crs.neq)
           := DoblDobl_Vector_Splitters.Allocate(crs.neq,crs.dim+1,0,1);
     begin
-      Singular_Values(nbt,crs,leadsol,svl,walltime);
+      Singular_Values(nbt,crs,leadsol,svl,eta,walltime);
+      put("eta : "); put(eta,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
     end;
     DoblDobl_Speelpenning_Convolutions.Clear(hom);
@@ -421,7 +431,7 @@ procedure ts_mtprdcnv is
     lnkcff,leadsol : QuadDobl_Complex_Vectors.Link_to_Vector;
     crs : QuadDobl_Complex_Circuits.Link_to_System;
     mxt : integer32 := 0;
-    radius,raderr : quad_double;
+    radius,raderr,eta : quad_double;
     walltime : duration;
 
   begin
@@ -453,7 +463,8 @@ procedure ts_mtprdcnv is
       svl : QuadDobl_Complex_VecVecs.VecVec(0..crs.neq)
           := QuadDobl_Vector_Splitters.Allocate(crs.neq,crs.dim+1,0,1);
     begin
-      Singular_Values(nbt,crs,leadsol,svl,walltime);
+      Singular_Values(nbt,crs,leadsol,svl,eta,walltime);
+      put("eta : "); put(eta,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
     end;
     QuadDobl_Speelpenning_Convolutions.Clear(hom);

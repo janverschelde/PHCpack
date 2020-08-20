@@ -1,5 +1,8 @@
 Thu 20 Aug 2020 : added tests in double double and quad double precision
-  to ts_mtprdcnv.
+  to ts_mtprdcnv.  Bug fix in multitasked_hessian_circuits.adb, in the
+  functions {Standard,DoblDobl,QuadDobl}_Distance; exported the procedures
+  for static/dynamic load balancing with allocated memories;
+  updates in ts_mtprdcnv.adb
 
 Wed 19 Aug 2020 : new test procedure ts_mtprdcnv, for the multitasked
   computation of Newton-Fabry and Hesse-Pade.

@@ -7,11 +7,8 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Matrices;
-with Standard_Complex_VecMats;
 with DoblDobl_Complex_Matrices;
-with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Matrices;
-with QuadDobl_Complex_VecMats;
 with Standard_Vector_Splitters;
 with DoblDobl_Vector_Splitters;
 with QuadDobl_Vector_Splitters;
@@ -235,16 +232,11 @@ package body Multitasked_Hessian_Circuits is
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
+                A,U,V : in out Standard_Complex_VecMats.VecMat;
+                e : in out Standard_Complex_VecVecs.VecVec;
+                yd : in out Standard_Complex_VecVecs.VecVec;
 		verbose : in boolean := false ) is
 
-  -- DESCRIPTION :
-  --   This is the original Multitased_Singular_Values, applying
-  --   static load balancing.  Except for the parameter static,
-  --   its specification is the same as Multitasked_Singular_Values.
-
-    A,U,V : Standard_Complex_VecMats.VecMat(1..nbt);
-    e : Standard_Complex_VecVecs.VecVec(1..nbt);
-    yd : Standard_Complex_VecVecs.VecVec(1..s.neq);
     pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
@@ -366,12 +358,6 @@ package body Multitasked_Hessian_Circuits is
     procedure silent_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
   begin
-    A := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    U := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Standard_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for all gradients
-    yd := Standard_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -381,11 +367,6 @@ package body Multitasked_Hessian_Circuits is
      then report_jobs(nbt);
      else silent_jobs(nbt);
     end if;
-    Standard_Complex_VecMats.Clear(A);
-    Standard_Complex_VecMats.Clear(U);
-    Standard_Complex_VecMats.Clear(V);
-    Standard_Complex_VecVecs.Clear(e);
-    Standard_Complex_VecVecs.Clear(yd);
   end Static_Singular_Values;
 
   procedure Dynamic_Singular_Values
@@ -393,16 +374,11 @@ package body Multitasked_Hessian_Circuits is
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
+                A,U,V : in out Standard_Complex_VecMats.VecMat;
+                e : in out Standard_Complex_VecVecs.VecVec;
+                yd : in out Standard_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
-  -- DESCRIPTION :
-  --   This version applies dynamic load balancing.
-  --   It has the same specification as Multitasked_Singular_Values,
-  --   except of course for the parameter static.
-
-    A,U,V : Standard_Complex_VecMats.VecMat(1..nbt);
-    e : Standard_Complex_VecVecs.VecVec(1..nbt);
-    yd : Standard_Complex_VecVecs.VecVec(1..s.neq);
     pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
@@ -542,12 +518,6 @@ package body Multitasked_Hessian_Circuits is
     procedure silent_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
   begin
-    A := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    U := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
-    e := Standard_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for all gradients
-    yd := Standard_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -557,11 +527,6 @@ package body Multitasked_Hessian_Circuits is
      then report_jobs(nbt);
      else silent_jobs(nbt);
     end if;
-    Standard_Complex_VecMats.Clear(A);
-    Standard_Complex_VecMats.Clear(U);
-    Standard_Complex_VecMats.Clear(V);
-    Standard_Complex_VecVecs.Clear(e);
-    Standard_Complex_VecVecs.Clear(yd);
   end Dynamic_Singular_Values;
 
   procedure Multitasked_Singular_Values
@@ -571,11 +536,27 @@ package body Multitasked_Hessian_Circuits is
                 values : in out Standard_Complex_VecVecs.VecVec;
                 static : in boolean := false;
                 verbose : in boolean := false ) is
+
+    A,U,V : Standard_Complex_VecMats.VecMat(1..nbt);
+    e : Standard_Complex_VecVecs.VecVec(1..nbt);
+    yd : Standard_Complex_VecVecs.VecVec(1..s.neq);
+
   begin
+    A := Standard_Complex_Circuits.Allocate(nbt,s.dim);
+    U := Standard_Complex_Circuits.Allocate(nbt,s.dim);
+    V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
+    e := Standard_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for all gradients
+    yd := Standard_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     if static
-     then Static_Singular_Values(nbt,s,x,values,verbose);
-     else Dynamic_Singular_Values(nbt,s,x,values,verbose);
+     then Static_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
+     else Dynamic_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
     end if;
+    Standard_Complex_VecMats.Clear(A);
+    Standard_Complex_VecMats.Clear(U);
+    Standard_Complex_VecMats.Clear(V);
+    Standard_Complex_VecVecs.Clear(e);
+    Standard_Complex_VecVecs.Clear(yd);
   end Multitasked_Singular_Values;
 
   procedure Static_Singular_Values
@@ -583,16 +564,11 @@ package body Multitasked_Hessian_Circuits is
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
+                A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
+                e : in out DoblDobl_Complex_VecVecs.VecVec;
+                yd : in out DoblDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
-  -- DESCRIPTION :
-  --   This is the original Multitased_Singular_Values, applying
-  --   static load balancing.  Except for the parameter static,
-  --   its specification is the same as Multitasked_Singular_Values.
-
-    A,U,V : DoblDobl_Complex_VecMats.VecMat(1..nbt);
-    e : DoblDobl_Complex_VecVecs.VecVec(1..nbt);
-    yd : DoblDobl_Complex_VecVecs.VecVec(1..s.neq);
     pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
@@ -713,12 +689,6 @@ package body Multitasked_Hessian_Circuits is
     procedure silent_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
   begin
-    A := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    U := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    V := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    e := DoblDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for gradients
-    yd := DoblDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -728,11 +698,6 @@ package body Multitasked_Hessian_Circuits is
      then report_jobs(nbt);
      else silent_jobs(nbt);
     end if;
-    DoblDobl_Complex_VecMats.Clear(A);
-    DoblDobl_Complex_VecMats.Clear(U);
-    DoblDobl_Complex_VecMats.Clear(V);
-    DoblDobl_Complex_VecVecs.Clear(e);
-    DoblDobl_Complex_VecVecs.Clear(yd);
   end Static_Singular_Values;
 
   procedure Dynamic_Singular_Values
@@ -740,16 +705,11 @@ package body Multitasked_Hessian_Circuits is
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
+                A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
+                e : in out DoblDobl_Complex_VecVecs.VecVec;
+                yd : in out DoblDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
-  -- DESCRIPTION :
-  --   This version applies dynamic load balancing.
-  --   It has the same specification as Multitasked_Singular_Values,
-  --   except of course for the parameter static.
-
-    A,U,V : DoblDobl_Complex_VecMats.VecMat(1..nbt);
-    e : DoblDobl_Complex_VecVecs.VecVec(1..nbt);
-    yd : DoblDobl_Complex_VecVecs.VecVec(1..s.neq);
     pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
@@ -890,12 +850,6 @@ package body Multitasked_Hessian_Circuits is
     procedure silent_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
   begin
-    A := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    U := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    V := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    e := DoblDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for gradients
-    yd := DoblDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -905,11 +859,6 @@ package body Multitasked_Hessian_Circuits is
      then report_jobs(nbt);
      else silent_jobs(nbt);
     end if;
-    DoblDobl_Complex_VecMats.Clear(A);
-    DoblDobl_Complex_VecMats.Clear(U);
-    DoblDobl_Complex_VecMats.Clear(V);
-    DoblDobl_Complex_VecVecs.Clear(e);
-    DoblDobl_Complex_VecVecs.Clear(yd);
   end Dynamic_Singular_Values;
 
   procedure Multitasked_Singular_Values
@@ -919,11 +868,27 @@ package body Multitasked_Hessian_Circuits is
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
                 static : in boolean := false;
                 verbose : in boolean := false ) is
+
+    A,U,V : DoblDobl_Complex_VecMats.VecMat(1..nbt);
+    e : DoblDobl_Complex_VecVecs.VecVec(1..nbt);
+    yd : DoblDobl_Complex_VecVecs.VecVec(1..s.neq);
+
   begin
+    A := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
+    U := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
+    V := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
+    e := DoblDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for gradients
+    yd := DoblDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     if static
-     then Static_Singular_Values(nbt,s,x,values,verbose);
-     else Dynamic_Singular_Values(nbt,s,x,values,verbose);
+     then Static_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
+     else Dynamic_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
     end if;
+    DoblDobl_Complex_VecMats.Clear(A);
+    DoblDobl_Complex_VecMats.Clear(U);
+    DoblDobl_Complex_VecMats.Clear(V);
+    DoblDobl_Complex_VecVecs.Clear(e);
+    DoblDobl_Complex_VecVecs.Clear(yd);
   end Multitasked_Singular_Values;
 
   procedure Static_Singular_Values
@@ -931,16 +896,11 @@ package body Multitasked_Hessian_Circuits is
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
+                A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
+                e : in out QuadDobl_Complex_VecVecs.VecVec;
+                yd : in out QuadDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
-  -- DESCRIPTION :
-  --   This is the original Multitased_Singular_Values, applying
-  --   static load balancing.  Except for the parameter static,
-  --   its specification is the same as Multitasked_Singular_Values.
-
-    A,U,V : QuadDobl_Complex_VecMats.VecMat(1..nbt);
-    e : QuadDobl_Complex_VecVecs.VecVec(1..nbt);
-    yd : QuadDobl_Complex_VecVecs.VecVec(1..s.neq);
     pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
@@ -1060,12 +1020,6 @@ package body Multitasked_Hessian_Circuits is
     procedure silent_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
   begin
-    A := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    U := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    V := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    e := QuadDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for gradients
-    yd := QuadDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -1075,11 +1029,6 @@ package body Multitasked_Hessian_Circuits is
      then report_jobs(nbt);
      else silent_jobs(nbt);
     end if;
-    QuadDobl_Complex_VecMats.Clear(A);
-    QuadDobl_Complex_VecMats.Clear(U);
-    QuadDobl_Complex_VecMats.Clear(V);
-    QuadDobl_Complex_VecVecs.Clear(e);
-    QuadDobl_Complex_VecVecs.Clear(yd);
   end Static_Singular_Values;
 
   procedure Dynamic_Singular_Values
@@ -1087,16 +1036,11 @@ package body Multitasked_Hessian_Circuits is
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
+                A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
+                e : in out QuadDobl_Complex_VecVecs.VecVec;
+                yd : in out QuadDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
-  -- DESCRIPTION :
-  --   This version applies dynamic load balancing.
-  --   It has the same specification as Multitasked_Singular_Values,
-  --   except of course for the parameter static.
-
-    A,U,V : QuadDobl_Complex_VecMats.VecMat(1..nbt);
-    e : QuadDobl_Complex_VecVecs.VecVec(1..nbt);
-    yd : QuadDobl_Complex_VecVecs.VecVec(1..s.neq);
     pwtneeded : boolean := false;
     pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
@@ -1236,12 +1180,6 @@ package body Multitasked_Hessian_Circuits is
     procedure silent_jobs is new Multitasking.Silent_Workers(Silent_Job);
 
   begin
-    A := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    U := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    V := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
-    e := QuadDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for gradients
-    yd := QuadDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     for k in s.mxe'range loop -- determine if power table is needed
       if s.mxe(k) > 1
        then pwtneeded := true; exit;
@@ -1251,11 +1189,6 @@ package body Multitasked_Hessian_Circuits is
      then report_jobs(nbt);
      else silent_jobs(nbt);
     end if;
-    QuadDobl_Complex_VecMats.Clear(A);
-    QuadDobl_Complex_VecMats.Clear(U);
-    QuadDobl_Complex_VecMats.Clear(V);
-    QuadDobl_Complex_VecVecs.Clear(e);
-    QuadDobl_Complex_VecVecs.Clear(yd);
   end Dynamic_Singular_Values;
 
   procedure Multitasked_Singular_Values
@@ -1265,11 +1198,27 @@ package body Multitasked_Hessian_Circuits is
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
                 static : in boolean := false;
                 verbose : in boolean := false ) is
+
+     A,U,V : QuadDobl_Complex_VecMats.VecMat(1..nbt);
+     e : QuadDobl_Complex_VecVecs.VecVec(1..nbt);
+     yd : QuadDobl_Complex_VecVecs.VecVec(1..s.neq);
+
   begin
+    A := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
+    U := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
+    V := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
+    e := QuadDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
+   -- space for gradients
+    yd := QuadDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
     if static
-     then Static_Singular_Values(nbt,s,x,values,verbose);
-     else Dynamic_Singular_Values(nbt,s,x,values,verbose);
+     then Static_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
+     else Dynamic_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
     end if;
+    QuadDobl_Complex_VecMats.Clear(A);
+    QuadDobl_Complex_VecMats.Clear(U);
+    QuadDobl_Complex_VecMats.Clear(V);
+    QuadDobl_Complex_VecVecs.Clear(e);
+    QuadDobl_Complex_VecVecs.Clear(yd);
   end Multitasked_Singular_Values;
 
   function Standard_Distance
@@ -1277,8 +1226,8 @@ package body Multitasked_Hessian_Circuits is
               return double_float is
 
     jmsvls : constant Standard_Complex_Vectors.Link_to_Vector := values(0);
-    sigma1 : constant double_float
-           := Standard_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last));
+    sigma1 : constant double_float -- jmsvls'range = 1..dim+1 = jmsvls'last
+           := Standard_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last-1));
     lnk : Standard_Complex_Vectors.Link_to_Vector;
     sumvls : double_float := 0.0;
     val,nrm : double_float;
@@ -1298,8 +1247,8 @@ package body Multitasked_Hessian_Circuits is
               return double_double is
 
     jmsvls : constant DoblDobl_Complex_Vectors.Link_to_Vector := values(0);
-    sigma1 : constant double_double
-           := DoblDobl_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last));
+    sigma1 : constant double_double -- jmsvls'range = 1..dim+1 = jmsvls'last
+           := DoblDobl_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last-1));
     lnk : DoblDobl_Complex_Vectors.Link_to_Vector;
     sumvls : double_double := create(0.0);
     val,nrm : double_double;
@@ -1319,8 +1268,8 @@ package body Multitasked_Hessian_Circuits is
               return quad_double is
 
     jmsvls : constant QuadDobl_Complex_Vectors.Link_to_Vector := values(0);
-    sigma1 : constant quad_double
-           := QuadDobl_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last));
+    sigma1 : constant quad_double -- jmsvls'range = 1..dim+1 = jmsvls'last
+           := QuadDobl_Complex_Numbers.REAL_PART(jmsvls(jmsvls'last-1));
     lnk : QuadDobl_Complex_Vectors.Link_to_Vector;
     sumvls : quad_double := create(0.0);
     val,nrm : quad_double;
