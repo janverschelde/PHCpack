@@ -1,31 +1,16 @@
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
-with DoblDobl_Complex_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
-with QuadDobl_Complex_Numbers;
 with Standard_Natural_Matrices;         use Standard_Natural_Matrices;
---with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
---with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
-with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
-with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
-
 with Standard_Random_Numbers;           use Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;           use DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;           use QuadDobl_Random_Numbers;
-with Standard_Complex_Norms_Equals;
-with DoblDobl_Complex_Vector_Norms;
-with QuadDobl_Complex_Vector_Norms;
 with Standard_Random_Matrices;
 with DoblDobl_Random_Matrices;
 with QuadDobl_Random_Matrices;
 with Symbol_Table;
 with Matrix_Indeterminates;
-with Standard_Complex_Poly_SysFun;
-with DoblDobl_Complex_Poly_SysFun;
-with QuadDobl_Complex_Poly_SysFun;
-with Standard_Embed_Polynomials;
-with Planes_and_Polynomials;
 with Checker_Moves;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
 with Symbolic_Schubert_Conditions;
@@ -36,22 +21,23 @@ package body Setup_Flag_Homotopies is
              ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
 
     dim : constant natural32 := natural32(n);
+   -- res : Standard_Complex_Matrices.Matrix(1..n,1..n);
     res : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
         := Standard_Random_Matrices.Random_Orthogonal_Matrix(dim,dim);
 
   begin
-    --for j in 1..n loop
-    --  for i in 1..n loop
-    --    res(i,j) := Random1;
-    --  end loop;
-     -- for i in 1..(n-j) loop
-     --   res(i,j) := Random1;
-     -- end loop; 
-     -- res(n-j+1,j) := Create(1.0);
-     -- for i in (n-j+2)..n loop
-     --   res(i,j) := Create(0.0);
-     -- end loop;
-    --end loop;
+   -- for j in 1..n loop
+   --   for i in 1..n loop
+   --     res(i,j) := Random1;
+   --   end loop;
+   --   for i in 1..(n-j) loop
+   --     res(i,j) := Random1;
+   --   end loop; 
+   --   res(n-j+1,j) := Standard_Complex_Numbers.Create(1.0);
+   --   for i in (n-j+2)..n loop
+   --     res(i,j) := Standard_Complex_Numbers.Create(0.0);
+   --   end loop;
+   -- end loop;
     return res;
   end Random_Flag;
 
@@ -59,7 +45,7 @@ package body Setup_Flag_Homotopies is
              ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
 
     dim : constant natural32 := natural32(n);
-    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+    res : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
         := DoblDobl_Random_Matrices.Random_Orthogonal_Matrix(dim,dim);
 
   begin
@@ -70,7 +56,7 @@ package body Setup_Flag_Homotopies is
              ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
 
     dim : constant natural32 := natural32(n);
-    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+    res : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
         := QuadDobl_Random_Matrices.Random_Orthogonal_Matrix(dim,dim);
 
   begin
@@ -518,7 +504,7 @@ package body Setup_Flag_Homotopies is
   procedure Insert_Scaling_Symbol ( i,j : in natural32 ) is
 
     sb : Symbol_Table.Symbol := Matrix_Indeterminates.X_ij(i,j);
-    nb : natural32 := Symbol_Table.Number;
+    nb : constant natural32 := Symbol_Table.Number;
 
   begin
     sb(sb'first) := 's';
@@ -1179,6 +1165,8 @@ package body Setup_Flag_Homotopies is
     acc : Poly;
 
   begin
+    put("in Square, p'last = "); put(p'last,1);
+    put("  n = "); put(n,1); new_line;
     for i in res'range loop
       Copy(p(i),res(i));
       for j in n+1..p'last loop

@@ -207,7 +207,7 @@ package body Flag_Transformations is
     dim : constant integer32 := 2*n*n;
     res : DoblDobl_Complex_Vectors.Vector(1..dim);
     ind : integer32 := 0;
-    zero : double_double := create(0.0);
+    zero : constant double_double := create(0.0);
 
   begin
     for i in g'range(1) loop
@@ -231,7 +231,7 @@ package body Flag_Transformations is
     dim : constant integer32 := 2*n*n;
     res : QuadDobl_Complex_Vectors.Vector(1..dim);
     ind : integer32 := 0;
-    zero : quad_double := create(0.0);
+    zero : constant quad_double := create(0.0);
 
   begin
     for i in g'range(1) loop
@@ -562,7 +562,7 @@ package body Flag_Transformations is
           := Setup_Flag_Homotopies.Moved_Flag(n);
     idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
            :=  Setup_Flag_Homotopies.Identity(n);
-    ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n) := G;
+    ranflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n) := G;
     A,T1,T2,invT1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
 
     use Standard_Complex_Matrices;
@@ -579,7 +579,7 @@ package body Flag_Transformations is
                 F : out Standard_Complex_Matrices.Matrix;
                 rsd : out double_float ) is
 
-    ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n)
+    ranflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
             := Setup_Flag_Homotopies.Random_Flag(n);
 
   begin
@@ -660,7 +660,7 @@ package body Flag_Transformations is
                      A,invA,sT : out Standard_Complex_VecMats.VecMat ) is
 
     AA,invAA,T1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
-    work : Standard_Complex_VecMats.VecMat(flags'range);
+   -- work : Standard_Complex_VecMats.VecMat(flags'range);
 
   begin
     for i in flags'first..flags'last-1 loop
@@ -693,7 +693,7 @@ package body Flag_Transformations is
                      A,invA,sT : out DoblDobl_Complex_VecMats.VecMat ) is
 
     AA,invAA,T1 : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
-    work : DoblDobl_Complex_VecMats.VecMat(flags'range);
+   -- work : DoblDobl_Complex_VecMats.VecMat(flags'range);
 
   begin
     for i in flags'first..flags'last-1 loop
@@ -726,7 +726,7 @@ package body Flag_Transformations is
                      A,invA,sT : out QuadDobl_Complex_VecMats.VecMat ) is
 
     AA,invAA,T1 : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
-    work : QuadDobl_Complex_VecMats.VecMat(flags'range);
+   -- work : QuadDobl_Complex_VecMats.VecMat(flags'range);
 
   begin
     for i in flags'first..flags'last-1 loop
