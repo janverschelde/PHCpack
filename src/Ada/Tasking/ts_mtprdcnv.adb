@@ -16,11 +16,13 @@ with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Standard_Complex_VecVecs_io;        use Standard_Complex_VecVecs_io;
+with Standard_Complex_VecMats;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecMats;
 with Standard_Vector_Splitters;
 with DoblDobl_Vector_Splitters;
 with QuadDobl_Vector_Splitters;
@@ -35,6 +37,7 @@ with Standard_Circuit_Makers;
 with DoblDobl_Circuit_Makers;
 with QuadDobl_Circuit_Makers;
 with Convergence_Radius_Estimates;
+with Multitasking;
 with Multitasked_Series_Linearization;
 with Multitasked_Newton_Convolutions;
 with Multitasked_Hessian_Circuits;
@@ -185,11 +188,15 @@ procedure ts_mtprdcnv is
     walltime := tstop - tstart;
   end Newton_Fabry;
 
-  procedure Singular_Values
+  procedure Singular_Values_of_Hessians
               ( nbt : in integer32;
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 svl : in out Standard_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
+                A,U,V : in out Standard_Complex_VecMats.VecMat;
+                e : in out Standard_Complex_VecVecs.VecVec;
+                yd : in out Standard_Complex_VecVecs.VecVec;
                 eta : out double_float; walltime : out Duration ) is
 
   -- DESCRIPTION :
@@ -201,7 +208,16 @@ procedure ts_mtprdcnv is
   --   s        polynomials defined as a complex circuit system;
   --   x        leading coefficients of a series;
   --   vh       allocated space for all Hessian matrices;
-  --   svl      allocate space for the singular values.
+  --   svl      allocated space for the singular values.
+  --   pwtdone  array of nbt flags to synchronize power table computation,
+  --            must all be equal to false on entry;
+  --   gradone  array of nbt flags to synchronize gradient computation,
+  --            must all be equal to false on entry;
+  --   A        vector of range 1..nbt of work space matrices;
+  --   U        vector of range 1..nbt of work space matrices;
+  --   V        vector of range 1..nbt of work space matrices;
+  --   e        vector of range 1..nbt of vector space vectors;
+  --   yd       vector of range 1..s.neq of work space for gradients.
 
   -- ON RETURN :
   --   svl      the singular values of all Hessian matrices;
@@ -210,22 +226,26 @@ procedure ts_mtprdcnv is
 
     tstart,tstop : Ada.Calendar.Time;
 
-    use Multitasked_Hessian_Circuits;
     use Ada.Calendar;
 
   begin
     tstart := Ada.Calendar.Clock;
-    Multitasked_Singular_Values(nbt,s,x,svl,false,false);
+    Multitasked_Hessian_Circuits.Dynamic_Singular_Values
+      (nbt,s,x,svl,pwtdone,gradone,A,U,V,e,yd,false);
     eta := Multitasked_Hessian_Circuits.Standard_Distance(svl);
     tstop := Ada.Calendar.Clock;
     walltime := tstop - tstart;
-  end Singular_Values;
+  end Singular_Values_of_Hessians;
 
-  procedure Singular_Values
+  procedure Singular_Values_of_Hessians
               ( nbt : in integer32;
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 svl : in out DoblDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
+                A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
+                e : in out DoblDobl_Complex_VecVecs.VecVec;
+                yd : in out DoblDobl_Complex_VecVecs.VecVec;
                 eta : out double_double; walltime : out Duration ) is
 
   -- DESCRIPTION :
@@ -237,7 +257,16 @@ procedure ts_mtprdcnv is
   --   s        polynomials defined as a complex circuit system;
   --   x        leading coefficients of a series;
   --   vh       allocated space for all Hessian matrices;
-  --   svl      allocate space for the singular values.
+  --   svl      allocate space for the singular values;
+  --   pwtdone  array of nbt flags to synchronize power table computation,
+  --            must all be equal to false on entry;
+  --   gradone  array of nbt flags to synchronize gradient computation,
+  --            must all be equal to false on entry;
+  --   A        vector of range 1..nbt of work space matrices;
+  --   U        vector of range 1..nbt of work space matrices;
+  --   V        vector of range 1..nbt of work space matrices;
+  --   e        vector of range 1..nbt of vector space vectors;
+  --   yd       vector of range 1..s.neq of work space for gradients.
 
   -- ON RETURN :
   --   svl      the singular values of all Hessian matrices;
@@ -246,22 +275,26 @@ procedure ts_mtprdcnv is
 
     tstart,tstop : Ada.Calendar.Time;
 
-    use Multitasked_Hessian_Circuits;
     use Ada.Calendar;
 
   begin
     tstart := Ada.Calendar.Clock;
-    Multitasked_Singular_Values(nbt,s,x,svl,false,false);
+    Multitasked_Hessian_Circuits.Dynamic_Singular_Values
+      (nbt,s,x,svl,pwtdone,gradone,A,U,V,e,yd,false);
     eta := Multitasked_Hessian_Circuits.DoblDobl_Distance(svl);
     tstop := Ada.Calendar.Clock;
     walltime := tstop - tstart;
-  end Singular_Values;
+  end Singular_Values_of_Hessians;
 
-  procedure Singular_Values
+  procedure Singular_Values_of_Hessians
               ( nbt : in integer32;
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 svl : in out QuadDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
+                A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
+                e : in out QuadDobl_Complex_VecVecs.VecVec;
+                yd : in out QuadDobl_Complex_VecVecs.VecVec;
                 eta : out quad_double; walltime : out Duration ) is
 
   -- DESCRIPTION :
@@ -274,6 +307,15 @@ procedure ts_mtprdcnv is
   --   x        leading coefficients of a series;
   --   vh       allocated space for all Hessian matrices;
   --   svl      allocate space for the singular values.
+  --   pwtdone  array of nbt flags to synchronize power table computation,
+  --            must all be equal to false on entry;
+  --   gradone  array of nbt flags to synchronize gradient computation,
+  --            must all be equal to false on entry;
+  --   A        vector of range 1..nbt of work space matrices;
+  --   U        vector of range 1..nbt of work space matrices;
+  --   V        vector of range 1..nbt of work space matrices;
+  --   e        vector of range 1..nbt of vector space vectors;
+  --   yd       vector of range 1..s.neq of work space for gradients.
 
   -- ON RETURN :
   --   svl      the singular values of all Hessian matrices;
@@ -282,18 +324,18 @@ procedure ts_mtprdcnv is
 
     tstart,tstop : Ada.Calendar.Time;
 
-    use Multitasked_Hessian_Circuits;
     use Ada.Calendar;
 
   begin
     tstart := Ada.Calendar.Clock;
-    Multitasked_Singular_Values(nbt,s,x,svl,false,false);
+    Multitasked_Hessian_Circuits.Dynamic_Singular_Values
+      (nbt,s,x,svl,pwtdone,gradone,A,U,V,e,yd,false);
     eta := Multitasked_Hessian_Circuits.QuadDobl_Distance(svl);
     tstop := Ada.Calendar.Clock;
     walltime := tstop - tstart;
-  end Singular_Values;
+  end Singular_Values_of_Hessians;
 
-  procedure Standard_Main ( nbt,dim,deg,nbr,pwr : in integer32 ) is
+  procedure Standard_Main ( nbt1,nbt2,dim,deg,nbr,pwr : in integer32 ) is
 
   -- DESCRIPTION :
   --   Prompts for dimensions and generates a random Newton homotopy.
@@ -301,7 +343,8 @@ procedure ts_mtprdcnv is
   --   of all Hessian matrices in double precision.
 
   -- ON ENTRY :
-  --   nbt      the number of tasks;
+  --   nbt1     the number of tasks for Newton-Fabry;
+  --   nbt2     the number of tasks for SVD of Hessians;
   --   dim      the dimension is the number of equations and variables;
   --   deg      degree of the power series;
   --   nbr      number of terms per equations;
@@ -322,38 +365,53 @@ procedure ts_mtprdcnv is
       lnkcff := sol(k);        -- all coefficients of the series
       leadsol(k) := lnkcff(0); -- copy leading coefficient
     end loop;
-   -- leadsol := sol(0); -- leading coefficients of the series sol
     crs := Standard_Circuit_Makers.Make_Complex_System(hom);
     put("Give the maximum number of iterations : "); get(mxt);
     new_line;
-    put_line("Running Newton-Fabry ...");
+    put("Running Newton-Fabry with "); put(nbt1,1); put_line(" tasks ...");
     declare
       pvt : Standard_Integer_Vectors.Vector(1..dim);
-      wks : Standard_Complex_VecVecs.VecVec(1..nbt)
-          := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+      wks : Standard_Complex_VecVecs.VecVec(1..nbt1)
+          := Multitasked_Series_Linearization.Allocate_Work_Space(nbt1,dim);
     begin
-      Newton_Fabry(nbt,mxt,hom,sol.all,pvt,wks,radius,raderr,walltime);
+      Newton_Fabry(nbt1,mxt,hom,sol.all,pvt,wks,radius,raderr,walltime);
       put("estimated pole radius :"); put(radius,3);
       put(", with error :"); put(raderr,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
       Standard_Complex_VecVecs.Clear(wks);
     end;
     new_line;
-    put_line("Computing all singular values ...");
+    put("Computing all singular values with "); put(nbt2,1);
+    put_line(" tasks ...");
     declare
       svl : Standard_Complex_VecVecs.VecVec(0..crs.neq)
           := Standard_Vector_Splitters.Allocate(crs.neq,crs.dim+1,0,1);
+      pwtdone : Multitasking.boolean_array(1..nbt2) := (1..nbt2 => false);
+      gradone : Multitasking.boolean_array(1..nbt2) := (1..nbt2 => false);
+      A,U,V : Standard_Complex_VecMats.VecMat(1..nbt2); -- space for SVD
+      e : Standard_Complex_VecVecs.VecVec(1..nbt2);
+      yd : Standard_Complex_VecVecs.VecVec(1..crs.neq); -- gradient space
     begin
-      Singular_Values(nbt,crs,leadsol,svl,eta,walltime);
-      put_line("all singular values : "); put_line(svl);
+      A := Standard_Complex_Circuits.Allocate(nbt2,crs.dim);
+      U := Standard_Complex_Circuits.Allocate(nbt2,crs.dim);
+      V := Standard_Complex_Circuits.Allocate(nbt2,crs.dim);
+      e := Standard_Vector_Splitters.Allocate(nbt2,crs.dim,1,1);
+      yd := Standard_Vector_Splitters.Allocate(crs.neq,crs.dim,1,0);
+      Singular_Values_of_Hessians
+        (nbt2,crs,leadsol,svl,pwtdone,gradone,A,U,V,e,yd,eta,walltime);
       put("eta :"); put(eta,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
+      Standard_Complex_VecMats.Clear(A);
+      Standard_Complex_VecMats.Clear(U);
+      Standard_Complex_VecMats.Clear(V);
+      Standard_Complex_VecVecs.Clear(e);
+      Standard_Complex_VecVecs.Clear(yd);
     end;
     Standard_Speelpenning_Convolutions.Clear(hom);
     Standard_Complex_Circuits.Clear(crs);
   end Standard_Main;
 
-  procedure DoblDobl_Main ( nbt,dim,deg,nbr,pwr : integer32 ) is
+  procedure DoblDobl_Main ( nbt1,nbt2,dim,deg,nbr,pwr : integer32 ) is
 
   -- DESCRIPTION :
   --   Prompts for dimensions and generates a random Newton homotopy.
@@ -361,7 +419,8 @@ procedure ts_mtprdcnv is
   --   of all Hessian matrices in double double precision.
 
   -- ON ENTRY :
-  --   nbt      the number of tasks;
+  --   nbt1     the number of tasks for Newton-Fabry;
+  --   nbt2     the number of tasks for SVD of Hessians;
   --   dim      the dimension is the number of equations and variables;
   --   deg      degree of the power series;
   --   nbr      number of terms per equations;
@@ -382,37 +441,53 @@ procedure ts_mtprdcnv is
       lnkcff := sol(k);        -- all coefficients of the series
       leadsol(k) := lnkcff(0); -- copy leading coefficient
     end loop;
-   -- leadsol := sol(0); -- leading coefficients of the series sol
     crs := DoblDobl_Circuit_Makers.Make_Complex_System(hom);
     put("Give the maximum number of iterations : "); get(mxt);
     new_line;
-    put_line("Running Newton-Fabry ...");
+    put("Running Newton-Fabry with "); put(nbt1,1); put_line(" tasks ...");
     declare
       pvt : Standard_Integer_Vectors.Vector(1..dim);
-      wks : DoblDobl_Complex_VecVecs.VecVec(1..nbt)
-          := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+      wks : DoblDobl_Complex_VecVecs.VecVec(1..nbt1)
+          := Multitasked_Series_Linearization.Allocate_Work_Space(nbt1,dim);
     begin
-      Newton_Fabry(nbt,mxt,hom,sol.all,pvt,wks,radius,raderr,walltime);
+      Newton_Fabry(nbt1,mxt,hom,sol.all,pvt,wks,radius,raderr,walltime);
       put("estimated pole radius : "); put(radius,3);
       put(", with error : "); put(raderr,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
       DoblDobl_Complex_VecVecs.Clear(wks);
     end;
     new_line;
-    put_line("Computing all singular values ...");
+    put("Computing all singular values with "); put(nbt2,1);
+    put_line(" tasks ...");
     declare
       svl : DoblDobl_Complex_VecVecs.VecVec(0..crs.neq)
           := DoblDobl_Vector_Splitters.Allocate(crs.neq,crs.dim+1,0,1);
+      pwtdone : Multitasking.boolean_array(1..nbt2) := (1..nbt2 => false);
+      gradone : Multitasking.boolean_array(1..nbt2) := (1..nbt2 => false);
+      A,U,V : DoblDobl_Complex_VecMats.VecMat(1..nbt2); -- space for SVD
+      e : DoblDobl_Complex_VecVecs.VecVec(1..nbt2);
+      yd : DoblDobl_Complex_VecVecs.VecVec(1..crs.neq); -- gradient space
     begin
-      Singular_Values(nbt,crs,leadsol,svl,eta,walltime);
+      A := DoblDobl_Complex_Circuits.Allocate(nbt2,crs.dim);
+      U := DoblDobl_Complex_Circuits.Allocate(nbt2,crs.dim);
+      V := DoblDobl_Complex_Circuits.Allocate(nbt2,crs.dim);
+      e := DoblDobl_Vector_Splitters.Allocate(nbt2,crs.dim,1,1);
+      yd := DoblDobl_Vector_Splitters.Allocate(crs.neq,crs.dim,1,0);
+      Singular_Values_of_Hessians
+        (nbt2,crs,leadsol,svl,pwtdone,gradone,A,U,V,e,yd,eta,walltime);
       put("eta : "); put(eta,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
+      DoblDobl_Complex_VecMats.Clear(A);
+      DoblDobl_Complex_VecMats.Clear(U);
+      DoblDobl_Complex_VecMats.Clear(V);
+      DoblDobl_Complex_VecVecs.Clear(e);
+      DoblDobl_Complex_VecVecs.Clear(yd);
     end;
     DoblDobl_Speelpenning_Convolutions.Clear(hom);
     DoblDobl_Complex_Circuits.Clear(crs);
   end DoblDobl_Main;
 
-  procedure QuadDobl_Main ( nbt,dim,deg,nbr,pwr : integer32 ) is
+  procedure QuadDobl_Main ( nbt1,nbt2,dim,deg,nbr,pwr : integer32 ) is
 
   -- DESCRIPTION :
   --   Prompts for dimensions and generates a random Newton homotopy.
@@ -420,7 +495,8 @@ procedure ts_mtprdcnv is
   --   of all Hessian matrices in quad double precision.
 
   -- ON ENTRY :
-  --   nbt      the number of tasks;
+  --   nbt1     the number of tasks for Newton-Fabry;
+  --   nbt2     the number of tasks for SVD of Hessians;
   --   dim      the dimension is the number of equations and variables;
   --   deg      degree of the power series;
   --   nbr      number of terms per equations;
@@ -441,31 +517,47 @@ procedure ts_mtprdcnv is
       lnkcff := sol(k);        -- all coefficients of the series
       leadsol(k) := lnkcff(0); -- copy leading coefficient
     end loop;
-   -- leadsol := sol(0); -- leading coefficients of the series sol
     crs := QuadDobl_Circuit_Makers.Make_Complex_System(hom);
     put("Give the maximum number of iterations : "); get(mxt);
     new_line;
-    put_line("Running Newton-Fabry ...");
+    put("Running Newton-Fabry with "); put(nbt1,1); put_line(" tasks...");
     declare
       pvt : Standard_Integer_Vectors.Vector(1..dim);
-      wks : QuadDobl_Complex_VecVecs.VecVec(1..nbt)
-          := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+      wks : QuadDobl_Complex_VecVecs.VecVec(1..nbt1)
+          := Multitasked_Series_Linearization.Allocate_Work_Space(nbt1,dim);
     begin
-      Newton_Fabry(nbt,mxt,hom,sol.all,pvt,wks,radius,raderr,walltime);
+      Newton_Fabry(nbt1,mxt,hom,sol.all,pvt,wks,radius,raderr,walltime);
       put("estimated pole radius : "); put(radius,3);
       put(", with error : "); put(raderr,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
       QuadDobl_Complex_VecVecs.Clear(wks);
     end;
     new_line;
-    put_line("Computing all singular values ...");
+    put("Computing all singular values with "); put(nbt2,1);
+    put_line(" tasks ...");
     declare
       svl : QuadDobl_Complex_VecVecs.VecVec(0..crs.neq)
           := QuadDobl_Vector_Splitters.Allocate(crs.neq,crs.dim+1,0,1);
+      pwtdone : Multitasking.boolean_array(1..nbt2) := (1..nbt2 => false);
+      gradone : Multitasking.boolean_array(1..nbt2) := (1..nbt2 => false);
+      A,U,V : QuadDobl_Complex_VecMats.VecMat(1..nbt2); -- space for SVD
+      e : QuadDobl_Complex_VecVecs.VecVec(1..nbt2);
+      yd : QuadDobl_Complex_VecVecs.VecVec(1..crs.neq); -- gradient space
     begin
-      Singular_Values(nbt,crs,leadsol,svl,eta,walltime);
+      A := QuadDobl_Complex_Circuits.Allocate(nbt2,crs.dim);
+      U := QuadDobl_Complex_Circuits.Allocate(nbt2,crs.dim);
+      V := QuadDobl_Complex_Circuits.Allocate(nbt2,crs.dim);
+      e := QuadDobl_Vector_Splitters.Allocate(nbt2,crs.dim,1,1);
+      yd := QuadDobl_Vector_Splitters.Allocate(crs.neq,crs.dim,1,0);
+      Singular_Values_of_Hessians
+        (nbt2,crs,leadsol,svl,pwtdone,gradone,A,U,V,e,yd,eta,walltime);
       put("eta : "); put(eta,3); new_line;
       put("Wall clock time : "); duration_io.put(walltime,3,3); new_line;
+      QuadDobl_Complex_VecMats.Clear(A);
+      QuadDobl_Complex_VecMats.Clear(U);
+      QuadDobl_Complex_VecMats.Clear(V);
+      QuadDobl_Complex_VecVecs.Clear(e);
+      QuadDobl_Complex_VecVecs.Clear(yd);
     end;
     QuadDobl_Speelpenning_Convolutions.Clear(hom);
     QuadDobl_Complex_Circuits.Clear(crs);
@@ -498,7 +590,7 @@ procedure ts_mtprdcnv is
   --   and then launches the test.
 
     prc : character;
-    dim,deg,nbr,pwr,nbt : integer32 := 0;
+    dim,deg,nbr,pwr,nbt1,nbt2 : integer32 := 0;
 
   begin
     new_line;
@@ -506,11 +598,12 @@ procedure ts_mtprdcnv is
     prc := Communications_with_User.Prompt_for_Precision;
     Prompt_for_Dimensions(dim,deg,nbr,pwr);
     new_line;
-    put("Give the number of tasks : "); get(nbt);
+    put("Give the number of tasks for Newton-Fabry : "); get(nbt1);
+    put("Give the number of tasks for SVD of Hessians : "); get(nbt2);
     case prc is
-      when '0' => Standard_Main(nbt,dim,deg,nbr,pwr);
-      when '1' => DoblDobl_Main(nbt,dim,deg,nbr,pwr);
-      when '2' => QuadDobl_Main(nbt,dim,deg,nbr,pwr);
+      when '0' => Standard_Main(nbt1,nbt2,dim,deg,nbr,pwr);
+      when '1' => DoblDobl_Main(nbt1,nbt2,dim,deg,nbr,pwr);
+      when '2' => QuadDobl_Main(nbt1,nbt2,dim,deg,nbr,pwr);
       when others => null;
     end case;
   end Main;

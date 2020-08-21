@@ -1,5 +1,7 @@
 Fri 21 Aug 2020 : exported the boolean arrays for synchronization to the
   static and dynamic load balancing in multitasked_hessian_circuits.
+  Applied the dynamic load balancing procedure directly in the test
+  procedures in ts_mtprdcnv.
 
 Thu 20 Aug 2020 : added tests in double double and quad double precision
   to ts_mtprdcnv.  Bug fix in multitasked_hessian_circuits.adb, in the
