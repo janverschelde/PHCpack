@@ -1,3 +1,6 @@
+Fri 21 Aug 2020 : exported the boolean arrays for synchronization to the
+  static and dynamic load balancing in multitasked_hessian_circuits.
+
 Thu 20 Aug 2020 : added tests in double double and quad double precision
   to ts_mtprdcnv.  Bug fix in multitasked_hessian_circuits.adb, in the
   functions {Standard,DoblDobl,QuadDobl}_Distance; exported the procedures

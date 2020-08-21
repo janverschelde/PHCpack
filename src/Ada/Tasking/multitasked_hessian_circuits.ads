@@ -17,6 +17,7 @@ with Standard_Complex_Circuits;
 with Standard_Coefficient_Circuits;
 with DoblDobl_Complex_Circuits;
 with QuadDobl_Complex_Circuits;
+with Multitasking;
 
 package Multitasked_Hessian_Circuits is
 
@@ -72,6 +73,7 @@ package Multitasked_Hessian_Circuits is
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out Standard_Complex_VecMats.VecMat;
                 e : in out Standard_Complex_VecVecs.VecVec;
                 yd : in out Standard_Complex_VecVecs.VecVec;
@@ -81,6 +83,7 @@ package Multitasked_Hessian_Circuits is
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
                 e : in out DoblDobl_Complex_VecVecs.VecVec;
                 yd : in out DoblDobl_Complex_VecVecs.VecVec;
@@ -90,6 +93,7 @@ package Multitasked_Hessian_Circuits is
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
                 e : in out QuadDobl_Complex_VecVecs.VecVec;
                 yd : in out QuadDobl_Complex_VecVecs.VecVec;
@@ -105,6 +109,10 @@ package Multitasked_Hessian_Circuits is
   --   x        coordinates of the point to evaluate the Hessians;
   --   values   space allocated for all singular values,
   --            as a vector of range 1..s.dim;
+  --   pwtdone  array of nbt flags to synchronize power table computation,
+  --            must all be equal to false on entry;
+  --   gradone  array of nbt flags to synchronize gradient computation,
+  --            must all be equal to false on entry;
   --   A        vector of range 1..nbt of work space matrices;
   --   U        vector of range 1..nbt of work space matrices;
   --   V        vector of range 1..nbt of work space matrices;
@@ -115,13 +123,16 @@ package Multitasked_Hessian_Circuits is
 
   -- ON RETURN :
   --   values   values(0) contains the singular values of the Jacobian;
-  --            values(k) contains the singular values of the k-th Hessian.
+  --            values(k) contains the singular values of the k-th Hessian;
+  --   pwtdone  all equal to true if the power table was needed;
+  --   gradone  all equal to true.
 
   procedure Dynamic_Singular_Values
               ( nbt : in integer32;
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
                 e : in out DoblDobl_Complex_VecVecs.VecVec;
                 yd : in out DoblDobl_Complex_VecVecs.VecVec;
@@ -131,6 +142,7 @@ package Multitasked_Hessian_Circuits is
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out Standard_Complex_VecMats.VecMat;
                 e : in out Standard_Complex_VecVecs.VecVec;
                 yd : in out Standard_Complex_VecVecs.VecVec;
@@ -140,6 +152,7 @@ package Multitasked_Hessian_Circuits is
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
                 e : in out QuadDobl_Complex_VecVecs.VecVec;
                 yd : in out QuadDobl_Complex_VecVecs.VecVec;
@@ -155,6 +168,10 @@ package Multitasked_Hessian_Circuits is
   --   x        coordinates of the point to evaluate the Hessians;
   --   values   space allocated for all singular values,
   --            as a vector of range 1..s.dim;
+  --   pwtdone  array of nbt flags to synchronize power table computation,
+  --            must all be equal to false on entry;
+  --   gradone  array of nbt flags to synchronize gradient computation,
+  --            must all be equal to false on entry;
   --   A        vector of range 1..nbt of work space matrices;
   --   U        vector of range 1..nbt of work space matrices;
   --   V        vector of range 1..nbt of work space matrices;
@@ -165,7 +182,9 @@ package Multitasked_Hessian_Circuits is
 
   -- ON RETURN :
   --   values   values(0) contains the singular values of the Jacobian;
-  --            values(k) contains the singular values of the k-th Hessian.
+  --            values(k) contains the singular values of the k-th Hessian;
+  --   pwtdone  all equal to true if the power table was needed;
+  --   gradone  all equal to true.
 
   procedure Multitasked_Singular_Values
               ( nbt : in integer32;
@@ -191,7 +210,9 @@ package Multitasked_Hessian_Circuits is
 
   -- DESCRIPTION :
   --   Evaluates all Hessians of the circuits in s at x
-  --   and computes the singular values with nbt tasks.
+  --   and computes the singular values with nbt tasks,
+  --   in double, double double, or quad double precision.
+  --   Wraps Static_Singular_Values and Dynamic_Singular_Values.
 
   -- ON ENTRY :
   --   nbt      the number of tasks;

@@ -15,7 +15,7 @@ with QuadDobl_Vector_Splitters;
 with Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;
 with QuadDobl_Complex_Singular_Values;
-with Semaphore,Multitasking;
+with Semaphore;
 
 package body Multitasked_Hessian_Circuits is
 
@@ -232,14 +232,13 @@ package body Multitasked_Hessian_Circuits is
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out Standard_Complex_VecMats.VecMat;
                 e : in out Standard_Complex_VecVecs.VecVec;
                 yd : in out Standard_Complex_VecVecs.VecVec;
 		verbose : in boolean := false ) is
 
     pwtneeded : boolean := false;
-    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
-    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
 
     use Standard_Complex_Numbers;
@@ -374,14 +373,13 @@ package body Multitasked_Hessian_Circuits is
                 s : in Standard_Complex_Circuits.Link_to_System;
                 x : in Standard_Complex_Vectors.Link_to_Vector;
                 values : in out Standard_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out Standard_Complex_VecMats.VecMat;
                 e : in out Standard_Complex_VecVecs.VecVec;
                 yd : in out Standard_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     pwtneeded : boolean := false;
-    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
-    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
     idx1,idx2 : integer32 := 0; -- global indices
     lck1,lck2 : Semaphore.Lock;
@@ -537,20 +535,24 @@ package body Multitasked_Hessian_Circuits is
                 static : in boolean := false;
                 verbose : in boolean := false ) is
 
-    A,U,V : Standard_Complex_VecMats.VecMat(1..nbt);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    A,U,V : Standard_Complex_VecMats.VecMat(1..nbt); -- space for SVD
     e : Standard_Complex_VecVecs.VecVec(1..nbt);
-    yd : Standard_Complex_VecVecs.VecVec(1..s.neq);
+    yd : Standard_Complex_VecVecs.VecVec(1..s.neq); -- gradient space
 
   begin
     A := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     U := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     V := Standard_Complex_Circuits.Allocate(nbt,s.dim);
     e := Standard_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for all gradients
     yd := Standard_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
-    if static
-     then Static_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
-     else Dynamic_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
+    if static then
+      Static_Singular_Values
+        (nbt,s,x,values,pwtdone,gradone,A,U,V,e,yd,verbose);
+    else
+      Dynamic_Singular_Values
+        (nbt,s,x,values,pwtdone,gradone,A,U,V,e,yd,verbose);
     end if;
     Standard_Complex_VecMats.Clear(A);
     Standard_Complex_VecMats.Clear(U);
@@ -564,14 +566,13 @@ package body Multitasked_Hessian_Circuits is
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
                 e : in out DoblDobl_Complex_VecVecs.VecVec;
                 yd : in out DoblDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     pwtneeded : boolean := false;
-    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
-    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
 
     use DoblDobl_Complex_Numbers;
@@ -705,14 +706,13 @@ package body Multitasked_Hessian_Circuits is
                 s : in DoblDobl_Complex_Circuits.Link_to_System;
                 x : in DoblDobl_Complex_Vectors.Link_to_Vector;
                 values : in out DoblDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out DoblDobl_Complex_VecMats.VecMat;
                 e : in out DoblDobl_Complex_VecVecs.VecVec;
                 yd : in out DoblDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     pwtneeded : boolean := false;
-    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
-    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
     idx1,idx2 : integer32 := 0; -- global indices
     lck1,lck2 : Semaphore.Lock;
@@ -869,20 +869,24 @@ package body Multitasked_Hessian_Circuits is
                 static : in boolean := false;
                 verbose : in boolean := false ) is
 
-    A,U,V : DoblDobl_Complex_VecMats.VecMat(1..nbt);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    A,U,V : DoblDobl_Complex_VecMats.VecMat(1..nbt); -- space for SVD
     e : DoblDobl_Complex_VecVecs.VecVec(1..nbt);
-    yd : DoblDobl_Complex_VecVecs.VecVec(1..s.neq);
+    yd : DoblDobl_Complex_VecVecs.VecVec(1..s.neq); -- gradient space
 
   begin
     A := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
     U := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
     V := DoblDobl_Complex_Circuits.Allocate(nbt,s.dim);
     e := DoblDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for gradients
     yd := DoblDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
-    if static
-     then Static_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
-     else Dynamic_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
+    if static then
+      Static_Singular_Values
+        (nbt,s,x,values,pwtdone,gradone,A,U,V,e,yd,verbose);
+    else
+      Dynamic_Singular_Values
+        (nbt,s,x,values,pwtdone,gradone,A,U,V,e,yd,verbose);
     end if;
     DoblDobl_Complex_VecMats.Clear(A);
     DoblDobl_Complex_VecMats.Clear(U);
@@ -896,14 +900,13 @@ package body Multitasked_Hessian_Circuits is
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
                 e : in out QuadDobl_Complex_VecVecs.VecVec;
                 yd : in out QuadDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     pwtneeded : boolean := false;
-    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
-    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
 
     use QuadDobl_Complex_Numbers;
@@ -1036,14 +1039,13 @@ package body Multitasked_Hessian_Circuits is
                 s : in QuadDobl_Complex_Circuits.Link_to_System;
                 x : in QuadDobl_Complex_Vectors.Link_to_Vector;
                 values : in out QuadDobl_Complex_VecVecs.VecVec;
+                pwtdone,gradone : in out Multitasking.boolean_array;
                 A,U,V : in out QuadDobl_Complex_VecMats.VecMat;
                 e : in out QuadDobl_Complex_VecVecs.VecVec;
                 yd : in out QuadDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := false ) is
 
     pwtneeded : boolean := false;
-    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
-    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
     info : integer32;
     idx1,idx2 : integer32 := 0; -- global indices
     lck1,lck2 : Semaphore.Lock;
@@ -1199,20 +1201,24 @@ package body Multitasked_Hessian_Circuits is
                 static : in boolean := false;
                 verbose : in boolean := false ) is
 
-     A,U,V : QuadDobl_Complex_VecMats.VecMat(1..nbt);
-     e : QuadDobl_Complex_VecVecs.VecVec(1..nbt);
-     yd : QuadDobl_Complex_VecVecs.VecVec(1..s.neq);
+    pwtdone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    gradone : Multitasking.boolean_array(1..nbt) := (1..nbt => false);
+    A,U,V : QuadDobl_Complex_VecMats.VecMat(1..nbt); -- space for SVD
+    e : QuadDobl_Complex_VecVecs.VecVec(1..nbt);
+    yd : QuadDobl_Complex_VecVecs.VecVec(1..s.neq); -- gradient space
 
   begin
     A := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
     U := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
     V := QuadDobl_Complex_Circuits.Allocate(nbt,s.dim);
     e := QuadDobl_Vector_Splitters.Allocate(nbt,s.dim,1,1);
-   -- space for gradients
     yd := QuadDobl_Vector_Splitters.Allocate(s.neq,s.dim,1,0);
-    if static
-     then Static_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
-     else Dynamic_Singular_Values(nbt,s,x,values,A,U,V,e,yd,verbose);
+    if static then
+      Static_Singular_Values
+        (nbt,s,x,values,pwtdone,gradone,A,U,V,e,yd,verbose);
+    else
+      Dynamic_Singular_Values
+        (nbt,s,x,values,pwtdone,gradone,A,U,V,e,yd,verbose);
     end if;
     QuadDobl_Complex_VecMats.Clear(A);
     QuadDobl_Complex_VecMats.Clear(U);
