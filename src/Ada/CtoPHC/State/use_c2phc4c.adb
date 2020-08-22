@@ -1,7 +1,6 @@
 with text_io;                           use text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with PHCpack_Operations;
-with PHCpack_Operations_io;
 with C_to_PHCpack;
 with use_syscon,use_syspool;
 with use_tabform;
@@ -24,6 +23,7 @@ with use_witsols;
 with Job_Containers;
 with Job_Handlers;
 with Multprec_PolySys_Interface;
+with Multprec_Solutions_Interface;
 with File_Management_Interface;
 with Symbol_Table_Interface;
 with Continuation_Parameters_Interface;
@@ -378,6 +378,7 @@ function use_c2phc4c ( job : integer32;
     use Job_Handlers;
     use Symbol_Table_Interface;
     use Multprec_PolySys_Interface;
+    use Multprec_Solutions_Interface;
     use File_Management_Interface;
     use Newton_Interface;
     use Deflation_Interface;
@@ -591,11 +592,9 @@ function use_c2phc4c ( job : integer32;
       when 492 => return Multprec_PolySys_Write_Target(vrblvl-1);
       when 493 => return Multprec_PolySys_Prompt_for_Start(a,vrblvl-1);
       when 494 => return Multprec_PolySys_Write_Start(vrblvl-1);
-      when 495 =>
-        PHCpack_Operations_io.Write_Multprec_Start_Solutions; return 0;
+      when 495 => return Multprec_Solutions_Write_Start(vrblvl-1);
       when 496 => return Path_Trackers_Multprec_Polynomial_Solve(a,vrblvl-1);
-      when 497 =>
-        PHCpack_Operations_io.Write_Multprec_Target_Solutions; return 0;
+      when 497 => return Multprec_Solutions_Write_Target(vrblvl-1);
       when 498 => PHCpack_Operations.Multprec_Clear; return 0;
      -- path trackers with generators :
       when 500..520 => return use_nxtsol(job-500,a,b,c,vrblvl-1);

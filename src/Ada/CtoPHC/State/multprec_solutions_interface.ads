@@ -38,6 +38,20 @@ package Multprec_Solutions_Interface is
   --   Writes the solutions in multiprecision
   --   to the defined output file or to screen.
 
+  function Multprec_Solutions_Write_Start
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the solutions of the start system in multiprecision
+  --   to the defined output file or to screen.
+
+  function Multprec_Solutions_Write_Target
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Writes the solutions of the target system in multiprecision
+  --   to the defined output file or to screen.
+
   function Multprec_Solutions_Size 
              ( b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;

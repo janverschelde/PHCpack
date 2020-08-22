@@ -11,6 +11,7 @@ with Multprec_Solution_Strings;
 with Multprec_System_and_Solutions_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with PHCpack_Operations;
+with PHCpack_Operations_io;
 with Multprec_PolySys_Container;
 with Multprec_Solutions_Container;
 
@@ -103,7 +104,7 @@ package body Multprec_Solutions_Interface is
 
   begin
     if vrblvl > 0 then
-      put("-> in Multprec_Solutions_interface.");
+      put("-> in multprec_solutions_interface.");
       put_line("Multprec_Solutions_Write ...");
     end if;
     if not Is_Null(sols) then
@@ -118,11 +119,47 @@ package body Multprec_Solutions_Interface is
   exception
     when others => 
       if vrblvl > 0 then
-        put("Exception raised in Multprec_Solutions_interface.");
+        put("Exception raised in multprec_solutions_interface.");
         put_line("Multprec_Solutions_Write.");
       end if;
       return 451;
   end Multprec_Solutions_Write;
+
+  function Multprec_Solutions_Write_Start
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in multprec_solutions_interface.");
+      put_line("Multprec_Solutions_Write_Start ...");
+    end if;
+    PHCpack_Operations_io.Write_Multprec_Start_Solutions;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in Multprec_Solutions_interface.");
+        put_line("Multprec_Solutions_Write_Start.");
+      end if;
+      return 495;
+  end Multprec_Solutions_Write_Start;
+
+  function Multprec_Solutions_Write_Target
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in multprec_solutions_interface.");
+      put_line("Multprec_Solutions_Write_Target ...");
+    end if;
+    PHCpack_Operations_io.Write_Multprec_Target_Solutions;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in Multprec_Solutions_interface.");
+        put_line("Multprec_Solutions_Write_Target.");
+      end if;
+      return 497;
+  end Multprec_Solutions_Write_Target;
 
   function Multprec_Solutions_Size 
              ( b : C_intarrs.Pointer;
