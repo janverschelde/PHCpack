@@ -401,9 +401,9 @@ function use_c2phc4c ( job : integer32;
       when 7 => return Standard_Start_Solutions_to_Container(vrblvl-1);
       when 8 => return Standard_Container_Solutions_to_Start(vrblvl-1);
       when 9 => return Newton_Standard_Polynomial_Verify(vrblvl-1);
-      when 10..15 => return C_to_PHCpack(job-10,0);
+      when 10..15 => return C_to_PHCpack(job-10,0,vrblvl-1);
       when 16 => return Path_Trackers_Standard_Polynomial_Solve(a,vrblvl-1);
-      when 17..19 => return C_to_PHCpack(job-10,0);
+      when 17..19 => return C_to_PHCpack(job-10,0,vrblvl-1);
       when 20..29 => return use_syscon(job-20,a,b,c,vrblvl-1);
       when 30..38 => return use_solcon(job-30,a,b,c,vrblvl-1);
       when 39 => return use_c2fac(28,a,b,c,vrblvl-1); -- set state to silent
@@ -470,14 +470,14 @@ function use_c2phc4c ( job : integer32;
       when 210..227 => return use_c2pieri(job-210,a,b,c,vrblvl-1);
       when 228..229 => return use_c2lrhom(job-228,a,b,c,vrblvl-1);
       when 230 => return use_track(42,a,b,c,vrblvl-1);
-      when 231..235 => return C_to_PHCpack(job-220,0);
+      when 231..235 => return C_to_PHCpack(job-220,0,vrblvl-1);
       when 236 => return Path_Trackers_DoblDobl_Polynomial_Solve(a,vrblvl-1);
-      when 237..238 => return C_to_PHCpack(job-220,0);
+      when 237..238 => return C_to_PHCpack(job-220,0,vrblvl-1);
       when 239 => return use_celcon(46,a,b,c,vrblvl-1);
       when 240 => return use_celcon(47,a,b,c,vrblvl-1);
-      when 241..245 => return C_to_PHCpack(job-220,0);
+      when 241..245 => return C_to_PHCpack(job-220,0,vrblvl-1);
       when 246 => return Path_Trackers_QuadDobl_Polynomial_Solve(a,vrblvl-1);
-      when 247..248 => return C_to_PHCpack(job-220,0);
+      when 247..248 => return C_to_PHCpack(job-220,0,vrblvl-1);
      -- deflation in double double and quad double precision
       when 249 => return Deflation_DoblDobl_Run(a,b,c,vrblvl-1);
       when 250 => return Deflation_QuadDobl_Run(a,b,c,vrblvl-1);
@@ -698,7 +698,7 @@ function use_c2phc4c ( job : integer32;
      -- integer mixed cell configurations
       when 741..758 => return use_celcon(job-690,a,b,c,vrblvl-1);
      -- reading, writing Laurent start and target systems
-      when 759..773 => return c_to_phcpack(job-730,0);
+      when 759..773 => return c_to_phcpack(job-730,0,vrblvl-1);
      -- solve by Laurent homotopy continuation
       when 774 => return Path_Trackers_Standard_Laurent_Solve(a,vrblvl-1);
       when 775 => return Path_Trackers_DoblDobl_Laurent_Solve(a,vrblvl-1);

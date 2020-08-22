@@ -1,8 +1,10 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 
-function C_to_PHCpack ( job : integer32;
-                        number_of_tasks : natural32 ) return integer32;
+function C_to_PHCpack
+           ( job : integer32;
+             number_of_tasks : natural32;
+             vrblvl : integer32 := 0 ) return integer32;
 
 -- DESCRIPTION :
 --   Interactive gateway to the basic path tracking operations in PHCpack.
