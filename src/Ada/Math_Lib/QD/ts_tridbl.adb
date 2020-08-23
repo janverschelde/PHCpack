@@ -118,7 +118,7 @@ procedure ts_tridbl is
   function "+" ( x,y : triple_double ) return triple_double is
 
   -- DESCRIPTION :
-  --   Returns the sum of x and y.
+  --   Returns the sum x + y of x and y.
 
     res : triple_double;
     f0,f1,f2,f3,e : double_float;
@@ -138,6 +138,32 @@ procedure ts_tridbl is
     return res;
   end "+";
 
+  function "-" ( x : triple_double ) return triple_double is
+
+  -- DESCRIPTION :
+  --   Returns -x.
+
+    res : triple_double;
+
+  begin
+    res.hi := -x.hi;
+    res.mi := -x.mi;
+    res.lo := -x.lo;
+    return res;
+  end "-";
+
+  function "-" ( x,y : triple_double ) return triple_double is
+
+  -- DESCRIPTION :
+  --   Returns x - y.
+
+    mny : constant triple_double := -y;
+    res : constant triple_double := x + mny;
+
+  begin
+    return res;
+  end "-";
+
   procedure Test_Basic_Arithmetic is
 
   -- DESCRIPTION :
@@ -155,7 +181,10 @@ procedure ts_tridbl is
     qtx : constant quad_double := create(tdx);
     qty : constant quad_double := create(tdy);
     qtz : constant quad_double := create(tdz);
-    dfr : constant quad_double := qdz - qtz;
+    df1 : constant quad_double := qdz - qtz;
+    tdv : constant triple_double := tdz - tdy;
+    qtv : constant quad_double := create(tdv);
+    df2 : constant quad_double := qdx - qtv;
 
   begin
     put_line("The sum of two random quad doubles :");
@@ -166,7 +195,10 @@ procedure ts_tridbl is
     put("    x : "); put(qtx); new_line;
     put("    y : "); put(qty); new_line;
     put("x + y : "); put(qtz); new_line;
-    put_line("The difference :"); put(dfr); new_line;
+    put_line("The difference :"); put(df1); new_line;
+    put("(x+y)-y : "); put(qtv); new_line;
+    put("      x : "); put(qtx); new_line;
+    put_line("The difference :"); put(df2); new_line;
   end Test_Basic_Arithmetic;
 
   procedure Main is

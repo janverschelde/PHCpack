@@ -1,3 +1,5 @@
+Sun 23 Aug 2020 : added "-" functions to ts_tridbl.
+
 Sat 22 Aug 2020 : new test procedure ts_tridbl to develop arithmetic with
   triple doubles.
 
