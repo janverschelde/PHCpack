@@ -1,5 +1,6 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
 with Multprec_Complex_Vectors;
@@ -64,31 +65,38 @@ package Drivers_to_Deflate_Singularities is
 
   procedure Deflate_Singularities
                ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                 sols : in out Standard_Complex_Solutions.Solution_List );
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 vrblvl : in integer32 := 0 );
   procedure Deflate_Singularities
                ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 vrblvl : in integer32 := 0 );
   procedure Deflate_Singularities
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies deflation to the system p with solution in sols,
   --   using standard double precision and default values for
   --   the numerical tolerances.
+  --   The verbose level is in vrblvl.
 
   procedure Deflate_Singularities
                ( file : in file_type; outfilename : in string;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                 sols : in out Standard_Complex_Solutions.Solution_List );
+                 sols : in out Standard_Complex_Solutions.Solution_List;
+                 vrblvl : in integer32 := 0 );
   procedure Deflate_Singularities
                ( file : in file_type; outfilename : in string;
                  p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 vrblvl : in integer32 := 0 );
   procedure Deflate_Singularities
                ( file : in file_type; outfilename : in string;
                  p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method with deflation to a list of solutions
@@ -97,5 +105,6 @@ package Drivers_to_Deflate_Singularities is
   --   Systems and solutions are written to separate files, all
   --   starting with outfilename and ending with suffix _dk, where
   --   k is the number of the deflation step.
+  --   The verbose level is in vrblvl.
 
 end Drivers_to_Deflate_Singularities;

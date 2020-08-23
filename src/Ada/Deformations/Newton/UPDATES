@@ -1,3 +1,5 @@
+Sun 23 Aug 2020 : added verbose level to drivers_to_deflate_singularities.
+
 Thu 16 Jul 2020 : in standard_inlined_newton_circuits.adb ,added check 
   on divergence to the LU_Newton_Steps procedures.
 

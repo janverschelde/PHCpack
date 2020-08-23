@@ -366,4 +366,11 @@ package body Communications_with_User is
     return res;
   end Prompt_for_Precision;
 
+  procedure End_of_Input_Message is
+  begin
+    new_line;
+    put_line("No more input expected.  See output file for results.");
+    new_line;
+  end End_of_Input_Message;
+
 end Communications_with_User;

@@ -117,4 +117,11 @@ package Communications_with_User is
   --   Prompts the user for the working precision and returns '0'
   --   for standard double, '1' for double double, or '2' for quad double.
 
+  procedure End_of_Input_Message;
+
+  -- DESCRIPTON :
+  --   After a new_line, writes
+  --   "No more input expected.  See output file for results."
+  --   and then executes another new_line.
+
 end Communications_with_User;

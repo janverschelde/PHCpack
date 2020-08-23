@@ -86,15 +86,15 @@ procedure mainvali ( infilename,outfilename : in string;
   end Display_Verification_Info;
 
   procedure Refine_Roots
-                 ( file : in file_type;
-                   p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                   solsfile,invar,allperms,signsym : in boolean;
-                   v : in List_of_Permutations;
-                   epsxa,epsfa,tolsing : in double_float;
-                   maxit : in natural32; deflate : in out boolean;
-                   wout : in boolean;
-                   sols,refsols
-                         : in out Standard_Complex_Solutions.Solution_List ) is
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                solsfile,invar,allperms,signsym : in boolean;
+                v : in List_of_Permutations;
+                epsxa,epsfa,tolsing : in double_float;
+                maxit : in natural32; deflate : in out boolean;
+                wout : in boolean;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                refsols : in out Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Refines the roots and computes generating solutions when required.
@@ -208,13 +208,6 @@ procedure mainvali ( infilename,outfilename : in string;
     end if;
   end Refine_Roots;
 
-  procedure End_of_Input_Message is
-  begin
-    new_line;
-    put_line("No more input expected.  See output file for results.");
-    new_line;
-  end End_of_Input_Message;
-
 -- VALIDATION PROCEDURES :
 
   procedure Winding_Verification is
@@ -324,7 +317,7 @@ procedure mainvali ( infilename,outfilename : in string;
       (epsxa,epsfa,tolsing,maxit,deflate,wout);
     Standard_Menu_Root_Refining_Parameters
       (outfile,epsxa,epsfa,tolsing,maxit,deflate,wout);
-    End_of_Input_Message;
+    Communications_with_User.End_of_Input_Message;
    -- put("starting root refinement with #variables : ");
    -- put(Head_Of(sols).n,1); new_line;
     tstart(timer);
@@ -383,7 +376,7 @@ procedure mainvali ( infilename,outfilename : in string;
     deflate := false; -- no deflation for Laurent systems
     Standard_Menu_Root_Refining_Parameters
       (outfile,epsxa,epsfa,tolsing,maxit,deflate,wout);
-    End_of_Input_Message;
+    Communications_with_User.End_of_Input_Message;
     tstart(timer);
     Refine_Roots(outfile,lp.all,solsfile,
                  epsxa,epsfa,tolsing,maxit,wout,sols,refsols);
@@ -496,7 +489,7 @@ procedure mainvali ( infilename,outfilename : in string;
     p := Parse(m,size,ls.all);
    -- put_line("done parsing the system");
     Multprec_Complex_Solutions.Set_Size(sols,size);
-    End_of_Input_Message;
+    Communications_with_User.End_of_Input_Message;
     numit := 0;
     tstart(timer);
     if p'last /= Multprec_Complex_Solutions.Head_Of(sols).n then
@@ -602,7 +595,7 @@ procedure mainvali ( infilename,outfilename : in string;
     new_line;
     put_line("Reading name of output file.");
     Read_Name_and_Create_File(resultfile);
-    End_of_Input_Message;
+    Communications_with_User.End_of_Input_Message;
     valipoco(pocofile,resultfile);
     Close(pocofile);
     new_line(resultfile);
@@ -610,11 +603,12 @@ procedure mainvali ( infilename,outfilename : in string;
     Close(resultfile);
   end Polyhedral_End_Game_Verification;
 
-  procedure Standard_Newton_with_Deflation is
+  procedure Standard_Newton_with_Deflation ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Reads the polynomial system in standard double precision
   --   confirms the output to the file and calls the deflation method.
+  --   The verbose level is in vrblvl.
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
@@ -626,6 +620,9 @@ procedure mainvali ( infilename,outfilename : in string;
     nbequ,nbvar : natural32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.Standard_Newton_with_Deflation ...");
+    end if;
     Read_System(infile,infilename,lp,sysonfile);
     nbequ := natural32(lp'last);
     nbvar := Number_of_Unknowns(lp(lp'first));
@@ -644,7 +641,7 @@ procedure mainvali ( infilename,outfilename : in string;
         new_line(outfile);
         put_line(outfile,"the solutions on input :");
         put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-        Deflate_Singularities(outfile,new_outfilename,lp.all,sols);
+        Deflate_Singularities(outfile,new_outfilename,lp.all,sols,vrblvl-1);
       end;
     else
       Create_Output_File(outfile,outfilename);
@@ -656,15 +653,16 @@ procedure mainvali ( infilename,outfilename : in string;
       new_line(outfile);
       put_line(outfile,"the solutions on input :");
       put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Deflate_Singularities(outfile,outfilename,lp.all,sols);
+      Deflate_Singularities(outfile,outfilename,lp.all,sols,vrblvl-1);
     end if;
   end Standard_Newton_with_Deflation;
 
-  procedure DoblDobl_Newton_with_Deflation is
+  procedure DoblDobl_Newton_with_Deflation ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Reads the polynomial system in double double precision
   --   confirms the output to the file and calls the deflation method.
+  --   The verbose level is in vrblvl.
 
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Solutions;
@@ -676,6 +674,9 @@ procedure mainvali ( infilename,outfilename : in string;
     nbequ,nbvar : natural32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.DoblDobl_Newton_with_Deflation ...");
+    end if;
     Read_System(infile,infilename,lp,sysonfile);
     nbequ := natural32(lp'last);
     nbvar := Number_of_Unknowns(lp(lp'first));
@@ -694,7 +695,7 @@ procedure mainvali ( infilename,outfilename : in string;
         new_line(outfile);
         put_line(outfile,"the solutions on input :");
         put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-        Deflate_Singularities(outfile,new_outfilename,lp.all,sols);
+        Deflate_Singularities(outfile,new_outfilename,lp.all,sols,vrblvl-1);
       end;
     else
       Create_Output_File(outfile,outfilename);
@@ -706,15 +707,16 @@ procedure mainvali ( infilename,outfilename : in string;
       new_line(outfile);
       put_line(outfile,"the solutions on input :");
       put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Deflate_Singularities(outfile,outfilename,lp.all,sols);
+      Deflate_Singularities(outfile,outfilename,lp.all,sols,vrblvl-1);
     end if;
   end DoblDobl_Newton_with_Deflation;
 
-  procedure QuadDobl_Newton_with_Deflation is
+  procedure QuadDobl_Newton_with_Deflation ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Reads the polynomial system in quad double precision
   --   confirms the output to the file and calls the deflation method.
+  --   The verbose level is in vrblvl.
 
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Solutions;
@@ -726,6 +728,9 @@ procedure mainvali ( infilename,outfilename : in string;
     nbequ,nbvar : natural32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.QuadDobl_Newton_with_Deflation ...");
+    end if;
     Read_System(infile,infilename,lp,sysonfile);
     nbequ := natural32(lp'last);
     nbvar := Number_of_Unknowns(lp(lp'first));
@@ -744,7 +749,7 @@ procedure mainvali ( infilename,outfilename : in string;
         new_line(outfile);
         put_line(outfile,"the solutions on input :");
         put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-        Deflate_Singularities(outfile,new_outfilename,lp.all,sols);
+        Deflate_Singularities(outfile,new_outfilename,lp.all,sols,vrblvl-1);
       end;
     else
       Create_Output_File(outfile,outfilename);
@@ -756,53 +761,38 @@ procedure mainvali ( infilename,outfilename : in string;
       new_line(outfile);
       put_line(outfile,"the solutions on input :");
       put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-      Deflate_Singularities(outfile,outfilename,lp.all,sols);
+      Deflate_Singularities(outfile,outfilename,lp.all,sols,vrblvl-1);
     end if;
   end QuadDobl_Newton_with_Deflation;
 
-  function Prompt_for_Precision return character is
-
-  -- DESCRIPTION :
-  --   Prompts the user for '0', '1', or '2'
-  --   for double, double double or quad double.
-  --   The corresponding character is returned.
-
-    res : character;
-
-  begin
-    new_line;
-    put_line("MENU for the precision level :");
-    put_line("  0. standard double precision;");
-    put_line("  1. double double precision;");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the level of precision : ");
-    Ask_Alternative(res,"012");
-    return res;
-  end Prompt_for_Precision;
-
-  procedure Newton_with_Deflation is
+  procedure Newton_with_Deflation ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for the precision
   --   and then calls the corresponding driver
   --   to apply Newton's method with deflation.
 
-    prc : constant character := Prompt_for_Precision;
+    prc : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.Newton_with_Deflation ...");
+    end if;
+    prc := Communications_with_User.Prompt_for_Precision;
     case prc is
-      when '0' => Standard_Newton_with_Deflation;
-      when '1' => DoblDobl_Newton_with_Deflation;
-      when '2' => QuadDobl_Newton_with_Deflation;
+      when '0' => Standard_Newton_with_Deflation(vrblvl-1);
+      when '1' => DoblDobl_Newton_with_Deflation(vrblvl-1);
+      when '2' => QuadDobl_Newton_with_Deflation(vrblvl-1);
       when others => null;
     end case;
   end Newton_with_Deflation;
 
-  procedure Standard_Compute_Multiplicity_Structure is
+  procedure Standard_Multiplicity ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Computes the multiplicity structure in standard double precision,
   --   after prompting for a polynomial system and solutions.
+  --   The verbose level is in vrblvl.
 
     use Standard_Complex_Solutions;
     use Standard_Multiplicity_Structure;
@@ -813,6 +803,9 @@ procedure mainvali ( infilename,outfilename : in string;
     sols : Standard_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.Standard_Multiplicity ...");
+    end if;
     Read_System(infile,infilename,lp,sysonfile);
     if outfilename = "" then
       new_line;
@@ -824,13 +817,14 @@ procedure mainvali ( infilename,outfilename : in string;
     put(outfile,natural32(lp'last),lp.all);
     Read_Solutions(infile,sysonfile,sols);
     Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
-  end Standard_Compute_Multiplicity_Structure;
+  end Standard_Multiplicity;
 
-  procedure DoblDobl_Compute_Multiplicity_Structure is
+  procedure DoblDobl_Multiplicity ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Computes the multiplicity structure in double double precision,
   --   after prompting for a polynomial system and solutions.
+  --   The verbose level is in vrblvl.
 
     use DoblDobl_Complex_Solutions;
     use DoblDobl_Multiplicity_Structure;
@@ -841,6 +835,9 @@ procedure mainvali ( infilename,outfilename : in string;
     sols : DoblDobl_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.DoblDobl_Multiplicity ...");
+    end if;
     Read_System(infile,infilename,lp,sysonfile);
     if outfilename = "" then
       new_line;
@@ -852,13 +849,14 @@ procedure mainvali ( infilename,outfilename : in string;
     put(outfile,natural32(lp'last),lp.all);
     Read_Solutions(infile,sysonfile,sols);
     Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
-  end DoblDobl_Compute_Multiplicity_Structure;
+  end DoblDobl_Multiplicity;
 
-  procedure QuadDobl_Compute_Multiplicity_Structure is
+  procedure QuadDobl_Multiplicity ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Computes the multiplicity structure in quad double precision,
   --   after prompting for a polynomial system and solutions.
+  --   The verbose level is in vrblvl.
 
     use QuadDobl_Complex_Solutions;
     use QuadDobl_Multiplicity_Structure;
@@ -869,6 +867,9 @@ procedure mainvali ( infilename,outfilename : in string;
     sols : QuadDobl_Complex_Solutions.Solution_List;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.QuadDobl_Multiplicity ...");
+    end if;
     Read_System(infile,infilename,lp,sysonfile);
     if outfilename = "" then
       new_line;
@@ -880,27 +881,32 @@ procedure mainvali ( infilename,outfilename : in string;
     put(outfile,natural32(lp'last),lp.all);
     Read_Solutions(infile,sysonfile,sols);
     Driver_to_Multiplicity_Structure(outfile,lp.all,sols);
-  end QuadDobl_Compute_Multiplicity_Structure;
+  end QuadDobl_Multiplicity;
 
-  procedure Multiplicity_Structure is
+  procedure Multiplicity_Structure ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for the precision
   --   and then launches the corresponding driver
   --   to compute the multiplicity structure.
+  --   The verbose level is in vrblvl.
 
-    prc : constant character := Prompt_for_Precision;
+    prc : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.Multiplicity_Structure ...");
+    end if;
+    prc := Communications_with_User.Prompt_for_Precision;
     case prc is
-      when '0' => Standard_Compute_Multiplicity_Structure;
-      when '1' => DoblDobl_Compute_Multiplicity_Structure;
-      when '2' => QuadDobl_Compute_Multiplicity_Structure;
+      when '0' => Standard_Multiplicity(vrblvl-1);
+      when '1' => DoblDobl_Multiplicity(vrblvl-1);
+      when '2' => QuadDobl_Multiplicity(vrblvl-1);
       when others => null;
     end case;
   end Multiplicity_Structure;
 
-  procedure Solution_Scanner is
+  procedure Solution_Scanner ( vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Handles option #0, to deal with huge solution lists.
@@ -908,11 +914,14 @@ procedure mainvali ( infilename,outfilename : in string;
     ans : character;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in mainvali.Solution_Scanner ...");
+    end if;
     new_line;
     put("Run Newton's method ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then Standard_Refiner_Circuits.Main(infilename,outfilename,verbose-1);
-     else Main_Driver_to_Scan_Solution_Lists(infilename,outfilename,verbose-1);
+     then Standard_Refiner_Circuits.Main(infilename,outfilename,vrblvl-1);
+     else Main_Driver_to_Scan_Solution_Lists(infilename,outfilename,vrblvl-1);
     end if;
   end Solution_Scanner;
 
@@ -953,14 +962,14 @@ procedure mainvali ( infilename,outfilename : in string;
       case ans is
         when 'i' => new_line;
                     Display_Verification_Info;
-        when '0' => Solution_Scanner;
+        when '0' => Solution_Scanner(verbose-1);
         when '1' => Standard_Weeding_Verification;
         when '2' => Multprec_Residual_Evaluator;
         when '3' => Multprec_Weeding_Verification(false);
         when '4' => Winding_Verification;
         when '5' => Polyhedral_End_Game_Verification;
-        when '6' => Newton_with_Deflation;
-        when '7' => Multiplicity_Structure;
+        when '6' => Newton_with_Deflation(verbose-1);
+        when '7' => Multiplicity_Structure(verbose-1);
         when '8' => DD_QD_Root_Refinement(infilename,outfilename);
         when '9' => Multprec_Weeding_Verification(true);
         when others => null;

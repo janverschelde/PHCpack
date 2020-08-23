@@ -1,7 +1,6 @@
 with Communications_with_User;          use Communications_with_User;
 with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
 with Standard_Complex_Matrices;
@@ -281,13 +280,18 @@ package body Drivers_to_Deflate_Singularities is
 
   procedure Deflate_Singularities
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     symbolic,output : boolean;
     maxitr,maxdef,nbdgts : natural32;
     tolerr,tolres,tolrnk : double_float;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_to_deflate_singularities.");
+      put_line("Deflate_Singularities 1 ...");
+    end if;
     Set_Default_Parameters
       (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
     Standard_Deflation_Methods.Algorithmic_Deflation_and_Clustering
@@ -296,13 +300,18 @@ package body Drivers_to_Deflate_Singularities is
 
   procedure Deflate_Singularities
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     symbolic,output : boolean;
     maxitr,maxdef,nbdgts : natural32;
     tolerr,tolres,tolrnk : double_float;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_to_deflate_singularities.");
+      put_line("Deflate_Singularities 2 ...");
+    end if;
     Set_Default_Parameters
       (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
     DoblDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
@@ -311,13 +320,18 @@ package body Drivers_to_Deflate_Singularities is
 
   procedure Deflate_Singularities
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     symbolic,output : boolean;
     maxitr,maxdef,nbdgts : natural32;
     tolerr,tolres,tolrnk : double_float;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_to_deflate_singularities.");
+      put_line("Deflate_Singularities 3 ...");
+    end if;
     Set_Default_Parameters
       (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
     QuadDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
@@ -327,7 +341,8 @@ package body Drivers_to_Deflate_Singularities is
   procedure Deflate_Singularities
               ( file : in file_type; outfilename : in string;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     symbolic,output : boolean;
@@ -335,6 +350,10 @@ package body Drivers_to_Deflate_Singularities is
     tolerr,tolres,tolrnk : double_float;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_to_deflate_singularities.");
+      put_line("Deflate_Singularities 4 ...");
+    end if;
     new_line;
     Determine_Parameters
       (15,symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
@@ -384,7 +403,8 @@ package body Drivers_to_Deflate_Singularities is
   procedure Deflate_Singularities
               ( file : in file_type; outfilename : in string;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     symbolic,output : boolean;
@@ -392,6 +412,10 @@ package body Drivers_to_Deflate_Singularities is
     tolerr,tolres,tolrnk : double_float;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_to_deflate_singularities.");
+      put_line("Deflate_Singularities 5 ...");
+    end if;
     new_line;
     Determine_Parameters
       (31,symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
@@ -420,7 +444,8 @@ package body Drivers_to_Deflate_Singularities is
   procedure Deflate_Singularities
               ( file : in file_type; outfilename : in string;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     symbolic,output : boolean;
@@ -428,6 +453,10 @@ package body Drivers_to_Deflate_Singularities is
     tolerr,tolres,tolrnk : double_float;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_to_deflate_singularities.");
+      put_line("Deflate_Singularities 6 ...");
+    end if;
     new_line;
     Determine_Parameters
       (63,symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);

@@ -1,3 +1,5 @@
+Sun 23 Aug 2020 : in mainvali.adb passed the verbose level to deflation.
+
 Tue 4 Aug 2020 : modified greeting_banners.ads and greeting_banners.adb,
   adding the Littlewood-Richardson homotopies in the banner and removing
   one character from the help output.  Updated option_handlers.adb to pass
