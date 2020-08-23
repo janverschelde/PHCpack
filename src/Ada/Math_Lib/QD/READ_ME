@@ -1,4 +1,4 @@
-Quad double arithmetic for PHCv2.4.75
+Quad double arithmetic for PHCv2.4.80
 
 This directory was added to version 2.3.55 of PHCpack, departing from
 a standalone C version of a part of the QD software library.
@@ -93,4 +93,6 @@ standard_complex_exponentiation : high powers of double complex numbers
 dobldobl_complex_exponentiation : high powers of double double complex numbers
 quaddobl_complex_exponentiation : high powers of quad double complex numbers
 ts_cmpexp                       : test on complex exponentiation
+------------------------------------------------------------------------------
+ts_tridbl                    : test on triple double arithmetic
 ------------------------------------------------------------------------------

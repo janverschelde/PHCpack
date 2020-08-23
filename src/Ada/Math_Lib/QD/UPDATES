@@ -1,3 +1,6 @@
+Sat 22 Aug 2020 : new test procedure ts_tridbl to develop arithmetic with
+  triple doubles.
+
 Sat 25 Jan 2020 : added function to quaddobl_complex_numbers_cv to convert
   a quad double complex number into a double double complex number.
 
