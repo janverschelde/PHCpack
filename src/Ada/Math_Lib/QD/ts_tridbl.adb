@@ -118,7 +118,7 @@ procedure ts_tridbl is
   function "+" ( x,y : triple_double ) return triple_double is
 
   -- DESCRIPTION :
-  --   Returns the sum x + y of x and y.
+  --   Returns the sum x + y of the triple doubles x and y.
 
     res : triple_double;
     f0,f1,f2,f3,e : double_float;
@@ -155,7 +155,7 @@ procedure ts_tridbl is
   function "-" ( x,y : triple_double ) return triple_double is
 
   -- DESCRIPTION :
-  --   Returns x - y.
+  --   Returns x - y, for two triple doubles x and y.
 
     mny : constant triple_double := -y;
     res : constant triple_double := x + mny;
@@ -163,6 +163,93 @@ procedure ts_tridbl is
   begin
     return res;
   end "-";
+
+  function "*" ( x,y : triple_double ) return triple_double is
+
+  -- DESCRIPTION :
+  --   Returns the product x*y of two triple doubles, x and y.
+
+    res : triple_double;
+    f0,f1,f2,f3,p,e : double_float;
+
+  begin
+    f3 := x.mi*y.lo;
+    f3 := f3 + x.lo*y.mi;
+    Double_Double_Basics.two_prod(x.hi,y.lo,f2,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_prod(x.mi,y.mi,p,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_sum(f2,p,f2,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_prod(x.lo,y.hi,p,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_sum(f2,p,f2,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_prod(x.hi,y.mi,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_prod(x.mi,y.hi,p,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_sum(f1,p,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_prod(x.hi,y.hi,f0,e);
+    Double_Double_Basics.two_sum(f1,e,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    f3 := f3 + e;
+    fast_renorm(f0,f1,f2,f3,res.hi,res.mi,res.lo);
+    return res;
+  end "*";
+
+  function "*" ( x : triple_double; y : double_float ) return triple_double is
+
+  -- DESCRIPTION :
+  --   Returns the product x*y of the triple double x with the double y.
+
+    res : triple_double;
+    f0,f1,f2,f3,e : double_float;
+
+  begin
+    f3 := 0.0;
+    Double_Double_Basics.two_prod(x.lo,y,f2,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_prod(x.mi,y,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    f3 := f3 + e;
+    Double_Double_Basics.two_prod(x.hi,y,f0,e);
+    Double_Double_Basics.two_sum(f1,e,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    f3 := f3 + e;
+    fast_renorm(f0,f1,f2,f3,res.hi,res.mi,res.lo);
+    return res;
+  end "*";
+
+  function "*" ( x : double_float; y : triple_double ) return triple_double is
+
+  -- DESCRIPTION :
+  --   Returns the produce x*y of the double x with the triple double y.
+
+  begin
+    return y*x;
+  end "*";
+
+  function "/" ( x,y : triple_double ) return triple_double is
+
+  -- DESCRIPTION :
+  --   Returns the quotient x/y of the triple doubles x and y.
+
+    res,acc : triple_double;
+    q0,q1,q2,q3 : double_float;
+
+  begin
+    q0 := x.hi/y.hi;   acc := q0*y; res := x - acc;
+    q1 := res.hi/y.hi; acc := q1*y; res := res - acc;
+    q2 := res.hi/y.hi; acc := q2*y; res := res - acc;
+    q3 := res.hi/y.hi;
+    fast_renorm(q0,q1,q2,q3,res.hi,res.mi,res.lo);
+    return res;
+  end "/";
 
   procedure Test_Basic_Arithmetic is
 
@@ -185,6 +272,19 @@ procedure ts_tridbl is
     tdv : constant triple_double := tdz - tdy;
     qtv : constant quad_double := create(tdv);
     df2 : constant quad_double := qdx - qtv;
+    qdp : constant quad_double := qdx * qdy;
+    tdp : constant triple_double := tdx * tdy;
+    qtp : constant quad_double := create(tdp);
+    df3 : constant quad_double := qdp - qtp;
+    dy : constant double_float := hihi_part(qdy);
+    qdxdy : constant quad_double := qdx*dy;
+    tdxdy : constant triple_double := tdx*dy;
+    qtxdy : constant quad_double := create(tdxdy);
+    df4 : constant quad_double := qdxdy - qtxdy;
+    qdq : constant quad_double := qdx / qdy;
+    tdq : constant triple_double := tdx / tdy;
+    qtq : constant quad_double := create(tdq);
+    df5 : constant quad_double := qdq - qtq;
 
   begin
     put_line("The sum of two random quad doubles :");
@@ -199,6 +299,15 @@ procedure ts_tridbl is
     put("(x+y)-y : "); put(qtv); new_line;
     put("      x : "); put(qtx); new_line;
     put_line("The difference :"); put(df2); new_line;
+    put("qd x*y :"); put(qdp); new_line;
+    put("td x*y :"); put(qtp); new_line;
+    put_line("The difference :"); put(df3); new_line;
+    put("qd x*dy :"); put(qdxdy); new_line;
+    put("td x*dy :"); put(qtxdy); new_line;
+    put_line("The difference :"); put(df4); new_line;
+    put("qd x/y :"); put(qdq); new_line;
+    put("td x/y :"); put(qtq); new_line;
+    put_line("The difference :"); put(df5); new_line;
   end Test_Basic_Arithmetic;
 
   procedure Main is
