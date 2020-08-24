@@ -4,6 +4,8 @@ Mon 24 Aug 2020 : moved code from ts_tridbl into two new packages:
   New package triple_double_numbers_io, tested by ts_tridbl,
   extended triple_double_numbers and fast_double_renormalizations.
   Fixed definition of is_one() in quad_double_numbers.
+  Completed the triple_double_numbers_io.adb, after added the needed
+  operations to triple_double_numbers, tested by ts_tridbl.
 
 Sun 23 Aug 2020 : added "-" functions to ts_tridbl.
   Added multiplication and division functions to ts_tridbl.

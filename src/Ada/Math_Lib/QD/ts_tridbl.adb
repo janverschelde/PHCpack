@@ -1,5 +1,7 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
@@ -158,6 +160,41 @@ procedure ts_tridbl is
     end loop;
   end Test_io;
 
+  procedure Test_sqrt2 is
+
+  -- DESCRIPTION :
+  --   Computes the square root of 2 using Newton's method
+  --   in triple double arithmetic.
+
+    n,x,y,z,e,a : triple_double;
+    max_steps : constant natural32 := 7;
+    sqrt2 : constant string
+          := "1.4142135623730950488016887242096980785696718753769";
+    fail : boolean;
+
+  begin
+    n := Create(2.0); Copy(n,x);
+    new_line;
+    put_line("running Newton's method for sqrt(2) ...");
+    read(sqrt2,y,fail);
+    if fail
+     then put_line("reading value for sqrt2 from string failed!");
+    end if;
+    put(" sqrt2: "); put(y); new_line;
+    put("step 0: "); put(x); new_line;
+    for i in 1..max_steps loop
+      z := x*x;
+      z := z+n;
+      z := z/x;
+      z := 0.5*z;
+      put("step "); put(i,1); put(": "); put(z); new_line;
+      copy(z,x);
+      e := x - y;
+      a := abs(e);
+      put("  error : "); put(a,3); new_line;
+    end loop;
+  end Test_sqrt2;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -172,11 +209,14 @@ procedure ts_tridbl is
     put_line("  1. basic arithmetic");
     put_line("  2. test reading from string");
     put_line("  3. input and output");
-    put("Type 1, 2, or 3 to select a test : "); Ask_Alternative(ans,"123");
+    put_line("  4. Newton's method for sqrt(2)");
+    put("Type 1, 2, 3, or 4 to select a test : ");
+    Ask_Alternative(ans,"1234");
     case ans is
       when '1' => Test_Basic_Arithmetic;
       when '2' => Test_Read;
       when '3' => Test_io;
+      when '4' => Test_sqrt2;
       when others => null;
     end case;
   end Main;
