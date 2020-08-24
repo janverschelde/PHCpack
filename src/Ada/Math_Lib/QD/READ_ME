@@ -94,5 +94,7 @@ dobldobl_complex_exponentiation : high powers of double double complex numbers
 quaddobl_complex_exponentiation : high powers of quad double complex numbers
 ts_cmpexp                       : test on complex exponentiation
 ------------------------------------------------------------------------------
+fast_double_renormalizations : renormalizations for multiple doubles
+triple_double_numbers        : defines triple double numbers and arithmetic
 ts_tridbl                    : test on triple double arithmetic
 ------------------------------------------------------------------------------
