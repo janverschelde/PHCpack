@@ -66,6 +66,23 @@ package body Triple_Double_Numbers is
     return res;
   end "+";
 
+  function "+" ( x : triple_double; y : double_float ) return triple_double is
+
+    res : triple_double;
+
+  begin
+    renorm_add1(x.hi,x.mi,x.lo,y,res.hi,res.mi,res.lo);
+    return res;
+  end "+";
+
+  function "+" ( x : double_float; y : triple_double ) return triple_double is
+
+    res : constant triple_double := y + x;
+
+  begin
+    return res;
+  end "+";
+
   function "-" ( x : triple_double ) return triple_double is
 
     res : triple_double;
@@ -80,6 +97,15 @@ package body Triple_Double_Numbers is
   function "-" ( x,y : triple_double ) return triple_double is
 
     mny : constant triple_double := -y;
+    res : constant triple_double := x + mny;
+
+  begin
+    return res;
+  end "-";
+
+  function "-" ( x : triple_double; y : double_float ) return triple_double is
+
+    mny : constant double_float := -y;
     res : constant triple_double := x + mny;
 
   begin
@@ -159,5 +185,59 @@ package body Triple_Double_Numbers is
     fast_renorm(q0,q1,q2,q3,res.hi,res.mi,res.lo);
     return res;
   end "/";
+
+  function "/" ( x : double_float; y : triple_double ) return triple_double is
+
+    tdx : constant triple_double := create(x);
+    res : constant triple_double := tdx/y;
+
+  begin
+    return res;
+  end "/";
+
+  function "/" ( x : triple_double; y : double_float ) return triple_double is
+
+    tdy : constant triple_double := create(y);
+    res : constant triple_double := x/tdy;
+
+  begin
+    return res;
+  end "/";
+
+  function "**" ( x : triple_double; n : integer ) return triple_double is
+
+    res,acc : triple_double;
+    absn : natural;
+
+  begin
+    if n = 0 then
+      res.hi := 1.0; res.mi := 0.0; res.lo := 0.0;
+    else
+      if n > 0
+       then absn := n;
+       else absn := -n;
+      end if;
+      res.hi := x.hi; res.mi := x.mi; res.lo := x.lo;
+      acc.hi := 1.0;  acc.mi := 0.0;  acc.lo := 0.0;
+      if absn > 1 then          -- use binary exponentiation
+        while absn > 0 loop
+          if absn mod 2 = 1
+           then acc := acc*res;
+          end if;
+          absn := absn/2;
+          if absn > 0
+           then res := res*res;
+          end if;
+        end loop;
+      else
+        acc.hi := res.hi; acc.mi := res.mi; acc.lo := res.lo;
+      end if;
+      if n < 0
+       then res := 1.0/acc;          -- compute reciprocal
+       else res.hi := acc.hi; res.mi := acc.mi; res.lo := acc.lo;
+      end if;
+    end if;
+    return res;
+  end "**";
 
 end Triple_Double_Numbers;

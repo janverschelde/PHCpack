@@ -96,5 +96,6 @@ ts_cmpexp                       : test on complex exponentiation
 ------------------------------------------------------------------------------
 fast_double_renormalizations : renormalizations for multiple doubles
 triple_double_numbers        : defines triple double numbers and arithmetic
+triple_double_numbers_io     : input and output of triple double numbers
 ts_tridbl                    : test on triple double arithmetic
 ------------------------------------------------------------------------------

@@ -1,5 +1,8 @@
 Mon 24 Aug 2020 : moved code from ts_tridbl into two new packages:
   triple_double_numbers and fast_double_renormalizations.
+  Updated documentation error in quad_double_numbers_io.ads.
+  New package triple_double_numbers_io, tested by ts_tridbl,
+  extended triple_double_numbers and fast_double_renormalizations.
 
 Sun 23 Aug 2020 : added "-" functions to ts_tridbl.
   Added multiplication and division functions to ts_tridbl.

@@ -1,10 +1,12 @@
 with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with QuadDobl_Random_Numbers;            use QuadDobl_Random_Numbers;
 with QuadDobl_Mathematical_Functions;
 with Triple_Double_Numbers;              use Triple_Double_Numbers;
+with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
 
 procedure ts_tridbl is
 
@@ -96,11 +98,87 @@ procedure ts_tridbl is
     put_line("The difference :"); put(df5); new_line;
   end Test_Basic_Arithmetic;
 
+  procedure Test_Read is
+
+  -- DESCRIPTION :
+  --   Reads a 50-digit approximation A for sqrt(2) from a string
+  --   and shows the result of A*A - 2.
+
+  --   >>> from sympy import evalf, sqrt
+  --   >>> s2 = sqrt(2).evalf(50)
+  --   >>> s2
+  --   1.4142135623730950488016887242096980785696718753769
+  --   >>> s2*s2 - 2
+  --   -2.6727647100921956461405364671514818788151968801050e-51
+    
+    sqrt2 : constant string
+          := "1.4142135623730950488016887242096980785696718753769";
+    x,r : triple_double;
+    two : constant triple_double := create(2.0);
+    fail : boolean;
+    qdx,qdr : quad_double;
+
+  begin
+    read(sqrt2,x,fail);
+    new_line;
+    if fail then
+      put_line("The read procedure reports failure!");
+    else
+      put_line("The read procedure reports no failure.");
+      qdx := create(x);
+      put("qd x : "); put(qdx); new_line;
+      r := x*x - 2.0;
+      qdr := create(r);
+      put_line("x*x - 2.0 : "); put(qdr); new_line;
+      r := x*x - two;
+      qdr := create(r);
+      put_line("x*x - two : "); put(qdr); new_line;
+    end if;
+  end Test_Read;
+
+  procedure Test_io is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a number, reads and writes a triple double.
+
+    x,y : triple_double;
+    ans : character;
+ 
+  begin
+    new_line;
+    loop
+      put("Give x : "); get(x);
+      put(" --> x : "); put(x); new_line;
+      put("Give pair x y : "); get(x,y); 
+      put(" --> x : "); put(x); new_line;
+      put(" --> y : "); put(y); new_line;
+      put("More tests ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end Test_io;
+
   procedure Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user to select a test
+  --   and then runs the test.
+
+    ans : character;
+
   begin
     new_line;
     put_line("Testing triple double arithmetic ...");
-    Test_Basic_Arithmetic;
+    put_line("  1. basic arithmetic");
+    put_line("  2. test reading from string");
+    put_line("  3. input and output");
+    put("Type 1, 2, or 3 to select a test : "); Ask_Alternative(ans,"123");
+    case ans is
+      when '1' => Test_Basic_Arithmetic;
+      when '2' => Test_Read;
+      when '3' => Test_io;
+      when others => null;
+    end case;
   end Main;
 
 begin
