@@ -16,12 +16,12 @@ package Quad_Double_Numbers_io is
   --   Reads the string s starting at the position ps.
 
   -- ON ENTRY :
-  --   s        contains a double double number;
+  --   s        contains a quad double number;
   --   ps       position in string s where to start reading.
 
   -- ON RETURN :
   --   ps       position in s of next valid entry (in case of a pair);
-  --   x        double double read from the string;
+  --   x        quad double read from the string;
   --   fail     if format on string s is not correct.
 
   procedure read ( s : in string; x : out quad_double; fail : out boolean );
