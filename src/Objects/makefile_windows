@@ -245,6 +245,9 @@ ts_isnan:
 ts_tridbl:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tridbl.adb -o $(BIN)/ts_tridbl
 
+ts_octdbl:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_octdbl.adb -o $(BIN)/ts_octdbl
+
 # Test programs for Math_Lib/QD :
 
 ts_dbldbl:

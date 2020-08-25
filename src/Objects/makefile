@@ -160,7 +160,7 @@ ts_isnan:
 # Test programs for Math_Lib/QD :
 
 test_qd: ts_dbldbl ts_qddbl ts_ddcmplx ts_qdcmplx ts_mpddcv ts_mpqdcv \
-         ts_ddfun ts_qdfun ts_cmpexp ts_tridbl
+         ts_ddfun ts_qdfun ts_cmpexp ts_tridbl ts_octdbl
 
 ts_dbldbl:
 	make -f $(MAKEFILE) ts_dbldbl
@@ -191,6 +191,9 @@ ts_cmpexp:
 
 ts_tridbl:
 	make -f $(MAKEFILE) ts_tridbl
+
+ts_octdbl:
+	make -f $(MAKEFILE) ts_octdbl
 
 # Test programs for Math_Lib/Vectors :
 
