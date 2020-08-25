@@ -4,6 +4,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
 
 procedure ts_octdbl is
 
@@ -84,6 +85,39 @@ procedure ts_octdbl is
    put_line("All parts of (x * y) / y :"); Write(v);
   end Test_Multiplication_and_Division;
 
+  procedure Test_Read is
+
+  -- DESCRIPTION :
+  --   Reads a 128-digit approximation A for sqrt(2) from a string
+  --   and shows the result of A*A - 2.
+
+  --   >>> from sympy import evalf, sqrt
+  --   >>> s2 = sqrt(2).evalf(128)
+  --   >>> s2
+  --   1.414213562373095048801688724209698078569671875376948073176679737
+  --   9907324784621070388503875343276415727350138462309122970249248361
+    
+    sqrt2 : constant string
+      := "1.414213562373095048801688724209698078569671875376948073176679737"
+       & "9907324784621070388503875343276415727350138462309122970249248361";
+    x,r : octo_double;
+    two : constant octo_double := create(2.0);
+    fail : boolean;
+
+  begin
+    read(sqrt2,x,fail);
+    new_line;
+    if fail then
+      put_line("The read procedure reports failure!");
+    else
+      put_line("All parts of the sqrt(2) read :"); Write(x);
+      r := x*x - 2.0;
+      put_line("All parts of x*x - 2.0 : "); Write(r);
+      r := x*x - two;
+      put_line("All parts of x*x - two : "); Write(r);
+    end if;
+  end Test_Read;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -96,10 +130,13 @@ procedure ts_octdbl is
     put_line("Testing octo double arithmetic ...");
     put_line("  1. test addition and subtraction");
     put_line("  2. test multiplication and division");
-    put("Type 1 or 2 to select a test : "); Ask_Alternative(ans,"12");
+    put_line("  3. test reading from a string");
+    put("Type 1, 2, or 3 to select a test : ");
+    Ask_Alternative(ans,"123");
     case ans is
       when '1' => Test_Add_and_Subtract;
       when '2' => Test_Multiplication_and_Division;
+      when '3' => Test_Read;
       when others => null;
     end case;
   end Main;

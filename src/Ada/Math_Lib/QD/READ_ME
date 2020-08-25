@@ -99,5 +99,6 @@ triple_double_numbers        : defines triple double numbers and arithmetic
 triple_double_numbers_io     : input and output of triple double numbers
 ts_tridbl                    : test on triple double arithmetic
 octo_double_numbers          : defines octo double numbers and arithmetic
+octo_double_numbers_io       : input and output of octo double numbers
 ts_octdbl                    : test on octo double arithmetic
 ------------------------------------------------------------------------------
