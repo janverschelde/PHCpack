@@ -242,12 +242,6 @@ ts_numbio:
 ts_isnan:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_isnan.adb -o $(BIN)/ts_isnan
 
-ts_tridbl:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tridbl.adb -o $(BIN)/ts_tridbl
-
-ts_octdbl:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_octdbl.adb -o $(BIN)/ts_octdbl
-
 # Test programs for Math_Lib/QD :
 
 ts_dbldbl:
@@ -278,6 +272,20 @@ ts_qdfun:
 
 ts_cmpexp:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cmpexp.adb -o $(BIN)/ts_cmpexp
+
+ts_tridbl:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tridbl.adb -o $(BIN)/ts_tridbl
+
+ts_tdcmplx:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tdcmplx.adb \
+              -o $(BIN)/ts_tdcmplx
+
+ts_octdbl:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_octdbl.adb -o $(BIN)/ts_octdbl
+
+ts_odcmplx:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_odcmplx.adb \
+              -o $(BIN)/ts_odcmplx
 
 # Test programs for Math_Lib/Vectors :
 

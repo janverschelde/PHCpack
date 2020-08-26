@@ -293,6 +293,14 @@ ts_tridbl:
 ts_octdbl:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_octdbl.adb -o $(BIN)/ts_octdbl
 
+ts_tdcmplx:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tdcmplx.adb \
+              -o $(BIN)/ts_tdcmplx
+
+ts_odcmplx:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_odcmplx.adb \
+              -o $(BIN)/ts_odcmplx
+
 # Test programs for Math_Lib/Vectors :
 
 ts_natvec:
