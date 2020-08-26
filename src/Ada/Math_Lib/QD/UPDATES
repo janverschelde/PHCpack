@@ -1,3 +1,11 @@
+Wed 26 Aug 2020 : defined complex numbers in triple and octo double precision,
+  with the packages triple_double_ring, triple_double_ring-ffield,
+  octo_double_ring, octo_double_ring-ffield (which required updates to 
+  triple_double_numbers and octo_double_numbers); and 
+  tripdobl_complex_numbers, tripdobl_complex_numbers_io, tested by ts_tdcmplx,
+  octodobl_complex_numbers, octodobl_complex_numbers_io, tested by od_tdcmplx.
+  Instantiated tripdobl_complex_ring-ffield and octodobl_complex_ring-ffield.
+
 Tue 25 Aug 2020 : new test procedure ts_octdbl to work with octo doubles.
   New package octo_double_numbers, extended fast_double_renormalizations,
   ts_octdbl tests all basic arithmetical operations on octo doubles.

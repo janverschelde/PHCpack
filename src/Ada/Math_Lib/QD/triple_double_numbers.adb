@@ -8,6 +8,61 @@ package body Triple_Double_Numbers is
 
 -- CONSTRUCTORS :
 
+  function create ( i : integer ) return triple_double is
+
+    res : triple_double;
+
+  begin
+    res.hi := double_float(i);
+    res.mi := 0.0;
+    res.lo := 0.0;
+    return res;
+  end create;
+
+  function create ( n : natural32 ) return triple_double is
+
+    res : triple_double;
+
+  begin
+    res.hi := double_float(n);
+    res.mi := 0.0;
+    res.lo := 0.0;
+    return res;
+  end create;
+
+  function create ( n : natural64 ) return triple_double is
+
+    res : triple_double;
+
+  begin
+    res.hi := double_float(n);
+    res.mi := 0.0;
+    res.lo := 0.0;
+    return res;
+  end create;
+
+  function create ( i : integer32 ) return triple_double is
+
+    res : triple_double;
+
+  begin
+    res.hi := double_float(i);
+    res.mi := 0.0;
+    res.lo := 0.0;
+    return res;
+  end create;
+
+  function create ( i : integer64 ) return triple_double is
+
+    res : triple_double;
+
+  begin
+    res.hi := double_float(i);
+    res.mi := 0.0;
+    res.lo := 0.0;
+    return res;
+  end create;
+
   function create ( x : double_float ) return triple_double is
 
     res : triple_double;
@@ -41,6 +96,18 @@ package body Triple_Double_Numbers is
     end if;
     return res;
   end "abs";
+
+  function AbsVal ( x : triple_double ) return triple_double is
+
+    res : triple_double;
+
+  begin
+    if x.hi < 0.0
+     then res.hi := -x.hi; res.mi := -x.mi; res.lo := -x.lo;
+     else res.hi :=  x.hi; res.mi :=  x.mi; res.lo :=  x.lo;
+    end if;
+    return res;
+  end AbsVal;
 
   function floor ( x : triple_double ) return triple_double is
 
@@ -229,6 +296,15 @@ package body Triple_Double_Numbers is
     res : constant triple_double := y + x;
 
   begin
+    return res;
+  end "+";
+
+  function "+" ( x : triple_double ) return triple_double is
+
+    res : triple_double;
+
+  begin
+    res.hi := x.hi; res.mi := x.mi; res.lo := x.lo;
     return res;
   end "+";
 
@@ -560,5 +636,39 @@ package body Triple_Double_Numbers is
     res := log(x)/logten;
     return res;
   end log10;
+
+-- ARITHMETICAL OPERATIONS AS PROCEDURES :
+
+  procedure Add ( x : in out triple_double; y : in triple_double ) is
+  begin
+    x := x + y;
+  end Add;
+
+  procedure Sub ( x : in out triple_double; y : in triple_double ) is
+  begin
+    x := x - y;
+  end Sub;
+
+  procedure Min ( x : in out triple_double ) is
+  begin
+    x := -x;
+  end Min;
+
+  procedure Mul ( x : in out triple_double; y : in triple_double ) is
+  begin
+    x := x*y;
+  end Mul;
+
+  procedure Div ( x : in out triple_double; y : in triple_double ) is
+  begin
+    x := x/y;
+  end Div;
+
+-- DESTRUCTOR :
+
+  procedure clear ( x : in out triple_double ) is
+  begin
+    x.hi := 0.0; x.mi := 0.0; x.lo := 0.0;
+  end Clear;
 
 end Triple_Double_Numbers;

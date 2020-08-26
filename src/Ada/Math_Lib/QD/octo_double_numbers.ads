@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 
@@ -19,6 +20,25 @@ package Octo_Double_Numbers is
 
 -- CONSTRUCTORS :
 
+  function create ( i : integer ) return octo_double;
+
+  -- DECRIPTION :
+  --   Returns the octo double representation of the standard integer i.
+
+  function create ( n : natural32 ) return octo_double;
+  function create ( n : natural64 ) return octo_double;
+
+  -- DESCRIPTION :
+  --   Returns the octo double representation of the 32-bit or 64-bit
+  --   machine natural number n.
+
+  function create ( i : integer32 ) return octo_double;
+  function create ( i : integer64 ) return octo_double;
+
+  -- DESCRIPTION :
+  --   Returns the octo double representation of the 32-bit or 64-bit
+  --   machine integer number i.
+
   function create ( x : double_float ) return octo_double;
 
   -- DESCRIPTION :
@@ -37,6 +57,8 @@ package Octo_Double_Numbers is
 
   -- DESCRIPTION :
   --   Returns the absolute value of x.
+
+  function AbsVal ( x : octo_double ) return octo_double; -- same as abs
 
   function floor ( x : octo_double ) return octo_double;
 
@@ -143,6 +165,7 @@ package Octo_Double_Numbers is
   function "+" ( x,y : octo_double ) return octo_double;   -- returns x+y
   function "+" ( x : octo_double; y : double_float ) return octo_double;
   function "+" ( x : double_float; y : octo_double ) return octo_double;
+  function "+" ( x : octo_double ) return octo_double;     -- returns copy
 
   function "-" ( x : octo_double ) return octo_double;     -- returns -x
   function "-" ( x,y : octo_double ) return octo_double;   -- returns x-y
@@ -169,6 +192,18 @@ package Octo_Double_Numbers is
   function exp ( x : octo_double ) return octo_double;   -- returns exp(x)
   function log ( x : octo_double ) return octo_double;   -- natural log
   function log10 ( x : octo_double ) return octo_double; -- decimal log
+
+-- ARITHMETICAL OPERATIONS AS PROCEDURES :
+
+  procedure Add ( x : in out octo_double; y : in octo_double ); -- x := x+y
+  procedure Sub ( x : in out octo_double; y : in octo_double ); -- x := x-y
+  procedure Min ( x : in out octo_double );                     -- x:= -x
+  procedure Mul ( x : in out octo_double; y : in octo_double ); -- x := x*y
+  procedure Div ( x : in out octo_double; y : in octo_double ); -- x := x/y
+
+-- DESTRUCTOR :
+
+  procedure clear ( x : in out octo_double ); -- sets x to zero
 
 private
 

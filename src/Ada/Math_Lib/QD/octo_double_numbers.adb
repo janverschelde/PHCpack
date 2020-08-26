@@ -7,6 +7,46 @@ package body Octo_Double_Numbers is
 
 -- CONSTRUCTORS :
 
+  function create ( i : integer ) return octo_double is
+
+    res : constant octo_double := create(double_float(i));
+
+  begin
+    return res;
+  end create;
+
+  function create ( n : natural32 ) return octo_double is
+
+    res : constant octo_double := create(double_float(n));
+
+  begin
+    return res;
+  end create;
+
+  function create ( n : natural64 ) return octo_double is
+
+    res : constant octo_double := create(double_float(n));
+
+  begin
+    return res;
+  end create;
+
+  function create ( i : integer32 ) return octo_double is
+
+    res : constant octo_double := create(double_float(i));
+
+  begin
+    return res;
+  end create;
+
+  function create ( i : integer64 ) return octo_double is
+
+    res : constant octo_double := create(double_float(i));
+
+  begin
+    return res;
+  end create;
+
   function create ( x : double_float ) return octo_double is
 
     res : octo_double;
@@ -59,6 +99,25 @@ package body Octo_Double_Numbers is
     end if;
     return res;
   end "abs";
+
+  function AbsVal ( x : octo_double ) return octo_double is
+
+    res : octo_double;
+
+  begin
+    if x.hihihi < 0.0 then
+      res.hihihi := -x.hihihi; res.lohihi := -x.lohihi;
+      res.hilohi := -x.hilohi; res.lolohi := -x.lolohi;
+      res.hihilo := -x.hihilo; res.lohilo := -x.lohilo;
+      res.hilolo := -x.hilolo; res.lololo := -x.lololo;
+    else
+      res.hihihi := x.hihihi; res.lohihi := x.lohihi;
+      res.hilohi := x.hilohi; res.lolohi := x.lolohi;
+      res.hihilo := x.hihilo; res.lohilo := x.lohilo;
+      res.hilolo := x.hilolo; res.lololo := x.lololo;
+    end if;
+    return res;
+  end AbsVal;
 
   function floor ( x : octo_double ) return octo_double is
 
@@ -354,6 +413,22 @@ package body Octo_Double_Numbers is
     res : constant octo_double := y + x;
 
   begin
+    return res;
+  end "+";
+
+  function "+" ( x : octo_double ) return octo_double is
+
+    res : octo_double;
+
+  begin
+    res.hihihi := x.hihihi;
+    res.lohihi := x.lohihi;
+    res.hilohi := x.hilohi;
+    res.lolohi := x.lolohi;
+    res.hihilo := x.hihilo;
+    res.lohilo := x.lohilo;
+    res.hilolo := x.hilolo;
+    res.lololo := x.lololo;
     return res;
   end "+";
 
@@ -1063,5 +1138,42 @@ package body Octo_Double_Numbers is
     res := log(x)/logten;
     return res;
   end log10;
+
+-- ARITHMETICAL OPERATIONS AS PROCEDURES :
+
+  procedure Add ( x : in out octo_double; y : in octo_double ) is
+  begin
+    x := x + y;
+  end Add;
+
+  procedure Sub ( x : in out octo_double; y : in octo_double ) is
+  begin
+    x := x - y;
+  end Sub;
+
+  procedure Min ( x : in out octo_double ) is
+  begin
+    x := -x;
+  end Min;
+
+  procedure Mul ( x : in out octo_double; y : in octo_double ) is
+  begin
+    x := x*y;
+  end Mul;
+
+  procedure Div ( x : in out octo_double; y : in octo_double ) is
+  begin
+    x := x/y;
+  end Div;
+
+-- DESTRUCTOR :
+
+  procedure clear ( x : in out octo_double ) is
+  begin
+    x.hihihi := 0.0; x.lohihi := 0.0;
+    x.hilohi := 0.0; x.lolohi := 0.0;
+    x.hihilo := 0.0; x.lohilo := 0.0;
+    x.hilolo := 0.0; x.lololo := 0.0;
+  end clear;
 
 end Octo_Double_Numbers;

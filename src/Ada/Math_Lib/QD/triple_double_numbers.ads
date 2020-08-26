@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 
@@ -20,6 +21,25 @@ package Triple_Double_Numbers is
 
 -- CONSTRUCTORS :
 
+  function create ( i : integer ) return triple_double;
+
+  -- DECRIPTION :
+  --   Returns the triple double representation of the standard integer i.
+
+  function create ( n : natural32 ) return triple_double;
+  function create ( n : natural64 ) return triple_double;
+
+  -- DESCRIPTION :
+  --   Returns the triple double representation of the 32-bit or 64-bit
+  --   machine natural number n.
+
+  function create ( i : integer32 ) return triple_double;
+  function create ( i : integer64 ) return triple_double;
+
+  -- DESCRIPTION :
+  --   Returns the triple double representation of the 32-bit or 64-bit
+  --   machine integer number i.
+
   function create ( x : double_float ) return triple_double;
 
   -- DESCRIPTION :
@@ -35,6 +55,8 @@ package Triple_Double_Numbers is
 
   -- DESCRIPTION :
   --   Returns the absolute value of x.
+
+  function AbsVal ( x : triple_double ) return triple_double; -- same as abs
 
   function floor ( x : triple_double ) return triple_double;
 
@@ -116,6 +138,7 @@ package Triple_Double_Numbers is
   function "+" ( x,y : triple_double ) return triple_double; -- returns x+y
   function "+" ( x : triple_double; y : double_float ) return triple_double;
   function "+" ( x : double_float; y : triple_double ) return triple_double;
+  function "+" ( x : triple_double ) return triple_double; -- returns copy
 
   function "-" ( x : triple_double ) return triple_double; -- returns -x
 
@@ -143,6 +166,18 @@ package Triple_Double_Numbers is
   function exp ( x : triple_double ) return triple_double;   -- returns exp(x)
   function log ( x : triple_double ) return triple_double;   -- natural log
   function log10 ( x : triple_double ) return triple_double; -- decimal log
+
+-- ARITHMETICAL OPERATIONS AS PROCEDURES :
+
+  procedure Add ( x : in out triple_double; y : in triple_double ); -- x := x+y
+  procedure Sub ( x : in out triple_double; y : in triple_double ); -- x := x-y
+  procedure Min ( x : in out triple_double );                       -- x:= -x
+  procedure Mul ( x : in out triple_double; y : in triple_double ); -- x := x*y
+  procedure Div ( x : in out triple_double; y : in triple_double ); -- x := x/y
+
+-- DESTRUCTOR :
+
+  procedure clear ( x : in out triple_double ); -- sets x to zero
 
 private
 
