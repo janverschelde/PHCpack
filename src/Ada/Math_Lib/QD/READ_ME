@@ -112,11 +112,13 @@ triple_double_ring-ffield    : field of triple double numbers
 tripdobl_complex_numbers     : complex arithmetic with triple doubles
 tripdobl_complex_numbers_io  : input/output for triple double complex
 tripdobl_complex_ring-ffield : field of triple double complex numbers
+tripdobl_random_numbers      : random numbers in triple double precision
 ts_tdcmplx                   : test on triple double complex numbers
 octo_double_ring             : ring of octo double numbers
 octo_double_ring-ffield      : field of octo double numbers
 octodobl_complex_numbers     : complex arithmetic with octo doubles
 octodobl_complex_numbers_io  : input/output for octo double complex
 octodobl_complex_ring-ffield : field of octo double complex numbers
+octodobl_random_numbers      : random numbers in octo double precision
 ts_odcmplx                   : test on octo double complex numbers
 ------------------------------------------------------------------------------
