@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 
 package Octo_Double_Numbers is
@@ -31,6 +32,16 @@ package Octo_Double_Numbers is
   --   Returns an octo double with the doubles in the given order.
   --   The highest, most significant part is given in hihihi.
   --   The lowest, least significant part is given in lololo.
+
+  function "abs" ( x : octo_double ) return octo_double;
+
+  -- DESCRIPTION :
+  --   Returns the absolute value of x.
+
+  function floor ( x : octo_double ) return octo_double;
+
+  -- DESCRIPTION :
+  --   Returns nearest lower integer to x.
 
 -- SELECTORS :
 
@@ -74,6 +85,59 @@ package Octo_Double_Numbers is
   -- DESCRIPTION :
   --   Returns the least significant part of x.
 
+-- TYPE CASTS :
+
+  function to_int ( x : octo_double ) return integer32;
+
+  -- DESCRIPTION :
+  --   Converts the highest word into a 32-bit integer;
+
+  function to_double ( x : octo_double ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns hihihi_part(x).
+
+-- COMPARISON and COPYING :
+
+  function is_zero ( x : octo_double ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if x is zero, returns false otherwise.
+
+  function is_one ( x : octo_double ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if x is one, returns false otherwise.
+
+  function is_positive ( x : octo_double ) return boolean;
+
+  -- DESCRIPTION : 
+  --   Returns true if x is positive, returns false otherwise.
+
+  function is_negative ( x : octo_double ) return boolean;
+
+  -- DESCRIPTION : 
+  --   Returns true if x is negative, returns false otherwise.
+
+  function equal ( x,y : octo_double ) return boolean;
+  function equal ( x : octo_double; y : double_float ) return boolean;
+
+  function "<" ( x,y : octo_double ) return boolean;
+  function "<" ( x : octo_double; y : double_float ) return boolean;
+  function "<" ( x : double_float; y : octo_double ) return boolean;
+  function "<=" ( x,y : octo_double ) return boolean;
+  function "<=" ( x : octo_double; y : double_float ) return boolean;
+  function "<=" ( x : double_float; y : octo_double ) return boolean;
+
+  function ">" ( x,y : octo_double ) return boolean;
+  function ">" ( x : octo_double; y : double_float ) return boolean;
+  function ">" ( x : double_float; y : octo_double ) return boolean;
+  function ">=" ( x,y : octo_double ) return boolean;
+  function ">=" ( x : octo_double; y : double_float ) return boolean;
+  function ">=" ( x : double_float; y : octo_double ) return boolean;
+
+  procedure copy ( x : in octo_double; y : in out octo_double );
+
 -- ARITHMETICAL OPERATIONS :
 
   function "+" ( x,y : octo_double ) return octo_double;   -- returns x+y
@@ -88,11 +152,23 @@ package Octo_Double_Numbers is
   function "*" ( x : octo_double; y : double_float ) return octo_double;
   function "*" ( x : double_float; y : octo_double ) return octo_double;
 
+  function Mul_pwr2 ( x : octo_double; y : double_float ) -- y = 2^k
+                    return octo_double;
+  procedure Mul_pwr2 ( x : in out octo_double; y : in double_float );
+  -- multiplies x with y, where y is a power of 2
+
   function "/" ( x,y : octo_double ) return octo_double;   -- returns x/y
   function "/" ( x : octo_double; y : double_float ) return octo_double;
   function "/" ( x : double_float; y : octo_double ) return octo_double;
 
   function "**" ( x : octo_double; n : integer ) return octo_double; -- x^n
+
+  function ldexp ( x : octo_double; n : integer ) return octo_double;
+  -- returns (2^n)*x
+
+  function exp ( x : octo_double ) return octo_double;   -- returns exp(x)
+  function log ( x : octo_double ) return octo_double;   -- natural log
+  function log10 ( x : octo_double ) return octo_double; -- decimal log
 
 private
 
