@@ -121,4 +121,5 @@ octodobl_complex_numbers_io  : input/output for octo double complex
 octodobl_complex_ring-ffield : field of octo double complex numbers
 octodobl_random_numbers      : random numbers in octo double precision
 ts_odcmplx                   : test on octo double complex numbers
+ts_pentadbl                  : test on penta double arithmetic
 ------------------------------------------------------------------------------

@@ -7,6 +7,8 @@ Wed 26 Aug 2020 : defined complex numbers in triple and octo double precision,
   Instantiated tripdobl_complex_ring-ffield and octodobl_complex_ring-ffield.
   New packages tripdobl_random_numbers and octodobl_random_numbers,
   with test procedures added in ts_tdcmplx and ts_odcmplx.
+  New test procedure ts_pentadbl with the basis arithmetical operations
+  for numbers in penta double precision.
 
 Tue 25 Aug 2020 : new test procedure ts_octdbl to work with octo doubles.
   New package octo_double_numbers, extended fast_double_renormalizations,
