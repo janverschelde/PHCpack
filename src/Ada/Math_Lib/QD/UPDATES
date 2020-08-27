@@ -1,5 +1,8 @@
 Thu 27 Aug 2020 : bug fix in fast_double_renormalizations.adb:
   the fast_renorm applies quick_two_sum, the renorm_add1 applies two_sum.
+  New test procedure ts_decadbl to develop deca double arithmetic.
+  Extended fast_double_renormalizations and copied code from ts_decadbl
+  into a new package deca_double_numbers.
 
 Wed 26 Aug 2020 : defined complex numbers in triple and octo double precision,
   with the packages triple_double_ring, triple_double_ring-ffield,

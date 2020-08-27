@@ -1,0 +1,1109 @@
+with Double_Double_Basics;
+with Fast_Double_Renormalizations;       use Fast_Double_Renormalizations;
+
+package body Deca_Double_Numbers is
+
+-- CONSTRUCTORS :
+
+  function create ( i : integer ) return deca_double is
+
+    res : constant deca_double := create(double_float(i));
+
+  begin
+    return res;
+  end create;
+
+  function create ( n : natural32 ) return deca_double is
+
+    res : constant deca_double := create(double_float(n));
+
+  begin
+    return res;
+  end create;
+
+  function create ( n : natural64 ) return deca_double is
+
+    res : constant deca_double := create(double_float(n));
+
+  begin
+    return res;
+  end create;
+
+  function create ( i : integer32 ) return deca_double is
+
+    res : constant deca_double := create(double_float(i));
+
+  begin
+    return res;
+  end create;
+
+  function create ( i : integer64 ) return deca_double is
+
+    res : constant deca_double := create(double_float(i));
+
+  begin
+    return res;
+  end create;
+
+  function create ( x : double_float ) return deca_double is
+
+    res : constant deca_double
+        := create(x,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+
+  begin
+    return res;
+  end create;
+
+  function create ( right_thumb,right_index,right_middle : double_float;
+                    right_ring,right_pink : double_float;
+                    left_thumb,left_index,left_middle : double_float;
+                    left_ring,left_pink : double_float ) return deca_double is
+
+    res : deca_double;
+
+  begin
+    res.right_thumb := right_thumb;
+    res.right_index := right_index;
+    res.right_middle := right_middle; 
+    res.right_ring := right_ring;
+    res.right_pink := right_pink;
+    res.left_thumb := left_thumb;
+    res.left_index := left_index;
+    res.left_middle := left_middle;
+    res.left_ring := left_ring;
+    res.left_pink := left_pink;
+    return res;
+  end create;
+
+  function "abs" ( x : deca_double ) return deca_double is
+
+    res : deca_double;
+
+  begin
+    if x.right_thumb < 0.0 then
+      res.right_thumb := -x.right_thumb; res.right_index := -x.right_index;
+      res.right_middle := -x.right_middle; res.right_ring := -x.right_ring;
+      res.right_pink := -x.right_pink;
+      res.left_thumb := -x.left_thumb; res.left_index := -x.left_index;
+      res.left_middle := -x.left_middle; res.left_ring := -x.left_ring;
+      res.left_pink := -x.left_pink;
+    else
+      res.right_thumb := x.right_thumb; res.right_index := x.right_index;
+      res.right_middle := x.right_middle; res.right_ring := x.right_ring;
+      res.right_pink := x.right_pink;
+      res.left_thumb := x.left_thumb; res.left_index := x.left_index;
+      res.left_middle := x.left_middle; res.left_ring := x.left_ring;
+      res.left_pink := x.left_pink;
+    end if;
+    return res;
+  end "abs";
+
+  function AbsVal ( x : deca_double ) return deca_double is
+
+    res : deca_double;
+
+  begin
+    if x.right_thumb < 0.0 then
+      res.right_thumb := -x.right_thumb; res.right_index := -x.right_index;
+      res.right_middle := -x.right_middle; res.right_ring := -x.right_ring;
+      res.right_pink := -x.right_pink;
+      res.left_thumb := -x.left_thumb; res.left_index := -x.left_index;
+      res.left_middle := -x.left_middle; res.left_ring := -x.left_ring;
+      res.left_pink := -x.left_pink;
+    else
+      res.right_thumb := x.right_thumb; res.right_index := x.right_index;
+      res.right_middle := x.right_middle; res.right_ring := x.right_ring;
+      res.right_pink := x.right_pink;
+      res.left_thumb := x.left_thumb; res.left_index := x.left_index;
+      res.left_middle := x.left_middle; res.left_ring := x.left_ring;
+      res.left_pink := x.left_pink;
+    end if;
+    return res;
+  end AbsVal;
+
+-- SELECTORS :
+
+  function thumb_right ( x : deca_double ) return double_float is
+  begin
+    return x.right_thumb;
+  end thumb_right;
+
+  function index_right ( x : deca_double ) return double_float is
+  begin
+    return x.right_index;
+  end index_right;
+
+  function middle_right ( x : deca_double ) return double_float is
+  begin
+    return x.right_middle;
+  end middle_right;
+
+  function ring_right ( x : deca_double ) return double_float is
+  begin
+    return x.right_ring;
+  end ring_right;
+
+  function pink_right ( x : deca_double ) return double_float is
+  begin
+    return x.right_pink;
+  end pink_right;
+
+  function thumb_left ( x : deca_double ) return double_float is
+  begin
+    return x.left_thumb;
+  end thumb_left;
+
+  function index_left ( x : deca_double ) return double_float is
+  begin
+    return x.left_index;
+  end index_left;
+
+  function middle_left ( x : deca_double ) return double_float is
+  begin
+    return x.left_middle;
+  end middle_left;
+
+  function ring_left ( x : deca_double ) return double_float is
+  begin
+    return x.left_ring;
+  end ring_left;
+
+  function pink_left ( x : deca_double ) return double_float is
+  begin
+    return x.left_pink;
+  end pink_left;
+
+-- ARITHMETICAL FUNCTIONS :
+
+  function "+" ( x,y : deca_double ) return deca_double is
+
+  -- ALGORITHM : baileyAdd_fast<10,10,10> generated by CAMPARY.
+   
+    res : deca_double;
+    f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,e : double_float;
+
+  begin
+    f10 := 0.0;
+    Double_Double_Basics.two_sum(x.left_pink,y.left_pink,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.left_ring,y.left_ring,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.left_middle,y.left_middle,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.left_index,y.left_index,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.left_thumb,y.left_thumb,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.right_pink,y.right_pink,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.right_ring,y.right_ring,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.right_middle,y.right_middle,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.right_index,y.right_index,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(x.right_thumb,y.right_thumb,f0,e);
+    Double_Double_Basics.two_sum(f1,e,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    fast_renorm(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,
+                res.right_thumb,res.right_index,res.right_middle,
+                res.right_ring,res.right_pink,
+                res.left_thumb,res.left_index,res.left_middle,
+                res.left_ring,res.left_pink);
+    return res;
+  end "+";
+
+  function "+" ( x : deca_double; y : double_float ) return deca_double is
+
+    res : deca_double;
+
+  begin
+    renorm_add1(x.right_thumb,x.right_index,x.right_middle,
+                x.right_ring,x.right_pink,
+                x.left_thumb,x.left_index,x.left_middle,
+                x.left_ring,x.left_pink,y,
+                res.right_thumb,res.right_index,res.right_middle,
+                res.right_ring,res.right_pink,
+                res.left_thumb,res.left_index,res.left_middle,
+                res.left_ring,res.left_pink);
+    return res;
+  end "+";
+
+  function "+" ( x : double_float; y : deca_double ) return deca_double is
+
+    res : constant deca_double := y + x;
+
+  begin
+    return res;
+  end "+";
+
+  function "+" ( x : deca_double ) return deca_double is
+
+    res : deca_double;
+
+  begin
+    res.right_thumb := x.right_thumb;
+    res.right_index := x.right_index;
+    res.right_middle := x.right_middle;
+    res.right_ring := x.right_ring;
+    res.right_pink := x.right_pink;
+    res.left_thumb := x.left_thumb;
+    res.left_index := x.left_index;
+    res.left_middle := x.left_middle;
+    res.left_ring := x.left_ring;
+    res.left_pink := x.left_pink;
+    return res;
+  end "+";
+
+  function "-" ( x : deca_double ) return deca_double is
+
+    res : deca_double;
+
+  begin
+    res.right_thumb := -x.right_thumb;
+    res.right_index := -x.right_index;
+    res.right_middle := -x.right_middle;
+    res.right_ring := -x.right_ring;
+    res.right_pink := -x.right_pink;
+    res.left_thumb := -x.left_thumb;
+    res.left_index := -x.left_index;
+    res.left_middle := -x.left_middle;
+    res.left_ring := -x.left_ring;
+    res.left_pink := -x.left_pink;
+    return res;
+  end "-";
+
+  function "-" ( x,y : deca_double ) return deca_double is
+
+    mny : constant deca_double := -y;
+    res : constant deca_double := x + mny;
+
+  begin
+    return res;
+  end "-";
+
+  function "-" ( x : deca_double; y : double_float ) return deca_double is
+
+    mny : constant double_float := -y;
+    res : constant deca_double := x + mny;
+
+  begin
+    return res;
+  end "-";
+
+  function "-" ( x : double_float; y : deca_double ) return deca_double is
+
+    mny : constant deca_double := -y;
+    res : constant deca_double := x + mny;
+
+  begin
+    return res;
+  end "-";
+
+  function "*" ( x,y : deca_double ) return deca_double is
+
+  -- ALGORITHM :baileyMul_fast<10,10,10> generated by CAMPARY.
+
+    res : deca_double;
+    f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,p,e : double_float;
+
+  begin
+    f10 := x.right_index*y.left_pink;
+    f10 := f10 + x.right_middle*y.left_ring;
+    f10 := f10 + x.right_ring*y.left_middle;
+    f10 := f10 + x.right_pink*y.left_index;
+    f10 := f10 + x.left_thumb*y.left_thumb;
+    f10 := f10 + x.left_index*y.right_pink;
+    f10 := f10 + x.left_middle*y.right_ring;
+    f10 := f10 + x.left_ring*y.right_middle;
+    f10 := f10 + x.left_pink*y.right_index;
+    Double_Double_Basics.two_prod(x.right_thumb,y.left_pink,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.left_ring,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y.left_middle,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_ring,y.left_index,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_pink,y.left_thumb,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_thumb,y.right_pink,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_index,y.right_ring,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_middle,y.right_middle,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_ring,y.right_index,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_pink,y.right_thumb,p,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f9,p,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.left_ring,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.left_middle,p,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f8,p,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y.left_index,p,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f8,p,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_ring,y.left_thumb,p,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f8,p,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_pink,y.right_pink,p,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f8,p,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_thumb,y.right_ring,p,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f8,p,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_index,y.right_middle,p,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f8,p,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_middle,y.right_index,p,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f8,p,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_ring,y.right_thumb,p,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f8,p,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.left_middle,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.left_index,p,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f7,p,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y.left_thumb,p,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f7,p,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_ring,y.right_pink,p,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f7,p,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_pink,y.right_ring,p,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f7,p,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_thumb,y.right_middle,p,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f7,p,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_index,y.right_index,p,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f7,p,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_middle,y.right_thumb,p,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f7,p,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.left_index,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.left_thumb,p,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f6,p,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y.right_pink,p,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f6,p,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_ring,y.right_ring,p,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f6,p,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_pink,y.right_middle,p,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f6,p,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_thumb,y.right_index,p,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f6,p,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_index,y.right_thumb,p,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f6,p,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.left_thumb,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.right_pink,p,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f5,p,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y.right_ring,p,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f5,p,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_ring,y.right_middle,p,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f5,p,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_pink,y.right_index,p,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f5,p,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_thumb,y.right_thumb,p,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f5,p,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.right_pink,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.right_ring,p,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f4,p,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y.right_middle,p,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f4,p,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_ring,y.right_index,p,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f4,p,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_pink,y.right_thumb,p,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f4,p,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.right_ring,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.right_middle,p,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f3,p,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y.right_index,p,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f3,p,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_ring,y.right_thumb,p,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f3,p,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.right_middle,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.right_index,p,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f2,p,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y.right_thumb,p,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f2,p,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.right_index,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y.right_thumb,p,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_sum(f1,p,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y.right_thumb,f0,e);
+    Double_Double_Basics.two_sum(f1,e,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    fast_renorm(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,
+                res.right_thumb,res.right_index,res.right_middle,
+                res.right_ring,res.right_pink,
+                res.left_thumb,res.left_index,res.left_middle,
+                res.left_ring,res.left_pink);
+    return res;
+  end "*";
+
+  function "*" ( x : deca_double; y : double_float ) return deca_double is
+
+  -- ALGORITHM : baileyMul_fast<10,1,10> generated by CAMPARY.
+
+    res : deca_double;
+    f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,e : double_float;
+
+  begin
+    f10 := 0.0;
+    Double_Double_Basics.two_prod(x.left_pink,y,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_ring,y,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_middle,y,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_index,y,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.left_thumb,y,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_pink,y,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_ring,y,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_middle,y,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_index,y,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    Double_Double_Basics.two_prod(x.right_thumb,y,f0,e);
+    Double_Double_Basics.two_sum(f1,e,f1,e);
+    Double_Double_Basics.two_sum(f2,e,f2,e);
+    Double_Double_Basics.two_sum(f3,e,f3,e);
+    Double_Double_Basics.two_sum(f4,e,f4,e);
+    Double_Double_Basics.two_sum(f5,e,f5,e);
+    Double_Double_Basics.two_sum(f6,e,f6,e);
+    Double_Double_Basics.two_sum(f7,e,f7,e);
+    Double_Double_Basics.two_sum(f8,e,f8,e);
+    Double_Double_Basics.two_sum(f9,e,f9,e);
+    f10 := f10 + e;
+    fast_renorm(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,
+                res.right_thumb,res.right_index,res.right_middle,
+                res.right_ring,res.right_pink,
+                res.left_thumb,res.left_index,res.left_middle,
+                res.left_ring,res.left_pink);
+    return res;
+  end "*";
+
+  function "*" ( x : double_float; y : deca_double ) return deca_double is
+
+    res : constant deca_double := y*x;
+
+  begin
+    return res;
+  end "*";
+
+  function Mul_pwr2 ( x : deca_double; y : double_float )
+                    return deca_double is
+
+    res : deca_double;
+
+  begin
+    res.right_thumb := y*x.right_thumb;
+    res.right_index := y*x.right_index;
+    res.right_middle := y*x.right_middle;
+    res.right_ring := y*x.right_ring;
+    res.right_pink := y*x.right_pink;
+    res.left_thumb := y*x.left_thumb;
+    res.left_index := y*x.left_index;
+    res.left_middle := y*x.left_middle;
+    res.left_ring := y*x.left_ring;
+    res.left_pink := y*x.left_pink;
+    return res;
+  end Mul_pwr2;
+
+  procedure Mul_pwr2 ( x : in out deca_double; y : in double_float ) is
+  begin
+    x.right_thumb := y*x.right_thumb;
+    x.right_index := y*x.right_index;
+    x.right_middle := y*x.right_middle;
+    x.right_ring := y*x.right_ring;
+    x.right_pink := y*x.right_pink;
+    x.left_thumb := y*x.left_thumb;
+    x.left_index := y*x.left_index;
+    x.left_middle := y*x.left_middle;
+    x.left_ring := y*x.left_ring;
+    x.left_pink := y*x.left_pink;
+  end Mul_pwr2;
+
+  function "/" ( x,y : deca_double ) return deca_double is
+
+    res,acc : deca_double;
+    q0,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10 : double_float;
+
+  begin
+    q0 := x.right_thumb/y.right_thumb;   acc := q0*y; res := x - acc;
+    q1 := res.right_thumb/y.right_thumb; acc := q1*y; res := res - acc;
+    q2 := res.right_thumb/y.right_thumb; acc := q2*y; res := res - acc;
+    q3 := res.right_thumb/y.right_thumb; acc := q3*y; res := res - acc;
+    q4 := res.right_thumb/y.right_thumb; acc := q4*y; res := res - acc;
+    q5 := res.right_thumb/y.right_thumb; acc := q5*y; res := res - acc;
+    q6 := res.right_thumb/y.right_thumb; acc := q6*y; res := res - acc;
+    q7 := res.right_thumb/y.right_thumb; acc := q7*y; res := res - acc;
+    q8 := res.right_thumb/y.right_thumb; acc := q8*y; res := res - acc;
+    q9 := res.right_thumb/y.right_thumb; acc := q9*y; res := res - acc;
+    q10 := res.right_thumb/y.right_thumb;
+    fast_renorm(q0,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,
+                res.right_thumb,res.right_index,res.right_middle,
+                res.right_ring,res.right_pink,
+                res.left_thumb,res.left_index,res.left_middle,
+                res.left_ring,res.left_pink);
+    return res;
+  end "/";
+
+  function "/" ( x : deca_double; y : double_float ) return deca_double is
+
+    ddy : constant deca_double := create(y);
+    res : constant deca_double := x/ddy;
+
+  begin
+    return res;
+  end "/";
+
+  function "/" ( x : double_float; y : deca_double ) return deca_double is
+
+    ddx : constant deca_double := create(x);
+    res : constant deca_double := ddx/y;
+
+  begin
+    return res;
+  end "/";
+
+  function "**" ( x : deca_double; n : integer ) return deca_double is
+
+    res,acc : deca_double;
+    absn : natural;
+
+  begin
+    if n = 0 then
+      res.right_thumb := 1.0; res.right_index := 0.0;
+      res.right_middle := 0.0; res.right_ring := 0.0; res.right_pink := 0.0;
+      res.left_thumb := 1.0; res.left_index := 0.0;
+      res.left_middle := 0.0; res.left_ring := 0.0; res.left_pink := 0.0;
+    else
+      if n > 0
+       then absn := n;
+       else absn := -n;
+      end if;
+      res.right_thumb := x.right_thumb; res.right_index := x.right_index;
+      res.right_middle := x.right_middle; res.right_ring := x.right_ring;
+      res.right_pink := x.right_pink;
+      res.left_thumb := x.left_thumb; res.left_index := x.left_index;
+      res.left_middle := x.left_middle; res.left_ring := x.left_ring;
+      res.left_pink := x.left_pink;
+      acc.right_thumb := 1.0; acc.right_index := 0.0;
+      acc.right_middle := 0.0; acc.right_ring := 0.0; acc.right_pink := 0.0;
+      acc.left_thumb := 1.0; acc.left_index := 0.0;
+      acc.left_middle := 0.0; acc.left_ring := 0.0; acc.left_pink := 0.0;
+      if absn > 1 then          -- use binary exponentiation
+        while absn > 0 loop
+          if absn mod 2 = 1
+           then acc := acc*res;
+          end if;
+          absn := absn/2;
+          if absn > 0
+           then res := res*res;
+          end if;
+        end loop;
+      else
+        acc.right_thumb := res.right_thumb;
+        acc.right_index := res.right_index;
+        acc.right_middle := res.right_middle;
+        acc.right_ring := res.right_ring;
+        acc.right_pink := res.right_pink;
+        acc.left_thumb := res.left_thumb;
+        acc.left_index := res.left_index;
+        acc.left_middle := res.left_middle;
+        acc.left_ring := res.left_ring;
+        acc.left_pink := res.left_pink;
+      end if;
+      if n < 0 then
+        res := 1.0/acc;          -- compute reciprocal
+      else 
+        res.right_thumb := acc.right_thumb;
+        res.right_index := acc.right_index;
+        res.right_middle := acc.right_middle;
+        res.right_ring := acc.right_ring;
+        res.right_pink := acc.right_pink;
+        res.left_thumb := acc.left_thumb;
+        res.left_index := acc.left_index;
+        res.left_middle := acc.left_middle;
+        res.left_ring := acc.left_ring;
+        res.left_pink := acc.left_pink;
+      end if;
+    end if;
+    return res;
+  end "**";
+
+  function ldexp ( x : deca_double; n : integer ) return deca_double is
+
+    res : deca_double;
+    function C_ldexp ( x : double_float; n : integer ) return double_float;
+    pragma Import(C,C_ldexp,External_Name => "ldexp");
+
+  begin
+    res.right_thumb := C_ldexp(x.right_thumb,n);
+    res.right_index := C_ldexp(x.right_index,n);
+    res.right_middle := C_ldexp(x.right_middle,n);
+    res.right_ring := C_ldexp(x.right_ring,n);
+    res.right_pink := C_ldexp(x.right_pink,n);
+    res.left_thumb := C_ldexp(x.left_thumb,n);
+    res.left_index := C_ldexp(x.left_index,n);
+    res.left_middle := C_ldexp(x.left_middle,n);
+    res.left_ring := C_ldexp(x.left_ring,n);
+    res.left_pink := C_ldexp(x.left_pink,n);
+    return res;
+  end ldexp;
+
+end Deca_Double_Numbers;
