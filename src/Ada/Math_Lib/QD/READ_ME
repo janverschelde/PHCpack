@@ -52,11 +52,13 @@ qd_test.c                    : test on basic operations in quad_double
 double_double_basics         : basic inline functions for double double numbers
 double_double_numbers        : defines double double arithmetic
 double_double_numbers_io     : provides input/output of double double numbers
-ts_dbldbl                    : test on double double arithmetic
+test_double_doubles          : test procedures on double doubles
+ts_dbldbl                    : main test on double double arithmetic
 quad_double_renormalizations : basic inline functions for quad double numbers
 quad_double_numbers          : defines quad double arithmetic
 quad_double_numbers_io       : input/output for quad double numbers
-ts_qddbl                     : test on quad double arithmetic
+test_quad_doubles            : test procedures on quad doubles
+ts_qddbl                     : main test on quad double arithmetic
 ------------------------------------------------------------------------------
 double_double_ring           : ring of double double numbers
 double_double_ring_io        : input/output for ring of double double numbers
@@ -103,10 +105,12 @@ ts_cmpexp                       : test on complex exponentiation
 fast_double_renormalizations : renormalizations for multiple doubles
 triple_double_numbers        : defines triple double numbers and arithmetic
 triple_double_numbers_io     : input and output of triple double numbers
-ts_tridbl                    : test on triple double arithmetic
+test_triple_doubles          : test procedures on triple doubles
+ts_tridbl                    : main test on triple double arithmetic
 octo_double_numbers          : defines octo double numbers and arithmetic
 octo_double_numbers_io       : input and output of octo double numbers
-ts_octdbl                    : test on octo double arithmetic
+test_octo_doubles            : test procedures on octo doubles
+ts_octdbl                    : main test on octo double arithmetic
 triple_double_ring           : ring of triple double numbers
 triple_double_ring-ffield    : field of triple double numbers
 tripdobl_complex_numbers     : complex arithmetic with triple doubles
@@ -123,8 +127,10 @@ octodobl_random_numbers      : random numbers in octo double precision
 ts_odcmplx                   : test on octo double complex numbers
 penta_double_numbers         : defines penta double numbers and arithmetic
 penta_double_numbers_io      : input and output of penta double numbers
-ts_pentadbl                  : test on penta double arithmetic
+test_penta_doubles           : test procedures on penta doubles
+ts_pentadbl                  : main test on penta double arithmetic
 deca_double_numbers          : defines deca double numbers and arithmetic
 deca_double_numbers_io       : input and output of deca double numbers
-ts_decadbl                   : test on deca double arithmetic
+test_deca_doubles            : test procedures on deca doubles
+ts_decadbl                   : main test on deca double arithmetic
 ------------------------------------------------------------------------------

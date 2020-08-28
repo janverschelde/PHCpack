@@ -1,7 +1,9 @@
 Fri 28 Aug 2020 : in {triple,quad,penta,octo}_double_numbers.adb,
   fixed the comparison functions to take lower doubles into account.
   Extended deca_double_numbers to complete deca_double_numbers_io.adb,
-  with added tests to ts_decadbl.
+  with added tests to ts_decadbl.  Extracted procedures from ts_dbldbl,
+  ts_qddbl, ts_tridbl, ts_pentadbl, ts_octdbl, and ts_decadbl to make
+  new packages test_{double,triple,quad,penta,octo,deca}_doubles.
 
 Thu 27 Aug 2020 : bug fix in fast_double_renormalizations.adb:
   the fast_renorm applies quick_two_sum, the renorm_add1 applies two_sum.
