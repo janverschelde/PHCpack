@@ -60,6 +60,11 @@ package Deca_Double_Numbers is
 
   function AbsVal ( x : deca_double ) return deca_double; -- same as abs
 
+  function floor ( x : deca_double ) return deca_double;
+
+  -- DESCRIPTION :
+  --   Returns nearest lower integer to x.
+
 -- SELECTORS :
 
   function thumb_right ( x : deca_double ) return double_float;
@@ -112,6 +117,59 @@ package Deca_Double_Numbers is
   -- DESCRIPTION :
   --   Returns the least significant double of x.
 
+-- TYPE CASTS :
+
+  function to_int ( x : deca_double ) return integer32;
+
+  -- DESCRIPTION :
+  --   Converts the highest word into a 32-bit integer;
+
+  function to_double ( x : deca_double ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns right_thumb(x).
+
+-- COMPARISON and COPYING :
+
+  function is_zero ( x : deca_double ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if x is zero, returns false otherwise.
+
+  function is_one ( x : deca_double ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if x is one, returns false otherwise.
+
+  function is_positive ( x : deca_double ) return boolean;
+
+  -- DESCRIPTION : 
+  --   Returns true if x is positive, returns false otherwise.
+
+  function is_negative ( x : deca_double ) return boolean;
+
+  -- DESCRIPTION : 
+  --   Returns true if x is negative, returns false otherwise.
+
+  function equal ( x,y : deca_double ) return boolean;
+  function equal ( x : deca_double; y : double_float ) return boolean;
+
+  function "<" ( x,y : deca_double ) return boolean;
+  function "<" ( x : deca_double; y : double_float ) return boolean;
+  function "<" ( x : double_float; y : deca_double ) return boolean;
+  function "<=" ( x,y : deca_double ) return boolean;
+  function "<=" ( x : deca_double; y : double_float ) return boolean;
+  function "<=" ( x : double_float; y : deca_double ) return boolean;
+
+  function ">" ( x,y : deca_double ) return boolean;
+  function ">" ( x : deca_double; y : double_float ) return boolean;
+  function ">" ( x : double_float; y : deca_double ) return boolean;
+  function ">=" ( x,y : deca_double ) return boolean;
+  function ">=" ( x : deca_double; y : double_float ) return boolean;
+  function ">=" ( x : double_float; y : deca_double ) return boolean;
+
+  procedure copy ( x : in deca_double; y : in out deca_double );
+
 -- ARITHMETICAL FUNCTIONS :
 
   function "+" ( x,y : deca_double ) return deca_double; -- returns x+y
@@ -141,6 +199,22 @@ package Deca_Double_Numbers is
 
   function ldexp ( x : deca_double; n : integer ) return deca_double;
   -- returns (2^n)*x
+
+  function exp ( x : deca_double ) return deca_double;   -- returns exp(x)
+  function log ( x : deca_double ) return deca_double;   -- natural log
+  function log10 ( x : deca_double ) return deca_double; -- decimal log
+
+-- ARITHMETICAL OPERATIONS AS PROCEDURES :
+
+  procedure Add ( x : in out deca_double; y : in deca_double ); -- x := x+y
+  procedure Sub ( x : in out deca_double; y : in deca_double ); -- x := x-y
+  procedure Min ( x : in out deca_double );                     -- x:= -x
+  procedure Mul ( x : in out deca_double; y : in deca_double ); -- x := x*y
+  procedure Div ( x : in out deca_double; y : in deca_double ); -- x := x/y
+
+-- DESTRUCTOR :
+
+  procedure clear ( x : in out deca_double ); -- sets x to zero
 
 private
 
