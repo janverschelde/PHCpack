@@ -171,15 +171,18 @@ package body Quad_Double_Numbers is
   begin
     return ((x.hihi < y.hihi)
          or (x.hihi = y.hihi and x.lohi < y.lohi)
-         or (x.lohi = y.lohi and x.hilo < y.hilo)
-         or (x.hilo = y.hilo and x.lolo < y.lolo));
+         or (x.hihi = y.hihi and x.lohi = y.lohi and x.hilo < y.hilo)
+         or (x.hihi = y.hihi and x.lohi = y.lohi and x.hilo = y.hilo and
+             x.lolo < y.lolo));
   end "<";
 
   function "<" ( x : quad_double; y : double_double ) return boolean is
   begin
     return ((x.hihi < hi_part(y))
          or (x.hihi = hi_part(y) and x.lohi < lo_part(y))
-         or (x.lohi = lo_part(y) and x.hilo < 0.0));
+         or (x.hihi = hi_part(y) and x.lohi = lo_part(y) and x.hilo < 0.0)
+         or (x.hihi = hi_part(y) and x.lohi = lo_part(y) and x.hilo = 0.0 and
+             x.lolo < 0.0));
   end "<";
 
   function "<" ( x : double_double; y : quad_double ) return boolean is
@@ -189,7 +192,10 @@ package body Quad_Double_Numbers is
 
   function "<" ( x : quad_double; y : double_float ) return boolean is
   begin
-    return ((x.hihi < y) or (x.hihi = y and x.lohi < 0.0));
+    return ((x.hihi < y)
+         or (x.hihi = y and x.lohi < 0.0)
+         or (x.hihi = y and x.lohi = 0.0 and x.hilo < 0.0)
+         or (x.hihi = y and x.lohi = 0.0 and x.hilo = 0.0 and x.lolo < 0.0));
   end "<";
 
   function "<" ( x : double_float; y : quad_double ) return boolean is
@@ -200,17 +206,16 @@ package body Quad_Double_Numbers is
   function "<=" ( x,y : quad_double ) return boolean is
   begin
     return x < y or equal(x,y);
-   -- return ((x.hihi < y.hihi)
-   --      or (x.hihi = y.hihi and x.lohi < y.lohi)
-   --      or (x.lohi = y.lohi and x.hilo < y.hilo)
-   --      or (x.hilo = y.hilo and x.lolo < y.lolo));
   end "<=";
 
   function "<=" ( x : quad_double; y : double_double ) return boolean is
   begin
     return ((x.hihi < hi_part(y))
          or (x.hihi = hi_part(y) and x.lohi < lo_part(y))
-         or (x.hihi = lo_part(y) and x.lohi <= 0.0));
+         or (x.hihi = lo_part(y) and x.lohi < 0.0)
+         or (x.hihi = lo_part(y) and x.lohi = 0.0 and x.hilo < 0.0)
+         or (x.hihi = lo_part(y) and x.lohi = 0.0 and x.hilo = 0.0 and
+             x.lolo <= 0.0));
   end "<=";
 
   function "<=" ( x : double_double; y : quad_double ) return boolean is
@@ -220,7 +225,10 @@ package body Quad_Double_Numbers is
 
   function "<=" ( x : quad_double; y : double_float ) return boolean is
   begin
-    return ((x.hihi < y) or (x.hihi = y and x.lohi <= 0.0));
+    return ((x.hihi < y)
+         or (x.hihi = y and x.lohi < 0.0)
+         or (x.hihi = y and x.lohi = 0.0 and x.hilo < 0.0)
+         or (x.hihi = y and x.lohi = 0.0 and x.hilo = 0.0 and x.lolo <= 0.0));
   end "<=";
 
   function "<=" ( x : double_float; y : quad_double ) return boolean is
@@ -232,15 +240,18 @@ package body Quad_Double_Numbers is
   begin
     return ((x.hihi > y.hihi)
          or (x.hihi = y.hihi and x.lohi > y.lohi)
-         or (x.lohi = y.lohi and x.hilo > y.hilo)
-         or (x.hilo = y.hilo and x.lolo > y.lolo));
+         or (x.hihi = y.hihi and x.lohi = y.lohi and x.hilo > y.hilo)
+         or (x.hihi = y.hihi and x.lohi = y.lohi and x.hilo = y.hilo and
+             x.lolo > y.lolo));
   end ">";
 
   function ">" ( x : quad_double; y : double_double ) return boolean is
   begin
     return ((x.hihi > hi_part(y))
          or (x.hihi = hi_part(y) and x.lohi > lo_part(y))
-         or (x.lohi = lo_part(y) and x.hilo > 0.0));
+         or (x.hihi = hi_part(y) and x.lohi = lo_part(y) and x.hilo > 0.0)
+         or (x.hihi = hi_part(y) and x.lohi = lo_part(y) and x.hilo = 0.0 and
+             x.lolo > 0.0));
   end ">";
 
   function ">" ( x : double_double; y : quad_double ) return boolean is
@@ -250,7 +261,10 @@ package body Quad_Double_Numbers is
 
   function ">" ( x : quad_double; y : double_float ) return boolean is
   begin
-    return ((x.hihi > y) or (x.hihi = y and x.lohi > 0.0));
+    return ((x.hihi > y)
+         or (x.hihi = y and x.lohi > 0.0)
+         or (x.hihi = y and x.lohi = 0.0 and x.hilo > 0.0)
+         or (x.hihi = y and x.lohi = 0.0 and x.hilo = 0.0 and x.lolo > 0.0));
   end ">";
 
   function ">" ( x : double_float; y : quad_double ) return boolean is
@@ -261,17 +275,15 @@ package body Quad_Double_Numbers is
   function ">=" ( x,y : quad_double ) return boolean is
   begin
     return x > y or equal(x,y);
-   -- return ((x.hihi > y.hihi)
-   --      or (x.hihi = y.hihi and x.lohi > y.lohi)
-   --      or (x.lohi = y.lohi and x.hilo > y.hilo)
-   --      or (x.hilo = y.hilo and x.lolo >= y.lolo));
   end ">=";
 
   function ">=" ( x : quad_double; y : double_double ) return boolean is
   begin
     return ((x.hihi > hi_part(y))
          or (x.hihi = hi_part(y) and x.lohi > lo_part(y))
-         or (x.lohi = lo_part(y) and x.lohi >= 0.0));
+         or (x.hihi = hi_part(y) and x.lohi = lo_part(y) and x.lohi > 0.0)
+         or (x.hihi = hi_part(y) and x.lohi = lo_part(y) and x.lohi = 0.0 and
+             x.lolo > 0.0));
   end ">=";
 
   function ">=" ( x : double_double; y : quad_double ) return boolean is
@@ -281,7 +293,10 @@ package body Quad_Double_Numbers is
 
   function ">=" ( x : quad_double; y : double_float ) return boolean is
   begin
-    return ((x.hihi > y) or (x.hihi = y and x.lohi >= 0.0));
+    return ((x.hihi > y)
+         or (x.hihi = y and x.lohi > 0.0)
+         or (x.hihi = y and x.lohi = 0.0 and x.hilo > 0.0)
+         or (x.hihi = y and x.lohi = 0.0 and x.hilo = 0.0 and x.lolo >= 0.0));
   end ">=";
 
   function ">=" ( x : double_float; y : quad_double ) return boolean is
@@ -291,10 +306,8 @@ package body Quad_Double_Numbers is
 
   procedure copy ( x : in quad_double; y : in out quad_double ) is
   begin
-    y.hihi := x.hihi;
-    y.lohi := x.lohi;
-    y.hilo := x.hilo;
-    y.lolo := x.lolo;
+    y.hihi := x.hihi; y.lohi := x.lohi;
+    y.hilo := x.hilo; y.lolo := x.lolo;
   end copy;
 
 -- Absolute value and type casts :

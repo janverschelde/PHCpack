@@ -257,17 +257,43 @@ package body Octo_Double_Numbers is
   begin
     return ((x.hihihi < y.hihihi)
          or (x.hihihi = y.hihihi and x.lohihi < y.lohihi)
-         or (x.lohihi = y.lohihi and x.hilohi < y.hilohi)
-         or (x.hilohi = y.hilohi and x.lolohi < y.lolohi)
-         or (x.lolohi = y.lolohi and x.hihilo < y.hihilo)
-         or (x.hihilo = y.hihilo and x.lohilo < y.lohilo)
-         or (x.lohilo = y.lohilo and x.hilolo < y.hilolo)
-         or (x.hilolo = y.hilolo and x.lololo < y.lololo));
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi < y.hilohi)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi < y.lolohi)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi = y.lolohi and
+             x.hihilo < y.hihilo)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi = y.lolohi and
+             x.hihilo = y.hihilo and x.lohilo < y.lohilo)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi = y.lolohi and
+             x.hihilo = y.hihilo and x.lohilo = y.lohilo and
+             x.hilolo < y.hilolo)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi = y.lolohi and
+             x.hihilo = y.hihilo and x.lohilo = y.lohilo and
+             x.hilolo = y.hilolo and x.lololo < y.lololo));
   end "<";
 
   function "<" ( x : octo_double; y : double_float ) return boolean is
   begin
-    return ((x.hihihi < y) or (x.hihihi = y and x.lohihi < 0.0));
+    return ((x.hihihi < y)
+         or (x.hihihi = y and x.lohihi < 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi < 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi < 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi = 0.0 and x.hihilo < 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi = 0.0 and x.hihilo = 0.0 and x.lohilo < 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi = 0.0 and x.hihilo = 0.0 and x.lohilo = 0.0 and
+             x.hilolo < 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi = 0.0 and x.hihilo = 0.0 and x.lohilo = 0.0 and
+             x.hilolo = 0.0 and x.lololo < 0.0));
   end "<";
 
   function "<" ( x : double_float; y : octo_double ) return boolean is
@@ -277,12 +303,12 @@ package body Octo_Double_Numbers is
 
   function "<=" ( x,y : octo_double ) return boolean is
   begin
-    return x < y or equal(x,y);
+    return (x < y) or equal(x,y);
   end "<=";
 
   function "<=" ( x : octo_double; y : double_float ) return boolean is
   begin
-    return ((x.hihihi < y) or (x.hihihi = y and x.lohihi <= 0.0));
+    return (x < y) or equal(x,y);
   end "<=";
 
   function "<=" ( x : double_float; y : octo_double ) return boolean is
@@ -294,17 +320,43 @@ package body Octo_Double_Numbers is
   begin
     return ((x.hihihi > y.hihihi)
          or (x.hihihi = y.hihihi and x.lohihi > y.lohihi)
-         or (x.lohihi = y.lohihi and x.hilohi > y.hilohi)
-         or (x.hilohi = y.hilohi and x.lolohi > y.lolohi)
-         or (x.lolohi = y.lolohi and x.hihilo > y.hihilo)
-         or (x.hihilo = y.hihilo and x.lohilo > y.lohilo)
-         or (x.lohilo = y.lohilo and x.hilolo > y.hilolo)
-         or (x.hilolo = y.hilolo and x.lololo > y.lololo));
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi > y.hilohi)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi > y.lolohi)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi = y.lolohi and
+             x.hihilo > y.hihilo)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi = y.lolohi and
+             x.hihilo = y.hihilo and x.lohilo > y.lohilo)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi = y.lolohi and
+             x.hihilo = y.hihilo and x.lohilo = y.lohilo and
+             x.hilolo > y.hilolo)
+         or (x.hihihi = y.hihihi and x.lohihi = y.lohihi and
+             x.hilohi = y.hilohi and x.lolohi = y.lolohi and
+             x.hihilo = y.hihilo and x.lohilo = y.lohilo and
+             x.hilolo = y.hilolo and x.lololo > y.lololo));
   end ">";
 
   function ">" ( x : octo_double; y : double_float ) return boolean is
   begin
-    return ((x.hihihi > y) or (x.hihihi = y and x.lohihi > 0.0));
+    return ((x.hihihi > y)
+         or (x.hihihi = y and x.lohihi > 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi > 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi > 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi = 0.0 and x.hihilo > 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi = 0.0 and x.hihilo = 0.0 and x.lohilo > 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi = 0.0 and x.hihilo = 0.0 and x.lohilo = 0.0 and
+             x.hilolo > 0.0)
+         or (x.hihihi = y and x.lohihi = 0.0 and x.hilohi = 0.0 and
+             x.lolohi = 0.0 and x.hihilo = 0.0 and x.lohilo = 0.0 and
+             x.hilolo = 0.0 and x.lololo > 0.0));
   end ">";
 
   function ">" ( x : double_float; y : octo_double ) return boolean is
@@ -314,12 +366,12 @@ package body Octo_Double_Numbers is
 
   function ">=" ( x,y : octo_double ) return boolean is
   begin
-    return x > y or equal(x,y);
+    return (x > y) or equal(x,y);
   end ">=";
 
   function ">=" ( x : octo_double; y : double_float ) return boolean is
   begin
-    return ((x.hihihi > y) or (x.hihihi = y and x.lohihi >= 0.0));
+    return (x > y) or equal(x,y);
   end ">=";
 
   function ">=" ( x : double_float; y : octo_double ) return boolean is

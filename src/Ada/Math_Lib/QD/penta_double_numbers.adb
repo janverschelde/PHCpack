@@ -213,7 +213,13 @@ package body Penta_Double_Numbers is
 
   function "<" ( x : penta_double; y : double_float ) return boolean is
   begin
-    return ((x.thumb < y) or (x.thumb = y and x.index < 0.0));
+    return ((x.thumb < y)
+         or (x.thumb = y and x.index < 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle < 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
+             x.ring < 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
+             x.ring = 0.0 and x.pink < 0.0));
   end "<";
 
   function "<" ( x : double_float; y : penta_double ) return boolean is
@@ -228,7 +234,13 @@ package body Penta_Double_Numbers is
 
   function "<=" ( x : penta_double; y : double_float ) return boolean is
   begin
-    return ((x.thumb < y) or (x.thumb = y and x.index <= 0.0));
+    return ((x.thumb < y)
+         or (x.thumb = y and x.index < 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle < 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
+             x.ring < 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
+             x.ring = 0.0 and x.pink < 0.0));
   end "<=";
 
   function "<=" ( x : double_float; y : penta_double ) return boolean is
@@ -249,7 +261,13 @@ package body Penta_Double_Numbers is
 
   function ">" ( x : penta_double; y : double_float ) return boolean is
   begin
-    return ((x.thumb > y) or (x.thumb = y and x.index > 0.0));
+    return ((x.thumb > y)
+         or (x.thumb = y and x.index > 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle > 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
+             x.ring > 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
+             x.ring = 0.0 and x.pink > 0.0));
   end ">";
 
   function ">" ( x : double_float; y : penta_double ) return boolean is
@@ -264,7 +282,13 @@ package body Penta_Double_Numbers is
 
   function ">=" ( x : penta_double; y : double_float ) return boolean is
   begin
-    return ((x.thumb > y) or (x.thumb = y and x.index >= 0.0));
+    return ((x.thumb > y)
+         or (x.thumb = y and x.index > 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle > 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
+             x.ring > 0.0)
+         or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
+             x.ring = 0.0 and x.pink > 0.0));
   end ">=";
 
   function ">=" ( x : double_float; y : penta_double ) return boolean is
@@ -409,7 +433,7 @@ package body Penta_Double_Numbers is
     f5 := f5 + e;
     Double_Double_Basics.two_sum(f4,p,f4,e);
     f5 := f5 + e;
-    Double_Double_Basics.two_prod(x.ring,y.index, p,e);
+    Double_Double_Basics.two_prod(x.ring,y.index,p,e);
     f5 := f5 + e;
     Double_Double_Basics.two_sum(f4,p,f4,e);
     f5 := f5 + e;

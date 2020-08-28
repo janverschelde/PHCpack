@@ -193,12 +193,13 @@ package body Triple_Double_Numbers is
   begin
     return ((x.hi < y.hi)
          or (x.hi = y.hi and x.mi < y.mi)
-         or (x.mi = y.mi and x.lo < y.lo));
+         or (x.mi = y.mi and x.mi = y.mi and x.lo < y.lo));
   end "<";
 
   function "<" ( x : triple_double; y : double_float ) return boolean is
   begin
-    return ((x.hi < y) or (x.hi = y and x.mi < 0.0));
+    return ((x.hi < y) or (x.hi = y and x.mi < 0.0)
+                       or (x.hi = y and x.mi = 0.0 and x.lo < 0.0));
   end "<";
 
   function "<" ( x : double_float; y : triple_double ) return boolean is
@@ -213,7 +214,8 @@ package body Triple_Double_Numbers is
 
   function "<=" ( x : triple_double; y : double_float ) return boolean is
   begin
-    return ((x.hi < y) or (x.hi = y and x.mi <= 0.0));
+    return ((x.hi < y) or (x.hi = y and x.mi < 0.0)
+                       or (x.hi = y and x.mi = 0.0 and x.lo <= 0.0));
   end "<=";
 
   function "<=" ( x : double_float; y : triple_double ) return boolean is
@@ -225,7 +227,7 @@ package body Triple_Double_Numbers is
   begin
     return ((x.hi > y.hi)
          or (x.hi = y.hi and x.mi > y.mi)
-         or (x.mi = y.mi and x.lo > y.lo));
+         or (x.hi = y.hi and x.mi = y.mi and x.lo > y.lo));
   end ">";
 
   function ">" ( x : triple_double; y : double_float ) return boolean is
@@ -245,7 +247,8 @@ package body Triple_Double_Numbers is
 
   function ">=" ( x : triple_double; y : double_float ) return boolean is
   begin
-    return ((x.hi > y) or (x.hi = y and x.mi >= 0.0));
+    return ((x.hi > y) or (x.hi = y and x.mi > 0.0)
+                       or (x.hi = y and x.mi = 0.0 and x.lo >= 0.0));
   end ">=";
 
   function ">=" ( x : double_float; y : triple_double ) return boolean is
@@ -255,9 +258,7 @@ package body Triple_Double_Numbers is
 
   procedure copy ( x : in triple_double; y : in out triple_double ) is
   begin
-    y.hi := x.hi;
-    y.mi := x.mi;
-    y.lo := x.lo;
+    y.hi := x.hi; y.mi := x.mi; y.lo := x.lo;
   end copy;
 
 -- ARITHMETICAL OPERATIONS :
