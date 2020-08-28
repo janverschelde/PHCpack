@@ -125,5 +125,6 @@ penta_double_numbers         : defines penta double numbers and arithmetic
 penta_double_numbers_io      : input and output of penta double numbers
 ts_pentadbl                  : test on penta double arithmetic
 deca_double_numbers          : defines deca double numbers and arithmetic
+deca_double_numbers_io       : input and output of deca double numbers
 ts_decadbl                   : test on deca double arithmetic
 ------------------------------------------------------------------------------

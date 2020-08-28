@@ -1029,7 +1029,7 @@ package body Deca_Double_Numbers is
     if n = 0 then
       res.right_thumb := 1.0; res.right_index := 0.0;
       res.right_middle := 0.0; res.right_ring := 0.0; res.right_pink := 0.0;
-      res.left_thumb := 1.0; res.left_index := 0.0;
+      res.left_thumb := 0.0; res.left_index := 0.0;
       res.left_middle := 0.0; res.left_ring := 0.0; res.left_pink := 0.0;
     else
       if n > 0
@@ -1044,7 +1044,7 @@ package body Deca_Double_Numbers is
       res.left_pink := x.left_pink;
       acc.right_thumb := 1.0; acc.right_index := 0.0;
       acc.right_middle := 0.0; acc.right_ring := 0.0; acc.right_pink := 0.0;
-      acc.left_thumb := 1.0; acc.left_index := 0.0;
+      acc.left_thumb := 0.0; acc.left_index := 0.0;
       acc.left_middle := 0.0; acc.left_ring := 0.0; acc.left_pink := 0.0;
       if absn > 1 then          -- use binary exponentiation
         while absn > 0 loop
