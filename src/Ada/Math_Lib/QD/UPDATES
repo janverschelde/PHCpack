@@ -4,6 +4,12 @@ Fri 28 Aug 2020 : in {triple,quad,penta,octo}_double_numbers.adb,
   with added tests to ts_decadbl.  Extracted procedures from ts_dbldbl,
   ts_qddbl, ts_tridbl, ts_pentadbl, ts_octdbl, and ts_decadbl to make
   new packages test_{double,triple,quad,penta,octo,deca}_doubles.
+  Instantiated penta_double_ring, penta_double_ring-ffield,
+  deca_double_ring, deca_double_ring-ffield, defined complex numbers in
+  {pentdobl,decadobl}_complex_numbers.ads, with the input and output in
+  {pentdobl,decadobl}_complex_numbers_io, with random numbers in
+  {pentdobl,decadobl}_random_numbers, tested in ts_pdcmplx and ts_dacmplx.
+  Instantiated {pentdobl,decadobl}_complex_ring-ffield.ads.
 
 Thu 27 Aug 2020 : bug fix in fast_double_renormalizations.adb:
   the fast_renorm applies quick_two_sum, the renorm_add1 applies two_sum.
