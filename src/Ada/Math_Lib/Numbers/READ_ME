@@ -1,4 +1,4 @@
-Basic number definitions, coefficient rings and fields for PHCv2.4.76
+Basic number definitions, coefficient rings and fields for PHCv2.4.80
 
 This directory was established in release 2 of PHCpack and was upgraded
 for efficiency in later versions.  In v2.3, only the i/o of multiprecision
@@ -22,6 +22,8 @@ The library is divided in three parts:
 3) embedding : generics + instantiation, no implementation!
 In addition we have random number generators and numbers_io,
 besides the usual testing facilities.
+
+In v2.4.80, code from test procedures was moved into separate test packages.
 
 ------------------------------------------------------------------------------
 file name                        : short description
@@ -119,11 +121,17 @@ multprec_write_numbers           : output of multiprecision coefficients
 multprec_floating_constants      : multiprecision version of Pi
 write_seed_number                : defines writing of the seed number
 ------------------------------------------------------------------------------
-ts_strnum                        : test numbers <-> string conversions
-ts_natnum                        : test multiprecision natural numbers
-ts_intnum                        : test multiprecision integer numbers
-ts_fltnum                        : test multiprecision floating numbers
-ts_cmpnum                        : test multiprecision complex numbers
+test_number_strings              : test parsing, writing number strings
+test_natural_numbers             : test multiprecision natural numbers
+test_integer_numbers             : test multiprecision integer numbers
+test_floating_numbers            : test multiprecision floating numbers
+test_complex_numbers             : test multiprecision complex numbers
+------------------------------------------------------------------------------
+ts_strnum                        : main test on number strings
+ts_natnum                        : main test on multiprecision natural numbers
+ts_intnum                        : main test on multiprecision integer numbers
+ts_fltnum                        : main test on multiprecision floating numbers
+ts_cmpnum                        : main test on multiprecision complex numbers
 ts_plrexp                        : exponentiation via polar representation
 ts_random                        : test random number generators
 ts_matfun                        : test mathematical functions

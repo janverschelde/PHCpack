@@ -1,3 +1,7 @@
+Sat 29 Aug 2020 : moved code from ts_strnum, ts_natnum, ts_intnum, ts_fltnum,
+  and ts_cmpnum into the package test_number_strings, and the new packages
+  test_{natural,integer,floating,complex}_numbers.
+
 Thu 19 Mar 2020 : fixed another overflow error in standard_random_numbers.adb.
 
 Thu 16 Jan 2020 : fixed overflow error in standard_random_number.adb.
