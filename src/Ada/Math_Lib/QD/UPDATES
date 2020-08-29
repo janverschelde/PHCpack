@@ -1,3 +1,7 @@
+Sat 29 Aug 2020 : moved code from ts_{dd,td,qd,pd,od,da}cmplx.adb into new
+  test_{dobldobl,tripdobl,quaddobl,pentdobl,octodobl,decadobl}_complex
+  packages, collecting all test procedures on complex arithmetic.
+
 Fri 28 Aug 2020 : in {triple,quad,penta,octo}_double_numbers.adb,
   fixed the comparison functions to take lower doubles into account.
   Extended deca_double_numbers to complete deca_double_numbers_io.adb,

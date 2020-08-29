@@ -69,7 +69,8 @@ dobldobl_random_numbers      : random number generators for double doubles
 dobldobl_complex_ring        : ring of double double complex numbers
 dobldobl_complex_ring_io     : input/output for ring of double double complex
 dobldobl_complex_ring-ffield : field of double double complex numbers
-ts_ddcmplx                   : test on double double complex arithmetic
+test_dobldobl_complex        : tests double double complex arithmetic
+ts_ddcmplx                   : main test on double double complex arithmetic
 quad_double_ring             : ring of quad double numbers
 quad_double_ring_io          : input/output for ring of quad double numbers
 quad_double_ring-ffield      : field of quad double numbers
@@ -79,7 +80,8 @@ quaddobl_random_numbers      : random number generators for quad doubles
 quaddobl_complex_ring        : ring of quad double complex numbers
 quaddobl_complex_ring_io     : input/output for ring of quad double complex
 quaddobl_complex_ring-ffield : field of quad double complex numbers
-ts_qdcmplx                   : test on quad double complex arithmetic
+test_quaddobl_complex        : tests quad double complex arithmetic
+ts_qdcmplx                   : main test on quad double complex arithmetic
 ------------------------------------------------------------------------------
 multprec_dobldobl_convertors : convert double double <-> multiprecision float
 dobldobl_complex_numbers_cv  : convert complex <-> double double complex
@@ -125,26 +127,30 @@ tripdobl_complex_numbers     : complex arithmetic with triple doubles
 tripdobl_complex_numbers_io  : input/output for triple double complex
 tripdobl_complex_ring-ffield : field of triple double complex numbers
 tripdobl_random_numbers      : random numbers in triple double precision
-ts_tdcmplx                   : test on triple double complex numbers
+test_tripdobl_complex        : tests triple double complex arithmetic
+ts_tdcmplx                   : main test on triple double complex numbers
 penta_double_ring            : ring of penta double numbers
 penta_double_ring-ffield     : field of penta double numbers
 pentdobl_complex_numbers     : complex arithmetic with penta doubles
 pentdobl_complex_numbers_io  : input/output for penta double complex
 pentdobl_complex_ring-ffield : field of penta double complex numbers
 pentdobl_random_numbers      : random numbers in penta double precision
-ts_pdcmplx                   : test on penta double complex numbers
+test_pentdobl_complex        : test penta double complex arithmetic
+ts_pdcmplx                   : main test on penta double complex numbers
 octo_double_ring             : ring of octo double numbers
 octo_double_ring-ffield      : field of octo double numbers
 octodobl_complex_numbers     : complex arithmetic with octo doubles
 octodobl_complex_numbers_io  : input/output for octo double complex
 octodobl_complex_ring-ffield : field of octo double complex numbers
 octodobl_random_numbers      : random numbers in octo double precision
-ts_odcmplx                   : test on octo double complex numbers
+test_octodobl_complex        : tests octo double complex arithmetic
+ts_odcmplx                   : main test on octo double complex numbers
 deca_double_ring             : ring of deca double numbers
 deca_double_ring-ffield      : field of deca double numbers
 decadobl_complex_numbers     : complex arithmetic with deca doubles
 decadobl_complex_numbers_io  : input/output for deca double complex
 decadobl_complex_ring-ffield : field of deca double complex numbers
 decadobl_random_numbers      : random numbers in deca double precision
-ts_dacmplx                   : test on deca double complex numbers
+test_decadobl_complex        : tests deca double complex arithmetic
+ts_dacmplx                   : main test on deca double complex numbers
 ------------------------------------------------------------------------------
