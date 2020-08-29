@@ -1,6 +1,11 @@
 Sat 29 Aug 2020 : moved code from ts_{dd,td,qd,pd,od,da}cmplx.adb into new
   test_{dobldobl,tripdobl,quaddobl,pentdobl,octodobl,decadobl}_complex
   packages, collecting all test procedures on complex arithmetic.
+  Moved code from ts_ddfun and ts_qdfun into new packages
+  test_dobldobl_functions and test_quaddobl_functions, code from
+  ts_cmpexp into the new package test_polar_exponentiation, and code from
+  ts_mpddcv and ts_mpqdcv into new packages test_multprec_dobldobl_casts
+  and test_multprec_quaddobl_casts.
 
 Fri 28 Aug 2020 : in {triple,quad,penta,octo}_double_numbers.adb,
   fixed the comparison functions to take lower doubles into account.

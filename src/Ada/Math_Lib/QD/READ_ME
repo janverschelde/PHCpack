@@ -85,10 +85,12 @@ ts_qdcmplx                   : main test on quad double complex arithmetic
 ------------------------------------------------------------------------------
 multprec_dobldobl_convertors : convert double double <-> multiprecision float
 dobldobl_complex_numbers_cv  : convert complex <-> double double complex
-ts_mpddcv                    : test double double multiprecision conversions
+test_multprec_dobldobl_casts : test casting multprec into dd and back
+ts_mpddcv                    : main test on double double multprec conversions
 multprec_quaddobl_convertors : convert double double <-> multiprecision float
 quaddobl_complex_numbers_cv  : convert complex <-> quad double complex
-ts_mpqdcv                    : test quad double multiprecision conversions
+test_multprec_quaddobl_casts : tests casting multprec into qd and back
+ts_mpqdcv                    : main test on quad double multprec conversions
 ------------------------------------------------------------------------------
 double_double_constants         : collects double double constants
 dobldobl_mathematical_functions : dd sqrt and trigonometric functions
@@ -96,13 +98,16 @@ dobldobl_complex_numbers_polar  : polar representations of dd complex
 quad_double_constants           : collects quad double constants
 quaddobl_mathematical_functions : qd sqrt and trigonometric functions
 quaddobl_complex_numbers_polar  : polar representations of qd complex
-ts_ddfun                        : tests dd math functions
-ts_qdfun                        : tests qd math functions
+test_dobldobl_functions         : test functions in double double precision
+test_quaddobl_functions         : test functions in quad double precision
+ts_ddfun                        : main test on dd math functions
+ts_qdfun                        : main test on qd math functions
 ------------------------------------------------------------------------------
 standard_complex_exponentiation : high powers of double complex numbers
 dobldobl_complex_exponentiation : high powers of double double complex numbers
 quaddobl_complex_exponentiation : high powers of quad double complex numbers
-ts_cmpexp                       : test on complex exponentiation
+test_polar_exponentiation       : test procedures on complex exponentiation 
+ts_cmpexp                       : main test on complex exponentiation
 ------------------------------------------------------------------------------
 fast_double_renormalizations : renormalizations for multiple doubles
 triple_double_numbers        : defines triple double numbers and arithmetic
