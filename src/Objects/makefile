@@ -172,7 +172,7 @@ ts_numbio:
 
 test_qd: ts_dbldbl ts_qddbl ts_ddcmplx ts_qdcmplx ts_mpddcv ts_mpqdcv \
          ts_ddfun ts_qdfun ts_cmpexp ts_tridbl ts_octdbl ts_tdcmplx \
-         ts_odcmplx ts_pentadbl ts_decadbl
+         ts_odcmplx ts_pentadbl ts_decadbl ts_pdcmplx ts_dacmplx
 
 ts_dbldbl:
 	make -f $(MAKEFILE) ts_dbldbl
@@ -221,6 +221,12 @@ ts_pentadbl:
 
 ts_decadbl:
 	make -f $(MAKEFILE) ts_decadbl
+
+ts_pdcmplx:
+	make -f $(MAKEFILE) ts_pdcmplx
+
+ts_dacmplx:
+	make -f $(MAKEFILE) ts_dacmplx
 
 # Test programs for Math_Lib/Vectors :
 
