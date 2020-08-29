@@ -126,6 +126,8 @@ test_natural_numbers             : test multiprecision natural numbers
 test_integer_numbers             : test multiprecision integer numbers
 test_floating_numbers            : test multiprecision floating numbers
 test_complex_numbers             : test multiprecision complex numbers
+test_random_numbers              : test random numbers
+test_mathematical_functions      : test mathematical functions
 ------------------------------------------------------------------------------
 ts_strnum                        : main test on number strings
 ts_natnum                        : main test on multiprecision natural numbers
@@ -133,8 +135,8 @@ ts_intnum                        : main test on multiprecision integer numbers
 ts_fltnum                        : main test on multiprecision floating numbers
 ts_cmpnum                        : main test on multiprecision complex numbers
 ts_plrexp                        : exponentiation via polar representation
-ts_random                        : test random number generators
-ts_matfun                        : test mathematical functions
+ts_random                        : main test on random number generators
+ts_matfun                        : main test on mathematical functions
 ts_intval                        : test interval arithmetic
 ts_mpcst                         : test multiprecision version of Pi
 ts_numbio                        : reading of numbers with exception handling
