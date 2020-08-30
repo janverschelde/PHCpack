@@ -1,3 +1,8 @@
+Sun 30 Aug 2020 : instantiated io for triple, penta, octo, and deca doubles,
+  yielding the packages {triple,penta,octo,deca}_double_ring_io.ads;
+  instantiated {tripdobl,pentdobl,octodobl,decadobl}_complex_ring and
+  {tripdobl,pentdobl,octodobl,decadobl}_complex_ring_io.
+
 Sat 29 Aug 2020 : moved code from ts_{dd,td,qd,pd,od,da}cmplx.adb into new
   test_{dobldobl,tripdobl,quaddobl,pentdobl,octodobl,decadobl}_complex
   packages, collecting all test procedures on complex arithmetic.
