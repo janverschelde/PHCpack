@@ -1,4 +1,4 @@
-Matrix types in PHCv2.4.79
+Matrix types in PHCv2.4.80
 
 Below are some milestones in the development of this library.
 New in the second release is the availability of multiprecision numbers,
@@ -20,6 +20,8 @@ This library is organized in three parts :
 The organization above is hierarchic.  Other possible views are 
 classifications by numeric types (e.g., everything with standard_integer*,
 *integer*, etc...) or by data types.
+
+In v2.4.80, the test procedures were moved into test packages.
 
 ------------------------------------------------------------------------------
 file name                          : short description
@@ -85,18 +87,19 @@ random_conditioned_matrices        : random matrices with given condition
 ------------------------------------------------------------------------------
 standard_matrix_splitters          : split real from imaginary parts
 ------------------------------------------------------------------------------
-ts_natmat                          : test matrices of natural numbers
-ts_intmat                          : test solvers of integer numbers
-ts_fltmat                          : test solvers of floating linear systems
-ts_cmpmat                          : test solvers of complex linear systems
-ts_ddmat                           : test on double double matrices
-ts_qdmat                           : test on quad double matrices
+test_natural_matrices              : tests matrices of natural numbers
+test_integer_matrices              : tests matrices of integer numbers
+test_floating_matrices             : tests matrices of floating-point numbers
+test_complex_matrices              : tests matrices of complex numbers
+test_dobldobl_matrices             : tests matrices of double doubles
+test_quaddobl_matrices             : tests matrices of quad doubles
+-----------------------------------------------------------------------------
+ts_natmat                          : main test on natural matrices 
+ts_intmat                          : main test on integer matrices
+ts_fltmat                          : main test on floating-point matrices
+ts_cmpmat                          : main test on complex matrices
+ts_ddmat                           : main test on double double matrices
+ts_qdmat                           : main test on quad double matrices
 ------------------------------------------------------------------------------
 The generic_* packages are different from the abstract_* packages in the
 sense that they export types and operations, i.e.: they have a body.
-
-There are three types of linear systems: over integer, floating-point reals
-and complex numbers.  For each numeric type, there is only one generic
-implementation, except for the complex numbers, where it became too complex
-to elaborate the mixed floating-complex arithmetic with generics.
-Also with norms and equalities, no generics are used for complex numbers.
