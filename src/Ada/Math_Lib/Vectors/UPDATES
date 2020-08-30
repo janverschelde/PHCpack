@@ -1,3 +1,14 @@
+Sun 30 Aug 2020 : instantiated vectors in triple, penta, octo, and deca
+  double precision: {triplel,penta,octo,deca}_double_vectors,
+  with io: {triple,penta,octo,deca}_double_vectors_io.
+  Instantiated complex vectors in triple, penta, octo, and deca double
+  precision: {tripdobl,pentdobl,octodobl,decadobl}_complex_vectors,
+  with io: {tripdobl,pentdobl,octodobl,decadobl}_complex_vectors_io.
+  Defined basic routines to generate random vectors in the packages
+  {tripdobl,pentdobl,octodobl,decadobl}_random_vectors.  Added tests in
+  test_{tripdobl,pentdobl,octodobl,decadobl}_vectors, with calls to the
+  main interactive tests in ts_tdvec, ts_pdvec, ts_odvec, ts_davec.
+
 Sat 29 Aug 2020 : moved all test procedures in the ts_*.adb files into
   test_{natural,integer,floating,complex,dobldobl,quaddobl,nesvec}_vectors,
   test_string_vectors, and test_{dobldobl,quaddobl}_performance packages.

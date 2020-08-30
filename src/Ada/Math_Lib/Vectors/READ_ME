@@ -16,8 +16,9 @@ The organization above is hierarchic.  Other possible views are
 classifications by numeric types (e.g., everything with standard_integer*,
 *integer*, etc...) or by data types.
 
-In version 2.4.80, all test procedures were moved into ten packages,
-all starting with test_*.
+In version 2.4.80, all test procedures were moved into ten test packages.
+Instantiations for vectors in triple, penta, octo, and deca double
+precisions were added.
 
 ------------------------------------------------------------------------------
 file name                          : short description
@@ -114,6 +115,23 @@ multprec_complex_vector_tools      : format and size conversions
 multprec_complex_nesvecs           : generic_nesvecs(multprec complex)
 multprec_complex_nesvecs_io        : generic_nesvecs_io(multprec complex)
 ------------------------------------------------------------------------------
+triple_double_vectors              : vectors of triple double numbers
+triple_double_vectors_io           : input/output of triple double vectors
+tripdobl_complex_vectors           : complex vectors of triple doubles
+tripdobl_complex_vectors_io        : i/o of complex vectors of triple doubles
+penta_double_vectors               : vectors of penta double numbers
+penta_double_vectors_io            : input/output of penta double vectors
+pentdobl_complex_vectors           : complex vectors of penta doubles
+pentdobl_complex_vectors_io        : i/o of complex vectors of penta doubles
+octo_double_vectors                : vectors of octo double numbers
+octo_double_vectors_io             : input/output of octo double vectors
+octodobl_complex_vectors           : complex vectors of octo doubles
+octodobl_complex_vectors_io        : i/o of complex vectors of octo doubles
+deca_double_vectors                : vectors of deca double numbers
+deca_double_vectors_io             : input/output of deca double vectors
+decadobl_complex_vectors           : complex vectors of deca doubles
+decadobl_complex_vectors_io        : i/o of complex vectors of deca doubles
+------------------------------------------------------------------------------
 valid_vector_checks                : valid if no component is NaN
 ------------------------------------------------------------------------------
 standard_floating_two_norms        : Euclidean norms for standard floating vecs
@@ -126,6 +144,10 @@ quaddobl_random_vectors            : vectors of random quad doubles
 quaddobl_random_vecvecs            : vecvecs of random quad doubles
 multprec_random_vectors            : vectors of random multiprecision numbers
 multprec_random_vecvecs            : vecvecs of random multiprecision numbers
+tripdobl_random_vectors            : vectors of random triple doubles
+pentdobl_random_vectors            : vectors of random penta doubles
+octodobl_random_vectors            : vectors of random octo doubles
+decadobl_random_vectors            : vectors of random deca doubles
 ------------------------------------------------------------------------------
 varbprec_vecvec_conversions        : conversions between vecvecs of varb prcs
 ------------------------------------------------------------------------------
@@ -137,6 +159,10 @@ test_vector_strings                : tests vectors in strings
 test_nested_vectors                : tests nested complex vectors
 test_dobldobl_vectors              : tests vectors in double double precision
 test_quaddobl_vectors              : tests vectors in quad double precision
+test_tripdobl_vectors              : tests vectors in triple double precision
+test_pentdobl_vectors              : tests vectors in penta double precision
+test_octodobl_vectors              : tests vectors in octo double precision
+test_decadobl_vectors              : tests vectors in deca double precision
 ------------------------------------------------------------------------------
 ts_natvec                          : main test on natural vectors
 ts_intvec                          : main test on integer vectors
@@ -146,6 +172,10 @@ ts_strvec                          : main test on vectors in strings
 ts_nesvec                          : main test on nested vectors
 ts_ddvec                           : main test on vectors of double doubles
 ts_qdvec                           : main test on vectors of quad doubles
+ts_tdvec                           : main test on vectors of triple doubles
+ts_pdvec                           : main test on vectors of penta doubles
+ts_odvec                           : main test on vectors of octo doubles
+ts_davec                           : main test on vectors of deca doubles
 ------------------------------------------------------------------------------
 standard_vector_splitters          : split/merge complex vectors for doubles
 dobldobl_vector_splitters          : 4-vector representation of dobldobl vecs
