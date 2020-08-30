@@ -279,7 +279,7 @@ ts_davec:
 # Test programs for Math_Lib/Matrices :
 
 test_matrices: ts_natmat ts_intmat ts_fltmat ts_fltdls ts_cmpmat \
-               ts_ddmat ts_qdmat
+               ts_ddmat ts_qdmat ts_tdmat ts_pdmat ts_odmat ts_damat
 
 ts_natmat:
 	make -f $(MAKEFILE) ts_natmat
@@ -301,6 +301,18 @@ ts_ddmat:
 
 ts_qdmat:
 	make -f $(MAKEFILE) ts_qdmat
+
+ts_tdmat:
+	make -f $(MAKEFILE) ts_tdmat
+
+ts_pdmat:
+	make -f $(MAKEFILE) ts_pdmat
+
+ts_odmat:
+	make -f $(MAKEFILE) ts_odmat
+
+ts_damat:
+	make -f $(MAKEFILE) ts_damat
 
 # Test programs for Math_Lib/Divisors :
 

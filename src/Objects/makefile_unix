@@ -386,6 +386,18 @@ ts_ddmat:
 ts_qdmat:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_qdmat.adb -o $(BIN)/ts_qdmat
 
+ts_tdmat:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tdmat.adb -o $(BIN)/ts_tdmat
+
+ts_pdmat:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pdmat.adb -o $(BIN)/ts_pdmat
+
+ts_odmat:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_odmat.adb -o $(BIN)/ts_odmat
+
+ts_damat:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_damat.adb -o $(BIN)/ts_damat
+
 # Test programs for Math_Lib/Divisors :
 
 ts_gcd:
