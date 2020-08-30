@@ -1,3 +1,14 @@
+Sun 30 Aug 2020 : instantiated matrices in triple, penta, octo, and deca
+  double precision: {triplel,penta,octo,deca}_double_matrices,
+  with io: {triple,penta,octo,deca}_double_matrices_io.
+  Instantiated complex matrices in triple, penta, octo, and deca double
+  precision: {tripdobl,pentdobl,octodobl,decadobl}_complex_matrices,
+  with io: {tripdobl,pentdobl,octodobl,decadobl}_complex_matrices_io.
+  Defined basic routines to generate random matrices in the packages
+  {tripdobl,pentdobl,octodobl,decadobl}_random_matrices.  Added tests in
+  test_{tripdobl,pentdobl,octodobl,decadobl}_matrices, with calls to the
+  main interactive tests in ts_tdmat, ts_pdmat, ts_odmat, ts_damat.
+
 Sat 29 Aug 2020 : moved test procedures from ts_*adb files into packages
   test_{natural,integer,floating,complex,dobldobl,quaddobl}_matrices.
 

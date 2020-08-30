@@ -22,6 +22,7 @@ classifications by numeric types (e.g., everything with standard_integer*,
 *integer*, etc...) or by data types.
 
 In v2.4.80, the test procedures were moved into test packages.
+Matrices in triple, penta, octo, and deca double precision were added.
 
 ------------------------------------------------------------------------------
 file name                          : short description
@@ -76,10 +77,31 @@ multprec_floating64_matrices_io    : generic_matrices_io(multprec floating)
 multprec_complex_vecmats           : generic_vecmats(multprec complex)
 multprec_complex_vecmats_io        : generic_vecmats_io(multprec complex)
 ------------------------------------------------------------------------------
+triple_double_matrices             : matrices of triple double numbers
+triple_double_matrices_io          : i/o of matrices of triple double numbers
+tripdobl_complex_matrices          : matrices of complex triple doubles
+tripdobl_complex_matrices_io       : i/o matrices of complex triple doubles
+penta_double_matrices              : matrices of penta double numbers
+penta_double_matrices_io           : i/o of matrices of penta double numbers
+pentdobl_complex_matrices          : matrices of complex penta doubles
+pentdobl_complex_matrices_io       : i/o matrices of complex penta doubles
+octo_double_matrices               : matrices of octo double numbers
+octo_double_matrices_io            : i/o of matrices of octo double numbers
+octodobl_complex_matrices          : matrices of complex octo doubles
+octodobl_complex_matrices_io       : i/o matrices of complex octo doubles
+deca_double_matrices               : matrices of deca double numbers
+deca_double_matrices_io            : i/o of matrices of deca double numbers
+decadobl_complex_matrices          : matrices of complex deca doubles
+decadobl_complex_matrices_io       : i/o matrices of complex deca doubles
+------------------------------------------------------------------------------
 standard_random_matrices           : matrices of random standard numbers
 dobldobl_random_matrices           : matrices of random double doubles
 quaddobl_random_matrices           : matrices of random quad doubles
 multprec_random_matrices           : matrices of random multiprecision numbers
+tripdobl_random_matrices           : matrices of random triple doubles
+pentdobl_random_matrices           : matrices of random penta doubles
+octodobl_random_matrices           : matrices of random octo doubles
+decadobl_random_matrices           : matrices of random deca doubles
 ------------------------------------------------------------------------------
 matrix_to_vecvec_conversions       : convert matrices to vectors of vectors
 varbprec_matrix_conversions        : convert matrices of various precisions
@@ -93,6 +115,10 @@ test_floating_matrices             : tests matrices of floating-point numbers
 test_complex_matrices              : tests matrices of complex numbers
 test_dobldobl_matrices             : tests matrices of double doubles
 test_quaddobl_matrices             : tests matrices of quad doubles
+test_tripdobl_matrices             : tests matrices of triple doubles
+test_pentdobl_matrices             : tests matrices of penta doubles
+test_octodobl_matrices             : tests matrices of octo doubles
+test_decadobl_matrices             : tests matrices of deca doubles
 -----------------------------------------------------------------------------
 ts_natmat                          : main test on natural matrices 
 ts_intmat                          : main test on integer matrices
@@ -100,6 +126,8 @@ ts_fltmat                          : main test on floating-point matrices
 ts_cmpmat                          : main test on complex matrices
 ts_ddmat                           : main test on double double matrices
 ts_qdmat                           : main test on quad double matrices
+ts_tdmat                           : main test on triple double matrices
+ts_pdmat                           : main test on penta double matrices
+ts_odmat                           : main test on octo double matrices
+ts_damat                           : main test on deca double matrices
 ------------------------------------------------------------------------------
-The generic_* packages are different from the abstract_* packages in the
-sense that they export types and operations, i.e.: they have a body.
