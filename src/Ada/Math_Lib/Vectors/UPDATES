@@ -1,3 +1,7 @@
+Sat 29 Aug 2020 : moved all test procedures in the ts_*.adb files into
+  test_{natural,integer,floating,complex,dobldobl,quaddobl,nesvec}_vectors,
+  test_string_vectors, and test_{dobldobl,quaddobl}_performance packages.
+
 Sun 5 Jun 2020 : added an Allocate procedure to standard_floating_vecvecvecs.
 
 Fri 3 Jul 2020 : new package standard_floating_vecvecvecs, with definitions

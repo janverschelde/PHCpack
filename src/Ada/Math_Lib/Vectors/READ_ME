@@ -1,4 +1,4 @@
-Vectors and vectors of vectors in PHCv2.4.79
+Vectors and vectors of vectors in PHCv2.4.80
 
 Because the directory Matrices became too big, 
 this directory was created new for PHCv2.3.33.
@@ -15,6 +15,9 @@ This library is organized in four parts :
 The organization above is hierarchic.  Other possible views are 
 classifications by numeric types (e.g., everything with standard_integer*,
 *integer*, etc...) or by data types.
+
+In version 2.4.80, all test procedures were moved into ten packages,
+all starting with test_*.
 
 ------------------------------------------------------------------------------
 file name                          : short description
@@ -126,20 +129,31 @@ multprec_random_vecvecs            : vecvecs of random multiprecision numbers
 ------------------------------------------------------------------------------
 varbprec_vecvec_conversions        : conversions between vecvecs of varb prcs
 ------------------------------------------------------------------------------
-ts_natvec                          : test vectors/vecvecs of natural numbers
-ts_intvec                          : test vectors/vecvecs of integer numbers
-ts_fltvec                          : test vectors/vecvecs of floating numbers
-ts_cmpvec                          : test vectors/vecvecs of complex numbers
-ts_strvec                          : test parse/write vectors from/to strings
-ts_nesvec                          : test on nested vectors
-ts_ddvec                           : test on vectors of double doubles
-ts_qdvec                           : test on vectors of quad doubles
+test_natural_vectors               : tests vectors of natural numbers
+test_integer_vectors               : tests vectors of integer numbers
+test_floating_vectors              : tests vectors of floating-point numbers
+test_complex_vectors               : tests vectors of complex numbers
+test_vector_strings                : tests vectors in strings
+test_nested_vectors                : tests nested complex vectors
+test_dobldobl_vectors              : tests vectors in double double precision
+test_quaddobl_vectors              : tests vectors in quad double precision
+------------------------------------------------------------------------------
+ts_natvec                          : main test on natural vectors
+ts_intvec                          : main test on integer vectors
+ts_fltvec                          : main test on floating-point vectors
+ts_cmpvec                          : main test on complex vectors
+ts_strvec                          : main test on vectors in strings
+ts_nesvec                          : main test on nested vectors
+ts_ddvec                           : main test on vectors of double doubles
+ts_qdvec                           : main test on vectors of quad doubles
 ------------------------------------------------------------------------------
 standard_vector_splitters          : split/merge complex vectors for doubles
 dobldobl_vector_splitters          : 4-vector representation of dobldobl vecs
 quaddobl_vector_splitters          : 2-vector representation of quaddobl vecs
-ts_perfddvc                        : better performing dd vector operations
-ts_perfqdvc                        : better performing qd vector operations
+test_dobldobl_performance          : performance test with double doubles
+test_quaddobl_performance          : performance test with quad doubles
+ts_perfddvc                        : main test on dd vector performance
+ts_perfqdvc                        : main test on qd vector performance
 ------------------------------------------------------------------------------
 The generic_* packages are different from the abstract_* packages in the
 sense that they export types and operations, i.e.: they have a body.
