@@ -342,6 +342,18 @@ ts_nesvec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_nesvec.adb \
               -o $(BIN)/ts_nesvec
 
+ts_tdvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tdvec.adb -o $(BIN)/ts_tdvec
+
+ts_pdvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pdvec.adb -o $(BIN)/ts_pdvec
+
+ts_odvec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_odvec.adb -o $(BIN)/ts_odvec
+
+ts_davec:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_davec.adb -o $(BIN)/ts_davec
+
 # Test programs for Matrices :
 
 ts_natmat:

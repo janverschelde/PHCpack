@@ -231,7 +231,8 @@ ts_dacmplx:
 # Test programs for Math_Lib/Vectors :
 
 test_vectors: ts_natvec ts_intvec ts_fltvec ts_cmpvec ts_ddvec ts_qdvec \
-              ts_nesvec ts_strvec ts_perfddvc ts_perfqdvc
+              ts_nesvec ts_strvec ts_perfddvc ts_perfqdvc ts_tdvec ts_pdvec \
+	      ts_odvec ts_davec
 
 ts_natvec:
 	make -f $(MAKEFILE) ts_natvec
@@ -262,6 +263,18 @@ ts_perfddvc:
 
 ts_perfqdvc:
 	make -f $(MAKEFILE) ts_perfqdvc
+
+ts_tdvec:
+	make -f $(MAKEFILE) ts_tdvec
+
+ts_pdvec:
+	make -f $(MAKEFILE) ts_pdvec
+
+ts_odvec:
+	make -f $(MAKEFILE) ts_odvec
+
+ts_davec:
+	make -f $(MAKEFILE) ts_davec
 
 # Test programs for Math_Lib/Matrices :
 
