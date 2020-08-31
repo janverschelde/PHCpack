@@ -334,7 +334,7 @@ ts_circuit:
 
 test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
                 ts_mgs ts_mgsrnk ts_backsubs ts_perflu ts_vvlu ts_vmplu \
-                ts_perfdlu ts_perfdsvd
+                ts_perfdlu ts_perfdsvd ts_tdlu ts_pdlu ts_odlu ts_dalu
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -383,6 +383,18 @@ ts_vvlu:
 
 ts_vmplu:
 	make -f $(MAKEFILE) ts_vmplu
+
+ts_tdlu:
+	make -f $(MAKEFILE) ts_tdlu
+
+ts_pdlu:
+	make -f $(MAKEFILE) ts_pdlu
+
+ts_odlu:
+	make -f $(MAKEFILE) ts_odlu
+
+ts_dalu:
+	make -f $(MAKEFILE) ts_dalu
 
 # Test programs for Math_Lib/Polynomials :
 

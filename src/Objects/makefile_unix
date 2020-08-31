@@ -465,6 +465,18 @@ ts_vvlu:
 ts_vmplu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_vmplu.adb -o $(BIN)/ts_vmplu
 
+ts_tdlu:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tdlu.adb -o $(BIN)/ts_tdlu
+
+ts_pdlu:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pdlu.adb -o $(BIN)/ts_pdlu
+
+ts_odlu:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_odlu.adb -o $(BIN)/ts_odlu
+
+ts_dalu:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_dalu.adb -o $(BIN)/ts_dalu
+
 # Test programs for Math_Lib/Polynomials :
 
 ts_poly:
