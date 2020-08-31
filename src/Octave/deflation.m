@@ -18,12 +18,14 @@ function [L]=deflation(S,Sols)
 global phcloc
 global phctemp
 rand('seed',sum(100*clock));
-sr = num2str(round(10^8*rand(1,1)));
+% sr = num2str(round(10^8*rand(1,1)));
+sr = num2str(int32(10^8*rand(1,1)),10);  % the integer format looks nicer
 
 verbose = 0;
 if(verbose) 
-    fprintf('calls the fist-order deflation ..., please wait...\n');
+    fprintf('calling deflation ...\n');
 end  
+
 deflationfile = [phctemp 'deflation' sr];
 deflationtemp = [phctemp 'deflationtemp' sr];
 deflationphcout = [phctemp 'deflationphcout' sr];
@@ -36,8 +38,15 @@ write_system(deflationfile,S);
 % write solution into a file
 write_solution(solsfile,Sols);
 
-% write input redirection file
-temp = ['6\ny\n' phctemp 'deflation' sr '\n' phctemp 'out' sr '\n' phctemp 'sols' sr '\n' '0\n'];
+% write input redirection file, navigating the menu of phc -v
+% 6 : Newton's method with deflation for isolated singularities,
+% 0 : hardware double precision,
+% y : read the input system and solutions from file,
+% and the last three characters in answering the menu questions:
+% 1 : change algorithmic evaluation into symbolic evaluation
+% y : confirm the change
+% 0 : no more changes to the settings.
+temp = ['6\n0\ny\n' phctemp 'deflation' sr '\n' phctemp 'out' sr '\n' phctemp 'sols' sr '\n' '1\ny\n0\n'];
 deflationtemp_id = fopen(deflationtemp,'wt');
 fprintf(deflationtemp_id, temp);
 fclose(deflationtemp_id);
