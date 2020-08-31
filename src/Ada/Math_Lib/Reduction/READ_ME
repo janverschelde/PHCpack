@@ -1,4 +1,4 @@
-Numerical Linear Algebra in PHCv2.4.79
+Numerical Linear Algebra in PHCv2.4.80
 
 This "Reduction" directory implements "row reduction" on linear systems
 of floating-point number of various precisions: double, double double,
@@ -10,6 +10,9 @@ Version 2.2 contains singular value decomposition, which was extended
 to multiprecision in version 2.3.  
 In v2.3.55, double double and quad double numbers were introducted.
 The modified Gram-Schmidt method was added in version 2.3.70.
+
+Added solvers in triple, penta, octo, and deca double precision
+in version 2.4.80.
 
 -------------------------------------------------------------------------------
 file name                          : short description
@@ -36,19 +39,39 @@ multprec_complex_norms_equals      : norms/equals for multprec complex numbers
 generic_floating_linear_solvers    : solvers of linear systems of floats
 standard_floating_linear_solvers   : linear-system solvers for standard floats
 double_double_linear_solvers       : linear-system solvers for double doubles
+triple_double_linear_solvers       : linear-system solvers for triple doubles
 quad_double_linear_solvers         : linear-system solvers for quad doubles
+penta_double_linear_solvers        : linear-system solvers for penta doubles
+octo_double_linear_solvers         : linear-system solvers for octo doubles
+deca_double_linear_solvers         : linear-system solvers for deca doubles
 multprec_floating_linear_solvers   : linear-system solvers for multprec floats
 multprec_floating64_linear_solvers : linear-system solvers for multprec floats
-standard_complex_linear_solvers    : linear-system solvers for standard complex
+standard_complex_linear_solvers    : linear solvers for standard complex
 dobldobl_complex_linear_solvers    : linear solvers for double double complex
+tripdobl_complex_linear_solvers    : linear solvers for triple double complex
 quaddobl_complex_linear_solvers    : linear solvers for quad double complex
-multprec_complex_linear_solvers    : linear-system solvers for multprec complex
+pentdobl_complex_linear_solvers    : linear solvers for penta double complex
+octodobl_complex_linear_solvers    : linear solvers for octo double complex
+decadobl_complex_linear_solvers    : linear solvers for deca double complex
+multprec_complex_linear_solvers    : linear solvers for multprec complex
+------------------------------------------------------------------------------
 test_lu_decompositions             : test accuracy of LU factorization
+test_dobldobl_linear_solvers       : test double double linear solvers
+test_tripdobl_linear_solvers       : test triple double linear solvers
+test_quaddobl_linear_solvers       : test quad double linear solvers
+test_pentdobl_linear_solvers       : test penta double linear solvers
+test_octodobl_linear_solvers       : test octo double linear solvers
+test_decadobl_linear_solvers       : test deca double linear solvers
+------------------------------------------------------------------------------
 ts_fltdls                          : test dynamic matrix triangulators
 ts_fltlu                           : test on floating-point LU factorization
 ts_cmplu                           : test on complex LU factorization
-ts_ddlu                            : test on double double LU factorization
-ts_qdlu                            : test on quad double LU factorization
+ts_ddlu                            : main test on double double LU solver
+ts_tdlu                            : main test on triple double LU solver
+ts_qdlu                            : main test on quad double LU solver 
+ts_pdlu                            : main test on penta double LU solver 
+ts_odlu                            : main test on octo double LU solver 
+ts_dalu                            : main test on deca double LU solver 
 ts_backsubs                        : test on accuracy of back substitution
 ts_vvlu                            : test LU factorization on vecvecs
 ts_perflu                          : performance test on lufac

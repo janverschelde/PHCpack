@@ -1,3 +1,11 @@
+Sun 30 Aug 2020 : moved test procedures from ts_ddlu and ts_qdlu into
+  packages test_{dobldobl,quaddobl}_linear solvers.
+  Instantiated {triple,penta,octo,deca}_double_linear_solvers, defined
+  {tripdobl,pentdobl,octodobl,decadobl}_linear_solvers, and extented
+  test_lu_decompositions for triple, penta, octo, and deca doubles.
+  Defined test_{tripdobl,pentdobl,octodobl,decadobl}_linear_solvers,
+  with new main testers in ts_tdlu, ts_pdlu, ts_odlu, ts_dalu.
+
 Wed 22 Jul 2020 : new package standard_inlined_singular_values has wrapper,
   with a test defined in ts_perfdsvd.  Added some additional operations to
   standard_complex_blas_helpers, updated standard_inlined_singular_values,
