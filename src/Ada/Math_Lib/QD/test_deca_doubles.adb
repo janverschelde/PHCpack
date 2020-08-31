@@ -101,6 +101,26 @@ package body Test_Deca_Doubles is
     end if;
   end Test_Read;
 
+  procedure Test_Write is
+
+    dfx : double_float := 1.0E-16;
+    dax : deca_double := create(dfx);
+    ans : character;
+
+  begin
+    loop
+      new_line;
+      put("A double float : "); put(dfx); new_line;
+      put_line("All words in the corresponding deca double :");
+      write(dax);
+      put("Written as a deca double : "); put(dax); new_line;
+      put("Give your own double float ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      put("Give a double float : "); get(dfx);
+      dax := create(dfx);
+    end loop;
+  end Test_Write;
+
   procedure Log10log2exp1_doubles is
 
   -- >>> from sympy import log, exp, evalf
@@ -408,20 +428,22 @@ package body Test_Deca_Doubles is
     put_line("  1. test addition and subtraction");
     put_line("  2. test multiplication and division");
     put_line("  3. test reading from a string");
-    put_line("  4. write 10 leading doubles of log(10), log(2), exp(1)");
-    put_line("  5. write 10 leading doubles for inverse factorials");
-    put_line("  6. input and output");
-    put_line("  7. Newton's method for sqrt(2)");
-    put("Type 1, 2, 3, 4, 5, 6, or 7 to select a test : ");
-    Ask_Alternative(ans,"1234567");
+    put_line("  4. test writing a double as deca double");
+    put_line("  5. write 10 leading doubles of log(10), log(2), exp(1)");
+    put_line("  6. write 10 leading doubles for inverse factorials");
+    put_line("  7. input and output");
+    put_line("  8. Newton's method for sqrt(2)");
+    put("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
+    Ask_Alternative(ans,"12345678");
     case ans is
       when '1' => Test_Addition_and_Subtraction;
       when '2' => Test_Multiplication_and_Division;
       when '3' => Test_Read;
-      when '4' => Log10log2exp1_doubles;
-      when '5' => inverse_factorials;
-      when '6' => Test_io;
-      when '7' => Test_sqrt2;
+      when '4' => Test_Write;
+      when '5' => Log10log2exp1_doubles;
+      when '6' => inverse_factorials;
+      when '7' => Test_io;
+      when '8' => Test_sqrt2;
       when others => null;
     end case;
   end Main;

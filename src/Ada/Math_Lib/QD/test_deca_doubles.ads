@@ -32,6 +32,11 @@ package Test_Deca_Doubles is
   --   Reads a 160-digit approximation A for sqrt(2) from a string
   --   and shows the result of A*A - 2.
 
+  procedure Test_Write;
+
+  -- DESCRIPTION :
+  --   Tests writing of a double.
+
   procedure Log10log2exp1_doubles;
 
   -- DESCRIPTION :

@@ -400,7 +400,7 @@ package body Deca_Double_Numbers is
   function ">" ( x : deca_double; y : double_float ) return boolean is
   begin
    return ((x.right_thumb > y)
-        or (x.right_thumb = y and x.right_index < 0.0)
+        or (x.right_thumb = y and x.right_index > 0.0)
         or (x.right_thumb = y and x.right_index = 0.0 and
             x.right_middle > 0.0)
         or (x.right_thumb = y and x.right_index = 0.0 and
