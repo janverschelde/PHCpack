@@ -119,18 +119,26 @@ triple_double_vectors              : vectors of triple double numbers
 triple_double_vectors_io           : input/output of triple double vectors
 tripdobl_complex_vectors           : complex vectors of triple doubles
 tripdobl_complex_vectors_io        : i/o of complex vectors of triple doubles
+tripdobl_complex_vecvecs           : complex vecvecs of triple doubles
+tripdobl_complex_vecvecs_io        : i/o of complex vecvecs of triple doubles
 penta_double_vectors               : vectors of penta double numbers
 penta_double_vectors_io            : input/output of penta double vectors
 pentdobl_complex_vectors           : complex vectors of penta doubles
 pentdobl_complex_vectors_io        : i/o of complex vectors of penta doubles
+pentdobl_complex_vecvecs           : complex vecvecs of penta doubles
+pentdobl_complex_vecvecs_io        : i/o of complex vecvecs of penta doubles
 octo_double_vectors                : vectors of octo double numbers
 octo_double_vectors_io             : input/output of octo double vectors
 octodobl_complex_vectors           : complex vectors of octo doubles
 octodobl_complex_vectors_io        : i/o of complex vectors of octo doubles
+octodobl_complex_vecvecs           : complex vevcecs of octo doubles
+octodobl_complex_vecvecs_io        : i/o of complex vevcecs of octo doubles
 deca_double_vectors                : vectors of deca double numbers
 deca_double_vectors_io             : input/output of deca double vectors
 decadobl_complex_vectors           : complex vectors of deca doubles
 decadobl_complex_vectors_io        : i/o of complex vectors of deca doubles
+decadobl_complex_vecvecs           : complex vecvecs of deca doubles
+decadobl_complex_vecvecs_io        : i/o of complex vecvecs of deca doubles
 ------------------------------------------------------------------------------
 valid_vector_checks                : valid if no component is NaN
 ------------------------------------------------------------------------------
