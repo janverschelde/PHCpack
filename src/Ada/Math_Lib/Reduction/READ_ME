@@ -21,14 +21,36 @@ standard_floating_vector_norms     : norms of vectors of double floats
 standard_complex_vector_norms      : norms of standard complex vectors
 double_double_vector_norms         : norms of double double vectors
 dobldobl_complex_vector_norms      : vector norms for double double complex
+test_dobldobl_vector_norms         : tests on double double vector norms
+ts_ddnorm                          : main test on double double vector norms
 quad_double_vector_norms           : norms of vectors of quad doubles
 quaddobl_complex_vector_norms      : vector norms for quad double complex
+test_quaddobl_vector_norms         : tests on quad double vector norms
+ts_qdnorm                          : main test on quad double vector norms
+-------------------------------------------------------------------------------
 standard_floating_two_norms        : Euclidean norms for standard floating vecs
 double_double_two_norms            : 2-norms in double double precision
 quad_double_two_norms              : 2-norms in quad double precision
 standard_complex_matrix_norms      : max norm for double complex matrices
 dobldobl_complex_matrix_norms      : max norm for dobldobl complex matrices
 quaddobl_complex_matrix_norms      : max norm for quaddobl complex matrices
+-------------------------------------------------------------------------------
+triple_double_vector_norms         : norms of vectors of triple doubles
+tripdobl_complex_vector_norms      : norms of complex triple double vectors
+test_tripdobl_vector_norms         : tests on triple double vector norms
+ts_tdnorm                          : main test on triple double vector norms
+penta_double_vector_norms          : norms of vectors of penta doubles
+pentdobl_complex_vector_norms      : norms of complex penta double vectors
+test_pentdobl_vector_norms         : tests on penta double vector norms
+ts_pdnorm                          : main test on penta double vector norms
+octo_double_vector_norms           : norms of vectors of octo doubles
+octodobl_complex_vector_norms      : norms of complex octo double vectors
+test_octodobl_vector_norms         : tests on octo double vector norms
+ts_odnorm                          : main test on octo double vector norms
+deca_double_vector_norms           : norms of vectors of deca doubles
+decadobl_complex_vector_norms      : norms of complex deca double vectors
+test_decadobl_vector_norms         : tests on deca double vector norms
+ts_danorm                          : main test on deca double vector norms
 -------------------------------------------------------------------------------
 generic_norms_equals               : norms and equality routines
 standard_floating_norms_equals     : norms/equals for standard floating numbers

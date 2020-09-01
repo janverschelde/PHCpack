@@ -1,3 +1,9 @@
+Mon 1 Sep 2020 : new packages {triple,penta,octo,deca}_vector_norms and
+  {tripdobl,pentdobl,octodobl,decadobl}_complex_vector_norms, with tests in
+  test_{dobldobl,tripdobl,quaddobl,pentdobl,octodobl,decadobl}_vector_norms,
+  main tests in ts_ddnorm, ts_tdnorm, ts_qdnorm, ts_pdnorm, ts_odnorm, 
+  and ts_danorm.
+
 Sun 30 Aug 2020 : moved test procedures from ts_ddlu and ts_qdlu into
   packages test_{dobldobl,quaddobl}_linear solvers.
   Instantiated {triple,penta,octo,deca}_double_linear_solvers, defined
