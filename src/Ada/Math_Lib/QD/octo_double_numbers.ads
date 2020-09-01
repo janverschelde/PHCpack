@@ -170,6 +170,7 @@ package Octo_Double_Numbers is
   function "-" ( x : octo_double ) return octo_double;     -- returns -x
   function "-" ( x,y : octo_double ) return octo_double;   -- returns x-y
   function "-" ( x : octo_double; y : double_float ) return octo_double;
+  function "-" ( x : double_float; y : octo_double ) return octo_double;
 
   function "*" ( x,y : octo_double ) return octo_double;   -- returns x*y
   function "*" ( x : octo_double; y : double_float ) return octo_double;

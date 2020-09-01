@@ -144,6 +144,7 @@ package Triple_Double_Numbers is
 
   function "-" ( x,y : triple_double ) return triple_double; -- returns x-y
   function "-" ( x : triple_double; y : double_float ) return triple_double;
+  function "-" ( x : double_float; y : triple_double ) return triple_double;
 
   function "*" ( x,y : triple_double ) return triple_double; -- returns x*y
   function "*" ( x : triple_double; y : double_float ) return triple_double;

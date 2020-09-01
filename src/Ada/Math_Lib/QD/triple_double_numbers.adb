@@ -338,6 +338,15 @@ package body Triple_Double_Numbers is
     return res;
   end "-";
 
+  function "-" ( x : double_float; y : triple_double ) return triple_double is
+
+    mny : constant triple_double := -y;
+    res : constant triple_double := x + mny;
+
+  begin
+    return res;
+  end "-";
+
   function "*" ( x,y : triple_double ) return triple_double is
 
     res : triple_double;

@@ -109,61 +109,76 @@ quaddobl_complex_exponentiation : high powers of quad double complex numbers
 test_polar_exponentiation       : test procedures on complex exponentiation 
 ts_cmpexp                       : main test on complex exponentiation
 ------------------------------------------------------------------------------
-fast_double_renormalizations : renormalizations for multiple doubles
-triple_double_numbers        : defines triple double numbers and arithmetic
-triple_double_numbers_io     : input and output of triple double numbers
-test_triple_doubles          : test procedures on triple doubles
-ts_tridbl                    : main test on triple double arithmetic
-octo_double_numbers          : defines octo double numbers and arithmetic
-octo_double_numbers_io       : input and output of octo double numbers
-test_octo_doubles            : test procedures on octo doubles
-ts_octdbl                    : main test on octo double arithmetic
-penta_double_numbers         : defines penta double numbers and arithmetic
-penta_double_numbers_io      : input and output of penta double numbers
-test_penta_doubles           : test procedures on penta doubles
-ts_pentadbl                  : main test on penta double arithmetic
-deca_double_numbers          : defines deca double numbers and arithmetic
-deca_double_numbers_io       : input and output of deca double numbers
-test_deca_doubles            : test procedures on deca doubles
-ts_decadbl                   : main test on deca double arithmetic
-triple_double_ring           : ring of triple double numbers
-triple_double_ring_io        : input/output for ring of triple doubles
-triple_double_ring-ffield    : field of triple double numbers
-tripdobl_complex_numbers     : complex arithmetic with triple doubles
-tripdobl_complex_numbers_io  : input/output for triple double complex
-tripdobl_complex_ring        : ring of triple double complex numbers
-tripdobl_complex_ring-ffield : field of triple double complex numbers
-tripdobl_random_numbers      : random numbers in triple double precision
-test_tripdobl_complex        : tests triple double complex arithmetic
-ts_tdcmplx                   : main test on triple double complex numbers
-penta_double_ring            : ring of penta double numbers
-penta_double_ring_io         : input/output for the ring of penta doubles
-penta_double_ring-ffield     : field of penta double numbers
-pentdobl_complex_numbers     : complex arithmetic with penta doubles
-pentdobl_complex_numbers_io  : input/output for penta double complex
-pentdobl_complex_ring        : ring of penta double complex numbers
-pentdobl_complex_ring-ffield : field of penta double complex numbers
-pentdobl_random_numbers      : random numbers in penta double precision
-test_pentdobl_complex        : test penta double complex arithmetic
-ts_pdcmplx                   : main test on penta double complex numbers
-octo_double_ring             : ring of octo double numbers
-octo_double_ring_io          : input/output for the ring of octo doubles
-octo_double_ring-ffield      : field of octo double numbers
-octodobl_complex_numbers     : complex arithmetic with octo doubles
-octodobl_complex_numbers_io  : input/output for octo double complex
-octodobl_complex_ring        : ring of octo double complex numbers
-octodobl_complex_ring-ffield : field of octo double complex numbers
-octodobl_random_numbers      : random numbers in octo double precision
-test_octodobl_complex        : tests octo double complex arithmetic
-ts_odcmplx                   : main test on octo double complex numbers
-deca_double_ring             : ring of deca double numbers
-deca_double_ring_io          : input/output for the ring of deca doubles
-deca_double_ring-ffield      : field of deca double numbers
-decadobl_complex_numbers     : complex arithmetic with deca doubles
-decadobl_complex_numbers_io  : input/output for deca double complex
-decadobl_complex_ring        : ring of deca double complex numbers
-decadobl_complex_ring-ffield : field of deca double complex numbers
-decadobl_random_numbers      : random numbers in deca double precision
-test_decadobl_complex        : tests deca double complex arithmetic
-ts_dacmplx                   : main test on deca double complex numbers
+fast_double_renormalizations    : renormalizations for multiple doubles
+triple_double_numbers           : defines triple double numbers and arithmetic
+triple_double_numbers_io        : input and output of triple double numbers
+test_triple_doubles             : test procedures on triple doubles
+ts_tridbl                       : main test on triple double arithmetic
+tripdobl_mathematical_functions : triple double SQRT and Radius
+test_tripdobl_functions         : test triple double functions
+ts_tdfun                        : main test on triple double functions
+triple_double_ring              : ring of triple double numbers
+triple_double_ring_io           : input/output for ring of triple doubles
+triple_double_ring-ffield       : field of triple double numbers
+tripdobl_complex_numbers        : complex arithmetic with triple doubles
+tripdobl_complex_numbers_io     : input/output for triple double complex
+tripdobl_complex_ring           : ring of triple double complex numbers
+tripdobl_complex_ring-ffield    : field of triple double complex numbers
+tripdobl_random_numbers         : random numbers in triple double precision
+test_tripdobl_complex           : tests triple double complex arithmetic
+ts_tdcmplx                      : main test on triple double complex numbers
+------------------------------------------------------------------------------
+penta_double_numbers            : defines penta double numbers and arithmetic
+penta_double_numbers_io         : input and output of penta double numbers
+test_penta_doubles              : test procedures on penta doubles
+ts_pentadbl                     : main test on penta double arithmetic
+pentdobl_mathematical_functions : penta double SQRT and Radius
+test_pentdobl_functions         : test penta double functions
+ts_pdfun                        : main test on penta double functions
+penta_double_ring               : ring of penta double numbers
+penta_double_ring_io            : input/output for the ring of penta doubles
+penta_double_ring-ffield        : field of penta double numbers
+pentdobl_complex_numbers        : complex arithmetic with penta doubles
+pentdobl_complex_numbers_io     : input/output for penta double complex
+pentdobl_complex_ring           : ring of penta double complex numbers
+pentdobl_complex_ring-ffield    : field of penta double complex numbers
+pentdobl_random_numbers         : random numbers in penta double precision
+test_pentdobl_complex           : test penta double complex arithmetic
+ts_pdcmplx                      : main test on penta double complex numbers
+------------------------------------------------------------------------------
+octo_double_numbers             : defines octo double numbers and arithmetic
+octo_double_numbers_io          : input and output of octo double numbers
+test_octo_doubles               : test procedures on octo doubles
+ts_octdbl                       : main test on octo double arithmetic
+octodobl_mathematical_functions : octo double SQRT and Radius
+test_octodobl_functions         : test octo double functions
+ts_odfun                        : main test on octo double functions
+octo_double_ring                : ring of octo double numbers
+octo_double_ring_io             : input/output for the ring of octo doubles
+octo_double_ring-ffield         : field of octo double numbers
+octodobl_complex_numbers        : complex arithmetic with octo doubles
+octodobl_complex_numbers_io     : input/output for octo double complex
+octodobl_complex_ring           : ring of octo double complex numbers
+octodobl_complex_ring-ffield    : field of octo double complex numbers
+octodobl_random_numbers         : random numbers in octo double precision
+test_octodobl_complex           : tests octo double complex arithmetic
+ts_odcmplx                      : main test on octo double complex numbers
+------------------------------------------------------------------------------
+deca_double_numbers             : defines deca double numbers and arithmetic
+deca_double_numbers_io          : input and output of deca double numbers
+test_deca_doubles               : test procedures on deca doubles
+ts_decadbl                      : main test on deca double arithmetic
+decadobl_mathematical_functions : deca double SQRT and Radius
+test_decadobl_functions         : tests deca double functions
+ts_dafun                        : main test on deca double functions
+deca_double_ring                : ring of deca double numbers
+deca_double_ring_io             : input/output for the ring of deca doubles
+deca_double_ring-ffield         : field of deca double numbers
+decadobl_complex_numbers        : complex arithmetic with deca doubles
+decadobl_complex_numbers_io     : input/output for deca double complex
+decadobl_complex_ring           : ring of deca double complex numbers
+decadobl_complex_ring-ffield    : field of deca double complex numbers
+decadobl_random_numbers         : random numbers in deca double precision
+test_decadobl_complex           : tests deca double complex arithmetic
+ts_dacmplx                      : main test on deca double complex numbers
 ------------------------------------------------------------------------------
