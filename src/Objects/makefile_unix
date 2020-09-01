@@ -489,6 +489,24 @@ ts_odlu:
 ts_dalu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_dalu.adb -o $(BIN)/ts_dalu
 
+ts_ddnorm:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ddnorm.adb -o $(BIN)/ts_ddnorm
+
+ts_tdnorm:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tdnorm.adb -o $(BIN)/ts_tdnorm
+
+ts_qdnorm:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_qdnorm.adb -o $(BIN)/ts_qdnorm
+
+ts_pdnorm:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pdnorm.adb -o $(BIN)/ts_pdnorm
+
+ts_odnorm:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_odnorm.adb -o $(BIN)/ts_odnorm
+
+ts_danorm:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_danorm.adb -o $(BIN)/ts_danorm
+
 # Test programs for Math_Lib/Polynomials :
 
 ts_poly:
