@@ -172,7 +172,8 @@ ts_numbio:
 
 test_qd: ts_dbldbl ts_qddbl ts_ddcmplx ts_qdcmplx ts_mpddcv ts_mpqdcv \
          ts_ddfun ts_qdfun ts_cmpexp ts_tridbl ts_octdbl ts_tdcmplx \
-         ts_odcmplx ts_pentadbl ts_decadbl ts_pdcmplx ts_dacmplx
+         ts_odcmplx ts_pentadbl ts_decadbl ts_pdcmplx ts_dacmplx ts_tdfun \
+	 ts_pdfun ts_odfun ts_dafun
 
 ts_dbldbl:
 	make -f $(MAKEFILE) ts_dbldbl
@@ -197,6 +198,18 @@ ts_ddfun:
 
 ts_qdfun:
 	make -f $(MAKEFILE) ts_qdfun
+
+ts_tdfun:
+	make -f $(MAKEFILE) ts_tdfun
+
+ts_pdfun:
+	make -f $(MAKEFILE) ts_pdfun
+
+ts_odfun:
+	make -f $(MAKEFILE) ts_odfun
+
+ts_dafun:
+	make -f $(MAKEFILE) ts_dafun
 
 ts_cmpexp:
 	make -f $(MAKEFILE) ts_cmpexp

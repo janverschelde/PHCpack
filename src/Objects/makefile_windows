@@ -270,6 +270,18 @@ ts_ddfun:
 ts_qdfun:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_qdfun.adb -o $(BIN)/ts_qdfun
 
+ts_tdfun:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tdfun.adb -o $(BIN)/ts_tdfun
+
+ts_pdfun:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pdfun.adb -o $(BIN)/ts_pdfun
+
+ts_odfun:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_odfun.adb -o $(BIN)/ts_odfun
+
+ts_dafun:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_dafun.adb -o $(BIN)/ts_dafun
+
 ts_cmpexp:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cmpexp.adb -o $(BIN)/ts_cmpexp
 
