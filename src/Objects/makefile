@@ -348,7 +348,8 @@ ts_circuit:
 test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
                 ts_mgs ts_mgsrnk ts_backsubs ts_perflu ts_vvlu ts_vmplu \
                 ts_perfdlu ts_perfdsvd ts_tdlu ts_pdlu ts_odlu ts_dalu \
-		ts_ddnorm ts_tdnorm ts_qdnorm ts_pdnorm ts_odnorm ts_danorm
+		ts_ddnorm ts_tdnorm ts_qdnorm ts_pdnorm ts_odnorm ts_danorm \
+		ts_dqrd ts_ddqrd ts_qdqrd ts_mpqrd
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -364,6 +365,18 @@ ts_qdlu:
 
 ts_qrd:
 	make -f $(MAKEFILE) ts_qrd
+
+ts_dqrd:
+	make -f $(MAKEFILE) ts_dqrd
+
+ts_ddqrd:
+	make -f $(MAKEFILE) ts_ddqrd
+
+ts_qdqrd:
+	make -f $(MAKEFILE) ts_qdqrd
+
+ts_mpqrd:
+	make -f $(MAKEFILE) ts_mpqrd
 
 ts_svd:
 	make -f $(MAKEFILE) ts_svd

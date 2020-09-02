@@ -447,6 +447,22 @@ ts_qrd: get_clock.o get_clocks_per_sec.o
 	gnatmake -o $(BIN)/ts_qrd $(INCLULIBS) $(GNATOPTFLAGS) ts_qrd.adb \
                  -largs get_clock.o get_clocks_per_sec.o
 
+ts_dqrd: get_clock.o get_clocks_per_sec.o
+	gnatmake -o $(BIN)/ts_dqrd $(INCLULIBS) $(GNATOPTFLAGS) ts_dqrd.adb \
+                 -largs get_clock.o get_clocks_per_sec.o
+
+ts_ddqrd: get_clock.o get_clocks_per_sec.o
+	gnatmake -o $(BIN)/ts_ddqrd $(INCLULIBS) $(GNATOPTFLAGS) ts_ddqrd.adb \
+                 -largs get_clock.o get_clocks_per_sec.o
+
+ts_qdqrd: get_clock.o get_clocks_per_sec.o
+	gnatmake -o $(BIN)/ts_qdqrd $(INCLULIBS) $(GNATOPTFLAGS) ts_qdqrd.adb \
+                 -largs get_clock.o get_clocks_per_sec.o
+
+ts_mpqrd: get_clock.o get_clocks_per_sec.o
+	gnatmake -o $(BIN)/ts_mpqrd $(INCLULIBS) $(GNATOPTFLAGS) ts_mpqrd.adb \
+                 -largs get_clock.o get_clocks_per_sec.o
+
 ts_svd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_svd.adb -o $(BIN)/ts_svd
 
