@@ -1,3 +1,7 @@
+Tue 2 Sep 2020 : moved code from ts_qrd into the new test packages
+  test_{standard,dobldobl,quaddobl,multprec}_qrls_solvers, with separate
+  main tests in ts_dqrd, ts_ddqrd, ts_qdqrd, and ts_mpqrd.
+
 Mon 1 Sep 2020 : new packages {triple,penta,octo,deca}_vector_norms and
   {tripdobl,pentdobl,octodobl,decadobl}_complex_vector_norms, with tests in
   test_{dobldobl,tripdobl,quaddobl,pentdobl,octodobl,decadobl}_vector_norms,

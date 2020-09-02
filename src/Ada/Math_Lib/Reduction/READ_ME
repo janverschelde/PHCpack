@@ -112,7 +112,15 @@ standard_complex_qr_least_squares  : QR + least squares for standard complex
 dobldobl_complex_qr_least_squares  : QR + least squares for dobldobl complex
 quaddobl_complex_qr_least_squares  : QR + least squares for quaddobl complex
 multprec_complex_qr_least_squares  : QR + least squares for multprec complex
-ts_qrd                             : test QR-decomposition and least squares
+test_standard_qrls_solvers         : tests QRLS solvers for doubles
+test_dobldobl_qrls_solvers         : tests QRLS solvers for double doubles
+test_quaddobl_qrls_solvers         : tests QRLS solvers for quad doubles
+test_multprec_qrls_solvers         : tests QRLS solvers for multiprecision
+ts_dqrd                            : main test on double QR and LS
+ts_ddqrd                           : main test on double double QR and LS
+ts_qdqrd                           : main test on quad double QR and LS
+ts_mpqrd                           : main test on multiprecision QR and LS
+ts_qrd                             : main test on QR and least squares
 -------------------------------------------------------------------------------
 standard_floating_gramschmidt      : modified Gram-Schmidt QR on doubles
 standard_complex_gramschmidt       : Gram-Schmidt QR on complex numbers
