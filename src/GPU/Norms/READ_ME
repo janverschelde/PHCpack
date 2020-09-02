@@ -1,0 +1,37 @@
+Accelerated Vector Norm computation in PHCv2.4.80.
+
+The code in this folder experiments with GPU accelerated algorithms
+to compute vector norms with multiple double precisions.
+
+--------------------------------------------------------------------
+file name                  : short description
+--------------------------------------------------------------------
+dbl_norm_host              : 2-norm of double vectors on host
+dbl_norm_kernels           : kernels for 2-norm of double vectors
+run_norm_d                 : main program to run norm computations
+--------------------------------------------------------------------
+
+To build, type make run_norm_d.
+
+An example of a run with the programs:
+
+$ time ./run_norm_d 64 1024 10000 0
+
+real	0m0.965s
+user	0m0.414s
+sys	0m0.548s
+$ time ./run_norm_d 64 1024 10000 1
+
+real	0m0.073s
+user	0m0.072s
+sys	0m0.001s
+$ time ./run_norm_d 64 1024 10000 2
+GPU norm : 26.2328
+GPU norm after normalization : 1
+CPU norm : 26.2328
+CPU norm after normalization : 1
+
+real	0m0.973s
+user	0m0.453s
+sys	0m0.519s
+$ 
