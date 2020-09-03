@@ -1,3 +1,7 @@
+Wed 2 Sep 2020 : moved all test procedures in ts_checkers, ts_flagcond,
+  ts_induce, and ts_lrhom into separate packages test_checker_games,
+  test_schubert_condition, test_homotopy_definitions, and test_lr_homotopies.
+
 Tue 18 Aug 2020 : modified flag_transformations.adb for compiler warnings.
   Modified also setup_flag_homotopies for compiler warnings.
 
