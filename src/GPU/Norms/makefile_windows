@@ -1,0 +1,50 @@
+# This makefile is for the command line version
+# of the Microsoft Visual Studio Compiler on Windows 10.
+
+# tested with nvcc version 5.5.0 and gcc 4.4.7 on C2050
+# Note that the -arch=sm_13 is needed on the C2050.
+# tested with nvcc version 10.1 and gcc 4.8.5 on Volta
+
+# location of the command line Microsoft Visual Studio Compiler
+CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
+
+# include path for the Microsoft Visual Studio Compiler
+includepath="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include"
+
+# include path for the Windows Kit
+winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt"
+
+# libaries of the Microsoft Visual Studio compiler
+libdirvs="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\lib\x64"
+
+# libraries of the Windows Kits
+libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64"
+libdirkitucrt="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64"
+
+# include files of the CUDA SDK
+CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2"
+# library folder of the CUDA SDK
+CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
+
+dbl_norm_kernels.obj:
+	@-echo ">>> compiling vector norm kernels for doubles ..."
+	nvcc -ccbin=$(CL) -c dbl_norm_kernels.cu -o dbl_norm_kernels.obj
+
+dbl_norm_host.obj:
+	@-echo ">>> compile code for execution on the host ..."
+	$(CL)\cl /c dbl_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_norm_host.obj
+	
+run_norm_d.obj:
+	@-echo ">>> compiling the main program ..."
+	$(CL)\cl /c run_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: run_norm_d.obj /EHsc
+
+run_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj run_norm_d.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_norm_d.exe \
+             dbl_norm_kernels.obj dbl_norm_host.obj run_norm_d.obj
+
+
+clean:
+	del *exe *obj *exp *lib *~

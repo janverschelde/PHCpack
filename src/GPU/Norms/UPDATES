@@ -1,0 +1,3 @@
+Wed 2 Sep 2020 : figured out the makefile for windows, and made the
+  files makefile_windows and makefile_unix, in addition to makefile
+  to use for both (with the proper definition of MAKEFILE).

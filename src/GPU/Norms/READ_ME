@@ -11,7 +11,7 @@ dbl_norm_kernels           : kernels for 2-norm of double vectors
 run_norm_d                 : main program to run norm computations
 --------------------------------------------------------------------
 
-To build, type make run_norm_d.
+To build, type "make run_norm_d" and "make clean" to clean up.
 
 An example of a run with the programs:
 
@@ -35,3 +35,9 @@ real	0m0.973s
 user	0m0.453s
 sys	0m0.519s
 $ 
+
+On windows, use Measure-Command:
+
+Norms> Measure-Command {./run_norm_d 32 32 1000 0}
+Norms> Measure-Command {./run_norm_d 32 32 1000 1}
+Norms> Measure-Command {./run_norm_d 32 32 1000 2}
