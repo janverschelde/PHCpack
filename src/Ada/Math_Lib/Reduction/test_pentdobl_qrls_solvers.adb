@@ -3,30 +3,30 @@ with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
-with Double_Double_Vectors_io;           use Double_Double_Vectors_io;
-with Double_Double_Matrices_io;          use Double_Double_Matrices_io;
-with DoblDobl_Complex_Numbers;
+with Penta_Double_Numbers_io;           use Penta_Double_Numbers_io;
+with Penta_Double_Vectors_io;           use Penta_Double_Vectors_io;
+with Penta_Double_Matrices_io;          use Penta_Double_Matrices_io;
+with PentDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
-with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
-with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
-with DoblDobl_Random_Vectors;            use DoblDobl_Random_Vectors;
-with DoblDobl_Random_Matrices;           use DoblDobl_Random_Matrices;
-with Double_Double_Vector_Norms;         use Double_Double_Vector_Norms;
-with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
-with Double_Double_QR_Least_Squares;     use Double_Double_QR_Least_Squares;
-with DoblDobl_Complex_QR_Least_Squares;  use DoblDobl_Complex_QR_Least_Squares;
+with PentDobl_Complex_Vectors_io;        use PentDobl_Complex_Vectors_io;
+with PentDobl_Complex_Matrices_io;       use PentDobl_Complex_Matrices_io;
+with PentDobl_Random_Vectors;            use PentDobl_Random_Vectors;
+with PentDobl_Random_Matrices;           use PentDobl_Random_Matrices;
+with Penta_Double_Vector_Norms;         use Penta_Double_Vector_Norms;
+with PentDobl_Complex_Vector_Norms;      use PentDobl_Complex_Vector_Norms;
+with Penta_Double_QR_Least_Squares;     use Penta_Double_QR_Least_Squares;
+with PentDobl_Complex_QR_Least_Squares;  use PentDobl_Complex_QR_Least_Squares;
 
-package body Test_DoblDobl_QRLS_Solvers is
+package body Test_PentDobl_QRLS_Solvers is
 
   function Extract_Upper_Triangular
-                ( a : Double_Double_Matrices.Matrix )
-                return Double_Double_Matrices.Matrix is
+                ( a : Penta_Double_Matrices.Matrix )
+                return Penta_Double_Matrices.Matrix is
 
-    res : Double_Double_Matrices.Matrix(a'range(1),a'range(2));
+    res : Penta_Double_Matrices.Matrix(a'range(1),a'range(2));
 
-    zero : constant double_double := create(0.0);
+    zero : constant penta_double := create(0.0);
 
   begin
     for i in a'range(1) loop
@@ -41,13 +41,13 @@ package body Test_DoblDobl_QRLS_Solvers is
   end Extract_Upper_Triangular;
 
   function Extract_Upper_Triangular
-                ( a : DoblDobl_Complex_Matrices.Matrix )
-                return DoblDobl_Complex_Matrices.Matrix is
+                ( a : PentDobl_Complex_Matrices.Matrix )
+                return PentDobl_Complex_Matrices.Matrix is
 
-    use DoblDobl_Complex_Numbers;
+    use PentDobl_Complex_Numbers;
 
-    res : DoblDobl_Complex_Matrices.Matrix(a'range(1),a'range(2));
-    zero : constant double_double := create(0.0);
+    res : PentDobl_Complex_Matrices.Matrix(a'range(1),a'range(2));
+    zero : constant penta_double := create(0.0);
 
   begin
     for i in a'range(1) loop
@@ -61,10 +61,10 @@ package body Test_DoblDobl_QRLS_Solvers is
     return res;
   end Extract_Upper_Triangular;
 
-  function Differences ( a,b : in Double_Double_Matrices.Matrix )
-                       return double_double is
+  function Differences ( a,b : in Penta_Double_Matrices.Matrix )
+                       return penta_double is
 
-    sum : double_double := create(0.0);
+    sum : penta_double := create(0.0);
 
   begin
     for i in a'range(1) loop
@@ -75,12 +75,12 @@ package body Test_DoblDobl_QRLS_Solvers is
     return sum;
   end Differences;
 
-  function Differences ( a,b : in DoblDobl_Complex_Matrices.Matrix )
-                       return double_double is
+  function Differences ( a,b : in PentDobl_Complex_Matrices.Matrix )
+                       return penta_double is
 
-    use DoblDobl_Complex_Numbers;
+    use PentDobl_Complex_Numbers;
 
-    sum : double_double := create(0.0);
+    sum : penta_double := create(0.0);
 
   begin
     for i in a'range(1) loop
@@ -92,10 +92,10 @@ package body Test_DoblDobl_QRLS_Solvers is
   end Differences;
 
   function Orthogonality_Check_Sum
-             ( q : Double_Double_Matrices.Matrix ) return double_double is
+             ( q : Penta_Double_Matrices.Matrix ) return penta_double is
 
-    sum,ip : double_double;
-    zero : constant double_double := create(0.0);
+    sum,ip : penta_double;
+    zero : constant penta_double := create(0.0);
 
   begin
     sum := zero;
@@ -112,13 +112,13 @@ package body Test_DoblDobl_QRLS_Solvers is
   end Orthogonality_Check_Sum;
 
   function Orthogonality_Check_Sum 
-             ( q : DoblDobl_Complex_Matrices.Matrix )
-             return double_double is
+             ( q : PentDobl_Complex_Matrices.Matrix )
+             return penta_double is
 
-    use DoblDobl_Complex_Numbers;
+    use PentDobl_Complex_Numbers;
 
-    zero : constant double_double := create(0.0);
-    sum : double_double := zero;
+    zero : constant penta_double := create(0.0);
+    sum : penta_double := zero;
     ip : Complex_Number;
 
   begin
@@ -134,12 +134,12 @@ package body Test_DoblDobl_QRLS_Solvers is
     return sum;
   end Orthogonality_Check_Sum;
 
-  procedure Test_QRD ( a,q,r : in Double_Double_Matrices.Matrix;
+  procedure Test_QRD ( a,q,r : in Penta_Double_Matrices.Matrix;
                        output : in boolean ) is
 
-    wrk : Double_Double_Matrices.Matrix(a'range(1),a'range(2));
+    wrk : Penta_Double_Matrices.Matrix(a'range(1),a'range(2));
 
-    use Double_Double_Matrices;
+    use Penta_Double_Matrices;
 
   begin
     if output
@@ -155,12 +155,12 @@ package body Test_DoblDobl_QRLS_Solvers is
     put(Orthogonality_Check_Sum(q),3); new_line;
   end Test_QRD;
 
-  procedure Test_QRD ( a,q,r : in DoblDobl_Complex_Matrices.Matrix;
+  procedure Test_QRD ( a,q,r : in PentDobl_Complex_Matrices.Matrix;
                        output : in boolean ) is
 
-    wrk : DoblDobl_Complex_Matrices.Matrix(a'range(1),a'range(2));
+    wrk : PentDobl_Complex_Matrices.Matrix(a'range(1),a'range(2));
 
-    use DoblDobl_Complex_Matrices;
+    use PentDobl_Complex_Matrices;
 
   begin
     if output
@@ -176,21 +176,21 @@ package body Test_DoblDobl_QRLS_Solvers is
     put(Orthogonality_Check_Sum(q),3); new_line;
   end Test_QRD;
 
-  procedure DoblDobl_Real_LS_Test
+  procedure PentDobl_Real_LS_Test
               ( n,m : in integer32; piv : in boolean;
-                a : in Double_Double_Matrices.Matrix;
-                b : in Double_Double_Vectors.Vector;
+                a : in Penta_Double_Matrices.Matrix;
+                b : in Penta_Double_Vectors.Vector;
                 output : in boolean ) is
 
-    zero : constant double_double := create(0.0);
-    wrk : Double_Double_Matrices.Matrix(1..n,1..m) := a;
-    qraux : Double_Double_Vectors.Vector(1..m) := (1..m => zero);
+    zero : constant penta_double := create(0.0);
+    wrk : Penta_Double_Matrices.Matrix(1..n,1..m) := a;
+    qraux : Penta_Double_Vectors.Vector(1..m) := (1..m => zero);
     jpvt : Standard_Integer_Vectors.Vector(1..m) := (1..m => 0);
-    sol : Double_Double_Vectors.Vector(1..m);
-    rsd,dum,dum2,dum3 : Double_Double_Vectors.Vector(1..n);
+    sol : Penta_Double_Vectors.Vector(1..m);
+    rsd,dum,dum2,dum3 : Penta_Double_Vectors.Vector(1..n);
     info : integer32;
-    use Double_Double_Matrices;
-    use Double_Double_Vectors;
+    use Penta_Double_Matrices;
+    use Penta_Double_Vectors;
 
   begin
     if output
@@ -218,17 +218,17 @@ package body Test_DoblDobl_QRLS_Solvers is
       put(dum,3); new_line;
     end if;
     put("The norm of residual : "); put(Sum_Norm(dum),3); new_line;
-  end DoblDobl_Real_LS_Test;          
+  end PentDobl_Real_LS_Test;          
 
-  procedure DoblDobl_Real_QR_Test
+  procedure PentDobl_Real_QR_Test
               ( n,m : in integer32; piv : in boolean;
-                a : in Double_Double_Matrices.Matrix;
+                a : in Penta_Double_Matrices.Matrix;
                 output : in boolean ) is
 
-    zero : constant double_double := create(0.0);
-    wrk : Double_Double_Matrices.Matrix(1..n,1..m) := a;
-    bas : Double_Double_Matrices.Matrix(1..n,1..n);
-    qraux : Double_Double_Vectors.Vector(1..m) := (1..m => zero);
+    zero : constant penta_double := create(0.0);
+    wrk : Penta_Double_Matrices.Matrix(1..n,1..m) := a;
+    bas : Penta_Double_Matrices.Matrix(1..n,1..n);
+    qraux : Penta_Double_Vectors.Vector(1..m) := (1..m => zero);
     jpvt : Standard_Integer_Vectors.Vector(1..m) := (1..m => 0);
 
   begin
@@ -257,37 +257,37 @@ package body Test_DoblDobl_QRLS_Solvers is
      then put_line("The orthogonal part Q of QR  :"); put(bas,3);
     end if;
     Test_QRD(a,bas,Extract_Upper_Triangular(wrk),output);
-  end DoblDobl_Real_QR_Test;
+  end PentDobl_Real_QR_Test;
 
-  procedure DoblDobl_Interactive_Real_QR_Test
+  procedure PentDobl_Interactive_Real_QR_Test
               ( n,m : in integer32; piv : in boolean ) is
 
-    a : Double_Double_Matrices.Matrix(1..n,1..m);
+    a : Penta_Double_Matrices.Matrix(1..n,1..m);
 
   begin
     put("Give a "); put(n,1); put("x"); put(m,1);   
     put_line(" matrix : "); get(a);
-    DoblDobl_Real_QR_Test(n,m,piv,a,true);
-  end DoblDobl_Interactive_Real_QR_Test;
+    PentDobl_Real_QR_Test(n,m,piv,a,true);
+  end PentDobl_Interactive_Real_QR_Test;
 
-  procedure DoblDobl_Interactive_Real_LS_Test
+  procedure PentDobl_Interactive_Real_LS_Test
               ( n,m : in integer32; piv : in boolean ) is
 
-    a : Double_Double_Matrices.Matrix(1..n,1..m);
-    b : Double_Double_Vectors.Vector(1..n);
+    a : Penta_Double_Matrices.Matrix(1..n,1..m);
+    b : Penta_Double_Vectors.Vector(1..n);
 
   begin
     put("Give a "); put(n,1); put("x"); put(m,1);   
     put_line(" matrix : "); get(a);
     put("Give right-hand size "); put(n,1);
     put_line("-vector : "); get(b);
-    DoblDobl_Real_LS_Test(n,m,piv,a,b,true);
-  end DoblDobl_Interactive_Real_LS_Test;
+    PentDobl_Real_LS_Test(n,m,piv,a,b,true);
+  end PentDobl_Interactive_Real_LS_Test;
 
-  procedure DoblDobl_Random_Real_QR_Test
+  procedure PentDobl_Random_Real_QR_Test
               ( n,m : in integer32; piv : in boolean ) is
 
-    a : Double_Double_Matrices.Matrix(1..n,1..m);
+    a : Penta_Double_Matrices.Matrix(1..n,1..m);
     nb : integer32 := 0;
     output : boolean;
     ans : character;
@@ -301,20 +301,20 @@ package body Test_DoblDobl_QRLS_Solvers is
     tstart(timer);
     for i in 1..nb loop
       a := Random_Matrix(natural32(n),natural32(m));
-      DoblDobl_Real_QR_Test(n,m,piv,a,output);
+      PentDobl_Real_QR_Test(n,m,piv,a,output);
     end loop;
     tstop(timer);
     put("Tested "); put(nb,1);
-    put_line(" QR factoriziations on dobldobl random real matrices.");
+    put_line(" QR factoriziations on PentDobl random real matrices.");
     new_line;
-    print_times(Standard_Output,timer,"Random DoblDobl Real QR Factorizations");
-  end DoblDobl_Random_Real_QR_Test;
+    print_times(Standard_Output,timer,"Random PentDobl Real QR Factorizations");
+  end PentDobl_Random_Real_QR_Test;
 
-  procedure DoblDobl_Random_Real_LS_Test
+  procedure PentDobl_Random_Real_LS_Test
               ( n,m : in integer32; piv : in boolean ) is
 
-    a : Double_Double_Matrices.Matrix(1..n,1..m);
-    b : Double_Double_Vectors.Vector(1..n);
+    a : Penta_Double_Matrices.Matrix(1..n,1..m);
+    b : Penta_Double_Vectors.Vector(1..n);
     nb : integer32 := 0;
     ans : character;
     output : boolean;
@@ -329,25 +329,25 @@ package body Test_DoblDobl_QRLS_Solvers is
     for i in 1..nb loop
       a := Random_Matrix(natural32(n),natural32(m));
       b := Random_Vector(1,n);
-      DoblDobl_Real_LS_Test(n,m,piv,a,b,output);
+      PentDobl_Real_LS_Test(n,m,piv,a,b,output);
     end loop;
     tstop(timer);
     put("Tested "); put(nb,1);
-    put_line(" real least squares on dobldobl random real matrices.");
+    put_line(" real least squares on PentDobl random real matrices.");
     new_line;
-    print_times(Standard_Output,timer,"Testing DoblDobl Real Least Squares");
-  end DoblDobl_Random_Real_LS_Test;
+    print_times(Standard_Output,timer,"Testing PentDobl Real Least Squares");
+  end PentDobl_Random_Real_LS_Test;
 
-  procedure DoblDobl_Complex_QR_Test
+  procedure PentDobl_Complex_QR_Test
               ( n,m : in integer32; piv : in boolean;
-                a : DoblDobl_Complex_Matrices.Matrix;
+                a : PentDobl_Complex_Matrices.Matrix;
                 output : in boolean ) is
 
-    use DoblDobl_Complex_Numbers;
-    wrk : DoblDobl_Complex_Matrices.Matrix(1..n,1..m) := a;
-    bas : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
-    zero : constant double_double := create(0.0);
-    qraux : DoblDobl_Complex_Vectors.Vector(1..m) := (1..m => Create(zero));
+    use PentDobl_Complex_Numbers;
+    wrk : PentDobl_Complex_Matrices.Matrix(1..n,1..m) := a;
+    bas : PentDobl_Complex_Matrices.Matrix(1..n,1..n);
+    zero : constant penta_double := create(0.0);
+    qraux : PentDobl_Complex_Vectors.Vector(1..m) := (1..m => Create(zero));
     jpvt : Standard_Integer_Vectors.Vector(1..m) := (1..m => 0);
 
   begin
@@ -375,24 +375,24 @@ package body Test_DoblDobl_QRLS_Solvers is
       end if;
       Test_QRD(a,bas,Extract_Upper_Triangular(wrk),output);
     end if;
-  end DoblDobl_Complex_QR_Test;
+  end PentDobl_Complex_QR_Test;
 
-  procedure DoblDobl_Complex_LS_Test
+  procedure PentDobl_Complex_LS_Test
               ( n,m : in integer32; piv : in boolean;
-                a : DoblDobl_Complex_Matrices.Matrix;
-                b : DoblDobl_Complex_Vectors.Vector;
+                a : PentDobl_Complex_Matrices.Matrix;
+                b : PentDobl_Complex_Vectors.Vector;
                 output : in boolean ) is
 
-    use DoblDobl_Complex_Numbers;
-    wrk : DoblDobl_Complex_Matrices.Matrix(1..n,1..m) := a;
-    zero : constant double_double := create(0.0);
-    qraux : DoblDobl_Complex_Vectors.Vector(1..m) := (1..m => Create(zero));
+    use PentDobl_Complex_Numbers;
+    wrk : PentDobl_Complex_Matrices.Matrix(1..n,1..m) := a;
+    zero : constant penta_double := create(0.0);
+    qraux : PentDobl_Complex_Vectors.Vector(1..m) := (1..m => Create(zero));
     jpvt : Standard_Integer_Vectors.Vector(1..m) := (1..m => 0);
-    sol : DoblDobl_Complex_Vectors.Vector(1..m);
-    rsd,dum,dum2,dum3 : DoblDobl_Complex_Vectors.Vector(1..n);
+    sol : PentDobl_Complex_Vectors.Vector(1..m);
+    rsd,dum,dum2,dum3 : PentDobl_Complex_Vectors.Vector(1..n);
     info : integer32;
-    use DoblDobl_Complex_Matrices;
-    use DoblDobl_Complex_Vectors; 
+    use PentDobl_Complex_Matrices;
+    use PentDobl_Complex_Vectors; 
 
   begin
     if output
@@ -414,30 +414,30 @@ package body Test_DoblDobl_QRLS_Solvers is
       put(dum,3); new_line;
     end if;
     put("Sum norm of residual : "); put(Sum_Norm(dum),3); new_line;
-  end DoblDobl_Complex_LS_Test;
+  end PentDobl_Complex_LS_Test;
 
-  procedure DoblDobl_Interactive_Complex_QR_Test
+  procedure PentDobl_Interactive_Complex_QR_Test
               ( n,m : in integer32; piv : in boolean ) is
 
-    a : DoblDobl_Complex_Matrices.Matrix(1..n,1..m);
+    a : PentDobl_Complex_Matrices.Matrix(1..n,1..m);
     ans : character;
 
   begin
     loop
       put("Give a "); put(n,1); put("x"); put(m,1);
       put_line(" matrix : "); get(a);
-      DoblDobl_Complex_QR_Test(n,m,piv,a,true);
+      PentDobl_Complex_QR_Test(n,m,piv,a,true);
       put("Do you want more tests ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
-  end DoblDobl_Interactive_Complex_QR_Test;
+  end PentDobl_Interactive_Complex_QR_Test;
 
-  procedure DoblDobl_Interactive_Complex_LS_Test
+  procedure PentDobl_Interactive_Complex_LS_Test
               ( n,m : in integer32; piv : in boolean ) is
 
-    a : DoblDobl_Complex_Matrices.Matrix(1..n,1..m);
-    b : DoblDobl_Complex_Vectors.Vector(1..n);
+    a : PentDobl_Complex_Matrices.Matrix(1..n,1..m);
+    b : PentDobl_Complex_Vectors.Vector(1..n);
     ans : character;
 
   begin
@@ -446,17 +446,17 @@ package body Test_DoblDobl_QRLS_Solvers is
       put_line(" matrix : "); get(a);
       put("Give right-hand size "); put(n,1);
       put_line("-vector : "); get(b); 
-      DoblDobl_Complex_LS_Test(n,m,piv,a,b,true);
+      PentDobl_Complex_LS_Test(n,m,piv,a,b,true);
       put("Do you want more tests ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
-  end DoblDobl_Interactive_Complex_LS_Test;
+  end PentDobl_Interactive_Complex_LS_Test;
 
-  procedure DoblDobl_Random_Complex_QR_Test
+  procedure PentDobl_Random_Complex_QR_Test
               ( n,m : in integer32; piv : in boolean ) is
 
-    a : DoblDobl_Complex_Matrices.Matrix(1..n,1..m);
+    a : PentDobl_Complex_Matrices.Matrix(1..n,1..m);
     nb : integer32 := 0;
     ans : character;
     output : boolean;
@@ -470,21 +470,21 @@ package body Test_DoblDobl_QRLS_Solvers is
     tstart(timer);
     for i in 1..nb loop
       a := Random_Matrix(natural32(n),natural32(m));
-      DoblDobl_Complex_QR_Test(n,m,piv,a,output);
+      PentDobl_Complex_QR_Test(n,m,piv,a,output);
     end loop;
     tstop(timer);
     put("Tested "); put(nb,1);
-    put_line(" QR factorizations on random double double complex matrices.");
+    put_line(" QR factorizations on random penta double complex matrices.");
     new_line;
     print_times(Standard_Output,timer,
-                "Random DoblDobl Complex QR Factorizations");
-  end DoblDobl_Random_Complex_QR_Test;
+                "Random PentDobl Complex QR Factorizations");
+  end PentDobl_Random_Complex_QR_Test;
 
-  procedure DoblDobl_Random_Complex_LS_Test
+  procedure PentDobl_Random_Complex_LS_Test
               ( n,m : in integer32; piv : in boolean ) is
 
-    a : DoblDobl_Complex_Matrices.Matrix(1..n,1..m);
-    b : DoblDobl_Complex_Vectors.Vector(1..n);
+    a : PentDobl_Complex_Matrices.Matrix(1..n,1..m);
+    b : PentDobl_Complex_Vectors.Vector(1..n);
     nb : integer32 := 0;
     ans : character;
     output : boolean;
@@ -499,14 +499,14 @@ package body Test_DoblDobl_QRLS_Solvers is
     for i in 1..nb loop
       a := Random_Matrix(natural32(n),natural32(m));
       b := Random_Vector(1,n);
-      DoblDobl_Complex_LS_Test(n,m,piv,a,b,output);
+      PentDobl_Complex_LS_Test(n,m,piv,a,b,output);
     end loop;
     tstop(timer);
     put("Tested "); put(nb,1);
-    put_line(" least squares on random double double complex matrices.");
+    put_line(" least squares on random penta double complex matrices.");
     new_line;
-    print_times(Standard_Output,timer,"Random DoblDobl Complex Least Squares");
-  end DoblDobl_Random_Complex_LS_Test;
+    print_times(Standard_Output,timer,"Random PentDobl Complex Least Squares");
+  end PentDobl_Random_Complex_LS_Test;
 
   procedure Main is
 
@@ -518,16 +518,16 @@ package body Test_DoblDobl_QRLS_Solvers is
     loop
       new_line;
       put_line
-        ("MENU to test QR and Least Squares in double double precision : ");
+        ("MENU to test QR and Least Squares in penta double precision : ");
       put_line("  0. Exit this program.");
-      put_line("  1. QR-decomposition on given double double real matrix.");
-      put_line("  2.                                         complex matrix.");
-      put_line("  3.                  on random double double real matrix.");
-      put_line("  4.                                          complex matrix.");
-      put_line("  5. Least Squares on given double double real matrix.");
-      put_line("  6.                                      complex matrix.");
-      put_line("  7.               on random double double real matrix.");
-      put_line("  8.                                       complex matrix.");
+      put_line("  1. QR-decomposition on given penta double real matrix.");
+      put_line("  2.                                        complex matrix.");
+      put_line("  3.                  on random penta double real matrix.");
+      put_line("  4.                                         complex matrix.");
+      put_line("  5. Least Squares on given penta double real matrix.");
+      put_line("  6.                                     complex matrix.");
+      put_line("  7.               on random penta double real matrix.");
+      put_line("  8.                                      complex matrix.");
       put("Type 1, 2, 3, 4, 5, 6, 7, 8 for a test, or 0 to exit : ");
       Ask_Alternative(choice,"012345678");
       exit when (choice = '0');
@@ -535,17 +535,17 @@ package body Test_DoblDobl_QRLS_Solvers is
       put("Give the number of rows of the matrix : "); get(n);
       put("Give the number of columns of the matrix : "); get(m);
       case choice is
-        when '1' => DoblDobl_Interactive_Real_QR_Test(n,m,piv);
-        when '2' => DoblDobl_Interactive_Complex_QR_Test(n,m,piv);
-        when '3' => DoblDobl_Random_Real_QR_Test(n,m,piv);
-        when '4' => DoblDobl_Random_Complex_QR_Test(n,m,piv);
-        when '5' => DoblDobl_Interactive_Real_LS_Test(n,m,piv);
-        when '6' => DoblDobl_Interactive_Complex_LS_Test(n,m,piv);
-        when '7' => DoblDobl_Random_Real_LS_Test(n,m,piv);
-        when '8' => DoblDobl_Random_Complex_LS_Test(n,m,piv);
+        when '1' => PentDobl_Interactive_Real_QR_Test(n,m,piv);
+        when '2' => PentDobl_Interactive_Complex_QR_Test(n,m,piv);
+        when '3' => PentDobl_Random_Real_QR_Test(n,m,piv);
+        when '4' => PentDobl_Random_Complex_QR_Test(n,m,piv);
+        when '5' => PentDobl_Interactive_Real_LS_Test(n,m,piv);
+        when '6' => PentDobl_Interactive_Complex_LS_Test(n,m,piv);
+        when '7' => PentDobl_Random_Real_LS_Test(n,m,piv);
+        when '8' => PentDobl_Random_Complex_LS_Test(n,m,piv);
         when others => null;
       end case;
     end loop;
   end Main;
 
-end Test_DoblDobl_QRLS_Solvers;
+end Test_PentDobl_QRLS_Solvers;

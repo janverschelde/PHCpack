@@ -1,18 +1,18 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
-with Quad_Double_Vectors;
-with Quad_Double_Matrices;
+with Octo_Double_Vectors;
+with Octo_Double_Matrices;
 
-package Quad_Double_QR_Least_Squares is
+package Octo_Double_QR_Least_Squares is
 
 -- DESCRIPTION :
 --   This package provides an implementation of QR-decomposition for
---   matrices in quad double precision.  With this decomposition,
+--   matrices in octo double precision.  With this decomposition,
 --   we can orthogonalize matrices and solve linear systems in the
 --   least squares sense.
 
-  procedure QRD ( x : in out Quad_Double_Matrices.Matrix;
-                  qraux : in out Quad_Double_Vectors.Vector;
+  procedure QRD ( x : in out Octo_Double_Matrices.Matrix;
+                  qraux : in out Octo_Double_Vectors.Vector;
                   jpvt : in out Standard_Integer_Vectors.Vector;
                   piv : in boolean );
 
@@ -58,7 +58,7 @@ package Quad_Double_QR_Least_Squares is
   --   This Ada Version is a translation of the LINPACK version, dated 08/14/78,
   --   written by G.W. Stewart, University of Maryland, Argonne National Lab.
 
-  procedure Permute_Columns ( x : in out Quad_Double_Matrices.Matrix;
+  procedure Permute_Columns ( x : in out Octo_Double_Matrices.Matrix;
                               jpvt : in Standard_Integer_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -66,7 +66,7 @@ package Quad_Double_QR_Least_Squares is
   --     x := (x(jpvt(1)),x(jpvt(2)), ... ,x(jpvt(k))), k = jpvt'last.
   --   This routine is useful to the Least Squares computation.
 
-  procedure Permute ( x : in out Quad_Double_Vectors.Vector;
+  procedure Permute ( x : in out Octo_Double_Vectors.Vector;
                       jpvt : in Standard_Integer_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -74,8 +74,8 @@ package Quad_Double_QR_Least_Squares is
   --     x := (x(jpvt(1)),x(jpvt(2)), ... ,x(jpvt(k))), k = jpvt'last.
   --   This routine is useful to the Least Squares computation.
 
-  procedure Basis ( qr : in out Quad_Double_Matrices.Matrix;
-                    x : in Quad_Double_Matrices.Matrix );
+  procedure Basis ( qr : in out Octo_Double_Matrices.Matrix;
+                    x : in Octo_Double_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Retrieves the orthogonal part of the decomposition.
@@ -93,14 +93,14 @@ package Quad_Double_QR_Least_Squares is
   -- ON RETURN : 
   --   qr         orthogonal part of the QR-decomposition.
 
-  procedure QRLS ( x : in out Quad_Double_Matrices.Matrix;
+  procedure QRLS ( x : in out Octo_Double_Matrices.Matrix;
                    ldx,n,k : in integer32;
-                   qraux,y : in Quad_Double_Vectors.Vector;
-                   qy,qty,b,rsd,xb : out Quad_Double_Vectors.Vector;
+                   qraux,y : in Octo_Double_Vectors.Vector;
+                   qy,qty,b,rsd,xb : out Octo_Double_Vectors.Vector;
                    job : in integer32; info : out integer32 );
 
   -- DESCRIPTION :
-  --   Applies the output of Quad_Double_QR_Decomposition.QRD to
+  --   Applies the output of Octo_Double_QR_Decomposition.QRD to
   --   compute coordinate transformations, projections and least quares
   --   solutions.  For k <= min(n,p), let xk be the matrix
   --
@@ -193,4 +193,4 @@ package Quad_Double_QR_Least_Squares is
   --   This Ada version is a translation of the LINPACK version, datet 08/14/78,
   --   written by G.W. Stewart, University of Maryland, Argonne National Lab.
 
-end Quad_Double_QR_Least_Squares;
+end Octo_Double_QR_Least_Squares;

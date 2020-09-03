@@ -1,8 +1,14 @@
-Tue 2 Sep 2020 : moved code from ts_qrd into the new test packages
+Wed 2 Sep 2020 : moved code from ts_qrd into the new test packages
   test_{standard,dobldobl,quaddobl,multprec}_qrls_solvers, with separate
   main tests in ts_dqrd, ts_ddqrd, ts_qdqrd, and ts_mpqrd.
+  Fixed documentation error in {double,quad}_double_qr_least_squares.ads
+  and added new {triple,penta,octo,deca}_double_qr_least_squares packages,
+  and {tripdobl,pentdobl,octodobl,decadobl}_complex_qr_least_squares, and
+  test_{tripdobl,pentdobl,octodobl,decadobl}_qrls_solvers, with new test
+  procedures ts_tdqrd, ts_pdqrd, ts_odqrd, ts_daqrd, and updated ts_qrd.
+  Improved the main menu in test_{dobldobl,quaddobl}_qrls_solvers.adb.
 
-Mon 1 Sep 2020 : new packages {triple,penta,octo,deca}_vector_norms and
+Tue 1 Sep 2020 : new packages {triple,penta,octo,deca}_vector_norms and
   {tripdobl,pentdobl,octodobl,decadobl}_complex_vector_norms, with tests in
   test_{dobldobl,tripdobl,quaddobl,pentdobl,octodobl,decadobl}_vector_norms,
   main tests in ts_ddnorm, ts_tdnorm, ts_qdnorm, ts_pdnorm, ts_odnorm, 

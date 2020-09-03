@@ -7,7 +7,7 @@ package Double_Double_QR_Least_Squares is
 
 -- DESCRIPTION :
 --   This package provides an implementation of QR-decomposition for
---   matrices of standard floating numbers.  With this decomposition,
+--   matrices in double double precision.  With this decomposition,
 --   we can orthogonalize matrices and solve linear systems in the
 --   least squares sense.
 

@@ -105,20 +105,35 @@ dobldobl_complex_row_reduction     : row reduction with double doubles
 quaddobl_complex_row_reduction     : row reduction with quad doubles
 ts_rowred                          : test incremental row reduction
 -------------------------------------------------------------------------------
-standard_floating_qr_least_squares : QR + least squares for standard floats
+standard_floating_qr_least_squares : QR + least squares for standard doubles
 double_double_qr_least_squares     : QR + least squares for double doubles
+triple_double_qr_least_squares     : QR + least squares for triple doubles
 quad_double_qr_least_squares       : QR + least squares for quad doubles
+penta_double_qr_least_squares      : QR + least squares for penta doubles
+octo_double_qr_least_squares       : QR + least squares for octo doubles
+deca_double_qr_least_squares       : QR + least squares for deca doubles
 standard_complex_qr_least_squares  : QR + least squares for standard complex
 dobldobl_complex_qr_least_squares  : QR + least squares for dobldobl complex
+tripdobl_complex_qr_least_squares  : QR + least squares for tripdobl complex
 quaddobl_complex_qr_least_squares  : QR + least squares for quaddobl complex
+pentdobl_complex_qr_least_squares  : QR + least squares for pentdobl complex
+octodobl_complex_qr_least_squares  : QR + least squares for octodobl complex
 multprec_complex_qr_least_squares  : QR + least squares for multprec complex
 test_standard_qrls_solvers         : tests QRLS solvers for doubles
 test_dobldobl_qrls_solvers         : tests QRLS solvers for double doubles
+test_tripdobl_qrls_solvers         : tests QRLS solvers for triple doubles
 test_quaddobl_qrls_solvers         : tests QRLS solvers for quad doubles
+test_pentdobl_qrls_solvers         : tests QRLS solvers for penta doubles
+test_octodobl_qrls_solvers         : tests QRLS solvers for octo doubles
+test_decadobl_qrls_solvers         : tests QRLS solvers for deca doubles
 test_multprec_qrls_solvers         : tests QRLS solvers for multiprecision
 ts_dqrd                            : main test on double QR and LS
 ts_ddqrd                           : main test on double double QR and LS
+ts_tdqrd                           : main test on triple double QR and LS
 ts_qdqrd                           : main test on quad double QR and LS
+ts_pdqrd                           : main test on penta double QR and LS
+ts_odqrd                           : main test on octo double QR and LS
+ts_daqrd                           : main test on deca double QR and LS
 ts_mpqrd                           : main test on multiprecision QR and LS
 ts_qrd                             : main test on QR and least squares
 -------------------------------------------------------------------------------
