@@ -1,3 +1,7 @@
+Thu 3 Sep 2020 : moved test procedures from ts_svd into new test packages
+  test_{standard,dobldobl,quaddobl,multprec}_singular_values with new
+  main testers in ts_dsvd, ts_ddsvd, ts_qdsvd, and ts_mpsvd.
+
 Wed 2 Sep 2020 : moved code from ts_qrd into the new test packages
   test_{standard,dobldobl,quaddobl,multprec}_qrls_solvers, with separate
   main tests in ts_dqrd, ts_ddqrd, ts_qdqrd, and ts_mpqrd.

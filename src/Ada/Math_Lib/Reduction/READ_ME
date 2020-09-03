@@ -151,7 +151,15 @@ standard_inlined_singular_values   : inlined double precision SVD
 dobldobl_complex_singular_values   : SVD in double double arithmetic
 quaddobl_complex_singular_values   : SVD in quad double arithmetic
 multprec_complex_singular_values   : SVD in multiprecision arithmetic
-ts_svd                             : test singular value decomposition
+test_standard_singular_values      : test SVD in double precision
+test_dobldobl_singular_values      : test SVD in double double precision
+test_quaddobl_singular_values      : test SVD in quad double precision
+test_multprec_singular_values      : test SVD in arbitrary multiprecision
+ts_dsvd                            : main test on double SVD
+ts_ddsvd                           : main test on double double SVD
+ts_qdsvd                           : main test on quad double SVD
+ts_mpsvd                           : main test on multiprecision SVD
+ts_svd                             : main test on the SVD
 ts_perfdsvd                        : develop better performing SVD
 -------------------------------------------------------------------------------
 standard_floating_eigenvalues      : eigenvalues of floating-point matrices
