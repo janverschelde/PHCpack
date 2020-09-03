@@ -350,7 +350,7 @@ test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
                 ts_perfdlu ts_perfdsvd ts_tdlu ts_pdlu ts_odlu ts_dalu \
                 ts_ddnorm ts_tdnorm ts_qdnorm ts_pdnorm ts_odnorm ts_danorm \
                 ts_dqrd ts_ddqrd ts_tdqrd ts_qdqrd ts_pdqrd ts_odqrd ts_daqrd \
-                ts_mpqrd
+                ts_mpqrd ts_dsvd ts_ddsvd ts_qdsvd ts_mpsvd
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -393,6 +393,18 @@ ts_mpqrd:
 
 ts_svd:
 	make -f $(MAKEFILE) ts_svd
+
+ts_dsvd:
+	make -f $(MAKEFILE) ts_dsvd
+
+ts_ddsvd:
+	make -f $(MAKEFILE) ts_ddsvd
+
+ts_qdsvd:
+	make -f $(MAKEFILE) ts_qdsvd
+
+ts_mpsvd:
+	make -f $(MAKEFILE) ts_mpsvd
 
 ts_rowred:
 	make -f $(MAKEFILE) ts_rowred

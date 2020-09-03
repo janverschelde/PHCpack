@@ -469,6 +469,18 @@ ts_mpqrd:
 ts_svd:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_svd.adb -o $(BIN)/ts_svd
 
+ts_dsvd:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_dsvd.adb -o $(BIN)/ts_dsvd
+
+ts_ddsvd:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ddsvd.adb -o $(BIN)/ts_ddsvd
+
+ts_qdsvd:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_qdsvd.adb -o $(BIN)/ts_qdsvd
+
+ts_mpsvd:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mpsvd.adb -o $(BIN)/ts_mpsvd
+
 ts_rowred:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_rowred.adb -o $(BIN)/ts_rowred
 
