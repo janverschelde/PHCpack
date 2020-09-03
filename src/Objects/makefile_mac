@@ -444,8 +444,20 @@ ts_dqrd:
 ts_ddqrd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddqrd.adb -o $(BIN)/ts_ddqrd
 
+ts_tdqrd:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tdqrd.adb -o $(BIN)/ts_tdqrd
+
 ts_qdqrd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_qdqrd.adb -o $(BIN)/ts_qdqrd
+
+ts_pdqrd:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pdqrd.adb -o $(BIN)/ts_pdqrd
+
+ts_odqrd:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_odqrd.adb -o $(BIN)/ts_odqrd
+
+ts_daqrd:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_daqrd.adb -o $(BIN)/ts_daqrd
 
 ts_mpqrd:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mpqrd.adb -o $(BIN)/ts_mpqrd
