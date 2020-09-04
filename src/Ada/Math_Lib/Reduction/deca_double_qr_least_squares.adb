@@ -3,11 +3,6 @@ with DecaDobl_Mathematical_Functions;     use DecaDobl_Mathematical_Functions;
 
 package body Deca_Double_QR_Least_Squares is
 
-  function sqr ( x : deca_double ) return deca_double is
-  begin
-    return x*x;
-  end sqr;
-
   function min0 ( a,b : integer32 ) return integer32 is
 
   -- DESCRIPTION : returns the minimum of a and b.

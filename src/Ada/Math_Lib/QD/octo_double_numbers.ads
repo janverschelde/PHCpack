@@ -185,6 +185,7 @@ package Octo_Double_Numbers is
   function "/" ( x : octo_double; y : double_float ) return octo_double;
   function "/" ( x : double_float; y : octo_double ) return octo_double;
 
+  function sqr ( x : octo_double ) return octo_double;     -- returns x*x
   function "**" ( x : octo_double; n : integer ) return octo_double; -- x^n
 
   function ldexp ( x : octo_double; n : integer ) return octo_double;

@@ -1,3 +1,7 @@
+Fri 4 Sep 2020 : moved the definion of sqr function from the body of
+ {triple,penta,octo,deca}_double_qr_least squares and
+ {tripdobl,pentdobl,octodobl,decadobl}_complex_qr_least squares.
+  
 Thu 3 Sep 2020 : moved test procedures from ts_svd into new test packages
   test_{standard,dobldobl,quaddobl,multprec}_singular_values with new
   main testers in ts_dsvd, ts_ddsvd, ts_qdsvd, and ts_mpsvd.

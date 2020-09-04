@@ -458,6 +458,11 @@ package body Triple_Double_Numbers is
     return res;
   end "/";
 
+  function sqr ( x : triple_double ) return triple_double is
+  begin
+    return x*x;
+  end sqr;
+
   function "**" ( x : triple_double; n : integer ) return triple_double is
 
     res,acc : triple_double;

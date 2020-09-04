@@ -1312,6 +1312,11 @@ package body Deca_Double_Numbers is
     return res;
   end "/";
 
+  function sqr ( x : deca_double ) return deca_double is
+  begin
+    return x*x;
+  end sqr;
+
   function "**" ( x : deca_double; n : integer ) return deca_double is
 
     res,acc : deca_double;

@@ -943,6 +943,11 @@ package body Octo_Double_Numbers is
     return res;
   end "/";
 
+  function sqr ( x : octo_double ) return octo_double is
+  begin
+    return x*x;
+  end sqr;
+
   function "**" ( x : octo_double; n : integer ) return octo_double is
 
     res,acc : octo_double;

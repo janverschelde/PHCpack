@@ -168,6 +168,7 @@ package Penta_Double_Numbers is
   function "/" ( x : penta_double; y : double_float ) return penta_double;
   function "/" ( x : double_float; y : penta_double ) return penta_double;
 
+  function sqr ( x : penta_double ) return penta_double;   -- return x*x
   function "**" ( x : penta_double; n : integer ) return penta_double; -- x^n
 
   function ldexp ( x : penta_double; n : integer ) return penta_double;

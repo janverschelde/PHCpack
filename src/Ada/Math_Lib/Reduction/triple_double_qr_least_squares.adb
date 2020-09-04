@@ -3,11 +3,6 @@ with TripDobl_Mathematical_Functions;     use TripDobl_Mathematical_Functions;
 
 package body Triple_Double_QR_Least_Squares is
 
-  function sqr ( x : triple_double ) return triple_double is
-  begin
-    return x*x;
-  end sqr;
-
   function min0 ( a,b : integer32 ) return integer32 is
 
   -- DESCRIPTION : returns the minimum of a and b.

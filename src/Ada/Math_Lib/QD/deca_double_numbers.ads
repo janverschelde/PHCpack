@@ -191,10 +191,11 @@ package Deca_Double_Numbers is
   procedure Mul_pwr2 ( x : in out deca_double; y : in double_float );
   -- multiplies x with y, where y is a power of 2
 
-  function "/" ( x,y : deca_double ) return deca_double; -- return x/y
+  function "/" ( x,y : deca_double ) return deca_double; -- returns x/y
   function "/" ( x : deca_double; y : double_float ) return deca_double;
   function "/" ( x : double_float; y : deca_double ) return deca_double;
 
+  function sqr ( x : deca_double ) return deca_double;   -- returns x*x
   function "**" ( x : deca_double; n : integer ) return deca_double; -- x^n
 
   function ldexp ( x : deca_double; n : integer ) return deca_double;

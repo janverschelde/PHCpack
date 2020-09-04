@@ -4,11 +4,6 @@ with PentDobl_Mathematical_Functions;     use PentDobl_Mathematical_Functions;
 
 package body PentDobl_Complex_QR_Least_Squares is
 
-  function sqr ( x : penta_double ) return penta_double is
-  begin
-    return x*x;
-  end sqr;
-
   function min0 ( a,b : integer32 ) return integer32 is
 
   -- DESCRIPTION : returns the minimum of a and b.

@@ -159,6 +159,7 @@ package Triple_Double_Numbers is
   function "/" ( x : double_float; y : triple_double ) return triple_double;
   function "/" ( x : triple_double; y : double_float ) return triple_double;
 
+  function sqr ( x : triple_double ) return triple_double;   -- returns x*x
   function "**" ( x : triple_double; n : integer ) return triple_double; -- x^n
 
   function ldexp ( x : triple_double; n : integer ) return triple_double;

@@ -1,3 +1,14 @@
+Fri 4 Sep 2020 : added a very basic definition of sqr to the packages
+  {triple,penta,octo,deca}_double_numbers.
+
+Mon 31 Aug 2020 : bug fixed in comparison in deca_double_numbers.adb,
+  added a test to test_deca_doubles to write a double as a deca double.
+  Add a "-" for a double float as first operand in triple_double_numbers
+  and octo_double_numbers.  Defined the SQRT and Radius functions in
+  {tripdobl,pentdobl,octodobl,decadobl}_mathematical_functions with tests
+  in test_{tripdobl,pentdobl,octodobl,decadobl}_functions, and main
+  procedures in ts_tdfun, ts_pdfun, ts_odfun, ts_dafun.
+
 Sun 30 Aug 2020 : instantiated io for triple, penta, octo, and deca doubles,
   yielding the packages {triple,penta,octo,deca}_double_ring_io.ads;
   instantiated {tripdobl,pentdobl,octodobl,decadobl}_complex_ring and

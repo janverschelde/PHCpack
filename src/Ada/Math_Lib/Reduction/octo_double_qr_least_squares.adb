@@ -3,11 +3,6 @@ with OctoDobl_Mathematical_Functions;     use OctoDobl_Mathematical_Functions;
 
 package body Octo_Double_QR_Least_Squares is
 
-  function sqr ( x : octo_double ) return octo_double is
-  begin
-    return x*x;
-  end sqr;
-
   function min0 ( a,b : integer32 ) return integer32 is
 
   -- DESCRIPTION : returns the minimum of a and b.

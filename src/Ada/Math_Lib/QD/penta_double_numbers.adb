@@ -605,6 +605,11 @@ package body Penta_Double_Numbers is
     return res;
   end "/";
 
+  function sqr ( x : penta_double ) return penta_double is
+  begin
+    return x*x;
+  end sqr;
+
   function "**" ( x : penta_double; n : integer ) return penta_double is
 
     res,acc : penta_double;
