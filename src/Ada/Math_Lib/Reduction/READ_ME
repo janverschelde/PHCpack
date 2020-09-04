@@ -149,7 +149,11 @@ standard_inlined_blas_helpers      : inlined versions of the BLAS helpers
 standard_complex_singular_values   : SVD in standard arithmetic
 standard_inlined_singular_values   : inlined double precision SVD
 dobldobl_complex_singular_values   : SVD in double double arithmetic
+tripdobl_complex_singular_values   : SVD in triple double arithmetic
 quaddobl_complex_singular_values   : SVD in quad double arithmetic
+pentdobl_complex_singular_values   : SVD in penta double arithmetic
+octodobl_complex_singular_values   : SVD in octo double arithmetic
+decadobl_complex_singular_values   : SVD in deca double arithmetic
 multprec_complex_singular_values   : SVD in multiprecision arithmetic
 test_standard_singular_values      : test SVD in double precision
 test_dobldobl_singular_values      : test SVD in double double precision
@@ -157,7 +161,11 @@ test_quaddobl_singular_values      : test SVD in quad double precision
 test_multprec_singular_values      : test SVD in arbitrary multiprecision
 ts_dsvd                            : main test on double SVD
 ts_ddsvd                           : main test on double double SVD
+ts_tdsvd                           : main test on triple double SVD
 ts_qdsvd                           : main test on quad double SVD
+ts_pdsvd                           : main test on penta double SVD
+ts_odsvd                           : main test on octo double SVD
+ts_dasvd                           : main test on deca double SVD
 ts_mpsvd                           : main test on multiprecision SVD
 ts_svd                             : main test on the SVD
 ts_perfdsvd                        : develop better performing SVD
