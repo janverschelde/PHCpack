@@ -136,20 +136,26 @@ package body Test_Multprec_Singular_Values is
   procedure Test_SVD_Output
               ( x,u,v : in Multprec_Complex_Matrices.Matrix;
                 s,e : in Multprec_Complex_Vectors.Vector;
-                info : in integer32 ) is
+                info : in integer32; output : in boolean := true ) is
 
     tol : constant double_float := 1.0E-8;
 
   begin
     put("info = " ); put(info,1); new_line;
-    put_line("The e values : "); put_line(e);
+    if output
+     then put_line("The e values : "); put_line(e);
+    end if;
     put_line("The singular values : "); put_line(s);
-    put_line("The matrix u : "); put(u);
+    if output
+     then put_line("The matrix u : "); put(u);
+    end if;
     if Is_Orthogonal(u,tol)
      then put_line("The matrix u is orthogonal.");
      else put_line("The matrix u is NOT orthogonal!  BUG!!!");
     end if;
-    put_line("The matrix v : "); put(v);
+    if output
+     then put_line("The matrix v : "); put(v);
+    end if;
     if Is_Orthogonal(v,tol)
      then put_line("The matrix v is orthogonal.");
      else put_line("The matrix v is NOT orthogonal!  BUG!!!");
@@ -223,8 +229,7 @@ package body Test_Multprec_Singular_Values is
     use Multprec_Complex_Vectors;
     use Multprec_Complex_Matrices;
 
-    x : Matrix(1..n,1..p) := Random_Matrix(natural32(n),natural32(p),size);
-    y : Matrix(1..n,1..p);
+    x,y : Matrix(1..n,1..p);
     mm : constant integer32 := Multprec_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
@@ -232,12 +237,25 @@ package body Test_Multprec_Singular_Values is
     v : Matrix(1..p,1..p);
     job : constant integer32 := 11;
     info : integer32;
+    ans : character;
+    otp : boolean;
 
   begin
-    Copy(x,y);
-    put_line("The random matrix : "); put(x);
-    SVD(x,n,p,s,e,u,v,job,info);
-    Test_SVD_Output(y,u,v,s,e,info);
+    new_line;
+    put("See all vectors and matrices ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    loop
+      x := Random_Matrix(natural32(n),natural32(p),size);
+      Copy(x,y);
+      if otp
+       then put_line("The random matrix : "); put(x);
+      end if;
+      SVD(x,n,p,s,e,u,v,job,info);
+      Test_SVD_Output(y,u,v,s,e,info);
+      new_line;
+      put("Test another random problem ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end Test_SVD_on_Random_Matrix;
 
   procedure Test_SVD_on_Random_System
@@ -250,9 +268,8 @@ package body Test_Multprec_Singular_Values is
     use Multprec_Complex_Vectors;
     use Multprec_Complex_Matrices;
 
-    a : Matrix(1..n,1..p) := Random_Matrix(natural32(n),natural32(p),size);
-    b : Vector(1..n) := Random_Vector(1,n,size);
-    y : Matrix(1..n,1..p);
+    a,y : Matrix(1..n,1..p);
+    b : Vector(1..n);
     mm : constant integer32 := Multprec_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
@@ -260,15 +277,29 @@ package body Test_Multprec_Singular_Values is
     v : Matrix(1..p,1..p);
     job : constant integer32 := 11;
     info : integer32;
+    ans : character;
+    otp : boolean;
 
   begin
-    Copy(a,y);
-    put_line("The random matrix : "); put(a);
-    SVD(a,n,p,s,e,u,v,job,info);
-    Test_SVD_Output(y,u,v,s,e,info);
-    Test_SVD_Solver(y,u,v,s,b);
-    Multprec_Complex_Matrices.Clear(a);
-    Multprec_Complex_Vectors.Clear(b);
+    new_line;
+    put("See all vectors and matrices ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    loop
+      a := Random_Matrix(natural32(n),natural32(p),size);
+      Copy(a,y);
+      b := Random_Vector(1,n,size);
+      if otp
+       then put_line("The random matrix : "); put(a);
+      end if;
+      SVD(a,n,p,s,e,u,v,job,info);
+      Test_SVD_Output(y,u,v,s,e,info);
+      Test_SVD_Solver(y,u,v,s,b);
+      Multprec_Complex_Matrices.Clear(a);
+      Multprec_Complex_Vectors.Clear(b);
+      new_line;
+      put("Test another random problem ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end Test_SVD_on_Random_System;
 
   procedure Test_SVD_on_Given_System

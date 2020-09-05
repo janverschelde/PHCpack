@@ -21,8 +21,7 @@ package body Test_DoblDobl_Singular_Values is
   begin
     put("Give "); put(n,1);
     put(" complex numbers for a vector of dimension ");
-    put(n,1); put_line(" :");
-    get(res);
+    put(n,1); put_line(" :"); get(res);
     return res;
   end Read_Vector;
 
@@ -33,8 +32,7 @@ package body Test_DoblDobl_Singular_Values is
 
   begin
     put("Give "); put(n*m,1); put(" complex numbers for ");
-    put(n,1); put("x"); put(m,1); put_line(" matrix :");
-    get(res);
+    put(n,1); put("x"); put(m,1); put_line(" matrix :"); get(res);
     return res;
   end Read_Matrix;
 
@@ -115,22 +113,28 @@ package body Test_DoblDobl_Singular_Values is
   procedure Test_SVD_Output
               ( x,u,v : in DoblDobl_Complex_Matrices.Matrix;
                 s,e : in DoblDobl_Complex_Vectors.Vector;
-                info : in integer32 ) is
+                info : in integer32; output : in boolean := true ) is
 
     ortho,decomp : boolean;
     tol : constant double_float := 1.0E-8;
 
   begin
     put("info = "); put(info,1); new_line;
-    put_line("The e values : "); put_line(e);
+    if output
+     then put_line("The e values : "); put_line(e);
+    end if;
     put_line("The singular values : "); put_line(s);
-    put_line("The matrix u : "); put(u);
+    if output
+     then put_line("The matrix u : "); put(u);
+    end if;
     ortho := Is_Orthogonal(u,tol);
     if ortho
      then put_line("The matrix u is orthogonal.");
      else put_line("The matrix u is NOT orthogonal!  BUG!!!");
     end if;
-    put_line("The matrix v : "); put(v);
+    if output
+     then put_line("The matrix v : "); put(v);
+    end if;
     ortho := Is_Orthogonal(v,tol);
     if ortho
      then put_line("The matrix v is orthogonal.");
@@ -162,8 +166,7 @@ package body Test_DoblDobl_Singular_Values is
     tol : constant double_float := 1.0E-8;
 
   begin
-    put("The rank of the matrix : ");
-    put(Rank(s),1); new_line;
+    put("The rank of the matrix : "); put(Rank(s),1); new_line;
     put("Inverse of condition number : ");
     put(Inverse_Condition_Number(s),3); new_line;
     if Is_Identity(ai,tol) then
@@ -190,8 +193,7 @@ package body Test_DoblDobl_Singular_Values is
     end if;
     x := Solve(u,v,s,b);
     res := b - a*x;
-    put_line("The residual vector : ");
-    put_line(res);
+    put_line("The residual vector : "); put_line(res);
   end Test_SVD_Solver;
 
   procedure Test_SVD_on_Given_Matrix ( n,p : in integer32 ) is

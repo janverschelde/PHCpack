@@ -1,3 +1,7 @@
+Sat 5 Sep 2020 : improved the tests on the singular values, modified all
+  test_{standard,dobldobl,tripdobl,quaddobl,pentdobl,octodobl,decadobl,
+  multprec}_singular_values packages.
+
 Fri 4 Sep 2020 : moved the definion of sqr function from the body of
   {triple,penta,octo,deca}_double_qr_least squares and
   {tripdobl,pentdobl,octodobl,decadobl}_complex_qr_least squares.

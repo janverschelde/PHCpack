@@ -46,12 +46,13 @@ package Test_DecaDobl_Singular_Values is
   procedure Test_SVD_Output
               ( x,u,v : in DecaDobl_Complex_Matrices.Matrix;
                 s,e : in DecaDobl_Complex_Vectors.Vector;
-                info : in integer32 );
+                info : in integer32; output : in boolean := true );
 
   -- DESCRIPTION :
   --   Tests whether the matrices u and v are orthogonal and
   --   whether u'*x*v yields a diagonal matrix with the singular
   --   values on the diagonal.  Diagnostics are written to screen.
+  --   If output, then all vectors and matrices are written.
 
   procedure Test_SVD_Solver
                ( a,u,v : in DecaDobl_Complex_Matrices.Matrix;

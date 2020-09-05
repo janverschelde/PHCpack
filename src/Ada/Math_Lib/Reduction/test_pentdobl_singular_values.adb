@@ -21,8 +21,7 @@ package body Test_PentDobl_Singular_Values is
   begin
     put("Give "); put(n,1);
     put(" complex numbers for a vector of dimension ");
-    put(n,1); put_line(" :");
-    get(res);
+    put(n,1); put_line(" :"); get(res);
     return res;
   end Read_Vector;
 
@@ -33,8 +32,7 @@ package body Test_PentDobl_Singular_Values is
 
   begin
     put("Give "); put(n*m,1); put(" complex numbers for ");
-    put(n,1); put("x"); put(m,1); put_line(" matrix :");
-    get(res);
+    put(n,1); put("x"); put(m,1); put_line(" matrix :"); get(res);
     return res;
   end Read_Matrix;
 
@@ -115,22 +113,28 @@ package body Test_PentDobl_Singular_Values is
   procedure Test_SVD_Output
               ( x,u,v : in PentDobl_Complex_Matrices.Matrix;
                 s,e : in PentDobl_Complex_Vectors.Vector;
-                info : in integer32 ) is
+                info : in integer32; output : in boolean := true ) is
 
     ortho,decomp : boolean;
     tol : constant double_float := 1.0E-8;
 
   begin
     put("info = "); put(info,1); new_line;
-    put_line("The e values : "); put_line(e);
+    if output
+     then put_line("The e values : "); put_line(e);
+    end if;
     put_line("The singular values : "); put_line(s);
-    put_line("The matrix u : "); put(u);
+    if output
+     then put_line("The matrix u : "); put(u);
+    end if;
     ortho := Is_Orthogonal(u,tol);
     if ortho
      then put_line("The matrix u is orthogonal.");
      else put_line("The matrix u is NOT orthogonal!  BUG!!!");
     end if;
-    put_line("The matrix v : "); put(v);
+    if output
+     then put_line("The matrix v : "); put(v);
+    end if;
     ortho := Is_Orthogonal(v,tol);
     if ortho
      then put_line("The matrix v is orthogonal.");
@@ -162,8 +166,7 @@ package body Test_PentDobl_Singular_Values is
     tol : constant double_float := 1.0E-8;
 
   begin
-    put("The rank of the matrix : ");
-    put(Rank(s),1); new_line;
+    put("The rank of the matrix : "); put(Rank(s),1); new_line;
     put("Inverse of condition number : ");
     put(Inverse_Condition_Number(s),3); new_line;
     if Is_Identity(ai,tol) then
@@ -250,10 +253,20 @@ package body Test_PentDobl_Singular_Values is
     v : Matrix(1..p,1..p);
     job : constant integer32 := 11;
     info : integer32;
+    ans : character;
+    otp : boolean;
 
   begin
-    SVD(x,n,p,s,e,u,v,job,info);
-    Test_SVD_Output(y,u,v,s,e,info);
+    new_line;
+    put("See all vectors and matrices ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    loop
+      SVD(x,n,p,s,e,u,v,job,info);
+      Test_SVD_Output(y,u,v,s,e,info,otp);
+      new_line;
+      put("Test another random problem ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end Test_SVD_on_Random_Matrix;
 
   procedure Test_SVD_on_Random_System ( n,p : in integer32 ) is
@@ -271,11 +284,21 @@ package body Test_PentDobl_Singular_Values is
     v : Matrix(1..p,1..p);
     job : constant integer32 := 11;
     info : integer32;
+    ans : character;
+    otp : boolean;
 
   begin
-    SVD(a,n,p,s,e,u,v,job,info);
-    Test_SVD_Output(y,u,v,s,e,info);
-    Test_SVD_Solver(y,u,v,s,b);
+    new_line;
+    put("See all vectors and matrices ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    loop
+      SVD(a,n,p,s,e,u,v,job,info);
+      Test_SVD_Output(y,u,v,s,e,info,otp);
+      Test_SVD_Solver(y,u,v,s,b);
+      new_line;
+      put("Test another random problem ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end Test_SVD_on_Random_System;
 
   procedure Main is

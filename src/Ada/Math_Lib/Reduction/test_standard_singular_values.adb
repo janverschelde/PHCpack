@@ -20,8 +20,7 @@ package body Test_Standard_Singular_Values is
   begin
     put("Give "); put(n,1);
     put(" complex numbers for a vector of dimension ");
-    put(n,1); put_line(" :");
-    get(res);
+    put(n,1); put_line(" :"); get(res);
     return res;
   end Read_Vector;
 
@@ -32,8 +31,7 @@ package body Test_Standard_Singular_Values is
 
   begin
     put("Give "); put(n*m,1); put(" complex numbers for ");
-    put(n,1); put("x"); put(m,1); put_line(" matrix :");
-    get(res);
+    put(n,1); put("x"); put(m,1); put_line(" matrix :"); get(res);
     return res;
   end Read_Matrix;
 
@@ -111,22 +109,28 @@ package body Test_Standard_Singular_Values is
   procedure Test_SVD_Output
               ( x,u,v : in Standard_Complex_Matrices.Matrix;
                 s,e : in Standard_Complex_Vectors.Vector;
-                info : in integer32 ) is
+                info : in integer32; output : in boolean := true ) is
 
     ortho,decomp : boolean;
     tol : constant double_float := 1.0E-8;
 
   begin
     put("info = "); put(info,1); new_line;
-    put_line("The e values : "); put_line(e);
+    if output
+     then put_line("The e values : "); put_line(e);
+    end if;
     put_line("The singular values : "); put_line(s);
-    put_line("The matrix u : "); put(u);
+    if output
+     then put_line("The matrix u : "); put(u);
+    end if;
     ortho := Is_Orthogonal(u,tol);
     if ortho
      then put_line("The matrix u is orthogonal.");
      else put_line("The matrix u is NOT orthogonal!  BUG!!!");
     end if;
-    put_line("The matrix v : "); put(v);
+    if output
+     then put_line("The matrix v : "); put(v);
+    end if;
     ortho := Is_Orthogonal(v,tol);
     if ortho
      then put_line("The matrix v is orthogonal.");
@@ -237,8 +241,7 @@ package body Test_Standard_Singular_Values is
     use Standard_Complex_Vectors;
     use Standard_Complex_Matrices;
   
-    x : Matrix(1..n,1..p) := Random_Matrix(natural32(n),natural32(p));
-    y : constant Matrix(1..n,1..p) := x;
+    x,y : Matrix(1..n,1..p);
     mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
@@ -246,13 +249,26 @@ package body Test_Standard_Singular_Values is
     v : Matrix(1..p,1..p);
     job : constant integer32 := 11;
     info : integer32;
+    ans : character;
+    otp : boolean;
 
   begin
-    SVD(x,n,p,s,e,u,v,0,info);
-    put_line("The singular values with job 0 :"); put_line(s);
-    x := y;
-    SVD(x,n,p,s,e,u,v,job,info);
-    Test_SVD_Output(y,u,v,s,e,info);
+    new_line;
+    put("See all vectors and matrices ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    loop
+      x := Random_Matrix(natural32(n),natural32(p));
+      y := x;
+      SVD(x,n,p,s,e,u,v,0,info);
+      put_line("The singular values with job 0 :"); put_line(s);
+      x := y;
+      SVD(x,n,p,s,e,u,v,job,info);
+      Test_SVD_Output(y,u,v,s,e,info,otp);
+      new_line;
+      put("Test another random problem ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end Test_SVD_on_Random_Matrix;
 
   procedure Test_SVD_on_Random_System ( n,p : in integer32 ) is
@@ -260,9 +276,8 @@ package body Test_Standard_Singular_Values is
     use Standard_Complex_Vectors;
     use Standard_Complex_Matrices;
 
-    a : Matrix(1..n,1..p) := Random_Matrix(natural32(n),natural32(p));
-    b : constant Vector(1..n) := Random_Vector(1,n);
-    y : constant Matrix(1..n,1..p) := a;
+    a,y : Matrix(1..n,1..p);
+    b : Vector(1..n);
     mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
@@ -270,11 +285,25 @@ package body Test_Standard_Singular_Values is
     v : Matrix(1..p,1..p);
     job : constant integer32 := 11;
     info : integer32;
+    ans : character;
+    otp : boolean;
 
   begin
-    SVD(a,n,p,s,e,u,v,job,info);
-    Test_SVD_Output(y,u,v,s,e,info);
-    Test_SVD_Solver(y,u,v,s,b);
+    new_line;
+    put("See all vectors and matrices ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    loop
+      a := Random_Matrix(natural32(n),natural32(p));
+      y := a;
+      b := Random_Vector(1,n);
+      SVD(a,n,p,s,e,u,v,job,info);
+      Test_SVD_Output(y,u,v,s,e,info,otp);
+      Test_SVD_Solver(y,u,v,s,b);
+      new_line;
+      put("Test another random problem ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end Test_SVD_on_Random_System;
 
   procedure Main is
