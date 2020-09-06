@@ -329,10 +329,13 @@ ts_damat:
 
 # Test programs for Math_Lib/Divisors :
 
-test_divisors: ts_gcd ts_smith ts_intinv ts_circuit
+test_divisors: ts_gcd ts_intlina ts_smith ts_intinv ts_circuit
 
 ts_gcd:
 	make -f $(MAKEFILE) ts_gcd
+
+ts_intlina:
+	make -f $(MAKEFILE) ts_intlina
 
 ts_smith:
 	make -f $(MAKEFILE) ts_smith

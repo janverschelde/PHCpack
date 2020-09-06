@@ -415,6 +415,9 @@ ts_damat:
 ts_gcd:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gcd.adb -o $(BIN)/ts_gcd
 
+ts_intlina:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_intlina.adb -o $(BIN)/ts_intlina
+
 ts_smith:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_smith.adb -o $(BIN)/ts_smith
 
