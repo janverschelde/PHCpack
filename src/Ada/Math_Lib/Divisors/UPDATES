@@ -1,3 +1,9 @@
+Sun 6 Sep 2020 : moved the test procedures from ts_gcd, ts_intlina, ts_smith,
+  ts_intinv, ts_circuit into new packages test_greatest_common_divisors,
+  test_integer_linear_solvers, test_normal_forms, test_integer_inverse,
+  test_integer_circuits.  Modified standard_integer_matrix_inverse.adb
+  for a compiler warning.
+
 Wed 10 Sep 2014 : made multprec_common_divisors.adb consistent with
   greatest_common_divisors.adb.
 

@@ -111,7 +111,6 @@ package body Standard_Integer_Matrix_Inverse is
              ( A : in Standard_Integer64_Matrices.Matrix )
              return Standard_Integer64_Matrices.Matrix is
 
-    use Standard_Integer_Numbers;
     use Standard_Integer64_Matrices;
     use Standard_Integer64_Linear_Solvers;
 
