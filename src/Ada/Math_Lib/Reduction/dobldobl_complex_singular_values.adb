@@ -102,8 +102,20 @@ package body DoblDobl_Complex_Singular_Values is
   --   Computes the modulus of the complex number, let us hope this
   --   corresponds to the `cdabs' fortran function.
 
+  -- NOTE : 
+  --   The SQRT may crash for very tiny numbers because of overflow
+  --   in Newton's method, which is applied without scaling.
+  --   The patch is to check for zero imaginary part.
+  --   For efficiency, this should have been done anyway ...
+
+    rpz : constant double_double := REAL_PART(z);
+    ipz : constant double_double := IMAG_PART(z);
+
   begin
-    return SQRT(sqr(REAL_PART(z)) + sqr(IMAG_PART(z)));
+    if is_zero(ipz)
+     then return AbsVal(rpz);
+     else return SQRT(sqr(rpz) + sqr(ipz));
+    end if;
   end cdabs;
 
   function csign ( z1,z2 : Complex_Number ) return Complex_Number is

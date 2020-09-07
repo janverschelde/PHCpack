@@ -102,8 +102,20 @@ package body TripDobl_Complex_Singular_Values is
   --   Computes the modulus of the complex number, let us hope this
   --   corresponds to the `cdabs' fortran function.
 
+  -- NOTE : 
+  --   The SQRT may crash for very tiny numbers because of overflow
+  --   in Newton's method, which is applied without scaling.
+  --   The patch is to check for zero imaginary part.
+  --   For efficiency, this should have been done anyway ...
+
+    rpz : constant triple_double := REAL_PART(z);
+    ipz : constant triple_double := IMAG_PART(z);
+
   begin
-    return SQRT(sqr(REAL_PART(z)) + sqr(IMAG_PART(z)));
+    if is_zero(ipz)
+     then return AbsVal(rpz);
+     else return SQRT(sqr(rpz) + sqr(ipz));
+    end if;
   end cdabs;
 
   function csign ( z1,z2 : Complex_Number ) return Complex_Number is
@@ -570,8 +582,8 @@ package body TripDobl_Complex_Singular_Values is
     iter,jobu,kase,kk,ll,lm1,lp1,ls,lu,m,maxit : integer32;
     mm,mm1,mp1,nct,nctp1,ncu,nrt,nrtp1 : integer32;
     t,r : Complex_Number;
-    b,c,cs,el,emm1,f,g,scale,shift,sl,sm,sn : triple_double;
-    smm1,t1,test,ztest : triple_double;
+    b,c,cs,el,emm1,f,g,scale,shift,sl,sm,sn : triple_double := create(0.0);
+    smm1,t1,test,ztest : triple_double := create(0.0);
     wantu,wantv : boolean;
     zero : constant triple_double := create(0.0);
     one : constant triple_double := create(1.0);

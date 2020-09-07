@@ -1,8 +1,10 @@
---with text_io,integer_io;                use text_io,integer_io;
---with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
---with PentDobl_Complex_Numbers_io;       use PentDobl_Complex_Numbers_io;
---with PentDobl_Complex_Vectors_io;       use PentDobl_Complex_Vectors_io;
---with PentDobl_Complex_Matrices_io;      use PentDobl_Complex_Matrices_io;
+-- with text_io,integer_io;                use text_io,integer_io;
+-- with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+-- with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+-- with Penta_Double_Numbers_io;           use Penta_Double_Numbers_io;
+-- with PentDobl_Complex_Numbers_io;       use PentDobl_Complex_Numbers_io;
+-- with PentDobl_Complex_Vectors_io;       use PentDobl_Complex_Vectors_io;
+-- with PentDobl_Complex_Matrices_io;      use PentDobl_Complex_Matrices_io;
 
 with PentDobl_Complex_Numbers;          use PentDobl_Complex_Numbers;
 with PentDobl_Mathematical_Functions;   use PentDobl_Mathematical_Functions;
@@ -102,8 +104,25 @@ package body PentDobl_Complex_Singular_Values is
   --   Computes the modulus of the complex number, let us hope this
   --   corresponds to the `cdabs' fortran function.
 
+  -- NOTE : 
+  --   The SQRT crashes for very tiny numbers because of overflow
+  --   in Newton's method, which is applied without scaling.
+  --   The patch is to check for zero imaginary part.
+  --   For efficiency, this should have been done anyway ...
+
+    rpz : constant penta_double := REAL_PART(z);
+    ipz : constant penta_double := IMAG_PART(z);
+
   begin
-    return SQRT(sqr(REAL_PART(z)) + sqr(IMAG_PART(z)));
+    if is_zero(ipz)
+     then return AbsVal(rpz);
+     else return SQRT(sqr(rpz) + sqr(ipz));
+    end if;
+ -- exception
+ --   when others =>
+ --     put_line("exception raised in cdabs ...");
+ --     put("z = "); put(z); new_line;
+ --     raise;
   end cdabs;
 
   function csign ( z1,z2 : Complex_Number ) return Complex_Number is
@@ -113,12 +132,12 @@ package body PentDobl_Complex_Singular_Values is
 
   begin
     return (Create(cdabs(z1)/cdabs(z2))*z2);
---  exception
---    when others => put_line("exception caught by csign");
---                   put("z1 = "); put(z1); new_line;
---                   put("z2 = "); put(z2); new_line;
---                   put("cdabs(z2) = "); put(cdabs(z2)); new_line;
---                   raise;
+ -- exception
+ --   when others => put_line("exception caught by csign");
+ --                  put("z1 = "); put(z1); new_line;
+ --                  put("z2 = "); put(z2); new_line;
+ --                 -- put("cdabs(z2) = "); put(cdabs(z2)); new_line;
+ --                  raise;
   end csign;
 
   function dsign ( a,b : penta_double ) return penta_double is
@@ -177,8 +196,8 @@ package body PentDobl_Complex_Singular_Values is
       norm := scale*SQRT(ssq);
     end if;
     return norm;
---  exception
---    when others => put_line("exception caught by 1st dznrm2"); raise;
+ -- exception
+ --   when others => put_line("exception caught by 1st dznrm2"); raise;
   end dznrm2;
 
   function dznrm2 ( n : integer32; x : Matrix; row,col,incx : integer32 )
@@ -220,8 +239,8 @@ package body PentDobl_Complex_Singular_Values is
       norm := scale*SQRT(ssq);
     end if;
     return norm;
---  exception
---    when others => put_line("exception caught by 2nd dznrm2"); raise;
+ -- exception
+ --   when others => put_line("exception caught by 2nd dznrm2"); raise;
   end dznrm2;
 
   procedure zscal ( n : in integer32; za : in Complex_Number;
@@ -246,8 +265,8 @@ package body PentDobl_Complex_Singular_Values is
         ix := ix + incx;
       end loop;
     end if;
---  exception
---    when others => put_line("exception caught by 1st zscal"); raise;
+ -- exception
+ --   when others => put_line("exception caught by 1st zscal"); raise;
   end zscal;
 
   procedure zscal ( n : in integer32; za : in Complex_Number;
@@ -272,8 +291,8 @@ package body PentDobl_Complex_Singular_Values is
         ix := ix + incx;
       end loop;
     end if;
---  exception
---    when others => put_line("exception caught by 2nd zscal"); raise;
+ -- exception
+ --   when others => put_line("exception caught by 2nd zscal"); raise;
   end zscal;
 
   procedure zaxpy ( n : in integer32; z : in Complex_Number;
@@ -309,8 +328,8 @@ package body PentDobl_Complex_Singular_Values is
         end loop;
       end if;
     end if;
---  exception
---    when others => put_line("exception caught by 1st zaxpy"); raise;
+ -- exception
+ --   when others => put_line("exception caught by 1st zaxpy"); raise;
   end zaxpy;
 
   procedure zaxpy ( n : in integer32; z : in Complex_Number;
@@ -346,8 +365,8 @@ package body PentDobl_Complex_Singular_Values is
         end loop;
       end if;
     end if;
---  exception
---    when others => put_line("exception caught by 2nd zaxpy"); raise;
+ -- exception
+ --   when others => put_line("exception caught by 2nd zaxpy"); raise;
   end zaxpy;
 
   procedure zaxpy ( n : in integer32; z : in Complex_Number;
@@ -384,8 +403,8 @@ package body PentDobl_Complex_Singular_Values is
         end loop;
       end if;
     end if;
---  exception
---    when others => put_line("exception caught by 3rd zaxpy"); raise;
+ -- exception
+ --   when others => put_line("exception caught by 3rd zaxpy"); raise;
   end zaxpy;
 
   function zdotc ( n : in integer32; x : in Matrix;
@@ -423,8 +442,8 @@ package body PentDobl_Complex_Singular_Values is
       end loop;
     end if;
     return ztemp;
---  exception
---    when others => put_line("exception caught by zdotc"); raise;
+ -- exception
+ --   when others => put_line("exception caught by zdotc"); raise;
   end zdotc;
 
   procedure drotg ( da,db,c,s : in out penta_double ) is
@@ -462,8 +481,8 @@ package body PentDobl_Complex_Singular_Values is
    -- put("          s = "); put(s); new_line;
    -- put("         da = "); put(da); new_line;
    -- put("         db = "); put(db); new_line;
---  exception
---    when others => put_line("exception caught by drotg"); raise;
+ -- exception
+ --   when others => put_line("exception caught by drotg"); raise;
   end drotg;
 
   procedure zdrot ( n : in integer32;
@@ -505,8 +524,8 @@ package body PentDobl_Complex_Singular_Values is
         end loop;
       end if;
     end if;
---  exception
---    when others => put_line("exception caught by zdrot"); raise;
+ -- exception
+ --   when others => put_line("exception caught by zdrot"); raise;
   end zdrot;
 
   procedure zswap ( n : in integer32;
@@ -546,11 +565,11 @@ package body PentDobl_Complex_Singular_Values is
         end loop;
       end if;
     end if;
---  exception
---    when others => put_line("exception caught by zswap"); raise;
+ -- exception
+ --   when others => put_line("exception caught by zswap"); raise;
   end zswap;
 
--- TARGET PROCEDURE :
+-- TARGET PROCEDURES :
 
   procedure SVD ( x : in out Matrix; n,p : in integer32;
                   s,e : out Vector; u : out Matrix; v : out Matrix; 
@@ -814,7 +833,7 @@ package body PentDobl_Complex_Singular_Values is
       end if;
       ll := ll + 1;
      -- perform the task indicated by kase
-     -- put(" kase = "); put(kase,1); 
+     -- put(" kase = "); put(kase,1); new_line;
       case kase is
         when 1 => -- deflate negligible s(m)
           mm1 := m-1;
@@ -870,6 +889,8 @@ package body PentDobl_Complex_Singular_Values is
            g := sl*el;
           -- 2) chase zeros
            mm1 := m - 1;
+          -- put("chasing zeros, ll = "); put(ll,1);
+          -- put(", mm1 = "); put(mm1,1); new_line;
            for k in ll..mm1 loop
              drotg(f,g,cs,sn);
              if k /= ll then e(k-1) := Create(f); end if;
@@ -920,10 +941,9 @@ package body PentDobl_Complex_Singular_Values is
       end case;
     end loop;
    -- put_line("... leaving SVD");
---  exception
---    when others 
---      => put_line("exception caught by SVD");
---         raise;
+ -- exception
+ --   when others 
+ --     => put_line("exception caught by SVD"); raise;
   end SVD;
 
   function Rank ( s : Vector ) return integer32 is
