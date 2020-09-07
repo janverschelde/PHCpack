@@ -1,3 +1,6 @@
+Mon 7 Sep 2020 : fixed test_{tripdobl,pentdobl}_singular_values.adb,
+  fixed the bug in the loop tests on random problems.
+
 Sat 5 Sep 2020 : improved the tests on the singular values, modified all
   test_{standard,dobldobl,tripdobl,quaddobl,pentdobl,octodobl,decadobl,
   multprec}_singular_values packages.

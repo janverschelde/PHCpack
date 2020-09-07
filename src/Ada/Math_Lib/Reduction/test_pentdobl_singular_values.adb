@@ -244,8 +244,7 @@ package body Test_PentDobl_Singular_Values is
     use PentDobl_Complex_Vectors;
     use PentDobl_Complex_Matrices;
   
-    x : Matrix(1..n,1..p) := Random_Matrix(natural32(n),natural32(p));
-    y : constant Matrix(1..n,1..p) := x;
+    x,y : Matrix(1..n,1..p);
     mm : constant integer32 := PentDobl_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
@@ -261,6 +260,8 @@ package body Test_PentDobl_Singular_Values is
     put("See all vectors and matrices ? (y/n) ");
     Ask_Yes_or_No(ans); otp := (ans = 'y');
     loop
+      x := Random_Matrix(natural32(n),natural32(p));
+      y := x;
       SVD(x,n,p,s,e,u,v,job,info);
       Test_SVD_Output(y,u,v,s,e,info,otp);
       new_line;
@@ -274,9 +275,8 @@ package body Test_PentDobl_Singular_Values is
     use PentDobl_Complex_Vectors;
     use PentDobl_Complex_Matrices;
 
-    a : Matrix(1..n,1..p) := Random_Matrix(natural32(n),natural32(p));
-    b : constant Vector(1..n) := Random_Vector(1,n);
-    y : constant Matrix(1..n,1..p) := a;
+    a,y : Matrix(1..n,1..p);
+    b : Vector(1..n);
     mm : constant integer32 := PentDobl_Complex_Singular_Values.Min0(n+1,p);
     s : Vector(1..mm);
     e : Vector(1..p);
@@ -292,6 +292,9 @@ package body Test_PentDobl_Singular_Values is
     put("See all vectors and matrices ? (y/n) ");
     Ask_Yes_or_No(ans); otp := (ans = 'y');
     loop
+      a := Random_Matrix(natural32(n),natural32(p));
+      y := a;
+      b := Random_Vector(1,n);
       SVD(a,n,p,s,e,u,v,job,info);
       Test_SVD_Output(y,u,v,s,e,info,otp);
       Test_SVD_Solver(y,u,v,s,b);
