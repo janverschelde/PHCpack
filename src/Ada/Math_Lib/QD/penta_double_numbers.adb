@@ -240,7 +240,7 @@ package body Penta_Double_Numbers is
          or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
              x.ring < 0.0)
          or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
-             x.ring = 0.0 and x.pink < 0.0));
+             x.ring = 0.0 and x.pink <= 0.0));
   end "<=";
 
   function "<=" ( x : double_float; y : penta_double ) return boolean is
@@ -288,7 +288,7 @@ package body Penta_Double_Numbers is
          or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
              x.ring > 0.0)
          or (x.thumb = y and x.index = 0.0 and x.middle = 0.0 and
-             x.ring = 0.0 and x.pink > 0.0));
+             x.ring = 0.0 and x.pink >= 0.0));
   end ">=";
 
   function ">=" ( x : double_float; y : penta_double ) return boolean is
