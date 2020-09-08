@@ -173,6 +173,8 @@ package Penta_Double_Numbers is
 
   function ldexp ( x : penta_double; n : integer ) return penta_double;
   -- returns (2^n)*x
+  function "**" ( x,y : penta_double ) return penta_double; -- x^y
+  function "**" ( x : penta_double; y : double_float ) return penta_double;
 
   function exp ( x : penta_double ) return penta_double;   -- returns exp(x)
   function log ( x : penta_double ) return penta_double;   -- natural log

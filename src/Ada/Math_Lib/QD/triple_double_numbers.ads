@@ -164,6 +164,8 @@ package Triple_Double_Numbers is
 
   function ldexp ( x : triple_double; n : integer ) return triple_double;
   -- returns (2^n)*x
+  function "**" ( x,y : triple_double ) return triple_double; -- x^y
+  function "**" ( x : triple_double; y : double_float ) return triple_double;
 
   function exp ( x : triple_double ) return triple_double;   -- returns exp(x)
   function log ( x : triple_double ) return triple_double;   -- natural log

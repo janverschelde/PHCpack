@@ -190,6 +190,8 @@ package Octo_Double_Numbers is
 
   function ldexp ( x : octo_double; n : integer ) return octo_double;
   -- returns (2^n)*x
+  function "**" ( x,y : octo_double ) return octo_double; -- x^y
+  function "**" ( x : octo_double; y : double_float ) return octo_double;
 
   function exp ( x : octo_double ) return octo_double;   -- returns exp(x)
   function log ( x : octo_double ) return octo_double;   -- natural log

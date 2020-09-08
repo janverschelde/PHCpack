@@ -512,6 +512,19 @@ package body Triple_Double_Numbers is
     return res;
   end ldexp;
 
+  function "**" ( x,y : triple_double ) return triple_double is
+  begin
+    return exp(y*log(x));
+  end "**";
+
+  function "**" ( x : triple_double; y : double_float ) return triple_double is
+
+    td_y : constant triple_double := create(y);
+
+  begin
+    return x**td_y;
+  end "**";
+
   function exp ( x : triple_double ) return triple_double is
 
   -- Strategy:  We first reduce the size of x by noting that

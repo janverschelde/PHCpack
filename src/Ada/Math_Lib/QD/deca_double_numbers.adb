@@ -1403,6 +1403,19 @@ package body Deca_Double_Numbers is
     return res;
   end ldexp;
 
+  function "**" ( x,y : deca_double ) return deca_double is
+  begin
+    return exp(y*log(x));
+  end "**";
+
+  function "**" ( x : deca_double; y : double_float ) return deca_double is
+
+    da_y : constant deca_double := create(y);
+
+  begin
+    return x**da_y;
+  end "**";
+
   function exp ( x : deca_double ) return deca_double is
 
   -- Strategy:  We first reduce the size of x by noting that

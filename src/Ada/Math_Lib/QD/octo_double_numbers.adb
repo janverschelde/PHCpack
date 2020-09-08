@@ -1018,6 +1018,19 @@ package body Octo_Double_Numbers is
     return res;
   end ldexp;
 
+  function "**" ( x,y : octo_double ) return octo_double is
+  begin
+    return exp(y*log(x));
+  end "**";
+
+  function "**" ( x : octo_double; y : double_float ) return octo_double is
+
+    od_y : constant octo_double := create(y);
+
+  begin
+    return x**od_y;
+  end "**";
+
   function exp ( x : octo_double ) return octo_double is
 
   -- Strategy:  We first reduce the size of x by noting that

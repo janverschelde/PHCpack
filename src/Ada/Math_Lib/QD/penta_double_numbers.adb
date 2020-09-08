@@ -669,6 +669,19 @@ package body Penta_Double_Numbers is
     return res;
   end ldexp;
 
+  function "**" ( x,y : penta_double ) return penta_double is
+  begin
+    return exp(y*log(x));
+  end "**";
+
+  function "**" ( x : penta_double; y : double_float ) return penta_double is
+
+    pd_y : constant penta_double := create(y);
+
+  begin
+    return x**pd_y;
+  end "**";
+
   function exp ( x : penta_double ) return penta_double is
 
   -- Strategy:  We first reduce the size of x by noting that

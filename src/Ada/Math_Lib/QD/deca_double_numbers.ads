@@ -200,6 +200,8 @@ package Deca_Double_Numbers is
 
   function ldexp ( x : deca_double; n : integer ) return deca_double;
   -- returns (2^n)*x
+  function "**" ( x,y : deca_double ) return deca_double; -- x^y
+  function "**" ( x : deca_double; y : double_float ) return deca_double;
 
   function exp ( x : deca_double ) return deca_double;   -- returns exp(x)
   function log ( x : deca_double ) return deca_double;   -- natural log

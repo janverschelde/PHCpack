@@ -1,3 +1,6 @@
+Tue 8 Sep 2020 : to {triple,penta,octo,deca}_double_numbers, added the
+  exponentiation for floating-point powers.
+
 Mon 7 Sep 2020 : fixed definition of <= and >= for penta doubles and doubles
   in penta_double_numbers.adb.
 
