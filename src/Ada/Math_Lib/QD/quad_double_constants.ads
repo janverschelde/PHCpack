@@ -4,10 +4,11 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 package Quad_Double_Constants is
 
 -- DESCRIPTION :
---   This package collects common definitions of double double constants
---   for use in double double mathematical functions.
+--   This package collects common definitions of quad double constants
+--   for use in quad double mathematical functions.
 
-  qd_eps : constant double_float := 1.21543267145725e-63;      -- 2^-209
+  qd_eps : constant double_float := 4.861730685829017e-63; -- 2.0**(-52*4-1)
+  -- := 1.21543267145725e-63;      -- 2^-209
 
 -- PI and multiples and factors :
 

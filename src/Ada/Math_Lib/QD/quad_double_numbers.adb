@@ -1290,7 +1290,8 @@ package body Quad_Double_Numbers is
     log2_2 : constant double_float :=  5.707708438416212066e-34; -- log(2)[2]
     log2_3 : constant double_float := -3.582432210601811423e-50; -- log(2)[3]
     log2 : constant quad_double := Create(log2_0,log2_1,log2_2,log2_3);
-    qd_eps : constant double_float := 1.21543267145725e-63;      -- 2^-209
+    qd_eps : constant double_float := 4.861730685829017e-63; -- 2.0**(-54*4+1)
+    --  := 1.21543267145725e-63;      -- 2^-209
     tol : constant double_float := inv_k*qd_eps;
     m : constant double_float := double_float'floor(x.hihi/log2_0 + 0.5);
     i_fac : array(0..14) of quad_double;

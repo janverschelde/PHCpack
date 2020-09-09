@@ -7,6 +7,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Double_Double_Constants;
 with DoblDobl_Random_Numbers;
 
 package body Test_Double_Doubles is
@@ -177,6 +178,21 @@ package body Test_Double_Doubles is
     put("the random number : "); put(r); new_line;
   end Test_Random;
 
+  procedure Test_dd_eps is
+
+    one : constant double_double := create(1.0);
+    eps : constant double_float := Double_Double_Constants.dd_eps;
+    one_plus_dd_eps : constant double_double := one + eps;
+    inc : constant double_float := (eps/2.0);
+    one_plus_dd_eps_half : constant double_double := one + inc;
+
+  begin
+    new_line;
+    put("    dd_eps   :"); put(eps); new_line;
+    put("1 + dd_eps   : "); put(one_plus_dd_eps,31); new_line;
+    put("1 + dd_eps/2 : "); put(one_plus_dd_eps_half,31); new_line;
+  end Test_dd_eps;
+
   procedure Main is
 
     ans : character;
@@ -184,23 +200,25 @@ package body Test_Double_Doubles is
   begin
     new_line;
     put_line("MENU to test operations on double double numbers :");
-    put_line("  0. test character arithmetic;");
-    put_line("  1. do a basic interactive test on ldexp;");
-    put_line("  2. test input/output of double double numbers;");
-    put_line("  3. run add/sub, sqr/div, log/exp, and a sqrt;");
-    put_line("  4. generate a random double double.");
-    put("Type 0, 1, 2, 3, or 4 to choose : ");
-    Ask_Alternative(ans,"01234");
+    put_line("  0. test character arithmetic");
+    put_line("  1. do a basic interactive test on ldexp");
+    put_line("  2. test input/output of double double numbers");
+    put_line("  3. run add/sub, sqr/div, log/exp, and a sqrt");
+    put_line("  4. generate a random double double");
+    put_line("  5. test the value of dd_eps");
+    put("Type 0, 1, 2, 3, 4, or 5 to choose : ");
+    Ask_Alternative(ans,"012345");
     case ans is
       when '0' => character_arithmetic;
       when '1' => Basic_Test;
       when '2' => Test_io;
-      when '3' =>
-        Add_Sub_of_Pi_e;
-        Div_sqr_of_Pi;
-        Log_exp_of_Pi;
-        my_sqrt;
-      when others => Test_Random;
+      when '3' => Add_Sub_of_Pi_e;
+                  Div_sqr_of_Pi;
+                  Log_exp_of_Pi;
+                  my_sqrt;
+      when '4' => Test_Random;
+      when '5' => Test_dd_eps;
+      when others => null;
     end case;
   end Main;
 

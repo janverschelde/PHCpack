@@ -46,6 +46,13 @@ package Test_Quad_Doubles is
   -- DESCRIPTION :
   --   Generates a random number and shows it.
 
+  procedure Test_qd_eps;
+
+  -- DESCRIPTION :
+  --   Tests on the smallest number which still makes a difference
+  --   when added to one in quad double precision,
+  --   when printed with 63 decimal places.
+
   procedure Main;
 
   -- DESCRIPTION :

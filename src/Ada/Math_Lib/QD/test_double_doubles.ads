@@ -53,6 +53,13 @@ package Test_Double_Doubles is
   -- DESCRIPTIN :
   --   Generates and shows a random number.
 
+  procedure Test_dd_eps;
+
+  -- DESCRIPTION :
+  --   Tests on the smallest number which still makes a difference
+  --   when added to one in double double precision,
+  --   when printed with 32 decimal places.
+
   procedure Main;
 
   -- DESCRIPTION :

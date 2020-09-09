@@ -7,6 +7,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Quad_Double_Constants;
 with QuadDobl_Random_Numbers;
 
 package body Test_Quad_Doubles is
@@ -158,6 +159,21 @@ package body Test_Quad_Doubles is
     put("the random number : "); put(r); new_line;
   end Test_Random;
 
+  procedure Test_qd_eps is
+
+    one : constant quad_double := create(1.0);
+    eps : constant double_float := Quad_Double_Constants.qd_eps;
+    one_plus_qd_eps : constant quad_double := one + eps;
+    inc : constant double_float := (eps/2.0);
+    one_plus_qd_eps_half : constant quad_double := one + inc;
+
+  begin
+    new_line;
+    put("    qd_eps   :"); put(eps); new_line;
+    put_line("1 + qd_eps   : "); put(one_plus_qd_eps,62); new_line;
+    put_line("1 + qd_eps/2 : "); put(one_plus_qd_eps_half,62); new_line;
+  end Test_qd_eps;
+
   procedure Main is
 
     ans : character;
@@ -165,20 +181,21 @@ package body Test_Quad_Doubles is
   begin
     new_line;
     put_line("MENU to test operations on quad double arithmetic :");
-    put_line("  0. do a basic test;");
-    put_line("  1. test input/output of quad double numbers;");
-    put_line("  2. run test on add/sub, div/sqr, log/exp, and a sqrt;");
-    put_line("  3. generate a random quad double.");
-    put("Type 0, 1, 2, or 3 to choose : "); Ask_Alternative(ans,"0123");
+    put_line("  0. do a basic test");
+    put_line("  1. test input/output of quad double numbers");
+    put_line("  2. run test on add/sub, div/sqr, log/exp, and a sqrt");
+    put_line("  3. generate a random quad double");
+    put_line("  4. test the value of qd_eps");
+    put("Type 0, 1, 2, 3, or 4 to choose : "); Ask_Alternative(ans,"01234");
     case ans is
       when '0' => Basic_Test;
       when '1' => Test_io;
-      when '2' =>
-        Add_Sub_of_Pi_e;
-        Div_sqr_of_Pi;
-        Log_exp_of_Pi;
-        my_sqrt;
+      when '2' => Add_Sub_of_Pi_e;
+                  Div_sqr_of_Pi;
+                  Log_exp_of_Pi;
+                  my_sqrt;
       when '3' => Test_Random;
+      when '4' => Test_qd_eps;
       when others => null;
     end case;
   end Main;
