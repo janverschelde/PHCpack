@@ -1,5 +1,8 @@
 Tue 8 Sep 2020 : new test_{standard,dobldobl,quaddobl}_complex_series,
-  with code taken from ts_cseries.
+  with code taken from ts_cseries.  Instantiated tripdobl_complex_series,
+  defined tripdobl_complex_{series_io,random_series}, extended ts_cseries,
+  with a call to test_tripdobl_complex_series.  Added the analogue packages
+  for penta, octo, and deca double precision.
 
 Mon 13 Jul 2020 : to ts_perfserlin, added a test procedure for the indexed
   solving of a linear system of power series, for use in a staggered Newton.
