@@ -6,6 +6,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
+with Octo_Double_Constants;
 
 package body Test_Octo_Doubles is
 
@@ -389,6 +390,21 @@ package body Test_Octo_Doubles is
     end loop;
   end Test_sqrt2;
 
+  procedure Test_od_eps is
+
+    one : constant octo_double := create(1.0);
+    eps : constant double_float := Octo_Double_Constants.od_eps;
+    one_plus_od_eps : constant octo_double := one + eps;
+    inc : constant double_float := (eps/2.0);
+    one_plus_od_eps_half : constant octo_double := one + inc;
+
+  begin
+    new_line;
+    put("    od_eps   :"); put(eps); new_line;
+    put_line("1 + od_eps   : "); put(one_plus_od_eps,127); new_line;
+    put_line("1 + od_eps/2 : "); put(one_plus_od_eps_half,127); new_line;
+  end Test_od_eps;
+
   procedure Main is
 
     ans : character;
@@ -403,8 +419,9 @@ package body Test_Octo_Doubles is
     put_line("  5. write 8 leading double for inverse factorials");
     put_line("  6. input and output");
     put_line("  7. Newton's method for sqrt(2)");
-    put("Type 1, 2, 3, 4, 5, 6, or 7 to select a test : ");
-    Ask_Alternative(ans,"1234567");
+    put_line("  8. test the value of od_eps");
+    put("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
+    Ask_Alternative(ans,"12345678");
     case ans is
       when '1' => Test_Add_and_Subtract;
       when '2' => Test_Multiplication_and_Division;
@@ -413,6 +430,7 @@ package body Test_Octo_Doubles is
       when '5' => inverse_factorials;
       when '6' => Test_io;
       when '7' => Test_sqrt2;
+      when '8' => Test_od_eps;
       when others => null;
     end case;
   end Main;

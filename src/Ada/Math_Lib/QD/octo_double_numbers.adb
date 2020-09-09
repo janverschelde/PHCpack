@@ -1064,7 +1064,7 @@ package body Octo_Double_Numbers is
     L6 : constant double_float :=  2.89550243323471469E-99;
     L7 : constant double_float :=  2.35138671214606540E-116;
     log2 : constant octo_double := Create(L0,L1,L2,L3,L4,L5,L6,L7);
-    od_eps : constant double_float := 5.909106315382871e-126; -- 2^-416
+    od_eps : constant double_float := 4.616489308892868e-128; -- 2^(-423)
     tol : constant double_float := inv_k*od_eps;
     m : constant double_float := double_float'floor(x.hihihi/L0 + 0.5);
     i_fac : array(0..14) of octo_double;

@@ -1,7 +1,13 @@
 Wed 9 Sep 2020 : verified the definition of dd_eps in test_double_doubles,
   corrected the qd_eps in quad_double_constants.ads, to correspond 
   to the test on qd_eps in test_quad_doubles.  Also updated the value
-  of qd_eps in quad_double_numbers.adb.
+  of qd_eps in quad_double_numbers.adb.  In all test*doubles.ads,
+  clarified the relation between the precision and the size of the
+  decimal expansion of a multiple precision number.  New packages
+  {triple,penta,octo,deca}_double_constants.ads with the definition
+  of eps, tested by test_{triple,penta,octo,deca}_doubles.adb.
+  Modified {triple,penta,octo,deca}_double_numbers.adb with the
+  updated value for eps.
  
 Tue 8 Sep 2020 : to {triple,penta,octo,deca}_double_numbers, added the
   exponentiation for floating-point powers.

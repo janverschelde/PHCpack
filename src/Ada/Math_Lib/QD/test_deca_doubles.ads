@@ -60,6 +60,13 @@ package Test_Deca_Doubles is
   --   Computes the square root of 2 using Newton's method
   --   in deca double arithmetic.
 
+  procedure Test_da_eps;
+
+  -- DESCRIPTION :
+  --   Tests on the smallest number which still makes a difference
+  --   when added to one in deca double precision,
+  --   when printed with precision equal to 159.
+
   procedure Main;
 
   -- DESCRIPTION :

@@ -58,7 +58,7 @@ package Test_Double_Doubles is
   -- DESCRIPTION :
   --   Tests on the smallest number which still makes a difference
   --   when added to one in double double precision,
-  --   when printed with 32 decimal places.
+  --   when printed with precision equal to 31.
 
   procedure Main;
 

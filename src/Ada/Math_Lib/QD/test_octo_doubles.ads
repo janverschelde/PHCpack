@@ -49,12 +49,18 @@ package Test_Octo_Doubles is
   -- DESCRIPTION :
   --   Prompts the user for a number, reads and writes a octo double.
 
-
   procedure Test_sqrt2;
 
   -- DESCRIPTION :
   --   Computes the square root of 2 using Newton's method
   --   in octo double arithmetic.
+
+  procedure Test_od_eps;
+
+  -- DESCRIPTION :
+  --   Tests on the smallest number which still makes a difference
+  --   when added to one in octo double precision,
+  --   when printed with precision equal to 127.
 
   procedure Main;
 

@@ -43,6 +43,13 @@ package Test_Penta_Doubles is
   --   Computes the square root of 2 using Newton's method
   --   in penta double arithmetic.
 
+  procedure Test_pd_eps;
+
+  -- DESCRIPTION :
+  --   Tests on the smallest number which still makes a difference
+  --   when added to one in penta double precision,
+  --   when printed with precision equal to 79.
+
   procedure Main;
 
   -- DESCRIPTION :

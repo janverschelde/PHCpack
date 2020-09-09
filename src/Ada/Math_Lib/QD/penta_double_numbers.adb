@@ -709,7 +709,7 @@ package body Penta_Double_Numbers is
     L3 : constant double_float := -3.58243221060181142E-50;
     L4 : constant double_float := -1.35216967579886296E-66;
     log2 : constant penta_double := Create(L0,L1,L2,L3,L4);
-    pd_eps : constant double_float := 5.397605346934028e-79; -- 2^-260
+    pd_eps : constant double_float := 6.747006683667535e-80; -- 2^-263
     tol : constant double_float := inv_k*pd_eps;
     m : constant double_float := double_float'floor(x.thumb/L0 + 0.5);
     i_fac : array(0..14) of penta_double;

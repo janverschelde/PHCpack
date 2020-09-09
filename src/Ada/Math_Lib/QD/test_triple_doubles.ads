@@ -46,6 +46,13 @@ package Test_Triple_Doubles is
   --   Computes the square root of 2 using Newton's method
   --   in triple double arithmetic.
 
+  procedure Test_td_eps;
+
+  -- DESCRIPTION :
+  --   Tests on the smallest number which still makes a difference
+  --   when added to one in triple double precision,
+  --   when printed with precision equal to 47.
+
   procedure Main;
 
   -- DESCRIPTION :

@@ -6,6 +6,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with Penta_Double_Numbers_io;            use Penta_Double_Numbers_io;
+with Penta_Double_Constants;
 
 package body Test_Penta_Doubles is
 
@@ -145,6 +146,21 @@ package body Test_Penta_Doubles is
     end loop;
   end Test_sqrt2;
 
+  procedure Test_pd_eps is
+
+    one : constant penta_double := create(1.0);
+    eps : constant double_float := Penta_Double_Constants.pd_eps;
+    one_plus_pd_eps : constant penta_double := one + eps;
+    inc : constant double_float := (eps/2.0);
+    one_plus_pd_eps_half : constant penta_double := one + inc;
+
+  begin
+    new_line;
+    put("    pd_eps   :"); put(eps); new_line;
+    put_line("1 + pd_eps   : "); put(one_plus_pd_eps,79); new_line;
+    put_line("1 + pd_eps/2 : "); put(one_plus_pd_eps_half,79); new_line;
+  end Test_pd_eps;
+
   procedure Main is
 
     ans : character;
@@ -157,14 +173,16 @@ package body Test_Penta_Doubles is
     put_line("  3. test reading from a string");
     put_line("  4. input and output");
     put_line("  5. Newton's method for sqrt(2)");
-    put("Type 1, 2, 3, 4, or 5 to select a test : ");
-    Ask_Alternative(ans,"12345");
+    put_line("  6. test the value of pd_eps");
+    put("Type 1, 2, 3, 4, 5, or 6 to select a test : ");
+    Ask_Alternative(ans,"123456");
     case ans is
       when '1' => Test_Addition_and_Subtraction;
       when '2' => Test_Multiplication_and_Division;
       when '3' => Test_Read;
       when '4' => Test_io;
       when '5' => Test_sqrt2;
+      when '6' => Test_pd_eps;
       when others => null;
     end case;
   end Main;

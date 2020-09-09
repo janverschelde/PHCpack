@@ -1453,8 +1453,8 @@ package body Deca_Double_Numbers is
     L8 : constant double_float :=  4.45977441701428101E-133;
     L9 : constant double_float := -3.06993326323528609E-149;
     log2 : constant deca_double := Create(L0,L1,L2,L3,L4,L5,L6,L7,L8,L9);
-    Dd_eps : constant double_float := 2.913414348125081e-157; -- 2^-520
-    tol : constant double_float := inv_k*Dd_eps;
+    da_eps : constant double_float := 5.6902623986817984e-160; -- 2^-529
+    tol : constant double_float := inv_k*da_eps;
     m : constant double_float := double_float'floor(x.right_thumb/L0 + 0.5);
     i_fac : array(0..14) of deca_double;
       -- inverse factorials for Taylor expansion

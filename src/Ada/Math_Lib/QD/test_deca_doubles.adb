@@ -6,6 +6,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
+with Deca_Double_Constants;
 
 package body Test_Deca_Doubles is
 
@@ -418,6 +419,21 @@ package body Test_Deca_Doubles is
     end loop;
   end Test_sqrt2;
 
+  procedure Test_da_eps is
+
+    one : constant deca_double := create(1.0);
+    eps : constant double_float := Deca_Double_Constants.da_eps;
+    one_plus_da_eps : constant deca_double := one + eps;
+    inc : constant double_float := (eps/2.0);
+    one_plus_da_eps_half : constant deca_double := one + inc;
+
+  begin
+    new_line;
+    put("    da_eps   :"); put(eps); new_line;
+    put_line("1 + da_eps   : "); put(one_plus_da_eps,159); new_line;
+    put_line("1 + da_eps/2 : "); put(one_plus_da_eps_half,159); new_line;
+  end Test_da_eps;
+
   procedure Main is
 
     ans : character;
@@ -433,8 +449,9 @@ package body Test_Deca_Doubles is
     put_line("  6. write 10 leading doubles for inverse factorials");
     put_line("  7. input and output");
     put_line("  8. Newton's method for sqrt(2)");
+    put_line("  9. test the value of da_eps");
     put("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
-    Ask_Alternative(ans,"12345678");
+    Ask_Alternative(ans,"123456789");
     case ans is
       when '1' => Test_Addition_and_Subtraction;
       when '2' => Test_Multiplication_and_Division;
@@ -444,6 +461,7 @@ package body Test_Deca_Doubles is
       when '6' => inverse_factorials;
       when '7' => Test_io;
       when '8' => Test_sqrt2;
+      when '9' => Test_da_eps;
       when others => null;
     end case;
   end Main;

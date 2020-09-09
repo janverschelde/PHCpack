@@ -548,7 +548,7 @@ package body Triple_Double_Numbers is
     log2_1 : constant double_float :=  2.319046813846299558e-17; -- log(2)[1]
     log2_2 : constant double_float :=  5.707708438416212066e-34; -- log(2)[2]
     log2 : constant triple_double := Create(log2_0,log2_1,log2_2);
-    td_eps : constant double_float := 1.0947644252537633e-47; -- 2^-156
+    td_eps : constant double_float := 5.473822126268817e-48; -- 2.0**(-157)
     tol : constant double_float := inv_k*td_eps;
     m : constant double_float := double_float'floor(x.hi/log2_0 + 0.5);
     i_fac : array(0..14) of triple_double;

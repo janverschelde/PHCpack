@@ -3,10 +3,12 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with QuadDobl_Random_Numbers;            use QuadDobl_Random_Numbers;
 with QuadDobl_Mathematical_Functions;
 with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
+with Triple_Double_Constants;
 
 package body Test_Triple_Doubles is
 
@@ -160,6 +162,21 @@ package body Test_Triple_Doubles is
     end loop;
   end Test_sqrt2;
 
+  procedure Test_td_eps is
+
+    one : constant triple_double := create(1.0);
+    eps : constant double_float := Triple_Double_Constants.td_eps/2.0;
+    one_plus_td_eps : constant triple_double := one + eps;
+    inc : constant double_float := (eps/2.0);
+    one_plus_td_eps_half : constant triple_double := one + inc;
+
+  begin
+    new_line;
+    put("    td_eps   :"); put(eps); new_line;
+    put_line("1 + td_eps   : "); put(one_plus_td_eps,47); new_line;
+    put_line("1 + td_eps/2 : "); put(one_plus_td_eps_half,47); new_line;
+  end Test_td_eps;
+
   procedure Main is
 
     ans : character;
@@ -171,13 +188,15 @@ package body Test_Triple_Doubles is
     put_line("  2. test reading from string");
     put_line("  3. input and output");
     put_line("  4. Newton's method for sqrt(2)");
-    put("Type 1, 2, 3, or 4 to select a test : ");
-    Ask_Alternative(ans,"1234");
+    put_line("  5. test the value of td_eps");
+    put("Type 1, 2, 3, 4, or 5 to select a test : ");
+    Ask_Alternative(ans,"12345");
     case ans is
       when '1' => Test_Basic_Arithmetic;
       when '2' => Test_Read;
       when '3' => Test_io;
       when '4' => Test_sqrt2;
+      when '5' => Test_td_eps;
       when others => null;
     end case;
   end Main;
