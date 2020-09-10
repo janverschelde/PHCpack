@@ -170,8 +170,8 @@ package body Test_Quad_Doubles is
   begin
     new_line;
     put("    qd_eps   :"); put(eps); new_line;
-    put_line("1 + qd_eps   : "); put(one_plus_qd_eps,62); new_line;
-    put_line("1 + qd_eps/2 : "); put(one_plus_qd_eps_half,62); new_line;
+    put_line("1 + qd_eps   : "); put(one_plus_qd_eps,63); new_line;
+    put_line("1 + qd_eps/2 : "); put(one_plus_qd_eps_half,63); new_line;
   end Test_qd_eps;
 
   procedure Main is

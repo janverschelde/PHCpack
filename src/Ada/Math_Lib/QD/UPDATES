@@ -7,7 +7,9 @@ Wed 9 Sep 2020 : verified the definition of dd_eps in test_double_doubles,
   {triple,penta,octo,deca}_double_constants.ads with the definition
   of eps, tested by test_{triple,penta,octo,deca}_doubles.adb.
   Modified {triple,penta,octo,deca}_double_numbers.adb with the
-  updated value for eps.
+  updated value for eps.  Fixed the quad double precision to 2^(-210)
+  to be consistent with the precision of 63 in to_digits, and changed files
+  test_quad_doubles.*, quad_double_numbers.adb, quad_double_constants.ads.
  
 Tue 8 Sep 2020 : to {triple,penta,octo,deca}_double_numbers, added the
   exponentiation for floating-point powers.

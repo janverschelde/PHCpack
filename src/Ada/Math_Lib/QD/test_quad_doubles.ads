@@ -51,7 +51,7 @@ package Test_Quad_Doubles is
   -- DESCRIPTION :
   --   Tests on the smallest number which still makes a difference
   --   when added to one in quad double precision,
-  --   when printed with precision equal to 62.
+  --   when printed with precision equal to 63.
 
   procedure Main;
 

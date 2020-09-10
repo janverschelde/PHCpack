@@ -7,7 +7,7 @@ package Quad_Double_Constants is
 --   This package collects common definitions of quad double constants
 --   for use in quad double mathematical functions.
 
-  qd_eps : constant double_float := 4.861730685829017e-63; -- 2.0**(-52*4-1)
+  qd_eps : constant double_float := 6.077163357286271e-64; -- 2.0**(-52*4-2)
   -- := 1.21543267145725e-63;      -- 2^-209
 
 -- PI and multiples and factors :
