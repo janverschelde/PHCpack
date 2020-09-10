@@ -1,6 +1,7 @@
 Thu 10 Sep 2020 : added the nint funtion to triple_double_numbers,
   extended triple_double_constants.ads and tripdobl_mathematical_functions,
-  tested by test_tripdobl_functions.
+  tested by test_tripdobl_functions.  Extended tripdobl_random_numbers with
+  random numbers on the unit circle, tested by test_tripdobl_complex.
 
 Wed 9 Sep 2020 : verified the definition of dd_eps in test_double_doubles,
   corrected the qd_eps in quad_double_constants.ads, to correspond 

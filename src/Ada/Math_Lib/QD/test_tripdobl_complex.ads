@@ -18,6 +18,12 @@ package Test_TripDobl_Complex is
   -- DESCRIPTION :
   --   Tests x * y / x for randomly generated complex triple doubles.
 
+  procedure Test_Random;
+
+  -- DESCRIPTION :
+  --   Generates a random complex number on the unit circle
+  --   and computes its radius to verify it is on the unit circle.
+
   procedure Main;
 
   -- DESCRIPTION :

@@ -1,5 +1,7 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
+with Triple_Double_Constants;
+with TripDobl_Mathematical_Functions;
 
 package body TripDobl_Random_Numbers is
 
@@ -58,5 +60,32 @@ package body TripDobl_Random_Numbers is
     Random_Triple_Double(seed,imagpart);
     c := Create(realpart,imagpart);
   end Random_Complex_Number;
+
+  function Random1 return Complex_Number is
+
+    res : Complex_Number;
+    arg : triple_double := TripDobl_Random_Numbers.Random;
+    cs,sn : triple_double;
+
+  begin
+    arg := arg*Triple_Double_Constants.pi;
+    cs := TripDobl_Mathematical_Functions.cos(arg);
+    sn := TripDobl_Mathematical_Functions.sin(arg);
+    res := create(cs,sn);
+    return res;
+  end Random1;
+
+  procedure Random1_Complex_Number
+              ( seed : in out integer32; c : out Complex_Number ) is
+
+    arg,cs,sn : triple_double;
+
+  begin
+    Random_Triple_Double(seed,arg);
+    arg := arg*Triple_Double_Constants.pi;
+    cs := TripDobl_Mathematical_Functions.cos(arg);
+    sn := TripDobl_Mathematical_Functions.sin(arg);
+    c := create(cs,sn);
+  end Random1_Complex_Number;
 
 end TripDobl_Random_Numbers; 
