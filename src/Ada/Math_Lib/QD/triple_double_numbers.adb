@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Mathematical_Functions;
 with Double_Double_Basics;
+with Double_Double_Numbers;
 with Quad_Double_Renormalizations;
 with Fast_Double_Renormalizations;       use Fast_Double_Renormalizations;
 
@@ -127,6 +128,33 @@ package body Triple_Double_Numbers is
     res := Create(x0,x1,x2);
     return res;
   end floor;
+
+  function nint ( x : triple_double ) return triple_double is
+
+    res : triple_double;
+    x0,x1,x2,x3 : double_float;
+
+  begin
+    x1 := 0.0; x2 := 0.0; x3 := 0.0;
+    x0 := Double_Double_Numbers.nint(x.hi);
+    if x0 = x.hi then      -- first double is already an integer
+      x1 := Double_Double_Numbers.nint(x.mi);
+      if x1 = x.mi then    -- second double is already an integer
+        x2 := Double_Double_Numbers.nint(x.lo);
+      else
+        if abs(x1 - x.mi) = 0.5 and x.lo < 0.0
+         then x1 := x1 - 1.0;
+        end if;
+      end if;
+    else                     -- first double is not an integer
+      if abs(x0 - x.hi) = 0.5 and x.mi < 0.0
+       then x0 := x0 - 1.0;
+      end if;
+    end if;
+    Quad_Double_Renormalizations.renorm4(x0,x1,x2,x3);
+    res := Create(x0,x1,x2);
+    return res;
+  end nint;
 
 -- SELECTORS :
 

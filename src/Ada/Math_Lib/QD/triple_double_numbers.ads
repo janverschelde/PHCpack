@@ -63,6 +63,11 @@ package Triple_Double_Numbers is
   -- DESCRIPTION :
   --   Returns nearest lower integer to x.
 
+  function nint ( x : triple_double ) return triple_double;
+
+  -- DESCRIPTION :
+  --   Returns the nearest integer to x.
+
 -- SELECTORS :
 
   function hi_part ( x : triple_double ) return double_float;

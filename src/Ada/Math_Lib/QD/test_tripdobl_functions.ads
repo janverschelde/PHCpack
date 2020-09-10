@@ -13,6 +13,12 @@ package Test_TripDobl_Functions is
   -- DESCRIPTION :
   --   Verifies the radius with Pythagorean triple.
 
+  procedure Test_SINCOS;
+
+  -- DESCRIPTION :
+  --   Verifies if the square of sine and cosine on a random triple double
+  --   or a user given number sum up to one.
+
   procedure Main;
 
   -- DESCRIPTION :
