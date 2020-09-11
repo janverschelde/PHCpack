@@ -125,6 +125,7 @@ tripdobl_complex_numbers_io     : input/output for triple double complex
 tripdobl_complex_ring           : ring of triple double complex numbers
 tripdobl_complex_ring-ffield    : field of triple double complex numbers
 tripdobl_random_numbers         : random numbers in triple double precision
+tripdobl_complex_numbers_polar  : polar view of triple double complex numbers
 test_tripdobl_complex           : tests triple double complex arithmetic
 ts_tdcmplx                      : main test on triple double complex numbers
 ------------------------------------------------------------------------------
