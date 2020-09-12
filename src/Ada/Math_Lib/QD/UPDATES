@@ -1,3 +1,6 @@
+Sat 12 Sep 2020 : to {penta,octo,deca}_double_constants.ads, added 
+  inverse factorials.
+
 Thu 10 Sep 2020 : added the nint funtion to triple_double_numbers,
   extended triple_double_constants.ads and tripdobl_mathematical_functions,
   tested by test_tripdobl_functions.  Extended tripdobl_random_numbers with
