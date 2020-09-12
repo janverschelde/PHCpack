@@ -67,6 +67,12 @@ package Test_Deca_Doubles is
   --   when added to one in deca double precision,
   --   when printed with precision equal to 159.
 
+  procedure Write_Pi;
+
+  -- DESCRIPTION :
+  --   Writes the deca double expansion for Pi and multiples,
+  --   as needed for the deca double constants.
+
   procedure Main;
 
   -- DESCRIPTION :

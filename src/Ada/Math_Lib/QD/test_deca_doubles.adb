@@ -434,6 +434,102 @@ package body Test_Deca_Doubles is
     put_line("1 + da_eps/2 : "); put(one_plus_da_eps_half,159); new_line;
   end Test_da_eps;
 
+  procedure Write_Pi is
+
+  -- To evaluate the constants with 160 decimal places, sympy is used.
+  -- >>> from sympy import pi
+  -- >>> from sympy import evalf
+  -- >>> pi.evalf(160)
+  -- 3.141592653589793238462643383279502884197169399375105820
+  -- 97494459230781640628620899862803482534211706798214808651
+  -- 3282306647093844609550582231725359408128481117450
+    pi : constant string
+       := "3.141592653589793238462643383279502884197169399375105820"
+        & "97494459230781640628620899862803482534211706798214808651"
+        & "3282306647093844609550582231725359408128481117450";
+  -- >>> twopi = 2*pi
+  -- >>> twopi.evalf(160)
+  -- 6.283185307179586476925286766559005768394338798750211641
+  -- 94988918461563281257241799725606965068423413596429617302
+  -- 6564613294187689219101164463450718816256962234901
+    twopi : constant string
+          := "6.283185307179586476925286766559005768394338798750211641"
+           & "94988918461563281257241799725606965068423413596429617302"
+           & "6564613294187689219101164463450718816256962234901";
+  -- >>> pi2 = pi/2
+  -- >>> pi2.evalf(160)
+  -- 1.570796326794896619231321691639751442098584699687552910
+  -- 48747229615390820314310449931401741267105853399107404325
+  -- 6641153323546922304775291115862679704064240558725
+    pi2 : constant string
+        := "1.570796326794896619231321691639751442098584699687552910"
+         & "48747229615390820314310449931401741267105853399107404325"
+         & "6641153323546922304775291115862679704064240558725";
+  -- >>> pi4 = pi/4
+  -- >>> pi4.evalf(160)
+  -- 0.785398163397448309615660845819875721049292349843776455
+  -- 24373614807695410157155224965700870633552926699553702162
+  -- 83205766617734611523876455579313398520321202793626
+    pi4 : constant string
+        := "0.785398163397448309615660845819875721049292349843776455"
+         & "24373614807695410157155224965700870633552926699553702162"
+         & "83205766617734611523876455579313398520321202793626";
+  -- >>> threepi4 = 3*pi/4
+  -- >>> threepi4.evalf(160)
+  -- 2.356194490192344928846982537459627163147877049531329365
+  -- 73120844423086230471465674897102611900658780098661106488
+  -- 4961729985320383457162936673794019556096360838088
+    threepi4 : constant string
+             := "2.356194490192344928846982537459627163147877049531329365"
+              & "73120844423086230471465674897102611900658780098661106488"
+              & "4961729985320383457162936673794019556096360838088";
+  -- >>> pi1024 = pi/1024
+  -- >>> pi1024.evalf(160)
+  -- 0.003067961575771282459436175178983889535348798241577251
+  -- 77829584432842560195926387597522269025912316119920131649
+  -- 0735627252585052582626514240460669296297000469841260
+    pi1024 : constant string
+           := "0.003067961575771282459436175178983889535348798241577251"
+            & "77829584432842560195926387597522269025912316119920131649"
+            & "0735627252585052582626514240460669296297000469841260";
+
+    x : deca_double;
+    fail : boolean;
+
+  begin
+    new_line;
+    read(pi,x,fail);
+    if fail
+     then put_line("Reading pi from a string failed!");
+     else put_line("The deca double expansion of pi :"); Write(x);
+    end if;
+    read(twopi,x,fail);
+    if fail
+     then put_line("Reading twopi from a string failed!");
+     else put_line("The deca double expansion of 2*pi :"); Write(x);
+    end if;
+    read(pi2,x,fail);
+    if fail
+     then put_line("Reading pi2 from a string failed!");
+     else put_line("The deca double expansion of pi/2 :"); Write(x);
+    end if;
+    read(pi4,x,fail);
+    if fail
+     then put_line("Reading pi4 from a string failed!");
+     else put_line("The deca double expansion of pi/4 :"); Write(x);
+    end if;
+    read(threepi4,x,fail);
+    if fail
+     then put_line("Reading threepi4 from a string failed!");
+     else put_line("The deca double expansion of 3*pi/4 :"); Write(x);
+    end if;
+    read(pi1024,x,fail);
+    if fail
+     then put_line("Reading pi1024 from a string failed!");
+     else put_line("The deca double expansion of pi/1024 :"); Write(x);
+    end if;
+  end Write_Pi;
+
   procedure Main is
 
     ans : character;
@@ -450,8 +546,9 @@ package body Test_Deca_Doubles is
     put_line("  7. input and output");
     put_line("  8. Newton's method for sqrt(2)");
     put_line("  9. test the value of da_eps");
-    put("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
-    Ask_Alternative(ans,"123456789");
+    put_line("  A. write 10 leading doubles for pi and multiples");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, or A to select a test : ");
+    Ask_Alternative(ans,"123456789A");
     case ans is
       when '1' => Test_Addition_and_Subtraction;
       when '2' => Test_Multiplication_and_Division;
@@ -462,6 +559,7 @@ package body Test_Deca_Doubles is
       when '7' => Test_io;
       when '8' => Test_sqrt2;
       when '9' => Test_da_eps;
+      when 'A' => Write_Pi;
       when others => null;
     end case;
   end Main;
