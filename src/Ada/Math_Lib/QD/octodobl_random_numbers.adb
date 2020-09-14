@@ -1,5 +1,7 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
+with Octo_Double_Constants;
+with OctoDobl_Mathematical_Functions;
 
 package body OctoDobl_Random_Numbers is
 
@@ -64,5 +66,32 @@ package body OctoDobl_Random_Numbers is
     Random_Octo_Double(seed,imagpart);
     c := Create(realpart,imagpart);
   end Random_Complex_Number;
+
+  function Random1 return Complex_Number is
+
+    res : Complex_Number;
+    arg : octo_double := OctoDobl_Random_Numbers.Random;
+    cs,sn : octo_double;
+
+  begin
+    arg := arg*Octo_Double_Constants.pi;
+    cs := OctoDobl_Mathematical_Functions.cos(arg);
+    sn := OctoDobl_Mathematical_Functions.sin(arg);
+    res := create(cs,sn);
+    return res;
+  end Random1;
+
+  procedure Random1_Complex_Number
+              ( seed : in out integer32; c : out Complex_Number ) is
+
+    arg,cs,sn : octo_double;
+
+  begin
+    Random_Octo_Double(seed,arg);
+    arg := arg*Octo_Double_Constants.pi;
+    cs := OctoDobl_Mathematical_Functions.cos(arg);
+    sn := OctoDobl_Mathematical_Functions.sin(arg);
+    c := create(cs,sn);
+  end Random1_Complex_Number;
 
 end OctoDobl_Random_Numbers; 

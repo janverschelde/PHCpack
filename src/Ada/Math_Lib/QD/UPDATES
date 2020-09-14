@@ -1,3 +1,9 @@
+Mon 14 Sep 2020 : new {pentdobl,octodobl,decadobl}_complex_numbers_polar
+  with definitions for angle, root, and polar_exponentiation, applied
+  in {pentdobl,octodobl,decadobl}_random_numbers, with tests added to
+  test_{pentdobl,octodobl,decadobl}_complex.  Minor corrections to
+  tripdobl_random_numbers.ads and test_tripdobl_complex.adb.
+
 Sun 13 Sep 2020 : extended deca_double_constants with the table of sines
   and cosines of multiples of pi/1024, with the aid of sincostables.py,
   with the help of a new test procedure in test_deca_doubles.

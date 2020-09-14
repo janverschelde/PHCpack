@@ -40,7 +40,7 @@ package TripDobl_Random_Numbers is
   function Random1 return Complex_Number;
 
   -- DESCRIPTION :
-  --   Returns a random complex double double with modulus equal to one.
+  --   Returns a random complex triple double with modulus equal to one.
 
   procedure Random1_Complex_Number
               ( seed : in out integer32; c : out Complex_Number );

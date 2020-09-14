@@ -125,8 +125,8 @@ tripdobl_complex_numbers        : complex arithmetic with triple doubles
 tripdobl_complex_numbers_io     : input/output for triple double complex
 tripdobl_complex_ring           : ring of triple double complex numbers
 tripdobl_complex_ring-ffield    : field of triple double complex numbers
-tripdobl_random_numbers         : random numbers in triple double precision
 tripdobl_complex_numbers_polar  : polar view of triple double complex numbers
+tripdobl_random_numbers         : random numbers in triple double precision
 test_tripdobl_complex           : tests triple double complex arithmetic
 ts_tdcmplx                      : main test on triple double complex numbers
 ------------------------------------------------------------------------------
@@ -145,6 +145,7 @@ pentdobl_complex_numbers        : complex arithmetic with penta doubles
 pentdobl_complex_numbers_io     : input/output for penta double complex
 pentdobl_complex_ring           : ring of penta double complex numbers
 pentdobl_complex_ring-ffield    : field of penta double complex numbers
+pentdobl_complex_numbers_polar  : polar view of penta double complex numbers
 pentdobl_random_numbers         : random numbers in penta double precision
 test_pentdobl_complex           : test penta double complex arithmetic
 ts_pdcmplx                      : main test on penta double complex numbers
@@ -164,6 +165,7 @@ octodobl_complex_numbers        : complex arithmetic with octo doubles
 octodobl_complex_numbers_io     : input/output for octo double complex
 octodobl_complex_ring           : ring of octo double complex numbers
 octodobl_complex_ring-ffield    : field of octo double complex numbers
+octodobl_complex_numbers_polar  : polar view of octo double complex numbers
 octodobl_random_numbers         : random numbers in octo double precision
 test_octodobl_complex           : tests octo double complex arithmetic
 ts_odcmplx                      : main test on octo double complex numbers
@@ -184,6 +186,7 @@ decadobl_complex_numbers        : complex arithmetic with deca doubles
 decadobl_complex_numbers_io     : input/output for deca double complex
 decadobl_complex_ring           : ring of deca double complex numbers
 decadobl_complex_ring-ffield    : field of deca double complex numbers
+decadobl_complex_numbers_polar  : polar view of deca double complex numbers
 decadobl_random_numbers         : random numbers in deca double precision
 test_decadobl_complex           : tests deca double complex arithmetic
 ts_dacmplx                      : main test on deca double complex numbers

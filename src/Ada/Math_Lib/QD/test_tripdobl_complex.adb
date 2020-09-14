@@ -92,7 +92,7 @@ package body Test_TripDobl_Complex is
 
   begin
     new_line;
-    put_line("Solving x^d - c = 0, for a double double complex number c.");
+    put_line("Solving x^d - c = 0, for a triple double complex number c.");
     new_line;
     put("Give the degree d : "); get(d);
     Prompt_Complex_Number(c);
@@ -123,7 +123,7 @@ package body Test_TripDobl_Complex is
     put_line("  2. test addition and subtraction");
     put_line("  3. test multiplication and division");
     put_line("  4. generate a random complex number");
-    put_line("  5. test computation of primitive roots;");
+    put_line("  5. test computation of primitive roots");
     put("Type 1, 2, 3, 4, or 5 to select a test : ");
     Ask_Alternative(ans,"12345");
     case ans is
