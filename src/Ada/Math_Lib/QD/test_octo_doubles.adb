@@ -405,6 +405,48 @@ package body Test_Octo_Doubles is
     put_line("1 + od_eps/2 : "); put(one_plus_od_eps_half,127); new_line;
   end Test_od_eps;
 
+  procedure Log_exp_of_Pi is
+
+    od_pi : constant octo_double
+          := create( 3.14159265358979312E+00, 1.22464679914735321E-16,
+                    -2.99476980971833967E-33, 1.11245422086336528E-49,
+                     5.67223197964031574E-66, 1.74498621613524860E-83,
+                     6.02937273224953984E-100, 1.91012354687998999E-116);
+    exp_of_pi,log_of_exp_of_pi : octo_double;
+    log_of_pi,exp_of_log_of_pi : octo_double;
+    ans : character;
+    x,expx,logx,logexpx,explogx : octo_double;
+
+  begin
+    new_line;
+    put_line("testing log(exp(pi)) and exp(log(pi)) ...");
+    exp_of_pi := exp(od_pi);
+    put("     exp(pi) : "); put(exp_of_pi); new_line;
+    log_of_exp_of_pi := log(exp_of_pi);
+    put("log(exp(pi)) : "); put(log_of_exp_of_pi); new_line;
+    put("        pi   : "); put(od_pi); new_line;
+    put("  difference : "); put(log_of_exp_of_pi - od_pi,3); new_line;
+    log_of_pi := log(od_pi);
+    put("     log(pi) : "); put(log_of_pi); new_line;
+    exp_of_log_of_pi := exp(log_of_pi);
+    put("exp(log(pi)) : "); put(exp_of_log_of_pi); new_line;
+    put("        pi   : "); put(od_pi); new_line;
+    put("  difference : "); put(exp_of_log_of_pi - od_pi,3); new_line;
+    loop
+      put("Test a random number ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      x := abs(random);
+      expx := exp(x); logexpx := log(expx);
+      put("log(exp(x)) : "); put(logexpx); new_line;
+      put("        x   : "); put(x); new_line;
+      put(" difference : "); put(logexpx - x,3); new_line;
+      logx := log(x); explogx := exp(logx);
+      put("exp(log(x)) : "); put(explogx); new_line;
+      put("        x   : "); put(x); new_line;
+      put(" difference : "); put(explogx - x,3); new_line;
+    end loop;
+  end Log_exp_of_Pi;
+
   procedure Main is
 
     ans : character;
@@ -420,8 +462,9 @@ package body Test_Octo_Doubles is
     put_line("  6. input and output");
     put_line("  7. Newton's method for sqrt(2)");
     put_line("  8. test the value of od_eps");
-    put("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
-    Ask_Alternative(ans,"12345678");
+    put_line("  9. test log(exp(pi)) = pi = exp(log(pi))");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select a test : ");
+    Ask_Alternative(ans,"123456789");
     case ans is
       when '1' => Test_Add_and_Subtract;
       when '2' => Test_Multiplication_and_Division;
@@ -431,6 +474,7 @@ package body Test_Octo_Doubles is
       when '6' => Test_io;
       when '7' => Test_sqrt2;
       when '8' => Test_od_eps;
+      when '9' => Log_exp_of_Pi;
       when others => null;
     end case;
   end Main;

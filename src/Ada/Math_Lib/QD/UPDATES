@@ -5,6 +5,8 @@ Mon 14 Sep 2020 : new {pentdobl,octodobl,decadobl}_complex_numbers_polar
   tripdobl_random_numbers.ads and test_tripdobl_complex.adb.
   Improved the accuracy of exp() in penta_double_numbers.adb.
   Added a test procedure on exp and log in test_{triple,penta}_doubles.
+  Improved the accuracy of exp() in {octo,deca}_double_numbers.adb and
+  added a test on exp and log in test_{octo,deca}_doubles.
 
 Sun 13 Sep 2020 : extended deca_double_constants with the table of sines
   and cosines of multiples of pi/1024, with the aid of sincostables.py,

@@ -79,6 +79,11 @@ package Test_Deca_Doubles is
   --   Writes the deca double exponansion for the sine consine table
   --   as needed for the deca double constants.
 
+  procedure Log_exp_of_Pi;
+
+  -- DESCRIPTION :
+  --   Tests whether log(exp(pi)) = pi = exp(log(pi)).
+
   procedure Main;
 
   -- DESCRIPTION :

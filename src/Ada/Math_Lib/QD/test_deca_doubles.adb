@@ -5175,6 +5175,49 @@ package body Test_Deca_Doubles is
     end if;
   end Sine_Cosine_Table;
 
+  procedure Log_exp_of_Pi is
+
+    da_pi : constant deca_double
+          := create( 3.14159265358979312E+00, 1.22464679914735321E-16,
+                    -2.99476980971833967E-33, 1.11245422086336528E-49,
+                     5.67223197964031574E-66, 1.74498621613524860E-83,
+                     6.02937273224953984E-100, 1.91012354687998999E-116,
+                     3.04397816534429330E-133, -4.71430003123113544E-150);
+    exp_of_pi,log_of_exp_of_pi : deca_double;
+    log_of_pi,exp_of_log_of_pi : deca_double;
+    ans : character;
+    x,expx,logx,logexpx,explogx : deca_double;
+
+  begin
+    new_line;
+    put_line("testing log(exp(pi)) and exp(log(pi)) ...");
+    exp_of_pi := exp(da_pi);
+    put("     exp(pi) : "); put(exp_of_pi); new_line;
+    log_of_exp_of_pi := log(exp_of_pi);
+    put("log(exp(pi)) : "); put(log_of_exp_of_pi); new_line;
+    put("        pi   : "); put(da_pi); new_line;
+    put("  difference : "); put(log_of_exp_of_pi - da_pi,3); new_line;
+    log_of_pi := log(da_pi);
+    put("     log(pi) : "); put(log_of_pi); new_line;
+    exp_of_log_of_pi := exp(log_of_pi);
+    put("exp(log(pi)) : "); put(exp_of_log_of_pi); new_line;
+    put("        pi   : "); put(da_pi); new_line;
+    put("  difference : "); put(exp_of_log_of_pi - da_pi,3); new_line;
+    loop
+      put("Test a random number ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      x := abs(random);
+      expx := exp(x); logexpx := log(expx);
+      put("log(exp(x)) : "); put(logexpx); new_line;
+      put("        x   : "); put(x); new_line;
+      put(" difference : "); put(logexpx - x,3); new_line;
+      logx := log(x); explogx := exp(logx);
+      put("exp(log(x)) : "); put(explogx); new_line;
+      put("        x   : "); put(x); new_line;
+      put(" difference : "); put(explogx - x,3); new_line;
+    end loop;
+  end Log_exp_of_Pi;
+
   procedure Main is
 
     ans : character;
@@ -5193,8 +5236,9 @@ package body Test_Deca_Doubles is
     put_line("  9. test the value of da_eps");
     put_line("  A. write 10 leading doubles for pi and multiples");
     put_line("  B. write 10 leading doubles for sine and cosine table");
-    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, or B to select a test : ");
-    Ask_Alternative(ans,"123456789AB");
+    put_line("  C. test log(exp(pi)) = pi = exp(log(pi))");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, or C to select a test : ");
+    Ask_Alternative(ans,"123456789ABC");
     case ans is
       when '1' => Test_Addition_and_Subtraction;
       when '2' => Test_Multiplication_and_Division;
@@ -5207,6 +5251,7 @@ package body Test_Deca_Doubles is
       when '9' => Test_da_eps;
       when 'A' => Write_Pi;
       when 'B' => Sine_Cosine_Table;
+      when 'C' => Log_exp_of_Pi;
       when others => null;
     end case;
   end Main;

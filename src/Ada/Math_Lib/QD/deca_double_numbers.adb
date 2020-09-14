@@ -1510,7 +1510,7 @@ package body Deca_Double_Numbers is
     pragma Import(C,C_ldexp,External_Name => "ldexp");
 
     res : deca_double;
-    k : constant double_float := C_ldexp(1.0,16);
+    k : constant double_float := C_ldexp(1.0,26);
     inv_k : constant double_float := 1.0/k;
     e0 : constant double_float :=  2.71828182845904509E+00;
     e1 : constant double_float :=  1.44564689172925016E-16;
@@ -1637,9 +1637,9 @@ package body Deca_Double_Numbers is
         s := s + t;
         exit when abs(t.right_thumb) <= tol;
         cnt := cnt + 1;
-        exit when (cnt >= 9);
+        exit when (cnt >= 15);
       end loop;
-      for i in 1..16 loop -- 16 times s = mul_pwr2(s,2.0) + sqr(s);
+      for i in 1..26 loop -- 26 times s = mul_pwr2(s,2.0) + sqr(s);
         p := Mul_pwr2(s,2.0);
         t := s*s;
         s := p + t;

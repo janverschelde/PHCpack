@@ -62,6 +62,11 @@ package Test_Octo_Doubles is
   --   when added to one in octo double precision,
   --   when printed with precision equal to 127.
 
+  procedure Log_exp_of_Pi;
+
+  -- DESCRIPTION :
+  --   Tests whether log(exp(pi)) = pi = exp(log(pi)).
+
   procedure Main;
 
   -- DESCRIPTION :
