@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Mathematical_Functions;
 with Double_Double_Basics;
+with Double_Double_Numbers;
 with Fast_Double_Renormalizations;       use Fast_Double_Renormalizations;
 
 package body Penta_Double_Numbers is
@@ -123,6 +124,48 @@ package body Penta_Double_Numbers is
                 res.thumb,res.index,res.middle,res.ring,res.pink);
     return res;
   end floor;
+
+  function nint ( x : penta_double ) return penta_double is
+
+    res : penta_double;
+    x0,x1,x2,x3,x4,x5 : double_float;
+
+  begin
+    x1 := 0.0; x2 := 0.0; x3 := 0.0; x4 := 0.0; x5 := 0.0;
+    x0 := Double_Double_Numbers.nint(x.thumb);
+    if x0 = x.thumb then      -- first double is already an integer
+      x1 := Double_Double_Numbers.nint(x.index);
+      if x1 = x.index then    -- second double is already an integer
+        x2 := Double_Double_Numbers.nint(x.ring);
+        if x2 = x.ring then  -- third double is already an integer
+          x3 := Double_Double_Numbers.nint(x.middle);
+          if x3 = x.middle then  -- 4-th double is an integer
+            x4 := Double_Double_Numbers.nint(x.pink);
+          else
+            if abs(x3 - x.ring) = 0.5 and x.pink < 0.0
+             then x3 := x3 - 1.0;
+            end if;
+          end if;
+        else
+          if abs(x2 - x.middle) = 0.5 and x.ring < 0.0
+           then x2 := x2 - 1.0;
+          end if;
+        end if;
+      else
+        if abs(x1 - x.index) = 0.5 and x.middle < 0.0
+         then x1 := x1 - 1.0;
+        end if;
+      end if;
+    else                     -- first double is not an integer
+      if abs(x0 - x.thumb) = 0.5 and x.index < 0.0
+       then x0 := x0 - 1.0;
+      end if;
+    end if;
+    fast_renorm(x0,x1,x2,x3,x4,x5,
+                res.thumb,res.index,res.middle,res.ring,res.pink);
+    return res;
+  end nint;
+
 
 -- SELECTORS :
 

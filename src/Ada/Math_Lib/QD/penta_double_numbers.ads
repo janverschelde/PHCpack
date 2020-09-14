@@ -63,6 +63,11 @@ package Penta_Double_Numbers is
   -- DESCRIPTION :
   --   Returns nearest lower integer to x.
 
+  function nint ( x : penta_double ) return penta_double;
+
+  -- DESCRIPTION :
+  --   Returns the nearest integer to x.
+
 -- SELECTORS :
 
   function thumb_part ( x : penta_double ) return double_float;
