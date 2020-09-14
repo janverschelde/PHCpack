@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Mathematical_Functions;
 with Double_Double_Basics;
+with Double_Double_Numbers;
 with Fast_Double_Renormalizations;       use Fast_Double_Renormalizations;
 
 package body Deca_Double_Numbers is
@@ -166,6 +167,86 @@ package body Deca_Double_Numbers is
                 res.left_ring,res.left_pink);
     return res;
   end floor;
+
+  function nint ( x : deca_double ) return deca_double is
+
+    res : deca_double;
+    x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 : double_float;
+
+  begin
+    x1 := 0.0; x2 := 0.0; x3 := 0.0; x4 := 0.0; x5 := 0.0;
+    x6 := 0.0; x7 := 0.0; x8 := 0.0; x9 := 0.0; x10 := 0.0;
+    x0 := Double_Double_Numbers.nint(x.right_thumb);
+    if x0 = x.right_thumb then      -- first double is already an integer
+      x1 := Double_Double_Numbers.nint(x.right_index);
+      if x1 = x.right_index then    -- second double is already an integer
+        x2 := Double_Double_Numbers.nint(x.right_middle);
+        if x2 = x.right_middle then  -- third double is already an integer
+          x3 := Double_Double_Numbers.nint(x.right_ring);
+          if x3 = x.right_ring then  -- 4-th double is an integer
+            x4 := Double_Double_Numbers.nint(x.right_pink);
+            if x4 = x.right_pink then  -- 5-th double is an integer
+              x5 := Double_Double_Numbers.nint(x.left_thumb);
+              if x5 = x.left_thumb then  -- 6-th double is an integer
+                x6 := Double_Double_Numbers.nint(x.left_index);
+                if x6 = x.left_index then  -- 7-th double is an integer
+                  x7 := Double_Double_Numbers.nint(x.left_middle);
+                  if x7 = x.left_middle then  -- 8-th double is an integer
+                    x8 := Double_Double_Numbers.nint(x.left_ring);
+                    if x8 = x.left_ring then  -- 9-th double is an integer
+                      x9 := Double_Double_Numbers.nint(x.left_ring);
+                    else
+                      if abs(x8 - x.left_ring) = 0.5 and x.left_pink < 0.0
+                       then x8 := x8 - 1.0;
+                      end if;
+                    end if;
+                  else
+                    if abs(x7 - x.left_middle) = 0.5 and x.left_ring < 0.0
+                     then x7 := x7 - 1.0;
+                    end if;
+                  end if;
+                else
+                  if abs(x6 - x.left_index) = 0.5 and x.left_middle < 0.0
+                   then x6 := x6 - 1.0;
+                  end if;
+                end if;
+              else
+                if abs(x5 - x.left_thumb) = 0.5 and x.left_index < 0.0
+                 then x5 := x5 - 1.0;
+                end if;
+              end if;
+            else
+              if abs(x4 - x.right_pink) = 0.5 and x.left_thumb < 0.0
+               then x4 := x4 - 1.0;
+              end if;
+            end if;
+          else
+            if abs(x3 - x.right_ring) = 0.5 and x.right_pink < 0.0
+             then x3 := x3 - 1.0;
+            end if;
+          end if;
+        else
+          if abs(x2 - x.right_middle) = 0.5 and x.right_ring < 0.0
+           then x2 := x2 - 1.0;
+          end if;
+        end if;
+      else
+        if abs(x1 - x.right_index) = 0.5 and x.right_middle < 0.0
+         then x1 := x1 - 1.0;
+        end if;
+      end if;
+    else                     -- first double is not an integer
+      if abs(x0 - x.right_thumb) = 0.5 and x.right_index < 0.0
+       then x0 := x0 - 1.0;
+      end if;
+    end if;
+    fast_renorm(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,
+                res.right_thumb,res.right_index,res.right_middle,
+                res.right_ring,res.right_pink,
+                res.left_thumb,res.left_index,res.left_middle,
+                res.left_ring,res.left_pink);
+    return res;
+  end nint;
 
 -- SELECTORS :
 

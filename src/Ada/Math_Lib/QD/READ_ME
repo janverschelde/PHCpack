@@ -113,6 +113,7 @@ fast_double_renormalizations    : renormalizations for multiple doubles
 triple_double_numbers           : defines triple double numbers and arithmetic
 triple_double_numbers_io        : input and output of triple double numbers
 test_triple_doubles             : test procedures on triple doubles
+triple_double_constants         : constants in triple double precision
 ts_tridbl                       : main test on triple double arithmetic
 tripdobl_mathematical_functions : triple double SQRT and Radius
 test_tripdobl_functions         : test triple double functions
@@ -132,6 +133,7 @@ ts_tdcmplx                      : main test on triple double complex numbers
 penta_double_numbers            : defines penta double numbers and arithmetic
 penta_double_numbers_io         : input and output of penta double numbers
 test_penta_doubles              : test procedures on penta doubles
+penta_double_constants          : constants in penta double precision
 ts_pentadbl                     : main test on penta double arithmetic
 pentdobl_mathematical_functions : penta double SQRT and Radius
 test_pentdobl_functions         : test penta double functions
@@ -150,6 +152,7 @@ ts_pdcmplx                      : main test on penta double complex numbers
 octo_double_numbers             : defines octo double numbers and arithmetic
 octo_double_numbers_io          : input and output of octo double numbers
 test_octo_doubles               : test procedures on octo doubles
+octo_double_constants           : constants in octo double precision
 ts_octdbl                       : main test on octo double arithmetic
 octodobl_mathematical_functions : octo double SQRT and Radius
 test_octodobl_functions         : test octo double functions
@@ -168,6 +171,8 @@ ts_odcmplx                      : main test on octo double complex numbers
 deca_double_numbers             : defines deca double numbers and arithmetic
 deca_double_numbers_io          : input and output of deca double numbers
 test_deca_doubles               : test procedures on deca doubles
+sincostables.py                 : sympy script for deca double constants
+deca_double_constants           : constants in deca double precision
 ts_decadbl                      : main test on deca double arithmetic
 decadobl_mathematical_functions : deca double SQRT and Radius
 test_decadobl_functions         : tests deca double functions

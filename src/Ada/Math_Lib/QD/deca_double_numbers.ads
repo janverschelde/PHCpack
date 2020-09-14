@@ -65,6 +65,11 @@ package Deca_Double_Numbers is
   -- DESCRIPTION :
   --   Returns nearest lower integer to x.
 
+  function nint ( x : deca_double ) return deca_double;
+
+  -- DESCRIPTION :
+  --   Returns the nearest integer to x.
+
 -- SELECTORS :
 
   function thumb_right ( x : deca_double ) return double_float;

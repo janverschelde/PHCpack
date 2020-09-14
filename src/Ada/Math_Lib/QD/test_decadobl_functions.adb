@@ -69,6 +69,50 @@ package body Test_DecaDobl_Functions is
     end loop;
   end Test_Radius;
 
+  procedure Test_SINCOS is
+
+    x,s,c,y,t,a,inv_s,inv_c,err : deca_double;
+    one : constant deca_double := create(1.0);
+    ans : character;
+
+  begin
+    new_line;
+    put_line("testing sin and cos function ...");
+    loop
+      put("generate random number ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then x := DecaDobl_Random_Numbers.Random;
+       else put("give x : "); get(x);
+      end if;
+                   put("     x : "); put(x); new_line;
+      s := SIN(x); put("sin(x) : "); put(s); new_line;
+      c := COS(x); put("cos(x) : "); put(c); new_line;
+      y := s*s + c*c;
+      put("sin(x)^2 + cos(x)^2 : "); put(y); new_line;
+      err := y - one;
+      put("sin(x)^2 + cos(x)^2 - 1 : "); put(err,3); new_line;
+      put("sin(x)/cos(x) : "); put(s/c); new_line;
+      t := tan(x);
+      put("       tan(x) : "); put(t); new_line;
+      a := arctan(t);
+      put("    arctan(tan(x)) : "); put(a); new_line;
+      err := x - a;
+      put("x - arctan(tan(x)) : "); put(err,3); new_line;
+      inv_s := arcsin(s);
+      put("arcsin(sin(x)) : "); put(inv_s); new_line;
+      err := x - inv_s;
+      put("x - arcsin(sin(x)) : "); put(err,3); new_line;
+      inv_c := arccos(c);
+      put("arccos(cos(x)) : "); put(inv_c); new_line;
+      err := x - inv_c;
+      put("x - arccos(cos(x)) : "); put(err,3); new_line;
+      put("Test more ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end Test_SINCOS;
+
   procedure Main is
 
     ans : character;
@@ -78,11 +122,14 @@ package body Test_DecaDobl_Functions is
     put_line("MENU to test deca double mathematical functions :");
     put_line("  1. test square root of deca doubles");
     put_line("  2. test radius for deca doubles");
-    put("Type 1 or 2 to select a test : "); Ask_Alternative(ans,"12");
-    if ans = '1'
-     then Test_SQRT;
-     else Test_Radius;
-    end if;
+    put_line("  3. test cos, sin, tan, and their inverses");
+    put("Type 1, 2, or 3 to select a test : "); Ask_Alternative(ans,"123");
+    case ans is
+      when '1' => Test_SQRT;
+      when '2' => Test_Radius;
+      when '3' => Test_SINCOS;
+      when others => null;
+    end case;
   end Main;
 
 end Test_DecaDobl_Functions;

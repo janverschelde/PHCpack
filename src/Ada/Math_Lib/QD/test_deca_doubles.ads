@@ -73,6 +73,12 @@ package Test_Deca_Doubles is
   --   Writes the deca double expansion for Pi and multiples,
   --   as needed for the deca double constants.
 
+  procedure Sine_Cosine_Table;
+
+  -- DESCRIPTION :
+  --   Writes the deca double exponansion for the sine consine table
+  --   as needed for the deca double constants.
+
   procedure Main;
 
   -- DESCRIPTION :
