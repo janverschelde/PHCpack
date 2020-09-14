@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Mathematical_Functions;
 with Double_Double_Basics;
+with Double_Double_Numbers;
 with Fast_Double_Renormalizations;       use Fast_Double_Renormalizations;
 
 package body Octo_Double_Numbers is
@@ -154,6 +155,70 @@ package body Octo_Double_Numbers is
                 res.hihilo,res.lohilo,res.hilolo,res.lololo);
     return res;
   end floor;
+
+  function nint ( x : octo_double ) return octo_double is
+
+    res : octo_double;
+    x0,x1,x2,x3,x4,x5,x6,x7,x8 : double_float;
+
+  begin
+    x1 := 0.0; x2 := 0.0; x3 := 0.0; x4 := 0.0; x5 := 0.0;
+    x6 := 0.0; x7 := 0.0; x8 := 0.0;
+    x0 := Double_Double_Numbers.nint(x.hihihi);
+    if x0 = x.hihihi then      -- first double is already an integer
+      x1 := Double_Double_Numbers.nint(x.lohihi);
+      if x1 = x.lohihi then    -- second double is already an integer
+        x2 := Double_Double_Numbers.nint(x.hilohi);
+        if x2 = x.hilohi then  -- third double is already an integer
+          x3 := Double_Double_Numbers.nint(x.lolohi);
+          if x3 = x.lolohi then  -- 4-th double is an integer
+            x4 := Double_Double_Numbers.nint(x.hihilo);
+            if x4 = x.hihilo then  -- 5-th double is an integer
+              x5 := Double_Double_Numbers.nint(x.lohilo);
+              if x5 = x.lohilo then  -- 6-th double is an integer
+                x6 := Double_Double_Numbers.nint(x.hilolo);
+                if x6 = x.hilolo then  -- 7-th double is an integer
+                  x7 := Double_Double_Numbers.nint(x.lololo);
+                else
+                  if abs(x6 - x.hilolo) = 0.5 and x.lololo < 0.0
+                   then x6 := x6 - 1.0;
+                  end if;
+                end if;
+              else
+                if abs(x5 - x.lohilo) = 0.5 and x.hilolo < 0.0
+                 then x5 := x5 - 1.0;
+                end if;
+              end if;
+            else
+              if abs(x4 - x.hihilo) = 0.5 and x.lohilo < 0.0
+               then x4 := x4 - 1.0;
+              end if;
+            end if;
+          else
+            if abs(x3 - x.lolohi) = 0.5 and x.hihilo < 0.0
+             then x3 := x3 - 1.0;
+            end if;
+          end if;
+        else
+          if abs(x2 - x.hilohi) = 0.5 and x.lolohi < 0.0
+           then x2 := x2 - 1.0;
+          end if;
+        end if;
+      else
+        if abs(x1 - x.lohihi) = 0.5 and x.hilohi < 0.0
+         then x1 := x1 - 1.0;
+        end if;
+      end if;
+    else                     -- first double is not an integer
+      if abs(x0 - x.hihihi) = 0.5 and x.lohihi < 0.0
+       then x0 := x0 - 1.0;
+      end if;
+    end if;
+    fast_renorm(x0,x1,x2,x3,x4,x5,x6,x7,x8,
+                res.hihihi,res.lohihi,res.hilohi,res.lolohi,
+                res.hihilo,res.lohilo,res.hilolo,res.lololo);
+    return res;
+  end nint;
 
 -- SELECTORS :
 

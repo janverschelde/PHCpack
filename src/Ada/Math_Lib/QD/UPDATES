@@ -3,6 +3,9 @@ Sun 13 Sep 2020 : extended deca_double_constants with the table of sines
   with the help of a new test procedure in test_deca_doubles.
   Added a nint function to deca_double_numbers.  Added trig functions to
   decadobl_mathematical_functions, with tests in test_decadobl_functions.
+  Added nint to octo_double_numbers, extended octo_double_constants.ads,
+  defined trig functions to octodobl_mathematical_functions, with tests
+  added in test_octodobl_functions.
 
 Sat 12 Sep 2020 : to {penta,octo,deca}_double_constants.ads, added 
   inverse factorials.

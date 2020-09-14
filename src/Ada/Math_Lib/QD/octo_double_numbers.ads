@@ -65,6 +65,11 @@ package Octo_Double_Numbers is
   -- DESCRIPTION :
   --   Returns nearest lower integer to x.
 
+  function nint ( x : octo_double ) return octo_double;
+
+  -- DESCRIPTION :
+  --   Returns the nearest integer to x.
+
 -- SELECTORS :
 
   function hihihi_part ( x : octo_double ) return double_float;
