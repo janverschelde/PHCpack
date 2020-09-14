@@ -50,6 +50,11 @@ package Test_Penta_Doubles is
   --   when added to one in penta double precision,
   --   when printed with precision equal to 79.
 
+  procedure Log_exp_of_Pi;
+
+  -- DESCRIPTION :
+  --   Tests whether log(exp(pi)) = pi = exp(log(pi)).
+
   procedure Main;
 
   -- DESCRIPTION :

@@ -9,6 +9,7 @@ with QuadDobl_Random_Numbers;            use QuadDobl_Random_Numbers;
 with QuadDobl_Mathematical_Functions;
 with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
 with Triple_Double_Constants;
+with TripDobl_Random_Numbers;
 
 package body Test_Triple_Doubles is
 
@@ -177,6 +178,46 @@ package body Test_Triple_Doubles is
     put_line("1 + td_eps/2 : "); put(one_plus_td_eps_half,47); new_line;
   end Test_td_eps;
 
+  procedure Log_exp_of_Pi is
+
+    td_pi : constant triple_double
+          := create( 3.141592653589793116e+00, 1.224646799147353207e-16,
+                    -2.994769809718339666e-33);
+    exp_of_pi,log_of_exp_of_pi : triple_double;
+    log_of_pi,exp_of_log_of_pi : triple_double;
+    ans : character;
+    x,expx,logx,logexpx,explogx : triple_double;
+
+  begin
+    new_line;
+    put_line("testing log(exp(pi)) and exp(log(pi)) ...");
+    exp_of_pi := exp(td_pi);
+    put("     exp(pi) : "); put(exp_of_pi); new_line;
+    log_of_exp_of_pi := log(exp_of_pi);
+    put("log(exp(pi)) : "); put(log_of_exp_of_pi); new_line;
+    put("        pi   : "); put(td_pi); new_line;
+    put("  difference : "); put(log_of_exp_of_pi - td_pi,3); new_line;
+    log_of_pi := log(td_pi);
+    put("     log(pi) : "); put(log_of_pi); new_line;
+    exp_of_log_of_pi := exp(log_of_pi);
+    put("exp(log(pi)) : "); put(exp_of_log_of_pi); new_line;
+    put("        pi   : "); put(td_pi); new_line;
+    put("  difference : "); put(exp_of_log_of_pi - td_pi,3); new_line;
+    loop
+      put("Test a random number ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      x := abs(TripDobl_Random_Numbers.Random);
+      expx := exp(x); logexpx := log(expx);
+      put("log(exp(x)) : "); put(logexpx); new_line;
+      put("        x   : "); put(x); new_line;
+      put(" difference : "); put(logexpx - x,3); new_line;
+      logx := log(x); explogx := exp(logx);
+      put("exp(log(x)) : "); put(explogx); new_line;
+      put("        x   : "); put(x); new_line;
+      put(" difference : "); put(explogx - x,3); new_line;
+    end loop;
+  end Log_exp_of_Pi;
+
   procedure Main is
 
     ans : character;
@@ -189,14 +230,16 @@ package body Test_Triple_Doubles is
     put_line("  3. input and output");
     put_line("  4. Newton's method for sqrt(2)");
     put_line("  5. test the value of td_eps");
-    put("Type 1, 2, 3, 4, or 5 to select a test : ");
-    Ask_Alternative(ans,"12345");
+    put_line("  6. test log(exp(pi)) = pi = exp(log(pi))");
+    put("Type 1, 2, 3, 4, 5, or 6 to select a test : ");
+    Ask_Alternative(ans,"123456");
     case ans is
       when '1' => Test_Basic_Arithmetic;
       when '2' => Test_Read;
       when '3' => Test_io;
       when '4' => Test_sqrt2;
       when '5' => Test_td_eps;
+      when '6' => Log_exp_of_Pi;
       when others => null;
     end case;
   end Main;
