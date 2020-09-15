@@ -30,7 +30,7 @@ package body PentDobl_Random_Vectors is
 
   begin
     for i in res'range loop
-      res(i) := PentDobl_Random_Numbers.Random;
+      res(i) := PentDobl_Random_Numbers.Random1;
     end loop;
     return res;
   end Random_Vector;
@@ -40,7 +40,7 @@ package body PentDobl_Random_Vectors is
                 v : out PentDobl_Complex_Vectors.Vector ) is
   begin
     for i in v'range loop
-      PentDobl_Random_Numbers.Random_Complex_Number(seed,v(i));
+      PentDobl_Random_Numbers.Random1_Complex_Number(seed,v(i));
     end loop;
   end Random_Vector;
 

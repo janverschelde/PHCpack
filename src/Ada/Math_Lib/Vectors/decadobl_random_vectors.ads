@@ -30,7 +30,7 @@ package DecaDobl_Random_Vectors is
 
   -- DESCRIPTION :
   --   Returns a vector of range first..last with random deca
-  --   double complex numbers with real and imaginary parts in [-1,+1].
+  --   double complex numbers on the unit circle.
 
   procedure Random_Vector
               ( seed : in out integer32;
@@ -38,7 +38,7 @@ package DecaDobl_Random_Vectors is
 
   -- DESRIPTION :
   --   Given a seed, generates a vector v of random complex numbers of
-  --   deca double precision with real and imaginary parts in [-1,+1].
+  --   deca double precision on the unit circle.
   --   The seed is updated so the next call returns a different v.
 
 end DecaDobl_Random_Vectors;

@@ -30,7 +30,7 @@ package body DecaDobl_Random_Vectors is
 
   begin
     for i in res'range loop
-      res(i) := DecaDobl_Random_Numbers.Random;
+      res(i) := DecaDobl_Random_Numbers.Random1;
     end loop;
     return res;
   end Random_Vector;
@@ -40,7 +40,7 @@ package body DecaDobl_Random_Vectors is
                 v : out DecaDobl_Complex_Vectors.Vector ) is
   begin
     for i in v'range loop
-      DecaDobl_Random_Numbers.Random_Complex_Number(seed,v(i));
+      DecaDobl_Random_Numbers.Random1_Complex_Number(seed,v(i));
     end loop;
   end Random_Vector;
 

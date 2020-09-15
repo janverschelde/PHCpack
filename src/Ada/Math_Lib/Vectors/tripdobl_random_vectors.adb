@@ -30,7 +30,7 @@ package body TripDobl_Random_Vectors is
 
   begin
     for i in res'range loop
-      res(i) := TripDobl_Random_Numbers.Random;
+      res(i) := TripDobl_Random_Numbers.Random1;
     end loop;
     return res;
   end Random_Vector;
@@ -40,7 +40,7 @@ package body TripDobl_Random_Vectors is
                 v : out TripDobl_Complex_Vectors.Vector ) is
   begin
     for i in v'range loop
-      TripDobl_Random_Numbers.Random_Complex_Number(seed,v(i));
+      TripDobl_Random_Numbers.Random1_Complex_Number(seed,v(i));
     end loop;
   end Random_Vector;
 

@@ -1,3 +1,6 @@
+Tue 15 Sep 2020 : changed {tripdobl,pentdobl,octodobl,decadobl}_random_vectors
+  so a random complex vector has all elements on the unit circle.
+
 Sun 30 Aug 2020 : instantiated vectors in triple, penta, octo, and deca
   double precision: {triple,penta,octo,deca}_double_vectors,
   with io: {triple,penta,octo,deca}_double_vectors_io.
