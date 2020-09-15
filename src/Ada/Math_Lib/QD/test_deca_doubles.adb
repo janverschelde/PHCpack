@@ -241,6 +241,109 @@ package body Test_Deca_Doubles is
        := "0.00000000000000281145725434552076319894558301032001623349273"
         & "5204531033973922240339918522302587039592953069454781250610693"
         & "498959916638099022163759169672646174357970187413075679";
+    -- >>> from sympy import factorial, evalf
+    -- >>> f = [1/factorial(k) for k in range(17,17+24)]
+    -- >>> for x in f: print(x.evalf(160))
+    -- the first number is f14, as a check ...
+    f15 : constant string
+       := "0.00000000000000015619206968586226462216364350057333423519404"
+        & "0844696168554106791129995473461254835532941837191932291700594"
+        & "0832755509243388345646532872040358985754427881896153155";
+    f16 : constant string
+       := "0.00000000000000000822063524662432971695598123687228074922073"
+        & "8991826114134426673217368182813750254501733780904838541668452"
+        & "320172397417070464977087015116001889398707515167874490291";
+    f17 : constant string
+       := "0.00000000000000000041103176233121648584779906184361403746103"
+        & "6949591305706721333660868409140687512725086689045241927083422"
+        & "6160086198708535232488543507558000944699353757583937245145";
+    f18 : constant string
+       := "0.00000000000000000001957294106339126123084757437350543035528"
+        & "7473790062176510539698136590911461310129766032811678187003972"
+        & "50552421999385016777375496908360952830809216075039970116736";
+    f19 : constant string
+       := "0.00000000000000000000088967913924505732867488974425024683433"
+        & "1248808639189841388168097117768702786824080274218712644863816"
+        & "9320692827269931894442615895038004331049132800341090773257891";
+    f20 : constant string
+       := "0.00000000000000000000003868170170630684037716911931522812323"
+        & "1793426462573471364702960744250813164644525229313857071515818"
+        & "12748127316204318214975050389146958404803970782756995988372996";
+    f21 : constant string
+       := "0.00000000000000000000000161173757109611834904871330480117180"
+        & "1324726102607227973529290031010450548526855217888077377979825"
+        & "755311719715085132589572937662144566002001654492815414995155415";
+    f22 : constant string
+       := "0.00000000000000000000000006446950284384473396194853219204687"
+        & "2052989044104289118941171601240418021941074208715523095119193"
+        & "03021246878860340530358291750648578264008006617971261659980621660";
+    f23 : constant string
+       := "0.00000000000000000000000000247959626322479746007494354584795"
+        & "6617422655542472658420814292355400693151579777258289349812276"
+        & "655008171876484746357830112211787914716926156391527408330761777561";
+    f24 : constant string
+       := "0.000000000000000000000000000091836898637955461484257168364739133"
+        & "97861687194343179336349230945928493153999175030701295601024648178"
+        & "414357350912436407823006621906358985764413064475299117694672";
+    f25 : constant string
+       := "0.000000000000000000000000000003279889237069837910152041727312111"
+        & "92780774542655113547726758248068874755499970536810760557179451720"
+        & "6576556196754441574222502364966556780630147523026892542033811";
+    f26 : constant string
+       := "0.000000000000000000000000000000113099628864477169315587645769383"
+        & "16992440501470865984404370974071340508810343811614164157144119024"
+        & "85026398688536014335938793918953985096769016387250652600701314";
+    f27 : constant string
+       := "0.000000000000000000000000000000003769987628815905643852921525646"
+        & "10566414683382362199480145699135711350293678127053805471904803967"
+        & "4950087995628453381119795979729846616989230054624168842002337714";
+    f28 : constant string
+       := "0.0000000000000000000000000000000001216125041553517949629974685692"
+        & "292149724785104394191871437739147455968689284280818727328725174088"
+        & "693576772783372058425740638622531166770719372459409303871721843";
+    f29 : constant string
+       := "0.0000000000000000000000000000000000038003907548547435925936708927"
+        & "884129678899534512318495982429348357999021540133775585229022661690"
+        & "27167427414948037682580439495695409896158498038935654074599130760";
+    f30 : constant string
+       := "0.0000000000000000000000000000000000001151633562077195028058688149"
+        & "329822111481804076130863514619071162363606713337387138946334020051"
+        & "220353765883317587176539527119907699968532878193616864871090645685";
+    f31 : constant string
+       := "0.00000000000000000000000000000000000000338715753552116184723143"
+        & "5733323006210240600223914304454761974006951784450992315114548041"
+        & "2354447657463702450517269898221385879638234368614064518143084443"
+        & "84252015";
+    f32 : constant string
+       := "0.00000000000000000000000000000000000000009677592958631890992089"
+        & "8163809228748864017149254694412993199257341479555742637574701372"
+        & "6067269933070391498586207711377753882275378124817544700518373841"
+        & "2526434328";
+    f33 : constant string
+       := "0.00000000000000000000000000000000000000000268822026628663638669"
+        & "1615661367465246222698590408178138699979370596654326184377075038"
+        & "1279646387029733097182950214204937607840982725689376241681065940"
+        & "03479565091";
+    f34 : constant string
+       := "0.00000000000000000000000000000000000000000007265460179153071315"
+        & "3827450307228790438451313254275084829729172178287954761739920946"
+        & "9764314767217019813437377032816349665076783316910523682207596376"
+        & "7576971797543";
+    f35 : constant string
+       := "0.00000000000000000000000000000000000000000000191196320504028192"
+        & "5100722376506020801011876664586186442887609794165472493729997919"
+        & "6572745125453079468774667816653061833291494297813434833742305167"
+        & "80941308367775";
+    f36 : constant string
+       := "0.00000000000000000000000000000000000000000000004902469756513543"
+        & "3976941599397590276949022478579132985715066917799114679326410203"
+        & "0681352439114181524840376097862899021366448571738806021378007824"
+        & "8156259765045576";
+    f37 : constant string
+       := "0.00000000000000000000000000000000000000000000000122561743912838"
+        & "5849423539984939756923725561964478324642876672944977866983160255"
+        & "0767033810977854538121009402446572475534161214293470150534450195"
+        & "62039064941261394";
 
     x : deca_double;
     fail : boolean;
@@ -364,6 +467,186 @@ package body Test_Deca_Doubles is
     if fail
      then put_line("The read procedure reports failure!");
      else put_line("All parts of the i_fac(14) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f15,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(15) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f16,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(16) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f17,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(17) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f18,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(18) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f19,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(19) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f20,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(20) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f21,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(21) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f22,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(22) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f23,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(23) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f24,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(24) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f25,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(25) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f26,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(26) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f27,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(27) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f28,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(28) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f29,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(29) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f30,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(30) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f31,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(31) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f32,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(32) read :"); Write(x);
+    end if;
+    read(f33,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(33) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f34,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(34) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f35,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(35) read :"); Write(x);
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    read(f36,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(36) read :"); Write(x);
+    end if;
+    read(f37,x,fail);
+    new_line;
+    if fail
+     then put_line("The read procedure reports failure!");
+     else put_line("All parts of the i_fac(37) read :"); Write(x);
     end if;
   end inverse_factorials;
 
