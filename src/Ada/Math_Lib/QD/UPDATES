@@ -1,3 +1,6 @@
+Tue 15 Sep 2020 : extended {penta,octo}_double_constants.ads with enough
+  inverse factorials so primitive complex roots are sufficiently accurate.
+
 Mon 14 Sep 2020 : new {pentdobl,octodobl,decadobl}_complex_numbers_polar
   with definitions for angle, root, and polar_exponentiation, applied
   in {pentdobl,octodobl,decadobl}_random_numbers, with tests added to
@@ -7,6 +10,8 @@ Mon 14 Sep 2020 : new {pentdobl,octodobl,decadobl}_complex_numbers_polar
   Added a test procedure on exp and log in test_{triple,penta}_doubles.
   Improved the accuracy of exp() in {octo,deca}_double_numbers.adb and
   added a test on exp and log in test_{octo,deca}_doubles.
+  To test_deca_doubles.adb added the computation of more inverse factorials,
+  defined in deca_double_constants.ads, for accurate primitive complex roots.
 
 Sun 13 Sep 2020 : extended deca_double_constants with the table of sines
   and cosines of multiples of pi/1024, with the aid of sincostables.py,

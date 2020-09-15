@@ -103,11 +103,24 @@ package Penta_Double_Constants is
           := Create( 2.81145725434552060E-15, 1.65088427308614326E-31,
                     -2.87777179307447918E-50, 4.27110689256293549E-67,
                     -2.93287743014724397E-83);
+  i_fac15 : constant penta_double
+          := Create( 1.56192069685862253E-16, 1.19106796602737540E-32,
+                    -4.57750605962998323E-49, 2.87494142340899603E-67,
+                     2.03110904687324058E-84);
+  i_fac16 : constant penta_double
+          := Create( 8.22063524662432950E-18, 2.21418941196042654E-34,
+                    -1.50891402377419897E-50, 1.40072951514781548E-67,
+                    -5.96179899774792636E-84);
+  i_fac17 : constant penta_double
+          := Create( 4.11031762331216484E-19, 1.44129733786595272E-36,
+                    -5.28562754878981208E-53, -4.14764725635765685E-70,
+                    -2.10538849298467203E-87);
 
-  n_inv_fact : constant natural := 15;
+  n_inv_fact : constant natural := 18;
   i_fac : array(0..n_inv_fact-1) of penta_double
         := (i_fac0,i_fac1,i_fac2,i_fac3,i_fac4,i_fac5,i_fac6,i_fac7,
-            i_fac8,i_fac9,i_fac10,i_fac11,i_fac12,i_fac13,i_fac14);
+            i_fac8,i_fac9,i_fac10,i_fac11,i_fac12,i_fac13,i_fac14,
+            i_fac15,i_fac16,i_fac17);
 
 -- TABLES of sin(k * pi/1024) and cos(k * pi/1024).
 
