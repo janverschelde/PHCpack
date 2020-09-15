@@ -1,3 +1,6 @@
+Tue 15 Sep 2020 : updated {tripdobl,pentdobl,octodobl,decadobl}_random_
+  matrices.adb so all generated complex entries are on the unit circle.
+
 Sun 30 Aug 2020 : instantiated matrices in triple, penta, octo, and deca
   double precision: {triplel,penta,octo,deca}_double_matrices,
   with io: {triple,penta,octo,deca}_double_matrices_io.

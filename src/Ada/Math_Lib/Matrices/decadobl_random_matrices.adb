@@ -25,7 +25,7 @@ package body DecaDobl_Random_Matrices is
   begin
     for i in res'range(1) loop
       for j in res'range(2) loop
-        res(i,j) := DecaDobl_Random_Numbers.Random;
+        res(i,j) := DecaDobl_Random_Numbers.Random1;
       end loop;
     end loop;
     return res;
