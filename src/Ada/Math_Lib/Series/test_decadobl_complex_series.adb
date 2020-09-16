@@ -7,12 +7,15 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Deca_Double_Numbers;               use Deca_Double_Numbers;
 with Deca_Double_Numbers_io;            use Deca_Double_Numbers_io;
 with DecaDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers_io;       use DecaDobl_Complex_Numbers_io;
 with DecaDobl_Complex_Vectors_io;
 with DecaDobl_Complex_Series;
 with DecaDobl_Complex_Series_io;        use DecaDobl_Complex_Series_io;
 with DecaDobl_Complex_Random_Series;
 with DecaDobl_Complex_Algebraic_Series;
 with DecaDobl_Complex_Series_Norms;
+with DecaDobl_Complex_Series_Functions;
+with DecaDobl_Complex_Series_Transforms;
 
 package body Test_DecaDobl_Complex_Series is
 
@@ -198,6 +201,65 @@ package body Test_DecaDobl_Complex_Series is
     put(Two_Norm(ns),3); new_line;
   end DecaDobl_Test_Norm;
 
+  procedure DecaDobl_Test_Shift ( degree : in integer32 ) is
+
+    use DecaDobl_Complex_Numbers;
+    use DecaDobl_Complex_Series;
+    use DecaDobl_Complex_Series_Functions;
+
+    s : constant Series(degree)
+      := DecaDobl_Complex_Random_Series.Random_Series(degree);
+    zero : constant deca_double := create(0.0);
+    rc : deca_double := zero;
+    shifteds : Series(degree);
+    cc,y,z : Complex_Number;
+
+  begin
+    put_line("Shifting the series parameter ...");
+    put_line("on a random series s :"); put(s);
+    skip_line;
+    put("Give a real constant for the shift : "); get(rc);
+    shifteds := Shift(s,rc);
+    y := Eval(s,-rc);
+    z := Eval(shifteds,zero);
+    put("s(-shift constant) : "); put(y); new_line;
+    put(" shifted series(0) : "); put(z); new_line;
+    new_line;
+    put_line("Testing with a complex shift ...");
+    put("Give a complex number for the shift : "); get(cc);
+    shifteds := Shift(s,cc);
+    y := Eval(s,-cc);
+    z := Eval(shifteds,zero);
+    put("s(-shift constant) : "); put(y); new_line;
+    put(" shifted series(0) : "); put(z); new_line;
+  end DecaDobl_Test_Shift;
+
+  procedure DecaDobl_Test_Transform ( degree : in integer32 ) is
+
+    use DecaDobl_Complex_Series;
+    use DecaDobl_Complex_Series_Transforms;
+
+    s : constant Series(degree)
+      := DecaDobl_Complex_Random_Series.Random_Series(degree);
+    c : deca_double := create(0.0);
+    sc : Series(degree);
+    idx : integer32;
+    mxc : deca_double;
+
+  begin
+    put_line("a random series s :"); put(s);
+    skip_line;
+    put("Give a deca double : "); get(c);
+    put("-> your constant c : "); put(c); new_line;
+    sc := DecaDobl_Complex_Series_Transforms.Scale(s,c);
+    put_line("the series s scaled by c, s(c*t) :"); put(sc);
+    Maximum_Coefficient_Modulus(sc,idx,mxc);
+    put("the index : "); put(idx,1);
+    put("  maximum modulus : "); put(mxc); new_line;
+    Coefficient_Modulus_Transform(sc,idx,mxc);
+    put_line("the transformed series :"); put(sc);
+  end DecaDobl_Test_Transform;
+
   procedure Main is
 
     ans : character;
@@ -213,8 +275,10 @@ package body Test_DecaDobl_Complex_Series is
     put_line("  4. p-th root of a random series");
     put_line("  5. test complex conjugate of a series");
     put_line("  6. test the norm of a series");
-    put("Type 0, 1, 2, 3, 4, 5, or 6 to select a test : ");
-    Ask_Alternative(ans,"0123456");
+    put_line("  7. test shift of series parameter");
+    put_line("  8. test coefficient modulus transforms");
+    put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
+    Ask_Alternative(ans,"012345678");
     if ans /= '0' then
       new_line;
       put("Give the degree of the series : "); get(degree);
@@ -228,6 +292,8 @@ package body Test_DecaDobl_Complex_Series is
       when '4' => DecaDobl_Random_Test_root(degree);
       when '5' => DecaDobl_Test_Conjugate(degree);
       when '6' => DecaDobl_Test_Norm(degree);
+      when '7' => DecaDobl_Test_Shift(degree);
+      when '8' => DecaDobl_Test_Transform(degree);
       when others => null;
     end case;
   end Main;

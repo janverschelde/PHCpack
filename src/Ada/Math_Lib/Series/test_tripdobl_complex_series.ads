@@ -46,6 +46,17 @@ package Test_TripDobl_Complex_Series is
   -- DESCRIPTION :
   --   Generates a random series of the given degree and computes its norm.
 
+  procedure TripDobl_Test_Shift ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Does a basic test on shifting the series parameter
+  --   on random series of the given degree.
+
+  procedure TripDobl_Test_Transform ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests the coefficient modulus transform on series of the given degree.
+
   procedure Main;
 
   -- DESCRIPTION :

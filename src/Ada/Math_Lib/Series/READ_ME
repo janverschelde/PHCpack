@@ -74,7 +74,11 @@ octodobl_complex_series_functions  : evaluate and shift octodobl series
 decadobl_complex_series_functions  : evaluate and shift decadobl series
 standard_complex_series_transforms : coefficient modulus transformations
 dobldobl_complex_series_transforms : dd coefficient modulus transformations
+tripdobl_complex_series_transforms : td coefficient modulus transformations
 quaddobl_complex_series_transforms : qd coefficient modulus transformations
+pentdobl_complex_series_transforms : pd coefficient modulus transformations
+octodobl_complex_series_transforms : od coefficient modulus transformations
+decadobl_complex_series_transforms : da coefficient modulus transformations
 test_standard_complex_series       : tests series with double complex coeffs
 test_dobldobl_complex_series       : tests series in double double precision
 test_tripdobl_complex_series       : tests series in triple double precision

@@ -303,7 +303,7 @@ package body Test_DoblDobl_Complex_Series is
     put_line("  7. test shift of series parameter");
     put_line("  8. test computation of powers");
     put_line("  9. test coefficient modulus transforms");
-    put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
+    put("Type 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select a test : ");
     Ask_Alternative(ans,"0123456789");
     if ans /= '0' then
       new_line;

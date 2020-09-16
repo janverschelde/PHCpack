@@ -15,6 +15,7 @@ with TripDobl_Complex_Random_Series;
 with TripDobl_Complex_Algebraic_Series;
 with TripDobl_Complex_Series_Norms;
 with TripDobl_Complex_Series_Functions;
+with TripDobl_Complex_Series_Transforms;
 
 package body Test_TripDobl_Complex_Series is
 
@@ -233,16 +234,38 @@ package body Test_TripDobl_Complex_Series is
     put(" shifted series(0) : "); put(z); new_line;
   end TripDobl_Test_Shift;
 
+  procedure TripDobl_Test_Transform ( degree : in integer32 ) is
+
+    use TripDobl_Complex_Series;
+    use TripDobl_Complex_Series_Transforms;
+
+    s : constant Series(degree)
+      := TripDobl_Complex_Random_Series.Random_Series(degree);
+    c : triple_double := create(0.0);
+    sc : Series(degree);
+    idx : integer32;
+    mxc : triple_double;
+
+  begin
+    put_line("a random series s :"); put(s);
+    skip_line;
+    put("Give a triple double : "); get(c);
+    put("-> your constant c : "); put(c); new_line;
+    sc := TripDobl_Complex_Series_Transforms.Scale(s,c);
+    put_line("the series s scaled by c, s(c*t) :"); put(sc);
+    Maximum_Coefficient_Modulus(sc,idx,mxc);
+    put("the index : "); put(idx,1);
+    put("  maximum modulus : "); put(mxc); new_line;
+    Coefficient_Modulus_Transform(sc,idx,mxc);
+    put_line("the transformed series :"); put(sc);
+  end TripDobl_Test_Transform;
+
   procedure Main is
 
     ans : character;
     degree : integer32 := 0;
-    x : triple_double;
 
   begin
-    new_line;
-    put("Give a triple double : "); get(x);
-    put("-> your x : "); put(x); new_line;
     new_line;
     put_line("MENU with testing operations :");
     put_line("  0. test the basic construct methods");
@@ -253,8 +276,9 @@ package body Test_TripDobl_Complex_Series is
     put_line("  5. test complex conjugate of a series");
     put_line("  6. test the norm of a series");
     put_line("  7. test shift of series parameter");
-    put("Type 0, 1, 2, 3, 4, 5, 6, or 7 to select a test : ");
-    Ask_Alternative(ans,"01234567");
+    put_line("  8. test coefficient modulus transforms");
+    put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
+    Ask_Alternative(ans,"012345678");
     if ans /= '0' then
       new_line;
       put("Give the degree of the series : "); get(degree);
@@ -268,6 +292,7 @@ package body Test_TripDobl_Complex_Series is
       when '5' => TripDobl_Test_Conjugate(degree);
       when '6' => TripDobl_Test_Norm(degree);
       when '7' => TripDobl_Test_Shift(degree);
+      when '8' => TripDobl_Test_Transform(degree);
       when others => null;
     end case;
   end Main;
