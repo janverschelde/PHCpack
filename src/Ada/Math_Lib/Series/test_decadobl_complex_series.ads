@@ -23,6 +23,29 @@ package Test_DecaDobl_Complex_Series is
   --   Does a basic test on the arithmetic,
   --   on random series of the given degree.
 
+  procedure DecaDobl_Random_Test_sqrt ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation.
+
+  procedure DecaDobl_Random_Test_root ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation.
+
+  procedure DecaDobl_Test_Conjugate ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and makes the product with its conjugate.
+
+  procedure DecaDobl_Test_Norm ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree and computes its norm.
+
   procedure Main;
 
   -- DESCRIPTION :

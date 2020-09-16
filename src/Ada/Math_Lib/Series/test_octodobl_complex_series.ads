@@ -23,6 +23,29 @@ package Test_OctoDobl_Complex_Series is
   --   Does a basic test on the arithmetic,
   --   on random series of the given degree.
 
+  procedure OctoDobl_Random_Test_sqrt ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation.
+
+  procedure OctoDobl_Random_Test_root ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation.
+
+  procedure OctoDobl_Test_Conjugate ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and makes the product with its conjugate.
+
+  procedure OctoDobl_Test_Norm ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree and computes its norm.
+
   procedure Main;
 
   -- DESCRIPTION :

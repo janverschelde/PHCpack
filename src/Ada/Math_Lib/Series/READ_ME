@@ -53,13 +53,25 @@ octodobl_complex_random_series     : generators for random octodobl series
 decadobl_complex_random_series     : generators for random decadobl series
 standard_complex_algebraic_series  : sqrt and n-th root of standard series
 dobldobl_complex_algebraic_series  : sqrt and n-th root of dobldobl series
+tripdobl_complex_algebraic_series  : sqrt and n-th root of tripdobl series
 quaddobl_complex_algebraic_series  : sqrt and n-th root of quaddobl series
+pentdobl_complex_algebraic_series  : sqrt and n-th root of pentdobl series
+octodobl_complex_algebraic_series  : sqrt and n-th root of octodobl series
+decadobl_complex_algebraic_series  : sqrt and n-th root of decadobl series
 standard_complex_series_norms      : conjugates and norms of standard series
 dobldobl_complex_series_norms      : conjugates and norms of dobldobl series
+tripdobl_complex_series_norms      : conjugates and norms of tripdobl series
 quaddobl_complex_series_norms      : conjugates and norms of quaddobl series
+pentdobl_complex_series_norms      : conjugates and norms of pentdobl series
+octodobl_complex_series_norms      : conjugates and norms of octodobl series
+decadobl_complex_series_norms      : conjugates and norms of decadobl series
 standard_complex_series_functions  : evaluate and shift standard series
 dobldobl_complex_series_functions  : evaluate and shift dobldobl series
+tripdobl_complex_series_functions  : evaluate and shift tripdobl series
 quaddobl_complex_series_functions  : evaluate and shift quaddobl series
+pentdobl_complex_series_functions  : evaluate and shift pentdobl series
+octodobl_complex_series_functions  : evaluate and shift octodobl series
+decadobl_complex_series_functions  : evaluate and shift decadobl series
 standard_complex_series_transforms : coefficient modulus transformations
 dobldobl_complex_series_transforms : dd coefficient modulus transformations
 quaddobl_complex_series_transforms : qd coefficient modulus transformations
@@ -76,17 +88,37 @@ standard_complex_series_ring       : ring of series in double precision
 standard_complex_series_ring_io    : i/o for standard series in the ring
 dobldobl_complex_series_ring       : ring of series in double double precision
 dobldobl_complex_series_ring_io    : i/o for dobldobl series in the ring
+tripdobl_complex_series_ring       : ring of series in triple double precision
+tripdobl_complex_series_ring_io    : i/o for tripdobl series in the ring
 quaddobl_complex_series_ring       : ring of series in quad double precision
 quaddobl_complex_series_ring_io    : i/o for quaddobl series in the ring
+pentdobl_complex_series_ring       : ring of series in penta double precision
+pentdobl_complex_series_ring_io    : i/o for pentdobl series in the ring
+octodobl_complex_series_ring       : ring of series in octo double precision
+octodobl_complex_series_ring_io    : i/o for octodobl series in the ring
+decadobl_complex_series_ring       : ring of series in deca double precision
+decadobl_complex_series_ring_io    : i/o for decadobl series in the ring
 standard_complex_series_vectors    : vectors of standard series
-dobldobl_complex_series_vectors    : vectors of dobldobl series
-quaddobl_complex_series_vectors    : vectors of quaddobl series
 standard_complex_series_vectors_io : i/o for vectors of standard series
+dobldobl_complex_series_vectors    : vectors of dobldobl series
 dobldobl_complex_series_vectors_io : i/o for vectors of dobldobl series
+tripdobl_complex_series_vectors    : vectors of tripdobl series
+tripdobl_complex_series_vectors_io : i/o for vectors of tripdobl series
+quaddobl_complex_series_vectors    : vectors of quaddobl series
 quaddobl_complex_series_vectors_io : i/o for vectors of quaddobl series
+pentdobl_complex_series_vectors    : vectors of pentdobl series
+pentdobl_complex_series_vectors_io : i/o for vectors of pentdobl series
+octodobl_complex_series_vectors    : vectors of octodobl series
+octodobl_complex_series_vectors_io : i/o for vectors of octodobl series
+decadobl_complex_series_vectors    : vectors of decadobl series
+decadobl_complex_series_vectors_io : i/o for vectors of decadobl series
 standard_complex_series_vecvecs    : vectors of vectors of standard series
 dobldobl_complex_series_vecvecs    : vectors of vectors of dobldobl series
+tripdobl_complex_series_vecvecs    : vectors of vectors of tripdobl series
 quaddobl_complex_series_vecvecs    : vectors of vectors of quaddobl series
+pentdobl_complex_series_vecvecs    : vectors of vectors of pentdobl series
+octodobl_complex_series_vecvecs    : vectors of vectors of octodobl series
+decadobl_complex_series_vecvecs    : vectors of vectors of decadobl series
 standard_complex_series_norms      : norms of vectors of standard series
 dobldobl_complex_series_norms      : norms of vectors of dobldobl series
 quaddobl_complex_series_norms      : norms of vectors of dobldobl series

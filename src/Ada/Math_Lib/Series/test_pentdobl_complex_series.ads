@@ -23,6 +23,29 @@ package Test_PentDobl_Complex_Series is
   --   Does a basic test on the arithmetic,
   --   on random series of the given degree.
 
+  procedure PentDobl_Random_Test_sqrt ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation.
+
+  procedure PentDobl_Random_Test_root ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and tests the square root computation.
+
+  procedure PentDobl_Test_Conjugate ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree
+  --   and makes the product with its conjugate.
+
+  procedure PentDobl_Test_Norm ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given degree and computes its norm.
+
   procedure Main;
 
   -- DESCRIPTION :

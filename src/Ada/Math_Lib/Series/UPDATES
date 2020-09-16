@@ -1,3 +1,14 @@
+Tue 15 Sep 2020 : instantiated {trip,pent,octo,deca}dobl_complex_series_ring
+  and its i/o in {trip,pent,octo,deca}dobl_complex_series_ring_io, for use
+  in {trip,pent,octo,deca}dobl_complex_series_vectors to define vectors of
+  series and its i/o in {trip,pent,octo,deca}dobl_complex_series_vectors_io.
+  New packages {trip,pent,octo,deca}dobl_complex_series_vecvecs.
+  Defined {trip,pent,octo,deca}dobl_complex_algebraic_series
+  and {trip,pent,octo,deca}dobl_complex_series_norms.  Extended binomials
+  with functions in triple, penta, octo, and deca double precision.
+  New {trip,pent,octo,deca}dobl_compelx_series_functions.
+  Extended test_{trip,pent,octo,deca}dobl_complex_series.
+
 Tue 8 Sep 2020 : new test_{standard,dobldobl,quaddobl}_complex_series,
   with code taken from ts_cseries.  Instantiated tripdobl_complex_series,
   defined tripdobl_complex_{series_io,random_series}, extended ts_cseries,
