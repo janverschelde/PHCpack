@@ -217,6 +217,7 @@ package body Test_DoblDobl_Complex_Series is
   begin
     put_line("Shifting the series parameter ...");
     put_line("on a random series s :"); put(s);
+    skip_line;
     put("Give a real constant for the shift : "); get(rc);
     shifteds := Shift(s,rc);
     y := Eval(s,-rc);
@@ -272,6 +273,7 @@ package body Test_DoblDobl_Complex_Series is
 
   begin
     put_line("a random series s :"); put(s);
+    skip_line;
     put("Give a double double : "); get(c);
     put("-> your constant c : "); put(c); new_line;
     sc := DoblDobl_Complex_Series_Transforms.Scale(s,c);

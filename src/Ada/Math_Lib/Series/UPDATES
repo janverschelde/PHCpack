@@ -1,3 +1,6 @@
+Wed 16 Sep 2020 : added skip_line before prompting for a shift parameter
+  in test_{dobldobl,tripdobl,quaddobl}_complex_series.adb.
+
 Tue 15 Sep 2020 : instantiated {trip,pent,octo,deca}dobl_complex_series_ring
   and its i/o in {trip,pent,octo,deca}dobl_complex_series_ring_io, for use
   in {trip,pent,octo,deca}dobl_complex_series_vectors to define vectors of

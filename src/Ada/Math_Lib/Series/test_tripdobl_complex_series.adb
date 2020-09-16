@@ -237,8 +237,12 @@ package body Test_TripDobl_Complex_Series is
 
     ans : character;
     degree : integer32 := 0;
+    x : triple_double;
 
   begin
+    new_line;
+    put("Give a triple double : "); get(x);
+    put("-> your x : "); put(x); new_line;
     new_line;
     put_line("MENU with testing operations :");
     put_line("  0. test the basic construct methods");
@@ -255,7 +259,6 @@ package body Test_TripDobl_Complex_Series is
       new_line;
       put("Give the degree of the series : "); get(degree);
     end if;
-    new_line;
     case ans is 
       when '0' => TripDobl_Construct;
       when '1' => TripDobl_Test_Creation(degree);
