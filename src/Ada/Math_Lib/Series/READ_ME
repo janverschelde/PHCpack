@@ -125,22 +125,46 @@ octodobl_complex_series_vecvecs    : vectors of vectors of octodobl series
 decadobl_complex_series_vecvecs    : vectors of vectors of decadobl series
 standard_complex_series_norms      : norms of vectors of standard series
 dobldobl_complex_series_norms      : norms of vectors of dobldobl series
+tripdbol_complex_series_norms      : norms of vectors of tripdobl series
 quaddobl_complex_series_norms      : norms of vectors of dobldobl series
+pentdobl_complex_series_norms      : norms of vectors of pentdobl series
+octodobl_complex_series_norms      : norms of vectors of octodobl series
+decadobl_complex_series_norms      : norms of vectors of decadobl series
 standard_complex_vector_series     : series with standard vector coefficients
 standard_complex_vector_series_io  : basic output of standard vector series
 dobldobl_complex_vector_series     : series with dobldobl vector coefficients
 dobldobl_complex_vector_series_io  : basic output of dobldobl vector series
+tripdobl_complex_vector_series     : series with tripdobl vector coefficients
+tripdobl_complex_vector_series_io  : basic output of tripdobl vector series
 quaddobl_complex_vector_series     : series with quaddobl vector coefficients
 quaddobl_complex_vector_series_io  : basic output of quaddobl vector series
+pentdobl_complex_vector_series     : series with pentdobl vector coefficients
+pentdobl_complex_vector_series_io  : basic output of pentdobl vector series
+octodobl_complex_vector_series     : series with octodobl vector coefficients
+octodobl_complex_vector_series_io  : basic output of octodobl vector series
+decadobl_complex_vector_series     : series with decadobl vector coefficients
+decadobl_complex_vector_series_io  : basic output of decadobl vector series
 standard_cseries_vector_norms      : norms of vectors of standard series
 dobldobl_cseries_vector_norms      : norms of vectors of dobldobl series
+tripdobl_cseries_vector_norms      : norms of vectors of tripdobl series
 quaddobl_cseries_vector_norms      : norms of vectors of quaddobl series
+pentdobl_cseries_vector_norms      : norms of vectors of pentdobl series
+octodobl_cseries_vector_norms      : norms of vectors of octodobl series
+decadobl_cseries_vector_norms      : norms of vectors of decadobl series
 standard_random_series_vectors     : random vectors of standard series
 dobldobl_random_series_vectors     : random vectors of dobldobl series
+tripdobl_random_series_vectors     : random vectors of tripdobl series
 quaddobl_random_series_vectors     : random vectors of quaddobl series
+pentdobl_random_series_vectors     : random vectors of pentdobl series
+octodobl_random_series_vectors     : random vectors of octodobl series
+decadobl_random_series_vectors     : random vectors of decadobl series
 test_standard_vector_series        : tests vector series in double precision
 test_dobldobl_vector_series        : tests vector series in dobldobl precision
+test_tripdobl_vector_series        : tests vector series in tripdobl precision
 test_quaddobl_vector_series        : tests vector series in quaddobl precision
+test_pentdobl_vector_series        : tests vector series in pentdobl precision
+test_octodobl_vector_series        : tests vector series in octodobl precision
+test_decadobl_vector_series        : tests vector series in decadobl precision
 ts_cservec                         : test on 3rd version of vector series
 standard_cseries_vector_functions  : evaluating vectors of standard series
 dobldobl_cseries_vector_functions  : evaluating vectors of dobldobl series
