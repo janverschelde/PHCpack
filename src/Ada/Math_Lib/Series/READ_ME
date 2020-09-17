@@ -192,6 +192,9 @@ quaddobl_series_linear_solvers     : quaddobl LU solver on matrices of series
 standard_series_least_squares      : standard QR solver on matrices of series
 dobldobl_series_least_squares      : dobldobl QR solver on matrices of series
 quaddobl_series_least_squares      : quaddobl QR solver on matrices of series
+test_standard_matrix_series        : tests matrix series in double precision
+test_dobldobl_matrix_series        : tests matrix series in dobldobl precision
+test_quaddobl_matrix_series        : tests matrix series in quaddobl precision
 ts_csermat                         : test on 3rd version of matrices of series
 ------------------------------------------------------------------------------
 standard_interpolating_series      : interpolation for standard series systems
