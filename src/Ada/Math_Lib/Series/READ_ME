@@ -168,7 +168,11 @@ test_decadobl_vector_series        : tests vector series in decadobl precision
 ts_cservec                         : test on 3rd version of vector series
 standard_cseries_vector_functions  : evaluating vectors of standard series
 dobldobl_cseries_vector_functions  : evaluating vectors of dobldobl series
+tripdobl_cseries_vector_functions  : evaluating vectors of tripdobl series
 quaddobl_cseries_vector_functions  : evaluating vectors of quaddobl series
+pentdobl_cseries_vector_functions  : evaluating vectors of pentdobl series
+octodobl_cseries_vector_functions  : evaluating vectors of octodobl series
+decadobl_cseries_vector_functions  : evaluating vectors of decadobl series
 ------------------------------------------------------------------------------
 standard_complex_series_matrices   : matrices of standard series
 dobldobl_complex_series_matrices   : matrices of dobldobl series

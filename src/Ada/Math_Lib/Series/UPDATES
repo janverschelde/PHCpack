@@ -1,6 +1,7 @@
 Thu 17 Sep 2020 : new {trip,pent,octo,deca}dobl_complex_vector_series,
   and _io, with corresponding _random_series_vectors, _cseries_vector_norms,
   and test_{trip,pent,octo,deca}dobl_vector_series, called by ts_cservec.
+  New {trip,pent,octo,deca}dobl_cseries_vector_functions packages.
 
 Wed 16 Sep 2020 : added skip_line before prompting for a shift parameter
   in test_{dobldobl,tripdobl,quaddobl}_complex_series.adb.
