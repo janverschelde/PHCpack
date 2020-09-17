@@ -3,6 +3,8 @@ Wed 16 Sep 2020 : added skip_line before prompting for a shift parameter
   New {trip,pent,octo,deca}dobl_complex_series_transforms, with tests added
   to test_{trip,pent,octo,deca}dobl_complex_series.
   Corrected prompt in test_dobldobl_complex_series.adb
+  Moved test procedures from ts_cservec.adb into new packages
+  test_{standard,dobldobl,quaddobl}_vector_series.
 
 Tue 15 Sep 2020 : instantiated {trip,pent,octo,deca}dobl_complex_series_ring
   and its i/o in {trip,pent,octo,deca}dobl_complex_series_ring_io, for use

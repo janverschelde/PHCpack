@@ -138,6 +138,9 @@ quaddobl_cseries_vector_norms      : norms of vectors of quaddobl series
 standard_random_series_vectors     : random vectors of standard series
 dobldobl_random_series_vectors     : random vectors of dobldobl series
 quaddobl_random_series_vectors     : random vectors of quaddobl series
+test_standard_vector_series        : tests vector series in double precision
+test_dobldobl_vector_series        : tests vector series in dobldobl precision
+test_quaddobl_vector_series        : tests vector series in quaddobl precision
 ts_cservec                         : test on 3rd version of vector series
 standard_cseries_vector_functions  : evaluating vectors of standard series
 dobldobl_cseries_vector_functions  : evaluating vectors of dobldobl series
