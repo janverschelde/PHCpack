@@ -176,25 +176,52 @@ decadobl_cseries_vector_functions  : evaluating vectors of decadobl series
 ------------------------------------------------------------------------------
 standard_complex_series_matrices   : matrices of standard series
 dobldobl_complex_series_matrices   : matrices of dobldobl series
+tripdobl_complex_series_matrices   : matrices of tripdobl series
 quaddobl_complex_series_matrices   : matrices of quaddobl series
+pentdobl_complex_series_matrices   : matrices of pentdobl series
+octodobl_complex_series_matrices   : matrices of octodobl series
+decadobl_complex_series_matrices   : matrices of decadobl series
 standard_complex_matrix_series     : series with standard matrix coefficients
 dobldobl_complex_matrix_series     : series with dobldobl matrix coefficients
+tripdobl_complex_matrix_series     : series with tripdobl matrix coefficients
 quaddobl_complex_matrix_series     : series with quaddobl matrix coefficients
+pentdobl_complex_matrix_series     : series with pentdobl matrix coefficients
+octodobl_complex_matrix_series     : series with octodobl matrix coefficients
+decadobl_complex_matrix_series     : series with decadobl matrix coefficients
 standard_complex_matrix_series_io  : basic output of standard matrix series
 dobldobl_complex_matrix_series_io  : basic output of dobldobl matrix series
+tripdobl_complex_matrix_series_io  : basic output of tripdobl matrix series
 quaddobl_complex_matrix_series_io  : basic output of quaddobl matrix series
+pentdobl_complex_matrix_series_io  : basic output of pentdobl matrix series
+octodobl_complex_matrix_series_io  : basic output of octodobl matrix series
+decadobl_complex_matrix_series_io  : basic output of decadobl matrix series
 standard_random_series_matrices    : standard random matrices of series
 dobldobl_random_series_matrices    : dobldobl random matrices of series
+tripdobl_random_series_matrices    : tripdobl random matrices of series
 quaddobl_random_series_matrices    : quaddobl random matrices of series
+pentdobl_random_series_matrices    : pentdobl random matrices of series
+octodobl_random_series_matrices    : octodobl random matrices of series
+decadobl_random_series_matrices    : decadobl random matrices of series
 standard_series_linear_solvers     : standard LU solver on matrices of series
 dobldobl_series_linear_solvers     : dobldobl LU solver on matrices of series
+tripdobl_series_linear_solvers     : tripdobl LU solver on matrices of series
 quaddobl_series_linear_solvers     : quaddobl LU solver on matrices of series
+pentdobl_series_linear_solvers     : pentdobl LU solver on matrices of series
+octodobl_series_linear_solvers     : octodobl LU solver on matrices of series
+decadobl_series_linear_solvers     : decadobl LU solver on matrices of series
 standard_series_least_squares      : standard QR solver on matrices of series
 dobldobl_series_least_squares      : dobldobl QR solver on matrices of series
+tripdobl_series_least_squares      : tripdobl QR solver on matrices of series
 quaddobl_series_least_squares      : quaddobl QR solver on matrices of series
+pentdobl_series_least_squares      : pentdobl QR solver on matrices of series
+octodobl_series_least_squares      : octodobl QR solver on matrices of series
+decadobl_series_least_squares      : decadobl QR solver on matrices of series
 test_standard_matrix_series        : tests matrix series in double precision
 test_dobldobl_matrix_series        : tests matrix series in dobldobl precision
+test_tripdobl_matrix_series        : tests matrix series in tripdobl precision
 test_quaddobl_matrix_series        : tests matrix series in quaddobl precision
+test_octodobl_matrix_series        : tests matrix series in octodobl precision
+test_decadobl_matrix_series        : tests matrix series in decadobl precision
 ts_csermat                         : test on 3rd version of matrices of series
 ------------------------------------------------------------------------------
 standard_interpolating_series      : interpolation for standard series systems

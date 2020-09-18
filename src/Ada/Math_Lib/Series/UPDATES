@@ -4,6 +4,11 @@ Thu 17 Sep 2020 : new {trip,pent,octo,deca}dobl_complex_vector_series,
   New {trip,pent,octo,deca}dobl_cseries_vector_functions packages.
   Moved procedures from ts_csermat.adb into new test packages:
   test_{standard,dobldobl,quaddobl}_matrix_series.
+  New {trip,pent,octo,deca}dobl_complex_series_matrices,
+  {trip,pent,octo,deca}dobl_complex_matrix_series, and its _io,
+  {trip,pent,octo,deca}dobl_random_series_matrices,
+  {trip,pent,octo,deca}dobl_series_{linear_solvers, least_squares),
+  test_{trip,pent,octo,deca}_matrix_series, extended ts_csermat.
 
 Wed 16 Sep 2020 : added skip_line before prompting for a shift parameter
   in test_{dobldobl,tripdobl,quaddobl}_complex_series.adb.
