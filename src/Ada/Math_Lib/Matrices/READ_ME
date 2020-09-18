@@ -51,18 +51,19 @@ standard_floating_vecmats_io       : generic_vecmats_io(standard floating)
 standard_complex_matrices          : matrices of standard complex numbers
 standard_complex_matrices_io       : generic_matrices_io(standard complex)
 standard_complex_vecmats           : generic_vecmats(standard double complex)
-dobldobl_complex_vecmats           : generic_vecmats(double double complex)
-quaddobl_complex_vecmats           : generic_vecmats(quad double complex)
 standard_complex_vecmats_io        : generic_vecmats_io(standard complex)
+pentdobl_complex_vecmats           : generic_vecmats(penta double complex)
 double_double_matrices             : matrices of double double numbers
 double_double_matrices_io          : generic_matrices_io(double double)
 dobldobl_complex_matrices          : matrices of double double complex numbers
 dobldobl_complex_matrices_io       : generic_matrices_io(double double complex)
+dobldobl_complex_vecmats           : generic_vecmats(double double complex)
 dobldobl_complex_vecmats_io        : generic_vecmats_io(double double complex)
 quad_double_matrices               : matrices of quad double numbers
 quad_double_matrices_io            : generic_matrices_io(quad double)
 quaddobl_complex_matrices          : matrices of quad double complex numbers
 quaddobl_complex_matrices_io       : generic_matrices_io(quad double complex)
+quaddobl_complex_vecmats           : generic_vecmats(quad double complex)
 quaddobl_complex_vecmats_io        : generic_vecmats_io(quad double complex)
 multprec_natural_matrices          : matrices of multiprecision natural numbers
 multprec_natural_matrices_io       : generic_matrices_io(multprec natural)
@@ -81,18 +82,26 @@ triple_double_matrices             : matrices of triple double numbers
 triple_double_matrices_io          : i/o of matrices of triple double numbers
 tripdobl_complex_matrices          : matrices of complex triple doubles
 tripdobl_complex_matrices_io       : i/o matrices of complex triple doubles
+tripdobl_complex_vecmats           : generic_vecmats(triple double complex)
+tripdobl_complex_vecmats_io        : generic_vecmats_io(triple double complex)
 penta_double_matrices              : matrices of penta double numbers
 penta_double_matrices_io           : i/o of matrices of penta double numbers
 pentdobl_complex_matrices          : matrices of complex penta doubles
 pentdobl_complex_matrices_io       : i/o matrices of complex penta doubles
+pentdobl_complex_vecmats           : generic_vecmats(penta double complex)
+pentdobl_complex_vecmats_io        : generic_vecmats_io(penta double complex)
 octo_double_matrices               : matrices of octo double numbers
 octo_double_matrices_io            : i/o of matrices of octo double numbers
 octodobl_complex_matrices          : matrices of complex octo doubles
 octodobl_complex_matrices_io       : i/o matrices of complex octo doubles
+octodobl_complex_vecmats           : generic_vecmats(octo double complex)
+octodobl_complex_vecmats_io        : generic_vecmats_io(octo double complex)
 deca_double_matrices               : matrices of deca double numbers
 deca_double_matrices_io            : i/o of matrices of deca double numbers
 decadobl_complex_matrices          : matrices of complex deca doubles
 decadobl_complex_matrices_io       : i/o matrices of complex deca doubles
+decadobl_complex_vecmats           : generic_vecmats(deca double complex)
+decadobl_complex_vecmats_io        : generic_vecmats_io(deca double complex)
 ------------------------------------------------------------------------------
 standard_random_matrices           : matrices of random standard numbers
 dobldobl_random_matrices           : matrices of random double doubles

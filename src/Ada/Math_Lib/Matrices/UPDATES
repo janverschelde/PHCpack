@@ -1,3 +1,5 @@
+Thu 17 Sep 2020 : new {trip,pent,octo,deca}dobl_complex_vecmats and _io.
+
 Tue 15 Sep 2020 : updated {tripdobl,pentdobl,octodobl,decadobl}_random_
   matrices.adb so all generated complex entries are on the unit circle.
 
