@@ -828,10 +828,6 @@ ts_cserlin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin.adb \
               -o $(BIN)/ts_cserlin
 
-ts_cserlin2:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin2.adb \
-              -o $(BIN)/ts_cserlin2
-
 ts_perfserlin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfserlin.adb \
               -o $(BIN)/ts_perfserlin

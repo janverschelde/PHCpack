@@ -868,11 +868,6 @@ ts_cserlin: get_clock.o get_clocks_per_sec.o
               -o $(BIN)/ts_cserlin \
               -largs get_clock.o get_clocks_per_sec.o
 
-ts_cserlin2: get_clock.o get_clocks_per_sec.o
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin2.adb \
-              -o $(BIN)/ts_cserlin2 \
-              -largs get_clock.o get_clocks_per_sec.o
-
 ts_perfserlin: get_clock.o get_clocks_per_sec.o
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfserlin.adb \
               -o $(BIN)/ts_perfserlin \

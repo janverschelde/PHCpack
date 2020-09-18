@@ -665,7 +665,7 @@ test_series: ts_pstrunc ts_bincff ts_series ts_series2 ts_cseries \
              ts_seritp ts_seritp2 ts_cseritp ts_sersin ts_sersin2 ts_csersin \
              ts_serlin ts_serlin2 ts_cserlin ts_serinv ts_cserinv \
              ts_serpol ts_cserpol ts_sersys ts_csersys ts_sercffpol \
-             ts_cserlin2 ts_perfserlin
+             ts_perfserlin
 
 ts_pstrunc:
 	make -f $(MAKEFILE) ts_pstrunc
@@ -726,9 +726,6 @@ ts_serlin2:
 
 ts_cserlin:
 	make -f $(MAKEFILE) ts_cserlin
-
-ts_cserlin2:
-	make -f $(MAKEFILE) ts_cserlin2
 
 ts_perfserlin:
 	make -f $(MAKEFILE) ts_perfserlin
