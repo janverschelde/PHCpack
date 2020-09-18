@@ -238,6 +238,9 @@ standard_series_matrix_solvers     : linearization for standard series systems
 dobldobl_series_matrix_solvers     : linearization for dobldobl series systems
 quaddobl_series_matrix_solvers     : linearization for quaddobl series systems
 series_coefficient_vectors         : flatten data structure
+test_standard_linearization        : tests linearization in double precision
+test_dobldobl_linearization        : tests linearization in dobldobl precision
+test_quaddobl_linearization        : tests linearization in quaddobl precision
 ts_cserlin                         : test on linearization
 ts_cserlin2                        : for flattened data structures
 ts_cserinv                         : test on inverting singular problems
