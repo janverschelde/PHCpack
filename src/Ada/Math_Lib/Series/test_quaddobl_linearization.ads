@@ -12,8 +12,8 @@ package Test_QuadDobl_Linearization is
 
   -- DESCRIPTION :
   --   Writes the max norm of the difference of each coefficient vector
-  --   between x and y.  At the end, writes the largest max norm, as an
-  --   upper bound on the error.
+  --   between x and y.  At the end, writes the largest max norm,
+  --   as an upper bound on the error.
 
   -- REQUIRED : x.deg = y.deg >= 0.
 
@@ -22,7 +22,7 @@ package Test_QuadDobl_Linearization is
   -- DESCRIPTION :
   --   Generates an n-by-m matrix of series of degree d,
   --   with complex coefficients in double double precision.
-  --   Converts an n-by-m matrix of series of degree d with standard
+  --   Converts an n-by-m matrix of series of degree d with double
   --   double precision complex coefficients into a matrix series.
 
   procedure QuadDobl_Timing ( n,m,d,f : in integer32 );
@@ -37,6 +37,16 @@ package Test_QuadDobl_Linearization is
   --   m        number of variables, number of columns of the matrices;
   --   d        degree of the series;
   --   f        frequency of tests.
+
+  procedure QuadDobl_Coefficient_Test ( n,m,d : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates an n-by-m matrix of series of degree d,
+  --   with complex coefficients in quad double precision.
+  --   Converts an n-by-m matrix of series of degree d with quad
+  --   double precision complex coefficients into a matrix series.
+  --   The linearization tested operates directly on coefficient vectors
+  --   of power series, without data type encapsulation.
 
   procedure Main;
 

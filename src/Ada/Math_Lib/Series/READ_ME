@@ -250,7 +250,6 @@ test_pentdobl_linearization        : tests linearization in pentdobl precision
 test_octodobl_linearization        : tests linearization in octodobl precision
 test_decadobl_linearization        : tests linearization in decadobl precision
 ts_cserlin                         : test on linearization
-ts_cserlin2                        : for flattened data structures
 ts_cserinv                         : test on inverting singular problems
 ------------------------------------------------------------------------------
 standard_cseries_polynomials       : polynomials with series as coefficients
