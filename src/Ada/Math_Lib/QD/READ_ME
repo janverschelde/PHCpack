@@ -83,15 +83,6 @@ quaddobl_complex_ring-ffield : field of quad double complex numbers
 test_quaddobl_complex        : tests quad double complex arithmetic
 ts_qdcmplx                   : main test on quad double complex arithmetic
 ------------------------------------------------------------------------------
-multprec_dobldobl_convertors : convert double double <-> multiprecision float
-dobldobl_complex_numbers_cv  : convert complex <-> double double complex
-test_multprec_dobldobl_casts : test casting multprec into dd and back
-ts_mpddcv                    : main test on double double multprec conversions
-multprec_quaddobl_convertors : convert double double <-> multiprecision float
-quaddobl_complex_numbers_cv  : convert complex <-> quad double complex
-test_multprec_quaddobl_casts : tests casting multprec into qd and back
-ts_mpqdcv                    : main test on quad double multprec conversions
-------------------------------------------------------------------------------
 double_double_constants         : collects double double constants
 dobldobl_mathematical_functions : dd sqrt and trigonometric functions
 dobldobl_complex_numbers_polar  : polar representations of dd complex
@@ -190,4 +181,26 @@ decadobl_complex_numbers_polar  : polar view of deca double complex numbers
 decadobl_random_numbers         : random numbers in deca double precision
 test_decadobl_complex           : tests deca double complex arithmetic
 ts_dacmplx                      : main test on deca double complex numbers
+------------------------------------------------------------------------------
+multprec_dobldobl_convertors    : convert double double <-> multiprec float
+dobldobl_complex_numbers_cv     : convert complex <-> double double complex
+test_multprec_dobldobl_casts    : test casting multprec into dd and back
+ts_mpddcv                       : main test on dobldobl multprec conversions
+multprec_tripdobl_convertors    : convert triple double <-> multiprec float
+tripdobl_complex_numbers_cv     : convert complex <-> triple double complex
+test_multprec_tripdobl_casts    : test casting multprec into td and back
+multprec_quaddobl_convertors    : convert double double <-> multiprec float
+quaddobl_complex_numbers_cv     : convert complex <-> quad double complex
+test_multprec_quaddobl_casts    : tests casting multprec into qd and back
+ts_mpqdcv                       : main test on quaddobl multprec conversions
+multprec_pentdobl_convertors    : convert penta double <-> multiprec float
+pentdobl_complex_numbers_cv     : convert complex <-> penta double complex
+test_multprec_pentdobl_casts    : tests casting multprec into pd and back
+multprec_octodobl_convertors    : convert octo double <-> multiprec float
+octodobl_complex_numbers_cv     : convert complex <-> octo double complex
+test_multprec_octodobl_casts    : tests casting multprec into od and back
+multprec_decadobl_convertors    : convert deca double <-> multiprec float
+decadobl_complex_numbers_cv     : convert complex <-> deca double complex
+test_multprec_decadobl_casts    : tests casting multprec into da and back
+ts_mpcasts                      : main test on multiprecision casts
 ------------------------------------------------------------------------------

@@ -1,3 +1,7 @@
+Sat 19 Sep 2020 : new multprec_{trip,pent,octo,deca}dobl_convertors,
+  {trip,pent,octo,deca}dobl_complex_numbers_cv, and
+  test_multprec_{trip,pent,octo,deca}dobl_casts, called in ts_mpcasts.
+
 Tue 15 Sep 2020 : extended {penta,octo}_double_constants.ads with enough
   inverse factorials so primitive complex roots are sufficiently accurate.
 
