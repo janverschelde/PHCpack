@@ -1,3 +1,7 @@
+Sat 19 Sep 2020 : moved test procedures from ts_poly, ts_ddpol, ts_qdpol
+  into test_{standard,dobldobl,quaddobl,multprec}_polynomials,
+  and test_standard_laurentials.
+
 Fri 26 Jul 2019 : refactored procedures in random_polynomial_systems into
   new functions to generate random polynomial systems.
 

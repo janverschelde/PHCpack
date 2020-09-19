@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.4.71
+Multivariate polynomials and polynomial systems over rings in PHCv2.4.80
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -167,6 +167,12 @@ standard_complex_hessians         : Hessians in standard double precision
 dobldobl_complex_hessians         : Hessians in double double precision
 quaddobl_complex_hessians         : Hessians in quad double precision
 ts_hessian                        : test on Hessian matrices
+-------------------------------------------------------------------------------
+test_standard_polynomials         : tests double polynomials
+test_standard_laurentials         : tests double Laurent polynomials
+test_dobldobl_polynomials         : tests double double polynomials
+test_quaddobl_polynomials         : tests quad double polynomials
+test_multprec_polynomials         : tests multiprecision polynomials
 -------------------------------------------------------------------------------
 ts_poly                           : test on polynomials and polynomial systems
 ts_rpol                           : test polynomials with real coefficients
