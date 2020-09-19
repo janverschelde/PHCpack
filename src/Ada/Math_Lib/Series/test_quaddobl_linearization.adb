@@ -164,12 +164,6 @@ package body Test_QuadDobl_Linearization is
 
   procedure QuadDobl_Coefficient_Test ( n,m,d : in integer32 ) is
 
-  -- DESCRIPTION :
-  --   Generates an n-by-m matrix of series of degree d,
-  --   with complex coefficients in double double precision.
-  --   Converts an n-by-m matrix of series of degree d with standard
-  --   double precision complex coefficients into a matrix series.
-
     use QuadDobl_Complex_Series_Matrices;
     use QuadDobl_Series_Matrix_Solvers;
 

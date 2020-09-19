@@ -38,6 +38,16 @@ package Test_PentDobl_Linearization is
   --   d        degree of the series;
   --   f        frequency of tests.
 
+  procedure PentDobl_Coefficient_Test ( n,m,d : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates an n-by-m matrix of series of degree d,
+  --   with complex coefficients in penta double precision.
+  --   Converts an n-by-m matrix of series of degree d with penta
+  --   double precision complex coefficients into a matrix series.
+  --   The linearization tested operates directly on coefficient vectors
+  --   of power series, without data type encapsulation.
+
   procedure Main;
 
   -- DESCRIPTION :

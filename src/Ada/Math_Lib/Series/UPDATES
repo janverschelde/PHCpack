@@ -4,7 +4,10 @@ Fri 18 Sep 2020 : new test_{standard,dobldobl,quaddobl}_linearization with
   test_{trip,pent,octo,pent}dobl_linearization, updated ts_cserlin.
   Moved the test procedures from ts_cserlin2 into the test packages
   test_{standard,dobldobl,quaddobl}_linearization, which makes the file
-  ts_cserlin2.adb redundant, so this file must be removed.
+  ts_cserlin2.adb redundant, so this file must be removed.  Extended 
+  test_{trip,pent,octo,deca}dobl_linearization with a coefficient test,
+  after adding to series_coefficient_vectors the linearization functions
+  in triple, penta, octo, and deca double precision.
 
 Thu 17 Sep 2020 : new {trip,pent,octo,deca}dobl_complex_vector_series,
   and _io, with corresponding _random_series_vectors, _cseries_vector_norms,
