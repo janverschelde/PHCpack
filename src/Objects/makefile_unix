@@ -329,6 +329,10 @@ ts_dacmplx:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_dacmplx.adb \
               -o $(BIN)/ts_dacmplx
 
+ts_mpcasts:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mpcasts.adb \
+              -o $(BIN)/ts_mpcasts
+
 # Test programs for Math_Lib/Vectors :
 
 ts_natvec:
