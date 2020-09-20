@@ -575,8 +575,20 @@ ts_rpol:
 ts_ddpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddpol.adb -o $(BIN)/ts_ddpol
 
+ts_tdpol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tdpol.adb -o $(BIN)/ts_tdpol
+
 ts_qdpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_qdpol.adb -o $(BIN)/ts_qdpol
+
+ts_pdpol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pdpol.adb -o $(BIN)/ts_pdpol
+
+ts_odpol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_odpol.adb -o $(BIN)/ts_odpol
+
+ts_dapol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dapol.adb -o $(BIN)/ts_dapol
 
 ts_polmat:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_polmat.adb -o $(BIN)/ts_polmat

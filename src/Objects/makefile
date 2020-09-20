@@ -489,7 +489,8 @@ ts_danorm:
 
 test_polynomials: ts_poly ts_laurpoly ts_laurlist ts_rpol ts_ddpol ts_qdpol \
                   ts_polmat ts_jaco ts_parse ts_subs ts_tabform ts_randpoly \
-                  ts_str2pol ts_termlist ts_rwspol ts_nbrvar ts_hessian
+                  ts_str2pol ts_termlist ts_rwspol ts_nbrvar ts_hessian \
+		  ts_tdpol ts_pdpol ts_odpol ts_dapol
 
 ts_poly:
 	make -f $(MAKEFILE) ts_poly
@@ -506,8 +507,20 @@ ts_rpol:
 ts_ddpol:
 	make -f $(MAKEFILE) ts_ddpol
 
+ts_tdpol:
+	make -f $(MAKEFILE) ts_tdpol
+
 ts_qdpol:
 	make -f $(MAKEFILE) ts_qdpol
+
+ts_pdpol:
+	make -f $(MAKEFILE) ts_pdpol
+
+ts_odpol:
+	make -f $(MAKEFILE) ts_odpol
+
+ts_dapol:
+	make -f $(MAKEFILE) ts_dapol
 
 ts_polmat:
 	make -f $(MAKEFILE) ts_polmat
