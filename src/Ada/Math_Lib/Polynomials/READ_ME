@@ -8,6 +8,8 @@ New in release 2.3.26 is the i/o for genuine Laurent polynomials.
 Polynomials with double and quad double coefficients are new in v2.3.55.
 In v2.3.69, the algorithms to evaluate polynomials was moved to the new
 Functions directory.  Code for phc -g was added in version 2.3.80.
+Version 2.4.80 added polynomials in triple, penta, octo, and deca double
+precision.
 
 This library is organized in three parts:
 1) generic packages: polynomials and systems
@@ -161,6 +163,47 @@ multprec_system_readers           : multiprecision version of system readers
 string_system_readers             : reading strings from file
 standard_complex_laur_lists       : lists of standard complex Laurentials
 random_polynomial_systems         : interactive generation of random systems
+-------------------------------------------------------------------------------
+triple_double_polynomials         : polynomials with triple double coeffs
+triple_double_poly_systems        : poly systems with triple double coeffs
+tripdobl_complex_polynomials      : polynomials with tripdobl complex coeffs
+tripdobl_complex_polynomials_io   : i/o for tripdobl complex polynomials
+tripdobl_complex_laurentials      : tripdobl complex Laurent polynomials
+tripdobl_complex_poly_systems     : systems of tripdobl complex polynomials
+tripdobl_complex_laur_systems     : systems of tripdobl complex Laurentials
+tripdobl_polynomial_convertors    : converting tripdobl with double/multprec
+test_tripdobl_polynomials         : tests on tripdobl polynomials
+ts_tdpol                          : main test on tripdobl polynomials
+penta_double_polynomials          : polynomials with penta double coeffs
+penta_double_poly_systems         : poly systems with penta double coeffs
+pentdobl_complex_polynomials      : polynomials with pentdobl complex coeffs
+pentdobl_complex_polynomials_io   : i/o for pentdobl complex polynomials
+pentdobl_complex_laurentials      : pentdobl complex Laurent polynomials
+pentdobl_complex_poly_systems     : systems of pentdobl complex polynomials
+pentdobl_complex_laur_systems     : systems of pentdobl complex Laurentials
+pentdobl_polynomial_convertors    : converting pentdobl with double/multprec
+test_pentdobl_polynomials         : tests on pentdobl polynomials
+ts_pdpol                          : main test on pentdobl polynomials
+octo_double_polynomials           : polynomials with octo double coeffs
+octo_double_poly_systems          : poly systems with octo double coeffs
+octodobl_complex_polynomials      : polynomials with octodobl complex coeffs
+octodobl_complex_polynomials_io   : i/o for octodobl complex polynomials
+octodobl_complex_laurentials      : octodobl complex Laurent polynomials
+octodobl_complex_poly_systems     : systems of octodobl complex polynomials
+octodobl_complex_laur_systems     : systems of octodobl complex Laurentials
+octodobl_polynomial_convertors    : converting octodobl with double/multprec
+test_octodobl_polynomials         : tests on octodobl polynomials
+ts_odpol                          : main test on octodobl polynomials
+deca_double_polynomials           : polynomials with deca double coeffs
+deca_double_poly_systems          : poly systems with deca double coeffs
+decadobl_complex_polynomials      : polynomials with decadobl complex coeffs
+decadobl_complex_polynomials_io   : i/o for decadobl complex polynomials
+decadobl_complex_laurentials      : decadobl complex Laurent polynomials
+decadobl_complex_poly_systems     : systems of decadobl complex polynomials
+decadobl_complex_laur_systems     : systems of decadobl complex Laurentials
+decadobl_polynomial_convertors    : converting decadobl with double/multprec
+test_decadobl_polynomials         : tests on decadobl polynomials
+ts_dapol                          : main test on decadobl polynomials
 -------------------------------------------------------------------------------
 generic_hessian_matrices          : basic computation of Hessian matrix
 standard_complex_hessians         : Hessians in standard double precision

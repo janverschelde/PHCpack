@@ -1,3 +1,13 @@
+Sun 20 Sep 2020 : added systems of (Laurent) polynomials in triple, penta,
+  octo, and deca double precision, instantiating generic packages:
+  {triple,penta,octo,deca}_double_{polynomials,poly_systems},
+  {trip,pent,octo,deca}dobl_complex_{polynomials,poly_systems},
+  {trip,pent,octo,deca}dobl_complex_{laurentials,laur_systems}, with
+  i/o in {trip,pent,octo,deca}dobl_complex_polynomial_io, convertors in
+  {trip,pent,octo,deca}dobl_polynomial_convertors, and tests in
+  test_{trip,pent,octo,deca}dobl_polynomials, with main tests called
+  in ts_tdpol, ts_pdpol, ts_odpol, ts_dapol.
+
 Sat 19 Sep 2020 : moved test procedures from ts_poly, ts_ddpol, ts_qdpol
   into test_{standard,dobldobl,quaddobl,multprec}_polynomials,
   and test_standard_laurentials.
