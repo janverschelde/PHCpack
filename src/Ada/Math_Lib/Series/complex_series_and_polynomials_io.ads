@@ -8,10 +8,26 @@ with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Vectors;
 with DoblDobl_CSeries_Polynomials;
 with DoblDobl_CSeries_Poly_Systems;
+with TripDobl_Complex_Series;
+with TripDobl_Complex_Series_Vectors;
+with TripDobl_CSeries_Polynomials;
+with TripDobl_CSeries_Poly_Systems;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Vectors;
 with QuadDobl_CSeries_Polynomials;
 with QuadDobl_CSeries_Poly_Systems;
+with PentDobl_Complex_Series;
+with PentDobl_Complex_Series_Vectors;
+with PentDobl_CSeries_Polynomials;
+with PentDobl_CSeries_Poly_Systems;
+with OctoDobl_Complex_Series;
+with OctoDobl_Complex_Series_Vectors;
+with OctoDobl_CSeries_Polynomials;
+with OctoDobl_CSeries_Poly_Systems;
+with DecaDobl_Complex_Series;
+with DecaDobl_Complex_Series_Vectors;
+with DecaDobl_CSeries_Polynomials;
+with DecaDobl_CSeries_Poly_Systems;
 
 package Complex_Series_and_Polynomials_io is
 
@@ -21,13 +37,25 @@ package Complex_Series_and_Polynomials_io is
 
   procedure get ( s : out Standard_Complex_Series.Series );
   procedure get ( s : out DoblDobl_Complex_Series.Series );
+  procedure get ( s : out TripDobl_Complex_Series.Series );
   procedure get ( s : out QuadDobl_Complex_Series.Series );
+  procedure get ( s : out PentDobl_Complex_Series.Series );
+  procedure get ( s : out OctoDobl_Complex_Series.Series );
+  procedure get ( s : out DecaDobl_Complex_Series.Series );
   procedure get ( file : in file_type;
                   s : out Standard_Complex_Series.Series );
   procedure get ( file : in file_type;
                   s : out DoblDobl_Complex_Series.Series );
   procedure get ( file : in file_type;
+                  s : out TripDobl_Complex_Series.Series );
+  procedure get ( file : in file_type;
                   s : out QuadDobl_Complex_Series.Series );
+  procedure get ( file : in file_type;
+                  s : out PentDobl_Complex_Series.Series );
+  procedure get ( file : in file_type;
+                  s : out OctoDobl_Complex_Series.Series );
+  procedure get ( file : in file_type;
+                  s : out DecaDobl_Complex_Series.Series );
 
   -- DESCRIPTION :
   --   Reads a polynomial in one variable and returns the
@@ -35,13 +63,25 @@ package Complex_Series_and_Polynomials_io is
 
   procedure put ( s : in Standard_Complex_Series.Series );
   procedure put ( s : in DoblDobl_Complex_Series.Series );
+  procedure put ( s : in TripDobl_Complex_Series.Series );
   procedure put ( s : in QuadDobl_Complex_Series.Series );
+  procedure put ( s : in PentDobl_Complex_Series.Series );
+  procedure put ( s : in OctoDobl_Complex_Series.Series );
+  procedure put ( s : in DecaDobl_Complex_Series.Series );
   procedure put ( file : in file_type;
                   s : in Standard_Complex_Series.Series );
   procedure put ( file : in file_type;
                   s : in DoblDobl_Complex_Series.Series );
   procedure put ( file : in file_type;
+                  s : in TripDobl_Complex_Series.Series );
+  procedure put ( file : in file_type;
                   s : in QuadDobl_Complex_Series.Series );
+  procedure put ( file : in file_type;
+                  s : in PentDobl_Complex_Series.Series );
+  procedure put ( file : in file_type;
+                  s : in OctoDobl_Complex_Series.Series );
+  procedure put ( file : in file_type;
+                  s : in DecaDobl_Complex_Series.Series );
 
   -- DESCRIPTION :
   --   Writes a polynomial in one variable,
@@ -51,7 +91,15 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 1; verbose : in boolean := false );
   procedure get ( lv : out DoblDobl_Complex_Series_Vectors.Link_to_Vector;
                   idx : in integer32 := 1; verbose : in boolean := false );
+  procedure get ( lv : out TripDobl_Complex_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false );
   procedure get ( lv : out QuadDobl_Complex_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false );
+  procedure get ( lv : out PentDobl_Complex_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false );
+  procedure get ( lv : out OctoDobl_Complex_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false );
+  procedure get ( lv : out DecaDobl_Complex_Series_Vectors.Link_to_Vector;
                   idx : in integer32 := 1; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -64,13 +112,25 @@ package Complex_Series_and_Polynomials_io is
 
   procedure put ( v : in Standard_Complex_Series_Vectors.Vector );
   procedure put ( v : in DoblDobl_Complex_Series_Vectors.Vector );
+  procedure put ( v : in TripDobl_Complex_Series_Vectors.Vector );
   procedure put ( v : in QuadDobl_Complex_Series_Vectors.Vector );
+  procedure put ( v : in PentDobl_Complex_Series_Vectors.Vector );
+  procedure put ( v : in OctoDobl_Complex_Series_Vectors.Vector );
+  procedure put ( v : in DecaDobl_Complex_Series_Vectors.Vector );
   procedure put ( file : in file_type;
                   v : in Standard_Complex_Series_Vectors.Vector );
   procedure put ( file : in file_type;
                   v : in DoblDobl_Complex_Series_Vectors.Vector );
   procedure put ( file : in file_type;
+                  v : in TripDobl_Complex_Series_Vectors.Vector );
+  procedure put ( file : in file_type;
                   v : in QuadDobl_Complex_Series_Vectors.Vector );
+  procedure put ( file : in file_type;
+                  v : in PentDobl_Complex_Series_Vectors.Vector );
+  procedure put ( file : in file_type;
+                  v : in OctoDobl_Complex_Series_Vectors.Vector );
+  procedure put ( file : in file_type;
+                  v : in DecaDobl_Complex_Series_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Writes the series as a system of v'length univariate polynomials
@@ -81,7 +141,15 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( p : out DoblDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( p : out TripDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( p : out QuadDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( p : out PentDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( p : out OctoDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( p : out DecaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( file : in file_type;
                   p : out Standard_CSeries_Polynomials.Poly;
@@ -90,7 +158,19 @@ package Complex_Series_and_Polynomials_io is
                   p : out DoblDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( file : in file_type;
+                  p : out TripDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( file : in file_type;
                   p : out QuadDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( file : in file_type;
+                  p : out PentDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( file : in file_type;
+                  p : out OctoDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( file : in file_type;
+                  p : out DecaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -103,7 +183,15 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( p : in DoblDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( p : in TripDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( p : in QuadDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( p : in PentDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( p : in OctoDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( p : in DecaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
                   p : in Standard_CSeries_Polynomials.Poly;
@@ -112,7 +200,19 @@ package Complex_Series_and_Polynomials_io is
                   p : in DoblDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
+                  p : in TripDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
                   p : in QuadDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  p : in PentDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  p : in OctoDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  p : in DecaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -126,7 +226,15 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( ls : out DoblDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( ls : out TripDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( ls : out QuadDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( ls : out PentDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( ls : out OctoDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( ls : out DecaDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -140,7 +248,15 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( s : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( s : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( s : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( s : in PentDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( s : in OctoDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( s : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
                   s : in Standard_CSeries_Poly_Systems.Poly_Sys;
@@ -149,7 +265,19 @@ package Complex_Series_and_Polynomials_io is
                   s : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
+                  s : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
                   s : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  s : in PentDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  s : in OctoDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  s : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
