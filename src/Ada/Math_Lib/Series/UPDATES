@@ -1,3 +1,7 @@
+Mon 21 Sep 2020 : new test_{standard,dobldobl,quaddobl}_cseries_polynomials
+  with test procedures from ts_cserpol.  Instantiated cseries polynomials
+  in {trip,pent,octo,deca}dobl_cseries_polynomials, with _io as well.
+
 Fri 18 Sep 2020 : new test_{standard,dobldobl,quaddobl}_linearization with
   procedures from ts_cserlin.  New packages for linearization in the new
   precisions: {trip,pent,octo,pent}dobl_series_matrix_solvers, tested by
