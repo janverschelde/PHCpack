@@ -1,3 +1,6 @@
+Sun 20 Sep 2020 : new test_{standard,dobldobl,quaddobl}_fabry packages,
+  with test procedures from ts_fabry.
+
 Thu 20 Aug 2020 : added functions to {dobldobl,quaddobl}_circuit_makers
   to make complex circuits from Speelpenning convolution circuits.
 
