@@ -1,543 +1,760 @@
-Mon 21 Sep 2020 : new test_{standard,dobldobl,quaddobl}_cseries_polynomials
-  with test procedures from ts_cserpol.  Instantiated cseries polynomials
-  in {trip,pent,octo,deca}dobl_cseries_polynomials, with _io as well.
-  Defined {trip,pent,octo,deca}dobl_cseries_poly_{functions,systems},
-  i/o in {trip,pent,octo,deca}dobl_cseries_poly_systems_io, and
-  {trip,pent,octo,deca}dobl_cseries_jaco_matrices.  Defined series with
-  polynomial coefficients in {trip,pent,octo,deca}dobl_polynomial_cseries.
-
-Fri 18 Sep 2020 : new test_{standard,dobldobl,quaddobl}_linearization with
-  procedures from ts_cserlin.  New packages for linearization in the new
-  precisions: {trip,pent,octo,pent}dobl_series_matrix_solvers, tested by
-  test_{trip,pent,octo,pent}dobl_linearization, updated ts_cserlin.
-  Moved the test procedures from ts_cserlin2 into the test packages
-  test_{standard,dobldobl,quaddobl}_linearization, which makes the file
-  ts_cserlin2.adb redundant, so this file must be removed.  Extended 
-  test_{trip,pent,octo,deca}dobl_linearization with a coefficient test,
-  after adding to series_coefficient_vectors the linearization functions
-  in triple, penta, octo, and deca double precision.
-
-Thu 17 Sep 2020 : new {trip,pent,octo,deca}dobl_complex_vector_series,
-  and _io, with corresponding _random_series_vectors, _cseries_vector_norms,
-  and test_{trip,pent,octo,deca}dobl_vector_series, called by ts_cservec.
-  New {trip,pent,octo,deca}dobl_cseries_vector_functions packages.
-  Moved procedures from ts_csermat.adb into new test packages:
-  test_{standard,dobldobl,quaddobl}_matrix_series.
-  New {trip,pent,octo,deca}dobl_complex_series_matrices,
-  {trip,pent,octo,deca}dobl_complex_matrix_series, and its _io,
-  {trip,pent,octo,deca}dobl_random_series_matrices,
-  {trip,pent,octo,deca}dobl_series_{linear_solvers, least_squares),
-  test_{trip,pent,octo,deca}_matrix_series, extended ts_csermat.
-
-Wed 16 Sep 2020 : added skip_line before prompting for a shift parameter
-  in test_{dobldobl,tripdobl,quaddobl}_complex_series.adb.
-  New {trip,pent,octo,deca}dobl_complex_series_transforms, with tests added
-  to test_{trip,pent,octo,deca}dobl_complex_series.
-  Corrected prompt in test_dobldobl_complex_series.adb
-  Moved test procedures from ts_cservec.adb into new packages
-  test_{standard,dobldobl,quaddobl}_vector_series.
-
-Tue 15 Sep 2020 : instantiated {trip,pent,octo,deca}dobl_complex_series_ring
-  and its i/o in {trip,pent,octo,deca}dobl_complex_series_ring_io, for use
-  in {trip,pent,octo,deca}dobl_complex_series_vectors to define vectors of
-  series and its i/o in {trip,pent,octo,deca}dobl_complex_series_vectors_io.
-  New packages {trip,pent,octo,deca}dobl_complex_series_vecvecs.
-  Defined {trip,pent,octo,deca}dobl_complex_algebraic_series
-  and {trip,pent,octo,deca}dobl_complex_series_norms.  Extended binomials
-  with functions in triple, penta, octo, and deca double precision.
-  New {trip,pent,octo,deca}dobl_compelx_series_functions.
-  Extended test_{trip,pent,octo,deca}dobl_complex_series.
-
-Tue 8 Sep 2020 : new test_{standard,dobldobl,quaddobl}_complex_series,
-  with code taken from ts_cseries.  Instantiated tripdobl_complex_series,
-  defined tripdobl_complex_{series_io,random_series}, extended ts_cseries,
-  with a call to test_tripdobl_complex_series.  Added the analogue packages
-  for penta, octo, and deca double precision.
-
-Mon 13 Jul 2020 : to ts_perfserlin, added a test procedure for the indexed
-  solving of a linear system of power series, for use in a staggered Newton.
-
-Thu 9 Jul 2020 : added procedures to standard_inlined_linearization for
-  an indexed solving of linear series systems.
-
-Tue 7 Jul 2020 : improved standard_inlined_linearization, moving all
-  parts/merge procedures to the wrappers, added versions for use in
-  the staggered Newton methods; updated ts_perfserlin.
-  Corrected some spelling mistakes in standard_inlined_linearization.ads.
-
-Mon 6 Jul 2020 : added timer to ts_perfserlin.  Added lufco procedures
-  to standard_inlined_linearization, tested in ts_perfserling.
-
-Sun 5 Jul 2020 : moved the allocate procedure from ts_perfserlin into
-  the package standard_floating_vecvecvecs.  Moved the split_rows from
-  ts_perfserlin to standard_matrix_splitters and move the solver procedures
-  from ts_perfserlin to the new package standard_inlined_linearization.
-
-Sat 4 Jul 2020 : new ts_perfserlin to develop a better performing solver
-  for linear systems of power series.
-
-Fri 26 Jun 2020 : to standard_series_matrix_solvers, added procedures to
-  pass the degree of the series for use in a staggered iterative solving.
-
-Sun 5 Apr 2020 : updated *_series_matrix_solvers.a* to pass the work space
-  vector to the SVD() procedures.
-
-Wed 19 Feb 2020 : to binomial_coefficients added functions to compute the
-  binomial coefficients with doubles, double doubles, and quad doubles.
-  Applied the changes in *_complex_series_functions.adb so overflow no
-  longer occurs when shifting coefficients of power series of large degrees.
-
-Sun 16 Feb 2020 : improved the test on the shift in ts_cseries.
-
-Tue 14 Jan 2020 : in standard_series_matrix_solvers, exported the
-  auxiliary procedures for the matrix-vector multiply and the subtract.
-  Did so likewise for {dobldobl,quaddobl}_series_matrix_solvers.
-
-Thu 9 Jan 2020 : added timers to ts_cserlin2.adb.
-
-Sat 4 Jan 2020 : added double double and quad double versions for the LU
-  solvers with linearization on matrix series, in the packages
-  {dobldobl,quaddobl}_series_matrix_solvers, tested by ts_cserlin2.
-  To {standard,dobldobl,quaddobl}_series_matrix_solvers, added procedures
-  to solve overdetermined matrix series, tested by ts_cserlin2.
-  To {standard,dobldobl,quaddobl}_series_matrix_solvers, added procedures
-  to solve matrix series with SVD, tested by ts_cserlin2.
-
-Fri 3 Jan 2020 : for compiler warnings, modified
-  {standard,dobldobl,quaddobl}_matrix_series_solvers.adb.
-  New package series_coefficient_vectors, with code taken from the package
-  ../Circuits/series_polynomial_gradients, to flatten the data types in
-  the linearized matrix series solvers.  Extended series_coefficient_vectors
-  with functions for vectors of matrices, added linearized solvers to
-  standard_series_matrix_solvers for flattened data typed, tested by
-  the new test procedure ts_cserlin2.
-
-Thu 2 Jan 2020 : for compiler warnings, modified ts_sersys.adb,
-  {standard,dobldobl,quaddobl}_polynomial_cseries.adb, ts_sermat.adb,
-  ts_cservec.adb, ts_csermat.adb, ts_cserlin.adb,
-  {standard,dobldobl,quaddobl}_polynomial_series.adb.  Modified
-  {standard,dobldobl,quaddobl}_series_least_squares.adb for compiler warnings.
-
-Wed 1 Jan 2020 : for compiler warnings, modified standard_truncated_series.adb, 
-  ts_pstrunc.adb, {standard,dobldobl,quaddobl}_random_series.adb,
-  dobldobl_algebraic_series.adb, standard_algebraic_series2.adb,
-  {dobldobl,quaddobl}_complex_series_functions, ts_series.adb, ts_series2.adb,
-  {dobldobl,quaddobl}_complex_series_transforms.adb, ts_cseries.adb,
-  ts_servec.adb, standard_dense_series2, standard_dense_series.adb,
-  ts_sercffpol.adb, ts_csersys.adb.
-
-Mon 30 Dec 2019 : updates in complex_series_and_polynomials.adb and in
-  standard_complex_series_functions for compiler warnings.
-
-Wed 25 Dec 2019 : the generic_dense_series.ads did not export the creating
-  of a link to a series, given the coefficient vector.
-  Modifications to {standard,dobldobl,quaddobl}_cseries_polynomials_io.adb
-  for compiler warnings.  For compiler warnings, modified
-  {standard,dobldobl,quaddobl}_complex_vector_series.a* and
-  {standard,dobldobl,quaddobl}_random_series_vectors.adb.
-
-Mon 13 May 2019 : added double double and quad double versions of the
-  packages to compute coefficient modulus transforms on series.
-
-Sun 12 May 2019 : new package standard_complex_series_transforms to
-  transform series so their coefficients are bounded by one in modulus.
-
-Fri 4 Jan 2019 : added deep_clear to standard_cseries_vector_functions,
-  and also to the dobldobl and quaddobl versions.
-
-Thu 3 Jan 2019 : to {standard,dobldobl,quaddobl}_cseries_vector_functions
-  added shift functions and shift procedures.  Added Make_Deep_Copy()
-  functions to {standard,dobldobl,quaddobl}_cseries_vector_functions.
-
-Wed 2 Jan 2019 : new test procedure ts_sercffpol, to test the coefficient
-  parameter evaluation and differentiation of series polynomials,
-  which lead to new packages random_series_polynomials and better output
-  defined by {standard,dobldobl,quaddobl}__cseries_polynomial_io
-  and {standard,dobldobl,quaddobl}__cseries_poly_systems_io.
-
-Wed 26 Dec 2018 : bug fix in generic_dense_series.adb and in the
-  {standard,dobldobl,quaddobl}_complex_algebraic_series.adb.
-
-Mon 17 Dec 2018 : modified Mul() in generic_dense_series so "in place"
-  is possible for the Link_to_Series types and added a Power procedure
-  which computes without extra memory locations.
-  Tested the power procedure with an test added to ts_cseries.adb.
-
-Mon 26 Nov 2018 : fixed sign error in the Shift functions in
-  {standard,dobldobl,quaddobl}_complex_series_functions.adb.
-  Corrected a fix in standard_complex_series_functions.adb.
-
-Tue 20 Nov 2018 : added frequency test to ts_cserpol.adb, to ensure no
-  memory leaks occur with evaluating series polynomials.
-
-Mon 19 Nov 2018 : added clear() statements to the frequency tests to
-  ts_cserlin.adb to ensure there is no memory leak in linear system solving.
-
-Sat 17 Nov 2018 : fixed bug in Sub() method with empty first argument
-  in generic_dense_series.adb.
-
-Wed 7 Nov 2018 : new test program ts_csersys and ts_cserinv,
-  based on modifications of ts_sersys and ts_serinv respectively.
-  Extended *_complex_series_functions* with Order functions.
-  New packages {standard,dobldobl,quaddobl}_cseries_vector_functions.
-
-Tue 6 Nov 2018 : renamed *_series_vector_norms3 into *_cseries_vector_norms
-  with modification and renaming of ts_servec3 into ts_cservec and
-  ts_sermat3 into ts_csermat.  Renamed *_interpolating_series3* into
-  *_interpolating_cseries*, which changed ts_seritp3, ts_sersin3,
-  and *_series_matrix_solvers.adb.  Renamed ts_seritp3 into ts_cseritp,
-  ts_sersin3 into ts_csersin, and ts_serlin3 into ts_cserlin.
-
-Mon 5 Nov 2018 : instantiated polynomials, functions, systems, and Jacobian
-  matrices to define 15 packages to work with polynomial systems with series
-  as coefficients, in double, double double, and quad double precision.
-  Change names of *random_series3.* into *complex_random_series.*
-  and *algebraic_series3* into *complex_algebraic_series.*, which changed
-  *complex_series_norms.adb.  Renamed ts_series3 into ts_cseries.
-  The name changes in the packages caused changes in
-  *random_series_vectors.adb, *series_vector_norms3.adb,
-  *random_series_matrices.adb, and *series_least_squares.adb.
-  Fixed mistake in quaddobl_cseries_polynomials.ads.
-  New packages *polynomial_cseries and complex_series_and_polynomials*,
-  with its i/o, tested by ts_cserpol.
-
-Sun 4 Nov 2018 : fixed problem in {dobldobl,quaddobl}_series_vector_norms3.adb
-  and defined {dobldobl,quaddobl}_series_{linear_solvers,least_squares},
-  tested by ts_sermat3.  Made *interpolating_series3, tested by ts_seritp3.
-  New test procedure ts_sersin3 for testing echelon forms on singular systems.
-  New packages {standard,dobldobl,quaddobl}_series_matrix_solvers,
-  tested by ts_serlin3.adb.
-
-Sat 3 Nov 2018 : new packages to compute norms, to evaluate and to shift
-  series in *complex_series_norms and *complex_series_functions, for
-  double, double double, and quad double precision, tested by ts_series3.adb.
-  Defined a rind of complex series to instantiate vectors and vectors of
-  vectors, with io, norms, and random series, tested by ts_servec3.
-  Defined matrices of series and series of matrices, and the solvers
-  in standard_series_linear_solvers and standard_series_least_squares,
-  tested by the new ts_sermat3.
-
-Fri 2 Nov 2018 : defined generic series in generic_dense_series,
-  instantiated in {standard,dobldobl,quaddobl}_complex_series, with i/o
-  in {standard,dobldobl,quaddobl}_complex_series_io, and tested in
-  ts_series3.adb.  Defined {standard,dobldobl,quaddobl}_random_series3,
-  and {standard,dobldobl,quaddobl3}_algebraic_series3,
-  for use in tests in ts_series3.adb.
-
-Thu 1 Nov 2018 : extended random_series_matrices with functions to generate
-  random matrix series, used in ts_seritp2, which tests the operations in
-  standard_interpolating_series2.  This use of this new package causes
-  a change in standard_matrix_series2_solvers.adb.
-  New ts_sersin2.adb tests the package standard_echelon_forms.
-
-Wed 31 Oct 2018 : fixed a bug in a test procedure in ts_sermat2.adb and
-  made some small changes in standard_least_squares_series2.adb.
-  New package standard_matrix_series2_solvers to apply linearization
-  to systems with the new matrix series, tested by ts_serlin2.
-
-Tue 30 Oct 2018 : new standard_dense_vector_series2, updated ts_servec2.adb.
-  Instantiated vecvecs into the new standard_dense_series2_vecvecs.ads.
-  New package random_series_generators, called by ts_series2.adb.
-  New package random_series_vectors, called by ts_servec2.adb.
-  New packages standard_dense_vector_serie2_io and
-  standard_series_vector_norms2, tested by ts_servec2.adb.
-  Instantiated the generic_matrices with the new series ring to obtain
-  standard_dense_series2_matrices, defined standard_dense_matrix_series2
-  and standard_dense_matrix_series2_io.  The LU factorization solvers in
-  standard_linear_series2_solvers are tested on randomly generated linear
-  systems, using random_series_matrices, in ts_sermat2.
-  New package standard_least_squares_series2, tested by ts_sermat2.
-
-Mon 29 Oct 2018 : added definitions of arithmetical operations
-  to standard_dense_series2.  Completed standard_dense_series2 and
-  extended standard_dense_series2_io, tested by ts_series2.
-  Defined the ring of series, in standard_dense_series2_ring and its i/o
-  in standard_dense_series2_ring_io, for the definition of vectors of
-  series, in standard_dense_series2_vectors and its i/o in
-  standard_dense_series2_vectors_io, tested by ts_servec2.adb.
-
-Sun 28 Oct 2018 : extending the series type with a Link_to_Series type
-  to allow for variable degree power series.  The redevelopment starts
-  with standard_dense_series2.a* and standard_dense_series2_io.a*,
-  tested by ts_series2.adb.  New versions of packages to compute roots and
-  norms in standard_algebraic_series2 and standard_dense_series_norms2.
-  In standard_dense_series2, wrapped the create, copy, and equal operations
-  for variable degree series.
-
-Fri 2 Jun 2017 : added guard test on setting the degree in
-  series_and_polynomials.adb.
-
-Wed 14 Dec 2016 : added Determinant function to *echelon_forms.
-  Fixed bug in timer in ts_serlin, forgotten to initialize L, as L := A.
-  Wrapped the echelon solver in *matrix_series_solvers, tested by ts_serlin,
-  for the general case.
-
-Mon 12 Dec 2016 : added timing for the lower triangular echelon forms for
-  the Hermite-Laurent systems to ts_serlin.  To the procedures in the
-  packages *echelon_forms, added the block dimension, which changed 
-  the test procedures ts_sersin and ts_serlin.
-  Fixed bug in *echelon_forms with added tests in ts_sersin.
-  Use of added block dimension gives sometimes not an echelon form
-  for very sparse 0/1 matrices, fixed this in *echelon_forms.adb and
-  simplified the construction of multipier matrices in ts_sersin.
-  Added wrappers to *echelon_forms to solve A*x = b, tested by ts_sersin.
-
-Sun 11 Dec 2016 : to ts_sersin added test on user given input.
-  Made the Multiply_and_Permute procedures in *echelon_forms.adb
-  similar to the Multiplication_Matrices in ts_sersin.
-
-Sat 10 Dec 2016 : in *echelon_forms.adb initialized matrix U to the identity.
-  Solved triangular system with the echelon forms, tested by ts_sersin.
-  Added back transformations to ts_sersin to solve the original system,
-  and also to the packages *echelon_forms, tested by ts_sersin.
-
-Fri 9 Dec 2016 : added parameters lower and upper to the random_matrix_series
-  functions, adjusted the calls in the tests ts_seritp and ts_sersin.
-  To random_matrix_series, added functions to generate random matrices
-  with complex coefficients.  Improved writing in *echelon_forms,
-  tested by ts_sersin.  Returned multipliers in *echelon_forms.
-  Defined permutation matrices and stored multipliers better in the
-  *echelon_forms.  Added checks on the results in ts_sersin.
-  Checks in ts_sersin should work in stages, with sequences of matrices.
-
-Thu 8 Dec 2016 : new test program ts_sersin to develop the solving of the
-  Hermite-Laurent matrix for series with singular matrix coefficients.
-  Defined finding of pivots and swapping of rows and columns in ts_sersin,
-  followed by the elimination of the nonzero element right of the pivots.
-  New package standard_echelon_forms for the Hermite-Laurent systems,
-  tested by ts_sersin.  Wrote dobldobl and quaddobl versions.
-
-Wed 7 Dec 2016 : more tests on Hermite-Laurent interpolation in ts_seritp.
-  Made the Hermite-Laurent matrix square.  Added timing test to ts_serlin.adb.
-  Moved Multiply procedure of matrix series with vector series from ts_seritp
-  to the packages {standard,dobldobl,quaddobl}_matrix_series.
-  New package random_matrix_series with code out of ts_seritp.
-
-Tue 6 Dec 2016 : defined the Hermite-Laurent interpolation problem in
-  standard_interpolating_series.  Added test on a singular case to ts_seritp.
-  Extended {dobldobl,quaddobl}_interpolating_series with Hermite-Laurent.
-  Tested the singular case in double double and quad double precision,
-  with new code in ts_seritp.
-
-Mon 5 Dec 2016 : added more tests to ts_seritp.adb, added rank computation
-  of the Hermite matrix, with more tests, also for the dd/qd versions.
-  Set the magnitude for t at 0.01 in ts_seritp.
-
-Sun 4 Dec 2016 : fixed in standard_interpolating_series.adb the differentials
-  in the coefficients of the Hermite matrix.  And made the same fixes in the
-  {dobldobl,quaddobl}_interpolating_series.adb.
-
-Sat 3 Dec 2016 : added a Hermite_Interpolate function to the packages
-  {standard,dobldobl,quaddobl}_interpolating_series.  Fixed bug in the
-  selection of the coefficient vector, in the range 0..deg.
-  Add test procedures for Hermite interpolation to ts_seritp.
-
-Fri 2 Dec 2016 : added definition of coefficient matrix and right hand side
-  vector for the linear system in the Hermite interpolation,
-  to the package standard_interpolating_series.  Made the corresponding
-  additions to {dobldobl,quaddobl}_interpolating_series.
-
-Sun 27 Nov 2016 : standard_interpolating_series tested by ts_seritp
-  computes by interpolation the solution of a linear system with matrix
-  series, with possible singular leading matrix coefficients.
-  Moved the Interpolate from ts_seritp to standard_interpolating_series.
-  Added to {dobldobl,quaddobl}_random_series functions to generate random
-  vector series.  New packages {dobldobl,quaddobl}_interpolating_series
-  to solve linear series systems with interpolation in double double
-  and quad double precision.
-
-Sat 26 Nov 2016 : to standard_random_series, added a function to generate
-  a random vector series.  New test program ts_seritp, to develop the
-  solving of linear systems of series via interpolation.
-  New package standard_interpolating_series computes the generic rank
-  of a matrix series at a random point, tested by ts_seritp.
-
-Mon 7 Nov 2016 : fixed number of rows in stacked matrix in ts_serinv.
-
-Sun 6 Nov 2016 : added rank computation via SVD to ts_serinv.adb.
-
-Sat 5 Nov 2016 : ts_serinv tests development of inverse of matrix series.
-
-Sun 9 Oct 2016 : edited {standard,dobldobl,quaddobl}_random_series.adb 
-  for compiler warnings.
-
-Fri 7 Oct 2016 : fixed bug in Eval() in *_dense_series with additional
-  exponents a and b.  Isolated computation of binomial coefficient in a
-  new package binomial_coefficients, tested by ts_bincff.
-  Used binomial_coefficients in *_dense_series.adb package bodies.
-
-Sun 2 Oct 2016 : added weighted Eval() in standard_dense_series
-  and standard_series_vector_functions.  Added double double and quad double
-  versions of the weighted Eval() to {dobldobl,quaddobl}_dense_series
-  and {dobldobl,quaddobl}_series_vector_functions.
-
-Tue 27 Sep 2016 : fixed type error in *_dense_vector_series.ads.
-
-Fri 29 Jul 2016 : SVD solver in standard_matrix_series_solvers, tested by 
-  ts_serlin.  Added SVD solvers in double double and quad double precision 
-  to {dobldobl,quaddobl}_matrix_series_solvers, with tests in ts_serlin.
-
-Thu 28 Jul 2016 : added SVD to solve the lead coefficient in
-  standard_matrix_series_solvers.
-
-Mon 25 Jul 2016 : fixed bug in the 2nd create() of *vector_series.adb.
-
-Sun 24 Jul 2016 : new packages {dobldobl,quaddobl}_polynomial_series 
-  define polynomial series for double double and quad double precision,
-  tested by ts_serpol.
-
-Sat 23 Jul 2016 : eval() functions added to *vector_series.a*.
-  Fixed type error in documentation of *matrix_series.ads.
-  New package standard_polynomial_series to define series where the
-  coefficients are polynomials in several variables.
-
-Wed 20 Jul 2016 : added computation of max norm of backward and forward
-  error to ts_sermat.
-
-Tue 19 Jul 2016 : applied lufco in *_matrix_series_solvers, with tests added
-  to ts_serlin.  Added qrls to *_matrix_series_solvers, tested in ts_serlin.
-  Added computation of the max norm of the error to ts_serlin.
-
-Mon 18 Jul 2016 : defined {dobldobl,quaddobl}_matrix_series_solvers, with
-  added tests in ts_serlin.
-
-Sun 17 Jul 2016 : new package standard_matrix_series_solvers tested by
-  ts_serlin to apply linearization to solve a linear system of series.
-  Completed solving with lusolve in standard_matrix_series_solvers.adb,
-  with added test in ts_serlin.
-
-Fri 15 Jul 2016 : defined series that have vectors as coefficients and output
-  in standard_dense_vector_series and _io, with added test in ts_servec.
-  Defined dobldobl and quaddobl versions of series with vectors as coeffs.
-  Added the initialization of the degrees in *vector_series.adb.
-  Defined series with matrix coefficients in *matrix_series* with output,
-  tested by ts_sermat.adb.
-
-Thu 7 Jul 2016 : change in termilogy, order is replaced by degree.
-  This changes 40 files: *dense_series.a*, *dense_series_io.a*, *algebraic*,
-  *series_norms.adb, quaddobl_series_vector_norms.adb, *random*, *least*adb,
-  series_and_polynomials, series_and_polynomials_io.ads and ts*.
-  Added Order() function to *dense_series.a*.
-
-Tue 5 Jul 2016 : {standard,dobldobl,quaddobl}_dense_series_vector_functions
-  is new package to evaluate vectors of power series.
-
-Mon 4 Jul 2016 : added shift operator to *_dense_series, tested by ts_series.
-
-Thu 30 Jun 2016 : added convertor functions to series_and_polynomials,
-  as needed for the gateway functions to C.
-
-Tue 28 Jun 2016 : fixed bug in the Max_Norm of _dense_series_norms.adb,
-  added Max_Norm to _series_vector_norms.  Added set_order procedure for
-  Jacobian matrices to series_and_polynomials.  Placed guards before the
-  call to _Polar.Root in _algebraic_series.adb.
-
-Mon 27 Jun 2016 : extra test in ts_series, in dobldobl_algebraic_series.adb,
-  also wrote the result of the evaluation in verbose mode.
-  Instantiated {dobldobl,quaddobl}_series_polynomials, and the corresponding
-  _poly_functions, _poly_systems, and _poly_sysfun packages.
-  Extended series_and_polynomials and its _io.
-  Added tests to ts_serpol for double double and quad double precision.
-  Instantiated {dobldobl,quaddobl}_series_jaco_matrices, tested by
-  ts_sersys.
-
-Sun 26 Jun 2016 : defined {dobldobl,quaddobl}_dense_series_{vecvecs,matrices},
-  for use in {dobldobl,quaddobl}_random_series.  New packages to solve linear
-  systems of series, {dobldobl,quaddobl}_linear_series_solvers, in double
-  double and quad double precision, test by ts_sermat.  Defined norms of
-  series in double double and quad double precision, tested by ts_series.
-  New {dobldobl,quaddobl}_series_vector_norms, tested by ts_servec.
-  New {dobldobl,quaddobl}_least_squares_series, tested by ts_sermat.
-
-Sat 25 Jun 2016 : defined {dobldobl,quaddobl}_dense_series with their _io,
-  modified standard_dense_series, added a test to ts_series.
-  Defined {dobldobl,quaddobl}_dense_series_ring, and its _io, for the
-  instantiation of {dobldobl,quaddobl}_dense_series_vectors and its _io.
-  New packages {dobldobl,quaddobl}_random_series, with some changes in
-  standard_random_series.  New packages {dobldobl,quaddobl}_algebraic_series,
-  tested by ts_series.
-
-Fri 24 Jun 2016 : instantiated standard_dense_series_ring_io, which required
-  a change in standard_dense_series_io, used this instantiation to define
-  standard_dense_series_vectors_io, called in ts_servec.
-  Modified standard_least_squares_series.adb, tested by ts_sermat:
-  the Householder QR decomposition on truncated power series works!
-  Extra output in series_and_polynomials.adb and its _io.adb.
-  Added Safe_Norm() function to standard_least_squares_series.adb.
-
-Thu 23 Jun 2016 : added QRLS to standard_least_squares_series,
-  tested by ts_sermat.  Fixed bug in get of standard_dense_series_io.adb.
-  More tests in ts_sermat, with edits in standard_least_squares_series.adb.
-  After more edits in standard_least_squares_series.adb, it works for
-  the zero-th order terms of the truncated series.
-
-Wed 22 Jun 2016 : added norm and normalize to standard_series_vector_norms,
-  tested by ts_servec.  New package standard_dense_series_norms to define
-  the norm and to normalize series, tested by ts_series.
-  Added two-norm to standard_dense_series_norms, tested by ts_series.
-  New package standard_least_squares_series for QR decomposition,
-  tested by ts_sermat.
-
-Tue 21 Jun 2016 : added conjugate to standard_dense_series, changed ts_series.
-  Verified that the norm of a normalized series equals one.
-  The package standard_series_vector_norms defines inner products and norms.
-
-Mon 20 Jun 2016 : added input/output of series in series_and_polynomials_io,
-  extended convertor operations for series in series_and_polynomials 
-  with index, tested evaluation in ts_sersys.  Added set_order procedure
-  for vectors of series, used in ts_sersys for more accurate evaluation.
-  Added set_order() procedure for matrices to series_and_polynomials,
-  added one Newton step to ts_sersys.  To standard_dense_series and
-  series_and_polynomials added Filter procedure, used in ts_sersys.
-
-Sun 19 Jun 2016 : instantiated standard_dense_series_vecvecs and added
-  to standard_random_series a function to make a vecvec of random series. 
-  Convertors in series_and_polynomials are more general, test by ts_serpol.
-  Added set_order procedure to series_and_polynomials.
-  Extended series_and_polynomials_io with index and verbose options,
-  and basic input/output of systems of series polynomials.
-  Instantiated standard_series_poly_sysfun and standard_series_jaco_matrices,
-  with a new test procedure ts_sersys.
-
-Sat 18 Jun 2016 : added get/put procedures to series_and_polynomials_io,
-  encapsulating the get/put of ordinary polynomials.  Instantiated the
-  generic_polynomial_systems to define standard_series_poly_systems,
-  with added converter functions to series_and_polynomials.
-
-Fri 17 Jun 2016 : added basic get to standard_dense_series_io.
-  Added conversion to series_and_polynomials and a new package for the
-  symbolic i/o of series: series_and_polynomials_io, tested by ts_serpol.
-
-Thu 16 Jun 2016 : instantiated standard_series_poly_functions, tested by
-  ts_serpol.  Fixed Add() and Sub() so that order of the series is updated
-  as well in case the other series has a higher order.  Fixed Mul() as well
-  and updated the specifications, with a modification in ts_serpol.adb.
-
-Wed 15 Jun 2016 : new package series_and_polynomials to convert polynomials
-  with complex coefficients into polynomials with series coefficients, and
-  vice versa, tested by ts_serpol.adb.
-
-Tue 14 Jun 2016 : instantiated new standard_series_polynomials,
-  tested by ts_serpol.adb.  In standard_dense_series, fixed copy.
-
-Sun 12 Jun 2016 : defined standard_dense_series_matrices and extended
-  standard_random_series with a random_matrix_series function, tested
-  by ts_sermat.adb.  New package standard_linear_series_solvers to solve
-  systems of truncated power series with LU factorization.
-
-Sat 11 Jun 2016 : new package standard_random_series with code factored out
-  from the test ts_series.  Extended the package with random vectors.
-
-Fri 10 Jun 2016 : new package standard_algebraic_series with the sqrt code
-  from ts_series.  Extended standard_algebraic_series and ts_series with
-  code to compute the p-th root of a series.
-
-Thu 9 Jun 2016 : rewrote standard_dense_series to use a definite type for
-  making the standard_dense_series_ring and standard_dense_series_vectors.
-  The test programs are ts_series and ts_servec.  Extended the package
-  standard_dense_series with operations with complex numbers and added
-  a power function.  A sqrt is added to ts_series.
-
-Wed 8 Jun 2016 : new package standard_dense_series, with a very basic output
-  in standard_dense_series_io, tested by ts_series, to encapsulate the
-  standard complex vectors data type.
+Mon 21 Sep 2020 : added {trip,pent,octo,deca}dobl_poly_systems_io.
+
+Sun 20 Sep 2020 : added systems of (Laurent) polynomials in triple, penta,
+  octo, and deca double precision, instantiating generic packages:
+  {triple,penta,octo,deca}_double_{polynomials,poly_systems},
+  {trip,pent,octo,deca}dobl_complex_{polynomials,poly_systems},
+  {trip,pent,octo,deca}dobl_complex_{laurentials,laur_systems}, with
+  i/o in {trip,pent,octo,deca}dobl_complex_polynomial_io, convertors in
+  {trip,pent,octo,deca}dobl_polynomial_convertors, and tests in
+  test_{trip,pent,octo,deca}dobl_polynomials, with main tests called
+  in ts_tdpol, ts_pdpol, ts_odpol, ts_dapol.
+
+Sat 19 Sep 2020 : moved test procedures from ts_poly, ts_ddpol, ts_qdpol
+  into test_{standard,dobldobl,quaddobl,multprec}_polynomials,
+  and test_standard_laurentials.
+
+Fri 26 Jul 2019 : refactored procedures in random_polynomial_systems into
+  new functions to generate random polynomial systems.
+
+Sun 17 Feb 2019 : added link to array of Hessians type to
+  generic_hessian_matrices, along with a deallocator procedure.
+
+Wed 13 Feb 2019 : adjusted generic_hessian_matrices for polynomials with
+  one homotopy parameter as variable, tested in ts_hessian.
+
+Tue 12 Feb 2019 : new package generic_hessian_matrices, instantiated in
+  {standard,dobldobl,quaddobl}_complex_hessians, tested in ts_hessian.adb.
+
+Thu 3 Jan 2019 : fixed memory leak in the coefficient-parameter evaluation
+  in generic_jacobian_matrices.adb.
+
+Wed 2 Jan 2019 : exported the write_number procedure in the packages
+  {dobldobl,quaddobl}_complex_polynomials_io.
+
+Sat 18 Aug 2018 : added a pointer type to an array of polynomial systems
+  in generic_polynomial_systems and generic_laur_poly_systems.
+
+Thu 7 Jun 2018 : to generic_lists added a function to create a list with
+  one single item.  Fixed generic_polynomials and generic_laurent_polynomials
+  for a program error with the GNAT Community 2018 compiler.
+
+Mon 25 Dec 2017 : before free(p) in generic_polynomial_systems.adb,
+  must test whether the pointer is null or not.
+
+Sun 30 Jul 2017 : defined the get in quaddobl_complex_laurentials_io.adb.
+
+Tue 25 Jul 2017 : provided basic input procedures for Laurent polynomials,
+  in {dobldobl,quaddobl}_complex_laurentials_io.
+
+Sun 16 Jul 2017 : the clear in parse_dimensions.adb should not clear the
+  symbol table as this creates problems for the names_of_variables()
+  function in the solver module of phcpy.
+
+Sat 8 Jul 2017 : added operations on Laurent polynomials and systems in
+  standard_to_multprec_convertors.  Added a shallow_clear procedure
+  to generic_laur_poly_systems.
+
+Fri 30 Jun 2017 : fixed memory leak in parse_dimensions.adb.
+
+Sun 25 Jun 2017 : in generic_laur_poly_systems, added a type to define
+  arrays of Laurent systems.
+
+Thu 22 Jun 2017 : added Display_Format procedure to the package
+  standard_complex_laur_systems_io and defined the Display_Format
+  in standard_complex_laurentials_io.adb.
+
+Sun 28 May 2017 : added procedures to write polynomials to string with a
+  given array of symbols in standard_complex_poly_strings.
+  Did the same for the multprec, the dobldobl, and quaddobl versions.
+
+Mon 3 Oct 2016 : factored a new package random_polynomial_systems out of
+  the test procedure ts_randpoly.  Added an additional parameter to return
+  the generated systems in random_polynomial_systems.
+
+Tue 28 Jun 2016 : writing in standard_complex_polynomials_io.adb crashed
+  at a call to Sum(t.dg) at the input polynomial x + (-1-2*i)*y.
+  Fixed by an explicit loop instead of the call to Sum().  Applied the
+  same fix in {dobldobl,quaddobl,multprec}_complex_polynomials_io.adb.
+
+Tue 22 Mar 2016 : extended {dobldobl,quaddobl}_complex_poly_systems_io
+  with procedure to write number of polynomials and variables as well.
+  Bug fix in {standard,dobldobl,quaddobl,multprec}_laur_poly_convertors.adb.
+
+Fri 11 Mar 2016 : fixed in writing of terms in Laurent polynomials that
+  have a zero degree, in {dobldobl,quaddobl}_complex_laurentials_io.adb.
+
+Thu 10 Mar 2016 : extended {dobldobl,quaddobl}_laur_systems_io with output
+  procedures for nonsquare Laurent polynomial systems.
+
+Wed 9 Mar 2016 : extended standard_complex_laur_systems_io with put procedures
+  systems that are not square.
+
+Fri 19 Feb 2016 : fix in {standard,multprec}_complex_{poly,laur}_strings.adb,
+  {standard,multprec}_complex_laurentials_io.adb and
+  multprec_complex_polynomials_io.adb, to solve the (x-y)**2 bug.
+
+Thu 18 Feb 2016 : with look_ahead() in standard_complex_polynomials_io.adb,
+  solved the problem of parsing (x-y)**2.
+
+Sun 14 Feb 2016 : new package parse_dimensions to extract the number of symbols
+  used as variables in a string representation of a polynomial system,
+  tested by ts_nbrvar.
+
+Sat 13 Feb 2016 : new test program ts_nbrvar to determine the size of the
+  support of a polynomial given as a string.
+
+Sat 14 Nov 2015 : factored out the writing of a pure power out of the
+  standard_complex_polynomials_io.adb into the new write_factors package.
+  Also multprec_complex_polynomials_io.adb uses write_factors.
+  Completed {dobldobl, quaddobl}_complex_polynomials_io to write polynomials
+  with a given array of symbols for the variable names.
+
+Mon 26 Oct 2015 : new packages {double, quad}_double_poly_systems_io, with
+  a later fix in the name of quad_double_poly_systems_io.adb.
+
+Sun 25 Oct 2015 : new packages {dobldobl, quaddobl}_complex_to_real_poly.
+
+Fri 16 Oct 2015 : extended matrix_indeterminates that return monomials as
+  polynomials with coefficients in double double and quad double precision.
+  Extensions in {dobldobl,quaddobl}_complex_polynomials_io to instantiate
+  {dobldobl,quaddobl}_complex_poly_ring_io, needed for the new package
+  {dobldobl,quaddobl}_complex_poly_matrices_io.
+
+Fri 25 Sep 2015 : new packages {dobldobl,quaddobl}_system_readers.
+
+Thu 24 Sep 2015 : changed the bound from 2**32 - 1 to 2**31 - 1 in the
+  files {standard,dobldobl,quaddobl,multprec}_complex_{laur,poly}_strings.adb.
+
+Tue 22 Sep 2015 : applied rewriting also to the Laurent polynomials in the
+  packages {standard,multprec}_complex_laur_strings.adb.
+  Added function Size_Limit to all *_{laur,poly}_strings packages,
+  tested by ts_rwspol.adb.
+
+Mon 21 Sep 2015 : rewrote the write in standard_complex_poly_strings.adb
+  to reduce the number of recursive calls and thus to avoid the stack_overflow
+  with polynomial with many calls, tested by the new ts_rwspol.
+  Did the same updates to multprec_complex_poly_strings.adb, with tests
+  on double double and quad double polynomials in ts_rwspol.adb.
+
+Wed 9 Sep 2015 : new packages quaddobl_complex_{laur,poly}_randomizers to
+  make random coefficient systems with quad double precision coefficients.
+
+Tue 8 Sep 2015 : new package dobldobl_complex_laur_randomizers.
+
+Fri 22 May 2015 : extra variables_in_support functions in the packages
+  generic_polynomials and generic_laurent_polynomials as needed to define
+  the size_of_support correctly in generic_{polynomials, laur_poly}_systems.
+
+Fri 20 Feb 2015 : fixed the bug in standard_complex_laur_strings.adb.
+
+Wed 18 Feb 2015 : regressed version of standard_complex_laur_strings.adb.
+
+Sun 4 Jan 2015 : updates in standard_complex_{polynomials,laurentials}_io.adb
+  to suppress the raising of an exception in case of a null polynomial factor.
+  Made same changes to multprec_complex_{polynomials,laurentials}_io.adb.
+  Similar changes in standard_complex_{poly,laur}_strings.adb and
+  for multprec_complex_{poly,laur}_strings.adb.
+
+Sat 3 Jan 2015 : updates in standard_complex_{polynomials,laurentials}_io.adb
+  to allow for terms with zero coefficient.
+
+Fri 19 Dec 2014 : added function to generic_polynomials to compute the size
+  of the support of a polynomial.  Added same to generic_laurent_polynomials,
+  tested in ts_poly.  Also generic_{polynomial, laur_poly}_systems now have
+  a function to compute the size of their support.
+
+Wed 17 Dec 2014 : bug fix in standard_complex_poly_strings.adb for parsing
+  strings with zero complex coefficients.
+
+Wed 10 Dec 2014 : updated ts_termlist with parsing routines to polynomials
+  for efficiency comparisons.
+
+Tue 9 Dec 2014 : parsing of user given strings for arrays of term lists
+  in {dobldobl,quaddobl,multprec}_complex_poly_strings with corresponding
+  changes in {dobldobl,quaddobl,multprec}_complex_term_lists_io,
+  tested by ts_termlist.
+
+Mon 8 Dec 2014 : extended standard_complex_poly_strings and
+  standard_complex_term_lists_io with operations on arrays_of_term_lists,
+  as needed in ts_termlist.
+
+Fri 5 Dec 2014 : extended multprec_complex_poly_strings with operations
+  to parse a string into a list of terms.  Likewise, added parse operations
+  to {dobldobl,quaddobl}_complex_poly_strings, tested by ts_termlist.
+
+Thu 4 Dec 2014 : fixed in generic_lists_of_terms.adb the treatment of 
+  coefficients as needed for multiprecision coefficients.
+
+Wed 3 Dec 2014 : new package standard_complex_term_lists_io to write lists
+  of terms in tableau format.  Updated generic_lists_of_terms with another
+  create operation and merge append/concat procedures.  Extended 
+  standard_complex_poly_strings with parse a string into a term list,
+  with updated testing in ts_termlist.  Instantiated versions for
+  double double, quad double, and arbitrary multiprecision.
+
+Tue 2 Dec 2014 : added array of term lists to generic_lists_of_terms.
+  Extended standard_complex_poly_strings with operations that parse a string
+  into a list of terms.
+
+Mon 1 Dec 2014 : new package generic_lists_of_terms, tested by ts_termlist
+  via the instantiation standard_complex_term_lists.
+
+Sun 30 Nov 2014 : in all *_complex_{laur,poly}_strings packages added function
+  to write each polynomial in a system to a separate string.
+
+Wed 26 Nov 2014 : added tests to check for the end of a string in
+  standard_complex_poly_strings.adb.  Added similar tests to the packages
+  multprec_complex_poly_strings.adb, and
+  {standard,multprec}_complex_laur_strings.adb.
+
+Tue 25 Nov 2014 : improved exception handling messages when parsing a string
+  in standard_complex_poly_strings.adb.
+
+Wed 19 Nov 2014 : bug fix in put_line of multprec_complex_polynomials_io.adb.
+
+Tue 23 Sep 2014 : new routine mainsymb to show symbols in a system.
+
+Fri 29 Aug 2014 : added read operations for polynomials with complex
+  double double and quad double coefficients, extending the packages
+  {dobl,quad}dobl_complex_polynomials_io.
+
+Tue 5 Aug 2014 : instantiations of {dobl,quad}dobl_complex_poly_ring,
+  {dobl,quad}_complex_poly_{matrices,vectors,vectors_io}.
+
+Fri 25 Jul 2014 : extended ts_laurpoly.adb and ts_poly.adb to test the 
+  evaluation for multiprecision coefficients.  Instantiation of the
+  generic_laur_jaco_matrices with multiprecision complex numbers leads
+  to the package multprec_complex_laur_JacoMats.
+
+Wed 23 Jul 2014 : bug fix in dobldobl_laurentials_io.adb and new package
+  dobldobl_complex_laur_strings, tested by ts_parse.adb.
+
+Sun 20 Jul 2014 : reading of double double and quad double Laurent polynomials
+  improved in {dobldobl,quaddobl}_complex_laur_systems_io.adb.
+
+Sun 13 Jul 2014 : new package quaddobl_tableau_formats, tested by ts_tabform.
+  In dobldobl_tableau_formats.adb, added writing of separating space between
+  real and imaginary part of complex number.
+
+Sat 12 Jul 2014 : new package dobldobl_tableau_formats, tested by ts_tabform.
+
+Sun 6 Jul 2014 : new package quaddobl_poly_laur_convertors to convert poly
+  systems with quad double coefficients into Laurent polynomial systems.
+
+Sat 5 Jul 2014 : new package dobldobl_poly_laur_convertors.
+
+Thu 3 Jul 2014 : fixed compilation error in dobldobl_laur_poly_convertors.adb
+  and in quaddobl_laur_poly_convertors.adb.
+
+Wed 2 Jul 2014 : new packages {dobl,quad}dobl_laur_poly_convertors.
+
+Wed 25 Jun 2014 : extended symbol_table with a function to return the
+  standard variables x1, x2, ... useful for random systems.
+
+Tue 24 Jun 2014 : new package dobldobl_complex_poly_randomizers.
+
+Mon 23 Jun 2014 : improved access of data in generic_jacobian_matrices.adb.
+
+Thu 29 May 2014 : modified multprec_complex_laurentials_io.adb for a
+  compiler warning.
+
+Thu 28 Nov 2013 : new package multprec_random_polynomials, tested by
+  ts_randpoly.adb.
+
+Thu 27 Jun 2013 : updated standard_random_laurentials.
+
+Wed 26 Jun 2013 : updated string_system_readers for natural32.
+
+Fri 21 Jun 2013 : because of warnings removed with/use clauses from
+  multprec_to_standard_convertors.adb.
+
+Mon 17 Jun 2013 : updated matrix_indeterminates for natural32 and integer32.
+
+Sat 8 Jun 2013 : fixed ts_randpoly.adb, with changes to
+  {standard,dobldobl,quaddobl}_random_polynomials, also updated
+  {dobldobl,quaddobl}_complex_laurentials_io and
+  {dobldobl,quaddobl}_complex_{poly,laur}_systems_io.
+
+Fri 7 Jun 2013 : about half of all files changed because of the integer32...
+
+Wed 29 May 2013 : explicit raise instead of return for the phc -g bug
+  in parse_strings_to_polynomials.adb.
+
+Tue 28 May 2013 : edits in parse_strings_to_polynomials.adb and maingood.adb
+  to trace why phc -g hangs when an overflow of the unknowns occurred in the
+  last line of the input.
+
+Sat 25 May 2013 : added more documentation to maingood.ads and fixed a bug
+  in Symbol_Table_io.Write.  Extended maingood.adb.
+  Suppressed output when raising exception in symbol_table.adb.
+  New package parse_strings_to_polynomials with code from maingood.adb.
+
+Thu 23 May 2013 : added output file to maingood.adb.
+
+Wed 22 May 2013 : made maingood.adb better.
+
+Tue 21 May 2013 : updated maingood.adb.
+
+Mon 20 May 2013 : new maingood to implement new option phc -g to check
+  if a system is good.
+
+Thu 18 Apr 2013 : additions to standard_tableau_formats.
+
+Tue 16 Apr 2013 : change in standard_tableau_formats for compiler warning.
+
+Mon 15 Apr 2013 : added four new functions to standard_tableau_formats,
+  to extract coefficients and exponent into a vectored data structure.
+
+Fri 22 Feb 2013 : new exception handlers to standard_complex_poly_strings.adb.
+
+Wed 20 Feb 2013 : fixed bug in standard_complex_{poly,laur}_strings.adb.
+
+Fri 8 Feb 2013 : new package multprec_system_readers, cloned off from
+  the standard_system_readers, as needed in mainpoco.adb.
+  Did the same for multprec_laur_poly_convertors, but what was actually
+  needed in mainpoco was the string_system_readers, a new package.
+
+Mon 28 Jan 2013 : new packages {dobldobl,quaddobl}_complex_poly_strings,
+  tested by ts_parse.
+
+Tue 13 Nov 2012 : modified standard_complex_laur_lists to distinguish
+  clearly between shallow and deep constructors and destructors,
+  and added concatenate operation.
+
+Mon 12 Nov 2012 : added a package standard_complex_laur_lists,
+  tested by ts_laurlist.
+
+Wed 21 Oct 2012 : exception handlers in standard_complex_laurentials_io.adb
+  to track a bug with t^-2...
+
+Wed 4 Jul 2012 : changed standard_monomial_evaluations.adb for the case
+  when there are no common factors and fixed a similar bug in
+  standard_speelpenning_products: when the monomial is constant or
+  consists of just one variable.
+
+Thu 28 Jun 2012 : extended coefficient_supported_polynomials, tested
+  by the new ts_cffsup.adb.
+
+Wed 27 Jun 2012 : new package coefficient_supported_polynomials, used in
+  ts_speel.adb.  Updates in standard_gradient_evaluations so any polynomial
+  and its gradient can be evaluated.  Extended to double double and quad 
+  double arithmetic with new {dobldobl,quaddobl}_gradient_evaluations.
+
+Tue 26 Jun 2012 : updates in standard_gradient_evaluations, tested by
+  ts_speel.adb.
+
+Sun 24 Jun 2012 : edits in {standard,dobldobl,quaddobl}_monomial_evaluations
+  and {standard,dobldobl,quaddobl}_speelpenning_products, tested by
+  ts_speel.adb.  Also changes in ts_randpoly.adb.
+
+Sat 26 May 2012 : fixed spelling mistake in ts_speel.adb and separated the
+  code in the new package standard_speelpenning_products.  Created new
+  packages {dobldobl,quaddobl}_speelpenning_products, tested by ts_speel.
+  Create {standard,dobldobl,quaddobl}_monomial_evaluations for the
+  evaluation of monomials, the common factors in the gradients of the
+  monomials, using standard, double double, and quad double arithmetic.
+
+Wed 21 Mar 2012 : touched standard_complex_poly_systems_io.adb to trace a bug,
+  which got fixed in standard_complex_polynomials_io.adb.
+
+Sat 10 Sep 2011 : exteded ts_speel.adb to deal with more general monomials.
+
+Sun 4 Sep 2011 : created ts_speel.adb to test Speelpenning's example.
+
+Thu 9 Jun 2011 : updated ts_parse.adb for warnings and for the parsing
+  of numbers from a string.
+
+Wed 1 Jun 2011 : changed {dobldobl,quaddobl}_complex_polynomials_io.adb,
+  {dobldobl,quaddobl}_polynomial_convertors.adb for warnings.
+  Extended {dobldobl,quaddobl}_complex_poly_systems_io with a get procedure.
+
+Sun 29 May 2011 : changed matrix_indeterminates.adb and 
+  standard_poly_laur_convertors.adb for warnings.
+
+Sun 22 May 2011 : changed {standard,multprec}_complex_{poly,laur}_strings.adb
+  and {standard,multprec}_complex_{polynomials,laurentials}_io.adb for
+  crashing on double brackets.
+
+Fri 20 May 2011 : standard_evaluator_packages.adb needed string_splitters,
+  ts_evaline.adb no longer compiled.  Changed ts_expvec.adb, ts_jaco.adb,
+  ts_laurpoly.adb, ts_subs.adb for warnings.
+
+Sun 15 May 2011 : fixed standard_complex_poly_strings.adb to deal with
+  cases like x^(-1) where the exponent is between round brackets.
+  Fixed multprec_complex_poly_strings.adb just as well.
+
+Sat 14 May 2011 : fixed a bug in standard_complex_polynomials_io.adb.
+ Fixed also the corresponding multprec_* and *_laurentials_io versions,
+ and the parsing in {standard,multprec}*strings.adb.
+
+Tue 10 May 2011 : extended ts_randpoly with code to write random systems.
+  Fixed get(lp) problem in {dobldobl,quaddobl}_complex_poly_systems_io.adb.
+
+Mon 9 May 2011 : bug in parsing of a factor of a polynomial in 
+  multprec_complex_{laur,poly}_strings.adb. 
+  For bug hunting, added print statement in symbol_table.adb.
+
+Mon 11 Oct 2010 : {dobl,quad}dobl_complex_{polynomials,larentials}_io.adb
+  had bug: writing of complex coefficients without plus connector.
+
+Mon 27 Sep 2010 : updated {dobldobl,quaddobl}_complex_{poly,laur}_systems_io
+  to set the working precision accordingly for the get operations.
+
+Sun 26 Sep 2010 : updated ts_parse.adb with 4 routines to test parse.
+
+Sat 25 Sep 2010 : created multprec_complex_poly_strings to parse polynomials
+  with multiprecision coefficients from a string.  Because of shared code,
+  altered standard_complex_poly_strings.a*, tested by a changed ts_parse.adb.
+  Updated multprec_complex_polynomial_io.adb, with working precision.
+  Also changed multprec_complex_laurentials_io.adb and ts_laurpoly.adb.
+
+Sat 18 Sep 2010 : to quaddobl_complex_{laur,poly}_systems_io added get to
+  read any system from file.
+
+Thu 16 Sep 2010 : updated ts_parse.adb to read a system of polynomial as
+  an array of strings from file.
+
+Mon 13 Sep 2010 : extended dobldobl_complex_{poly,laur}_systems_io with
+  another get procedure to read systems from file.
+
+Tue 8 Jun 2010 : extended standard_random_polynomials.ad* and
+  new packages {dobldobl,quaddobl}_random_polynomials tested by ts_randpoly.
+
+Mon 7 Jun 2010 : extended dobldbol_complex_poly_systems_io with get
+  and did also for corresponding quaddobl_ and _laur_ systems_io.
+
+Sun 6 Jun 2010 : instantiated {dobldobl,quaddobl}_complex_poly_sysfun.ads.
+  Provided basic output for dobldobl, quaddobl complex polynomials,
+  laurentials and their corresponding systems.
+
+Wed 2 Jun 2010 : new package standard_system_readers,
+  made changes in generic_laur_poly_functions.adb to search for a bug...
+  Extended standard_tableau_formats to Laurent systems to verify that
+  reading of Laurent systems went fine.  Added one test to ts_laurpoly.adb
+  on all partial derivatives of a Laurent polynomial.
+
+Fri 28 May 2010 : {dobldobl,quaddobl}_polynomial_convertors.adb use
+  the type convertors of {dobldobl,quaddobl}_complex_numbers_cv.
+  Instantiated {dobldobl,quaddobl}_complex_laur_sysfun.
+
+Thu 27 May 2010 : introduced QD doubles with instantiated packages
+  {dobldobl,quaddobl}_complex_{polynomials,laurentials,functions}.
+  Also added are {double_double,quad_double}_{polynomials,functions}.
+  DoblDobl_Polynomial_Convertors are tested by ts_ddpol.
+  Create multprec_complex_laurentials_io.adb, tested by ts_laurpoly.adb
+  and adjusted multprec_complex_polynomials_io.adb.
+  Updated multprec_complex_laur_systems.ads and created input/output in
+  the new package multprec_complex_laur_systems_io, tested by ts_laurpoly.
+  Instantiated {dobldobl,quaddobl}_complex_{poly,laur}_systems.
+  Instantiated {dobldobl,quaddobl}_complex_jaco_matrices and
+  {double,quad}_double_jaco_matrices.
+
+Thu 13 May 2010 : fixed skipping of new_line symbol in package
+  standard_complex_laur_systems_io.adb and multprec_complex_poly_systems_io.adb
+  copying from standard_complex_poly_systems_io.adb.
+
+Fri 6 Nov 2009 : redundant use clause from standard_complex_poly_systems_io.adb
+  also changed generic_jacobian_matrices.adb, generic_polynomial_functions.adb,
+  symbol_table_io.adb and generic_poly_system_functions.adb,
+  standard_to_multprec_convertors.adb, standard_laur_poly_convertors.adb
+  for GNAT GPL 2009 warnings.
+
+Mon 26 Oct 2009 : added routines to standard_laur_poly_convertors in case
+  the Laurent polynomials do not contain any negative exponents.
+
+Fri 9 Oct 2009 : fix in Diff of generic_laurent_polynomials.adb,
+  similar patch as in generic_laur_poly_functions.adb (see Sep 23 2009).
+
+Wed 30 Sep 2009 : commented out exception handlers in
+  generic_polynomial_functions.adb.
+
+Wed 23 Sep 2009 : fixed on bug in generic_laur_poly_functions.adb
+  but more work is definitely needed...
+
+Fri 11 Sep 2009 : adding exception handler to an evaluator fixes the
+  crash with phc -0 -b cyclic7 /tmp/out.
+
+Wed 25 Aug 2009 : new procedure "Add_String" in symbol_table.
+
+Thu 6 Aug 2009 : updates in {standard,multprec}_complex_polynomials_io,
+  standard_complex_laurentials_io.adb, standard_complex_{laur,poly}_strings.adb
+  all to deal with brackets and powers of polynomials.
+
+Wed 5 Aug 2009 : documentation update in standard_complex_polynomials_io.adb
+  and similar fix in multprec_complex_polynomials_io.adb for brackets and
+  powers of polynomials.
+
+Tue 4 Aug 2009 : fixed standard_complex_polynomials_io.adb to deal with
+  brackets and powers of polynomials.
+
+Thu 30 Jul 2009 : added ** and pow to generic_polynomials and also
+  to generic_laurent_polynomials.  standard_complex_polynomials_io.adb
+  got updated as well.
+
+Tue 14 Jul 2009 : adjusted some if-then-else formatting in generic_lists.adb.
+
+Mon 13 Jul 2009 : added "constant" to a declaration for gnat warning.
+  Bug in line_breaks for standard_complex_laurentials_io.adb: the
+  exponent d can be negative for Laurent polynomials!
+
+Sun 12 Jul 2009 : created standard_random_laurentials.
+
+Thu 25 Dec 2008 : further optimizations to ts_evalpoly.adb.
+
+Fri 19 Dec 2008 : used ts_evalpoly.adb to develop new Horner scheme
+  to evaluate multivariate polynomials more efficiently.
+
+Thu 18 Dec 2008 : because of bug with mt_newton.adb, changed code in
+  generic_polynomial_functions.adb and generic_polynomials.adb.
+
+Mon 1 Sep 2008 : copied symbol_table.adb and ts_poly.adb from toto,
+  because apparently the older versions were still on phcpack.
+
+Thu 14 Aug 2008 : for better feedback on errors when parsing polynomials,
+  changed symbol_table.adb, {standard,multprec}_complex_poly_systems_io.adb,
+  standard_complex_laur_systems_io.adb, parse_polynomial_exceptions_io.ads,
+  ts_poly.adb, and deleted parse_polynomial_exceptions.adb.
+
+Fri 6 Jun 2008 : formatting in generic_polynomial_functions.adb, fixed
+  two bugs in generic_laur_poly_functions.adb, extended ts_laurpoly.adb.
+  This caused phc -m not to work on Laurent systems!
+
+Sat 26 Apr 2008 : changed standard_complex_poly_strings.ads: text_io is
+  not needed.  Also changed standard_complex_laur_strings.ads.
+
+Thu 3 Jan 2008 : because of warnings in GNAT GPL 2006, changed
+  symbol_table.adb, standard_complex_poly_systems_io.a*, ts_poly.adb,
+  multprec_complex_polynomials_io.adb and graded_lexicographic_order.adb.
+
+Wed 2 Jan 2008 : changed generic_polynomials.adb, and
+  standard_complex_polynomials_io.adb for warnings in GNAT GPL 2006.
+
+Sat 29 Dec 2007 : generic_polynomials.adb got touched but not changed
+  when searching for a bug: not enlarging symbol table before adding 't'!
+
+Thu 27 Dec 2007 : added Is_Real to standard_complex_to_real_poly.ads.
+
+Thu 20 Dec 2007 : added Minimal_Degrees and Maximal_Degrees to
+  generic_polynomials, copying from generic_laurent_polynomials.
+
+Wed 19 Dec 2007 : added Downsize operation to symbol_table. 
+  Touched the standard_complex_polynomials_io.adb when debugging.
+
+Wed 26 Sep 2007 : updated standard_complex_to_real_poly and
+  standard_floating_poly_systems_io.
+
+Sun 19 Aug 2007 : standard_complex_laurentials_io.adb now accepts exponents
+  enclosed in round brackets; created package standard_complex_laur_strings,
+  tested by ts_parse, not complete yet.
+
+Fri 3 Aug 2007 : improved documentation of standard_complex_substitutors.ads.
+  Discovered the name "Laurential" an improvement over "laur_polys" for a
+  contraction of "Laurent polynomial", so "standard_complex_laur_polys*"
+  became "standard_complex_laurentials*".  The change also affected the
+  files *laur_functions.ads, *laur_systems*, ts_laurpoly.adb, exponent_vectors,
+  *laur_poly_convertors*, *poly_laur_convertors*, *laur_sysfun*, *laur_jaco*,
+  standard_complex_laur_randomizers.ads, and ts_poly.adb.
+
+Thu 5 Jul 2007 : added "Is_Genuine_Laurent" functions to
+  standard_laur_poly_convertors.ads, needed for stable mixed volumes.
+
+Wed 20 Jun 2007 : only added and then removed some put statements in
+  generic_laur_poly_functions when debugging mixed_homotopy_continuation.
+
+Wed 13 Jun 2007 : fixed generic_laur_poly_functions.adb, with a bit more
+  testing in ts_laurpoly.adb.
+
+Tue 12 Jun 2007 : added "Head" function to generic_polynomials and
+  generic_laurent_polynomials, bug fix in standard_complex_laur_polys_io.adb,
+  editing in generic_{polynomial,laur_poly}_functions.adb.
+
+Mon 11 Jun 2007 : extended standard_complex_laur_systems_io with output
+  procedures that also write first the number of equations.
+  Fixed bug in standard_complex_laur_polys_io.adb, put('*') -> put(file,'*').
+
+Thu 3 May 2007 : added also ASCII.LF in standard_complex_polynomials_io.adb.
+  standard_complex_poly_strings mirrors standard_complex_polynomials_io in
+  the parsing of strings.
+
+Wed 2 May 2007 : ASCII.LF is added to symbol_table_io.adb, as one
+  of the symbols which must be ignored when parsing a symbol.
+  The puts for debugging in standard_complex_poly_strings.adb were
+  later removed, so standard_complex_poly_strings.adb did not change.
+
+Tue 1 May 2007 : new package line_breaks, modified symbol_table,
+  standard_complex_polynomials_io.adb, multprec_complex_polynomials_io,
+  standard_complex_laur_polys_io.adb, ts_laurpoly.adb and ts_poly.adb.
+
+Mon 30 Apr 2007 : bug fixes in ts_parse.adb, improvements in 
+  standard_complex_polynomials_io.adb and standard_complex_poly_strings.
+  Also multprec_complex_polynomials_io.adb improved.
+  Moved exceptions from parse_polynomial_exceptions into symbol_table,
+  changed symbol_table_io and {standard,multprec}_complex_poly_systems_io.adb.
+  Created standard_complex_laur_systems_io, tested by ts_laurpoly.adb.
+
+Wed 25 Apr 2007 : arranged standard_complex_polynomials_io.adb so that
+  the carriage return (captured by ASCII.CR) is skipped.
+
+Mon 23 Apr 2007 : added test on parsing of numbers to ts_parse.adb.
+
+Sat 21 Apr 2007 : added output of factors to standard_complex_laur_polys_io.
+  Write_Plus used in standard_complex_polynomials_io.adb.
+  Also changed ts_laurpoly.adb which now outputs Laurent polynomials.
+
+Thu 19 Apr 2007 : standard_complex_polynomials_io.adb is a bit leaner,
+  added new output routines to standard_complex_laur_polys_io.
+
+Sat 14 Apr 2007 : started development of standard_complex_laur_polys_io,
+  new ts_laurpoly.adb.  Code from {standard,multprec}_complex_polynomials_io
+  got moved to {standard,multprec}_parse_numbers.  Exceptions are now
+  defined in new package parse_polynomial_exceptions, which changed the
+  specifications of *polynomials_io and the body of *systems_io.
+
+Fri 13 Apr 2007 : edited in standard_complex_polynomials_io.adb.
+
+Tue 27 Mar 2007 : {standard,multprec}_floating_poly_systems_io provides i/o
+  for systems with real coefficients, tested by ts_rpol.
+  Added "Set_Size" for real polynomials to standard_to_multprec_convertors.
+
+Sat 18 Mar 2007 : added initialization procedure in matrix_indeterminates.
+
+Sat 3 Feb 2007 : created {standard,multprec}_floating_jaco_matrices,
+  tested by ts_rpol.adb.  Cleaned up the indentation problems in 
+  standard_complex_poly_strings.adb and moved functions to a new
+  package "strings_and_numbers" in the Numbers Library.
+
+Fri 2 Feb 2007 : created standard_floating_polynomials, and the convertors
+  standard_complex_to_real_poly, tested by ts_rpol.  Added also
+  standard_floating_poly_systems, all the functions, with all their
+  multiprecision versions as well.
+
+Mon 18 Dec 2006 : added "Link_to_Array_of_Symbols" in symbol_table.ads
+  and cleaned up "Symbol_Array" type in symbol_table.adb.
+
+Wed 18 Oct 2006 : moved definitions for representations from adb to ads
+  in generic_polynomial_functions and generic_laur_poly_functions,
+  because of GNAT 3.3.5 20050117 (prerelease) (SUSE Linux).
+
+Wed 28 Jun 2006 : added "put_pair" to standard_complex_polynomials_io and
+  standard_complex_poly_systems_io for general double float coefficients.
+  Created the package "standard_tableau_formats", called by ts_tabform,
+  to convert back and forth systems in tableau formats.
+
+Fri 23 Jun 2006 : changed standard_complex_poly_systems_io.adb.
+
+Mon 20 Mar 2006 : moved scan_line out of standard_complex_poly_systems_io.adb
+  and multprec_complex_poly_systems_io.adb into System/file_scanning.
+  Changed standard_complex_poly_systems_io to use ^ as default power symbol.
+
+Sun 19 Mar 2006 : cosmetic change to generic_lists.ads, added put_terms to
+  standard_complex_polynomials_io.ads, and of course updated .adb as well.
+
+Thu 5 Jan 2006 : added access types to generic_laur_system_functions
+  and to generic_laur_jaco_matrices.
+
+Mon 2 Jan 2006 : added Link_to_Exponent_Vectors_Array in the
+  exponent_vectors package, needed for cells container.
+
+Tue 27 Dec 2005 : changed multprec_complex_polynomials_io.adb to fix the
+  reading of -x, fixing two bugs in that package!
+
+Wed 21 Dec 2005 : the creation of multprec_complex_matrices required
+  multprec_complex_poly_ring, multprec_complex_poly_vectors, with their
+  corresponding *_io declarations as well.
+
+Mon 27 Jun 2005 : added user friendly get in multprec_complex_poly_systems_io.
+
+Sun 9 Jan 2004 : added ts_subs to substitute variables by constants.
+
+Thu 26 Aug 2004 : get for link_to_poly_sys uses "out" instead of
+  "in out" in standard_complex_poly_systems_io.ads;
+  added a clear in standard_complex_polynomials_io.adb,
+  simplified data structures in generic_polynomial_functions.
+
+Thu 24 Jun 2004 : added an array of Eval_Poly_Sys
+  to generic_poly_system_functions.ads and added array types
+  to generic_jacobian_matrices, all needed for ts_deflate.
+
+Tue 22 Jun 2004 : inlined graded lexicographic order routines in
+  generic_polynomials to make phc run on spinner.
+
+Wed 24 Sep 2003 : added a type "Array_of_Symbols" to the
+  package Symbol_Table to allow customized symbols in poly output.
+  this changed standard+multprec_complex_polynomials_io
+  and standard+multprec_complex_poly_systems_io.
+
+Sat 13 Sep 2003 : added "Write" to the symbol_table_io,
+  to write out all symbols currently in the table.
+
+**************** since release 2.2 beta *********************
+
+Sat 14 August 1999 : changed ts_poly.adb, due to change in
+  Standard_Random_Vectors.Random_Vector.  Updated ts_poly.adb
+  with a tester on the evaluation of Laurent polynomials.
+  There was a bug in that evaluation routine, because it was
+  never been tested since the upgrade!
+  The package generic_laur_poly_functions.adb is debugged.
+  Copied ts_poly.adb and generic_laur_poly_functions.adb to the
+  public distribution directory.
+
+Sat 25 September 1999 : cosmetic change in ts_poly.adb.
+  generic_polynomial_functions and generic_laur_poly_functions
+  contained the same bug : forgotten "or else" instead of "or".
+  The bug only occurred in the non-optimized mode.
+  Copied ts_poly.adb, generic_polynomial_functions.adb and
+  generic_laur_poly_functions.adb to PHCv2p.
+
+Sat 5 February 2000 : the output of multi-precision complex
+  polynomials needed the initialization of the symbol table.
+  There was no default standard output format available.
+  This new version can write polynomials with empty symbol table.
+
+Mon 7 February 2000 : multi-precision output of multivariate
+  polynomials wrote exponents always on standard output instead
+  of on file.
+
+Thu 9 March 2000 : added very basic package for output of
+  multi-precision system of complex polynomials.
+
+Thu 16 March 2000 : standard_to_multprec_convertors, added
+  the Set_Size procedure.
+
+Sat 3 June 2000 : standard_complex_poly_systems_io.adb,
+  the get(lp) routine was incorrect for underdetermined systems.
+
+Mon 26 June 2000 : generic_polynomial_systems.ads :
+  added "Array_of_Poly_Sys".
+
+Sat 30 Sep 2000 : added "put(file,delimiter);" 
+  in multprec_complex_polynomials_io.adb
+
+Sun 5 Aug 2001 : added the package standard_complex_poly_strings to
+  convert between strings and polynomials, with "ts_parse" as tester.
+
+Thu 9 Aug 2001 : modified the "get(file,lp)" operation in
+  standard_complex_poly_systems_io.adb so that it handles now also
+  polynomial with a different number of unknowns than equations
+
+Tue 28 Aug 2001 : in standard_complex_poly_strings, added the conversion
+  operators for polynomial systems, tested new routines with ts_parse.
+
+Mon 29 Oct 2001 : modified standard_complex_polynomials_io.adb so
+  that also the 'e' in the scientific notation of numbers is accepted
+  as well, next to the 'E'.
+
+Wed 14 Nov 2001 : started the development in ts_jaco of a symbolic
+  expansion of the determinant of the Jacobi matrices
+
+Mon 13 May 2002 : modified standard_complex_polynomials_io.adb so that
+  also the 'I' is accepted (next to the 'i') for the square root of -1
+
+Sun 2 Feb 2003 : added a create to the Symbol_Table, to convert a string
+  of characters into a symbol.
+
+Thu 13 Mar 2003 : the put_line in standard_complex_poly_systems_io.adb
+  did not put the number of variables in case of nonsquare systems.
+
+Thu 15 May 2003 : added "Equal" of symbols in symbol_table
+
+Tue 20 May 2003 : added "standard_random_polynomials" and ts_randpoly.
