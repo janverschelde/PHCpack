@@ -1,3 +1,6 @@
+Tue 22 Sep 2020 : added {trip,pent,octo,deca}dobl_complex_laurentials_io
+  and {trip,pent,octo,deca}dobl_complex_laurent_systems_io.
+
 Mon 21 Sep 2020 : added {trip,pent,octo,deca}dobl_poly_systems_io.
 
 Sun 20 Sep 2020 : added systems of (Laurent) polynomials in triple, penta,

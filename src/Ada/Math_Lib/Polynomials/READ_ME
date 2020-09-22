@@ -169,8 +169,10 @@ triple_double_poly_systems        : poly systems with triple double coeffs
 tripdobl_complex_polynomials      : polynomials with tripdobl complex coeffs
 tripdobl_complex_polynomials_io   : i/o for tripdobl complex polynomials
 tripdobl_complex_laurentials      : tripdobl complex Laurent polynomials
+tripdobl_complex_laurentials_io   : i/o for tripdobl complex Laurentials
 tripdobl_complex_poly_systems     : systems of tripdobl complex polynomials
-tripdobl_complex_poly_systems_io  : basic output for td complex poly systems
+tripdobl_complex_poly_systems_io  : i/o for tripdobl complex poly systems
+tripdobl_complex_laur_systems_io  : i/o for tripdobl complex Laurent systems
 tripdobl_complex_laur_systems     : systems of tripdobl complex Laurentials
 tripdobl_polynomial_convertors    : converting tripdobl with double/multprec
 test_tripdobl_polynomials         : tests on tripdobl polynomials
@@ -180,9 +182,11 @@ penta_double_poly_systems         : poly systems with penta double coeffs
 pentdobl_complex_polynomials      : polynomials with pentdobl complex coeffs
 pentdobl_complex_polynomials_io   : i/o for pentdobl complex polynomials
 pentdobl_complex_laurentials      : pentdobl complex Laurent polynomials
+pentdobl_complex_lauentials_io    : i/o for pentdobl complex Laurentials
 pentdobl_complex_poly_systems     : systems of pentdobl complex polynomials
-pentdobl_complex_poly_systems_io  : basic output for pd complex poly systems
+pentdobl_complex_poly_systems_io  : i/o for pentdobl complex poly systems
 pentdobl_complex_laur_systems     : systems of pentdobl complex Laurentials
+pentdobl_complex_laur_systems_io  : i/o for pentdobl complex Laurent systems
 pentdobl_polynomial_convertors    : converting pentdobl with double/multprec
 test_pentdobl_polynomials         : tests on pentdobl polynomials
 ts_pdpol                          : main test on pentdobl polynomials
@@ -191,9 +195,11 @@ octo_double_poly_systems          : poly systems with octo double coeffs
 octodobl_complex_polynomials      : polynomials with octodobl complex coeffs
 octodobl_complex_polynomials_io   : i/o for octodobl complex polynomials
 octodobl_complex_laurentials      : octodobl complex Laurent polynomials
+octodobl_complex_laurentials_io   : i/o for octodobl complex Laurentials
 octodobl_complex_poly_systems     : systems of octodobl complex polynomials
 octodobl_complex_poly_systems_io  : basic output for od complex poly systems
 octodobl_complex_laur_systems     : systems of octodobl complex Laurentials
+octodobl_complex_laur_systems_io  : i/o for octodobl complex Laurent systems
 octodobl_polynomial_convertors    : converting octodobl with double/multprec
 test_octodobl_polynomials         : tests on octodobl polynomials
 ts_odpol                          : main test on octodobl polynomials
@@ -202,9 +208,11 @@ deca_double_poly_systems          : poly systems with deca double coeffs
 decadobl_complex_polynomials      : polynomials with decadobl complex coeffs
 decadobl_complex_polynomials_io   : i/o for decadobl complex polynomials
 decadobl_complex_laurentials      : decadobl complex Laurent polynomials
+decadobl_complex_laurentials_io   : i/o for decadobl complex Laurentials
 decadobl_complex_poly_systems     : systems of decadobl complex polynomials
 decadobl_complex_poly_systems_io  : basic output for da complex poly systems
 decadobl_complex_laur_systems     : systems of decadobl complex Laurentials
+decadobl_complex_laur_systems_io  : i/o for decadobl complex Laurent systems
 decadobl_polynomial_convertors    : converting decadobl with double/multprec
 test_decadobl_polynomials         : tests on decadobl polynomials
 ts_dapol                          : main test on decadobl polynomials
