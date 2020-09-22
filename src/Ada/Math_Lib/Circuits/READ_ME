@@ -92,7 +92,9 @@ test_standard_coeff_convolutions   : test cff convols with doubles
 test_dobldobl_coeff_convolutions   : test cff convols with double doubles
 test_quaddobl_coeff_convolutions   : test cff convols with quad doubles
 ts_speelcnv                        : convolutions for series polynomials
-newton_convolutions                : Newton with convolution circuits
+standard_newton_convolutions       : Newton with double convolutions
+dobldobl_newton_convolutions       : Newton with dobldobl convolutions
+quaddobl_newton_convolutions       : Newton with quaddobl convolutions
 newton_coefficient_convolutions    : Newton on coefficient convolutions
 convergence_radius_estimates       : applies ratio theorem of Fabry
 test_standard_fabry                : tests Fabry in double precision

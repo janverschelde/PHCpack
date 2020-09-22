@@ -16,7 +16,7 @@ with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_System_and_Solutions_io;
 with Convergence_Radius_Estimates;
-with Newton_Convolutions;
+with QuadDobl_Newton_Convolutions;
 
 package body Test_QuadDobl_Fabry is
 
@@ -60,20 +60,20 @@ package body Test_QuadDobl_Fabry is
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
-        Newton_Convolutions.SVD_Newton_Step
+        QuadDobl_Newton_Convolutions.SVD_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,svl,U,V,
            info,rcond,ewrk,wrk,scale);
       elsif useqrls then
-        Newton_Convolutions.QR_Newton_Step
+        QuadDobl_Newton_Convolutions.QR_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          Newton_Convolutions.LU_Newton_Step
+          QuadDobl_Newton_Convolutions.LU_Newton_Step
             (standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
           put("rcond : "); put(rcond,3); new_line;
         else
-          Newton_Convolutions.LU_Newton_Step
+          QuadDobl_Newton_Convolutions.LU_Newton_Step
             (standard_output,s,scf,absdx,info,ipvt,wrk,scale);
           put("info : "); put(info,1); new_line;
         end if;
@@ -111,7 +111,7 @@ package body Test_QuadDobl_Fabry is
         := Make_Convolution_Circuits(lp.all,natural32(degree));
       s : Link_to_System := Create(c,dim,degree);
       scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
-          := Newton_Convolutions.Series_Coefficients(sol.v,degree);
+          := QuadDobl_Newton_Convolutions.Series_Coefficients(sol.v,degree);
       z : QuadDobl_Complex_Numbers.Complex_Number;
       r,err : quad_double;
       fail : boolean;

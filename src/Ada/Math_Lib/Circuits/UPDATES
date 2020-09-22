@@ -2,6 +2,10 @@ Tue 22 Sep 2002 : {trip,pent,octo,deca}dobl_speelpenning_convolutions are
   instantiations of generic_speelpenning_convolutions.  Extended reference
   code in series_polynomial_gradient and made new test packages
   test_{trip,pent,octo,deca}dobl_speel_convolutions, called in ts_speelser.
+  Splitted the package newton_convolutions into three separate packages:
+  {standard,dobldobl,quaddobl}_newton_convolutions, which changed
+  random_convolution_circuits.adb, and the bodies of the test packages
+  test_{standard,dobldobl,quaddobl}_fabry.adb.
 
 Mon 21 Sep 2020 : new test_{standard,dobldobl,quaddobl}_speel_convolutions
   with code from ts_speelser and moved code from ts_speelcnv into new

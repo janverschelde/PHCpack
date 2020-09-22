@@ -18,7 +18,7 @@ with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_System_and_Solutions_io;
 with Convergence_Radius_Estimates;
-with Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
 with Newton_Coefficient_Convolutions;
 
 package body Test_DoblDobl_Fabry is
@@ -131,20 +131,20 @@ package body Test_DoblDobl_Fabry is
     for k in 1..maxit loop
       put("Step "); put(k,1); put_line(" :");
       if usesvd then
-        Newton_Convolutions.SVD_Newton_Step
+        DoblDobl_Newton_Convolutions.SVD_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,svl,U,V,
            info,rcond,ewrk,wrk,scale);
       elsif useqrls then
-        Newton_Convolutions.QR_Newton_Step
+        DoblDobl_Newton_Convolutions.QR_Newton_Step
           (standard_output,s,scf,dx,xd,absdx,
            qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,scale);
       else
         if needrcond then
-          Newton_Convolutions.LU_Newton_Step
+          DoblDobl_Newton_Convolutions.LU_Newton_Step
             (standard_output,s,scf,absdx,rcond,ipvt,wrk,scale);
           put("  rcond : "); put(rcond,3); new_line;
         else
-          Newton_Convolutions.LU_Newton_Step
+          DoblDobl_Newton_Convolutions.LU_Newton_Step
             (standard_output,s,scf,absdx,info,ipvt,wrk,scale);
           put("  info : "); put(info,1); new_line;
         end if;
@@ -183,7 +183,7 @@ package body Test_DoblDobl_Fabry is
         := DoblDobl_Speelpenning_Convolutions.Create(c,dim,deg);
       cs : DoblDobl_Coefficient_Convolutions.Link_to_System;
       scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
-          := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+          := DoblDobl_Newton_Convolutions.Series_Coefficients(sol.v,deg);
       rhx : constant Standard_Floating_VecVecs.Link_to_VecVec
           := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
       ihx : constant Standard_Floating_VecVecs.Link_to_VecVec

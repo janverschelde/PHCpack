@@ -20,7 +20,9 @@ with QuadDobl_Random_Series_Vectors;
 with Exponent_Indices;
 with Series_Coefficient_Vectors;
 with Homotopy_Convolution_Circuits;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
+with QuadDobl_Newton_Convolutions;
 
 package body Random_Convolution_Circuits is
 
@@ -234,7 +236,7 @@ package body Random_Convolution_Circuits is
     z : constant Standard_Complex_Vectors.Vector(1..dim)
       := Standard_Random_Vectors.Random_Vector(1,dim);
     sz : constant Standard_Complex_VecVecs.VecVec(1..dim)
-       := Newton_Convolutions.Series_Coefficients(z,deg);
+       := Standard_Newton_Convolutions.Series_Coefficients(z,deg);
 
   begin
     x := new Standard_Complex_VecVecs.VecVec'(sz);
@@ -250,7 +252,7 @@ package body Random_Convolution_Circuits is
     z : constant DoblDobl_Complex_Vectors.Vector(1..dim)
       := DoblDobl_Random_Vectors.Random_Vector(1,dim);
     sz : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
-       := Newton_Convolutions.Series_Coefficients(z,deg);
+       := DoblDobl_Newton_Convolutions.Series_Coefficients(z,deg);
 
   begin
     x := new DoblDobl_Complex_VecVecs.VecVec'(sz);
@@ -266,7 +268,7 @@ package body Random_Convolution_Circuits is
     z : constant QuadDobl_Complex_Vectors.Vector(1..dim)
       := QuadDobl_Random_Vectors.Random_Vector(1,dim);
     sz : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
-       := Newton_Convolutions.Series_Coefficients(z,deg);
+       := QuadDobl_Newton_Convolutions.Series_Coefficients(z,deg);
 
   begin
     x := new QuadDobl_Complex_VecVecs.VecVec'(sz);
