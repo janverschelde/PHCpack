@@ -1,9 +1,11 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
+with TripDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
+with TripDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 
 package Homotopy_Convolution_Circuits is
@@ -19,6 +21,8 @@ package Homotopy_Convolution_Circuits is
   procedure Add_Continuation_Parameter
               ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit );
   procedure Add_Continuation_Parameter
+              ( c : in TripDobl_Speelpenning_Convolutions.Link_to_Circuit );
+  procedure Add_Continuation_Parameter
               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit );
 
   -- DESCRIPTION :
@@ -29,6 +33,8 @@ package Homotopy_Convolution_Circuits is
               ( c : in Standard_Speelpenning_Convolutions.Circuits );
   procedure Add_Continuation_Parameter
               ( c : in DoblDobl_Speelpenning_Convolutions.Circuits );
+  procedure Add_Continuation_Parameter
+              ( c : in TripDobl_Speelpenning_Convolutions.Circuits );
   procedure Add_Continuation_Parameter
               ( c : in QuadDobl_Speelpenning_Convolutions.Circuits );
 
@@ -41,6 +47,9 @@ package Homotopy_Convolution_Circuits is
                 deg : in integer32 );
   procedure Add_Parameter_to_Constant
               ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                deg : in integer32 );
+  procedure Add_Parameter_to_Constant
+              ( c : in TripDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 deg : in integer32 );
   procedure Add_Parameter_to_Constant
               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
@@ -57,6 +66,8 @@ package Homotopy_Convolution_Circuits is
   procedure Add_Parameter_to_Constant
               ( s : in DoblDobl_Speelpenning_Convolutions.Link_to_System );
   procedure Add_Parameter_to_Constant
+              ( s : in TripDobl_Speelpenning_Convolutions.Link_to_System );
+  procedure Add_Parameter_to_Constant
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System );
 
   -- DESCRIPTION :
@@ -71,6 +82,9 @@ package Homotopy_Convolution_Circuits is
               ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in DoblDobl_Complex_Vectors.Vector );
   procedure Set_Solution_Constant
+              ( c : in TripDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                z : in TripDobl_Complex_Vectors.Vector );
+  procedure Set_Solution_Constant
               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in QuadDobl_Complex_Vectors.Vector );
 
@@ -84,6 +98,9 @@ package Homotopy_Convolution_Circuits is
               ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
                 z : in DoblDobl_Complex_Vectors.Vector );
   procedure Set_Solution_Constant
+              ( c : in TripDobl_Speelpenning_Convolutions.Circuits;
+                z : in TripDobl_Complex_Vectors.Vector );
+  procedure Set_Solution_Constant
               ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 z : in QuadDobl_Complex_Vectors.Vector );
 
@@ -96,6 +113,9 @@ package Homotopy_Convolution_Circuits is
   procedure Newton_Homotopy
               ( c : in DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in DoblDobl_Complex_Vectors.Vector );
+  procedure Newton_Homotopy
+              ( c : in TripDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                z : in TripDobl_Complex_Vectors.Vector );
   procedure Newton_Homotopy
               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in QuadDobl_Complex_Vectors.Vector );
@@ -112,6 +132,9 @@ package Homotopy_Convolution_Circuits is
   procedure Newton_Homotopy
               ( c : in DoblDobl_Speelpenning_Convolutions.Circuits;
                 z : in DoblDobl_Complex_Vectors.Vector );
+  procedure Newton_Homotopy
+              ( c : in TripDobl_Speelpenning_Convolutions.Circuits;
+                z : in TripDobl_Complex_Vectors.Vector );
   procedure Newton_Homotopy
               ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 z : in QuadDobl_Complex_Vectors.Vector );

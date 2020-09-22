@@ -2,14 +2,18 @@ with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with TripDobl_Complex_Vectors;
+with TripDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 
@@ -23,6 +27,8 @@ package Convergence_Radius_Estimates is
   function Is_Zero ( z : Standard_Complex_Numbers.Complex_Number )
                    return boolean;
   function Is_Zero ( z : DoblDobl_Complex_Numbers.Complex_Number )
+                   return boolean;
+  function Is_Zero ( z : TripDobl_Complex_Numbers.Complex_Number )
                    return boolean;
   function Is_Zero ( z : QuadDobl_Complex_Numbers.Complex_Number )
                    return boolean;
@@ -38,6 +44,10 @@ package Convergence_Radius_Estimates is
   procedure Fabry ( c : in DoblDobl_Complex_Vectors.Vector;
                     z : out DoblDobl_Complex_Numbers.Complex_Number;
                     e : out double_double; fail : out boolean;
+                    offset : in integer32 := 0 );
+  procedure Fabry ( c : in TripDobl_Complex_Vectors.Vector;
+                    z : out TripDobl_Complex_Numbers.Complex_Number;
+                    e : out triple_double; fail : out boolean;
                     offset : in integer32 := 0 );
   procedure Fabry ( c : in QuadDobl_Complex_Vectors.Vector;
                     z : out QuadDobl_Complex_Numbers.Complex_Number;
@@ -92,6 +102,19 @@ package Convergence_Radius_Estimates is
                     z : out DoblDobl_Complex_Numbers.Complex_Number;
                     r : out double_double;
                     e : out double_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
+  procedure Fabry ( c : in TripDobl_Complex_VecVecs.VecVec;
+                    z : out TripDobl_Complex_Numbers.Complex_Number;
+                    r : out triple_double;
+                    e : out triple_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
+  procedure Fabry ( file : in file_type;
+                    c : in TripDobl_Complex_VecVecs.VecVec;
+                    z : out TripDobl_Complex_Numbers.Complex_Number;
+                    r : out triple_double;
+                    e : out triple_double; fail : out boolean;
                     offset : in integer32 := 0;
                     verbose : in boolean := true );
   procedure Fabry ( c : in QuadDobl_Complex_VecVecs.VecVec;

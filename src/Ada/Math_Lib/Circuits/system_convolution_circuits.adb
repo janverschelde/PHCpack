@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
@@ -12,6 +13,8 @@ with Varbprec_VecVec_Conversions;
 with Standard_Complex_Series;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Series;
+with TripDobl_Complex_Vectors;
+with TripDobl_Complex_Series;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Series;
 with Exponent_Indices;
@@ -67,6 +70,38 @@ package body System_Convolution_Circuits is
   end Is_Zero;
 
   function Is_Zero ( d : DoblDobl_CSeries_Polynomials.Degrees )
+                   return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all entries of d are zero,
+  --   return false otherwise.
+
+  begin
+    for i in d'range loop
+      if d(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
+  function Is_Zero ( d : TripDobl_Complex_Polynomials.Degrees )
+                   return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all entries of d are zero,
+  --   return false otherwise.
+
+  begin
+    for i in d'range loop
+      if d(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
+  function Is_Zero ( d : TripDobl_CSeries_Polynomials.Degrees )
                    return boolean is
 
   -- DESCRIPTION :
@@ -151,6 +186,24 @@ package body System_Convolution_Circuits is
   end Nonzero_Constant;
 
   function Nonzero_Constant
+             ( c : TripDobl_Complex_Numbers.Complex_Number )
+             return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns 1 if c is nonzero, 0 otherwise.
+
+    use TripDobl_Complex_Numbers;
+
+    cmplxzero : constant Complex_Number := Create(integer32(0));
+
+  begin
+    if c = cmplxzero
+     then return 0;
+     else return 1;
+    end if;
+  end Nonzero_Constant;
+
+  function Nonzero_Constant
              ( c : QuadDobl_Complex_Numbers.Complex_Number )
              return integer32 is
 
@@ -202,6 +255,31 @@ package body System_Convolution_Circuits is
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Complex_Series;
+
+    cmplxzero : constant Complex_Number := Create(integer(0));
+
+  begin
+    if s = null then
+      return 0;
+    else
+      for k in s.cff'range loop
+        if s.cff(k) /= cmplxzero
+         then return 1;
+        end if;
+      end loop;
+      return 0;
+    end if;
+  end Nonzero_Constant;
+
+  function Nonzero_Constant
+             ( s : TripDobl_Complex_Series.Link_to_Series )
+             return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns 1 if s /= null, 0 otherwise.
+
+    use TripDobl_Complex_Numbers;
+    use TripDobl_Complex_Series;
 
     cmplxzero : constant Complex_Number := Create(integer(0));
 
@@ -358,6 +436,69 @@ package body System_Convolution_Circuits is
     res.idx := Exponent_Indices.Exponent_Index(res.xps);
     res.fac := Exponent_Indices.Factor_Index(res.xps);
     res.cst := new DoblDobl_Complex_Vectors.Vector'(0..deg => cmplxzero);
+    res.cst(0) := cst;
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    Standard_Natural_Vectors.Clear
+      (Standard_Natural_Vectors.Link_to_Vector(zero));
+    return res;
+  end Make_Convolution_Circuit;
+
+  function Make_Convolution_Circuit
+             ( p : TripDobl_Complex_Polynomials.Poly;
+               d : natural32 )
+             return TripDobl_Speelpenning_Convolutions.Circuit is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    deg : constant integer32 := integer32(d);
+    dim : constant integer32
+        := integer32(TripDobl_Complex_Polynomials.Number_of_Unknowns(p));
+    zero : TripDobl_Complex_Polynomials.Degrees
+         := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+    cmplxzero : constant TripDobl_Complex_Numbers.Complex_Number
+              := TripDobl_Complex_Numbers.Create(integer32(0));
+    cst : constant TripDobl_Complex_Numbers.Complex_Number
+        := TripDobl_Complex_Polynomials.Coeff(p,zero);
+    nbr : constant integer32
+        := integer32(TripDobl_Complex_Polynomials.Number_of_Terms(p))
+           - Nonzero_Constant(cst);
+    res : Circuit(nbr,dim,dim-1,dim-2);
+    idx : integer32 := 0;
+
+    procedure Visit_Term ( t : in TripDobl_Complex_Polynomials.Term;
+                           continue : out boolean ) is
+
+      use TripDobl_Complex_Polynomials;
+
+    begin
+      if not Is_Zero(t.dg) then
+        idx := idx + 1;
+        declare
+          cf : TripDobl_Complex_Vectors.Vector(0..deg) := (0..deg => cmplxzero);
+          xp : Standard_Integer_Vectors.Vector(1..dim);
+        begin
+          cf(0) := t.cf;
+          res.cff(idx) := new TripDobl_Complex_Vectors.Vector'(cf);
+          for i in t.dg'range loop
+            xp(i) := integer32(t.dg(i));
+          end loop;
+          res.xps(idx) := new Standard_Integer_Vectors.Vector'(xp);
+        end;
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new TripDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cst := new TripDobl_Complex_Vectors.Vector'(0..deg => cmplxzero);
     res.cst(0) := cst;
     res.forward := Allocate_Coefficients(dim-1,deg);
     res.backward := Allocate_Coefficients(dim-2,deg);
@@ -547,6 +688,63 @@ package body System_Convolution_Circuits is
   end Make_Convolution_Circuit;
 
   function Make_Convolution_Circuit
+             ( p : TripDobl_CSeries_Polynomials.Poly )
+             return TripDobl_Speelpenning_Convolutions.Circuit is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32
+        := integer32(TripDobl_CSeries_Polynomials.Number_of_Unknowns(p));
+    zero : TripDobl_CSeries_Polynomials.Degrees
+         := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+    cst : constant TripDobl_Complex_Series.Link_to_Series
+        := TripDobl_CSeries_Polynomials.Coeff(p,zero);
+    nbr : constant integer32
+        := integer32(TripDobl_CSeries_Polynomials.Number_of_Terms(p))
+           - Nonzero_Constant(cst);
+    res : Circuit(nbr,dim,dim-1,dim-2);
+    idx,deg : integer32 := 0;
+
+    procedure Visit_Term ( t : in TripDobl_CSeries_Polynomials.Term;
+                           continue : out boolean ) is
+
+      use TripDobl_CSeries_Polynomials;
+
+    begin
+      if not Is_Zero(t.dg) then
+        idx := idx + 1;
+        res.cff(idx) := new TripDobl_Complex_Vectors.Vector'(t.cf.cff);
+        declare
+          xp : Standard_Integer_Vectors.Vector(1..dim);
+        begin
+          for i in t.dg'range loop
+            xp(i) := integer32(t.dg(i));
+          end loop;
+          res.xps(idx) := new Standard_Integer_Vectors.Vector'(xp);
+        end;
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new TripDobl_CSeries_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cst := new TripDobl_Complex_Vectors.Vector'(cst.cff);
+    deg := res.cff(1)'last;
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    Standard_Natural_Vectors.Clear
+      (Standard_Natural_Vectors.Link_to_Vector(zero));
+    return res;
+  end Make_Convolution_Circuit;
+
+  function Make_Convolution_Circuit
              ( p : QuadDobl_CSeries_Polynomials.Poly )
              return QuadDobl_Speelpenning_Convolutions.Circuit is
 
@@ -636,6 +834,22 @@ package body System_Convolution_Circuits is
   end Make_Convolution_Circuits;
 
   function Make_Convolution_Circuits
+             ( p : TripDobl_Complex_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return TripDobl_Speelpenning_Convolutions.Circuits is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    res : Circuits(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i),d));
+    end loop;
+    return res;
+  end Make_Convolution_Circuits;
+
+  function Make_Convolution_Circuits
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                d : natural32 )
              return QuadDobl_Speelpenning_Convolutions.Circuits is
@@ -671,6 +885,21 @@ package body System_Convolution_Circuits is
              return DoblDobl_Speelpenning_Convolutions.Circuits is
 
     use DoblDobl_Speelpenning_Convolutions;
+
+    res : Circuits(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i)));
+    end loop;
+    return res;
+  end Make_Convolution_Circuits;
+
+  function Make_Convolution_Circuits
+             ( p : TripDobl_CSeries_Poly_Systems.Poly_Sys )
+             return TripDobl_Speelpenning_Convolutions.Circuits is
+
+    use TripDobl_Speelpenning_Convolutions;
 
     res : Circuits(p'range);
 
@@ -731,6 +960,23 @@ package body System_Convolution_Circuits is
   end Make_Convolution_System;
 
   function Make_Convolution_System
+             ( p : TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return TripDobl_Speelpenning_Convolutions.System is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    c : constant Circuits(p'range) := Make_Convolution_Circuits(p);
+    dim : constant integer32 := c(c'first).dim;
+    deg : constant integer32 := integer32(d);
+    res : constant System(neq,neq+1,dim,dim+1,deg) := Create(c,dim,deg);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
              ( p : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                d : natural32 )
              return QuadDobl_Speelpenning_Convolutions.System is
@@ -777,6 +1023,26 @@ package body System_Convolution_Circuits is
     neq : constant integer32 := p'last;
     nvr : constant natural32
         := DoblDobl_CSeries_Polynomials.Number_of_Unknowns(p(p'first));
+    dim : constant integer32 := integer32(nvr);
+    deg : constant integer32 := integer32(d);
+    s : constant System(neq,neq+1,dim,dim+1,deg)
+      := Make_Convolution_System(p,d);
+    res : constant Link_to_System := new System'(s);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
+             ( p : TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return TripDobl_Speelpenning_Convolutions.Link_to_System is
+
+    use TripDobl_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    nvr : constant natural32
+        := TripDobl_CSeries_Polynomials.Number_of_Unknowns(p(p'first));
     dim : constant integer32 := integer32(nvr);
     deg : constant integer32 := integer32(d);
     s : constant System(neq,neq+1,dim,dim+1,deg)
