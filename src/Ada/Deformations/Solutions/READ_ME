@@ -6,6 +6,8 @@ Utilities to build frequency tables for solutions were added in version 2.3,
 which became part of the main phc -v validation module in release v2.3.07
 and upgraded with quad trees in v2.3.10.
 Double double and quad double solutions were introduced in v2.3.55.
+Solutions in triple, penta, octo, and deca double precision were added
+in version 2.4.80.
 
 There are three parts in this library:
 (1) definition of solutions with standard, double double, quad double,
@@ -20,9 +22,17 @@ symbols_io                         : utilities for i/o of symbols
 standard_complex_solutions         : standard solutions to families of systems
 standard_complex_solutions_io      : input/output of standard solutions
 dobldobl_complex_solutions         : solutions with double double complex
-dobldobl_complex_solutions_io      : output for double double complex solutions
+dobldobl_complex_solutions_io      : i/o for double double complex solutions
+tripdobl_complex_solutions         : solutions with triple double complex
+tripdobl_complex_solutions_io      : i/o for triple double complex solutions
 quaddobl_complex_solutions         : solutions with quad double complex
-quaddobl_complex_solutions_io      : output for quad double complex solutions
+quaddobl_complex_solutions_io      : i/o for quad double complex solutions
+pentdobl_complex_solutions         : solutions with penta double complex
+pentdobl_complex_solutions_io      : i/o for penta double complex solutions
+octodobl_complex_solutions         : solutions with octo double complex
+octodobl_complex_solutions_io      : i/o for octo double complex solutions
+decadobl_complex_solutions         : solutions with deca double complex
+decadobl_complex_solutions_io      : i/o for deca double complex solutions
 multprec_complex_solutions         : multprec solutions to families of systems
 multprec_complex_solutions_io      : input/output of multprec solutions
 ts_sols                            : plain test on i/o of solutions
@@ -35,10 +45,14 @@ multprec_solution_strings          : multprecision solutions and strings
 solution_string_splitters          : split coordinates of a solution string
 ts_solstr                          : test string representations
 ------------------------------------------------------------------------------
-standard_system_and_solutions_io   : get/put standard systems and solutions
-dobldobl_system_and_solutions_io   : basic output for dd complex sys & sols
-quaddobl_system_and_solutions_io   : basic output for qd complex sys & sols
-multprec_system_and_solutions_io   : get/put multprec systems and solutions
+standard_system_and_solutions_io   : i/o of double systems and solutions
+dobldobl_system_and_solutions_io   : i/o of dobldobl system and solutions
+tripdobl_system_and_solutions_io   : i/o of tripdobl system and solutions
+quaddobl_system_and_solutions_io   : i/o of quaddobl system and solutions
+pentdobl_system_and_solutions_io   : i/o of pentdobl system and solutions
+octodobl_system_and_solutions_io   : i/o of octodobl system and solutions
+decadobl_system_and_solutions_io   : i/o of decadobl system and solutions
+multprec_system_and_solutions_io   : i/o of multprec systems and solutions
 prompt_for_systems                 : scan, read, and prompt for system
 prompt_for_solutions               : scan, read, and prompt for solutions
 ------------------------------------------------------------------------------
