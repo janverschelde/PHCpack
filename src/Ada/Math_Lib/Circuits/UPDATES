@@ -1,3 +1,7 @@
+Mon 21 Sep 2020 : new test_{standard,dobldobl,quaddobl}_speel_convolutions
+  with code from ts_speelser and moved code from ts_speelcnv into new
+  packages test_{standard,dobldobl,quaddobl}_coeff_convolutions.
+
 Sun 20 Sep 2020 : new test_{standard,dobldobl,quaddobl}_fabry packages,
   with test procedures from ts_fabry.
 
