@@ -2,7 +2,9 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
+with QuadDobl_Newton_Convolutions;
 with Newton_Coefficient_Convolutions;
 
 package body Newton_Power_Convolutions is
@@ -33,7 +35,7 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       Newton_Coefficient_Convolutions.LU_Newton_Step
         (csr,scf,rx,ix,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -72,7 +74,7 @@ package body Newton_Power_Convolutions is
       put(file,"Step "); put(file,k,1); put_line(file," :");
       Newton_Coefficient_Convolutions.LU_Newton_Step
         (file,csr,scf,rx,ix,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -108,9 +110,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 3 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.LU_Newton_Step
+      Standard_Newton_Convolutions.LU_Newton_Step
         (csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -146,9 +148,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.LU_Newton_Step
+      Standard_Newton_Convolutions.LU_Newton_Step
         (file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -182,9 +184,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 5 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.LU_Newton_Step
+      DoblDobl_Newton_Convolutions.LU_Newton_Step
         (csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -220,9 +222,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.LU_Newton_Step
+      DoblDobl_Newton_Convolutions.LU_Newton_Step
         (file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -256,9 +258,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 7 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.LU_Newton_Step
+      QuadDobl_Newton_Convolutions.LU_Newton_Step
         (csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      QuadDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -294,9 +296,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.LU_Newton_Step
+      QuadDobl_Newton_Convolutions.LU_Newton_Step
         (file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      QuadDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -336,7 +338,7 @@ package body Newton_Power_Convolutions is
     for k in 1..nbrit loop
       Newton_Coefficient_Convolutions.LU_Newton_Step
         (csr,scf,rx,ix,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -375,7 +377,7 @@ package body Newton_Power_Convolutions is
       put(file,"Step "); put(file,k,1); put_line(file," :");
       Newton_Coefficient_Convolutions.LU_Newton_Step
         (file,csr,scf,rx,ix,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -411,9 +413,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 11 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.LU_Newton_Step
+      Standard_Newton_Convolutions.LU_Newton_Step
         (csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -449,9 +451,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.LU_Newton_Step
+      Standard_Newton_Convolutions.LU_Newton_Step
         (file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -485,9 +487,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 13 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.LU_Newton_Step
+      DoblDobl_Newton_Convolutions.LU_Newton_Step
         (csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -523,9 +525,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.LU_Newton_Step
+      DoblDobl_Newton_Convolutions.LU_Newton_Step
         (file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -559,9 +561,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.LU_Newton_Steps 15 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.LU_Newton_Step
+      QuadDobl_Newton_Convolutions.LU_Newton_Step
         (csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      QuadDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -597,9 +599,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.LU_Newton_Step
+      QuadDobl_Newton_Convolutions.LU_Newton_Step
         (file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      QuadDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -642,7 +644,7 @@ package body Newton_Power_Convolutions is
       Newton_Coefficient_Convolutions.QR_Newton_Step
         (csr,scf,dx,xd,rx,ix,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -685,7 +687,7 @@ package body Newton_Power_Convolutions is
       Newton_Coefficient_Convolutions.QR_Newton_Step
         (file,csr,scf,dx,xd,rx,ix,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -724,10 +726,10 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.QR_Newton_Steps 3 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.QR_Newton_Step
+      Standard_Newton_Convolutions.QR_Newton_Step
         (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -766,10 +768,10 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.QR_Newton_Step
+      Standard_Newton_Convolutions.QR_Newton_Step
         (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -806,10 +808,10 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.QR_Newton_Steps 5 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.QR_Newton_Step
+      DoblDobl_Newton_Convolutions.QR_Newton_Step
         (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
 	 scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -848,10 +850,10 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.QR_Newton_Step
+      DoblDobl_Newton_Convolutions.QR_Newton_Step
         (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -888,10 +890,10 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.QR_Newton_Steps 7 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.QR_Newton_Step
+      QuadDobl_Newton_Convolutions.QR_Newton_Step
         (csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
 	 scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      QuadDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -930,10 +932,10 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.QR_Newton_Step
+      QuadDobl_Newton_Convolutions.QR_Newton_Step
         (file,csr,scf,dx,xd,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      QuadDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -976,7 +978,7 @@ package body Newton_Power_Convolutions is
       Newton_Coefficient_Convolutions.SVD_Newton_Step
         (csr,scf,dx,xd,rx,ix,absdx,svl,U,V,info,rcond,ewrk,wrkv,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -1019,7 +1021,7 @@ package body Newton_Power_Convolutions is
       Newton_Coefficient_Convolutions.SVD_Newton_Step
         (file,csr,scf,dx,xd,rx,ix,absdx,svl,U,V,info,rcond,ewrk,wrkv,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -1058,9 +1060,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.SVD_Newton_Steps 3 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.SVD_Newton_Step
+      Standard_Newton_Convolutions.SVD_Newton_Step
         (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -1099,9 +1101,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.SVD_Newton_Step
+      Standard_Newton_Convolutions.SVD_Newton_Step
         (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -1138,9 +1140,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.SVD_Newton_Steps 5 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.SVD_Newton_Step
+      DoblDobl_Newton_Convolutions.SVD_Newton_Step
         (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -1179,9 +1181,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.SVD_Newton_Step
+      DoblDobl_Newton_Convolutions.SVD_Newton_Step
         (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -1218,9 +1220,9 @@ package body Newton_Power_Convolutions is
      then put_line("-> in newton_power_convolutions.SVD_Newton_Steps 7 ...");
     end if;
     for k in 1..nbrit loop
-      Newton_Convolutions.SVD_Newton_Step
+      QuadDobl_Newton_Convolutions.SVD_Newton_Step
         (csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      QuadDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -1259,9 +1261,9 @@ package body Newton_Power_Convolutions is
     end if;
     for k in 1..nbrit loop
       put(file,"Step "); put(file,k,1); put_line(file," :");
-      Newton_Convolutions.SVD_Newton_Step
+      QuadDobl_Newton_Convolutions.SVD_Newton_Step
         (file,csr,scf,dx,xd,absdx,svl,U,V,info,rcond,ewrk,wrkv,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      QuadDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first

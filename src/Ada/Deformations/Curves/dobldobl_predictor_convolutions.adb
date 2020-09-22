@@ -9,7 +9,7 @@ with DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Complex_Singular_Values;
 with DoblDobl_Mixed_Residuals;
 with DoblDobl_Rational_Approximations;
-with Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
 with Newton_Power_Convolutions;
 with Convergence_Radius_Estimates;
 with Jacobian_Convolution_Circuits;
@@ -33,7 +33,7 @@ package body DoblDobl_Predictor_Convolutions is
          := (0..dendeg => zero);
 
   begin
-    res.sol := Newton_Convolutions.Series_Coefficients(sol,deg);
+    res.sol := DoblDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
     res.wrk := new DoblDobl_Complex_Vectors.Vector'(1..neq => zero);
     for k in sol'range loop
       res.numcff(k) := new DoblDobl_Complex_Vectors.Vector'(knum);
@@ -55,7 +55,7 @@ package body DoblDobl_Predictor_Convolutions is
          := (0..dendeg => zero);
 
   begin
-    res.sol := Newton_Convolutions.Series_Coefficients(sol,deg);
+    res.sol := DoblDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
     res.wrk := new DoblDobl_Complex_Vectors.Vector'(1..neq => zero);
     res.ewrk := new DoblDobl_Complex_Vectors.Vector'(1..dim => zero);
     res.dx := Allocate_Coefficients(dim,deg);

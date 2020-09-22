@@ -1,3 +1,8 @@
+Tue 22 Sep 2020 : because of split of newton_convolutions package,
+  updated {standard,dobldobl,quaddobl}_predictor_convolutions.adb,
+  newton_power_convolutions.adb, staggered_newton_convolutions.adb,
+  ts_sernewcnv.adb, and ts_fabryhom.adb.
+
 Wed 12 Aug 2020 : extended ts_fabryhom with test procedures in double double
   and quad double precision.
 

@@ -11,7 +11,7 @@ with Standard_Complex_Singular_Values;
 with Standard_Inlined_Singular_Values;
 with Standard_Mixed_Residuals;
 with Standard_Rational_Approximations;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
 with Newton_Power_Convolutions;
 with Staggered_Newton_Convolutions;
 with Convergence_Radius_Estimates;
@@ -37,7 +37,7 @@ package body Standard_Predictor_Convolutions is
          := (0..dendeg => zero);
 
   begin
-    res.sol := Newton_Convolutions.Series_Coefficients(sol,deg);
+    res.sol := Standard_Newton_Convolutions.Series_Coefficients(sol,deg);
     res.wrk := new Standard_Complex_Vectors.Vector'(1..neq => zero);
     for k in sol'range loop
       res.numcff(k) := new Standard_Complex_Vectors.Vector'(knum);
@@ -71,7 +71,7 @@ package body Standard_Predictor_Convolutions is
     use Standard_Speelpenning_Convolutions;
 
   begin
-    res.sol := Newton_Convolutions.Series_Coefficients(sol,deg);
+    res.sol := Standard_Newton_Convolutions.Series_Coefficients(sol,deg);
     res.wrk := new Standard_Complex_Vectors.Vector'(1..neq => zero);
     res.ewrk := new Standard_Complex_Vectors.Vector'(1..dim => zero);
     res.dx := Allocate_Coefficients(dim,deg);

@@ -1,6 +1,6 @@
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
 with Newton_Coefficient_Convolutions;
 
 package body Staggered_Newton_Convolutions is
@@ -127,7 +127,7 @@ package body Staggered_Newton_Convolutions is
     end loop;
   end Indexed_LU_Newton_Steps;
 
--- INDEXED NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
+-- INDEXED NEWTON STEPS WITH LU WITH CONDITION NUMBER ESTIMATE :
 
   procedure Indexed_LU_Newton_Steps
               ( csr : in Standard_Coefficient_Convolutions.Link_to_System;
@@ -280,7 +280,7 @@ package body Staggered_Newton_Convolutions is
       Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
         (wrkdeg,csr,scf,rx,ix,absdx,info,ipvt,
          rc,ic,rv,iv,rb,ib,ry,iy,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -330,7 +330,7 @@ package body Staggered_Newton_Convolutions is
       Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
         (file,wrkdeg,csr,scf,rx,ix,absdx,info,ipvt,
          rc,ic,rv,iv,rb,ib,ry,iy,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
@@ -381,7 +381,7 @@ package body Staggered_Newton_Convolutions is
       Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
         (wrkdeg,csr,scf,rx,ix,absdx,rcond,ipvt,
          rc,ic,rv,iv,rb,ib,ry,iy,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -431,7 +431,7 @@ package body Staggered_Newton_Convolutions is
       Newton_Coefficient_Convolutions.Inlined_LU_Newton_Step
         (file,wrkdeg,csr,scf,rx,ix,absdx,rcond,ipvt,
          rc,ic,rv,iv,rb,ib,ry,iy,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
@@ -477,7 +477,7 @@ package body Staggered_Newton_Convolutions is
     for k in 1..maxit loop
       Newton_Coefficient_Convolutions.LU_Newton_Step
         (wrkdeg,csr,scf,rx,ix,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -523,7 +523,7 @@ package body Staggered_Newton_Convolutions is
       put(file,"Step "); put(file,k,1); put_line(file," :");
       Newton_Coefficient_Convolutions.LU_Newton_Step
         (file,wrkdeg,csr,scf,rx,ix,absdx,info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
@@ -569,7 +569,7 @@ package body Staggered_Newton_Convolutions is
     for k in 1..maxit loop
       Newton_Coefficient_Convolutions.LU_Newton_Step
         (wrkdeg,csr,scf,rx,ix,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -615,7 +615,7 @@ package body Staggered_Newton_Convolutions is
       put(file,"Step "); put(file,k,1); put_line(file," :");
       Newton_Coefficient_Convolutions.LU_Newton_Step
         (file,wrkdeg,csr,scf,rx,ix,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
@@ -665,7 +665,7 @@ package body Staggered_Newton_Convolutions is
       Newton_Coefficient_Convolutions.QR_Newton_Step
         (wrkdeg,csr,scf,dx,xd,rx,ix,absdx,qraux,w1,w2,w3,w4,w5,info,ipvt,wrk,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -715,7 +715,7 @@ package body Staggered_Newton_Convolutions is
       Newton_Coefficient_Convolutions.QR_Newton_Step
         (file,wrkdeg,csr,scf,dx,xd,rx,ix,absdx,qraux,w1,w2,w3,w4,w5,
          info,ipvt,wrk,scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first
@@ -763,7 +763,7 @@ package body Staggered_Newton_Convolutions is
       Newton_Coefficient_Convolutions.SVD_Newton_Step
         (wrkdeg,csr,scf,dx,xd,rx,ix,absdx,svl,U,V,info,rcond,ewrk,wrkv,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(wrkdeg,csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| ="); put(maxval,3);
         if idx < csr.vy'first
@@ -813,7 +813,7 @@ package body Staggered_Newton_Convolutions is
       Newton_Coefficient_Convolutions.SVD_Newton_Step
         (file,wrkdeg,csr,scf,dx,xd,rx,ix,absdx,svl,U,V,info,rcond,ewrk,wrkv,
          scale,vrblvl-1);
-      Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      Standard_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put(file,"max |dx| ="); put(file,maxval,3);
         if idx < csr.vy'first

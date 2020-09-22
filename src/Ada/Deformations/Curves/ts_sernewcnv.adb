@@ -42,7 +42,9 @@ with Standard_Convolution_Splitters;
 with Standard_Coefficient_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
+with QuadDobl_Newton_Convolutions;
 with Newton_Power_Convolutions;
 with Staggered_Newton_Convolutions;
 
@@ -84,7 +86,7 @@ procedure ts_sernewcnv is
       := Standard_Speelpenning_Convolutions.Create(c,dim,deg);
     cs : Standard_Coefficient_Convolutions.Link_to_System;
     scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
-        := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+        := Standard_Newton_Convolutions.Series_Coefficients(sol.v,deg);
     rx : constant Standard_Floating_VecVecs.Link_to_VecVec
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     ix : constant Standard_Floating_VecVecs.Link_to_VecVec
@@ -237,7 +239,7 @@ procedure ts_sernewcnv is
     dim : constant integer32 := sol.n;
     s : constant Link_to_System := Create(c,dim,deg);
     scf : constant Standard_Complex_VecVecs.VecVec(1..sol.n)
-        := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+        := Standard_Newton_Convolutions.Series_Coefficients(sol.v,deg);
     info,nbrit : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
     ewrk : Standard_Complex_Vectors.Link_to_Vector
@@ -322,7 +324,7 @@ procedure ts_sernewcnv is
     dim : constant integer32 := sol.n;
     s : constant Link_to_System := Create(c,dim,deg);
     scf : constant DoblDobl_Complex_VecVecs.VecVec(1..sol.n)
-        := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+        := DoblDobl_Newton_Convolutions.Series_Coefficients(sol.v,deg);
     info,nbrit : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
     ewrk : DoblDobl_Complex_Vectors.Link_to_Vector
@@ -401,7 +403,7 @@ procedure ts_sernewcnv is
     dim : constant integer32 := sol.n;
     s : constant Link_to_System := Create(c,dim,deg);
     scf : constant QuadDobl_Complex_VecVecs.VecVec(1..sol.n)
-        := Newton_Convolutions.Series_Coefficients(sol.v,deg);
+        := QuadDobl_Newton_Convolutions.Series_Coefficients(sol.v,deg);
     info,nbrit : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..sol.n);
     ewrk : QuadDobl_Complex_Vectors.Link_to_Vector

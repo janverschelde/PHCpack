@@ -60,7 +60,9 @@ with Standard_Convolution_Splitters;
 with Standard_Homotopy_Convolutions_io;
 with DoblDobl_Homotopy_Convolutions_io;
 with QuadDobl_Homotopy_Convolutions_io;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
+with QuadDobl_Newton_Convolutions;
 with Newton_Power_Convolutions;
 with Staggered_Newton_Convolutions;
 with Convergence_Radius_Estimates;
@@ -84,7 +86,7 @@ procedure ts_fabryhom is
     dim : constant integer32 := sol'last;
     deg : constant integer32 := cfs.deg;
     scf : constant Standard_Complex_VecVecs.VecVec(1..dim)
-        := Newton_Convolutions.Series_Coefficients(sol,deg);
+        := Standard_Newton_Convolutions.Series_Coefficients(sol,deg);
     rx : constant Standard_Floating_VecVecs.Link_to_VecVec
        := Standard_Vector_Splitters.Allocate_Floating_Coefficients(dim,deg);
     ix : constant Standard_Floating_VecVecs.Link_to_VecVec
@@ -153,7 +155,7 @@ procedure ts_fabryhom is
     dim : constant integer32 := sol'last;
     deg : constant integer32 := cfs.deg;
     scf : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
-        := Newton_Convolutions.Series_Coefficients(sol,deg);
+        := DoblDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
     maxit,nbrit : integer32 := 0;
     ans : character;
     tol : double_float := 1.0E-20;
@@ -204,7 +206,7 @@ procedure ts_fabryhom is
     dim : constant integer32 := sol'last;
     deg : constant integer32 := cfs.deg;
     scf : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
-        := Newton_Convolutions.Series_Coefficients(sol,deg);
+        := QuadDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
     maxit,nbrit : integer32 := 0;
     ans : character;
     tol : double_float := 1.0E-32;
