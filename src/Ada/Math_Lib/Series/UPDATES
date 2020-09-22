@@ -1,7 +1,10 @@
+Tue 22 Sep 2020 : new test_{standard,dobldobl,quaddobl}_cseries_systems
+  with test procedures from ts_csersys.
+
 Mon 21 Sep 2020 : new test_{standard,dobldobl,quaddobl}_cseries_polynomials
   with test procedures from ts_cserpol.  Instantiated cseries polynomials
   in {trip,pent,octo,deca}dobl_cseries_polynomials, with _io as well.
-  Defined {trip,pent,octo,deca}dobl_cseries_poly_{functions,systems},
+  Defined {trip,pent,octo,deca}dobl_cseries_poly_{functions,systems,sysfun},
   i/o in {trip,pent,octo,deca}dobl_cseries_poly_systems_io, and
   {trip,pent,octo,deca}dobl_cseries_jaco_matrices.  Defined series with
   polynomial coefficients in {trip,pent,octo,deca}dobl_polynomial_cseries.
