@@ -1,3 +1,7 @@
+Tue 22 Sep 2020 : updates in multitasked_newton_convolutions.adb,
+  ts_mtnewton.adb and ts_mthessian.adb because of the split of the
+  Newton convolutions package.
+
 Fri 21 Aug 2020 : exported the boolean arrays for synchronization to the
   static and dynamic load balancing in multitasked_hessian_circuits.
   Applied the dynamic load balancing procedure directly in the test

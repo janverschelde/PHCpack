@@ -2,7 +2,9 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
+with QuadDobl_Newton_Convolutions;
 with Multitasked_AlgoDiff_Convolutions;  use Multitasked_AlgoDiff_Convolutions;
 with Multitasked_Series_Linearization;   use Multitasked_Series_Linearization;
 
@@ -20,11 +22,11 @@ package body Multitasked_Newton_Convolutions is
                 output : in boolean := false ) is
   begin
     Standard_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,wrk,output);
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
+    Standard_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
   procedure Multitasked_LU_Newton_Step
@@ -37,11 +39,11 @@ package body Multitasked_Newton_Convolutions is
                 output : in boolean := false ) is
   begin
     DoblDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,wrk,output);
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
+    absdx := DoblDobl_Newton_Convolutions.Max(s.yv);
+    DoblDobl_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
   procedure Multitasked_LU_Newton_Step
@@ -54,11 +56,11 @@ package body Multitasked_Newton_Convolutions is
                 output : in boolean := false ) is
   begin
     QuadDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
+    QuadDobl_Newton_Convolutions.Minus(s.vy);
     Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,wrk,output);
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
+    absdx := QuadDobl_Newton_Convolutions.Max(s.yv);
+    QuadDobl_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
 -- ONE NEWTON STEP WITH LU WITH CONDITION NUMBER ESTIMATE :
@@ -73,11 +75,11 @@ package body Multitasked_Newton_Convolutions is
                 output : in boolean := false ) is
   begin
     Standard_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Multitasked_Solve_by_lufco(nbt,s.vm,s.vy,ipvt,rcond,wrk,output);
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
+    Standard_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
   procedure Multitasked_LU_Newton_Step
@@ -90,11 +92,11 @@ package body Multitasked_Newton_Convolutions is
                 output : in boolean := false ) is
   begin
     DoblDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     Multitasked_Solve_by_lufco(nbt,s.vm,s.vy,ipvt,rcond,wrk,output);
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
+    absdx := DoblDobl_Newton_Convolutions.Max(s.yv);
+    DoblDobl_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
   procedure Multitasked_LU_Newton_Step
@@ -107,11 +109,11 @@ package body Multitasked_Newton_Convolutions is
                 output : in boolean := false ) is
   begin
     QuadDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
-    Newton_Convolutions.Minus(s.vy);
+    QuadDobl_Newton_Convolutions.Minus(s.vy);
     Multitasked_Solve_by_lufco(nbt,s.vm,s.vy,ipvt,rcond,wrk,output);
     QuadDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(x,s.yv);
+    absdx := QuadDobl_Newton_Convolutions.Max(s.yv);
+    QuadDobl_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
 -- SEVERAL NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :

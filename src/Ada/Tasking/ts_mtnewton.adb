@@ -40,7 +40,9 @@ with QuadDobl_Speelpenning_Convolutions;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
 with Homotopy_Convolution_Circuits;      use Homotopy_Convolution_Circuits;
 with Random_Convolution_Circuits;        use Random_Convolution_Circuits;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
+with QuadDobl_Newton_Convolutions;
 with Convergence_Radius_Estimates;
 with Multitasked_Series_Linearization;
 with Multitasked_Newton_Convolutions;    use Multitasked_Newton_Convolutions;
@@ -459,7 +461,7 @@ procedure ts_mtnewton is
       otp := (ans = 'y');
       put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
       est := (ans = 'y');
-      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+      scf := Standard_Newton_Convolutions.Series_Coefficients(sol,deg);
       Standard_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
                    speedup,efficiency,otp,est);
       Standard_Complex_VecVecs.Clear(scf);
@@ -498,7 +500,7 @@ procedure ts_mtnewton is
       otp := (ans = 'y');
       put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
       est := (ans = 'y');
-      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+      scf := DoblDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
       DoblDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
                    speedup,efficiency,otp,est);
       DoblDobl_Complex_VecVecs.Clear(scf);
@@ -537,7 +539,7 @@ procedure ts_mtnewton is
       otp := (ans = 'y');
       put("Estimate condition number ? (y/n) "); Ask_Yes_or_No(ans);
       est := (ans = 'y');
-      scf := Newton_Convolutions.Series_Coefficients(sol,deg);
+      scf := QuadDobl_Newton_Convolutions.Series_Coefficients(sol,deg);
       QuadDobl_Run(nbt,dim,maxit,s,scf,seri_elapsed,mult_elapsed,
                    speedup,efficiency,otp,est);
       QuadDobl_Complex_VecVecs.Clear(scf);
@@ -1054,7 +1056,7 @@ procedure ts_mtnewton is
     Add_Parameter_to_Constant(qds); -- make Newton homotopy
     dds := System_Convolution_Circuits.to_double_double(qds);
     d_s := System_Convolution_Circuits.to_double(qds);
-    scf := Newton_Convolutions.Series_Coefficients(ls.v,deg);
+    scf := QuadDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
     qdx := new QuadDobl_Complex_VecVecs.VecVec'(scf);
     ddx := QuadDobl_Complex_Vectors_cv.to_double_double(qdx);
     d_x := QuadDobl_Complex_Vectors_cv.to_double(qdx);

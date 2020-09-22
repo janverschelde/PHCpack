@@ -43,7 +43,9 @@ with Evaluation_Differentiation_Errors;  use Evaluation_Differentiation_Errors;
 with Hessian_Convolution_Circuits;       use Hessian_Convolution_Circuits;
 with Jacobian_Convolution_Circuits;      use Jacobian_Convolution_Circuits;
 with Multitasked_Hessian_Convolutions;   use Multitasked_Hessian_Convolutions;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
+with QuadDobl_Newton_Convolutions;
 
 procedure ts_mthessian is
 
@@ -471,7 +473,7 @@ procedure ts_mthessian is
         := Make_Convolution_Circuits(lp.all,natural32(deg));
       s : constant Link_to_System := Create(c,dim,deg);
       scf : constant Standard_Complex_VecVecs.VecVec(1..dim)
-          := Newton_Convolutions.Series_Coefficients(ls.v,deg);
+          := Standard_Newton_Convolutions.Series_Coefficients(ls.v,deg);
       x : constant Standard_Complex_VecVecs.Link_to_VecVec
         := new Standard_Complex_VecVecs.VecVec'(scf);
     begin
@@ -506,7 +508,7 @@ procedure ts_mthessian is
         := Make_Convolution_Circuits(lp.all,natural32(deg));
       s : constant Link_to_System := Create(c,dim,deg);
       scf : constant DoblDobl_Complex_VecVecs.VecVec(1..dim)
-          := Newton_Convolutions.Series_Coefficients(ls.v,deg);
+          := DoblDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
       x : constant DoblDobl_Complex_VecVecs.Link_to_VecVec
         := new DoblDobl_Complex_VecVecs.VecVec'(scf);
     begin
@@ -541,7 +543,7 @@ procedure ts_mthessian is
         := Make_Convolution_Circuits(lp.all,natural32(deg));
       s : constant Link_to_System := Create(c,dim,deg);
       scf : constant QuadDobl_Complex_VecVecs.VecVec(1..dim)
-          := Newton_Convolutions.Series_Coefficients(ls.v,deg);
+          := QuadDobl_Newton_Convolutions.Series_Coefficients(ls.v,deg);
       x : constant QuadDobl_Complex_VecVecs.Link_to_VecVec
         := new QuadDobl_Complex_VecVecs.VecVec'(scf);
     begin
