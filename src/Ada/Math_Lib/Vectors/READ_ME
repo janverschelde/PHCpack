@@ -48,27 +48,23 @@ standard_integer64_vecvecs         : generic_vecvecs(standard integer64)
 standard_integer64_vecvecs_io      : generic_vecvecs_io(standard integer64)
 standard_floating_vectors          : vectors of standard floating numbers
 standard_floating_vectors_io       : generic_vectors_io(standard floating)
-standard_floating_vector_norms     : norms of vectors of double floats
 standard_floating_vecvecs          : generic_vecvecs(standard floating)
 standard_floating_vecvecs_io       : generic_vecvecs_io(standard floating)
 standard_complex_vectors           : vectors of standard complex numbers
 standard_complex_vectors_io        : generic_vectors_io(standard complex)
 standard_complex_vector_strings    : parse/write cmplx vectors from/to strings
-standard_complex_vector_norms      : norms of standard complex vectors
 standard_complex_vecvecs           : generic_vecvecs(standard complex)
 standard_complex_vecvecs_io        : generic_vecvecs_io(standard complex)
 standard_complex_nesvecs           : generic_nesvecs(standard complex)
 standard_complex_nesvecs_io        : generic_nesvecs_io(standard complex)
 double_double_vectors              : vectors of double double numbers
 double_double_vectors_io           : generic_vectors_io(double double)
-double_double_vector_norms         : norms of double double vectors
 double_double_vecvecs              : vectors of double double vectors
 double_double_vecvecs_io           : generic_vecvecs_io(double double)
 dobldobl_complex_vectors           : vectors of double double complex numbers
 dobldobl_complex_vectors_io        : generic_vectors_io(double double complex)
 dobldobl_complex_vector_strings    : parse/write ddcplx vectors from/to strings
 dobldobl_complex_vectors_cv        : convert complex <-> double double
-dobldobl_complex_vector_norms      : vector norms for double double complex
 dobldobl_complex_equality_tests    : tests whether double doubles are equal
 dobldobl_complex_vecvecs           : vectors of double double complex vectors
 dobldobl_complex_vecvecs_io        : generic_vecvecs_io(double double complex)
@@ -76,7 +72,6 @@ dobldobl_complex_nesvecs           : generic_nesvecs(dobldobl complex)
 dobldobl_complex_nesvecs_io        : generic_nesvecs_io(dobldobl complex)
 quad_double_vectors                : vectors of quad double numbers
 quad_double_vectors_io             : generic_vectors_io(quad double)
-quad_double_vector_norms           : norms of vectors of quad doubles
 quaddobl_complex_equality_tests    : tests whether quad doubles are equal
 quad_double_vecvecs                : vectors of double quad vectors
 quad_double_vecvecs_io             : generic_vecvecs_io(quad double)
@@ -84,7 +79,6 @@ quaddobl_complex_vectors           : vectors of quad double complex numbers
 quaddobl_complex_vectors_io        : generic_vectors_io(quad double complex)
 quaddobl_copmlex_vector_strings    : parse/write qdcplx vectors from/to strings
 quaddobl_complex_vectors_cv        : convert complex <-> quad double
-quaddobl_complex_vector_norms      : vector norms for quad double complex
 quaddobl_complex_vecvecs           : vectors of quad double complex vectors
 quaddobl_complex_vecvecs_io        : generic_vecvecs_io(quad double complex)
 quaddobl_complex_nesvecs           : generic_nesvecs(quaddobl complex)
@@ -121,28 +115,30 @@ tripdobl_complex_vectors           : complex vectors of triple doubles
 tripdobl_complex_vectors_io        : i/o of complex vectors of triple doubles
 tripdobl_complex_vecvecs           : complex vecvecs of triple doubles
 tripdobl_complex_vecvecs_io        : i/o of complex vecvecs of triple doubles
+tripdobl_complex_vectors_cv        : convert to double and multiprecision
 penta_double_vectors               : vectors of penta double numbers
 penta_double_vectors_io            : input/output of penta double vectors
 pentdobl_complex_vectors           : complex vectors of penta doubles
 pentdobl_complex_vectors_io        : i/o of complex vectors of penta doubles
 pentdobl_complex_vecvecs           : complex vecvecs of penta doubles
 pentdobl_complex_vecvecs_io        : i/o of complex vecvecs of penta doubles
+pentdobl_complex_vectors_cv        : convert to double and multiprecision
 octo_double_vectors                : vectors of octo double numbers
 octo_double_vectors_io             : input/output of octo double vectors
 octodobl_complex_vectors           : complex vectors of octo doubles
 octodobl_complex_vectors_io        : i/o of complex vectors of octo doubles
 octodobl_complex_vecvecs           : complex vevcecs of octo doubles
 octodobl_complex_vecvecs_io        : i/o of complex vevcecs of octo doubles
+octodobl_complex_vectors_cv        : convert to double and multiprecision
 deca_double_vectors                : vectors of deca double numbers
 deca_double_vectors_io             : input/output of deca double vectors
 decadobl_complex_vectors           : complex vectors of deca doubles
 decadobl_complex_vectors_io        : i/o of complex vectors of deca doubles
 decadobl_complex_vecvecs           : complex vecvecs of deca doubles
 decadobl_complex_vecvecs_io        : i/o of complex vecvecs of deca doubles
+decadobl_complex_vectors_cv        : convert to double and multiprecision
 ------------------------------------------------------------------------------
 valid_vector_checks                : valid if no component is NaN
-------------------------------------------------------------------------------
-standard_floating_two_norms        : Euclidean norms for standard floating vecs
 ------------------------------------------------------------------------------
 standard_random_vectors            : vectors of random standard numbers
 standard_random_vecvecs            : vecvecs of random standard numbers
