@@ -13,7 +13,8 @@ with Standard_Series_Matrix_Solvers;
 with DoblDobl_Series_Matrix_Solvers;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
-with Newton_Convolutions;
+with Standard_Newton_Convolutions;
+with DoblDobl_Newton_Convolutions;
 
 package body Newton_Coefficient_Convolutions is
 
@@ -27,13 +28,13 @@ package body Newton_Coefficient_Convolutions is
     done : boolean := false;
 
   begin
-    absdx := Newton_Convolutions.Max(v(idx));
+    absdx := Standard_Newton_Convolutions.Max(v(idx));
     if absdx > tol
      then idxtoldx := idx-1; done := true;
      else idxtoldx := deg;
     end if;
     for k in idx+1..deg loop
-      val := Newton_Convolutions.Max(v(k));
+      val := Standard_Newton_Convolutions.Max(v(k));
       if not done then
         if val > tol
          then idxtoldx := k-1; done := true;
@@ -67,7 +68,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     Standard_Vector_Splitters.Complex_Parts(s.vy,rb,ib);
     Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
@@ -75,11 +76,11 @@ package body Newton_Coefficient_Convolutions is
       (s.dim,rc,ic,rv,iv,rb,ib,ipvt,info,ry,iy);
     Standard_Vector_Splitters.Complex_Merge(rb,ib,s.vy);
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(scf,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
+    Standard_Newton_Convolutions.Update(scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -103,7 +104,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     for k in 0..deg loop
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
@@ -115,11 +116,11 @@ package body Newton_Coefficient_Convolutions is
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
-    Newton_Convolutions.Update(deg,scf,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
+    Standard_Newton_Convolutions.Update(deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -147,7 +148,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     for k in idx..deg loop
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
     end loop;
@@ -177,11 +178,11 @@ package body Newton_Coefficient_Convolutions is
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
     Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
-    Newton_Convolutions.Update(idx,deg,scf,s.yv);
+    Standard_Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -207,7 +208,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     Standard_Vector_Splitters.Complex_Parts(s.vy,rb,ib);
     Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
@@ -217,13 +218,13 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Merge(rb,ib,s.vy);
     put_line(file,"dx :"); put_line(file,s.vy);
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,s.yv);
+    Standard_Newton_Convolutions.Update(scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -252,7 +253,7 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     for k in 0..deg loop -- s.vy, rb, and ib are linearized
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
@@ -271,13 +272,13 @@ package body Newton_Coefficient_Convolutions is
       put_line(file,s.vy(k)); new_line(file);
     end loop;
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(deg,scf,s.yv);
+    Standard_Newton_Convolutions.Update(deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -310,7 +311,7 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     for k in idx..deg loop -- s.vy, rb, and ib are linearized
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
     end loop;
@@ -345,14 +346,14 @@ package body Newton_Coefficient_Convolutions is
       put_line(file,s.vy(k)); new_line(file);
     end loop;
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
     Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
     put(file,"max |dx| :"); put(file,absdx,3);
     put(file,"  tolerance index : "); put(file,idxtoldx,1); new_line(file);
-    Newton_Convolutions.Update(idx,deg,scf,s.yv);
+    Standard_Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
 -- ONE INLINED NEWTON STEP WITH CONDITION NUMBER ESTIMATE :
@@ -377,7 +378,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     Standard_Vector_Splitters.Complex_Parts(s.vy,rb,ib);
     Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
@@ -385,11 +386,11 @@ package body Newton_Coefficient_Convolutions is
        (s.dim,rc,ic,rv,iv,rb,ib,ipvt,rcond,ry,iy);
     Standard_Vector_Splitters.Complex_Merge(rb,ib,s.vy);
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(scf,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
+    Standard_Newton_Convolutions.Update(scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -413,7 +414,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     for k in 0..deg loop
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
@@ -425,11 +426,11 @@ package body Newton_Coefficient_Convolutions is
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
-    Newton_Convolutions.Update(deg,scf,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
+    Standard_Newton_Convolutions.Update(deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -457,7 +458,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     for k in idx..deg loop
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
     end loop;
@@ -487,11 +488,11 @@ package body Newton_Coefficient_Convolutions is
       Standard_Vector_Splitters.Complex_Merge(rb(k),ib(k),s.vy(k));
     end loop;
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
     Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
-    Newton_Convolutions.Update(idx,deg,scf,s.yv);
+    Standard_Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -517,7 +518,7 @@ package body Newton_Coefficient_Convolutions is
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     Standard_Vector_Splitters.Complex_Parts(s.vy,rb,ib);
     Standard_Matrix_Splitters.Split_Rows(s.vm,rv,iv);
@@ -527,13 +528,13 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Merge(rb,ib,s.vy);
     put_line(file,"dx :"); put_line(file,s.vy);
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,s.yv);
+    Standard_Newton_Convolutions.Update(scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -562,7 +563,7 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Matrix_Splitters.Complex_Parts(s.vm(0).all,rc,ic);
     for k in 0..deg loop -- s.vy, rb, and ib are linearized
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
@@ -581,13 +582,13 @@ package body Newton_Coefficient_Convolutions is
       put_line(file,s.vy(k)); new_line(file);
     end loop;
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(deg,scf,s.yv);
+    Standard_Newton_Convolutions.Update(deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
   procedure Inlined_LU_Newton_Step
@@ -620,7 +621,7 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     for k in idx..deg loop -- s.vy, rb, and ib are linearized
       Standard_Vector_Splitters.Complex_Parts(s.vy(k),rb(k),ib(k));
     end loop;
@@ -655,15 +656,15 @@ package body Newton_Coefficient_Convolutions is
       put_line(file,s.vy(k)); new_line(file);
     end loop;
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
     Tolerance_Index(idx,deg,s.vy,toldx,idxtoldx,absdx);
     put(file,"max |dx| :"); put(file,absdx,3);
     put(file,"  tolerance index : "); put(file,idxtoldx,1); new_line(file);
-    Newton_Convolutions.Update(idx,deg,scf,s.yv);
+    Standard_Newton_Convolutions.Update(idx,deg,scf,s.yv);
   end Inlined_LU_Newton_Step;
 
 -- ONE NEWTON STEP WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
@@ -684,14 +685,14 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(scf,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
+    Standard_Newton_Convolutions.Update(scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -711,14 +712,14 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufac(deg,s.vm,s.vy,ipvt,info,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
-    Newton_Convolutions.Update(deg,scf,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
+    Standard_Newton_Convolutions.Update(deg,scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -740,17 +741,17 @@ package body Newton_Coefficient_Convolutions is
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,s.yv);
+    Standard_Newton_Convolutions.Update(scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -775,20 +776,20 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufac(deg,s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :");
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Speelpenning_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(deg,scf,s.yv);
+    Standard_Newton_Convolutions.Update(deg,scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -813,14 +814,14 @@ package body Newton_Coefficient_Convolutions is
       (s.rhpwt,s.ihpwt,s.rlpwt,s.ilpwt,s.mxe,rhx,ihx,rlx,ilx);
     DoblDobl_Coefficient_Convolutions.EvalDiff
       (s,rhx.all,ihx.all,rlx.all,ilx.all);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,fac);
+     then DoblDobl_Newton_Convolutions.Power_Divide(s.vy,fac);
     end if;
     DoblDobl_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(scf,s.yv);
+    absdx := DoblDobl_Newton_Convolutions.Max(s.yv);
+    DoblDobl_Newton_Convolutions.Update(scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -848,17 +849,17 @@ package body Newton_Coefficient_Convolutions is
     DoblDobl_Coefficient_Convolutions.EvalDiff
       (s,rhx.all,ihx.all,rlx.all,ilx.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufac(s.vm,s.vy,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,fac);
+      DoblDobl_Newton_Convolutions.Power_Divide(s.vy,fac);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     DoblDobl_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
+    absdx := DoblDobl_Newton_Convolutions.Max(s.yv);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,s.yv);
+    DoblDobl_Newton_Convolutions.Update(scf,s.yv);
   end LU_Newton_Step;
 
 -- ONE NEWTON STEP WITH LU WITH CONDITION NUMBER ESTIMATE :
@@ -879,14 +880,14 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
-    Newton_Convolutions.Update(scf,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
+    Standard_Newton_Convolutions.Update(scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -906,15 +907,15 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufco
       (deg,s.vm,s.vy,ipvt,rcond,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
-    Newton_Convolutions.Update(deg,scf,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
+    Standard_Newton_Convolutions.Update(deg,scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -936,17 +937,17 @@ package body Newton_Coefficient_Convolutions is
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.yv);
+    absdx := Standard_Newton_Convolutions.Max(s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,s.yv);
+    Standard_Newton_Convolutions.Update(scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -971,7 +972,7 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_lufco
       (deg,s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :");
@@ -979,13 +980,13 @@ package body Newton_Coefficient_Convolutions is
       put_line(file,s.vy(k)); new_line(file);
     end loop;
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,1.0);
+      Standard_Newton_Convolutions.Power_Divide(s.vy,1.0);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(deg,s.yv);
+    absdx := Standard_Newton_Convolutions.Max(deg,s.yv);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(deg,scf,s.yv);
+    Standard_Newton_Convolutions.Update(deg,scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -1010,14 +1011,14 @@ package body Newton_Coefficient_Convolutions is
       (s.rhpwt,s.ihpwt,s.rlpwt,s.ilpwt,s.mxe,rhx,ihx,rlx,ilx);
     DoblDobl_Coefficient_Convolutions.EvalDiff
       (s,rhx.all,ihx.all,rlx.all,ilx.all);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(s.vy,fac);
+     then DoblDobl_Newton_Convolutions.Power_Divide(s.vy,fac);
     end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.vy);
-    Newton_Convolutions.Update(scf,s.yv);
+    absdx := DoblDobl_Newton_Convolutions.Max(s.vy);
+    DoblDobl_Newton_Convolutions.Update(scf,s.yv);
   end LU_Newton_Step;
 
   procedure LU_Newton_Step
@@ -1045,17 +1046,17 @@ package body Newton_Coefficient_Convolutions is
     DoblDobl_Coefficient_Convolutions.EvalDiff
       (s,rhx.all,ihx.all,rlx.all,ilx.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_lufco(s.vm,s.vy,ipvt,rcond,wrk);
     put_line(file,"dx :"); put_line(file,s.vy);
     if scaledx then
-      Newton_Convolutions.Power_Divide(s.vy,fac);
+      DoblDobl_Newton_Convolutions.Power_Divide(s.vy,fac);
       put_line(file,"scaled dx :"); put_line(file,s.vy);
     end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
-    absdx := Newton_Convolutions.Max(s.vy);
+    absdx := DoblDobl_Newton_Convolutions.Max(s.vy);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,s.yv);
+    DoblDobl_Newton_Convolutions.Update(scf,s.yv);
   end LU_Newton_Step;
 
 -- ONE NEWTON STEP WITH QR :
@@ -1079,15 +1080,15 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(xd,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(xd,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(xd,dx);
-    absdx := Newton_Convolutions.Max(dx);
-    Newton_Convolutions.Update(scf,dx);
+    absdx := Standard_Newton_Convolutions.Max(dx);
+    Standard_Newton_Convolutions.Update(scf,dx);
   end QR_Newton_Step;
 
   procedure QR_Newton_Step
@@ -1110,15 +1111,15 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_QRLS
       (deg,s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(xd,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(xd,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,xd,dx);
-    absdx := Newton_Convolutions.Max(deg,dx);
-    Newton_Convolutions.Update(deg,scf,dx);
+    absdx := Standard_Newton_Convolutions.Max(deg,dx);
+    Standard_Newton_Convolutions.Update(deg,scf,dx);
   end QR_Newton_Step;
 
   procedure QR_Newton_Step
@@ -1143,18 +1144,18 @@ package body Newton_Coefficient_Convolutions is
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     put_line(file,"dx :"); put_line(file,xd);
     if scaledx then
-      Newton_Convolutions.Power_Divide(xd,1.0);
+      Standard_Newton_Convolutions.Power_Divide(xd,1.0);
       put(file,"scaled dx :"); put_line(file,xd);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(xd,dx);
-    absdx := Newton_Convolutions.Max(dx);
+    absdx := Standard_Newton_Convolutions.Max(dx);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,dx);
+    Standard_Newton_Convolutions.Update(scf,dx);
   end QR_Newton_Step;
 
   procedure QR_Newton_Step
@@ -1182,7 +1183,7 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_QRLS
       (deg,s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     put_line(file,"dx :");
@@ -1190,13 +1191,13 @@ package body Newton_Coefficient_Convolutions is
       put_line(file,xd(k)); new_line(file);
     end loop;
     if scaledx then
-      Newton_Convolutions.Power_Divide(xd,1.0);
+      Standard_Newton_Convolutions.Power_Divide(xd,1.0);
       put(file,"scaled dx :"); put_line(file,xd);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,xd,dx);
-    absdx := Newton_Convolutions.Max(deg,dx);
+    absdx := Standard_Newton_Convolutions.Max(deg,dx);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(deg,scf,dx);
+    Standard_Newton_Convolutions.Update(deg,scf,dx);
   end QR_Newton_Step;
 
   procedure QR_Newton_Step
@@ -1224,15 +1225,15 @@ package body Newton_Coefficient_Convolutions is
       (s.rhpwt,s.ihpwt,s.rlpwt,s.ilpwt,s.mxe,rhx,ihx,rlx,ilx);
     DoblDobl_Coefficient_Convolutions.EvalDiff
       (s,rhx.all,ihx.all,rlx.all,ilx.all);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     if scaledx
-     then Newton_Convolutions.Power_Divide(xd,fac);
+     then DoblDobl_Newton_Convolutions.Power_Divide(xd,fac);
     end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    absdx := Newton_Convolutions.Max(dx);
-    Newton_Convolutions.Update(scf,dx);
+    absdx := DoblDobl_Newton_Convolutions.Max(dx);
+    DoblDobl_Newton_Convolutions.Update(scf,dx);
   end QR_Newton_Step;
 
   procedure QR_Newton_Step
@@ -1263,17 +1264,17 @@ package body Newton_Coefficient_Convolutions is
     DoblDobl_Coefficient_Convolutions.EvalDiff
       (s,rhx.all,ihx.all,rlx.all,ilx.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_QRLS
       (s.vm,s.vy,xd,qraux,w1,w2,w3,w4,w5,ipvt,info,wrk);
     if scaledx then
-      Newton_Convolutions.Power_Divide(xd,fac);
+      DoblDobl_Newton_Convolutions.Power_Divide(xd,fac);
       put(file,"scaled dx :"); put_line(file,xd);
     end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    absdx := Newton_Convolutions.Max(dx);
+    absdx := DoblDobl_Newton_Convolutions.Max(dx);
     put(file,"max |dx| :"); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,dx);
+    DoblDobl_Newton_Convolutions.Update(scf,dx);
   end QR_Newton_Step;
 
 -- ONE NEWTON STEP WITH SVD :
@@ -1297,15 +1298,15 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     if scaledx
-     then Newton_Convolutions.Power_Divide(xd,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(xd,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(xd,dx);
-    absdx := Newton_Convolutions.Max(dx);
-    Newton_Convolutions.Update(scf,dx);
+    absdx := Standard_Newton_Convolutions.Max(dx);
+    Standard_Newton_Convolutions.Update(scf,dx);
   end SVD_Newton_Step;
 
   procedure SVD_Newton_Step
@@ -1328,15 +1329,15 @@ package body Newton_Coefficient_Convolutions is
     Standard_Vector_Splitters.Complex_Parts(deg,scf,rx,ix);
     Standard_Coefficient_Convolutions.Compute(deg,s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(deg,s,rx.all,ix.all);
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_SVD
       (deg,s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     if scaledx
-     then Newton_Convolutions.Power_Divide(xd,1.0);
+     then Standard_Newton_Convolutions.Power_Divide(xd,1.0);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,xd,dx);
-    absdx := Newton_Convolutions.Max(deg,dx);
-    Newton_Convolutions.Update(deg,scf,dx);
+    absdx := Standard_Newton_Convolutions.Max(deg,dx);
+    Standard_Newton_Convolutions.Update(deg,scf,dx);
   end SVD_Newton_Step;
 
   procedure SVD_Newton_Step
@@ -1361,18 +1362,18 @@ package body Newton_Coefficient_Convolutions is
     Standard_Coefficient_Convolutions.Compute(s.rpwt,s.ipwt,s.mxe,rx,ix);
     Standard_Coefficient_Convolutions.EvalDiff(s,rx.all,ix.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    Standard_Newton_Convolutions.Minus(s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     put_line(file,"dx :"); put_line(file,xd);
     if scaledx then
-      Newton_Convolutions.Power_Divide(xd,1.0);
+      Standard_Newton_Convolutions.Power_Divide(xd,1.0);
       put(file,"scaled dx :"); put_line(file,xd);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(xd,dx);
-    absdx := Newton_Convolutions.Max(dx);
+    absdx := Standard_Newton_Convolutions.Max(dx);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,dx);
+    Standard_Newton_Convolutions.Update(scf,dx);
   end SVD_Newton_Step;
 
   procedure SVD_Newton_Step
@@ -1400,7 +1401,7 @@ package body Newton_Coefficient_Convolutions is
     for k in 0..deg loop
       put_line(file,s.vy(k)); new_line(file);
     end loop;
-    Newton_Convolutions.Minus(deg,s.vy);
+    Standard_Newton_Convolutions.Minus(deg,s.vy);
     Standard_Series_Matrix_Solvers.Solve_by_SVD
       (deg,s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     put_line(file,"dx :");
@@ -1408,13 +1409,13 @@ package body Newton_Coefficient_Convolutions is
       put_line(file,xd(k)); new_line(file);
     end loop;
     if scaledx then
-      Newton_Convolutions.Power_Divide(xd,1.0);
+      Standard_Newton_Convolutions.Power_Divide(xd,1.0);
       put(file,"scaled dx :"); put_line(file,xd);
     end if;
     Standard_Coefficient_Convolutions.Delinearize(deg,xd,dx);
-    absdx := Newton_Convolutions.Max(deg,dx);
+    absdx := Standard_Newton_Convolutions.Max(deg,dx);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(deg,scf,dx);
+    Standard_Newton_Convolutions.Update(deg,scf,dx);
   end SVD_Newton_Step;
 
   procedure SVD_Newton_Step
@@ -1442,15 +1443,15 @@ package body Newton_Coefficient_Convolutions is
       (s.rhpwt,s.ihpwt,s.rlpwt,s.ilpwt,s.mxe,rhx,ihx,rlx,ilx);
     DoblDobl_Coefficient_Convolutions.EvalDiff
       (s,rhx.all,ihx.all,rlx.all,ilx.all);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     if scaledx
-     then Newton_Convolutions.Power_Divide(xd,fac);
+     then DoblDobl_Newton_Convolutions.Power_Divide(xd,fac);
     end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    absdx := Newton_Convolutions.Max(dx);
-    Newton_Convolutions.Update(scf,dx);
+    absdx := DoblDobl_Newton_Convolutions.Max(dx);
+    DoblDobl_Newton_Convolutions.Update(scf,dx);
   end SVD_Newton_Step;
 
   procedure SVD_Newton_Step
@@ -1481,17 +1482,17 @@ package body Newton_Coefficient_Convolutions is
     DoblDobl_Coefficient_Convolutions.EvalDiff
       (s,rhx.all,ihx.all,rlx.all,ilx.all);
     put_line(file,"vy :"); put_line(file,s.vy);
-    Newton_Convolutions.Minus(s.vy);
+    DoblDobl_Newton_Convolutions.Minus(s.vy);
     DoblDobl_Series_Matrix_Solvers.Solve_by_SVD
       (s.vm,s.vy,xd,svl,U,V,info,rcond,ewrk,wrkv);
     if scaledx then
-      Newton_Convolutions.Power_Divide(xd,fac);
+      DoblDobl_Newton_Convolutions.Power_Divide(xd,fac);
       put(file,"scaled dx :"); put_line(file,xd);
     end if;
     DoblDobl_Speelpenning_Convolutions.Delinearize(xd,dx);
-    absdx := Newton_Convolutions.Max(dx);
+    absdx := DoblDobl_Newton_Convolutions.Max(dx);
     put(file,"max |dx| : "); put(file,absdx,3); new_line(file);
-    Newton_Convolutions.Update(scf,dx);
+    DoblDobl_Newton_Convolutions.Update(scf,dx);
   end SVD_Newton_Step;
 
 end Newton_Coefficient_Convolutions;
