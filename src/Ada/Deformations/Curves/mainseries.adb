@@ -633,7 +633,7 @@ procedure mainseries ( nt : in natural32; precision : in character;
       when '1' =>
         put_line("Using as lifting the powers of the first variable,");
         put_line("assuming coefficients are sufficiently generic ...");
-        case precision is
+        case valprc is
           when '1' =>
             put_line("The working precision is double precision");
             Regular_Newton_Puiseux.Standard_Main;
@@ -649,7 +649,7 @@ procedure mainseries ( nt : in natural32; precision : in character;
         new_line;
         put("Start Newton's method at a constant term ? (y/n) ");
         Ask_Yes_or_No(ans);
-        case precision is
+        case valprc is
           when '1' =>
             put_line("The working precision is double precision");
             if ans = 'y'

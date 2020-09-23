@@ -1,3 +1,6 @@
+Wed 23 Sep 2020 : bug fix in mainseries.adb so menus options 1 and 2
+  of phc -u are again accessible for proper choices of precision levels.
+
 Tue 22 Sep 2020 : because of split of newton_convolutions package,
   updated {standard,dobldobl,quaddobl}_predictor_convolutions.adb,
   newton_power_convolutions.adb, staggered_newton_convolutions.adb,
