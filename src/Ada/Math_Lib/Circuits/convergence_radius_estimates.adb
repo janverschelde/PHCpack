@@ -2,14 +2,17 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Penta_Double_Numbers_io;            use Penta_Double_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with TripDobl_Complex_Numbers_io;        use TripDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
+with PentDobl_Complex_Numbers_io;        use PentDobl_Complex_Numbers_io;
 with Standard_Complex_Numbers_Polar;
 with DoblDobl_Complex_Numbers_Polar;
 with TripDobl_Complex_Numbers_Polar;
 with QuadDobl_Complex_Numbers_Polar;
+with PentDobl_Complex_Numbers_Polar;
 
 package body Convergence_Radius_Estimates is
 
@@ -59,6 +62,20 @@ package body Convergence_Radius_Estimates is
     use QuadDobl_Complex_Numbers;
 
     one : constant quad_double := create(1.0);
+
+  begin
+    if REAL_PART(z) + one /= one
+     then return false;
+     else return (IMAG_PART(z) + one = one);
+    end if;
+  end Is_Zero;
+
+  function Is_Zero ( z : PentDobl_Complex_Numbers.Complex_Number )
+                   return boolean is
+
+    use PentDobl_Complex_Numbers;
+
+    one : constant penta_double := create(1.0);
 
   begin
     if REAL_PART(z) + one /= one
@@ -151,6 +168,32 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Numbers;
+
+  begin
+    fail := Is_Zero(c(c'last-offset));
+    if not fail then
+      if offset = 0 then
+        z := c(c'last-1)/c(c'last);
+        if Is_Zero(c(c'last-1))
+         then e := create(1.0);
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+        end if;
+      else -- offset should be > 0, typically 2
+        z := c(c'last-1-offset)/c(c'last-offset);
+        if Is_Zero(c(c'last))
+         then e := create(1.0);
+         else e := AbsVal(z - c(c'last-1)/c(c'last));
+        end if;
+      end if;
+    end if;
+  end Fabry;
+
+  procedure Fabry ( c : in PentDobl_Complex_Vectors.Vector;
+                    z : out PentDobl_Complex_Numbers.Complex_Number;
+                    e : out penta_double; fail : out boolean;
+                    offset : in integer32 := 0 ) is
+
+    use PentDobl_Complex_Numbers;
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -323,6 +366,44 @@ package body Convergence_Radius_Estimates is
     end loop;
   end Fabry;
 
+  procedure Fabry ( c : in PentDobl_Complex_VecVecs.VecVec;
+                    z : out PentDobl_Complex_Numbers.Complex_Number;
+                    r : out penta_double;
+                    e : out penta_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true ) is
+
+    use PentDobl_Complex_Numbers;
+
+    zk : Complex_Number;
+    ek,rad : penta_double;
+    kfail : boolean;
+
+  begin
+    fail := true;
+    for k in c'range loop
+      Fabry(c(k).all,zk,ek,kfail,offset);
+      if verbose then
+        if kfail
+         then put_line("zero last coefficient");
+         else put(zk); put("  error estimate : "); put(ek,3); new_line;
+        end if;
+      end if;
+      if not kfail then
+        if k = c'first then
+          z := zk; e := ek;
+          r := PentDobl_Complex_Numbers_Polar.Radius(z);
+        else
+          rad := PentDobl_Complex_Numbers_Polar.Radius(zk);
+          if rad < r
+           then z := zk; e := ek; r := rad;
+          end if;
+        end if;
+        fail := false;
+      end if;
+    end loop;
+  end Fabry;
+
   procedure Fabry ( file : in file_type;
                     c : in Standard_Complex_VecVecs.VecVec;
                     z : out Standard_Complex_Numbers.Complex_Number;
@@ -478,6 +559,47 @@ package body Convergence_Radius_Estimates is
           r := QuadDobl_Complex_Numbers_Polar.Radius(z);
         else
           rad := QuadDobl_Complex_Numbers_Polar.Radius(zk);
+          if rad < r
+           then z := zk; e := ek; r := rad;
+          end if;
+        end if;
+        fail := false;
+      end if;
+    end loop;
+  end Fabry;
+
+  procedure Fabry ( file : in file_type;
+                    c : in PentDobl_Complex_VecVecs.VecVec;
+                    z : out PentDobl_Complex_Numbers.Complex_Number;
+                    r : out penta_double;
+                    e : out penta_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true ) is
+
+    use PentDobl_Complex_Numbers;
+
+    zk : Complex_Number;
+    ek,rad : penta_double;
+    kfail : boolean;
+
+  begin
+    fail := true;
+    for k in c'range loop
+      Fabry(c(k).all,zk,ek,kfail,offset);
+      if verbose then
+        if kfail then
+          put_line(file,"zero last coefficient");
+        else
+          put(file,zk); put(file,"  error estimate : ");
+          put(file,ek,3); new_line(file);
+        end if;
+      end if;
+      if not kfail then
+        if k = c'first then
+          z := zk; e := ek;
+          r := PentDobl_Complex_Numbers_Polar.Radius(z);
+        else
+          rad := PentDobl_Complex_Numbers_Polar.Radius(zk);
           if rad < r
            then z := zk; e := ek; r := rad;
           end if;

@@ -8,7 +8,9 @@ Tue 22 Sep 2002 : {trip,pent,octo,deca}dobl_speelpenning_convolutions are
   and test_{standard,dobldobl,quaddobl}_fabry.adb.  Extended
   {system,homotopy}_convolution_circuits and convergence_radius_estimates
   to triple double precision, added new tripdobl_newton_convolutions and
-  test_tripdobl_fabry, called in ts_fabry.
+  test_tripdobl_fabry, called in ts_fabry.  For penta doubles, extended
+  {system,homotopy}_convolution_circuits and convergence_radius_estimates,
+  added pentdobl_newton_convolutions, test_pentdobl_fabry, updated ts_fabry.
 
 Mon 21 Sep 2020 : new test_{standard,dobldobl,quaddobl}_speel_convolutions
   with code from ts_speelser and moved code from ts_speelcnv into new

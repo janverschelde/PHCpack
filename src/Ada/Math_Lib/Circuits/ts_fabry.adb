@@ -4,6 +4,7 @@ with Test_Standard_Fabry;
 with Test_DoblDobl_Fabry;
 with Test_TripDobl_Fabry;
 with Test_QuadDobl_Fabry;
+with Test_PentDobl_Fabry;
 
 procedure ts_fabry is
 
@@ -30,13 +31,15 @@ procedure ts_fabry is
     put_line("  2. double double precision");
     put_line("  3. triple double precision");
     put_line("  4. quad double precision");
-    put("Type 1, 2, 3, or 4 to select the precision : ");
-    Ask_Alternative(prc,"1234");
+    put_line("  5. penta double precision");
+    put("Type 1, 2, 3, 4, or 5 to select the precision : ");
+    Ask_Alternative(prc,"12345");
     case prc is
       when '1' => Test_Standard_Fabry.Main;
       when '2' => Test_DoblDobl_Fabry.Main;
       when '3' => Test_TripDobl_Fabry.Main;
       when '4' => Test_QuadDobl_Fabry.Main;
+      when '5' => Test_PentDobl_Fabry.Main;
       when others => null;
     end case;
   end Main;

@@ -1,4 +1,3 @@
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with PentDobl_Complex_Laurentials;      use PentDobl_Complex_Laurentials;
 with PentDobl_Complex_Laurentials_io;   use PentDobl_Complex_Laurentials_io;

@@ -2,7 +2,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Penta_Double_Numbers;               use Penta_Double_Numbers;
-with Penta_Double_Numbers_i o;           use Penta_Double_Numbers_io;
+with Penta_Double_Numbers_io;            use Penta_Double_Numbers_io;
 with PentDobl_Complex_Numbers;           use PentDobl_Complex_Numbers;
 with Symbol_Table,Symbol_Table_io;
 with PentDobl_Polynomial_Convertors;     use PentDobl_Polynomial_Convertors;

@@ -3,10 +3,12 @@ with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with TripDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
+with PentDobl_Complex_Vectors;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with TripDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
+with PentDobl_Speelpenning_Convolutions;
 
 package Homotopy_Convolution_Circuits is
 
@@ -24,6 +26,8 @@ package Homotopy_Convolution_Circuits is
               ( c : in TripDobl_Speelpenning_Convolutions.Link_to_Circuit );
   procedure Add_Continuation_Parameter
               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit );
+  procedure Add_Continuation_Parameter
+              ( c : in PentDobl_Speelpenning_Convolutions.Link_to_Circuit );
 
   -- DESCRIPTION :
   --   To every coefficient adds 't' as the linear coefficient
@@ -37,6 +41,8 @@ package Homotopy_Convolution_Circuits is
               ( c : in TripDobl_Speelpenning_Convolutions.Circuits );
   procedure Add_Continuation_Parameter
               ( c : in QuadDobl_Speelpenning_Convolutions.Circuits );
+  procedure Add_Continuation_Parameter
+              ( c : in PentDobl_Speelpenning_Convolutions.Circuits );
 
   -- DESCRIPTION :
   --   To every coefficient adds 't' as the linear coefficient
@@ -54,6 +60,9 @@ package Homotopy_Convolution_Circuits is
   procedure Add_Parameter_to_Constant
               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 deg : in integer32 );
+  procedure Add_Parameter_to_Constant
+              ( c : in PentDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                deg : in integer32 );
 
   -- DESCRIPTION :
   --   Adds the continuation parameter t to the constant of c.
@@ -69,6 +78,8 @@ package Homotopy_Convolution_Circuits is
               ( s : in TripDobl_Speelpenning_Convolutions.Link_to_System );
   procedure Add_Parameter_to_Constant
               ( s : in QuadDobl_Speelpenning_Convolutions.Link_to_System );
+  procedure Add_Parameter_to_Constant
+              ( s : in PentDobl_Speelpenning_Convolutions.Link_to_System );
 
   -- DESCRIPTION :
   --   Adds the continuation parameter to every circuit in s.
@@ -87,6 +98,9 @@ package Homotopy_Convolution_Circuits is
   procedure Set_Solution_Constant
               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in QuadDobl_Complex_Vectors.Vector );
+  procedure Set_Solution_Constant
+              ( c : in PentDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                z : in PentDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Sets the constant of c so that z becomes a solution.
@@ -103,6 +117,9 @@ package Homotopy_Convolution_Circuits is
   procedure Set_Solution_Constant
               ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 z : in QuadDobl_Complex_Vectors.Vector );
+  procedure Set_Solution_Constant
+              ( c : in PentDobl_Speelpenning_Convolutions.Circuits;
+                z : in PentDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Sets the constant of each circuit in c so that z becomes a solution.
@@ -119,6 +136,9 @@ package Homotopy_Convolution_Circuits is
   procedure Newton_Homotopy
               ( c : in QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
                 z : in QuadDobl_Complex_Vectors.Vector );
+  procedure Newton_Homotopy
+              ( c : in PentDobl_Speelpenning_Convolutions.Link_to_Circuit;
+                z : in PentDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Let y = Eval(c,z), then the constant of c becomes -y + t*y, so
@@ -138,6 +158,9 @@ package Homotopy_Convolution_Circuits is
   procedure Newton_Homotopy
               ( c : in QuadDobl_Speelpenning_Convolutions.Circuits;
                 z : in QuadDobl_Complex_Vectors.Vector );
+  procedure Newton_Homotopy
+              ( c : in PentDobl_Speelpenning_Convolutions.Circuits;
+                z : in PentDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Constructs a Newton homotopy for all circuits in c.

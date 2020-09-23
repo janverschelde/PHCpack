@@ -14,7 +14,7 @@ and code was developed for better performing circuits, along with the
 evaluation of Hessians, as needed for a robust path tracker.
 
 Since the different ways to evaluate polynomials use different orders of
-computation, the results may differ when mixed-precision arithmetic is used.
+computation, the results may differ when multiprecision arithmetic is used.
 
 -------------------------------------------------------------------------------
 file name                          : short description
@@ -96,12 +96,14 @@ standard_newton_convolutions       : Newton with double convolutions
 dobldobl_newton_convolutions       : Newton with dobldobl convolutions
 tripdobl_newton_convolutions       : Newton with tripdobl convolutions
 quaddobl_newton_convolutions       : Newton with quaddobl convolutions
+pentdobl_newton_convolutions       : Newton with pentdobl convolutions
 newton_coefficient_convolutions    : Newton on coefficient convolutions
 convergence_radius_estimates       : applies ratio theorem of Fabry
 test_standard_fabry                : tests Fabry in double precision
 test_dobldobl_fabry                : tests Fabry in double double precision
 test_tripdobl_fabry                : tests Fabry in triple double precision
 test_quaddobl_fabry                : tests Fabry in quad double precision
+test_pentdobl_fabry                : tests Fabry in quad double precision
 ts_fabry                           : test on the Fabry ratio theorem
 ts_evalcnv                         : test on plain evaluation
 hessian_convolution_circuits       : Hessians on convolution circuits
