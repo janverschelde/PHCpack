@@ -5,11 +5,15 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Penta_Double_Numbers;               use Penta_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Deca_Double_Numbers;                use Deca_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with PentDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
@@ -20,6 +24,10 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with PentDobl_Complex_Vectors;
 with PentDobl_Complex_VecVecs;
+with OctoDobl_Complex_Vectors;
+with OctoDobl_Complex_VecVecs;
+with DecaDobl_Complex_Vectors;
+with DecaDobl_Complex_VecVecs;
 
 package Convergence_Radius_Estimates is
 
@@ -37,6 +45,10 @@ package Convergence_Radius_Estimates is
   function Is_Zero ( z : QuadDobl_Complex_Numbers.Complex_Number )
                    return boolean;
   function Is_Zero ( z : PentDobl_Complex_Numbers.Complex_Number )
+                   return boolean;
+  function Is_Zero ( z : OctoDobl_Complex_Numbers.Complex_Number )
+                   return boolean;
+  function Is_Zero ( z : DecaDobl_Complex_Numbers.Complex_Number )
                    return boolean;
 
   -- DESCRIPTION :
@@ -62,6 +74,14 @@ package Convergence_Radius_Estimates is
   procedure Fabry ( c : in PentDobl_Complex_Vectors.Vector;
                     z : out PentDobl_Complex_Numbers.Complex_Number;
                     e : out penta_double; fail : out boolean;
+                    offset : in integer32 := 0 );
+  procedure Fabry ( c : in OctoDobl_Complex_Vectors.Vector;
+                    z : out OctoDobl_Complex_Numbers.Complex_Number;
+                    e : out octo_double; fail : out boolean;
+                    offset : in integer32 := 0 );
+  procedure Fabry ( c : in DecaDobl_Complex_Vectors.Vector;
+                    z : out DecaDobl_Complex_Numbers.Complex_Number;
+                    e : out deca_double; fail : out boolean;
                     offset : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -151,6 +171,32 @@ package Convergence_Radius_Estimates is
                     z : out PentDobl_Complex_Numbers.Complex_Number;
                     r : out penta_double;
                     e : out penta_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
+  procedure Fabry ( c : in OctoDobl_Complex_VecVecs.VecVec;
+                    z : out OctoDobl_Complex_Numbers.Complex_Number;
+                    r : out octo_double;
+                    e : out octo_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
+  procedure Fabry ( file : in file_type;
+                    c : in OctoDobl_Complex_VecVecs.VecVec;
+                    z : out OctoDobl_Complex_Numbers.Complex_Number;
+                    r : out octo_double;
+                    e : out octo_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
+  procedure Fabry ( c : in DecaDobl_Complex_VecVecs.VecVec;
+                    z : out DecaDobl_Complex_Numbers.Complex_Number;
+                    r : out deca_double;
+                    e : out deca_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
+  procedure Fabry ( file : in file_type;
+                    c : in DecaDobl_Complex_VecVecs.VecVec;
+                    z : out DecaDobl_Complex_Numbers.Complex_Number;
+                    r : out deca_double;
+                    e : out deca_double; fail : out boolean;
                     offset : in integer32 := 0;
                     verbose : in boolean := true );
 

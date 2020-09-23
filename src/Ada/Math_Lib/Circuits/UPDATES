@@ -1,4 +1,9 @@
-Tue 22 Sep 2002 : {trip,pent,octo,deca}dobl_speelpenning_convolutions are
+Wed 23 Sep 2020 : to test the Fabry ratio theorem with octo and deca doubles,
+  extended {system,homotopy}_convolution_circuits, and the operations in
+  convergence_radius_estimates; added new {octo,deca}dobl_newton_convolutions
+  and test_{octo,deca}dobl_fabry, with extensions in ts_fabry.
+
+Tue 22 Sep 2020 : {trip,pent,octo,deca}dobl_speelpenning_convolutions are
   instantiations of generic_speelpenning_convolutions.  Extended reference
   code in series_polynomial_gradient and made new test packages
   test_{trip,pent,octo,deca}dobl_speel_convolutions, called in ts_speelser.
