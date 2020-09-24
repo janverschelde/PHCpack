@@ -3,6 +3,8 @@ with Standard_Complex_Series;
 with Standard_Complex_Series_Functions;
 with DoblDobl_Complex_Series;
 with DoblDobl_Complex_Series_Functions;
+with TripDobl_Complex_Series;
+with TripDobl_Complex_Series_Functions;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Functions;
 with Complex_Series_and_Polynomials;
@@ -26,6 +28,18 @@ package body Series_and_Homotopies is
                   return DoblDobl_CSeries_Poly_Systems.Poly_Sys is
 
     res : constant DoblDobl_CSeries_Poly_Systems.Poly_Sys
+        := Complex_Series_and_Polynomials.System_to_Series_System
+             (h,idx,verbose);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( h : in TripDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return TripDobl_CSeries_Poly_Systems.Poly_Sys is
+
+    res : constant TripDobl_CSeries_Poly_Systems.Poly_Sys
         := Complex_Series_and_Polynomials.System_to_Series_System
              (h,idx,verbose);
 
@@ -165,6 +179,66 @@ package body Series_and_Homotopies is
     return res;
   end Eval;
 
+  function Eval ( p : TripDobl_CSeries_Polynomials.Poly;
+                  t : triple_double )
+                return TripDobl_Complex_Polynomials.Poly is
+
+    res : TripDobl_Complex_Polynomials.Poly
+        := TripDobl_Complex_Polynomials.Null_Poly;
+
+    procedure Eval_Term ( trm : in TripDobl_CSeries_Polynomials.Term;
+                          cont : out boolean ) is
+
+      rt : TripDobl_Complex_Polynomials.Term;
+
+    begin
+      rt.cf := TripDobl_Complex_Series_Functions.Eval(trm.cf,t);
+      rt.dg := new Standard_Natural_Vectors.Vector(trm.dg'range);
+      for k in rt.dg'range loop
+        rt.dg(k) := trm.dg(k);
+      end loop;
+      TripDobl_Complex_Polynomials.Add(res,rt);
+      TripDobl_Complex_Polynomials.Clear(rt);
+      cont := true;
+    end Eval_Term;
+    procedure Eval_Terms is
+      new TripDobl_CSeries_Polynomials.Visiting_Iterator(Eval_Term);
+
+  begin
+    Eval_Terms(p);
+    return res;
+  end Eval;
+
+  function Eval ( p : TripDobl_CSeries_Polynomials.Poly;
+                  t : TripDobl_Complex_Numbers.Complex_Number )
+                return TripDobl_Complex_Polynomials.Poly is
+
+    res : TripDobl_Complex_Polynomials.Poly
+        := TripDobl_Complex_Polynomials.Null_Poly;
+
+    procedure Eval_Term ( trm : in TripDobl_CSeries_Polynomials.Term;
+                          cont : out boolean ) is
+
+      rt : TripDobl_Complex_Polynomials.Term;
+
+    begin
+      rt.cf := TripDobl_Complex_Series_Functions.Eval(trm.cf,t);
+      rt.dg := new Standard_Natural_Vectors.Vector(trm.dg'range);
+      for k in rt.dg'range loop
+        rt.dg(k) := trm.dg(k);
+      end loop;
+      TripDobl_Complex_Polynomials.Add(res,rt);
+      TripDobl_Complex_Polynomials.Clear(rt);
+      cont := true;
+    end Eval_Term;
+    procedure Eval_Terms is
+      new TripDobl_CSeries_Polynomials.Visiting_Iterator(Eval_Term);
+
+  begin
+    Eval_Terms(p);
+    return res;
+  end Eval;
+
   function Eval ( p : QuadDobl_CSeries_Polynomials.Poly;
                   t : Quad_double )
                 return QuadDobl_Complex_Polynomials.Poly is
@@ -269,6 +343,32 @@ package body Series_and_Homotopies is
                 return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
     res : DoblDobl_Complex_Poly_Systems.Poly_Sys(h'range);
+
+  begin
+    for i in res'range loop
+      res(i) := Eval(h(i),t);
+    end loop;
+    return res;
+  end Eval;
+
+  function Eval ( h : TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                  t : triple_double )
+                return TripDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : TripDobl_Complex_Poly_Systems.Poly_Sys(h'range);
+
+  begin
+    for i in res'range loop
+      res(i) := Eval(h(i),t);
+    end loop;
+    return res;
+  end Eval;
+
+  function Eval ( h : TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                  t : TripDobl_Complex_Numbers.Complex_Number )
+                return TripDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : TripDobl_Complex_Poly_Systems.Poly_Sys(h'range);
 
   begin
     for i in res'range loop

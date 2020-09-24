@@ -1,9 +1,11 @@
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Triple_Double_Numbers_io;           use Triple_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Newton_Convolutions;
 with DoblDobl_Newton_Convolutions;
+with TripDobl_Newton_Convolutions;
 with QuadDobl_Newton_Convolutions;
 with Newton_Coefficient_Convolutions;
 
@@ -225,6 +227,80 @@ package body Newton_Power_Convolutions is
       DoblDobl_Newton_Convolutions.LU_Newton_Step
         (file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
       DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      if verbose then
+        put("max |dx| = "); put(maxval,3);
+        if idx < csr.vy'first
+         then put_line(" too large");
+         else put(" at index "); put(idx,1); new_line;
+        end if;
+      end if;
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( csr : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out triple_double;
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+
+    maxval : triple_double;
+    idx : integer32;
+
+  begin
+    fail := true; nbrit := maxit;
+    if vrblvl > 0
+     then put_line("-> in newton_power_convolutions.LU_Newton_Steps 5 ...");
+    end if;
+    for k in 1..nbrit loop
+      TripDobl_Newton_Convolutions.LU_Newton_Step
+        (csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
+      TripDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      if verbose then
+        put("max |dx| = "); put(maxval,3);
+        if idx < csr.vy'first
+         then put_line(" too large");
+         else put(" at index "); put(idx,1); new_line;
+        end if;
+      end if;
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( file : in file_type; 
+                csr : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out triple_double;
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+
+    maxval : triple_double;
+    idx : integer32;
+
+  begin
+    fail := true; nbrit := maxit;
+    if vrblvl > 0
+     then put_line("-> in newton_power_convolutions.LU_Newton_Steps 6 ...");
+    end if;
+    for k in 1..nbrit loop
+      put(file,"Step "); put(file,k,1); put_line(file," :");
+      TripDobl_Newton_Convolutions.LU_Newton_Step
+        (file,csr,scf,absdx,info,ipvt,wrk,scale,vrblvl-1);
+      TripDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first
@@ -528,6 +604,80 @@ package body Newton_Power_Convolutions is
       DoblDobl_Newton_Convolutions.LU_Newton_Step
         (file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
       DoblDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      if verbose then
+        put("max |dx| = "); put(maxval,3);
+        if idx < csr.vy'first
+         then put_line(" too large");
+         else put(" at index "); put(idx,1); new_line;
+        end if;
+      end if;
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( csr : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out triple_double;
+                fail : out boolean; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+
+    maxval : triple_double;
+    idx : integer32;
+
+  begin
+    fail := true; nbrit := maxit;
+    if vrblvl > 0
+     then put_line("-> in newton_power_convolutions.LU_Newton_Steps 13 ...");
+    end if;
+    for k in 1..nbrit loop
+      TripDobl_Newton_Convolutions.LU_Newton_Step
+        (csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
+      TripDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
+      if verbose then
+        put("max |dx| = "); put(maxval,3);
+        if idx < csr.vy'first
+         then put_line(" too large");
+         else put(" at index "); put(idx,1); new_line;
+        end if;
+      end if;
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end LU_Newton_Steps;
+
+  procedure LU_Newton_Steps
+              ( file : in file_type; 
+                csr : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out triple_double;
+                fail : out boolean; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 ) is
+
+    maxval : triple_double;
+    idx : integer32;
+
+  begin
+    fail := true; nbrit := maxit;
+    if vrblvl > 0
+     then put_line("-> in newton_power_convolutions.LU_Newton_Steps 14 ...");
+    end if;
+    for k in 1..nbrit loop
+      put(file,"Step "); put(file,k,1); put_line(file," :");
+      TripDobl_Newton_Convolutions.LU_Newton_Step
+        (file,csr,scf,absdx,rcond,ipvt,wrk,scale,vrblvl-1);
+      TripDobl_Newton_Convolutions.MaxIdx(csr.vy,tol,maxval,idx);
       if verbose then
         put("max |dx| = "); put(maxval,3);
         if idx < csr.vy'first

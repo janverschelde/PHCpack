@@ -6,6 +6,8 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
+with TripDobl_Complex_Numbers;
+with TripDobl_Complex_Numbers_cv;        use TripDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 with Characters_and_Numbers;
@@ -25,6 +27,9 @@ with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Hessians;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with DoblDobl_System_and_Solutions_io;
+with TripDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Poly_Systems_io;   use TripDobl_Complex_Poly_Systems_io;
+with TripDobl_System_and_Solutions_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_SysFun;
@@ -37,6 +42,8 @@ with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
 with DoblDobl_Homotopy;
 with DoblDobl_Coefficient_Homotopy;
+with TripDobl_Homotopy;
+with TripDobl_Coefficient_Homotopy;
 with QuadDobl_Homotopy;
 with QuadDobl_Coefficient_Homotopy;
 with Standard_Complex_Series_VecVecs;
@@ -967,6 +974,46 @@ package body Series_Path_Trackers is
     end if;
   end DoblDobl_Define_Homotopy;
 
+  procedure TripDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out TripDobl_Complex_Solutions.Solution_List ) is
+
+    target,start : TripDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    td_gamma : constant TripDobl_Complex_Numbers.Complex_Number
+             := Standard_to_TripDobl_Complex(gamma);
+
+    use Homotopy_Series_Readers;
+
+  begin
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system and its solutions ...");
+    TripDobl_System_and_Solutions_io.get(start,sols);
+    nvr := TripDobl_Complex_Solutions.Head_Of(sols).n;
+    nbq := target'last;
+    mhom := Prompt_for_Homogenization(natural32(nvr));
+    if mhom = 0 then
+      TripDobl_Homotopy.Create(target.all,start.all,2,td_gamma);
+    else
+      if mhom = 1 then
+        TripDobl_Projective_Transformation(target,start,sols);
+        Add_Multihomogeneous_Symbols(1);
+        nvr := nvr + 1; nbq := nbq + 1;
+      else
+        Define_Partition(natural32(nvr),mhom,idz,z);
+        TripDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+        Add_Multihomogeneous_Symbols(mhom);
+        nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      end if;
+      TripDobl_Homotopy.Create(target.all,start.all,1,td_gamma);
+      TripDobl_Coefficient_Homotopy.Create(start.all,target.all,1,td_gamma);
+    end if;
+  end TripDobl_Define_Homotopy;
+
   procedure QuadDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
                 gamma : in Standard_Complex_Numbers.Complex_Number;
@@ -1026,6 +1073,16 @@ package body Series_Path_Trackers is
   begin
     DoblDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
   end DoblDobl_Define_Homotopy;
+
+  procedure TripDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out TripDobl_Complex_Solutions.Solution_List ) is
+  begin
+    TripDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
+  end TripDobl_Define_Homotopy;
 
   procedure QuadDobl_Define_Homotopy
               ( nbq,nvr : out integer32;

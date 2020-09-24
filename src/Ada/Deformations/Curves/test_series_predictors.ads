@@ -4,6 +4,7 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
+with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Standard_Complex_Series_Vectors;
 with DoblDobl_Complex_Series_Vectors;
@@ -51,13 +52,16 @@ package Test_Series_Predictors is
   procedure DoblDobl_Homotopy_Reader
               ( nbeq,idxpar : out integer32;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure TripDobl_Homotopy_Reader
+              ( nbeq,idxpar : out integer32;
+                sols : out TripDobl_Complex_Solutions.Solution_List );
   procedure QuadDobl_Homotopy_Reader
               ( nbeq,idxpar : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Wraps the reading of a homotopy in double, double double,
-  --   or quad double precision.
+  --   triple double, or quad double precision.
   --
   -- ON RETURN :
   --   nbeq     the number of equations in the homotopy;

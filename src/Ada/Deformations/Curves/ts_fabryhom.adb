@@ -1,6 +1,8 @@
-with Communications_with_User;
+with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Fabry_on_Homotopy;
 with DoblDobl_Fabry_on_Homotopy;
+with TripDobl_Fabry_on_Homotopy;
 with QuadDobl_Fabry_on_Homotopy;
 
 procedure ts_fabryhom is
@@ -18,11 +20,19 @@ procedure ts_fabryhom is
     prc : character;
 
   begin
-    prc := Communications_with_User.Prompt_for_Precision;
+    new_line;
+    put_line("MENU for the working precision :");
+    put_line("  1. double precision");
+    put_line("  2. double double precision");
+    put_line("  3. triple double precision");
+    put_line("  4. quad double precision");
+    put("Type 1, 2, 3, or 4 to select a precision : ");
+    Ask_Alternative(prc,"1234");
     case prc is
-      when '0' => Standard_Fabry_on_Homotopy.Main;
-      when '1' => DoblDobl_Fabry_on_Homotopy.Main;
-      when '2' => QuadDobl_Fabry_on_Homotopy.Main;
+      when '1' => Standard_Fabry_on_Homotopy.Main;
+      when '2' => DoblDobl_Fabry_on_Homotopy.Main;
+      when '3' => TripDobl_Fabry_on_Homotopy.Main;
+      when '4' => QuadDobl_Fabry_on_Homotopy.Main;
       when others => null;
     end case;
   end Main;

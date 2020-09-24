@@ -1,7 +1,11 @@
 Wed 23 Sep 2020 : bug fix in mainseries.adb so menus options 1 and 2
   of phc -u are again accessible for proper choices of precision levels.
   New packages {standard,dobldobl,quaddobl}_fabry_on_homotopy with code
-  from ts_fabryhom.
+  from ts_fabryhom.  For triple double precision, extended 
+  newton_power_convolutions, series_and_homotopies, series_path_trackers,
+  homotopy_series_readers, test_series_predictors, with new packages
+  tripdobl_homotopy_convolutions_io and tripdobl_fabry_on_homotopy,
+  called by ts_fabryhom.
 
 Tue 22 Sep 2020 : because of split of newton_convolutions package,
   updated {standard,dobldobl,quaddobl}_predictor_convolutions.adb,

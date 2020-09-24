@@ -5,6 +5,7 @@ with Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
+with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 with Homotopy_Continuation_Parameters;
@@ -206,6 +207,12 @@ package Series_Path_Trackers is
                 mhom : out natural32; z : out Link_to_Partition;
                 idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure TripDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out TripDobl_Complex_Solutions.Solution_List );
   procedure QuadDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
                 gamma : in Standard_Complex_Numbers.Complex_Number;
@@ -241,6 +248,12 @@ package Series_Path_Trackers is
                 mhom : out natural32; z : out Link_to_Partition;
                 idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure TripDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out TripDobl_Complex_Solutions.Solution_List );
   procedure QuadDobl_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;

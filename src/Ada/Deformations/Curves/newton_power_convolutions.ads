@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_VecVecs;
@@ -11,11 +12,15 @@ with Standard_Complex_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Matrices;
+with TripDobl_Complex_Vectors;
+with TripDobl_Complex_VecVecs;
+with TripDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
+with TripDobl_Speelpenning_Convolutions;
 with QuadDobl_Speelpenning_Convolutions;
 with Standard_Coefficient_Convolutions;
 
@@ -337,6 +342,27 @@ package Newton_Power_Convolutions is
                 scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
+              ( csr : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out triple_double;
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure LU_Newton_Steps
+              ( file : in file_type; 
+                csr : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out triple_double;
+                fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_Vectors.Link_to_Vector;
+                scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure LU_Newton_Steps
               ( csr : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
                 maxit : in integer32; nbrit : out integer32;
@@ -360,8 +386,8 @@ package Newton_Power_Convolutions is
 
   -- DESCRIPTION :
   --   Applies several Newton steps on the convolution circuits csr,
-  --   departing from the series coefficients in scf,
-  --   in double, double double, or quad double precision,
+  --   departing from the series coefficients in scf, in double
+  --   double double, triple double, or quad double precision,
   --   using LU factorization to solve the linear systems.
 
   -- ON ENTRY :
@@ -430,6 +456,27 @@ package Newton_Power_Convolutions is
 		scale : in boolean := true; verbose : in boolean := true;
                 vrblvl : in integer32 := 0 );
   procedure LU_Newton_Steps
+              ( csr : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out triple_double;
+                fail : out boolean; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure LU_Newton_Steps
+              ( file : in file_type; 
+                csr : in TripDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in TripDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+                tol : in double_float; absdx : out triple_double;
+                fail : out boolean; rcond : out triple_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in TripDobl_Complex_Vectors.Link_to_Vector;
+		scale : in boolean := true; verbose : in boolean := true;
+                vrblvl : in integer32 := 0 );
+  procedure LU_Newton_Steps
               ( csr : in QuadDobl_Speelpenning_Convolutions.Link_to_System;
                 scf : in QuadDobl_Complex_VecVecs.VecVec;
                 maxit : in integer32; nbrit : out integer32;
@@ -453,8 +500,8 @@ package Newton_Power_Convolutions is
 
   -- DESCRIPTION :
   --   Applies several Newton steps on the convolution circuits csr,
-  --   departing from the series coefficients in scf,
-  --   in double, double double, or quad double precision,
+  --   departing from the series coefficients in scf, in double
+  --   in double double, triple double, or quad double precision,
   --   using LU factorization to solve the linear systems,
   --   with an estimate for the condition number.
 

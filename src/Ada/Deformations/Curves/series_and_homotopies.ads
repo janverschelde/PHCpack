@@ -1,20 +1,26 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Polynomials;
+with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_CSeries_Polynomials;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Polynomials;
 with DoblDobl_CSeries_Poly_Systems;
+with TripDobl_CSeries_Polynomials;
+with TripDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Polynomials;
 with QuadDobl_CSeries_Poly_Systems;
 
@@ -23,7 +29,7 @@ package Series_and_Homotopies is
 -- DESCRIPTION :
 --   A homotopy in one parameter is naturally encoded as a polynomial
 --   system with truncated power series as coefficients,
---   in double, double double, and quad double precision.
+--   in double, double double, triple double and quad double precision.
 
   function Create ( h : in Standard_Complex_Poly_Systems.Poly_Sys;
                     idx : in integer32; verbose : boolean := false )
@@ -31,6 +37,9 @@ package Series_and_Homotopies is
   function Create ( h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                     idx : in integer32; verbose : boolean := false )
                   return DoblDobl_CSeries_Poly_Systems.Poly_Sys;
+  function Create ( h : in TripDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return TripDobl_CSeries_Poly_Systems.Poly_Sys;
   function Create ( h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     idx : in integer32; verbose : boolean := false )
                   return QuadDobl_CSeries_Poly_Systems.Poly_Sys;
@@ -54,6 +63,12 @@ package Series_and_Homotopies is
   function Eval ( p : DoblDobl_CSeries_Polynomials.Poly;
                   t : DoblDobl_Complex_Numbers.Complex_Number )
                 return DoblDobl_Complex_Polynomials.Poly;
+  function Eval ( p : TripDobl_CSeries_Polynomials.Poly;
+                  t : triple_double )
+                return TripDobl_Complex_Polynomials.Poly;
+  function Eval ( p : TripDobl_CSeries_Polynomials.Poly;
+                  t : TripDobl_Complex_Numbers.Complex_Number )
+                return TripDobl_Complex_Polynomials.Poly;
   function Eval ( p : QuadDobl_CSeries_Polynomials.Poly;
                   t : quad_double )
                 return QuadDobl_Complex_Polynomials.Poly;
@@ -64,7 +79,7 @@ package Series_and_Homotopies is
   -- DESCRIPTION :
   --   Every series coefficient in p is evaluated at t.
   --   On return is a polynomial with complex coefficients
-  --   in double, double double, or quad double precision.
+  --   in double, double double, triple double, or quad double precision.
 
   function Eval ( h : Standard_CSeries_Poly_Systems.Poly_Sys;
                   t : double_float )
@@ -78,6 +93,12 @@ package Series_and_Homotopies is
   function Eval ( h : DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                   t : DoblDobl_Complex_Numbers.Complex_Number )
                 return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Eval ( h : TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                  t : triple_double )
+                return TripDobl_Complex_Poly_Systems.Poly_Sys;
+  function Eval ( h : TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                  t : TripDobl_Complex_Numbers.Complex_Number )
+                return TripDobl_Complex_Poly_Systems.Poly_Sys;
   function Eval ( h : QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                   t : quad_double )
                 return QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -88,7 +109,8 @@ package Series_and_Homotopies is
   -- DESCRIPTION :
   --   Every series coefficient in h is evaluated at t.
   --   On return is the evaluated polynomial system,
-  --   with complex coefficients in standard double precision.
+  --   with complex coefficients in double, double double,
+  --   triple double, or quad double precision.
 
   function Shift ( p : Standard_CSeries_Polynomials.Poly;
                    c : double_float )

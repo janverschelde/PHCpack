@@ -2,9 +2,11 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
@@ -162,6 +164,40 @@ package body Test_Series_Predictors is
       end if;
     end if;
   end DoblDobl_Homotopy_Reader;
+
+  procedure TripDobl_Homotopy_Reader
+              ( nbeq,idxpar : out integer32;
+                sols : out TripDobl_Complex_Solutions.Solution_List ) is
+
+    ans : character;
+    nvr : integer32;
+
+  begin
+    new_line;
+    put("Natural parameter homotopy ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Homotopy_Series_Readers.TripDobl_Parameter_Reader(nbeq,nvr,idxpar,sols);
+    else
+      idxpar := 0;
+      new_line;
+      put("Random gamma ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+       -- Homotopy_Series_Readers.TripDobl_Reader(nbeq,sols,tpow=>1);
+        Homotopy_Series_Readers.TripDobl_Reader(nbeq,sols);
+      else
+        declare
+          one : constant triple_double := create(1.0);
+          gamma : constant TripDobl_Complex_Numbers.Complex_Number
+                := TripDobl_Complex_Numbers.Create(one);
+        begin
+         -- Homotopy_Series_Readers.TripDobl_Reader(nbeq,sols,1,gamma);
+          Homotopy_Series_Readers.TripDobl_Reader(nbeq,sols,gamma);
+        end;
+      end if;
+    end if;
+  end TripDobl_Homotopy_Reader;
 
   procedure QuadDobl_Homotopy_Reader
               ( nbeq,idxpar : out integer32;
