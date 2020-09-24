@@ -1,4 +1,4 @@
-Sweeping for singularities and parameter continuation in PHCv2.4.60
+Sweeping for singularities and parameter continuation in PHCv2.4.80
 
 For clarity, this directory was isolated from Continuation in v2.3.75.
 The path trackers in this directory rely on natural parameter homotopies.
@@ -11,6 +11,7 @@ dobldobl_parameter_solutions     : parameter solutions with double doubles
 quaddobl_parameter_solutions     : parameter solutions with quad doubles
 standard_parameter_systems       : definition of parameter homotopy + i/o
 dobldobl_parameter_systems       : parameter homotopy with double doubles
+tripdobl_parameter_systems       : parameter homotopy with triple doubles
 quaddobl_parameter_systems       : parameter homotopy with quad doubles
 complex_convex_continuation      : interpolate start and target with complex
 parameter_homotopy_continuation  : drivers to path tracking

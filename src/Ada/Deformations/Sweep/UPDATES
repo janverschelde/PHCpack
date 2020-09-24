@@ -1,3 +1,5 @@
+Wed 23 Sep 2020 : defined tripdobl_parameter_systems.
+
 Mon 22 Oct 2018 : added new procedures to *parameter_systems.a* to read
   solutions and parameter homotopies without writing to an output file.
 
