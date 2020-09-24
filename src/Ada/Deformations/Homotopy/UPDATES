@@ -1,3 +1,8 @@
+Thu 24 Sep 2020 : new test_ packages on polynomial homotopies in double,
+  double double, triple double, penta double, octo double, and deca double
+  precision, to test the new {pent,octo,deca}dobl_homotopy.
+  Added test_standard_laur_homotopy, all called in ts_homotopy.
+
 Wed 23 Sep 2020 : added tripdobl_homotopy and tripdobl_coefficient_homotopy,
   extended homogenization, (multi_)projective_transformations, and
   artificial_parameter_homotopy_io for triple double precision.

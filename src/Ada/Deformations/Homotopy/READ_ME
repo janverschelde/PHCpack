@@ -30,6 +30,18 @@ tripdobl_homotopy                  : homotopy for systems of triple doubles
 quaddobl_homotopy                  : homotopy for systems of quad doubles
 quaddobl_laurent_homotopy          : homotopy for quaddobl Laurent systems
 ts_qdhom                           : compares eval & diff for dd & qd
+pentdobl_homotopy                  : homotopy for systems of penta doubles
+octodobl_homotopy                  : homotopy for systems of octo doubles
+decadobl_homotopy                  : homotopy for systems of deca doubles
+test_standard_laur_homotopy        : tests standard Laurent homotopy
+test_standard_poly_homotopy        : tests standard polynomial homotopy
+test_dobldobl_poly_homotopy        : tests dobldobl polynomial homotopy
+test_tripdobl_poly_homotopy        : tests tripdobl polynomial homotopy
+test_quaddobl_poly_homotopy        : tests quaddobl polynomial homotopy
+test_pentdobl_poly_homotopy        : tests pentdobl polynomial homotopy
+test_octodobl_poly_homotopy        : tests octodobl polynomial homotopy
+test_decadobl_poly_homotopy        : tests decadobl polynomial homotopy
+ts_homotopy                        : runs tests on homotopies
 multprec_homotopy                  : homotopy for multiprecision numbers
 drivers_for_homotopy_creation      : menu-driven homotopy construction
 standard_stable_homotopies         : for solutions with zero components
