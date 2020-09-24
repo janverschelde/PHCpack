@@ -1,3 +1,6 @@
+Wed 23 Sep 2020 :  defined {trip,pent,octo,deca}dobl_complex_poly_functions
+  and {trip,pent,octo,deca}dobl_complex_poly_sysfun.
+
 Wed 2 Jan 2019 : extended generic_{poly,laur}_system_functions with
   a function to get the coefficients of all polynomials in the system.
 

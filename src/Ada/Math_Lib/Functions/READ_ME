@@ -1,4 +1,4 @@
-Polynomial evaluation and differentiation algorithms in PHCv2.4.64.
+Polynomial evaluation and differentiation algorithms in PHCv2.4.80
 
 This directory was created new in v2.3.69, collecting the former nested 
 Horner scheme algorithms of the directory polynomials, and with the new
@@ -12,7 +12,7 @@ and used in our first multithreaded polynomial evaluation algorithms,
 presented at PASCO 2010.  See also the directory ../Circuits.
 
 Since the different ways to evaluate polynomials use different orders of
-computation, the results may differ when mixed-precision arithmetic is used.
+computation, the results may differ when multiprecision arithmetic is used.
 
 -------------------------------------------------------------------------------
 file name                         : short description
@@ -32,12 +32,20 @@ double_double_poly_sysfun         : systems of double double poly functions
 dobldobl_complex_poly_functions   : complex double double polynomial functions
 dobldobl_complex_laur_functions   : complex double double Laurent functions
 dobldobl_complex_laur_sysfun      : double double Laurent system functions
+tripdobl_complex_poly_functions   : complex triple double polynomial functions
+tripdobl_complex_poly_sysfun      : systems of tripdobl complex functions
 quad_double_poly_functions        : quad double polynomial functions
 quad_double_poly_sysfun           : systems of quad double polynomial functions
 quaddobl_complex_poly_functions   : complex quad double polynomial functions
 quaddobl_complex_poly_sysfun      : quad double polynomial system functions
 quaddobl_complex_laur_functions   : complex quad double Laurent functions
 quaddobl_complex_laur_sysfun      : quad double Laurent system functions
+pentdobl_complex_poly_functions   : complex penta double polynomial functions
+pentdobl_complex_poly_sysfun      : systems of pentdobl complex functions
+octodobl_complex_poly_functions   : complex octo double polynomial functions
+octodobl_complex_poly_sysfun      : systems of octodobl complex functions
+decadobl_complex_poly_functions   : complex deca double polynomial functions
+decadobl_complex_poly_sysfun      : systems of decadobl complex functions
 multprec_complex_poly_functions   : evaluating multprec complex polynomials
 multprec_complex_laur_functions   : evaluating multprec complex Laurentials
 multprec_floating_poly_functions  : evaluating multprec floating polynomials
