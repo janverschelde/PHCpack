@@ -1,5 +1,8 @@
+Wed 23 Sep 2020 : extended solution_drops with operations on solutions in
+  triple, penta, octo, and deca double precision.
+
 Tue 22 Sep 2020 : added {trip,pent,octo,deca}dobl_complex_solutions, its _io,
-  and {trip,pent,octo,deca}dobl_system_and_solutions_io.
+  and {trip,pent,octo,deca}dobl_system_and_solutions_io. 
 
 Thu 6 Aug 2020 : updated *_system_and_solutions_io.adb to output systems
   that have a different number of polynomials than equations.
