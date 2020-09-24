@@ -2,13 +2,16 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;
-with DoblDobl_Complex_Polynomials;
-with QuadDobl_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Polynomials;
+with TripDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
+with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Sets_of_Unknowns;
 with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
@@ -31,6 +34,10 @@ package Multi_Projective_Transformations is
                m : in natural32; z : in Partition )
              return Standard_Integer_Vectors.Vector;
   function Multiset_Degrees
+             ( p : in TripDobl_Complex_Polynomials.Poly;
+               m : in natural32; z : in Partition )
+             return Standard_Integer_Vectors.Vector;
+  function Multiset_Degrees
              ( p : in QuadDobl_Complex_Polynomials.Poly;
                m : in natural32; z : in Partition )
              return Standard_Integer_Vectors.Vector;
@@ -50,6 +57,11 @@ package Multi_Projective_Transformations is
                m : natural32; z : Partition )
              return DoblDobl_Complex_Polynomials.Term;
   function Make_Homogeneous
+             ( t : TripDobl_Complex_Polynomials.Term; 
+               d : Standard_Integer_Vectors.Vector;
+               m : natural32; z : Partition )
+             return TripDobl_Complex_Polynomials.Term;
+  function Make_Homogeneous
              ( t : QuadDobl_Complex_Polynomials.Term; 
                d : Standard_Integer_Vectors.Vector;
                m : natural32; z : Partition )
@@ -68,6 +80,10 @@ package Multi_Projective_Transformations is
                m : natural32; z : Partition )
              return DoblDobl_Complex_Polynomials.Poly;
   function Make_Homogeneous
+             ( p : TripDobl_Complex_Polynomials.Poly; 
+               m : natural32; z : Partition )
+             return TripDobl_Complex_Polynomials.Poly;
+  function Make_Homogeneous
              ( p : QuadDobl_Complex_Polynomials.Poly; 
                m : natural32; z : Partition )
              return QuadDobl_Complex_Polynomials.Poly;
@@ -85,6 +101,10 @@ package Multi_Projective_Transformations is
                m : natural32; z : Partition )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Make_Homogeneous
+             ( p : TripDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
+  function Make_Homogeneous
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys; 
                m : natural32; z : Partition )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -99,6 +119,9 @@ package Multi_Projective_Transformations is
   function DoblDobl_Random_Linear_Term
              ( n,i : natural32 )
              return DoblDobl_Complex_Polynomials.Term;
+  function TripDobl_Random_Linear_Term
+             ( n,i : natural32 )
+             return TripDobl_Complex_Polynomials.Term;
   function QuadDobl_Random_Linear_Term
              ( n,i : natural32 )
              return QuadDobl_Complex_Polynomials.Term;
@@ -113,6 +136,9 @@ package Multi_Projective_Transformations is
   function DoblDobl_Start_Linear_Term
              ( n,i : natural32 )
              return DoblDobl_Complex_Polynomials.Term;
+  function TripDobl_Start_Linear_Term
+             ( n,i : natural32 )
+             return TripDobl_Complex_Polynomials.Term;
   function QuadDobl_Start_Linear_Term
              ( n,i : natural32 )
              return QuadDobl_Complex_Polynomials.Term;
@@ -127,6 +153,9 @@ package Multi_Projective_Transformations is
   function DoblDobl_Random_Linear_Polynomial
              ( n : natural32; s : Sets_of_Unknowns.Set )
              return DoblDobl_Complex_Polynomials.Poly;
+  function TripDobl_Random_Linear_Polynomial
+             ( n : natural32; s : Sets_of_Unknowns.Set )
+             return TripDobl_Complex_Polynomials.Poly;
   function QuadDobl_Random_Linear_Polynomial
              ( n : natural32; s : Sets_of_Unknowns.Set )
              return QuadDobl_Complex_Polynomials.Poly;
@@ -141,6 +170,9 @@ package Multi_Projective_Transformations is
   function DoblDobl_Start_Linear_Polynomial
              ( n,i : natural32 )
              return DoblDobl_Complex_Polynomials.Poly;
+  function TripDobl_Start_Linear_Polynomial
+             ( n,i : natural32 )
+             return TripDobl_Complex_Polynomials.Poly;
   function QuadDobl_Start_Linear_Polynomial
              ( n,i : natural32 )
              return QuadDobl_Complex_Polynomials.Poly;
@@ -155,6 +187,9 @@ package Multi_Projective_Transformations is
   function DoblDobl_Random_Linear_Polynomials
              ( n,m : natural32; z : Partition )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function TripDobl_Random_Linear_Polynomials
+             ( n,m : natural32; z : Partition )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
   function QuadDobl_Random_Linear_Polynomials
              ( n,m : natural32; z : Partition )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -170,6 +205,9 @@ package Multi_Projective_Transformations is
   function DoblDobl_Start_Linear_Polynomials
              ( n,m : natural32 )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function TripDobl_Start_Linear_Polynomials
+             ( n,m : natural32 )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
   function QuadDobl_Start_Linear_Polynomials
              ( n,m : natural32 )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -184,6 +222,9 @@ package Multi_Projective_Transformations is
   function Add_Ones ( s : DoblDobl_Complex_Solutions.Solution;
                       m : natural32 )
                     return DoblDobl_Complex_Solutions.Solution;
+  function Add_Ones ( s : TripDobl_Complex_Solutions.Solution;
+                      m : natural32 )
+                    return TripDobl_Complex_Solutions.Solution;
   function Add_Ones ( s : QuadDobl_Complex_Solutions.Solution;
                       m : natural32 )
                     return QuadDobl_Complex_Solutions.Solution;
@@ -198,6 +239,9 @@ package Multi_Projective_Transformations is
   function Add_Ones ( sols : DoblDobl_Complex_Solutions.Solution_List;
                       m : natural32 )
                     return DoblDobl_Complex_Solutions.Solution_List;
+  function Add_Ones ( sols : TripDobl_Complex_Solutions.Solution_List;
+                      m : natural32 )
+                    return TripDobl_Complex_Solutions.Solution_List;
   function Add_Ones ( sols : QuadDobl_Complex_Solutions.Solution_List;
                       m : natural32 )
                     return QuadDobl_Complex_Solutions.Solution_List;
@@ -209,6 +253,8 @@ package Multi_Projective_Transformations is
   procedure Add_Ones ( sols : in out Standard_Complex_Solutions.Solution_List;
                        m : in natural32 );
   procedure Add_Ones ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                       m : in natural32 );
+  procedure Add_Ones ( sols : in out TripDobl_Complex_Solutions.Solution_List;
                        m : in natural32 );
   procedure Add_Ones ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
                        m : in natural32 );
@@ -281,6 +327,10 @@ package Multi_Projective_Transformations is
              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys; 
                m : natural32; z : Partition; start : boolean := false )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Multi_Projective_Transformation
+             ( p : TripDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
   function Multi_Projective_Transformation
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys; 
                m : natural32; z : Partition; start : boolean := false )

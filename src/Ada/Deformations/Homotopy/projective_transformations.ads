@@ -2,10 +2,13 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Polynomials;
+with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
+with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 
 package Projective_Transformations is
@@ -13,7 +16,7 @@ package Projective_Transformations is
 -- DESCRIPTION :
 --   This package exports methods to perform projective transformations
 --   on polynomials, polynomial systems, solutions, and lists of solutions,
---   in standard double, double double, and quad double precision.
+--   in double, double double, triple double, and quad double precision.
 
   function Projective_Transformation 
              ( p : Standard_Complex_Polynomials.Poly )
@@ -21,6 +24,9 @@ package Projective_Transformations is
   function Projective_Transformation 
              ( p : DoblDobl_Complex_Polynomials.Poly )
              return DoblDobl_Complex_Polynomials.Poly;
+  function Projective_Transformation 
+             ( p : TripDobl_Complex_Polynomials.Poly )
+             return TripDobl_Complex_Polynomials.Poly;
   function Projective_Transformation 
              ( p : QuadDobl_Complex_Polynomials.Poly )
              return QuadDobl_Complex_Polynomials.Poly;
@@ -30,6 +36,9 @@ package Projective_Transformations is
   function Projective_Transformation
              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Projective_Transformation
+             ( p : TripDobl_Complex_Poly_Systems.Poly_Sys )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
   function Projective_Transformation
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -42,6 +51,10 @@ package Projective_Transformations is
               ( p : in out DoblDobl_Complex_Polynomials.Poly );
   procedure Projective_Transformation
               ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Projective_Transformation
+              ( p : in out TripDobl_Complex_Polynomials.Poly );
+  procedure Projective_Transformation
+              ( p : in out TripDobl_Complex_Poly_Systems.Poly_Sys );
   procedure Projective_Transformation
               ( p : in out QuadDobl_Complex_Polynomials.Poly );
   procedure Projective_Transformation
@@ -57,6 +70,9 @@ package Projective_Transformations is
              ( s : DoblDobl_Complex_Solutions.Solution )
              return DoblDobl_Complex_Solutions.Solution;
   function Projective_Transformation
+             ( s : TripDobl_Complex_Solutions.Solution )
+             return TripDobl_Complex_Solutions.Solution;
+  function Projective_Transformation
              ( s : QuadDobl_Complex_Solutions.Solution )
              return QuadDobl_Complex_Solutions.Solution;
 
@@ -70,12 +86,17 @@ package Projective_Transformations is
              ( sols : DoblDobl_Complex_Solutions.Solution_List )
            return DoblDobl_Complex_Solutions.Solution_List;
   function Projective_Transformation
+             ( sols : TripDobl_Complex_Solutions.Solution_List )
+           return TripDobl_Complex_Solutions.Solution_List;
+  function Projective_Transformation
              ( sols : QuadDobl_Complex_Solutions.Solution_List )
            return QuadDobl_Complex_Solutions.Solution_List;
   procedure Projective_Transformation
               ( sols : in out Standard_Complex_Solutions.Solution_List );
   procedure Projective_Transformation
               ( sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Projective_Transformation
+              ( sols : in out TripDobl_Complex_Solutions.Solution_List );
   procedure Projective_Transformation
               ( sols : in out QuadDobl_Complex_Solutions.Solution_List );
 

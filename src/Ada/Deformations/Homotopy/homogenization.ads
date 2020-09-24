@@ -3,6 +3,8 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Polynomials;
+with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 
@@ -34,6 +36,10 @@ package Homogenization is
                s2 : DoblDobl_Complex_Poly_Systems.Poly_Sys )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Add_Equations
+             ( s1 : TripDobl_Complex_Poly_Systems.Poly_Sys;
+               s2 : TripDobl_Complex_Poly_Systems.Poly_Sys )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Equations
              ( s1 : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                s2 : QuadDobl_Complex_Poly_Systems.Poly_Sys )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -59,6 +65,10 @@ package Homogenization is
                m : natural32; re : boolean )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
   function Add_Random_Hyperplanes
+             ( s : TripDobl_Complex_Poly_Systems.Poly_Sys;
+               m : natural32; re : boolean )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Random_Hyperplanes
              ( s : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                m : natural32; re : boolean )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -76,6 +86,9 @@ package Homogenization is
   function Add_Standard_Hyperplanes
              ( s : DoblDobl_Complex_Poly_Systems.Poly_Sys; m : natural32 )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Standard_Hyperplanes
+             ( s : TripDobl_Complex_Poly_Systems.Poly_Sys; m : natural32 )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
   function Add_Standard_Hyperplanes
              ( s : QuadDobl_Complex_Poly_Systems.Poly_Sys; m : natural32 )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;

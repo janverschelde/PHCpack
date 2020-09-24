@@ -1,3 +1,7 @@
+Wed 23 Sep 2020 : added tripdobl_homotopy and tripdobl_coefficient_homotopy,
+  extended homogenization, (multi_)projective_transformations, and
+  artificial_parameter_homotopy_io for triple double precision.
+
 Fri 7 Aug 2020 : added functions to wrapped_solution_vectors to chop the
   last coordinate of solutions extended with the continuation parameter.
 

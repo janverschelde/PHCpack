@@ -26,6 +26,7 @@ standard_homotopy                  : homotopy for standard polynomial systems
 standard_laurent_homotopy          : homotopy for standard Laurent systems
 dobldobl_homotopy                  : homotopy for systems of double doubles
 dobldobl_laurent_homotopy          : homotopy for dobldobl Laurent systems
+tripdobl_homotopy                  : homotopy for systems of triple doubles
 quaddobl_homotopy                  : homotopy for systems of quad doubles
 quaddobl_laurent_homotopy          : homotopy for quaddobl Laurent systems
 ts_qdhom                           : compares eval & diff for dd & qd
@@ -36,6 +37,7 @@ dobldobl_stable_homotopies         : version for double doubles
 quaddobl_stable_homotopies         : version for quad doubles
 standard_coefficient_homotopy      : coefficient-parameter homotopy
 dobldobl_coefficient_homotopy      : double double coeff-parameter homotopy
+tripdobl_coefficient_homotopy      : triple double coeff-parameter homotopy
 quaddobl_coefficient_homotopy      : quad double coeff-parameter homotopy
 ts_evalhomt                        : test on coefficient-parameter homotopy
 hyperplane_solution_scaling        : scale a solution and a hyperplane

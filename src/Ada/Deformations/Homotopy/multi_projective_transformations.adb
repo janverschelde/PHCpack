@@ -2,9 +2,12 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Random_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Triple_Double_Numbers;              use Triple_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with DoblDobl_Random_Numbers;
+with TripDobl_Complex_Numbers;
+with TripDobl_Random_Numbers;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Random_Numbers;
 with Degrees_in_Sets_of_Unknowns;
@@ -27,6 +30,20 @@ package body Multi_Projective_Transformations is
 
   function Multiset_Degrees
              ( p : in DoblDobl_Complex_Polynomials.Poly;
+               m : in natural32; z : in Partition )
+             return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(1..integer32(m));
+
+  begin
+    for i in z'range loop
+      res(integer32(i)) := Degrees_in_Sets_of_Unknowns.Degree(p,z(i));
+    end loop;
+    return res;
+  end Multiset_Degrees;
+
+  function Multiset_Degrees
+             ( p : in TripDobl_Complex_Polynomials.Poly;
                m : in natural32; z : in Partition )
              return Standard_Integer_Vectors.Vector is
 
@@ -84,6 +101,30 @@ package body Multi_Projective_Transformations is
              return DoblDobl_Complex_Polynomials.Term is
 
     res : DoblDobl_Complex_Polynomials.Term;
+    itm : constant integer32 := integer32(m);
+    lst : constant integer32 := t.dg'last;
+    deg : integer32;
+ 
+  begin
+    res.cf := t.cf;
+    res.dg := new Standard_Natural_Vectors.Vector(1..lst+itm);
+    for i in t.dg'range loop
+      res.dg(i) := t.dg(i);
+    end loop;
+    for i in 1..itm loop
+      deg := Degrees_in_Sets_of_Unknowns.Degree(t,z(natural32(i)));
+      res.dg(lst+i) := natural32(d(i) - deg);
+    end loop;
+    return res;
+  end Make_Homogeneous;
+
+  function Make_Homogeneous
+             ( t : TripDobl_Complex_Polynomials.Term; 
+               d : Standard_Integer_Vectors.Vector;
+               m : natural32; z : Partition )
+             return TripDobl_Complex_Polynomials.Term is
+
+    res : TripDobl_Complex_Polynomials.Term;
     itm : constant integer32 := integer32(m);
     lst : constant integer32 := t.dg'last;
     deg : integer32;
@@ -184,6 +225,35 @@ package body Multi_Projective_Transformations is
   end Make_Homogeneous;
 
   function Make_Homogeneous
+             ( p : in TripDobl_Complex_Polynomials.Poly; 
+               m : in natural32; z : in Partition )
+             return TripDobl_Complex_Polynomials.Poly is
+
+    deg : constant Standard_Integer_Vectors.Vector(1..integer32(m))
+        := Multiset_Degrees(p,m,z);
+    res : TripDobl_Complex_Polynomials.Poly
+        := TripDobl_Complex_Polynomials.Null_Poly;
+
+    procedure Visit_Term ( t : in TripDobl_Complex_Polynomials.Term;
+                           continue : out boolean ) is
+
+      rt : TripDobl_Complex_Polynomials.Term
+         := Make_Homogeneous(t,deg,m,z);
+
+    begin
+      TripDobl_Complex_Polynomials.Add(res,rt);
+      TripDobl_Complex_Polynomials.Clear(rt);
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new
+      TripDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
+ 
+  begin
+    Visit_Terms(p);
+    return res;
+  end Make_Homogeneous;
+
+  function Make_Homogeneous
              ( p : in QuadDobl_Complex_Polynomials.Poly; 
                m : in natural32; z : in Partition )
              return QuadDobl_Complex_Polynomials.Poly is
@@ -241,6 +311,20 @@ package body Multi_Projective_Transformations is
   end Make_Homogeneous;
 
   function Make_Homogeneous
+             ( p : in TripDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : in natural32; z : in Partition )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : TripDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Make_Homogeneous(p(i),m,z);
+    end loop;
+    return res;
+  end Make_Homogeneous;
+
+  function Make_Homogeneous
              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys; 
                m : in natural32; z : in Partition )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
@@ -279,6 +363,19 @@ package body Multi_Projective_Transformations is
     res.dg(integer32(i)) := 1;
     return res;
   end DoblDobl_Random_Linear_Term;
+
+  function TripDobl_Random_Linear_Term
+             ( n,i : natural32 )
+             return TripDobl_Complex_Polynomials.Term is
+
+    res : TripDobl_Complex_Polynomials.Term;
+
+  begin
+    res.cf := TripDobl_Random_Numbers.Random1;
+    res.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
+    res.dg(integer32(i)) := 1;
+    return res;
+  end TripDobl_Random_Linear_Term;
 
   function QuadDobl_Random_Linear_Term
              ( n,i : natural32 )
@@ -319,6 +416,20 @@ package body Multi_Projective_Transformations is
     res.dg(integer32(i)) := 1;
     return res;
   end DoblDobl_Start_Linear_Term;
+
+  function TripDobl_Start_Linear_Term
+             ( n,i : natural32 )
+             return TripDobl_Complex_Polynomials.Term is
+
+    res : TripDobl_Complex_Polynomials.Term;
+    one : constant triple_double := create(1.0);
+
+  begin
+    res.cf := TripDobl_Complex_Numbers.Create(one);
+    res.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
+    res.dg(integer32(i)) := 1;
+    return res;
+  end TripDobl_Start_Linear_Term;
 
   function QuadDobl_Start_Linear_Term
              ( n,i : natural32 )
@@ -378,6 +489,28 @@ package body Multi_Projective_Transformations is
     return res;
   end DoblDobl_Random_Linear_Polynomial;
 
+  function TripDobl_Random_Linear_Polynomial
+             ( n : natural32; s : Sets_of_Unknowns.Set )
+             return TripDobl_Complex_Polynomials.Poly is
+
+    res : TripDobl_Complex_Polynomials.Poly
+        := TripDobl_Complex_Polynomials.Null_Poly;
+
+  begin
+    for i in 1..Sets_of_Unknowns.Dimension(s) loop
+      if Sets_of_Unknowns.Is_In(s,i) then
+        declare
+          t : TripDobl_Complex_Polynomials.Term
+            := TripDobl_Random_Linear_Term(n,i);
+        begin
+          TripDobl_Complex_Polynomials.Add(res,t);
+          TripDobl_Complex_Polynomials.Clear(t);
+        end;
+      end if;
+    end loop;
+    return res;
+  end TripDobl_Random_Linear_Polynomial;
+
   function QuadDobl_Random_Linear_Polynomial
              ( n : natural32; s : Sets_of_Unknowns.Set )
              return QuadDobl_Complex_Polynomials.Poly is
@@ -431,6 +564,22 @@ package body Multi_Projective_Transformations is
     DoblDobl_Complex_Polynomials.Clear(trm);
     return res;
   end DoblDobl_Start_Linear_Polynomial;
+
+  function TripDobl_Start_Linear_Polynomial
+             ( n,i : natural32 )
+             return TripDobl_Complex_Polynomials.Poly is
+
+    trm : TripDobl_Complex_Polynomials.Term
+        := TripDobl_Start_Linear_Term(n,i);
+    res : TripDobl_Complex_Polynomials.Poly
+        := TripDobl_Complex_Polynomials.Create(trm);
+
+  begin
+    trm.dg(integer32(i)) := 0;
+    TripDobl_Complex_Polynomials.Sub(res,trm);
+    TripDobl_Complex_Polynomials.Clear(trm);
+    return res;
+  end TripDobl_Start_Linear_Polynomial;
 
   function QuadDobl_Start_Linear_Polynomial
              ( n,i : natural32 )
@@ -500,6 +649,32 @@ package body Multi_Projective_Transformations is
     return res;
   end DoblDobl_Random_Linear_Polynomials;
 
+  function TripDobl_Random_Linear_Polynomials
+             ( n,m : natural32; z : Partition )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys is
+
+    dim : constant natural32 := n+m;
+    res : TripDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
+    cst : TripDobl_Complex_Polynomials.Term;
+    ztm : TripDobl_Complex_Polynomials.Term;
+
+  begin
+    cst.dg := new Standard_Natural_Vectors.Vector'(1..integer32(dim) => 0);
+    ztm.dg := new Standard_Natural_Vectors.Vector'(1..integer32(dim) => 0);
+    for i in 1..m loop
+      res(integer32(i)) := TripDobl_Random_Linear_Polynomial(dim,z(i));
+      cst.cf := TripDobl_Random_Numbers.Random1;
+      ztm.cf := TripDobl_Random_Numbers.Random1;
+      TripDobl_Complex_Polynomials.Add(res(integer32(i)),cst);
+      ztm.dg(integer32(n+i)) := 1;
+      TripDobl_Complex_Polynomials.Add(res(integer32(i)),ztm);
+      ztm.dg(integer32(n+i)) := 0;
+    end loop;
+    TripDobl_Complex_Polynomials.Clear(cst);
+    TripDobl_Complex_Polynomials.Clear(ztm);
+    return res;
+  end TripDobl_Random_Linear_Polynomials;
+
   function QuadDobl_Random_Linear_Polynomials
              ( n,m : natural32; z : Partition )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
@@ -554,6 +729,20 @@ package body Multi_Projective_Transformations is
     return res;
   end DoblDobl_Start_Linear_Polynomials;
 
+  function TripDobl_Start_Linear_Polynomials
+             ( n,m : natural32 )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys is
+
+    dim : constant natural32 := n+m;
+    res : TripDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
+    
+  begin
+    for i in 1..m loop
+      res(integer32(i)) := TripDobl_Start_Linear_Polynomial(dim,n+i);
+    end loop;
+    return res;
+  end TripDobl_Start_Linear_Polynomials;
+
   function QuadDobl_Start_Linear_Polynomials
              ( n,m : natural32 )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
@@ -600,6 +789,27 @@ package body Multi_Projective_Transformations is
     res.v(1..dim) := s.v(1..dim);
     for k in 1..integer32(m) loop
       res.v(dim+k) := DoblDobl_Complex_Numbers.Create(one);
+    end loop;
+    res.t := s.t;
+    res.m := s.m;
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    return res;
+  end Add_Ones;
+
+  function Add_Ones ( s : TripDobl_Complex_Solutions.Solution;
+                      m : natural32 )
+                    return TripDobl_Complex_Solutions.Solution is
+
+    dim : constant integer32 := s.n;
+    res : TripDobl_Complex_Solutions.Solution(dim+integer32(m));
+    one : constant triple_double := create(1.0);
+
+  begin
+    res.v(1..dim) := s.v(1..dim);
+    for k in 1..integer32(m) loop
+      res.v(dim+k) := TripDobl_Complex_Numbers.Create(one);
     end loop;
     res.t := s.t;
     res.m := s.m;
@@ -664,6 +874,23 @@ package body Multi_Projective_Transformations is
     return res;
   end Add_Ones;
 
+  function Add_Ones ( sols : TripDobl_Complex_Solutions.Solution_List;
+                      m : natural32 )
+                    return TripDobl_Complex_Solutions.Solution_List is
+
+    res,res_last : TripDobl_Complex_Solutions.Solution_List;
+    tmp : TripDobl_Complex_Solutions.Solution_List := sols;
+    ls : TripDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    while not TripDobl_Complex_Solutions.Is_Null(tmp) loop
+      ls := TripDobl_Complex_Solutions.Head_Of(tmp);
+      TripDobl_Complex_Solutions.Append(res,res_last,Add_Ones(ls.all,m));
+      tmp := TripDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+    return res;
+  end Add_Ones;
+
   function Add_Ones ( sols : QuadDobl_Complex_Solutions.Solution_List;
                       m : natural32 )
                     return QuadDobl_Complex_Solutions.Solution_List is
@@ -722,6 +949,28 @@ package body Multi_Projective_Transformations is
         DoblDobl_Complex_Solutions.Set_Head(tmp,ls);
       end;
       tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+  end Add_Ones;
+
+  procedure Add_Ones ( sols : in out TripDobl_Complex_Solutions.Solution_List;
+                       m : in natural32 ) is
+
+    tmp : TripDobl_Complex_Solutions.Solution_List := sols;
+    ls : TripDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    while not TripDobl_Complex_Solutions.Is_Null(tmp) loop
+      ls := TripDobl_Complex_Solutions.Head_Of(tmp);
+      declare
+        dim : constant integer32 := ls.n;
+        sol : constant TripDobl_Complex_Solutions.Solution(dim+integer32(m))
+            := Add_Ones(ls.all,m);
+      begin
+        TripDobl_Complex_Solutions.Clear(ls);
+        ls := new TripDobl_Complex_Solutions.Solution'(sol);
+        TripDobl_Complex_Solutions.Set_Head(tmp,ls);
+      end;
+      tmp := TripDobl_Complex_Solutions.Tail_Of(tmp);
     end loop;
   end Add_Ones;
 
@@ -995,6 +1244,30 @@ package body Multi_Projective_Transformations is
     if start
      then lhp := DoblDobl_Start_Linear_Polynomials(nbr,m);
      else lhp := DoblDobl_Random_Linear_Polynomials(nbr,m,z);
+    end if;
+    for i in lhp'range loop
+      res(p'last+i) := lhp(i);
+    end loop;
+    return res;
+  end Multi_Projective_Transformation;
+
+  function Multi_Projective_Transformation
+             ( p : TripDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys is
+ 
+    dim : constant integer32 := p'last + integer32(m);
+    res : TripDobl_Complex_Poly_Systems.Poly_Sys(1..dim);
+    mhp : constant TripDobl_Complex_Poly_Systems.Poly_Sys
+        := Make_Homogeneous(p,m,z);
+    lhp : TripDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(m));
+    nbr : constant natural32 := natural32(p'last);
+
+  begin
+    res(mhp'range) := mhp;
+    if start
+     then lhp := TripDobl_Start_Linear_Polynomials(nbr,m);
+     else lhp := TripDobl_Random_Linear_Polynomials(nbr,m,z);
     end if;
     for i in lhp'range loop
       res(p'last+i) := lhp(i);
