@@ -172,6 +172,7 @@ tripdobl_complex_laurentials      : tripdobl complex Laurent polynomials
 tripdobl_complex_laurentials_io   : i/o for tripdobl complex Laurentials
 tripdobl_complex_poly_systems     : systems of tripdobl complex polynomials
 tripdobl_complex_poly_systems_io  : i/o for tripdobl complex poly systems
+tripdobl_complex_jaco_matrices    : Jacobian matrices for tripdobl complex
 tripdobl_complex_laur_systems_io  : i/o for tripdobl complex Laurent systems
 tripdobl_complex_laur_systems     : systems of tripdobl complex Laurentials
 tripdobl_polynomial_convertors    : converting tripdobl with double/multprec
@@ -185,6 +186,7 @@ pentdobl_complex_laurentials      : pentdobl complex Laurent polynomials
 pentdobl_complex_lauentials_io    : i/o for pentdobl complex Laurentials
 pentdobl_complex_poly_systems     : systems of pentdobl complex polynomials
 pentdobl_complex_poly_systems_io  : i/o for pentdobl complex poly systems
+pentdobl_complex_jaco_matrices    : Jacobian matrices for pentdobl complex
 pentdobl_complex_laur_systems     : systems of pentdobl complex Laurentials
 pentdobl_complex_laur_systems_io  : i/o for pentdobl complex Laurent systems
 pentdobl_polynomial_convertors    : converting pentdobl with double/multprec
@@ -198,6 +200,7 @@ octodobl_complex_laurentials      : octodobl complex Laurent polynomials
 octodobl_complex_laurentials_io   : i/o for octodobl complex Laurentials
 octodobl_complex_poly_systems     : systems of octodobl complex polynomials
 octodobl_complex_poly_systems_io  : basic output for od complex poly systems
+octodobl_complex_jaco_matrices    : Jacobian matrices for octodobl complex
 octodobl_complex_laur_systems     : systems of octodobl complex Laurentials
 octodobl_complex_laur_systems_io  : i/o for octodobl complex Laurent systems
 octodobl_polynomial_convertors    : converting octodobl with double/multprec
@@ -211,6 +214,7 @@ decadobl_complex_laurentials      : decadobl complex Laurent polynomials
 decadobl_complex_laurentials_io   : i/o for decadobl complex Laurentials
 decadobl_complex_poly_systems     : systems of decadobl complex polynomials
 decadobl_complex_poly_systems_io  : basic output for da complex poly systems
+decadobl_complex_jaco_matrices    : Jacobian matrices for decadobl complex
 decadobl_complex_laur_systems     : systems of decadobl complex Laurentials
 decadobl_complex_laur_systems_io  : i/o for decadobl complex Laurent systems
 decadobl_polynomial_convertors    : converting decadobl with double/multprec

@@ -1,3 +1,5 @@
+Wed 23 Sep 2020 : added {trip,pent,octo,deca}dobl_complex_jaco_matrices.
+
 Tue 22 Sep 2020 : added {trip,pent,octo,deca}dobl_complex_laurentials_io
   and {trip,pent,octo,deca}dobl_complex_laurent_systems_io.
   Corrected pentdobl_complex_{laurentials,laur_systems}_io.adb.
