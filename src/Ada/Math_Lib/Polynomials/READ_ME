@@ -233,6 +233,11 @@ test_dobldobl_polynomials         : tests double double polynomials
 test_quaddobl_polynomials         : tests quad double polynomials
 test_multprec_polynomials         : tests multiprecision polynomials
 -------------------------------------------------------------------------------
+test_standard_random_systems      : tests random systems in double precision
+test_dobldobl_random_systems      : tests random systems in dobldobl precision
+test_quaddobl_random_systems      : tests random systems in quaddobl precision
+test_multprec_random_systems      : tests random systems in multiprecision 
+-------------------------------------------------------------------------------
 ts_poly                           : test on polynomials and polynomial systems
 ts_rpol                           : test polynomials with real coefficients
 ts_laurpoly                       : test on Laurent polynomials and systems
