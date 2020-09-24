@@ -1,3 +1,6 @@
+Wed 23 Sep 2020 : updated degrees_in_sets_of_unknowns for polynomials
+  in triple, penta, octo, and deca double precision.
+
 Fri 16 Aug 2019 : added access type to partitions_of_sets_of_unknowns.
 
 Thu 15 Aug 2019 : extended degrees_in_sets_of_unknowns with functions for

@@ -3,7 +3,11 @@ with Standard_Integer_Matrices;
 with Standard_Integer64_Matrices;
 with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials;
+with TripDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials;
+with PentDobl_Complex_Polynomials;
+with OctoDobl_Complex_Polynomials;
+with DecaDobl_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Sets_of_Unknowns;                   use Sets_of_Unknowns;
 with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
@@ -18,7 +22,15 @@ package Degrees_in_Sets_of_Unknowns is
                   return integer32;
   function Degree ( t : DoblDobl_Complex_Polynomials.Term; s : Set )
                   return integer32;
+  function Degree ( t : TripDobl_Complex_Polynomials.Term; s : Set )
+                  return integer32;
   function Degree ( t : QuadDobl_Complex_Polynomials.Term; s : Set )
+                  return integer32;
+  function Degree ( t : PentDobl_Complex_Polynomials.Term; s : Set )
+                  return integer32;
+  function Degree ( t : OctoDobl_Complex_Polynomials.Term; s : Set )
+                  return integer32;
+  function Degree ( t : DecaDobl_Complex_Polynomials.Term; s : Set )
                   return integer32;
 
   -- DESCRIPTION :
@@ -28,7 +40,15 @@ package Degrees_in_Sets_of_Unknowns is
                   return integer32;
   function Degree ( p : DoblDobl_Complex_Polynomials.Poly; s : Set )
                   return integer32;
+  function Degree ( p : TripDobl_Complex_Polynomials.Poly; s : Set )
+                  return integer32;
   function Degree ( p : QuadDobl_Complex_Polynomials.Poly; s : Set )
+                  return integer32;
+  function Degree ( p : PentDobl_Complex_Polynomials.Poly; s : Set )
+                  return integer32;
+  function Degree ( p : OctoDobl_Complex_Polynomials.Poly; s : Set )
+                  return integer32;
+  function Degree ( p : DecaDobl_Complex_Polynomials.Poly; s : Set )
                   return integer32;
 
   -- DESCRIPTION :

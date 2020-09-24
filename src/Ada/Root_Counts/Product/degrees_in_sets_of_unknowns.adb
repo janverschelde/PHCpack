@@ -34,7 +34,71 @@ package body Degrees_in_Sets_of_Unknowns is
     return sum;
   end Degree;
 
+  function Degree ( t : TripDobl_Complex_Polynomials.Term; s : Set )
+                  return integer32 is
+
+    sum : integer32 := 0;
+
+  begin
+    if Extent_Of(s) > 0 then
+      for i in t.dg'range loop
+        if Is_In(s,natural32(i))
+         then sum := sum + integer32(t.dg(i));
+        end if;
+      end loop;
+    end if;
+    return sum;
+  end Degree;
+
   function Degree ( t : QuadDobl_Complex_Polynomials.Term; s : Set )
+                  return integer32 is
+
+    sum : integer32 := 0;
+
+  begin
+    if Extent_Of(s) > 0 then
+      for i in t.dg'range loop
+        if Is_In(s,natural32(i))
+         then sum := sum + integer32(t.dg(i));
+        end if;
+      end loop;
+    end if;
+    return sum;
+  end Degree;
+
+  function Degree ( t : PentDobl_Complex_Polynomials.Term; s : Set )
+                  return integer32 is
+
+    sum : integer32 := 0;
+
+  begin
+    if Extent_Of(s) > 0 then
+      for i in t.dg'range loop
+        if Is_In(s,natural32(i))
+         then sum := sum + integer32(t.dg(i));
+        end if;
+      end loop;
+    end if;
+    return sum;
+  end Degree;
+
+  function Degree ( t : OctoDobl_Complex_Polynomials.Term; s : Set )
+                  return integer32 is
+
+    sum : integer32 := 0;
+
+  begin
+    if Extent_Of(s) > 0 then
+      for i in t.dg'range loop
+        if Is_In(s,natural32(i))
+         then sum := sum + integer32(t.dg(i));
+        end if;
+      end loop;
+    end if;
+    return sum;
+  end Degree;
+
+  function Degree ( t : DecaDobl_Complex_Polynomials.Term; s : Set )
                   return integer32 is
 
     sum : integer32 := 0;
@@ -98,12 +162,108 @@ package body Degrees_in_Sets_of_Unknowns is
     return res;
   end Degree;
 
+  function Degree ( p : TripDobl_Complex_Polynomials.Poly; s : Set )
+                  return integer32 is
+
+    res : integer32 := -1;
+
+    use TripDobl_Complex_Polynomials;
+
+    procedure Degree_Term ( t : in Term; continue : out boolean ) is
+
+      sum : constant integer32 := Degree(t,s);
+
+    begin
+      if sum > res
+       then res := sum;
+      end if;
+      continue := true;
+    end Degree_Term;
+    procedure Degree_Terms is new Visiting_Iterator(Degree_Term);
+
+  begin
+    Degree_Terms(p);
+    return res;
+  end Degree;
+
   function Degree ( p : QuadDobl_Complex_Polynomials.Poly; s : Set )
                   return integer32 is
 
     res : integer32 := -1;
 
     use QuadDobl_Complex_Polynomials;
+
+    procedure Degree_Term ( t : in Term; continue : out boolean ) is
+
+      sum : constant integer32 := Degree(t,s);
+
+    begin
+      if sum > res
+       then res := sum;
+      end if;
+      continue := true;
+    end Degree_Term;
+    procedure Degree_Terms is new Visiting_Iterator(Degree_Term);
+
+  begin
+    Degree_Terms(p);
+    return res;
+  end Degree;
+
+  function Degree ( p : PentDobl_Complex_Polynomials.Poly; s : Set )
+                  return integer32 is
+
+    res : integer32 := -1;
+
+    use PentDobl_Complex_Polynomials;
+
+    procedure Degree_Term ( t : in Term; continue : out boolean ) is
+
+      sum : constant integer32 := Degree(t,s);
+
+    begin
+      if sum > res
+       then res := sum;
+      end if;
+      continue := true;
+    end Degree_Term;
+    procedure Degree_Terms is new Visiting_Iterator(Degree_Term);
+
+  begin
+    Degree_Terms(p);
+    return res;
+  end Degree;
+
+  function Degree ( p : OctoDobl_Complex_Polynomials.Poly; s : Set )
+                  return integer32 is
+
+    res : integer32 := -1;
+
+    use OctoDobl_Complex_Polynomials;
+
+    procedure Degree_Term ( t : in Term; continue : out boolean ) is
+
+      sum : constant integer32 := Degree(t,s);
+
+    begin
+      if sum > res
+       then res := sum;
+      end if;
+      continue := true;
+    end Degree_Term;
+    procedure Degree_Terms is new Visiting_Iterator(Degree_Term);
+
+  begin
+    Degree_Terms(p);
+    return res;
+  end Degree;
+
+  function Degree ( p : DecaDobl_Complex_Polynomials.Poly; s : Set )
+                  return integer32 is
+
+    res : integer32 := -1;
+
+    use DecaDobl_Complex_Polynomials;
 
     procedure Degree_Term ( t : in Term; continue : out boolean ) is
 
