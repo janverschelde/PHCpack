@@ -51,7 +51,9 @@ standard_coefficient_homotopy      : coefficient-parameter homotopy
 dobldobl_coefficient_homotopy      : double double coeff-parameter homotopy
 tripdobl_coefficient_homotopy      : triple double coeff-parameter homotopy
 quaddobl_coefficient_homotopy      : quad double coeff-parameter homotopy
-ts_evalhomt                        : test on coefficient-parameter homotopy
+test_standard_coeff_homotopy       : tests standard coefficient homotopies
+test_dobldobl_coeff_homotopy       : tests dobldobl coefficient homotopies
+ts_evalhomt                        : main test on coefficient homotopies
 hyperplane_solution_scaling        : scale a solution and a hyperplane
 ts_scalplane                       : test on scaling last hyperplane
 multi_projective_transformations   : transform to m-homogeneous coordinates
