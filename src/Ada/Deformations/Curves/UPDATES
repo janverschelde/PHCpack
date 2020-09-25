@@ -3,7 +3,10 @@ Fri 25 Sep 2020 : new {standard,dobldobl,tripdobl,quaddobl}_convolution_steps,
   and test_{standard,dobldobl,tripdobl,quaddobl}_newtconvsteps, with code
   from ts_sernewcnv.  The removal of newton_power_convolutions leads to
   updates in {standard,dobldobl,quaddobl}_predictor_convolutions.adb
-  and {dobl,trip,quad}dobl_fabry_on_homotopy.
+  and {dobl,trip,quad}dobl_fabry_on_homotopy.  Extended ts_sernewcnv
+  to penta, octo, and deca double precision with the new packages
+  {pent,octo,deca}dobl_newton_convolution_steps and
+  test_{pent,octo,deca}dobl_newtconvsteps.
 
 Wed 23 Sep 2020 : bug fix in mainseries.adb so menus options 1 and 2
   of phc -u are again accessible for proper choices of precision levels.
