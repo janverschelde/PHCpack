@@ -19,56 +19,60 @@ control and detection of the nearest singularity via the application
 of the theorem of Fabry.
 
 -------------------------------------------------------------------------------
-file name                        : short description
+file name                         : short description
 -------------------------------------------------------------------------------
-standard_durand_kerner           : solves univariate polynomial equations
-dobldobl_durand_kerner           : double double Durand-Kerner method
-quaddobl_durand_kerner           : quad double Durand-Kerner method
-multprec_durand_kerner           : multi-precision Durand-Kerner method
-hybrid_durand_kerner             : hybrid standard/multi-precision version
-ts_durker                        : test polynomial equation solver
-black_box_univariate_solvers     : called by the black-box solver (phc -b)
+standard_durand_kerner            : solves univariate polynomial equations
+dobldobl_durand_kerner            : double double Durand-Kerner method
+quaddobl_durand_kerner            : quad double Durand-Kerner method
+multprec_durand_kerner            : multi-precision Durand-Kerner method
+hybrid_durand_kerner              : hybrid standard/multi-precision version
+ts_durker                         : test polynomial equation solver
+black_box_univariate_solvers      : called by the black-box solver (phc -b)
 -------------------------------------------------------------------------------
-standard_extrapolators           : divided differences to extrapolate
-dobldobl_extrapolators           : extrapolation with double doubles
-quaddobl_extrapolators           : extrapolation with quad doubles
-multprec_extrapolators           : extrapolation at any precision
-sample_plane_curves              : tools to compute points on curves
-ts_extrapol                      : test on extrapolation
-ts_extrapts                      : points on skew line
+standard_extrapolators            : divided differences to extrapolate
+dobldobl_extrapolators            : extrapolation with double doubles
+quaddobl_extrapolators            : extrapolation with quad doubles
+multprec_extrapolators            : extrapolation at any precision
+sample_plane_curves               : tools to compute points on curves
+ts_extrapol                       : test on extrapolation
+ts_extrapts                       : points on skew line
 -------------------------------------------------------------------------------
-standard_newton_series           : Newton's method to compute series solutions
-standard_newton_matrix_series    : linearization in Newton on series matrices
-dobldobl_newton_series           : Newton on series in double double precision
-dobldobl_newton_matrix_series    : linearization in Newton with double doubles
-quaddobl_newton_series           : Newton on series in quad double precision
-quaddobl_newton_matrix_series    : linearization in Newton with quad doubles
-ts_sernew                        : test on the Newton series packages
-series_and_solutions             : making series from solution vectors
-power_series_methods             : Newton's method on power series solutions
-ts_sersol                        : test on series and solutions
+standard_newton_series            : Newton to compute series solutions
+standard_newton_matrix_series     : linearization in Newton on series matrices
+dobldobl_newton_series            : Newton on series in double double precision
+dobldobl_newton_matrix_series     : linearization in Newton with double doubles
+quaddobl_newton_series            : Newton on series in quad double precision
+quaddobl_newton_matrix_series     : linearization in Newton with quad doubles
+ts_sernew                         : test on the Newton series packages
+series_and_solutions              : making series from solution vectors
+power_series_methods              : Newton's method on power series solutions
+ts_sersol                         : test on series and solutions
 -------------------------------------------------------------------------------
-newton_power_convolutions        : Newton on power series with convolutions
-staggered_newton_convolutions    : Newton with staggered degrees
-ts_sernewcnv                     : test on Newton power series convolutions
+newton_power_convolutions         : Newton on power series with convolutions
+standard_newton_convolution_steps : double Newton convolution steps
+dobldobl_newton_convolution_steps : double double Newton convolution steps
+tripdobl_newton_convolution_steps : triple double Newton convolution steps
+quaddobl_newton_convolution_steps : quad double Newton convolution steps
+staggered_newton_convolutions     : Newton with staggered degrees
+ts_sernewcnv                      : test on Newton power series convolutions
 -------------------------------------------------------------------------------
-series_and_homotopies            : homotopies as systems with series coeffs
-ts_serhom                        : test on series and homotopies
-homotopy_series_readers          : reads a homotopy for power series
+series_and_homotopies             : homotopies as systems with series coeffs
+ts_serhom                         : test on series and homotopies
+homotopy_series_readers           : reads a homotopy for power series
 -------------------------------------------------------------------------------
-standard_rational_approximations : definition of a rational approximation
-dobldobl_rational_approximations : rational approximations with double doubles
-quaddobl_rational_approximations : rational approximations with quad doubles
-homotopy_coefficient_scaling     : scale coefficients for homogenization
-standard_pade_approximants       : Pade approximants in double precision
-standard_pade_approximants_io    : output of double Pade approximants
-dobldobl_pade_approximants       : Pade approximants with double doubles
-dobldobl_pade_approximants_io    : output of double double Pade approximants
-quaddobl_pade_approximants       : Pade approximants with quad doubles
-quaddobl_pade_approximants_io    : output of quad double Pade approximants
-homotopy_pade_approximants       : wraps series Newton and Pade creators
-ts_serpade                       : test rational approximations given series
-ts_ratapp                        : test on thread safe constructions
+standard_rational_approximations  : definition of a rational approximation
+dobldobl_rational_approximations  : rational approximations with double doubles
+quaddobl_rational_approximations  : rational approximations with quad doubles
+homotopy_coefficient_scaling      : scale coefficients for homogenization
+standard_pade_approximants        : Pade approximants in double precision
+standard_pade_approximants_io     : output of double Pade approximants
+dobldobl_pade_approximants        : Pade approximants with double doubles
+dobldobl_pade_approximants_io     : output of double double Pade approximants
+quaddobl_pade_approximants        : Pade approximants with quad doubles
+quaddobl_pade_approximants_io     : output of quad double Pade approximants
+homotopy_pade_approximants        : wraps series Newton and Pade creators
+ts_serpade                        : test rational approximations given series
+ts_ratapp                         : test on thread safe constructions
 ------------------------------------------------------------------------------
 standard_homotopy_convolutions_io : prompts for double homotopy convolutions
 dobldobl_homotopy_convolutions_io : prompts for dobldobl homotopy convolutions

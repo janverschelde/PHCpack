@@ -1,3 +1,8 @@
+Fri 25 Sep 2020 : new {standard,dobldobl,tripdobl,quaddobl}_convolution_steps,
+  with code taken from newton_power_convolutions (which will be removed),
+  and test_{standard,dobldobl,tripdobl,quaddobl}_newtconvsteps, with code
+  from ts_sernewcnv.
+
 Wed 23 Sep 2020 : bug fix in mainseries.adb so menus options 1 and 2
   of phc -u are again accessible for proper choices of precision levels.
   New packages {standard,dobldobl,quaddobl}_fabry_on_homotopy with code
