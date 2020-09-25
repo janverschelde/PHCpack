@@ -48,7 +48,6 @@ series_and_solutions              : making series from solution vectors
 power_series_methods              : Newton's method on power series solutions
 ts_sersol                         : test on series and solutions
 -------------------------------------------------------------------------------
-newton_power_convolutions         : Newton on power series with convolutions
 standard_newton_convolution_steps : double Newton convolution steps
 dobldobl_newton_convolution_steps : double double Newton convolution steps
 tripdobl_newton_convolution_steps : triple double Newton convolution steps

@@ -12,7 +12,7 @@ with Standard_Inlined_Singular_Values;
 with Standard_Mixed_Residuals;
 with Standard_Rational_Approximations;
 with Standard_Newton_Convolutions;
-with Newton_Power_Convolutions;
+with Standard_Newton_Convolution_Steps;
 with Staggered_Newton_Convolutions;
 with Convergence_Radius_Estimates;
 with Jacobian_Convolution_Circuits;
@@ -293,7 +293,7 @@ package body Standard_Predictor_Convolutions is
       put_line("-> in standard_predictor_convolutions.Newton_Fabry 1 ...");
     end if;
     nbrit := 0;
-   -- Newton_Power_Convolutions.LU_Newton_Steps
+   -- Standard_Newton_Convolution_Steps.LU_Newton_Steps
    --  LU_Newton_Steps was first replaced by a staggered version
    -- Staggered_Newton_Convolutions.LU_Newton_Steps
    --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
@@ -335,7 +335,7 @@ package body Standard_Predictor_Convolutions is
     end if;
     nbrit := 0;
     if output then
-     -- Newton_Power_Convolutions.LU_Newton_Steps
+     -- Standard_Newton_Convolution_Steps.LU_Newton_Steps
      -- Staggered_Newton_Convolutions.LU_Newton_Steps
      --   (file,hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
      --    info,prd.newtpiv,prd.wrk,false);
@@ -349,7 +349,7 @@ package body Standard_Predictor_Convolutions is
          true);
       Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
-     -- Newton_Power_Convolutions.LU_Newton_Steps
+     -- Standard_Newton_Convolution_Steps.LU_Newton_Steps
      -- Staggered_Newton_Convolutions.LU_Newton_Steps
      --   (hom,prd.sol,rx,ix,maxit,nbrit,tol,absdx,fail,
      --    info,prd.newtpiv,prd.wrk,false,false);
@@ -385,7 +385,7 @@ package body Standard_Predictor_Convolutions is
       put_line("-> in standard_predictor_convolutions.Newton_Fabry 3 ...");
     end if;
     nbrit := 0;
-   -- Newton_Power_Convolutions.SVD_Newton_Steps
+   -- Standard_Newton_Convolution_Steps.SVD_Newton_Steps
     Staggered_Newton_Convolutions.SVD_Newton_Steps
       (hom,prd.sol,prd.dx,prd.xd,rx,ix,maxit,nbrit,tol,absdx,fail,
        prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
@@ -415,13 +415,13 @@ package body Standard_Predictor_Convolutions is
     end if;
     nbrit := 0;
     if output then
-     -- Newton_Power_Convolutions.SVD_Newton_Steps
+     -- Standard_Newton_Convolution_Steps.SVD_Newton_Steps
       Staggered_Newton_Convolutions.SVD_Newton_Steps
         (file,hom,prd.sol,prd.dx,prd.xd,rx,ix,maxit,nbrit,tol,absdx,
          fail,prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false);
       Convergence_Radius_Estimates.Fabry(file,prd.sol,z,rad,err,fail,2);
     else
-     -- Newton_Power_Convolutions.SVD_Newton_Steps
+     -- Standard_Newton_Convolution_Steps.SVD_Newton_Steps
       Staggered_Newton_Convolutions.SVD_Newton_Steps
         (hom,prd.sol,prd.dx,prd.xd,rx,ix,maxit,nbrit,tol,absdx,fail,
          prd.svl,prd.U,prd.V,info,rcond,prd.ewrk,prd.wrk,false,false);
@@ -442,7 +442,7 @@ package body Standard_Predictor_Convolutions is
                 rad,err : out double_float; vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use Standard_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -470,7 +470,7 @@ package body Standard_Predictor_Convolutions is
                 vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use Standard_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -503,7 +503,7 @@ package body Standard_Predictor_Convolutions is
                 rad,err : out double_float; vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use Standard_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -531,7 +531,7 @@ package body Standard_Predictor_Convolutions is
                 vrblvl : in integer32 := 0 ) is
 
     use Standard_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use Standard_Newton_Convolution_Steps;
 
     info : integer32;
 

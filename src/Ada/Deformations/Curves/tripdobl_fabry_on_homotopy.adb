@@ -21,7 +21,7 @@ with Standard_Parameter_Systems;
 with Solution_Drops;
 with TripDobl_Homotopy_Convolutions_io;
 with TripDobl_Newton_Convolutions;
-with Newton_Power_Convolutions;
+with TripDobl_Newton_Convolution_Steps;
 with Convergence_Radius_Estimates;
 
 package body TripDobl_Fabry_on_Homotopy is
@@ -56,7 +56,7 @@ package body TripDobl_Fabry_on_Homotopy is
         put("Give the new tolerance for the accuracy : "); get(tol);
       end if;
     end loop;
-    Newton_Power_Convolutions.LU_Newton_Steps
+    TripDobl_Newton_Convolution_Steps.LU_Newton_Steps
       (standard_output,cfs,scf,maxit,nbrit,tol,absdx,fail,rcond,
        ipvt,wrk,scale);
     put_line("The coefficients of the series : "); put_line(scf);

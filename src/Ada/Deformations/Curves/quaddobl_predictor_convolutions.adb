@@ -10,7 +10,7 @@ with QuadDobl_Complex_Singular_Values;
 with QuadDobl_Mixed_Residuals;
 with QuadDobl_Rational_Approximations;
 with QuadDobl_Newton_Convolutions;
-with Newton_Power_Convolutions;
+with QuadDobl_Newton_Convolution_Steps;
 with Convergence_Radius_Estimates;
 with Jacobian_Convolution_Circuits;
 with Hessian_Convolution_Circuits;
@@ -251,7 +251,7 @@ package body QuadDobl_Predictor_Convolutions is
                 rad,err : out quad_double ) is
 
     use QuadDobl_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use QuadDobl_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -274,7 +274,7 @@ package body QuadDobl_Predictor_Convolutions is
                 rad,err : out quad_double; output : in boolean ) is
 
     use QuadDobl_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use QuadDobl_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -303,7 +303,7 @@ package body QuadDobl_Predictor_Convolutions is
                 rad,err : out quad_double ) is
 
     use QuadDobl_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use QuadDobl_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -326,7 +326,7 @@ package body QuadDobl_Predictor_Convolutions is
                 rad,err : out quad_double; output : in boolean ) is
 
     use QuadDobl_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use QuadDobl_Newton_Convolution_Steps;
 
     info : integer32;
 

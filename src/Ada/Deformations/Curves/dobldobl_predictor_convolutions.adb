@@ -10,7 +10,7 @@ with DoblDobl_Complex_Singular_Values;
 with DoblDobl_Mixed_Residuals;
 with DoblDobl_Rational_Approximations;
 with DoblDobl_Newton_Convolutions;
-with Newton_Power_Convolutions;
+with DoblDobl_Newton_Convolution_Steps;
 with Convergence_Radius_Estimates;
 with Jacobian_Convolution_Circuits;
 with Hessian_Convolution_Circuits;
@@ -251,7 +251,7 @@ package body DoblDobl_Predictor_Convolutions is
                 rad,err : out double_double ) is
 
     use DoblDobl_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use DoblDobl_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -274,7 +274,7 @@ package body DoblDobl_Predictor_Convolutions is
                 rad,err : out double_double; output : in boolean ) is
 
     use DoblDobl_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use DoblDobl_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -303,7 +303,7 @@ package body DoblDobl_Predictor_Convolutions is
                 rad,err : out double_double ) is
 
     use DoblDobl_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use DoblDobl_Newton_Convolution_Steps;
 
     info : integer32;
 
@@ -326,7 +326,7 @@ package body DoblDobl_Predictor_Convolutions is
                 rad,err : out double_double; output : in boolean ) is
 
     use DoblDobl_Rational_Approximations;
-    use Newton_Power_Convolutions;
+    use DoblDobl_Newton_Convolution_Steps;
 
     info : integer32;
 
