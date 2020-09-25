@@ -1,5 +1,8 @@
 Thu 24 Sep 2020 : test_{standard,dobldobl,quaddobl,multprec}_random_systems
   are new packages with code from ts_randpoly.adb.
+  Added new packages {trip,pent,octo,deca}dobl_random_polynomials and
+  test_{trip,pent,octo,deca}dobl_random_systems, extended ts_randpoly
+  and random_polynomials_systems.
 
 Wed 23 Sep 2020 : added {trip,pent,octo,deca}dobl_complex_jaco_matrices.
 

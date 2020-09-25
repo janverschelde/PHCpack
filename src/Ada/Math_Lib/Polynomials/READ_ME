@@ -162,7 +162,17 @@ quaddobl_system_readers           : quad double version of system readers
 multprec_system_readers           : multiprecision version of system readers
 string_system_readers             : reading strings from file
 standard_complex_laur_lists       : lists of standard complex Laurentials
-random_polynomial_systems         : interactive generation of random systems
+-------------------------------------------------------------------------------
+test_standard_polynomials         : tests double polynomials
+test_standard_laurentials         : tests double Laurent polynomials
+test_dobldobl_polynomials         : tests double double polynomials
+test_quaddobl_polynomials         : tests quad double polynomials
+test_multprec_polynomials         : tests multiprecision polynomials
+-------------------------------------------------------------------------------
+test_standard_random_systems      : tests random systems in double precision
+test_dobldobl_random_systems      : tests random systems in dobldobl precision
+test_quaddobl_random_systems      : tests random systems in quaddobl precision
+test_multprec_random_systems      : tests random systems in multiprecision 
 -------------------------------------------------------------------------------
 triple_double_polynomials         : polynomials with triple double coeffs
 triple_double_poly_systems        : poly systems with triple double coeffs
@@ -221,22 +231,21 @@ decadobl_polynomial_convertors    : converting decadobl with double/multprec
 test_decadobl_polynomials         : tests on decadobl polynomials
 ts_dapol                          : main test on decadobl polynomials
 -------------------------------------------------------------------------------
+tripdobl_random_polynomials       : random polynomials in tripdobl precision
+pentdobl_random_polynomials       : random polynomials in pentdobl precision
+octodobl_random_polynomials       : random polynomials in octodobl precision
+decadobl_random_polynomials       : random polynomials in decadobl precision
+random_polynomial_systems         : interactive generation of random systems
+test_tripdobl_random_systems      : tests random tripdobl polynomial systems
+test_pentdobl_random_systems      : tests random pentdobl polynomial systems
+test_octodobl_random_systems      : tests random octodobl polynomial systems
+test_decadobl_random_systems      : tests random decadobl polynomial systems
+-------------------------------------------------------------------------------
 generic_hessian_matrices          : basic computation of Hessian matrix
 standard_complex_hessians         : Hessians in standard double precision
 dobldobl_complex_hessians         : Hessians in double double precision
 quaddobl_complex_hessians         : Hessians in quad double precision
 ts_hessian                        : test on Hessian matrices
--------------------------------------------------------------------------------
-test_standard_polynomials         : tests double polynomials
-test_standard_laurentials         : tests double Laurent polynomials
-test_dobldobl_polynomials         : tests double double polynomials
-test_quaddobl_polynomials         : tests quad double polynomials
-test_multprec_polynomials         : tests multiprecision polynomials
--------------------------------------------------------------------------------
-test_standard_random_systems      : tests random systems in double precision
-test_dobldobl_random_systems      : tests random systems in dobldobl precision
-test_quaddobl_random_systems      : tests random systems in quaddobl precision
-test_multprec_random_systems      : tests random systems in multiprecision 
 -------------------------------------------------------------------------------
 ts_poly                           : test on polynomials and polynomial systems
 ts_rpol                           : test polynomials with real coefficients

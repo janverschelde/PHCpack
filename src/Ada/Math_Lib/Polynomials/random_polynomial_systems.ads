@@ -2,7 +2,11 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
+with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with PentDobl_Complex_Poly_Systems;
+with OctoDobl_Complex_Poly_Systems;
+with DecaDobl_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems;
 
 package Random_Polynomial_Systems is
@@ -10,14 +14,19 @@ package Random_Polynomial_Systems is
 -- DESCRIPTION :
 --   This package offers interactive generators of systems of polynomials,
 --   generated at random, for coefficients in double, double double,
---   quad double, and arbitrary multiprecision precision.
+--   triple double, quad double, penta double, octo double, deca double,
+--   and arbitrary multiprecision precision.
 
   procedure Save_System_to_File
               ( s : in Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Save_System_to_File
               ( s : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
   procedure Save_System_to_File
+              ( s : in TripDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Save_System_to_File
               ( s : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Save_System_to_File
+              ( s : in PentDobl_Complex_Poly_Systems.Poly_Sys );
   procedure Save_System_to_File
               ( s : in Multprec_Complex_Poly_Systems.Poly_Sys );
 
@@ -33,10 +42,26 @@ package Random_Polynomial_Systems is
              ( nvr,deg,mct,ctp : natural32; neq : integer32;
                verbose : boolean := false )
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function TripDobl_Generate
+             ( nvr,deg,mct,ctp : natural32; neq : integer32;
+               verbose : boolean := false )
+             return TripDobl_Complex_Poly_Systems.Poly_Sys;
   function QuadDobl_Generate
              ( nvr,deg,mct,ctp : natural32; neq : integer32;
                verbose : boolean := false )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function PentDobl_Generate
+             ( nvr,deg,mct,ctp : natural32; neq : integer32;
+               verbose : boolean := false )
+             return PentDobl_Complex_Poly_Systems.Poly_Sys;
+  function OctoDobl_Generate
+             ( nvr,deg,mct,ctp : natural32; neq : integer32;
+               verbose : boolean := false )
+             return OctoDobl_Complex_Poly_Systems.Poly_Sys;
+  function DecaDobl_Generate
+             ( nvr,deg,mct,ctp : natural32; neq : integer32;
+               verbose : boolean := false )
+             return DecaDobl_Complex_Poly_Systems.Poly_Sys;
   function Multprec_Generate
              ( nvr,deg,mct,ctp : natural32; neq : integer32;
                verbose : boolean := false )
@@ -44,7 +69,8 @@ package Random_Polynomial_Systems is
 
   -- DESCRIPTION :
   --   Returns a randomly generated polynomial system, with double,
-  --   double double, quad double, or arbitrary precision coefficients.
+  --   double double, triple double, quad double, penta double, octo double,
+  --   deca double, or arbitrary precision coefficients.
 
   -- ON ENTRY :
   --   nvr     number of variables;
@@ -63,9 +89,21 @@ package Random_Polynomial_Systems is
   procedure DoblDobl_Generate_and_Show
               ( n,d,m,c : in natural32; e : in integer32;
                 lp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure TripDobl_Generate_and_Show
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out TripDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure QuadDobl_Generate_and_Show
               ( n,d,m,c : in natural32; e : in integer32;
                 lp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure PentDobl_Generate_and_Show
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure OctoDobl_Generate_and_Show
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure DecaDobl_Generate_and_Show
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Multprec_Generate_and_Show
               ( n,d,m,c : in natural32; e : in integer32;
                 lp : out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys );
@@ -75,7 +113,8 @@ package Random_Polynomial_Systems is
   --   in m the maximum number of monomials (or 0 for dense), and in c
   --   the type of coefficients, then this procedure will generate a
   --   random polynomial with complex coefficients, in double, double double,
-  --   quad double, or quad double precision.
+  --   triple double, quad double, penta double, octo double, deca double,
+  --   or arbitrary multiprecision.
   --   The procedure is interactive, the result is returned in lp.
 
 end Random_Polynomial_Systems;
