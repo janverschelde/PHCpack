@@ -12,7 +12,9 @@ with DoblDobl_Laur_Poly_Convertors;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 with DoblDobl_System_Readers;
 with Greeting_Banners;
-with Black_Box_Solver_Cases;
+with Black_Box_Linear_Solvers;
+with Black_Box_Single_Solvers;
+with Black_Box_Square_Solvers;
 with bablsolve;
 
 procedure bablphc2 ( nt : in natural32; infilename,outfilename : in string;
@@ -35,18 +37,19 @@ procedure bablphc2 ( nt : in natural32; infilename,outfilename : in string;
     outfile : file_type;
     fail : boolean;
 
-    use Black_Box_Solver_Cases;
-
   begin
     if v > 0
      then put_line("-> in bablphc2.Solve for a polynomial system ...");
     end if;
     if p'last = p'first then
-      Single_Main(infilename,outfilename,p(p'first),append_sols,v-1);
+      Black_Box_Single_Solvers.Solve
+        (infilename,outfilename,p(p'first),append_sols,v-1);
     elsif p'last = integer32(n) then
-      Linear_Main(infilename,outfilename,p,n,append_sols,fail,v-1);
+      Black_Box_Linear_Solvers.Solve
+        (infilename,outfilename,p,n,append_sols,fail,v-1);
       if fail then
-        Square_Main(nt,infilename,outfilename,start_moment,p,append_sols,v-1);
+        Black_Box_Square_Solvers.Solve
+          (nt,infilename,outfilename,start_moment,p,append_sols,v-1);
       end if;
     else
       declare
@@ -61,14 +64,12 @@ procedure bablphc2 ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Solve ( p : in Link_to_Laur_Sys; append_sols : in boolean;
                     v : in integer32 := 0 ) is
-
-    use Black_Box_Solver_Cases;
-
   begin
     if v > 0
      then put_line("-> in bablphc2.Solve for a Laurent polynomial system ...");
     end if;
-    Square_Main(nt,infilename,outfilename,start_moment,p,append_sols,v-1);
+    Black_Box_Square_Solvers.Solve
+      (nt,infilename,outfilename,start_moment,p,append_sols,v-1);
   end Solve;
 
   procedure Main is

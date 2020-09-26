@@ -24,7 +24,10 @@ with Standard_Monomial_Maps;             use Standard_Monomial_Maps;
 with Standard_Monomial_Maps_io;          use Standard_Monomial_Maps_io;
 with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
 with Greeting_Banners;
-with Black_Box_Solver_Cases;
+with Black_Box_Helpers;
+with Black_Box_Linear_Solvers;
+with Black_Box_Single_Solvers;
+with Black_Box_Square_Solvers;
 with bablsolve;
 
 procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
@@ -117,7 +120,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
       if append_sols then
         Append_Toric_Binomial_Solutions_to_Input_File(infilename,d,M.all,c);
       end if;
-      Black_Box_Solver_Cases.Ask_Output_File(outfile,outfilename,to_file);
+      Black_Box_Helpers.Ask_Output_File(outfile,outfilename,to_file);
       ended_moment := Ada.Calendar.Clock;
       if to_file then
         Write_Toric_Binomial_Solutions(outfile,d,M.all,c);
@@ -168,7 +171,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
     if v > 0
      then put_line("-> in bablphc.Affine_Binomial_Solver ...");
     end if;
-    Black_Box_Solver_Cases.Ask_Output_File
+    Black_Box_Helpers.Ask_Output_File
       (outfile,outfilename,to_file,outnewname);
     if to_file then
       put(outfile,p'last,1); put(outfile," ");
@@ -251,18 +254,18 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
     outfile : file_type;
     outnewname : Link_to_String;
 
-    use Black_Box_Solver_Cases;
-
   begin
     if v > 0
      then put_line("-> in bablphc.Solve for an ordinary polynomial system ...");
     end if;
     if p'last = p'first then
-      Single_Main(infilename,outfilename,p(p'first),append_sols,v-1);
+      Black_Box_Single_Solvers.Solve
+        (infilename,outfilename,p(p'first),append_sols,v-1);
     elsif p'last = integer32(n) then
-      Linear_Main(infilename,outfilename,p,n,append_sols,fail,v-1);
+      Black_Box_Linear_Solvers.Solve
+        (infilename,outfilename,p,n,append_sols,fail,v-1);
       if fail then
-        Square_Main
+        Black_Box_Square_Solvers.Solve
           (nt,infilename,outfilename,start_moment,p,true,append_sols,v-1);
       end if;
     else
@@ -287,8 +290,6 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
     outfile : file_type;
     outnewname : Link_to_String;
 
-    use Black_Box_Solver_Cases;
-
   begin
     if v > 0
      then put_line("-> in bablphc.Solve for a Laurent polynomial system ...");
@@ -301,7 +302,8 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string;
         (p.all,append_sols,outfile,outnewname,to_file,fail,v-1);
     end if;
     if fail then
-      Square_Main(nt,infilename,outfilename,start_moment,p,append_sols,v-1);
+      Black_Box_Square_Solvers.Solve
+        (nt,infilename,outfilename,start_moment,p,append_sols,v-1);
     end if;
   end Solve;
 

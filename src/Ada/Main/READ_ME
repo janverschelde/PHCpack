@@ -42,7 +42,11 @@ maintrack                    : jumpstart path tracking
 mainvali                     : menu-driver for validating the results
 bablvali                     : black-box version of validation
 mainphc                      : the main program running in full mode
-black_box_solver_cases       : utilities and special cases for the solvers
+black_box_helpers            : helper operations for the black box solvers
+black_box_single_solvers     : solvers for one single equation
+black_box_linear_solvers     : solvers for linear systems
+black_box_square_solvers     : solvers for square systems
+black_box_solver_cases       : special cases for the solvers
 black_box_solvers            : to be called by bablphc
 bablphc                      : black-box version of the program
 bablphc2                     : black-box solving in double double precision

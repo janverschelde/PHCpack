@@ -10,6 +10,7 @@ with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
 with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with DoblDobl_Blackbox_Continuations;    use DoblDobl_Blackbox_Continuations;
 with QuadDobl_Blackbox_Continuations;    use QuadDobl_Blackbox_Continuations;
+with Black_Box_Helpers;
 with Black_Box_Solver_Cases;             use Black_Box_Solver_Cases;
 
 package body Black_Box_Solvers is
@@ -236,7 +237,7 @@ package body Black_Box_Solvers is
         ls := new Solution'(s);
         Construct(ls,sols);
       else
-        if Are_Constants_In(p) then
+        if Black_Box_Helpers.Are_Constants_In(p) then
           Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
@@ -295,7 +296,7 @@ package body Black_Box_Solvers is
         ls := new Solution'(s);
         Construct(ls,sols);
       else
-        if Are_Constants_In(p) then
+        if Black_Box_Helpers.Are_Constants_In(p) then
           Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
@@ -354,7 +355,7 @@ package body Black_Box_Solvers is
         ls := new Solution'(s);
         Construct(ls,sols);
       else
-        if Are_Constants_In(p) then
+        if Black_Box_Helpers.Are_Constants_In(p) then
           Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
@@ -875,7 +876,7 @@ package body Black_Box_Solvers is
         ls := new Solution'(s);
         Construct(ls,sols);
       else
-        if Are_Constants_In(p) then
+        if Black_Box_Helpers.Are_Constants_In(p) then
           Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
@@ -939,7 +940,7 @@ package body Black_Box_Solvers is
         ls := new Solution'(s);
         Construct(ls,sols);
       else
-        if Are_Constants_In(p) then
+        if Black_Box_Helpers.Are_Constants_In(p) then
           Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else
@@ -1003,7 +1004,7 @@ package body Black_Box_Solvers is
         ls := new Solution'(s);
         Construct(ls,sols);
       else
-        if Are_Constants_In(p) then
+        if Black_Box_Helpers.Are_Constants_In(p) then
           Black_Box_Simplex_Solver(p,sols,fail,verbose-1);
           fail := (fail or (Length_Of(sols) = 0));
         else

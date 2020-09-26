@@ -1,3 +1,8 @@
+Sat 26 Sep 2020 : moved special cases from black_box_solver_cases into
+  new packages: black_box_helpers, black_box_single_solvers,
+  black_box_linear_solvers, black_box_square_solvers, which changed
+  black_box_solvers.adb, bablphc.adb, bablphc2.adb, and bablphc4.adb.
+
 Sun 23 Aug 2020 : in mainvali.adb passed the verbose level to deflation.
 
 Tue 4 Aug 2020 : modified greeting_banners.ads and greeting_banners.adb,
