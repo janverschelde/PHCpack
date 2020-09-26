@@ -13,6 +13,9 @@ standard_parameter_systems       : definition of parameter homotopy + i/o
 dobldobl_parameter_systems       : parameter homotopy with double doubles
 tripdobl_parameter_systems       : parameter homotopy with triple doubles
 quaddobl_parameter_systems       : parameter homotopy with quad doubles
+pentdobl_parameter_systems       : parameter homotopy with penta doubles
+octodobl_parameter_systems       : parameter homotopy with octo doubles
+decadobl_parameter_systems       : parameter homotopy with deca doubles
 complex_convex_continuation      : interpolate start and target with complex
 parameter_homotopy_continuation  : drivers to path tracking
 ts_parcon                        : stand-alone calling program
