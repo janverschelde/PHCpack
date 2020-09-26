@@ -7,6 +7,10 @@ Fri 25 Sep 2020 : new {standard,dobldobl,tripdobl,quaddobl}_convolution_steps,
   to penta, octo, and deca double precision with the new packages
   {pent,octo,deca}dobl_newton_convolution_steps and
   test_{pent,octo,deca}dobl_newtconvsteps.
+  To series_and_homotopies, series_path_trackers, test_series_predictors,
+  homotopy_series_readers added operations with penta, octo, and deca doubles.
+  New packages {pent,octo,deca}dobl_homotopy_convolutions_io and
+  {pent,octo,deca}dobl_fabry_on_homotopy, called in ts_fabryhom.
 
 Wed 23 Sep 2020 : bug fix in mainseries.adb so menus options 1 and 2
   of phc -u are again accessible for proper choices of precision levels.

@@ -7,6 +7,9 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with PentDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
@@ -15,6 +18,12 @@ with TripDobl_Complex_Polynomials;
 with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
+with PentDobl_Complex_Polynomials;
+with PentDobl_Complex_Poly_Systems;
+with OctoDobl_Complex_Polynomials;
+with OctoDobl_Complex_Poly_Systems;
+with DecaDobl_Complex_Polynomials;
+with DecaDobl_Complex_Poly_Systems;
 with Standard_CSeries_Polynomials;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Polynomials;
@@ -23,13 +32,20 @@ with TripDobl_CSeries_Polynomials;
 with TripDobl_CSeries_Poly_Systems;
 with QuadDobl_CSeries_Polynomials;
 with QuadDobl_CSeries_Poly_Systems;
+with PentDobl_CSeries_Polynomials;
+with PentDobl_CSeries_Poly_Systems;
+with OctoDobl_CSeries_Polynomials;
+with OctoDobl_CSeries_Poly_Systems;
+with DecaDobl_CSeries_Polynomials;
+with DecaDobl_CSeries_Poly_Systems;
 
 package Series_and_Homotopies is
 
 -- DESCRIPTION :
 --   A homotopy in one parameter is naturally encoded as a polynomial
 --   system with truncated power series as coefficients,
---   in double, double double, triple double and quad double precision.
+--   in double, double double, triple double, quad double, penta double,
+--   octo double, and deca double precision.
 
   function Create ( h : in Standard_Complex_Poly_Systems.Poly_Sys;
                     idx : in integer32; verbose : boolean := false )
@@ -43,6 +59,15 @@ package Series_and_Homotopies is
   function Create ( h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                     idx : in integer32; verbose : boolean := false )
                   return QuadDobl_CSeries_Poly_Systems.Poly_Sys;
+  function Create ( h : in PentDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return PentDobl_CSeries_Poly_Systems.Poly_Sys;
+  function Create ( h : in OctoDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return OctoDobl_CSeries_Poly_Systems.Poly_Sys;
+  function Create ( h : in DecaDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return DecaDobl_CSeries_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Given in h the output of Standard_Homotopy.Homotopy_System

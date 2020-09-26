@@ -7,6 +7,12 @@ with TripDobl_Complex_Series;
 with TripDobl_Complex_Series_Functions;
 with QuadDobl_Complex_Series;
 with QuadDobl_Complex_Series_Functions;
+with PentDobl_Complex_Series;
+with PentDobl_Complex_Series_Functions;
+with OctoDobl_Complex_Series;
+with OctoDobl_Complex_Series_Functions;
+with DecaDobl_Complex_Series;
+with DecaDobl_Complex_Series_Functions;
 with Complex_Series_and_Polynomials;
 
 package body Series_and_Homotopies is
@@ -52,6 +58,42 @@ package body Series_and_Homotopies is
                   return QuadDobl_CSeries_Poly_Systems.Poly_Sys is
 
     res : constant QuadDobl_CSeries_Poly_Systems.Poly_Sys
+        := Complex_Series_and_Polynomials.System_to_Series_System
+             (h,idx,verbose);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( h : in PentDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return PentDobl_CSeries_Poly_Systems.Poly_Sys is
+
+    res : constant PentDobl_CSeries_Poly_Systems.Poly_Sys
+        := Complex_Series_and_Polynomials.System_to_Series_System
+             (h,idx,verbose);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( h : in OctoDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return OctoDobl_CSeries_Poly_Systems.Poly_Sys is
+
+    res : constant OctoDobl_CSeries_Poly_Systems.Poly_Sys
+        := Complex_Series_and_Polynomials.System_to_Series_System
+             (h,idx,verbose);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( h : in DecaDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return DecaDobl_CSeries_Poly_Systems.Poly_Sys is
+
+    res : constant DecaDobl_CSeries_Poly_Systems.Poly_Sys
         := Complex_Series_and_Polynomials.System_to_Series_System
              (h,idx,verbose);
 
@@ -589,7 +631,7 @@ package body Series_and_Homotopies is
     procedure Shift_Term ( trm : in Standard_CSeries_Polynomials.Term;
                            cont : out boolean ) is
 
-      cff : Standard_Complex_Series.Link_to_Series := trm.cf;
+      cff : constant Standard_Complex_Series.Link_to_Series := trm.cf;
 
     begin
       Standard_Complex_Series_Functions.Shift(cff,c);
@@ -608,7 +650,7 @@ package body Series_and_Homotopies is
     procedure Shift_Term ( trm : in Standard_CSeries_Polynomials.Term;
                            cont : out boolean ) is
 
-      cff : Standard_Complex_Series.Link_to_Series := trm.cf;
+      cff : constant Standard_Complex_Series.Link_to_Series := trm.cf;
 
     begin
       Standard_Complex_Series_Functions.Shift(cff,c);
@@ -627,7 +669,7 @@ package body Series_and_Homotopies is
     procedure Shift_Term ( trm : in DoblDobl_CSeries_Polynomials.Term;
                            cont : out boolean ) is
 
-      cff : DoblDobl_Complex_Series.Link_to_Series := trm.cf;
+      cff : constant DoblDobl_Complex_Series.Link_to_Series := trm.cf;
 
     begin
       DoblDobl_Complex_Series_Functions.Shift(cff,c);
@@ -665,7 +707,7 @@ package body Series_and_Homotopies is
     procedure Shift_Term ( trm : in QuadDobl_CSeries_Polynomials.Term;
                            cont : out boolean ) is
 
-      cff : QuadDobl_Complex_Series.Link_to_Series := trm.cf;
+      cff : constant QuadDobl_Complex_Series.Link_to_Series := trm.cf;
 
     begin
       QuadDobl_Complex_Series_Functions.Shift(cff,c);
@@ -684,7 +726,7 @@ package body Series_and_Homotopies is
     procedure Shift_Term ( trm : in QuadDobl_CSeries_Polynomials.Term;
                            cont : out boolean ) is
 
-      cff : QuadDobl_Complex_Series.Link_to_Series := trm.cf;
+      cff : constant QuadDobl_Complex_Series.Link_to_Series := trm.cf;
 
     begin
       QuadDobl_Complex_Series_Functions.Shift(cff,c);

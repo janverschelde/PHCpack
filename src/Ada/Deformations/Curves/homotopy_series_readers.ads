@@ -4,6 +4,9 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with PentDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -18,13 +21,23 @@ with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Series_Vectors;
+with PentDobl_Complex_Poly_Systems;
+with PentDobl_Complex_Solutions;
+with PentDobl_Complex_Series_Vectors;
+with OctoDobl_Complex_Poly_Systems;
+with OctoDobl_Complex_Solutions;
+with OctoDobl_Complex_Series_Vectors;
+with DecaDobl_Complex_Poly_Systems;
+with DecaDobl_Complex_Solutions;
+with DecaDobl_Complex_Series_Vectors;
 with Partitions_of_Sets_of_Unknowns;    use Partitions_of_Sets_of_Unknowns;
 
 package Homotopy_Series_Readers is
 
 -- DESCRIPTION :
 --   Provides interactive procedures to setup of homotopies of series,
---   in double, double double, and quad double precision.
+--   in double, double double, triple double, quad double, penta double,
+--   octo double, and deca double precision.
 --   The homotopy is an artificial parameter homotopy
 --   or a natural parameter homotopy.
 
@@ -40,12 +53,22 @@ package Homotopy_Series_Readers is
   procedure QuadDobl_Projective_Transformation
               ( target,start
                  : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure PentDobl_Projective_Transformation
+              ( target,start
+                 : in out PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure OctoDobl_Projective_Transformation
+              ( target,start
+                 : in out OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure DecaDobl_Projective_Transformation
+              ( target,start
+                 : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Transforms the target and start system into homogeneous coordinates,
   --   adding one random linear equation to the target system and Z0 = 1 
   --   to the start system, adding 1 to every start solution,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   octo double, or deca double precision.
 
   -- ON ENTRY :
   --   target   target system in an artificial-parameter homotopy;
@@ -73,6 +96,18 @@ package Homotopy_Series_Readers is
               ( target : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
+  procedure PentDobl_Projective_Transformation
+              ( target : in out PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out PentDobl_Complex_Solutions.Solution_List );
+  procedure OctoDobl_Projective_Transformation
+              ( target : in out OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out OctoDobl_Complex_Solutions.Solution_List );
+  procedure DecaDobl_Projective_Transformation
+              ( target : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out DecaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Transforms the target, start system, and its start solutions
@@ -108,12 +143,25 @@ package Homotopy_Series_Readers is
               ( target,start
                   : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 m : in natural32; z : in Partition );
+  procedure PentDobl_Multi_Projective_Transformation
+              ( target,start
+                  : in out PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition );
+  procedure OctoDobl_Multi_Projective_Transformation
+              ( target,start
+                  : in out OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition );
+  procedure DecaDobl_Multi_Projective_Transformation
+              ( target,start
+                  : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition );
 
   -- DESCRIPTION :
   --   Transforms the target and start system into m-homogeneous coordinates,
   --   adding m random linear equations to the target system and Zi = 1,
   --   for i in 1..m, to the start system, adding 1 to every start solution,
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double, penta double,
+  --   octo double, or deca double precision.
 
   -- ON ENTRY :
   --   target   target system in an artificial-parameter homotopy;
@@ -146,6 +194,21 @@ package Homotopy_Series_Readers is
               ( target : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition );
+  procedure PentDobl_Multi_Projective_Transformation
+              ( target : in out PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out PentDobl_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition );
+  procedure OctoDobl_Multi_Projective_Transformation
+              ( target : in out OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out OctoDobl_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition );
+  procedure DecaDobl_Multi_Projective_Transformation
+              ( target : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out DecaDobl_Complex_Solutions.Solution_List;
                 m : in natural32; z : in Partition );
 
   -- DESCRIPTION :
@@ -192,6 +255,24 @@ package Homotopy_Series_Readers is
                -- tpow : in natural32;
                 gamma : in QuadDobl_Complex_Numbers.Complex_Number;
                 homcrd,rabin : in boolean := false );
+  procedure PentDobl_Reader
+              ( nbequ : out integer32;
+                sols : out PentDobl_Complex_Solutions.Solution_List;
+               -- tpow : in natural32;
+                gamma : in PentDobl_Complex_Numbers.Complex_Number;
+                homcrd,rabin : in boolean := false );
+  procedure OctoDobl_Reader
+              ( nbequ : out integer32;
+                sols : out OctoDobl_Complex_Solutions.Solution_List;
+               -- tpow : in natural32;
+                gamma : in OctoDobl_Complex_Numbers.Complex_Number;
+                homcrd,rabin : in boolean := false );
+  procedure DecaDobl_Reader
+              ( nbequ : out integer32;
+                sols : out DecaDobl_Complex_Solutions.Solution_List;
+               -- tpow : in natural32;
+                gamma : in DecaDobl_Complex_Numbers.Complex_Number;
+                homcrd,rabin : in boolean := false );
 
   -- DESCRIPTION :
   --   Prompts for a target system, a start system with start solutions.
@@ -230,6 +311,21 @@ package Homotopy_Series_Readers is
                 sols : out QuadDobl_Complex_Solutions.Solution_List;
                -- tpow : in natural32 := 2;
                 homcrd,rabin : in boolean := false );
+  procedure PentDobl_Reader
+              ( nbequ : out integer32;
+                sols : out PentDobl_Complex_Solutions.Solution_List;
+               -- tpow : in natural32 := 2;
+                homcrd,rabin : in boolean := false );
+  procedure OctoDobl_Reader
+              ( nbequ : out integer32;
+                sols : out OctoDobl_Complex_Solutions.Solution_List;
+               -- tpow : in natural32 := 2;
+                homcrd,rabin : in boolean := false );
+  procedure DecaDobl_Reader
+              ( nbequ : out integer32;
+                sols : out DecaDobl_Complex_Solutions.Solution_List;
+               -- tpow : in natural32 := 2;
+                homcrd,rabin : in boolean := false );
 
   -- DESCRIPTION :
   --   Prompts for a target system, a start system with start solutions.
@@ -258,10 +354,20 @@ package Homotopy_Series_Readers is
   procedure QuadDobl_Parameter_Reader
               ( nbequ,nbvar,idxpar : out integer32;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
+  procedure PentDobl_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out PentDobl_Complex_Solutions.Solution_List );
+  procedure OctoDobl_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out OctoDobl_Complex_Solutions.Solution_List );
+  procedure DecaDobl_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out DecaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Prompts the user for a natural parameter homotopy and start solutions
-  --   in double, double double, triple double, or quad double precision.
+  --   in double, double double, triple double, quad double,
+  --   penta double, octo double, or deca double precision.
   --   Assumes there is only one natural parameter.
 
   -- ON RETURN :

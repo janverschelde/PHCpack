@@ -7,6 +7,9 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with PentDobl_Complex_Solutions;
+with OctoDobl_Complex_Solutions;
+with DecaDobl_Complex_Solutions;
 with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 with Homotopy_Continuation_Parameters;
 
@@ -219,6 +222,24 @@ package Series_Path_Trackers is
                 mhom : out natural32; z : out Link_to_Partition;
                 idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
+  procedure PentDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out PentDobl_Complex_Solutions.Solution_List );
+  procedure OctoDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out OctoDobl_Complex_Solutions.Solution_List );
+  procedure DecaDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out DecaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Prompts the user for target and start system and defines
@@ -260,6 +281,24 @@ package Series_Path_Trackers is
                 mhom : out natural32; z : out Link_to_Partition;
                 idz : out Standard_Natural_Vectors.Link_to_Vector;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
+  procedure PentDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out PentDobl_Complex_Solutions.Solution_List );
+  procedure OctoDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out OctoDobl_Complex_Solutions.Solution_List );
+  procedure DecaDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out DecaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Prompts the user for target and start system and defines

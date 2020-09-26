@@ -10,6 +10,12 @@ with TripDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers_cv;        use TripDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
+with PentDobl_Complex_Numbers;
+with PentDobl_Complex_Numbers_cv;        use PentDobl_Complex_Numbers_cv;
+with OctoDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers_cv;        use OctoDobl_Complex_Numbers_cv;
+with DecaDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers_cv;        use DecaDobl_Complex_Numbers_cv;
 with Characters_and_Numbers;
 with Numbers_io;                         use Numbers_io;
 with Symbol_Table;
@@ -37,6 +43,15 @@ with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Hessians;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
+with PentDobl_Complex_Poly_Systems;
+with PentDobl_Complex_Poly_Systems_io;   use PentDobl_Complex_Poly_Systems_io;
+with PentDobl_System_and_Solutions_io;
+with OctoDobl_Complex_Poly_Systems;
+with OctoDobl_Complex_Poly_Systems_io;   use OctoDobl_Complex_Poly_Systems_io;
+with OctoDobl_System_and_Solutions_io;
+with DecaDobl_Complex_Poly_Systems;
+with DecaDobl_Complex_Poly_Systems_io;   use DecaDobl_Complex_Poly_Systems_io;
+with DecaDobl_System_and_Solutions_io;
 with Solution_Drops;
 with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
@@ -46,6 +61,12 @@ with TripDobl_Homotopy;
 with TripDobl_Coefficient_Homotopy;
 with QuadDobl_Homotopy;
 with QuadDobl_Coefficient_Homotopy;
+with PentDobl_Homotopy;
+with PentDobl_Coefficient_Homotopy;
+with OctoDobl_Homotopy;
+with OctoDobl_Coefficient_Homotopy;
+with DecaDobl_Homotopy;
+with DecaDobl_Coefficient_Homotopy;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_VecVecs;
@@ -1054,6 +1075,126 @@ package body Series_Path_Trackers is
     end if;
   end QuadDobl_Define_Homotopy;
 
+  procedure PentDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out PentDobl_Complex_Solutions.Solution_List ) is
+
+    target,start : PentDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    pd_gamma : constant PentDobl_Complex_Numbers.Complex_Number
+             := Standard_to_PentDobl_Complex(gamma);
+
+    use Homotopy_Series_Readers;
+
+  begin
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system and its solutions ...");
+    PentDobl_System_and_Solutions_io.get(start,sols);
+    nvr := PentDobl_Complex_Solutions.Head_Of(sols).n;
+    nbq := target'last;
+    mhom := Prompt_for_Homogenization(natural32(nvr));
+    if mhom = 0 then
+      PentDobl_Homotopy.Create(target.all,start.all,2,pd_gamma);
+    else
+      if mhom = 1 then
+        PentDobl_Projective_Transformation(target,start,sols);
+        Add_Multihomogeneous_Symbols(1);
+        nvr := nvr + 1; nbq := nbq + 1;
+      else
+        Define_Partition(natural32(nvr),mhom,idz,z);
+        PentDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+        Add_Multihomogeneous_Symbols(mhom);
+        nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      end if;
+      PentDobl_Homotopy.Create(target.all,start.all,1,pd_gamma);
+      PentDobl_Coefficient_Homotopy.Create(start.all,target.all,1,pd_gamma);
+    end if;
+  end PentDobl_Define_Homotopy;
+
+  procedure OctoDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out OctoDobl_Complex_Solutions.Solution_List ) is
+
+    target,start : OctoDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    od_gamma : constant OctoDobl_Complex_Numbers.Complex_Number
+             := Standard_to_OctoDobl_Complex(gamma);
+
+    use Homotopy_Series_Readers;
+
+  begin
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system and its solutions ...");
+    OctoDobl_System_and_Solutions_io.get(start,sols);
+    nvr := OctoDobl_Complex_Solutions.Head_Of(sols).n;
+    nbq := target'last;
+    mhom := Prompt_for_Homogenization(natural32(nvr));
+    if mhom = 0 then
+      OctoDobl_Homotopy.Create(target.all,start.all,2,od_gamma);
+    else
+      if mhom = 1 then
+        OctoDobl_Projective_Transformation(target,start,sols);
+        Add_Multihomogeneous_Symbols(1);
+        nvr := nvr + 1; nbq := nbq + 1;
+      else
+        Define_Partition(natural32(nvr),mhom,idz,z);
+        OctoDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+        Add_Multihomogeneous_Symbols(mhom);
+        nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      end if;
+      OctoDobl_Homotopy.Create(target.all,start.all,1,od_gamma);
+      OctoDobl_Coefficient_Homotopy.Create(start.all,target.all,1,od_gamma);
+    end if;
+  end OctoDobl_Define_Homotopy;
+
+  procedure DecaDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out DecaDobl_Complex_Solutions.Solution_List ) is
+
+    target,start : DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    da_gamma : constant DecaDobl_Complex_Numbers.Complex_Number
+             := Standard_to_DecaDobl_Complex(gamma);
+
+    use Homotopy_Series_Readers;
+
+  begin
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system and its solutions ...");
+    DecaDobl_System_and_Solutions_io.get(start,sols);
+    nvr := DecaDobl_Complex_Solutions.Head_Of(sols).n;
+    nbq := target'last;
+    mhom := Prompt_for_Homogenization(natural32(nvr));
+    if mhom = 0 then
+      DecaDobl_Homotopy.Create(target.all,start.all,2,da_gamma);
+    else
+      if mhom = 1 then
+        DecaDobl_Projective_Transformation(target,start,sols);
+        Add_Multihomogeneous_Symbols(1);
+        nvr := nvr + 1; nbq := nbq + 1;
+      else
+        Define_Partition(natural32(nvr),mhom,idz,z);
+        DecaDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+        Add_Multihomogeneous_Symbols(mhom);
+        nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      end if;
+      DecaDobl_Homotopy.Create(target.all,start.all,1,da_gamma);
+      DecaDobl_Coefficient_Homotopy.Create(start.all,target.all,1,da_gamma);
+    end if;
+  end DecaDobl_Define_Homotopy;
+
   procedure Standard_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -1093,6 +1234,36 @@ package body Series_Path_Trackers is
   begin
     QuadDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
   end QuadDobl_Define_Homotopy;
+
+  procedure PentDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out PentDobl_Complex_Solutions.Solution_List ) is
+  begin
+    PentDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
+  end PentDobl_Define_Homotopy;
+
+  procedure OctoDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out OctoDobl_Complex_Solutions.Solution_List ) is
+  begin
+    OctoDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
+  end OctoDobl_Define_Homotopy;
+
+  procedure DecaDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out DecaDobl_Complex_Solutions.Solution_List ) is
+  begin
+    DecaDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
+  end DecaDobl_Define_Homotopy;
 
   procedure Standard_Main ( vrb : in integer32 := 0 ) is
 

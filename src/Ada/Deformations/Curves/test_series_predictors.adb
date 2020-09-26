@@ -8,6 +8,9 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with PentDobl_Complex_Numbers;
+with OctoDobl_Complex_Numbers;
+with DecaDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
@@ -232,5 +235,107 @@ package body Test_Series_Predictors is
       end if;
     end if;
   end QuadDobl_Homotopy_Reader;
+
+  procedure PentDobl_Homotopy_Reader
+              ( nbeq,idxpar : out integer32;
+                sols : out PentDobl_Complex_Solutions.Solution_List ) is
+
+    ans : character;
+    nvr : integer32;
+
+  begin
+    new_line;
+    put("Natural parameter homotopy ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Homotopy_Series_Readers.PentDobl_Parameter_Reader(nbeq,nvr,idxpar,sols);
+    else
+      idxpar := 0;
+      new_line;
+      put("Random gamma ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+       -- Homotopy_Series_Readers.PentDobl_Reader(nbeq,sols,tpow=>1);
+        Homotopy_Series_Readers.PentDobl_Reader(nbeq,sols);
+      else
+        declare
+          one : constant penta_double := create(1.0);
+          gamma : constant PentDobl_Complex_Numbers.Complex_Number
+                := PentDobl_Complex_Numbers.Create(one);
+        begin
+         -- Homotopy_Series_Readers.PentDobl_Reader(nbeq,sols,1,gamma);
+          Homotopy_Series_Readers.PentDobl_Reader(nbeq,sols,gamma);
+        end;
+      end if;
+    end if;
+  end PentDobl_Homotopy_Reader;
+
+  procedure OctoDobl_Homotopy_Reader
+              ( nbeq,idxpar : out integer32;
+                sols : out OctoDobl_Complex_Solutions.Solution_List ) is
+
+    ans : character;
+    nvr : integer32;
+
+  begin
+    new_line;
+    put("Natural parameter homotopy ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Homotopy_Series_Readers.OctoDobl_Parameter_Reader(nbeq,nvr,idxpar,sols);
+    else
+      idxpar := 0;
+      new_line;
+      put("Random gamma ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+       -- Homotopy_Series_Readers.OctoDobl_Reader(nbeq,sols,tpow=>1);
+        Homotopy_Series_Readers.OctoDobl_Reader(nbeq,sols);
+      else
+        declare
+          one : constant octo_double := create(1.0);
+          gamma : constant OctoDobl_Complex_Numbers.Complex_Number
+                := OctoDobl_Complex_Numbers.Create(one);
+        begin
+         -- Homotopy_Series_Readers.OctoDobl_Reader(nbeq,sols,1,gamma);
+          Homotopy_Series_Readers.OctoDobl_Reader(nbeq,sols,gamma);
+        end;
+      end if;
+    end if;
+  end OctoDobl_Homotopy_Reader;
+
+  procedure DecaDobl_Homotopy_Reader
+              ( nbeq,idxpar : out integer32;
+                sols : out DecaDobl_Complex_Solutions.Solution_List ) is
+
+    ans : character;
+    nvr : integer32;
+
+  begin
+    new_line;
+    put("Natural parameter homotopy ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Homotopy_Series_Readers.DecaDobl_Parameter_Reader(nbeq,nvr,idxpar,sols);
+    else
+      idxpar := 0;
+      new_line;
+      put("Random gamma ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+       -- Homotopy_Series_Readers.DecaDobl_Reader(nbeq,sols,tpow=>1);
+        Homotopy_Series_Readers.DecaDobl_Reader(nbeq,sols);
+      else
+        declare
+          one : constant deca_double := create(1.0);
+          gamma : constant DecaDobl_Complex_Numbers.Complex_Number
+                := DecaDobl_Complex_Numbers.Create(one);
+        begin
+         -- Homotopy_Series_Readers.DecaDobl_Reader(nbeq,sols,1,gamma);
+          Homotopy_Series_Readers.DecaDobl_Reader(nbeq,sols,gamma);
+        end;
+      end if;
+    end if;
+  end DecaDobl_Homotopy_Reader;
 
 end Test_Series_Predictors;
