@@ -9,10 +9,19 @@ with TripDobl_Complex_Polynomials;
 with TripDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
+with PentDobl_Complex_Polynomials;
+with PentDobl_Complex_Poly_Systems;
+with OctoDobl_Complex_Polynomials;
+with OctoDobl_Complex_Poly_Systems;
+with DecaDobl_Complex_Polynomials;
+with DecaDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with TripDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
+with PentDobl_Complex_Solutions;
+with OctoDobl_Complex_Solutions;
+with DecaDobl_Complex_Solutions;
 with Sets_of_Unknowns;
 with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 
@@ -23,7 +32,8 @@ package Multi_Projective_Transformations is
 --   After a multi-projective transformation, the degree of a term in a set
 --   of the partition is the same for all terms in the multi-homogenous form
 --   of the polynomial.  Transformations are supported for polynomials with
---   coefficients in double, double double, and quad double precision.
+--   coefficients in double, double double, triple double, quad double,
+--   penta double, octo double, and deca double precision.
 
   function Multiset_Degrees
              ( p : in Standard_Complex_Polynomials.Poly;
@@ -39,6 +49,18 @@ package Multi_Projective_Transformations is
              return Standard_Integer_Vectors.Vector;
   function Multiset_Degrees
              ( p : in QuadDobl_Complex_Polynomials.Poly;
+               m : in natural32; z : in Partition )
+             return Standard_Integer_Vectors.Vector;
+  function Multiset_Degrees
+             ( p : in PentDobl_Complex_Polynomials.Poly;
+               m : in natural32; z : in Partition )
+             return Standard_Integer_Vectors.Vector;
+  function Multiset_Degrees
+             ( p : in OctoDobl_Complex_Polynomials.Poly;
+               m : in natural32; z : in Partition )
+             return Standard_Integer_Vectors.Vector;
+  function Multiset_Degrees
+             ( p : in DecaDobl_Complex_Polynomials.Poly;
                m : in natural32; z : in Partition )
              return Standard_Integer_Vectors.Vector;
 
@@ -66,6 +88,21 @@ package Multi_Projective_Transformations is
                d : Standard_Integer_Vectors.Vector;
                m : natural32; z : Partition )
              return QuadDobl_Complex_Polynomials.Term;
+  function Make_Homogeneous
+             ( t : PentDobl_Complex_Polynomials.Term; 
+               d : Standard_Integer_Vectors.Vector;
+               m : natural32; z : Partition )
+             return PentDobl_Complex_Polynomials.Term;
+  function Make_Homogeneous
+             ( t : OctoDobl_Complex_Polynomials.Term; 
+               d : Standard_Integer_Vectors.Vector;
+               m : natural32; z : Partition )
+             return OctoDobl_Complex_Polynomials.Term;
+  function Make_Homogeneous
+             ( t : DecaDobl_Complex_Polynomials.Term; 
+               d : Standard_Integer_Vectors.Vector;
+               m : natural32; z : Partition )
+             return DecaDobl_Complex_Polynomials.Term;
 
   -- DESCRIPTION :
   --   Returns the term with m variables added,
@@ -87,6 +124,18 @@ package Multi_Projective_Transformations is
              ( p : QuadDobl_Complex_Polynomials.Poly; 
                m : natural32; z : Partition )
              return QuadDobl_Complex_Polynomials.Poly;
+  function Make_Homogeneous
+             ( p : PentDobl_Complex_Polynomials.Poly; 
+               m : natural32; z : Partition )
+             return PentDobl_Complex_Polynomials.Poly;
+  function Make_Homogeneous
+             ( p : OctoDobl_Complex_Polynomials.Poly; 
+               m : natural32; z : Partition )
+             return OctoDobl_Complex_Polynomials.Poly;
+  function Make_Homogeneous
+             ( p : DecaDobl_Complex_Polynomials.Poly; 
+               m : natural32; z : Partition )
+             return DecaDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the polynomial p with m variables added,
@@ -108,6 +157,18 @@ package Multi_Projective_Transformations is
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys; 
                m : natural32; z : Partition )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Make_Homogeneous
+             ( p : PentDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition )
+             return PentDobl_Complex_Poly_Systems.Poly_Sys;
+  function Make_Homogeneous
+             ( p : OctoDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition )
+             return OctoDobl_Complex_Poly_Systems.Poly_Sys;
+  function Make_Homogeneous
+             ( p : DecaDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition )
+             return DecaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns the polynomial system p with m variables added,
@@ -125,6 +186,15 @@ package Multi_Projective_Transformations is
   function QuadDobl_Random_Linear_Term
              ( n,i : natural32 )
              return QuadDobl_Complex_Polynomials.Term;
+  function PentDobl_Random_Linear_Term
+             ( n,i : natural32 )
+             return PentDobl_Complex_Polynomials.Term;
+  function OctoDobl_Random_Linear_Term
+             ( n,i : natural32 )
+             return OctoDobl_Complex_Polynomials.Term;
+  function DecaDobl_Random_Linear_Term
+             ( n,i : natural32 )
+             return DecaDobl_Complex_Polynomials.Term;
 
   -- DESCRIPTION :
   --   Returns a term in the i-th variable, with random coefficient,
@@ -142,6 +212,15 @@ package Multi_Projective_Transformations is
   function QuadDobl_Start_Linear_Term
              ( n,i : natural32 )
              return QuadDobl_Complex_Polynomials.Term;
+  function PentDobl_Start_Linear_Term
+             ( n,i : natural32 )
+             return PentDobl_Complex_Polynomials.Term;
+  function OctoDobl_Start_Linear_Term
+             ( n,i : natural32 )
+             return OctoDobl_Complex_Polynomials.Term;
+  function DecaDobl_Start_Linear_Term
+             ( n,i : natural32 )
+             return DecaDobl_Complex_Polynomials.Term;
 
   -- DESCRIPTION :
   --   Returns the i-th variable as a term in n variables,
@@ -159,6 +238,15 @@ package Multi_Projective_Transformations is
   function QuadDobl_Random_Linear_Polynomial
              ( n : natural32; s : Sets_of_Unknowns.Set )
              return QuadDobl_Complex_Polynomials.Poly;
+  function PentDobl_Random_Linear_Polynomial
+             ( n : natural32; s : Sets_of_Unknowns.Set )
+             return PentDobl_Complex_Polynomials.Poly;
+  function OctoDobl_Random_Linear_Polynomial
+             ( n : natural32; s : Sets_of_Unknowns.Set )
+             return OctoDobl_Complex_Polynomials.Poly;
+  function DecaDobl_Random_Linear_Polynomial
+             ( n : natural32; s : Sets_of_Unknowns.Set )
+             return DecaDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns a linear polynomial in the variables in s,
@@ -176,6 +264,15 @@ package Multi_Projective_Transformations is
   function QuadDobl_Start_Linear_Polynomial
              ( n,i : natural32 )
              return QuadDobl_Complex_Polynomials.Poly;
+  function PentDobl_Start_Linear_Polynomial
+             ( n,i : natural32 )
+             return PentDobl_Complex_Polynomials.Poly;
+  function OctoDobl_Start_Linear_Polynomial
+             ( n,i : natural32 )
+             return OctoDobl_Complex_Polynomials.Poly;
+  function DecaDobl_Start_Linear_Polynomial
+             ( n,i : natural32 )
+             return DecaDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the start polynomial Zi - 1,
@@ -193,6 +290,15 @@ package Multi_Projective_Transformations is
   function QuadDobl_Random_Linear_Polynomials
              ( n,m : natural32; z : Partition )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function PentDobl_Random_Linear_Polynomials
+             ( n,m : natural32; z : Partition )
+             return PentDobl_Complex_Poly_Systems.Poly_Sys;
+  function OctoDobl_Random_Linear_Polynomials
+             ( n,m : natural32; z : Partition )
+             return OctoDobl_Complex_Poly_Systems.Poly_Sys;
+  function DecaDobl_Random_Linear_Polynomials
+             ( n,m : natural32; z : Partition )
+             return DecaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns m random linear polynomials in n+m variables in the sets
@@ -211,6 +317,15 @@ package Multi_Projective_Transformations is
   function QuadDobl_Start_Linear_Polynomials
              ( n,m : natural32 )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function PentDobl_Start_Linear_Polynomials
+             ( n,m : natural32 )
+             return PentDobl_Complex_Poly_Systems.Poly_Sys;
+  function OctoDobl_Start_Linear_Polynomials
+             ( n,m : natural32 )
+             return OctoDobl_Complex_Poly_Systems.Poly_Sys;
+  function DecaDobl_Start_Linear_Polynomials
+             ( n,m : natural32 )
+             return DecaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns m start polynomials in n+m variables Zi - 1,
@@ -228,6 +343,15 @@ package Multi_Projective_Transformations is
   function Add_Ones ( s : QuadDobl_Complex_Solutions.Solution;
                       m : natural32 )
                     return QuadDobl_Complex_Solutions.Solution;
+  function Add_Ones ( s : PentDobl_Complex_Solutions.Solution;
+                      m : natural32 )
+                    return PentDobl_Complex_Solutions.Solution;
+  function Add_Ones ( s : OctoDobl_Complex_Solutions.Solution;
+                      m : natural32 )
+                    return OctoDobl_Complex_Solutions.Solution;
+  function Add_Ones ( s : DecaDobl_Complex_Solutions.Solution;
+                      m : natural32 )
+                    return DecaDobl_Complex_Solutions.Solution;
 
   -- DESCRIPTION :
   --   Returns a solution with the same coordinates as in s,
@@ -245,6 +369,15 @@ package Multi_Projective_Transformations is
   function Add_Ones ( sols : QuadDobl_Complex_Solutions.Solution_List;
                       m : natural32 )
                     return QuadDobl_Complex_Solutions.Solution_List;
+  function Add_Ones ( sols : PentDobl_Complex_Solutions.Solution_List;
+                      m : natural32 )
+                    return PentDobl_Complex_Solutions.Solution_List;
+  function Add_Ones ( sols : OctoDobl_Complex_Solutions.Solution_List;
+                      m : natural32 )
+                    return OctoDobl_Complex_Solutions.Solution_List;
+  function Add_Ones ( sols : DecaDobl_Complex_Solutions.Solution_List;
+                      m : natural32 )
+                    return DecaDobl_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
   --   Returns the solutions with the same coordinates as in sols,
@@ -257,6 +390,12 @@ package Multi_Projective_Transformations is
   procedure Add_Ones ( sols : in out TripDobl_Complex_Solutions.Solution_List;
                        m : in natural32 );
   procedure Add_Ones ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                       m : in natural32 );
+  procedure Add_Ones ( sols : in out PentDobl_Complex_Solutions.Solution_List;
+                       m : in natural32 );
+  procedure Add_Ones ( sols : in out OctoDobl_Complex_Solutions.Solution_List;
+                       m : in natural32 );
+  procedure Add_Ones ( sols : in out DecaDobl_Complex_Solutions.Solution_List;
                        m : in natural32 );
 
   -- DESCRIPTION :
@@ -335,6 +474,18 @@ package Multi_Projective_Transformations is
              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys; 
                m : natural32; z : Partition; start : boolean := false )
              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Multi_Projective_Transformation
+             ( p : PentDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return PentDobl_Complex_Poly_Systems.Poly_Sys;
+  function Multi_Projective_Transformation
+             ( p : OctoDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return OctoDobl_Complex_Poly_Systems.Poly_Sys;
+  function Multi_Projective_Transformation
+             ( p : DecaDobl_Complex_Poly_Systems.Poly_Sys; 
+               m : natural32; z : Partition; start : boolean := false )
+             return DecaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns the polynomial system p with m variables added,

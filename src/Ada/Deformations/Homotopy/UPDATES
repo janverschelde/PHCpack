@@ -1,3 +1,6 @@
+Fri 25 Sep 2020 : extended homogenization, projective_transformations, and
+  multi_projective_transformations for penta, octo, and deca doubles.
+
 Thu 24 Sep 2020 : new test_ packages on polynomial homotopies in double,
   double double, triple double, penta double, octo double, and deca double
   precision, to test the new {pent,octo,deca}dobl_homotopy.
