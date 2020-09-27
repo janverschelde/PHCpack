@@ -1,3 +1,6 @@
+Sun 27 Sep 2020 : new test procedure ts_bbsolve with a basic test on the
+  new polyhedral black box solver.
+
 Sat 26 Sep 2020 : moved special cases from black_box_solver_cases into
   new packages: black_box_helpers, black_box_single_solvers,
   black_box_linear_solvers, black_box_square_solvers, which changed
