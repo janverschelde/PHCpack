@@ -2,6 +2,9 @@ Sat 26 Sep 2020 : moved special cases from black_box_solver_cases into
   new packages: black_box_helpers, black_box_single_solvers,
   black_box_linear_solvers, black_box_square_solvers, which changed
   black_box_solvers.adb, bablphc.adb, bablphc2.adb, and bablphc4.adb.
+  Extended black_box_solvers with polyhedral_solve procedures,
+  calling procedures from the new black_box_mixed_volumes package,
+  with extensions done in root_counters_output.
 
 Sun 23 Aug 2020 : in mainvali.adb passed the verbose level to deflation.
 

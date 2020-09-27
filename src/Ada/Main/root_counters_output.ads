@@ -21,6 +21,17 @@ package Root_Counters_Output is
   --   d         total degree;
   --   mp_d      multiprecision version of total degree (if overflow).
 
+  procedure Write_Mixed_Volumes
+               ( file : in file_type; mv,smv : in natural32 );
+
+  -- DESCRIPTION :
+  --   Writes the mixed volumes to file.
+
+  -- ON ENTRY :
+  --   file      to write root counts to;
+  --   mv        mixed volume;
+  --   smv       stable mixed volume.
+
   procedure Write_Root_Counts
                ( file : in file_type; no_mv : in boolean;
                  d : in natural64; mp_d : in Natural_Number;
@@ -31,7 +42,7 @@ package Root_Counters_Output is
   --   Writes root counts and set structures to file.
 
   -- ON ENTRY :
-  --   file      to write root counts on (could be standard_output);
+  --   file      to write root counts to;
   --   no_mv     if no mixed volume was computed;
   --   d         total degree;
   --   mp_d      multiprecision version of total degree (if overflow);
@@ -66,7 +77,14 @@ package Root_Counters_Output is
              ( d : in natural64; mv,smv : in natural32 ) return string;
 
   -- DESCRIPTION :
-  --   Write total degree d, mixed volume mv, and stable mixed volume smv
+  --   Writes total degree d, mixed volume mv, and stable mixed volume smv
+  --   to a string, which is returned.
+
+  function Mixed_Volumes_to_String
+             ( mv,smv : in natural32 ) return string;
+
+  -- DESCRIPTION :
+  --   Writes the mixed volume mv and stable mixed volume smv
   --   to a string, which is returned.
 
 end Root_Counters_Output;

@@ -30,6 +30,37 @@ package Black_Box_Solvers is
 --   procedures return also the root counter string.
 --   This results in a total of 36 Solve procedures.
 
+  procedure Polyhedral_Solve
+                  ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    silent,deflate : in boolean;
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+  procedure Polyhedral_Solve
+                  ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    deflate : in boolean;
+                    rc : out natural32; rocos : out Link_to_String;
+                    sols : out Standard_Complex_Solutions.Solution_List;
+                    verbose : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Applies polyhedral homotopies in blackbox mode to solve p.
+
+  -- ON INPUT :
+  --   p            a polynomial system;
+  --   silent       if true, then the computed root counts will not be shown,
+  --                if false, then the user will see the computed root counts
+  --                displayed on screen;
+  --   deflate      if not deflate, then no deflation will be applied;
+  --   verbose      the verbose level.
+
+  -- ON RETURN :
+  --   rc           root count used in the homotopy to solve p;
+  --   rocos        string with the root count information,
+  --                displayed in the format as when silent is false
+  --                in the first Polyhedral_Solve;
+  --   sols         solutions found at the end of the paths.
+
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;
                     rc : out natural32;

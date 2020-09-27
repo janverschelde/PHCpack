@@ -23,6 +23,16 @@ package body Root_Counters_Output is
     end if;
   end Write_Total_Degree;
 
+  procedure Write_Mixed_Volumes
+               ( file : in file_type; mv,smv : in natural32 ) is
+  begin
+    new_line(file);
+    put_line(file,"ROOT COUNTS :");
+    new_line(file);
+    put(file,"mixed volume : "); put(file,mv,1); new_line(file);
+    put(file,"stable mixed volume : "); put(file,smv,1); new_line(file);
+  end Write_Mixed_Volumes;
+
   procedure Write_Root_Counts
                ( file : in file_type; no_mv : in boolean;
                  d : in natural64; mp_d : in Natural_Number;
@@ -56,7 +66,7 @@ package body Root_Counters_Output is
     use String_Splitters;
 
     res : Link_to_String;
-    nlc : character := ASCII.LF;
+    nlc : constant character := ASCII.LF;
     snl : constant string(1..1) := (1..1 => nlc);
 
   begin
@@ -84,11 +94,13 @@ package body Root_Counters_Output is
         Append(res,snl);
       end loop;
     end if;
-    Append(res,"mixed volume : ");
-    Append(res,Characters_and_Numbers.nConvert(mv));
-    Append(res,snl);
-    Append(res,"stable mixed volume : ");
-    Append(res,Characters_and_Numbers.nConvert(smv));
+    if not no_mv then
+      Append(res,"mixed volume : ");
+      Append(res,Characters_and_Numbers.nConvert(mv));
+      Append(res,snl);
+      Append(res,"stable mixed volume : ");
+      Append(res,Characters_and_Numbers.nConvert(smv));
+    end if;
     return res.all;
   end Root_Counts_to_String;
 
@@ -98,13 +110,31 @@ package body Root_Counters_Output is
     use String_Splitters;
 
     res : Link_to_String;
-    nlc : character := ASCII.LF;
+    nlc : constant character := ASCII.LF;
     snl : constant string(1..1) := (1..1 => nlc);
 
   begin
     Append(res,"total degree : ");
     Append(res,Characters_and_Numbers.nConvert(d));
     Append(res,snl);
+    Append(res,"mixed volume : ");
+    Append(res,Characters_and_Numbers.nConvert(mv));
+    Append(res,snl);
+    Append(res,"stable mixed volume : ");
+    Append(res,Characters_and_Numbers.nConvert(smv));
+    return res.all;
+  end Mixed_Volumes_to_String;
+
+  function Mixed_Volumes_to_String
+             ( mv,smv : in natural32 ) return string is
+
+    use String_Splitters;
+
+    res : Link_to_String;
+    nlc : constant character := ASCII.LF;
+    snl : constant string(1..1) := (1..1 => nlc);
+
+  begin
     Append(res,"mixed volume : ");
     Append(res,Characters_and_Numbers.nConvert(mv));
     Append(res,snl);
