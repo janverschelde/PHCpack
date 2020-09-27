@@ -2322,13 +2322,32 @@ ts_mtprdcnv: get_clock.o get_clocks_per_sec.o
 
 # Test programs for the Main interactive drivers :
 
-ts_drivroco:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_drivroco.adb
-	gnatbl -o $(BIN)/ts_drivroco ts_drivroco.ali
+ts_greet:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_greet.adb -o $(BIN)/ts_greet
 
-use_phc:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_phc.adb
-	gnatbl -o $(BIN)/use_phc use_phc.ali
+ts_drivroco: get_clock.o get_clocks_per_sec.o \
+             inputData.o outputData.o iTest.o fTest.o reltab.o \
+             simplex4phc.o mvc4phc.o demicsrun4phc.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_drivroco.adb \
+                 -o ts_drivroco
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind ts_drivroco use_c2phc
+	gnatlink ts_drivroco inputData.o outputData.o iTest.o fTest.o \
+                 get_clock.o get_clocks_per_sec.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o $(BIN)/ts_drivroco --LINK=$(gpp) 
+
+ts_bbsolve: get_clock.o get_clocks_per_sec.o \
+            inputData.o outputData.o iTest.o fTest.o reltab.o \
+            simplex4phc.o mvc4phc.o demicsrun4phc.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_bbsolve.adb \
+                 -o ts_bbsolve
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind ts_bbsolve use_c2phc
+	gnatlink ts_bbsolve inputData.o outputData.o iTest.o fTest.o \
+                 get_clock.o get_clocks_per_sec.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o $(BIN)/ts_bbsolve --LINK=$(gpp) 
 
 # Test programs for the Library Lib :
 

@@ -3210,6 +3210,16 @@ ts_opthand: corecount.o inputData.o outputData.o iTest.o fTest.o \
                             feedback.o lib.a \
                  -o $(BIN)/ts_opthand --LINK=$(gpp) 
 
+ts_bbsolve: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc4phc.o demicsrun4phc.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_bbsolve.adb \
+                 -o ts_bbsolve.o
+	gnatbind ts_bbsolve use_c2phc
+	gnatlink ts_bbsolve inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o $(BIN)/ts_bbsolve --LINK=$(gpp) 
+
 # Test programs for the Library Lib :
 
 phcpack.o:

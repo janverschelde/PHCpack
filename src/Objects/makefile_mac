@@ -65,12 +65,12 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 # GNATFLAGS=-gnatv -O3 -gnatp -gnatf
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
+# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
-# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-# GNATFLAGS=-gnatv -gnatwa -gnatVa
+GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+GNATFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -320,10 +320,6 @@ ts_pdcmplx:
 ts_dacmplx:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dacmplx.adb \
               -o $(BIN)/ts_dacmplx
-
-ts_mpcasts:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mpcasts.adb \
-              -o $(BIN)/ts_mpcasts
 
 # Test programs for Math_Lib/Vectors :
 
@@ -575,20 +571,8 @@ ts_rpol:
 ts_ddpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddpol.adb -o $(BIN)/ts_ddpol
 
-ts_tdpol:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tdpol.adb -o $(BIN)/ts_tdpol
-
 ts_qdpol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_qdpol.adb -o $(BIN)/ts_qdpol
-
-ts_pdpol:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pdpol.adb -o $(BIN)/ts_pdpol
-
-ts_odpol:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_odpol.adb -o $(BIN)/ts_odpol
-
-ts_dapol:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_dapol.adb -o $(BIN)/ts_dapol
 
 ts_polmat:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_polmat.adb -o $(BIN)/ts_polmat
@@ -843,6 +827,10 @@ ts_serlin2:
 ts_cserlin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin.adb \
               -o $(BIN)/ts_cserlin
+
+ts_cserlin2:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cserlin2.adb \
+              -o $(BIN)/ts_cserlin2
 
 ts_perfserlin:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_perfserlin.adb \
@@ -2746,6 +2734,19 @@ ts_opthand: corecount.o inputData.o outputData.o iTest.o fTest.o \
                             lib.a feedback.o \
                  /usr/lib/libc++.dylib /usr/lib/libstdc++.dylib \
                  -o $(BIN)/ts_opthand --LINK=g++
+
+ts_bbsolve: inputData.o outputData.o iTest.o fTest.o simplex4phc.o \
+            reltab.o mvc4phc.o demicsrun4phc.o
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_bbsolve.adb \
+                 -o ts_bbsolve.o
+	gnatbind ts_bbsolve use_c2phc
+	gnatlink ts_bbsolve inputData.o outputData.o iTest.o fTest.o \
+                 simplex4phc.o reltab.o mvc4phc.o demicsrun4phc.o \
+                 -o $(BIN)/ts_bbsolve \
+                 /usr/lib/libc++.dylib \
+                 /usr/lib/libstdc++.dylib \
+                 --LINK=g++
 
 # Test programs for the Library Lib :
 
