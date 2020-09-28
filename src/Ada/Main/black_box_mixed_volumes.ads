@@ -54,8 +54,7 @@ package Black_Box_Mixed_Volumes is
   --   rocotime  is the time it took to compute the root count.
 
   procedure Construct_Start_System
-               ( nt : in integer32;
-                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  mix : in Link_to_Vector;
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision;
@@ -63,7 +62,7 @@ package Black_Box_Mixed_Volumes is
                  qsols,qsols0 : in out Standard_Complex_Solutions.Solution_List;
                  hocotime : out duration; verbose : in integer32 := 0 );
   procedure Construct_Start_System
-               ( file : in file_type; nt : in integer32;
+               ( file : in file_type;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  mix : in Link_to_Vector;
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
@@ -92,7 +91,7 @@ package Black_Box_Mixed_Volumes is
   --   hocotime  is the time it took to construct the start system.
 
   procedure Black_Box_Polyhedral_Homotopies
-               ( nt : in integer32; silent : in boolean;
+               ( silent : in boolean;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
@@ -105,8 +104,6 @@ package Black_Box_Mixed_Volumes is
   --   with polyhedral homotopies.
 
   -- ON ENTRY :
-  --   nt        number of tasks for polyhedral homotopy continuation,
-  --             if 0, then sequential execution;
   --   silent    if silent, then the computed root counts will not be shown
   --             on screen, otherwise, the root counter remains silent;
   --   p         a polynomial system;
@@ -123,8 +120,7 @@ package Black_Box_Mixed_Volumes is
   --   hocotime  is elapsed user cpu time for construction of start system.
 
   procedure Black_Box_Polyhedral_Homotopies
-               ( nt : in integer32;
-                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  rc : out natural32; rocos : out Link_to_String;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
@@ -137,8 +133,6 @@ package Black_Box_Mixed_Volumes is
   --   Returns a string with mixed volume and stable mixed volume.
 
   -- ON ENTRY :
-  --   nt        number of tasks for polyhedral homotopy continuation,
-  --             if 0, then sequential execution;
   --   p         a polynomial system;
   --   verbose   the verbose level.
 
@@ -149,6 +143,129 @@ package Black_Box_Mixed_Volumes is
   --   rocos     string with the information about the root counts,
   --             with the same information as the above procedures
   --             when silent equals false;
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   qsols0    solutions of q, with zero components;
+  --   rocotime  is elapsed user cpu time for computation of the root counts;
+  --   hocotime  is elapsed user cpu time for construction of start system.
+
+  procedure Black_Box_Polyhedral_Homotopies
+               ( file : in file_type;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 rc : out natural32;
+                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the mixed volume and solves a random coefficient start system
+  --   with polyhedral homotopies.
+  --   Writes mixed volume, stable mixed volume, start system, 
+  --   start solutions, and timing information to file.
+
+  -- ON ENTRY :
+  --   p         a polynomial system;
+  --   verbose   the verbose level.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        root count, mixed volume or stable mixed volume,
+  --             rc = Length_Of(qsols) + Length_Of(qsols0);
+  --   rocos     string with the information about the root counts,
+  --             with the same information as the above procedures
+  --             when silent equals false;
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   qsols0    solutions of q, with zero components;
+  --   rocotime  is elapsed user cpu time for computation of the root counts;
+  --   hocotime  is elapsed user cpu time for construction of start system.
+
+  procedure Black_Box_Polyhedral_Homotopies
+               ( nt : in natural32; silent : in boolean;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 rc : out natural32;
+                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the mixed volume and solves a random coefficient start system
+  --   with polyhedral homotopies, with multitasking.
+
+  -- ON ENTRY :
+  --   nt        number of tasks, must be at least 2;
+  --   silent    if not silent, then writes the mixed volume
+  --             and the stable mixed volume as root counts;
+  --   p         a polynomial system;
+  --   verbose   the verbose level.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        root count, mixed volume or stable mixed volume,
+  --             rc = Length_Of(qsols) + Length_Of(qsols0);
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   qsols0    solutions of q, with zero components;
+  --   rocotime  is elapsed user cpu time for computation of the root counts;
+  --   hocotime  is elapsed user cpu time for construction of start system.
+
+  procedure Black_Box_Polyhedral_Homotopies
+               ( nt : in natural32;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 rc : out natural32; rocos : out Link_to_String;
+                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the mixed volume and solves a random coefficient start system
+  --   with polyhedral homotopies, with multitasking.
+
+  -- ON ENTRY :
+  --   nt        number of tasks, must be at least 2;
+  --   p         a polynomial system;
+  --   verbose   the verbose level.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        root count, mixed volume or stable mixed volume,
+  --             rc = Length_Of(qsols) + Length_Of(qsols0);
+  --   rocos     string with the information about the root counts,
+  --             with the same information as the above procedures
+  --             when silent equals false;
+  --   q         start system;
+  --   qsols     solutions of q, without zero components;
+  --   qsols0    solutions of q, with zero components;
+  --   rocotime  is elapsed user cpu time for computation of the root counts;
+  --   hocotime  is elapsed user cpu time for construction of start system.
+
+  procedure Black_Box_Polyhedral_Homotopies
+               ( file : in file_type; nt : in natural32;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 rc : out natural32;
+                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration;
+                 verbose : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the mixed volume and solves a random coefficient start system
+  --   with polyhedral homotopies, with multitasking.
+  --   Writes mixed volume, stable mixed volume, start system, 
+  --   start solutions, and timing information to file.
+
+  -- ON ENTRY :
+  --   nt        number of tasks, must be at least 2;
+  --   p         a polynomial system;
+  --   verbose   the verbose level.
+
+  -- ON RETURN :
+  --   p         may have been permuted for semi-mixed inputs;
+  --   rc        root count, mixed volume or stable mixed volume,
+  --             rc = Length_Of(qsols) + Length_Of(qsols0);
   --   q         start system;
   --   qsols     solutions of q, without zero components;
   --   qsols0    solutions of q, with zero components;

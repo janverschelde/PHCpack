@@ -474,6 +474,99 @@ package Black_Box_Root_Counters is
 
 -- PIPELINED BLACK BOX ROOT COUNTING :
 
+  procedure Pipelined_Stable_Continuation
+              ( silent : in boolean; r : in integer32;
+                mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                stlb : in double_float;
+                lifsup: in Link_to_Array_of_Lists;
+                mcc : in Mixed_Subdivision; tmv : in natural32;
+                lq : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mv,smv : out natural32;
+                qsols0 : out Standard_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Extracts the stable mixed cells and applies polyhedral
+  --   continuation to compute the solutions with zero coordinates,
+  --   in standard double precision.
+
+  -- ON ENTRY :
+  --   silent   if not silent, then the mixed volume and the stable
+  --            mixed volume are written to screen;
+  --   r        number of distinct supports;
+  --   mtype    type of mixture of the supports;
+  --   stlb     bound on the artificial origin;
+  --   lifsup   the lifted supports;
+  --   mcc      regular mixed cell configuration for the supports;
+  --   tmv      the total volume of cells without artificial origin in mcc;
+  --   lq       a random coefficient system.
+
+  -- ON RETURN :
+  --   mv       the mixed volume of the supports;
+  --   smv      the stable mixed volume;
+  --   qsols0   solutions of lq with zero coordinates.
+
+  procedure Pipelined_Stable_Continuation
+              ( silent : in boolean; r : in integer32;
+                mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                stlb : in double_float;
+                lifsup: in Link_to_Array_of_Lists;
+                mcc : in Mixed_Subdivision; tmv : in natural32;
+                lq : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mv,smv : out natural32;
+                qsols0 : out DoblDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Extracts the stable mixed cells and applies polyhedral
+  --   continuation to compute the solutions with zero coordinates,
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   silent   if not silent, then the mixed volume and the stable
+  --            mixed volume are written to screen;
+  --   r        number of distinct supports;
+  --   mtype    type of mixture of the supports;
+  --   stlb     bound on the artificial origin;
+  --   lifsup   the lifted supports;
+  --   mcc      regular mixed cell configuration for the supports;
+  --   tmv      the total volume of cells without artificial origin in mcc;
+  --   lq       a random coefficient system.
+
+  -- ON RETURN :
+  --   mv       the mixed volume of the supports;
+  --   smv      the stable mixed volume;
+  --   qsols0   solutions of lq with zero coordinates.
+
+  procedure Pipelined_Stable_Continuation
+              ( silent : in boolean; r : in integer32;
+                mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                stlb : in double_float;
+                lifsup: in Link_to_Array_of_Lists;
+                mcc : in Mixed_Subdivision; tmv : in natural32;
+                lq : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mv,smv : out natural32;
+                qsols0 : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Extracts the stable mixed cells and applies polyhedral
+  --   continuation to compute the solutions with zero coordinates,
+  --   in double double precision.
+
+  -- ON ENTRY :
+  --   silent   if not silent, then the mixed volume and the stable
+  --            mixed volume are written to screen;
+  --   r        number of distinct supports;
+  --   mtype    type of mixture of the supports;
+  --   stlb     bound on the artificial origin;
+  --   lifsup   the lifted supports;
+  --   mcc      regular mixed cell configuration for the supports;
+  --   tmv      the total volume of cells without artificial origin in mcc;
+  --   lq       a random coefficient system.
+
+  -- ON RETURN :
+  --   mv       the mixed volume of the supports;
+  --   smv      the stable mixed volume;
+  --   qsols0   solutions of lq with zero coordinates.
+
   procedure Pipelined_Root_Counting 
                ( nt : in integer32; silent : in boolean;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;

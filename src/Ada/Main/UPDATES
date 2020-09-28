@@ -1,4 +1,9 @@
 Mon 28 Sep 2020 : new package test_standard_solver with code from ts_bbsolve.
+  Exported the pipelined_stable_continuation in black_box_root_counters.
+  Move the polyhedral_solve procedures from black_box_solvers into the
+  new package black_box_polyhedral_solvers.  Extended the packages 
+  black_box_{mixed_volumes, polyhedral_solvers}, test_standard_solver
+  with procedures which output to file and with multitasking.
 
 Sun 27 Sep 2020 : new test procedure ts_bbsolve with a basic test on the
   new polyhedral black box solver.

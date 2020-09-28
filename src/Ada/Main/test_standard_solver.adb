@@ -6,11 +6,12 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Black_Box_Solvers;
+with Black_Box_Polyhedral_Solvers;
 
 package body Test_Standard_Solver is
 
   procedure Solve_to_File
-              ( nt : in natural32;
+              ( nt : in natural32; mvonly : in boolean;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 vrb : in integer32 := 0 ) is
 
@@ -26,9 +27,16 @@ package body Test_Standard_Solver is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    if nt = 0
-     then Black_Box_Solvers.Solve(outfile,p,true,rc,sols,vrb);
-     else Black_Box_Solvers.Solve(outfile,nt,p,true,rc,sols,vrb);
+    if mvonly then
+      if nt = 0
+       then Black_Box_Polyhedral_Solvers.Solve(outfile,p,true,rc,sols,vrb);
+       else Black_Box_Polyhedral_Solvers.Solve(outfile,nt,p,true,rc,sols,vrb);
+      end if;
+    else
+      if nt = 0
+       then Black_Box_Solvers.Solve(outfile,p,true,rc,sols,vrb);
+       else Black_Box_Solvers.Solve(outfile,nt,p,true,rc,sols,vrb);
+      end if;
     end if;
   end Solve_to_File;
 
@@ -42,7 +50,10 @@ package body Test_Standard_Solver is
 
   begin
     if mvonly then
-      Black_Box_Solvers.Polyhedral_Solve(p,false,true,rc,sols,vrb);
+      if nt = 0
+       then Black_Box_Polyhedral_Solvers.Solve(p,false,true,rc,sols,vrb);
+       else Black_Box_Polyhedral_Solvers.Solve(nt,p,false,true,rc,sols,vrb);
+      end if;
     else
       if nt = 0 
        then Black_Box_Solvers.Solve(p,false,true,rc,sols,vrb);
@@ -78,7 +89,7 @@ package body Test_Standard_Solver is
     Ask_Yes_or_No(ans); mvfocus := (ans = 'y');
     put("Write the output to file ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y'
-     then Solve_to_File(nt,lp.all,vrb);
+     then Solve_to_File(nt,mvfocus,lp.all,vrb);
      else Solve_without_File(nt,mvfocus,lp.all,vrb);
     end if;
   end Main;

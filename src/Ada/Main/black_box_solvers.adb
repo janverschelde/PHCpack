@@ -12,65 +12,8 @@ with DoblDobl_Blackbox_Continuations;    use DoblDobl_Blackbox_Continuations;
 with QuadDobl_Blackbox_Continuations;    use QuadDobl_Blackbox_Continuations;
 with Black_Box_Helpers;
 with Black_Box_Solver_Cases;             use Black_Box_Solver_Cases;
-with Black_Box_Mixed_Volumes;
 
 package body Black_Box_Solvers is
-
-  procedure Polyhedral_Solve
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                silent,deflate : in boolean;
-                rc : out natural32;
-                sols : out Standard_Complex_Solutions.Solution_List;
-                verbose : in integer32 := 0 ) is
-
-    use Standard_Complex_Solutions;
- 
-    pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
-    roco,hoco,poco : duration;
-    sols0 : Solution_List;
-
-  begin
-    if verbose > 0 then
-      put_line("-> in black_box_solvers.Polyhedral_Solve 1 ...");
-    end if;
-    Standard_Complex_Poly_Systems.Copy(p,pp);
-    Black_Box_Mixed_Volumes.Black_Box_Polyhedral_Homotopies
-      (0,silent,pp,rc,q,sols,sols0,roco,hoco,verbose-1);
-    if rc /= 0 then
-      Standard_Scaling.Scale(pp);
-      Black_Box_Polynomial_Continuation
-        (deflate,pp,q,sols,sols0,poco,verbose-1);
-      Push(sols0,sols);
-    end if;
-  end Polyhedral_Solve;
-
-  procedure Polyhedral_Solve
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                deflate : in boolean;
-                rc : out natural32; rocos : out Link_to_String;
-                sols : out Standard_Complex_Solutions.Solution_List;
-                verbose : in integer32 := 0 ) is
-
-    use Standard_Complex_Solutions;
- 
-    pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
-    roco,hoco,poco : duration;
-    sols0 : Solution_List;
-
-  begin
-    if verbose > 0 then
-      put_line("-> in black_box_solvers.Polyhedral_Solve 2 ...");
-    end if;
-    Standard_Complex_Poly_Systems.Copy(p,pp);
-    Black_Box_Mixed_Volumes.Black_Box_Polyhedral_Homotopies
-      (0,pp,rc,rocos,q,sols,sols0,roco,hoco,verbose-1);
-    if rc /= 0 then
-      Standard_Scaling.Scale(pp);
-      Black_Box_Polynomial_Continuation
-        (deflate,pp,q,sols,sols0,poco,verbose-1);
-      Push(sols0,sols);
-    end if;
-  end Polyhedral_Solve;
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent,deflate : in boolean;

@@ -1327,27 +1327,6 @@ package body Black_Box_Root_Counters is
                 mv,smv : out natural32;
                 qsols0 : out Standard_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION :
-  --   Extracts the stable mixed cells and applies polyhedral
-  --   continuation to compute the solutions with zero coordinates,
-  --   in standard double precision.
-
-  -- ON ENTRY :
-  --   silent   if not silent, then the mixed volume and the stable
-  --            mixed volume are written to screen;
-  --   r        number of distinct supports;
-  --   mtype    type of mixture of the supports;
-  --   stlb     bound on the artificial origin;
-  --   lifsup   the lifted supports;
-  --   mcc      regular mixed cell configuration for the supports;
-  --   tmv      the total volume of cells without artificial origin in mcc;
-  --   lq       a random coefficient system.
-
-  -- ON RETURN :
-  --   mv       the mixed volume of the supports;
-  --   smv      the stable mixed volume;
-  --   qsols0   solutions of lq with zero coordinates.
-
    -- start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
    -- ended_moment : Ada.Calendar.Time;
     dim : constant integer32 := lq'last;
@@ -1404,27 +1383,6 @@ package body Black_Box_Root_Counters is
                 lq : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 mv,smv : out natural32;
                 qsols0 : out DoblDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Extracts the stable mixed cells and applies polyhedral
-  --   continuation to compute the solutions with zero coordinates,
-  --   in double double precision.
-
-  -- ON ENTRY :
-  --   silent   if not silent, then the mixed volume and the stable
-  --            mixed volume are written to screen;
-  --   r        number of distinct supports;
-  --   mtype    type of mixture of the supports;
-  --   stlb     bound on the artificial origin;
-  --   lifsup   the lifted supports;
-  --   mcc      regular mixed cell configuration for the supports;
-  --   tmv      the total volume of cells without artificial origin in mcc;
-  --   lq       a random coefficient system.
-
-  -- ON RETURN :
-  --   mv       the mixed volume of the supports;
-  --   smv      the stable mixed volume;
-  --   qsols0   solutions of lq with zero coordinates.
 
    -- start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
    -- ended_moment : Ada.Calendar.Time;
@@ -1483,27 +1441,6 @@ package body Black_Box_Root_Counters is
                 lq : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 mv,smv : out natural32;
                 qsols0 : out QuadDobl_Complex_Solutions.Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Extracts the stable mixed cells and applies polyhedral
-  --   continuation to compute the solutions with zero coordinates,
-  --   in double double precision.
-
-  -- ON ENTRY :
-  --   silent   if not silent, then the mixed volume and the stable
-  --            mixed volume are written to screen;
-  --   r        number of distinct supports;
-  --   mtype    type of mixture of the supports;
-  --   stlb     bound on the artificial origin;
-  --   lifsup   the lifted supports;
-  --   mcc      regular mixed cell configuration for the supports;
-  --   tmv      the total volume of cells without artificial origin in mcc;
-  --   lq       a random coefficient system.
-
-  -- ON RETURN :
-  --   mv       the mixed volume of the supports;
-  --   smv      the stable mixed volume;
-  --   qsols0   solutions of lq with zero coordinates.
 
    -- start_moment : constant Ada.Calendar.Time := Ada.Calendar.Clock;
    -- ended_moment : Ada.Calendar.Time;

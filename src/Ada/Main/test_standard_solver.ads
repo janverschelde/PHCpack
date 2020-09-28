@@ -8,7 +8,7 @@ package Test_Standard_Solver is
 --   Tests the black box solver in double precision.
 
   procedure Solve_to_File
-              ( nt : in natural32;
+              ( nt : in natural32; mvonly : in boolean;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 vrb : in integer32 := 0 );
 
@@ -17,6 +17,7 @@ package Test_Standard_Solver is
 
   -- ON ENTRY :
   --   nt       the number of tasks, 0 for no multitasking;
+  --   mvonly   focus on mixed volumes and polyhedral homotopies;
   --   p        a square polynomial system;
   --   vrb      the verbose level.
 
