@@ -31,6 +31,7 @@ with Standard_Refiner_Circuits;
 with Floating_Mixed_Subdivisions;
 with Black_Mixed_Volume_Computations;
 with Black_Box_Solvers;
+with Black_Box_Polyhedral_Solvers;
 with Greeting_Banners;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
@@ -118,11 +119,12 @@ package body Job_Handlers is
     use Interfaces.C;
 
    -- n : constant natural := Standard_PolySys_Container.Dimension;
-    v_b : constant C_Integer_Array(0..1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    v_b : constant C_Integer_Array(0..2)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(3));
     silval : constant natural32 := natural32(v_b(v_b'first));
     silent : constant boolean := (silval = 1);
     ntasks : constant natural32 := natural32(v_b(v_b'first+1));
+    mvfocus : constant natural32 := natural32(v_b(v_b'first+2));
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -145,14 +147,36 @@ package body Job_Handlers is
     end if;
    -- Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     if silent then
-      if ntasks = 0
-       then Black_Box_Solvers.Solve(lp.all,silent,true,rc,sols,vrblvl-1);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,silent,true,rc,sols,vrblvl-1);
+      if mvfocus = 0 then
+        if ntasks = 0 then
+          Black_Box_Solvers.Solve(lp.all,silent,true,rc,sols,vrblvl-1);
+        else
+          Black_Box_Solvers.Solve(ntasks,lp.all,silent,true,rc,sols,vrblvl-1);
+        end if;
+      else
+        if ntasks = 0 then
+          Black_Box_Polyhedral_Solvers.Solve
+            (lp.all,silent,true,rc,sols,vrblvl-1);
+        else
+          Black_Box_Polyhedral_Solvers.Solve
+            (ntasks,lp.all,silent,true,rc,sols,vrblvl-1);
+        end if;
       end if;
     else
-      if ntasks = 0
-       then Black_Box_Solvers.Solve(lp.all,true,rc,lsroco,sols,vrblvl-1);
-       else Black_Box_Solvers.Solve(ntasks,lp.all,true,rc,lsroco,sols,vrblvl-1);
+      if mvfocus = 0 then
+        if ntasks = 0 then
+          Black_Box_Solvers.Solve(lp.all,true,rc,lsroco,sols,vrblvl-1);
+        else
+          Black_Box_Solvers.Solve(ntasks,lp.all,true,rc,lsroco,sols,vrblvl-1);
+        end if;
+      else
+        if ntasks = 0 then
+          Black_Box_Polyhedral_Solvers.Solve
+            (lp.all,true,rc,lsroco,sols,vrblvl-1);
+        else
+          Black_Box_Polyhedral_Solvers.Solve
+            (ntasks,lp.all,true,rc,lsroco,sols,vrblvl-1);
+        end if;
       end if;
       if lsroco = null then
         nr := 0;

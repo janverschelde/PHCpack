@@ -1,3 +1,6 @@
+Mon 28 Sep 2020 : extended job_handlers with the option to the solver of
+  polynomials in double precision, for focus on polyhedral homotopies.
+
 Sat 22 Aug 2020 : added verbose level parameter to c_to_phcpack,
   adjusted the calls in use_c2phc4c.adb.
 
