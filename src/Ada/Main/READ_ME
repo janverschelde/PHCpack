@@ -49,6 +49,7 @@ black_box_square_solvers     : solvers for square systems
 black_box_solver_cases       : special cases for the solvers
 black_box_mixed_volumes      : for a polyhedral black box solver
 black_box_solvers            : to be called by bablphc
+test_standard_solver         : test black box solver in double precision
 ts_bbsolve                   : test on black box solvers
 bablphc                      : black-box version of the program
 bablphc2                     : black-box solving in double double precision
