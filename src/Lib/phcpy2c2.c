@@ -1443,12 +1443,12 @@ static PyObject *py2c_copy_multprec_container_to_start_solutions
 static PyObject *py2c_solve_standard_system
  ( PyObject *self, PyObject *args )
 {
-   int fail,rc,nrc,silent,vrb,nbtasks = 0;
+   int fail,rc,nrc,silent,vrb,nbtasks,mvfocus = 0;
    char rocos[1024];
 
    initialize();
    if(!PyArg_ParseTuple(args,"iii",&silent,&nbtasks,&vrb)) return NULL;
-   fail = solve_standard_system(&rc,silent,&nrc,rocos,nbtasks,vrb);
+   fail = solve_standard_system(&rc,silent,&nrc,rocos,nbtasks,mvfocus,vrb);
    if(silent == 1)
       return Py_BuildValue("i",rc);
    else

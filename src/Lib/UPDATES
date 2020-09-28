@@ -1,3 +1,7 @@
+Mon 28 Sep 2020 : to the solve_standard_system in phcpack, added the
+  option to focus on mixed volumes and polyhedral homotopies, tested by
+  phc_solve, with updates in phcpy2c2.c and phcpy2c3.c.
+
 Mon 3 Aug 2020 : fix in parsing arguments in phcpy2c3.c in the function
   py2c_padcon_quaddobl_track.
 

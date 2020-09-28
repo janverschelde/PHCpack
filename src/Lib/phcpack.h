@@ -42,7 +42,8 @@ int get_seed ( int *seed );
  *   for debugging and testing benchmark problems. */
 
 int solve_standard_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb );
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks,
+   int mvfocus, int vrb );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double polynomial systems
@@ -53,6 +54,9 @@ int solve_standard_system
  *              counts to screen, otherwise, if 0, the user will see
  *              the computed root counts to screen;
  *   nbtasks    number of threads to be used, if 0, then no multitasking;
+ *   mvfocus    if zero, then various root counts are compute, otherwise,
+ *              if one, then the focus is on mixed volumes and polyhedral
+ *              homotopies, and degree bounds will not be computed;
  *   vrb        is the verbose level, if 0, nothing will be written,
  *              for vrb > 0, the value of vrb is the depth of the tree
  *              of nested subroutine calls for which information is shown.
