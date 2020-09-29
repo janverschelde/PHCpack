@@ -46,6 +46,7 @@ quaddobl_newton_matrix_series     : linearization in Newton with quad doubles
 ts_sernew                         : test on the Newton series packages
 series_and_solutions              : making series from solution vectors
 power_series_methods              : Newton's method on power series solutions
+run_power_series_methods          : main programs to run Newton on series
 ts_sersol                         : test on series and solutions
 -------------------------------------------------------------------------------
 standard_newton_convolution_steps : double Newton convolution steps
@@ -134,12 +135,12 @@ series_path_trackers                : runs the series path trackers
 ts_serpath                          : test on series path tracker
 mainseries                          : defines the phc -u
 -------------------------------------------------------------------------------
-standard_seriespade_tracker      : provides a get_next() method tracker
-dobldobl_seriespade_tracker      : a get_next() tracker with double doubles
-quaddobl_seriespade_tracker      : a get_next() tracker with quad doubles
-interactive_pade_trackers        : calls the step-by-step path trackers
-ts_nxtpadsol                     : test on the get_next() trackers
+standard_seriespade_tracker         : provides a get_next() method tracker
+dobldobl_seriespade_tracker         : a get_next() tracker with double doubles
+quaddobl_seriespade_tracker         : a get_next() tracker with quad doubles
+interactive_pade_trackers           : calls the step-by-step path trackers
+ts_nxtpadsol                        : test on the get_next() trackers
 -------------------------------------------------------------------------------
-wrapped_pade_trackers            : wrapping of the trackers
-ts_wrappade                      : test on the wrapping
+wrapped_pade_trackers               : wrapping of the trackers
+ts_wrappade                         : test on the wrapping
 -------------------------------------------------------------------------------
