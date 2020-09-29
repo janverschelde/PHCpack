@@ -203,8 +203,8 @@ def is_square(pols):
     nbreqs = len(pols)
     return nbrvar == nbreqs
 
-def standard_solve(pols, verbose=True, tasks=0, dictionary_output=False, \
-    verbose_level=0):
+def standard_solve(pols, verbose=True, tasks=0, mvfocus=0, \
+    dictionary_output=False, verbose_level=0):
     r"""
     Calls the blackbox solver to compute all isolated solutions in
     standard double precision.  On input in *pols* is a list of strings.
@@ -212,6 +212,10 @@ def standard_solve(pols, verbose=True, tasks=0, dictionary_output=False, \
     To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
     The default zero value for *tasks* indicates no multithreading.
+    If the *mvfocus* option is set to one, then only mixed volumes
+    and polyhedral homotopies will be applied in the solver, and no
+    degree bounds will be computed, as is already the case when the
+    input system is genuinely Laurent and has negative exponents.
     If *dictionary_output*, then on return is a list of dictionaries,
     else the returned list is a list of strings.
     If *verbose_level* is larger than 0, then the names of the procedures
@@ -235,10 +239,11 @@ def standard_solve(pols, verbose=True, tasks=0, dictionary_output=False, \
         py2c_syscon_store_standard_Laurential(nchar, dim, ind+1, pol)
     silent = not verbose
     if silent:
-        py2c_solve_standard_Laurent_system(silent, tasks, verbose_level)
+        py2c_solve_standard_Laurent_system\
+          (silent, tasks, mvfocus, verbose_level)
     else:
         (rc, counts) = py2c_solve_standard_Laurent_system\
-                         (silent, tasks, verbose_level)
+                         (silent, tasks, mvfocus, verbose_level)
         if counts != "":
             print(counts)
     sols = load_standard_solutions()
@@ -354,8 +359,8 @@ def solve_checkin(pols, msg):
         print('Either correct the input, or use phcpy.factor.solve')
         print('to solve polynomial systems that are not square.')
 
-def solve(pols, verbose=True, tasks=0, precision='d', checkin=True, \
-    dictionary_output=False, verbose_level=0):
+def solve(pols, verbose=True, tasks=0, mvfocus=0, precision='d', 
+    checkin=True, dictionary_output=False, verbose_level=0):
     r"""
     Calls the blackbox solver to compute all isolated solutions.
     To compute all solutions, also all positive dimensional solution sets,
@@ -365,6 +370,10 @@ def solve(pols, verbose=True, tasks=0, precision='d', checkin=True, \
     To make the solver silent, set the flag *verbose* to False.
     The number of tasks for multithreading is given by *tasks*.
     The default zero value for *tasks* indicates no multithreading.
+    If the *mvfocus* option is set to one, then only mixed volumes
+    and polyhedral homotopies will be applied in the solver, and no
+    degree bounds will be computed, as is already the case when the
+    input system is genuinely Laurent and has negative exponents.
     Three levels of precision are supported:
 
     *d*: standard double precision (1.1e-15 or 2^(-53)),
@@ -388,7 +397,8 @@ def solve(pols, verbose=True, tasks=0, precision='d', checkin=True, \
             return None
     if(precision == 'd'):
         return standard_solve\
-                 (pols, verbose, tasks, dictionary_output, verbose_level)
+                 (pols, verbose, tasks, mvfocus, dictionary_output, \
+                  verbose_level)
     elif(precision == 'dd'):
         return dobldobl_solve\
                  (pols, verbose, tasks, dictionary_output, verbose_level)
