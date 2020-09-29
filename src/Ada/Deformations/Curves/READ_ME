@@ -81,6 +81,9 @@ dobldobl_pade_approximants_io     : output of double double Pade approximants
 quaddobl_pade_approximants        : Pade approximants with quad doubles
 quaddobl_pade_approximants_io     : output of quad double Pade approximants
 homotopy_pade_approximants        : wraps series Newton and Pade creators
+test_standard_pade_approximants   : test pade approximants with doubles
+test_dobldobl_pade_approximants   : test pade approximants with double doubles
+test_quaddobl_pade_approximants   : test pade approximants with quad doubles
 ts_serpade                        : test rational approximations given series
 ts_ratapp                         : test on thread safe constructions
 ------------------------------------------------------------------------------
