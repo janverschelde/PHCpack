@@ -6,6 +6,7 @@ with Series_Path_Trackers;
 with Interactive_Pade_Trackers;
 with Track_Path_Convolutions;
 with Multitasked_Path_Convolutions;
+with Newton_Fabry_on_Homotopy;
 
 package body Main_Pade_Trackers is
 
@@ -171,6 +172,17 @@ package body Main_Pade_Trackers is
     Run_Path_Convolution_Trackers(nbt,prc,vrb-1);
   end Run_Path_Convolution_Trackers;
 
+  procedure Run_Newton_Fabry ( prc : in character ) is
+
+    valprc : character := prc;
+
+  begin
+    if valprc = '0'
+     then valprc := Newton_Fabry_on_Homotopy.Prompt_for_Precision;
+    end if;
+    Newton_Fabry_on_Homotopy.Run_Newton_Fabry(valprc);
+  end Run_Newton_Fabry;
+
   function Prompt_for_Method return character is
 
     res : character;
@@ -178,12 +190,13 @@ package body Main_Pade_Trackers is
   begin
     new_line;
     put_line("MENU for power series methods :");
-    put_line("  1. apply polyhedral methods for tropisms;");
-    put_line("  2. run Newton's method starting at a series or a point;");
-    put_line("  3. track paths with Pade approximants as predictor;");
-    put_line("  4. run a faster Newton-Fabry-Pade-Hesse path tracker.");
-    put("Type 1, 2, 3, or 4 to select the method : ");
-    Ask_Alternative(res,"1234");
+    put_line("  1. apply polyhedral methods for tropisms");
+    put_line("  2. run Newton's method starting at a series or a point");
+    put_line("  3. track paths with Pade approximants as predictor");
+    put_line("  4. run a faster Newton-Fabry-Pade-Hesse path tracker");
+    put_line("  5. compute the convergence radius of a solution series");
+    put("Type 1, 2, 3, 4, or 5 to select the method : ");
+    Ask_Alternative(res,"12345");
     return res;
   end Prompt_for_Method;
 
@@ -204,6 +217,7 @@ package body Main_Pade_Trackers is
       when '2' => Run_Power_Series_Newton(infilename,outfilename,valprc,vrb-1);
       when '3' => Run_Path_Trackers(valprc,vrb-1);
       when '4' => Run_Path_Convolution_Trackers(nbtasks,valprc,vrb-1);
+      when '5' => Run_Newton_Fabry(valprc);
       when others => null;
     end case;
   end Nonzero_Precision_Main;
@@ -224,6 +238,7 @@ package body Main_Pade_Trackers is
       when '2' => Run_Power_Series_Newton(infilename,outfilename,vrb-1);
       when '3' => Run_Path_Trackers(vrb-1);
       when '4' => Run_Path_Convolution_Trackers(nbtasks,vrb-1);
+      when '5' => Run_Newton_Fabry('0');
       when others => null;
     end case;
   end Zero_Precision_Main;
