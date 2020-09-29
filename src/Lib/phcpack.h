@@ -54,9 +54,9 @@ int solve_standard_system
  *              counts to screen, otherwise, if 0, the user will see
  *              the computed root counts to screen;
  *   nbtasks    number of threads to be used, if 0, then no multitasking;
- *   mvfocus    if zero, then various root counts are compute, otherwise,
+ *   mvfocus    if zero, then various root counts are computed, otherwise,
  *              if one, then the focus is on mixed volumes and polyhedral
- *              homotopies, and degree bounds will not be computed;
+ *              homotopies, and then degree bounds will not be computed;
  *   vrb        is the verbose level, if 0, nothing will be written,
  *              for vrb > 0, the value of vrb is the depth of the tree
  *              of nested subroutine calls for which information is shown.
@@ -112,7 +112,8 @@ int solve_quaddobl_system
  *              but only if silent = 0. */
 
 int solve_standard_Laurent_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb );
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks,
+   int mvfocus, int vrb );
 /*
  * DESCRIPTION :
  *   Calls the blackbox solver on the standard double Laurent systems
@@ -123,6 +124,11 @@ int solve_standard_Laurent_system
  *              counts to screen, otherwise, if 0, the user will see
  *              the computed root counts to screen;
  *   nbtasks    number of threads to be used, if 0, then no multitasking;
+ *   mvfocus    if zero, then various root counts are computed, otherwise,
+ *              if one, then the focus is on mixed volumes and polyhedral
+ *              homotopies, and then degree bounds will not be computed;
+ *              the focus on polyhedral homotopies is automatic if the
+ *              system is genuinely Laurent and has negative exponents;
  *   vrb        is the verbose level, if 0, nothing will be written,
  *              for vrb > 0, the value of vrb is the depth of the tree
  *              of nested subroutine calls for which information is shown.

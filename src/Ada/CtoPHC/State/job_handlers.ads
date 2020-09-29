@@ -62,6 +62,10 @@ package Job_Handlers is
   --   The two parameters on entry are as follows:
   --     a[0] : 1 or 2 for to be silent or not,
   --     a[1] : the number of tasks.
+  --     a[2] : 1 if the focus is on mixed volumes and polyhedral homotopies,
+  --            0 for all bounds on the number of solutions.
+  --   The focus on mixed volumes and polyhedral homotopies is automatic
+  --   if the system is a genuine Laurent system with negative exponents.
   --   On return in a[0] is the root count and if not silent,
   --   then a[1] contains the number of characters in b,
   --   where b is the root counter output string;

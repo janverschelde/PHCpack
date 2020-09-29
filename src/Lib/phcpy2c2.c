@@ -1447,7 +1447,8 @@ static PyObject *py2c_solve_standard_system
    char rocos[1024];
 
    initialize();
-   if(!PyArg_ParseTuple(args,"iii",&silent,&nbtasks,&vrb)) return NULL;
+   if(!PyArg_ParseTuple(args,"iiii",&silent,&nbtasks,&mvfocus,&vrb))
+      return NULL;
    fail = solve_standard_system(&rc,silent,&nrc,rocos,nbtasks,mvfocus,vrb);
    if(silent == 1)
       return Py_BuildValue("i",rc);
@@ -1502,12 +1503,14 @@ static PyObject *py2c_solve_quaddobl_system
 static PyObject *py2c_solve_standard_Laurent_system
  ( PyObject *self, PyObject *args )
 {
-   int silent,fail,rc,nrc,vrb,nbtasks = 0;
+   int silent,fail,rc,nrc,vrb,nbtasks,mvfocus = 0;
    char rocos[1024];
 
    initialize();
-   if (!PyArg_ParseTuple(args,"iii",&silent,&nbtasks,&vrb)) return NULL;
-   fail = solve_standard_Laurent_system(&rc,silent,&nrc,rocos,nbtasks,vrb);
+   if(!PyArg_ParseTuple(args,"iiii",&silent,&nbtasks,&mvfocus,&vrb))
+      return NULL;
+   fail = solve_standard_Laurent_system
+            (&rc,silent,&nrc,rocos,nbtasks,mvfocus,vrb);
    if(silent == 1)
       return Py_BuildValue("i",rc);
    else
@@ -10178,7 +10181,7 @@ static PyMethodDef phcpy2c_methods[] =
      py2c_copy_multprec_container_to_start_solutions, METH_VARARGS,
     "Copies the solutions in arbitrary multiprecision from the\n container to the start solutions in arbitrary multiprecision."},
    {"py2c_solve_standard_system", py2c_solve_standard_system, METH_VARARGS,
-    "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in standard double precision.\n Three integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose;\n 2) the number of tasks.\n If that number is zero, then no multitasking is applied; and\n 3) the verbose level.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard systems container."},
+    "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in standard double precision.\n Four integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose;\n 2) the number of tasks.\n If that number is zero, then no multitasking is applied;\n 3) a flag to focus on mixed volumes and polyhedral homotopies,\n if 1, then no degree bounds will be computed; and\n 4) the verbose level.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard systems container."},
    {"py2c_scan_for_symbols", py2c_scan_for_symbols, METH_VARARGS,
     "Given on input are two arguments: a number and a string.\n The string holds the string representation of a polynomial system,\n where each polynomial is terminated by a semi colon.\n The first argument on input is the number of characters in the string.\n On return is the number of symbols used as variables in the system.\n This function helps to determine whether a system is square or not."},
    {"py2c_solve_dobldobl_system", py2c_solve_dobldobl_system, METH_VARARGS,
@@ -10187,10 +10190,10 @@ static PyMethodDef phcpy2c_methods[] =
     "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in quad double precision.\n Three integers are expected on input: 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose;\n 2) the number of tasks.\n If that number is zero, then no multitasking is applied; and\n 3) the verbose level. \n On return, the container for solutions in quad double precision\n contains the solutions to the system in the quaddobl systems container."},
    {"py2c_solve_standard_Laurent_system",
      py2c_solve_standard_Laurent_system, METH_VARARGS,
-    "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in standard double precision.\n Three integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run; and\n 3) the verbose level.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard Laurent systems\n container."},
+    "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in standard double precision.\n Three integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run;\n 3) a flag to focus on mixed volumes and polyhedral homotopies,\n if 1, then no degree bounds will be computed, as when\n the system is genuinely Laurent with negative exponents; and\n 4) the verbose level.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard Laurent systems\n container."},
    {"py2c_solve_dobldobl_Laurent_system",
      py2c_solve_dobldobl_Laurent_system, METH_VARARGS,
-    "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in double double precision.\n Three integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run; and\n 3) the verbose level.\n On return, the container for solutions in double double precision\n contains the solutions to the system in the double double Laurent systems\n container."},
+    "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in double double precision.\n Four integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run; and\n 3) 4) the verbose level.\n On return, the container for solutions in double double precision\n contains the solutions to the system in the double double Laurent systems\n container."},
    {"py2c_solve_quaddobl_Laurent_system",
      py2c_solve_quaddobl_Laurent_system, METH_VARARGS,
     "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in quad double precision.\n Three integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run; and\n 3) the verbose level.\n On return, the container for solutions in quad double precision\n contains the solutions to the system in the quad double Laurent systems\n container."},

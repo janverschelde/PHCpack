@@ -215,11 +215,12 @@ package body Job_Handlers is
     use Standard_Complex_Laur_Systems;
     use Interfaces.C;
 
-    v_b : constant C_Integer_Array(0..1)
-        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    v_b : constant C_Integer_Array(0..2)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(3));
     silval : constant natural32 := natural32(v_b(v_b'first));
     silent : constant boolean := (silval = 1);
     ntasks : constant natural32 := natural32(v_b(v_b'first+1));
+    mvfocus : constant natural32 := natural32(v_b(v_b'first+2));
     lp : constant Link_to_Laur_Sys := Standard_LaurSys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -273,14 +274,36 @@ package body Job_Handlers is
       begin
        -- Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
         if silent then
-          if ntasks = 0 -- patch for deflation with multitasking
-           then Black_Box_Solvers.Solve(p,silent,true,rc,sols,vrblvl-1);
-           else Black_Box_Solvers.Solve(ntasks,p,silent,true,rc,sols,vrblvl-1);
+          if mvfocus = 0 then
+            if ntasks = 0 then -- patch for deflation with multitasking
+              Black_Box_Solvers.Solve(p,silent,true,rc,sols,vrblvl-1);
+            else
+              Black_Box_Solvers.Solve(ntasks,p,silent,true,rc,sols,vrblvl-1);
+            end if;
+          else 
+            if ntasks = 0 then -- patch for deflation with multitasking
+              Black_Box_Polyhedral_Solvers.Solve
+                (p,silent,true,rc,sols,vrblvl-1);
+            else
+              Black_Box_Polyhedral_Solvers.Solve
+                (ntasks,p,silent,true,rc,sols,vrblvl-1);
+            end if;
           end if;
         else
-          if ntasks = 0 -- patch for deflation with multitasking
-           then Black_Box_Solvers.Solve(p,true,rc,lsroco,sols,vrblvl-1);
-           else Black_Box_Solvers.Solve(ntasks,p,true,rc,lsroco,sols,vrblvl-1);
+          if mvfocus = 0 then
+            if ntasks = 0 then -- patch for deflation with multitasking
+              Black_Box_Solvers.Solve(p,true,rc,lsroco,sols,vrblvl-1);
+            else
+              Black_Box_Solvers.Solve(ntasks,p,true,rc,lsroco,sols,vrblvl-1);
+            end if;
+          else
+            if ntasks = 0 then -- patch for deflation with multitasking
+              Black_Box_Polyhedral_Solvers.Solve
+                (p,true,rc,lsroco,sols,vrblvl-1);
+            else
+              Black_Box_Polyhedral_Solvers.Solve
+                (ntasks,p,true,rc,lsroco,sols,vrblvl-1);
+            end if;
           end if;
           if lsroco = null then
             nr := 0;

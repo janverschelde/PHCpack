@@ -119,7 +119,8 @@ int solve_quaddobl_system
 }
 
 int solve_standard_Laurent_system
- ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks, int vrb )
+ ( int *root_count, int silent, int *nrcs, char *rocos, int nbtasks,
+   int mvfocus, int vrb )
 {
    int fail,i;
    int a[2];
@@ -128,6 +129,7 @@ int solve_standard_Laurent_system
 
    b[0] = silent;
    b[1] = nbtasks;
+   b[2] = mvfocus;
 
    fail = _ada_use_c2phc4c(75,a,b,c,vrb);
 

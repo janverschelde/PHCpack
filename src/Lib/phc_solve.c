@@ -99,7 +99,7 @@ int input_output_on_files ( int precision )
       printf("\nThe system in the container : \n");
       fail = syscon_write_standard_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
-      printf("\nFocus on polynomials (1 = yes, 0 = no) : ");
+      printf("\nFocus on mixed volumes (1 = yes, 0 = no) : ");
       scanf("%d",&focusmv);
       printf("\nGive the verbose level : "); scanf("%d",&vrb);
       fail = solve_standard_system(&rc,0,&nrc,rocos,nbtasks,focusmv,vrb);
@@ -143,7 +143,7 @@ int input_output_on_files ( int precision )
 
 int Laurent_input_output_on_files ( int precision )
 {
-   int fail,rc,nrc,nbtasks,vrb,i;
+   int fail,rc,nrc,nbtasks,focusmv,vrb,i;
    char rocos[1024];
 
    if(precision == 0)
@@ -152,8 +152,11 @@ int Laurent_input_output_on_files ( int precision )
       printf("\nThe system in the container : \n");
       fail = syscon_write_standard_Laurent_system();
       printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
+      printf("\nFocus on mixed volumes (1 = yes, 0 = no) : ");
+      scanf("%d",&focusmv);
       printf("\nGive the verbose level : "); scanf("%d",&vrb);
-      fail = solve_standard_Laurent_system(&rc,0,&nrc,rocos,nbtasks,vrb);
+      fail = solve_standard_Laurent_system
+               (&rc,0,&nrc,rocos,nbtasks,focusmv,vrb);
       printf("\nROOT COUNTS :\n");
       for(i=0; i<nrc; i++) printf("%c",rocos[i]);
       printf("\nThe root count : %d\n",rc);
@@ -348,7 +351,7 @@ int interactive_input_output ( int precision )
 
 int standard_interactive_Laurent_input_output ( void )
 {
-   int n,fail,k,nc,nrc,i,rc,len,nbtasks,vrb;
+   int n,fail,k,nc,nrc,i,rc,len,nbtasks,focusmv,vrb;
    char rocos[1024];
    char ch,p[800];
 
@@ -371,8 +374,11 @@ int standard_interactive_Laurent_input_output ( void )
    printf("The system in the container : \n");
    syscon_write_standard_Laurent_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
+   printf("\nFocus on mixed volumes (1 = yes, 0 = no) : ");
+   scanf("%d",&focusmv);
    printf("\nGive the verbose level : "); scanf("%d",&vrb);
-   fail = solve_standard_Laurent_system(&rc,0,&nrc,rocos,nbtasks,vrb);
+   fail = solve_standard_Laurent_system
+            (&rc,0,&nrc,rocos,nbtasks,focusmv,vrb);
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
    fail = solcon_write_standard_solutions(); */
