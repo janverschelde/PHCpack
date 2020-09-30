@@ -197,6 +197,8 @@ enabling the solution of polynomial systems in the cloud.
 DEMiCs applies dynamic enumeration for all mixed cells and
 computes the mixed volume at a faster pace than MixedVol.
 Since version 2.4.53, DEMiCs is distributed with PHCpack.
+Triple, penta, octo, and deca double arithmetic was added
+in version 2.4.80.
 
 phcpy: An Application Programming Interface to PHCpack
 ======================================================
@@ -220,6 +222,8 @@ PHCpack relies for its fast mixed volume computation
 on MixedVol and DEMiCs.
 For its double double and quad double arithmetic,
 there is QDlib which is integrated in PHCpack.
+For triple double, and other multiple doubles (penta, octo, deca),
+code generated from the CAMPARY software is used.
 Pointers to the literature are mentioned below.
 
 1. N. Bliss, J. Sommars, J. Verschelde and X. Yu:
@@ -252,6 +256,11 @@ Pointers to the literature are mentioned below.
    11-17 June 2001, Vail, CO, USA, pages 155-162.
    IEEE Computer Society, 2001.
    Shortened version of Technical Report LBNL-46996.
+
+#. M. Joldes, J.-M. Muller, V. Popescu, and W. Tucker: 
+   **CAMPARY: Cuda Multiple Precision Arithmetic Library and Applications.** 
+   In *Mathematical Software - ICMS 2016*, pages 232-240,
+   Springer-Verlag 2016.
 
 #. A. Leykin and J. Verschelde: 
    **PHCmaple: A Maple Interface to the Numerical Homotopy Algorithms
