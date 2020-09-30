@@ -277,9 +277,10 @@ the new modules cascades.py, factor.py, and diagonal.py.
 Code snippets for jupyter notebook menu extensions were defined
 in version 0.7.4.
 
-An important milestone was the presentation of phcpy
-of the 18th Python in Science Conference, SciPy 2019,
-with paper which appeared in the proceedings (see the references below).
+Version 0.9.2 was presented in a talk at the Python devroom at FOSDEM 2019.
+Another important milestone was the poster presentation
+at the 18th Python in Science Conference, SciPy 2019,
+with a paper which appeared in the proceedings (see the references below).
 
 As the original goal of phcpy was on exporting the functionality of
 PHCpack, its design is functional and phcpy is a collection of modules.
