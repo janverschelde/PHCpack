@@ -1,5 +1,6 @@
 Wed 30 Sep 2020 : added reference to SciPy 2019 paper to welcome.rst in
-  the phcpy documentation.
+  the phcpy documentation.  In blackbox.rst, added descriptions on the
+  options mvfocus, dictionary_output, and verbose_level of the solver.
 
 Tue 29 Sep 2020 : updated files for version 1.0.7.
 

@@ -114,7 +114,17 @@ Other options of the solver are
        >>> from phcpy.phcpy2c3 import py2c_corecount
        >>> py2c_corecount()
 
-2. **precision**: by default the ``precision`` is set to ``d`` for
+2. **mvfocus**: by default, the blackbox solver computes 
+   both B |eacute| zout numbers
+   and mixed volumes, because ``mvfocus`` equals zero.
+   But for sparse polynomial systems, the mixed volume is always
+   significantly smaller than the B |eacute| zout numbers.
+   With ``mvfocus=1``, the focus on the solver is on mixed volumes
+   and then B |eacute| zout numbers will not be computed.
+   For large sparse polynomial systems, using ``mvfocus=1`` will
+   save time.
+
+3. **precision**: by default the ``precision`` is set to ``d`` for
    standard hardware double precision.  While this precision may suffice,
    the blackbox solver supports two additional levels of precision:
    ``dd`` for double double preicsion (about 32 decimal places), and
@@ -123,7 +133,7 @@ Other options of the solver are
    is likely to yield more accurate results, at an extra cost,
    which may be compensated by multithreading.
 
-3. **checkin**: by default this flag is set to ``True`` to check
+4. **checkin**: by default this flag is set to ``True`` to check
    whether the system given on input has as many polynomials as
    variables.  The current version of the blackbox solver accepts
    only square systems.  See the section on positive dimensional
@@ -154,6 +164,18 @@ What is printed to screen by ``s = solve(p)`` is an example of
 the four different types of root counts.
 The structure of the output in ``s`` is described in the next section.
 
+Because the system ``p`` is sparse, the mixed volume is much smaller
+and we can avoid the computation B |eacute| zout numbers with
+the option ``mvfocus``, as demonstrated below.
+
+::
+
+   >>> from phcpy.solver import solve
+   >>> p = ['x^2*y^2 + x + 1;', 'x^2*y^2 + y + 1;']
+   >>> s = solve(p, mvfocus=1)
+   mixed volume : 4
+   stable mixed volume : 4
+
 If multitasking is applied in the solver,
 providing a larger than one value for the option ``tasks``,
 then the multi-homogeneous and the general linear-product 
@@ -165,6 +187,34 @@ run the polyhedral homotopies to solve a random coefficient start system.
 This random coefficient start system will then be used to solve the given
 system, so there is no need for a start system based on 
 a B |eacute| zout number.
+
+And then there two more options of ``solve``:
+
+5. **dictionary_output**: with polynomials given as strings on input,
+   the solver by default returns the solutions as a list of strings.
+   With ``dictionary_output=True``, the output of ``solve`` is a list
+   of Python dictionaries.  For example:
+
+   ::
+
+      >>> from phcpy.solver import solve
+      >>> p = ['x + y - 1;', 'x - y - 1;']
+      >>> s = solve(p, dictionary_output=True)
+      >>> s[0]
+      {'t': (1+0j), 'm': 1, 'err': 2.22e-16, 'rco': 0.5, 'res': 0.0,
+      'x': (1+0j), 'y': -0j}
+
+   The keys in the dictionaries are the names of the variables and
+   other attributes, described in the next section.
+   As the imaginary unit ``j`` appears, the solver computes with
+   complex numbers.
+
+6. **verbose_level**: by default, the value of the verbose level is zero.
+   Setting ``verbose_level`` to positive values will show the names
+   of the modules and procedures in the modules that are called during
+   the blackbox solver.  While mainly useful to the software developer,
+   a user may wonder during a long calculation at which stage 
+   the solver appears to be stuck in.
 
 representations of solutions of polynomial systems 
 --------------------------------------------------
