@@ -1,3 +1,5 @@
+Tue 29 Sep 2020 : updated greeting_banners for version 2.4.80.
+
 Mon 28 Sep 2020 : new package test_standard_solver with code from ts_bbsolve.
   Exported the pipelined_stable_continuation in black_box_root_counters.
   Move the polyhedral_solve procedures from black_box_solvers into the
