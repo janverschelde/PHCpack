@@ -278,6 +278,10 @@ Code snippets for jupyter notebook menu extensions were defined
 in version 0.7.4.  Version 0.8.3 gave access to DEMiCs to compute
 mixed volumes by dynamic enumeration of all mixed cells.
 
+An important milestone was the presentation of phcpy
+of the 18th Python in Science Conference, SciPy 2019,
+with paper which appeared in the proceedings (see the references below).
+
 As the original goal of phcpy was on exporting the functionality of
 PHCpack, its design is functional and phcpy is a collection of modules.
 Since version 1.0.0, two class definitions were added,
@@ -317,6 +321,12 @@ references
 #. T. Mizutani, A. Takeda, and M. Kojima.
    **Dynamic enumeration of all mixed cells.**
    *Discrete Comput. Geom.* 37(3):351-367, 2007.
+
+#. J. Otto, A. Forbes, and J. Verschelde.
+   **Solving Polynomial Systems with phcpy.**
+   In the *Proceedings of the 18th Python in Science Conference (SciPy 2019)*,
+   edited by Chris Calloway, David Lippa, Dillon Niederhut and David Shupe,
+   pages 58-64, 2019. 
 
 #. K. Piret:
    **Computing Critical Points of Polynomial Systems 

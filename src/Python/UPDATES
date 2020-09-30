@@ -1,3 +1,6 @@
+Wed 30 Sep 2020 : added reference to SciPy 2019 paper to welcome.rst in
+  the phcpy documentation.
+
 Tue 29 Sep 2020 : updated files for version 1.0.7.
 
 Mon 28 Sep 2020 : added the option mvfocus to the double precision solve()
