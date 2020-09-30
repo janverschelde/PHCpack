@@ -1,210 +1,188 @@
-The public distribution for PHCpack version 2.4.79 contains
+phcpy 1.0.7 offers a simple Python interface to PHCv2.4.80
 
-  Ada        Ada sources
-  bin        binary versions of phc
-  doc        documentation in restructured text for Sphinx
-  cgi        scripts for the web interface, developed by Xiangcheng Yu
-  Feedback   realization of feedback laws, with Yusong Wang
-  GPU        code for NVIDIA Graphics Processing Units
-             developed in collaboration with Genady Yoffe and Xiangcheng Yu
-  Lib        PHCpack as a C library of algorithms
-  Macaulay2  simple Macaulay2 interface to Littlewood-Richardson homotopies
-             and PHCpack.m2 with Elizabeth Gross and Sonja Petrovic,
-             with contributions of Anton Leykin
-  Maple      simple Maple interface, forerunner of PHCmaple with Anton Leykin
-  MPI        parallel PHCpack, bindings to MPI,
-             in collaboration with Yusong Wang, Anton Leykin, Yan Zhuang
-  Objects    makefile, .o and .ali files to create phc
-  Octave     interface with Octave and MATLAB, jointly with Yun Guan
-  Python     basic Python interface started with Kathy Piret; is now phcpy
+This directory was added since release 2.3.41 of PHCpack,
+in collaboration with Kathy Piret.
+Release 0.3.3 of phcpy offers the new module sweepers.py,
+which exports the sweep homotopies, described in the paper
+"Sweeping Algebraic Curves for Singular Solutions"
+by Kathy Piret and Jan Verschelde, published in the
+Journal of Computational and Applied Mathematics,
+volume 234, number 4, pages 1228-1237, 2010. 
 
-This code is distributed under the GNU GENERAL PUBLIC LICENSE,
-see the file COPYING.txt for version 3 of this license.
-The documentation (in restructured text developed with Sphinx) is licensed
-under a Creative Commons Attribution-Share Alike 3.0 License.
+The module phcpy needs the C extension module phcpy2c,
+which should be available as a shared object file.
+By default, the "make phcpy2c2.so" for python2 command will place
+this shared object file in the directory PHCpy2/phcpy.
+To compile phcpy2c2.so on Unix, the fPIC option must be used for all files,
+so it is recommended to first execute "make clean" before "make phcpy2c2.so".
+For python3, the shared object file is phcpy2c3.so and the code for phcpy
+is in the folder PHCpy3/phcpy.
 
-The date of the latest major release 2.3 was Independence Day 2005 (4 July).
-Since then, releases occurred frequently, applying agile software development.
-For each release, a single one line description gives a title to the release.
-While 2.4 could be viewed as another major release, marking it as 2.4.00
-simply continues the process of frequent releases.
+In version 2.3.71, documentation was generated with Sphinx,
+see the "doc" directory and the modules examples and phcsols were added.
+The module schubert.py was added in 2.3.73 and a plain version of the
+monodromy factorization was provided in phcsets.py in release 2.3.74.
 
-release 2.4.79 on 2020-07-30 : more optimizations in phc -u
-release 2.4.78 on 2020-06-30 : phc -u is more efficient, fixed bugs
-release 2.4.77 on 2020-06-12 : phc -v option #0 provides better verifier
-release 2.4.76 on 2020-04-29 : multitasked Newton-Fabry-Pade-Hesse trackers
-release 2.4.75 on 2020-01-28 : preliminary multitasked Newton on power series
-release 2.4.74 on 2019-10-21 : phc -c writes again the _sw files
-release 2.4.73 on 2019-10-03 : bug fix in phc -b for nonsquare systems 
-release 2.4.72 on 2019-09-01 : phc -u supports m-homogeneous coordinates
-release 2.4.71 on 2019-08-13 : phc -u supports 1-homogeneous coordinates
-release 2.4.70 on 2019-07-25 : removed series step from phc -u
-release 2.4.69 on 2019-07-05 : improved phc -u with better output
-release 2.4.68 on 2019-06-21 : option phc -V to trace procedure calls
-release 2.4.67 on 2019-05-17 : bug fixes for extra iterations for phc -u
-release 2.4.66 on 2019-03-29 : improved phc -u, -t, full windows 10 version
-release 2.4.65 on 2019-02-28 : improved phc -u for high degrees
-release 2.4.64 on 2019-01-21 : basic parallel series-Pade continuation
-release 2.4.63 on 2018-12-28 : improved phc -u, new AD library
-release 2.4.62 on 2018-12-10 : module curves in phcpy for Pade predictors
-release 2.4.61 on 2018-11-29 : phc -u offers a robust path tracker
-release 2.4.60 on 2018-11-11 : phc -u no longer fixed degree of the series
-release 2.4.59 on 2018-10-14 : fixed memory leak in phc -j
-release 2.4.58 on 2018-09-27 : bug fix for stable mixed volume in phc -b
-release 2.4.57 on 2018-08-31 : improved phc -B and many other bug fixes
-release 2.4.56 on 2018-08-14 : fixed error with GNAT Community 2018 compiler
-release 2.4.55 on 2018-06-02 : pipelined polyhedral homotopies with DEMiCs
-release 2.4.54 on 2018-05-18 : phc -m gives access to DEMiCs
-release 2.4.53 on 2018-05-01 : basic command line interface to DEMiCs
-release 2.4.52 on 2018-04-10 : multitasked homotopy membership tests in phc -B
-release 2.4.51 on 2018-03-26 : pipelined polyhedral continuation in phc -b|B
-release 2.4.50 on 2018-03-13 : faster phc -B by faster membership test
-release 2.4.49 on 2018-03-05 : phc -r computes set structures bound faster
-release 2.4.48 on 2017-12-30 : improved phc -B as another blackbox solver
-release 2.4.47 on 2017-10-17 : phc -B factors, bug fixed in phcpy
-release 2.4.46 on 2017-09-28 : option -B gives access to cascade homotopies
-release 2.4.45 on 2017-09-12 : root counters output string for phcpy
-release 2.4.44 on 2017-09-05 : code snippets for Jupyter/SageMath kernel
-release 2.4.43 on 2017-08-20 : bug fix in phc -p for dd/qd precision
-release 2.4.42 on 2017-08-13 : phcpy has numerical irreducible decomposition
-release 2.4.41 on 2017-07-31 : phc -l,l2,l3 accept Laurent polynomials
-release 2.4.40 on 2017-07-18 : monodromy for Laurent system witness sets
-release 2.4.39 on 2017-07-05 : improved support for Laurent systems
-release 2.4.38 on 2017-06-07 : preliminary Pade approximant methods
-release 2.4.37 on 2017-05-17 : check on maximum power in phc -j
-release 2.4.36 on 2017-02-19 : tuning and quality control added to phc -j
-release 2.4.35 on 2017-02-07 : new option phc -j for path trackers with AD
-release 2.4.34 on 2017-01-31 : templated code for path tracking on host
-release 2.4.33 on 2017-01-05 : reference manual, GNAT independent phcpy
-release 2.4.32 on 2016-12-30 : recondition swap homotopies, reference manual
-release 2.4.31 on 2016-12-20 : better Newton on power series in phc -u
-release 2.4.30 on 2016-11-30 : improved interface to Pieri homotopies
-release 2.4.29 on 2016-11-20 : multitasked option in phc -e LR-homotopies
-release 2.4.28 on 2016-10-31 : improved Littlewood-Richardson homotopies
-release 2.4.27 on 2016-10-16 : phc -u has Newton-Puiseux for regular curves
-release 2.4.26 on 2016-09-20 : check in phc -r on square system
-release 2.4.25 on 2016-08-31 : another use case for phcpy and better docs
-release 2.4.24 on 2016-08-13 : improved documentation with phcpy use cases
-release 2.4.23 on 2016-07-31 : improved phc -u with linearization
-release 2.4.22 on 2016-07-22 : fixed phc -k, linearization for power series
-release 2.4.21 on 2016-07-01 : phc -u computes power series solutions
-release 2.4.20 on 2016-06-15 : new phc --help, better documentation
-release 2.4.19 on 2016-06-03 : minor improvements, mostly for phcpy.dashboard
-release 2.4.18 on 2016-05-26 : bug fix in cascade of homotopies
-release 2.4.17 on 2016-05-21 : Gauss-Newton path trackers for LR homotopies
-release 2.4.16 on 2016-05-11 : bug fix for stable semi-mixed cells, --version
-release 2.4.15 on 2016-04-30 : phc -c combines option -t for multitasking
-release 2.4.14 on 2016-03-25 : phc -v handles overdetermined systems better
-release 2.4.13 on 2016-03-18 : phc -p handles overdetermined homotopies
-release 2.4.12 on 2016-02-19 : fix parsing ()**2, checkin in phcpy.solver.solve 
-release 2.4.11 on 2016-02-12 : polyhedral end games in version 0.4.0 of phcpy
-release 2.4.10 on 2016-01-17 : polyhedral end games in dd and qd arithmetic
-release 2.4.09 on 2016-01-02 : phcpy runs with Python 3.5, better documentation
-release 2.4.08 on 2015-12-29 : homotopy membership tests in phcpy
-release 2.4.07 on 2015-12-24 : monodromy breakup in dd/qd for phcpy 0.3.6
-release 2.4.06 on 2015-12-11 : pipelined polyhedral trackers in phc -m
-release 2.4.05 on 2015-11-23 : diagonal homotopies in phcpy, better docs
-release 2.4.04 on 2015-11-06 : sweep in dd/qd, and new sweepers.py module
-release 2.4.03 on 2015-10-22 : LR homotopies with double double & quad doubles
-release 2.4.02 on 2015-10-07 : new options phc -b2 and -b4 for dd/qd solving
-release 2.4.01 on 2015-09-24 : bug fix in string reps of poly for phcpy 0.3.0
-release 2.4.00 on 2015-08-31 : GPU accelerated path trackers in phcpy 0.2.9
-release 2.3.99 on 2015-07-31 : scaling in phcpy 0.2.8
-release 2.3.98 on 2015-06-26 : eval & diff circuits in phc -v option #8
-release 2.3.97 on 2015-05-22 : better Sphinx documentation and fewer bugs
-release 2.3.96 on 2014-11-26 : variable precision Newton's method
-release 2.3.95 on 2014-10-31 : more complete Littlewood-Richardson homotopies
-release 2.3.94 on 2014-09-25 : new option phc -o for symbol table
-release 2.3.93 on 2014-09-12 : phcpy contains module polytopes, bug fixes
-release 2.3.92 on 2014-08-31 : sampling in phc -y with dobldobls and quaddobls
-release 2.3.91 on 2014-08-10 : factorization and deflation with dd/qd numbers
-release 2.3.90 on 2014-07-30 : polyhedral homotopies with dd/qd numbers
-release 2.3.89 on 2014-06-30 : faster and more accurate path trackers
-release 2.3.88 on 2014-06-06 : improved Littlewood-Richardson homotopies
-release 2.3.87 on 2014-03-28 : dd/qd sampling and improved phcpy 0.1.7
-release 2.3.86 on 2013-12-20 : transform corank > 0 supports, better phcpy
-release 2.3.85 on 2013-12-06 : multiprecision next() path tracker in phcpy
-release 2.3.84 on 2013-09-25 : path trackers with generator for phcpy
-release 2.3.83 on 2013-09-19 : bug fixes and small improvements
-release 2.3.82 on 2013-09-06 : bug fix and new module: phcpy.phcmaps
-release 2.3.81 on 2013-08-30 : improved phcpy with pylint; test programs
-release 2.3.80 on 2013-08-12 : explicit 32- and 64-bit typing, phcpy package
-release 2.3.79 on 2013-05-16 : higher order predictors, multicore verification
-release 2.3.78 on 2013-04-25 : new multithreaded polyhedral homotopies
-release 2.3.77 on 2013-02-15 : improved MPI support, better phcpy.py
-release 2.3.76 on 2013-02-08 : bug fix in multprec homotopies, better phcpy.py
-release 2.3.75 on 2013-01-31 : better interfaces and phcpy.py
-release 2.3.74 on 2012-12-30 : improved makefiles and phcsets.py
-release 2.3.73 on 2012-12-21 : new schubert.py and bug fixes
-release 2.3.72 on 2012-12-06 : improved Python interface and bug fixes
-release 2.3.71 on 2012-12-02 : improved phcpy and circuit equations
-release 2.3.70 on 2012-11-08 : irreducible decomposition of binomial systems
-release 2.3.69 on 2012-08-08 : bug fixes and better diagonal homotopy output
-release 2.3.68 on 2012-06-14 : new phc -b solves general binomial systems
-release 2.3.67 on 2012-03-21 : bug fix in output of embedded systems
-release 2.3.66 on 2011-08-12 : new phc -y to sample an algebraic set
-release 2.3.65 on 2011-07-27 : bug fixes, recentered local intrinsic
-release 2.3.64 on 2011-05-23 : phc -q with more dd, qd; bug fixes
-release 2.3.63 on 2011-05-20 : phc -q with dd, qd cheater, bug fixes
-release 2.3.62 on 2011-05-16 : bug fixes in parsing wrong input
-release 2.3.61 on 2011-05-09 : bug fix and new phc -x option
-release 2.3.60 on 2010-12-19 : bug fix with m-homogeneous Bezout bound
-release 2.3.59 on 2010-11-14 : bug fixes + ts_path with quad doubles
-release 2.3.58 on 2010-09-27 : multiprecision refinement for rational input
-release 2.3.57 on 2010-09-12 : bug fixes and small changes
-release 2.3.56 on 2010-06-28 : tasking with quad doubles
-release 2.3.55 on 2010-05-28 : quad double arithmetic in phc -v
-release 2.3.54 on 2010-05-16 : bug fixes with Laurent input
-release 2.3.53 on 2009-11-30 : local intrinsic coordinates, bug fixes
-release 2.3.52 on 2009-10-30 : LR homotopies in phc -e, bug fixes
-release 2.3.51 on 2009-10-09 : better multiprecision phc -v; phc -b Laurent
-release 2.3.50 on 2009-09-30 : many bug fixes
-release 2.3.49 on 2009-09-11 : 64-bit arithmetic gives faster multiprecision
-release 2.3.48 on 2009-07-31 : new #7 in phc -f, tasking for phc -m
-release 2.3.47 on 2009-07-03 : better sweeping homotopies in phc -p
-release 2.3.46 on 2009-06-19 : multitasking also in phc -b; L-R homotopies
-release 2.3.45 on 2009-05-15 : multitasking continuation in phc -p
-release 2.3.44 on 2008-09-02 : one fix in v2.3.43 regressed
-release 2.3.43 on 2008-08-15 : bug fixes, more stable phcwulf.py
-release 2.3.42 on 2008-06-06 : bug fixes, extended phcpy and phcwulf.py
-release 2.3.41 on 2008-05-16 : Python phcpy module has blackbox solver
-release 2.3.40 on 2008-04-23 : bugs with deflation & stable mv fixed
-release 2.3.39 on 2008-02-08 : bug fixes and sweep summary
-release 2.3.38 on 2008-01-04 : bug fix in phc -b, cleaned up for warnings
-release 2.3.37 on 2007-12-29 : fixed leak in deflation, sweep in phc -p
-release 2.3.36 on 2007-12-21 : better phc -b, phc -c, and phc -e, bug fixes
-release 2.3.35 on 2007-12-10 : stable polynomial continuation in phc -b
-release 2.3.34 on 2007-11-29 : phc -b shows stable mixed volume, bug fixes
-release 2.3.33 on 2007-10-12 : patches and incremental improvements
-release 2.3.32 on 2007-08-15 : again bug fixes and stable mixed volumes
-release 2.3.31 on 2007-07-13 : bug fixes, stable mixed volumes in phc -m
-release 2.3.30 on 2007-06-22 : bug fix in deflation and Hermite predictor
-release 2.3.29 on 2007-06-20 : improved phc -m, bug fixes + Laurent input
-release 2.3.28 on 2007-06-01 : bug fixes in root refiners with deflation
-release 2.3.27 on 2007-05-22 : phc -b deflates by default, better phc -v
-release 2.3.26 on 2007-05-01 : i/o for Laurent systems, bug fixes
-release 2.3.25 on 2007-03-21 : improved phc -e and phc -b, phc_solve
-release 2.3.24 on 2007-02-18 : fix in phc -b, better defaults for phc -p
-release 2.3.23 on 2007-02-07 : bug fix in phc -b for linear systems
-release 2.3.22 on 2007-02-05 : improved phc -b and phc_solve
-release 2.3.21 on 2007-01-25 : phc_solve.c calls blackbox solver
-release 2.3.20 on 2007-01-14 : better phc -f, lib_track and mpi2track
-release 2.3.19 on 2007-01-02 : more efficient phc -q and mpi2track
-release 2.3.18 on 2006-12-18 : bug fix in mpi2cell_d, phc -q extended
-release 2.3.17 on 2006-12-03 : fixed output for univariate and linear -b
-release 2.3.16 on 2006-11-25 : better polyhedral trackers, phc -b and -f
-release 2.3.15 on 2006-09-28 : bug fix in phc -b, improved phc -r
-release 2.3.14 on 2006-08-28 : phc -b calls MixedVol
-release 2.3.13 on 2006-08-25 : ACM TOMS Algorithm 846 MixedVol in phc
-release 2.3.12 on 2006-06-23 : bug fix when reading systems in phc -p
-release 2.3.11 on 2006-06-15 : AIX warnings and fewnomial bug fix
-release 2.3.10 on 2006-06-09 : improved option 0 in phc -v and phc -f
-release 2.3.09 on 2006-05-12 : new option 0 in phc -f, removed phc -t 
-release 2.3.08 on 2006-05-03 : better mpi2track, mpi2cell_d
-release 2.3.07 on 2006-03-24 : option 0 in phc -v, improved mpi2track
-release 2.3.06 on 2006-03-16 : fewnomial solver; mpi2track and mpi2cell
-release 2.3.05 on 2006-02-17 : bug fix in per(); phc -q is new option
-release 2.3.04 on 2006-02-05 : C bindings to cos/sin for random numbers
-release 2.3.03 on 2006-01-10 : changes in menu for phc -f and lib_celcon
-release 2.3.02 on 2005-12-28 : numerous patches and changes
-release 2.3.01 on 2005-07-15 : one bug fix
+Release 2.4 corresponds to the first version of the GPU accelerated
+path trackers in the trackers module of phcpy.
+See the setup.py file for the specific shared object modules needed
+to install for the specific precision levels.
+
+Version 0.3.7 provided the key tools to compute a numerical
+irreducible decomposition.  In version 0.6.9, the code in the module sets
+was redistributed, leading to three new modules: cascades, factor, and
+diagonal.  Better support for Laurent polynomials was added as well.
+
+The package phcpy is defined in the directory PHCpy.
+The directory PHCpy3 contains the version of phcpy for Python 3.5+.
+The directory Jupyter contains an extension of the Jupyter notebook,
+which defines the menus for using phcpy in SageMath and python.
+The use of phcpy on a server hosted by JupyterHub was defined in
+collaboration with Jasmine Otto, and presented at SciPy 2019,
+described in the paper by Jasmine Otto, Angus Forbes, and Jan Verschelde:
+"Solving Polynomial Systems with phcpy", in the Proceedings of the
+18th Python in Science Conference (SciPy 2019), edited by Chris Calloway,
+David Lippa, Dillon Niederhut, and David Shupe, pages 58-64, 2019.
+
+Version 1.0.1 of phcpy started to provide an object oriented interface,
+with classes Solution and Polynomials, to respectively represent a
+solution and a system of polynomials.
+
+------------------------------------------------------------------------------
+file name              : short description
+------------------------------------------------------------------------------
+cascades.py            : homotopies to compute generic points
+curves.py              : approximate algebraic curves
+examples.py            : some interesting benchmark examples
+dashboard.py           : prototypes a graphical user interface
+diagonal.py            : homotopies to intersect solution sets
+factor.py              : factor pure dimensional set into irreducibles
+families.py            : a couple of families of systems
+interface.py           : load/store data to C interface with PHCpack
+maps.py                : monomial maps as solutions of binomials
+polynomials.py         : defines the class Polynomials
+polytopes.py           : convex hulls and mixed volumes of Newton polytopes
+schubert.py            : numerical Schubert calculus
+series.py              : power series solutions and robust path tracker
+sets.py                : manipulate algebraic sets
+solutions.py           : turns PHCpack solution strings into dictionaries
+solver.py              : use of C extension module phcpy2c
+sweepers.py            : homotopies to sweep through parameter space
+trackers.py            : path trackers
+tropisms.py            : numerically computed tropisms
+tuning.py              : tuning tolerances and parameters for path trackers
+server.py              : client/server for beowulf clusters
+------------------------------------------------------------------------------
+
+The modules examples, solver, solutions provide tests which are executed
+by "python examples.py" (regression test), "python solver.py" (tests solver),
+and "python solutions.py" (test on checking the solutions dictionaries).
+
+Release history:
+1.0.7 : 2020-09-30 : option to focus on polyhedral homotopies in solver
+1.0.6 : 2020-07-30 : added verbose level parameter in the solver module
+1.0.5 : 2020-07-01 : function in solver module for condition report 
+1.0.4 : 2020-06-12 : condition tables in the solutions module
+1.0.3 : 2020-04-29 : bug fix in sweepers module
+1.0.2 : 2019-10-21 : improved documentation
+1.0.1 : 2019-10-03 : class definitions for polynomials and solutions
+1.0.0 : 2019-09-01 : support for m-homogenization in trackers of curves
+0.9.9 : 2019-08-13 : step-by-step trackers in curves support 1-homogenization
+0.9.8 : 2019-07-25 : support for the tableau format of a polynomial system
+0.9.7 : 2019-07-05 : improved step-by-step Pade continuation
+0.9.6 : 2019-06-21 : improved random_coefficient_system in the solver module
+0.9.5 : 2019-05-17 : test in curves module for natural parameter homotopy
+0.9.4 : 2019-03-29 : gamma added to step-by-step path tracker in trackers
+0.9.3 : 2019-02-28 : fixed errors in documentation for path trackers
+0.9.2 : 2019-01-19 : step-by-step Pade continuation for natural homotopies
+0.9.1 : 2018-12-28 : improved module curves, step-by-step Pade continuation
+0.9.0 : 2018-12-10 : new module curves to apply Pade approximants in trackers
+0.8.9 : 2018-11-11 : removed fixed degree bound on the power series
+0.8.8 : 2018-10-14 : fixed memory leak in algorithmic differentiation trackers
+0.8.7 : 2018-09-27 : fixed regression tests in the examples module
+0.8.6 : 2018-08-31 : wrapped phc -B function in solvers of the factor module
+0.8.5 : 2018-08-14 : phcpy2c?.so is compiled with GNAT Community 2018
+0.8.4 : 2018-06-02 : option stable added to mixed_volume_by_demics()
+0.8.3 : 2018-05-18 : function mixed_volume_by_demics() in solver.py
+0.8.2 : 2018-05-01 : multiplicity calculation added to the solver module
+0.8.1 : 2018-04-10 : multitasked homotopy membership test in sets module
+0.8.0 : 2018-03-26 : multitasked solve() applies pipelining
+0.7.9 : 2018-03-13 : faster solve() in the factor module
+0.7.8 : 2018-03-05 : checkin for newton_power_series() functions
+0.7.7 : 2017-12-30 : checkin for mixed_volume(), init_cysignals() documented
+0.7.6 : 2017-10-17 : bug fixes and other improvements
+0.7.5 : 2017-09-28 : reduction of systems added to the solver module
+0.7.4 : 2017-09-12 : phcpy prints the root counters output string
+0.7.3 : 2017-09-05 : code snippets in Jupyter notebook for SageMath kernel
+0.7.2 : 2017-08-20 : added sevenbar to examples, bug fix in store solutions
+0.7.1 : 2017-08-13 : numerical irreducible decomposition in factor.solve()
+0.7.0 : 2017-07-31 : witness sets defined by Laurent polynomials
+0.6.9 : 2017-07-18 : new modules cascades, factor, and diagonal
+0.6.8 : 2017-07-05 : improved support for Laurent polynomial systems
+0.6.7 : 2017-06-07 : preliminary version of Pade approximant methods
+0.6.6 : 2017-05-17 : added tangents to 4 spheres as a use case
+0.6.5 : 2017-02-19 : tuned versions of the path trackers with AD 
+0.6.4 : 2017-02-07 : algorithmic differentiation trackers in phcpy
+0.6.3 : 2017-01-31 : source ready for better integration of ade trackers
+0.6.2 : 2017-01-05 : bug fix in series and made ready for import in Sage
+0.6.1 : 2016-12-30 : added Littlewood-Richardson tests in examples
+0.6.0 : 2016-12-20 : better Newton on power series in the series module
+0.5.9 : 2016-11-30 : reorganized chapters in the documentation
+0.5.8 : 2016-11-20 : added an example of a power series solution computation
+0.5.7 : 2016-10-31 : improved reference manual with restructured text
+0.5.6 : 2016-10-16 : compute mixed cell configuration for integer lifting
+0.5.5 : 2016-09-20 : checkin parameters for start system constructors
+0.5.4 : 2016-08-31 : another use case and reference manual in documentation
+0.5.3 : 2016-08-13 : added two use cases to the documentation
+0.5.2 : 2016-07-31 : added use case on the circle problem of Appolonius
+0.5.1 : 2016-07-22 : fixed makefile for .so files on Mac OS X
+0.5.0 : 2016-07-01 : series module to run Newton's method on power series
+0.4.9 : 2016-06-15 : improved documentation for the dashboard module
+0.4.8 : 2016-06-03 : new module dashboard to prototype GUI with Tkinter
+0.4.7 : 2016-05-26 : bug fix in cascade of homotopies
+0.4.6 : 2016-05-21 : improved Littlewood-Richardson homotopy interface
+0.4.5 : 2016-05-11 : bug fix for stable semi-mixed cells
+0.4.4 : 2016-04-30 : function to filter real solutions, better documentation
+0.4.3 : 2016-03-25 : improved root refinement for overdetermined systems
+0.4.2 : 2016-03-18 : path tracking for overdetermined convex homotopies
+0.4.1 : 2016-02-19 : bug fix in parsing ()**2, checkin for solver
+0.4.0 : 2016-02-12 : new module tropisms, for output of polyhedral end game
+0.3.9 : 2016-01-17 : new tuning module, to tune the settings of the trackers
+0.3.8 : 2016-01-02 : version for Python 3.5, improved documentation
+0.3.7 : 2015-12-29 : homotopy membership test in sets.py
+0.3.6 : 2015-12-24 : monodromy breakup with double doubles and quad doubles
+0.3.5 : 2015-12-11 : checkin/checkout functions in polytopes.py
+0.3.4 : 2015-11-23 : diagonal homotopies and improved documentation
+0.3.3 : 2015-11-06 : new module sweepers exports sweep homotopies
+0.3.2 : 2015-10-22 : L-R homotopies with double double and quad doubles
+0.3.1 : 2015-10-07 : blackbox solver with double doubles and quad doubles
+0.3.0 : 2015-09-24 : bug fix in passing string representations of polynomials
+0.2.9 : 2015-08-31 : interface to the path trackers accelerated by GPUs
+0.2.8 : 2015-07-31 : added scaling and better documentation for py2c
+0.2.7 : 2015-06-26 : faster retrieval of solutions, reproducible runs
+0.2.6 : 2015-05-22 : improved documentation
+0.2.5 : 2014-11-26 : variable precision Newton steps
+0.2.4 : 2014-10-31 : more complete Littlewood-Richardson homotopies
+0.2.3 : 2014-09-12 : new module polytopes with convex hulls and mixed volume
+0.2.2 : 2014-08-31 : univariate root finders at various level of precision
+0.2.1 : 2014-08-10 : deflation in double double and quad double precision
+0.2.0 : 2014-07-30 : polyhedral homotopies with double double and quad doubles
+0.1.9 : 2014-06-30 : examples directory and random system function
+0.1.8 : 2014-06-06 : schubert.py exports Littlewood-Richardson homotopies
+0.1.7 : 2014-03-28 : multicore path tracking
+0.1.6 : 2013-12-20 : m-homogenization, trackers in separate module
+0.1.5 : 2013-12-06 : arbitrary multiprecision Newton and path trackers
+0.1.4 : 2013-09-25 : path trackers with generators, bug fix
+0.1.3 : 2013-09-19 : references in families, puretopdim option in phcpmaps
+0.1.2 : 2013-09-06 : added new module phcmaps
+0.1.1 : 2013-08-30 : heeded warnings of pylint
+0.1.0 : 2013-08-12 : modules bundled into a package
+0.0.9 : 2013-04-25 : updated phcsets.py and new families.py
+0.0.8 : 2013-02-15 : deflation and cascade_step
+0.0.7 : 2013-02-08 : path trackers in double double and quad double precision
+0.0.6 : 2013-01-31 : linear-product root counts & start systems
+0.0.5 : 2012-12-30 : plain monodromy factorization in phcsets.py
+0.0.4 : 2012-12-21 : first release of schubert.py
+0.0.3 : 2012-12-06 : bug fixes and improvements
+0.0.2 : 2012-12-02 : regression tests, the new examples.py
+0.0.1 : 2012-11-30 : demonstration of Sphinx in MCS 507
