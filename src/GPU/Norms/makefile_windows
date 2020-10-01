@@ -34,16 +34,26 @@ dbl_norm_host.obj:
 	@-echo ">>> compile code for execution on the host ..."
 	$(CL)\cl /c dbl_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl_norm_host.obj
-	
+
 run_norm_d.obj:
 	@-echo ">>> compiling the main program ..."
 	$(CL)\cl /c run_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
                  /I$(CUDASDK)/include -O2 /Fo: run_norm_d.obj /EHsc
 
+test_norm_d.obj:
+	@-echo ">>> compiling the main program ..."
+	$(CL)\cl /c test_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: test_norm_d.obj /EHsc
+
 run_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj run_norm_d.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_norm_d.exe \
              dbl_norm_kernels.obj dbl_norm_host.obj run_norm_d.obj
+
+test_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj test_norm_d.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_norm_d.exe \
+             dbl_norm_kernels.obj dbl_norm_host.obj test_norm_d.obj
 
 
 clean:

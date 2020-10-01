@@ -1,6 +1,7 @@
 Thu 1 Oct 2020 : new test program test_norm_d.cpp without parameters to
   verify correctness and determine the best block size.
   In run_norm_d.cpp, enlarged the precision in the output.
+  Updated makefile_windows.
 
 Wed 2 Sep 2020 : figured out the makefile for windows, and made the
   files makefile_windows and makefile_unix, in addition to makefile
