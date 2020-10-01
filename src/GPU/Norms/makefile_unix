@@ -8,16 +8,21 @@ gcc=/usr/bin/gcc
 
 dbl_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
-	# nvcc -ccbin=$(gcc) -arch=sm_13 -c dbl_norm_kernels.cu
 	nvcc -ccbin=$(gcc) -c dbl_norm_kernels.cu
+
+# nvcc -ccbin=$(gcc) -arch=sm_13 -c dbl_norm_kernels.cu
 
 dbl_norm_host.o:
 	@-echo ">>> compile code for execution on the host ..."
 	$(gpp) -O3 -c dbl_norm_host.cpp
-	
+
 run_norm_d.o:
 	@-echo ">>> compiling the main program ..."
 	$(gpp) -I/usr/local/cuda/include -O3 -c run_norm_d.cpp
+
+test_norm_d.o:
+	@-echo ">>> compiling the main program ..."
+	$(gpp) -I/usr/local/cuda/include -O3 -c test_norm_d.cpp
 
 run_norm_d: dbl_norm_kernels.o dbl_norm_host.o run_norm_d.o
 	@-echo ">>> linking ..."
@@ -25,6 +30,13 @@ run_norm_d: dbl_norm_kernels.o dbl_norm_host.o run_norm_d.o
                dbl_norm_kernels.o dbl_norm_host.o run_norm_d.o \
             -lcuda -lcudart -L/usr/local/cuda/lib64 
 
+test_norm_d: dbl_norm_kernels.o dbl_norm_host.o test_norm_d.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_norm_d \
+               dbl_norm_kernels.o dbl_norm_host.o test_norm_d.o \
+            -lcuda -lcudart -L/usr/local/cuda/lib64 
+
 clean:
-	/bin/rm -f -r run_norm_d
-	/bin/rm -f -r dbl_norm_kernels.o dbl_norm_host.o run_norm_d.o
+	/bin/rm -f -r run_norm_d test_norm_d
+	/bin/rm -f -r dbl_norm_kernels.o dbl_norm_host.o
+	/bin/rm -f -r run_norm_d.o test_norm_d.o

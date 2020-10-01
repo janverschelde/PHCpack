@@ -1,7 +1,13 @@
-// This is the main program.
+/* This is the main program to run manual tests,
+   with four input parameters at the command line.
+   For example, typing at the command prompt
+   ./run_norm_d 32 32 1 2
+   computes the norm once with 32 threads in a block,
+   of a vector of dimension 32, on both GPU and CPU,
+   and applies this norm to normalize a random vector.
 
-// Including the vector_types.h is needed for the include of
-// the headers for the dbl_norm_kernels.
+Including the vector_types.h is needed for the include of
+the headers for the dbl_norm_kernels. */
 
 #include <ctime>
 #include <iostream>
@@ -77,6 +83,7 @@ int main ( int argc, char *argv[] )
 
    if(mode == 2) // GPU vs CPU correctness verification
    {
+      cout << scientific << setprecision(16);
       cout << "GPU norm : " << vnorm_device << endl;
       cout << "GPU norm after normalization : " << wnorm_device << endl;
       cout << "CPU norm : " << vnorm_host << endl;
