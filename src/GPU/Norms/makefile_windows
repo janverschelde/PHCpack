@@ -30,31 +30,62 @@ dbl_norm_kernels.obj:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
 	nvcc -ccbin=$(CL) -c dbl_norm_kernels.cu -o dbl_norm_kernels.obj
 
+cmplx_norm_kernels.obj:
+	@-echo ">>> compiling vector norm kernels for doubles ..."
+	nvcc -ccbin=$(CL) -c cmplx_norm_kernels.cu -o cmplx_norm_kernels.obj
+
 dbl_norm_host.obj:
-	@-echo ">>> compile code for execution on the host ..."
+	@-echo ">>> compiling code for execution on the host ..."
 	$(CL)\cl /c dbl_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl_norm_host.obj
 
-run_norm_d.obj:
+random_vectors.obj:
+	@-echo ">>> compiling random data generators ..."
+	$(CL)\cl /c random_vectors.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random_vectors.obj
+
+cmplx_norm_host.obj:
+	@-echo ">>> compiling code for execution on the host ..."
+	$(CL)\cl /c cmplx_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: cmplx_norm_host.obj
+
+run_dbl_norm_d.obj:
 	@-echo ">>> compiling the main program ..."
-	$(CL)\cl /c run_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include -O2 /Fo: run_norm_d.obj /EHsc
+	$(CL)\cl /c run_dbl_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: run_dbl_norm_d.obj /EHsc
 
-test_norm_d.obj:
+run_cmplx_norm_d.obj:
 	@-echo ">>> compiling the main program ..."
-	$(CL)\cl /c test_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include -O2 /Fo: test_norm_d.obj /EHsc
+	$(CL)\cl /c run_cmplx_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: run_cmplx_norm_d.obj /EHsc
 
-run_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj run_norm_d.obj
+test_dbl_norm_d.obj:
+	@-echo ">>> compiling the main program ..."
+	$(CL)\cl /c test_dbl_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: test_dbl_norm_d.obj /EHsc
+
+test_cmplx_norm_d.obj:
+	@-echo ">>> compiling the main program ..."
+	$(CL)\cl /c test_cmplx_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: test_cmplx_norm_d.obj /EHsc
+
+run_dbl_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj random_vectors.obj \
+                run_dbl_norm_d.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o run_norm_d.exe \
-             dbl_norm_kernels.obj dbl_norm_host.obj run_norm_d.obj
+	nvcc -ccbin=$(CL) -o run_dbl_norm_d.exe dbl_norm_kernels.obj \
+             dbl_norm_host.obj random_vectors.obj run_dbl_norm_d.obj
 
-test_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj test_norm_d.obj
+run_cmplx_norm_d: cmplx_norm_kernels.obj cmplx_norm_host.obj \
+                  random_vectors.obj run_cmplx_norm_d.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_norm_d.exe \
-             dbl_norm_kernels.obj dbl_norm_host.obj test_norm_d.obj
+	nvcc -ccbin=$(CL) -o run_cmplx_norm_d.exe cmplx_norm_kernels.obj \
+             cmplx_norm_host.obj random_vectors.obj run_cmplx_norm_d.obj
 
+test_cmplx_norm_d: cmplx_norm_kernels.obj cmplx_norm_host.obj \
+                   random_vectors.obj test_cmplx_norm_d.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_cmplx_norm_d.exe cmplx_norm_kernels.obj \
+             cmplx_norm_host.obj random_vectors.obj test_cmplx_norm_d.obj
 
 clean:
 	del *exe *obj *exp *lib *~
