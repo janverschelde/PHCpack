@@ -52,11 +52,10 @@ void time_device ( int dim, int freq, int bs );
  * as many times as the frequency freq, for block size bs,
  * and shows the elapsed time. */
 
-#define maxbs 512
-
 int main ( void )
 {
    int fail;
+   const int maxbs = d_shmemsize;
 
    for(int d=512; d<=4096; d=d+512) // for(int d=32; d<=1024; d=d+32)
    {
@@ -76,7 +75,7 @@ int main ( void )
       if(fail != 0) break;
    }
 
-   const int dimmaxbs = 512;      // dimension equals maxbs
+   const int dimmaxbs = maxbs;      // dimension equals maxbs
    const int freqmaxbs = dimmaxbs*32;
 
    cout << endl;
@@ -87,7 +86,7 @@ int main ( void )
    cout << endl;
    cout << "Time on device for dimension " << dimmaxbs
         << ", block size " << maxbs
-        << ", and frequency " << freqmaxbs << "..." << endl;
+        << ", and frequency " << freqmaxbs << " ..." << endl;
    time_device(dimmaxbs,freqmaxbs,maxbs);
 
    const int dim = 4096;
@@ -103,7 +102,7 @@ int main ( void )
    {
       cout << "Time on device for dimension " << dim
            << ", block size " << bs
-           << ", and frequency " << freq << "..." << endl;
+           << ", and frequency " << freq << " ..." << endl;
       time_device(dim,freq,bs);
    }
    return 0;

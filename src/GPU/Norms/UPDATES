@@ -1,3 +1,8 @@
+Fri 2 Oct 2020 : for both double and complex double, the constant
+  d_shmemsize can be raised to 1024 and this constant is moved to the
+  header file of {dbl,cmplx}_norm_kernels, so test_{dbl,cmplx}_norm_d.cpp
+  may use this constant.  Updated makefile_windows for test_dbl_norm_d.
+
 Thu 1 Oct 2020 : new test program test_norm_d.cpp without parameters to
   verify correctness and determine the best block size.
   In run_norm_d.cpp, enlarged the precision in the output.
@@ -7,8 +12,6 @@ Thu 1 Oct 2020 : new test program test_norm_d.cpp without parameters to
   run_dbl_norm_d and test_norm_d into run_dbl_norm_d, for the complex
   analogues run_cmplx_norm_d and test_cmplx_norm_d, which rely on the
   new cmplx_norm_host and cmplx_norm_kernels.
-  Added a modified version of random_vectors.cpp for windows,
-  as the file random_vectors_windows.cpp.  Updated makefile_windows.
 
 Wed 2 Sep 2020 : figured out the makefile for windows, and made the
   files makefile_windows and makefile_unix, in addition to makefile

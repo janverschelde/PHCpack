@@ -81,6 +81,12 @@ run_cmplx_norm_d: cmplx_norm_kernels.obj cmplx_norm_host.obj \
 	nvcc -ccbin=$(CL) -o run_cmplx_norm_d.exe cmplx_norm_kernels.obj \
              cmplx_norm_host.obj random_vectors.obj run_cmplx_norm_d.obj
 
+test_dbl_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj \
+                 random_vectors.obj test_dbl_norm_d.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_norm_d.exe dbl_norm_kernels.obj \
+             dbl_norm_host.obj random_vectors.obj test_dbl_norm_d.obj
+
 test_cmplx_norm_d: cmplx_norm_kernels.obj cmplx_norm_host.obj \
                    random_vectors.obj test_cmplx_norm_d.obj
 	@-echo ">>> linking ..."

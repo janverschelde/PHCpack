@@ -6,9 +6,7 @@
 #include <cmath>
 #include <assert.h>
 #include <cstdio>
-
-#define d_shmemsize 512
-#define maxrounds 32
+#include "dbl_norm_kernels.h"
 
 using namespace std;
 
@@ -36,7 +34,7 @@ __global__ void small_normalize_vector
    v[j] = shv[j]/prd[0];
 }
 
-__global__ void large_normalize_vector
+__global__ void medium_normalize_vector
  ( double* v, int dim, int rnd, int rndLog2, int BS, int BSLog2,
    double* twonorm )
 {
@@ -117,7 +115,7 @@ void GPU_norm
       int rf = ceil(((double) dim)/BS);
       int rfLog2 = ceil(log2((double) rf));
       for(int i=0; i<freq; i++)
-         large_normalize_vector<<<1,BS>>>
+         medium_normalize_vector<<<1,BS>>>
             (v_d,dim,rf,rfLog2,BS,BSLog2,twonorm_d);
    }
 

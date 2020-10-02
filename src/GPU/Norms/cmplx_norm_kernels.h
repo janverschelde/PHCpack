@@ -1,8 +1,28 @@
-// Defines the prototypes for the kernels to compute the 2-norm
-// of a complex vector in double precision.
+// Defines the prototypes and constants for the kernels
+// to compute the 2-norm of a complex vector in double precision.
 
 #ifndef __CMPLX_NORM_KERNELS_H__
 #define __CMPLX_NORM_KERNELS_H__
+
+/*
+  The constant d_shmemsize determines the size of the vectors
+  stored in shared memory.  As every thread works on one entry
+  in the shared memory vectors, for double precision, this size
+  is bounded by the number of threads in a block.
+  The largest dimension for which the small normalization runs
+  is thus the value of d_shmemsize.
+ */
+
+#define d_shmemsize 1024
+
+/*
+  The constant maxrounds determines the number of rounds
+  in the normalization of medium sized vectors.
+  The largest dimension for a medium size normalization
+  is thus d_shemsize*maxrounds, for instance: 1024*32 = 32768.
+ */
+
+#define maxrounds 32
 
 __global__ void small_normalize_vector
  ( double* vre, double* vim, int dim, int dimLog2, double* twonorm );
@@ -29,13 +49,13 @@ __global__ void small_normalize_vector
  *             of the original vector but with norm one;
  *   twonorm   the 2-norm of the given vector. */
 
-__global__ void large_normalize_vector
+__global__ void medium_normalize_vector
  ( double* vre, double* vim, int dim, int rnd, int rndLog2,
    int BS, int BSLog2, double* twonorm );
 /*
  * DESCRIPTION :
  *   Kernel function to compute the norm of the vector in v,
- *   for vectors of large dimension, in double precision.
+ *   for vectors of medium dimension, in double precision.
  *
  * REQUIRED :
  *   The dimension dim equals the block size BS times rnd.
