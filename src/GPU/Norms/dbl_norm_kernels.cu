@@ -95,8 +95,70 @@ __global__ void medium_normalize_vector
    }
 }
 
+__global__ void large_sum_the_squares
+ ( double* v, int dim, double* sums, int BS, int BSLog2 )
+{
+   const int i = blockIdx.x;
+   const int j = threadIdx.x;
+   const int k = i*BS + j;
+
+   __shared__ double shv[d_shmemsize];
+   __shared__ double prd[d_shmemsize];
+
+   shv[j] = v[k];
+   prd[j] = shv[j]*shv[j];
+
+   __syncthreads();
+
+   int powTwo = 1;                          // sum reduction
+   for(int L=0; L < BSLog2; L++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < BS) prd[j] = prd[j] + prd[j+powTwo];
+      powTwo = powTwo*2;
+
+      __syncthreads();
+   }
+   if(j == 0) sums[i] = prd[0];     // thread 0 writes the sum
+}
+
+__global__ void large_normalize_vector
+ ( double* v, int dim, double* sums, int nbsums, int nbsumsLog2, int BS,
+   double* twonorm )
+{
+   const int i = blockIdx.x;
+   const int j = threadIdx.x;
+   const int k = i*BS + j;
+
+   __shared__ double shv[d_shmemsize];
+
+   if(j < nbsums) shv[j] = sums[j];
+
+   __syncthreads();
+
+   int powTwo = 1;                          // sum reduction
+   for(int L=0; L < nbsumsLog2; L++)
+   {
+      if((j%(powTwo*2)) == 0)
+         if(j+powTwo < nbsums) shv[j] = shv[j] + shv[j+powTwo];
+      powTwo = powTwo*2;
+
+      __syncthreads();
+   }
+   __syncthreads();                    // every thread 0 of all blocks
+   if(j == 0) *twonorm = sqrt(shv[0]); // compute the 2-norm and assigns
+   __syncthreads();                    // to the output parameter
+
+   if(k < dim)
+   {
+      shv[j] = v[k];
+      shv[j] = shv[j]/(*twonorm);
+      v[k] = shv[j];
+   }
+}
+
 void GPU_norm
- ( double* v_h, int dim, int freq, int BS, double* twonorm )
+ ( double* v_h, int dim, int freq, int BS, double* twonorm, int blocked )
 {
    int BSLog2 = ceil(log2((double) BS)); // ceil for sum reduction
 
@@ -108,17 +170,34 @@ void GPU_norm
    cudaMalloc((void**)&twonorm_d,sizeof(double));
 
    if(dim == BS)
+   {
       for(int i=0; i<freq; i++)
          small_normalize_vector<<<1,BS>>>(v_d,dim,BSLog2,twonorm_d);
-   else
+   }
+   else if(blocked == 0)
    {
-      int rf = ceil(((double) dim)/BS);
-      int rfLog2 = ceil(log2((double) rf));
+      const int rf = ceil(((double) dim)/BS);
+      const int rfLog2 = ceil(log2((double) rf));
       for(int i=0; i<freq; i++)
          medium_normalize_vector<<<1,BS>>>
             (v_d,dim,rf,rfLog2,BS,BSLog2,twonorm_d);
    }
-
+   else
+   {
+      const int nblocks = dim/BS;
+      const int nblocksLog2 = ceil(log2((double) nblocks));
+      double* sums_d; // sums of squares for each block
+      size_t sums_size = nblocks*sizeof(double);
+      cudaMalloc((void**)&sums_d,sums_size);
+      for(int i=0; i<freq; i++)
+      {
+         large_sum_the_squares<<<nblocks,BS>>>(v_d,dim,sums_d,BS,BSLog2);
+         large_normalize_vector<<<nblocks,BS>>>
+            (v_d,dim,sums_d,nblocks,nblocksLog2,BS,twonorm_d);
+      }
+      double* sums_h = new double[nblocks];
+      cudaMemcpy(sums_h,sums_d,sums_size,cudaMemcpyDeviceToHost);
+   }
    cudaMemcpy(v_h,v_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(twonorm,twonorm_d,sizeof(double),cudaMemcpyDeviceToHost);
 }

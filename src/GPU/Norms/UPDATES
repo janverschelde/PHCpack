@@ -2,6 +2,8 @@ Fri 2 Oct 2020 : for both double and complex double, the constant
   d_shmemsize can be raised to 1024 and this constant is moved to the
   header file of {dbl,cmplx}_norm_kernels, so test_{dbl,cmplx}_norm_d.cpp
   may use this constant.  Updated makefile_windows for test_dbl_norm_d.
+  Extended dbl_norm_kernels, {run,test}_dbl_norm_d with functions to
+  compute the norm and to normalize with multiple thread blocks.
 
 Thu 1 Oct 2020 : new test program test_norm_d.cpp without parameters to
   verify correctness and determine the best block size.

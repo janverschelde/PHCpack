@@ -68,8 +68,53 @@ __global__ void medium_normalize_vector
  *   v         vector in same direction of original v with norm one;
  *   twonorm   the 2-norm of the original vector v. */
 
+__global__ void large_sum_the_squares
+ ( double* v, int dim, double* sums, int BS, int BSLog2 );
+/*
+ * DESCRIPTION :
+ *   Computes the sums of the squares of the numbers in v,
+ *   as needed in the 2-norm of the vector, with many blocks.
+ *
+ * REQUIRED :
+ *   Space in sums is allocated for as many blocks in the launch.
+ *
+ * ON ENTRY :
+ *   v         vector of doubles of dimension dim;
+ *   dim       dimension of the vector must equal BS*nbsums;
+ *   BS        the block size or the number of threads in the block;
+ *   BSLog2    equals ceil(log2((double) BS), used in sum reduction.
+ *
+ * ON RETURN :
+ *   sums      computed sums of squares of slices of v. */
+
+__global__ void large_normalize_vector
+ ( double* v, int dim, double* sums, int nbsums, int nbsumsLog2, int BS,
+   double* twonorm );
+/*
+ * DESCRIPTION :
+ *   Computes the norm of the vector v for vectors of large dimension,
+ *   for given sums of squares, and normalizes the vector.
+ *
+ * REQUIRED :
+ *   The dimension dim equals the block size BS times nbsums.
+ *   The block size BS is the number of threads in the block.
+ *   The number of blocks equals nbsums.
+ *
+ * ON ENTRY :
+ *   v         vector of doubles of dimension dim;
+ *   dim       dimension of the vector must equal BS*nbsums;
+ *   sums      computed sums of squares of slices of v;
+ *   nbsums    the number of elements in sums equals
+ *             the number of blocks in the kernel launch;
+ *   nbsumsLog2 is ceil(log2((double) nbsums), used in sum reduction;
+ *   BS        is the block size, the number of threads in a block.
+ *
+ * ON RETURN :
+ *   v         vector in same direction of original v with norm one;
+ *   twonorm   the 2-norm of the original vector v. */
+
 void GPU_norm
- ( double* v_h, int dim, int freq, int BS, double* twonorm );
+ ( double* v_h, int dim, int freq, int BS, double* twonorm, int blocked );
 /*
  * DESCRIPTION :
  *   Allocates global memory on the card, transfers the data for the vector
@@ -81,7 +126,10 @@ void GPU_norm
  *   v_h       vector of doubles of dimension dim;
  *   dim       dimension of the vector v_h;
  *   freq      frequency of the number of kernel launches (for timings);
- *   BS        block size, number of threads per block.
+ *   BS        block size, number of threads per block;
+ *   blocked   is 0 or 1, if 0, then only one block will be launched,
+ *             if 1, then as many blocks as dim/BS will be lauched and
+ *             dim must be a multiple of BS.
  *
  * ON RETURN :
  *   v_h       the normalized vector v_h;

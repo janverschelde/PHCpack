@@ -61,8 +61,8 @@ int main ( int argc, char *argv[] )
 
    if(mode==0 || mode==2) // GPU computation of the norm
    {
-      GPU_norm(v_device,dim,1,BS,&vnorm_device);
-      GPU_norm(v_device,dim,freq,BS,&wnorm_device);
+      GPU_norm(v_device,dim,1,BS,&vnorm_device,1);
+      GPU_norm(v_device,dim,freq,BS,&wnorm_device,1);
    }
 
    if(mode==1 || mode==2) // CPU computation of the norm
