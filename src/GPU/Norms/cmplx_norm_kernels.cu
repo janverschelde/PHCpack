@@ -1,5 +1,5 @@
-// This file contains the definition for the functions in dbl_norm_kernels.h,
-// to compute the 2-norm and normalize a vector of double precision numbers,
+// Defines code of the functions in cmplx_norm_kernels.h,
+// to compute the 2-norm and normalize a complex vector in double precision,
 // for small and large vectors.
 
 #include <iostream>
@@ -13,13 +13,15 @@
 using namespace std;
 
 __global__ void small_normalize_vector
- ( double* v, int dim, int dimLog2, double* twonorm )
+ ( double* vre, double* vim, int dim, int dimLog2, double* twonorm )
 {
    int j = threadIdx.x;
-   __shared__ double shv[d_shmemsize];
+   __shared__ double shvre[d_shmemsize];
+   __shared__ double shvim[d_shmemsize];
    __shared__ double prd[d_shmemsize];
-   shv[j] = v[j];    // reading of vector into shared memory
-   prd[j] = shv[j]*shv[j];
+   shvre[j] = vre[j];    // reading real parts into shared memory
+   shvim[j] = vim[j];    // reading imaginary parts into shared memory
+   prd[j] = shvre[j]*shvre[j] + shvim[j]*shvim[j];
    __syncthreads();
    int powTwo = 1;                          // sum reduction
    for(int k=0; k < dimLog2; k++)
@@ -33,18 +35,20 @@ __global__ void small_normalize_vector
    if(j == 0) prd[0] = sqrt(prd[0]); 
    if(j == 0) *twonorm = prd[0];
    __syncthreads();
-   v[j] = shv[j]/prd[0];
+   vre[j] = shvre[j]/prd[0];
+   vim[j] = shvim[j]/prd[0];
 }
 
 __global__ void large_normalize_vector
- ( double* v, int dim, int rnd, int rndLog2, int BS, int BSLog2,
-   double* twonorm )
+ ( double* vre, double* vim, int dim, int rnd, int rndLog2,
+   int BS, int BSLog2, double* twonorm )
 {
    int j = threadIdx.x;
    int powTwo;
    int vBSind = 0;
 
-   __shared__ double shv[d_shmemsize];
+   __shared__ double shvre[d_shmemsize];
+   __shared__ double shvim[d_shmemsize];
    __shared__ double prd[d_shmemsize];
    __shared__ double sums[maxrounds];
 
@@ -54,8 +58,9 @@ __global__ void large_normalize_vector
          prd[j] = 0.0;
       else
       {
-         shv[j] = v[vBSind+j];  // reading of vector into shared memory
-         prd[j] = shv[j]*shv[j];
+         shvre[j] = vre[vBSind+j];  // reading of vector into shared memory
+         shvim[j] = vim[vBSind+j]; 
+         prd[j] = shvre[j]*shvre[j] + shvim[j]*shvim[j];
       }
       __syncthreads();
       powTwo = 1;                          // sum reduction
@@ -89,8 +94,10 @@ __global__ void large_normalize_vector
    {
       if(vBSind+j < dim)
       {
-         shv[j] = v[vBSind+j];           // read into shared memory
-         v[vBSind+j] = shv[j]/sums[0];   // normalize vector
+         shvre[j] = vre[vBSind+j];           // read into shared memory
+         shvim[j] = vim[vBSind+j];
+         vre[vBSind+j] = shvre[j]/sums[0];   // normalize vector
+         vim[vBSind+j] = shvim[j]/sums[0];
       }
       __syncthreads();
       vBSind = vBSind + BS;
@@ -98,29 +105,33 @@ __global__ void large_normalize_vector
 }
 
 void GPU_norm
- ( double* v_h, int dim, int freq, int BS, double* twonorm )
+ ( double* vre_h, double* vim_h, int dim, int freq, int BS, double* twonorm )
 {
    int BSLog2 = ceil(log2((double) BS)); // ceil for sum reduction
 
-   double* v_d;                   // allocate for vector on device
+   double* vre_d;                   // allocate for real parts on device
+   double* vim_d;                   // allocate for imaginary parts on device
    size_t size = dim*sizeof(double);
-   cudaMalloc((void**)&v_d,size);
-   cudaMemcpy(v_d,v_h,size,cudaMemcpyHostToDevice);
+   cudaMalloc((void**)&vre_d,size);
+   cudaMalloc((void**)&vim_d,size);
+   cudaMemcpy(vre_d,vre_h,size,cudaMemcpyHostToDevice);
+   cudaMemcpy(vim_d,vim_h,size,cudaMemcpyHostToDevice);
    double* twonorm_d;
    cudaMalloc((void**)&twonorm_d,sizeof(double));
 
    if(dim == BS)
       for(int i=0; i<freq; i++)
-         small_normalize_vector<<<1,BS>>>(v_d,dim,BSLog2,twonorm_d);
+         small_normalize_vector<<<1,BS>>>(vre_d,vim_d,dim,BSLog2,twonorm_d);
    else
    {
       int rf = ceil(((double) dim)/BS);
       int rfLog2 = ceil(log2((double) rf));
       for(int i=0; i<freq; i++)
          large_normalize_vector<<<1,BS>>>
-            (v_d,dim,rf,rfLog2,BS,BSLog2,twonorm_d);
+            (vre_d,vim_d,dim,rf,rfLog2,BS,BSLog2,twonorm_d);
    }
 
-   cudaMemcpy(v_h,v_d,size,cudaMemcpyDeviceToHost);
+   cudaMemcpy(vre_h,vre_d,size,cudaMemcpyDeviceToHost);
+   cudaMemcpy(vim_h,vim_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(twonorm,twonorm_d,sizeof(double),cudaMemcpyDeviceToHost);
 }

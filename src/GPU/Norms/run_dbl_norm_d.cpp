@@ -1,7 +1,7 @@
 /* This is the main program to run manual tests,
    with four input parameters at the command line.
    For example, typing at the command prompt
-   ./run_norm_d 32 32 1 2
+   ./run_dbl_norm_d 32 32 1 2
    computes the norm once with 32 threads in a block,
    of a vector of dimension 32, on both GPU and CPU,
    and applies this norm to normalize a random vector.
@@ -17,6 +17,7 @@ the headers for the dbl_norm_kernels. */
 #include <vector_types.h>
 #include "dbl_norm_kernels.h"
 #include "dbl_norm_host.h"
+#include "random_vectors.h"
 
 using namespace std;
 
@@ -35,9 +36,6 @@ int parse_arguments
                 1 : CPU run, no output,
                 2 : both GPU and CPU run with output. */
 
-double random_double ( void );
-// Returns a random double in [-1,+1].
-
 int main ( int argc, char *argv[] )
 {
    // initialization of the execution parameters
@@ -52,16 +50,11 @@ int main ( int argc, char *argv[] )
       timevalue = 1287178355; // fixed seed for timings
    srand(timevalue);
 
-   double *v_host = new double[dim];   // vector on the host
+   double* v_host = new double[dim];   // vector on the host
+   double* w_host = new double[dim];   // a copy for normalization
    double* v_device = new double[dim]; // vector on the device
-   for(int k=0; k<dim; k++)
-   {
-      double r = random_double();
-      v_host[k] = r;
-      v_device[k] = r;
-   }
 
-   double *w_host = new double[dim];   // a copy for normalization
+   random_double_vectors(dim,v_host,v_device);
 
    double vnorm_device,wnorm_device;
    double vnorm_host,wnorm_host;
@@ -117,13 +110,4 @@ int parse_arguments
 
       return 0;
    }
-}
-
-double random_double ( void )
-{
-   double r = (double) rand();
-
-   r = r/RAND_MAX; // r is in [0,1]
-
-   return (2.0*r - 1.0); // result is in [-1, 1]
 }

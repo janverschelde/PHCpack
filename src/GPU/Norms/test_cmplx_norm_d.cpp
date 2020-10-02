@@ -1,4 +1,4 @@
-/* This program runs automatic tests to compute norms of real vectors
+/* This program runs automatic tests to compute norms of complex vectors
    in double precision, for preset values of the parameters.
    No input is required from the user. */
 
@@ -8,13 +8,11 @@
 #include <cstdlib>
 #include <cmath>
 #include <vector_types.h>
-#include "dbl_norm_kernels.h"
-#include "dbl_norm_host.h"
+#include "cmplx_norm_kernels.h"
+#include "cmplx_norm_host.h"
+#include "random_vectors.h"
 
 using namespace std;
-
-double random_double ( void );
-// Returns a random double in [-1,+1].
 
 void run ( int dim, int BS, int freq, int mode,
            double *vnorm_device, double *vnorm_host,
@@ -118,29 +116,28 @@ void run ( int dim, int BS, int freq, int mode,
    const int timevalue = time(NULL); // no fixed seed to verify correctness
    srand(timevalue);
 
-   double *v_host = new double[dim];   // vector on the host
-   double* v_device = new double[dim]; // vector on the device
-   for(int k=0; k<dim; k++)
-   {
-      double r = random_double();
-      v_host[k] = r;
-      v_device[k] = r;
-   }
-   double *w_host = new double[dim];   // a copy for normalization
+   double* vre_host = new double[dim];   // real parts of vector on the host
+   double* vim_host = new double[dim];   // imaginary parts on the host
+   double* wre_host = new double[dim];   // a copy for normalization
+   double* wim_host = new double[dim];
+   double* vre_device = new double[dim]; // real parts of vector on the device
+   double* vim_device = new double[dim]; // imaginary parts on the device
+
+   random_complex_vectors(dim,vre_host,vim_host,vre_device,vim_device);
 
    if(mode == 0 || mode == 2)
    {
-      GPU_norm(v_device,dim,1,BS,vnorm_device);
-      GPU_norm(v_device,dim,freq,BS,wnorm_device);
+      GPU_norm(vre_device,vim_device,dim,1,BS,vnorm_device);
+      GPU_norm(vre_device,vim_device,dim,freq,BS,wnorm_device);
    }
    if(mode == 1 || mode == 2)
    {
       for(int i=0; i<=freq; i++)
       {
-         CPU_norm(v_host,dim,vnorm_host);
-         make_copy(dim,v_host,w_host);
-         CPU_normalize(w_host,dim,*vnorm_host);
-         CPU_norm(w_host,dim,wnorm_host);
+         CPU_norm(vre_host,vim_host,dim,vnorm_host);
+         make_copy(dim,vre_host,vim_host,wre_host,wim_host);
+         CPU_normalize(wre_host,wim_host,dim,*vnorm_host);
+         CPU_norm(wre_host,wim_host,dim,wnorm_host);
       }
    }
 }
@@ -202,13 +199,4 @@ void time_device ( int dim, int freq, int BS )
    long int end_time = clock();
    int elapsed = 1000*(end_time - begin_time)/CLOCKS_PER_SEC;
    cout << "elapsed time : " << elapsed << " milliseconds" << endl;
-}
-
-double random_double ( void )
-{
-   double r = (double) rand();
-
-   r = r/RAND_MAX; // r is in [0,1]
-
-   return (2.0*r - 1.0); // result is in [-1, 1]
 }

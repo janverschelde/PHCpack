@@ -6,11 +6,17 @@
 # MAKEFILE = makefile_windows
 MAKEFILE = makefile_unix
 
-run_norm_d:
-	make -f $(MAKEFILE) run_norm_d
+run_dbl_norm_d:
+	make -f $(MAKEFILE) run_dbl_norm_d
 
-test_norm_d:
-	make -f $(MAKEFILE) test_norm_d
+test_dbl_norm_d:
+	make -f $(MAKEFILE) test_dbl_norm_d
+
+run_cmplx_norm_d:
+	make -f $(MAKEFILE) run_cmplx_norm_d
+
+test_cmplx_norm_d:
+	make -f $(MAKEFILE) test_cmplx_norm_d
 
 clean:
 	make -f $(MAKEFILE) clean

@@ -3,30 +3,34 @@ Accelerated Vector Norm computation in PHCv2.4.81.
 The code in this folder experiments with GPU accelerated algorithms
 to compute vector norms with multiple double precisions.
 
---------------------------------------------------------------------
-file name                  : short description
---------------------------------------------------------------------
-dbl_norm_host              : 2-norm of double vectors on host
-dbl_norm_kernels           : kernels for 2-norm of double vectors
-run_norm_d                 : main program to run norm computations
-test_norm_d                : test without command line parameters
---------------------------------------------------------------------
+----------------------------------------------------------------------------
+file name            : short description
+----------------------------------------------------------------------------
+dbl_norm_host        : 2-norm of double vectors on host
+dbl_norm_kernels     : kernels for 2-norm of double vectors
+run_dbl_norm_d       : main program to compute norms of double vectors
+test_dbl_norm_d      : test double 2-norm without command line parameters
+cmplx_norm_host      : 2-norm of complex double vectors on host
+cmplx_norm_kernels   : kernels for 2-norm of complex double vectors
+run_cmplx_norm_d     : main program to compute norms of complex vectors
+test_cmplx_norm_d    : test complex 2-norm without command line parameters
+----------------------------------------------------------------------------
 
-To build, type "make run_norm_d" and "make clean" to clean up.
+To build, type "make run_dbl_norm_d" and "make clean" to clean up.
 
 An example of a run with the programs:
 
-$ time ./run_norm_d 64 1024 10000 0
+$ time ./run_dbl_norm_d 64 1024 10000 0
 
 real	0m0.965s
 user	0m0.414s
 sys	0m0.548s
-$ time ./run_norm_d 64 1024 10000 1
+$ time ./run_dbl_norm_d 64 1024 10000 1
 
 real	0m0.073s
 user	0m0.072s
 sys	0m0.001s
-$ time ./run_norm_d 64 1024 10000 2
+$ time ./run_dbl_norm_d 64 1024 10000 2
 GPU norm : 26.2328
 GPU norm after normalization : 1
 CPU norm : 26.2328
@@ -39,6 +43,6 @@ $
 
 On windows, use Measure-Command:
 
-Norms> Measure-Command {./run_norm_d 32 32 1000 0}
-Norms> Measure-Command {./run_norm_d 32 32 1000 1}
-Norms> Measure-Command {./run_norm_d 32 32 1000 2}
+Norms> Measure-Command {./run_dbl_norm_d 32 32 1000 0}
+Norms> Measure-Command {./run_dbl_norm_d 32 32 1000 1}
+Norms> Measure-Command {./run_dbl_norm_d 32 32 1000 2}

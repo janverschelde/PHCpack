@@ -1,4 +1,5 @@
-// defines code of the norm computations for execution on the host
+// The file dbl_norm_host.cpp defines the code for the functions
+// specified in dbl_norm_host.h.
 
 #include "dbl_norm_host.h"
 #include <cmath>
@@ -12,7 +13,7 @@ void CPU_norm ( double* v, int dim, double* twonorm )
 {
    double sum = 0.0;
 
-   for(int i=0; i<dim; i++) sum = sum + v[i]*v[i] + v[i]*v[i];
+   for(int i=0; i<dim; i++) sum = sum + v[i]*v[i];
 
    *twonorm = sqrt(sum);
 }

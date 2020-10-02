@@ -1,4 +1,5 @@
-// defines code for execution on the host
+// The file dbl_norm_host.h specifies functions to compute
+// the 2-norm of a real double vector and to normalize a vector.
 
 #ifndef __dbl_norm_host_h__
 #define __dbl_norm_host_h__
