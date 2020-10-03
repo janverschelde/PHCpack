@@ -89,8 +89,8 @@ int main ( void )
         << ", and frequency " << freqmaxbs << " ..." << endl;
    time_device(dimmaxbs,freqmaxbs,maxbs);
 
-   const int dim = 4096;
-   const int freq = dim*32;
+   const int dim = 1024*1024;
+   const int freq = 2048;
 
    cout << endl;
    cout << "Time on host for dimension " << dim
@@ -100,10 +100,13 @@ int main ( void )
    cout << endl;
    for(int bs=128; bs<=maxbs; bs=bs+128)
    {
-      cout << "Time on device for dimension " << dim
-           << ", block size " << bs
-           << ", and frequency " << freq << " ..." << endl;
-      time_device(dim,freq,bs);
+      if(dim % bs == 0) // dimension must be a multiple of BS
+      {
+         cout << "Time on device for dimension " << dim
+              << ", block size " << bs
+              << ", and frequency " << freq << " ..." << endl;
+         time_device(dim,freq,bs);
+      }
    }
    return 0;
 }
@@ -126,8 +129,8 @@ void run ( int dim, int BS, int freq, int mode,
 
    if(mode == 0 || mode == 2)
    {
-      GPU_norm(vre_device,vim_device,dim,1,BS,vnorm_device);
-      GPU_norm(vre_device,vim_device,dim,freq,BS,wnorm_device);
+      GPU_norm(vre_device,vim_device,dim,1,BS,vnorm_device,1);
+      GPU_norm(vre_device,vim_device,dim,freq,BS,wnorm_device,1);
    }
    if(mode == 1 || mode == 2)
    {

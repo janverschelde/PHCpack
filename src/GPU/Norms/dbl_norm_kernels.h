@@ -122,6 +122,9 @@ void GPU_norm
  *   and transfers the result from global memory of the card 
  *   to the memory of the host.
  *
+ * REQUIRED :
+ *   The dimension dim is a multiple of the block size BS.
+ *
  * ON ENTRY :
  *   v_h       vector of doubles of dimension dim;
  *   dim       dimension of the vector v_h;

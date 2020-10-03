@@ -195,8 +195,6 @@ void GPU_norm
          large_normalize_vector<<<nblocks,BS>>>
             (v_d,dim,sums_d,nblocks,nblocksLog2,BS,twonorm_d);
       }
-      double* sums_h = new double[nblocks];
-      cudaMemcpy(sums_h,sums_d,sums_size,cudaMemcpyDeviceToHost);
    }
    cudaMemcpy(v_h,v_d,size,cudaMemcpyDeviceToHost);
    cudaMemcpy(twonorm,twonorm_d,sizeof(double),cudaMemcpyDeviceToHost);

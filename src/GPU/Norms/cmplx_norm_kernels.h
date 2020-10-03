@@ -77,8 +77,60 @@ __global__ void medium_normalize_vector
  *             of the original vector but with norm one;
  *   twonorm   the 2-norm of the given vector. */
 
+__global__ void large_sum_the_squares
+ ( double* vre, double* vim, int dim, double* sums, int BS, int BSLog2 );
+/*
+ * DESCRIPTION :
+ *   Computes the sums of the squares of the numbers in v,
+ *   as needed in the 2-norm of the vector, with many blocks.
+ *
+ * REQUIRED :
+ *   Space in sums is allocated for as many blocks in the launch.
+ *
+ * ON ENTRY :
+ *   vre       real parts of a complex vector of dimension dim;
+ *   vim       imaginary parts of a complex vector of dimension dim;
+ *   dim       dimension of the vector must equal BS*nbsums;
+ *   BS        the block size or the number of threads in the block;
+ *   BSLog2    equals ceil(log2((double) BS), used in sum reduction.
+ *
+ * ON RETURN :
+ *   sums      computed sums of squares of slices of v. */
+
+__global__ void large_normalize_vector
+ ( double* vre, double* vim, int dim, double* sums,
+   int nbsums, int nbsumsLog2, int BS, double* twonorm );
+/*
+ * DESCRIPTION :
+ *   Computes the norm of the vector v for vectors of large dimension,
+ *   for given sums of squares, and normalizes the vector.
+ *
+ * REQUIRED :
+ *   The dimension dim equals the block size BS times nbsums.
+ *   The block size BS is the number of threads in the block.
+ *   The number of blocks equals nbsums.
+ *
+ * ON ENTRY :
+ *   vre       real parts of a complex vector of dimension dim;
+ *   vim       imaginary parts of a complex vector of dimension dim;
+ *   v         vector of doubles of dimension dim;
+ *   dim       dimension of the vector must equal BS*nbsums;
+ *   sums      computed sums of squares of slices of v;
+ *   nbsums    the number of elements in sums equals
+ *             the number of blocks in the kernel launch;
+ *   nbsumsLog2 is ceil(log2((double) nbsums), used in sum reduction;
+ *   BS        is the block size, the number of threads in a block.
+ *
+ * ON RETURN :
+ *   vre       real parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   vim       imaginary parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   twonorm   the 2-norm of the original vector v. */
+
 void GPU_norm
- ( double* vre_h, double* vim_h, int dim, int freq, int BS, double* twonorm );
+ ( double* vre_h, double* vim_h, int dim, int freq, int BS,
+   double* twonorm, int blocked );
 /*
  * DESCRIPTION :
  *   Allocates global memory on the card, transfers the data for the vector
@@ -86,12 +138,18 @@ void GPU_norm
  *   and transfers the result from global memory of the card 
  *   to the memory of the host.
  *
+ * REQUIRED :
+ *   The dimension dim is a multiple of the block size BS.
+ *
  * ON ENTRY :
  *   vre_h     real parts of a complex vector of dimension dim;
  *   vim_h     imaginary parts of a complex vector of dimension dim;
  *   dim       dimension of the given vector;
  *   freq      frequency of the number of kernel launches (for timings);
- *   BS        block size, number of threads per block.
+ *   BS        block size, number of threads per block;
+ *   blocked   is 0 or 1, if 0, then only one block will be launched,
+ *             if 1, then as many blocks as dim/BS will be lauched and
+ *             dim must be a multiple of BS.
  *
  * ON RETURN :
  *   vre_h     real parts of the the normalized vector on input;
