@@ -9,7 +9,7 @@ package Main_m_Homogenization is
 
 -- DESCRIPTION :
 --   The main interactive procedure to compute m-homogeneous Bezout numbers
---   are defined by this procedure;
+--   are defined by this package.
 
   procedure m_Homogenization_Info;
 

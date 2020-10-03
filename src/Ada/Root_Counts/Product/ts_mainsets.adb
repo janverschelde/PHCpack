@@ -8,29 +8,28 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors;
-with Drivers_for_Set_Structures;         use Drivers_for_Set_Structures;
+-- with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors;
+with Main_Set_Structures;
 with Random_Product_Start_Systems;
 with Standard_Linear_Product_System;
-with Set_Structure;
 with Set_Structure_io;
 with Degree_Sets_Tables;
 with Degree_Sets_Tables_io;
 
-procedure ts_drivss is
+procedure ts_mainsets is
 
 -- DESCRIPTION :
---   Reads a polynomial system and calls the driver.
+--   Tests the Bezout numbers for general linear-product start structures.
 
-  procedure Test_Driver is
+  procedure Test_Main is
 
   -- DESCRIPTION :
-  --   Calls the main driver to construct a set structure
-  --   for a polynomial system.
+  --   Prompts for a polynomial system and constructs a set structure
+  --   with the main procedure for set structures.
 
     file : file_type;
     lp : Link_to_Poly_Sys;
-    lpos : List;
+   -- lpos : List;
     b : natural32 := 0;
 
   begin
@@ -41,9 +40,10 @@ procedure ts_drivss is
     begin
       put_line("Reading the output file.");
       Read_Name_and_Create_File(file);
-      Driver_for_Set_Structure(file,lp.all,b,lpos,q,qsols);
+     -- Main_Set_Structures.Main(file,lp.all,b,lpos,q,qsols);
+      Main_Set_Structures.Main(file,lp.all,b,q,qsols);
     end;
-  end Test_Driver;
+  end Test_Main;
 
   procedure Test_Permanent_Computation ( dim : in natural32 ) is
 
@@ -129,13 +129,13 @@ procedure ts_drivss is
   begin
     new_line;
     put_line("MENU to test set structures :");
-    put_line("  1. test the main driver;");
+    put_line("  1. test the main procedure;");
     put_line("  2. test root count computation.");
     put("Type 1 or 2 to select : ");
     Ask_Alternative(ans,"12");
     new_line;
     case ans is
-      when '1' => Test_Driver;
+      when '1' => Test_Main;
       when '2' => Test_Root_Count;
       when others => null;
     end case;
@@ -143,4 +143,4 @@ procedure ts_drivss is
 
 begin
   Main;
-end ts_drivss;
+end ts_mainsets;

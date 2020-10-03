@@ -49,8 +49,8 @@ ts_mainvmhom                       : calls the main m-homogenization
 generate_unions                    : all unions of k numbers from a range
 degree_structure                   : model for multi-homogeneous structure
 multi_homogeneous_start_systems    : construct multi-homogeneous start systems
-drivers_for_multi_homogenization   : menu-driver for multi-homogenization
-ts_drivmuho                        : calls the driver for multi-homogenization
+main_multi_homogenization          : main procedure for multi-homogenization
+ts_mainmuho                        : calls the main multi-homogenization
 ------------------------------------------------------------------------------
 pivot_selection                    : algorithms for pivot selection
 ts_pivsel                          : test pivot selection problem
@@ -62,8 +62,8 @@ supporting_set_structure           : does set structure support polynomials?
 degree_sets_tables                 : generalized permanents
 degree_sets_tables_io              : output of degree sets tables
 random_product_start_systems       : construct random linear-product systems
-drivers_for_set_structures         : menu-driver for set structures
+main_set_structures                : main procedure for set structures
 ts_strset                          : test on set structures as strings
-ts_drivss                          : calls the driver for set structures
+ts_mainsets                        : calls the main for set structures
 ts_prodsys                         : test on jumpstarting product systems
 ------------------------------------------------------------------------------

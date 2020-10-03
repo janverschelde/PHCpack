@@ -5,7 +5,6 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Natural_Vectors;
-with Standard_Complex_Prod_Systems;      use Standard_Complex_Prod_Systems;
 with Standard_Complex_Prod_Systems_io;   use Standard_Complex_Prod_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Set_Structure,Set_Structure_io;
@@ -14,7 +13,7 @@ with Standard_Linear_Product_System;
 with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
 with Standard_Complex_Prod_Planes;
 
-package body Drivers_for_Set_Structures is
+package body Main_Set_Structures is
 
   procedure Set_Structure_Info is
 
@@ -59,11 +58,6 @@ package body Drivers_for_Set_Structures is
   end Read_Set_Structure;
 
   procedure Write_Results ( file : in file_type; bb : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Writes the generalized Bezout number with its corresponding
-  --   set structure to file.
-
   begin
     new_line(file);
     put(file,"  generalized Bezout number is "); put(file,bb,1);
@@ -73,9 +67,6 @@ package body Drivers_for_Set_Structures is
   end Write_Results;
 
   procedure Save_Results ( q : in Prod_Sys; qsols : in Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Saves the start system and the corresponding start solutions to file.
 
     file : file_type;
 
@@ -95,10 +86,7 @@ package body Drivers_for_Set_Structures is
     end if;
   end Save_Results;
 
-  procedure Display_Menu ( choice : out character; bb : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for a choice after displaying a menu.
+  procedure Menu_Prompt ( choice : out character; bb : in natural32 ) is
 
     ans : character;
 
@@ -110,18 +98,10 @@ package body Drivers_for_Set_Structures is
     put_line("  2. Evaluate your own set structure");
     put("Type 0, 1, or 2 to make your choice : ");
     Ask_Alternative(ans,"012"); choice := ans;
-  end Display_Menu;
+  end Menu_Prompt;
 
-  procedure Dispatch_Menu ( file : in file_type; choice : in character;
-                            p : in Poly_Sys; bb : in out natural32 ) is
-
-  -- DESCRIPTION :
-  --   Depending on whether the user wants the computer to generate
-  --   a set structure or whether a set structure needs to be read,
-  --   a generalized Bezout number is computed and returned in bb.
-  --   The permanent computation based on the bipartite matching problem
-  --   is more efficient than the one based on set unions.
-
+  procedure Menu_Handler ( file : in file_type; choice : in character;
+                           p : in Poly_Sys; bb : in out natural32 ) is
   begin
     case choice is
       when '1' =>  
@@ -133,15 +113,11 @@ package body Drivers_for_Set_Structures is
       when others => null;
     end case;
     Write_Results(Standard_Output,bb); Write_Results(file,bb);
-  end Dispatch_Menu;
+  end Menu_Handler;
 
-  procedure Driver_for_Bezout_Number
+  procedure Compute_Bezout_Number
                 ( file : in file_type;
                   p : in Poly_Sys; bb : in out natural32 ) is
-
-  -- DESCRIPTION :
-  --   Interactive driver for the calculation of a generalized Bezout number,
-  --   based on a supporting set structure for the polynomial system p.
 
     method : character;
     timer : timing_widget;
@@ -151,88 +127,83 @@ package body Drivers_for_Set_Structures is
     put_line(file,"SET STRUCTURE ANALYSIS :");
     tstart(timer);
     loop
-      Display_Menu(method,bb);
+      Menu_Prompt(method,bb);
       exit when method = '0';
-      Dispatch_Menu(file,method,p,bb);
+      Menu_Handler(file,method,p,bb);
     end loop;
     tstop(timer);
     new_line(file);
     print_times(file,timer,"set structure analysis");
-  end Driver_for_Bezout_Number;
+  end Compute_Bezout_Number;
 
-  procedure Driver_for_Set_Structure
-               ( file : in file_type; p : in Poly_Sys; 
-                 b : in out natural32; lpos : in out List;
-                 q : out Poly_Sys; qsols : out Solution_List ) is
+  procedure Construct_Start_System
+              ( file : in file_type; p : in Poly_Sys;
+                bb : in natural32;
+                q : out Poly_Sys; qsols : out Solution_List ) is
 
-    procedure Driver_for_Start_System
-                  ( file : in file_type; bb : in natural32 ) is
-
-      n : constant natural32 := natural32(p'last);
-      ans : character;
-      timer : timing_widget;
-      qq : Poly_Sys(p'range);
-      rq : Prod_Sys(p'range);
-      qqsols : Solution_List;
-      nl : natural32;
-
-    begin
-      new_line;
-      put("Do you want a start system based on the set structure ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      if ans = 'y' then
-        put("There are "); put(bb,1); put_line(" start solutions.");
-        put_line("phc -q can compute start solutions later whenever needed.");
-        put("Do you want to compute all solutions now ? (y/n) ");
-        Ask_Yes_or_No(ans);
-        tstart(timer);
-        Standard_Linear_Product_System.Init(n);
-        Build_Random_Product_System(n);
-        rq := Standard_Complex_Prod_Planes.Create;
-        qq := Standard_Linear_Product_System.Polynomial_System;
-       -- Random_Product_System.Solve(qqsols,nl,lpos);
-        if ans = 'y'
-         then Standard_Linear_Product_System.Solve(qqsols,nl);
-        end if;
-        tstop(timer);
-        Save_Results(rq,qqsols);
-        q := qq; qsols := qqsols;
-        new_line(file);
-        put_line(file,"RANDOM LINEAR-PRODUCT START SYSTEM : ");
-        put_line(file,natural32(rq'last),rq); -- put_line(file,qq);
-        if not Is_Null(qqsols) then
-          new_line(file);
-          put_line(file,"THE SOLUTIONS :");
-          new_line(file);
-          put(file,Length_Of(qqsols),natural32(Head_Of(qqsols).n),qqsols);
-          new_line(file);
-          print_times(file,timer,"constructing and solving the start system");
-        else
-          new_line(file);
-          print_times(file,timer,"constructing a linear-product start system");
-        end if;
-        Set_Structure.Clear;
-        Standard_Linear_Product_System.Clear;
-      else
-        Set_Structure.Clear;
-       -- Clear(lpos);
-      end if;
-    end Driver_for_Start_System;
-
-    procedure Main_Driver is
-
-      bb : natural32 := b;
-
-    begin
-      Driver_for_Bezout_Number(file,p,bb);
-      if not Set_Structure.Empty then
-        b := bb;
-        Driver_for_Start_System(file,bb);
-      end if;
-    end Main_Driver;
+    n : constant natural32 := natural32(p'last);
+    ans : character;
+    timer : timing_widget;
+    qq : Poly_Sys(p'range);
+    rq : Prod_Sys(p'range);
+    qqsols : Solution_List;
+    nl : natural32;
 
   begin
-    Main_Driver;
-  end Driver_for_Set_Structure;
+    new_line;
+    put("Do you want a start system based on the set structure ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put("There are "); put(bb,1); put_line(" start solutions.");
+      put_line("phc -q can compute start solutions later whenever needed.");
+      put("Do you want to compute all solutions now ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      tstart(timer);
+      Standard_Linear_Product_System.Init(n);
+      Build_Random_Product_System(n);
+      rq := Standard_Complex_Prod_Planes.Create;
+      qq := Standard_Linear_Product_System.Polynomial_System;
+     -- Random_Product_System.Solve(qqsols,nl,lpos);
+      if ans = 'y'
+       then Standard_Linear_Product_System.Solve(qqsols,nl);
+      end if;
+      tstop(timer);
+      Save_Results(rq,qqsols);
+      q := qq; qsols := qqsols;
+      new_line(file);
+      put_line(file,"RANDOM LINEAR-PRODUCT START SYSTEM : ");
+      put_line(file,natural32(rq'last),rq); -- put_line(file,qq);
+      if not Is_Null(qqsols) then
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        new_line(file);
+        put(file,Length_Of(qqsols),natural32(Head_Of(qqsols).n),qqsols);
+        new_line(file);
+        print_times(file,timer,"constructing and solving the start system");
+      else
+        new_line(file);
+        print_times(file,timer,"constructing a linear-product start system");
+      end if;
+      Set_Structure.Clear;
+      Standard_Linear_Product_System.Clear;
+    else
+      Set_Structure.Clear;
+     -- Clear(lpos);
+    end if;
+  end Construct_Start_System;
 
-end Drivers_for_Set_Structures;
+  procedure Main ( file : in file_type; p : in Poly_Sys; 
+                   b : in out natural32; -- lpos : in out List;
+                   q : out Poly_Sys; qsols : out Solution_List ) is
+
+    bb : natural32 := b;
+
+  begin
+    Compute_Bezout_Number(file,p,bb);
+    if not Set_Structure.Empty then
+      b := bb;
+      Construct_Start_System(file,p,bb,q,qsols);
+    end if;
+  end Main;
+
+end Main_Set_Structures;

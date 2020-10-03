@@ -2,6 +2,10 @@ Sat 3 Oct 2020 : renamed the package drivers_for_m_homogenization into
   main_m_homogenization and factored out the main procedures with the
   specifications properly documented in the package specification.
   Renamed the test procedure ts_drivmhom.adb into ts_mainmhom.adb.
+  Renamed drivers_for_set_structures into main_set_structures and
+  drivers_for_multi_homogenization into main_multi_homogenization,
+  with correspoinding test procedures ts_drivss and ts_drivmuho
+  renamed into ts_mainsets and ts_mainmuho.
 
 Wed 23 Sep 2020 : updated degrees_in_sets_of_unknowns for polynomials
   in triple, penta, octo, and deca double precision.

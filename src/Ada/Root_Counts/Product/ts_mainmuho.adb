@@ -5,16 +5,17 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Prod_Systems;      use Standard_Complex_Prod_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Drivers_for_Multi_Homogenization;   use Drivers_for_Multi_Homogenization;
+with Main_Multi_Homogenization;
 
-procedure ts_drivmuho is
+procedure ts_mainmuho is
 
 -- DESCRIPTION :
---   Reads a polynomial system and calls the driver.
+--   Reads a polynomial system and calls the main procedure
+--   for multi-homogenization.
 
   file : file_type;
   lp : Link_to_Poly_Sys;
-  b : natural32;
+  b : natural32 := 0;
 
 begin
   get(lp);
@@ -25,6 +26,6 @@ begin
   begin
     put_line("Reading the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_Multi_homogenization(file,lp.all,b,q,rq,qsols);
+    Main_Multi_homogenization.Main(file,lp.all,b,q,rq,qsols);
   end;
-end ts_drivmuho;
+end ts_mainmuho;
