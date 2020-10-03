@@ -1240,9 +1240,9 @@ ts_strpart:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_strpart.adb \
                  -o $(BIN)/ts_strpart
 
-ts_drivmhom:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivmhom.adb \
-                 -o $(BIN)/ts_drivmhom
+ts_mainmhom:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainmhom.adb \
+                 -o $(BIN)/ts_mainmhom
 
 ts_drivmuho:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivmuho.adb \

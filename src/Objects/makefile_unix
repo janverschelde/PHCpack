@@ -1199,9 +1199,9 @@ ts_permanent:
 ts_prodsys:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_prodsys.adb -o $(BIN)/ts_prodsys
 
-ts_drivmhom:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivmhom.adb \
-              -o $(BIN)/ts_drivmhom
+ts_mainmhom:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mainmhom.adb \
+              -o $(BIN)/ts_mainmhom
 
 ts_drivmuho:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivmuho.adb \

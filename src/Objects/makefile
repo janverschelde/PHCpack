@@ -1106,7 +1106,7 @@ test_root_counts: test_product test_binomials test_implift test_mixedvol \
 
 # Test programs for the Root_Counts/Product homotopies library :
 
-test_product: ts_startsys ts_permanent ts_prodsys ts_drivmhom ts_drivmuho \
+test_product: ts_startsys ts_permanent ts_prodsys ts_mainmhom ts_drivmuho \
               ts_drivss ts_strset ts_strpart ts_permstar ts_pivsel
 
 ts_startsys:
@@ -1121,8 +1121,8 @@ ts_prodsys:
 ts_strpart:
 	make -f $(MAKEFILE) ts_strpart
 
-ts_drivmhom:
-	make -f $(MAKEFILE) ts_drivmhom
+ts_mainmhom:
+	make -f $(MAKEFILE) ts_mainmhom
 
 ts_drivmuho:
 	make -f $(MAKEFILE) ts_drivmuho
