@@ -1348,14 +1348,14 @@ ts_mainmhom: get_clock.o get_clocks_per_sec.o
               -o $(BIN)/ts_mainmhom \
               -largs get_clock.o get_clocks_per_sec.o
 
-ts_drivmuho: get_clock.o get_clocks_per_sec.o
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivmuho.adb \
-              -o $(BIN)/ts_drivmuho \
+ts_mainmuho: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainmuho.adb \
+              -o $(BIN)/ts_mainmuho \
               -largs get_clock.o get_clocks_per_sec.o
 
-ts_drivss: get_clock.o get_clocks_per_sec.o
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivss.adb \
-              -o $(BIN)/ts_drivss \
+ts_mainsets: get_clock.o get_clocks_per_sec.o
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainsets.adb \
+              -o $(BIN)/ts_mainsets \
               -largs get_clock.o get_clocks_per_sec.o
 
 ts_strset:

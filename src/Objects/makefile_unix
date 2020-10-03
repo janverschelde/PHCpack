@@ -1203,12 +1203,13 @@ ts_mainmhom:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mainmhom.adb \
               -o $(BIN)/ts_mainmhom
 
-ts_drivmuho:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivmuho.adb \
-              -o $(BIN)/ts_drivmuho
+ts_mainmuho:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mainmuho.adb \
+              -o $(BIN)/ts_mainmuho
 
-ts_drivss:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivss.adb -o $(BIN)/ts_drivss
+ts_mainsets:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mainsets.adb \
+              -o $(BIN)/ts_mainsets
 
 ts_strset:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_strset.adb -o $(BIN)/ts_strset

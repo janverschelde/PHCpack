@@ -1244,12 +1244,13 @@ ts_mainmhom:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainmhom.adb \
                  -o $(BIN)/ts_mainmhom
 
-ts_drivmuho:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivmuho.adb \
-                 -o $(BIN)/ts_drivmuho
+ts_mainmuho:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainmuho.adb \
+                 -o $(BIN)/ts_mainmuho
 
-ts_drivss:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivss.adb -o $(BIN)/ts_drivss
+ts_mainsets:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainsets.adb \
+              -o $(BIN)/ts_mainsets
 
 ts_strset:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_strset.adb -o $(BIN)/ts_strset
