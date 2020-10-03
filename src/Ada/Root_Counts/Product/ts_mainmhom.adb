@@ -4,12 +4,13 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Drivers_for_m_homogenization;       use Drivers_for_m_homogenization;
+with Main_m_Homogenization;
 
-procedure ts_drivmhom is
+procedure ts_mainmhom is
 
 -- DESCRIPTION :
---   Reads a polynomial system and calls the driver.
+--   Reads a polynomial system and tests the main procedure
+--   to compute m-homogeneous Bezout numbers.
 
   file : file_type;
   lp : Link_to_Poly_Sys;
@@ -23,6 +24,6 @@ begin
   begin
     put_line("Reading the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_m_homogenization(file,lp.all,b,q,qsols);
+    Main_m_Homogenization.Main(file,lp.all,b,q,qsols);
   end;
-end ts_drivmhom;
+end ts_mainmhom;

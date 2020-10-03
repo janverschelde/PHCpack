@@ -1,4 +1,4 @@
-Generalized Bezout numbers and linear-product start systems in PHCv2.4.80
+Generalized Bezout numbers and linear-product start systems in PHCv2.4.81
 
 Four types of start systems are implemented, based on total degree,
 m-homogeneous, multi-homegenous, and generalized Bezout number.
@@ -43,8 +43,8 @@ ts_permstar                        : mirroring permanent computations
 m_homogeneous_start_systems        : creation of m-homogeneous start systems
 interpolating_homotopies           : homotopies based on interpolation
 interpolating_homotopies_driver    : driver for interpolating homotopies
-drivers_for_m_homogenization       : menu-driver for m-homogenization
-ts_drivmhom                        : calls the driver for m-homogenization
+main_m_homogenization              : main interactive m-homogenization
+ts_mainvmhom                       : calls the main m-homogenization
 ------------------------------------------------------------------------------
 generate_unions                    : all unions of k numbers from a range
 degree_structure                   : model for multi-homogeneous structure

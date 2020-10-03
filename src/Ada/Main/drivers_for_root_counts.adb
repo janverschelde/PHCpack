@@ -13,7 +13,7 @@ with m_Homogeneous_Bezout_Numbers;       use m_Homogeneous_Bezout_Numbers;
 with Total_Degree_Start_Systems;         use Total_Degree_Start_Systems;
 with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors;
 with Driver_for_Own_Start_System;
-with Drivers_for_m_Homogenization;       use Drivers_for_m_Homogenization;
+with Main_m_Homogenization;
 with Drivers_for_Multi_Homogenization;   use Drivers_for_Multi_Homogenization;
 with Drivers_for_Set_Structures;         use Drivers_for_Set_Structures;
 with Driver_for_Symmetric_Set_Structure; use Driver_for_Symmetric_Set_Structure;
@@ -150,7 +150,7 @@ package body Drivers_for_Root_Counts is
     new_line;
     case method is
       when '0' => Total_Degree_Info;
-      when '1' => m_Homogenization_Info;
+      when '1' => Main_m_Homogenization.m_Homogenization_Info;
       when '2' => Multi_Homogenization_Info;
       when '3' => Set_Structure_Info;
       when '4' => Symmetric_Set_Structure_Info;
@@ -253,7 +253,7 @@ package body Drivers_for_Root_Counts is
   begin
     case method is
       when '0' => Driver_for_Total_Degree_Start_System(p,rc,q,qsols);
-      when '1' => Driver_for_m_Homogenization(file,p,irc,q,qsols);
+      when '1' => Main_m_Homogenization.Main(file,p,irc,q,qsols);
       when '2' => Driver_for_Multi_Homogenization(file,p,rc,q,rq,qsols);
       when '3' => Driver_for_Set_Structure(file,p,rc,lpos,q,qsols);
       when '4' => Driver_for_Symmetric_Random_Product_Systems

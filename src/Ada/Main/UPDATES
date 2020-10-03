@@ -1,3 +1,6 @@
+Sat 3 Oct 2020 : updated drivers_for_root_counts.adb for the change in name
+  of drivers_for_m_homogenization into main_m_homogenization.
+
 Tue 29 Sep 2020 : updated greeting_banners for version 2.4.80.
 
 Mon 28 Sep 2020 : new package test_standard_solver with code from ts_bbsolve.
