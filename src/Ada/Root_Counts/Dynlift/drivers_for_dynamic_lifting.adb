@@ -15,7 +15,7 @@ with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
-with Drivers_for_Vertex_Points;          use Drivers_for_Vertex_Points;
+with Main_Vertex_Points;                 use Main_Vertex_Points;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
 with Integer_Mixed_Subdivisions_io;      use Integer_Mixed_Subdivisions_io;
 with Mixed_Volume_Computation;           use Mixed_Volume_Computation;
