@@ -1,7 +1,7 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Communications_with_User;           use Communications_with_User;
-with Drivers_for_Vertex_Points;          use Drivers_for_Vertex_Points;
+with Main_Vertex_Points;                 use Main_Vertex_Points;
 with Drivers_for_Mixed_Contributions;    use Drivers_for_Mixed_Contributions;
 
 procedure Driver_for_Criterion

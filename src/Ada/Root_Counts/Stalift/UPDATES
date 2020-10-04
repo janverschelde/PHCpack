@@ -1,3 +1,6 @@
+Sun 4 Oct 2020 : updated driver_for_criterion for the name change of
+  drivers_for_vertex_points into main_vertex_points.
+
 Fri 14 Jun 2019 : added verbose level to floating_polyhedral_continuation,
   and some debugging messages to stable_polyhedral_continuation.adb.
   Updated drivers_for_mixedvol_algorithm.adb so phc -m also writes the
