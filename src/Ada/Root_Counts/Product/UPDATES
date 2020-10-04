@@ -1,3 +1,7 @@
+Sun 4 Oct 2020 : to main_{m_homogenization,multi_homogenization,set_structures}
+  added a Main without parameters, with code from ts_mainmhom, ts_mainmuho,
+  and ts_mainsets.
+
 Sat 3 Oct 2020 : renamed the package drivers_for_m_homogenization into 
   main_m_homogenization and factored out the main procedures with the
   specifications properly documented in the package specification.

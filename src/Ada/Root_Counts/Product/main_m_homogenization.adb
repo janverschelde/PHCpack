@@ -256,4 +256,22 @@ package body Main_m_Homogenization is
     b := bz;
   end Main;
 
+  procedure Main is
+
+    file : file_type;
+    lp : Link_to_Poly_Sys;
+    b : natural64 := 0;
+
+  begin
+    get(lp);
+    declare
+      q : Poly_Sys(lp'range);
+      qsols : Solution_List;
+    begin
+      put_line("Reading the output file.");
+      Read_Name_and_Create_File(file);
+      Main(file,lp.all,b,q,qsols);
+    end;
+  end Main;
+
 end Main_m_Homogenization;

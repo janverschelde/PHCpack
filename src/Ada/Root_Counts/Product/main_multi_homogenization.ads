@@ -80,4 +80,10 @@ package Main_Multi_Homogenization is
   --   rq        product format of the start system q;
   --   qsols     the solutions of q.
 
+  procedure Main;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system, an output file,
+  --   and then computes.
+
 end Main_Multi_Homogenization;

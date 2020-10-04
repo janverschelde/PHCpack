@@ -197,4 +197,23 @@ package body Main_Multi_Homogenization is
     end if;
   end Main; 
 
+  procedure Main is
+
+    file : file_type;
+    lp : Link_to_Poly_Sys;
+    b : natural32 := 0;
+
+  begin
+    get(lp);
+    declare
+      q : Poly_Sys(lp'range);
+      rq : Prod_Sys(q'range);
+      qsols : Solution_List;
+    begin
+      put_line("Reading the output file.");
+      Read_Name_and_Create_File(file);
+      Main(file,lp.all,b,q,rq,qsols);
+    end;
+  end Main;
+
 end Main_Multi_Homogenization;

@@ -133,4 +133,9 @@ package Main_m_Homogenization is
   --   q           m-homogeneous start system;
   --   qsols       solutions of q.
 
+  procedure Main;
+
+  -- DESCRIPTION :
+  --   Prompts for a system and an output file and then computes.
+
 end Main_m_Homogenization;

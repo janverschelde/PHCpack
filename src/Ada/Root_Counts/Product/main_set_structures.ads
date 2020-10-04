@@ -86,4 +86,10 @@ package Main_Set_Structures is
   --   q         a random product start system;
   --   qsols     the solutions of q.
 
+  procedure Main;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system, an output file,
+  --   and then computes.
+
 end Main_Set_Structures;

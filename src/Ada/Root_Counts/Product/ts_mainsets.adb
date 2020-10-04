@@ -21,30 +21,6 @@ procedure ts_mainsets is
 -- DESCRIPTION :
 --   Tests the Bezout numbers for general linear-product start structures.
 
-  procedure Test_Main is
-
-  -- DESCRIPTION :
-  --   Prompts for a polynomial system and constructs a set structure
-  --   with the main procedure for set structures.
-
-    file : file_type;
-    lp : Link_to_Poly_Sys;
-   -- lpos : List;
-    b : natural32 := 0;
-
-  begin
-    get(lp);
-    declare
-      q : Poly_Sys(lp'range);
-      qsols : Solution_List;
-    begin
-      put_line("Reading the output file.");
-      Read_Name_and_Create_File(file);
-     -- Main_Set_Structures.Main(file,lp.all,b,lpos,q,qsols);
-      Main_Set_Structures.Main(file,lp.all,b,q,qsols);
-    end;
-  end Test_Main;
-
   procedure Test_Permanent_Computation ( dim : in natural32 ) is
 
   -- DESCRIPTION :
@@ -135,7 +111,7 @@ procedure ts_mainsets is
     Ask_Alternative(ans,"12");
     new_line;
     case ans is
-      when '1' => Test_Main;
+      when '1' => Main_Set_Structures.Main;
       when '2' => Test_Root_Count;
       when others => null;
     end case;

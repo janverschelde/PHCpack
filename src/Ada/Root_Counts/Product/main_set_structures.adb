@@ -5,6 +5,7 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Natural_Vectors;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Prod_Systems_io;   use Standard_Complex_Prod_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Set_Structure,Set_Structure_io;
@@ -204,6 +205,26 @@ package body Main_Set_Structures is
       b := bb;
       Construct_Start_System(file,p,bb,q,qsols);
     end if;
+  end Main;
+
+  procedure Main is
+
+    file : file_type;
+    lp : Link_to_Poly_Sys;
+   -- lpos : List;
+    b : natural32 := 0;
+
+  begin
+    get(lp);
+    declare
+      q : Poly_Sys(lp'range);
+      qsols : Solution_List;
+    begin
+      put_line("Reading the output file.");
+      Read_Name_and_Create_File(file);
+     -- Main_Set_Structures.Main(file,lp.all,b,lpos,q,qsols);
+      Main_Set_Structures.Main(file,lp.all,b,q,qsols);
+    end;
   end Main;
 
 end Main_Set_Structures;
