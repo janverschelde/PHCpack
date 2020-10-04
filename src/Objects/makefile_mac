@@ -1321,9 +1321,9 @@ ts_transfo:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_transfo.adb \
                  -o $(BIN)/ts_transfo
 
-ts_drivpts:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivpts.adb \
-                 -o $(BIN)/ts_drivpts
+ts_mainvpts:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mainvpts.adb \
+                 -o $(BIN)/ts_mainvpts
 
 ts_impvol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_impvol.adb \
