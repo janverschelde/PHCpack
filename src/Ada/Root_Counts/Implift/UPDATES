@@ -1,3 +1,7 @@
+Sun 4 Oct 2020 : renamed drivers_for_vertex_points into main_vertex_points
+  and ts_drivpts into ts_mainvpts.  Updated drivers_for_implicit_lifting
+  for this name change.
+
 Thu 6 Oct 2016 : added two functions in supports_of_polynomial_systems.
 
 Tue 27 Sep 2016 : in supports_of_polynomial_systems, added select_terms 

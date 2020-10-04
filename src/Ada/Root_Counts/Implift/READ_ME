@@ -1,4 +1,4 @@
-Polyhedral homotopies by implicit lifting in PHCpack version 2.4.27
+Polyhedral homotopies by implicit lifting in PHCpack version 2.4.81
 
 This directory contains software for the computation of mixed volumes,
 according to the recursive formula Bershtein used in his proof.
@@ -25,8 +25,8 @@ supports_of_polynomial_systems      : manipulating support sets of polynomials
 ts_supports                         : test the power lists
 standard_integer32_vertices         : extracting vertices from supports
 standard_integer64_vertices         : 64-bit version of vertices computation
-drivers_for_vertex_points           : drivers to the vertex extraction
-ts_drivpts                          : calls the driver to vertices
+main_vertex_points                  : main vertex extraction procedures
+ts_mainvpts                         : calls main vertex extraction procedure
 -------------------------------------------------------------------------------
 standard_integer32_transformations  : unimodular transformations on monomials
 standard_integer64_transformations  : 64-bit unimodular transformations

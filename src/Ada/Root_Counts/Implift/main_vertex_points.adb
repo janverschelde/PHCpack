@@ -1,12 +1,14 @@
+with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Lists_of_Integer_Vectors_io;        use Lists_of_Integer_Vectors_io;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
 with Standard_Integer32_Vertices;        use Standard_Integer32_Vertices;
 
-package body Drivers_for_Vertex_Points is
+package body Main_Vertex_Points is
 
   procedure Vertex_Points ( file : in file_type; L : in out List ) is
 
@@ -144,4 +146,20 @@ package body Drivers_for_Vertex_Points is
     Clear(p); p := res;
   end Vertex_Points;
 
-end Drivers_for_Vertex_Points;
+  procedure Main is
+
+    lp : Link_to_Poly_Sys;
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("Extracting vertex points of support sets ...");
+    new_line;
+    get(lp);
+    new_line;
+    put_line("Reading the name of the output file.");
+    Read_Name_and_Create_File(file);
+    Vertex_Points(file,lp.all);
+  end Main;
+
+end Main_Vertex_Points;

@@ -10,7 +10,7 @@ with Standard_Laur_Poly_Convertors;      use Standard_Laur_Poly_Convertors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;   
 with Set_Structure,Set_Structure_io;
-with Drivers_for_Vertex_Points;          use Drivers_for_Vertex_Points;
+with Main_Vertex_Points;                 use Main_Vertex_Points;
 with Trees_of_Vectors;                   use Trees_of_Vectors;
 with Trees_of_Vectors_io;                use Trees_of_Vectors_io;
 with Set_Structures_and_Volumes;         use Set_Structures_and_Volumes;

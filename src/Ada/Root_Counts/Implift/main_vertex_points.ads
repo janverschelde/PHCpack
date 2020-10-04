@@ -4,7 +4,7 @@ with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;     use Arrays_of_Integer_Vector_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 
-package Drivers_for_Vertex_Points is
+package Main_Vertex_Points is
 
 -- DESCRIPTION :
 --   This package provides two drivers for extracting the vertex
@@ -45,4 +45,10 @@ package Drivers_for_Vertex_Points is
   --   Reduces the supports of the polynomials to their vertex points.
   --   Merely a driver to the procedures listed above.
 
-end Drivers_for_Vertex_Points;
+  procedure Main;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system, an output file, and then
+  --   extracts the vertex points of the support sets of the system.
+
+end Main_Vertex_Points;
