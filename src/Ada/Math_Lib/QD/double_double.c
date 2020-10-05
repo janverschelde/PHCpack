@@ -1043,7 +1043,7 @@ void dd_to_string ( const double *a, char *s, int precision, int width,
       }
       else
       {
-         char t[d+1];
+         char* t = (char*)calloc(d+1,sizeof(char)); // char t[d+1]
          int j;
 
          dd_to_digits(a,t,&e,d);
@@ -1076,6 +1076,7 @@ void dd_to_string ( const double *a, char *s, int precision, int width,
             }
             for(i=1; i<=precision; i++,cnt++) *(p++) = t[i];
          }
+         free(t);
       }
    }
    if(fixed == 0)   /* fill in the exponent part */
@@ -1111,9 +1112,10 @@ void dd_to_string ( const double *a, char *s, int precision, int width,
 
 void dd_write ( const double *a, int precision )
 {
-   char s[precision+10];
+   char* s = (char*)calloc(precision+10,sizeof(char)); // char s[precision+10];
    int s_end;
 
    dd_to_string(a,s,precision,0,0,0,1,' ',&s_end);
    printf("%s",s);
+   free(s);
 }
