@@ -10,6 +10,7 @@
 #include <vector_types.h>
 #include "dbl2_norm_host.h"
 #include "random_vectors.h"
+#include "double_double.h"
 
 using namespace std;
 
@@ -67,10 +68,16 @@ int verify_correctness ( int dim )
 {
    double vhinorm_host,vlonorm_host; // norm before normalization
    double whinorm_host,wlonorm_host; // norm after normalization
+   double vnrm[2],wnrm[2];
 
    run(dim,&vhinorm_host,&vlonorm_host,&whinorm_host,&wlonorm_host);
 
+   vnrm[0] = vhinorm_host; vnrm[1] = vlonorm_host;
+   wnrm[0] = whinorm_host; wnrm[1] = vlonorm_host;
+
    cout << scientific << setprecision(16);
-   cout << "   CPU norm : " << vhinorm_host << endl;
-   cout << "       after normalization : " << whinorm_host << endl;
+   cout << "   CPU norm : ";
+   dd_write(vnrm,32); cout << endl;
+   cout << "       after normalization : ";
+   dd_write(wnrm,32); cout << endl;
 }

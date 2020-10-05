@@ -1,12 +1,18 @@
-// This file double_double_functions.h defines the arithmetical operations 
-// for double double numbers, defined by high and low doubles.
+/* This file double_double_functions.h defines the arithmetical operations 
+   for double double numbers, defined by high and low doubles.
+
+The algorithms are from the QD library of Hida, Li, and Bailey,
+with the modification that a double double is not stored as an array
+of two doubles, but plainly by two doubles: a high and a low double.
+All functions have the prefix ddf_ so the dd_ functions can be applied
+for comparison and for input and output. */
 
 #ifndef __double_double_functions_h__
 #define __double_double_functions_h__
 
 /************************** additions ********************************/
 
-double dd_quick_two_sum ( double a, double b, double* err );
+double ddf_quick_two_sum ( double a, double b, double* err );
 /*
  * DESCRIPTION :
  *   Assuming |a| >= |b|, returns a+b and in err the error.
@@ -18,7 +24,7 @@ double dd_quick_two_sum ( double a, double b, double* err );
  *   s        returned sum of a and b.
  *   err      error value, b - (s - a). */
 
-double dd_two_sum ( double a, double b, double* err );
+double ddf_two_sum ( double a, double b, double* err );
 /*
  * DESCRIPTION :
  *   Computes fl(a+b) and err(a+b).
@@ -30,7 +36,7 @@ double dd_two_sum ( double a, double b, double* err );
  *   s        approximation for the sum of a and b is returned;
  *   err      error of a + b. */
 
-void dd_add
+void ddf_add
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double* c_hi, double* c_lo );
 /*
@@ -48,7 +54,7 @@ void dd_add
  *   c_hi     high part of the double double c;
  *   c_lo     low part of the double double c. */
 
-double dd_quick_two_diff ( double a, double b, double *err );
+double ddf_quick_two_diff ( double a, double b, double* err );
 /*
  * DESCRIPTION :
  *   Assuming |a| >= |b|, returns a-b and in err the error.
@@ -60,7 +66,7 @@ double dd_quick_two_diff ( double a, double b, double *err );
  *   s        returned a minus b.
  *   err      error value, (a - s) - b. */
 
-double dd_two_diff ( double a, double b, double *err );
+double ddf_two_diff ( double a, double b, double* err );
 /*
  * DESCRIPTION :
  *   Computes fl(a-b) and err(a-b).
@@ -72,7 +78,7 @@ double dd_two_diff ( double a, double b, double *err );
  *   s        approximation for the difference of a with b is returned;
  *   err      error of a - b. */
 
-void dd_sub
+void ddf_sub
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double* c_hi, double* c_lo );
 /*
@@ -91,7 +97,7 @@ void dd_sub
  *   c_hi     high part of the double double c;
  *   c_lo     low part of the double double c. */
 
-void dd_sub_dd_d
+void ddf_sub_dd_d
  ( double a_hi, double a_lo, double b, double* c_hi, double* c_lo );
 /*
  * DESCRIPTION : c = a - b.
@@ -107,7 +113,9 @@ void dd_sub_dd_d
  *   c_hi     high part of the double double c;
  *   c_lo     low part of the double double c. */
 
-void dd_inc ( double *a_hi, double *a_lo, double b_hi, double b_lo );
+/********** incrementers, decrementers, and multipliers ****************/
+
+void ddf_inc ( double *a_hi, double *a_lo, double b_hi, double b_lo );
 /*
  * DESCRIPTION : a = a + b.
  *   Inplace increment of the double double a (a_hi, a_lo)
@@ -123,7 +131,7 @@ void dd_inc ( double *a_hi, double *a_lo, double b_hi, double b_lo );
  *   a_hi     high part of the double double a;
  *   a_lo     low part of the double double a. */
 
-void dd_inc_d ( double *a_hi, double *a_lo, double b );
+void ddf_inc_d ( double *a_hi, double *a_lo, double b );
 /*
  * DESCRIPTION : a = a + b.
  *   Inplace increment of the double double a (a_hi, a_lo)
@@ -138,7 +146,7 @@ void dd_inc_d ( double *a_hi, double *a_lo, double b );
  *   a_hi     high part of the double double a;
  *   a_lo     low part of the double double a. */
 
-void dd_dec ( double *a_hi, double *a_lo, double b_hi, double b_lo );
+void ddf_dec ( double *a_hi, double *a_lo, double b_hi, double b_lo );
 /*
  * DESCRIPTION : a = a - b.
  *   Inplace decrement of the double double a (a_hi, a_lo)
@@ -154,10 +162,41 @@ void dd_dec ( double *a_hi, double *a_lo, double b_hi, double b_lo );
  *   a_hi     high part of the double double a;
  *   a_lo     low part of the double double a. */
 
-void dd_dec_d ( double *a_hi, double *a_lo, double b );
+void ddf_dec_d ( double *a_hi, double *a_lo, double b );
 /*
  * DESCRIPTION : a = a - b.
  *   Inplace decrement of the double double a (a_hi, a_lo)
+ *   with the double b.
+ *
+ * ON ENTRY :
+ *   a_hi     high part of the double double a;
+ *   a_lo     low part of the double double a;
+ *   b        some double.
+ *
+ * ON RETURN :
+ *   a_hi     high part of the double double a;
+ *   a_lo     low part of the double double a. */
+
+void ddf_mlt ( double* a_hi, double* a_lo, double b_hi, double b_lo );
+/*
+ * DESCRIPTION : a = a * b.
+ *   Inplace multiplication of the double double a (a_hi, a_lo)
+ *   with the double double in b (b_hi, b_lo) 
+ *
+ * ON ENTRY :
+ *   a_hi     high part of the double double a;
+ *   a_lo     low part of the double double a;
+ *   b_hi     high part of the double double b;
+ *   b_lo     low part of the double double b.
+ *
+ * ON RETURN :
+ *   a_hi     high part of the double double a;
+ *   a_lo     low part of the double double a. */
+
+void ddf_mlt_d ( double* a_hi, double* a_lo, double b );
+/*
+ * DESCRIPTION : a = a * b.
+ *   Inplace multiplication of the double double a (a_hi, a_lo)
  *   with the double b.
  *
  * ON ENTRY :
@@ -171,7 +210,7 @@ void dd_dec_d ( double *a_hi, double *a_lo, double b );
 
 /************************ multiplications ********************************/
 
-void dd_split ( double a, double *hi, double *lo );
+void ddf_split ( double a, double* hi, double* lo );
 /*
  * DESCRIPTION :
  *   Computes high and low word of a.
@@ -183,7 +222,7 @@ void dd_split ( double a, double *hi, double *lo );
  *   hi       high word of a;
  *   lo       low word of a. */ 
 
-double dd_two_prod ( double a, double b, double *err );
+double ddf_two_prod ( double a, double b, double* err );
 /*
  * DESCRIPTION :
  *   Computes fl(a*b) and err(a*b).
@@ -195,12 +234,12 @@ double dd_two_prod ( double a, double b, double *err );
  *   p        returned approximation for a*b;
  *   err      error on the approximated product. */
 
-double dd_two_sqr ( double a, double *err );
+double ddf_two_sqr ( double a, double* err );
 /*
  * DESCRIPTION :
  *   Computes fl(a*a) and err(a*a) faster than two_prod. */
 
-void dd_mul
+void ddf_mul
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double* c_hi, double* c_lo );
 /*
@@ -218,7 +257,7 @@ void dd_mul
  *   c_hi     high part of the double double c;
  *   c_lo     low part of the double double c. */
 
-void dd_sqr ( double a_hi, double a_lo, double *b_hi, double *b_lo );
+void ddf_sqr ( double a_hi, double a_lo, double *b_hi, double *b_lo );
 /*
  * DESCRIPTION :
  *   Returns in the double double b (b_hi, b_lo) 
@@ -232,8 +271,8 @@ void dd_sqr ( double a_hi, double a_lo, double *b_hi, double *b_lo );
  *   b_hi     high part of the double double b;
  *   b_lo     low part of the double double b. */
 
-void dd_mul_d_dd
- ( double a, double b_hi, double b_lo, double *c_hi, double *c_lo );
+void ddf_mul_d_dd
+ ( double a, double b_hi, double b_lo, double* c_hi, double* c_lo );
 /*
  * DESCRIPTION : c = a * b.
  *   Multiplies the double a with the double double b (b_hi, b_lo)
@@ -250,7 +289,7 @@ void dd_mul_d_dd
 
 /*************************** divisions ***************************/
 
-void dd_div
+void ddf_div
  ( double a_hi, double a_lo, double b_hi, double b_lo,
    double* c_hi, double* c_lo );
 /*
@@ -270,11 +309,25 @@ void dd_div
 
 /*************************** sqrt ***************************/
 
-void dd_sqrt ( double a_hi, double a_lo, double *b_hi, double *b_lo );
+void ddf_sqrt ( double a_hi, double a_lo, double* b_hi, double* b_lo );
 /*
  * DESCRIPTION :
  *   Returns in the double double b (b_hi, b_lo) 
  *   the square root of the double double a (a_hi, a_lo).
+ *
+ * ON ENTRY :
+ *   a_hi     high part of the double double a;
+ *   a_lo     low part of the double double a.
+ *
+ * ON RETURN :
+ *   b_hi     high part of the double double b;
+ *   b_lo     low part of the double double b. */
+
+void ddf_abs ( double a_hi, double a_lo, double* b_hi, double* b_lo );
+/*
+ * DESCRIPTION :
+ *   Returns in the double double b (b_hi, b_lo) the absolute value
+ *   of the double double a (a_hi, a_lo).
  *
  * ON ENTRY :
  *   a_hi     high part of the double double a;

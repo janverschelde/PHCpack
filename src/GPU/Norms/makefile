@@ -6,11 +6,17 @@
 # MAKEFILE = makefile_windows
 MAKEFILE = makefile_unix
 
+test_double_doubles:
+	make -f $(MAKEFILE) test_double_doubles
+
 run_dbl_norm_d:
 	make -f $(MAKEFILE) run_dbl_norm_d
 
 test_dbl_norm_d:
 	make -f $(MAKEFILE) test_dbl_norm_d
+
+test_dbl2_norm:
+	make -f $(MAKEFILE) test_dbl2_norm
 
 run_cmplx_norm_d:
 	make -f $(MAKEFILE) run_cmplx_norm_d

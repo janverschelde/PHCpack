@@ -23,15 +23,15 @@ void CPU_norm
 
    for(int i=0; i<dim; i++) // sum = sum + v[i]*v[i]
    {
-      dd_sqr(vhi[i],vlo[i],&prodhi,&prodlo);
-      dd_add(prodhi,prodlo,sumhi,sumlo,&sumhi,&sumlo);
+      ddf_sqr(vhi[i],vlo[i],&prodhi,&prodlo);
+      ddf_add(prodhi,prodlo,sumhi,sumlo,&sumhi,&sumlo);
    }
-   dd_sqrt(sumhi,sumlo,normhi,normlo);
+   ddf_sqrt(sumhi,sumlo,normhi,normlo);
 }
 
 void CPU_normalize
  ( double* vhi, double* vlo, int dim, double normhi, double normlo )
 {
    for(int i=0; i<dim; i++)
-      dd_div(vhi[i],vlo[i],normhi,normlo,&vhi[i],&vlo[i]);
+      ddf_div(vhi[i],vlo[i],normhi,normlo,&vhi[i],&vlo[i]);
 }
