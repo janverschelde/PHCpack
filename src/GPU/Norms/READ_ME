@@ -3,20 +3,24 @@ Accelerated Vector Norm computation in PHCv2.4.81.
 The code in this folder experiments with GPU accelerated algorithms
 to compute vector norms with multiple double precisions.
 
-----------------------------------------------------------------------------
-file name              : short description
-----------------------------------------------------------------------------
-random_vectors         : generators of random data
-random_vectors_windows : modification of random_vectors.cpp for windows
-dbl_norm_host          : 2-norm of double vectors on host
-dbl_norm_kernels       : kernels for 2-norm of double vectors
-run_dbl_norm_d         : main program to compute norms of double vectors
-test_dbl_norm_d        : test double 2-norm without command line parameters
-cmplx_norm_host        : 2-norm of complex double vectors on host
-cmplx_norm_kernels     : kernels for 2-norm of complex double vectors
-run_cmplx_norm_d       : main program to compute norms of complex vectors
-test_cmplx_norm_d      : test complex 2-norm without command line parameters
-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+file name               : short description
+-----------------------------------------------------------------------------
+double_double_functions : double double precision arithmetic
+random_vectors          : vectors of random numbers
+-----------------------------------------------------------------------------
+dbl_norm_host           : 2-norm of double vectors on host
+dbl2_norm_host          : 2-norm of double double vectors on host
+dbl_norm_kernels        : kernels for 2-norm of double vectors
+run_dbl_norm_d          : main program to compute norms of double vectors
+test_dbl_norm_d         : test double 2-norm without command line parameters
+test_dbl2_norm          : test double double 2-norm
+-----------------------------------------------------------------------------
+cmplx_norm_host         : 2-norm of complex double vectors on host
+cmplx_norm_kernels      : kernels for 2-norm of complex double vectors
+run_cmplx_norm_d        : main program to compute norms of complex vectors
+test_cmplx_norm_d       : test complex 2-norm without command line parameters
+-----------------------------------------------------------------------------
 
 To build, type "make run_dbl_norm_d" and "make clean" to clean up.
 

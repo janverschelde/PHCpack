@@ -35,6 +35,22 @@ void random_double_vectors ( int dim, double* v_host, double* v_device )
    }
 }
 
+void random_double2_vectors
+ ( int dim, double* vhi_host, double* vlo_host,
+   double* vhi_device, double* vlo_device )
+{
+   double r;
+
+   for(int k=0; k<dim; k++)
+   {
+      r = random_double();
+      vhi_host[k] = r;
+      vhi_device[k] = r;
+      vlo_host[k] = 0.0;
+      vlo_device[k] = 0.0;
+   }
+}
+
 void random_complex_vectors
  ( int dim, double* vre_host, double* vim_host,
    double* vre_device, double* vim_device )

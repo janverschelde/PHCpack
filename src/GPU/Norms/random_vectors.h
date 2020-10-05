@@ -23,6 +23,27 @@ void random_double_vectors ( int dim, double* v_host, double* v_device );
      v_host   as many randomly generated doubles as the value of dim;
      v_device is the same vector as v_host.                            */
 
+void random_double2_vectors
+ ( int dim, double* vhi_host, double* vlo_host,
+   double* vhi_device, double* vlo_device );
+/*
+   DESCRIPTION :
+     Generates two instances of the same random double double vector,
+     one for the host and another for the device.
+
+   REQUIRED :
+     Space has been allocated for vhi_host, vlo_host, v_hidevice, and
+     vlo_device, for double arrays of size at least equal to dim.
+
+   ON ENTRY :
+     dim      dimension of the random real vector.
+
+   ON RETURN :
+     vhi_host as many randomly generated doubles as the value of dim;
+     vlo_host as many randomly generated doubles as the value of dim;
+     vhi_device is the same vector as vhi_host;
+     vlo_device is the same vector as vlo_host.                            */
+
 void random_complex_vectors
  ( int dim, double* vre_host, double* vim_host,
    double* vre_device, double* vim_device );

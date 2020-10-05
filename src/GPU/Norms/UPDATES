@@ -1,3 +1,7 @@
+Mon 5 Oct 2020 : added double_double_functions, extended random_vectors,
+  to define in dbl2_norm_host the norm computation in double double precision,
+  tested by test_dbl2_norm.cpp.
+
 Fri 2 Oct 2020 : for both double and complex double, the constant
   d_shmemsize can be raised to 1024 and this constant is moved to the
   header file of {dbl,cmplx}_norm_kernels, so test_{dbl,cmplx}_norm_d.cpp

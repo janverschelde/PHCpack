@@ -23,7 +23,7 @@ void CPU_norm ( double* v, int dim, double* twonorm );
  *   Computes the 2-norm of the vector in v.
  *
  * ON ENTRY :
- *   v         vector of complex numbers of size dim;
+ *   v         real vector of size dim;
  *   dim       dimension of the vector v.
  *
  * ON RETURN :
