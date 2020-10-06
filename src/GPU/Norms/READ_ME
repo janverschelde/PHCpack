@@ -6,13 +6,15 @@ to compute vector norms with multiple double precisions.
 -----------------------------------------------------------------------------
 file name               : short description
 -----------------------------------------------------------------------------
-double_double_functions : double double precision arithmetic
+double_double_functions : double double precision arithmetic on host
+double_double_gpufun    : double double precision arithmetic on device
 test_double_doubles     : a test on double_double_functions
 random_vectors          : vectors of random numbers
 -----------------------------------------------------------------------------
 dbl_norm_host           : 2-norm of double vectors on host
 dbl2_norm_host          : 2-norm of double double vectors on host
 dbl_norm_kernels        : kernels for 2-norm of double vectors
+dbl2_norm_kernels       : kernels for 2-norm of double double vectors
 run_dbl_norm_d          : main program to compute norms of double vectors
 test_dbl_norm_d         : test double 2-norm without command line parameters
 test_dbl2_norm          : test double double 2-norm
