@@ -1,9 +1,9 @@
 # This makefile is for the command line version
 # of the Microsoft Visual Studio Compiler on Windows 10.
+# The option '-O3' is unknown and replaced by '-O2'.
 
-# tested with nvcc version 5.5.0 and gcc 4.4.7 on C2050
-# Note that the -arch=sm_13 is needed on the C2050.
-# tested with nvcc version 10.1 and gcc 4.8.5 on Volta
+# location for the C code of the QD library
+QDsrc=../../Ada/Math_Lib/QD
 
 # location of the command line Microsoft Visual Studio Compiler
 CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
@@ -34,10 +34,33 @@ cmplx_norm_kernels.obj:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
 	nvcc -ccbin=$(CL) -c cmplx_norm_kernels.cu -o cmplx_norm_kernels.obj
 
+double_double.obj:
+	@-echo ">>> compiling double_double ..."
+	$(CL)\cl /c -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(QDsrc)/double_double.cpp /Fo: double_double.obj
+
+double_double_functions.obj:
+	@-echo ">>> compiling double_double_functions ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+             double_double_functions.cpp /Fo: double_double_functions.obj
+
+test_double_doubles: double_double.obj double_double_functions.obj
+	@-echo ">>> compiling test_double_doubles ..."
+	$(CL)\cl /c -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+                    test_double_doubles.cpp /Fo: test_double_doubles.obj /EHsc
+	@-echo ">>> linking test_double_doubles ..."
+	nvcc -ccbin=$(CL) -o test_double_doubles.exe double_double.obj \
+             double_double_functions.obj test_double_doubles.obj
+
 dbl_norm_host.obj:
 	@-echo ">>> compiling code for execution on the host ..."
 	$(CL)\cl /c dbl_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl_norm_host.obj
+
+dbl2_norm_host.obj:
+	@-echo ">>> compiling code for execution on the host ..."
+	$(CL)\cl /c dbl2_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl2_norm_host.obj
 
 random_vectors.obj:
 	@-echo ">>> compiling random data generators ..."
@@ -62,7 +85,12 @@ run_cmplx_norm_d.obj:
 test_dbl_norm_d.obj:
 	@-echo ">>> compiling the main program ..."
 	$(CL)\cl /c test_dbl_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include -O2 /Fo: test_dbl_norm_d.obj /EHsc
+                 /I$(CUDASDK)/include -02 /Fo: test_dbl_norm_d.obj /EHsc
+
+test_dbl2_norm.obj:
+	@-echo ">>> compiling the main program ..."
+	$(CL)\cl /c -O2 test_dbl2_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) /Fo: test_dbl2_norm.obj /EHsc
 
 test_cmplx_norm_d.obj:
 	@-echo ">>> compiling the main program ..."
@@ -86,6 +114,13 @@ test_dbl_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj \
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_norm_d.exe dbl_norm_kernels.obj \
              dbl_norm_host.obj random_vectors.obj test_dbl_norm_d.obj
+
+test_dbl2_norm: double_double.obj double_double_functions.obj \
+                dbl2_norm_host.obj random_vectors.obj test_dbl2_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_norm.exe dbl2_norm_host.obj \
+             double_double.obj double_double_functions.obj \
+	     random_vectors.obj test_dbl2_norm.obj
 
 test_cmplx_norm_d: cmplx_norm_kernels.obj cmplx_norm_host.obj \
                    random_vectors.obj test_cmplx_norm_d.obj

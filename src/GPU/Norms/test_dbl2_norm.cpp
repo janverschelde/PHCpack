@@ -80,4 +80,6 @@ int verify_correctness ( int dim )
    dd_write(vnrm,32); cout << endl;
    cout << "       after normalization : ";
    dd_write(wnrm,32); cout << endl;
+
+   return 0;
 }
