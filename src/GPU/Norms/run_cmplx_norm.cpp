@@ -22,30 +22,16 @@ the headers for the cmplx_norm_kernels. */
 #include "cmplx_norm_kernels.h"
 #include "cmplx_norm_host.h"
 #include "random_vectors.h"
+#include "parse_run_arguments.h"
 
 using namespace std;
-
-int parse_arguments
- ( int argc, char *argv[], int *blocksize, int *dim, int *freq, int *mode );
-/*
-   Parses the argc arguments on the command line in argv[].
-   Returns 0 if four numbers are given, 1 otherwise for failure.
-
-   ON RETURN :
-     blocksize  the block size, number of threads in a block;
-     dim        dimension of the vectors;
-     freq       frequency of the runs;
-     mode       execution mode is 0, 1, or 2
-                0 : GPU run, no output,
-                1 : CPU run, no output,
-                2 : both GPU and CPU run with output. */
 
 int main ( int argc, char *argv[] )
 {
    // initialization of the execution parameters
 
    int BS,dim,freq,mode;
-   if(parse_arguments(argc,argv,&BS,&dim,&freq,&mode) == 1) return 1;
+   if(parse_run_arguments(argc,argv,&BS,&dim,&freq,&mode) == 1) return 1;
 
    int timevalue;
    if(mode == 2)
@@ -91,30 +77,4 @@ int main ( int argc, char *argv[] )
    }
 
    return 0;
-}
-
-int parse_arguments
- ( int argc, char *argv[], int *blocksize, int *dim, int *freq, int *mode )
-{
-   if(argc < 5)
-   {
-      cout << argv[0] << " needs four parameters, for example:" << endl;
-      cout << argv[0] << " blocksize dim freq mode" << endl;
-      cout << " where blocksize is the number of threads in a block," << endl;
-      cout << "       dim is the dimension of the problem," << endl;
-      cout << "       freq is the number of repeated runs, and" << endl;
-      cout << "       mode is 0, 1, or 2 for execution mode." << endl;
-      cout << "Please try again ..." << endl;
-
-      return 1;
-   }
-   else
-   {
-      *blocksize = atoi(argv[1]);  // number of threads in a block
-      *dim = atoi(argv[2]);        // dimension
-      *freq = atoi(argv[3]);       // number of repeated runs
-      *mode = atoi(argv[4]);       // execution mode
-
-      return 0;
-   }
 }
