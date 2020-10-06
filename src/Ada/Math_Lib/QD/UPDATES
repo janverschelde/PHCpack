@@ -1,5 +1,7 @@
 Mon 5 Oct 2020 : used explicit calloc statement to allocate arrays of
   characters in double_double.c, as needed in Microsofts VS.
+  Made a copy of double_double.c into double_double.cpp, as was needed
+  get it linked correctly with MS VS.
 
 Sat 19 Sep 2020 : new multprec_{trip,pent,octo,deca}dobl_convertors,
   {trip,pent,octo,deca}dobl_complex_numbers_cv, and
