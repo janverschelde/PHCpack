@@ -9,20 +9,20 @@ MAKEFILE = makefile_unix
 test_double_doubles:
 	make -f $(MAKEFILE) test_double_doubles
 
-run_dbl_norm_d:
-	make -f $(MAKEFILE) run_dbl_norm_d
+run_dbl_norm:
+	make -f $(MAKEFILE) run_dbl_norm
 
-test_dbl_norm_d:
-	make -f $(MAKEFILE) test_dbl_norm_d
+test_dbl_norm:
+	make -f $(MAKEFILE) test_dbl_norm
 
 test_dbl2_norm:
 	make -f $(MAKEFILE) test_dbl2_norm
 
-run_cmplx_norm_d:
-	make -f $(MAKEFILE) run_cmplx_norm_d
+run_cmplx_norm:
+	make -f $(MAKEFILE) run_cmplx_norm
 
-test_cmplx_norm_d:
-	make -f $(MAKEFILE) test_cmplx_norm_d
+test_cmplx_norm:
+	make -f $(MAKEFILE) test_cmplx_norm
 
 clean:
 	make -f $(MAKEFILE) clean

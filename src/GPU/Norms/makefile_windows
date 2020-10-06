@@ -72,48 +72,48 @@ cmplx_norm_host.obj:
 	$(CL)\cl /c cmplx_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: cmplx_norm_host.obj
 
-run_dbl_norm_d.obj:
+run_dbl_norm.obj:
 	@-echo ">>> compiling the main program ..."
-	$(CL)\cl /c run_dbl_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include -O2 /Fo: run_dbl_norm_d.obj /EHsc
+	$(CL)\cl /c run_dbl_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: run_dbl_norm.obj /EHsc
 
-run_cmplx_norm_d.obj:
+run_cmplx_norm.obj:
 	@-echo ">>> compiling the main program ..."
-	$(CL)\cl /c run_cmplx_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include -O2 /Fo: run_cmplx_norm_d.obj /EHsc
+	$(CL)\cl /c run_cmplx_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: run_cmplx_norm.obj /EHsc
 
-test_dbl_norm_d.obj:
+test_dbl_norm.obj:
 	@-echo ">>> compiling the main program ..."
-	$(CL)\cl /c test_dbl_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include -02 /Fo: test_dbl_norm_d.obj /EHsc
+	$(CL)\cl /c test_dbl_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -02 /Fo: test_dbl_norm.obj /EHsc
 
 test_dbl2_norm.obj:
 	@-echo ">>> compiling the main program ..."
 	$(CL)\cl /c -O2 test_dbl2_norm.cpp -I$(winkitucrt) -I$(includepath) \
                  /I$(CUDASDK)/include -I$(QDsrc) /Fo: test_dbl2_norm.obj /EHsc
 
-test_cmplx_norm_d.obj:
+test_cmplx_norm.obj:
 	@-echo ">>> compiling the main program ..."
-	$(CL)\cl /c test_cmplx_norm_d.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include -O2 /Fo: test_cmplx_norm_d.obj /EHsc
+	$(CL)\cl /c test_cmplx_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -O2 /Fo: test_cmplx_norm.obj /EHsc
 
-run_dbl_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj random_vectors.obj \
-                run_dbl_norm_d.obj
+run_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj random_vectors.obj \
+              run_dbl_norm.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o run_dbl_norm_d.exe dbl_norm_kernels.obj \
-             dbl_norm_host.obj random_vectors.obj run_dbl_norm_d.obj
+	nvcc -ccbin=$(CL) -o run_dbl_norm.exe dbl_norm_kernels.obj \
+             dbl_norm_host.obj random_vectors.obj run_dbl_norm.obj
 
-run_cmplx_norm_d: cmplx_norm_kernels.obj cmplx_norm_host.obj \
-                  random_vectors.obj run_cmplx_norm_d.obj
+run_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
+                random_vectors.obj run_cmplx_norm.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o run_cmplx_norm_d.exe cmplx_norm_kernels.obj \
-             cmplx_norm_host.obj random_vectors.obj run_cmplx_norm_d.obj
+	nvcc -ccbin=$(CL) -o run_cmplx_norm.exe cmplx_norm_kernels.obj \
+             cmplx_norm_host.obj random_vectors.obj run_cmplx_norm.obj
 
-test_dbl_norm_d: dbl_norm_kernels.obj dbl_norm_host.obj \
-                 random_vectors.obj test_dbl_norm_d.obj
+test_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj \
+               random_vectors.obj test_dbl_norm.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_dbl_norm_d.exe dbl_norm_kernels.obj \
-             dbl_norm_host.obj random_vectors.obj test_dbl_norm_d.obj
+	nvcc -ccbin=$(CL) -o test_dbl_norm.exe dbl_norm_kernels.obj \
+             dbl_norm_host.obj random_vectors.obj test_dbl_norm.obj
 
 test_dbl2_norm: double_double.obj double_double_functions.obj \
                 dbl2_norm_host.obj random_vectors.obj test_dbl2_norm.obj
@@ -122,11 +122,11 @@ test_dbl2_norm: double_double.obj double_double_functions.obj \
              double_double.obj double_double_functions.obj \
 	     random_vectors.obj test_dbl2_norm.obj
 
-test_cmplx_norm_d: cmplx_norm_kernels.obj cmplx_norm_host.obj \
-                   random_vectors.obj test_cmplx_norm_d.obj
+test_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
+                 random_vectors.obj test_cmplx_norm.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_cmplx_norm_d.exe cmplx_norm_kernels.obj \
-             cmplx_norm_host.obj random_vectors.obj test_cmplx_norm_d.obj
+	nvcc -ccbin=$(CL) -o test_cmplx_norm.exe cmplx_norm_kernels.obj \
+             cmplx_norm_host.obj random_vectors.obj test_cmplx_norm.obj
 
 clean:
 	del *exe *obj *exp *lib *~

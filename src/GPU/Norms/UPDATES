@@ -1,3 +1,8 @@
+Tue 6 Oct 2020 : renaming of files run_dbl_norm_d.cpp -> run_dbl_norm.cpp,
+  test_dbl_norm_d.cpp -> test_dbl_norm.cpp, run_cmplx_norm_d.cpp ->
+  run_cmplx_norm.cpp, and test_cmplx_norm_d.cpp -> test_cmplx_norm.cpp.
+  Updated the makefiles accordingly.
+
 Mon 5 Oct 2020 : added double_double_functions, extended random_vectors,
   to define in dbl2_norm_host the norm computation in double double precision,
   tested by test_dbl2_norm.cpp.  In double_double_functions.h, changed

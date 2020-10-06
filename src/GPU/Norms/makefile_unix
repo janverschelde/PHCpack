@@ -11,6 +11,10 @@ dbl_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
 	nvcc -ccbin=$(gcc) -c dbl_norm_kernels.cu
 
+dbl2_norm_kernels.o:
+	@-echo ">>> compiling vector norm kernels for double doubles ..."
+	nvcc -ccbin=$(gcc) -c dbl2_norm_kernels.cu
+
 cmplx_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for complex doubles ..."
 	nvcc -ccbin=$(gcc) -c cmplx_norm_kernels.cu
@@ -24,6 +28,10 @@ double_double.o:
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c double_double_functions.cpp
+
+double_double_gpufun.o:
+	@-echo ">>> compiling double double gpu functions ..."
+	nvcc -ccbin=$(gpp) -c double_double_gpufun.cu
 
 test_double_doubles: double_double.o double_double_functions.o
 	@-echo ">>> compiling test_double_doubles ..."
@@ -49,70 +57,73 @@ cmplx_norm_host.o:
 	@-echo ">>> compile code for execution on the host ..."
 	$(gpp) -O3 -c cmplx_norm_host.cpp
 
-run_dbl_norm_d.o:
+run_dbl_norm.o:
 	@-echo ">>> compiling the main program ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl_norm_d.cpp
+	$(gpp) -I/usr/local/cuda/include -O3 -c run_dbl_norm.cpp
 
-run_cmplx_norm_d.o:
+run_cmplx_norm.o:
 	@-echo ">>> compiling the main program ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx_norm_d.cpp
+	$(gpp) -I/usr/local/cuda/include -O3 -c run_cmplx_norm.cpp
 
-test_dbl_norm_d.o:
+test_dbl_norm.o:
 	@-echo ">>> compiling the main program ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl_norm_d.cpp
+	$(gpp) -I/usr/local/cuda/include -O3 -c test_dbl_norm.cpp
 
 test_dbl2_norm.o:
 	@-echo ">>> compiling the main program ..."
 	$(gpp) -I$(QDsrc) -I/usr/local/cuda/include -O3 -c test_dbl2_norm.cpp
 
-test_cmplx_norm_d.o:
+test_cmplx_norm.o:
 	@-echo ">>> compiling the main program ..."
-	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx_norm_d.cpp
+	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx_norm.cpp
 
-run_dbl_norm_d: dbl_norm_kernels.o dbl_norm_host.o random_vectors.o \
-                run_dbl_norm_d.o
+run_dbl_norm: dbl_norm_kernels.o dbl_norm_host.o random_vectors.o \
+              run_dbl_norm.o
 	@-echo ">>> linking ..."
-	$(gpp) -o run_dbl_norm_d dbl_norm_kernels.o dbl_norm_host.o \
-                  random_vectors.o run_dbl_norm_d.o \
+	$(gpp) -o run_dbl_norm dbl_norm_kernels.o dbl_norm_host.o \
+                  random_vectors.o run_dbl_norm.o \
             -lcuda -lcudart -L/usr/local/cuda/lib64 
 
-run_cmplx_norm_d: cmplx_norm_kernels.o cmplx_norm_host.o random_vectors.o \
-                  run_cmplx_norm_d.o
+run_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o random_vectors.o \
+                run_cmplx_norm.o
 	@-echo ">>> linking ..."
-	$(gpp) -o run_cmplx_norm_d cmplx_norm_kernels.o cmplx_norm_host.o \
-                  random_vectors.o run_cmplx_norm_d.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+	$(gpp) -o run_cmplx_norm cmplx_norm_kernels.o cmplx_norm_host.o \
+                  random_vectors.o run_cmplx_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
 
-test_dbl_norm_d: dbl_norm_kernels.o dbl_norm_host.o random_vectors.o \
-                 test_dbl_norm_d.o
+test_dbl_norm: dbl_norm_kernels.o dbl_norm_host.o random_vectors.o \
+               test_dbl_norm.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl_norm_d dbl_norm_kernels.o dbl_norm_host.o \
-                  random_vectors.o test_dbl_norm_d.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+	$(gpp) -o test_dbl_norm dbl_norm_kernels.o dbl_norm_host.o \
+                  random_vectors.o test_dbl_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
 
 test_dbl2_norm: double_double.o double_double_functions.o random_vectors.o \
-                dbl2_norm_host.o test_dbl2_norm.o
+                dbl2_norm_host.o test_dbl2_norm.o double_double_gpufun.o \
+                dbl2_norm_kernels.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_norm double_double.o double_double_functions.o \
-                  random_vectors.o dbl2_norm_host.o test_dbl2_norm.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+                  random_vectors.o dbl2_norm_host.o \
+                  dbl2_norm_kernels.o test_dbl2_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
 
-test_cmplx_norm_d: cmplx_norm_kernels.o cmplx_norm_host.o random_vectors.o \
-                   test_cmplx_norm_d.o
+test_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o random_vectors.o \
+                 test_cmplx_norm.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_cmplx_norm_d cmplx_norm_kernels.o cmplx_norm_host.o \
-                  random_vectors.o test_cmplx_norm_d.o \
-            -lcuda -lcudart -L/usr/local/cuda/lib64 
+	$(gpp) -o test_cmplx_norm cmplx_norm_kernels.o cmplx_norm_host.o \
+                  random_vectors.o test_cmplx_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
 
 clean:
 	/bin/rm -f -r double_double.o double_double_functions.o
 	/bin/rm -f -r test_double_doubles.o test_double_doubles
 	/bin/rm -f -r random_vectors.o
-	/bin/rm -f -r run_dbl_norm_d test_dbl_norm_d
-	/bin/rm -f -r run_cmplx_norm_d test_cmplx_norm_d
+	/bin/rm -f -r run_dbl_norm test_dbl_norm
+	/bin/rm -f -r run_cmplx_norm test_cmplx_norm
 	/bin/rm -f -r test_dbl2_norm
 	/bin/rm -f -r dbl_norm_kernels.o dbl_norm_host.o
 	/bin/rm -f -r cmplx_norm_kernels.o cmplx_norm_host.o
-	/bin/rm -f -r run_dbl_norm_d.o test_dbl_norm_d.o
-	/bin/rm -f -r run_cmplx_norm_d.o test_cmplx_norm_d.o
+	/bin/rm -f -r run_dbl_norm.o test_dbl_norm.o
+	/bin/rm -f -r run_cmplx_norm.o test_cmplx_norm.o
 	/bin/rm -f -r test_dbl2_norm.o dbl2_norm_host.o
+	/bin/rm -f -r double_double_gpufun.o dbl2_norm_kernels.o
