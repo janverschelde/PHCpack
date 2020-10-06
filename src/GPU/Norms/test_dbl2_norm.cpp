@@ -15,41 +15,42 @@
 
 using namespace std;
 
-void run ( int dim,
+void run ( int dim, int BS,
            double *vhinorm_device, double *vlonorm_device,
            double *vhinorm_host, double *vlonorm_host,
            double *whinorm_device, double *wlonorm_device,
            double *whinorm_host, double *wlonorm_host );
 /*
-  DESCRIPTION :
-    Computes norms for random real vectors.
+   DESCRIPTION :
+     Computes norms for random real vectors.
 
-  ON ENTRY :
-    dim    dimension of the random vector;
+   ON ENTRY :
+     dim   dimension of the random vector;
+     BS    block size.
 
-  ON RETURN :
-    vhinorm_device  high part of 2-norm compute by the device;
-    vlonorm_device  low part of 2-norm computed by the device;
-    vhinorm_host    high part of 2-norm compute by the host;
-    vlonorm_host    low part of 2-norm computed by the host;
-    whinorm_device  high part of 2-norm on device after normalization;
-    wlonorm_device  low norm of 2-norm on device after normalization;
-    whinorm_host    high part of 2-norm on host after normalization;
-    wlonorm_host    low norm of 2-norm on host after normalization.  */
+   ON RETURN :
+     vhinorm_device  high part of 2-norm compute by the device;
+     vlonorm_device  low part of 2-norm computed by the device;
+     vhinorm_host    high part of 2-norm compute by the host;
+     vlonorm_host    low part of 2-norm computed by the host;
+     whinorm_device  high part of 2-norm on device after normalization;
+     wlonorm_device  low norm of 2-norm on device after normalization;
+     whinorm_host    high part of 2-norm on host after normalization;
+     wlonorm_host    low norm of 2-norm on host after normalization.  */
 
-int verify_correctness ( int dim );
+int verify_correctness ( int dim, int BS );
 /*
- * Computes norms of real vectors of dimension dim
+ * Computes norms of real vectors of dimension dim, block size BS,
  * and verifies the correctness. */
 
 int main ( void )
 {
-   int fail = verify_correctness(256);
+   int fail = verify_correctness(128,64);
 
    return 0;
 }
 
-void run ( int dim,
+void run ( int dim, int BS,
            double *vhinorm_device, double *vlonorm_device,
            double *vhinorm_host, double *vlonorm_host,
            double *whinorm_device, double *wlonorm_device,
@@ -67,16 +68,16 @@ void run ( int dim,
 
    random_double2_vectors(dim,vhi_host,vlo_host,vhi_device,vlo_device);
 
-   GPU_norm(vhi_device,vlo_device,dim,1,dim,vhinorm_device,vlonorm_device,1);
-   GPU_norm(vhi_device,vlo_device,dim,1,dim,whinorm_device,wlonorm_device,1);
+   GPU_norm(vhi_device,vlo_device,dim,1,BS,vhinorm_device,vlonorm_device,1);
+   GPU_norm(vhi_device,vlo_device,dim,1,BS,whinorm_device,wlonorm_device,1);
 
    CPU_norm(vhi_host,vlo_host,dim,vhinorm_host,vlonorm_host);
    make_copy(dim,vhi_host,vlo_host,whi_host,wlo_host);
    CPU_normalize(whi_host,wlo_host,dim,*vhinorm_host,*vlonorm_host);
-   CPU_norm(whi_host,wlo_host,dim,whinorm_host,vlonorm_host);
+   CPU_norm(whi_host,wlo_host,dim,whinorm_host,wlonorm_host);
 }
 
-int verify_correctness ( int dim )
+int verify_correctness ( int dim, int BS )
 {
    double vhinorm_device,vlonorm_device; // norm before normalization on device
    double whinorm_device,wlonorm_device; // norm after normalization on device
@@ -84,15 +85,29 @@ int verify_correctness ( int dim )
    double whinorm_host,wlonorm_host;     // norm after normalization on host
    double vnrm_h[2],vnrm_d[2],wnrm_h[2],wnrm_d[2];
 
-   run(dim,&vhinorm_device,&vlonorm_device,&vhinorm_host,&vlonorm_host,
-           &whinorm_device,&wlonorm_device,&whinorm_host,&wlonorm_host);
+   run(dim,BS,&vhinorm_device,&vlonorm_device,&vhinorm_host,&vlonorm_host,
+              &whinorm_device,&wlonorm_device,&whinorm_host,&wlonorm_host);
+
+   cout << scientific << setprecision(16);
+
+   cout << "   CPU norm : " << endl;
+   cout << "     hi : " << vhinorm_host << endl;
+   cout << "     lo : " << vlonorm_host << endl;
+   cout << "   CPU norm after normalization : " << endl;
+   cout << "     hi : " << whinorm_host << endl;
+   cout << "     lo : " << wlonorm_host << endl;
+   cout << "   GPU norm : " << endl;
+   cout << "     hi : " << vhinorm_device << endl;
+   cout << "     lo : " << vlonorm_device << endl;
+   cout << "   GPU norm after normalization : " << endl;
+   cout << "     hi : " << whinorm_device << endl;
+   cout << "     lo : " << wlonorm_device << endl;
 
    vnrm_d[0] = vhinorm_device; vnrm_d[1] = vlonorm_device;
    wnrm_d[0] = whinorm_device; wnrm_d[1] = wlonorm_device;
    vnrm_h[0] = vhinorm_host; vnrm_h[1] = vlonorm_host;
    wnrm_h[0] = whinorm_host; wnrm_h[1] = wlonorm_host;
 
-   cout << scientific << setprecision(16);
 
    cout << "   GPU norm : ";
    dd_write(vnrm_d,32); cout << endl;

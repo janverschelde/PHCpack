@@ -18,13 +18,14 @@ void make_copy
 void CPU_norm
  ( double* vhi, double* vlo, int dim, double* normhi, double* normlo )
 {
-   double sumhi,sumlo = 0.0;
+   double sumhi = 0.0;
+   double sumlo = 0.0;
    double prodhi,prodlo;
 
    for(int i=0; i<dim; i++) // sum = sum + v[i]*v[i]
    {
       ddf_sqr(vhi[i],vlo[i],&prodhi,&prodlo);
-      ddf_add(prodhi,prodlo,sumhi,sumlo,&sumhi,&sumlo);
+      ddf_inc(&sumhi,&sumlo,prodhi,prodlo);
    }
    ddf_sqrt(sumhi,sumlo,normhi,normlo);
 }

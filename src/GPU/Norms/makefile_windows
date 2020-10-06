@@ -30,6 +30,10 @@ dbl_norm_kernels.obj:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
 	nvcc -ccbin=$(CL) -c dbl_norm_kernels.cu -o dbl_norm_kernels.obj
 
+dbl2_norm_kernels.obj:
+	@-echo ">>> compiling vector norm kernels for doubles ..."
+	nvcc -ccbin=$(CL) -c dbl2_norm_kernels.cu -o dbl2_norm_kernels.obj
+
 cmplx_norm_kernels.obj:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
 	nvcc -ccbin=$(CL) -c cmplx_norm_kernels.cu -o cmplx_norm_kernels.obj
@@ -116,11 +120,12 @@ test_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj \
              dbl_norm_host.obj random_vectors.obj test_dbl_norm.obj
 
 test_dbl2_norm: double_double.obj double_double_functions.obj \
-                dbl2_norm_host.obj random_vectors.obj test_dbl2_norm.obj
+                dbl2_norm_host.obj random_vectors.obj dbl2_norm_kernels.obj \
+                test_dbl2_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_norm.exe dbl2_norm_host.obj \
              double_double.obj double_double_functions.obj \
-	     random_vectors.obj test_dbl2_norm.obj
+	     random_vectors.obj dbl2_norm_kernels.obj test_dbl2_norm.obj
 
 test_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
                  random_vectors.obj test_cmplx_norm.obj

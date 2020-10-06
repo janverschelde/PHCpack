@@ -1,7 +1,7 @@
 // The file double_double_functions.cpp defines the code for the functions
 // specified in double_double_functions.h
 
-// #include "double_double_gpufun.h"
+#include "double_double_gpufun.h"
 
 #include <cmath>
 
@@ -253,7 +253,7 @@ __device__ void ddg_sqrt
      Also, the multiplication (a*x) and [-]*x can be done with
      only half the precision. */
   
-   if((a_hi == 0.0) and (a_lo == 0.0))
+   if((a_hi == 0.0) && (a_lo == 0.0))
    {
       *b_hi = 0.0; *b_lo = 0.0;
    }

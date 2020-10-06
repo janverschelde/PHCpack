@@ -58,15 +58,19 @@ __global__ void medium_normalize_vector
    __shared__ double prdlo[dd_shmemsize];
    __shared__ double sumshi[maxrounds];
    __shared__ double sumslo[maxrounds];
-/*
+
    for(int i=0; i<rnd; i++)
    {
       if(vBSind+j >= dim)       // at last round some threads are excluded
-         prd[j] = 0.0;
+      {
+         prdhi[j] = 0.0;
+         prdlo[j] = 0.0;
+      }
       else
       {
-         shv[j] = v[vBSind+j];  // reading of vector into shared memory
-         prd[j] = shv[j]*shv[j];
+         shvhi[j] = vhi[vBSind+j];  // reading of vector into shared memory
+         shvlo[j] = vlo[vBSind+j];
+         ddg_sqr(shvhi[j],shvlo[j],&prdhi[j],&prdlo[j]);
       }
       __syncthreads();
       powTwo = 1;                          // sum reduction
@@ -74,12 +78,16 @@ __global__ void medium_normalize_vector
       {
          if((j%(powTwo*2)) == 0)
             if(j+powTwo < BS)
-               prd[j] = prd[j] + prd[j+powTwo];
+               ddg_inc(&prdhi[j],&prdlo[j],prdhi[j+powTwo],prdlo[j+powTwo]);
          powTwo = powTwo*2;
          __syncthreads();
       }
       // thread 0 copies the sum of this round in sums[i], the others wait
-      if(j == 0) sums[i] = prd[0]; 
+      if(j == 0)
+      {
+         sumshi[i] = prdhi[0]; 
+         sumslo[i] = prdlo[0]; 
+      }
       __syncthreads();
       vBSind = vBSind + BS;
    }
@@ -88,25 +96,30 @@ __global__ void medium_normalize_vector
    {
       if((j%(powTwo*2)) == 0)
          if(j+powTwo < rnd)
-            sums[j] = sums[j] + sums[j+powTwo];
+            ddg_inc(&sumshi[j],&sumslo[j],sumshi[j+powTwo],sumslo[j+powTwo]);
       powTwo = powTwo*2;
       __syncthreads();
    }
-   if(j == 0) sums[0] = sqrt(sums[0]);
-   if(j == 0) *twonorm = sums[0];
+   if(j == 0) ddg_sqrt(sumshi[0],sumslo[0],&sumshi[0],&sumslo[0]); 
+   if(j == 0)
+   {
+      *normhi = sumshi[0];
+      *normlo = sumslo[0];
+   }
    __syncthreads();
    vBSind = 0;
    for(int i=0; i<rnd; i++)
    {
       if(vBSind+j < dim)
       {
-         shv[j] = v[vBSind+j];           // read into shared memory
-         v[vBSind+j] = shv[j]/sums[0];   // normalize vector
+         shvhi[j] = vhi[vBSind+j];   // read into shared memory
+         shvlo[j] = vlo[vBSind+j];   // and normalize the vector
+         ddg_div(shvhi[j],shvlo[j],sumshi[0],sumslo[0],
+                 &vhi[vBSind+j],&vlo[vBSind+j]);
       }
       __syncthreads();
       vBSind = vBSind + BS;
    }
-*/
 }
 
 __global__ void large_sum_the_squares
@@ -121,9 +134,10 @@ __global__ void large_sum_the_squares
    __shared__ double shvlo[dd_shmemsize];
    __shared__ double prdhi[dd_shmemsize];
    __shared__ double prdlo[dd_shmemsize];
-/*
-   shv[j] = v[k];
-   prd[j] = shv[j]*shv[j];
+
+   shvhi[j] = vhi[k];
+   shvlo[j] = vlo[k];
+   ddg_sqr(shvhi[j],shvlo[j],&prdhi[j],&prdlo[j]);
 
    __syncthreads();
 
@@ -131,13 +145,17 @@ __global__ void large_sum_the_squares
    for(int L=0; L < BSLog2; L++)
    {
       if((j%(powTwo*2)) == 0)
-         if(j+powTwo < BS) prd[j] = prd[j] + prd[j+powTwo];
+         if(j+powTwo < BS) 
+            ddg_inc(&prdhi[j],&prdlo[j],prdhi[j+powTwo],prdlo[j+powTwo]);
       powTwo = powTwo*2;
 
       __syncthreads();
    }
-   if(j == 0) sums[i] = prd[0];     // thread 0 writes the sum
-*/
+   if(j == 0)                              // thread 0 writes the sum
+   {
+      sumshi[i] = prdhi[0];
+      sumslo[i] = prdlo[0];
+   }
 }
 
 __global__ void large_normalize_vector
@@ -147,33 +165,42 @@ __global__ void large_normalize_vector
    const int i = blockIdx.x;
    const int j = threadIdx.x;
    const int k = i*BS + j;
-/*
-   __shared__ double shv[dd_shmemsize];
 
-   if(j < nbsums) shv[j] = sums[j];
+   __shared__ double shvhi[dd_shmemsize];
+   __shared__ double shvlo[dd_shmemsize];
 
+   if(j < nbsums)
+   {
+      shvhi[j] = sumshi[j];
+      shvlo[j] = sumslo[j];
+   }
    __syncthreads();
 
    int powTwo = 1;                          // sum reduction
    for(int L=0; L < nbsumsLog2; L++)
    {
       if((j%(powTwo*2)) == 0)
-         if(j+powTwo < nbsums) shv[j] = shv[j] + shv[j+powTwo];
+         if(j+powTwo < nbsums)
+            ddg_inc(&shvhi[j],&shvlo[j],shvhi[j+powTwo],shvlo[j+powTwo]);
       powTwo = powTwo*2;
 
       __syncthreads();
    }
    __syncthreads();                    // every thread 0 of all blocks
-   if(j == 0) *twonorm = sqrt(shv[0]); // compute the 2-norm and assigns
+   if(j == 0)                          // compute the 2-norm and assigns
+   {                                   // to the output parameter
+      ddg_sqrt(shvhi[0],shvlo[0],normhi,normlo); 
+   }
    __syncthreads();                    // to the output parameter
 
    if(k < dim)
    {
-      shv[j] = v[k];
-      shv[j] = shv[j]/(*twonorm);
-      v[k] = shv[j];
+      shvhi[j] = vhi[k];
+      shvlo[j] = vlo[k];
+      ddg_div(shvhi[j],shvlo[j],*normhi,*normlo,&shvhi[j],&shvlo[j]);
+      vhi[k] = shvhi[j];
+      vlo[k] = shvlo[j];
    }
-*/
 }
 
 void GPU_norm
