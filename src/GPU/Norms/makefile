@@ -27,5 +27,8 @@ run_cmplx_norm:
 test_cmplx_norm:
 	make -f $(MAKEFILE) test_cmplx_norm
 
+test_cmplx2_norm:
+	make -f $(MAKEFILE) test_cmplx2_norm
+
 clean:
 	make -f $(MAKEFILE) clean

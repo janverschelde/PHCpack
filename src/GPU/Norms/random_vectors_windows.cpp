@@ -44,10 +44,8 @@ void random_double2_vectors
    for(int k=0; k<dim; k++)
    {
       r = random_double();
-      vhi_host[k] = r;
-      vhi_device[k] = r;
-      vlo_host[k] = 0.0;
-      vlo_device[k] = 0.0;
+      vhi_host[k] = r;   vhi_device[k] = r;
+      vlo_host[k] = 0.0; vlo_device[k] = 0.0;
    }
 }
 
@@ -59,9 +57,26 @@ void random_complex_vectors
 
    for(int k=0; k<dim; k++)
    {
-      r = random_angle();
-      cr = cos(r); sr = sin(r);
+      r = random_angle(); cr = cos(r); sr = sin(r);
       vre_host[k] = cr; vre_device[k] = cr;
       vim_host[k] = sr; vim_device[k] = sr;
+   }
+}
+
+void random_complex2_vectors
+ ( int dim, double* vrehi_host, double* vrelo_host,
+            double* vimhi_host, double* vimlo_host,
+   double* vrehi_device, double* vrelo_device,
+   double* vimhi_device, double* vimlo_device )
+{
+   double r,cr,sr;
+
+   for(int k=0; k<dim; k++)
+   {
+      r = random_angle(); cr = cos(r); sr = sin(r);
+      vrehi_host[k] = cr;  vrehi_device[k] = cr;
+      vrelo_host[k] = 0.0; vrelo_device[k] = 0.0;
+      vimhi_host[k] = sr;  vimhi_device[k] = sr;
+      vimlo_host[k] = 0.0; vimlo_device[k] = 0.0;
    }
 }

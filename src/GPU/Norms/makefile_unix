@@ -50,16 +50,20 @@ parse_run_arguments.o:
 	$(gpp) -O3 -c parse_run_arguments.cpp
 
 dbl_norm_host.o:
-	@-echo ">>> compile code for execution on the host ..."
+	@-echo ">>> compiling dbl_norm_host ..."
 	$(gpp) -O3 -c dbl_norm_host.cpp
 
 dbl2_norm_host.o:
-	@-echo ">>> compile code for execution on the host ..."
+	@-echo ">>> compiling dbl2_norm_host ..."
 	$(gpp) -O3 -c dbl2_norm_host.cpp
 
 cmplx_norm_host.o:
-	@-echo ">>> compile code for execution on the host ..."
+	@-echo ">>> compiling cmplx_norm_host ..."
 	$(gpp) -O3 -c cmplx_norm_host.cpp
+
+cmplx2_norm_host.o:
+	@-echo ">>> compiling cmplx2_norm_host ..."
+	$(gpp) -O3 -c cmplx2_norm_host.cpp
 
 run_dbl_norm.o:
 	@-echo ">>> compiling run_dbl_norm ..."
@@ -82,8 +86,13 @@ test_dbl2_norm.o:
 	$(gpp) -I$(QDsrc) -I/usr/local/cuda/include -O3 -c test_dbl2_norm.cpp
 
 test_cmplx_norm.o:
-	@-echo ">>> compiling the main program ..."
+	@-echo ">>> compiling test_cmplx_norm ..."
 	$(gpp) -I/usr/local/cuda/include -O3 -c test_cmplx_norm.cpp
+
+test_cmplx2_norm.o:
+	@-echo ">>> compiling test_cmplx2_norm ..."
+	$(gpp) -I$(QDsrc) -I/usr/local/cuda/include -O3 \
+               -c test_cmplx2_norm.cpp
 
 run_dbl_norm: dbl_norm_kernels.o dbl_norm_host.o random_vectors.o \
               parse_run_arguments.o run_dbl_norm.o
@@ -129,6 +138,14 @@ test_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o random_vectors.o \
                   random_vectors.o test_cmplx_norm.o \
                -lcuda -lcudart -L/usr/local/cuda/lib64 
 
+test_cmplx2_norm: random_vectors.o double_double.o double_double_functions.o \
+                  cmplx2_norm_host.o test_cmplx2_norm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_cmplx2_norm cmplx2_norm_host.o \
+                  double_double.o double_double_functions.o \
+                  random_vectors.o test_cmplx2_norm.o \
+               -lcuda -lcudart -L/usr/local/cuda/lib64 
+
 clean:
 	/bin/rm -f -r double_double.o double_double_functions.o
 	/bin/rm -f -r test_double_doubles.o test_double_doubles
@@ -139,7 +156,9 @@ clean:
 	/bin/rm -f -r test_dbl2_norm.o test_dbl2_norm
 	/bin/rm -f -r run_cmplx_norm.o run_cmplx_norm
 	/bin/rm -f -r test_cmplx_norm.o test_cmplx_norm
+	/bin/rm -f -r test_cmplx2_norm.o test_cmplx2_norm
 	/bin/rm -f -r dbl_norm_kernels.o dbl_norm_host.o
 	/bin/rm -f -r dbl2_norm_kernels.o dbl2_norm_host.o
 	/bin/rm -f -r cmplx_norm_kernels.o cmplx_norm_host.o
+	/bin/rm -f -r cmplx2_norm_host.o
 	/bin/rm -f -r double_double_gpufun.o

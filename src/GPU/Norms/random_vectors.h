@@ -42,7 +42,7 @@ void random_double2_vectors
      vhi_host as many randomly generated doubles as the value of dim;
      vlo_host as many randomly generated doubles as the value of dim;
      vhi_device is the same vector as vhi_host;
-     vlo_device is the same vector as vlo_host.                            */
+     vlo_device is the same vector as vlo_host.                       */
 
 void random_complex_vectors
  ( int dim, double* vre_host, double* vim_host,
@@ -66,4 +66,33 @@ void random_complex_vectors
      vre_host   real parts of the complex vectors;
      vim_host   imaginary parts of the complex vectors;
      vre_device is the same vector as vre_host;
-     vim_device is the same vector as vim_host.                            */
+     vim_device is the same vector as vim_host.                      */
+
+void random_complex2_vectors
+ ( int dim, double* vrehi_host, double* vrelo_host,
+            double* vimhi_host, double* vimlo_host,
+   double* vrehi_device, double* vrelo_device,
+   double* vimhi_device, double* vimlo_device );
+/*
+   DESCRIPTION :
+     Generates two instances of the same random complex vector,
+     one for the host and another for the device.
+     The complex vector is represented by four real vectors,
+     with the high and low real parts and with high and low imaginary parts.
+     The complex numbers are on the complex unit circle.
+
+   REQUIRED :
+     Space has been allocated for all arrays of size at least dim.
+
+   ON ENTRY :
+     dim        dimension of the random complex vector.
+
+   ON RETURN :
+     vrehi_host   high real parts of the complex vectors;
+     vrelo_host   low real parts of the complex vectors;
+     vimhi_host   high imaginary parts of the complex vectors;
+     vimlo_host   low imaginary parts of the complex vectors;
+     vrehi_device is the same vector as vrehi_host;
+     vrelo_device is the same vector as vrelo_host;
+     vimhi_device is the same vector as vimhi_host.
+     vimlo_device is the same vector as vimlo_host.                    */

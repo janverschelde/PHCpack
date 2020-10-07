@@ -9,7 +9,9 @@ Tue 6 Oct 2020 : renaming of files run_dbl_norm_d.cpp -> run_dbl_norm.cpp,
   on the 2-norm calculations in double double precision, with a new
   parse_run_arguments, for use in run_dbl_norm and run_cmplx_norm.
   Extended test_dbl2_norm.cpp with more tests to verify the correctness
-  and a timing test.
+  and a timing test.  Extended random_vectors with a function to generate
+  a random complex double double vector, new cmplx2_norm_host and
+  test_cmplx2_norm.cpp for 2-norms of complex double double vectors.
 
 Mon 5 Oct 2020 : added double_double_functions, extended random_vectors,
   to define in dbl2_norm_host the norm computation in double double precision,

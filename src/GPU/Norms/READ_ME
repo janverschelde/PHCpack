@@ -10,19 +10,23 @@ double_double_functions : double double precision arithmetic on host
 double_double_gpufun    : double double precision arithmetic on device
 test_double_doubles     : a test on double_double_functions
 random_vectors          : vectors of random numbers
+parse_run_arguments     : parse command line arguments for run_ functions
 -----------------------------------------------------------------------------
 dbl_norm_host           : 2-norm of double vectors on host
 dbl2_norm_host          : 2-norm of double double vectors on host
 dbl_norm_kernels        : kernels for 2-norm of double vectors
 dbl2_norm_kernels       : kernels for 2-norm of double double vectors
-run_dbl_norm            : main program to compute norms of double vectors
+run_dbl_norm            : test norm computation of double vectors
+run_dbl2_norm           : test norm computation of double double vectors
 test_dbl_norm           : test double 2-norm without command line parameters
 test_dbl2_norm          : test double double 2-norm
 -----------------------------------------------------------------------------
 cmplx_norm_host         : 2-norm of complex double vectors on host
+cmplx2_norm_host        : 2-norm of complex double double vectors on host
 cmplx_norm_kernels      : kernels for 2-norm of complex double vectors
 run_cmplx_norm          : main program to compute norms of complex vectors
 test_cmplx_norm         : test complex 2-norm without command line parameters
+test_cmplx2_norm        : test 2-norm of complex double double vectors
 -----------------------------------------------------------------------------
 
 To build, type "make run_dbl_norm" and "make clean" to clean up.
