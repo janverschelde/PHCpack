@@ -1,11 +1,11 @@
 /* file: double_double.h */
 
 /* This file contains the header files for a standalone, self-contained
-   collection of routines to provide double-double arithmetic, based on
-   the QD-2.3.9 software library. */
+   collection of routines to provide double-double arithmetic,
+   based on the QD-2.3.9 software library. */
 
-#ifndef _double_double_h
-#define _double_double_h
+#ifndef __double_double_h__
+#define __double_double_h__
 
 /* Part I: basic functions from inline.h */
 
@@ -86,7 +86,7 @@ double dd_two_sqr ( double a, double *err );
  * DESCRIPTION :
  *   Computes fl(a*a) and err(a*a) faster than two_prod. */
 
-double dd_nint ( double d );
+double dd_nint_d ( double d );
 /*
  * DESCRIPTION :
  *   Returns nearest integer to d. */
@@ -454,7 +454,7 @@ void dd_log10 ( const double *a, double *b );
  * DESCRIPTION :
  *   Returns b = log10(a).  If a <=0, b equals -1.0. */
 
-/****************** copy, type casts, abs, and floor *****************/
+/**************** copy, type casts, abs, floor, nint *****************/
 
 void dd_copy ( const double *a, double *b );
 /*
@@ -481,7 +481,18 @@ void dd_floor ( const double *a, double *b );
  * DESCRIPTION :
  *   Returns the largest integer to a as the double double b. */
 
-/************************** sin and cos ********************************/  
+void dd_nint ( const double *a, double *b );
+/*
+ * DESCRIPTION :
+ *   Returns the nearest integer to a as the double double b. */
+
+/************************** sqrt, sin and cos ***************************/  
+
+void dd_sqrt ( const double* a, double* b );
+/*
+ * DESCRIPTION :
+ *   Returns in the double double b 
+ *   the square root of the double double a. */
 
 void dd_sin_taylor ( const double *a, double *b );
 /*
@@ -497,6 +508,34 @@ void dd_sincos_taylor ( const double *a, double *sin_a, double *cos_a );
 /*
  * DESCRIPTION :
  *   Returns sin_a = sin(a), cos_a = cos(a) for |a| <= pi/32. */
+
+void dd_reduce_modulo_2pi
+ ( const double *x, double *t, int *j, int *k, int *abs_k, int* fail );
+/*
+ * DESCRIPTION :
+ *   Reduces x modulo 2*pi, modulo pi/2, and then modulo pi/16.
+ *   If this reduction does not work, then an error message is printed
+ *   and fail is true on return.
+ *
+ * ON ENTRY :
+ *   x        some double double number.
+ *
+ * ON RETURN :
+ *   t        what remains of x;
+ *   j        result after reduction modulo pi/2;
+ *   k        result after reduction modulo pi/16;
+ *   abs_k    absolute value of k;
+ *   fail     true if reduction fails. */
+
+void dd_sin ( const double *a, double *sin_a );
+/*
+ * DESCRIPTION :
+ *   Returns sin_a = sin(a). */
+
+void dd_cos ( const double *a, double *cos_a );
+/*
+ * DESCRIPTION :
+ *   Returns sin_a = cos(a). */
 
 /********************* input/output operations *************************/
 

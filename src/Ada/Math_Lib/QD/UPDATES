@@ -1,3 +1,9 @@
+Wed 7 Oct 2020 : extended double_double.h and double_double.c
+  (the corresponding double_double.cpp as well) with functions to compute
+  sin and cos in double precision, tested by dd_funtest.cpp.
+  Updated dd_test.c for a renaming of dd_nint into dd_nint_d.
+  Extended the makefile for the new test function.
+
 Mon 5 Oct 2020 : used explicit calloc statement to allocate arrays of
   characters in double_double.c, as needed in Microsofts VS.
   Made a copy of double_double.c into double_double.cpp, as was needed

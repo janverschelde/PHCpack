@@ -8,6 +8,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "double_double.h"
 
 /* Part I: basic functions from inline.h */
 
@@ -88,7 +89,7 @@ double dd_two_sqr ( double a, double *err )
    return q;
 }
 
-double dd_nint ( double d )
+double dd_nint_d ( double d )
 {
    if (d == floor(d)) return d;
    return floor(d + 0.5);
@@ -709,8 +710,60 @@ void dd_floor ( const double *a, double *b )
    }
 }
 
+void dd_nint ( const double *a, double *b )
+{
+   double f[2];
 
-/************************ sin and cos ********************************/  
+   dd_floor(a,f);
+
+   if(dd_eq(a,f) == 1) 
+   {
+      dd_copy(a,b);
+   }
+   else
+   {
+      double c[2];
+
+      dd_add_dd_d(a,0.5,c);
+      dd_floor(c,b);
+   }
+}
+
+/************************ sqrt, sin and cos ******************************/  
+
+void dd_sqrt ( const double* a, double *b )
+{
+  /* Use Karp's trick: if x is an approximation to sqrt(a), then
+       sqrt(a) = a*x + [a - (a*x)^2] * x / 2   (approx)
+     The approximation is accurate to twice the accuracy of x.
+     Also, the multiplication (a*x) and [-]*x can be done with
+     only half the precision. */
+  
+   if(dd_is_zero(a) == 1)
+   {
+      b[0] = 0.0; b[1] = 0.0;
+   }
+   else if(a[0] < 0.0)
+   {
+      b[0] = -1.0; b[0] = 0.0;
+   }
+   else
+   {
+      const double x = 1.0/sqrt(a[0]);
+      double ax = a[0]*x;
+
+      double ddax[2];
+      double sqax[2];
+      double y[2];
+      
+      ddax[0] = ax; ddax[1] = 0.0;
+      dd_sqr(ddax,sqax);
+
+      dd_sub(a,sqax,y);     
+
+      b[0] = dd_two_sum(ax,y[0]*x*0.5,&b[1]);
+   }
+}
 
 void dd_sin_taylor ( const double *a, double *b )
 {
@@ -721,7 +774,6 @@ void dd_sin_taylor ( const double *a, double *b )
    else
    {
       const int n_inv_fact = 15;
-      double *inv_fac;
       double i_fac[30];  /* inverse factorials for Taylor expansion */
       i_fac[0] = 1.66666666666666657e-01;  i_fac[1] =  9.25185853854297066e-18;
       i_fac[2] = 4.16666666666666644e-02;  i_fac[3] =  2.31296463463574266e-18;
@@ -740,7 +792,7 @@ void dd_sin_taylor ( const double *a, double *b )
       i_fac[28] = 2.81145725434552060e-15; i_fac[29] =  1.65088427308614326e-31;
       const double dd_eps = 4.93038065763132e-32;     /* 2^-104 */
       const double thresh = 0.5*a[0]*dd_eps;
-      double x[2], r[2], s[2], t[2];
+      double x[2], r[2], s[2], t[2], inv_fac[2];
       int i = 0;
       dd_sqr(a,x);     /* x = -sqr(a) */
       dd_minus(x);
@@ -749,10 +801,11 @@ void dd_sin_taylor ( const double *a, double *b )
       do
       {
          dd_mlt(r,x);             /* r *= x */
-         inv_fac = &i_fac[2*i];
+         inv_fac[0] = i_fac[i];   /* even ones are high parts */
+         inv_fac[1] = i_fac[i+1]; /* odd ones are low parts */
          dd_mul(r,inv_fac,t);     /* t = r * inv_fact[i] */
          dd_inc(s,t);             /* s += t */
-         i += 2;
+         i += 4;
       }
       while((i < n_inv_fact) && (t[0] > thresh));
       dd_copy(s,b);
@@ -768,7 +821,6 @@ void dd_cos_taylor ( const double *a, double *b )
    else
    {
       const int n_inv_fact = 15;
-      double *inv_fac;
       double i_fac[30];  /* inverse factorials for Taylor expansion */
       i_fac[0] = 1.66666666666666657e-01;  i_fac[1] =  9.25185853854297066e-18;
       i_fac[2] = 4.16666666666666644e-02;  i_fac[3] =  2.31296463463574266e-18;
@@ -787,7 +839,7 @@ void dd_cos_taylor ( const double *a, double *b )
       i_fac[28] = 2.81145725434552060e-15; i_fac[29] =  1.65088427308614326e-31;
       const double dd_eps = 4.93038065763132e-32;     /* 2^-104 */
       const double thresh = 0.5*a[0]*dd_eps;
-      double x[2], r[2], s[2], t[2];
+      double x[2], r[2], s[2], t[2], inv_fac[2];
       int i = 1;
       dd_sqr(a,x);                /* x = -sqr(a) */
       dd_minus(x);
@@ -797,10 +849,11 @@ void dd_cos_taylor ( const double *a, double *b )
       do
       {
          dd_mlt(r,x);             /* r *= x */
-         inv_fac = &i_fac[2*i];
+         inv_fac[0] = i_fac[i+1]; /* even ones are high parts */
+         inv_fac[1] = i_fac[i+2]; /* odd ones are low parts */
          dd_mul(r, inv_fac, t);   /* t = r * inv_fact[i] */
          dd_inc(s,t);             /* s += t */
-         i += 2;
+         i += 4;
       }
       while((i < n_inv_fact) && (t[0] > thresh));
       dd_copy(s,b);
@@ -817,11 +870,296 @@ void dd_sincos_taylor ( const double *a, double *sin_a, double *cos_a )
    else
    {
       double tmp[2];
+
       dd_sin_taylor(a, sin_a);
       dd_sqr(sin_a, tmp);       /* tmp = sqr(sin_a) */
       dd_minus(tmp);            /* tmp = -sqr(sin_a) */
       dd_inc_d(tmp, 1.0);       /* tmp = 1.0 - sqr(sin_a) */
-      // dd_sqrt(tmp, cos_a);      /* cos_a = sqrt(1.0 - sqr(sin_a) */
+      dd_sqrt(tmp, cos_a);      /* cos_a = sqrt(1.0 - sqr(sin_a) */
+   }
+}
+
+void dd_reduce_modulo_2pi
+ ( const double *x, double *t, int *j, int *k, int *abs_k, int* fail )
+{
+   double q,y[2],z[2],r[2],twopi[2],pi2[2],pi16[2];
+
+   const double twopi_hi = 6.283185307179586232e+00; // high part of 2*pi
+   const double twopi_lo = 2.449293598294706414e-16; // low part of 2*pi
+   const double pi2_hi = 1.570796326794896558e+00; // high part of pi/2
+   const double pi2_lo = 6.123233995736766036e-17; // low part of pi/2
+   const double pi16_hi = 1.963495408493620697e-01; // high part of pi/16
+   const double pi16_lo = 7.654042494670957545e-18; // low part of pi/16
+
+   *j = 0; *k = 0; *abs_k = 0; *fail = 0;
+
+   twopi[0] = twopi_hi; twopi[1] = twopi_lo;
+   pi2[0] = pi2_hi;     pi2[1] = pi2_lo;
+   pi16[0] = pi16_hi;   pi16[1] = pi16_lo;
+
+   dd_div(x,twopi,y);
+
+   dd_nint(y,z);
+   dd_mul(twopi,z,y);
+   dd_sub(x,y,r);
+
+   q = floor(r[0]/pi2_hi+0.5);
+   dd_mul_dd_d(pi2,q,y);
+   dd_sub(r,y,t);
+   *j = (int) q;
+
+   if((*j < -2 ) || (*j > 2))
+   {
+      printf("dd_sin: cannot reduce module pi/2");
+      *fail = 1;
+   }
+   else
+   {
+      q = floor(t[0]/pi16_hi + 0.5);
+      dd_mul_dd_d(pi16,q,y);
+      dd_dec(t,y);
+      *k = (int) q;
+      if(*k < 0)
+         *abs_k = -(*k);
+      else
+         *abs_k = *k;
+      if(*abs_k > 4)
+      {
+         printf("dd_sin: cannot reduce module pi/16");
+         *fail = 1;
+      }
+      else
+         *fail = 0;
+   }
+}
+
+void sincostables
+ ( double *sintabhi, double *sintablo, double *costabhi, double *costablo )
+/*
+ * Defines tables of sin(k*pi/16) and cos(k*pi/16),
+ * in high parts ending with hi and low parts ending with lo.
+ * All arrays have space for four doubles. */
+{
+   const double sin_t0_hi = 1.950903220161282758e-01;
+   const double sin_t0_lo = -7.991079068461731263e-18;
+   const double sin_t1_hi = 3.826834323650897818e-01;
+   const double sin_t1_lo = -1.005077269646158761e-17;
+   const double sin_t2_hi = 5.555702330196021776e-01;
+   const double sin_t2_lo = 4.709410940561676821e-17;
+   const double sin_t3_hi = 7.071067811865475727e-01;
+   const double sin_t3_lo = -4.833646656726456726e-17;
+   const double cos_t0_hi = 9.807852804032304306e-01;
+   const double cos_t0_lo = 1.854693999782500573e-17;
+   const double cos_t1_hi = 9.238795325112867385e-01;
+   const double cos_t1_lo = 1.764504708433667706e-17;
+   const double cos_t2_hi = 8.314696123025452357e-01;
+   const double cos_t2_lo = 1.407385698472802389e-18;
+   const double cos_t3_hi = 7.071067811865475727e-01;
+   const double cos_t3_lo = -4.833646656726456726e-17;
+
+   sintabhi[0] = sin_t0_hi; sintablo[0] = sin_t0_lo;
+   sintabhi[1] = sin_t1_hi; sintablo[1] = sin_t1_lo;
+   sintabhi[2] = sin_t2_hi; sintablo[2] = sin_t2_lo;
+   sintabhi[3] = sin_t3_hi; sintablo[3] = sin_t3_lo;
+   costabhi[0] = cos_t0_hi; costablo[0] = cos_t0_lo;
+   costabhi[1] = cos_t1_hi; costablo[1] = cos_t1_lo;
+   costabhi[2] = cos_t2_hi; costablo[2] = cos_t2_lo;
+   costabhi[3] = cos_t3_hi; costablo[3] = cos_t3_lo;
+}
+
+void dd_sin ( const double *a, double *sin_a )
+{
+   if(dd_is_zero(a) == 1)
+   {
+      sin_a[0] = 0.0; sin_a[1] = 0.0;
+   }
+   else
+   {
+      double t[2];
+      int j,k,abs_k,fail;
+
+      dd_reduce_modulo_2pi(a,t,&j,&k,&abs_k,&fail);
+      if(fail == 1)
+      {
+         sin_a[0] = -2.0; sin_a[1] = 0.0;
+      }
+      else if(k == 0)
+      {
+         if(j == 0)
+         {
+            dd_sin_taylor(a,sin_a);
+         }
+         else if(j == 1)
+         {
+            dd_cos_taylor(a,sin_a);
+         }
+         else if(j == -1)
+         {
+            dd_cos_taylor(a,sin_a);
+            dd_minus(sin_a);
+         }
+         else
+         {
+            dd_sin_taylor(a,sin_a);
+            dd_minus(sin_a);
+         }
+      }
+      else
+      {
+         double u[2],v[2],w[2],t_sin[2],t_cos[2];
+         double sintabhi[4],sintablo[4];
+         double costabhi[4],costablo[4];
+
+         sincostables(sintabhi,sintablo,costabhi,costablo);
+
+         u[0] = costabhi[abs_k-1]; u[1] = costablo[abs_k-1];
+         v[0] = sintabhi[abs_k-1]; v[1] = sintablo[abs_k-1];
+         dd_sincos_taylor(t,t_sin,t_cos);
+         if(j == 0)
+         {
+            dd_mul(u,t_sin,sin_a);
+            dd_mul(v,t_cos,w);
+            if(k > 0)
+               dd_inc(sin_a,w);
+            else
+               dd_dec(sin_a,w);
+         }
+         else if(j == 1)
+         {
+            dd_mul(u,t_cos,sin_a);
+            dd_mul(v,t_sin,w);
+            if(k > 0)
+               dd_dec(sin_a,w);
+            else
+               dd_inc(sin_a,w);
+         }
+         else if(j == -1)
+         {
+            dd_mul(v,t_sin,sin_a);
+            dd_mul(u,t_cos,w);
+            if(k > 0)
+            {
+               dd_dec(sin_a,w);
+            }
+            else
+            { 
+               dd_minus(sin_a);
+               dd_dec(sin_a,w);
+            }
+         }
+         else
+         {
+            dd_mul(v,t_cos,sin_a);
+            dd_mul(u,t_sin,w);
+            if(k > 0)
+            {
+               dd_minus(sin_a);
+               dd_dec(sin_a,w);
+            }
+            else
+            {
+               dd_dec(sin_a,w);
+            }
+         }
+      }
+   }
+}
+
+void dd_cos ( const double *a, double *cos_a )
+{
+   if(dd_is_zero(a) == 1)
+   {
+      cos_a[0] = 1.0; cos_a[1] = 0.0;
+   }
+   else
+   {
+      double t[2];
+      int j,k,abs_k,fail;
+ 
+      dd_reduce_modulo_2pi(a,t,&j,&k,&abs_k,&fail);
+      if(fail == 1)
+      {
+         cos_a[0] = -2.0; cos_a[1] = 0.0;
+      }
+      else if(k == 0)
+      {
+         if(j == 0)
+         {
+            dd_cos_taylor(a,cos_a);
+         }
+         else if(j == 1)
+         {
+            dd_sin_taylor(a,cos_a);
+            dd_minus(cos_a);
+         }
+         else if(j == -1)
+         {
+            dd_sin_taylor(a,cos_a);
+         }
+         else
+         {
+            dd_cos_taylor(a,cos_a);
+            dd_minus(cos_a);
+         }
+      }
+      else
+      {
+         double u[2],v[2],w[2],t_sin[2],t_cos[2];
+         double sintabhi[4],sintablo[4];
+         double costabhi[4],costablo[4];
+
+         sincostables(sintabhi,sintablo,costabhi,costablo);
+
+         u[0] = costabhi[abs_k-1]; u[1] = costablo[abs_k-1];
+         v[0] = sintabhi[abs_k-1]; v[1] = sintablo[abs_k-1];
+         dd_sincos_taylor(t,t_sin,t_cos);
+         if(j == 0)
+         {
+            dd_mul(u,t_cos,cos_a);
+            dd_mul(v,t_sin,w);
+            if(k > 0)
+               dd_dec(cos_a,w);
+            else
+               dd_inc(cos_a,w);
+         }
+         else if(j == 1)
+         {
+            dd_mul(v,t_cos,cos_a);
+            dd_mul(u,t_sin,w);
+            if(k > 0)
+            {
+               dd_minus(cos_a);
+               dd_dec(cos_a,w);
+            }
+            else
+            {
+               dd_dec(cos_a,w);
+            }
+         }
+         else if(j == -1)
+         {
+            dd_mul(u,t_sin,cos_a);
+            dd_mul(v,t_cos,w);
+            if(k > 0)
+               dd_inc(cos_a,w);
+            else
+               dd_dec(cos_a,w);
+         }
+         else
+         {
+            dd_mul(v,t_sin,cos_a);
+            dd_mul(u,t_cos,w);
+            if(k > 0)
+            {
+               dd_dec(cos_a,w);
+            }
+            else
+            {
+               dd_minus(cos_a);
+               dd_dec(cos_a,w);
+            }
+         }
+      }
    }
 }
 

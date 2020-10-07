@@ -1,10 +1,10 @@
 /* Test on the operations declared in the double_double.h file. */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
-#include<limits.h>
-#include"double_double.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <limits.h>
+#include "double_double.h"
 
 int basic_test ( void );
 /* 
@@ -52,7 +52,7 @@ int basic_test ( void )
    b = ((double) rand())/RAND_MAX;
    printf("  a = %21.14e\n  b = %21.14e\n",a,b);
 
-   printf("nearest integer to a : %21.14e\n",dd_nint(a));
+   printf("nearest integer to a : %21.14e\n",dd_nint_d(a));
    printf("a truncated to integer : %21.14e\n",dd_aint(a));
    
    s = dd_two_sum(a,b,&e);

@@ -4,5 +4,8 @@ qd_test:
 dd_test:
 	gcc -o /tmp/dd_test dd_test.c double_double.c -lm
 
+dd_funtest:
+	g++ -o /tmp/dd_funtest dd_funtest.cpp double_double.c -lm
+
 clean:
 	/bin/rm -f -r *.o
