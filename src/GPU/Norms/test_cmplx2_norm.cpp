@@ -10,7 +10,7 @@
 #include <vector_types.h>
 // #include "cmplx_norm_kernels.h"
 #include "cmplx2_norm_host.h"
-#include "random_vectors.h"
+#include "random2_vectors.h"
 #include "double_double.h"
 
 using namespace std;

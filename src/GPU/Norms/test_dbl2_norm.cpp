@@ -10,7 +10,7 @@
 #include <vector_types.h>
 #include "dbl2_norm_host.h"
 #include "dbl2_norm_kernels.h"
-#include "random_vectors.h"
+#include "random2_vectors.h"
 #include "double_double.h"
 
 using namespace std;

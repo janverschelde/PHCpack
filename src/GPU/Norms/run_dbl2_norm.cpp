@@ -17,7 +17,7 @@ the headers for the dbl2_norm_kernels. */
 #include <vector_types.h>
 #include "dbl2_norm_kernels.h"
 #include "dbl2_norm_host.h"
-#include "random_vectors.h"
+#include "random2_vectors.h"
 #include "parse_run_arguments.h"
 
 using namespace std;
