@@ -5,7 +5,11 @@ Tue 6 Oct 2020 : renaming of files run_dbl_norm_d.cpp -> run_dbl_norm.cpp,
   double_double_gpufun.cu, minor update in dbl2_norm_host.cpp,
   fixed bug in test_dbl2_norm.cpp, and completed dbl2_norm_kernels.cu.
   In double_double_gpufun.cu, replaced 'and' by '&&' because of MS VC.
-  Updated makefile_windows.
+  Updated makefile_windows.  New run_dbl2_norm.cpp for manual tests
+  on the 2-norm calculations in double double precision, with a new
+  parse_run_arguments, for use in run_dbl_norm and run_cmplx_norm.
+  Extended test_dbl2_norm.cpp with more tests to verify the correctness
+  and a timing test.
 
 Mon 5 Oct 2020 : added double_double_functions, extended random_vectors,
   to define in dbl2_norm_host the norm computation in double double precision,
