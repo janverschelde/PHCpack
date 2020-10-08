@@ -53,15 +53,46 @@ int verify_correctness ( int dim, int BS, int blocked );
  * The number of threads in a block is given in the block size BS.
  * If blocked and dim is a multiple of BS, then many blocks compute. */
 
+void time_host ( int dim, int freq );
+/*
+ * Computes norms on the host for random vectors of dimension dim
+ * as many times as the frequency freq and shows the elapsed time. */
+
+void time_device ( int dim, int freq, int bs );
+/*
+ * Computes norms on the device for random vectors of dimension dim
+ * as many times as the frequency freq, for block size bs,
+ * and shows the elapsed time. */
+
 int main ( void )
 {
-   int fail = verify_correctness(64,64,0);
+   int fail;
+
+   cout << "Verifying correctness for dimension and block size 64 ..."
+        << endl;
+   fail = verify_correctness(64,64,0);
 
    cout << "nonblocked version ..." << endl;
    fail = verify_correctness(256,64,0);
 
    cout << "blocked version ..." << endl;
    fail = verify_correctness(256,64,1);
+
+   const int dim = 256*256; // largest dimension
+   const int freq = 1024;
+   const int bs = 256;
+
+   fail = verify_correctness(dim,bs,1);
+
+   cout << endl;
+   cout << "Time on host for dimension " << dim
+        << " and frequency " << freq << " ..." << endl;
+   time_host(dim,freq);
+
+   cout << "Time on device for dimension " << dim
+        << ", block size " << bs
+        << ", and frequency " << freq << " ..." << endl;
+   time_device(dim,freq,bs);
 
    return 0;
 }
@@ -156,5 +187,53 @@ int verify_correctness ( int dim, int BS, int blocked )
    cout << "   GPU norm after normalization : ";
    dd_write(wnrm_d,32); cout << endl;
 
-   return 0;
+   const double tol = 1.0e-24;
+   double err = abs(vlonorm_device - vlonorm_host)
+              + abs(wlonorm_device - wlonorm_host);
+
+   cout << scientific << setprecision(4) << "error : " << err;
+   if(err <= tol)
+   {
+      cout << " <= " << tol << "  okay" << endl;
+      return 0;
+   }
+   else
+   {
+      cout << " > " << tol << "  failure" << endl;
+      return 1;
+   }
+}
+
+void time_host ( int dim, int freq )
+{
+   const int BS = 32;  // block size, not used anyway
+
+   double vhinorm_device,vlonorm_device; // norm before normalization on device
+   double whinorm_device,wlonorm_device; // norm after normalization on device
+   double vhinorm_host,vlonorm_host;     // norm before normalization on host
+   double whinorm_host,wlonorm_host;     // norm after normalization on host
+
+   long int begin_time = clock();
+   run(dim,BS,freq,1,1,
+       &vhinorm_device,&vlonorm_device,&vhinorm_host,&vlonorm_host,
+       &whinorm_device,&wlonorm_device,&whinorm_host,&wlonorm_host);
+   long int end_time = clock();
+   int elapsed = 1000*(end_time - begin_time)/CLOCKS_PER_SEC;
+   cout << "elapsed time : " << elapsed << " milliseconds" << endl;
+}
+
+void time_device ( int dim, int freq, int BS )
+{
+   double vhinorm_device,vlonorm_device; // norm before normalization on device
+   double whinorm_device,wlonorm_device; // norm after normalization on device
+   double vhinorm_host,vlonorm_host;     // norm before normalization on host
+   double whinorm_host,wlonorm_host;     // norm after normalization on host
+
+   long int begin_time = clock();
+   run(dim,BS,freq,0,1,
+       &vhinorm_device,&vlonorm_device,&vhinorm_host,&vlonorm_host,
+       &whinorm_device,&wlonorm_device,&whinorm_host,&wlonorm_host);
+   long int end_time = clock();
+   int elapsed = 1000*(end_time - begin_time)/CLOCKS_PER_SEC;
+   cout << "elapsed time : " << elapsed << " milliseconds" << endl;
 }

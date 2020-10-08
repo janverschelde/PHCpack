@@ -24,6 +24,9 @@ test_dbl2_norm:
 run_cmplx_norm:
 	make -f $(MAKEFILE) run_cmplx_norm
 
+run_cmplx2_norm:
+	make -f $(MAKEFILE) run_cmplx2_norm
+
 test_cmplx_norm:
 	make -f $(MAKEFILE) test_cmplx_norm
 

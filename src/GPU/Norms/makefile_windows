@@ -28,18 +28,21 @@ CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
 
 dbl_norm_kernels.obj:
 	@-echo ">>> compiling norm kernels for doubles ..."
-	nvcc -ccbin=$(CL) -c dbl_norm_kernels.cu -o dbl_norm_kernels.obj
+	nvcc -ccbin=$(CL) -c -O3 dbl_norm_kernels.cu -o dbl_norm_kernels.obj
 
 dbl2_norm_kernels.obj:
 	@-echo ">>> compiling norm kernels for doubles ..."
-	nvcc -ccbin=$(CL) -c dbl2_norm_kernels.cu -o dbl2_norm_kernels.obj
+	nvcc -ccbin=$(CL) -c -O3 dbl2_norm_kernels.cu -o dbl2_norm_kernels.obj
 
 cmplx_norm_kernels.obj:
 	@-echo ">>> compiling norm kernels for complex doubles ..."
+	nvcc -ccbin=$(CL) -c -O3 cmplx_norm_kernels.cu \
+                          -o cmplx_norm_kernels.obj
 
 cmplx2_norm_kernels.obj:
 	@-echo ">>> compiling norm kernels for complex double doubles ..."
-	nvcc -ccbin=$(CL) -c cmplx2_norm_kernels.cu -o cmplx2_norm_kernels.obj
+	nvcc -ccbin=$(CL) -c -O3 cmplx2_norm_kernels.cu \
+                          -o cmplx2_norm_kernels.obj
 
 double_double.obj:
 	@-echo ">>> compiling double_double ..."
@@ -115,6 +118,12 @@ run_cmplx_norm.obj:
 	$(CL)\cl /c run_cmplx_norm.cpp -I$(winkitucrt) -I$(includepath) \
                  /I$(CUDASDK)/include -O2 /Fo: run_cmplx_norm.obj /EHsc
 
+run_cmplx2_norm.obj:
+	@-echo ">>> compiling run_cmplx2_norm ..."
+	$(CL)\cl /c run_cmplx2_norm.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include -I$(QDsrc) -O2 \
+                 /Fo: run_cmplx2_norm.obj /EHsc
+
 test_dbl_norm.obj:
 	@-echo ">>> compiling test_dbl_norm ..."
 	$(CL)\cl /c test_dbl_norm.cpp -I$(winkitucrt) -I$(includepath) \
@@ -160,6 +169,16 @@ run_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
 	nvcc -ccbin=$(CL) -o run_cmplx_norm.exe cmplx_norm_kernels.obj \
              cmplx_norm_host.obj random_numbers.obj random_vectors.obj \
              parse_run_arguments.obj run_cmplx_norm.obj
+
+run_cmplx2_norm: cmplx2_norm_kernels.obj cmplx2_norm_host.obj \
+                 double_double.obj double_double_functions.obj \
+                random_numbers.obj random2_vectors.obj \
+                parse_run_arguments.obj run_cmplx2_norm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o run_cmplx2_norm.exe cmplx2_norm_kernels.obj \
+             cmplx2_norm_host.obj random_numbers.obj random2_vectors.obj \
+             double_double.obj double_double_functions.obj \
+             parse_run_arguments.obj run_cmplx2_norm.obj
 
 test_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj \
                random_numbers.obj random_vectors.obj test_dbl_norm.obj
