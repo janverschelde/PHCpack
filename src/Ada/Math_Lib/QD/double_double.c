@@ -805,7 +805,7 @@ void dd_sin_taylor ( const double *a, double *b )
          dd_inc(s,t);             /* s += t */
          i += 4;                  /* only take even terms */
       }
-      while((i < 2*n_inv_fact) && (abs(t[0]) > thresh));
+      while((i < 2*n_inv_fact) && (fabs(t[0]) > thresh));
       dd_copy(s,b);
    }
 }
@@ -853,7 +853,7 @@ void dd_cos_taylor ( const double *a, double *b )
          dd_inc(s,t);             /* s += t */
          i += 4;                  /* only take the odd terms */
       }
-      while((i < 2*n_inv_fact) && (abs(t[0]) > thresh));
+      while((i < 2*n_inv_fact) && (fabs(t[0]) > thresh));
       dd_copy(s,b);
    }
 }

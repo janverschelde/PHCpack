@@ -1,3 +1,6 @@
+Thu 8 Oct 2020 : in double_double.c and double_double.cpp,
+  replaced abs(t[0]) by fabs(t[0]).
+
 Wed 7 Oct 2020 : extended double_double.h and double_double.c
   (the corresponding double_double.cpp as well) with functions to compute
   sin and cos in double precision, tested by dd_funtest.cpp.
