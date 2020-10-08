@@ -805,7 +805,7 @@ void dd_sin_taylor ( const double *a, double *b )
          dd_inc(s,t);             /* s += t */
          i += 4;                  /* only take even terms */
       }
-      while((i < 2*n_inv_fact) && (t[0] > thresh));
+      while((i < 2*n_inv_fact) && (abs(t[0]) > thresh));
       dd_copy(s,b);
    }
 }
@@ -848,12 +848,12 @@ void dd_cos_taylor ( const double *a, double *b )
       {
          dd_mlt(r,x);             /* r *= x */
          inv_fac[0] = i_fac[i+1]; /* even ones are high parts */
-         inv_fac[1] = i_fac[i+2];   /* odd ones are low parts */
+         inv_fac[1] = i_fac[i+2]; /* odd ones are low parts */
          dd_mul(r, inv_fac, t);   /* t = r * inv_fact[i] */
          dd_inc(s,t);             /* s += t */
          i += 4;                  /* only take the odd terms */
       }
-      while((i < 2*n_inv_fact) && (t[0] > thresh));
+      while((i < 2*n_inv_fact) && (abs(t[0]) > thresh));
       dd_copy(s,b);
    }
 }
@@ -985,20 +985,20 @@ void dd_sin ( const double *a, double *sin_a )
       {
          if(j == 0)
          {
-            dd_sin_taylor(a,sin_a);
+            dd_sin_taylor(t,sin_a);
          }
          else if(j == 1)
          {
-            dd_cos_taylor(a,sin_a);
+            dd_cos_taylor(t,sin_a);
          }
          else if(j == -1)
          {
-            dd_cos_taylor(a,sin_a);
+            dd_cos_taylor(t,sin_a);
             dd_minus(sin_a);
          }
          else
          {
-            dd_sin_taylor(a,sin_a);
+            dd_sin_taylor(t,sin_a);
             dd_minus(sin_a);
          }
       }
@@ -1083,20 +1083,20 @@ void dd_cos ( const double *a, double *cos_a )
       {
          if(j == 0)
          {
-            dd_cos_taylor(a,cos_a);
+            dd_cos_taylor(t,cos_a);
          }
          else if(j == 1)
          {
-            dd_sin_taylor(a,cos_a);
+            dd_sin_taylor(t,cos_a);
             dd_minus(cos_a);
          }
          else if(j == -1)
          {
-            dd_sin_taylor(a,cos_a);
+            dd_sin_taylor(t,cos_a);
          }
          else
          {
-            dd_cos_taylor(a,cos_a);
+            dd_cos_taylor(t,cos_a);
             dd_minus(cos_a);
          }
       }

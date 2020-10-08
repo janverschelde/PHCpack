@@ -4,6 +4,9 @@ Wed 7 Oct 2020 : extended double_double.h and double_double.c
   Updated dd_test.c for a renaming of dd_nint into dd_nint_d.
   Extended the makefile for the new test function.
   Adjusted code for dd_sqrt in double_double.c and double_double.cpp.
+  Two bugs fixed in double_double.c (and double_double.cpp):
+  in sin/cos worked with original argument instead of reduced, and
+  forgot abs() in stop criterion in sin_taylor and cos_taylor.
 
 Mon 5 Oct 2020 : used explicit calloc statement to allocate arrays of
   characters in double_double.c, as needed in Microsofts VS.
