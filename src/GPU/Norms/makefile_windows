@@ -66,10 +66,21 @@ dbl2_norm_host.obj:
 	$(CL)\cl /c dbl2_norm_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl2_norm_host.obj
 
+random_numbers.obj:
+	@-echo ">>> compiling random numbers ..."
+	$(CL)\cl /c random_numbers.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random_numbers.obj
+
 random_vectors.obj:
-	@-echo ">>> compiling random data generators ..."
+	@-echo ">>> compiling random double precision vectors ..."
 	$(CL)\cl /c random_vectors.cpp -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: random_vectors.obj
+
+random2_vectors.obj:
+	@-echo ">>> compiling random double double vectors ..."
+	$(CL)\cl /c random2_vectors.cpp \
+                 -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random2_vectors.obj
 
 parse_run_arguments.obj:
 	@-echo ">>> compiling parse_run_arguments ..."
@@ -121,56 +132,62 @@ test_cmplx2_norm.obj:
 	$(CL)\cl /c -O2 test_cmplx2_norm.cpp -I$(winkitucrt) -I$(includepath) \
                  /I$(CUDASDK)/include -I$(QDsrc) /Fo: test_cmplx2_norm.obj /EHsc
 
-run_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj random_vectors.obj \
+run_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj \
+	      random_numbers.obj random_vectors.obj \
               parse_run_arguments.obj run_dbl_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_dbl_norm.exe dbl_norm_kernels.obj \
-             dbl_norm_host.obj random_vectors.obj parse_run_arguments.obj \
-             run_dbl_norm.obj
+             dbl_norm_host.obj random_numbers.obj random_vectors.obj \
+             parse_run_arguments.obj run_dbl_norm.obj
 
-run_dbl2_norm: double_double_functions.obj \
-               dbl2_norm_kernels.obj dbl2_norm_host.obj random_vectors.obj \
+run_dbl2_norm: double_double_functions.obj double_double.obj \
+               dbl2_norm_kernels.obj dbl2_norm_host.obj \
+               random_numbers.obj random2_vectors.obj \
                parse_run_arguments.obj run_dbl2_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_dbl2_norm.exe dbl2_norm_kernels.obj \
-             dbl2_norm_host.obj random_vectors.obj parse_run_arguments.obj \
+             dbl2_norm_host.obj random_numbers.obj random2_vectors.obj \
+             parse_run_arguments.obj double_double.obj \
              double_double_functions.obj run_dbl2_norm.obj
 
 run_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
-                random_vectors.obj parse_run_arguments.obj \
-                run_cmplx_norm.obj
+                random_numbers.obj random_vectors.obj \
+                parse_run_arguments.obj run_cmplx_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o run_cmplx_norm.exe cmplx_norm_kernels.obj \
-             cmplx_norm_host.obj random_vectors.obj parse_run_arguments.obj \
-             run_cmplx_norm.obj
+             cmplx_norm_host.obj random_numbers.obj random_vectors.obj \
+             parse_run_arguments.obj run_cmplx_norm.obj
 
 test_dbl_norm: dbl_norm_kernels.obj dbl_norm_host.obj \
-               random_vectors.obj test_dbl_norm.obj
+               random_numbers.obj random_vectors.obj test_dbl_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_norm.exe dbl_norm_kernels.obj \
-             dbl_norm_host.obj random_vectors.obj test_dbl_norm.obj
+             dbl_norm_host.obj random_numbers.obj random_vectors.obj \
+             test_dbl_norm.obj
 
 test_dbl2_norm: double_double.obj double_double_functions.obj \
-                dbl2_norm_host.obj random_vectors.obj dbl2_norm_kernels.obj \
-                test_dbl2_norm.obj
+                dbl2_norm_host.obj random_numbers.obj random2_vectors.obj \
+                dbl2_norm_kernels.obj test_dbl2_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_norm.exe dbl2_norm_host.obj \
              double_double.obj double_double_functions.obj \
-	     random_vectors.obj dbl2_norm_kernels.obj test_dbl2_norm.obj
+	     random_numbers.obj random2_vectors.obj dbl2_norm_kernels.obj \
+             test_dbl2_norm.obj
 
 test_cmplx_norm: cmplx_norm_kernels.obj cmplx_norm_host.obj \
-                 random_vectors.obj test_cmplx_norm.obj
+                 random_numbers.obj random_vectors.obj test_cmplx_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_cmplx_norm.exe cmplx_norm_kernels.obj \
-             cmplx_norm_host.obj random_vectors.obj test_cmplx_norm.obj
+             cmplx_norm_host.obj random_numbers.obj random_vectors.obj \
+             test_cmplx_norm.obj
 
-test_cmplx2_norm: cmplx2_norm_host.obj random_vectors.obj \
+test_cmplx2_norm: cmplx2_norm_host.obj random_numbers.obj random2_vectors.obj \
                   double_double.obj double_double_functions.obj \
                   test_cmplx2_norm.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_cmplx2_norm.exe cmplx2_norm_host.obj \
              double_double.obj double_double_functions.obj \
-             random_vectors.obj test_cmplx2_norm.obj
+             random_numbers.obj random2_vectors.obj test_cmplx2_norm.obj
 
 clean:
 	del *exe *obj *exp *lib *~

@@ -1,3 +1,8 @@
+Wed 7 Oct 2020 : splitted the random_vectors into random_numbers,
+  random_vectors, and random2_vectors, updated {run,test}_dbl2_norm.cpp,
+  test_cmplx2_norm.cpp, and the makefile_unix.  Updated makefile_windows
+  and adjusted random_numbers.cpp to random_numbers_windows.cpp.
+
 Tue 6 Oct 2020 : renaming of files run_dbl_norm_d.cpp -> run_dbl_norm.cpp,
   test_dbl_norm_d.cpp -> test_dbl_norm.cpp, run_cmplx_norm_d.cpp ->
   run_cmplx_norm.cpp, and test_cmplx_norm_d.cpp -> test_cmplx_norm.cpp.

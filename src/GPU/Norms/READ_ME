@@ -9,7 +9,10 @@ file name               : short description
 double_double_functions : double double precision arithmetic on host
 double_double_gpufun    : double double precision arithmetic on device
 test_double_doubles     : a test on double_double_functions
-random_vectors          : vectors of random numbers
+random_numbers          : generators of random doubles and random angles
+random_numbers_windows  : specific include for windows MS VC
+random_vectors          : random vectors in double precision
+random2_vectors         : random vectors in double double precision
 parse_run_arguments     : parse command line arguments for run_ functions
 -----------------------------------------------------------------------------
 dbl_norm_host           : 2-norm of double vectors on host
