@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void run ( int dim, int BS, int freq, int mode,
+void run ( int dim, int BS, int freq, int mode, int blocked,
            double *vhinorm_device, double *vlonorm_device,
            double *vhinorm_host, double *vlonorm_host,
            double *whinorm_device, double *wlonorm_device,
@@ -26,12 +26,15 @@ void run ( int dim, int BS, int freq, int mode,
  *   in double doble precision.
  *
  * ON ENTRY :
- *   dim   dimension of the random vector;
- *   BS    block size;
- *   freq  frequency of runs for the timings;
- *   mode  if 0, then only GPU computes,
- *         if 1, then only CPU computes,
- *         if 2, then both GPU and CPU  compute.
+ *   dim      dimension of the random vector;
+ *   BS       block size;
+ *   freq     frequency of runs for the timings;
+ *   mode     if 0, then only GPU computes,
+ *            if 1, then only CPU computes,
+ *            if 2, then both GPU and CPU  compute;
+ *   blocked  if 0, then the vector should be of medium size
+ *            and only one block will compute,
+ *            if 1, then as many as dim/BS blocks will compute.
  *
  * ON RETURN :
  *   vhinorm_device  high part of 2-norm compute by the device;
@@ -43,20 +46,27 @@ void run ( int dim, int BS, int freq, int mode,
  *   whinorm_host    high part of 2-norm on host after normalization;
  *   wlonorm_host    low norm of 2-norm on host after normalization.  */
 
-int verify_correctness ( int dim, int BS );
+int verify_correctness ( int dim, int BS, int blocked );
 /*
  * Computes norms of real vectors both on GPU and CPU
  * of dimension dim and verifies the correctness.
- * The number of threads in a block is given in the block size BS. */
+ * The number of threads in a block is given in the block size BS.
+ * If blocked and dim is a multiple of BS, then many blocks compute. */
 
 int main ( void )
 {
-   int fail = verify_correctness(64,64);
+   int fail = verify_correctness(64,64,0);
+
+   cout << "nonblocked version ..." << endl;
+   fail = verify_correctness(256,64,0);
+
+   cout << "blocked version ..." << endl;
+   fail = verify_correctness(256,64,1);
 
    return 0;
 }
 
-void run ( int dim, int BS, int freq, int mode,
+void run ( int dim, int BS, int freq, int mode, int blocked,
            double *vhinorm_device, double *vlonorm_device,
            double *vhinorm_host, double *vlonorm_host,
            double *whinorm_device, double *wlonorm_device,
@@ -85,9 +95,9 @@ void run ( int dim, int BS, int freq, int mode,
    if(mode == 0 || mode == 2)
    {
       GPU_norm(vrehi_device,vrelo_device,vimhi_device,vimlo_device,
-               dim,1,BS,vhinorm_device,vlonorm_device,1);
+               dim,1,BS,vhinorm_device,vlonorm_device,blocked);
       GPU_norm(vrehi_device,vrelo_device,vimhi_device,vimlo_device,
-               dim,freq,BS,whinorm_device,wlonorm_device,1);
+               dim,freq,BS,whinorm_device,wlonorm_device,blocked);
    }
    if(mode == 1 || mode == 2)
    {
@@ -105,7 +115,7 @@ void run ( int dim, int BS, int freq, int mode,
    }
 }
 
-int verify_correctness ( int dim, int BS )
+int verify_correctness ( int dim, int BS, int blocked )
 {
    double vhinorm_device,vlonorm_device; // norm before normalization on device
    double whinorm_device,wlonorm_device; // norm after normalization on device
@@ -113,7 +123,7 @@ int verify_correctness ( int dim, int BS )
    double whinorm_host,wlonorm_host;     // norm after normalization on host
    double vnrm_h[2],vnrm_d[2],wnrm_h[2],wnrm_d[2];
 
-   run(dim,BS,1,2,
+   run(dim,BS,1,2,blocked,
        &vhinorm_device,&vlonorm_device,&vhinorm_host,&vlonorm_host,
        &whinorm_device,&wlonorm_device,&whinorm_host,&wlonorm_host);
 

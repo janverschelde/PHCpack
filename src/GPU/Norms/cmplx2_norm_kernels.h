@@ -57,6 +57,104 @@ __global__ void small_normalize_vector
  *   normhi    high part of the 2-norm of the given vector;
  *   normlo    low part of the 2-norm of the given vector. */
 
+__global__ void medium_normalize_vector
+ ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
+   int dim, int rnd, int rndLog2, int BS, int BSLog2,
+   double* normhi, double* normlo );
+/*
+ * DESCRIPTION :
+ *   Kernel function to compute the norm of the vector in v,
+ *   for vectors of medium dimension, in double double precision.
+ *
+ * REQUIRED :
+ *   The dimension dim equals the block size BS times rnd.
+ *   The block size BS is the number of threads in the block.
+ *
+ * ON ENTRY :
+ *   vrehi     high real parts of a complex vector of dimension dim;
+ *   vrelo     low real parts of a complex vector of dimension dim;
+ *   vimhi     high imaginary parts of a complex vector of dimension dim;
+ *   vimlo     low imaginary parts of a complex vector of dimension dim;
+ *   dim       dimension of the vector must equal rnd*BS;
+ *   rnd       the number of rounds or the multiplier for the dimension;
+ *   rndLog2   the 2-logarithm of rnd for use in sum reduction;
+ *   BS        the block size or the number of threads in the block;
+ *   BSLog2    equals ceil(log2((double) BS), used in sum reduction.
+ *
+ * ON RETURN :
+ *   vrehi     high real parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   vrelo     low real parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   vimhi     high imaginary parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   vimlo     high imaginary parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   twonorm   the 2-norm of the given vector. */
+
+__global__ void large_sum_the_squares
+ ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
+   int dim, double* sumshi, double* sumslo, int BS, int BSLog2 );
+/*
+ * DESCRIPTION :
+ *   Computes the sums of the squares of the numbers in v,
+ *   as needed in the 2-norm of the vector, with many blocks.
+ *
+ * REQUIRED :
+ *   Space in sums is allocated for as many blocks in the launch.
+ *
+ * ON ENTRY :
+ *   vrehi     high real parts of a complex vector of dimension dim;
+ *   vrelo     low real parts of a complex vector of dimension dim;
+ *   vimhi     high imaginary parts of a complex vector of dimension dim;
+ *   vimlo     low imaginary parts of a complex vector of dimension dim;
+ *   dim       dimension of the vector must equal BS*nbsums;
+ *   BS        the block size or the number of threads in the block;
+ *   BSLog2    equals ceil(log2((double) BS), used in sum reduction.
+ *
+ * ON RETURN :
+ *   sumshi    high parts of sums of squares of slices of v;
+ *   sumslo    low parts of sums of squares of slices of v. */
+
+__global__ void large_normalize_vector
+ ( double* vrehi, double* vrelo, double* vimhi, double* vimlo,
+   int dim, double* sumshi, double* sumslo, int nbsums, int nbsumsLog2,
+   int BS, double* normhi, double* normlo );
+/*
+ * DESCRIPTION :
+ *   Computes the norm of the vector v for vectors of large dimension,
+ *   for given sums of squares, and normalizes the vector.
+ *
+ * REQUIRED :
+ *   The dimension dim equals the block size BS times nbsums.
+ *   The block size BS is the number of threads in the block.
+ *   The number of blocks equals nbsums.
+ *
+ * ON ENTRY :
+ *   vrehi     high real parts of a complex vector of dimension dim;
+ *   vrelo     low real parts of a complex vector of dimension dim;
+ *   vimhi     high imaginary parts of a complex vector of dimension dim;
+ *   vimlo     low imaginary parts of a complex vector of dimension dim;
+ *   dim       dimension of the vector must equal BS*nbsums;
+ *   sumshi    high parts of sums of squares of slices of v;
+ *   sumslo    high parts of sums of squares of slices of v;
+ *   nbsums    the number of elements in sums equals
+ *             the number of blocks in the kernel launch;
+ *   nbsumsLog2 is ceil(log2((double) nbsums), used in sum reduction;
+ *   BS        is the block size, the number of threads in a block.
+ *
+ * ON RETURN :
+ *   vrehi     high real parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   vrelo     low real parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   vimhi     high imaginary parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   vimlo     low imaginary parts of the complex vector in same direction,
+ *             of the original vector but with norm one;
+ *   normhi    high part of the 2-norm of the original vector v;
+ *   normlo    low part of the 2-norm of the original vector v. */
+
 void GPU_norm
  ( double* vrehi_h, double* vrelo_h, double* vimhi_h, double* vimlo_h,
    int dim, int freq, int BS, double* normhi, double* normlo, int blocked );
