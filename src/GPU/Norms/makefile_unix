@@ -8,16 +8,20 @@ gcc=/usr/bin/gcc
 QDsrc=../../Ada/Math_Lib/QD
 
 dbl_norm_kernels.o:
-	@-echo ">>> compiling vector norm kernels for doubles ..."
+	@-echo ">>> compiling norm kernels for doubles ..."
 	nvcc -ccbin=$(gcc) -c dbl_norm_kernels.cu
 
 dbl2_norm_kernels.o:
-	@-echo ">>> compiling vector norm kernels for double doubles ..."
+	@-echo ">>> compiling norm kernels for double doubles ..."
 	nvcc -ccbin=$(gcc) -c dbl2_norm_kernels.cu
 
 cmplx_norm_kernels.o:
-	@-echo ">>> compiling vector norm kernels for complex doubles ..."
+	@-echo ">>> compiling norm kernels for complex doubles ..."
 	nvcc -ccbin=$(gcc) -c cmplx_norm_kernels.cu
+
+cmplx2_norm_kernels.o:
+	@-echo ">>> compiling norm kernels for complex double doubles ..."
+	nvcc -ccbin=$(gcc) -c cmplx2_norm_kernels.cu
 
 # nvcc -ccbin=$(gcc) -arch=sm_13 -c dbl_norm_kernels.cu
 
@@ -154,9 +158,10 @@ test_cmplx_norm: cmplx_norm_kernels.o cmplx_norm_host.o \
 
 test_cmplx2_norm: random_numbers.o random2_vectors.o \
                   double_double.o double_double_functions.o \
-                  cmplx2_norm_host.o test_cmplx2_norm.o
+                  cmplx2_norm_host.o cmplx2_norm_kernels.o \
+                  test_cmplx2_norm.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_cmplx2_norm cmplx2_norm_host.o \
+	$(gpp) -o test_cmplx2_norm cmplx2_norm_host.o cmplx2_norm_kernels.o \
                   double_double.o double_double_functions.o \
                   random_numbers.o random2_vectors.o test_cmplx2_norm.o \
                -lcuda -lcudart -L/usr/local/cuda/lib64 
@@ -176,5 +181,5 @@ clean:
 	/bin/rm -f -r dbl_norm_kernels.o dbl_norm_host.o
 	/bin/rm -f -r dbl2_norm_kernels.o dbl2_norm_host.o
 	/bin/rm -f -r cmplx_norm_kernels.o cmplx_norm_host.o
-	/bin/rm -f -r cmplx2_norm_host.o
+	/bin/rm -f -r cmplx2_norm_host.o cmplx2_norm_kernels.o
 	/bin/rm -f -r double_double_gpufun.o

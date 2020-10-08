@@ -1,3 +1,9 @@
+Thu 8 Oct 2020 : small edits in dbl2_norm_kernels.h and dlb2_norm_kernels.cu.
+  New cmplx2_norm_kernels.h and cmplx2_norm_kernels.cu with code to
+  compute the 2-norm and normalize a vector of small size, with test
+  code in test_cmplx2_norm.cpp.  Fixed bug in random2_vectors.cpp.
+  Extended makefile_unix and makefile_windows.
+
 Wed 7 Oct 2020 : splitted the random_vectors into random_numbers,
   random_vectors, and random2_vectors, updated {run,test}_dbl2_norm.cpp,
   test_cmplx2_norm.cpp, and the makefile_unix.  Updated makefile_windows

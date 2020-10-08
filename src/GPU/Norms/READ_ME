@@ -26,7 +26,8 @@ test_dbl2_norm          : test double double 2-norm
 -----------------------------------------------------------------------------
 cmplx_norm_host         : 2-norm of complex double vectors on host
 cmplx2_norm_host        : 2-norm of complex double double vectors on host
-cmplx_norm_kernels      : kernels for 2-norm of complex double vectors
+cmplx_norm_kernels      : 2-norm kernels for complex double vectors
+cmplx2_norm_kernels     : 2-norm kernels for complex double double vectors
 run_cmplx_norm          : main program to compute norms of complex vectors
 test_cmplx_norm         : test complex 2-norm without command line parameters
 test_cmplx2_norm        : test 2-norm of complex double double vectors

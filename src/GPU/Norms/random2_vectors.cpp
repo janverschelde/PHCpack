@@ -38,12 +38,12 @@ void random_complex2_vectors
       // rnd = random_angle()/100.0;            // small angle is ok
       // dd_sincos_taylor(ddrnd,sinrnd,cosrnd); // for sincos_taylor
 
-      rnd = random_double(); // random_angle();
-
+      // rnd = random_angle();
       // ddrnd[0] = rnd; ddrnd[1] = 0.0;
-      sinrnd[0] = rnd; sinrnd[1] = 0.0;
+      // dd_sin(ddrnd,sinrnd); dd_cos(ddrnd,cosrnd);
 
-      //dd_sin(ddrnd,sinrnd); // dd_cos(ddrnd,cosrnd);
+      rnd = random_double();
+      sinrnd[0] = rnd; sinrnd[1] = 0.0;
 
       double y[2];          // work around to compute cos
       dd_sqr(sinrnd,y);
@@ -57,6 +57,6 @@ void random_complex2_vectors
       vrehi_host[k] = cosrnd[0]; vrehi_device[k] = cosrnd[0];
       vrelo_host[k] = cosrnd[1]; vrelo_device[k] = cosrnd[1];
       vimhi_host[k] = sinrnd[0]; vimhi_device[k] = sinrnd[0];
-      vimlo_host[k] = sinrnd[1]; vimlo_device[k] = cosrnd[1];
+      vimlo_host[k] = sinrnd[1]; vimlo_device[k] = sinrnd[1];
    }
 }

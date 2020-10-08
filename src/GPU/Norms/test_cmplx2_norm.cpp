@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <vector_types.h>
-// #include "cmplx_norm_kernels.h"
+#include "cmplx2_norm_kernels.h"
 #include "cmplx2_norm_host.h"
 #include "random2_vectors.h"
 #include "double_double.h"
@@ -81,17 +81,18 @@ void run ( int dim, int BS, int freq, int mode,
    random_complex2_vectors
      (dim,vrehi_host,vrelo_host,vimhi_host,vimlo_host,
       vrehi_device,vrelo_device,vimhi_device,vimlo_device);
-/*
+
    if(mode == 0 || mode == 2)
    {
-      GPU_norm(vre_device,vim_device,dim,1,BS,vnorm_device,1);
-      GPU_norm(vre_device,vim_device,dim,freq,BS,wnorm_device,1);
+      GPU_norm(vrehi_device,vrelo_device,vimhi_device,vimlo_device,
+               dim,1,BS,vhinorm_device,vlonorm_device,1);
+      GPU_norm(vrehi_device,vrelo_device,vimhi_device,vimlo_device,
+               dim,freq,BS,whinorm_device,wlonorm_device,1);
    }
    if(mode == 1 || mode == 2)
    {
       for(int i=0; i<=freq; i++)
       {
- */
          CPU_norm(vrehi_host,vrelo_host,vimhi_host,vimlo_host,dim,
                   vhinorm_host,vlonorm_host);
          make_copy(dim,vrehi_host,vrelo_host,vimhi_host,vimlo_host,
@@ -100,15 +101,12 @@ void run ( int dim, int BS, int freq, int mode,
                        *vhinorm_host,*vlonorm_host);
          CPU_norm(wrehi_host,wrelo_host,wimhi_host,wimlo_host,dim,
                   whinorm_host,wlonorm_host);
-/*
       }
    }
- */
 }
 
 int verify_correctness ( int dim, int BS )
 {
-
    double vhinorm_device,vlonorm_device; // norm before normalization on device
    double whinorm_device,wlonorm_device; // norm after normalization on device
    double vhinorm_host,vlonorm_host;     // norm before normalization on host
@@ -124,17 +122,29 @@ int verify_correctness ( int dim, int BS )
    cout << "   CPU norm : " << endl;
    cout << "     hi : " << vhinorm_host << endl;
    cout << "     lo : " << vlonorm_host << endl;
+   cout << "   GPU norm : " << endl;
+   cout << "     hi : " << vhinorm_device << endl;
+   cout << "     lo : " << vlonorm_device << endl;
    cout << "   CPU norm after normalization : " << endl;
    cout << "     hi : " << whinorm_host << endl;
    cout << "     lo : " << wlonorm_host << endl;
+   cout << "   GPU norm after normalization : " << endl;
+   cout << "     hi : " << whinorm_device << endl;
+   cout << "     lo : " << wlonorm_device << endl;
 
    vnrm_h[0] = vhinorm_host; vnrm_h[1] = vlonorm_host;
    wnrm_h[0] = whinorm_host; wnrm_h[1] = wlonorm_host;
+   vnrm_d[0] = vhinorm_device; vnrm_d[1] = vlonorm_device;
+   wnrm_d[0] = whinorm_device; wnrm_d[1] = wlonorm_device;
 
    cout << "   CPU norm : ";
    dd_write(vnrm_h,32); cout << endl;
-   cout << "       after normalization : ";
+   cout << "   GPU norm : ";
+   dd_write(vnrm_d,32); cout << endl;
+   cout << "   CPU norm after normalization : ";
    dd_write(wnrm_h,32); cout << endl;
+   cout << "   GPU norm after normalization : ";
+   dd_write(wnrm_d,32); cout << endl;
 
    return 0;
 }

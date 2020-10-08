@@ -7,8 +7,8 @@
 /*
   The constant d_shmemsize determines the size of the vectors
   stored in shared memory.  As every thread works on one entry
-  in the shared memory vectors, for double precision, this size
-  is bounded by the number of threads in a block.
+  in the shared memory vectors, for double double precision,
+  this size is bounded by the number of threads in a block.
   The largest dimension for which the small normalization runs
   is thus the value of d_shmemsize.
  */

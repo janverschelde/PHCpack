@@ -37,8 +37,8 @@ __global__ void small_normalize_vector
    if(j == 0) ddg_sqrt(prdhi[0],prdlo[0],&prdhi[0],&prdlo[0]); 
    if(j == 0)
    {
-     *normhi = prdhi[0];
-     *normlo = prdlo[0];
+      *normhi = prdhi[0];
+      *normlo = prdlo[0];
    }
    __syncthreads();
    ddg_div(shvhi[j],shvlo[j],prdhi[0],prdlo[0],&vhi[j],&vlo[j]);
