@@ -756,12 +756,10 @@ void dd_sqrt ( const double* a, double *b )
       double sqax[2];
       double y[2];
       
-      ddax[0] = ax; ddax[1] = 0.0;
-      dd_sqr(ddax,sqax);
-
+      dd_sqr_d(ax,sqax);
       dd_sub(a,sqax,y);     
 
-      b[0] = dd_two_sum(ax,y[0]*x*0.5,&b[1]);
+      b[0] = dd_two_sum(ax,y[0]*(x*0.5),&b[1]);
    }
 }
 
@@ -805,9 +803,9 @@ void dd_sin_taylor ( const double *a, double *b )
          inv_fac[1] = i_fac[i+1]; /* odd ones are low parts */
          dd_mul(r,inv_fac,t);     /* t = r * inv_fact[i] */
          dd_inc(s,t);             /* s += t */
-         i += 4;
+         i += 4;                  /* only take even terms */
       }
-      while((i < n_inv_fact) && (t[0] > thresh));
+      while((i < 2*n_inv_fact) && (t[0] > thresh));
       dd_copy(s,b);
    }
 }
@@ -838,7 +836,7 @@ void dd_cos_taylor ( const double *a, double *b )
       i_fac[26] = 4.77947733238738525e-14; i_fac[27] =  4.39920548583408126e-31;
       i_fac[28] = 2.81145725434552060e-15; i_fac[29] =  1.65088427308614326e-31;
       const double dd_eps = 4.93038065763132e-32;     /* 2^-104 */
-      const double thresh = 0.5*a[0]*dd_eps;
+      const double thresh = 0.5*dd_eps;
       double x[2], r[2], s[2], t[2], inv_fac[2];
       int i = 1;
       dd_sqr(a,x);                /* x = -sqr(a) */
@@ -850,12 +848,12 @@ void dd_cos_taylor ( const double *a, double *b )
       {
          dd_mlt(r,x);             /* r *= x */
          inv_fac[0] = i_fac[i+1]; /* even ones are high parts */
-         inv_fac[1] = i_fac[i+2]; /* odd ones are low parts */
+         inv_fac[1] = i_fac[i+2];   /* odd ones are low parts */
          dd_mul(r, inv_fac, t);   /* t = r * inv_fact[i] */
          dd_inc(s,t);             /* s += t */
-         i += 4;
+         i += 4;                  /* only take the odd terms */
       }
-      while((i < n_inv_fact) && (t[0] > thresh));
+      while((i < 2*n_inv_fact) && (t[0] > thresh));
       dd_copy(s,b);
    }
 }

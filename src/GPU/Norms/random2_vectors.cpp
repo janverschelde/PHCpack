@@ -2,10 +2,13 @@
 // specified in random_vectors.h.
 
 #include <cstdlib>
+#include <iostream>
 #include <cmath>
 #include "random_numbers.h"
 #include "random2_vectors.h"
 #include "double_double.h"
+
+using namespace std;
 
 void random_double2_vectors
  ( int dim, double* vhi_host, double* vlo_host,
@@ -32,11 +35,21 @@ void random_complex2_vectors
 
    for(int k=0; k<dim; k++)
    {
-      rnd = random_angle();
+      // rnd = random_angle()/100.0;            // small angle is ok
+      // dd_sincos_taylor(ddrnd,sinrnd,cosrnd); // for sincos_taylor
 
-      ddrnd[0] = rnd; ddrnd[1] = 0.0;
+      rnd = random_double(); // random_angle();
 
-      dd_sin(ddrnd,sinrnd); dd_cos(ddrnd,cosrnd);
+      // ddrnd[0] = rnd; ddrnd[1] = 0.0;
+      sinrnd[0] = rnd; sinrnd[1] = 0.0;
+
+      //dd_sin(ddrnd,sinrnd); // dd_cos(ddrnd,cosrnd);
+
+      double y[2];          // work around to compute cos
+      dd_sqr(sinrnd,y);
+      dd_minus(y);          // y = -sin^2
+      dd_inc_d(y,1.0);      // y = 1 - sin^2
+      dd_sqrt(y,cosrnd);    // cos is sqrt(1-sin^2)
 
       // sinrnd[0] = sin(rnd); sinrnd[1] = 0.0;
       // cosrnd[0] = cos(rnd); cosrnd[1] = 0.0;
