@@ -2,14 +2,17 @@
 
 /* This file contains the header files for a standalone,
    self-contained collection of routines for penta double arithmetic,
-   based on the CAMPARY and the QD software libraries. */
+   based on the CAMPARY and the QD software libraries.
+
+All functions in this library have the prefix pd_
+to avoid potential name clashes with other multiple doubles. */
 
 #ifndef __penta_double_h__
 #define __penta_double_h__
 
 /************************* normalizations ************************/
 
-void renorm5
+void pd_renorm5
  ( double f0, double f1, double f2, double f3, double f4, double f5,
    double *pr, double *r0, double *r1, double *r2, double *r3, double *r4 );
 /*
@@ -36,7 +39,7 @@ void renorm5
  *   r3       second lowest part of a penta double number;
  *   r4       lowest part of a penta double number. */
 
-void fast_renorm
+void pd_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double *r0, double *r1, double *r2, double *r3, double *r4 );
 /*
@@ -61,7 +64,7 @@ void fast_renorm
  *   r3       second lowest part of a penta double number;
  *   r4       lowest part of a penta double number. */
 
-void renorm_add1
+void pd_renorm_add1
  ( double x0, double x1, double x2, double x3, double x4, double y,
    double *r0, double *r1, double *r2, double *r3, double *r4 );
 /*
@@ -99,14 +102,14 @@ void pd_copy ( const double *a, double *b );
 void pd_add ( const double *a, const double *b, double *c );
 /*
  * DESCRIPTION : c = a + b, or in words:
- *   Adds two double doubles in a and b to make the double double c. */
+ *   Adds two penta doubles in a and b to make the penta double c. */
 
 /* penta double = penta double + double */
 void pd_add_pd_d ( const double *a, double b, double *c );
 /*
  * DESCRIPTION : c = a + b, or in words:
- *   Adds the double doubles in a and the double b
- *   to make the double double c. */
+ *   Adds the penta doubles in a and the double b
+ *   to make the penta double c. */
 
 /* penta double = - penta double */
 void pd_minus ( double *a );
@@ -118,8 +121,8 @@ void pd_minus ( double *a );
 void pd_sub ( const double *a, const double *b, double *c );
 /*
  * DESCRIPTION : c = a - b, or in words:
- *   Subtracts from the double doubles in a
- *   the double double in b to make the double double c. */
+ *   Subtracts from the penta doubles in a
+ *   the penta double in b to make the penta double c. */
 
 /**************  multiplications and division ***********************/
 
@@ -143,11 +146,18 @@ void pd_div ( const double *a, const double *b, double *c );
  *   Divides the penta double a by the penta double b
  *   to make the penta double c. */
 
-/**************************** random *****************************/
+/******************** random number generator **************************/
 
-void random_penta_double ( double *x );
+void pd_random ( double *x );
 /*
  * DESCRIPTION :
  *   Returns in x a random penta double number in [0,1]. */
+
+/************************ basic output *********************************/
+
+void pd_write_doubles ( const double* x );
+/*
+ * DESCRIPTION :
+ *   Writes the doubles in the penta double number x. */
 
 #endif /* __penta_double_h__ */

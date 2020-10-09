@@ -2,14 +2,17 @@
 
 /* This file contains the header files for a standalone,
    self-contained collection of routines for triple double arithmetic,
-   based on the CAMPARY and the QD software libraries. */
+   based on the CAMPARY and the QD software libraries.
+
+All functions in this library have the prefix td_
+to avoid potential name clashes with other multiple doubles. */
 
 #ifndef __triple_double_h__
 #define __triple_double_h__
 
 /************************* normalizations ************************/
 
-void fast_renorm
+void td_fast_renorm
  ( double x0, double x1, double x2, double x3,
    double *r0, double *r1, double *r2 );
 /*
@@ -43,7 +46,7 @@ void td_copy ( const double *a, double *b );
 void td_add ( const double *a, const double *b, double *c );
 /*
  * DESCRIPTION : c = a + b, or in words:
- *   Adds two double doubles in a and b to make the double double c. */
+ *   Adds two triple doubles in a and b to make the triple double c. */
 
 /* triple double = - triple double */
 void td_minus ( double *a );
@@ -55,8 +58,8 @@ void td_minus ( double *a );
 void td_sub ( const double *a, const double *b, double *c );
 /*
  * DESCRIPTION : c = a - b, or in words:
- *   Subtracts from the double doubles in a
- *   the double double in b to make the double double c. */
+ *   Subtracts from the triple doubles in a
+ *   the triple double in b to make the triple double c. */
 
 /**************  multiplications and division ***********************/
 
@@ -80,11 +83,18 @@ void td_div ( const double *a, const double *b, double *c );
  *   Divides the triple double a by the triple double b
  *   to make the triple double c. */
 
-/**************************** random *****************************/
+/********************** random number generator ************************/
 
-void random_triple_double ( double *x );
+void td_random ( double *x );
 /*
  * DESCRIPTION :
  *   Returns in x a random triple double number in [0,1]. */
+
+/************************ basic output *********************************/
+
+void td_write_doubles ( const double* x );
+/*
+ * DESCRIPTION :
+ *   Writes the three doubles in the triple double number x. */
 
 #endif /* __triple_double_h__ */

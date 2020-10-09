@@ -3,8 +3,6 @@
 /* This file contains the corresponding C code for the functions
    with prototypes declared in the triple_double.h file. */
 
-/* basic functions */
-
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -13,7 +11,7 @@
 
 /************************* normalizations ************************/
 
-void fast_renorm
+void td_fast_renorm
  ( double x0, double x1, double x2, double x3,
    double *r0, double *r1, double *r2 )
 {
@@ -114,7 +112,8 @@ void td_add ( const double *a, const double *b, double *c )
    f1 = dd_two_sum(f1,e,&e);
    f2 = dd_two_sum(f2,e,&e);
    f3 += e;
-   fast_renorm(f0,f1,f2,f3,&c[0],&c[1],&c[2]);
+
+   td_fast_renorm(f0,f1,f2,f3,&c[0],&c[1],&c[2]);
 }
 
 void td_minus ( double *a )
@@ -139,32 +138,32 @@ void td_mul ( const double *a, const double *b, double *c )
 {
    double f0,f1,f2,f3,p,e;
 
-   f3 = a[1]*b[2];
-   f3 = f3 + a[2]*b[1];
+   f3 = a[1]*b[2] + a[2]*b[1];
    f2 = dd_two_prod(a[0],b[2],&e);
-   f3 = f3 + e;
+   f3 += e;
    p = dd_two_prod(a[1],b[1],&e);
-   f3 = f3 + e;
+   f3 += e;
    f2 = dd_two_sum(f2,p,&e);
-   f3 = f3 + e;
+   f3 += e;
    p = dd_two_prod(a[2],b[0],&e);
-   f3 = f3 + e;
+   f3 += e;
    f2 = dd_two_sum(f2,p,&e);
-   f3 = f3 + e;
+   f3 += e;
    f1 = dd_two_prod(a[0],b[1],&e);
    f2 = dd_two_sum(f2,e,&e);
-   f3 = f3 + e;
+   f3 += e;
    p = dd_two_prod(a[1],b[0],&e);
    f2 = dd_two_sum(f2,e,&e);
-   f3 = f3 + e;
+   f3 += e;
    f1 = dd_two_sum(f1,p,&e);
    f2 = dd_two_sum(f2,e,&e);
-   f3 = f3 + e;
+   f3 += e;
    f0 = dd_two_prod(a[0],b[0],&e);
    f1 = dd_two_sum(f1,e,&e);
    f2 = dd_two_sum(f2,e,&e);
-   f3 = f3 + e;
-   fast_renorm(f0,f1,f2,f3,&c[0],&c[1],&c[2]);
+   f3 += e;
+
+   td_fast_renorm(f0,f1,f2,f3,&c[0],&c[1],&c[2]);
 }
 
 void td_mul_td_d ( const double *a, double b, double *c )
@@ -173,15 +172,16 @@ void td_mul_td_d ( const double *a, double b, double *c )
 
    f3 = 0.0;
    f2 = dd_two_prod(a[2],b,&e);
-   f3 = f3 + e;
+   f3 += e;
    f1 = dd_two_prod(a[1],b,&e);
    f2 = dd_two_sum(f2,e,&e);
-   f3 = f3 + e;
+   f3 += e;
    f0 = dd_two_prod(a[0],b,&e);
    f1 = dd_two_sum(f1,e,&e);
    f2 = dd_two_sum(f2,e,&e);
-   f3 = f3 + e;
-   fast_renorm(f0,f1,f2,f3,&c[0],&c[1],&c[2]);
+   f3 += e;
+
+   td_fast_renorm(f0,f1,f2,f3,&c[0],&c[1],&c[2]);
 }
 
 void td_div ( const double *a, const double *b, double *c )
@@ -203,18 +203,27 @@ void td_div ( const double *a, const double *b, double *c )
 
    q3 = c[0]/b[0];
 
-   fast_renorm(q0,q1,q2,q3,&c[0],&c[1],&c[2]);
+   td_fast_renorm(q0,q1,q2,q3,&c[0],&c[1],&c[2]);
 }
 
 /**************************** random *****************************/
 
-void random_triple_double ( double *x )
+void td_random ( double *x )
 {
    const double eps = 2.220446049250313e-16; // 2^(-52)
    const double dd_eps = 4.930380657631324e-32; // 2^(-104)
-   double first = ((double) rand())/RAND_MAX;
-   double second = ((double) rand())/RAND_MAX;
-   double third = ((double) rand())/RAND_MAX;
+   const double first = ((double) rand())/RAND_MAX;
+   const double second = ((double) rand())/RAND_MAX;
+   const double third = ((double) rand())/RAND_MAX;
 
-   fast_renorm(first,eps*second,dd_eps*third,0.0,&x[0],&x[1],&x[2]);
+   td_fast_renorm(first,eps*second,dd_eps*third,0.0,&x[0],&x[1],&x[2]);
+}
+
+/************************ basic output *********************************/
+
+void td_write_doubles ( const double* x )
+{
+   printf("  hi = %21.14e\n",x[0]);
+   printf("  mi = %21.14e\n",x[1]);
+   printf("  lo = %21.14e\n",x[2]);
 }

@@ -3,8 +3,6 @@
 /* This file contains the corresponding C code for the functions
    with prototypes declared in the penta_double.h file. */
 
-/* basic functions */
-
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -13,7 +11,7 @@
 
 /************************* normalizations ************************/
 
-void renorm5
+void pd_renorm5
  ( double f0, double f1, double f2, double f3, double f4, double f5,
    double *pr, double *r0, double *r1, double *r2, double *r3, double *r4 )
 {
@@ -209,7 +207,7 @@ void renorm5
    }
 }
 
-void fast_renorm
+void pd_fast_renorm
  ( double x0, double x1, double x2, double x3, double x4, double x5,
    double *r0, double *r1, double *r2, double *r3, double *r4 )
 {
@@ -221,10 +219,10 @@ void fast_renorm
    pr = dd_quick_two_sum(x1,pr,&f2);
    f0 = dd_quick_two_sum(x0,pr,&f1);
 
-   renorm5(f0,f1,f2,f3,f4,f5,&pr,r0,r1,r2,r3,r4);
+   pd_renorm5(f0,f1,f2,f3,f4,f5,&pr,r0,r1,r2,r3,r4);
 }
 
-void renorm_add1
+void pd_renorm_add1
  ( double x0, double x1, double x2, double x3, double x4, double y,
    double *r0, double *r1, double *r2, double *r3, double *r4 )
 {
@@ -236,7 +234,7 @@ void renorm_add1
    pr = dd_two_sum(x1,pr,&f2);
    f0 = dd_two_sum(x0,pr,&f1);
 
-   renorm5(f0,f1,f2,f3,f4,f5,&pr,r0,r1,r2,r3,r4);
+   pd_renorm5(f0,f1,f2,f3,f4,f5,&pr,r0,r1,r2,r3,r4);
 }
 
 /****************************** copy *****************************/
@@ -280,12 +278,12 @@ void pd_add ( const double *a, const double *b, double *c )
    f4 = dd_two_sum(f4,e,&e);
    f5 = f5 + e;
 
-   fast_renorm(f0,f1,f2,f3,f4,f5,&c[0],&c[1],&c[2],&c[3],&c[4]);
+   pd_fast_renorm(f0,f1,f2,f3,f4,f5,&c[0],&c[1],&c[2],&c[3],&c[4]);
 }
 
 void pd_add_pd_d ( const double *a, double b, double *c )
 {
-   renorm_add1(a[0],a[1],a[2],a[3],a[4],b,&c[0],&c[1],&c[2],&c[3],&c[4]);
+   pd_renorm_add1(a[0],a[1],a[2],a[3],a[4],b,&c[0],&c[1],&c[2],&c[3],&c[4]);
 }
 
 void pd_minus ( double *a )
@@ -400,7 +398,7 @@ void pd_mul ( const double *a, const double *b, double *c )
    f4 = dd_two_sum(f4,e,&e);
    f5 = f5 + e;
 
-   fast_renorm(f0,f1,f2,f3,f4,f5,&c[0],&c[1],&c[2],&c[3],&c[4]);
+   pd_fast_renorm(f0,f1,f2,f3,f4,f5,&c[0],&c[1],&c[2],&c[3],&c[4]);
 }
 
 void pd_mul_pd_d ( const double *a, double b, double *c )
@@ -431,7 +429,7 @@ void pd_mul_pd_d ( const double *a, double b, double *c )
    f4 = dd_two_sum(f4,e,&e);
    f5 = f5 + e;
 
-   fast_renorm(f0,f1,f2,f3,f4,f5,&c[0],&c[1],&c[2],&c[3],&c[4]);
+   pd_fast_renorm(f0,f1,f2,f3,f4,f5,&c[0],&c[1],&c[2],&c[3],&c[4]);
 }
 
 void pd_div ( const double *a, const double *b, double *c )
@@ -446,12 +444,12 @@ void pd_div ( const double *a, const double *b, double *c )
    q4 = c[0]/b[0]; pd_mul_pd_d(b,q4,acc); pd_sub(c,acc,c);
    q5 = c[0]/b[0];
 
-   fast_renorm(q0,q1,q2,q3,q4,q5,&c[0],&c[1],&c[2],&c[3],&c[4]);
+   pd_fast_renorm(q0,q1,q2,q3,q4,q5,&c[0],&c[1],&c[2],&c[3],&c[4]);
 }
 
-/**************************** random *****************************/
+/******************** random number generator **************************/
 
-void random_penta_double ( double *x )
+void pd_random ( double *x )
 {
    const double eps = 2.220446049250313e-16; // 2^(-52)
    const double eps2 = eps*eps;
@@ -468,4 +466,15 @@ void random_penta_double ( double *x )
    pd_add_pd_d(x,r2*eps2,x);
    pd_add_pd_d(x,r3*eps3,x);
    pd_add_pd_d(x,r4*eps4,x);
+}
+
+/************************ basic output *********************************/
+
+void pd_write_doubles ( const double* x )
+{
+   printf("  thumb = %21.14e",x[0]);
+   printf("  index = %21.14e\n",x[1]);
+   printf("  middle = %21.14e\n",x[2]);
+   printf("  ring = %21.14e",x[3]);
+   printf("   pink = %21.14e\n",x[4]);
 }
