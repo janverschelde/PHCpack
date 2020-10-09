@@ -3,6 +3,7 @@ Fri 9 Oct 2020 : new penta_double.h, penta_double.c, and pd_test.c with
   Corrected a documentation error in fast_double_renormalizations.ads.
   Edited {triple,penta}_double.h with uniform prefix, added output;
   updated {triple,penta}_double.c, td_test.c, and pd_test.c.
+  New octo_double.h, octo_double.c, and od_test for octo doubles.
 
 Thu 8 Oct 2020 : in double_double.c and double_double.cpp,
   replaced abs(t[0]) by fabs(t[0]).

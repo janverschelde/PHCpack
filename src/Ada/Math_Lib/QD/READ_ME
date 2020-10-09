@@ -56,6 +56,9 @@ qd_test.c                    : test on basic operations in quad_double
 penta_double.h               : prototypes of the penta double functions
 penta_double.c               : definitions of the penta_double.h functions
 pd_test.c                    : test on basic operations in penta_double
+octo_double.h                : prototypes of the octo double functions
+octo_double.c                : definitions of the octo_double.h functions
+od_test.c                    : test on basic operations in octo_double
 ------------------------------------------------------------------------------
 double_double_basics         : basic inline functions for double double numbers
 double_double_numbers        : defines double double arithmetic

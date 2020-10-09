@@ -20,5 +20,11 @@ pd_test:
 	gcc -o /tmp/pd_test pd_test.c \
                /tmp/double_double.o /tmp/penta_double.o -lm
 
+od_test:
+	gcc -c double_double.c -o /tmp/double_double.o
+	gcc -c octo_double.c -o /tmp/octo_double.o
+	gcc -o /tmp/od_test od_test.c \
+               /tmp/double_double.o /tmp/octo_double.o -lm
+
 clean:
 	/bin/rm -f -r *.o
