@@ -47,6 +47,9 @@ double_double.c              : defines the operations in double_double.h
 double_double.cpp            : operations defined as c++ code
 dd_test.c                    : test on basic operations in double_double
 dd_funtest.cpp               : test on sin and cos functions
+triple_double.h              : prototypes of the triple double operations
+triple_double.c              : defines the operations in triple_double.h
+td_test.c                    : tests the operations in triple_double
 quad_double.h                : prototypes of the quad double operations
 quad_double.c                : definitions of the operations in quad_double.h
 qd_test.c                    : test on basic operations in quad_double
