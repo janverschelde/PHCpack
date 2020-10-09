@@ -14,5 +14,11 @@ td_test:
 	gcc -o /tmp/td_test td_test.c \
                /tmp/double_double.o /tmp/triple_double.o -lm
 
+pd_test:
+	gcc -c double_double.c -o /tmp/double_double.o
+	gcc -c penta_double.c -o /tmp/penta_double.o
+	gcc -o /tmp/pd_test pd_test.c \
+               /tmp/double_double.o /tmp/penta_double.o -lm
+
 clean:
 	/bin/rm -f -r *.o

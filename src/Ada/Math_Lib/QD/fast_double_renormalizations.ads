@@ -61,12 +61,12 @@ package Fast_Double_Renormalizations is
   --   double double basics of QD-2.3.9 (Y. Hida, X.S. Li, and D.H. Bailey).
 
   -- ON ENTRY :
-  --   x0       most significant word;
-  --   x1       second most significant word;
-  --   x2       third most significant word;
-  --   x3       fourth most significant word;
-  --   x4       fifth most significant word;
-  --   x5       sixth most significant word;
+  --   f0       most significant word;
+  --   f1       second most significant word;
+  --   f2       third most significant word;
+  --   f3       fourth most significant word;
+  --   f4       fifth most significant word;
+  --   f5       sixth most significant word;
   --   pr       computed by the start of the renormalization.
 
   -- ON RETURN :

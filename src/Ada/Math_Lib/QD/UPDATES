@@ -1,3 +1,7 @@
+Fri 9 Oct 2020 : new penta_double.h, penta_double.c, and pd_test.c with
+  the basic operations on penta double numbers.
+  Corrected a documentation error in fast_double_renormalizations.ads.
+
 Thu 8 Oct 2020 : in double_double.c and double_double.cpp,
   replaced abs(t[0]) by fabs(t[0]).
   New triple_double.h and triple_double.c, with basic triple double 
