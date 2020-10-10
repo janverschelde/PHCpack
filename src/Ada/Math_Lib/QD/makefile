@@ -26,5 +26,11 @@ od_test:
 	gcc -o /tmp/od_test od_test.c \
                /tmp/double_double.o /tmp/octo_double.o -lm
 
+da_test:
+	gcc -c double_double.c -o /tmp/double_double.o
+	gcc -c deca_double.c -o /tmp/deca_double.o
+	gcc -o /tmp/da_test da_test.c \
+               /tmp/double_double.o /tmp/deca_double.o -lm
+
 clean:
 	/bin/rm -f -r *.o
