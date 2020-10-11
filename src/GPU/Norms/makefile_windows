@@ -54,13 +54,24 @@ double_double_functions.obj:
 	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
              double_double_functions.cpp /Fo: double_double_functions.obj
 
+triple_double_functions.obj:
+	@-echo ">>> compiling triple_double_functions ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+             triple_double_functions.cpp /Fo: triple_double_functions.obj
+
 test_double_doubles: double_double.obj double_double_functions.obj
 	@-echo ">>> compiling test_double_doubles ..."
 	$(CL)\cl /c -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
                     test_double_doubles.cpp /Fo: test_double_doubles.obj /EHsc
-	@-echo ">>> linking test_double_doubles ..."
-	nvcc -ccbin=$(CL) -o test_double_doubles.exe double_double.obj \
-             double_double_functions.obj test_double_doubles.obj
+
+test_triple_doubles: triple_double_functions.obj double_double_functions.obj
+	@-echo ">>> compiling test_triple_doubles ..."
+	$(CL)\cl /c -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+                    test_triple_doubles.cpp /Fo: test_triple_doubles.obj /EHsc
+	@-echo ">>> linking test_triple_doubles ..."
+	nvcc -ccbin=$(CL) -o test_triple_doubles.exe \
+             double_double_functions.obj triple_double_functions.obj \
+             test_triple_doubles.obj
 
 dbl_norm_host.obj:
 	@-echo ">>> compiling dbl_norm_host ..."
