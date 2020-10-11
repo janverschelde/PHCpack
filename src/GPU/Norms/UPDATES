@@ -1,6 +1,8 @@
 Sun 11 Oct 2020 : fixed documentation errors in triple_double_functions.h.
   New penta_double_functions.h, penta_double_functions.cpp, tested by
   test_penta_doubles.cpp, updated makefile and makefile_unix.
+  New octo_double_functions.h, octo_double_functions.cpp, tested by
+  test_octo_doubles.cpp, updated makefile and makefile_unix.
 
 Sat 10 Oct 2020 : new triple_double_functions.h, triple_double_functions.cpp,
   tested by test_triple_doubles.cpp.  Updated makefile and makefile_unix;
