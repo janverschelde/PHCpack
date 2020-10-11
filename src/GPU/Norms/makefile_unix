@@ -33,6 +33,10 @@ triple_double_functions.o:
 	@-echo ">>> compiling triple double functions ..."
 	$(gpp) -O3 -c triple_double_functions.cpp
 
+penta_double_functions.o:
+	@-echo ">>> compiling penta double functions ..."
+	$(gpp) -O3 -c penta_double_functions.cpp
+
 double_double_gpufun.o:
 	@-echo ">>> compiling double double gpu functions ..."
 	nvcc -ccbin=$(gpp) -c double_double_gpufun.cu
@@ -51,6 +55,13 @@ test_triple_doubles: triple_double_functions.o double_double_functions.o
 	@-echo ">>> linking test_triple_doubles ..."
 	$(gpp) -o test_triple_doubles double_double_functions.o \
                   triple_double_functions.o test_triple_doubles.o
+
+test_penta_doubles: penta_double_functions.o double_double_functions.o
+	@-echo ">>> compiling test_penta_doubles ..."
+	$(gpp) -c -I$(QDsrc) test_penta_doubles.cpp
+	@-echo ">>> linking test_penta_doubles ..."
+	$(gpp) -o test_penta_doubles double_double_functions.o \
+                  penta_double_functions.o test_penta_doubles.o
 
 random_numbers.o:
 	@-echo ">>> compiling random number generators ..."
@@ -190,3 +201,5 @@ clean:
 	/bin/rm -f -r cmplx2_norm_host.o
 	/bin/rm -f -r double_double_gpufun.o test_triple_doubles
 	/bin/rm -f -r triple_double_functions.o test_triple_doubles.o
+	/bin/rm -f -r penta_double_functions.o test_penta_doubles.o
+	/bin/rm -f -r test_penta_doubles

@@ -41,7 +41,7 @@ void tdf_copy
 /*
  * DESCRIPTION :
  *   Copies the content of the triple double a (a_hi, a_mi, a_lo)
- *   to the triple double b (a_hi, a_mi, a_lo). */
+ *   to the triple double b (b_hi, b_mi, b_lo). */
 
 void tdf_abs
  ( double a_hi, double a_mi, double a_lo,
@@ -170,7 +170,7 @@ void tdf_mul_td_d
    double *c_hi, double *c_mi, double *c_lo );
 /*
  * DESCRIPTION : c = a * b.
- *   Multiplies two triple doubles a (a_hi, a_mi, a_lo) with b
+ *   Multiplies the triple double a (a_hi, a_mi, a_lo) with b
  *   to make the triple double c (c_hi, c_mi, c_lo).
  *
  * ON ENTRY :
@@ -190,7 +190,7 @@ void tdf_div
    double *c_hi, double *c_mi, double *c_lo );
 /*
  * DESCRIPTION : c = a / b.
- *   Divides the triple doubles a (a_hi, a_mi, a_lo) b b (b_hi, 
+ *   Divides the triple double a (a_hi, a_mi, a_lo) by b (b_hi, 
  *   b_mi, b_lo) to make the triple double c (c_hi, c_mi, c_lo).
  *
  * ON ENTRY :
