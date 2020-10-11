@@ -8,7 +8,10 @@ file name               : short description
 -----------------------------------------------------------------------------
 double_double_functions : double double precision arithmetic on host
 double_double_gpufun    : double double precision arithmetic on device
-test_double_doubles     : a test on double_double_functions
+test_double_doubles     : a test on double double_functions
+triple_double_functions : triple double precision arithmetic on host
+triple_double_gpufun    : triple double precision arithmetic on device
+test_triple_doubles     : a test on triple double_functions
 random_numbers          : generators of random doubles and random angles
 random_numbers_windows  : specific include for windows MS VC
 random_vectors          : random vectors in double precision

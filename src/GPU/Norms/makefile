@@ -9,6 +9,9 @@ MAKEFILE = makefile_unix
 test_double_doubles:
 	make -f $(MAKEFILE) test_double_doubles
 
+test_triple_doubles:
+	make -f $(MAKEFILE) test_triple_doubles
+
 run_dbl_norm:
 	make -f $(MAKEFILE) run_dbl_norm
 
@@ -23,9 +26,6 @@ test_dbl2_norm:
 
 run_cmplx_norm:
 	make -f $(MAKEFILE) run_cmplx_norm
-
-run_cmplx2_norm:
-	make -f $(MAKEFILE) run_cmplx2_norm
 
 test_cmplx_norm:
 	make -f $(MAKEFILE) test_cmplx_norm
