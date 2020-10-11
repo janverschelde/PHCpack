@@ -1,3 +1,6 @@
+Sun 11 Oct 2020 : added a forgotten last step in the definition of od_div
+  in octo_double.c.
+
 Fri 9 Oct 2020 : new penta_double.h, penta_double.c, and pd_test.c with
   the basic operations on penta double numbers.
   Corrected a documentation error in fast_double_renormalizations.ads.

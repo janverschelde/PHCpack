@@ -904,7 +904,8 @@ void od_div ( const double *a, const double *b, double *c )
    q4 = c[0]/b[0]; od_mul_od_d(b,q4,acc); od_sub(c,acc,c);
    q5 = c[0]/b[0]; od_mul_od_d(b,q5,acc); od_sub(c,acc,c);
    q6 = c[0]/b[0]; od_mul_od_d(b,q6,acc); od_sub(c,acc,c);
-   q7 = c[0]/b[0];
+   q7 = c[0]/b[0]; od_mul_od_d(b,q7,acc); od_sub(c,acc,c);
+   q8 = c[0]/b[0];
 
    od_fast_renorm(q0,q1,q2,q3,q4,q5,q6,q7,q8,
                   &c[0],&c[1],&c[2],&c[3],&c[4],&c[5],&c[6],&c[7]);
