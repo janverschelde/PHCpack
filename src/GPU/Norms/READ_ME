@@ -15,6 +15,8 @@ penta_double_functions  : penta double precision arithmetic on host
 test_penta_doubles      : a test on penta double_functions
 octo_double_functions   : octo double precision arithmetic on host
 test_octo_doubles       : a test on octo double_functions
+deca_double_functions   : deca double precision arithmetic on host
+test_deca_doubles       : a test on deca double_functions
 random_numbers          : generators of random doubles and random angles
 random_numbers_windows  : specific include for windows MS VC
 random_vectors          : random vectors in double precision

@@ -9,7 +9,7 @@ ring, and pink are respectively tb, ix, mi, rg, and pk.
 
 The algorithms are from the CAMPARY and QD software libraries
 with the modification that a penta double is not stored as an array
-of three doubles, but plainly by five double numbers.
+of five doubles, but plainly by five double numbers.
 All functions have the prefix pdf_ to avoid name clashes. */
 
 #ifndef __penta_double_functions_h__
@@ -102,7 +102,7 @@ void pdf_copy
 /*
  * DESCRIPTION :
  *   Copies the content of the penta double a (a_tb, a_ix, a_mi, a_rg, a_pk)
- *   to the penta double b (b_hi, b_ix, b_mi, b_rn, b_pk). */
+ *   to the penta double b (b_tb, b_ix, b_mi, b_rg, b_pk). */
 
 void pdf_abs
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
@@ -173,7 +173,7 @@ void pdf_minus
  ( double *a_tb, double *a_ix, double *a_mi, double *a_rg, double *a_pk );
 /*
  * DESCRIPTION :
- *   Flips the sign of a (a_hi, a_ix, a_mi, a_rn, a_pk). */
+ *   Flips the sign of a (a_tb, a_ix, a_mi, a_rg, a_pk). */
 
 void pdf_sub
  ( double a_tb, double a_ix, double a_mi, double a_rg, double a_pk,
@@ -287,8 +287,8 @@ void pdf_div
    double *c_tb, double *c_ix, double *c_mi, double *c_rg, double *c_pk );
 /*
  * DESCRIPTION : c = a / b.
- *   Divides the penta doubles a (a_tb, a_ix, a_mi, a_rg, a_pk) 
- *   and b (b_tb, b_ix, b_mi, b_rg, b_pk) 
+ *   Divides the penta double a (a_tb, a_ix, a_mi, a_rg, a_pk) 
+ *   by b (b_tb, b_ix, b_mi, b_rg, b_pk) 
  *   to make the penta double c (c_tb, c_ix, c_mi, c_rg, c_pk).
  *
  * ON ENTRY :

@@ -18,6 +18,9 @@ test_penta_doubles:
 test_octo_doubles:
 	make -f $(MAKEFILE) test_octo_doubles
 
+test_deca_doubles:
+	make -f $(MAKEFILE) test_deca_doubles
+
 run_dbl_norm:
 	make -f $(MAKEFILE) run_dbl_norm
 
